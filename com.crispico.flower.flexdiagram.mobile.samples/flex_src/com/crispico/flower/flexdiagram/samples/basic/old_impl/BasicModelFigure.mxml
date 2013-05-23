@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	 
+	 implements="com.crispico.flower.flexdiagram.IFigure"
+	horizontalAlign="center" verticalAlign="middle" xmlns:mx="library://ns.adobe.com/flex/mx" >
+	
+	
+	<fx:Script>
+				
+		<![CDATA[
+			import com.crispico.flower.flexdiagram.EditPart;
+			
+			private var editPart:EditPart;
+			
+			[Bindable]
+			private var data:Object;
+			
+			public function getEditPart():EditPart {
+				return editPart;
+			}
+			
+			public function setEditPart(ep:EditPart):void {
+				editPart = ep;
+				if (ep == null) {
+					data = null;
+				} else {
+					data = ep.getModel();
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Rect width="100%" height="100%">
+		<s:fill><s:SolidColor color="#6688FF" /></s:fill>
+		<s:stroke>
+			<s:SolidColorStroke color="0x000000" weight="1" />
+		</s:stroke>
+	</s:Rect>
+	
+	<s:Label text="{data.name}"/>
+	
+</s:VGroup>

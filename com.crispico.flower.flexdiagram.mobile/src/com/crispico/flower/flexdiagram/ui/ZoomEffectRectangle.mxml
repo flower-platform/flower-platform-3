@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:UIComponent width="50" height="50" includeInLayout="true" visible="false" xmlns:mx="http://www.adobe.com/2006/mxml">
+<!--
+ - 
+  	The class provides a zoom effect that can be added/removed by applications when a 
+  	zoom operation is in progress. The application handles with the invokation of this
+  	effect.
+  	
+  	@author Georgi
+ @flowerModelElementId _IeH98MVeEd6x1dpkaVcaXg
+-->
+<mx:Script>
+	<![CDATA[
+		import mx.controls.Alert;
+		/**
+		 * The length of the line.
+		 */
+		private var segmentLength:int = 15;
+		
+		/**
+		 * The offset of the rectangle.
+		 */
+		private var offset:int = 0;
+		
+		/**
+		 * Computed heightBy taking in consideration the scale.
+		 * The value is needed for the Resize effect.
+		 */
+		[Bindable]
+		public var hb:Number;
+		
+		/**
+		 * Computed widthBY taking in consideration the scale.
+		 * The value is needed for the Resize effect.
+		 */
+		[Bindable]
+		public var wb:Number;
+		
+		/**
+		 * Computed xBy taking in consideration the scale.
+		 * The value is needed to Move effect.
+		 */
+		[Bindable]
+		public var xb:Number;
+		
+		/**
+		 * Computed xBy taking in consideration the scale.
+		 * The value is needed to Move effect.
+		 */
+		[Bindable]
+		public var yb:Number;
+		
+		/**
+		 * Constant value used for the rectangle.
+		 */
+		private const DELTA:int = 25;
+		
+		/**
+		 * Line's thickness.
+		 */
+		private var lineThickness:int;
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			graphics.clear();
+			
+			// top side
+			graphics.lineStyle(lineThickness, 0x0033CC);
+			graphics.moveTo(-offset, -offset);
+			graphics.lineTo(segmentLength - offset, - offset);
+			graphics.moveTo(unscaledWidth - segmentLength - offset, -offset);
+			graphics.lineTo(unscaledWidth - offset, - offset);
+			
+			// right side
+			graphics.lineTo(unscaledWidth - offset, segmentLength - offset);
+			graphics.moveTo(unscaledWidth - offset, unscaledHeight - segmentLength - offset);
+			graphics.lineTo(unscaledWidth - offset, unscaledHeight - offset);
+			
+			// left side
+			graphics.moveTo(- offset, - offset);
+			graphics.lineTo(- offset, segmentLength - offset);
+			graphics.moveTo(- offset, unscaledHeight - segmentLength - offset);
+			graphics.lineTo(- offset, unscaledHeight - offset);
+			
+			// bottom side
+			graphics.lineTo(segmentLength - offset, unscaledHeight - offset);
+			graphics.moveTo(unscaledWidth - segmentLength - offset, unscaledHeight - offset);
+			graphics.lineTo(unscaledWidth - offset, unscaledHeight - offset);
+		}
+	
+		/**
+		 * The method is called by application in order to play the effect
+		 * while a zoom operation is in progress.
+		 *
+		 * Compute all the parameters for the effect (width, height, widthBy, heightBy) and
+		 * all line's parameters considering the current scale factor.
+		 */
+		public function playEffect(posX:int, posY:int, delta:Boolean):void {
+			parent.setChildIndex(this, parent.numChildren - 1);
+			lineThickness = 1 ;
+			segmentLength = 15;
+			x = posX;
+			y = posY;
+			if (delta) {
+				height = 100;
+				width = 100;
+				hb = -(2 * DELTA);
+				wb = -(2 * DELTA);
+				xb = DELTA;
+				yb = DELTA;
+				offset = 50;
+			} else {
+				height = 50;
+				width = 50;
+				hb = (2 * DELTA);
+				wb = (2 * DELTA);
+				xb = - DELTA;
+				yb = - DELTA;  
+				offset = 25;
+			}
+			visible = true;
+			effects.play([this]);
+		}
+		
+		private function stop():void {
+			visible = false; 
+		}
+	]]>
+</mx:Script>
+
+<mx:Parallel id="effects" duration="700" effectEnd="stop()">
+	<mx:Move id="moveEffect" xBy="{xb}" yBy="{yb}" />
+	<mx:Resize id="resizeEffect" heightBy="{hb}" widthBy="{wb}" /> 
+	<mx:Fade alphaFrom="1" alphaTo="0"/>
+</mx:Parallel>
+
+</mx:UIComponent>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		
+		xmlns:flexdiagram="com.crispico.flower.flexdiagram.*" addedToStage="creationCompleteHandler()" xmlns:common="com.crispico.flower.flexdiagram.util.common.*">
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.flexdiagram.EditPart;
+			import com.crispico.flower.flexdiagram.samples.basic.model.BasicConnection;
+			import com.crispico.flower.flexdiagram.samples.basic.model.BasicModel;
+			import com.crispico.flower.flexdiagram.samples.basic.old_impl.Viewer;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.CollectionEvent;
+			import mx.events.FlexEvent;
+
+			private var rootModel:ArrayCollection = new ArrayCollection();
+			
+			private var viewer:Viewer;
+			
+			[Bindable]
+			private var selectedModel:BasicModel;
+			
+			private function populateRootModel():void {
+				var model:BasicModel;
+				
+				model = new BasicModel();
+				model.name = "Model1";
+				model.x = 10;
+				model.y = 10;
+				model.width = 100;
+				model.height = 100;
+				rootModel.addItem(model);
+
+				model = new BasicModel();
+				model.name = "Model2";
+				model.x = 220;
+				model.y = 220;
+				model.width = 100;
+				model.height = 100;
+				rootModel.addItem(model);
+				
+				var connection:BasicConnection;
+				
+				connection = new BasicConnection();
+				connection.source = rootModel[0];
+				connection.target = rootModel[1];
+				rootModel.addItem(connection);
+			}
+			
+			private function creationCompleteHandler():void {
+				populateRootModel();
+				viewer = new Viewer(rootFigure, rootModel);
+				viewer.getSelectedElements().addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangeHandler);
+				selectionChangeHandler(null);
+			}
+			
+			private function selectionChangeHandler(event:Event):void {
+				trace(rootFigure.contentHeight);
+				if (viewer.getSelectedElements().length == 0) {
+					deleteButton.enabled = false;
+					selectionLabel.text = "No selection";
+					selectedModel = null;
+				} else {
+					deleteButton.enabled = true;
+					selectionLabel.text = viewer.getSelectedElements().length + " selected elem(s)";
+					if (viewer.getSelectedElements().length == 1 && viewer.getSelectedElements()[0].getModel() is BasicModel) {
+						selectedModel = viewer.getSelectedElements()[0].getModel();
+					} else {
+						selectedModel = null;
+					}
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Binding source="modelName.text" destination="selectedModel.name"/>
+	<fx:Binding source="parseInt(modelX.text)" destination="selectedModel.x"/>
+	<fx:Binding source="parseInt(modelY.text)" destination="selectedModel.y"/>
+	<fx:Binding source="parseInt(modelWidth.text)" destination="selectedModel.width"/>
+	<fx:Binding source="parseInt(modelHeight.text)" destination="selectedModel.height"/>
+	
+	<s:Scroller width="100%" height="100%" verticalScrollPolicy="auto" >
+		<s:HGroup width="100%" height="100%">			
+			<s:Panel width="200" height="100%" title="Selection">
+				<s:VGroup width="100%">
+					<s:Label id="selectionLabel"/>
+					<s:Form width="100%" enabled="{selectedModel != null}">
+						<s:FormItem label="Name" width="100%">
+							<s:TextInput id="modelName" width="100%" text="{selectedModel.name}"/>
+						</s:FormItem>
+						<s:FormItem label="X" width="100%">
+							<s:TextInput id="modelX" width="100%" text="{selectedModel.x}"/>
+						</s:FormItem>
+						<s:FormItem label="Y" width="100%">
+							<s:TextInput id="modelY" width="100%" text="{selectedModel.y}"/>
+						</s:FormItem>
+						<s:FormItem label="Width" width="100%">
+							<s:TextInput id="modelWidth" width="100%" text="{selectedModel.width}"/>
+						</s:FormItem>
+						<s:FormItem label="Height" width="100%">
+							<s:TextInput id="modelHeight" width="100%" text="{selectedModel.height}"/>
+						</s:FormItem>
+					</s:Form>
+					<s:Button label="Add">
+						<s:click>
+							<![CDATA[
+							var model:BasicModel = new BasicModel();
+							model.width = model.height = 10;
+							rootModel.addItem(model);
+							
+							viewer.addToSelection(viewer.getModelToEditPartMap()[model], true);
+							]]>
+						</s:click>
+					</s:Button>
+					<s:Button id="deleteButton" label="Delete">
+						<s:click>
+							<![CDATA[
+							for (var i:int = viewer.getSelectedElements().length - 1; i >= 0; i--) {
+							rootModel.removeItemAt(rootModel.getItemIndex(viewer.getSelectedElements()[i].getModel()));
+							}
+							]]>
+						</s:click>
+					</s:Button>
+				</s:VGroup>
+			</s:Panel>
+			
+			<s:Scroller width="100%" height="100%" horizontalScrollPolicy="auto" >
+				<s:Group width="100%" height="100%">					
+					<flexdiagram:RootFigure id="rootFigure" width="100%" height="100%" useGrid="false"  />					
+				</s:Group>
+			</s:Scroller>
+		</s:HGroup>	
+	</s:Scroller>
+		
+	
+</s:HGroup>

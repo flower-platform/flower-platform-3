@@ -1,0 +1,13 @@
+Daca faci update prima data si nu iti compileaza proiectul
+
+1) Editeaza configFlexSDKLocale.cmd cu path-urile corespunzatoare mediului tau de lucru si ruleaza-l
+
+2) S-ar putea sa fie necesar sa reconfigurezi lista de sdk-uri flex in Eclipse (Sterge si readauga sdk-ul modificat)
+
+
+TODO sorin : 
+de facut un task prin care poate gasim alta solutie sau poate o configurare speciala de folosita doar pentru implementarile de gantt? 
+de vazut daca e o limitare a compilatorului;
+
+temporar de adaugat in csp1/configurare_mediu_de_lucru_flower un readme care spune ca la copierea flex builder in d:\java mai trebuie avut in vedere si acest fisier
++ de detaliat motivul pentru care adaugam localizarea NL si cine ar trebui sa tina cont (nu este util cand pentru cei care work pe flower.mp)
