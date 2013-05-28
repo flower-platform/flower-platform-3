@@ -6,9 +6,9 @@
 	<fx:Script>
 		<![CDATA[
 			import com.crispico.flower.flexdiagram.EditPart;
+			import com.crispico.flower.flexdiagram.samples.basic.editpart.Viewer;
 			import com.crispico.flower.flexdiagram.samples.basic.model.BasicConnection;
 			import com.crispico.flower.flexdiagram.samples.basic.model.BasicModel;
-			import com.crispico.flower.flexdiagram.samples.basic.old_impl.Viewer;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.CollectionEvent;

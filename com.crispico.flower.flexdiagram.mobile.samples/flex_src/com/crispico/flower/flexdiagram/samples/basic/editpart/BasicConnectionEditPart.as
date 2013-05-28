@@ -1,5 +1,8 @@
-package com.crispico.flower.flexdiagram.samples.basic.old_impl {
+package com.crispico.flower.flexdiagram.samples.basic.editpart {
+	import com.crispico.flower.flexdiagram.AbsolutePositionEditPartUtils;
 	import com.crispico.flower.flexdiagram.DiagramViewer;
+	import com.crispico.flower.flexdiagram.EditPart;
+	import com.crispico.flower.flexdiagram.IFigure;
 	import com.crispico.flower.flexdiagram.connection.ConnectionEditPart;
 	import com.crispico.flower.flexdiagram.samples.basic.model.BasicConnection;
 	import com.crispico.flower.flexdiagram.ui.ConnectionEnd;
@@ -9,6 +12,12 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 	import com.crispico.flower.flexdiagram.ui.IDraggable;
 	import com.crispico.flower.flexdiagram.ui.ResizeAnchor;
 	
+	import flash.display.DisplayObject;
+	
+	import mx.collections.ArrayCollection;
+	import mx.core.Container;
+	import mx.core.IVisualElement;
+	import mx.core.IVisualElementContainer;
 	import mx.events.PropertyChangeEvent;
 	
 	public class BasicConnectionEditPart extends ConnectionEditPart {
@@ -44,6 +53,10 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 			}
 			if (event.property == "target" && event.oldValue != event.newValue) {
 				targetModelChanged(getTargetModel());
+			}
+			if (event.property == "children") {
+				refreshChildren();
+				refreshVisualChildren();
 			}
 		}
 		/**
@@ -84,6 +97,29 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 				return;
 			}
 			super.drag(draggable, deltaX, deltaY, isInitiator);
+		}
+		
+		override protected function getModelHolderCollections():Array {
+			return [BasicConnection(model).children];
+		}
+		
+		override public function getModelFromModelHolder(modelHolder:Object):Object {
+			return modelHolder;
+		}
+		
+		override public function refreshVisualChildren():void {
+			// parentContainer is the diagram
+			var container:IVisualElementContainer = IVisualElementContainer(getViewer().getRootEditPart().getFigure());
+			var currentFigure:IFigure = null;
+			var editPartsToAdd:ArrayCollection = new ArrayCollection();
+			for (var i:int = 0; i < children.length; i++) {
+				var ep:EditPart = EditPart(children[i]);
+				if (ep.getFigure() == null) { // the figure is not visible
+					currentFigure = ep.createOrGetRecycledFigure()
+					ep.setFigure(currentFigure);
+					AbsolutePositionEditPartUtils.addChildFigure(container, IVisualElement(currentFigure));
+				} 					
+			}
 		}
 	}
 

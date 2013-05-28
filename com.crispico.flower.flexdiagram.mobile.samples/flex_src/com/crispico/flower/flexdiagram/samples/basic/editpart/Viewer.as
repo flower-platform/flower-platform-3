@@ -1,4 +1,4 @@
-package com.crispico.flower.flexdiagram.samples.basic.old_impl {
+package com.crispico.flower.flexdiagram.samples.basic.editpart {
 	import com.crispico.flower.flexdiagram.DiagramViewer;
 	import com.crispico.flower.flexdiagram.EditPart;
 	import com.crispico.flower.flexdiagram.IEditPartFactory;
@@ -8,6 +8,7 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 	import com.crispico.flower.flexdiagram.contextmenu.DelegatingActionProvider;
 	import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
 	import com.crispico.flower.flexdiagram.samples.basic.action.CreateBasicConnectionAction;
+	import com.crispico.flower.flexdiagram.samples.basic.action.CreateBasicConnectionWithLabelAction;
 	import com.crispico.flower.flexdiagram.samples.basic.action.CreateBasicModelAction;
 	import com.crispico.flower.flexdiagram.samples.basic.action.SampleAction;
 	import com.crispico.flower.flexdiagram.samples.basic.model.BasicConnection;
@@ -23,6 +24,7 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 		
 		private var createBaseModelAction:CreateBasicModelAction = new CreateBasicModelAction();
 		private var createBasicConnectionAction:CreateBasicConnectionAction = new CreateBasicConnectionAction();
+		private var createBasicConnectionWithLabelAction:CreateBasicConnectionWithLabelAction = new CreateBasicConnectionWithLabelAction();
 		private var sampleAction1:SampleAction = new SampleAction("Sample Action 1");
 		private var sampleAction2:SampleAction = new SampleAction("Sample Action 2");
 		
@@ -31,7 +33,7 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 			activate(true);
 			selectMoveResizeTool = new SelectMoveResizeTool();
 			setCreateElementActionProvider(new DelegatingActionProvider(getCreateElementActionContext, fillCreateElementContextMenu));
-			setCreateRelationActionProvider(new DelegatingActionProvider(getCreateRelationActionContext, fillCreateRelationContextMenu));
+			setCreateRelationActionProvider(new DelegatingActionProvider(getCreateRelationActionContext, fillCreateRelationContextMenu));			
 			rightClickEnabled = true;
 		}
 		
@@ -39,12 +41,16 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 			if (model is ArrayCollection) {
 				return new DiagramEditPart(model, this);
 			} else if (model is BasicModel) {
-				return new BasicModelEditPart(model, this); 
+				switch (BasicModel(model).type) {
+					case BasicModel.NODE:
+						return new BasicModelEditPart(model, this);
+					case BasicModel.CONNECTION_LABEL:
+						return new BasicConnectionLabelEditPart(model, this);	
+				}				
 			} else if (model is BasicConnection) {
 				return new BasicConnectionEditPart(model, this);
-			} else {
-				return null;
-			}
+			} 
+			return null;			
 		}
 		
 		override public function getEditPartFactory():IEditPartFactory {
@@ -57,6 +63,7 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 		
 		public function fillCreateRelationContextMenu(menu:FlowerContextMenu):void {
 			menu.addActionEntryIfVisible(createBasicConnectionAction);
+			menu.addActionEntryIfVisible(createBasicConnectionWithLabelAction);
 		}
 		
 		public function fillContextMenu(contextMenu:FlowerContextMenu):void {

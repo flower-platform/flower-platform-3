@@ -1,4 +1,4 @@
-package com.crispico.flower.flexdiagram.samples.basic.old_impl {
+package com.crispico.flower.flexdiagram.samples.basic.editpart{
 	import com.crispico.flower.flexdiagram.AbsolutePositionEditPartUtils;
 	import com.crispico.flower.flexdiagram.DiagramViewer;
 	import com.crispico.flower.flexdiagram.EditPart;
@@ -6,6 +6,7 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 	import com.crispico.flower.flexdiagram.IConnectableEditPart;
 	import com.crispico.flower.flexdiagram.IFigure;
 	import com.crispico.flower.flexdiagram.event.BoundsRectChangedEvent;
+	import com.crispico.flower.flexdiagram.samples.basic.figure.BasicModelFigure;
 	import com.crispico.flower.flexdiagram.samples.basic.model.BasicConnection;
 	import com.crispico.flower.flexdiagram.samples.basic.model.BasicModel;
 	import com.crispico.flower.flexdiagram.ui.AbsolutePositionSelectionAnchors;
@@ -14,12 +15,9 @@ package com.crispico.flower.flexdiagram.samples.basic.old_impl {
 	import com.crispico.flower.flexdiagram.ui.ResizeAnchor;
 	
 	import flash.display.DisplayObject;
-	import flash.display.DisplayObjectContainer;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Alert;
 	import mx.core.IVisualElementContainer;
-	import mx.core.UIComponent;
 	import mx.events.PropertyChangeEvent;
 	
 	public class BasicModelEditPart extends EditPart implements IAbsolutePositionEditPart, IConnectableEditPart {

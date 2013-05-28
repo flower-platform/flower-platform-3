@@ -1,4 +1,4 @@
-package com.crispico.flower.flexdiagram.samples.basic.old_impl {
+package com.crispico.flower.flexdiagram.samples.basic.editpart {
 	import com.crispico.flower.flexdiagram.AbsoluteLayoutEditPart;
 	import com.crispico.flower.flexdiagram.DiagramViewer;
 	import com.crispico.flower.flexdiagram.EditPart;
