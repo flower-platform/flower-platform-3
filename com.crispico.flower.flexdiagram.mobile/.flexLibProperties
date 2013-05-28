@@ -76,6 +76,12 @@
     <classEntry path="com.crispico.flower.flexdiagram.event.ToolEvent"/>
     <classEntry path="com.crispico.flower.flexdiagram.event.UpdateConnectionEndsEvent"/>
     <classEntry path="com.crispico.flower.flexdiagram.event.ZoomPerformedEvent"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteGroup"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.scroller.InfiniteHScrollBar"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.scroller.InfiniteScroller"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.scroller.InfiniteScrollerSkin"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.scroller.InfiniteVScrollBar"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.scroller.layout.InfiniteGroupBasicLayout"/>
     <classEntry path="com.crispico.flower.flexdiagram.print.AbstractPrintExportManager"/>
     <classEntry path="com.crispico.flower.flexdiagram.print.DiagramIconsListener"/>
     <classEntry path="com.crispico.flower.flexdiagram.print.DiagramScaleListener"/>
@@ -113,6 +119,7 @@
     <classEntry path="com.crispico.flower.flexdiagram.ui.ResizeAnchor"/>
     <classEntry path="com.crispico.flower.flexdiagram.ui.ZoomEffectRectangle"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.FlowerArrayCollection"/>
+    <classEntry path="com.crispico.flower.flexdiagram.util.FlowerLoaderUtil"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.common.BitmapContainer"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.common.ButtonUtils"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.common.FlowerButton"/>
@@ -138,7 +145,6 @@
     <classEntry path="com.crispico.flower.flexdiagram.util.treegrid.FlowerTreeGridColumn"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.treegrid.FlowerTreeGridItemRenderer"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.treegrid.FlowerTreeGridListData"/>
-    <classEntry path="com.crispico.flower.flexdiagram.util.FlowerLoaderUtil"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
