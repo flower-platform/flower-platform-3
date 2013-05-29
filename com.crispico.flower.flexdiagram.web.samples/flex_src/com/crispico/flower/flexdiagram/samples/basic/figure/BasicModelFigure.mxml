@@ -28,22 +28,18 @@
 				return String("http://wwwimages.adobe.com/include/style/default/SiteHeader/info.png");
 			}
 			
-			protected function item_doubleClickHandler(event:MouseEvent):void {
-				item.startEditing();
-			}
-			
 		]]>
 	</fx:Script>
 	
 	
-	<s:Rect width="100%" height="100%">
+	<s:Rect width="100%" height="100%" id="rect">
 		<s:fill><s:SolidColor color="#6688FF" /></s:fill>
 		<s:stroke>
 			<s:SolidColorStroke color="black" />
 		</s:stroke>
 	</s:Rect>
 	
-	<s:VGroup id="content" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
+	<s:VGroup id="content" horizontalAlign="center" verticalAlign="middle">
 		<figure:GeneralItemRenderer id="item" labelField="name" iconFunction="getImage" verticalAlign="middle" />
 	</s:VGroup>
 	

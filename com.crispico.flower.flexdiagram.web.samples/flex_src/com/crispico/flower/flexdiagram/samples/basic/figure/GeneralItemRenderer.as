@@ -18,37 +18,7 @@ package com.crispico.flower.flexdiagram.samples.basic.figure {
 			// used only for web app
 			minHeight = 0;			
 		}
-		
-		override protected function createLabelDisplay():void {
-			super.createLabelDisplay();
-			labelDisplay.type = TextFieldType.INPUT;
-			labelDisplay.wordWrap = true;
-			
-			labelDisplay.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler1);
-			labelDisplay.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickHandler);
-		}
-		
-		private function keyDownHandler1(event:KeyboardEvent):void {
-			if (event.charCode == Keyboard.ENTER) {
-				endEditing();
-				data[labelField] = labelDisplay.text;
-			}
-		}
-		
-		private function doubleClickHandler(event:MouseEvent):void {
-			startEditing();
-		}
-		
-		public function startEditing():void {
-			labelDisplay.editable = true;			
-			labelDisplay.border = true;
-		}
-		
-		public function endEditing():void {
-			labelDisplay.editable = false;			
-			labelDisplay.border = false;
-		}
-		
+	
 		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {	
 //			Example setting the bottom border 
 //			var bottomSeparatorColor:uint;

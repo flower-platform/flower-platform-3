@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:flexdiagram="com.crispico.flower.flexdiagram.*" addedToStage="creationCompleteHandler()" xmlns:common="com.crispico.flower.flexdiagram.util.common.*">
-	<mx:Script>
+<s:HGroup xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  
+		  xmlns:flexdiagram="com.crispico.flower.flexdiagram.*" addedToStage="creationCompleteHandler()" xmlns:common="com.crispico.flower.flexdiagram.util.common.*" xmlns:figure="com.crispico.flower.flexdiagram.samples.basic.figure.*">
+	<fx:Script>
 		<![CDATA[
+			import com.crispico.flower.flexdiagram.EditPart;
 			import com.crispico.flower.flexdiagram.samples.basic.editpart.Viewer;
 			import com.crispico.flower.flexdiagram.samples.basic.model.BasicConnection;
 			import com.crispico.flower.flexdiagram.samples.basic.model.BasicModel;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.CollectionEvent;
-
+			import mx.events.FlexEvent;
+			
 			private var rootModel:ArrayCollection = new ArrayCollection();
 			
 			private var viewer:Viewer;
@@ -26,7 +31,7 @@
 				model.width = 100;
 				model.height = 100;
 				rootModel.addItem(model);
-
+				
 				model = new BasicModel();
 				model.name = "Model2";
 				model.x = 220;
@@ -51,6 +56,7 @@
 			}
 			
 			private function selectionChangeHandler(event:Event):void {
+				trace(rootFigure.contentHeight);
 				if (viewer.getSelectedElements().length == 0) {
 					deleteButton.enabled = false;
 					selectionLabel.text = "No selection";
@@ -67,58 +73,66 @@
 			}
 			
 		]]>
-	</mx:Script>
+	</fx:Script>
 	
-	<mx:Binding source="modelName.text" destination="selectedModel.name"/>
-	<mx:Binding source="parseInt(modelX.text)" destination="selectedModel.x"/>
-	<mx:Binding source="parseInt(modelY.text)" destination="selectedModel.y"/>
-	<mx:Binding source="parseInt(modelWidth.text)" destination="selectedModel.width"/>
-	<mx:Binding source="parseInt(modelHeight.text)" destination="selectedModel.height"/>
+	<fx:Binding source="modelName.text" destination="selectedModel.name"/>
+	<fx:Binding source="parseInt(modelX.text)" destination="selectedModel.x"/>
+	<fx:Binding source="parseInt(modelY.text)" destination="selectedModel.y"/>
+	<fx:Binding source="parseInt(modelWidth.text)" destination="selectedModel.width"/>
+	<fx:Binding source="parseInt(modelHeight.text)" destination="selectedModel.height"/>
 	
-	<mx:Panel width="200" height="100%" title="Selection">
-		<mx:VBox width="100%">
-			<mx:Label id="selectionLabel"/>
-			<mx:Form width="100%" enabled="{selectedModel != null}">
-				<mx:FormItem label="Name" width="100%">
-					<mx:TextInput id="modelName" width="100%" text="{selectedModel.name}"/>
-				</mx:FormItem>
-				<mx:FormItem label="X" width="100%">
-					<mx:TextInput id="modelX" width="100%" text="{selectedModel.x}"/>
-				</mx:FormItem>
-				<mx:FormItem label="Y" width="100%">
-					<mx:TextInput id="modelY" width="100%" text="{selectedModel.y}"/>
-				</mx:FormItem>
-				<mx:FormItem label="Width" width="100%">
-					<mx:TextInput id="modelWidth" width="100%" text="{selectedModel.width}"/>
-				</mx:FormItem>
-				<mx:FormItem label="Height" width="100%">
-					<mx:TextInput id="modelHeight" width="100%" text="{selectedModel.height}"/>
-				</mx:FormItem>
-			</mx:Form>
-			<mx:Button label="Add">
-				<mx:click>
-					<![CDATA[
-					var model:BasicModel = new BasicModel();
-					model.width = model.height = 10;
-					rootModel.addItem(model);
+	<s:Scroller width="100%" height="100%" verticalScrollPolicy="auto" >
+		<s:HGroup width="100%" height="100%">			
+			<s:Panel width="200" height="100%" title="Selection">
+				<s:VGroup width="100%">
+					<s:Label id="selectionLabel"/>
+					<s:Form width="100%" enabled="{selectedModel != null}">
+						<s:FormItem label="Name" width="100%">
+							<s:TextInput id="modelName" width="100%" text="{selectedModel.name}"/>
+						</s:FormItem>
+						<s:FormItem label="X" width="100%">
+							<s:TextInput id="modelX" width="100%" text="{selectedModel.x}"/>
+						</s:FormItem>
+						<s:FormItem label="Y" width="100%">
+							<s:TextInput id="modelY" width="100%" text="{selectedModel.y}"/>
+						</s:FormItem>
+						<s:FormItem label="Width" width="100%">
+							<s:TextInput id="modelWidth" width="100%" text="{selectedModel.width}"/>
+						</s:FormItem>
+						<s:FormItem label="Height" width="100%">
+							<s:TextInput id="modelHeight" width="100%" text="{selectedModel.height}"/>
+						</s:FormItem>
+					</s:Form>
 					
-					viewer.addToSelection(viewer.getModelToEditPartMap()[model], true);
-					]]>
-				</mx:click>
-			</mx:Button>
-			<mx:Button id="deleteButton" label="Delete">
-				<mx:click>
-					<![CDATA[
-						for (var i:int = viewer.getSelectedElements().length - 1; i >= 0; i--) {
+					<s:Button label="Add">
+						<s:click>
+							<![CDATA[
+							var model:BasicModel = new BasicModel();
+							model.width = model.height = 10;
+							rootModel.addItem(model);
+							
+							viewer.addToSelection(viewer.getModelToEditPartMap()[model], true);
+							]]>
+						</s:click>
+					</s:Button>
+					<s:Button id="deleteButton" label="Delete">
+						<s:click>
+							<![CDATA[
+							for (var i:int = viewer.getSelectedElements().length - 1; i >= 0; i--) {
 							rootModel.removeItemAt(rootModel.getItemIndex(viewer.getSelectedElements()[i].getModel()));
-						}
-					]]>
-				</mx:click>
-			</mx:Button>
-		</mx:VBox>
-	</mx:Panel>
-	<mx:Canvas width="100%" height="100%">
-		<common:BitmapContainer source="../assets/map.png"/>
-		<flexdiagram:RootFigure id="rootFigure" width="100%" height="100%" useGrid="false"/>
-	</mx:Canvas>
-</mx:HBox>
+							}
+							]]>
+						</s:click>
+					</s:Button>
+				</s:VGroup>
+			</s:Panel>
+			
+			<s:Scroller width="100%" height="100%" horizontalScrollPolicy="auto" >
+				<s:Group width="100%" height="100%">					
+					<flexdiagram:RootFigure id="rootFigure" width="100%" height="100%" useGrid="false"  />					
+				</s:Group>
+			</s:Scroller>
+		</s:HGroup>	
+	</s:Scroller>
+		
+</s:HGroup>
