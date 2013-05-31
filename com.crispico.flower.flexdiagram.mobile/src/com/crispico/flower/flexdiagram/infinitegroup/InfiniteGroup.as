@@ -1,54 +1,69 @@
 package com.crispico.flower.flexdiagram.infinitegroup {
+	import flash.events.Event;
+	import flash.geom.Rectangle;
+	
 	import spark.components.Group;
 	
 	/**
 	 * @author Cristina
 	 */ 
 	public class InfiniteGroup extends Group {
-		
-		/**
-		 * The current number of steps made to scroll up/left
-		 * after reaching the (0, 0) point (increments only for negative values).
-		 */ 
-		public var horizontalOffset:Number = 0;		
-		public var verticalOffset:Number = 0;
-		
-		/**
-		 * The maximum contentHeight/contentWidth for this group.
-		 * When set, the group will take them in consideration and not
-		 * the sizes given by its children.
-		 * 
-		 * @see setContentSize()
-		 */ 
-		public var maxContentWidth:Number = NaN;		
-		public var maxContentHeight:Number = NaN;
-		
-		/**
-		 * The minimum x/y coordonates for content group.
-		 * Used to set a limit to horizontal/vertical scroll left/top limit. 
-		 */ 
-		public var minContentX:Number = 0;		
-		public var minContentY:Number = 0;
 				
-		public function setContentArea(x:int, y:int, width:int, height:int):void {
-			this.minContentX = x;
-			this.minContentY = y;
-			
-			this.maxContentWidth = width;
-			this.maxContentHeight = height;
-			
-			invalidateDisplayList();			
+		private var _contentRect:Rectangle;
+				
+		/**
+		 * The group's coordonates and dimensions.
+		 */ 
+		[Bindable]
+		public function get contentRect():Rectangle {       
+			return _contentRect;
 		}
 		
-		override public function setContentSize(width:Number, height:Number):void {
-			if (!isNaN(maxContentWidth)) {
-				width = maxContentWidth;
-			}
-			if (!isNaN(maxContentHeight)) {
-				height = maxContentHeight;
-			}
-			super.setContentSize(width, height);
-		}		
-	}
+		public function set contentRect(value:Rectangle):void {
+			if (value == _contentRect)
+				return;
+			
+			_contentRect = value;
+		}
+		
+		private var _scrollByToolInProgress:Boolean = false;
+		
+		/**
+		 * Must be modified only when working on mobile.
+		 * If <code>true</code> (the scrolling will be done by move/resize tool),
+		 * scrollers will not be displayed. 
+		 * 
+		 * @see InfiniteScrollerLayout
+		 */ 
+		[Bindable]
+		public function get scrollByToolInProgress():Boolean {       
+			return _scrollByToolInProgress;
+		}
+		
+		public function set scrollByToolInProgress(value:Boolean):void {
+			if (value == _scrollByToolInProgress)
+				return;
+			
+			_scrollByToolInProgress = value;
+		}
+		
+		public function InfiniteGroup() {
+			super();
+			
+			layout = new InfiniteGroupBasicLayout();
+		}
 	
+		/**
+		 * Don't allow changing contentWidth/contentHeight.
+		 * 
+		 * <p>
+		 * The ones from <code>contentRect</code> must be used.
+		 */ 
+		override public function setContentSize(width:Number, height:Number):void {
+			width = _contentRect ? _contentRect.width : width;
+			height = _contentRect ? _contentRect.height : height;
+				
+			super.setContentSize(width, height);
+		}
+	}
 }

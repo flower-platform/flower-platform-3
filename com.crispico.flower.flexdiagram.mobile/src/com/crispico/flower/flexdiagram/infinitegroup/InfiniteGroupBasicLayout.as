@@ -1,6 +1,4 @@
-package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
-	import com.crispico.flower.flexdiagram.infinitegroup.InfiniteGroup;
-	
+package com.crispico.flower.flexdiagram.infinitegroup {
 	import flash.geom.Rectangle;
 	
 	import spark.components.supportClasses.GroupBase;
@@ -8,6 +6,11 @@ package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
 	import spark.layouts.BasicLayout;
 
 	/**
+	 * Represents the layout used by an InfiniteGroup.
+	 * 
+	 * <p>
+	 * Methods were modified to allow setting negative values to scrollers.
+	 * 
 	 * @author Cristina
 	 */ 
 	public class InfiniteGroupBasicLayout extends BasicLayout {
@@ -23,16 +26,21 @@ package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
 			
 			// Special case: if the scrollRect's origin is 0,0 and it's bigger 
 			// than the target, then there's no where to scroll to
-			//if ((scrollRect.x == 0) && (scrollRect.width >= g.contentWidth))
-			//	return 0;  
+			if ((scrollRect.x == 0) && (scrollRect.width >= g.contentWidth))
+				return 0;  
 			
 			// maxDelta is the horizontalScrollPosition delta required 
 			// to scroll to the END and minDelta scrolls to HOME. 
 			var maxDelta:Number = g.contentWidth - scrollRect.right;
-			var minDelta:Number = (scrollRect.left < 0) ? InfiniteGroup(g).horizontalOffset : -scrollRect.left;
+			if (maxDelta < 0) { 
+				maxDelta = 1;
+			}
+			var minDelta:Number = -scrollRect.left;
+			if (scrollRect.left <= 0) {
+				minDelta = -1;
+			}
 			var getElementBounds:Rectangle;
-			switch(navigationUnit)
-			{
+			switch(navigationUnit) {
 				case NavigationUnit.LEFT:
 				case NavigationUnit.PAGE_LEFT:
 					// Find the bounds of the first non-fully visible element
@@ -61,8 +69,7 @@ package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
 				return 0;
 			
 			var delta:Number = 0;
-			switch (navigationUnit)
-			{
+			switch (navigationUnit) {
 				case NavigationUnit.LEFT:
 					// Snap the left edge of element to the left edge of the scrollRect.
 					// The element is the the first non-fully visible element left of the scrollRect.
@@ -86,7 +93,7 @@ package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
 						delta = Math.max(getElementBounds.left - scrollRect.left, -scrollRect.width);  
 				}
 					break;
-				case NavigationUnit.PAGE_RIGHT:
+				case NavigationUnit.PAGE_RIGHT:	
 				{
 					// Align the left edge of the element to the left edge of the scrollRect.
 					// The element is the the first non-fully visible element right of the scrollRect.
@@ -105,7 +112,7 @@ package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
 			// by more than the scrollRect width at a time.
 			return Math.min(maxDelta, Math.max(minDelta, delta));
 		}
-		
+	
 		override public function getVerticalScrollPositionDelta(navigationUnit:uint):Number {
 			var g:GroupBase = target;
 			if (!g)
@@ -117,14 +124,20 @@ package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
 			
 			// Special case: if the scrollRect's origin is 0,0 and it's bigger 
 			// than the target, then there's no where to scroll to
-			if (scrollRect.y == 0 && (scrollRect.height >= g.contentHeight))
+			if ((scrollRect.y == 0) && (scrollRect.height >= g.contentHeight))
 				return 0;  
 			
 			// maxDelta is the horizontalScrollPosition delta required 
 			// to scroll to the END and minDelta scrolls to HOME. 
 			var maxDelta:Number = g.contentHeight - scrollRect.bottom;
-			var minDelta:Number = (scrollRect.top <= 0) ? (InfiniteGroup(g).verticalOffset == 0 ? -1 : InfiniteGroup(g).verticalOffset): -scrollRect.top;
-
+			if (maxDelta < 0) {
+				maxDelta = 1;
+			}
+			var minDelta:Number = -scrollRect.top;
+			if (scrollRect.top <= 0) {
+				minDelta = -1;
+			}
+			
 			var getElementBounds:Rectangle;
 			switch(navigationUnit)
 			{
@@ -196,8 +209,7 @@ package com.crispico.flower.flexdiagram.infinitegroup.scroller.layout {
 					break;
 			}
 			
-			return Math.min(maxDelta, Math.max(minDelta, delta));			
-		}	
-		
+			return Math.min(maxDelta, Math.max(minDelta, delta));
+		}
 	}
 }

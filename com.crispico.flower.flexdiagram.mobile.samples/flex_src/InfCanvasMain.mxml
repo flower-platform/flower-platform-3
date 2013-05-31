@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009"  applicationDPI="160"
+			   xmlns:s="library://ns.adobe.com/flex/spark" minWidth="50" minHeight="50"
+			   xmlns:infinitegroup="com.crispico.flower.flexdiagram.infinitegroup.*" xmlns:layout="com.crispico.flower.flexdiagram.util.layout.*" >
+	
+	<s:HGroup width="100%" height="100%">
+		<s:Panel>
+			<s:VGroup height="100%" width="200" >			
+				<s:VGroup width="100%" height="50%" gap="0">		
+					<s:Label text="contentRect:" />
+					<s:Form width="100%" >							
+						<s:FormItem label="X" width="100%">
+							<s:TextInput id="modelX" width="100%" />
+						</s:FormItem>
+						<s:FormItem label="Y" width="100%">
+							<s:TextInput id="modelY" width="100%" />
+						</s:FormItem>	
+						<s:FormItem label="W" width="100%">
+							<s:TextInput id="modelW" width="100%" />
+						</s:FormItem>
+						<s:FormItem label="H" width="100%">
+							<s:TextInput id="modelH" width="100%" />
+						</s:FormItem>
+					</s:Form>
+					<s:Button label="Add">
+						<s:click>
+							<![CDATA[							
+							vp.contentRect = new Rectangle(Number(modelX.text), Number(modelY.text), Number(modelW.text), Number(modelH.text));							
+							]]>
+						</s:click>
+					</s:Button>					
+				</s:VGroup>
+				
+				<s:CheckBox id="scrollByToolInProgress" label="scrollByToolInProgress" change="{vp.scrollByToolInProgress = scrollByToolInProgress.selected}" />
+				
+				<s:VGroup width="100%" height="50%" gap="0">
+					<s:Spacer height="20" />
+					<s:Label text="add button at (x,y):" />
+					<s:Form width="100%">							
+						<s:FormItem label="X" width="100%">
+							<s:TextInput id="btnX" width="100%" />
+						</s:FormItem>
+						<s:FormItem label="Y" width="100%">
+							<s:TextInput id="btnY" width="100%" />
+						</s:FormItem>						
+					</s:Form>
+					<s:Button label="Add">
+						<s:click>
+							<![CDATA[		
+							var btn:Button = new Button();
+							btn.x = Number(btnX.text);
+							btn.y = Number(btnY.text);
+							btn.width = 100;
+							btn.height = 100;
+							
+							vp.addElement(btn);
+							]]>
+						</s:click>
+					</s:Button>
+				</s:VGroup>
+				
+				<s:VGroup left="140" top="30" gap="0">
+					<s:Label text="group.contentWidth = {vp.contentWidth}"/>
+					<s:Label text="group.contentHeight = {vp.contentHeight}"/>
+					<s:Label text="group.x = {vp.x}"/>
+					<s:Label text="group.y = {vp.y}"/>
+					<s:Label text="group.hPos = {vp.horizontalScrollPosition}"/>
+					<s:Label text="group.vPos = {vp.verticalScrollPosition}"/>
+				</s:VGroup>
+			</s:VGroup>
+			
+		</s:Panel>
+		
+		<infinitegroup:InfiniteScroller id="scr" width="500" height="500" >
+			<infinitegroup:InfiniteGroup id="vp" width="100%" height="100%" />
+		</infinitegroup:InfiniteScroller>
+		
+	</s:HGroup>	
+</s:Application>
