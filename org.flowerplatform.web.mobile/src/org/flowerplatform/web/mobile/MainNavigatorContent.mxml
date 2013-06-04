@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristian Spiescu
+-->
+<fx:Object xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		   xmlns:s="library://ns.adobe.com/flex/spark">
+	<fx:Declarations>
+		<fx:Array id="navigatorContent">
+			<s:Button label="Back">
+				<s:click>
+					<![CDATA[
+						navigator.popView();
+					]]>
+				</s:click>
+			</s:Button>
+		</fx:Array>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import spark.components.ViewNavigator;
+			
+			public var navigator:ViewNavigator;
+		]]>
+	</fx:Script>
+</fx:Object>

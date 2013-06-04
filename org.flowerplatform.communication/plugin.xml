@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="servlet" name="servlet" schema="schema/servlet.exsd"/>
+   <extension
+         point="org.flowerplatform.communication.servlet">
+      <servlet
+            mappingEvaluator="org.flowerplatform.communication.public_resources.PublicResourcesMappingEvaluator"
+            priority="100"
+            servlet="org.flowerplatform.communication.public_resources.PublicResourcesServlet">
+      </servlet>
+   </extension>
+
+</plugin>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristian Spiescu
+-->
+<s:View creationComplete="creationCompleteHandler()" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="SplitView" xmlns:mobile="org.flowerplatform.web.mobile.*">
+	<fx:Declarations>
+		<mobile:MainNavigatorContent id="mainNavigatorContent" navigator="{navigator}"/>
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			import mx.core.IVisualElement;
+			
+			private var _oneViewMode:Boolean = true;
+			
+			private var _oneViewModeLeftViewActive:Boolean = true;
+			
+			public var leftAreaPercentWidth:int = 30;
+			
+			public var leftComponents:ArrayList = new ArrayList();
+			
+			public var rightComponents:ArrayList = new ArrayList();
+			
+			private var _leftActiveComponent:IVisualElement;
+			
+			private var _rightActiveComponent:IVisualElement;
+
+			public function get leftActiveComponent():IVisualElement {
+				return _leftActiveComponent;
+			}
+
+			public function set leftActiveComponent(value:IVisualElement):void {
+				_leftActiveComponent = value;
+				rearrangeLayout();
+			}
+
+			public function get rightActiveComponent():IVisualElement {
+				return _rightActiveComponent;
+			}
+
+			public function set rightActiveComponent(value:IVisualElement):void {
+				_rightActiveComponent = value;
+				rearrangeLayout();
+			}
+
+			[Bindable]
+			public function get oneViewMode():Boolean {
+				return _oneViewMode;
+			}
+
+			public function set oneViewMode(value:Boolean):void {
+				_oneViewMode = value;
+				rearrangeLayout();
+			}
+			
+			[Bindable]
+			public function get oneViewModeLeftViewActive():Boolean {
+				return _oneViewModeLeftViewActive;
+			}
+			
+			public function set oneViewModeLeftViewActive(value:Boolean):void {
+				_oneViewModeLeftViewActive = value;
+				rearrangeLayout();
+			}
+			
+			protected function rearrangeLayout():void {
+				this.removeAllElements();
+				if (oneViewMode) {
+					// one view
+					if (oneViewModeLeftViewActive) {
+						// one view / left
+						if (leftActiveComponent != null) {
+							addElement(leftActiveComponent);
+							leftActiveComponent.percentHeight = 100;
+							leftActiveComponent.percentWidth = 100;
+						}
+					} else {
+						// one view / right
+						if (rightActiveComponent != null) {
+							addElement(rightActiveComponent);
+							rightActiveComponent.percentHeight = 100;
+							rightActiveComponent.percentWidth = 100;
+						}
+					}
+				} else {
+					// 2 views
+					if (leftActiveComponent != null) {
+						addElement(leftActiveComponent);
+						leftActiveComponent.percentHeight = 100;
+						leftActiveComponent.percentWidth = leftAreaPercentWidth;
+					}
+					if (rightActiveComponent != null) {
+						addElement(rightActiveComponent);
+						rightActiveComponent.percentHeight = 100;
+						rightActiveComponent.percentWidth = 100;
+					}					
+				}
+			}
+
+			protected function creationCompleteHandler():void {
+				navigationContent = mainNavigatorContent.navigatorContent.concat(navigationContent);
+				leftActiveComponent = new RecentActivityView();
+				rightActiveComponent = new Button();
+			}
+			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<s:navigationContent>
+		<s:Button id="switchLeftRight" label="Sw LR" visible="{oneViewMode}" includeInLayout="{switchLeftRight.visible}" click="oneViewModeLeftViewActive = !oneViewModeLeftViewActive"/>
+		<s:Button id="switch1" label="Sw 1" visible="{!oneViewMode}" includeInLayout="{switch1.visible}" click="oneViewMode = true"/>
+		<s:Button id="switch2" label="Sw 2" visible="{oneViewMode}" includeInLayout="{switch2.visible}" click="oneViewMode = false"/>
+	</s:navigationContent>
+</s:View>
