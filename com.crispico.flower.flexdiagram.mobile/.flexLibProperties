@@ -76,9 +76,11 @@
     <classEntry path="com.crispico.flower.flexdiagram.event.ToolEvent"/>
     <classEntry path="com.crispico.flower.flexdiagram.event.UpdateConnectionEndsEvent"/>
     <classEntry path="com.crispico.flower.flexdiagram.event.ZoomPerformedEvent"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.GoBackButton"/>
     <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteGroup"/>
     <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteHScrollBar"/>
     <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteScroller"/>
+    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteScrollerLayout"/>
     <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteScrollerSkin"/>
     <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteVScrollBar"/>
     <classEntry path="com.crispico.flower.flexdiagram.print.AbstractPrintExportManager"/>
@@ -103,6 +105,8 @@
     <classEntry path="com.crispico.flower.flexdiagram.toolbar.Toolbar"/>
     <classEntry path="com.crispico.flower.flexdiagram.toolbar.ToolbarButton"/>
     <classEntry path="com.crispico.flower.flexdiagram.toolbar.ToolbarButtonWithTool"/>
+    <classEntry path="com.crispico.flower.flexdiagram.tree.DummyData"/>
+    <classEntry path="com.crispico.flower.flexdiagram.tree.TreeNode"/>
     <classEntry path="com.crispico.flower.flexdiagram.ui.AbsolutePositionSelectionAnchors"/>
     <classEntry path="com.crispico.flower.flexdiagram.ui.AbstractSelectionAnchors"/>
     <classEntry path="com.crispico.flower.flexdiagram.ui.ConnectionEnd"/>
@@ -144,8 +148,10 @@
     <classEntry path="com.crispico.flower.flexdiagram.util.treegrid.FlowerTreeGridColumn"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.treegrid.FlowerTreeGridItemRenderer"/>
     <classEntry path="com.crispico.flower.flexdiagram.util.treegrid.FlowerTreeGridListData"/>
-    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.InfiniteScrollerLayout"/>
-    <classEntry path="com.crispico.flower.flexdiagram.infinitegroup.GoBackButton"/>
+    <classEntry path="com.crispico.flower.flexdiagram.tree.TreeListSkin"/>
+    <classEntry path="com.crispico.flower.flexdiagram.tree.TreeListDataGroup"/>
+    <classEntry path="com.crispico.flower.flexdiagram.tree.TreeList"/>
+    <classEntry path="com.crispico.flower.flexdiagram.tree.TreeListItemRenderer"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

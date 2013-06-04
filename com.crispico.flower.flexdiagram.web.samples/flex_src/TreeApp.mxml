@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="955" height="600" creationComplete="complete()" xmlns:tree="com.crispico.flower.flexdiagram.tree.*">
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.flexdiagram.tree.DummyData;
+			import com.crispico.flower.flexdiagram.tree.TreeListDataProvider;
+			import com.crispico.flower.flexdiagram.tree.TreeNode;
+			
+			import mx.collections.ArrayCollection;
+			
+			[Bindable] private var _list:TreeListDataProvider;
+			
+			private var root1:TreeNode;
+			
+			private function complete():void {
+				//construct an obj hierarchy
+				root1 = DummyData.getDummyHierarchy();
+				
+				//build flattened list given the root node
+				_list = new TreeListDataProvider(root1);
+			}
+			
+			protected function addClickHandler(event:MouseEvent):void {
+				var selectedNode:TreeNode = TreeNode(lst.selectedItem);
+							
+				var newNode:TreeNode = new TreeNode(selectedNode.id);
+				newNode.parent = selectedNode.parent;
+				var fred:TreeNode = new TreeNode(newNode.id + '1');
+				fred.parent = newNode;
+				var fade:TreeNode = new TreeNode(newNode.id + '2');
+				fade.parent = newNode;
+				var filthy:TreeNode = new TreeNode(newNode.id + '3');
+				filthy.parent = newNode;
+				newNode.children = new ArrayCollection([fred,fade,filthy]);
+				
+				_list.updateNode(selectedNode.getPathForNode(), newNode);
+				
+			}
+			
+			protected function add1000ClickHandler(event:MouseEvent):void {
+				var selectedNode:TreeNode = TreeNode(lst.selectedItem);
+				
+				var newNode:TreeNode = new TreeNode(selectedNode.id);
+				newNode.parent = selectedNode.parent;
+				for (var i:int = 1; i <= 100; i++) {
+					var child:TreeNode = new TreeNode(newNode.id + i);
+					child.parent = newNode;
+					newNode.children.addItem(child);
+				}
+				
+				_list.updateNode(selectedNode.getPathForNode(), newNode);
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<s:VGroup left="8" right="8" top="8" bottom="8" gap="10">
+		<s:HGroup>
+			<s:Button label="Add" click="addClickHandler(event)" />
+			<s:Button label="Add 1000" click="add1000ClickHandler(event)" />
+			
+		</s:HGroup>
+		
+		<tree:TreeList id="lst" width="100%" height="100%" useVirtualLayout="true"
+				dataProvider="{_list}" 
+				/>
+		
+		<s:Label width="100%" styleName="dbg"
+				 text="{(lst.selectedIndex == -1 ? '&lt;none&gt;' : (lst.selectedItem as TreeNode).name)}" />
+	</s:VGroup>
+</s:Application>

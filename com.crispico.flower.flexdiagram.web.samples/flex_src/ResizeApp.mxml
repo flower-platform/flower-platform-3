@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:flexdiagram="com.crispico.flower.flexdiagram.*"
+			   creationComplete="application1_creationCompleteHandler(event)">	
+	<s:layout>
+		<s:VerticalLayout gap="10" />
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.ResizeEvent;
+			
+			import spark.components.BorderContainer;
+			import spark.components.Button;
+						
+			protected function clickHandler(event:MouseEvent):void {
+				var child:spark.components.Button = new spark.components.Button();
+				child.label = "Loooooooooooooog Label";
+				
+				container.addElement(child);
+			}
+			
+			protected function application1_creationCompleteHandler(event:FlexEvent):void {
+
+			}
+			
+			protected function container_resizeHandler(event:ResizeEvent):void
+			{
+				trace(event.oldWidth);
+			}
+			
+		]]>
+	</fx:Script>
+					
+	<s:Button label="Add Button" click="clickHandler(event)" />	
+	<s:VGroup id="container" resize="container_resizeHandler(event)" />		
+	
+</s:Application>
