@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Web
+Bundle-SymbolicName: org.flowerplatform.web;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.flowerplatform.web.WebPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.flowerplatform.common,
+ org.flowerplatform.communication
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: javax.servlet,
+ javax.servlet.http
