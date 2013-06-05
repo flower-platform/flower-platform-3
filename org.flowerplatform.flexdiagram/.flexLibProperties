@@ -19,6 +19,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.util.ParentAwareArrayList"/>
     <classEntry path="org.flowerplatform.flexdiagram.renderer.IAbsoluteLayoutRenderer"/>
     <classEntry path="org.flowerplatform.flexdiagram.renderer.DiagramRenderer"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.selection.ISelectionController"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
