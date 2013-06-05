@@ -14,9 +14,8 @@ package com.crispico.flower.flexdiagram.tree {
 		
 		public var parent:TreeNode;
 		public var children:ArrayCollection;
-		
 		public var hasChildren:Boolean;
-		
+				
 		public function TreeNode(name:String = '') {
 			id = name;
 			this.name = name;

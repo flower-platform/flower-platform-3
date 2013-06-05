@@ -16,6 +16,7 @@ package com.crispico.flower.flexdiagram.tree
 	import spark.components.Group;
 	import spark.components.IItemRenderer;
 	import spark.components.IconItemRenderer;
+	import spark.components.Image;
 	import spark.components.LabelItemRenderer;
 	import spark.components.List;
 	import spark.components.supportClasses.InteractionState;
@@ -50,7 +51,10 @@ package com.crispico.flower.flexdiagram.tree
 			labelField = "name";
 			
 			// only for web
-			//minHeight = 22;					
+			//minHeight = 22;	
+			
+			doubleClickEnabled = true;
+			addEventListener(MouseEvent.DOUBLE_CLICK, expandedIconDisplayClickHandler);
 		}
 		
 		private function get treeListDataProvider():TreeListDataProvider {
@@ -61,11 +65,7 @@ package com.crispico.flower.flexdiagram.tree
 		private function get treeNode():TreeNode {
 			return TreeNode(data);
 		}
-		
-		private function hasChildren():Boolean {			
-			return treeNode.children != null && treeNode.children.length > 0;
-		}
-		
+				
 		private function get nestingLevel():int {			
 			return treeListDataProvider.getItemDepth(treeNode);
 		}
@@ -73,18 +73,28 @@ package com.crispico.flower.flexdiagram.tree
 		protected override function createChildren():void {
 			super.createChildren();
 			
-			expandIconDisplay = new BitmapImage();
-
+			// create BitmapImage container
 			var imageContainer:Group = new Group();
 			imageContainer.width = 16;
 			imageContainer.height = 16;
 			addChildAt(imageContainer, 0);
 			
+			// create BitmapImage
+			expandIconDisplay = new BitmapImage();
+			// set to temporary emded icon in order to set width/height
+			expandIconDisplay.source = _iconExpanded;
 			imageContainer.addElement(expandIconDisplay);		
-			
+						
+			// expandIcon position is set later because we must know its exact width/height
+			imageContainer.callLater(setExpandIconDisplayPosition, [imageContainer.width, imageContainer.height]);
+						
 			imageContainer.addEventListener(MouseEvent.CLICK, expandedIconDisplayClickHandler);
 		}
 			
+		private function setExpandIconDisplayPosition(width:Number, heigth:Number):void {
+			setElementPosition(expandIconDisplay, width/2 - expandIconDisplay.measuredWidth/2, heigth/2 - expandIconDisplay.measuredHeight/2);
+		}
+		
 		protected function expandedIconDisplayClickHandler(event:MouseEvent):void {
 			if (treeListDataProvider.isItemOpen(treeNode)) {
 				treeListDataProvider.closeItem(treeNode);
@@ -97,7 +107,7 @@ package com.crispico.flower.flexdiagram.tree
 		override protected function layoutContents(unscaledWidth:Number, unscaledHeight:Number):void {	
 			// no need to call super.layoutContents() since we're changing how it happens here
 			
-			if (!hasChildren()) {
+			if (!treeNode.hasChildren) {
 				expandIconDisplay.source = null;
 			} else if (treeListDataProvider.isItemOpen(treeNode)) {
 				expandIconDisplay.source = _iconExpanded;

@@ -20,10 +20,10 @@ package com.crispico.flower.flexdiagram.tree {
 			_openList = [];
 			_depthMap = {};
 			
-			computeDepthMap(_root, 0);
+			computeDepthMap(_root, -1);
 			reset();
 		}
-		
+			
 		public function reset(openList:Array = null):void {
 			_openList = (openList == null ? [] : openList);
 			var a:Array = [];
@@ -48,7 +48,10 @@ package com.crispico.flower.flexdiagram.tree {
 			return (_openList.indexOf(obj.id) != -1);
 		}
 		
-		public function openItem(obj:TreeNode):void {			
+		public function openItem(obj:TreeNode):void {
+			if (!obj.hasChildren) {
+				return;
+			}
 			_openList.push(obj.id);
 			var a:Array = [];
 			addItemToList(obj, a);

@@ -34,6 +34,7 @@
 				var filthy:TreeNode = new TreeNode(newNode.id + '3');
 				filthy.parent = newNode;
 				newNode.children = new ArrayCollection([fred,fade,filthy]);
+				newNode.hasChildren = true;
 				
 				_list.updateNode(selectedNode.getPathForNode(), newNode);
 				
@@ -49,7 +50,7 @@
 					child.parent = newNode;
 					newNode.children.addItem(child);
 				}
-				
+				newNode.hasChildren = true;
 				_list.updateNode(selectedNode.getPathForNode(), newNode);
 				
 			}

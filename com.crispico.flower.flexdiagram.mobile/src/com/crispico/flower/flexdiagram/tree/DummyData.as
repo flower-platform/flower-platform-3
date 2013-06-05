@@ -16,6 +16,7 @@ package com.crispico.flower.flexdiagram.tree {
 			var bolts:TreeNode = new TreeNode('bolts');	
 			bolts.parent = root;
 			root.children = new ArrayCollection([foo,bar,baz,bolts]);
+			root.hasChildren = true;
 			
 			var fred:TreeNode = new TreeNode('fred');
 			fred.parent = foo;
@@ -24,6 +25,7 @@ package com.crispico.flower.flexdiagram.tree {
 			var filthy:TreeNode = new TreeNode('filthy');
 			filthy.parent = foo;
 			foo.children = new ArrayCollection([fred,fade,filthy]);
+			foo.hasChildren = true;
 			
 			var box:TreeNode = new TreeNode('box');
 			box.parent = bar;
@@ -40,6 +42,7 @@ package com.crispico.flower.flexdiagram.tree {
 			var bloodletting:TreeNode = new TreeNode('bloodletting');
 			bloodletting.parent = bar;
 			bar.children = new ArrayCollection([box,bushel,blossom,brotwurst,bundle,bombshell,bloodletting]);
+			bar.hasChildren = true;
 			
 			var red:TreeNode = new TreeNode('red');
 			red.parent = fred;
@@ -48,6 +51,7 @@ package com.crispico.flower.flexdiagram.tree {
 			var blue:TreeNode = new TreeNode('blue');
 			blue.parent = fred;
 			fred.children = new ArrayCollection([red,green,blue]);
+			fred.hasChildren = true;
 			
 			var lily:TreeNode = new TreeNode('lily');
 			lily.parent = blossom;
@@ -56,7 +60,8 @@ package com.crispico.flower.flexdiagram.tree {
 			var pansy:TreeNode = new TreeNode('pansy');	
 			pansy.parent = blossom;
 			blossom.children = new ArrayCollection([lily,lilac,pansy]);
-						
+			blossom.hasChildren = true;
+			
 			return root;
 		}
 	}
