@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Communication
+Bundle-SymbolicName: org.flowerplatform.communication;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.flowerplatform.communication.CommunicationPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.flowerplatform.common
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Import-Package: javax.servlet,
+ javax.servlet.http
+Export-Package: org.flowerplatform.communication

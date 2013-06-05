@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.SamplesDiagramShell"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelAbsoluteLayoutRectangleController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelRendererController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.renderer.BasicModelRendererWithChildren"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.ModelPopulator"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.renderer.SubModelIconItemRenderer"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.IModelHolder"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
