@@ -1,8 +1,9 @@
 package org.flowerplatform.flexdiagram.controller {
-	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
-	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.IModelExtraInfoController;
+	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
+	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
+	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -14,6 +15,7 @@ package org.flowerplatform.flexdiagram.controller {
 		public var modelChildrenController:IModelChildrenController;
 		public var absoluteLayoutRectangleController:IAbsoluteLayoutRectangleController;
 		public var rendererController:IRendererController;
+		public var selectionController:ISelectionController;
 		
 		public function getVisualChildrenController(model:Object):IVisualChildrenController {
 			return visualChildrenController;
@@ -33,6 +35,10 @@ package org.flowerplatform.flexdiagram.controller {
 		
 		public function getRendererController(model:Object):IRendererController {
 			return rendererController;
+		}
+		
+		public function getSelectionController(model:Object):ISelectionController {
+			return selectionController;
 		}
 		
 	}
