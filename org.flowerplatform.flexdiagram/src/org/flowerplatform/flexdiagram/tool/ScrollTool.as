@@ -31,7 +31,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public function ScrollTool(diagramShell:DiagramShell) {
 			super(diagramShell);		
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, MouseEvent.MOUSE_DOWN);
+			WakeUpTool.wakeMeUpIfEventOccurs(this, "mouseDrag");
 		}
 	
 		override public function activateAsMainTool():void {			

@@ -18,6 +18,7 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
+	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.Tool;
 	import org.flowerplatform.flexdiagram.tool.WakeUpTool;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
@@ -53,15 +54,11 @@ package org.flowerplatform.flexdiagram {
 		public function set rootModel(value:Object):void {
 			if (rootModel != null) {
 				unassociateModelFromRenderer(rootModel, IVisualElement(diagramRenderer), true);
-				
-				deactivateTools();
 			}
 			_rootModel = value;
 			if (rootModel != null) {
 				addInModelMapIfNecesssary(rootModel);
 				associateModelToRenderer(rootModel, IVisualElement(diagramRenderer), null);
-				
-				activateTools();
 			}
 		}
 		
@@ -105,15 +102,13 @@ package org.flowerplatform.flexdiagram {
 		public function set mainTool(value:Tool):void {
 			if (_mainTool != value) {
 				if (_mainTool != null) {
-					_mainTool.deactivateAsMainTool();
-					_mainTool.activateDozingMode();
+					_mainTool.deactivateAsMainTool();					
 				}
 				
 				_mainTool = value;
 				
 				if (mainTool != null) {
-					_mainTool.activateAsMainTool();
-					_mainTool.deactivateDozingMode();
+					_mainTool.activateAsMainTool();					
 				}
 			}
 		}
@@ -130,6 +125,7 @@ package org.flowerplatform.flexdiagram {
 			
 			tools.addItem(wakeUpTool);
 			tools.addItem(new ScrollTool(this));
+			tools.addItem(new SelectOnClickTool(this));
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {
@@ -256,12 +252,15 @@ package org.flowerplatform.flexdiagram {
 			var model:Object = event.items[0];
 			var selectionController:ISelectionController = getControllerProvider(model).getSelectionController(model);
 			
-			// set main selected item to last item from list
-			mainSelectedItem = selectedItems.length == 0 ? null : selectedItems.getItemAt(selectedItems.length  - 1);
-			
+			if (selectedItems.getItemIndex(mainSelectedItem) == -1) {
+				// set main selected item to last item from list
+				mainSelectedItem = selectedItems.length == 0 ? null : selectedItems.getItemAt(selectedItems.length  - 1);					
+			}
+		
 			if (selectionController != null) {				
 				if (event.kind == CollectionEventKind.ADD) {
-					selectionController.setSelectedState(model, getRendererForModel(model), true, _mainSelectedItem == model);					
+					mainSelectedItem = model;
+					//selectionController.setSelectedState(model, getRendererForModel(model), true, _mainSelectedItem == model);					
 				} else if (event.kind == CollectionEventKind.REMOVE ||  event.kind == CollectionEventKind.REPLACE) {
 					
 					if (event.kind == CollectionEventKind.REPLACE) {
@@ -272,17 +271,17 @@ package org.flowerplatform.flexdiagram {
 			}
 		}
 		
-		private function activateTools():void {
-			for each(var tool:Tool in tools) {
-				tool.activateDozingMode();
+		public function activateTools():void {
+			for (var i:int = 0; i < tools.length; i++) {
+				Tool(tools.getItemAt(i)).activateDozingMode();
 			}
 			
 			mainTool = _defaultTool;
-		}
-		
-		private function deactivateTools():void {
-			for each(var tool:Tool in tools) {
-				tool.deactivateDozingMode();
+		}		
+	
+		public function deactivateTools():void {
+			for (var i:int = 0; i < tools.length; i++) {
+				Tool(tools.getItemAt(i)).deactivateDozingMode();
 			}
 			mainTool = null;
 		}

@@ -1,14 +1,21 @@
 package org.flowerplatform.flexdiagram.renderer {
+	import flash.events.FocusEvent;
 	import flash.geom.Rectangle;
 	
-	import spark.components.DataRenderer;
-	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+	import mx.core.ContainerGlobals;
+	import mx.core.IFlexDisplayObject;
+	import mx.managers.IFocusManagerComponent;
+	import mx.managers.IFocusManagerContainer;
+	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+	
+	import spark.components.DataRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
 	 */
-	public class DiagramRenderer extends DataRenderer implements IDiagramShellAware, IVisualChildrenRefreshable, IAbsoluteLayoutRenderer {
+	public class DiagramRenderer extends DataRenderer implements IDiagramShellAware, IVisualChildrenRefreshable, IAbsoluteLayoutRenderer, IFocusManagerComponent {
 
 		private var _diagramShell:DiagramShell;
 		protected var visualChildrenController:IVisualChildrenController;
@@ -63,6 +70,18 @@ package org.flowerplatform.flexdiagram.renderer {
 				visualChildrenController.refreshVisualChildren(data);
 			}
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
-		}	
+		}
+		
+		override protected function focusInHandler(event:FocusEvent):void {
+			super.focusInHandler(event);
+			
+			diagramShell.activateTools();
+		}
+		
+		override protected function focusOutHandler(event:FocusEvent):void {
+			super.focusOutHandler(event);
+			
+			diagramShell.deactivateTools();
+		}
 	}
 }

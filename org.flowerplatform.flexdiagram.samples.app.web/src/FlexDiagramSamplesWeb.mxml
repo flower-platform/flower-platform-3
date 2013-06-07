@@ -43,7 +43,7 @@
 				</s:stroke>
 			</s:Rect>
 			<s:Scroller id="scroller" width="100%" height="100%">
-				<renderer:DiagramRenderer id="diagramRenderer" viewPortRectOffsetTowardOutside="-100">
+				<renderer:DiagramRenderer id="diagramRenderer" viewPortRectOffsetTowardOutside="-100" >
 					<s:Label x="9000" y="9000" text="end"/>
 				</renderer:DiagramRenderer>
 			</s:Scroller>

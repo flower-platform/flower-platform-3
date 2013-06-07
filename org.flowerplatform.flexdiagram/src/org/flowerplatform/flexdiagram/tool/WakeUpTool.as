@@ -15,6 +15,8 @@ package org.flowerplatform.flexdiagram.tool {
 				
 		private static var listeners:ArrayList = new ArrayList();
 		
+		private var myEventType:String;
+		
 		public function WakeUpTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 		}
@@ -29,15 +31,39 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		override public function activateAsMainTool():void {
-			EventDispatcher(diagramShell.diagramRenderer).addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			diagramRenderer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+			diagramRenderer.addEventListener(MouseEvent.CLICK, mouseClickHandler);
 		}
 		
 		override public function deactivateAsMainTool():void {			
-			EventDispatcher(diagramShell.diagramRenderer).removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			diagramRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);
 		}
 			
 		private function mouseDownHandler(event:MouseEvent):void {
-			var array:Array = filterAndSortListeners(event.type);
+			myEventType = "mouseDown";
+			trace("mouseDown");
+		}
+		
+		private function mouseMoveHandler(event:MouseEvent):void {
+			if (event.buttonDown) {
+				myEventType = "mouseDrag";
+				dispatchMyEvent("mouseDrag");
+			}
+			trace("mouseMove");
+		}
+		
+		private function mouseClickHandler(event:MouseEvent):void {
+			if (myEventType != "mouseDrag") {
+				dispatchMyEvent("mouseClick");
+			}
+			trace("mouseClick");
+		}
+		
+		private function dispatchMyEvent(eventType:String):void {
+			var array:Array = filterAndSortListeners(eventType);
 			
 			while (array.length != 0) {
 				var tool:IWakeUpableTool = array.pop().tool;

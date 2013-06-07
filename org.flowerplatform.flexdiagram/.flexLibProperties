@@ -23,6 +23,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.tool.ScrollTool"/>
     <classEntry path="org.flowerplatform.flexdiagram.tool.WakeUpTool"/>
     <classEntry path="org.flowerplatform.flexdiagram.util.ParentAwareArrayList"/>
+    <classEntry path="org.flowerplatform.flexdiagram.tool.SelectOnClickTool"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
