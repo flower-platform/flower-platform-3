@@ -1,6 +1,7 @@
 package org.flowerplatform.flexdiagram {
 	import flash.utils.Dictionary;
 	
+	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.core.IDataRenderer;
 	import mx.core.IInvalidating;
@@ -9,7 +10,6 @@ package org.flowerplatform.flexdiagram {
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.PropertyChangeEvent;
-	import mx.messaging.events.ChannelEvent;
 	
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
@@ -17,9 +17,10 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
+	import org.flowerplatform.flexdiagram.tool.ScrollTool;
+	import org.flowerplatform.flexdiagram.tool.Tool;
+	import org.flowerplatform.flexdiagram.tool.WakeUpTool;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
-	
-	import spark.components.supportClasses.ItemRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -35,6 +36,12 @@ package org.flowerplatform.flexdiagram {
 		private var _mainSelectedItem:Object;
 		private var _selectedItems:ParentAwareArrayList = new ParentAwareArrayList(null);
 		
+		private var _defaultTool:Tool;
+		
+		private var _mainTool:Tool;
+		
+		public var tools:ArrayList = new ArrayList();
+		
 		public function get modelToExtraInfoMap():Dictionary {
 			return _modelToExtraInfoMap;
 		}
@@ -46,11 +53,15 @@ package org.flowerplatform.flexdiagram {
 		public function set rootModel(value:Object):void {
 			if (rootModel != null) {
 				unassociateModelFromRenderer(rootModel, IVisualElement(diagramRenderer), true);
+				
+				deactivateTools();
 			}
 			_rootModel = value;
 			if (rootModel != null) {
 				addInModelMapIfNecesssary(rootModel);
 				associateModelToRenderer(rootModel, IVisualElement(diagramRenderer), null);
+				
+				activateTools();
 			}
 		}
 		
@@ -85,9 +96,40 @@ package org.flowerplatform.flexdiagram {
 		public function get mainSelectedItem():Object {			
 			return _mainSelectedItem;
 		}
+				
+		[Bindable]
+		public function get mainTool():Tool {			
+			return _mainTool;
+		}
+		
+		public function set mainTool(value:Tool):void {
+			if (_mainTool != value) {
+				if (_mainTool != null) {
+					_mainTool.deactivateAsMainTool();
+					_mainTool.activateDozingMode();
+				}
+				
+				_mainTool = value;
+				
+				if (mainTool != null) {
+					_mainTool.activateAsMainTool();
+					_mainTool.deactivateDozingMode();
+				}
+			}
+		}
+		
+		public function mainToolFinishedItsJob():void {
+			mainTool = _defaultTool;
+		}
 		
 		public function DiagramShell() {
 			selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangeHandler);
+			
+			var wakeUpTool:WakeUpTool = new WakeUpTool(this);
+			_defaultTool = wakeUpTool;
+			
+			tools.addItem(wakeUpTool);
+			tools.addItem(new ScrollTool(this));
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {
@@ -207,7 +249,7 @@ package org.flowerplatform.flexdiagram {
 			}
 			if (renderer is IVisualChildrenRefreshable) {
 				IVisualChildrenRefreshable(renderer).shouldRefreshVisualChildren = true;
-			}		
+			}
 		}
 		
 		private function selectionChangeHandler(event:CollectionEvent):void {
@@ -228,6 +270,22 @@ package org.flowerplatform.flexdiagram {
 					selectionController.setSelectedState(model, getRendererForModel(model), false, false);
 				}
 			}
-		}		
+		}
+		
+		private function activateTools():void {
+			for each(var tool:Tool in tools) {
+				tool.activateDozingMode();
+			}
+			
+			mainTool = _defaultTool;
+		}
+		
+		private function deactivateTools():void {
+			for each(var tool:Tool in tools) {
+				tool.deactivateDozingMode();
+			}
+			mainTool = null;
+		}
+		
 	}
 }

@@ -6,14 +6,15 @@
 		xmlns:s="library://ns.adobe.com/flex/spark" title="ModelEditorView" xmlns:samples="org.flowerplatform.flexdiagram.samples.*">
 	<fx:Script>
 		<![CDATA[
-			import org.flowerplatform.flexdiagram.samples.IModelHolder;
 			import mx.core.FlexGlobals;
+			
+			import org.flowerplatform.flexdiagram.samples.IModelHolder;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<s:Scroller width="100%" height="100%">
-		<samples:ModelEditor modelHolder="{IModelHolder(FlexGlobals.topLevelApplication)}"/>
+		<samples:ModelEditor modelHolder="{IModelHolder(FlexGlobals.topLevelApplication)}" diagramShell="{FlexGlobals.topLevelApplication.diagramView.diagramShell}"/>
 	</s:Scroller>
 </s:View>
