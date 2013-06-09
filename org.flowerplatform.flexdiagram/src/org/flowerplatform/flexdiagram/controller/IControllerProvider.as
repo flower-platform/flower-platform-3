@@ -16,5 +16,9 @@ package org.flowerplatform.flexdiagram.controller {
 		function getAbsoluteLayoutRectangleController(model:Object):IAbsoluteLayoutRectangleController;
 		function getRendererController(model:Object):IRendererController;
 		function getSelectionController(model:Object):ISelectionController;
+		
+		function getInplaceEditorController(model:Object):IInplaceEditorController;
+		function getResizeController(model:Object):IResizeController;
+		function getDragToCreateRelationController(model:Object):IDragToCreateRelationController;
 	}
 }

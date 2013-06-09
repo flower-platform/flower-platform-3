@@ -5,7 +5,7 @@ package org.flowerplatform.flexdiagram.tool {
 	 */ 
 	public interface IWakeUpableTool {	
 		
-		function wakeUp():Boolean;		
+		function wakeUp(eventType:String):Boolean;		
 	
 	}
 }

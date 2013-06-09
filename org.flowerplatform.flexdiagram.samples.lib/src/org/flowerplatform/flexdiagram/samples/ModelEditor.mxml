@@ -58,115 +58,117 @@
 	<fx:Binding source="diagramShell.mainTool" destination="mainTool"/>
 	<fx:Binding source="diagramShell.selectedItems" destination="selectedItems"/>
 	
-	<s:VGroup width="100%" height="100%">
-		<s:Label id="selectionLabel"/>
-		
-		<s:Form width="100%" enabled="{selectedModel != null}">
-			<s:FormItem label="Name" width="100%">
-				<s:TextInput id="modelName" width="100%" text="{selectedModel.name}"/>
-			</s:FormItem>
-			<s:FormItem label="X" width="100%">
-				<s:TextInput id="modelX" width="100%" text="{selectedModel.x}"/>
-			</s:FormItem>
-			<s:FormItem label="Y" width="100%">
-				<s:TextInput id="modelY" width="100%" text="{selectedModel.y}"/>
-			</s:FormItem>
-			<s:FormItem label="Width" width="100%">
-				<s:TextInput id="modelWidth" width="100%" text="{selectedModel.width}"/>
-			</s:FormItem>
-			<s:FormItem label="Height" width="100%">
-				<s:TextInput id="modelHeight" width="100%" text="{selectedModel.height}"/>
-			</s:FormItem>
-			<s:FormItem label="SubModel" width="100%">
-				<s:TextInput id="subModelName" width="100%" text="{selectedSubModel.name}"/>
-			</s:FormItem>
-		</s:Form>
-		<s:HGroup width="100%" height="100%">
-			<s:VGroup width="50%" height="100%">
-				<s:Label text="Models"/>
-				<s:HGroup width="100%" horizontalAlign="center">
-					<s:Button label="Add">
-						<s:click>
-							<![CDATA[
-							var model:BasicModel = new BasicModel();
-							model.x = model.y = 300;
-							model.width = model.height = 100;
-							modelHolder.rootModel.addItemAt(model, 0);
-							]]>
-						</s:click>
-					</s:Button>
-					<s:Button id="deleteButton" label="Delete" enabled="{list.selectedItem != null}">
-						<s:click>
-							<![CDATA[
-							modelHolder.rootModel.removeItem(selectedModel);
-							]]>
-						</s:click>
-					</s:Button>
-				</s:HGroup>
-				<s:List id="list" dataProvider="{modelHolder.rootModel}" width="100%" height="200"/>			
-			</s:VGroup>
-			<s:VGroup id="vg2" width="50%" height="100%">
-				<s:Label text="SubModels"/>
-				<s:HGroup width="100%" horizontalAlign="center">
-					<s:Button label="Add" enabled="{list.selectedItem != null}">
-						<s:click>
-							<![CDATA[
-							var submodel:BasicSubModel = new BasicSubModel();
-							submodel.name = "new";
-							selectedModel.subModels.addItemAt(submodel, 0);
-							]]>
-						</s:click>
-					</s:Button>
-					<s:Button label="Delete" enabled="{subModelsList.selectedItem != null}">
-						<s:click>
-							<![CDATA[
-							selectedModel.subModels.removeItem(selectedSubModel);
-							]]>
-						</s:click>
-					</s:Button>				
-				</s:HGroup>
-				<s:List id="subModelsList" dataProvider="{list.selectedItem.subModels}" width="100%" height="200"/>
-			</s:VGroup>
-		</s:HGroup>
-		<s:HGroup width="100%" height="100%">
-			<s:VGroup id="vg3" width="100%" height="100%">
-				<s:Label text="SelectedItems"/>
-				<s:HGroup width="100%">
-					<s:List id="selectedItemsList" dataProvider="{selectedItems}" width="100%" height="200"/>
-					<s:VGroup>
-						<s:Button label="Add Model" enabled="{list.selectedItem != null}">
+	<s:Scroller width="100%" height="100%" >
+		<s:VGroup width="100%" height="100%">
+			<s:Label id="selectionLabel"/>
+			
+			<s:Form width="100%" enabled="{selectedModel != null}">
+				<s:FormItem label="Name" width="100%">
+					<s:TextInput id="modelName" width="100%" text="{selectedModel.name}"/>
+				</s:FormItem>
+				<s:FormItem label="X" width="100%">
+					<s:TextInput id="modelX" width="100%" text="{selectedModel.x}"/>
+				</s:FormItem>
+				<s:FormItem label="Y" width="100%">
+					<s:TextInput id="modelY" width="100%" text="{selectedModel.y}"/>
+				</s:FormItem>
+				<s:FormItem label="Width" width="100%">
+					<s:TextInput id="modelWidth" width="100%" text="{selectedModel.width}"/>
+				</s:FormItem>
+				<s:FormItem label="Height" width="100%">
+					<s:TextInput id="modelHeight" width="100%" text="{selectedModel.height}"/>
+				</s:FormItem>
+				<s:FormItem label="SubModel" width="100%">
+					<s:TextInput id="subModelName" width="100%" text="{selectedSubModel.name}"/>
+				</s:FormItem>
+			</s:Form>
+			<s:HGroup width="100%" height="100%">
+				<s:VGroup width="50%" height="100%">
+					<s:Label text="Models"/>
+					<s:HGroup width="100%" horizontalAlign="center">
+						<s:Button label="Add">
 							<s:click>
-								<![CDATA[																	
-									diagramShell.selectedItems.addItem(list.selectedItem);
-								]]>
-							</s:click>
-						</s:Button>		
-						<s:Button label="Add SubModel" enabled="{list.selectedItem != null}">
-							<s:click>
-								<![CDATA[													
-									diagramShell.selectedItems.addItem(subModelsList.selectedItem);
-								]]>
-							</s:click>
-						</s:Button>	
-						<s:Button label="Remove" enabled="{list.selectedItem != null}">
-							<s:click>
-								<![CDATA[														
-									diagramShell.selectedItems.removeItem(selectedItemsList.selectedItem);
-								]]>
-							</s:click>
-						</s:Button>	
-						<s:Button label="Remove All" enabled="{list.selectedItem != null}">
-							<s:click>
-								<![CDATA[														
-								diagramShell.selectedItems.removeAll();
+								<![CDATA[
+								var model:BasicModel = new BasicModel();
+								model.x = model.y = 300;
+								model.width = model.height = 100;
+								modelHolder.rootModel.addItemAt(model, 0);
 								]]>
 							</s:click>
 						</s:Button>
-						<s:TextInput text="{mainTool}"/>
-					</s:VGroup>					
-				</s:HGroup>
-			</s:VGroup>
-		</s:HGroup>		
-	</s:VGroup>
-			
+						<s:Button id="deleteButton" label="Delete" enabled="{list.selectedItem != null}">
+							<s:click>
+								<![CDATA[
+								modelHolder.rootModel.removeItem(selectedModel);
+								]]>
+							</s:click>
+						</s:Button>
+					</s:HGroup>
+					<s:List id="list" dataProvider="{modelHolder.rootModel}" width="100%" height="200"/>			
+				</s:VGroup>
+				<s:VGroup id="vg2" width="50%" height="100%">
+					<s:Label text="SubModels"/>
+					<s:HGroup width="100%" horizontalAlign="center">
+						<s:Button label="Add" enabled="{list.selectedItem != null}">
+							<s:click>
+								<![CDATA[
+								var submodel:BasicSubModel = new BasicSubModel();
+								submodel.name = "new";
+								selectedModel.subModels.addItemAt(submodel, 0);
+								]]>
+							</s:click>
+						</s:Button>
+						<s:Button label="Delete" enabled="{subModelsList.selectedItem != null}">
+							<s:click>
+								<![CDATA[
+								selectedModel.subModels.removeItem(selectedSubModel);
+								]]>
+							</s:click>
+						</s:Button>				
+					</s:HGroup>
+					<s:List id="subModelsList" dataProvider="{list.selectedItem.subModels}" width="100%" height="200"/>
+				</s:VGroup>
+			</s:HGroup>
+			<s:HGroup width="100%" height="100%">
+				<s:VGroup id="vg3" width="100%" height="100%">
+					<s:Label text="SelectedItems"/>
+					<s:HGroup width="100%">
+						<s:List id="selectedItemsList" dataProvider="{selectedItems}" width="100%" height="200"/>
+						<s:VGroup>
+							<s:Button label="Add Model" enabled="{list.selectedItem != null}">
+								<s:click>
+									<![CDATA[																	
+									diagramShell.selectedItems.addItem(list.selectedItem);
+									]]>
+								</s:click>
+							</s:Button>		
+							<s:Button label="Add SubModel" enabled="{list.selectedItem != null}">
+								<s:click>
+									<![CDATA[													
+									diagramShell.selectedItems.addItem(subModelsList.selectedItem);
+									]]>
+								</s:click>
+							</s:Button>	
+							<s:Button label="Remove" enabled="{list.selectedItem != null}">
+								<s:click>
+									<![CDATA[														
+									diagramShell.selectedItems.removeItem(selectedItemsList.selectedItem);
+									]]>
+								</s:click>
+							</s:Button>	
+							<s:Button label="Remove All" enabled="{list.selectedItem != null}">
+								<s:click>
+									<![CDATA[														
+									diagramShell.selectedItems.removeAll();
+									]]>
+								</s:click>
+							</s:Button>
+							<s:TextInput text="{mainTool}"/>
+						</s:VGroup>					
+					</s:HGroup>
+				</s:VGroup>
+			</s:HGroup>		
+		</s:VGroup>		
+	</s:Scroller>
+	
 </s:Group>

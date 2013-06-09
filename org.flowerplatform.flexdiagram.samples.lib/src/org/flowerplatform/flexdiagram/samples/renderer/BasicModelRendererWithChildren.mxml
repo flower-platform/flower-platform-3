@@ -2,7 +2,7 @@
 <!---
 @author Cristian Spiescu
 --><s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
-	cacheAsBitmap="true"
+	cacheAsBitmap="true" minWidth="100" minHeight="100"
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" >

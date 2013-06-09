@@ -1,9 +1,14 @@
 package org.flowerplatform.flexdiagram.samples {
+	import flash.display.IDrawCommand;
+	
 	import mx.collections.ArrayList;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
+	import org.flowerplatform.flexdiagram.controller.IDragToCreateRelationController;
+	import org.flowerplatform.flexdiagram.controller.IInplaceEditorController;
+	import org.flowerplatform.flexdiagram.controller.IResizeController;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.model_children.ParentAwareArrayListModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -18,8 +23,11 @@ package org.flowerplatform.flexdiagram.samples {
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelAbsoluteLayoutRectangleController;
+	import org.flowerplatform.flexdiagram.samples.controller.BasicModelDragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelModelChildrenController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelRendererController;
+	import org.flowerplatform.flexdiagram.samples.controller.BasicModelResizeController;
+	import org.flowerplatform.flexdiagram.samples.controller.BasicSubModelInplaceEditorController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicSubModelSelectionController;
 	import org.flowerplatform.flexdiagram.samples.model.BasicModel;
 	import org.flowerplatform.flexdiagram.samples.model.BasicSubModel;
@@ -49,6 +57,10 @@ package org.flowerplatform.flexdiagram.samples {
 			
 		private var basicSubModelSelectionController:BasicSubModelSelectionController;
 		
+		private var basicSubModelInplaceEditorController:BasicSubModelInplaceEditorController;
+		private var basicModelResizeController:BasicModelResizeController;
+		private var basicModelDragToCreateRelationController:BasicModelDragToCreateRelationController;
+		
 		public function SamplesDiagramShell() {
 			lightweightModelExtraInfoController = new LightweightModelExtraInfoController(this);
 			dynamicModelExtraInfoController = new DynamicModelExtraInfoController(this);
@@ -67,6 +79,9 @@ package org.flowerplatform.flexdiagram.samples {
 			basicModelExtraInfoController = new AnchorsSelectionDynamicModelExtraInfoController(this, BasicModelAnchorsSelectionRenderer);
 			
 			basicSubModelSelectionController = new BasicSubModelSelectionController(this);
+			basicSubModelInplaceEditorController = new BasicSubModelInplaceEditorController(this);
+			basicModelResizeController = new BasicModelResizeController(this);
+			basicModelDragToCreateRelationController = new BasicModelDragToCreateRelationController(this);
 		}
 		
 		public function getAbsoluteLayoutRectangleController(model:Object):IAbsoluteLayoutRectangleController {
@@ -117,6 +132,27 @@ package org.flowerplatform.flexdiagram.samples {
 				return basicModelSelectionController;
 			} else if (model is BasicSubModel) {
 				return basicSubModelSelectionController;
+			}
+			return null;
+		}
+		
+		public function getInplaceEditorController(model:Object):IInplaceEditorController {
+			if (model is BasicSubModel) {
+				return basicSubModelInplaceEditorController;
+			}
+			return null;
+		}
+		
+		public function getResizeController(model:Object):IResizeController {
+			if (model is BasicModel) {
+				return basicModelResizeController;
+			}
+			return null;
+		}
+		
+		public function getDragToCreateRelationController(model:Object):IDragToCreateRelationController{
+			if (model is BasicModel) {
+				return basicModelDragToCreateRelationController;
 			}
 			return null;
 		}

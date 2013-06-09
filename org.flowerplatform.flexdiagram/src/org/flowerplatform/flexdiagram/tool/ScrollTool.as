@@ -25,18 +25,17 @@ package org.flowerplatform.flexdiagram.tool {
 		
 		[Embed(source="../icons/move_cursor.png")]
 		private var _moveCursor:Class;
-		
-		protected var initialPoint:Point = new Point();
-		
+				
 		public function ScrollTool(diagramShell:DiagramShell) {
 			super(diagramShell);		
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, "mouseDrag");
+			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG);
 		}
 	
-		override public function activateAsMainTool():void {			
-			initialPoint.x = diagramRenderer.stage.mouseX;
-			initialPoint.y = diagramRenderer.stage.mouseY;
+		override public function activateAsMainTool():void {
+			context = new Object();
+			context.initialX = diagramRenderer.stage.mouseX;
+			context.initialY = diagramRenderer.stage.mouseY;
 			
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
@@ -47,9 +46,12 @@ package org.flowerplatform.flexdiagram.tool {
 		override public function deactivateAsMainTool():void {			
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
+			
+			diagramRenderer.cursorManager.removeAllCursors();
+			context = null;
 		}
 			
-		public function wakeUp():Boolean {
+		public function wakeUp(eventType:String):Boolean {
 			return getRendererFromDisplayCoordinates() is DiagramRenderer;
 		}
 		
@@ -58,10 +60,10 @@ package org.flowerplatform.flexdiagram.tool {
 				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));
 				
 				if (inDiagramVisibleArea(mousePoint.x, mousePoint.y)) {
-					var deltaX:int = initialPoint.x - event.stageX;
-					var deltaY:int = initialPoint.y - event.stageY;				
-					initialPoint.x = event.stageX;
-					initialPoint.y = event.stageY;
+					var deltaX:int = context.initialX - event.stageX;
+					var deltaY:int = context.initialY - event.stageY;				
+					context.initialX = event.stageX;
+					context.initialY = event.stageY;
 					
 					scrollDiagram(deltaX, deltaY);
 				}		
@@ -70,8 +72,7 @@ package org.flowerplatform.flexdiagram.tool {
 			}
 		}
 		
-		private function mouseUpHandler(event:MouseEvent = null):void {
-			diagramRenderer.cursorManager.removeAllCursors();
+		private function mouseUpHandler(event:MouseEvent = null):void {			
 			diagramShell.mainToolFinishedItsJob();
 		}
 		

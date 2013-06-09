@@ -17,6 +17,9 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
+	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
+	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
+	import org.flowerplatform.flexdiagram.tool.ResizeTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.Tool;
@@ -126,6 +129,9 @@ package org.flowerplatform.flexdiagram {
 			tools.addItem(wakeUpTool);
 			tools.addItem(new ScrollTool(this));
 			tools.addItem(new SelectOnClickTool(this));
+			tools.addItem(new InplaceEditorTool(this));
+			tools.addItem(new ResizeTool(this));
+			tools.addItem(new DragToCreateRelationTool(this));
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {

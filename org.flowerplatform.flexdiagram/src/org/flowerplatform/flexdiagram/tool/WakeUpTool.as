@@ -13,6 +13,10 @@ package org.flowerplatform.flexdiagram.tool {
 	 */ 
 	public class WakeUpTool extends Tool {
 				
+		public static const NO_EVENT:String = "none";
+		public static const MOUSE_CLICK:String = "mouseClick";		
+		public static const MOUSE_DRAG:String = "mouseDrag";
+				
 		private static var listeners:ArrayList = new ArrayList();
 		
 		private var myEventType:String;
@@ -49,25 +53,25 @@ package org.flowerplatform.flexdiagram.tool {
 		
 		private function mouseMoveHandler(event:MouseEvent):void {
 			if (event.buttonDown) {
-				myEventType = "mouseDrag";
-				dispatchMyEvent("mouseDrag");
+				myEventType = MOUSE_DRAG;
+				dispatchMyEvent(myEventType);
 			}
 			trace("mouseMove");
 		}
 		
 		private function mouseClickHandler(event:MouseEvent):void {
-			if (myEventType != "mouseDrag") {
-				dispatchMyEvent("mouseClick");
+			if (myEventType != MOUSE_DRAG) {
+				dispatchMyEvent(MOUSE_CLICK);
 			}
 			trace("mouseClick");
 		}
-		
+				
 		private function dispatchMyEvent(eventType:String):void {
 			var array:Array = filterAndSortListeners(eventType);
 			
 			while (array.length != 0) {
 				var tool:IWakeUpableTool = array.pop().tool;
-				if (tool.wakeUp()) {
+				if (tool.wakeUp(eventType)) {
 					diagramShell.mainTool = Tool(tool);
 					break;
 				}

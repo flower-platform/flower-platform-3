@@ -20,6 +20,8 @@ package org.flowerplatform.flexdiagram.tool {
 		
 		protected var diagramShell:DiagramShell;
 		
+		protected var context:Object = new Object();
+		
 		public function Tool(diagramShell:DiagramShell) {
 			this.diagramShell = diagramShell;
 		}		

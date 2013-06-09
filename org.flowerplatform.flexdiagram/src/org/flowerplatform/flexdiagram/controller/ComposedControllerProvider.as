@@ -17,6 +17,10 @@ package org.flowerplatform.flexdiagram.controller {
 		public var rendererController:IRendererController;
 		public var selectionController:ISelectionController;
 		
+		public var inplaceEditorController:IInplaceEditorController;
+		public var resizeController:IResizeController;
+		public var dragToCreateRelationController:IDragToCreateRelationController;
+		
 		public function getVisualChildrenController(model:Object):IVisualChildrenController {
 			return visualChildrenController;
 		}
@@ -41,5 +45,16 @@ package org.flowerplatform.flexdiagram.controller {
 			return selectionController;
 		}
 		
+		public function getInplaceEditorController(model:Object):IInplaceEditorController {
+			return inplaceEditorController;
+		}
+		
+		public function getResizeController(model:Object):IResizeController {
+			return resizeController;
+		}
+		
+		public function getDragToCreateRelationController(model:Object):IDragToCreateRelationController {
+			return dragToCreateRelationController;
+		}
 	}
 }

@@ -24,6 +24,14 @@
     <classEntry path="org.flowerplatform.flexdiagram.tool.WakeUpTool"/>
     <classEntry path="org.flowerplatform.flexdiagram.util.ParentAwareArrayList"/>
     <classEntry path="org.flowerplatform.flexdiagram.tool.SelectOnClickTool"/>
+    <classEntry path="org.flowerplatform.flexdiagram.tool.InplaceEditorTool"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.IInplaceEditorController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.tool.ResizeTool"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.IResizeController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.renderer.selection.RelationAnchor"/>
+    <classEntry path="org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.IDragToCreateRelationController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.tool.DragTool"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
