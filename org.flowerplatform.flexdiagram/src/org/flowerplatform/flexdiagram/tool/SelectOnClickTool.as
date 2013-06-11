@@ -14,29 +14,52 @@ package org.flowerplatform.flexdiagram.tool {
 	
 	import spark.components.Application;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */ 
 	public class SelectOnClickTool extends Tool implements IWakeUpableTool {
+		
+		public static const ID:String = "SelectOnClickTool";
 		
 		public function SelectOnClickTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_CLICK);			
+			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN);	
+			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_UP);	
 		}
 		
-		public function wakeUp(eventType:String):Boolean {
-			var renderer:IVisualElement = getRendererFromDisplayCoordinates();					
-			return renderer != null;
+		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
+			context.ctrlPressed = ctrlPressed;
+			context.shiftPressed = shiftPressed;
+			var renderer:IVisualElement = getRendererFromDisplayCoordinates();	
+						
+			var model:Object;
+			
+			if (eventType == WakeUpTool.MOUSE_UP && !ctrlPressed && !shiftPressed) {
+				if (renderer is DiagramRenderer) {
+					return true;
+				}
+				if (renderer is IDataRenderer) {
+					model = IDataRenderer(renderer).data;
+					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
+						return (diagramShell.selectedItems.getItemIndex(model) != -1) && diagramShell.selectedItems.length > 1;
+					}				
+				}
+			} else if (eventType == WakeUpTool.MOUSE_DOWN) {
+				if (renderer is DiagramRenderer) {
+					return false;
+				}
+				if (renderer is IDataRenderer) {
+					model = IDataRenderer(renderer).data;
+					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
+						return (diagramShell.selectedItems.getItemIndex(model) == -1) || ctrlPressed || shiftPressed;
+					}				
+				}
+			}
+			
+			return false;
 		}
-		
-		override public function activateDozingMode():void {
-			diagramRenderer.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
-			diagramRenderer.stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
-		}
-		
-		override public function deactivateDozingMode():void {
-			diagramRenderer.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
-			diagramRenderer.stage.removeEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
-		}
-		
+			
 		override public function activateAsMainTool():void {			
 			var renderer:IDataRenderer = IDataRenderer(getRendererFromDisplayCoordinates());
 			if (renderer is DiagramRenderer) {
@@ -65,18 +88,10 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramShell.mainToolFinishedItsJob();
 		}
 		
-		override public function deactivateAsMainTool():void {			
+		override public function deactivateAsMainTool():void {
+			delete context.ctrlPressed;
+			delete context.shiftPressed;		
 		}
 		
-		private function keyDownHandler(event:KeyboardEvent):void {
-			context.ctrlPressed = event.ctrlKey;
-			context.shiftPressed = event.shiftKey;
-		}
-		
-		private function keyUpHandler(event:KeyboardEvent):void {
-			context.ctrlPressed = event.ctrlKey;
-			context.shiftPressed = event.shiftKey;
-		}
-	}
-	
+	}	
 }

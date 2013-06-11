@@ -6,22 +6,26 @@ package org.flowerplatform.flexdiagram.tool {
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.selection.AnchorsSelectionRenderer;
-	import org.flowerplatform.flexdiagram.renderer.selection.RelationAnchor;
+	import org.flowerplatform.flexdiagram.ui.RelationAnchor;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */ 
 	public class DragToCreateRelationTool extends Tool implements IWakeUpableTool {
 		
+		public static const ID:String = "DragToCreateRelationTool";
+				
 		public function DragToCreateRelationTool(diagramShell:DiagramShell)	{
 			super(diagramShell);
 			
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG, 1);
 		}
 		
-		public function wakeUp(eventType:String):Boolean {
+		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
 			return getRelationAnchorFromDisplayCoordinates() != null;
 		}
 		
-		override public function activateAsMainTool():void {
-			context = new Object();
+		override public function activateAsMainTool():void {			
 			var relationAnchor:RelationAnchor = getRelationAnchorFromDisplayCoordinates();			
 			context.model = AnchorsSelectionRenderer(relationAnchor.parent).getTargetModel();
 			
@@ -29,20 +33,23 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
 			diagramShell.getControllerProvider(context.model).
-				getDragToCreateRelationController(context.model).startDragging(context.model);
+				getDragToCreateRelationController(context.model).activate(context.model);
 		}
 		
 		override public function deactivateAsMainTool():void {
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
-			context = null;
+			diagramShell.getControllerProvider(context.model).
+				getDragToCreateRelationController(context.model).deactivate(context.model);
+			
+			delete context.model;
 		}
 		
 		private function mouseMoveHandler(event:MouseEvent):void {
 			if (event.buttonDown) {				
 				diagramShell.getControllerProvider(context.model).
-					getDragToCreateRelationController(context.model).update(context.model);
+					getDragToCreateRelationController(context.model).drag(context.model);
 			} else {
 				mouseUpHandler();
 			}
@@ -50,7 +57,7 @@ package org.flowerplatform.flexdiagram.tool {
 		
 		private function mouseUpHandler(event:MouseEvent = null):void {			
 			diagramShell.getControllerProvider(context.model).
-				getDragToCreateRelationController(context.model).endDragging(context.model);
+				getDragToCreateRelationController(context.model).drop(context.model);
 		}
 		
 		private function getRelationAnchorFromDisplayCoordinates():RelationAnchor  {

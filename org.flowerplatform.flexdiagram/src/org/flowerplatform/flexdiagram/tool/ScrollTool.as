@@ -23,6 +23,8 @@ package org.flowerplatform.flexdiagram.tool {
 	 */ 
 	public class ScrollTool extends Tool implements IWakeUpableTool {
 		
+		public static const ID:String = "ScrollTool";
+		
 		[Embed(source="../icons/move_cursor.png")]
 		private var _moveCursor:Class;
 				
@@ -32,15 +34,18 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG);
 		}
 	
-		override public function activateAsMainTool():void {
-			context = new Object();
+		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
+			return getRendererFromDisplayCoordinates() is DiagramRenderer;
+		}
+		
+		override public function activateAsMainTool():void {			
 			context.initialX = diagramRenderer.stage.mouseX;
 			context.initialY = diagramRenderer.stage.mouseY;
 			
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
-			diagramRenderer.cursorManager.setCursor(_moveCursor);
+			diagramRenderer.cursorManager.setCursor(_moveCursor, 2, -16, -16);
 		}
 				
 		override public function deactivateAsMainTool():void {			
@@ -48,13 +53,10 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
 			diagramRenderer.cursorManager.removeAllCursors();
-			context = null;
+			delete context.initialX;
+			delete context.initialY;
 		}
 			
-		public function wakeUp(eventType:String):Boolean {
-			return getRendererFromDisplayCoordinates() is DiagramRenderer;
-		}
-		
 		private function mouseMoveHandler(event:MouseEvent):void {
 			if (event.buttonDown) {
 				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));

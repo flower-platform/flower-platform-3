@@ -28,10 +28,12 @@
     <classEntry path="org.flowerplatform.flexdiagram.controller.IInplaceEditorController"/>
     <classEntry path="org.flowerplatform.flexdiagram.tool.ResizeTool"/>
     <classEntry path="org.flowerplatform.flexdiagram.controller.IResizeController"/>
-    <classEntry path="org.flowerplatform.flexdiagram.renderer.selection.RelationAnchor"/>
     <classEntry path="org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool"/>
-    <classEntry path="org.flowerplatform.flexdiagram.controller.IDragToCreateRelationController"/>
     <classEntry path="org.flowerplatform.flexdiagram.tool.DragTool"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.IDragController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.ISelectOrDragToCreateElementController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.tool.ZoomTool"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

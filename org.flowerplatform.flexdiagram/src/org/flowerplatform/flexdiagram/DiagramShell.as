@@ -18,12 +18,15 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
 	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
+	import org.flowerplatform.flexdiagram.tool.DragTool;
 	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
 	import org.flowerplatform.flexdiagram.tool.ResizeTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
+	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 	import org.flowerplatform.flexdiagram.tool.Tool;
 	import org.flowerplatform.flexdiagram.tool.WakeUpTool;
+	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
 	/**
@@ -44,7 +47,7 @@ package org.flowerplatform.flexdiagram {
 		
 		private var _mainTool:Tool;
 		
-		public var tools:ArrayList = new ArrayList();
+		public var tools:Dictionary = new Dictionary();
 		
 		public function get modelToExtraInfoMap():Dictionary {
 			return _modelToExtraInfoMap;
@@ -126,12 +129,15 @@ package org.flowerplatform.flexdiagram {
 			var wakeUpTool:WakeUpTool = new WakeUpTool(this);
 			_defaultTool = wakeUpTool;
 			
-			tools.addItem(wakeUpTool);
-			tools.addItem(new ScrollTool(this));
-			tools.addItem(new SelectOnClickTool(this));
-			tools.addItem(new InplaceEditorTool(this));
-			tools.addItem(new ResizeTool(this));
-			tools.addItem(new DragToCreateRelationTool(this));
+			tools[WakeUpTool.ID] = wakeUpTool;
+			tools[ScrollTool.ID] = new ScrollTool(this);
+			tools[SelectOnClickTool.ID] = new SelectOnClickTool(this);
+			tools[InplaceEditorTool.ID] = new InplaceEditorTool(this);
+			tools[ResizeTool.ID] = new ResizeTool(this);
+			tools[DragToCreateRelationTool.ID] = new DragToCreateRelationTool(this);
+			tools[DragTool.ID] = new DragTool(this);
+			tools[SelectOrDragToCreateElementTool.ID] = new SelectOrDragToCreateElementTool(this);
+			tools[ZoomTool.ID] = new ZoomTool(this);
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {
@@ -278,18 +284,21 @@ package org.flowerplatform.flexdiagram {
 		}
 		
 		public function activateTools():void {
-			for (var i:int = 0; i < tools.length; i++) {
-				Tool(tools.getItemAt(i)).activateDozingMode();
+			for (var key:Object in tools) {
+				Tool(tools[key]).activateDozingMode();
 			}
-			
-			mainTool = _defaultTool;
+			if (mainTool == null) {
+				mainTool = _defaultTool;
+			}
+			mainTool.activateAsMainTool();
 		}		
 	
 		public function deactivateTools():void {
-			for (var i:int = 0; i < tools.length; i++) {
-				Tool(tools.getItemAt(i)).deactivateDozingMode();
-			}
-			mainTool = null;
+			mainTool.deactivateAsMainTool();
+			
+			for (var key:Object in tools) {
+				Tool(tools[key]).deactivateDozingMode();
+			}			
 		}
 		
 	}

@@ -75,12 +75,14 @@ package org.flowerplatform.flexdiagram.renderer {
 		override protected function focusInHandler(event:FocusEvent):void {
 			super.focusInHandler(event);
 			
+			trace("focusInHandler");
 			diagramShell.activateTools();
 		}
 		
 		override protected function focusOutHandler(event:FocusEvent):void {
 			super.focusOutHandler(event);
 			
+			trace("focusOutHandler");
 			diagramShell.deactivateTools();
 		}
 	}

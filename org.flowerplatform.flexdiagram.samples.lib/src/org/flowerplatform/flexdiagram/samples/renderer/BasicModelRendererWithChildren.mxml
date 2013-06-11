@@ -2,7 +2,7 @@
 <!---
 @author Cristian Spiescu
 --><s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
-	cacheAsBitmap="true" minWidth="100" minHeight="100"
+	cacheAsBitmap="true"
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" >
@@ -78,8 +78,10 @@
 					visualChildrenController.refreshVisualChildren(data);
 				}
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
 				graphics.clear();
 				graphics.lineStyle(1);
+				graphics.beginFill(0xCCCCCC, 0);
 				graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
 			}
 		]]>

@@ -2,7 +2,7 @@ package org.flowerplatform.flexdiagram.samples.controller
 {
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
-	import org.flowerplatform.flexdiagram.controller.IInplaceEditorController;
+	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	
 	public class BasicSubModelInplaceEditorController extends ControllerBase implements IInplaceEditorController {
 		
@@ -10,7 +10,7 @@ package org.flowerplatform.flexdiagram.samples.controller
 			super(diagramShell);
 		}
 		
-		public function startEditing(model:Object):void {
+		public function activate(model:Object):void {
 			trace("startEditing");
 		}
 		
@@ -24,7 +24,7 @@ package org.flowerplatform.flexdiagram.samples.controller
 			diagramShell.mainToolFinishedItsJob();
 		}
 		
-		public function endEditing(model:Object):void {
+		public function deactivate(model:Object):void {
 			trace("endEditing");
 		}		
 	}

@@ -8,6 +8,11 @@
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
+		]]>
+	</fx:Script>
 	
 	<fx:Script>
 		<![CDATA[
@@ -21,6 +26,7 @@
 			import org.flowerplatform.flexdiagram.samples.model.BasicConnection;
 			import org.flowerplatform.flexdiagram.samples.model.BasicModel;
 			import org.flowerplatform.flexdiagram.samples.model.BasicSubModel;
+			import org.flowerplatform.flexdiagram.tool.DragTool;
 			import org.flowerplatform.flexdiagram.tool.Tool;
 			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 
@@ -163,7 +169,8 @@
 									]]>
 								</s:click>
 							</s:Button>
-							<s:TextInput text="{mainTool}"/>
+							<s:Label text="{mainTool}"/>
+							<s:Button id="activateTool1" label="Select/Drag" click="{diagramShell.mainTool = diagramShell.tools[SelectOrDragToCreateElementTool.ID]}" />
 						</s:VGroup>					
 					</s:HGroup>
 				</s:VGroup>

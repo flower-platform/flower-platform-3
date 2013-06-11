@@ -1,4 +1,4 @@
-package org.flowerplatform.flexdiagram.renderer.selection {
+package org.flowerplatform.flexdiagram.ui {
 	
 	import flash.display.Bitmap;
 	import flash.display.DisplayObject;

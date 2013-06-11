@@ -9,17 +9,31 @@ package org.flowerplatform.flexdiagram.tool {
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */ 
 	public class InplaceEditorTool extends Tool implements IWakeUpableTool {
+		
+		public static const ID:String = "InplaceEditorTool";
 		
 		public function InplaceEditorTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG);
+			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_UP, -1);
 		}
 		
-		public function wakeUp(eventType:String):Boolean {
+		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates();
-			return renderer != null && !(renderer is DiagramRenderer);
+			if (renderer is IDataRenderer && !(renderer is DiagramRenderer)) {
+				var model:Object = IDataRenderer(renderer).data;
+				if (diagramShell.getControllerProvider(model).getInplaceEditorController(model) != null) {
+					if (diagramShell.selectedItems.getItemIndex(model) == -1) {
+						return false;
+					}
+					return !ctrlPressed && !shiftPressed;
+				}
+			}
+			return false;
 		}
 		
 		override public function activateDozingMode():void {
@@ -37,12 +51,12 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.addEventListener(MouseEvent.CLICK, mouseClickHandler);
 			
 			diagramShell.getControllerProvider(context.model).
-				getInplaceEditorController(context.model).startEditing(context.model);
+				getInplaceEditorController(context.model).activate(context.model);
 		}
 				
 		override public function deactivateAsMainTool():void {
 			diagramShell.getControllerProvider(context.model).
-				getInplaceEditorController(context.model).endEditing(context.model);
+				getInplaceEditorController(context.model).deactivate(context.model);
 			
 			context = null;
 			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);			

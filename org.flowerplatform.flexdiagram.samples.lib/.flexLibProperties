@@ -12,6 +12,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicSubModelInplaceEditorController"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelResizeController"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelDragToCreateRelationController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelDragController"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

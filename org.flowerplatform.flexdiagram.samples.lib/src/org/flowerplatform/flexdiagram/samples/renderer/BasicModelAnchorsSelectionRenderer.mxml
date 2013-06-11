@@ -4,41 +4,62 @@
 -->
 <selection:AnchorsSelectionRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 									xmlns:s="library://ns.adobe.com/flex/spark" 
-									xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:selection="org.flowerplatform.flexdiagram.renderer.selection.*">
+									xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:selection="org.flowerplatform.flexdiagram.renderer.selection.*" xmlns:ui="org.flowerplatform.flexdiagram.ui.*">
 	<fx:Declarations>
-		<selection:ResizeAnchor id="anchor1" />
-		<selection:ResizeAnchor id="anchor2" />
-		<selection:ResizeAnchor id="anchor3" />
-		<selection:ResizeAnchor id="anchor4" />
+		<ui:ResizeAnchor id="anchorLeftUp" type="left_up" />
+		<ui:ResizeAnchor id="anchorLeftMiddle" type="left_middle" />
+		<ui:ResizeAnchor id="anchorLeftDown" type="left_down" />
+		<ui:ResizeAnchor id="anchorMiddleDown" type="middle_down" />
+		<ui:ResizeAnchor id="anchorMiddleUp" type="middle_up" />
+		<ui:ResizeAnchor id="anchorRightDown" type="right_down" />
+		<ui:ResizeAnchor id="anchorRightMiddle" type="right_middle" />		
+		<ui:ResizeAnchor id="anchorRightUp" type="right_up" />
 		
-		<selection:RelationAnchor id="relationAnchor1" />
-		<selection:RelationAnchor id="relationAnchor2" />
+		
+		<ui:RelationAnchor id="relationAnchor1" />
+		<ui:RelationAnchor id="relationAnchor2" />
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
 			override protected function createChildren():void {
-				addChild(anchor1);
-				addChild(anchor2);
-				addChild(anchor3);
-				addChild(anchor4);
+				addChild(anchorLeftUp);
+				addChild(anchorLeftMiddle);
+				addChild(anchorLeftDown);
+				addChild(anchorMiddleDown);
+				addChild(anchorMiddleUp);
+				addChild(anchorRightDown);
+				addChild(anchorRightMiddle);
+				addChild(anchorRightUp);
 				
 				addChild(relationAnchor1);
 				addChild(relationAnchor2);
 			}
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-				anchor1.x = 0;
-				anchor1.y = 0;
+				anchorLeftUp.x = 0;
+				anchorLeftUp.y = 0;
 				
-				anchor2.x = target.width;
-				anchor2.y = 0;
+				anchorLeftDown.x = 0;
+				anchorLeftDown.y = target.height;
 				
-				anchor3.x = 0;
-				anchor3.y = target.height;
+				anchorMiddleUp.x = int(target.width / 2);
+				anchorMiddleUp.y = 0;
 				
-				anchor4.x = target.width;
-				anchor4.y = target.height;
+				anchorRightUp.x = target.width;
+				anchorRightUp.y = 0;
+				
+				anchorRightDown.x = target.width;
+				anchorRightDown.y = target.height;
+										
+				anchorRightMiddle.x = target.width;
+				anchorRightMiddle.y = int(target.height / 2);
+							
+				anchorMiddleDown.x = int(target.width / 2);
+				anchorMiddleDown.y = target.height;
+				
+				anchorLeftMiddle.x = 0;
+				anchorLeftMiddle.y = int(target.height / 2);
 				
 				var quarterX:Number = int(4 * target.width / 5);
 				
@@ -51,10 +72,14 @@
 			}
 			
 			override protected function invalidateActiveAnchors():void {
-				anchor1.invalidateDisplayList();
-				anchor2.invalidateDisplayList();
-				anchor3.invalidateDisplayList();
-				anchor4.invalidateDisplayList();	
+				anchorLeftUp.invalidateDisplayList();
+				anchorLeftDown.invalidateDisplayList();
+				anchorMiddleUp.invalidateDisplayList();
+				anchorRightUp.invalidateDisplayList();	
+				anchorRightDown.invalidateDisplayList();	
+				anchorRightMiddle.invalidateDisplayList();	
+				anchorMiddleDown.invalidateDisplayList();	
+				anchorLeftMiddle.invalidateDisplayList();	
 				
 				relationAnchor1.invalidateDisplayList();	
 				relationAnchor2.invalidateDisplayList();	

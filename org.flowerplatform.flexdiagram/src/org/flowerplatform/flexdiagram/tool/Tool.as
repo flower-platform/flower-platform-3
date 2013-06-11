@@ -1,6 +1,7 @@
 package org.flowerplatform.flexdiagram.tool {
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
 	
 	import mx.core.IDataRenderer;
@@ -20,13 +21,13 @@ package org.flowerplatform.flexdiagram.tool {
 		
 		protected var diagramShell:DiagramShell;
 		
-		protected var context:Object = new Object();
-		
+		public var context:Object = new Object();
+				
 		public function Tool(diagramShell:DiagramShell) {
 			this.diagramShell = diagramShell;
 		}		
 					
-		public function activateDozingMode():void {			
+		public function activateDozingMode():void {				
 		}
 		
 		public function deactivateDozingMode():void { 			
@@ -108,5 +109,6 @@ package org.flowerplatform.flexdiagram.tool {
 		protected function getMaxHorizontalScrollPosition():Number {
 			return diagramRenderer.contentWidth - diagramRenderer.width;
 		}
+		
 	}		
 }
