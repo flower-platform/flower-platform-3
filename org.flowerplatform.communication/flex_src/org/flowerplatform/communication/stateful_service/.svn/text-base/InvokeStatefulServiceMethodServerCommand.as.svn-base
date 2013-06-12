@@ -1,0 +1,17 @@
+package com.crispico.flower.mp.communication.stateful_service {
+	import com.crispico.flower.mp.communication.service.InvokeServiceMethodServerCommand;
+	
+	/**
+	 * @author Cristi
+	 */
+	[RemoteClass]
+	public class InvokeStatefulServiceMethodServerCommand extends InvokeServiceMethodServerCommand	{
+		
+		public var statefulClientId:String;
+		
+		public function InvokeStatefulServiceMethodServerCommand(statefulClientId:String, serviceId:String, methodName:String, parameters:Array, resultCallbackObject:Object=null, resultCallbackFunction:Function=null, exceptionCallbackFunction:Function=null) {
+			super(serviceId, methodName, parameters, resultCallbackObject, resultCallbackFunction, exceptionCallbackFunction);
+			this.statefulClientId = statefulClientId;
+		}
+	}
+}

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="explorerNodeDataProvider" name="explorerNodeDataProvider" schema="schema/explorerNodeDataProvider.exsd"/>
+   <extension-point id="explorerChildrenProvider" name="explorerChildrenProvider" schema="schema/explorerChildrenProvider.exsd"/>
    <extension
          id="org.flowerplatform.web.DummyApplication"
          point="org.eclipse.core.runtime.applications">
@@ -12,6 +14,86 @@
                class="org.flowerplatform.web.DummyApplication">
          </run>
       </application>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="ProjectExplorerTreeStatefulService"
+            serviceClass="temp.NewExplorerTreeStatefulService">
+      </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="explorerTreeStatefulService"
+            serviceClass="org.flowerplatform.web.explorer.ExplorerTreeStatefulService">
+      </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerChildrenProvider">
+      <explorerChildrenProvider
+            provider="org.flowerplatform.web.explorer.RootChildrenProvider">
+         <nodeType
+               nodeType="r">
+         </nodeType>
+      </explorerChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerNodeDataProvider">
+      <explorerNodeDataProvider
+            provider="org.flowerplatform.web.explorer.RootChildrenNodeDataProvider">
+         <nodeType
+               nodeType="or">
+         </nodeType>
+      </explorerNodeDataProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerChildrenProvider">
+      <explorerChildrenProvider
+            provider="org.flowerplatform.web.explorer.OrganizationChildrenProvider">
+         <nodeType
+               nodeType="or">
+         </nodeType>
+      </explorerChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerNodeDataProvider">
+      <explorerNodeDataProvider
+            provider="org.flowerplatform.web.explorer.OrganizationChildrenNodeDataProvider">
+         <nodeType
+               nodeType="wo">
+         </nodeType>
+         <nodeType
+               nodeType="re">
+         </nodeType>
+         <nodeType
+               nodeType="is">
+         </nodeType>
+         <nodeType
+               nodeType="wi">
+         </nodeType>
+      </explorerNodeDataProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerChildrenProvider">
+      <explorerChildrenProvider
+            provider="org.flowerplatform.web.explorer.WorkspacesChildrenProvider">
+         <nodeType
+               nodeType="wo">
+         </nodeType>
+         <nodeType
+               nodeType="f">
+         </nodeType>
+      </explorerChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerNodeDataProvider">
+      <explorerNodeDataProvider
+            provider="org.flowerplatform.web.explorer.WorkspacesNodeDataProvider">
+         <nodeType
+               nodeType="f">
+         </nodeType>
+      </explorerNodeDataProvider>
    </extension>
 
 </plugin>

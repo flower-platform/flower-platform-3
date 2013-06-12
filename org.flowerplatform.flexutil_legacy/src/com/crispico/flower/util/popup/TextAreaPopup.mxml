@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristi
+-->
+<popup:ResizablePopupWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+							xmlns:s="library://ns.adobe.com/flex/spark"
+							xmlns:mx="library://ns.adobe.com/flex/mx"
+							xmlns:popup="com.crispico.flower.util.popup.*"
+							creationComplete="text = text" paddingBottom="0" paddingLeft="0"
+							paddingRight="0" paddingTop="0" minWidth="200" minHeight="150" implements="org.flowerplatform.flexutil.popup.IMessageBox">
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.UtilAssets;
+			
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.formats.LineBreak;
+			
+			import org.flowerplatform.flexutil.popup.IMessageBox;
+
+			private var _text:String;
+			
+			private var _isHTML:Boolean;
+
+			public function get text():String {
+				return _text;
+			}
+
+			public function set text(value:String):void	{
+				_text = value;
+				if (textArea == null) {
+					return;
+				}
+				
+				if (isHTML) {
+					textArea.content = TextConverter.importToFlow(value, TextConverter.TEXT_FIELD_HTML_FORMAT);
+				} else {
+					textArea.text = value;
+				}
+			}
+
+			public function get isHTML():Boolean {
+				return _isHTML;
+			}
+
+			public function set isHTML(value:Boolean):void {
+				_isHTML = value;
+				var savedText:String = text;
+				text = null;
+				text = savedText;
+			}
+
+			protected function formOkHandler(event:MouseEvent):void {
+				closeForm();	
+			}
+			
+			public function setHeight(value:int):IMessageBox {
+				height = value;
+				return this;
+			}
+			
+			public function setText(value:String):IMessageBox {
+				text = value;
+				return this;
+			}
+			
+			public function setTitle(value:String):IMessageBox {
+				title = value;
+				return this;
+			}
+			
+			public function setWidth(value:int):IMessageBox {
+				width = value;
+				return this;
+			}
+			
+			public function setWordWrap(value:Boolean):IMessageBox {
+				var styleValue:String = value ? LineBreak.TO_FIT : LineBreak.EXPLICIT;
+//				callLater(textArea.setStyle, ["lineBreak", styleValue]);
+				callLater(function ():void {
+					textArea.setStyle("lineBreak", styleValue);
+				});
+				return this;
+			}
+			
+			public function showMessageBox(modal:Boolean = true):void {
+				showPopup(NaN, NaN, null, modal);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:TextArea id="textArea" width="100%" height="100%" editable="false"/>
+	<mx:ControlBar id="textAreaPopupControlBar" horizontalAlign="center">
+		<mx:Button id="okButton" label="{UtilAssets.INSTANCE.getMessage('dialog.ok')}" click="formOkHandler(event)"/>
+	</mx:ControlBar>
+</popup:ResizablePopupWindow>

@@ -1,0 +1,10 @@
+package com.crispico.flower.mp.communication.stateful_service {
+	
+	
+	/**
+	 * @flowerModelElementId _B7wSsAk8EeKWRtcZHNALmw
+	 */
+	public interface IStatefulClientLocalState {
+		
+	}
+}

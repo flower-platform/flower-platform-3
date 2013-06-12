@@ -3,6 +3,7 @@
     <wb-module deploy-name="org.flowerplatform.web.app">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/" source-path="/flex_bin"/>
         <property name="context-root" value="org.flowerplatform.web.app"/>
         <property name="java-output-path" value="/org.flowerplatform.web.app/build/classes"/>
     </wb-module>

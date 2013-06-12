@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristi
+-->
+<popup:ResizablePopupWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark" 
+							xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:popup="com.crispico.flower.util.popup.*"
+							title="{TITLE}" creationComplete="INSTANCE = this">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.core.mx_internal;
+			import mx.utils.DescribeTypeCache;
+			
+			public static const TITLE:String = "StatefulClientRegistry Debug Window";
+			
+			public static var INSTANCE:StatefulClientRegistryDebugWindow;
+			
+			override public function closeForm():void {
+				super.closeForm();
+				INSTANCE = null;
+			}
+			
+			private function showObjectClassName(item:Object, column:DataGridColumn):String {
+				var classInfo:XML = DescribeTypeCache.describeType(item).typeDescription;
+				var simpleClassName:String = classInfo.@name;
+				simpleClassName = simpleClassName.substr(simpleClassName.search("::") + 2);
+				return simpleClassName;
+			}
+			
+			private function showStatefulClientId(item:Object, column:DataGridColumn):String {
+				return item.getStatefulClientId();
+			}
+			
+			private function showStatefulServiceId(item:Object, column:DataGridColumn):String {
+				return item.getStatefulServiceId();
+			}
+
+			private function subscribeClickHandler():void	{
+				for each(var sc:StatefulClient in dataGrid.selectedItems) {
+					sc.subscribeToStatefulService(null);
+				}
+			}
+			
+			private function unsubscribedForcefullyClickHandler():void	{
+				for each(var sc:StatefulClient in dataGrid.selectedItems) {
+					sc.unsubscribedForcefully();
+				}
+			}
+			
+			public function get preventUnsubscribedForcefullySignalFromServer():Boolean {
+				return preventUnsubscribedForcefullySignalFromServerCheckbox.selected;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:HBox width="100%">
+		<mx:Label text="Operations on selection:"/>
+		<mx:Button label="subscribeToStatefulService()" click="subscribeClickHandler()" enabled="{dataGrid.selectedItem != null}"/>
+		<mx:Button label="unsubscribedForcefully()" click="unsubscribedForcefullyClickHandler()" enabled="{dataGrid.selectedItem != null}"/>
+		<mx:CheckBox id="preventUnsubscribedForcefullySignalFromServerCheckbox" label="Prevent unsubscribedForcefully signal from server"/>
+	</mx:HBox>
+	<mx:DataGrid id="dataGrid" width="100%" height="100%" dataProvider="{StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList}" allowMultipleSelection="true">
+		<mx:columns>
+			<mx:DataGridColumn headerText="StatefulClientId" labelFunction="showStatefulClientId"/>
+			<mx:DataGridColumn headerText="StatefulServiceId" labelFunction="showStatefulServiceId"/>
+			<mx:DataGridColumn headerText="Class" labelFunction="showObjectClassName"/>
+		</mx:columns>
+	</mx:DataGrid>
+</popup:ResizablePopupWindow>

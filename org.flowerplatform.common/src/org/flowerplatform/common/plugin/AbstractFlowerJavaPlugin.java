@@ -86,7 +86,7 @@ public abstract class AbstractFlowerJavaPlugin implements BundleActivator {
 	}
 
 	public String getResourceUrl(String resource) {
-		return PUBLIC_RESOURCES_DIR + "/" + 
+		return "servlet/" + PUBLIC_RESOURCES_DIR + "/" + 
 				getBundleContext().getBundle().getSymbolicName() + 
 				RESOURCES_PLUGIN_SUFFIX + "/" +
 				resource;
