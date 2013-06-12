@@ -5,7 +5,9 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.ui.Keyboard;
 	import flash.ui.Mouse;
+	import flash.ui.Multitouch;
 	
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
@@ -45,62 +47,58 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
-			diagramRenderer.cursorManager.setCursor(_moveCursor, 2, -16, -16);
+			if(!Multitouch.supportsGestureEvents) { // don't show cursor on touch screens
+				diagramRenderer.cursorManager.setCursor(_moveCursor, 2, -16, -16);
+			}
 		}
 				
 		override public function deactivateAsMainTool():void {			
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
-			diagramRenderer.cursorManager.removeAllCursors();
+			if(!Multitouch.supportsGestureEvents) {
+				diagramRenderer.cursorManager.removeAllCursors();
+			}
 			delete context.initialX;
 			delete context.initialY;
 		}
 			
 		private function mouseMoveHandler(event:MouseEvent):void {
-			if (event.buttonDown) {
-				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));
-				
-				//if (inDiagramVisibleArea(mousePoint.x, mousePoint.y)) {
-					var deltaX:int = context.initialX - event.stageX;
-					var deltaY:int = context.initialY - event.stageY;				
-					context.initialX = event.stageX;
-					context.initialY = event.stageY;
+			if (event.buttonDown) {				
+				var deltaX:int = context.initialX - event.stageX;
+				var deltaY:int = context.initialY - event.stageY;				
+				context.initialX = event.stageX;
+				context.initialY = event.stageY;
 					
-					scrollDiagram(deltaX, deltaY);
-				//}		
+				var scrollPositionChanged:Boolean = false;
+				
+				var maxScrollPosition:Number = getMaxHorizontalScrollPosition();
+				if (maxScrollPosition != 0) {
+					var newPosX:Number = diagramRenderer.horizontalScrollPosition + deltaX;				
+					diagramRenderer.horizontalScrollPosition = newPosX;
+					scrollPositionChanged = true;	
+				}
+				
+				maxScrollPosition = getMaxHorizontalScrollPosition();
+				if (maxScrollPosition != 0) {
+					var newPosY:Number = diagramRenderer.verticalScrollPosition + deltaY;				
+					diagramRenderer.verticalScrollPosition = newPosY;
+					scrollPositionChanged = true;
+				}
+				
+				// track changes to scroll position because calling refreshVisualChildren can be expensive
+				if (scrollPositionChanged) {
+					diagramShell.getControllerProvider(diagramShell.rootModel).
+						getVisualChildrenController(diagramShell.rootModel).refreshVisualChildren(diagramShell.rootModel);
+				}				
 			} else {
-				mouseUpHandler();
+				diagramShell.mainToolFinishedItsJob();
 			}
 		}
 		
-		private function mouseUpHandler(event:MouseEvent = null):void {			
+		private function mouseUpHandler(event:MouseEvent):void {			
 			diagramShell.mainToolFinishedItsJob();
 		}
 		
-		private function scrollDiagram(deltaX:int, deltaY:int):void {			
-			var scrollPositionChanged:Boolean = false;
-			
-			var maxScrollPosition:Number = getMaxHorizontalScrollPosition();
-			if (maxScrollPosition != 0) {
-				var newPosX:Number = diagramRenderer.horizontalScrollPosition + deltaX;				
-				diagramRenderer.horizontalScrollPosition = newPosX;
-				scrollPositionChanged = true;	
-			}
-			
-			maxScrollPosition = getMaxHorizontalScrollPosition();
-			if (maxScrollPosition != 0) {
-				var newPosY:Number = diagramRenderer.verticalScrollPosition + deltaY;				
-				diagramRenderer.verticalScrollPosition = newPosY;
-				scrollPositionChanged = true;
-			}
-			
-			// track changes to scroll position because calling refreshVisualChildren can be expensive
-			if (scrollPositionChanged) {
-				diagramShell.getControllerProvider(diagramShell.rootModel).
-					getVisualChildrenController(diagramShell.rootModel).refreshVisualChildren(diagramShell.rootModel);
-			}
-		}		
-	}
-	
+	}	
 }

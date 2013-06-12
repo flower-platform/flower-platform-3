@@ -12,12 +12,7 @@
 			
 			import org.flowerplatform.flexdiagram.samples.IModelHolder;
 			import org.flowerplatform.flexdiagram.samples.ModelPopulator;
-			
-			protected function scroller_creationCompleteHandler(event:FlexEvent):void {
-				scroller.mx_internal::bounceEnabled = false;
-				scroller.mx_internal::pullEnabled = false;
-			}
-			
+						
 		]]>
 	</fx:Script>
 	<fx:Declarations>

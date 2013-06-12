@@ -2,6 +2,7 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.ui.Multitouch;
 	
 	import mx.core.IVisualElement;
 	import mx.events.MoveEvent;
@@ -33,9 +34,10 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 			
 			// set the handler that move/resize anchors with parent renderer.
 			DisplayObject(target).addEventListener(MoveEvent.MOVE, handleTargetMoveResize); 
-			DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);			
-			DisplayObject(diagramShell.diagramRenderer).addEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler);
-			
+			DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);	
+			if(!Multitouch.supportsGestureEvents) {  // don't add cursor on touch screen
+				DisplayObject(diagramShell.diagramRenderer).addEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler);
+			}
 			// update position
 			handleTargetMoveResize(null);
 		}
@@ -49,8 +51,10 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 		override public function deactivate():void {
 			// remove move/resize listeners
 			DisplayObject(target).removeEventListener(MoveEvent.MOVE, handleTargetMoveResize);
-			DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);			
-			DisplayObject(diagramShell.diagramRenderer).removeEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler);
+			DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);	
+			if(!Multitouch.supportsGestureEvents) { // don't add cursor on touch screen
+				DisplayObject(diagramShell.diagramRenderer).removeEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler);
+			}
 			
 			super.deactivate();
 		}

@@ -11,7 +11,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	 * <p>
 	 * Methods were modified to allow setting negative values to scrollers.
 	 * 
-	 * @author Cristina
+	 * @author Cristina Constantinescu
 	 */ 
 	public class InfiniteGroupBasicLayout extends BasicLayout {
 		

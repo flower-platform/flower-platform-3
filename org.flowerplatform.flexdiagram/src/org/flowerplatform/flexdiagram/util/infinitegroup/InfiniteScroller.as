@@ -18,7 +18,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	[DefaultProperty("viewport")]
 	
 	/**
-	 * @author Cristina
+	 * @author Cristina Constantinescu
 	 */ 
 	public class InfiniteScroller extends SkinnableComponent implements IVisualElementContainer, IFocusManagerComponent {
 						

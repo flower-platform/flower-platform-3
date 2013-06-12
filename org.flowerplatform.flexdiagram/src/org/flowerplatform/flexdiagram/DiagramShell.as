@@ -1,4 +1,6 @@
 package org.flowerplatform.flexdiagram {
+	import flash.ui.Multitouch;
+	import flash.ui.MultitouchInputMode;
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayList;
@@ -138,6 +140,8 @@ package org.flowerplatform.flexdiagram {
 			tools[DragTool.ID] = new DragTool(this);
 			tools[SelectOrDragToCreateElementTool.ID] = new SelectOrDragToCreateElementTool(this);
 			tools[ZoomTool.ID] = new ZoomTool(this);
+			
+			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {

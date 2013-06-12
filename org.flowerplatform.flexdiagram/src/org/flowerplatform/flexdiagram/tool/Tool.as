@@ -3,6 +3,7 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
+	import flash.ui.Keyboard;
 	
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
@@ -30,7 +31,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public function activateDozingMode():void {				
 		}
 		
-		public function deactivateDozingMode():void { 			
+		public function deactivateDozingMode():void { 				
 		}
 		
 		public function activateAsMainTool():void {			
@@ -42,7 +43,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public function get diagramRenderer():DiagramRenderer {
 			return DiagramRenderer(diagramShell.diagramRenderer);
 		}
-		
+			
 		protected function getRendererFromDisplayCoordinates():IVisualElement {
 			var stage:Stage = DisplayObject(diagramShell.diagramRenderer).stage;
 			var arr:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));

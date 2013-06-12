@@ -23,6 +23,7 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {		
+			// used to know if tool activated from WakeUpTool
 			context.wakedUp = (getRendererFromDisplayCoordinates() is DiagramRenderer) && (ctrlPressed || shiftPressed);
 			context.ctrlPressed = ctrlPressed;
 			context.shiftPressed = shiftPressed;

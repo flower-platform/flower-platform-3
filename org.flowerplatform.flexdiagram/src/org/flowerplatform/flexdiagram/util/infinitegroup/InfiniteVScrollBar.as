@@ -12,7 +12,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	use namespace mx_internal;
 	
 	/**
-	 * @author Cristina
+	 * @author Cristina Constantinescu
 	 */ 
 	public class InfiniteVScrollBar extends VScrollBar {
 		

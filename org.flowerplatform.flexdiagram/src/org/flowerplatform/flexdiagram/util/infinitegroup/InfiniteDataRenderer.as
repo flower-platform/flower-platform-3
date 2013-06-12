@@ -6,7 +6,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	import spark.components.Group;
 	
 	/**
-	 * @author Cristina
+	 * @author Cristina Constantinescu
 	 */ 
 	public class InfiniteDataRenderer extends DataRenderer {
 				

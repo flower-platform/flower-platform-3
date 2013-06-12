@@ -11,7 +11,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	 * 
 	 * @see InfiniteScrollerSkin
 	 * 
-	 * @author Cristina
+	 * @author Cristina Constantinescu
 	 */ 
 	public class GoBackButton extends Button {
 		

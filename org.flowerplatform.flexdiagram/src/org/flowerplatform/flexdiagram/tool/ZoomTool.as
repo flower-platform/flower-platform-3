@@ -1,7 +1,9 @@
 package org.flowerplatform.flexdiagram.tool
 {
+	import flash.events.GesturePhase;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.events.TransformGestureEvent;
 	import flash.geom.Matrix;
 	import flash.geom.Point;
@@ -89,12 +91,16 @@ package org.flowerplatform.flexdiagram.tool
 		}
 		
 		private function gestureZoomHandler(event:TransformGestureEvent):void {	
-			diagramShell.mainTool = this;
+			if (event.phase == GesturePhase.BEGIN) {				
+				diagramShell.mainTool = this;
+			}
 			
 			diagramRenderer.scaleX *= getScaleFactor((event.scaleX + event.scaleY)/2, true);
 			diagramRenderer.scaleY *= getScaleFactor((event.scaleX + event.scaleY)/2, false);
 			
-			diagramShell.mainToolFinishedItsJob();
+			if (event.phase == GesturePhase.END) {				
+				diagramShell.mainToolFinishedItsJob();
+			}			
 		}
 			
 		private function getScaleFactor(scaleFactor:Number, isX:Boolean):Number {

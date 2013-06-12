@@ -1,6 +1,7 @@
 package org.flowerplatform.flexdiagram.tool.controller {
 	
 	import flash.display.DisplayObject;
+	import flash.geom.Rectangle;
 	import flash.system.System;
 	
 	import mx.charts.chartClasses.DualStyleObject;
@@ -14,6 +15,9 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 	import org.flowerplatform.flexdiagram.ui.MoveResizePlaceHolder;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */ 
 	public class SelectOrDragToCreateElementController extends ControllerBase implements ISelectOrDragToCreateElementController {
 				
 		private static const DRAG_TO_CREATE_MIN_WIDTH_DEFAULT:int = 30;
@@ -34,11 +38,6 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		public static const DRAG_TO_SELECT_ALPHA_DEFAULT:Number = 0.4;		
 		private var _dragToSelectAlpha:Number = DRAG_TO_SELECT_ALPHA_DEFAULT;
 		
-		/**
-		 * The color for the selection rectangle when it is in "drag to select" mode.
-		 * 
-		 * @see #DRAG_TO_SELECT_COLOR_DEFAULT
-		 */ 
 		public function get dragToSelectColor():uint {
 			return _dragToSelectColor;
 		}
@@ -47,11 +46,6 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			_dragToSelectColor = value;
 		}
 		
-		/**
-		 * The color for the selection rectangle when it is in "drag to create" mode.
-		 * 
-		 * @see #DRAG_TO_CREATE_COLOR_DEFAULT
-		 */ 
 		public function get dragToCreateColor():uint {
 			return _dragToCreateColor;
 		}
@@ -59,12 +53,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		public function set dragToCreateColor(value:uint):void {
 			_dragToCreateColor = value;
 		}
-		
-		/**
-		 * The alpha value for the selection rectangle when it is in "drag to select" mode.
-		 * 
-		 * @see #DRAG_TO_SELECT_ALPHA_DEFAULT		
-		 */ 
+				
 		public function get dragToSelectAlpha():Number {
 			return _dragToSelectAlpha;
 		} 
@@ -73,11 +62,6 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			_dragToSelectAlpha = value;
 		}
 		
-		/**
-		 * The alpha value for the selection rectangle when it is in "drag to create" mode.
-		 * 
-		 * @see #DRAG_TO_CREATE_ALPHA_DEFAULT		
-		 */ 
 		public function get dragToCreateAlpha():Number {
 			return _dragToCreateAlpha;
 		}
@@ -85,11 +69,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		public function set dragToCreateAlpha(value:Number):void {
 			_dragToCreateAlpha = value;
 		}
-		
-		/**
-		 * The width (in pixels) for the selection rectangle in order to trigger 
-		 * a "drag to create" operation.	
-		 */ 		
+			
 		public function get dragToCreateMinWidth():int {
 			return _dragToCreateMinWidth;
 		}
@@ -97,11 +77,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		public function set dragToCreateMinWidth(value:int):void {
 			_dragToCreateMinWidth = value;
 		}
-		
-		/**
-		 * The height (in pixels) for the selection rectangle in order to trigger 
-		 * a "drag to create" operation.
-		 */ 		
+			
 		public function get dragToCreateMinHeight():int {
 			return _dragToCreateMinHeight;
 		}
@@ -114,18 +90,22 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			super(diagramShell);
 		}
 		
-		public function activate(model:Object, initialX:Number, initialY:Number, mode:String):void {			
+		public function activate(model:Object, initialX:Number, initialY:Number, mode:String):void {
+			// create placeholder
 			var selectDragToCreatePlaceHolder:MoveResizePlaceHolder = new MoveResizePlaceHolder();
 			selectDragToCreatePlaceHolder.x = initialX;
 			selectDragToCreatePlaceHolder.y = initialY;
 			
+			// put placeholder in model's extra info
 			diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder = selectDragToCreatePlaceHolder;
-			diagramShell.diagramRenderer.addElement(selectDragToCreatePlaceHolder);
-			
 			diagramShell.modelToExtraInfoMap[model].selectDragToCreateMode = mode;
+			
+			// add it to diagram
+			diagramShell.diagramRenderer.addElement(selectDragToCreatePlaceHolder);			
 		}
 		
-		public function drag(model:Object, deltaX:Number, deltaY:Number):void {			
+		public function drag(model:Object, deltaX:Number, deltaY:Number):void {	
+			// update placeholder dimensions
 			var selectDragToCreatePlaceHolder:MoveResizePlaceHolder = diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder;
 			
 			selectDragToCreatePlaceHolder.width = deltaX;
@@ -135,10 +115,11 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				
 			if (models.length != 0 || 
 				selectDragToCreatePlaceHolder.width < _dragToCreateMinWidth || 
-				selectDragToCreatePlaceHolder.height < _dragToCreateMinHeight) {
-				
+				selectDragToCreatePlaceHolder.height < _dragToCreateMinHeight) { 
+				// SELECT MODE
 				selectDragToCreatePlaceHolder.setColorAndAlpha(_dragToSelectColor, _dragToSelectAlpha);
-			} else {
+			} else { 
+				// DRAG MODE
 				selectDragToCreatePlaceHolder.setColorAndAlpha(_dragToCreateColor, _dragToCreateAlpha);
 			}			
 		}
@@ -152,6 +133,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			if (models.length == 0) {
 				// TODO CC: add here drag to create element behavior
 			} else {
+				// select/deselect models
 				for (var i:int = 0; i < models.length; i++) {
 					var obj:Object = models.getItemAt(i);
 					if (mode == SelectOrDragToCreateElementTool.SELECT_MODE_ADD) {
@@ -164,13 +146,16 @@ package org.flowerplatform.flexdiagram.tool.controller {
 						}
 					}
 				}
-			}			
+			}
+			// done
 			diagramShell.mainToolFinishedItsJob();
 		}
 		
 		public function deactivate(model:Object):void {		
+			// remove placeholder from diagram
 			diagramShell.diagramRenderer.removeElement(diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder);
 			
+			// remove placeholder from model's extra info
 			delete diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder;
 			delete diagramShell.modelToExtraInfoMap[model].selectDragToCreateMode;
 		}
@@ -180,9 +165,12 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			var children:IList = diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model);
 			for (var i:int = 0; i < children.length; i++) {
 				var child:Object = children.getItemAt(i);
-				var absLayoutRectangleController:IAbsoluteLayoutRectangleController = diagramShell.getControllerProvider(child).getAbsoluteLayoutRectangleController(child);
+				var absLayoutRectangleController:IAbsoluteLayoutRectangleController = 
+					diagramShell.getControllerProvider(child).getAbsoluteLayoutRectangleController(child);
 				if (absLayoutRectangleController != null) {
-					if (selectDragToCreatePlaceHolder.getBounds(DisplayObject(diagramShell.diagramRenderer)).intersects(absLayoutRectangleController.getBounds(child))) {
+					var placeHolderBounds:Rectangle = selectDragToCreatePlaceHolder.getBounds(DisplayObject(diagramShell.diagramRenderer));
+					if (placeHolderBounds.intersects(absLayoutRectangleController.getBounds(child))) { 
+						// intersects hit area
 						models.addItem(child);
 					}
 				}

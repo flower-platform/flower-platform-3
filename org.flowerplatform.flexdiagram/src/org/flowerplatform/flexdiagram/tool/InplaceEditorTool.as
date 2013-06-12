@@ -19,7 +19,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public function InplaceEditorTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_UP, -1);
+			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN, -1);
 		}
 		
 		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
@@ -27,7 +27,9 @@ package org.flowerplatform.flexdiagram.tool {
 			if (renderer is IDataRenderer && !(renderer is DiagramRenderer)) {
 				var model:Object = IDataRenderer(renderer).data;
 				if (diagramShell.getControllerProvider(model).getInplaceEditorController(model) != null) {
-					if (diagramShell.selectedItems.getItemIndex(model) == -1) {
+					var selected:Boolean = diagramShell.selectedItems.getItemIndex(model) != -1;
+					if (!selected || (selected && diagramShell.selectedItems.length > 1)) {
+						// if not selected or multiple selection
 						return false;
 					}
 					return !ctrlPressed && !shiftPressed;

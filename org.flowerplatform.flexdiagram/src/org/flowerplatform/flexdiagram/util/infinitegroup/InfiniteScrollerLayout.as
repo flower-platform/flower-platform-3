@@ -23,7 +23,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	 * <p>
 	 * Added behavior for "Go Back" button.
 	 * 
-	 * @author Cristina
+	 * @author Cristina Constantinescu
 	 */ 
 	public class InfiniteScrollerLayout extends LayoutBase {
 		
