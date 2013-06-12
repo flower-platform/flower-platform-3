@@ -1,0 +1,123 @@
+package com.crispico.flower.mp.tree {
+	import flash.utils.Dictionary;
+	
+	import mx.collections.ArrayCollection;
+	
+	/**
+	 * Model element used by the tree to display data. Instances come from
+	 * Java.
+	 * 
+	 * @author Cristi
+	 * @author Cristina
+	 * 
+	 * @flowerModelElementId _32g2IDR9EeCGErbqxW555A
+	 */
+	[Bindable]
+	[RemoteClass(alias="com.crispico.flower.mp.tree.TreeNode")]
+	[SecureSWF(rename="off")]
+	public class TreeNode {
+		
+		/**
+		 * @flowerModelElementId _5CHGkDR9EeCGErbqxW555A
+		 */
+		[SecureSWF(rename="off")]
+		public var label:String;
+				
+		/**
+		 * @flowerModelElementId _A5ebQEiREeCqsckFqpKKFw
+		 */
+		[SecureSWF(rename="off")]
+		public var iconUrls:ArrayCollection;
+		
+		/**
+		 * @flowerModelElementId _bWTdoDSAEeCGErbqxW555A
+		 */
+		[SecureSWF(rename="off")]
+		public var hasChildren:Boolean;
+		
+		/**
+		 * @flowerModelElementId _9jJo0DR9EeCGErbqxW555A
+		 */
+		[SecureSWF(rename="off")]
+		public var children:ArrayCollection;
+				
+		/** 
+		 * @flowerModelElementId _HlmtYKAQEeGLneHqP7FuFA
+		 */
+		[SecureSWF(rename="off")]
+		public var parent:TreeNode;
+		
+		/**
+		 * @flowerModelElementId _cLrFQKP8EeGeHqktJlHXmA
+		 */
+		[SecureSWF(rename="off")]
+		public var pathFragment:PathFragment;
+				 
+		[SecureSWF(rename="off")]
+		public var customData:Object;
+		
+        /**
+         * @flowerModelElementId _ZFk8kJpwEeGg5ZWNBtAGAA
+         */
+        public function getPathForNode():ArrayCollection {
+        	var node:TreeNode = this;
+        	if (node == null || node.parent == null) {
+        		return null;
+        	}
+        	var path:ArrayCollection = new ArrayCollection();
+        	while (node.parent != null) {        		
+        		path.addItemAt(node.pathFragment, 0);
+        		node = node.parent;
+        	}			
+			return path;
+		}
+		
+		/**
+		 * Based on a given <code>delimiter</code>,
+		 * returns the full path of this node by concatenating
+		 * all path fragments names.
+		 * @flowerModelElementId _mz4XgKr2EeG3eZ1Jezjhtw
+		 */ 
+		public function getPath(delimiter:String="/"):String {
+			var paths:ArrayCollection = getPathForNode();
+			var path:String = "";
+			for each (var pathFragment:PathFragment in paths) {
+				if (path != "") {
+					path += delimiter;
+				}
+				path += pathFragment.name;
+			}
+			return path;
+		}
+       
+        /**
+         * Iterates through all tree structure 
+         * to find the corresponding node for given <code>path</code>.
+         * Note: if problems, this can be optimized by using a hash map of paths.
+         *  
+         * @flowerModelElementId _WkupEJpzEeGg5ZWNBtAGAA
+         */
+		 public static function getNodeByPath(path:ArrayCollection, parent:TreeNode = null):TreeNode {							
+			if (path == null) {
+				return parent;
+			}			
+			var node:TreeNode = parent;			
+			for each (var pathFragment:PathFragment in path) {				
+				parent = node;
+				node = null;
+				for each (var child:TreeNode in parent.children) {
+					if (child.pathFragment.name == pathFragment.name &&
+						child.pathFragment.type == pathFragment.type) {
+						node = child;
+						break;
+					}
+				}
+				if (node == null) {
+					return null;
+				}
+			}
+			return node;			
+		}		
+	}
+	
+}

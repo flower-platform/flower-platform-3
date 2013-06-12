@@ -1,0 +1,26 @@
+package  com.crispico.flower.mp.tree.communication {
+	import com.crispico.flower.mp.communication.stateful_service.IStatefulClientLocalState;
+	
+	import mx.collections.ArrayCollection;
+	
+	/**
+	 * @author Cristina
+	 * @flowerModelElementId _UjSwUA70EeKbvNML8mcTuA
+	 */
+	[RemoteClass(alias="com.crispico.flower.mp.tree.communication.GenericTreeStatefulClientLocalState")]
+	public class GenericTreeStatefulClientLocalState implements IStatefulClientLocalState {
+		
+		/**
+		 * @flowerModelElementId _jhrbMA70EeKbvNML8mcTuA
+		 */
+		public var openNodes:ArrayCollection;
+		
+		/**
+		 * @flowerModelElementId _T5C_cBEjEeKYjqFAQECmkA
+		 */
+		public var clientContext:Object;
+		
+		public var statefulContext:Object;
+	}
+	
+}

@@ -2,17 +2,29 @@
 <!---
 @author Cristian Spiescu
 -->
-<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<s:View creationComplete="creationCompleteHandler(event)" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" title="RecentActivityView">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.blazeds.BlazeDSBridge;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void
+			{
+			}
+			
+		]]>
+	</fx:Script>
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:RemoteObject id="testAmfService" destination="testAmfService" endpoint="http://localhost:8080/org.flowerplatform.web.app/messagebroker/testAmf"/>
 	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
 	<s:Label text="Recent Activity Content ..." />
-	<s:Button label="Open Split View">
-		<s:click>
-			<![CDATA[
-				navigator.pushView(SplitView);
-			]]>
-		</s:click>
-	</s:Button>
+	<s:Button label="Open Split View" click="navigator.pushView(SplitView);"/>
+	<s:Button label="Test Svc" click="CommunicationPlugin.getInstance().bridge.sendObject('salut')"/>
 </s:View>

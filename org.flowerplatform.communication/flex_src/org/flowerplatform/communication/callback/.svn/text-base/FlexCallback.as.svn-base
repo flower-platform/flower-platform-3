@@ -1,0 +1,36 @@
+package com.crispico.flower.mp.communication.callback {
+	import com.crispico.flower.mp.communication.transferable_object.TransferableObject;
+	import com.crispico.flower.mp.communication.transferable_object.GlobalIdTransferableObjectRegistry;
+
+	/**
+	 * This class wraps an AS function and it is registered globally with an
+	 * unique ID. The Java backend invokes it by using an <code>
+	 * InvokeFlexCallbackCommand</code>.
+	 * 
+	 * <p>
+	 * The constructor registers it.
+	 * 
+	 * @author Cristi
+	 * @flowerModelElementId _vQgpZ8bmEd6X47mKLkTdUQ
+	 */ 
+	public class FlexCallback extends TransferableObject {
+		
+		private var callbackFunction:Function;
+		
+		private var callbackObject:Object;
+		
+		public function FlexCallback(callbackFunction:Function, callbackObject:Object) {
+			this.callbackFunction = callbackFunction;
+			this.callbackObject = callbackObject;
+			GlobalIdTransferableObjectRegistry.instance.registerLocalObject(this);
+		}
+		
+		/**
+		 * @flowerModelElementId _vQgpd8bmEd6X47mKLkTdUQ
+		 */
+		public function invokeCallback(result:Object):void {
+			callbackFunction.call(callbackObject, result);
+		}
+		
+	}
+}

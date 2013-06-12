@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group currentState="connecting"
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[
+			// TODO CS/FP2 msg
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" verticalAlign="middle"/>
+	</s:layout>
+	<s:states>
+		<s:State name="connecting"/>
+		<s:State name="initializing"/>
+	</s:states>
+	<s:BusyIndicator symbolColor="#66aaff" width="35" height="35"/>
+	<s:Label color="#66aaff" fontWeight="bold" text.connecting="Connecting..." text.initializing="Initializing..."/>
+	<!-- Using visible instead of "includeIn", because we don't want the component to move
+		(it's middle centered, so on mobile is not that nice to see it moving)
+	-->
+	<s:Button label="Cancel" visible.initializing="false"/>
+</s:Group>

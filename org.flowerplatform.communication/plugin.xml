@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="servlet" name="servlet" schema="schema/servlet.exsd"/>
+   <extension-point id="service" name="service" schema="schema/service.exsd"/>
    <extension
          point="org.flowerplatform.communication.servlet">
       <servlet
