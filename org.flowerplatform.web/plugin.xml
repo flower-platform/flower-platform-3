@@ -18,13 +18,6 @@
    <extension
          point="org.flowerplatform.communication.service">
       <service
-            id="ProjectExplorerTreeStatefulService"
-            serviceClass="temp.NewExplorerTreeStatefulService">
-      </service>
-   </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
-      <service
             id="explorerTreeStatefulService"
             serviceClass="org.flowerplatform.web.explorer.ExplorerTreeStatefulService">
       </service>
