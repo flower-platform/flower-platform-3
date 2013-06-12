@@ -45,7 +45,6 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		override public function activateAsMainTool():void {
-			context = new Object();
 			context.model = IDataRenderer(getRendererFromDisplayCoordinates()).data;
 			
 			diagramRenderer.addEventListener(MouseEvent.CLICK, mouseClickHandler);
@@ -58,7 +57,7 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramShell.getControllerProvider(context.model).
 				getInplaceEditorController(context.model).deactivate(context.model);
 			
-			context = null;
+			delete context.model;
 			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);			
 		}
 		

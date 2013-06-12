@@ -24,7 +24,6 @@ package org.flowerplatform.flexdiagram.tool {
 		public function SelectOnClickTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN);	
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_UP);	
 		}
 		
@@ -34,29 +33,18 @@ package org.flowerplatform.flexdiagram.tool {
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates();	
 						
 			var model:Object;
-			
-			if (eventType == WakeUpTool.MOUSE_UP && !ctrlPressed && !shiftPressed) {
-				if (renderer is DiagramRenderer) {
-					return true;
-				}
-				if (renderer is IDataRenderer) {
-					model = IDataRenderer(renderer).data;
-					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
-						return (diagramShell.selectedItems.getItemIndex(model) != -1) && diagramShell.selectedItems.length > 1;
-					}				
-				}
-			} else if (eventType == WakeUpTool.MOUSE_DOWN) {
-				if (renderer is DiagramRenderer) {
-					return false;
-				}
-				if (renderer is IDataRenderer) {
-					model = IDataRenderer(renderer).data;
-					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
-						return (diagramShell.selectedItems.getItemIndex(model) == -1) || ctrlPressed || shiftPressed;
-					}				
-				}
+			if (renderer is DiagramRenderer) {
+				return true;
 			}
-			
+			if (renderer is IDataRenderer) {
+				model = IDataRenderer(renderer).data;
+				if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {	
+					if ((diagramShell.selectedItems.getItemIndex(model) != -1) && diagramShell.selectedItems.length > 1) {
+						return true;
+					}
+					return (diagramShell.selectedItems.getItemIndex(model) == -1) || ctrlPressed || shiftPressed;
+				}				
+			}			
 			return false;
 		}
 			

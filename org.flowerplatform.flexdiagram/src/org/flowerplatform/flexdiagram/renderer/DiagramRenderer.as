@@ -2,20 +2,16 @@ package org.flowerplatform.flexdiagram.renderer {
 	import flash.events.FocusEvent;
 	import flash.geom.Rectangle;
 	
-	import mx.core.ContainerGlobals;
-	import mx.core.IFlexDisplayObject;
 	import mx.managers.IFocusManagerComponent;
-	import mx.managers.IFocusManagerContainer;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
-	
-	import spark.components.DataRenderer;
+	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteDataRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
 	 */
-	public class DiagramRenderer extends DataRenderer implements IDiagramShellAware, IVisualChildrenRefreshable, IAbsoluteLayoutRenderer, IFocusManagerComponent {
+	public class DiagramRenderer extends InfiniteDataRenderer implements IDiagramShellAware, IVisualChildrenRefreshable, IAbsoluteLayoutRenderer, IFocusManagerComponent {
 
 		private var _diagramShell:DiagramShell;
 		protected var visualChildrenController:IVisualChildrenController;
