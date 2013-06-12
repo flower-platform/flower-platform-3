@@ -87,7 +87,11 @@
 	
 	<servlet-mapping>
 		<servlet-name>equinoxbridgeservlet</servlet-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/messagebroker/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>equinoxbridgeservlet</servlet-name>
+		<url-pattern>/servlet/*</url-pattern>
 	</servlet-mapping>
 	
 	<session-config>

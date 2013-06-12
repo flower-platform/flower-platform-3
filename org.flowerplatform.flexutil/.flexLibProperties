@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="org.flowerplatform.flexutil.FlexUtilGlobals"/>
+    <classEntry path="org.flowerplatform.flexutil.layout.IViewProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.layout.IWorkbench"/>
+    <classEntry path="org.flowerplatform.flexutil.layout.LayoutData"/>
+    <classEntry path="org.flowerplatform.flexutil.layout.ViewLayoutData"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IMessageBox"/>
+    <classEntry path="org.flowerplatform.flexutil.tree.HierarchicalModelWrapper"/>
+    <classEntry path="org.flowerplatform.flexutil.tree.IHierarchicalModelAdapter"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandler"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandlerFactory"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IPopupHost"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IPopupContent"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IAction"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.ActionBase"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

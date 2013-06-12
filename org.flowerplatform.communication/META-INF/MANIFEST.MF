@@ -10,4 +10,10 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.servlet,
  javax.servlet.http
-Export-Package: org.flowerplatform.communication
+Export-Package: org.flowerplatform.communication,
+ org.flowerplatform.communication.channel,
+ org.flowerplatform.communication.command,
+ org.flowerplatform.communication.service,
+ org.flowerplatform.communication.stateful_service,
+ org.flowerplatform.communication.tree,
+ org.flowerplatform.communication.tree.remote

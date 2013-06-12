@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.flowerplatform.web.WebPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.common,
- org.flowerplatform.communication
+ org.flowerplatform.communication,
+ org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.servlet,

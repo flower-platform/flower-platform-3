@@ -13,6 +13,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.common.util.RunnableWithParam;
+import org.flowerplatform.communication.channel.CommunicationChannelManager;
+import org.flowerplatform.communication.service.ServiceRegistry;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,20 +34,35 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static final String SERVLET_EXTENSION_POINT = "org.flowerplatform.communication.servlet";
 	
+	public static final String SERVICE_EXTENSION_POINT = "org.flowerplatform.communication.service";
+	
 	private List<ServletMapping> servletMappings;
 	
+	private CommunicationChannelManager communicationChannelManager = new CommunicationChannelManager();
+	
+	private ServiceRegistry serviceRegistry = new ServiceRegistry();
+
 	public List<ServletMapping> getServletMappings() {
 		return servletMappings;
+	}
+	
+	public CommunicationChannelManager getCommunicationChannelManager() {
+		return communicationChannelManager;
+	}
+
+	public ServiceRegistry getServiceRegistry() {
+		return serviceRegistry;
 	}
 
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
-		initServletMappings();
+		initExtensionPoint_servlet();
+		initExtensionPoint_service();
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected void initServletMappings() throws CoreException {
+	protected void initExtensionPoint_servlet() throws CoreException {
 		servletMappings = new ArrayList<ServletMapping>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(SERVLET_EXTENSION_POINT);
 		for (IConfigurationElement configurationElement : configurationElements) {
@@ -63,6 +80,17 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 			}
 		});
 	}
+	
+	protected void initExtensionPoint_service() throws CoreException {
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(SERVICE_EXTENSION_POINT);
+		for (IConfigurationElement configurationElement : configurationElements) {
+			String id = configurationElement.getAttribute("id");
+			Object serviceInstance = configurationElement.createExecutableExtension("serviceClass");
+			getServiceRegistry().registerService(id, serviceInstance);
+			logger.debug("Added service with id = {} with class = {}", id, serviceInstance.getClass());
+		}
+		
+	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
 		super.stop(bundleContext);
@@ -73,5 +101,5 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	public void registerMessageBundle() throws Exception {
 		// do nothing, because we don't have messages (yet)
 	}
-
+	
 }

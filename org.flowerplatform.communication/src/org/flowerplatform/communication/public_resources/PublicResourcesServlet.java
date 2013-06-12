@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.slf4j.Logger;
@@ -103,6 +103,9 @@ public class PublicResourcesServlet extends HttpServlet {
 		// Decode the file name (might contain spaces and on) and prepare file
 		// object.
 		requestedFile = URLDecoder.decode(requestedFile, "UTF-8");
+		if (requestedFile.startsWith(PATH_PREFIX)) {
+			requestedFile = requestedFile.substring(PATH_PREFIX.length());
+		}
 		
 		// this may be an attempt to see files that are not public, i.e. to go to the
 		// parent. From my tests, when you put in the browser (or even telnet) something like
