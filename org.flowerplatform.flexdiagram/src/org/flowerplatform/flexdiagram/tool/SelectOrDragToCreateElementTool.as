@@ -47,7 +47,7 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			diagramShell.getControllerProvider(diagramShell.rootModel).
 				getSelectOrDragToCreateElementController(diagramShell.rootModel).deactivate(diagramShell.rootModel);
-						
+			
 			delete context.wakedUp;
 			delete context.initialMousePoint;			
 			delete context.ctrlPressed;
@@ -86,12 +86,8 @@ package org.flowerplatform.flexdiagram.tool {
 			if (context.ctrlPressed) {
 				return SELECT_MODE_SUBSTRACT;
 			}
-			if (context.shiftPressed) {
-				return SELECT_MODE_ADD;
-			}
-			return null;
+			return SELECT_MODE_ADD;
 		}
-
 	}
 	
 }

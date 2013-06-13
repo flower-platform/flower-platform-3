@@ -21,6 +21,7 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
 	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
 	import org.flowerplatform.flexdiagram.tool.DragTool;
+	import org.flowerplatform.flexdiagram.tool.IWakeUpableTool;
 	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
 	import org.flowerplatform.flexdiagram.tool.ResizeTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
@@ -50,6 +51,8 @@ package org.flowerplatform.flexdiagram {
 		private var _mainTool:Tool;
 		
 		public var tools:Dictionary = new Dictionary();
+		
+		private var _toolsActivated:Boolean = false;
 		
 		public function get modelToExtraInfoMap():Dictionary {
 			return _modelToExtraInfoMap;
@@ -288,21 +291,29 @@ package org.flowerplatform.flexdiagram {
 		}
 		
 		public function activateTools():void {
-			for (var key:Object in tools) {
-				Tool(tools[key]).activateDozingMode();
+			// activate only if they weren't yet activated
+			if (!_toolsActivated) {
+				for (var key:Object in tools) {
+					Tool(tools[key]).activateDozingMode();
+				}	
+				if (mainTool == null) {
+					mainTool = _defaultTool;
+				}
+				_toolsActivated = true;
 			}
-			if (mainTool == null) {
-				mainTool = _defaultTool;
-			}
-			mainTool.activateAsMainTool();
 		}		
 	
 		public function deactivateTools():void {
-			mainTool.deactivateAsMainTool();
-			
-			for (var key:Object in tools) {
-				Tool(tools[key]).deactivateDozingMode();
-			}			
+			// deactivate only if they were activated
+			if (_toolsActivated) {
+				if (mainTool is IWakeUpableTool) { // return to default tool in case of a wakeupable tool
+					mainTool = _defaultTool;
+				}
+				for (var key:Object in tools) {
+					Tool(tools[key]).deactivateDozingMode();
+				}	
+				_toolsActivated = false;
+			}
 		}
 		
 	}

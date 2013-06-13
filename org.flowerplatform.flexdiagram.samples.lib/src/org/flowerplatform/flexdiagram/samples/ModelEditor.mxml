@@ -10,6 +10,7 @@
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
+			import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 			import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 		]]>
 	</fx:Script>
@@ -170,8 +171,8 @@
 								</s:click>
 							</s:Button>
 							<s:Label text="{mainTool}"/>
-							<s:Button id="activateTool1" label="Select/Drag" click="{diagramShell.mainTool = diagramShell.tools[SelectOrDragToCreateElementTool.ID]}" />
-						</s:VGroup>					
+							<s:Button id="activateTool1" label="Select/Drag" click="{DiagramRenderer(diagramShell.diagramRenderer).setFocus(); diagramShell.mainTool = diagramShell.tools[SelectOrDragToCreateElementTool.ID]}" />	
+							</s:VGroup>					
 					</s:HGroup>
 				</s:VGroup>
 			</s:HGroup>		

@@ -1,4 +1,5 @@
 package org.flowerplatform.flexdiagram.renderer {
+	import flash.display.DisplayObject;
 	import flash.events.FocusEvent;
 	import flash.geom.Rectangle;
 	
@@ -19,7 +20,7 @@ package org.flowerplatform.flexdiagram.renderer {
 		private var _noNeedToRefreshRect:Rectangle;
 		
 		public var viewPortRectOffsetTowardOutside:int = 0;
-		
+									
 		public function get diagramShell():DiagramShell {
 			return _diagramShell;
 		}
@@ -71,15 +72,17 @@ package org.flowerplatform.flexdiagram.renderer {
 		override protected function focusInHandler(event:FocusEvent):void {
 			super.focusInHandler(event);
 			
-			trace("focusInHandler");
-			diagramShell.activateTools();
+			diagramShell.activateTools();			
 		}
 		
 		override protected function focusOutHandler(event:FocusEvent):void {
 			super.focusOutHandler(event);
 			
-			trace("focusOutHandler");
-			diagramShell.deactivateTools();
-		}
+			var parent:DisplayObject;
+			if (!getBounds(stage).contains(stage.mouseX, stage.mouseY)) { // if outside diagram area
+				diagramShell.deactivateTools();	
+			}							
+		}	
+		
 	}
 }

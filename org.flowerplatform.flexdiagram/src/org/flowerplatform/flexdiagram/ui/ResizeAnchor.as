@@ -27,7 +27,7 @@ package org.flowerplatform.flexdiagram.ui {
 		/**
 		 * Wide of the anchor.		
 		 */
-		public var wide:int = 5;
+		public var wide:int = 2;
 		
 		/**
 		 * Constant for 2 colors used when displaying anchors.	

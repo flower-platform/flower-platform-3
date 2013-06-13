@@ -151,13 +151,16 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			diagramShell.mainToolFinishedItsJob();
 		}
 		
-		public function deactivate(model:Object):void {		
-			// remove placeholder from diagram
-			diagramShell.diagramRenderer.removeElement(diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder);
-			
-			// remove placeholder from model's extra info
-			delete diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder;
-			delete diagramShell.modelToExtraInfoMap[model].selectDragToCreateMode;
+		public function deactivate(model:Object):void {	
+			var selectDragToCreatePlaceHolder:MoveResizePlaceHolder = diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder;
+			if (selectDragToCreatePlaceHolder != null) {
+				// remove placeholder from diagram
+				diagramShell.diagramRenderer.removeElement(diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder);
+				
+				// remove placeholder from model's extra info
+				delete diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder;
+				delete diagramShell.modelToExtraInfoMap[model].selectDragToCreateMode;
+			}
 		}
 		
 		private function getModelsUnderPlaceHolder(model:Object, selectDragToCreatePlaceHolder:MoveResizePlaceHolder):IList {

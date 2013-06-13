@@ -8,6 +8,9 @@ package org.flowerplatform.flexdiagram.tool {
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
+	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
+	
+	import spark.components.RichEditableText;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -51,13 +54,17 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			diagramRenderer.addEventListener(MouseEvent.CLICK, mouseClickHandler);
 			
-			diagramShell.getControllerProvider(context.model).
-				getInplaceEditorController(context.model).activate(context.model);
+			var inplaceEditorController:IInplaceEditorController = diagramShell.getControllerProvider(context.model).getInplaceEditorController(context.model);
+			if (inplaceEditorController != null) {
+				inplaceEditorController.activate(context.model);
+			}
 		}
 				
 		override public function deactivateAsMainTool():void {
-			diagramShell.getControllerProvider(context.model).
-				getInplaceEditorController(context.model).deactivate(context.model);
+			var inplaceEditorController:IInplaceEditorController = diagramShell.getControllerProvider(context.model).getInplaceEditorController(context.model);
+			if (inplaceEditorController != null) {
+				inplaceEditorController.deactivate(context.model);
+			}
 			
 			delete context.model;
 			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);			
@@ -65,16 +72,16 @@ package org.flowerplatform.flexdiagram.tool {
 		
 		private function keyDownHandler(event:KeyboardEvent):void {
 			switch (event.keyCode) {
-				case Keyboard.F2:
+				case Keyboard.F2: // active tool
 					diagramShell.mainTool = this;
 					break;
-				case Keyboard.ENTER:
+				case Keyboard.ENTER: // commit value
 					if (this == diagramShell.mainTool) {
 						diagramShell.getControllerProvider(context.model).
 							getInplaceEditorController(context.model).commit(context.model);
 					}					
 					break;
-				case Keyboard.ESCAPE:
+				case Keyboard.ESCAPE: // abort
 					if (this == diagramShell.mainTool) {
 						diagramShell.getControllerProvider(context.model).
 							getInplaceEditorController(context.model).abort(context.model);
@@ -84,7 +91,7 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		private function mouseClickHandler(event:MouseEvent):void {			
-			if (getRendererFromDisplay(event.target) != diagramShell.getRendererForModel(context.model)) {
+			if (!(event.target is RichEditableText)) { // abort if click somewhere else
 				diagramShell.getControllerProvider(context.model).
 					getInplaceEditorController(context.model).abort(context.model);
 			}
