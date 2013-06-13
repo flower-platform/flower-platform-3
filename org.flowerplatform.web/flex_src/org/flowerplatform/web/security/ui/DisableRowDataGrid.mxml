@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Custom <code>DataGrid</code> that allows disabling a row.
+
+	@author Mariana
+-->
+<mx:DataGrid xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridItemRenderer;
+			import mx.controls.listClasses.IListItemRenderer;
+			
+			public var disabledFunction:Function;
+			
+			/**
+			 * Show the row with a reddish font, if disabled. Note that setting the item disabled won't allow changing the color.
+			 * Also, if the row is not disabled, set it's color to black, otherwise the colors won't update if the rows are reordered
+			 * (for example, by clicking on the columns headers).
+			 */ 
+			override protected function updateRendererDisplayList(r:IListItemRenderer):void {
+				super.updateRendererDisplayList(r);
+				var color:String;
+				if (disabledFunction && disabledFunction(r.data)) {
+					color = "#FF7777";
+				} else {
+					color = "#0B333C";
+				}
+				if (r is DataGridItemRenderer) { // some columns may have a different renderer (e.g. checkbox for activated flag)
+					DataGridItemRenderer(r).setStyle("color", color);
+				}
+			}
+			
+			/**
+			 * Prevent selection.
+			 */ 
+			override protected function mouseEventToItemRenderer(event:MouseEvent):IListItemRenderer {
+				var listItem:IListItemRenderer = super.mouseEventToItemRenderer(event);
+				if (listItem && listItem.data) {
+					if (disabledFunction && disabledFunction(listItem.data)) {
+							return null;
+						}
+					}
+				return listItem;
+			}
+			
+		]]>
+	</mx:Script>
+	
+</mx:DataGrid>

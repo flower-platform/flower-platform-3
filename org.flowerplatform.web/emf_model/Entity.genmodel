@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.flowerplatform.web/src"
+    modelPluginID="org.flowerplatform.web" modelName="Entity" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false">
+  <foreignModel>Entity.ecore</foreignModel>
+  <genPackages prefix="Entity" basePackage="org.flowerplatform.web" disposableProviderFactory="true"
+      ecorePackage="Entity.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Entity.ecore#//OrganizationMembershipStatus">
+      <genEnumLiterals ecoreEnumLiteral="Entity.ecore#//OrganizationMembershipStatus/MEMBER"/>
+      <genEnumLiterals ecoreEnumLiteral="Entity.ecore#//OrganizationMembershipStatus/ADMIN"/>
+      <genEnumLiterals ecoreEnumLiteral="Entity.ecore#//OrganizationMembershipStatus/PENDING_MEMBERSHIP_APPROVAL"/>
+    </genEnums>
+    <genClasses image="false" ecoreClass="Entity.ecore#//Entity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Entity/id"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Entity.ecore#//NamedEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//NamedEntity/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Entity.ecore#//ISecurityEntity">
+      <genOperations ecoreOperation="Entity.ecore#//ISecurityEntity/contains">
+        <genParameters ecoreParameter="Entity.ecore#//ISecurityEntity/contains/securityEntity"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//Organization">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/URL"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/logoURL"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/iconURL"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/activated"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//Organization/groups"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//Organization/organizationUsers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//Organization/svnRepositoryURLs"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/projectsCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/filesCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/modelsCount"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//Organization/diagramsCount"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//Group">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//Group/organization"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//Group/groupUsers"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//User">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//User/login"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//User/hashedPassword"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//User/email"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//User/activated"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//User/activationCode"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//User/groupUsers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//User/organizationUsers"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//User/perspectiveUserEntries"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//User/lastPerspective"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//User/svnComments"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//User/favoriteItems"/>
+      <genOperations ecoreOperation="Entity.ecore#//User/getFavoriteItem">
+        <genParameters ecoreParameter="Entity.ecore#//User/getFavoriteItem/item"/>
+        <genParameters ecoreParameter="Entity.ecore#//User/getFavoriteItem/category"/>
+      </genOperations>
+      <genOperations ecoreOperation="Entity.ecore#//User/isAdmin"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//OrganizationUser">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//OrganizationUser/organization"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//OrganizationUser/user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//OrganizationUser/status"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//GroupUser">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//GroupUser/group"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//GroupUser/user"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//PermissionEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//PermissionEntity/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//PermissionEntity/actions"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//PermissionEntity/assignedTo"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//SVNRepositoryURLEntity">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//SVNRepositoryURLEntity/organization"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//SVNCommentEntity">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//SVNCommentEntity/body"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//SVNCommentEntity/user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//SVNCommentEntity/timestamp"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//PerspectiveUserEntry">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//PerspectiveUserEntry/user"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//PerspectiveUserEntry/serializedLayoutData"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//FavoriteItem">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//FavoriteItem/user"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//FavoriteItem/resource"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//FavoriteItem/organization"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//FavoriteItem/category"/>
+      <genOperations ecoreOperation="Entity.ecore#//FavoriteItem/getItem"/>
+      <genOperations ecoreOperation="Entity.ecore#//FavoriteItem/setItem">
+        <genParameters ecoreParameter="Entity.ecore#//FavoriteItem/setItem/item"/>
+      </genOperations>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//RecentResource">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//RecentResource/label"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//RecentResource/path"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//RecentResource/organization"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//RecentResource/lastAccess"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//RecentResource/lastAccessUser"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//RecentResource/lastSave"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Entity.ecore#//RecentResource/lastSaveUser"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//AuditEntry">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/timestamp"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/username"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/ipAddress"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/auditCategory"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/duration"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/param0"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/param1"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//AuditEntry/param2"/>
+    </genClasses>
+    <genClasses ecoreClass="Entity.ecore#//DBVersion">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//DBVersion/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Entity.ecore#//DBVersion/dbVersion"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

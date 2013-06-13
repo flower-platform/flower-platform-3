@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="entity"
+    nsURI="http://www.flower-platform.com/xmi/entity_1.0.0" nsPrefix="org.flowerplatform.web.entity">
+  <eClassifiers xsi:type="ecore:EClass" name="Entity" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="NamedEntity" abstract="true" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ISecurityEntity" abstract="true" interface="true">
+    <eOperations name="contains" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
+      <eParameters name="securityEntity" eType="#//ISecurityEntity"/>
+    </eOperations>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Organization" eSuperTypes="#//NamedEntity #//ISecurityEntity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="URL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="logoURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="iconURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="activated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"
+        eType="#//Group"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organizationUsers" upperBound="-1"
+        eType="#//OrganizationUser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="svnRepositoryURLs" upperBound="-1"
+        eType="#//SVNRepositoryURLEntity"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filesCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="diagramsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="#//NamedEntity #//ISecurityEntity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupUsers" upperBound="-1"
+        eType="#//GroupUser"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="#//NamedEntity #//ISecurityEntity">
+    <eOperations name="getFavoriteItem" eType="#//FavoriteItem">
+      <eParameters name="item" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+      <eParameters name="category" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eOperations>
+    <eOperations name="isAdmin" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="login" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hashedPassword" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="email" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="activated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="activationCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="groupUsers" upperBound="-1"
+        eType="#//GroupUser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organizationUsers" upperBound="-1"
+        eType="#//OrganizationUser"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="perspectiveUserEntries"
+        upperBound="-1" eType="#//PerspectiveUserEntry"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastPerspective" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="svnComments" upperBound="-1"
+        eType="#//SVNCommentEntity"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="favoriteItems" upperBound="-1"
+        eType="#//FavoriteItem"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrganizationUser" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//OrganizationMembershipStatus"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="GroupUser" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//Group"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PermissionEntity" eSuperTypes="#//NamedEntity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="actions" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="assignedTo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SVNRepositoryURLEntity" eSuperTypes="#//NamedEntity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SVNCommentEntity" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timestamp" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PerspectiveUserEntry" eSuperTypes="#//NamedEntity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="serializedLayoutData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="FavoriteItem" eSuperTypes="#//Entity">
+    <eOperations name="getItem" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+    <eOperations name="setItem">
+      <eParameters name="item" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
+    </eOperations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="resource" eType="#//RecentResource"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RecentResource" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="label" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="path" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastAccess" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lastAccessUser" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastSave" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="lastSaveUser" eType="#//User"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AuditEntry" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="timestamp" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="username" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ipAddress" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="auditCategory" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="duration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="param0" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="param1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="param2" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DBVersion">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
+        iD="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="dbVersion" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="OrganizationMembershipStatus">
+    <eLiterals name="MEMBER"/>
+    <eLiterals name="ADMIN" value="1"/>
+    <eLiterals name="PENDING_MEMBERSHIP_APPROVAL" value="2"/>
+  </eClassifiers>
+</ecore:EPackage>

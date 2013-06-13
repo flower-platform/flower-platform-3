@@ -1,6 +1,8 @@
 package org.flowerplatform.web {
 	import com.crispico.flower.util.layout.Workbench;
 	
+	import flash.events.MouseEvent;
+	
 	import mx.controls.Alert;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
@@ -13,6 +15,9 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
+	import org.flowerplatform.web.security.ui.UserForm;
+	
+	import spark.components.Button;
 	
 	/**
 	 * @author Cristi
@@ -43,6 +48,15 @@ package org.flowerplatform.web {
 			// pass the same descriptor; to be used for images (that need the descriptor for the URL)
 			webCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			webCommonPlugin.start();
+			
+			var userFormBtn:Button = new Button();
+			userFormBtn.label = "User Form";
+			userFormBtn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContentClass(UserForm)
+					.show();
+			});
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(userFormBtn);
 			
 			workbench= new Workbench();
 			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;

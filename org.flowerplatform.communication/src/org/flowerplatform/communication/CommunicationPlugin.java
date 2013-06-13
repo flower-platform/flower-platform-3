@@ -53,6 +53,8 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	public ServiceRegistry getServiceRegistry() {
 		return serviceRegistry;
 	}
+	
+	public static final ThreadLocal<IPrincipal> tlCurrentUser = new ThreadLocal<IPrincipal>();
 
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);

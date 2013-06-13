@@ -59,4 +59,12 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 		return null;
 	}
 
+	/**
+	 * @author Mariana
+	 */
+	@Override
+	public void disconnect() {
+		messageClient.getFlexClient().invalidate();
+	}
+
 }

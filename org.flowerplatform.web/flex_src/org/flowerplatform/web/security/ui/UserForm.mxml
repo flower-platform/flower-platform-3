@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ User form.
+ 
+ @author Cristi
+ @author Cristina 
+ @author Mariana
+
+ @flowerModelElementId _HwKUoJqLEeGyKfvGQd78qg
+-->
+<s:Group 
+	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<s:layout>
+		<s:VerticalLayout verticalAlign="middle"/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			
+			public function set popupHost(popupHost:IPopupHost):void {
+				popupHost.setLabel("User Form");
+			}
+			
+			public function getActions():Vector.<IAction> {
+				return null;
+			}
+			
+			
+		]]>
+	</fx:Script>
+	
+	<s:FormItem width="100%" label="Login">
+		<s:TextInput id="loginInput" width="100%"/>
+	</s:FormItem>
+	       
+</s:Group>

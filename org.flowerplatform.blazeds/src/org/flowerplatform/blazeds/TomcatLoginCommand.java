@@ -8,6 +8,7 @@ import javax.security.auth.Subject;
 import javax.servlet.ServletConfig;
 
 import org.flowerplatform.communication.IPrincipal;
+import org.flowerplatform.communication.IUser;
 
 import flex.messaging.security.LoginCommand;
 
@@ -48,6 +49,24 @@ public class TomcatLoginCommand implements LoginCommand {
 				public Subject getSubject() {
 					// TODO Auto-generated method stub
 					return null;
+				}
+
+				@Override
+				public IUser getUser() {
+					// TODO Auto-generated method stub
+					return null;
+				}
+
+				@Override
+				public long getUserId() {
+					// TODO Auto-generated method stub
+					return 0;
+				}
+
+				@Override
+				public void clearCachedUser() {
+					// TODO Auto-generated method stub
+					
 				}
 			};
 

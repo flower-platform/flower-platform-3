@@ -5,6 +5,11 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServlet;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.web.database.DatabaseManager;
+import org.flowerplatform.web.entity.dao.Dao;
+import org.flowerplatform.web.security.service.GroupService;
+import org.flowerplatform.web.security.service.OrganizationService;
+import org.flowerplatform.web.security.service.UserService;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -19,7 +24,21 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
-
+	
+	private FlowerWebProperties flowerWebProperties;
+	
+	private DatabaseManager databaseManager;
+	
+	private Dao dao;
+	
+	public WebPlugin() {
+		super();
+		INSTANCE = this;
+		flowerWebProperties = new FlowerWebProperties();
+		dao = new Dao();
+		databaseManager = new DatabaseManager();
+	}
+	
 	/**
 	 * We use reflection because there is no compile time dependency,
 	 * which would generate a circular project dependency (or would imply
@@ -38,10 +57,30 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 	
+	/**
+	 * @author Mariana
+	 */
+	public FlowerWebProperties getFlowerWebProperties() {
+		return flowerWebProperties;
+	}
+
+	/**
+	 * @author Mariana
+	 */
+	public DatabaseManager getDatabaseManager() {
+		return databaseManager;
+	}
+
+	/**
+	 * @author Mariana
+	 */
+	public Dao getDao() {
+		return dao;
+	}
+
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
-		INSTANCE = this;
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

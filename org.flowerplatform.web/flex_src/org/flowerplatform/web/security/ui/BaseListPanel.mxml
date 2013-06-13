@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Base list panel.
+
+ @author Cristi
+ @author Cristina
+ @author Mariana
+
+ @flowerModelElementId _43UVkFc1EeG6S8FiFZ8nVA
+-->
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+	xmlns:pnl="com.crispico.flower.util.panel.*"
+	paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" implements="com.crispico.flower.util.spinner.ModalSpinnerSupport" xmlns:ui="org.flowerplatform.web.security.ui.*">
+
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.events.CloseEvent;
+			import mx.events.ListEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.entity.dto.Dto;
+			
+			/**
+			 * Holds the form class used by this panel that opens when
+			 * an add/edit command is requested.
+			 * @flowerModelElementId _JBNRgFi7EeGbZZLUWiYvBA
+			 */ 
+			public var formClass:Class;
+			
+			/**
+			 * Might be used during data request.
+			 * @flowerModelElementId _RBBYYF34EeGwLIVyv_iqEg
+			 */ 
+			private var _currentFilter:Object;
+			
+			/**
+			 * @flowerModelElementId _RBB_cF34EeGwLIVyv_iqEg
+			 */
+			public function get currentFilter():Object {
+				return _currentFilter;
+			}   	
+		
+			/**
+			 * @flowerModelElementId _RBB_cl34EeGwLIVyv_iqEg
+			 */
+			public function set currentFilter(_currentFilter:Object):void {
+				this._currentFilter = _currentFilter;
+				dispatchEvent(new Event("filterChangedEvent"));
+			}
+		
+			/**
+			 * When selection changes on table, the following rules must be valid:
+			 * <ul>
+			 * 	<li> the Edit button is available only on single selection.
+			 * 	<li> the Delete button is available if selection is !null (i.e. can be single or multiple).
+			 * </ul> 
+			 * @flowerModelElementId _JBOfoFi7EeGbZZLUWiYvBA
+			 */ 		
+			protected function selectionChangeHandler(event:ListEvent):void {
+				editBtn.enabled = (table.selectedItems.length == 1);
+				deleteBtn.enabled = (table.selectedItems.length > 0);			
+			}
+			
+			/**
+			 * Should be overridden to send a "get data command", and
+			 * register <code>dataReceivedCallback()</code> as callback.
+			 * <code>super</code> should be called at the begining.
+			 * @flowerModelElementId _KKgQEVlkEeGRrZ75u0k71A
+			 */
+			public function refreshBtnHandler(rslt:Object = null):void {
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.refreshingData"));
+			}
+			
+			public function exceptionHandler(exception:Object):void {
+				ModalSpinner.removeModalSpinner(this);
+			}
+			
+			/**
+			 * Sets the data provider and refreshes the buttons state.
+			 * @flowerModelElementId _KKg3IllkEeGRrZ75u0k71A
+			 */ 
+			public function dataReceivedCallback(dtos:ArrayCollection):void {
+				ModalSpinner.removeModalSpinner(this);
+				table.dataProvider = dtos;
+				selectionChangeHandler(null);
+			}
+			
+			/**
+			 * Opens form window in "add" mode.
+			 * @flowerModelElementId _JBPtwVi7EeGbZZLUWiYvBA
+			 */ 
+			protected function addBtnHandler():void {	
+				openForm();
+			}
+			
+			/**
+			 * Opens form window in "edit" mode.
+			 * @flowerModelElementId _JBRi8Vi7EeGbZZLUWiYvBA
+			 */ 
+			protected function editBtnHandler():void {
+				if (editBtn.enabled)
+					openForm(true);
+			}
+			
+			/**
+			 * Displayes a yes/no warning message before deleting selected items. 
+			 * @flowerModelElementId _JBUmQVi7EeGbZZLUWiYvBA
+			 */ 		
+			protected function deleteBtnHandler():void {
+				Alert.show(CommonPlugin.getInstance().getMessage("delete.confirmation"), CommonPlugin.getInstance().getMessage("warning"), Alert.YES | Alert.NO, this, deleteResultHandler, null, Alert.YES);
+			}
+			
+			/**
+			 * This methos must be implemented by subclasses.
+			 * 
+			 * @see deleteBtnHandler()
+			 * @flowerModelElementId _JBWbcVi7EeGbZZLUWiYvBA
+			 */ 
+			protected function deleteResultHandler(event:CloseEvent):void {
+				throw new Error("This method needs to be implemented.");
+			}
+			
+			/**
+			 * Creates an instance of <code>formClass</code> and opens it.
+			 * 
+			 * @see addBtnHandler()
+			 * @see editBtnHandler()
+			 * @flowerModelElementId _JBYQoVi7EeGbZZLUWiYvBA
+			 */ 
+			protected function openForm(editMode:Boolean=false):void {
+				if (editMode && table.selectedItem == null) {
+					return;
+				}
+				var form:BaseForm = new formClass();
+//				form.showPopup();
+
+				// we do the initializations here to let some time for the component children to be created
+				// because the setter assumes that the children are created
+				form.parentListPanel = this;
+				form.entityId = (editMode ? Dto(table.selectedItem).id : 0);
+			}
+			
+			private var _modalSpinner:ModalSpinner;
+			
+			public function get modalSpinner():ModalSpinner	{
+				return _modalSpinner;
+			}
+			
+			public function set modalSpinner(value:ModalSpinner):void {
+				_modalSpinner = value;
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				if (modalSpinner != null) {
+					modalSpinner.setActualSize(unscaledWidth, unscaledHeight);
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:ApplicationControlBar id="menuBar" width="100%" horizontalAlign="right" fillAlphas="[1.0, 1.0]" fillColors="[#F5F5F5, #F5F5F5]" horizontalGap="0">
+		<mx:VBox id="menuBarVBox" width="100%">
+			<mx:HBox id="menuBarFirstHBox" width="100%" horizontalAlign="right" horizontalGap="0">
+				<common:FlowerLinkButton id="refreshBtn" iconURL="icons/Web/icons/common/refresh.png" label="{WebPlugin.getInstance().getMessage('list.refresh')}" click="refreshBtnHandler()"/>		
+				<common:FlowerLinkButton id="addBtn" iconURL="icons/Web/icons/common/add.png" label="{WebPlugin.getInstance().getMessage('list.add')}" click="addBtnHandler()"/>
+				<common:FlowerLinkButton id="editBtn" iconURL="icons/Web/icons/common/edit.png" label="{WebPlugin.getInstance().getMessage('list.edit')}" click="editBtnHandler()"/>
+				<common:FlowerLinkButton id="deleteBtn" iconURL="icons/Web/icons/common/cancel_delete.png" label="{WebPlugin.getInstance().getMessage('list.delete')}" click="deleteBtnHandler()"/> 					
+			</mx:HBox>
+		</mx:VBox>
+	</mx:ApplicationControlBar>
+	
+	<ui:DisableRowDataGrid id="table" allowMultipleSelection="true" width="100%" height="100%" variableRowHeight="true"
+		change="selectionChangeHandler(event)"
+		doubleClickEnabled="true" itemDoubleClick="editBtnHandler();"/>
+</mx:VBox>
