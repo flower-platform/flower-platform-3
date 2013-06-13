@@ -19,6 +19,7 @@
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
 			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.git.GitCommonPlugin;
 			import org.flowerplatform.web.mobile.SplitView;
 			import org.flowerplatform.web.mobile.popup.WrapperViewPopupHandlerFactory;
 			
@@ -38,7 +39,8 @@
 			
 			private var plugins:Array = [
 				setDescriptorWithUrl(new CommunicationPlugin(), 'servlet/public-resources/org.flowerplatform.communication/org.flowerplatform.communication.swc|library.swf'), 
-				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/org.flowerplatform.web.swc|library.swf')
+				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/org.flowerplatform.web.swc|library.swf'),
+				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/org.flowerplatform.web.git.swc|library.swf')
 			];
 			
 			private function startPlugins():void {

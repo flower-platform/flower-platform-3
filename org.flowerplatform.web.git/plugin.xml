@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="gitExplorerTreeStatefulService"
+            serviceClass="org.flowerplatform.web.git.repository.GitExplorerTreeStatefulService">
+      </service>
+   </extension>
+
+</plugin>

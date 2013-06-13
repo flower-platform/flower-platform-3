@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Git
+Bundle-SymbolicName: org.flowerplatform.web.git;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Export-Package: org.flowerplatform.web.git
+Require-Bundle: org.flowerplatform.common,
+ org.flowerplatform.communication,
+ org.eclipse.core.runtime,
+ org.flowerplatform.web.git.common
