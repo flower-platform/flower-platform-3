@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<persistence-mapping xmlns="http://www.eclipse.org/emft/teneo" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	
+	<epackage namespace-uri="http://www.flower-platform.com/xmi/entity_1.0.0">
+	
+		<eclass name="ISecurityEntity">
+			<mapped-superclass/>
+		</eclass>
+		
+		<eclass name="DBVersion">
+			<property name="id">
+				<id generated="false"/>
+			</property>
+		</eclass>
+		
+		<eclass name="User">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="name">
+				<column length="30"/>
+			</property>
+			<property name="login">
+				<column length="30" unique="true"/>
+			</property>
+			<property name="hashedPassword">
+				<column length="30"/>
+			</property>
+			<property name="email">
+				<column length="50"/>
+			</property>
+			<property name="activationCode">
+				<column length="20"/>
+			</property>
+			<property name="lastPerspective">
+				<column length="40"/>
+			</property>
+		</eclass>
+		
+		<eclass name="Group">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="name">
+				<column length="61" unique="true"/>
+			</property>
+		</eclass>
+		
+		<eclass name="Organization">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="name">
+				<column length="30" unique="true"/>
+			</property>
+			<property name="label">
+				<column length="30"/>
+			</property>
+			<property name="URL">
+				<column length="80"/>
+			</property>
+			<property name="logoURL">
+				<column length="110"/>
+			</property>
+			<property name="iconURL">
+				<column length="110"/>
+			</property>
+		</eclass>
+		
+		<eclass name="GroupUser">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+		</eclass>
+		
+		<eclass name="OrganizationUser">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+		</eclass>
+		
+		<eclass name="PermissionEntity">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="name">
+				<column length="512"/>
+			</property>
+			<property name="type">
+				<column length="100"/>
+			</property>
+			<property name="actions">
+				<column length="65"/>
+			</property>
+			<property name="assignedTo">
+				<column length="30"/>
+			</property>
+		</eclass>
+		
+		<eclass name="SVNRepositoryURLEntity">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="name">
+				<column name="name" length="255"/>
+			</property>
+		</eclass>
+		
+		<eclass name="SVNCommentEntity">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="body">
+				<lob/>
+			</property>
+		</eclass>
+		
+		<eclass name="PerspectiveUserEntry">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="name">
+				<column length="100"/>
+			</property>
+			<property name="serializedLayoutData">
+				<lob/>
+			</property>
+		</eclass>
+		
+		<eclass name="RecentResource">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="label">
+				<column length="50"/>
+			</property>
+			<property name="path">
+				<lob/>
+			</property>
+		</eclass>
+		
+		<eclass name="FavoriteItem">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+		</eclass>
+		
+		<eclass name="AuditEntry">
+			<property name="id">
+				<generated-value generator="IDENTITY"/>
+			</property>
+			<property name="username">
+				<column length="30"/>
+			</property>
+			<property name="ipAddress">
+				<column length="45"/>
+			</property>
+			<property name="auditCategory">
+				<column name="35"/>
+			</property>
+			<property name="param0">
+				<lob/>
+			</property>
+			<property name="param1">
+				<column length="110"/>
+			</property>
+			<property name="param2">
+				<column length="110"/>
+			</property>
+		</eclass>
+		
+	</epackage>
+</persistence-mapping>
