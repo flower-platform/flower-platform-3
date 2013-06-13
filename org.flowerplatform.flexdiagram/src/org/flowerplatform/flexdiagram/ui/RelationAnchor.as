@@ -11,6 +11,9 @@ package org.flowerplatform.flexdiagram.ui {
 	
 	import mx.core.UIComponent;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class RelationAnchor extends UIComponent {
 		
 		// this component changes visual apparence depending on its state

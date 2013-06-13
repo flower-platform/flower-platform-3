@@ -7,9 +7,7 @@ package org.flowerplatform.flexdiagram.ui {
 	import mx.events.FlexEvent;
 	
 	/**
-	 * 
-	 * A component with border and semi-transparent background that can be used
-	 * during move (and/or resize) operations for rectangular shaped models.
+	 * @author Cristina Constantinescu
 	 */
 	public class MoveResizePlaceHolder extends UIComponent {
 		
