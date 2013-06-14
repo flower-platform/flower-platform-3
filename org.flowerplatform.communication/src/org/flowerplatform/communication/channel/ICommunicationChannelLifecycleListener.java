@@ -5,7 +5,7 @@ package org.flowerplatform.communication.channel;
  */
 public interface ICommunicationChannelLifecycleListener {
 	
-	public void webCommunicationChannelCreated(CommunicationChannel webCommunicationChannel);
+	public void communicationChannelCreated(CommunicationChannel webCommunicationChannel);
 
-	public void webCommunicationChannelDestroyed(CommunicationChannel webCommunicationChannel);
+	public void communicationChannelDestroyed(CommunicationChannel webCommunicationChannel);
 }

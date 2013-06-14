@@ -93,9 +93,10 @@
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new ResizablePopupWindowPopupHandlerFactory();
 					
 				FlexPluginManager.getInstance().loadPlugins(new ArrayCollection([
-					'servlet/public-resources/org.flowerplatform.common/org.flowerplatform.common.swc|library.swf',
-					'servlet/public-resources/org.flowerplatform.communication/org.flowerplatform.communication.swc|library.swf',
-					'servlet/public-resources/org.flowerplatform.web/org.flowerplatform.web.swc|library.swf',
+					'servlet/public-resources/org.flowerplatform.common/swc/org.flowerplatform.common.swc|library.swf',
+					'servlet/public-resources/org.flowerplatform.communication/swc/org.flowerplatform.communication.swc|library.swf',
+					'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf',
+					'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf',
 				]));
 
 			}

@@ -79,7 +79,7 @@
 		 -->
 		<init-param>
 			<param-name>workspaceLocation</param-name>
-			<param-value>../git_repo_cs/org.flowerplatform.web.app/workspace</param-value>
+			<param-value>../git_repo_fp/org.flowerplatform.web.app/workspace</param-value>
 		</init-param>	
 
 		<load-on-startup>1</load-on-startup>

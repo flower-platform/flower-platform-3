@@ -10,10 +10,6 @@ package org.flowerplatform.common.plugin {
 	 */
 	public class AbstractFlowerFlexPlugin extends AbstractFlexPlugin {
 		
-		public static const PUBLIC_RESOURCES_DIR:String = "public-resources";
-		
-		public static const RESOURCES_PLUGIN_SUFFIX:String = ".resources";
-		
 		public static const MESSAGES_FILE:String = "messages.properties";
 		
 		protected var resourcesUrl:String;
@@ -42,12 +38,13 @@ package org.flowerplatform.common.plugin {
 		
 		public function getResourceUrl(resource:String):String {
 			if (resourcesUrl == null) {
-				var groups:Array = FlexPluginLoadingSession.classNameRegEx.exec(flexPluginDescriptor.url);
+				const regex:RegExp = new RegExp("(.*?/)swc/");
+				var groups:Array = regex.exec(flexPluginDescriptor.url);
 				if (groups == null || groups.length != 2) {
-					throw new Error("Error getting the bundle name from the url: " + flexPluginDescriptor + "; tried to apply regex: " + FlexPluginLoadingSession.classNameRegEx);
+					throw new Error("Error getting the bundle name from the url: " + flexPluginDescriptor.url + "; tried to apply regex: " + regex);
 				} 
 				var package_:String = groups[1];
-				resourcesUrl = "servlet/" + PUBLIC_RESOURCES_DIR + "/" + package_ + RESOURCES_PLUGIN_SUFFIX + "/";
+				resourcesUrl = groups[1];
 			}
 			return resourcesUrl + resource;
 		}

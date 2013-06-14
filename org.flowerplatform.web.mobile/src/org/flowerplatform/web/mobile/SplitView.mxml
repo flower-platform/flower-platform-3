@@ -121,6 +121,7 @@
 					
 					var button:Button = new Button();
 					button.label = action.label;
+					button.setStyle("icon", FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(action.icon));
 					newActionContent.push(button);
 				}
 				actionContent = newActionContent;

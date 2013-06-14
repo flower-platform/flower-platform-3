@@ -1,7 +1,9 @@
 package org.flowerplatform.web.common.explorer {
+	import mx.collections.ArrayList;
 	import mx.events.IndexChangedEvent;
 	
 	import org.flowerplatform.communication.tree.GenericTreeList;
+	import org.flowerplatform.editor.action.EditorTreeActionProvider;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
@@ -13,6 +15,8 @@ package org.flowerplatform.web.common.explorer {
 		
 		protected var _popupHost:IPopupHost;
 		
+		protected var editorTreeActionProvider:EditorTreeActionProvider = new EditorTreeActionProvider();
+		
 		public function ExplorerTreeList() {
 			super();
 			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
@@ -21,8 +25,6 @@ package org.flowerplatform.web.common.explorer {
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {
 			popupHost.refreshActions(this);
 		}
-		
-		private static var ctr:int;
 		
 		public function getActions():Vector.<IAction>
 		{
@@ -33,13 +35,7 @@ package org.flowerplatform.web.common.explorer {
 			action.label = "Test 1";
 			result.push(action);
 			
-			if (ctr % 2 == 0) {
-				action = new ActionBase();
-				action.label = "Test 2";
-				result.push(action);
-			}
-			
-			return result;
+			return result.concat(editorTreeActionProvider.getActions(new ArrayList([].concat(selectedItems))));
 		}
 		
 		public function get popupHost():IPopupHost {
