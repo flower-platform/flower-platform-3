@@ -1,8 +1,6 @@
-package org.flowerplatform.web.git {
+package org.flowerplatform.web.git.common {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.web.git.repository.GitRepositoriesViewProvider;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -22,11 +20,6 @@ package org.flowerplatform.web.git {
 			}
 			INSTANCE = this;
 		}
-		
-		override public function setupExtensionPointsAndExtensions():void {
-			super.setupExtensionPointsAndExtensions();
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new GitRepositoriesViewProvider());
-		}		
 		
 	}	
 }

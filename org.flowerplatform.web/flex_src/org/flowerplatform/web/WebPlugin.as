@@ -54,7 +54,7 @@ package org.flowerplatform.web {
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-			perspectives[1].resetPerspective(workbench);
+			perspectives[0].resetPerspective(workbench);
 		}
 		
 		override public function setupExtensionPointsAndExtensions():void {

@@ -12,3 +12,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.servlet,
  javax.servlet.http
+Export-Package: org.flowerplatform.web,
+ org.flowerplatform.web.explorer

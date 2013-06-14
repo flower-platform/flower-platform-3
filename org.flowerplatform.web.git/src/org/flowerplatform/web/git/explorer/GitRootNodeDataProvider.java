@@ -1,49 +1,58 @@
-package org.flowerplatform.web.git.repository;
+package org.flowerplatform.web.git.explorer;
 
+import java.io.File;
 import java.util.List;
 
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodeDataProvider;
+import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.explorer.RootChildrenProvider;
 
-public class GitRepositoryNodeDataProvider implements INodeDataProvider {
-
+public class GitRootNodeDataProvider implements INodeDataProvider {
+	
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
-		// TODO Auto-generated method stub
-		return false;
+		destination.setLabel("Git Repositories");
+		destination.setIcon(WebPlugin.getInstance().getResourceUrl("images/organization.png"));
+		return true;
 	}
 
 	@Override
 	public Object getParent(Object node, String nodeType, GenericTreeContext context) {
-		// TODO Auto-generated method stub
-		return null;
+		@SuppressWarnings("unchecked")
+		File parentFile = ((Pair<File, String>) node).a;
+		return parentFile;
 	}
 
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
-		// TODO Auto-generated method stub
-		return null;
+		@SuppressWarnings("unchecked")
+		String nodeType1 = ((Pair<File, String>) node).b;
+		return new PathFragment(nodeType1, nodeType1);
 	}
 
 	@Override
 	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) {
-		// TODO Auto-generated method stub
-		return null;
+		if (fullPath == null || fullPath.size() != 2 || !RootChildrenProvider.NODE_TYPE_ORGANIZATION.equals(fullPath.get(0).getType())) {
+			throw new IllegalArgumentException("We were expecting a path with 2 items (no 0 being an org), but we got: " + fullPath);
+		}
+		return new Pair<File, String>(new File(RootChildrenProvider.getWorkspaceRoot(), fullPath.get(0).getName()), fullPath.get(1).getType());
 	}
 
 	@Override
 	public String getLabelForLog(Object node, String nodeType) {
-		// TODO Auto-generated method stub
-		return null;
+		File parentFile = ((Pair<File, String>) node).a;
+		return ((File) node).getName();
 	}
 
 	@Override

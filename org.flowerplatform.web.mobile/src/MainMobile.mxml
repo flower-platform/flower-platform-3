@@ -7,11 +7,9 @@
 	xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mobile="org.flowerplatform.web.mobile.*">
 	<fx:Script>
 		<![CDATA[
-			import flash.sampler.NewObjectSample;
-			
 			import mx.core.FlexGlobals;
-			import mx.events.FlexEvent;
 			
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -19,7 +17,6 @@
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
 			import org.flowerplatform.web.common.WebCommonPlugin;
-			import org.flowerplatform.web.git.GitCommonPlugin;
 			import org.flowerplatform.web.mobile.SplitView;
 			import org.flowerplatform.web.mobile.popup.WrapperViewPopupHandlerFactory;
 			

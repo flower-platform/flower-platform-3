@@ -7,4 +7,7 @@ Export-Package: org.flowerplatform.web.git
 Require-Bundle: org.flowerplatform.common,
  org.flowerplatform.communication,
  org.eclipse.core.runtime,
- org.flowerplatform.web.git.common
+ org.flowerplatform.web,
+ org.eclipse.core.resources
+Bundle-Activator: org.flowerplatform.web.git.GitPlugin
+Bundle-ActivationPolicy: lazy

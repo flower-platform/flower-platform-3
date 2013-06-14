@@ -7,8 +7,8 @@ package  org.flowerplatform.web.git.layout {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.git.GitPlugin;
-	import org.flowerplatform.web.git.repository.GitRepositoriesViewProvider;
 	import org.flowerplatform.web.layout.Perspective;
 	
 	/**
@@ -42,7 +42,7 @@ package  org.flowerplatform.web.git.layout {
 			
 			// repositories view
 			var view:ViewLayoutData = new ViewLayoutData();
-			view.viewId = GitRepositoriesViewProvider.ID;
+			view.viewId = ExplorerViewProvider.ID;
 			nav.children.addItem(view);
 			view.parent = nav;
 			

@@ -2,9 +2,8 @@ package org.flowerplatform.web.git {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.WebPlugin;
-	import org.flowerplatform.web.git.GitCommonPlugin;
 	import org.flowerplatform.web.git.layout.GitPerspective;
-	import org.flowerplatform.web.git.repository.GitRepositoriesViewProvider;
+	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -37,5 +36,8 @@ package org.flowerplatform.web.git {
 			gitCommonPlugin.setupExtensionPointsAndExtensions();		
 		}
 		
+		override protected function registerMessageBundle():void {
+			// do nothing; this plugin doesn't have a .resources (yet)
+		}
 	}
 }
