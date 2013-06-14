@@ -24,7 +24,7 @@ abstract public class StatefulService {
 		for (String statefulClientId : getStatefulClientIdsForCommunicationChannel(channel)) {
 			invokeClientMethod(channel, statefulClientId, "unsubscribedForcefully", null);
 		}
-		webCommunicationChannelDestroyed(channel);
+		communicationChannelDestroyed(channel);
 	}
 	
 	public Collection<String> getStatefulClientIdsForCommunicationChannel(CommunicationChannel communicationChannel) {
@@ -48,7 +48,7 @@ abstract public class StatefulService {
 	 * 
 	 * @param webCommunicationChannel
 	 */
-	public void webCommunicationChannelDestroyed(CommunicationChannel webCommunicationChannel) {
+	public void communicationChannelDestroyed(CommunicationChannel webCommunicationChannel) {
 		// Does nothing 
 	}
 	

@@ -1,5 +1,6 @@
 package org.flowerplatform.communication.tree {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.flexutil.tree.TreeListItemRenderer;
 	
@@ -15,8 +16,8 @@ package org.flowerplatform.communication.tree {
 			return TreeNode(data.treeNode).label;
 		}
 		
-		protected function getIconFunction(data:HierarchicalModelWrapper):String {
-			return TreeNode(data.treeNode).icon;
+		protected function getIconFunction(data:HierarchicalModelWrapper):Object {
+			return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(TreeNode(data.treeNode).icon);
 		}
 	}
 }

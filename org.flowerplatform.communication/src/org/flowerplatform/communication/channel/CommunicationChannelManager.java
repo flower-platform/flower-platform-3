@@ -59,7 +59,7 @@ public class CommunicationChannelManager {
 		// notify all listeners
 		for (ICommunicationChannelLifecycleListener listener : communicationLifecycleListeners) {
 			try {
-				listener.webCommunicationChannelCreated(communicationChannel);
+				listener.communicationChannelCreated(communicationChannel);
 			} catch (Throwable e) {
 				// We catch it but continue so that the system doesn't trip.
 				logger.error("Exception thrown by a webCommunicationChannelCreated() handler.", e); 
@@ -77,6 +77,7 @@ public class CommunicationChannelManager {
 	 */
 	public void messageClientDestroyed(Object communicationChannelId) {
 		CommunicationChannel communicationChannel = idToCommunicationChannelMap.remove(communicationChannelId);
+		communicationChannel.dispose();
 		AuditDetails auditDetails = new AuditDetails(logger, LOGOUT_AUDIT_CATEGORY, communicationChannel.getCachedUserId());
 		
 		if (logger.isDebugEnabled())
@@ -85,7 +86,7 @@ public class CommunicationChannelManager {
 		// notify all listeners, with a copy
 		for (ICommunicationChannelLifecycleListener listener : communicationLifecycleListeners) {
 			try {
-				listener.webCommunicationChannelDestroyed(communicationChannel);
+				listener.communicationChannelDestroyed(communicationChannel);
 			} catch (Throwable e) {
 				// We catch it but continue so that the system doesn't trip.
 				logger.error("Exception thrown by a communicationChannelDestroyed() handler.", e); 

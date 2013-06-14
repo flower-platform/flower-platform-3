@@ -41,6 +41,8 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	private CommunicationChannelManager communicationChannelManager = new CommunicationChannelManager();
 	
 	private ServiceRegistry serviceRegistry = new ServiceRegistry();
+	
+	private ScheduledExecutorServiceFactory scheduledExecutorServiceFactory = new ScheduledExecutorServiceFactory();
 
 	public List<ServletMapping> getServletMappings() {
 		return servletMappings;
@@ -52,6 +54,10 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 
 	public ServiceRegistry getServiceRegistry() {
 		return serviceRegistry;
+	}
+
+	public ScheduledExecutorServiceFactory getScheduledExecutorServiceFactory() {
+		return scheduledExecutorServiceFactory;
 	}
 	
 	public static final ThreadLocal<IPrincipal> tlCurrentUser = new ThreadLocal<IPrincipal>();
@@ -95,6 +101,7 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
+		scheduledExecutorServiceFactory.dispose();
 		super.stop(bundleContext);
 		INSTANCE = null;
 	}

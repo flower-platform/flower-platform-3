@@ -51,7 +51,7 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 
 	@Override
 	public Object getId() {
-		return messageClient.getFlexClient().getId();
+		return messageClient == null ? null : messageClient.getFlexClient().getId();
 	}
 
 	@Override
@@ -74,6 +74,16 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 	@Override
 	public void disconnect() {
 		messageClient.getFlexClient().invalidate();
+	}
+
+	@Override
+	public boolean isDisposed() {
+		return messageClient == null;
+	}
+
+	@Override
+	public void dispose() {
+		messageClient = null;
 	}
 
 }

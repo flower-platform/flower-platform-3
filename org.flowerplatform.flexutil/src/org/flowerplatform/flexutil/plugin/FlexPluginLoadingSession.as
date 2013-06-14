@@ -19,7 +19,6 @@ package org.flowerplatform.flexutil.plugin {
 	
 	import org.flowerplatform.flexutil.FlexUtilAssets;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.FlowerLoaderUtil;
 	
 	/**
 	 * Loads a list of plugins.
@@ -109,7 +108,7 @@ package org.flowerplatform.flexutil.plugin {
 				descriptor.urlLoader.addEventListener(Event.COMPLETE, downloadHandler);
 				descriptor.urlLoader.addEventListener(IOErrorEvent.IO_ERROR, downloadHandler);
 				descriptor.urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, downloadHandler);
-				descriptor.urlLoader.load(new URLRequest(FlowerLoaderUtil.createAbsoluteURL(descriptor.url)));
+				descriptor.urlLoader.load(new URLRequest(FlexUtilGlobals.getInstance().createAbsoluteUrl(descriptor.url)));
 				
 			}
 		}

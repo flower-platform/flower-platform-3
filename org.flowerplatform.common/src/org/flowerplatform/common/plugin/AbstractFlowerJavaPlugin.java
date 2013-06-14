@@ -19,8 +19,6 @@ public abstract class AbstractFlowerJavaPlugin implements BundleActivator {
 
 	public static final String PUBLIC_RESOURCES_DIR = "public-resources";
 	
-	public static final String RESOURCES_PLUGIN_SUFFIX = ".resources";
-	
 	public static final String MESSAGES_FILE = "messages.properties";
 	
 	protected final static Logger logger = LoggerFactory.getLogger(AbstractFlowerJavaPlugin.class);
@@ -38,7 +36,7 @@ public abstract class AbstractFlowerJavaPlugin implements BundleActivator {
 	}
 
 	protected String getMessagesFilePath() {
-		return getBundleContext().getBundle().getSymbolicName() + RESOURCES_PLUGIN_SUFFIX + "/" + PUBLIC_RESOURCES_DIR + "/" + MESSAGES_FILE;
+		return getBundleContext().getBundle().getSymbolicName() + "/" + PUBLIC_RESOURCES_DIR + "/" + MESSAGES_FILE;
 	}
 	
 	public void registerMessageBundle() throws Exception {
@@ -87,8 +85,7 @@ public abstract class AbstractFlowerJavaPlugin implements BundleActivator {
 
 	public String getResourceUrl(String resource) {
 		return "servlet/" + PUBLIC_RESOURCES_DIR + "/" + 
-				getBundleContext().getBundle().getSymbolicName() + 
-				RESOURCES_PLUGIN_SUFFIX + "/" +
+				getBundleContext().getBundle().getSymbolicName() + "/" +
 				resource;
 	}
 	

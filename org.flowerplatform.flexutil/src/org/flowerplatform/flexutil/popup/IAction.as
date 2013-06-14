@@ -4,6 +4,7 @@ package org.flowerplatform.flexutil.popup {
 		function get preferShowOnActionBar():Boolean;
 		function get visible():Boolean;
 		function get enabled():Boolean;
+		function get icon():Object;
 		function get label():String;
 		function run():void;
 	}

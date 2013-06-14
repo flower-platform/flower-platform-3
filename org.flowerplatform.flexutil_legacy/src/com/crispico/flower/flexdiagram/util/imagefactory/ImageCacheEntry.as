@@ -12,7 +12,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	
-	import org.flowerplatform.flexutil.FlowerLoaderUtil;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	 
 	/**
 	 * This class holds the <code>bitmapData</code> for the (composed) image identified 
@@ -69,7 +69,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 					timer.start();			 		
 				} else {
 					// This means the image has no decorators so there is no need for a composed image
-					var request:URLRequest = new URLRequest(FlowerLoaderUtil.createAbsoluteURL(sourceImages[0]));
+					var request:URLRequest = new URLRequest(FlexUtilGlobals.getInstance().createAbsoluteUrl(sourceImages[0]));
 					var loader:Loader = new Loader();
 	
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loaderCompleteHandler);

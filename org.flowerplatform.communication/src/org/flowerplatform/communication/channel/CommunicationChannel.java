@@ -61,4 +61,8 @@ public abstract class CommunicationChannel {
 	public static IPrincipal getCurrentPrincipal() {
 		throw new UnsupportedOperationException();
 	}
+	
+	public abstract boolean isDisposed();
+	
+	public abstract void dispose();
 }

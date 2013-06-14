@@ -1,14 +1,11 @@
 package org.flowerplatform.web.mobile.popup {
-	import flash.display.Bitmap;
-	
 	import mx.core.IVisualElement;
 	
-	import org.flowerplatform.flexutil.FlowerLoaderUtil;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
 	
-	import spark.components.ActionBar;
 	import spark.components.Button;
 	import spark.components.Label;
 	import spark.components.View;
@@ -63,7 +60,7 @@ package org.flowerplatform.web.mobile.popup {
 		}
 		
 		public function setIcon(value:Object):void {
-			iconComponent.source = FlowerLoaderUtil.createAbsoluteURL(String(value));
+			iconComponent.source = FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(value);
 		}
 		
 		public function setLabel(value:String):void {
