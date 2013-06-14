@@ -7,6 +7,7 @@ package  org.flowerplatform.web.common.communication {
 	import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
+	import org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto;
 	
 	
 	/**
@@ -44,10 +45,10 @@ package  org.flowerplatform.web.common.communication {
 		 */
 		private var anonymousAuthenticationRejected:Boolean;
 
-//		/**
-//		 * @author Cristi
-//	 	 */
-//		public var currentUserLoggedIn:User_CurrentUserLoggedInDto;
+		/**
+		 * @author Cristi
+	 	 */
+		public var currentUserLoggedIn:User_CurrentUserLoggedInDto;
 		
 		/**
 		 * Keeps the value for "Keep layout structure" checkbox from auth dialog.

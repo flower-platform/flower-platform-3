@@ -4,9 +4,10 @@ package org.flowerplatform.web.security.ui {
 	
 	import flash.events.Event;
 	
-	import org.flowerplatform.web.entity.dto.Dto;
+	import mx.containers.VBox;
 	
-	import spark.components.Group;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.web.common.entity.dto.Dto;
 		
 	/**
 	 * Base form panel.
@@ -15,7 +16,7 @@ package org.flowerplatform.web.security.ui {
 	 * @author Cristina
 	 * @flowerModelElementId _LA5mkFc1EeG6S8FiFZ8nVA
 	 */
-	public class BaseForm extends Group {
+	public class BaseForm extends VBox {
 				
 		/**
 		 * @flowerModelElementId _gJ5hsFfGEeGs_rPsEt9lFQ
@@ -80,11 +81,11 @@ package org.flowerplatform.web.security.ui {
 		 * @flowerModelElementId _mVQecFfLEeGs_rPsEt9lFQ
 		 */
 		protected function formOkHandler():void {
-//			closeForm();
+			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 		}
 		
 		protected function exceptionCallback(exception:Object):void {
-//			ModalSpinner.removeModalSpinner(this);
+			ModalSpinner.removeModalSpinner(this);
 		}
 
 	}

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Contains an <code>OrganizationsPanel</code>. A list of selected organizations is
+sent to a <code>callbackObject</code> as a parameter to the <code>callbackFunction</code>
+after pressing OK.
+
+@author Mariana
+-->
+<mx:VBox
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:popup="com.crispico.flower.util.popup.*"
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+	minWidth="900" minHeight="500" creationComplete="creationComplete()">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.popup.TextAreaPopup;
+			
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			
+			private function approveDenyNewOrganizationRequest(approve:Boolean):void {
+				var list:Array = organizationsPanel.table.selectedItems;
+				var organizationsLabels:String = new String();
+				for each (var org:OrganizationAdminUIDto in list) {
+					if (list.indexOf(org) < list.length - 1) {
+						organizationsLabels += org.label + ", ";
+					} else {
+						organizationsLabels += org.label;
+					}
+				}
+				var message:String = approve ? WebPlugin.getInstance().getMessage("entity.organization.approve.confirmation", [organizationsLabels]) : 
+					WebPlugin.getInstance().getMessage("entity.organization.deny.confirmation", [organizationsLabels]);
+				var title:String = approve ? WebPlugin.getInstance().getMessage("entity.organization.approve") : 
+					WebPlugin.getInstance().getMessage("entity.organization.deny"); 
+				
+				var wizard:CommentTextBoxWizard = new CommentTextBoxWizard();
+				wizard.title = title;
+//				wizard.titleIconURL = titleIconURL;
+				wizard.commentPageTitle = title;
+				wizard.commentPageDescription = WebPlugin.getInstance().getMessage('entity.organization.approveDeny.wizard.description');
+				wizard.commentBoxLabel = WebPlugin.getInstance().getMessage('entity.organization.approveDeny.wizard.commentForOrganizationOwner');
+				wizard.confirmationMessage = message;
+				wizard.finishFunction = function(obj:Object):void {
+					for each (var organization:OrganizationAdminUIDto in list) {
+						organization.activated = approve;
+						var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+							"userService", "approveDenyNewOrganization", [organization, approve, obj], this, organizationApprovedDenied);
+						CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+					}
+				};
+				wizard.showPopup();
+			}
+			
+			private function organizationApprovedDenied(message:String):void {
+				if (message) {
+					var popup:TextAreaPopup = new TextAreaPopup();
+					popup.minWidth = 500;
+					popup.minHeight = 300;
+					popup.title = WebPlugin.getInstance().getMessage('entity.organization.approve');
+					popup.titleIconURL = "icons/Web/icons/usr_admin/organization.png";
+					popup.isHTML = true;
+					popup.text = message;
+					popup.showPopup();
+				}
+				organizationsPanel.refreshBtnHandler();
+			}
+			
+			/**
+			 * Enable/disable approve/deny new organizations buttons.
+			 */ 
+			public function selectionChangeHandler():void {
+				var list:Array = organizationsPanel.table.selectedItems;
+				if (list.length == 0) {
+					approveRequestButton.enabled = false;
+					denyRequestButton.enabled = false;
+				} else {
+					for each (var organization:OrganizationAdminUIDto in list) {
+						if (organization.activated) {
+							approveRequestButton.enabled = false;
+							denyRequestButton.enabled = false;
+							return;
+						}
+					}
+					// all orgs in selection are not activated
+					approveRequestButton.enabled = true;
+					denyRequestButton.enabled = true;
+				}
+			}
+			
+			protected function creationComplete():void {
+				if (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin) {
+					currentState = "manageOrganizationsAsAdminState";
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		
+		<!-- Adds Approve/Deny New Organization request in the organizations panel menu bar. -->
+		<mx:State name="manageOrganizationsAsAdminState">
+			<mx:AddChild relativeTo="{organizationsPanel.menuBarFirstHBox}" position="firstChild">
+				<mx:Spacer width="100%"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{organizationsPanel.menuBarFirstHBox}" position="firstChild">
+				<mx:HBox width="100%" horizontalAlign="left">
+					<common:FlowerLinkButton id="approveRequestButton" label="{WebPlugin.getInstance().getMessage('entity.organization.approve')}" iconURL="icons/Web/icons/ok.png" click="approveDenyNewOrganizationRequest(true)" enabled="false"/>
+					<common:FlowerLinkButton id="denyRequestButton" label="{WebPlugin.getInstance().getMessage('entity.organization.deny')}" iconURL="icons/Web/icons/cancel.png" click="approveDenyNewOrganizationRequest(false)" enabled="false"/>
+				</mx:HBox>
+			</mx:AddChild>
+			<mx:SetProperty target="{organizationsPanel}" name="organizationsScreen" value="{this}"/>
+		</mx:State>
+	</mx:states>
+	
+	<mx:VBox id="contents" width="100%" height="100%">
+		<ui:OrganizationsPanel id="organizationsPanel" width="100%" height="100%"/>
+	</mx:VBox>
+		
+</mx:VBox>

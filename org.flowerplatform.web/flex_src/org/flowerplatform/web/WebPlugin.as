@@ -3,9 +3,11 @@ package org.flowerplatform.web {
 	
 	import flash.events.MouseEvent;
 	
-	import mx.controls.Alert;
+	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
+	
+	import spark.components.Button;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
@@ -15,9 +17,9 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
+	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.UserForm;
-	
-	import spark.components.Button;
+	import org.flowerplatform.web.security.ui.UsersScreen;
 	
 	/**
 	 * @author Cristi
@@ -49,14 +51,11 @@ package org.flowerplatform.web {
 			webCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			webCommonPlugin.start();
 			
-			var userFormBtn:Button = new Button();
-			userFormBtn.label = "User Form";
-			userFormBtn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContentClass(UserForm)
-					.show();
-			});
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(userFormBtn);
+			var hBox:HBox = new HBox();
+			test_addButton("User Form", UserForm, hBox);
+			test_addButton("Users Screen", UsersScreen, hBox);
+			test_addButton("Organizations Screen", OrganizationsScreen, hBox);
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
 			
 			workbench= new Workbench();
 			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
@@ -65,6 +64,20 @@ package org.flowerplatform.web {
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		private function test_addButton(label:String, cls:Class, hBox:HBox):void {
+			var btn:Button = new Button();
+			btn.label = label;
+			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContentClass(cls)
+					.show();
+			});
+			hBox.addElement(btn);
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
@@ -79,7 +92,7 @@ package org.flowerplatform.web {
 		}
 		
 		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
+			super.registerMessageBundle();
 		}
 		
 		public function getPerspective(id:String):Perspective {

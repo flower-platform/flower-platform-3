@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 	List panel for users, with filter.
+ 
+ 	@author Cristi
+ 	@author Cristina
+ 	@author Mariana
+ @flowerModelElementId _YYu_oFcPEeGL3vi-zPhopA
+-->
+<ui:BaseListPanel 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns="com.crispico.flower.util.ui_inheritance.*" 
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+	xmlns:utils="org.flowerplatform.web.utils.*" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	creationComplete="creationCompleteHandler(event)">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.entity.dto.Dto;
+
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				this.formClass = UserForm;
+				refreshBtnHandler();
+			}
+			
+			/**
+			 * This panel belongs to a <code>UsersScreen</code>, available in the administration menu.
+			 */
+			public var usersScreen:UsersScreen;
+			
+			/**
+			 * Changes the enablement of the add/edit/delete buttons, depending of the current user logged in.
+			 * 
+			 * @author Mariana
+			 */ 
+			override protected function selectionChangeHandler(event:ListEvent):void {
+				super.selectionChangeHandler(event);
+				
+				// can only add if hasAdminSecEntPermissions
+				addBtn.enabled &&= WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.hasAdminSecurityEntitiesPermissions;
+				
+				// can delete user only if global admin
+				deleteBtn.enabled &&= WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin;
+				
+				if (usersScreen) {
+					usersScreen.selectionChangeHandler();
+				}
+			}
+			
+			/**
+			 * @flowerModelElementId _KKrPMFlkEeGRrZ75u0k71A
+			 */
+			override public function refreshBtnHandler(rslt:Object = null):void {
+				super.refreshBtnHandler();
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("userService", "findAllAsAdminUIDto", [filter.text], this, dataReceivedCallback, exceptionHandler));
+			}
+			
+			/**
+			 * Sends command to server to delete selected items.
+			 * @flowerModelElementId _RCFIUF34EeGwLIVyv_iqEg
+			 */ 
+			override protected function deleteResultHandler(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					var ids:ArrayCollection = new ArrayCollection();
+					for each (var object:Object in table.selectedItems) {
+						ids.addItem(Dto(object).id);
+					}
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("userService", "delete", [ids], this, deleteAccountHandler));		
+				}
+			}
+			
+			private function deleteAccountHandler(errorMessage:String):void {
+				if (errorMessage) {
+					Alert.show(errorMessage, "Error");
+				} else {
+					refreshBtnHandler();
+				}
+			}
+			
+			override protected function openForm(editMode:Boolean=false):void {
+				if (editMode) {
+					super.openForm(editMode);
+				} else {
+					var wizard:NewUserWizard = new NewUserWizard();
+					wizard.parentListPanel = this;
+					CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
+						"organizationService",
+						"findAllAsAdminUIDto", // find all organizations
+						[false], 			   // where curent user is admin
+						wizard,
+						wizard.setAvailableOrganizations));
+				}
+			}
+			
+			protected function applyFilterHandler():void {
+				refreshBtnHandler();
+				applyFilterButton.enabled = false;
+				clearFilterButton.enabled = true;
+			}
+			
+			protected function clearFilterHandler(event:MouseEvent):void {
+				filter.text = "";
+				refreshBtnHandler();
+				applyFilterButton.enabled = false;
+				clearFilterButton.enabled = false;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<ns:InheritableStates component="{this}" currentState="default">
+		<ns:inheritableStates>
+			<mx:State name="default">
+				
+				<mx:AddChild relativeTo="{menuBarVBox}">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<mx:Label text="{WebPlugin.getInstance().getMessage('entity.filter')}" fontWeight="bold" paddingLeft="5"/>
+						<mx:TextInput id="filter" change="{ applyFilterButton.enabled = filter.text.length > 0; }" enter="applyFilterHandler()"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.filter.usersFilter.tooltip', [WebPlugin.getInstance().getMessage('entity.filter.usersFilter.simple'), WebPlugin.getInstance().getMessage('entity.filter.usersFilter.advanced.title')])}"/>
+						<common:FlowerLinkButton id="applyFilterButton" label="{WebPlugin.getInstance().getMessage('entity.filter.apply')}" iconURL="icons/Web/icons/filter/filter_add.png" enabled="false" click="applyFilterHandler()"/>
+						<common:FlowerLinkButton id="clearFilterButton" label="{WebPlugin.getInstance().getMessage('entity.filter.clear')}" iconURL="icons/Web/icons/filter/filter_delete.png" enabled="false" click="clearFilterHandler(event)"/>
+						
+						<mx:Spacer width="100%"/>
+						
+						<utils:HintButton label="{WebPlugin.getInstance().getMessage('entity.filter.usersFilter.advanced.title')}" popupText="{WebPlugin.getInstance().getMessage('entity.filter.usersFilter.advanced.content', [WebPlugin.getInstance().getMessage('entity.filter.usersFilter.simple')])}"/>
+					</mx:HBox>
+				</mx:AddChild>
+				
+				<mx:SetProperty target="{table}" name="columns">
+					<mx:value>
+						<mx:Array>
+							<mx:DataGridColumn width="0.17" headerText="{WebPlugin.getInstance().getMessage('entity.user.login')}" dataField="login"/>
+							<mx:DataGridColumn width="0.2" headerText="{WebPlugin.getInstance().getMessage('entity.user.name')}" dataField="name"/>
+							<mx:DataGridColumn width="0.2" headerText="{WebPlugin.getInstance().getMessage('entity.user.email')}" dataField="email"/>
+							<mx:DataGridColumn width="0.08" headerText="{WebPlugin.getInstance().getMessage('entity.user.activated')}">
+								<mx:itemRenderer>
+									<mx:Component>
+										<ui:CenteredCheckBoxItemRenderer selectedState="isActivated"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn width="0.2" headerText="{WebPlugin.getInstance().getMessage('entity.user.organizations')}">
+								<mx:itemRenderer>
+									<mx:Component>
+										<ui:MultiLineDataGridItemRenderer listName="organizationUsers"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn width="0.15" headerText="{WebPlugin.getInstance().getMessage('entity.user.groups')}">
+								<mx:itemRenderer>
+									<mx:Component>
+										<ui:MultiLineDataGridItemRenderer listName="groups"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+						</mx:Array>
+					</mx:value>
+				</mx:SetProperty>
+				
+			</mx:State>
+		</ns:inheritableStates>
+	</ns:InheritableStates>
+</ui:BaseListPanel>

@@ -1,5 +1,6 @@
-package org.flowerplatform.web.security.dto {
-	import org.flowerplatform.web.entity.dto.Dto;
+package org.flowerplatform.web.common.security.dto {
+	import org.flowerplatform.web.common.entity.dto.Dto;
+	
 	
 	[RemoteClass(alias="com.crispico.flower.mp.web.security.dto.OrganizationUserAdminUIDto")]
 	public class OrganizationUserAdminUIDto	extends Dto {

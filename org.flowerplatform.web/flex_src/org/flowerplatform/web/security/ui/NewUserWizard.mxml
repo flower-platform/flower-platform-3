@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	Wizard to created a new user. Contains:
+	<ul>
+		<li> first page to select the organization where the user will be created
+		<li> second page contains the user form
+	</ul>
+
+	@author Mariana
+-->
+<popup:Wizard 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:popup="com.crispico.flower.util.popup.*" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	title="{WebPlugin.getInstance().getMessage('form.add', [WebPlugin.getInstance().getMessage('entity.user')])}" 
+	titleIconURL="icons/Web/icons/usr_admin/user.png" 
+	width="550" height="585" minWidth="550" minHeight="585" >
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
+			
+			[Bindable]
+			private var availableOrganizations:ArrayCollection;
+			
+			public var parentListPanel:UsersPanel;
+			
+			public function setAvailableOrganizations(list:ArrayCollection):void {
+				if (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin) {
+					var noOrg:OrganizationAdminUIDto = new OrganizationAdminUIDto();
+					noOrg.name = "";
+					noOrg.id = 0;
+					list.addItemAt(noOrg, 0);
+				}
+
+				availableOrganizations = list;
+				showPopup();
+			}
+			
+			protected function userFormCreated():void {
+				userForm.entityId = 0;
+				userForm.save.includeInLayout = false;
+				userForm.save.visible = false;
+//				userForm.cancel.includeInLayout = false;
+//				userForm.cancel.visible = false;
+				
+				var tab:DisplayObject = userForm.tabNavigator.getChildAt(0);
+				userForm.visible = false;
+				userForm.includeInLayout = false;
+				userFormContainer.addChild(tab);
+			}
+			
+			override protected function finishClickHandler():void {
+				var selectedOrganization:OrganizationAdminUIDto = OrganizationAdminUIDto(organization.selectedItem);
+				if (selectedOrganization.id != 0) {
+					userForm.user.organizationUsers = new ArrayCollection();
+					var ou:OrganizationUserAdminUIDto = new OrganizationUserAdminUIDto();
+					ou.organization = selectedOrganization;
+					ou.status = OrganizationUserAdminUIDto.MEMBER;
+					userForm.user.organizationUsers.addItem(ou);
+				}
+				
+				userForm.saveUser();
+			}
+			
+			override protected function nextClickHandler():void {
+				super.nextClickHandler();
+				
+				var organizationsFilter:ArrayCollection = new ArrayCollection();
+				organizationsFilter.addItem(organization.selectedItem);
+				userForm.getAvailableGroups(organizationsFilter);
+			}
+			
+		]]>	
+	</mx:Script>
+	
+	<popup:states>
+		
+		<mx:State name="0">
+			<mx:SetProperty target="wizardTitle" name="text" value="{WebPlugin.getInstance().getMessage('entity.user.wizard.createNewUser')}"/>
+			<mx:SetProperty target="wizardDescription" name="text" value="{WebPlugin.getInstance().getMessage('entity.user.wizard.selectOrganization')}"/>
+			<mx:SetProperty target="next" name="enabled" value="true"/>
+			<mx:SetProperty target="finish" name="enabled" value="false"/>
+			
+			<mx:AddChild relativeTo="{contentArea}">
+				
+				<mx:Form width="100%" height="100%">
+					<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.organization')}">
+						<mx:ComboBox id="organization" dataProvider="{availableOrganizations}" labelField="name"/>
+					</mx:FormItem>
+				</mx:Form>
+			</mx:AddChild>
+		</mx:State>
+		
+		<mx:State name="1">
+			<mx:SetProperty target="wizardTitle" name="text" value="{WebPlugin.getInstance().getMessage('entity.user.userInformation')}"/>
+			<mx:SetProperty target="wizardDescription" name="text" value="{WebPlugin.getInstance().getMessage('entity.user.wizard.enterUserInformation')}"/>
+			<mx:SetProperty target="back" name="enabled" value="true"/>
+			<mx:SetProperty target="finish" name="enabled" value="true"/>
+			
+			<mx:AddChild relativeTo="{contentArea}">
+				<mx:HBox id="userFormContainer" width="100%" height="100%">
+					<ui:UserForm id="userForm" newUserWizard="{this}" parentListPanel="{parentListPanel}" width="100%" height="100%" includeInLayout="false" visible="false" creationComplete="userFormCreated()"/>
+				</mx:HBox>
+			</mx:AddChild>
+		</mx:State>
+	</popup:states>
+	
+</popup:Wizard>

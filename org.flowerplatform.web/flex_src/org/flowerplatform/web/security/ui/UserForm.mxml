@@ -8,35 +8,493 @@
 
  @flowerModelElementId _HwKUoJqLEeGyKfvGQd78qg
 -->
-<s:Group 
+<ui:BaseForm
 	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
-	xmlns:fx="http://ns.adobe.com/mxml/2009" 
-	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx">
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+	xmlns:validators="com.crispico.flower.util.validators.*"
+	xmlns:duallistbox="com.crispico.flower.util.duallistbox.*"
+	xmlns:utils="org.flowerplatform.web.utils.*"
+	>
 	
-	<s:layout>
-		<s:VerticalLayout verticalAlign="middle"/>
-	</s:layout>
-	
-	<fx:Script>
+	<mx:Script>
 		<![CDATA[
+			import com.crispico.flower.util.popup.TextAreaPopup;
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.command.CompoundServerCommand;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
-			
-			public function set popupHost(popupHost:IPopupHost):void {
-				popupHost.setLabel("User Form");
-			}
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.entity.dto.NamedDto;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
 			
 			public function getActions():Vector.<IAction> {
 				return null;
 			}
 			
+			public function set popupHost(value:IPopupHost):void {
+				
+			}
+			
+			/**
+			 * @flowerModelElementId _CphakFyIEeGwx-0cTKUc5w
+			 */
+			override public function set entityId(_entityId:Number):void {
+				super.entityId = _entityId;
+				
+				// set labelField now, to make sure they are both set before getting data from the server
+				groupsDualList.leftList.labelField = "name";
+				groupsDualList.rightList.labelField = "name";
+				
+				var command:CompoundServerCommand = new CompoundServerCommand();	
+				var organizationsFilter:ArrayCollection = new ArrayCollection();
+				if (entityId != 0) {
+					form.enabled = false;
+					save.enabled = false;
+//					title = WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.user")]);;
+					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
+					CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
+						"userService", 
+						"findByIdAsAdminUIDto", 
+						[entityId], 
+						this, dataReceivedCallback, exceptionCallback));
+				} else {
+//					title = WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.user")]);
+					dto = new UserAdminUIDto();
+					userName.setFocus();	
+				}
+				
+				myInfo = _entityId == WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id;
+				if (_entityId == 0) {
+					tabNavigator.removeChildAt(1); // remove organizations tab
+					deleteAccount.includeInLayout = false;
+					deleteAccount.visible = false;
+				} else {
+					if (myInfo) {
+						organizationsTab.label = WebPlugin.getInstance().getMessage('entity.user.myOrganizations');
+					} else {
+						organizationsTab.label = WebPlugin.getInstance().getMessage('entity.user.usersOrganizations');
+						deleteAccount.includeInLayout = false;
+						deleteAccount.visible = false;
+					}
+					
+					// we can create the organizations panel now that we have the user's id
+					organizationsPanelContainer.createComponentsFromDescriptors(true);
+				}
+			}
+			
+			/**
+			 * @flowerModelElementId _Cphak1yIEeGwx-0cTKUc5w
+			 */
+			private function dataReceivedCallback(result:UserAdminUIDto):void {
+				ModalSpinner.removeModalSpinner(this);
+				dto = result;
+				form.enabled = true;
+				save.enabled = true;	
+				
+				// only admin can change login
+				if (!WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin)
+					login.enabled = false;
+				
+				groupsDualList.leftListData = user.groups;	
+				
+				var organizationsFilter:ArrayCollection = new ArrayCollection();
+				for each (var ou:OrganizationUserAdminUIDto in user.organizationUsers) {
+					organizationsFilter.addItem(ou.organization);
+				}
+				getAvailableGroups(organizationsFilter);
+				
+				userName.setFocus();			
+				
+				// if user login starts with anonymous, don't display the delete button
+				if (result.login.indexOf("anonymous") == 0) {
+					deleteAccount.includeInLayout = false;
+					deleteAccount.visible = false;
+					anonHint.includeInLayout = true;
+					anonHint.visible = true;
+					height = 590;
+				}
+				
+				// calling this to remove buttons in case the user is anonymous
+				organizationsPanelCreated();
+			}
+			
+			public function getAvailableGroups(organizationsFilter:ArrayCollection):void {
+				// get all groups from server to display them in duallistbox
+				CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand("groupService", "findAllAsNamedDto", [organizationsFilter], this, groupsReceivedCallback));
+				
+			}
+			
+			/**
+			 * Populates the right list of the <code>DualListBox</code> with groups
+			 * that aren't found in the list of user's groups.
+			 * @flowerModelElementId _RB9MgF34EeGwLIVyv_iqEg
+			 */ 
+			private function groupsReceivedCallback(dtos:ArrayCollection):void {
+				groupsDualList.leftList.labelField = "name";
+				groupsDualList.rightList.labelField = "name";
+				
+				var otherGroups:ArrayCollection = new ArrayCollection();	
+				for each (var groupDto:NamedDto in dtos) {	
+					var commonGroup:Boolean = false;
+					if (user) {
+						for each (var userGrp:NamedDto in user.groups) {								
+							if (userGrp.id == groupDto.id) {
+								commonGroup = true;
+								break;											
+							}
+						}
+					}
+					if (!commonGroup) {
+						otherGroups.addItem(groupDto);		
+					}
+				}
+				groupsDualList.rightListData = otherGroups;			
+			}
+			
+			/**
+			 * Casted instance of the Dto.
+			 * @flowerModelElementId _KKlvo1lkEeGRrZ75u0k71A
+			 */
+			[Bindable(event="dtoChangedEvent")] 
+			public function get user():UserAdminUIDto {
+				return UserAdminUIDto(dto);
+			}
+			
+			private function getOrganizationNameFromOrganizationUser(ou:OrganizationUserAdminUIDto):String {
+				return ou.organization.name;
+			}
+			
+			public function isFormValid():Boolean {
+				if (password.text.length > 0)
+					return Validator.validateAll([loginValidator, loginRegexValidator, nameValidator, passwordValidator, comparePasswords, emailValidator, emailLengthValidator]).length == 0;
+				else
+					return Validator.validateAll([loginValidator, loginRegexValidator, nameValidator, emailValidator, emailLengthValidator]).length == 0;
+			}
+			
+			public function saveUser():void {
+				formOkHandler();
+			}
+			
+			/**
+			 * @flowerModelElementId _KKmWsVlkEeGRrZ75u0k71A
+			 */
+			protected override function formOkHandler():void {
+				// validate form
+				if (!isFormValid()) {
+					return;
+				}
+				
+				// store information from components
+				user.login = login.text;
+				user.name = userName.text;
+				user.email = email.text;
+				user.isActivated = activated.selected;
+				if (password.text.length == 0)
+					user.password = null;
+				else
+					user.password = password.text;
+				user.groups = groupsDualList.leftListData;
+				getOrganizations();
+				
+				if (entityId == 0) {
+					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand(
+							"userService", 
+							"createAndApproveAsOrganizationMember", 
+							[user], 
+							this, saveOkCallback, exceptionCallback));
+				} else {
+					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand(
+							"userService", 
+							"mergeAdminUIDto", 
+							[user], this, saveOkCallback, exceptionCallback));
+				}
+			}
+			
+			public var newUserWizard:NewUserWizard;
+			
+			/**
+			 * Refreshes <code>UserAndCoScreen</code> panels based on the flags received from server.
+			 * @flowerModelElementId _CphamFyIEeGwx-0cTKUc5w
+			 */ 
+			private function saveOkCallback(errorMessage:String):void {
+				if (errorMessage) {
+					Alert.show(errorMessage, CommonPlugin.getInstance().getMessage("error"));
+					exceptionCallback(null);
+				} else {
+					if (parentListPanel)
+						UsersPanel(parentListPanel).refreshBtnHandler();
+					if (newUserWizard)
+						newUserWizard.closeForm();
+					super.formOkHandler();
+					
+					// update authentication menu bar if current user changed his name
+					if (user.id == WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id && user.name != WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name) {
+						WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name = user.name;
+//						WebPlugin.getInstance().authenticationMenuBar.updateMenuItems(true);
+					}
+				}
+			}
+			
+			private function deleteAccountButtonHandler():void {
+				Alert.show(WebPlugin.getInstance().getMessage("entity.user.form.deleteAccount.confirmation"), WebPlugin.getInstance().getMessage("entity.user.form.deleteAccount"), 
+					Alert.YES | Alert.NO, this, deleteAccountHandler);
+			}
+			
+			private function deleteAccountHandler(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					var ids:ArrayCollection = new ArrayCollection();
+					ids.addItem(user.id);
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("userService", "delete", [ids], this, accountDeletedHandler));
+					
+					// the user will be disconnected automatically by the server
+				}
+			}
+			
+			private function accountDeletedHandler(errorMessage:String):void {
+				if (errorMessage) {
+					Alert.show(errorMessage, CommonPlugin.getInstance().getMessage("error"));
+				} else {
+					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+				}
+			}
+			
+			private var myInfo:Boolean = false;
+			
+			/**
+			 * Opens an OrganizationsScreen that displays all the organizations in the DB.
+			 */ 
+			private function requestMembershipButtonHandler():void {
+				var joinOrganizationsPopup:JoinOrganizationsWizard = new JoinOrganizationsWizard();
+				joinOrganizationsPopup.userForm = this;
+				joinOrganizationsPopup.showPopup();
+			}
+			
+			/**
+			 * Opens an <code>OrganizationForm</code> in 'request mode', i.e. adds a text area
+			 * to input a comment that will be sent to the FDC admin.
+			 */ 
+			private function requestNewOrganizationButtonHandler():void {
+				var wizard:NewOrganizationWizard = new NewOrganizationWizard();
+				wizard.organizationsPanel =organizationsPanel;
+				wizard.showPopup();
+			}
+			
+			private function removeFromOrganizationsButtonHandler():void {
+				var organizations:Array = organizationsPanel.table.selectedItems;
+				if (organizations.length > 0) {
+					Alert.show(WebPlugin.getInstance().getMessage("entity.user.organizations.leave.confirmation"), WebPlugin.getInstance().getMessage("entity.user.organizations.leave"),
+						Alert.YES | Alert.NO, null, function(event:CloseEvent) {
+							if (event.detail == Alert.YES) {
+								getOrganizations();
+								var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+									"userService", 
+									"leaveOrganizations", 
+									[user, new ArrayCollection(organizations)],
+									this, resultHandler);
+								CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+							}
+						});
+				}
+			}
+			
+			public function resultHandler(errorMessage:String):void {
+				if (errorMessage) {
+					var popup:TextAreaPopup = new TextAreaPopup();
+					popup.title = WebPlugin.getInstance().getMessage("form.info");
+					popup.isHTML = true;
+					popup.text = errorMessage;
+					popup.minWidth = 300;
+					popup.minHeight = 170;
+					popup.showPopup();
+				}
+				refreshOrganizationsPanel();
+				
+			}
+			
+			private function refreshOrganizationsPanel(rslt:Object = null):void {
+				organizationsPanel.refreshBtnHandler();
+				if (parentListPanel)
+					parentListPanel.refreshBtnHandler();
+			}
+			
+			/**
+			 * If the user requests a new organization/membership to an existing organization, and then saves,
+			 * the request will be lost. To prevent this, the user information must contain the new request
+			 * before being sent to the server.
+			 */ 
+			private function getOrganizations():void {
+				if (organizationsPanel) {
+					user.organizationUsers = new ArrayCollection();
+					for each (var organization:OrganizationAdminUIDto in organizationsPanel.table.dataProvider) {
+						var ou:OrganizationUserAdminUIDto = new OrganizationUserAdminUIDto();
+						ou.organization = organization;
+						ou.status = String(organization.status);
+						user.organizationUsers.addItem(ou);
+					}
+				}
+			}
+			
+			/**
+			 * Change state to add the create/join/leave buttons to the organizations panel
+			 * menu bar; this needs to be done only after the organizations panel is created, 
+			 * otherwise the buttons will be added directly to this form.
+			 * 
+			 * <p>
+			 * Called twice, after the organizations panel is created and after the user data
+			 * arrives from the server, to make sure the buttons are removed correctly if the
+			 * user is anonymous.
+			 */ 
+			private function organizationsPanelCreated():void {
+				if (organizationsPanel && user) {
+					currentState="addButtonsToOrganizationsMenuBarState";
+					
+					// add button is never visible; to create new orgs, use the request new org button
+					removeButton(organizationsPanel.addBtn);
+					
+					// remove the buttons if the user is anonymous
+					var removeForAnonymous:Boolean = user.login.indexOf("anonymous") == 0;
+					
+					// edit/delete and request/join/leave organization buttons are only visible if the user == current logged in user AND not anonymous
+					if (!myInfo || removeForAnonymous) {
+						removeButton(organizationsPanel.editBtn);
+						removeButton(organizationsPanel.deleteBtn);
+						removeButton(requestNewOrganizationButton);
+						removeButton(requestMembershipButton);
+						removeButton(removeFromOrganizationsButton);
+					}
+				}
+			}
+			
+			private function removeButton(button:Button):void {
+				button.includeInLayout = false;
+				button.visible = false;
+			}
 			
 		]]>
-	</fx:Script>
+	</mx:Script>
 	
-	<s:FormItem width="100%" label="Login">
-		<s:TextInput id="loginInput" width="100%"/>
-	</s:FormItem>
+	<ui:states>
+		<mx:State name="addButtonsToOrganizationsMenuBarState">
+			<mx:AddChild relativeTo="{organizationsPanel.menuBarFirstHBox}" position="firstChild">
+				<mx:Spacer width="100%" />
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{organizationsPanel.menuBarFirstHBox}" position="firstChild">
+				<mx:HBox id="myInfoButtons" width="100%" horizontalAlign="left" horizontalGap="0">
+					<common:FlowerLinkButton id="requestNewOrganizationButton" iconURL="icons/Web/icons/common/add.png" label="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestNew')}" click="requestNewOrganizationButtonHandler()"/>
+					<common:FlowerLinkButton id="requestMembershipButton" iconURL="icons/Web/icons/common/add.png" label="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestMembership')}" click="requestMembershipButtonHandler()"/>
+					<common:FlowerLinkButton id="removeFromOrganizationsButton" enabled="{organizationsPanel.table.selectedItems.length > 0}" label="{WebPlugin.getInstance().getMessage('entity.user.organizations.leave')}" iconURL="icons/Web/icons/common/cancel_delete.png" click="removeFromOrganizationsButtonHandler()"/>
+				</mx:HBox>
+			</mx:AddChild>
+		</mx:State>
+	</ui:states>
+	
+	<validators:CompareValidator id="comparePasswords" source="{confirm_password}" property="text" valueToCompare="{password.text}" errorMessage="{WebPlugin.getInstance().getMessage('authentication.error.doNotMatch.passwords')}" /> 
+	<mx:StringValidator id="passwordValidator" source="{password}" property="text" minLength="1"/>
+	<mx:StringValidator id="loginValidator" source="{login}" property="text" minLength="1" maxLength="30"/>
+	<mx:RegExpValidator id="loginRegexValidator" source="{login}" property="text" expression="^[a-z|A-Z|0-9|_|\.|-]+$"/>
+	<mx:StringValidator id="nameValidator" source="{userName}" property="text" minLength="1" maxLength="30"/>
+	<mx:EmailValidator id="emailValidator" source="{email}" property="text"/>
+	<mx:StringValidator id="emailLengthValidator" source="{email}" property="text" minLength="1" maxLength="50"/>
+	
+	<mx:TabNavigator id="tabNavigator" width="100%" height="100%" creationPolicy="all">
+		
+		<mx:Box label="{WebPlugin.getInstance().getMessage('entity.user.userInformation')}"  width="100%" horizontalAlign="center" creationPolicy="all">
+			<mx:VBox id="anonHint" width="100%" includeInLayout="false" visible="false">
+				<mx:HBox width="100%" verticalAlign="middle">
+					<utils:HintButton/>
+					<mx:Text width="100%" htmlText="{WebPlugin.getInstance().getMessage('entity.user.anonymous.hint')}" />
+				</mx:HBox>
+				<mx:HRule width="100%"/>
+			</mx:VBox>
+			
+			<mx:Form id="form" height="100%" width="100%" verticalGap="6">	 
+				
+				<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.user.login')}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<mx:TextInput id="login" text="{user.login}" width="100%"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.user.login.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+				
+				<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.user.name')}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<mx:TextInput id="userName" text="{user.name}" width="100%"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.user.name.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+				
+				<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.user.email')}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<mx:TextInput id="email" text="{user.email}" width="100%"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.user.email.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+				
+				<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.user.password')}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<mx:TextInput id="password" displayAsPassword="true" text="{user.password}" width="100%"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.user.password.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+				
+				<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.user.form.passwordAgain')}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<mx:TextInput id="confirm_password" displayAsPassword="true" text="{user.password}" width="100%"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.user.passwordAgain.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+				
+				<mx:FormItem id="activatedFormItem" label="{WebPlugin.getInstance().getMessage('entity.user.activated')}" includeInLayout="{WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.hasAdminSecurityEntitiesPermissions}" visible="{WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.hasAdminSecurityEntitiesPermissions}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<mx:CheckBox id="activated" selected="{user.isActivated}" enabled="{WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin}"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.user.activated.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+				
+				<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.user.groups')}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle">
+						<duallistbox:DualListBox id="groupsDualList" backgroundAlpha="0" width="100%" leftListTitleLabel="{WebPlugin.getInstance().getMessage('entity.user.form.groups.belongsTo')}" rightListTitleLabel="{WebPlugin.getInstance().getMessage('entity.user.form.groups.available')}" enabled="{WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.hasAdminSecurityEntitiesPermissions}"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.user.groups.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+			</mx:Form>
+			
+			<mx:HBox width="100%" horizontalAlign="center" paddingBottom="15" paddingLeft="3">
+				<mx:Button id="deleteAccount" label="{WebPlugin.getInstance().getMessage('entity.user.form.deleteAccount')}" click="deleteAccountButtonHandler()"/>
+				<mx:HBox width="100%" horizontalAlign="center" paddingLeft="0" paddingRight="0">
+					<mx:Button id="save" label="{WebPlugin.getInstance().getMessage('form.save')}" click="formOkHandler()"/>
+					<!--<mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>-->
+				</mx:HBox>
+			</mx:HBox>   
+		</mx:Box>
+		
+		<mx:VBox id="organizationsTab" width="100%" height="100%">
+			<mx:VBox id="organizationsPanelContainer" width="100%" height="100%" creationPolicy="none">
+				<ui:OrganizationsPanel id="organizationsPanel" width="100%" height="100%" 
+									   userForm="{this}" creationComplete="organizationsPanelCreated()"/>
+			</mx:VBox>
+		</mx:VBox>
+	</mx:TabNavigator>	
 	       
-</s:Group>
+</ui:BaseForm>

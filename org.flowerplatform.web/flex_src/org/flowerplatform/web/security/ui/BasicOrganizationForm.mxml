@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Form 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:utils="org.flowerplatform.web.utils.*">
+	<mx:Script>
+		<![CDATA[
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			
+			[Bindable]
+			public var organization:OrganizationAdminUIDto = new OrganizationAdminUIDto();
+		]]>
+	</mx:Script>
+	
+	
+	<mx:Array id="validators">
+		<mx:StringValidator source="{orgName}" property="text" minLength="1" maxLength="30"/>
+		<mx:RegExpValidator source="{orgName}" property="text" expression="^[a-z|0-9|_|-]+$"/>
+		<mx:StringValidator source="{orgLabel}" property="text" minLength="1" maxLength="30"/>
+		<mx:StringValidator source="{orgUrl}" property="text" minLength="1" maxLength="80"/>	
+		<mx:StringValidator source="{orgLogoUrl}" property="text" required="false" maxLength="110"/>
+		<mx:StringValidator source="{orgIconUrl}" property="text" required="false" maxLength="110"/>
+	</mx:Array>
+	
+	<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.organization.name')}" width="100%" required="true">
+		<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			<mx:TextInput id="orgName" text="{organization.name}" width="100%"/>	
+			<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.organization.name.hint')}"/>
+		</mx:HBox>
+	</mx:FormItem>
+	
+	<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.organization.label')}" width="100%" required="true">
+		<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			<mx:TextInput id="orgLabel" text="{organization.label}" width="100%"/>	
+			<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.organization.label.hint')}"/>
+		</mx:HBox>
+	</mx:FormItem>
+	
+	<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.organization.url')}" width="100%" required="true">
+		<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			<mx:TextInput id="orgUrl" text="{organization.URL}" width="100%"/>	
+			<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.organization.url.hint')}"/>
+		</mx:HBox>
+	</mx:FormItem>
+	
+	<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.organization.logoUrl')}" width="100%">
+		<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			<mx:TextInput id="orgLogoUrl" text="{organization.logoURL}" width="100%"/>	
+			<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.organization.logoUrl.hint', [180, 90])}"/>
+		</mx:HBox>
+	</mx:FormItem>
+	
+	<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.organization.iconUrl')}" width="100%">
+		<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			<mx:TextInput id="orgIconUrl" text="{organization.iconURL}" width="100%"/>	
+			<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.organization.iconUrl.hint')}"/>
+		</mx:HBox>
+	</mx:FormItem>
+</mx:Form>

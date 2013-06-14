@@ -80,7 +80,7 @@ public class DatabaseManager {
 		props.setProperty(Environment.PASS, "postgres");
 		props.setProperty(Environment.DIALECT, PostgresPlusDialect.class.getName());
 		props.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-//		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
 		props.setProperty(Environment.SHOW_SQL, "true");
 		
 		props.setProperty(PersistenceOptions.CASCADE_POLICY_ON_NON_CONTAINMENT, "REFRESH,PERSIST,MERGE");

@@ -1,4 +1,4 @@
-package org.flowerplatform.web.security.dto {
+package org.flowerplatform.web.common.security.dto {
 	
 	/**
 	 * @see Corresponding Java class.

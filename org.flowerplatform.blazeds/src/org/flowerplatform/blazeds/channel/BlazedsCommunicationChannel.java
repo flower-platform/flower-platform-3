@@ -56,7 +56,16 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 
 	@Override
 	public IPrincipal getPrincipal() {
-		return null;
+		// Inspired from FlexContext.getUserPrincipal()
+		if (messageClient == null) {
+			return null;
+		}
+		
+		if (messageClient.getDestination().getService().getMessageBroker().getLoginManager().isPerClientAuthentication()) {
+			return (IPrincipal) messageClient.getFlexClient().getUserPrincipal();
+		} else {
+			return (IPrincipal) messageClient.getFlexSession().getUserPrincipal();
+		}
 	}
 
 	/**

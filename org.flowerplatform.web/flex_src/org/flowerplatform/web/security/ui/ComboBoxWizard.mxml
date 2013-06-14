@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	The first page of the wizard contains a combobox (see the <code>setList</code> for details on how the combobox gets its data).
+	Second page contains the comment box.
+
+	@author Mariana
+-->
+<ui:CommentTextBoxWizard 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:popup="com.crispico.flower.util.popup.*" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*" 
+	xmlns:ns="com.crispico.flower.util.ui_inheritance.*"
+	getIndexForStateFunction="getIndexForState">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.utils.StringUtil;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			
+			// info displayed on the combobox page
+			
+			[Bindable]
+			public var comboBoxPageTitle:String;
+			
+			[Bindable]
+			public var comboBoxPageDescription:String;
+			
+			[Bindable]
+			public var comboBoxLabel:String;
+			
+			/**
+			 * This message is displayed if the empty label is selected, but is not a valid choice.
+			 */ 
+			public var errorMessageIfEmptyLabelSelected:String;
+			
+			/**
+			 * <code>True</code> if the empty label is a valid choice, <code>false</code> otherwise.
+			 */ 
+			public var allowEmptyLabel:Boolean = false;
+			
+			[Bindable]
+			private var comboBoxDataProvider:ArrayCollection;
+			
+			[Bindable]
+			private var comboBoxLabelField:String;
+			
+			/**
+			 * <code>True</code> to remove the comment page.
+			 */ 
+			[Bindable]
+			public var removeCommentPage:Boolean = false;
+			
+			/**
+			 * Sets the data provider for the combobox, using the <code>labelField</code>. Adds empty label
+			 * if <code>addEmptyLabel</code> is true.
+			 */ 
+			public function setList(list:ArrayCollection, labelField:String, addEmptyLabel:Boolean):void {
+				var _list:ArrayCollection = new ArrayCollection(list.toArray());
+				
+				if (addEmptyLabel) {
+					_list.addItemAt("", 0);
+				}
+				comboBoxDataProvider = _list;
+				comboBoxLabelField = labelField;
+			}
+			
+			/**
+			 * Substitute the {0} in the confirmation message with the label selected in the combobox.
+			 */ 
+			override protected function getSpecificConfirmationMessage():String {
+				return StringUtil.substitute(confirmationMessage, [comboBox.selectedLabel]);
+			}
+			
+			/**
+			 * Check the selected item on the comboBox page. If empty label is not allowed, but selected,
+			 * display an error message and return false; otherwise return true.
+			 */
+			private function isValidSelection():Boolean {
+				var notOk:Boolean = !allowEmptyLabel && comboBox.selectedLabel == "";
+				if (notOk) {
+					Alert.show(errorMessageIfEmptyLabelSelected, CommonPlugin.getInstance().getMessage("error"));
+					return false;
+				}
+				return true;
+			}
+			
+			override protected function nextClickHandler():void {
+				if (isValidSelection()) {
+					super.nextClickHandler();
+				}
+			}
+			
+			override protected function finishClickHandler():void {
+				if (isValidSelection()) {
+					super.finishClickHandler();
+				}
+			}
+			
+			override protected function get wizardResult():Object {
+				return [comboBox.selectedItem, super.wizardResult];
+			}
+			
+			/**
+			 * Returns the index for given state. Used in <code>Wizard</code>
+			 * to identify previous/next state.
+			 * 
+			 * @author Cristina
+			 */ 
+			private function getIndexForState(stateName:String):int {
+				switch (stateName) {
+					case "comboOrgsPage":
+						return 0;
+					case "commentPage":
+						return 1;					
+					default: 
+						return -1;
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<ns:InheritableStates component="{this}" currentState="comboOrgsPage">
+		<ns:inheritableStates>
+			
+			<!-- This needs to exist, even if empty -->
+			<mx:State name="default"/>
+			
+			<!-- Add a new state, containing the combobox -->
+			<mx:State name="comboOrgsPage" basedOn="default">
+				<mx:SetProperty target="wizardTitle" name="text" value="{comboBoxPageTitle}"/>
+				<mx:SetProperty target="wizardDescription" name="text" value="{comboBoxPageDescription}"/>
+				<mx:SetProperty target="next" name="enabled" value="{!removeCommentPage}"/>
+				<mx:SetProperty target="finish" name="enabled" value="{removeCommentPage}"/>
+				<mx:AddChild relativeTo="{contentArea}">
+					<mx:FormItem label="{comboBoxLabel}" width="100%" height="100%" horizontalAlign="left" paddingLeft="3" paddingBottom="3" paddingRight="3" paddingTop="3">
+						<mx:ComboBox id="comboBox" dataProvider="{comboBoxDataProvider}" labelField="{comboBoxLabelField}"/>
+					</mx:FormItem>
+				</mx:AddChild>
+			</mx:State>
+			
+			<!-- Move the comment box to the next page -->
+			<mx:State name="commentPage" basedOn="commentPageName"/>
+			
+		</ns:inheritableStates>
+	</ns:InheritableStates>
+	
+</ui:CommentTextBoxWizard>

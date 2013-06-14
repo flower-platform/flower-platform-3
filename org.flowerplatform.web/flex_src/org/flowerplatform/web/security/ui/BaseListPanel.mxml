@@ -10,8 +10,10 @@
 -->
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
-	xmlns:pnl="com.crispico.flower.util.panel.*"
-	paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" implements="com.crispico.flower.util.spinner.ModalSpinnerSupport" xmlns:ui="org.flowerplatform.web.security.ui.*">
+	xmlns:pnl="com.crispico.flower.util.panel.*" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	paddingTop="5" paddingBottom="5" paddingLeft="5" paddingRight="5" 
+	implements="com.crispico.flower.util.spinner.ModalSpinnerSupport">
 
 	<mx:Script>
 		<![CDATA[
@@ -19,14 +21,12 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
-			import mx.core.Application;
 			import mx.events.CloseEvent;
 			import mx.events.ListEvent;
-			import mx.managers.PopUpManager;
 			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.web.WebPlugin;
-			import org.flowerplatform.web.entity.dto.Dto;
+			import org.flowerplatform.web.common.entity.dto.Dto;
 			
 			/**
 			 * Holds the form class used by this panel that opens when

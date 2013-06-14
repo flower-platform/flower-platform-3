@@ -1,7 +1,7 @@
-package org.flowerplatform.web.security.dto
+package org.flowerplatform.web.common.security.dto
 {
-	import org.flowerplatform.web.entity.dto.NamedDto;
-	
+	import org.flowerplatform.web.common.entity.dto.NamedDto;
+
 	/**
 	 * @see Corresponding Java class.
 	 * 

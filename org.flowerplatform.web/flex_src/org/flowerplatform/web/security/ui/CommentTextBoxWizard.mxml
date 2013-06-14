@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	A wizard with a single page with a comment box and confirmation alert.
+
+	@author Mariana
+-->
+<popup:Wizard 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:popup="com.crispico.flower.util.popup.*" 
+	xmlns:form="com.crispico.flower.util.form.*"
+	minWidth="500" minHeight="290" 
+	getIndexForStateFunction="getIndexForState">
+	
+	<mx:Script>
+		<![CDATA[
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			
+			// info displayed on the comment page
+			
+			[Bindable]
+			public var commentPageTitle:String;
+			
+			[Bindable]
+			public var commentPageDescription:String;
+			
+			[Bindable]
+			public var commentBoxLabel:String;
+			
+			[Bindable]
+			public var commentEnablementLabel:String;
+			
+			/**
+			 * If this is set to true, then the <code>commentEnablementLabel</code> must also be set.
+			 */ 
+			[Bindable]
+			public var canCommentBeDisabled:Boolean = false;
+			
+			// confirmation logic related
+			
+			protected var closeFormAfterConfirmation:Boolean = true;
+			
+			public var confirmationMessage:String;
+			
+			public var finishFunction:Function;
+			
+			override protected function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				wizardImageContainer.width = 0;
+			}
+			
+			protected function getSpecificConfirmationMessage():String {
+				return confirmationMessage;
+			}
+			
+			/**
+			 * First display a confirmation alert; is the user confirms, call the <code>finishFunction</code> with the parameter <code>wizardResult</code>.
+			 */ 
+			override protected function finishClickHandler():void {
+				Alert.show(getSpecificConfirmationMessage(), title, Alert.YES | Alert.NO, null, function(event:CloseEvent):void {
+					if (event.detail == Alert.YES) {
+						finishFunction.call(null, wizardResult);
+						if (closeFormAfterConfirmation) {
+							closeForm();
+						}
+					}
+				});
+			}
+			
+			/**
+			 * This is passed as the parameter for the <code>finishFunction</code>. Extending wizards should return specific information.
+			 */ 
+			protected function get wizardResult():Object {
+				if (checkBox && !checkBox.selected) 
+					return null; 
+				if (comment)
+					return comment.text;
+				return null;
+			}
+			
+			private function getIndexForState(stateName:String):int {
+				if (stateName == "commentPageName") {
+					return 0;
+				}
+				return -1;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<popup:states>
+		<mx:State name="commentPageName">
+			<mx:SetProperty target="wizardTitle" name="text" value="{commentPageTitle}"/>
+			<mx:SetProperty target="wizardDescription" name="text" value="{commentPageDescription}"/>
+			<mx:SetProperty target="next" name="enabled" value="false"/>
+			<mx:SetProperty target="finish" name="enabled" value="true"/>
+			<mx:AddChild relativeTo="{contentArea}">
+				<mx:VBox width="100%" height="100%">
+					<mx:CheckBox id="checkBox" labelPlacement="right" label="{commentEnablementLabel}" selected="{!canCommentBeDisabled}" includeInLayout="{canCommentBeDisabled}" visible="{canCommentBeDisabled}"
+								 paddingLeft="3" paddingBottom="3" paddingRight="3" paddingTop="3"/>
+					<form:BetterFormItem multiline="true" label="{commentBoxLabel}" width="100%" height="100%" horizontalAlign="left" paddingLeft="3" paddingBottom="3" paddingRight="3" paddingTop="3">
+						<mx:HBox width="100%" height="100%" verticalAlign="middle" horizontalGap="1">
+							<mx:TextArea id="comment" wordWrap="true" width="100%" height="100%" minHeight="100" enabled="{checkBox.selected}"/>
+						</mx:HBox>
+					</form:BetterFormItem>
+				</mx:VBox>
+			</mx:AddChild>
+		</mx:State>
+	</popup:states>
+	
+</popup:Wizard>

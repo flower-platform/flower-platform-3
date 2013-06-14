@@ -1,4 +1,4 @@
-package org.flowerplatform.web.entity.dto {
+package org.flowerplatform.web.common.entity.dto {
 	
 	/**
 	 * @see Corresponding Java class.
