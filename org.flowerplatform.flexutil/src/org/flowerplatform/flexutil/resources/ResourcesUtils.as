@@ -13,7 +13,7 @@ package org.flowerplatform.flexutil.resources {
 	import mx.resources.ResourceBundle;
 	import mx.resources.ResourceManager;
 	
-	import org.flowerplatform.flexutil.FlowerLoaderUtil;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 
 	/**
 	 * @author Cristi
@@ -40,7 +40,7 @@ package org.flowerplatform.flexutil.resources {
 				Alert.show("Error loading message bundle: " + messageBundle + ", url: " + url + ", message: " + event.text);
 			}
 			
-			var urlLoader:URLLoader = new URLLoader(new URLRequest(FlowerLoaderUtil.createAbsoluteURL(url)));
+			var urlLoader:URLLoader = new URLLoader(new URLRequest(FlexUtilGlobals.getInstance().createAbsoluteUrl(url)));
 			urlLoader.addEventListener(Event.COMPLETE, loadedHandler);
 			urlLoader.addEventListener(IOErrorEvent.IO_ERROR, errorHandler);
 			urlLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, errorHandler);

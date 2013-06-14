@@ -2002,26 +2002,31 @@ package  com.crispico.flower.util.layout {
 		 * If component is <code>null</code>, an exception is thrown (this must not happen).
 		 */ 
 		private function getNewViewComponentInstance(viewLayoutData:ViewLayoutData):Container {
+			var actualContainer:Container = null;
 			var component:UIComponent = _viewProvider.createView(viewLayoutData);
 			if (component == null) {
 				throw new Error("A graphical component must be associated for view id '" + viewLayoutData.viewId + "'!");
 			}
-			if (!(component is Container)) {
+			if (component is Container) {
+				actualContainer = Container(component);
+			} else {
 				// there is an issue with NavigatorContent: https://github.com/flex-users/flexlib/issues/301
-				// so we use Container
-//				var navigatorContent:NavigatorContent = new NavigatorContent();
-				var navigatorContent:Canvas = new Canvas();
-				navigatorContent.addElement(component);
+				// so we use Container instead of a NavigatorContent that should wrap spark components
+				actualContainer = new Canvas();
+				actualContainer.addElement(component);
 				component.percentHeight = 100;
 				component.percentWidth = 100;
-				return navigatorContent;
 			}
-			component.addEventListener(FlexEvent.CREATION_COMPLETE, componentCreationCompleteHandler);
-			return Container(component);
+			if (component is IPopupContent) {
+				IPopupContent(component).popupHost = this;
+			}
+			actualContainer.addEventListener(FlexEvent.CREATION_COMPLETE, componentCreationCompleteHandler);
+			return Container(actualContainer);
 		}
 		
 		private function componentCreationCompleteHandler(event:FlexEvent):void {
 			UIComponent(event.currentTarget).dispatchEvent(new ViewAddedEvent(UIComponent(event.currentTarget)));
+			UIComponent(event.currentTarget).removeEventListener(FlexEvent.CREATION_COMPLETE, componentCreationCompleteHandler);
 		}
 				
 		/**

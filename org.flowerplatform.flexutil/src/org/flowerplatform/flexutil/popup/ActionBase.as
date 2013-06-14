@@ -8,6 +8,7 @@ package org.flowerplatform.flexutil.popup {
 		private var _visible:Boolean = true;
 		private var _enabled:Boolean = true;
 		private var _label:String;
+		private var _icon:Object;
 		
 		public function get orderIndex():int
 		{
@@ -58,9 +59,20 @@ package org.flowerplatform.flexutil.popup {
 		{
 			_label = value;
 		}
+
+		public function get icon():Object
+		{
+			return _icon;
+		}
+
+		public function set icon(value:Object):void
+		{
+			_icon = value;
+		}
 		
 		public function run():void {
 		}
+
 		
 	}
 }

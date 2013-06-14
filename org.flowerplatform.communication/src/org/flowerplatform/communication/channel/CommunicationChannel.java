@@ -49,4 +49,8 @@ public abstract class CommunicationChannel {
 	public abstract Object getId();
 	
 	public abstract IPrincipal getPrincipal();
+	
+	public abstract boolean isDisposed();
+	
+	public abstract void dispose();
 }
