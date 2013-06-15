@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 	List panel for permissions.
+ 	
+ 	@see PermissionForm
+ 
+ 	@author Cristi
+ 	@author Cristina
+ 	@author Mariana
+ @flowerModelElementId _RBpqgF34EeGwLIVyv_iqEg
+-->
+
+<ui:BaseListPanel 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns="com.crispico.flower.util.ui_inheritance.*" 
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	xmlns:utils="org.flowerplatform.web.utils.*" 
+	creationComplete="onCreationComplete(event)"
+	>
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.DataGridEvent;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.entity.dto.Dto;
+			import org.flowerplatform.web.common.security.dto.PermissionAdminUIDto;
+			
+			[Bindable]
+			public var permissionDescriptors:ArrayCollection;
+			
+			/**
+			 * @flowerModelElementId _RBpqhF34EeGwLIVyv_iqEg
+			 */
+			protected function onCreationComplete(event:FlexEvent):void {
+				this.formClass = PermissionForm;
+				
+				table.addEventListener(DataGridEvent.HEADER_RELEASE, function(event:DataGridEvent):void {
+					// re-enable the sort button
+					sortButton.enabled = true;
+				});
+				
+				CommunicationPlugin.getInstance().bridge.sendObject( 
+					new InvokeServiceMethodServerCommand("permissionService", "getPermissionDescriptors", [], this, permissionDescriptorsReceived));
+			}
+			
+			private function permissionDescriptorsReceived(permissionDescriptors:ArrayCollection):void {
+				// sort by order defined in permission descriptors
+				var array:Array = permissionDescriptors.toArray();
+				var done:Boolean = false;
+				while (!done) {
+					done = true;
+					for (var i:int = 1; i < permissionDescriptors.length; i++) {
+						if (array[i-1].order > array[i].order) {
+							done = false;
+							var t:Object = array[i-1];
+							array[i-1] = array[i];
+							array[i] = t;
+						}
+					}
+				}
+				this.permissionDescriptors = new ArrayCollection(array);
+			}
+			
+			public function getDescriptorByName(name:String):Object {
+				for each (var descriptor:Object in permissionDescriptors) {
+					if (descriptor.name == name) {
+						return descriptor;
+					}
+				}
+				return null;				
+			}
+			
+			/**
+			 * Used as label function for the type column in the table, to show the simple name from the descriptor.
+			 * 
+			 * @author Mariana
+			 */ 
+			private function getDescriptorForPermission(permission:PermissionAdminUIDto, obj:Object):String {
+				var descriptor:Object = getDescriptorByName(permission.type);
+				if (descriptor)
+					return descriptor["simpleName"];
+				return null;
+			}
+			
+			/**
+			 * Compare function for the type column; it is necessary when providing a label function.
+			 * 
+			 * @author Mariana
+			 */ 
+			private function compareDescriptorsForPermissions(permission:PermissionAdminUIDto, other:PermissionAdminUIDto):int {
+				var permissionName:String = getDescriptorForPermission(permission, null);
+				var otherName:String = getDescriptorForPermission(other, null);
+				if (permissionName == otherName)
+					return 0;
+				if (permissionName > otherName)
+					return 1;
+				return -1;
+			}
+			
+			/**
+			 * @author Mariana
+			 */ 
+			override protected function editBtnHandler():void {
+				if (table.selectedItem.isEditable)
+					super.editBtnHandler();
+			}
+			
+			/**
+			 * Refreshes the data on table by sending command to server
+			 * to request new data.
+			 * The command takes in consideration the panel's current filter.
+			 * @flowerModelElementId _RBqRkl34EeGwLIVyv_iqEg
+			 */ 
+			override public function refreshBtnHandler(rslt:Object = null):void {
+				super.refreshBtnHandler();
+				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("permissionService", "findAsAdminUIDtoFilterByResource", [currentFilter], this, dataReceivedCallback, exceptionHandler));
+			}
+			
+			override public function dataReceivedCallback(dtos:ArrayCollection):void {
+				super.dataReceivedCallback(dtos);
+				// sort by default
+				sort();
+			}
+			
+			/**
+			 * Sends command to server to delete selected items.
+			 * @flowerModelElementId _RBqRlV34EeGwLIVyv_iqEg
+			 */
+			override protected function deleteResultHandler(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					similarPermissionsToDelete = new ArrayCollection();
+					idsToDelete = new ArrayCollection();
+					for each (var object:Object in table.selectedItems) {
+						idsToDelete.addItem(Dto(object).id);
+						// find similar permissions for the selected items that will be deleted
+						var similarPermission:PermissionAdminUIDto = getSimilarPermission(PermissionAdminUIDto(object));
+						similarPermissionsToDelete.addItem(similarPermission);
+					}
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("permissionService", "delete", [idsToDelete], this, deleteOkCallback));	
+				}
+			}
+			
+			/**
+			 * If <code>permission</code> is a new permission, return a new permission with the same type, actions and owners and the similar resource.
+			 * If <code>permission</code> is an existing permission, search for the permission with the same type, actions and owners and similar resource.
+			 * 
+			 * @author Mariana
+			 */ 
+			public function getSimilarPermission(permission:PermissionAdminUIDto):PermissionAdminUIDto {
+				var similarResource:String = similarResource(permission.name);
+				if (similarResource == null)
+					// there is no similar resource => no similar permissions
+					return null;
+				
+				if (permission.id == 0) {
+					// create a new permission
+					var similarPermission:PermissionAdminUIDto = new PermissionAdminUIDto();
+					similarPermission.name = similarResource;
+					similarPermission.type = permission.type;
+					similarPermission.actions = permission.actions;
+					similarPermission.assignedTo = permission.assignedTo;
+					return similarPermission;
+				}
+				
+				// find the permission in the list
+				for each (var p:PermissionAdminUIDto in table.dataProvider) {
+					if (p.id != permission.id && p.type == permission.type && p.assignedTo == permission.assignedTo && p.actions == permission.actions && p.name == similarResource) {
+						return p;
+					}
+				}
+				return null;
+			}
+			
+			/**
+			 * E.g. for root/dir1 -> root/dir1/* and for root/dir1/* -> root/dir1. Return null for *.
+			 * 
+			 * @author Mariana
+			 */ 
+			private function similarResource(resource:String):String {
+				if (resource == "*")
+					return null;
+				var index:int = resource.indexOf("/*");
+				return index >= 0 ? resource.substring(0, index) : resource + 
+					(resource.lastIndexOf("/") == resource.length - 1 ? "*" : "/*"); 
+			}
+			
+			var idsToDelete:ArrayCollection;
+			var similarPermissionsToDelete:ArrayCollection;
+			
+			/**
+			 * Refreshes <code>PermissionPanel</code> table data.
+			 * @flowerModelElementId _RBq4ol34EeGwLIVyv_iqEg
+			 */ 
+			private function deleteOkCallback(result:Object):void {
+				refreshBtnHandler();			
+				
+				if (similarPermissionsToDelete) {
+					var list:ArrayCollection = result as ArrayCollection;
+					var similarPermissionIds:ArrayCollection = new ArrayCollection();
+					var similarResources:String = "";
+					for (var i:int = 0; i < list.length; i++) {
+						if (list.getItemAt(i) == true) {
+							if (similarPermissionsToDelete.getItemAt(i)) {
+								var similarPermission:PermissionAdminUIDto = PermissionAdminUIDto(similarPermissionsToDelete.getItemAt(i));
+								// check if this permission still exists in the list (maybe it was also deleted)
+								if (!idsToDelete.contains(similarPermission.id)) {
+									similarResources += similarPermission.name + ", ";
+									similarPermissionIds.addItem(similarPermission.id);
+								}
+							}
+						}
+					}
+					if (similarResources.length > 0) {
+						// clear the similarPermissionsToDelete list
+						similarPermissionsToDelete = null;
+						Alert.show(WebPlugin.getInstance().getMessage("entity.permission.confirmation.deleteSimilarPermission", [similarResources.substr(0, similarResources.length - 2)]), CommonPlugin.getInstance().getMessage("warning"), Alert.YES | Alert.NO, null,
+							function(event:CloseEvent):void {
+								if (event.detail == Alert.YES) {
+								CommunicationPlugin.getInstance().bridge.sendObject(
+									new InvokeServiceMethodServerCommand("permissionService", "delete", [similarPermissionIds], this, deleteOkCallback));
+								}
+							});
+					}
+				}
+			}	
+				
+			private function getResourceWithId(id:int):PermissionAdminUIDto {
+				for (var i:int = 0; i < table.dataProvider.length; i++) {
+					var p:PermissionAdminUIDto = table.dataProvider[i];
+					if (p.id == id) {
+						return p;
+					}
+				}
+				return null;
+			}
+			
+			/**
+			 * Sort by type and resource.
+			 * 
+			 * @author Mariana
+			 */ 
+			protected function sort(event:MouseEvent = null):void {
+				var array:Array = ArrayCollection(table.dataProvider).toArray();
+				var length:int = array.length;
+				var done:Boolean = false;
+				while (!done) {
+					done = true;
+					for (var i:int = 1; i < length; i++) {
+						var p1:PermissionAdminUIDto = PermissionAdminUIDto(array[i-1]);
+						var p2:PermissionAdminUIDto = PermissionAdminUIDto(array[i]);
+						if (getPermissionOrder(p1) > getPermissionOrder(p2)) {	// sort by type
+							done = false;
+							var p:PermissionAdminUIDto = p1;
+							array[i-1] = p2;
+							array[i] = p;
+						} else {
+							if (getPermissionOrder(p1) == getPermissionOrder(p2)) {
+								if (p1.name > p2.name) {						// sort by resource
+									done = false;
+									var p:PermissionAdminUIDto = p1;
+									array[i-1] = p2;
+									array[i] = p;
+								}
+							}
+						}
+					}
+				}
+				
+				table.dataProvider = array;
+				sortButton.enabled = false;
+			}
+			
+			private function getPermissionOrder(permission:PermissionAdminUIDto):int {
+				var descriptor:Object = getDescriptorByName(permission.type);
+				if (descriptor)
+					return descriptor["order"];
+				return 0;
+			}
+			
+			public function isPermissionDisabled(object:Object):Boolean {
+				var permission:PermissionAdminUIDto = PermissionAdminUIDto(object);
+				return !permission.isEditable;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<ns:InheritableStates component="{this}" currentState="default">
+		<ns:inheritableStates>
+			<mx:State name="default">
+				<mx:AddChild relativeTo="{menuBarFirstHBox}" position="firstChild">
+					<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle">
+						<common:FlowerLinkButton id="sortButton" label="{WebPlugin.getInstance().getMessage('entity.sort')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/sort.png")}' enabled="false" click="sort(event)"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.sort.permissions.tooltip')}"/>
+					</mx:HBox>
+				</mx:AddChild>
+				
+				
+				<mx:SetProperty target="{table}" name="columns">
+					<mx:value>
+						<mx:Array>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.permission.type')}" labelFunction="{getDescriptorForPermission}" sortCompareFunction="{compareDescriptorsForPermissions}"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.permission.resource')}" dataField="name"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.permission.actions')}" dataField="actions"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.permission.assignedTo')}" dataField="assignedTo"/>
+						</mx:Array>
+					</mx:value>
+				</mx:SetProperty>
+				
+				<mx:SetProperty target="{table}" name="disabledFunction" value="{isPermissionDisabled}"/>
+			</mx:State>
+		</ns:inheritableStates>
+	</ns:InheritableStates>
+	
+</ui:BaseListPanel>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Permission form.
+ 
+ @author Cristi
+ @author Cristina
+ @author Mariana
+
+ @flowerModelElementId _oauckFcPEeGL3vi-zPhopA
+-->
+<ns:BaseForm 
+	xmlns:ns="org.flowerplatform.web.security.ui.*"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:utils="org.flowerplatform.web.utils.*"
+	minWidth="720" minHeight="450">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.security.dto.PermissionAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.PermissionsByResourceFilter;
+			
+			private const ADMIN_SECURITY_ENTITIES_PERMISSION:String = "com.crispico.flower.mp.web.security.permission.AdminSecurityEntitiesPermission";
+			private const FLOWER_WEB_FILE_PERMISSION:String = "com.crispico.flower.mp.web.security.permission.FlowerWebFilePermission";
+			private const MODIFY_TREE_PERMISSIONS_PERMISSION:String = "com.crispico.flower.mp.web.security.permission.ModifyTreePermissionsPermission";
+			
+			/**
+			 * @flowerModelElementId _RBkK8F34EeGwLIVyv_iqEg
+			 */
+			override public function set entityId(_entityId:Number):void {
+				super.entityId = _entityId;
+			
+				type.dataProvider = permissionsPanel.permissionDescriptors;
+				
+				if (entityId != 0) {
+					form.enabled = false;
+					save.enabled = false;
+//					title = WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.permission")]);
+					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("permissionService", "findByIdAsAdminUIDto", [entityId], this, dataReceivedCallback, exceptionCallback));
+				} else {
+//					title = WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.permission")]);
+					dto = new PermissionAdminUIDto();
+					permission.id = 0;
+					type.selectedItem = permissionsPanel.permissionDescriptors.getItemAt(0);
+					permissionName.setFocus();
+				}
+				
+				permissionName.enabled = type.selectedItem == null || type.selectedItem.name != ADMIN_SECURITY_ENTITIES_PERMISSION;	
+				
+				comboChange(null);
+			}
+			
+			/**
+			 * @flowerModelElementId _RBlZEV34EeGwLIVyv_iqEg
+			 */
+			private function dataReceivedCallback(result:PermissionAdminUIDto):void {
+				ModalSpinner.removeModalSpinner(this);
+				dto = result;
+				form.enabled = true;
+				save.enabled = true;	
+				type.selectedItem = permissionsPanel.getDescriptorByName(permission.type);
+				permissionName.setFocus();		 		
+			}						
+			
+			/**
+			 * Casted instance of the Dto. 
+			 * @flowerModelElementId _RBlZFF34EeGwLIVyv_iqEg
+			 */ 
+			[Bindable(event="dtoChangedEvent")] 
+			public function get permission():PermissionAdminUIDto {
+				return PermissionAdminUIDto(dto);
+			}
+										
+			private function get permissionsPanel():PermissionsPanel {
+				return PermissionsPanel(parentListPanel);
+			}
+			
+			var initialPermission:PermissionAdminUIDto;
+			/**
+			 * @flowerModelElementId _RBmAI134EeGwLIVyv_iqEg
+			 */
+			protected override function formOkHandler():void {
+				initialPermission = new PermissionAdminUIDto();
+				initialPermission.id = permission.id;
+				initialPermission.actions = permission.actions;
+				initialPermission.assignedTo = permission.assignedTo;
+				initialPermission.name = permission.name;
+				initialPermission.type = permission.type;
+				
+				// collect data from form
+				permission.name = permissionName.text;
+				permission.type = type.selectedItem.name; 
+				permission.actions = actions.text;
+				permission.assignedTo = assignedTo.text;
+				
+				var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand("permissionService", "mergeAdminUIDto", [permission], this, saveOkCallback, exceptionCallback);
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
+				
+				CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+			}
+			
+			/**
+			 * Result is an untyped object (java map) where 
+			 * the key is a property of the PermissionEntity (dto) and 
+			 * the value is the error message for that field.
+			 * 
+			 * We make a convention that the keys of the map will have 
+			 * the same value as uicomponent id that displays the field.
+			 * (Exemple: we have PermissionEntity.resource, the textInput with id 'resource' from the form. 
+			 * We result['resource'] if a validation error occured for that field).
+			 * We can not use this convention for name.
+			 *
+			 * @flowerModelElementId _RBmAJV34EeGwLIVyv_iqEg
+			 */ 
+			private function saveOkCallback(result:Object):void { 
+				var hasErrors:Boolean = false; 
+				for (var field: String in result) { 
+					if (field == "modifySimilarPermission") {
+						addOrEditSimilarPermission();
+						continue;
+					}
+					
+					hasErrors = true;
+					if (field == "name") {
+						permissionName.errorString = result[field];
+					} else {
+    					this[field].errorString = result[field];
+    				}
+				}
+				if (!hasErrors) {
+					permissionsPanel.refreshBtnHandler();
+					super.formOkHandler();
+				} else {
+					ModalSpinner.removeModalSpinner(this);
+				}
+			}	
+			
+			private var alreadyAdded:Boolean = false;
+			
+			private function addOrEditSimilarPermission():void {
+				if (alreadyAdded)
+					return;
+				alreadyAdded = true;
+				var similarPermission:PermissionAdminUIDto = permissionsPanel.getSimilarPermission(permission.id == 0 ? permission : initialPermission);
+				if (similarPermission != null) {
+					if (permission.id == 0)
+						var message:String = WebPlugin.getInstance().getMessage("entity.permission.confirmation.addSimilarPermission", [similarPermission.name]);
+					else 
+						var message:String = WebPlugin.getInstance().getMessage("entity.permission.confirmation.editSimilarPermission", [similarPermission.name]);
+					
+						Alert.show(message, null, Alert.YES | Alert.NO, null, function(event:CloseEvent):void {
+						if (event.detail == Alert.YES) {
+							// yes, modify similar permission
+							similarPermission.actions = permission.actions;
+							similarPermission.assignedTo = permission.assignedTo;
+							CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand("permissionService", "mergeAdminUIDto", [similarPermission], this, saveOkCallback, exceptionCallback));
+						}
+					});
+				}
+			}
+			
+			private function comboChange(event:Event):void  {
+				permissionName.enabled = type.selectedItem.name != ADMIN_SECURITY_ENTITIES_PERMISSION;
+				if (permissionName.enabled) {
+					if (entityId == 0 && parentListPanel.currentFilter)
+						permissionName.text = PermissionsByResourceFilter(permissionsPanel.currentFilter).resource;
+				} else {
+					permissionName.text = "";
+				}
+				
+				// similar to the validation errors, we assume that the hint buttons' ids will correspond to the keys in the hints map in the descriptors
+				// e.g. for the key 'actions' we have a hint button with the id 'actionsHintButton'
+				var hints:Object = permissionsPanel.getDescriptorByName(type.selectedItem.name).hints;
+				for (var field:String in hints) {
+					if (field == "type") {
+						mainHint.htmlText = hints[field];
+					} else {
+						this[field + "HintButton"].toolTip = hints[field];
+					}
+				}
+			}
+		]]> 
+	</mx:Script>
+
+	<mx:HBox width="100%" verticalAlign="middle">
+		<utils:HintButton/>
+		<mx:Text id="mainHint" width="100%"/>
+	</mx:HBox>
+	
+	<mx:Form id="form" height="100%" width="100%" verticalGap="6">	 
+		<mx:HRule width="100%"/>
+
+		<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.permission.type')}" width="100%">
+			<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+				<mx:ComboBox id="type" labelField="simpleName" change="comboChange(event)" enabled="{entityId == 0}" width="100%"/>
+				<mx:Spacer width="{actionsHintButton.width}"/>
+			</mx:HBox>
+		</mx:FormItem>
+
+		<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.permission.resource')}" width="100%">
+			<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			   	<mx:TextInput id="permissionName" text="{permission.name}" width="100%"/>
+				<utils:HintButton id="nameHintButton"/>
+			</mx:HBox>
+		</mx:FormItem>
+		<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.permission.actions')}" width="100%">
+			<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			  	<mx:TextInput id="actions" text="{permission.actions}" width="100%"/>
+				<utils:HintButton id="actionsHintButton"/>
+			</mx:HBox>
+		</mx:FormItem>
+
+		<mx:HRule width="100%"/>
+
+		<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.permission.assignedTo')}" width="100%"> 
+			<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+			  	<mx:TextInput id="assignedTo" text="{permission.assignedTo}" width="100%"/>
+				<utils:HintButton id="assignedToHintButton"/>
+			</mx:HBox>
+		</mx:FormItem>
+		 
+	</mx:Form>
+	
+	<mx:ControlBar horizontalAlign="center" paddingBottom="15">
+		 <mx:Button id="save" label="{WebPlugin.getInstance().getMessage('form.save')}" click="formOkHandler()"/>
+        <!-- <mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>-->
+	</mx:ControlBar>  
+	
+</ns:BaseForm>

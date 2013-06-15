@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Mariana
+-->
+<mx:VBox
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:popup="com.crispico.flower.util.popup.*"
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	minWidth="900" minHeight="500">
+	
+	<mx:Script>
+		<![CDATA[
+		]]>
+	</mx:Script>
+	
+	<ui:GroupsPanel id="groupsPanel" width="100%" height="100%"/>
+</mx:VBox>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 	List panel for groups.
+ 
+ 	@author Cristi
+ 	@author Cristina
+ 	@author Mariana
+ @flowerModelElementId _V5t_gFcPEeGL3vi-zPhopA
+-->
+<ui:BaseListPanel 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns="com.crispico.flower.util.ui_inheritance.*" 
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+	xmlns:utils="org.flowerplatform.web.utils.*" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	creationComplete="onCreationComplete(event)" 
+	>
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.DataGridEvent;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.entity.dto.Dto;
+			import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
+		
+			/**
+			 * @flowerModelElementId _RBOzwl34EeGwLIVyv_iqEg
+			 */
+			protected function onCreationComplete(event:FlexEvent):void {
+				formClass = GroupForm;
+				refreshBtnHandler();
+				
+				table.addEventListener(DataGridEvent.HEADER_RELEASE, function(event:DataGridEvent):void {
+					// re-enable the sort button
+					sortButton.enabled = true;
+				});
+			}
+			
+			/**
+			 * @flowerModelElementId _RBPa0V34EeGwLIVyv_iqEg
+			 */
+			override public function refreshBtnHandler(rslt:Object=null):void {
+				super.refreshBtnHandler();
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("groupService", "findAllAsAdminUIDto", null, this, dataReceivedCallback, exceptionHandler));
+			}
+			
+			override public function dataReceivedCallback(dtos:ArrayCollection):void {
+				super.dataReceivedCallback(dtos);
+				// sort by default
+				sort();
+			}
+			
+			/**
+			 * @flowerModelElementId _RBPa0134EeGwLIVyv_iqEg
+			 */
+			override protected function deleteResultHandler(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					var ids:ArrayCollection = new ArrayCollection();
+					for each (var object:Object in table.selectedItems) {
+						ids.addItem(Dto(object).id);
+					}
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("groupService", "delete", [ids], this, refreshBtnHandler));		
+				}
+			}
+			
+			/**
+			 * Sort by organization name and group name.
+			 * 
+			 * @author Mariana
+			 */ 
+			protected function sort(event:MouseEvent = null):void {
+				var array:Array = ArrayCollection(table.dataProvider).toArray();
+				var length:int = array.length;
+				var done:Boolean = false;
+				while (!done) {
+					done = true;
+					for (var i:int = 1; i < length; i++) {
+						var gr1:GroupAdminUIDto = GroupAdminUIDto(array[i-1]);
+						var gr2:GroupAdminUIDto = GroupAdminUIDto(array[i]);
+						// groups that don't belong in an organization must go up
+						if (gr1.organizationLabel > gr2.organizationLabel) {
+							done = false;
+							var gr:GroupAdminUIDto = gr1;
+							array[i-1] = gr2;
+							array[i] = gr;
+						} else {
+							if (gr1.organizationLabel == gr2.organizationLabel) {
+								if (gr1.name > gr2.name) {
+									done = false;
+									var gr:GroupAdminUIDto = gr1;
+									array[i-1] = gr2;
+									array[i] = gr;
+								}
+							}
+						}
+					}
+				}
+				
+				table.dataProvider = array;
+				sortButton.enabled = false;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<ns:InheritableStates component="{this}" currentState="default">
+		<ns:inheritableStates>
+			<mx:State name="default">
+				<mx:AddChild relativeTo="{menuBarFirstHBox}" position="firstChild">
+					<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle">
+						<common:FlowerLinkButton id="sortButton" label="{WebPlugin.getInstance().getMessage('entity.sort')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/sort.png")}' enabled="false" click="sort(event)"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.sort.groups.tooltip')}"/>
+					</mx:HBox>
+				</mx:AddChild>
+				
+				<mx:SetProperty target="{table}" name="columns">
+					<mx:value>
+						<mx:Array>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.group.name')}" dataField="name"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.group.organization')}" dataField="organizationLabel"/>
+						</mx:Array>
+					</mx:value>
+				</mx:SetProperty>
+			</mx:State>
+		</ns:inheritableStates>
+	</ns:InheritableStates>
+
+</ui:BaseListPanel>
