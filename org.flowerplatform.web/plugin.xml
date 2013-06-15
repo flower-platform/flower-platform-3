@@ -123,5 +123,12 @@
             serviceClass="org.flowerplatform.web.security.mail.SendMailService">
       </service>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.authenticator">
+      <authenticator
+            authenticatorClass="org.flowerplatform.web.security.sandbox.FlowerWebAuthenticator"
+            id="flowerWebAuthenticator">
+      </authenticator>
+   </extension>
 
 </plugin>

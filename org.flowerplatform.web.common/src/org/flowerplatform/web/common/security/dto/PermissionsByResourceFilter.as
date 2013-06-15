@@ -7,7 +7,7 @@ package org.flowerplatform.web.common.security.dto {
 	 * @author Cristina
 	 * @flowerModelElementId _Q9I98F34EeGwLIVyv_iqEg
 	 */ 
-	[RemoteClass(alias="com.crispico.flower.mp.web.security.dto.PermissionsByResourceFilter")]
+	[RemoteClass(alias="org.flowerplatform.web.security.dto.PermissionsByResourceFilter")]
 	public class PermissionsByResourceFilter {
 		
 		

@@ -213,7 +213,7 @@ has in the organizations.
 															removeCommentPage:Boolean = false):void {
 				var wizard:ComboBoxWizard = new ComboBoxWizard();
 				wizard.title = popupTitle;
-				wizard.titleIconURL = "icons/Web/icons/usr_admin/user.png";
+				wizard.titleIconURL = WebCommonPlugin.getInstance().getResourceUrl("images/usr_admin/user.png");
 				
 				wizard.comboBoxLabel = WebPlugin.getInstance().getMessage("entity.organization");;
 				wizard.comboBoxPageDescription = comboBoxPageDescription;
@@ -245,17 +245,17 @@ has in the organizations.
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{usersPanel.menuBarFirstHBox}" position="firstChild">
 				<mx:HBox width="100%" horizontalAlign="left">
-					<common:FlowerLinkButton id="approveRequestButton" label="{WebPlugin.getInstance().getMessage('entity.user.approveMembership')}" iconURL="icons/Web/icons/ok.png" click="approveDenyMembershipRequests(true)" enabled="true"/>
-					<common:FlowerLinkButton id="denyRequestButton" label="{WebPlugin.getInstance().getMessage('entity.user.denyMembership')}" iconURL="icons/Web/icons/cancel.png" click="approveDenyMembershipRequests(false)" enabled="true"/>
+					<common:FlowerLinkButton id="approveRequestButton" label="{WebPlugin.getInstance().getMessage('entity.user.approveMembership')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/ok.png")}' click="approveDenyMembershipRequests(true)" enabled="true"/>
+					<common:FlowerLinkButton id="denyRequestButton" label="{WebPlugin.getInstance().getMessage('entity.user.denyMembership')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/cancel.png")}' click="approveDenyMembershipRequests(false)" enabled="true"/>
 				</mx:HBox>
 			</mx:AddChild>
 			
 			<mx:AddChild relativeTo="{usersPanel.menuBarFirstHBox}" position="after">
 				<mx:HBox width="100%" horizontalAlign="left">
-					<common:FlowerLinkButton id="addToOrganizationButton" label="{WebPlugin.getInstance().getMessage('entity.user.addToOrganization')}" iconURL="icons/Web/icons/usr_admin/user_add.png" click="addToOrganization()"/> 
-					<common:FlowerLinkButton id="removeFromOrganizationButton" label="{WebPlugin.getInstance().getMessage('entity.user.removeFromOrganization')}" iconURL="icons/Web/icons/usr_admin/user_delete.png" click="removeFromOrganization()"/>
-					<common:FlowerLinkButton id="upgradeToAdminButton" label="{WebPlugin.getInstance().getMessage('entity.user.upgrade')}" iconURL="icons/Web/icons/upgrade.png" enabled="false" click="{upgradeDowngradeUser(true)}"/>
-					<common:FlowerLinkButton id="downgradeToMemberButton" label="{WebPlugin.getInstance().getMessage('entity.user.downgrade')}" iconURL="icons/Web/icons/downgrade.png" enabled="false" click="{upgradeDowngradeUser(false)}"/>
+					<common:FlowerLinkButton id="addToOrganizationButton" label="{WebPlugin.getInstance().getMessage('entity.user.addToOrganization')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/usr_admin/user_add.png")}' click="addToOrganization()"/> 
+					<common:FlowerLinkButton id="removeFromOrganizationButton" label="{WebPlugin.getInstance().getMessage('entity.user.removeFromOrganization')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/usr_admin/user_delete.png")}' click="removeFromOrganization()"/>
+					<common:FlowerLinkButton id="upgradeToAdminButton" label="{WebPlugin.getInstance().getMessage('entity.user.upgrade')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/upgrade.png")}' enabled="false" click="{upgradeDowngradeUser(true)}"/>
+					<common:FlowerLinkButton id="downgradeToMemberButton" label="{WebPlugin.getInstance().getMessage('entity.user.downgrade')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/downgrade.png")}' enabled="false" click="{upgradeDowngradeUser(false)}"/>
 				</mx:HBox>
 			</mx:AddChild>
 		</mx:State>

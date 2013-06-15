@@ -9,7 +9,8 @@ import javax.security.auth.Subject;
 
 import org.flowerplatform.communication.IPrincipal;
 import org.flowerplatform.web.WebPlugin;
-import org.flowerplatform.web.entity.dao.Dao;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 
 import org.flowerplatform.web.entity.User;
 
@@ -75,8 +76,14 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	 */
 	public synchronized User getUser() {
 		if (cachedUser == null) {
-			Dao dao = WebPlugin.getInstance().getDao();
-			cachedUser = dao.find(User.class, userId);
+			new DatabaseOperationWrapper(new DatabaseOperation() {
+				
+				@Override
+				public void run() {
+					cachedUser = wrapper.find(User.class, userId);
+				}
+			});
+			
 		}
 		return cachedUser;
 	}

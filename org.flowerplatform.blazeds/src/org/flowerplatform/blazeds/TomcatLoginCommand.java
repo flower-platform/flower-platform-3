@@ -4,14 +4,12 @@ package org.flowerplatform.blazeds;
 import java.security.Principal;
 import java.util.List;
 
-import javax.security.auth.Subject;
 import javax.servlet.ServletConfig;
 
-import org.flowerplatform.communication.IPrincipal;
-import org.flowerplatform.communication.IUser;
-
+import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.IAuthenticator.AuthenticationResult;
 import flex.messaging.security.LoginCommand;
-
+import flex.messaging.security.SecurityException;
 
 /**
  * @author Sorin
@@ -33,85 +31,34 @@ public class TomcatLoginCommand implements LoginCommand {
 	public Principal doAuthentication(final String username, Object credentials) {
 		String[] credentialsProps = username.toString().split("\\|");
 		String login = credentialsProps[0];
+		String activationCode = credentialsProps.length > 1 ? credentialsProps[1] : null;
 		String password = credentials.toString();
 		
-		if ("anonymous".equals(login) || "test".equals(login)) {
-			final Subject subject = new Subject();		
-			
-			IPrincipal principal = new IPrincipal() {
-				
-				@Override
-				public String getName() {
-					return username;
-				}
-
-				@Override
-				public Subject getSubject() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public IUser getUser() {
-					// TODO Auto-generated method stub
-					return null;
-				}
-
-				@Override
-				public long getUserId() {
-					// TODO Auto-generated method stub
-					return 0;
-				}
-
-				@Override
-				public void clearCachedUser() {
-					// TODO Auto-generated method stub
-					
-				}
-			};
-
-			subject.getPrincipals().add(principal);
-			subject.setReadOnly();
-			return principal;
+		AuthenticationResult result = CommunicationPlugin.getInstance().getAuthenticator().authenticate(login, password, activationCode);
+		
+		switch (result) {
+		case OK:
+			return CommunicationPlugin.getInstance().getAuthenticator().getPrincipal(result.getId());
+		
+		// we throw an exception to differentiate from the case when username or password is incorrect
+		case ALREADY_ACTIVATED:
+			SecurityException seAlreadyActivated = new SecurityException();
+			seAlreadyActivated.setCode(SecurityException.CLIENT_AUTHENTICATION_CODE + ".UserAlreadyActivated");
+			throw seAlreadyActivated;
+		case NOT_ACTIVATED:
+			SecurityException seNotActivated = new SecurityException();
+			seNotActivated.setCode(SecurityException.CLIENT_AUTHENTICATION_CODE + ".NotActivated");
+			throw seNotActivated;
+		
+		default:
+			return null;
 		}
-//		
-//		List<User> users = new Dao().findByField(User.class, "login", login);
-//		
-//		// No user found, or too many, or no password, or password not correct according to GeneralService#createUser 
-//		if (users.size() != 1 || password == null || !Util.encrypt((String) password).equals( users.get(0).getHashedPassword())) { 
-//			return null;
-//		}
-//		
-//		User user = users.get(0);
-//		
-//		// if an activation code was sent, try activating the user
-//		if (credentialsProps.length > 1) {
-//			if (user.isActivated()) {
-//				// if the user is already activated, throw an exception
-//				SecurityException se = new SecurityException();
-//				se.setCode(SecurityException.CLIENT_AUTHENTICATION_CODE + ".UserAlreadyActivated");
-//				throw se;
-//			} else {
-//				UserService.getInstance().activateUser(login, credentialsProps[1]);
-//			}
-//		}
-//	
-//		// check if the user is activated; we throw this exception to differentiate from the case when username or password is incorrect
-//		user = new Dao().find(User.class, user.getId());
-//		if (!user.isActivated()) {
-//			SecurityException se = new SecurityException();
-//			se.setCode(SecurityException.CLIENT_AUTHENTICATION_CODE + ".NotActivated");
-//			throw se;
-//		}
-//		
-//		return new FlowerWebPrincipal(users.get(0).getId());
-		return null;
 	}
 
 	/**
 	 * @flowerModelElementId _7zYyk3dJEeGzz9ZUhe52dw
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean doAuthorization(Principal principal, List roles) {
 		return true;

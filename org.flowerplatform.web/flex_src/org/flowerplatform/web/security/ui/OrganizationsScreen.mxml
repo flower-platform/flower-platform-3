@@ -64,7 +64,7 @@ after pressing OK.
 					popup.minWidth = 500;
 					popup.minHeight = 300;
 					popup.title = WebPlugin.getInstance().getMessage('entity.organization.approve');
-					popup.titleIconURL = "icons/Web/icons/usr_admin/organization.png";
+					popup.titleIconURL = WebCommonPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png");
 					popup.isHTML = true;
 					popup.text = message;
 					popup.showPopup();
@@ -112,8 +112,8 @@ after pressing OK.
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{organizationsPanel.menuBarFirstHBox}" position="firstChild">
 				<mx:HBox width="100%" horizontalAlign="left">
-					<common:FlowerLinkButton id="approveRequestButton" label="{WebPlugin.getInstance().getMessage('entity.organization.approve')}" iconURL="icons/Web/icons/ok.png" click="approveDenyNewOrganizationRequest(true)" enabled="false"/>
-					<common:FlowerLinkButton id="denyRequestButton" label="{WebPlugin.getInstance().getMessage('entity.organization.deny')}" iconURL="icons/Web/icons/cancel.png" click="approveDenyNewOrganizationRequest(false)" enabled="false"/>
+					<common:FlowerLinkButton id="approveRequestButton" label="{WebPlugin.getInstance().getMessage('entity.organization.approve')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/ok.png")}' click="approveDenyNewOrganizationRequest(true)" enabled="false"/>
+					<common:FlowerLinkButton id="denyRequestButton" label="{WebPlugin.getInstance().getMessage('entity.organization.deny')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/cancel.png")}' click="approveDenyNewOrganizationRequest(false)" enabled="false"/>
 				</mx:HBox>
 			</mx:AddChild>
 			<mx:SetProperty target="{organizationsPanel}" name="organizationsScreen" value="{this}"/>

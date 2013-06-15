@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityPackage;
 import org.flowerplatform.web.entity.FavoriteItem;
 import org.flowerplatform.web.entity.GroupUser;
@@ -27,7 +28,6 @@ import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.PerspectiveUserEntry;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.entity.dao.Dao;
 import org.hibernate.Session;
 
 /**
@@ -454,12 +454,11 @@ public class UserImpl extends NamedEntityImpl implements User {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
+	 * @author Mariana
 	 */
 	public boolean contains(ISecurityEntity securityEntity) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		return this.equals(securityEntity);
 	}
 
 	/**

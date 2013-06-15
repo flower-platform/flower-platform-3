@@ -24,6 +24,7 @@ import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.GroupUser;
 import org.flowerplatform.web.entity.ISecurityEntity;
 import org.flowerplatform.web.entity.Organization;
+import org.flowerplatform.web.entity.User;
 
 /**
  * <!-- begin-user-doc -->
@@ -132,12 +133,29 @@ public class GroupImpl extends NamedEntityImpl implements Group {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
+	 * @author Mariana
 	 */
 	public boolean contains(ISecurityEntity securityEntity) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		boolean includes = false;
+		
+		if (securityEntity instanceof User) {
+			User user = (User) securityEntity;
+			if (ALL.equals(getName())) {
+				includes = true;
+			} else {
+				for (GroupUser groupUser: groupUsers) {
+					if (user.equals(groupUser.getUser())) {
+						includes = true;
+						break;
+					}
+				}
+			}
+		} else if (securityEntity instanceof Group) {
+			includes = this.equals(securityEntity);
+		} 		
+
+		return includes;
 	}
 
 	/**

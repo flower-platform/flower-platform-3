@@ -26,6 +26,12 @@ import org.eclipse.emf.common.util.EList;
  * @generated
  */
 public interface Group extends NamedEntity, ISecurityEntity {
+	
+	/**
+	 * Represents a group that contains all users, inclusive anonymous user.
+	 */
+	public static final String ALL = "ALL";
+	
 	/**
 	 * Returns the value of the '<em><b>Organization</b></em>' reference.
 	 * <!-- begin-user-doc -->

@@ -18,3 +18,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.persistence,
  javax.servlet,
  javax.servlet.http
+Eclipse-BuddyPolicy: registered
+Export-Package: org.flowerplatform.web.security.dto

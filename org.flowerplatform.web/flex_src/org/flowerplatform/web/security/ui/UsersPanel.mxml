@@ -130,8 +130,8 @@
 						<mx:Label text="{WebPlugin.getInstance().getMessage('entity.filter')}" fontWeight="bold" paddingLeft="5"/>
 						<mx:TextInput id="filter" change="{ applyFilterButton.enabled = filter.text.length > 0; }" enter="applyFilterHandler()"/>
 						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.filter.usersFilter.tooltip', [WebPlugin.getInstance().getMessage('entity.filter.usersFilter.simple'), WebPlugin.getInstance().getMessage('entity.filter.usersFilter.advanced.title')])}"/>
-						<common:FlowerLinkButton id="applyFilterButton" label="{WebPlugin.getInstance().getMessage('entity.filter.apply')}" iconURL="icons/Web/icons/filter/filter_add.png" enabled="false" click="applyFilterHandler()"/>
-						<common:FlowerLinkButton id="clearFilterButton" label="{WebPlugin.getInstance().getMessage('entity.filter.clear')}" iconURL="icons/Web/icons/filter/filter_delete.png" enabled="false" click="clearFilterHandler(event)"/>
+						<common:FlowerLinkButton id="applyFilterButton" label="{WebPlugin.getInstance().getMessage('entity.filter.apply')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/filter/filter_add.png")}' enabled="false" click="applyFilterHandler()"/>
+						<common:FlowerLinkButton id="clearFilterButton" label="{WebPlugin.getInstance().getMessage('entity.filter.clear')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/filter/filter_delete.png")}' enabled="false" click="clearFilterHandler(event)"/>
 						
 						<mx:Spacer width="100%"/>
 						

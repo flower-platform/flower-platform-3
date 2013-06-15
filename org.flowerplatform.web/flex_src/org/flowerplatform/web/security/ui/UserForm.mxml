@@ -48,7 +48,7 @@
 			}
 			
 			public function set popupHost(value:IPopupHost):void {
-				
+				value.setLabel("User Form");
 			}
 			
 			/**
@@ -401,9 +401,9 @@
 			</mx:AddChild>
 			<mx:AddChild relativeTo="{organizationsPanel.menuBarFirstHBox}" position="firstChild">
 				<mx:HBox id="myInfoButtons" width="100%" horizontalAlign="left" horizontalGap="0">
-					<common:FlowerLinkButton id="requestNewOrganizationButton" iconURL="icons/Web/icons/common/add.png" label="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestNew')}" click="requestNewOrganizationButtonHandler()"/>
-					<common:FlowerLinkButton id="requestMembershipButton" iconURL="icons/Web/icons/common/add.png" label="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestMembership')}" click="requestMembershipButtonHandler()"/>
-					<common:FlowerLinkButton id="removeFromOrganizationsButton" enabled="{organizationsPanel.table.selectedItems.length > 0}" label="{WebPlugin.getInstance().getMessage('entity.user.organizations.leave')}" iconURL="icons/Web/icons/common/cancel_delete.png" click="removeFromOrganizationsButtonHandler()"/>
+					<common:FlowerLinkButton id="requestNewOrganizationButton" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/common/add.png")}' label="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestNew')}" click="requestNewOrganizationButtonHandler()"/>
+					<common:FlowerLinkButton id="requestMembershipButton" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/common/add.png")}' label="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestMembership')}" click="requestMembershipButtonHandler()"/>
+					<common:FlowerLinkButton id="removeFromOrganizationsButton" enabled="{organizationsPanel.table.selectedItems.length > 0}" label="{WebPlugin.getInstance().getMessage('entity.user.organizations.leave')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/common/cancel_delete.png")}' click="removeFromOrganizationsButtonHandler()"/>
 				</mx:HBox>
 			</mx:AddChild>
 		</mx:State>

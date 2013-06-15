@@ -25,6 +25,8 @@ import org.flowerplatform.web.FlowerWebProperties.AddBooleanProperty;
 import org.flowerplatform.web.FlowerWebProperties.AddIntegerProperty;
 import org.flowerplatform.web.FlowerWebProperties.AddProperty;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.GroupUser;
@@ -35,7 +37,6 @@ import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.PermissionEntity;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.entity.dao.Dao;
 import org.flowerplatform.web.entity.dto.NamedDto;
 import org.flowerplatform.web.explorer.RootChildrenProvider;
 import org.flowerplatform.web.security.dto.GroupAdminUIDto;
@@ -73,13 +74,6 @@ public class UserService extends ServiceObservable {
 	
 	public static UserService getInstance() {	
 		return (UserService) CommunicationPlugin.getInstance().getServiceRegistry().getService(SERVICE_ID);
-	}
-	
-	/**
-	 * @flowerModelElementId _CbygklyIEeGwx-0cTKUc5w
-	 */
-	public Dao getDao() {
-		return WebPlugin.getInstance().getDao();
 	}
 	
 	/**
@@ -158,23 +152,32 @@ public class UserService extends ServiceObservable {
 	 * Finds the user given by its id and returns an {@link UserAdminUIDto}. 
 	 * @flowerModelElementId _QUTcUV34EeGwLIVyv_iqEg
 	 */
-	public UserAdminUIDto findByIdAsAdminUIDto(long id) {
+	public UserAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find user with id = {}", id);
 		
-		User user = getDao().find(User.class, id);
-		if (user == null)
-			throw new RuntimeException(String.format("User with id=%s was not found in the DB.", id));
-		String groupOwners = SecurityEntityAdaptor.toCsvString(getUserGroups(user), Collections.<GroupAdminUIDto>emptyList(), PermissionEntity.GROUP_PREFIX);
-		String orgOwners = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, true), null, PermissionEntity.ORGANIZATION_PREFIX);
-		String owners = groupOwners + (groupOwners.length() > 0 && orgOwners.length() > 0 ? "," : "") + orgOwners;
-		try {
-			if (id != CommunicationPlugin.tlCurrentUser.get().getUserId()) {
-				SecurityUtils.checkAdminSecurityEntitiesPermission(owners);
+		final UserAdminUIDto[] result = new UserAdminUIDto[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+
+			@Override
+			public void run() {
+				User user = wrapper.find(User.class, id);
+				if (user == null)
+					throw new RuntimeException(String.format("User with id=%s was not found in the DB.", id));
+				String groupOwners = SecurityEntityAdaptor.toCsvString(getUserGroups(user), Collections.<GroupAdminUIDto>emptyList(), PermissionEntity.GROUP_PREFIX);
+				String orgOwners = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, true), null, PermissionEntity.ORGANIZATION_PREFIX);
+				String owners = groupOwners + (groupOwners.length() > 0 && orgOwners.length() > 0 ? "," : "") + orgOwners;
+				try {
+					if (id != CommunicationPlugin.tlCurrentUser.get().getUserId()) {
+						SecurityUtils.checkAdminSecurityEntitiesPermission(owners);
+					}
+				} catch (SecurityException e) {
+					throw new RuntimeException(String.format("User with id=%s is not available.", id));
+				}
+				result[0] = convertUserToUserAdminUIDto(user);
 			}
-		} catch (SecurityException e) {
-			throw new RuntimeException(String.format("User with id=%s is not available.", id));
-		}
-		return convertUserToUserAdminUIDto(user);
+		});
+		
+		return result[0];
 	}
 	
 	/**
@@ -206,98 +209,97 @@ public class UserService extends ServiceObservable {
 		}
 		
 		filter = filter.replaceAll("\\*", "%");
-		String[] entities = filter.split("\\s+"); 
+		final String[] entities = filter.split("\\s+"); 
 		
-		List<User> users = new ArrayList<User>();
-		
-		boolean union = true; // true for OR, false for AND
-		
-		for (String entity : entities) {
-			Session session = getDao().getFactory().openSession();
+		final List<UserAdminUIDto> result = new ArrayList<UserAdminUIDto>();
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			try {
-				session.beginTransaction();
-				Query query = null;
-				if (entity.startsWith(PermissionEntity.ORGANIZATION_PREFIX)) {
-					entity = addDefaultWildcards(entity.substring(PermissionEntity.ORGANIZATION_PREFIX.length()));
-					query = session.createQuery("SELECT u " +
-										   "FROM Organization o JOIN o.organizationUsers ou JOIN ou.user u " +
-							 			   "WHERE o.name LIKE :organization_name OR o.label LIKE :organization_name");
-					query.setParameter("organization_name", entity);
-				} else {
-					if (entity.startsWith(PermissionEntity.GROUP_PREFIX)) {
-						entity = addDefaultWildcards(entity.substring(PermissionEntity.GROUP_PREFIX.length()));
-						query = session.createQuery("SELECT u " +
-								   			   "FROM Group g JOIN g.groupUsers gu JOIN gu.user u " +
-								   			   "WHERE g.name LIKE :group_name");
-						query.setParameter("group_name", entity);
-					} else {
-						if (entity.startsWith(PermissionEntity.USER_PREFIX)) {
-							entity = addDefaultWildcards(entity.substring(PermissionEntity.USER_PREFIX.length()));
-							query = session.createQuery("SELECT u " +
-												   "FROM User u " +
-												   "WHERE u.name LIKE :user_name OR u.login LIKE :user_name OR u.email LIKE :user_name");
-							query.setParameter("user_name", entity);
-						} else {
-							// filter by status
-							entity = entity.toUpperCase();
-							OrganizationMembershipStatus status = null;
-							for (OrganizationMembershipStatus value : OrganizationMembershipStatus.values()) {
-								if (value.toString().startsWith(entity) && value.toString().contains(entity)) {
-									status = value;
-									break;
-								}
-							}
-							
-							if (status != null) {
-								query = session.createQuery("SELECT u " +
-													   "FROM User u JOIN u.organizationUsers ou " +
-													   "WHERE ou.status = :status");
-								query.setParameter("status", status);
-							} else {
-								// operator, i.e. || && ,
-								if (entity.equals("&&")) {
-									union = false;
-								}
-							}
-						}
-					}
-				}
+			@Override
+			public void run() {
+				boolean union = true; // true for OR, false for AND
 				
-				if (query != null) {
-					List<User> newList = query.list();
-					if (union) {
-						for (User u : newList) {
-							if (!users.contains(u)) {
-								users.add(u);
-							}
-						}
+				List<User> users = new ArrayList<User>();
+				for (String entity : entities) {
+					Query query = null;
+					if (entity.startsWith(PermissionEntity.ORGANIZATION_PREFIX)) {
+						entity = addDefaultWildcards(entity.substring(PermissionEntity.ORGANIZATION_PREFIX.length()));
+						query = wrapper.createQuery("SELECT u " +
+											   "FROM Organization o JOIN o.organizationUsers ou JOIN ou.user u " +
+								 			   "WHERE o.name LIKE :organization_name OR o.label LIKE :organization_name");
+						query.setParameter("organization_name", entity);
 					} else {
-						for (Iterator<User> it = users.iterator(); it.hasNext(); ) {
-							User u = it.next();
-							if (!newList.contains(u)) {
-								it.remove();
+						if (entity.startsWith(PermissionEntity.GROUP_PREFIX)) {
+							entity = addDefaultWildcards(entity.substring(PermissionEntity.GROUP_PREFIX.length()));
+							query = wrapper.createQuery("SELECT u " +
+									   			   "FROM Group g JOIN g.groupUsers gu JOIN gu.user u " +
+									   			   "WHERE g.name LIKE :group_name");
+							query.setParameter("group_name", entity);
+						} else {
+							if (entity.startsWith(PermissionEntity.USER_PREFIX)) {
+								entity = addDefaultWildcards(entity.substring(PermissionEntity.USER_PREFIX.length()));
+								query = wrapper.createQuery("SELECT u " +
+													   "FROM User u " +
+													   "WHERE u.name LIKE :user_name OR u.login LIKE :user_name OR u.email LIKE :user_name");
+								query.setParameter("user_name", entity);
+							} else {
+								// filter by status
+								entity = entity.toUpperCase();
+								OrganizationMembershipStatus status = null;
+								for (OrganizationMembershipStatus value : OrganizationMembershipStatus.values()) {
+									if (value.toString().startsWith(entity) && value.toString().contains(entity)) {
+										status = value;
+										break;
+									}
+								}
+								
+								if (status != null) {
+									query = wrapper.createQuery("SELECT u " +
+														   "FROM User u JOIN u.organizationUsers ou " +
+														   "WHERE ou.status = :status");
+									query.setParameter("status", status);
+								} else {
+									// operator, i.e. || && ,
+									if (entity.equals("&&")) {
+										union = false;
+									}
+								}
 							}
 						}
 					}
 					
-					// reset operator
-					union = true;
+					if (query != null) {
+						List<User> newList = query.list();
+						if (union) {
+							for (User u : newList) {
+								if (!users.contains(u)) {
+									users.add(u);
+								}
+							}
+						} else {
+							for (Iterator<User> it = users.iterator(); it.hasNext(); ) {
+								User u = it.next();
+								if (!newList.contains(u)) {
+									it.remove();
+								}
+							}
+						}
+						
+						// reset operator
+						union = true;
+					}
 				}
-			} finally {
-				session.close();
+				
+				for (User user : users) {
+					try {
+						UserAdminUIDto dto = findByIdAsAdminUIDto(user.getId());
+						result.add(dto);
+					} catch (Exception e) {
+						// do nothing
+					}
+				}
+				
 			}
-		}
-		
-		List<UserAdminUIDto> result = new ArrayList<UserAdminUIDto>();
-		for (User user : users) {
-			try {
-				UserAdminUIDto dto = findByIdAsAdminUIDto(user.getId());
-				result.add(dto);
-			} catch (Exception e) {
-				// do nothing
-			}
-		}
+		});
 		
 		return result;
 	}
@@ -319,167 +321,173 @@ public class UserService extends ServiceObservable {
 	 * 
 	 * @flowerModelElementId _QUUDZF34EeGwLIVyv_iqEg
 	 */
-	public String mergeAdminUIDto(UserAdminUIDto dto) {
+	public String mergeAdminUIDto(final UserAdminUIDto dto) {
 		logger.debug("Merge user = {}", dto.getLogin());
 		
-		// first check if there is already a user with the same login
-		List<User> usersWithSameLogin = getDao().findByField(User.class, "login", dto.getLogin());
-		if (dto.getId() == 0 && usersWithSameLogin != null && usersWithSameLogin.size() > 0) {
-			return WebPlugin.getInstance().getMessage("authentication.register.loginAlreadyExists");
-		}
-		
-		if (dto.getLogin().startsWith(ANONYMOUS)) {
-			if (CommunicationPlugin.tlCurrentUser.get() != null) {
-				if (dto.getId() == 0 && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentUser.get()).getUser().isAdmin()) {
-					return "You cannot create an anonymous user!";
-				} else {
-					if (dto.getId() == CommunicationPlugin.tlCurrentUser.get().getUserId()) {
-						return "You cannot edit an anonymous user!"; // don't allow an anonymous user to edit its own details
-						// note: the permissions logic will take care of the case when another user tries to edit anonymous
-						// i.e. org1 admin will be allowed to edit anonymous.org1, but not anonymous.org2; FDC admin can edit any user by default
-					}
-				}
-			}
-		} 
-		
-		User initialUser = getDao().find(User.class, dto.getId());
-		
-		User user = getDao().mergeDto(User.class, dto);
-		
-		// check permissions
-		List<Group> originalGroups = getUserGroups(user);
-		if (CommunicationPlugin.tlCurrentUser.get() != null &&
-				CommunicationPlugin.tlCurrentUser.get().getUserId() != user.getId()) {
-			String groupsCsvList = SecurityEntityAdaptor.toCsvString(originalGroups, dto.getGroups(), PermissionEntity.GROUP_PREFIX);
-			String orgsCsvList = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, false), dto.getOrganizations(false), PermissionEntity.ORGANIZATION_PREFIX);
-			String csvList = groupsCsvList + (groupsCsvList.length() > 0 && orgsCsvList.length() > 0 ? "," : "") + orgsCsvList;
-			try {
-				SecurityUtils.checkAdminSecurityEntitiesPermission(csvList);
-			} catch (Exception e) {
-				// if logged in user does not have permissions over user, then maybe the user has PENDING status in one of logged in user's organizations
-				// in this case, return the corresponding error message
-				String orgsWithPendingStatus = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, true), dto.getOrganizations(true), PermissionEntity.ORGANIZATION_PREFIX);
-				SecurityUtils.checkAdminSecurityEntitiesPermission(orgsWithPendingStatus);
-				return "The user cannot be updated while his/her membership is not approved!";
-			}
-		}
-		user.setLogin(dto.getLogin());
-		
-		// validate email if changing, only if user is not anonymous
-		if (!dto.getLogin().startsWith(ANONYMOUS)) {
-			if (dto.getEmail() == null || !dto.getEmail().equals(user.getEmail())) {
-				if (!SendMailService.getInstance().validate(dto.getEmail())) {
-					return WebPlugin.getInstance().getMessage("authentication.register.emailNotValid");
-				}
-				
-				// check for uniqueness
-				if (Boolean.parseBoolean(WebPlugin.getInstance().getFlowerWebProperties().getProperty(EMAIL_SHOULD_BE_UNIQUE))) {
-					Session session =  getDao().getFactory().openSession();
-					Query query = session.createQuery("SELECT u " +
-												"FROM User u " +
-												"WHERE u.email = :email");
-					query.setParameter("email", dto.getEmail());
-					if (query.list().size() > 0) {
-						return WebPlugin.getInstance().getMessage("authentication.register.emailNotUnique");
-					}
-				}
-			}
-		}
-		user.setEmail(dto.getEmail());
-		
-		// allow updating the user without providing the password; if a password is provided, update it
-		if (dto.getPassword() != null) {
-			// check for min length
-			int minLength = Integer.parseInt(WebPlugin.getInstance().getFlowerWebProperties().getProperty(MIN_PASSWORD_LENGTH));
-			if (dto.getPassword().length() < minLength) {
-				return WebPlugin.getInstance().getMessage("authentication.register.passwordTooShort", minLength);
-			}
-			user.setHashedPassword(Util.encrypt(dto.getPassword()));
-		}
-		
-		user.setActivated(dto.getIsActivated());
-
-		user = getDao().merge(user);
-		
-		// get original organizations
-		List<Organization> originalOrganizations = getOrganizationsWhereUserBelongs(user, true);
-				
-		// get added and removed organizations
-		List<Long>[] list = Util.getAddedRemovedElements(originalOrganizations, dto.getOrganizations(true));
-		// for each removed organization, remove it from the database too
-		for (Long id : list[1]) {
-			for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
-				OrganizationUser organizationUser = it.next();
-				try {
-					// check if the current user has permissions, unless the current user is leaving the organization
-					if (CommunicationPlugin.tlCurrentUser.get() != null &&
-							CommunicationPlugin.tlCurrentUser.get().getUserId() != user.getId()) {
-						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(organizationUser.getOrganization()), null, PermissionEntity.ORGANIZATION_PREFIX));
-					}
-					if (organizationUser.getOrganization().getId() == id) {
-						it.remove();
-						getDao().merge(organizationUser.getUser());
-						removeOrganizationUserDependency(organizationUser);
-						break;
-					}
-				} catch (Exception e) {
-					// do nothing
-				}
-			}
-		}
-		// for each added organization, add it in the database too
-		for (Long id : list[0]) {
-			Organization organization = getDao().find(Organization.class, id);
-			try {
-				SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organization, null));
-				addOrganizationUserDependency(user, organization, OrganizationMembershipStatus.MEMBER);
-			} catch (Exception e) {
-				// do nothing
-			}
-		}		
-		
-		// get added and removed groups
-		list = Util.getAddedRemovedElements(originalGroups, dto.getGroups());
-		// for each removed group, remove it from database too
-		// important: only if current user has permission
-		for (Long id : list[1]) {
-			for (Iterator<GroupUser> it = user.getGroupUsers().iterator(); it.hasNext();) {
-				GroupUser groupUser = it.next();
-				try {
-					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(groupUser.getGroup()), null, PermissionEntity.GROUP_PREFIX));
-					if (groupUser.getGroup().getId() == id) {
-						it.remove();
-						getDao().merge(groupUser.getUser());
-						removeGroupUserDependency(groupUser);
-						break;
-					}
-				} catch (Exception e) {
-					// do nothing
-				}
-			}
-		}
-		// for each added group, add it in database too
-		for (Long id : list[0]) {
-			Group group = getDao().find(Group.class, id);
-			try {
-				SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(group), null, PermissionEntity.GROUP_PREFIX));
+		final String[] result = new String[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-				// only if the user is a member of the organization of the group
-				if (group.getOrganization() == null || OrganizationService.getInstance().getOrganizationMembershipStatus(group.getOrganization(), user) != null) {
-					addGroupUserDependency(user, group);
-				} else {
-					return "The user cannot be added to a group of an organization that he doesn't belong to!";
+			@Override
+			public void run() {
+				// first check if there is already a user with the same login
+				List<User> usersWithSameLogin = wrapper.findByField(User.class, "login", dto.getLogin());
+				if (dto.getId() == 0 && usersWithSameLogin != null && usersWithSameLogin.size() > 0) {
+					result[0] = WebPlugin.getInstance().getMessage("authentication.register.loginAlreadyExists");
 				}
-			} catch (Exception e) {
-				// do nothing
+				
+				if (dto.getLogin().startsWith(ANONYMOUS)) {
+					if (CommunicationPlugin.tlCurrentUser.get() != null) {
+						if (dto.getId() == 0 && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentUser.get()).getUser().isAdmin()) {
+							result[0] = "You cannot create an anonymous user!";
+						} else {
+							if (dto.getId() == CommunicationPlugin.tlCurrentUser.get().getUserId()) {
+								result[0] = "You cannot edit an anonymous user!"; // don't allow an anonymous user to edit its own details
+								// note: the permissions logic will take care of the case when another user tries to edit anonymous
+								// i.e. org1 admin will be allowed to edit anonymous.org1, but not anonymous.org2; FDC admin can edit any user by default
+							}
+						}
+					}
+				} 
+				
+				User initialUser = wrapper.find(User.class, dto.getId());
+				
+				User user = wrapper.mergeDto(User.class, dto);
+				
+				// check permissions
+				List<Group> originalGroups = getUserGroups(user);
+				if (CommunicationPlugin.tlCurrentUser.get() != null &&
+						CommunicationPlugin.tlCurrentUser.get().getUserId() != user.getId()) {
+					String groupsCsvList = SecurityEntityAdaptor.toCsvString(originalGroups, dto.getGroups(), PermissionEntity.GROUP_PREFIX);
+					String orgsCsvList = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, false), dto.getOrganizations(false), PermissionEntity.ORGANIZATION_PREFIX);
+					String csvList = groupsCsvList + (groupsCsvList.length() > 0 && orgsCsvList.length() > 0 ? "," : "") + orgsCsvList;
+					try {
+						SecurityUtils.checkAdminSecurityEntitiesPermission(csvList);
+					} catch (Exception e) {
+						// if logged in user does not have permissions over user, then maybe the user has PENDING status in one of logged in user's organizations
+						// in this case, return the corresponding error message
+						String orgsWithPendingStatus = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, true), dto.getOrganizations(true), PermissionEntity.ORGANIZATION_PREFIX);
+						SecurityUtils.checkAdminSecurityEntitiesPermission(orgsWithPendingStatus);
+						result[0] = "The user cannot be updated while his/her membership is not approved!";
+					}
+				}
+				user.setLogin(dto.getLogin());
+				
+				// validate email if changing, only if user is not anonymous
+				if (!dto.getLogin().startsWith(ANONYMOUS)) {
+					if (dto.getEmail() == null || !dto.getEmail().equals(user.getEmail())) {
+						if (!SendMailService.getInstance().validate(dto.getEmail())) {
+							result[0] = WebPlugin.getInstance().getMessage("authentication.register.emailNotValid");
+						}
+						
+						// check for uniqueness
+						if (Boolean.parseBoolean(WebPlugin.getInstance().getFlowerWebProperties().getProperty(EMAIL_SHOULD_BE_UNIQUE))) {
+							Query query = wrapper.createQuery("SELECT u " +
+														"FROM User u " +
+														"WHERE u.email = :email");
+							query.setParameter("email", dto.getEmail());
+							if (query.list().size() > 0) {
+								result[0] = WebPlugin.getInstance().getMessage("authentication.register.emailNotUnique");
+							}
+						}
+					}
+				}
+				user.setEmail(dto.getEmail());
+				
+				// allow updating the user without providing the password; if a password is provided, update it
+				if (dto.getPassword() != null) {
+					// check for min length
+					int minLength = Integer.parseInt(WebPlugin.getInstance().getFlowerWebProperties().getProperty(MIN_PASSWORD_LENGTH));
+					if (dto.getPassword().length() < minLength) {
+						result[0] = WebPlugin.getInstance().getMessage("authentication.register.passwordTooShort", minLength);
+					}
+					user.setHashedPassword(Util.encrypt(dto.getPassword()));
+				}
+				
+				user.setActivated(dto.getIsActivated());
+
+				user = wrapper.merge(user);
+				
+				// get original organizations
+				List<Organization> originalOrganizations = getOrganizationsWhereUserBelongs(user, true);
+						
+				// get added and removed organizations
+				List<Long>[] list = Util.getAddedRemovedElements(originalOrganizations, dto.getOrganizations(true));
+				// for each removed organization, remove it from the database too
+				for (Long id : list[1]) {
+					for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
+						OrganizationUser organizationUser = it.next();
+						try {
+							// check if the current user has permissions, unless the current user is leaving the organization
+							if (CommunicationPlugin.tlCurrentUser.get() != null &&
+									CommunicationPlugin.tlCurrentUser.get().getUserId() != user.getId()) {
+								SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(organizationUser.getOrganization()), null, PermissionEntity.ORGANIZATION_PREFIX));
+							}
+							if (organizationUser.getOrganization().getId() == id) {
+								it.remove();
+								wrapper.merge(organizationUser.getUser());
+								removeOrganizationUserDependency(organizationUser);
+								break;
+							}
+						} catch (Exception e) {
+							// do nothing
+						}
+					}
+				}
+				// for each added organization, add it in the database too
+				for (Long id : list[0]) {
+					Organization organization = wrapper.find(Organization.class, id);
+					try {
+						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organization, null));
+						addOrganizationUserDependency(user, organization, OrganizationMembershipStatus.MEMBER);
+					} catch (Exception e) {
+						// do nothing
+					}
+				}		
+				
+				// get added and removed groups
+				list = Util.getAddedRemovedElements(originalGroups, dto.getGroups());
+				// for each removed group, remove it from database too
+				// important: only if current user has permission
+				for (Long id : list[1]) {
+					for (Iterator<GroupUser> it = user.getGroupUsers().iterator(); it.hasNext();) {
+						GroupUser groupUser = it.next();
+						try {
+							SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(groupUser.getGroup()), null, PermissionEntity.GROUP_PREFIX));
+							if (groupUser.getGroup().getId() == id) {
+								it.remove();
+								wrapper.merge(groupUser.getUser());
+								removeGroupUserDependency(groupUser);
+								break;
+							}
+						} catch (Exception e) {
+							// do nothing
+						}
+					}
+				}
+				// for each added group, add it in database too
+				for (Long id : list[0]) {
+					Group group = wrapper.find(Group.class, id);
+					try {
+						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(group), null, PermissionEntity.GROUP_PREFIX));
+					
+						// only if the user is a member of the organization of the group
+						if (group.getOrganization() == null || OrganizationService.getInstance().getOrganizationMembershipStatus(group.getOrganization(), user) != null) {
+							addGroupUserDependency(user, group);
+						} else {
+							result[0] = "The user cannot be added to a group of an organization that he doesn't belong to!";
+						}
+					} catch (Exception e) {
+						// do nothing
+					}
+				}
+			
+				// save changes
+				wrapper.merge(user);
+				observable.notifyObservers(Arrays.asList(UPDATE, initialUser, user));
 			}
-		}
-	
-		// save changes
-		getDao().merge(user);
-		observable.notifyObservers(Arrays.asList(UPDATE, initialUser, user));
+		});
 		
-		return null;
+		return result[0];
 	}
 	
 	/**
@@ -492,7 +500,7 @@ public class UserService extends ServiceObservable {
 			if (((CommunicationChannel) context.getCommunicationChannel()).getPrincipal().getUserId() != id)
 				SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.ANY_ENTITY);	
 			
-			User user = getDao().find(User.class, Long.valueOf(id));
+			User user = wrapper.find(User.class, Long.valueOf(id));
 			
 			if (user.getLogin().startsWith(ANONYMOUS) &&
 					!((User) context.getCommunicationChannel().getPrincipal().getUser()).isAdmin()) {
@@ -505,7 +513,7 @@ public class UserService extends ServiceObservable {
 			for (Iterator<GroupUser> it = user.getGroupUsers().iterator(); it.hasNext();) {
 				GroupUser groupUser = it.next(); 
 				it.remove();
-				user = getDao().merge(user);
+				user = wrapper.merge(user);
 				removeGroupUserDependency(groupUser);
 			} 
 			
@@ -513,32 +521,32 @@ public class UserService extends ServiceObservable {
 			for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
 				OrganizationUser organizationUser = it.next();
 				it.remove();
-				user = getDao().merge(user);
+				user = wrapper.merge(user);
 				removeOrganizationUserDependency(organizationUser);
 			}
 			
 			// user is removed so update entities from RecentResource
-			Session session = getDao().getFactory().openSession();
+			Session wrapper = wrapper.getFactory().openSession();
 			try {
-				session.getTransaction().begin();
+				wrapper.getTransaction().begin();
 
-				Query q = session.createQuery("UPDATE RecentResource r SET lastAccessUser = NULL WHERE r.lastAccessUser = :user");
+				Query q = wrapper.createQuery("UPDATE RecentResource r SET lastAccessUser = NULL WHERE r.lastAccessUser = :user");
 				q.setParameter("user", user);
 				q.executeUpdate();
 				
-				q = session.createQuery("UPDATE RecentResource r SET lastSaveUser = NULL WHERE r.lastSaveUser = :user");
+				q = wrapper.createQuery("UPDATE RecentResource r SET lastSaveUser = NULL WHERE r.lastSaveUser = :user");
 				q.setParameter("user", user);
 				q.executeUpdate();
 				
-				session.getTransaction().commit();
+				wrapper.getTransaction().commit();
 			} catch (Exception e) {
-				session.getTransaction().rollback();
+				wrapper.getTransaction().rollback();
 				throw new RuntimeException(e);
 			} finally {
-				session.close();
+				wrapper.close();
 			}
 			
-			getDao().delete(user);
+			wrapper.delete(user);
 			observable.notifyObservers(Arrays.asList(DELETE, user));
 		}
 		return null;
@@ -559,14 +567,14 @@ public class UserService extends ServiceObservable {
 		logger.debug("Remove {} from {}", groupUser.getUser(), groupUser.getGroup());
 		
 		groupUser.getGroup().getGroupUsers().remove(groupUser);
-		getDao().merge(groupUser.getGroup());		
+		wrapper.merge(groupUser.getGroup());		
 	}
 	
 	private void removeOrganizationUserDependency(OrganizationUser organizationUser) {
 		logger.debug("Remove {} from {}", organizationUser.getUser(), organizationUser.getOrganization());
 		
 		organizationUser.getOrganization().getOrganizationUsers().remove(organizationUser);
-		getDao().merge(organizationUser.getOrganization());
+		wrapper.merge(organizationUser.getOrganization());
 	}
 	
 	/**
@@ -583,13 +591,13 @@ public class UserService extends ServiceObservable {
 		GroupUser gr = EntityFactory.eINSTANCE.createGroupUser();		
 		gr.setGroup(group);
 		gr.setUser(user);
-		gr = (GroupUser) getDao().merge(gr);
+		gr = (GroupUser) wrapper.merge(gr);
 					
 		group.getGroupUsers().add(gr);
-		group = getDao().merge(group);
+		group = wrapper.merge(group);
 		
 		user.getGroupUsers().add(gr);	
-		user = getDao().merge(user);
+		user = wrapper.merge(user);
 	}
 	
 	private OrganizationUser addOrganizationUserDependency(User user, Organization organization, OrganizationMembershipStatus status) {
@@ -602,20 +610,20 @@ public class UserService extends ServiceObservable {
 		ou.setOrganization(organization);
 		ou.setUser(user);
 		ou.setStatus(status);
-		ou = (OrganizationUser) getDao().merge(ou);
+		ou = (OrganizationUser) wrapper.merge(ou);
 		
 		organization.getOrganizationUsers().add(ou);
-		organization = getDao().merge(organization);
+		organization = wrapper.merge(organization);
 		
 		user.getOrganizationUsers().add(ou);
-		user = getDao().merge(user);
+		user = wrapper.merge(user);
 	
 		return ou;
 	}
 		
 	public List<Group> getUserGroups(User user) {
-		Session session =  getDao().getFactory().openSession();
-		Query query =  session.createQuery("SELECT g " +
+		Session wrapper =  wrapper.getFactory().openSession();
+		Query query =  wrapper.createQuery("SELECT g " +
 									  "FROM User u JOIN u.groupUsers gu JOIN gu.group g " +
 									  "WHERE u.id = :user_id");
 		query.setParameter("user_id", user.getId());
@@ -623,9 +631,9 @@ public class UserService extends ServiceObservable {
 	}
 	
 	private List<Organization> getOrganizationsWhereUserBelongs(User user, boolean withPendingStatus) {
-		Session session =  getDao().getFactory().openSession();
+		Session wrapper =  wrapper.getFactory().openSession();
 		Query query;
-		query =  session.createQuery("SELECT o " +
+		query =  wrapper.createQuery("SELECT o " +
 								"FROM User u JOIN u.organizationUsers ou JOIN ou.organization o " +
 								"WHERE u.id = :user_id" + 
 								(withPendingStatus ? "" : " AND ou.status != :pending_status"));
@@ -638,15 +646,15 @@ public class UserService extends ServiceObservable {
 	
 	public List<Organization> getOrganizations(User user) {
 		if (user.isAdmin()) {
-			return getDao().findAll(Organization.class);
+			return wrapper.findAll(Organization.class);
 		} else {
 			return getOrganizationsWhereUserBelongs(user, true);
 		}
 	}
 	
 	public Organization getOrganization(User user, long orgId) {
-		Session session =  getDao().getFactory().openSession();
-		Query query =  session.createQuery("SELECT o " +
+		Session wrapper =  wrapper.getFactory().openSession();
+		Query query =  wrapper.createQuery("SELECT o " +
 									  "FROM User u JOIN u.organizationUsers ou JOIN  ou.organization o " +
 									  "WHERE u.id = :user_id AND o.id = :org_id");
 		query.setParameter("user_id", user.getId());
@@ -672,8 +680,8 @@ public class UserService extends ServiceObservable {
 	}
 	
 	public List<SVNCommentEntity> getSVNCommentsOrderedByTimestamp(User user, boolean asc) {
-		Session session =  getDao().getFactory().openSession();	
-		Query query =  session.createQuery("SELECT s " +
+		Session wrapper =  wrapper.getFactory().openSession();	
+		Query query =  wrapper.createQuery("SELECT s " +
 									  "FROM SVNCommentEntity s JOIN s.user u WHERE u.id = :user_id ORDER BY s.timestamp " + (asc ? "ASC" : "DESC"));
 		query.setParameter("user_id", user.getId());
 		return query.list();	
@@ -700,14 +708,14 @@ public class UserService extends ServiceObservable {
 	 * Checks if the <code>activationCode</code> provided is correct and activates the user.
 	 */
 	public boolean activateUser(String login, String activationCode) {
-		User user = getDao().findByField(User.class, "login", login).get(0);
+		User user = wrapper.findByField(User.class, "login", login).get(0);
 		if (user.isActivated()) {
 			return true;
 		}
 		if (user.getActivationCode().equals(activationCode)) {
 			// activation successful
 			user.setActivated(true);
-			getDao().merge(user);
+			wrapper.merge(user);
 			logger.debug("Activation successful for {} with activation code = {}", user, activationCode);
 			return true;
 		}
@@ -728,7 +736,7 @@ public class UserService extends ServiceObservable {
 	 * @param organizationName the organization filter; a membership request was automatically made for the user on activation
 	 */
 	public void sendActivationEmail(long userId, String organizationName) {
-		User user = getDao().find(User.class, userId);
+		User user = wrapper.find(User.class, userId);
 		
 		String subject = WebPlugin.getInstance().getMessage(USER_ACTIVATED_SUBJECT);
 		
@@ -738,7 +746,7 @@ public class UserService extends ServiceObservable {
 			welcomeMessage = WebPlugin.getInstance().getMessage(USER_ACTIVATED_WELCOME_MESSAGE_WITHOUT_ORGANIZATION);
 		} else {
 			url = SendMailService.getInstance().getServerUrlForOrganization(organizationName);
-			Organization organization = getDao().findByField(Organization.class, "name", organizationName).get(0);
+			Organization organization = wrapper.findByField(Organization.class, "name", organizationName).get(0);
 			welcomeMessage = WebPlugin.getInstance().getMessage(USER_ACTIVATED_WELCOME_MESSAGE_WITH_ORGANIZATION, organization.getLabel());
 		}
 		
@@ -881,13 +889,13 @@ public class UserService extends ServiceObservable {
 			return errorMessage;
 		
 		long userId = CommunicationPlugin.tlCurrentUser.get().getUserId();
-		User currentUser = getDao().find(User.class, userId);
+		User currentUser = wrapper.find(User.class, userId);
 		if (currentUser.isAdmin()) {
 			// activate org automatically if this user is FDC admin
 			return approveDenyNewOrganization(context, dto, true, null);
 		} else {
 			// add the user to the organization
-			Organization organization = getDao().findByField(Organization.class, "name", dto.getName()).get(0);
+			Organization organization = wrapper.findByField(Organization.class, "name", dto.getName()).get(0);
 			User organizationOwner = currentUser;
 			UserService.getInstance().addOrganizationUserDependency(organizationOwner, organization, OrganizationMembershipStatus.ADMIN);
 			
@@ -907,7 +915,7 @@ public class UserService extends ServiceObservable {
 			
 			// send email to FDC admins
 			subject = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_FDC_ADMIN_SUBJECT, dto.getLabel());
-			for (User user : getDao().findAll(User.class)) {
+			for (User user : wrapper.findAll(User.class)) {
 				if (user.isAdmin()) {
 					content = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_FDC_ADMIN_BODY,
 							new Object[] {
@@ -939,7 +947,7 @@ public class UserService extends ServiceObservable {
 	public String approveDenyNewOrganization(ServiceInvocationContext context, OrganizationAdminUIDto dto, boolean approve, String commentFromAdmin) {
 		SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.ANY_ENTITY);
 		
-		Organization organization = getDao().findByField(Organization.class, "name", dto.getName()).get(0);
+		Organization organization = wrapper.findByField(Organization.class, "name", dto.getName()).get(0);
 		
 		List<OrganizationUser> list = organization.getOrganizationUsers();
 		User organizationOwner =  null;
@@ -953,7 +961,7 @@ public class UserService extends ServiceObservable {
 			logger.debug("Approve {}", organization);
 			
 			organization.setActivated(true);
-			organization = getDao().merge(organization);
+			organization = wrapper.merge(organization);
 			
 			// create directories
 			String createDirsProp = MessageFormat.format(
@@ -998,7 +1006,7 @@ public class UserService extends ServiceObservable {
 				userDto.setIsActivated(true);
 				try {
 					mergeAdminUIDto(userDto);
-					User newUser = getDao().findByField(User.class, "login", username).get(0);
+					User newUser = wrapper.findByField(User.class, "login", username).get(0);
 					addOrganizationUserDependency(newUser, organization, OrganizationMembershipStatus.MEMBER);
 				} catch (Exception e) {
 					// do nothing
@@ -1107,13 +1115,13 @@ public class UserService extends ServiceObservable {
 	 * the {@link OrganizationMembershipStatus#PENDING_MEMBERSHIP_APPROVAL} status.
 	 */
 	public String requestMembership(ServiceInvocationContext context, long userId, String organizationName, String commmentForAdmin) {
-		User user = getDao().find(User.class, userId);
+		User user = wrapper.find(User.class, userId);
 		
 		if (user.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentUser.get()).getUser().isAdmin()) {
 			return "Anonymous user cannot join organizations!";
 		}
 		
-		List<Organization> list = getDao().findByField(Organization.class, "name", organizationName);
+		List<Organization> list = wrapper.findByField(Organization.class, "name", organizationName);
 		if (list.size() != 1) {
 			return "Organization does not exist";
 		}
@@ -1196,7 +1204,7 @@ public class UserService extends ServiceObservable {
 	 * if the user's request was denied.
 	 */
 	public String approveDenyMembership(ServiceInvocationContext context, long organizationUserId, boolean approve, String commentForUser) {
-		OrganizationUser organizationUser = getDao().find(OrganizationUser.class, organizationUserId);
+		OrganizationUser organizationUser = wrapper.find(OrganizationUser.class, organizationUserId);
 		
 		SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organizationUser.getOrganization(), null));
 		
@@ -1205,13 +1213,13 @@ public class UserService extends ServiceObservable {
 			logger.debug("Approve membership request from {} to {}", organizationUser.getUser(), organizationUser.getOrganization());
 			
 			organizationUser.setStatus(OrganizationMembershipStatus.MEMBER);
-			organizationUser = getDao().merge(organizationUser);
+			organizationUser = wrapper.merge(organizationUser);
 			User user = organizationUser.getUser();
 			for (OrganizationUser ou : user.getOrganizationUsers()) {
 				if (ou.getId() == organizationUser.getId()) {
 					ou.setStatus(OrganizationMembershipStatus.MEMBER);
-					user = getDao().merge(user);
-					getDao().merge(organizationUser.getOrganization());
+					user = wrapper.merge(user);
+					wrapper.merge(organizationUser.getOrganization());
 					break;
 				}
 			}
@@ -1249,13 +1257,13 @@ public class UserService extends ServiceObservable {
 				OrganizationUser ou = it.next();
 				if (ou.getId() == organizationUser.getId()) {
 					it.remove();
-					user = getDao().merge(user);
+					user = wrapper.merge(user);
 					organizationUser.getOrganization().getOrganizationUsers().remove(ou);
-					getDao().merge(organizationUser.getOrganization());
+					wrapper.merge(organizationUser.getOrganization());
 					break;
 				}
 			}
-			getDao().delete(organizationUser);
+			wrapper.delete(organizationUser);
 			
 			// send mail to user
 			String subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_DENIED_SUBJECT, organizationUser.getOrganization().getLabel());
@@ -1280,7 +1288,7 @@ public class UserService extends ServiceObservable {
 			return errorMessage;
 		}
 		
-		User user = getDao().findByField(User.class, "login", userDto.getLogin()).get(0);
+		User user = wrapper.findByField(User.class, "login", userDto.getLogin()).get(0);
 		OrganizationUser ou = null;
 		if (user.getOrganizationUsers().size() > 0) {
 			ou = (OrganizationUser) user.getOrganizationUsers().toArray()[0];
@@ -1352,7 +1360,7 @@ public class UserService extends ServiceObservable {
 					}
 					
 					// send mail to organization admins
-					Organization organization = getDao().findByField(Organization.class, "name", ou.getOrganization().getName()).get(0);
+					Organization organization = wrapper.findByField(Organization.class, "name", ou.getOrganization().getName()).get(0);
 					for (OrganizationUser orgAdmin : organization.getOrganizationUsers()) {
 						if (orgAdmin.getStatus().equals(OrganizationMembershipStatus.ADMIN)) {
 							String subject = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_ADMIN_SUBJECT, ou.getOrganization().getLabel());
@@ -1387,14 +1395,14 @@ public class UserService extends ServiceObservable {
 		OrganizationMembershipStatus newStatus = upgrade ? OrganizationMembershipStatus.ADMIN : OrganizationMembershipStatus.MEMBER;
 		String message = "";
 		for (int ouId : organizationUserIds) {
-			OrganizationUser ou = getDao().find(OrganizationUser.class, (long) ouId);
+			OrganizationUser ou = wrapper.find(OrganizationUser.class, (long) ouId);
 			
 			if (!ou.getStatus().equals(newStatus)) {
 				try {
 					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(ou.getOrganization(), null));
 					
 					ou.setStatus(newStatus);
-					ou = getDao().merge(ou);
+					ou = wrapper.merge(ou);
 					
 					logger.debug("{} is now " + newStatus + " in {}", ou.getUser(), ou.getOrganization());
 				
@@ -1423,7 +1431,7 @@ public class UserService extends ServiceObservable {
 		String namesList = "";
 		String doNotExist = "";
 		for (String groupName : adminGroupNames) {
-			List<Group> list = getDao().findByField(Group.class, "name", groupName);
+			List<Group> list = wrapper.findByField(Group.class, "name", groupName);
 			if (list.size() == 0) {
 				doNotExist += "<li>" + groupName + "</li>";
 			} else {
@@ -1445,7 +1453,7 @@ public class UserService extends ServiceObservable {
 						if (gu.getUser().getId() == user.getId()) {
 							removeGroupUserDependency(gu);
 							user.getGroupUsers().remove(gu);
-							user = getDao().merge(user);
+							user = wrapper.merge(user);
 							break;
 						}
 					}
@@ -1473,7 +1481,7 @@ public class UserService extends ServiceObservable {
 		if (activationCode == null) {
 			activationCode = generateRandomString();
 			user.setActivationCode(activationCode);
-			getDao().merge(user);
+			wrapper.merge(user);
 		}
 		
 		String subject = WebPlugin.getInstance().getMessage(SEND_ACTIVATION_CODE_SUBJECT);

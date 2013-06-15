@@ -8,7 +8,7 @@ package org.flowerplatform.web.common.entity.dto {
 	 * 	 
 	 * @flowerModelElementId _rf68wFfcEeG3xJSMfQ3HWg
 	 */
-	[RemoteClass(alias="com.crispico.flower.mp.web.entity.dto.NamedDto")]
+	[RemoteClass(alias="org.flowerplatform.web.entity.dto.Dto")]
 	[Bindable]	
 	public class NamedDto extends Dto {
 		

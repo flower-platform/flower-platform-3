@@ -12,7 +12,7 @@ package org.flowerplatform.web.common.security.dto
 	 * @author Cristina
 	 * @flowerModelElementId _Q9EsgF34EeGwLIVyv_iqEg
 	 */ 
-	[RemoteClass(alias="com.crispico.flower.mp.web.security.dto.OrganizationAdminUIDto")]
+	[RemoteClass(alias="org.flowerplatform.web.security.dto.OrganizationAdminUIDto")]
 	public class OrganizationAdminUIDto	extends NamedDto {
 		
 		public var label:String;

@@ -5,11 +5,8 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServlet;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.database.DatabaseManager;
-import org.flowerplatform.web.entity.dao.Dao;
-import org.flowerplatform.web.security.service.GroupService;
-import org.flowerplatform.web.security.service.OrganizationService;
-import org.flowerplatform.web.security.service.UserService;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -29,14 +26,12 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	
 	private DatabaseManager databaseManager;
 	
-	private Dao dao;
-	
 	public WebPlugin() {
 		super();
 		INSTANCE = this;
 		flowerWebProperties = new FlowerWebProperties();
-		dao = new Dao();
 		databaseManager = new DatabaseManager();
+		databaseManager.initialize();
 	}
 	
 	/**
@@ -71,13 +66,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		return databaseManager;
 	}
 
-	/**
-	 * @author Mariana
-	 */
-	public Dao getDao() {
-		return dao;
-	}
-
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
@@ -87,11 +75,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		super.stop(bundleContext);
 		invokeBridgeServletMethod("unregisterServletDelegate", eclipseDispatcherServlet);
 		INSTANCE = null;
-	}
-
-	@Override
-	public void registerMessageBundle() throws Exception {
-		// do nothing, because we don't have messages (yet)
 	}
 
 }

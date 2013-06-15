@@ -36,7 +36,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.communication.IUser {
+public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.communication.ICurrentUserLoggedIn {
 	/**
 	 * Returns the value of the '<em><b>Login</b></em>' attribute.
 	 * <!-- begin-user-doc -->

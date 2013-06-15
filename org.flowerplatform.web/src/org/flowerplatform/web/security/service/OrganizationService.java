@@ -9,12 +9,12 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.flowerplatform.web.entity.dao.Dao;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
 import org.flowerplatform.web.security.sandbox.SecurityEntityAdaptor;
 import org.flowerplatform.web.security.sandbox.SecurityUtils;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,13 +54,6 @@ public class OrganizationService extends ServiceObservable {
 	
 	public static OrganizationService getInstance() {	
 		return (OrganizationService) CommunicationPlugin.getInstance().getServiceRegistry().getService(SERVICE_ID);
-	}
-	
-	/**
-	 * @flowerModelElementId _QTxQ0V34EeGwLIVyv_iqEg
-	 */
-	public Dao getDao() {
-		return WebPlugin.getInstance().getDao();
 	}
 	
 	/**
@@ -118,31 +111,45 @@ public class OrganizationService extends ServiceObservable {
 	 * Finds the {@link Organization} given by its id and returns an {@link OrganizationAdminUIDto}. 
 	 * @flowerModelElementId _QTxQ0134EeGwLIVyv_iqEg
 	 */
-	public OrganizationAdminUIDto findByIdAsAdminUIDto(ServiceInvocationContext context, long id) {
+	public OrganizationAdminUIDto findByIdAsAdminUIDto(final ServiceInvocationContext context, final long id) {
 		logger.debug("Find organization with id = {}", id);
-		
-		Organization org = getDao().find(Organization.class, id);
-		if (org == null)
-			throw new RuntimeException(String.format("Organization with id=%s was not found in the DB.", id));
-		try {
-			SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
-		} catch (SecurityException e) {
-			throw new RuntimeException(String.format("Organization with id=%s was not available.", id));
-		}
-		User user = (User) context.getCommunicationChannel().getPrincipal().getUser();
-		return convertOrganizationToOrganizationAdminUIDto(org, user);
+		final OrganizationAdminUIDto[] result = new OrganizationAdminUIDto[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				Organization org = wrapper.find(Organization.class, id);
+				if (org == null)
+					throw new RuntimeException(String.format("Organization with id=%s was not found in the DB.", id));
+				try {
+					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
+				} catch (SecurityException e) {
+					throw new RuntimeException(String.format("Organization with id=%s was not available.", id));
+				}
+				User user = (User) context.getCommunicationChannel().getPrincipal().getUser();
+				result[0] = convertOrganizationToOrganizationAdminUIDto(org, user);
+			}
+		});
+		return result[0];
 	}
 	
 	/**
 	 * Called from client side to request the current organization filter.
 	 */
-	public OrganizationAdminUIDto findByNameAsAdminUIDto(String name) {
+	public OrganizationAdminUIDto findByNameAsAdminUIDto(final String name) {
 		logger.debug("Find organization with name = {}", name);
-		
-		List<Organization> rslt = getDao().findByField(Organization.class, "name", name);
-		if (rslt.size() != 1)
-			return null;
-		return convertOrganizationToOrganizationAdminUIDto(rslt.get(0), null);
+		final OrganizationAdminUIDto[] result = new OrganizationAdminUIDto[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<Organization> rslt = wrapper.findByField(Organization.class, "name", name);
+				if (rslt.size() == 1) {
+					result[0] = convertOrganizationToOrganizationAdminUIDto(rslt.get(0), null);
+				}
+			}
+		});
+		return result[0];
 	}
 	
 	/**
@@ -150,49 +157,60 @@ public class OrganizationService extends ServiceObservable {
 	 * 	
 	 * @flowerModelElementId _OsC04FcwEeG6S8FiFZ8nVA
 	 */
-	public List<OrganizationAdminUIDto> findAllAsAdminUIDto(ServiceInvocationContext context, boolean getAll) {
+	public List<OrganizationAdminUIDto> findAllAsAdminUIDto(final ServiceInvocationContext context, final boolean getAll) {
 		logger.debug("Find all organizations");
-		
-		User user = (User) context.getCommunicationChannel().getPrincipal().getUser();
-		List<OrganizationAdminUIDto> list = new ArrayList<OrganizationAdminUIDto>();
-		for (Organization org : getDao().findAll(Organization.class)) {
-			if (!getAll) {
-				try {
-					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
-				} catch (SecurityException e) {
-					continue;
-				}
-			} else {
-				if (!org.isActivated()) {
-					continue; // do not return organizations that are not activated
-				}
-				if (getOrganizationMembershipStatus(org, user) != null) {
-					continue; // do not return organizations where the user is already a member
+		final List<OrganizationAdminUIDto> list = new ArrayList<OrganizationAdminUIDto>();
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				User user = (User) context.getCommunicationChannel().getPrincipal().getUser();
+				for (Organization org : wrapper.findAll(Organization.class)) {
+					if (!getAll) {
+						try {
+							SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
+						} catch (SecurityException e) {
+							continue;
+						}
+					} else {
+						if (!org.isActivated()) {
+							continue; // do not return organizations that are not activated
+						}
+						if (getOrganizationMembershipStatus(org, user) != null) {
+							continue; // do not return organizations where the user is already a member
+						}
+					}
+					
+					list.add(convertOrganizationToOrganizationAdminUIDto(org, user));
 				}
 			}
-			
-			list.add(convertOrganizationToOrganizationAdminUIDto(org, user));
-		}
+		});
 		return list;		
 	}
 	
-	public List<OrganizationAdminUIDto> findMyOrganizationsAsADminUIDto(long userId) {
-		List<OrganizationAdminUIDto> list = new ArrayList<OrganizationAdminUIDto>();
-		if (userId != 0) {
-			User user =  getDao().findByField(User.class, "id", userId).get(0);
+	public List<OrganizationAdminUIDto> findMyOrganizationsAsADminUIDto(final long userId) {
+		final List<OrganizationAdminUIDto> list = new ArrayList<OrganizationAdminUIDto>();
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			logger.debug("Find organizations where {} belongs", user);
-			
-			for (OrganizationUser ou : user.getOrganizationUsers()) {
-				try {
-					if (user.getId() != CommunicationPlugin.tlCurrentUser.get().getUserId())
-						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(ou.getOrganization(), null));
-					list.add(convertOrganizationToOrganizationAdminUIDto(ou.getOrganization(), user));
-				} catch (Exception e) {
-					// do nothing
+			@Override
+			public void run() {
+				if (userId != 0) {
+					User user =  wrapper.findByField(User.class, "id", userId).get(0);
+					
+					logger.debug("Find organizations where {} belongs", user);
+					
+					for (OrganizationUser ou : user.getOrganizationUsers()) {
+						try {
+							if (user.getId() != CommunicationPlugin.tlCurrentUser.get().getUserId())
+								SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(ou.getOrganization(), null));
+							list.add(convertOrganizationToOrganizationAdminUIDto(ou.getOrganization(), user));
+						} catch (Exception e) {
+							// do nothing
+						}
+					}
 				}
 			}
-		}
+		});
 		return list;	
 	}
 
@@ -205,15 +223,22 @@ public class OrganizationService extends ServiceObservable {
 	 * @flowerModelElementId _QTye8F34EeGwLIVyv_iqEg
 	 */
 	public List<NamedDto> findAllAsNamedDto() {
-		List<NamedDto> list = new ArrayList<NamedDto>();
-		for (Organization org : getDao().findAll(Organization.class)) {
-			try {
-				SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
-			} catch (SecurityException e) {
-				continue;
+		final List<NamedDto> list = new ArrayList<NamedDto>();
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				for (Organization org : wrapper.findAll(Organization.class)) {
+					try {
+						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
+					} catch (SecurityException e) {
+						continue;
+					}
+					list.add(new NamedDto(org.getId(), org.getName()));
+				}
 			}
-			list.add(new NamedDto(org.getId(), org.getName()));
-		}
+		});
+		
 		return list;	
 	}
 	
@@ -228,81 +253,88 @@ public class OrganizationService extends ServiceObservable {
 		return mergeAdminUIDto(context, dto, false);
 	}
 	
-	String mergeAdminUIDto(ServiceInvocationContext context, OrganizationAdminUIDto dto, boolean requestMode) {
+	String mergeAdminUIDto(ServiceInvocationContext context, final OrganizationAdminUIDto dto, final boolean requestMode) {
 		logger.debug("Merge organization = {}", dto.getName());
+		final String[] result = new String[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				// first check if there is already an organization with the same name
+				List<Organization> orgsWithSameName = wrapper.findByField(Organization.class, "name", dto.getName());
+				if (dto.getId() == 0 && orgsWithSameName != null && orgsWithSameName.size() > 0) {
+					result[0] = "There is already an organization with this name!";
+				}
+				
+				Organization initialOrg = wrapper.find(Organization.class, dto.getId());
+				
+				// normal users are only allowed to add new organizations in request mode
+				if (!requestMode)
+					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(initialOrg, dto));
+				
+				Organization org = wrapper.mergeDto(Organization.class, dto);
+				org.setName(dto.getName());
+				org.setURL(dto.getURL());
+				org.setLabel(dto.getLabel());
+				org.setLogoURL(dto.getLogoURL());
+				org.setIconURL(dto.getIconURL());
+				org.setActivated(dto.isActivated());
+				
+				org = wrapper.merge(org);
+				observable.notifyObservers(Arrays.asList(UPDATE, initialOrg, org));
+			}
+		});
 		
-		// first check if there is already an organization with the same name
-		List<Organization> orgsWithSameName = getDao().findByField(Organization.class, "name", dto.getName());
-		if (dto.getId() == 0 && orgsWithSameName != null && orgsWithSameName.size() > 0) {
-			return "There is already an organization with this name!";
-		}
-		
-		Organization initialOrg = getDao().find(Organization.class, dto.getId());
-		
-		// normal users are only allowed to add new organizations in request mode
-		if (!requestMode)
-			SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(initialOrg, dto));
-		
-		Organization org = getDao().mergeDto(Organization.class, dto);
-		org.setName(dto.getName());
-		org.setURL(dto.getURL());
-		org.setLabel(dto.getLabel());
-		org.setLogoURL(dto.getLogoURL());
-		org.setIconURL(dto.getIconURL());
-		org.setActivated(dto.isActivated());
-		
-		org = getDao().merge(org);
-		observable.notifyObservers(Arrays.asList(UPDATE, initialOrg, org));
-		
-		return null;
+		return result[0];
 	}
 	
 	/**
 	 * Deletes all {@link Organization}s based on the list of their ids.
 	 * @flowerModelElementId _QTzGAl34EeGwLIVyv_iqEg
 	 */
-	public void delete(List<Integer> ids) {
-		for (Integer id : ids) {
-			Organization org = getDao().find(Organization.class, Long.valueOf(id));
-			SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
+	public void delete(final List<Integer> ids) {
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			logger.debug("Delete {}", org);
-			
-			for (Group group : org.getGroups()) {
-				group.setOrganization(null);
-				getDao().merge(group);
-			}		
-			
-			for (OrganizationUser ou : org.getOrganizationUsers()) {
-				User user = ou.getUser();
-				user.getOrganizationUsers().remove(ou);
-				getDao().merge(user);
-			}
-			
-			Session session = getDao().getFactory().openSession();
-			try {
-				session.beginTransaction();
-				Query recentResources = session.createQuery("SELECT e FROM RecentResource e WHERE e.organization = :organization");
-				recentResources.setParameter("organization", org);
-				for (Object object : recentResources.list()) {
-					RecentResource rr = (RecentResource) object;
-					rr.setOrganization(null);
-					getDao().merge(rr);
+			@Override
+			public void run() {
+				for (Integer id : ids) {
+					Organization org = wrapper.find(Organization.class, Long.valueOf(id));
+					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
+					
+					logger.debug("Delete {}", org);
+					
+					for (Group group : org.getGroups()) {
+						group.setOrganization(null);
+						wrapper.merge(group);
+					}		
+					
+					for (OrganizationUser ou : org.getOrganizationUsers()) {
+						User user = ou.getUser();
+						user.getOrganizationUsers().remove(ou);
+						wrapper.merge(user);
+					}
+					
+					Query recentResources = wrapper.createQuery("SELECT e FROM RecentResource e WHERE e.organization = :organization");
+					recentResources.setParameter("organization", org);
+					for (Object object : recentResources.list()) {
+						RecentResource rr = (RecentResource) object;
+						rr.setOrganization(null);
+						wrapper.merge(rr);
+					}
+					
+					Query favoriteItems = wrapper.createQuery("SELECT e FROM FavoriteItem e WHERE e.organization = :organization");
+					favoriteItems.setParameter("organization", org);
+					for (Object object : favoriteItems.list()) {
+						FavoriteItem fav = (FavoriteItem) object;
+						wrapper.delete(fav);
+					}
+					
+					wrapper.delete(org);
+					observable.notifyObservers(Arrays.asList(DELETE, org));
+					
 				}
-				
-				Query favoriteItems = session.createQuery("SELECT e FROM FavoriteItem e WHERE e.organization = :organization");
-				favoriteItems.setParameter("organization", org);
-				for (Object object : favoriteItems.list()) {
-					FavoriteItem fav = (FavoriteItem) object;
-					getDao().delete(fav);
-				}
-				
-				getDao().delete(org);
-				observable.notifyObservers(Arrays.asList(DELETE, org));
-			} finally {
-				session.close();
 			}
-		}
+		});
 	}
 	
 	/**
@@ -335,11 +367,19 @@ public class OrganizationService extends ServiceObservable {
 			Matcher matcher = Pattern.compile(dir).matcher(resourcePath);
 			matcher.find();
 			try {
-				String organizationName = matcher.group(1);
-				List<Organization> result = getDao().findByField(Organization.class, "name", organizationName);
-				if (result.size() > 0) {
-					return result.get(0);
-				}
+				final String organizationName = matcher.group(1);
+				final Organization[] result = new Organization[1];
+				new DatabaseOperationWrapper(new DatabaseOperation() {
+					
+					@Override
+					public void run() {
+						List<Organization> orgs = wrapper.findByField(Organization.class, "name", organizationName);
+						if (orgs.size() > 0) {
+							result[0] = orgs.get(0);
+						}
+					}
+				});
+				return result[0];
 			} catch (IllegalStateException e) {
 				// do nothing
 			}
@@ -360,41 +400,53 @@ public class OrganizationService extends ServiceObservable {
 	/**
 	 * Rename the anonymous user and groups belonging to the organization.
 	 */
-	private void onOrganizationUpdate(Organization initialOrganization, Organization newOrganization) {
-		String initialName = initialOrganization.getName();
-		String newName  = newOrganization.getName();
-		
-		if (!initialName.equals(newName)) {
-			List<User> list = getDao().findByField(User.class, "login", SecurityEntityAdaptor.getAnonymousUserLogin(initialOrganization));
-			if (list.size() > 0) {
-				User user = list.get(0);
-				User initialUser = getDao().find(User.class, user.getId());
-				user.setLogin(user.getLogin().replace(initialName, newName));
-				user.setHashedPassword(Util.encrypt(user.getLogin()));
-				user = getDao().merge(user);
-				observable.notifyObservers(Arrays.asList(UPDATE, initialUser, user));
-			}
+	private void onOrganizationUpdate(final Organization initialOrganization, final Organization newOrganization) {
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			for (Group group : getDao().findAll(Group.class)) {
-				if (group.getOrganization() != null && group.getOrganization().getId() == initialOrganization.getId()) {
-					Group initialGroup = getDao().find(Group.class, group.getId());
-					group.setName(group.getName().replace(initialName, newName));
-					group = getDao().merge(group);
-					observable.notifyObservers(Arrays.asList(UPDATE, initialGroup, group));
+			@Override
+			public void run() {
+				String initialName = initialOrganization.getName();
+				String newName  = newOrganization.getName();
+				if (!initialName.equals(newName)) {
+					List<User> list = wrapper.findByField(User.class, "login", SecurityEntityAdaptor.getAnonymousUserLogin(initialOrganization));
+					if (list.size() > 0) {
+						User user = list.get(0);
+						User initialUser = wrapper.find(User.class, user.getId());
+						user.setLogin(user.getLogin().replace(initialName, newName));
+						user.setHashedPassword(Util.encrypt(user.getLogin()));
+						user = wrapper.merge(user);
+						observable.notifyObservers(Arrays.asList(UPDATE, initialUser, user));
+					}
+					
+					for (Group group : wrapper.findAll(Group.class)) {
+						if (group.getOrganization() != null && group.getOrganization().getId() == initialOrganization.getId()) {
+							Group initialGroup = wrapper.find(Group.class, group.getId());
+							group.setName(group.getName().replace(initialName, newName));
+							group = wrapper.merge(group);
+							observable.notifyObservers(Arrays.asList(UPDATE, initialGroup, group));
+						}
+					}
 				}
 			}
-		}
+		});
+		
 	}
 	
 	/**
 	 * Delete the anonymous user belonging to the organization.
 	 */
-	private void onOrganizationDelete(Organization organization) {
-		List<User> list = getDao().findByField(User.class, "login", SecurityEntityAdaptor.getAnonymousUserLogin(organization));
-		if (list.size() > 0) {
-			getDao().delete(list.get(0));
-			observable.notifyObservers(Arrays.asList(DELETE, list.get(0)));
-		}
+	private void onOrganizationDelete(final Organization organization) {
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<User> list = wrapper.findByField(User.class, "login", SecurityEntityAdaptor.getAnonymousUserLogin(organization));
+				if (list.size() > 0) {
+					wrapper.delete(list.get(0));
+					observable.notifyObservers(Arrays.asList(DELETE, list.get(0)));
+				}
+			}
+		});
 	}
 	
 	private Observer organizationObserver = new Observer() {

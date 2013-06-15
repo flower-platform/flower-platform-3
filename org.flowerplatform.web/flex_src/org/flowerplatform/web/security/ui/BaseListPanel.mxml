@@ -25,7 +25,10 @@
 			import mx.events.ListEvent;
 			
 			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.popup.IPopupHandler;
 			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.entity.dto.Dto;
 			
 			/**
@@ -139,8 +142,10 @@
 				if (editMode && table.selectedItem == null) {
 					return;
 				}
-				var form:BaseForm = new formClass();
 //				form.showPopup();
+				var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
+				handler.setPopupContentClass(formClass).show();
+				var form:Object = handler.getPopupContent();
 
 				// we do the initializations here to let some time for the component children to be created
 				// because the setter assumes that the children are created
@@ -170,10 +175,10 @@
 	<mx:ApplicationControlBar id="menuBar" width="100%" horizontalAlign="right" fillAlphas="[1.0, 1.0]" fillColors="[#F5F5F5, #F5F5F5]" horizontalGap="0">
 		<mx:VBox id="menuBarVBox" width="100%">
 			<mx:HBox id="menuBarFirstHBox" width="100%" horizontalAlign="right" horizontalGap="0">
-				<common:FlowerLinkButton id="refreshBtn" iconURL="icons/Web/icons/common/refresh.png" label="{WebPlugin.getInstance().getMessage('list.refresh')}" click="refreshBtnHandler()"/>		
-				<common:FlowerLinkButton id="addBtn" iconURL="icons/Web/icons/common/add.png" label="{WebPlugin.getInstance().getMessage('list.add')}" click="addBtnHandler()"/>
-				<common:FlowerLinkButton id="editBtn" iconURL="icons/Web/icons/common/edit.png" label="{WebPlugin.getInstance().getMessage('list.edit')}" click="editBtnHandler()"/>
-				<common:FlowerLinkButton id="deleteBtn" iconURL="icons/Web/icons/common/cancel_delete.png" label="{WebPlugin.getInstance().getMessage('list.delete')}" click="deleteBtnHandler()"/> 					
+				<common:FlowerLinkButton id="refreshBtn" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/common/refresh.png")}' label="{WebPlugin.getInstance().getMessage('list.refresh')}" click="refreshBtnHandler()"/>		
+				<common:FlowerLinkButton id="addBtn" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/common/add.png")}' label="{WebPlugin.getInstance().getMessage('list.add')}" click="addBtnHandler()"/>
+				<common:FlowerLinkButton id="editBtn" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/common/edit.png")}' label="{WebPlugin.getInstance().getMessage('list.edit')}" click="editBtnHandler()"/>
+				<common:FlowerLinkButton id="deleteBtn" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/common/cancel_delete.png")}' label="{WebPlugin.getInstance().getMessage('list.delete')}" click="deleteBtnHandler()"/> 					
 			</mx:HBox>
 		</mx:VBox>
 	</mx:ApplicationControlBar>

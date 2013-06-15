@@ -2,7 +2,7 @@ package org.flowerplatform.web.temp;
 
 import java.util.List;
 
-import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.GroupUser;
 import org.flowerplatform.web.entity.ISecurityEntity;
@@ -14,7 +14,6 @@ import org.flowerplatform.web.entity.PermissionEntity;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.entity.dao.Dao;
 import org.flowerplatform.web.security.service.Util;
 
 /**
@@ -24,49 +23,44 @@ import org.flowerplatform.web.security.service.Util;
  * created in the transaction scoped persistence context (i.e. created by entity manager)
  * 
  * @author Florin
+ * @author Mariana
  *
  */
 public class GeneralService {
 
-	private Dao getDao() {
-		return WebPlugin.getInstance().getDao();
-	}
-	
-	public Organization createOrganization(String name) {
+	public Organization createOrganization(String name, DatabaseOperationWrapper wrapper) {
 		Organization org = EntityFactory.eINSTANCE.createOrganization();
 		org.setName(name);	
 		org.setURL(name);
 		org.setLabel(name + "Label");
 		org.setActivated(true);
-		org = getDao().merge(org);		 
+		org = wrapper.merge(org);		 
 		return org;
 	}
 	
-	public Group createGroup(String groupName, Organization organization) {
+	public Group createGroup(String groupName, Organization organization, DatabaseOperationWrapper wrapper) {
 		Group group = EntityFactory.eINSTANCE.createGroup();
 		group.setName(groupName);
-		group.setOrganization(organization);		
-		group = getDao().merge(group);
+		group = wrapper.merge(group);
 		if (organization != null) {
 			organization.getGroups().add(group);
-			organization = getDao().merge(organization);
+			group.setOrganization(wrapper.merge(organization));
 		}
 		return group;
 	}
 	
-	public User createUserAndAddToGroups(String name, String password, List<Group> groups) {
-		User user = createUser(name, password);
+	public User createUserAndAddToGroups(String name, String password, List<Group> groups, DatabaseOperationWrapper wrapper) {
+		User user = createUser(name, password, wrapper);
 		for (Group g: groups) {
-			addUserToGroup(user, g);
+			addUserToGroup(user, g, wrapper);
 		}
 		return user;
 	}
 	
-	public User createUser(String name, String password) {		
+	public User createUser(String name, String password, DatabaseOperationWrapper wrapper) {	
 		User user = EntityFactory.eINSTANCE.createUser();
 		user.setLogin(name);
 		user.setName(name);
-//		user.setEmail(name + "@userEmail");
 		user.setEmail("csp3@crispico.com");
 		if (password != null) {
 			user.setHashedPassword(Util.encrypt(password));
@@ -75,30 +69,29 @@ public class GeneralService {
 		}
 		user.setActivationCode("12345");
 		user.setActivated(true);
-		user = getDao().merge(user);
-		return user;
+		return wrapper.merge(user);
 	}
 	
-	public void createSVNCommentAndAddToUser(String body, User user) {
+	public User createSVNCommentAndAddToUser(String body, User user, DatabaseOperationWrapper wrapper) {
 		SVNCommentEntity comment;
 		comment = EntityFactory.eINSTANCE.createSVNCommentEntity();
 		comment.setBody(body);
 		comment.setTimestamp(System.currentTimeMillis());
 		comment.setUser(user);
-		comment = getDao().merge(comment);
+		comment = wrapper.merge(comment);
 		user.getSvnComments().add(comment);	
-		user = getDao().merge(user);
+		return wrapper.merge(user);
 	}
 	
-	public void createSVNRepositoryURLAndAddToOrg(String name, Organization organization) {
+	public Organization createSVNRepositoryURLAndAddToOrg(String name, Organization organization, DatabaseOperationWrapper wrapper) {
 		SVNRepositoryURLEntity url;
 		url = EntityFactory.eINSTANCE.createSVNRepositoryURLEntity();
 		url.setName(name);
 		url.setOrganization(organization);
-		url = getDao().merge(url);
-		url = getDao().find(SVNRepositoryURLEntity.class, url.getId());
+		url = wrapper.merge(url);
+		url = wrapper.find(SVNRepositoryURLEntity.class, url.getId());
 		organization.getSvnRepositoryURLs().add(url);		
-		organization = getDao().merge(organization);
+		return wrapper.merge(organization);
 	}
 	
 	/**
@@ -108,15 +101,15 @@ public class GeneralService {
 	 * @param user
 	 * @param group
 	 */
-	public void addUserToGroup(User user, Group group) {	
+	public void addUserToGroup(User user, Group group, DatabaseOperationWrapper wrapper) {
 		GroupUser gu = EntityFactory.eINSTANCE.createGroupUser();
 		OrganizationUser organizationUser = EntityFactory.eINSTANCE.createOrganizationUser();
 		gu.setUser(user);
 		gu.setGroup(group);				
 		
-		gu = getDao().merge(gu); 	
-		user = getDao().merge(user);
-		group = getDao().merge(group);
+		gu = wrapper.merge(gu); 	
+		user = wrapper.merge(user);
+		group = wrapper.merge(group);
 		
 		// find operations will go to cache, not to the database
 		// this will update the cache, so subsequent find operations will return proper results		
@@ -143,17 +136,17 @@ public class GeneralService {
 			else
 				organizationUser.setStatus(OrganizationMembershipStatus.MEMBER);
 			
-			organizationUser = getDao().merge(organizationUser);
+			organizationUser = wrapper.merge(organizationUser);
 			
 //			user.getOrganizationUsers().add(organizationUser);
 //			organization.getOrganizationUsers().add(organizationUser);
 			
-			user = getDao().merge(user);
-			organization = getDao().merge(organization);
+			user = wrapper.merge(user);
+			organization = wrapper.merge(organization);
 		}
 	}
 	
-	public PermissionEntity createPermission(Class<?> implementedType, String resource, ISecurityEntity assignedTo, String parameters) {
+	public PermissionEntity createPermission(Class<?> implementedType, String resource, ISecurityEntity assignedTo, String parameters, DatabaseOperationWrapper wrapper) {
 		PermissionEntity p = EntityFactory.eINSTANCE.createPermissionEntity();
 		p.setName(resource);// path
 		p.setActions(parameters);// actions
@@ -168,6 +161,6 @@ public class GeneralService {
 			Organization org = (Organization) assignedTo;
 			p.setAssignedTo("#" + org.getName());
 		}
-		return getDao().merge(p);
+		return wrapper.merge(p);
 	}
 }

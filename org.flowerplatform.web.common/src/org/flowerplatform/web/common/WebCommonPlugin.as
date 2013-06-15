@@ -1,5 +1,7 @@
 package org.flowerplatform.web.common {
 	
+	import flash.net.registerClassAlias;
+	
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
 	
@@ -7,7 +9,16 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;
+	import org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient;
+	import org.flowerplatform.web.common.entity.dto.NamedDto;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
+	import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
+	import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+	import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
+	import org.flowerplatform.web.common.security.dto.PermissionAdminUIDto;
+	import org.flowerplatform.web.common.security.dto.PermissionsByResourceFilter;
+	import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
+	import org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto;
 	
 	/**
 	 * @author Cristi
@@ -22,6 +33,8 @@ package org.flowerplatform.web.common {
 		
 		public var authenticationManager:AuthenticationManager;
 		
+		public var heartbeatStatefulClient:HeartbeatStatefulClient;
+		
 		override public function start():void {
 			super.start();
 			if (INSTANCE != null) {
@@ -29,6 +42,7 @@ package org.flowerplatform.web.common {
 			}
 			INSTANCE = this;
 			authenticationManager = new AuthenticationManager();
+//			heartbeatStatefulClient = new HeartbeatStatefulClient();
 		}
 		
 		override public function setupExtensionPointsAndExtensions():void {
@@ -38,6 +52,18 @@ package org.flowerplatform.web.common {
 		
 		override protected function registerMessageBundle():void {
 			// do nothing; this plugin doesn't have a .resources (yet)
+		}
+		
+		override protected function registerClassAliases():void {
+			super.registerClassAliases();
+			registerClassAlias("org.flowerplatform.web.entity.dto.NamedDto", NamedDto);
+			registerClassAlias("org.flowerplatform.web.security.dto.UserAdminUIDto", UserAdminUIDto);
+			registerClassAlias("org.flowerplatform.web.security.dto.User_CurrentUserLoggedInDto", User_CurrentUserLoggedInDto);
+			registerClassAlias("org.flowerplatform.web.security.dto.GroupAdminUIDto", GroupAdminUIDto);
+			registerClassAlias("org.flowerplatform.web.security.dto.OrganizationAdminUIDto", OrganizationAdminUIDto);
+			registerClassAlias("org.flowerplatform.web.security.dto.OrganizationUserAdminUIDto", OrganizationUserAdminUIDto);
+			registerClassAlias("org.flowerplatform.web.security.dto.PermissionAdminUIDto", PermissionAdminUIDto);
+			registerClassAlias("org.flowerplatform.web.security.dto.PermissionsByResourceFilter", PermissionsByResourceFilter);
 		}
 		
 	}

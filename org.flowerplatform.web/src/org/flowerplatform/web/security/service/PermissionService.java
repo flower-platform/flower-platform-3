@@ -22,12 +22,13 @@ import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.service.ServiceRegistry;
 import org.flowerplatform.web.FlowerWebProperties.AddBooleanProperty;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.Entity;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.ISecurityEntity;
 import org.flowerplatform.web.entity.PermissionEntity;
-import org.flowerplatform.web.entity.dao.Dao;
 import org.flowerplatform.web.security.dto.PermissionAdminUIDto;
 import org.flowerplatform.web.security.dto.PermissionsByResourceFilter;
 import org.flowerplatform.web.security.permission.AdminSecurityEntitiesPermission;
@@ -69,13 +70,6 @@ public class PermissionService {
 	}
 	
 	/**
-	 * @flowerModelElementId _QT2JUF34EeGwLIVyv_iqEg
-	 */
-	public Dao getDao() {
-		return WebPlugin.getInstance().getDao();
-	}
-	
-	/**
 	 * Converts a {@link Group} to {@link PermissionAdminUIDto}.
 	 * 
 	 * @see #findAllAsAdminUIDto()
@@ -99,13 +93,21 @@ public class PermissionService {
 	 * Finds the {@link PermissionEntity permission} given by its id and returns a {@link PermissionAdminUIDto}. 
 	 * @flowerModelElementId _QT2JVl34EeGwLIVyv_iqEg
 	 */
-	public PermissionAdminUIDto findByIdAsAdminUIDto(long id) {
+	public PermissionAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find permission with id = {}", id);
 		
-		PermissionEntity permission = getDao().find(PermissionEntity.class, id);
-		if (permission == null)
-			throw new RuntimeException(String.format("Permission with id=%s was not found in the DB.", id));
-		return convertPermissionToPermissionAdminUIDto(permission);
+		final PermissionAdminUIDto[] result = new PermissionAdminUIDto[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				PermissionEntity permission = wrapper.find(PermissionEntity.class, id);
+				if (permission == null)
+					throw new RuntimeException(String.format("Permission with id=%s was not found in the DB.", id));
+				result[0] = convertPermissionToPermissionAdminUIDto(permission);
+			}
+		});
+		return result[0];
 	}
 	
 	/**
@@ -115,15 +117,21 @@ public class PermissionService {
 	public List<PermissionAdminUIDto> findAllAsAdminUIDto() { 
 		logger.debug("Find all permissions");
 		
-		List<PermissionAdminUIDto> list = new ArrayList<PermissionAdminUIDto>();
-		for (PermissionEntity permission : getDao().findAll(PermissionEntity.class)) {
-			try {
-				SecurityUtils.checkModifyTreePermission(permission);
-				if (Class.forName(permission.getType()).equals(AdminSecurityEntitiesPermission.class))
-					SecurityUtils.checkCurrentUserIsAdmin(null);
-				list.add(convertPermissionToPermissionAdminUIDto(permission));
-			} catch (Exception e) {}
-		}
+		final List<PermissionAdminUIDto> list = new ArrayList<PermissionAdminUIDto>();
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				for (PermissionEntity permission : wrapper.findAll(PermissionEntity.class)) {
+					try {
+						SecurityUtils.checkModifyTreePermission(permission);
+						if (Class.forName(permission.getType()).equals(AdminSecurityEntitiesPermission.class))
+							SecurityUtils.checkCurrentUserIsAdmin(null);
+						list.add(convertPermissionToPermissionAdminUIDto(permission));
+					} catch (Exception e) {}
+				}
+			}
+		});
 		return list;
 	}
 	
@@ -152,17 +160,11 @@ public class PermissionService {
 			index = resourceFilter.getResource().indexOf("/", fromIndex);
 		}
 		
-		Session session = getDao().getFactory().openSession();
-		session.beginTransaction();
 		List<PermissionEntity> permissionEntities;
-		try {
-			Query q = session.createQuery("SELECT e FROM PermissionEntity e WHERE e.name in :names ORDER by e.type, e.name");
-			q.setParameter("names", patterns);
-			q.setReadOnly(true);					
-			permissionEntities = q.list();
-		} finally {
-			session.close();
-		}
+		Query q = wrapper.createQuery("SELECT e FROM PermissionEntity e WHERE e.name in :names ORDER by e.type, e.name");
+		q.setParameter("names", patterns);
+		q.setReadOnly(true);					
+		permissionEntities = q.list();
 		
 		boolean showAllApplicablePermissions = Boolean.valueOf(WebPlugin.getInstance().getFlowerWebProperties().getProperty(SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE));
 		
@@ -202,55 +204,63 @@ public class PermissionService {
 	 * @see #validDto()
 	 * @flowerModelElementId _QT3-gl34EeGwLIVyv_iqEg
 	 */
-	public Map<String, String> mergeAdminUIDto(ServiceInvocationContext context, PermissionAdminUIDto dto) {
+	public Map<String, String> mergeAdminUIDto(ServiceInvocationContext context, final PermissionAdminUIDto dto) {
 		logger.debug("Merge permission = {}", dto.getName());
 		
-		PermissionEntity permissionEntity;
-		if (dto.getId() == 0) {
-			permissionEntity = EntityFactory.eINSTANCE.createPermissionEntity();
-		} else {
-			permissionEntity = getDao().find(PermissionEntity.class, (long)dto.getId());
-			SecurityUtils.checkModifyTreePermission(permissionEntity);
-		}
-		try {
-			if (Class.forName(dto.getType()).equals(AdminSecurityEntitiesPermission.class)) {
-				SecurityUtils.checkCurrentUserIsAdmin(String.format("Current user can not modify %s because he is not admin.", AdminSecurityEntitiesPermission.class.getSimpleName()));
-			}
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		
-		permissionEntity.setName(dto.getName());
-		permissionEntity.setAssignedTo(dto.getAssignedTo());
-		permissionEntity.setActions(dto.getActions());
-		permissionEntity.setType(dto.getType());				
+		final Object[] result = new Object[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				PermissionEntity permissionEntity;
+				if (dto.getId() == 0) {
+					permissionEntity = EntityFactory.eINSTANCE.createPermissionEntity();
+				} else {
+					permissionEntity = wrapper.find(PermissionEntity.class, (long)dto.getId());
+					SecurityUtils.checkModifyTreePermission(permissionEntity);
+				}
+				try {
+					if (Class.forName(dto.getType()).equals(AdminSecurityEntitiesPermission.class)) {
+						SecurityUtils.checkCurrentUserIsAdmin(String.format("Current user can not modify %s because he is not admin.", AdminSecurityEntitiesPermission.class.getSimpleName()));
+					}
+				} catch (ClassNotFoundException e) {
+					throw new RuntimeException(e);
+				}
+				
+				permissionEntity.setName(dto.getName());
+				permissionEntity.setAssignedTo(dto.getAssignedTo());
+				permissionEntity.setActions(dto.getActions());
+				permissionEntity.setType(dto.getType());				
 
-		PermissionDescriptor descriptor = ((FlowerWebPolicy)Policy.getPolicy()).getPermissionDescriptor(permissionEntity.getType());
-		Map<String, String> validationResults = descriptor.validate(createPermission(permissionEntity));
-		String assignedTo = permissionEntity.getAssignedTo();
-		if (!assignedTo.equals(PermissionEntity.ANY_ENTITY)) {
-			String message = SecurityUtils.validateSecurityEntity(assignedTo);
-			if (message != null) {
-				validationResults.put(PermissionDescriptor.ASSIGNED_TO_FIELD, message);
+				PermissionDescriptor descriptor = ((FlowerWebPolicy)Policy.getPolicy()).getPermissionDescriptor(permissionEntity.getType());
+				Map<String, String> validationResults = descriptor.validate(createPermission(permissionEntity));
+				String assignedTo = permissionEntity.getAssignedTo();
+				if (!assignedTo.equals(PermissionEntity.ANY_ENTITY)) {
+					String message = SecurityUtils.validateSecurityEntity(assignedTo);
+					if (message != null) {
+						validationResults.put(PermissionDescriptor.ASSIGNED_TO_FIELD, message);
+					}
+				}
+				
+				if (!validationResults.isEmpty()) {
+					result[0] = validationResults;
+				}		
+				SecurityUtils.checkModifyTreePermission(permissionEntity);		
+				wrapper.merge(permissionEntity);
+				
+				Map<String, String> rslt = new HashMap<String, String>();
+				
+				// check if tree permission on folder
+				if (descriptor.isTreePermission()) {
+					if (isFolder(permissionEntity.getName())) {
+						rslt.put("modifySimilarPermission", "");
+					}
+				}
+				
+				result[0] = rslt;
 			}
-		}
-		
-		if (!validationResults.isEmpty()) {
-			return validationResults;
-		}		
-		SecurityUtils.checkModifyTreePermission(permissionEntity);		
-		getDao().merge(permissionEntity);
-		
-		Map<String, String> result = new HashMap<String, String>();
-		
-		// check if tree permission on folder
-		if (descriptor.isTreePermission()) {
-			if (isFolder(permissionEntity.getName())) {
-				result.put("modifySimilarPermission", "");
-			}
-		}
-		
-		return result;
+		});
+		return (Map<String, String>) result[0];
 	}
 	
 	/**
@@ -264,27 +274,34 @@ public class PermissionService {
 	 * 
 	 * @flowerModelElementId _QUEy0V34EeGwLIVyv_iqEg
 	 */
-	public List<Boolean> delete(List<Integer> ids) {
-		List<Boolean> result = new ArrayList<Boolean>();
-		for (Integer id : ids) {
-			PermissionEntity permissionEntity = getDao().find(PermissionEntity.class, Long.valueOf(id));
-			SecurityUtils.checkModifyTreePermission(permissionEntity);
-			try {
-				if (Class.forName(permissionEntity.getType()).equals(AdminSecurityEntitiesPermission.class)) {
-					SecurityUtils.checkCurrentUserIsAdmin(String.format("Current user can not delete %s because he is not admin.", AdminSecurityEntitiesPermission.class.getSimpleName()));
-				}
-				PermissionDescriptor descriptor = ((FlowerWebPolicy)Policy.getPolicy()).getPermissionDescriptor(permissionEntity.getType());
-				if (descriptor.isTreePermission()) {
-					result.add(isFolder(permissionEntity.getName()));
-				}
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
+	public List<Boolean> delete(final List<Integer> ids) {
+		final List<Boolean> result = new ArrayList<Boolean>();
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				for (Integer id : ids) {
+					PermissionEntity permissionEntity = wrapper.find(PermissionEntity.class, Long.valueOf(id));
+					SecurityUtils.checkModifyTreePermission(permissionEntity);
+					try {
+						if (Class.forName(permissionEntity.getType()).equals(AdminSecurityEntitiesPermission.class)) {
+							SecurityUtils.checkCurrentUserIsAdmin(String.format("Current user can not delete %s because he is not admin.", AdminSecurityEntitiesPermission.class.getSimpleName()));
+						}
+						PermissionDescriptor descriptor = ((FlowerWebPolicy)Policy.getPolicy()).getPermissionDescriptor(permissionEntity.getType());
+						if (descriptor.isTreePermission()) {
+							result.add(isFolder(permissionEntity.getName()));
+						}
+					} catch (ClassNotFoundException e) {
+						throw new RuntimeException(e);
+					}
+					
+					logger.debug("Delete {}", permissionEntity);
+					
+					wrapper.delete(permissionEntity);
+				}		
 			}
-			
-			logger.debug("Delete {}", permissionEntity);
-			
-			getDao().delete(permissionEntity);
-		}		
+		});
+		
 		return result;
 	}
 	
@@ -299,106 +316,98 @@ public class PermissionService {
 		return resource.exists();
 	}
 	
-	public List<PermissionEntity> findPermissionsByType(String type) {
-		Session session = getDao().getFactory().openSession();
-		try {
-			session.beginTransaction();
-			Query q = session.createQuery("SELECT p FROM PermissionEntity p WHERE p.type = :type ORDER BY p.name");
-			q.setParameter("type", type);
-			return q.list();
-		} finally {
-			session.close();
-		}
-	}
-	
-	public void onSecurityEntityDelete(ISecurityEntity securityEntity) {
-		Session session = getDao().getFactory().openSession();
-		try {
-			session.getTransaction().begin();	
+	public List<PermissionEntity> findPermissionsByType(final String type) {
+		final Object[] result = new Object[1];
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			// delete permissions assigned to deleted entity
-			String assignedTo = SecurityEntityAdaptor.getAssignedTo(securityEntity);
-			Query query = session.createQuery("DELETE FROM PermissionEntity p WHERE p.assignedTo = :assigned_to");
-			query.setParameter("assigned_to", assignedTo);
-			query.executeUpdate();
-			
-			// delete/edit permissions where actions contain deleted entity
-			String actions = SecurityEntityAdaptor.getAssignedTo(securityEntity);
-			Query q = session.createQuery("SELECT p FROM PermissionEntity p WHERE p.actions LIKE :actions");
-			q.setParameter("actions", "%" + actions + "%");
-			List<PermissionEntity> list = q.list();
-				
-			for (PermissionEntity permission : list) {
-				if (permission.getActions().equals(actions)) {
-					// delete permission
-					session.delete(permission);
-				} else {
-					// update actions
-					List<ISecurityEntity> assignableEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(permission.getActions());
-					for (Iterator<ISecurityEntity> it = assignableEntities.iterator(); it.hasNext();) {
-						Entity entity = (Entity) it.next();
-						if (entity != null) {
-							if (entity.getId() == ((Entity) securityEntity).getId()) {
-								it.remove();
-								break;
-							}
-						} else {
-							it.remove();
-						}
-					}
-					Set<String> names = new HashSet<String>();
-					for (ISecurityEntity entity : assignableEntities) {
-						names.add(SecurityEntityAdaptor.getAssignedTo(entity));
-					}
-					permission.setActions(SecurityEntityAdaptor.toCsvString(names));
-					
-					session.merge(permission);
-				}
+			@Override
+			public void run() {
+				Query q = wrapper.createQuery("SELECT p FROM PermissionEntity p WHERE p.type = :type ORDER BY p.name");
+				q.setParameter("type", type);
+				result[0] = q.list();
 			}
-			
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-			throw new RuntimeException(e);
-		} finally {
-			session.close();
-		}
+		});
+		return (List<PermissionEntity>) result[0];
 	}
 	
-	public void onSecurityEntityUpdate(ISecurityEntity initialEntity, ISecurityEntity newEntity) {
-		String initialAssignedTo = SecurityEntityAdaptor.getAssignedTo(initialEntity);
-		String newAssignedTo = SecurityEntityAdaptor.getAssignedTo(newEntity);
-		
-		if (!initialAssignedTo.equals(newAssignedTo)) {
-			Session session = getDao().getFactory().openSession();
-			try {
-				session.getTransaction().begin();
-				
-				// update permissions assigned to entity
-				Query query = session.createQuery("UPDATE PermissionEntity " +
-											 "SET assignedTo = :newAssignedTo " + 
-											 "WHERE assignedTo = :initialAssignedTo");
-				query.setParameter("newAssignedTo", newAssignedTo);
-				query.setParameter("initialAssignedTo", initialAssignedTo);
+	public void onSecurityEntityDelete(final ISecurityEntity securityEntity) {
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				// delete permissions assigned to deleted entity
+				String assignedTo = SecurityEntityAdaptor.getAssignedTo(securityEntity);
+				Query query = wrapper.createQuery("DELETE FROM PermissionEntity p WHERE p.assignedTo = :assigned_to");
+				query.setParameter("assigned_to", assignedTo);
 				query.executeUpdate();
 				
-				// update permissions where actions contain entity
-				Query q = session.createQuery("SELECT p FROM PermissionEntity p WHERE p.actions LIKE :actions");
-				q.setParameter("actions", "%" + initialAssignedTo + "%");
+				// delete/edit permissions where actions contain deleted entity
+				String actions = SecurityEntityAdaptor.getAssignedTo(securityEntity);
+				Query q = wrapper.createQuery("SELECT p FROM PermissionEntity p WHERE p.actions LIKE :actions");
+				q.setParameter("actions", "%" + actions + "%");
 				List<PermissionEntity> list = q.list();
-				
+					
 				for (PermissionEntity permission : list) {
-					permission.setActions(permission.getActions().replaceAll(Matcher.quoteReplacement(initialAssignedTo), Matcher.quoteReplacement(newAssignedTo)));
-					session.merge(permission);
+					if (permission.getActions().equals(actions)) {
+						// delete permission
+						wrapper.delete(permission);
+					} else {
+						// update actions
+						List<ISecurityEntity> assignableEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(permission.getActions());
+						for (Iterator<ISecurityEntity> it = assignableEntities.iterator(); it.hasNext();) {
+							Entity entity = (Entity) it.next();
+							if (entity != null) {
+								if (entity.getId() == ((Entity) securityEntity).getId()) {
+									it.remove();
+									break;
+								}
+							} else {
+								it.remove();
+							}
+						}
+						Set<String> names = new HashSet<String>();
+						for (ISecurityEntity entity : assignableEntities) {
+							names.add(SecurityEntityAdaptor.getAssignedTo(entity));
+						}
+						permission.setActions(SecurityEntityAdaptor.toCsvString(names));
+						
+						wrapper.merge(permission);
+					}
 				}
-				session.getTransaction().commit();
-			} catch (Exception e) {
-				session.getTransaction().rollback();
-				throw new RuntimeException(e);
-			} finally {
-				session.close();
 			}
-		}
+		});
+			
+	}
+	
+	public void onSecurityEntityUpdate(final ISecurityEntity initialEntity, final ISecurityEntity newEntity) {
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				String initialAssignedTo = SecurityEntityAdaptor.getAssignedTo(initialEntity);
+				String newAssignedTo = SecurityEntityAdaptor.getAssignedTo(newEntity);
+				
+				if (!initialAssignedTo.equals(newAssignedTo)) {
+					// update permissions assigned to entity
+					Query query = wrapper.createQuery("UPDATE PermissionEntity " +
+												 "SET assignedTo = :newAssignedTo " + 
+												 "WHERE assignedTo = :initialAssignedTo");
+					query.setParameter("newAssignedTo", newAssignedTo);
+					query.setParameter("initialAssignedTo", initialAssignedTo);
+					query.executeUpdate();
+					
+					// update permissions where actions contain entity
+					Query q = wrapper.createQuery("SELECT p FROM PermissionEntity p WHERE p.actions LIKE :actions");
+					q.setParameter("actions", "%" + initialAssignedTo + "%");
+					List<PermissionEntity> list = q.list();
+					
+					for (PermissionEntity permission : list) {
+						permission.setActions(permission.getActions().replaceAll(Matcher.quoteReplacement(initialAssignedTo), Matcher.quoteReplacement(newAssignedTo)));
+						wrapper.merge(permission);
+					}
+				}
+			}
+		});
 	}
 	
 	public List<PermissionDescriptor> getPermissionDescriptors() {

@@ -12,7 +12,7 @@ package org.flowerplatform.web.common.security.dto {
 	 * 	
 	 * @flowerModelElementId _37klIFfcEeG3xJSMfQ3HWg
 	 */
-	[RemoteClass(alias="com.crispico.flower.mp.web.security.dto.UserAdminUIDto")]
+	[RemoteClass(alias="org.flowerplatform.web.security.dto.UserAdminUIDto")]
 	public class UserAdminUIDto extends NamedDto  {
 		
 		/**

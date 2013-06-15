@@ -17,8 +17,8 @@ import java.util.Map;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.osgi.internal.permadmin.BundlePermissions;
-import org.flowerplatform.web.WebPlugin;
-import org.flowerplatform.web.entity.dao.Dao;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.security.permission.AbstractTreePermission;
 import org.flowerplatform.web.security.permission.AdminSecurityEntitiesPermissionDescriptor;
 import org.flowerplatform.web.security.permission.FlowerWebFilePermission;
@@ -27,7 +27,6 @@ import org.flowerplatform.web.security.permission.ModifyTreePermissionsPermissio
 import org.flowerplatform.web.security.permission.PermissionDescriptor;
 import org.flowerplatform.web.security.service.PermissionService;
 import org.hibernate.Query;
-import org.hibernate.Session;
 
 import org.flowerplatform.web.entity.ISecurityEntity;
 import org.flowerplatform.web.entity.PermissionEntity;
@@ -272,41 +271,45 @@ public class FlowerWebPolicy extends Policy {
 	/**
 	 * Returns all the permissions that are enforced for the user (the permissions for the user,
 	 * the permissions for the user's group and the permissions for the user's organizations).
+	 * 
+	 * @author Cristi
+	 * @author Florin
+	 * @autor Mariana
+	 * 
 	 * @flowerModelElementId _xLB9wHQdEeGvmLPkt9AQrg
 	 */
-	PermissionCollection getNormalPermissions(User user) {	
-		PermissionCollection permissions = normalPermissionsCache.get(user.getId());
-		if (permissions == null) {
-			permissions = new Permissions();
+	PermissionCollection getNormalPermissions(final User user) {	
+		if (normalPermissionsCache.get(user.getId()) == null) {
+			final Permissions permissions = new Permissions();
 			
-			Session session = WebPlugin.getInstance().getDao().getFactory().openSession();
-			List<PermissionEntity> resultList = new ArrayList<PermissionEntity>();
-			try {
-				session.beginTransaction();
-				Query q = session.createQuery("SELECT p " +
-										"FROM PermissionEntity p " +
-										"WHERE p.assignedTo = :assigned_to " +
-										"OR p.assignedTo = '@ALL'" +
-										"OR EXISTS (SELECT g.name FROM User u JOIN u.groupUsers gu JOIN gu.group g WHERE u.login = :login AND p.assignedTo = CONCAT('@', g.name)) "+
-										"OR EXISTS (SELECT o2.name FROM User u2 JOIN u2.organizationUsers ou2 JOIN ou2.organization o2 WHERE u2.login = :login AND p.assignedTo = CONCAT('#', o2.name)) ");
+			new DatabaseOperationWrapper(new DatabaseOperation() {
 				
-				q.setParameter("assigned_to", '$' + user.getLogin());
-				q.setParameter("login", user.getLogin());
-				
-				resultList = q.list();
-			} finally {
-				session.close();
-			}
-			PermissionService permissionService = (PermissionService) PermissionService.getInstance();
-			for (PermissionEntity entity: resultList) {				
-				PermissionDescriptor descriptor = getPermissionDescriptor(entity.getType());
-				if (!descriptor.isTreePermission()) {
-					permissions.add(permissionService.createPermission(entity));
+				@Override
+				public void run() {
+					
+					Query q = wrapper.createQuery("SELECT p " +
+											"FROM PermissionEntity p " +
+											"WHERE p.assignedTo = :assigned_to " +
+											"OR p.assignedTo = '@ALL'" +
+											"OR EXISTS (SELECT g.name FROM User u JOIN u.groupUsers gu JOIN gu.group g WHERE u.login = :login AND p.assignedTo = CONCAT('@', g.name)) "+
+											"OR EXISTS (SELECT o2.name FROM User u2 JOIN u2.organizationUsers ou2 JOIN ou2.organization o2 WHERE u2.login = :login AND p.assignedTo = CONCAT('#', o2.name)) ");
+					
+					q.setParameter("assigned_to", '$' + user.getLogin());
+					q.setParameter("login", user.getLogin());
+
+					List<PermissionEntity> resultList = q.list();
+					PermissionService permissionService = (PermissionService) PermissionService.getInstance();
+					for (PermissionEntity entity: resultList) {				
+						PermissionDescriptor descriptor = getPermissionDescriptor(entity.getType());
+						if (!descriptor.isTreePermission()) {
+							permissions.add(permissionService.createPermission(entity));
+						}
+					}
+					normalPermissionsCache.put(user.getId(), permissions);
 				}
-			}
-			normalPermissionsCache.put(user.getId(), permissions);
+			});
 		}
-		return permissions;
+		return normalPermissionsCache.get(user.getId());
 	}
 
 	/**

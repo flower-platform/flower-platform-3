@@ -9,7 +9,7 @@ package org.flowerplatform.web.common.security.dto
 	 * @author Cristina
 	 * @flowerModelElementId _Q9C3UF34EeGwLIVyv_iqEg
 	 */ 
-	[RemoteClass(alias="com.crispico.flower.mp.web.security.dto.GroupAdminUIDto")]
+	[RemoteClass(alias="org.flowerplatform.web.security.dto.GroupAdminUIDto")]
 	public class GroupAdminUIDto extends NamedDto {
 		
 		/**

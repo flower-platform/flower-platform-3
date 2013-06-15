@@ -179,7 +179,7 @@ public class TreePermissionCollection {
 		if (referencePath.endsWith(AbstractTreePermission.STAR_WILDCARD)){
 			// path=D:/temp/a/file.txt
 			// referencePath=D:/temp/*			
-			referencePath = referencePath.substring(0, referencePath.length() - 1);
+			referencePath = referencePath.substring(0, referencePath.length() - 2);
 			if (path.startsWith(referencePath)){
 				match = true;
 			}

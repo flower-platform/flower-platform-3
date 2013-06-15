@@ -1,11 +1,11 @@
-package org.flowerplatform.web.entity.dao;
+package org.flowerplatform.web.database;
 
 import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.NamedEntity;
 import org.flowerplatform.web.entity.dto.Dto;
@@ -16,30 +16,36 @@ import org.flowerplatform.web.entity.dto.NamedDto;
  * 
  * @author Cristi
  * @author Cristina
+ * @author Mariana
  * @flowerModelElementId _CaEpUVyIEeGwx-0cTKUc5w
  */
-public class Dao {
+public class DatabaseOperationWrapper {
 
-	/**
-	 * @flowerModelElementId _CaEpVFyIEeGwx-0cTKUc5w
-	 */
-	public SessionFactory factory;
+	private Session session;
 
-	/**
-	 * @flowerModelElementId _CaEpV1yIEeGwx-0cTKUc5w
-	 */
-	public SessionFactory getFactory() {
-		return factory;
+	public DatabaseOperationWrapper(DatabaseOperation operation) {
+		operation.wrapper = this;
+		session = WebPlugin.getInstance().getDatabaseManager().getFactory().openSession();
+		try {
+			session.beginTransaction();
+			operation.run();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
 	}
-
+	
+	public Query createQuery(String query) {
+		return session.createQuery(query);
+	}
+	
 	/**
 	 * @flowerModelElementId _CaEpWVyIEeGwx-0cTKUc5w
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> findAll(Class<T> entityClass) {
-		// Create a session and a transaction
-		Session session = getFactory().getCurrentSession();
-		beginTransaction(session);
 		Query q = session.createQuery(String.format("SELECT e from %s e", entityClass.getSimpleName()));			
 		return q.list();
 	}
@@ -49,8 +55,6 @@ public class Dao {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T find(Class<T> entityClass, Object primaryKey) {
-		Session session = getFactory().getCurrentSession();
-		beginTransaction(session);
 		return (T) session.get(entityClass.getSimpleName(), (Serializable) primaryKey);
 	}
 	
@@ -59,8 +63,6 @@ public class Dao {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> findByField(Class<T> entityClass, Object fieldName, Object field) {
-		Session session = getFactory().getCurrentSession();
-		beginTransaction(session);
 		Query q = session.createQuery(String.format("SELECT e from %s e where e.%s='%s'", entityClass.getSimpleName(), fieldName, field));	
 		return q.list();
 	}
@@ -70,16 +72,7 @@ public class Dao {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T merge(T object) {
-		Session session = getFactory().getCurrentSession();
-		
-		try {
-			beginTransaction(session);
-			object = (T) session.merge(object);
-			session.getTransaction().commit();
-		} catch (Exception e) {
-			session.getTransaction().rollback();
-		}
-		return object;
+		return object = (T) session.merge(object);
 	}
 	
 	/**
@@ -128,24 +121,17 @@ public class Dao {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> void delete(T object){
-	    Session session = getFactory().getCurrentSession();
-	    try {
-	        beginTransaction(session);	 
-	        object = (T) session.merge(object);
-	        session.delete(object);
-	        session.getTransaction().commit();
-	    } catch (Exception e) {
-	    	session.getTransaction().rollback();
-	    }
+	    object = (T) session.merge(object);
+	    session.delete(object);
 	}
 	
-	/**
-	 * @author Mariana
-	 */
-	private void beginTransaction(Session session) {
-		if (!session.getTransaction().isActive()) {
-			session.beginTransaction();
-		}
-	}
+//	/**
+//	 * @author Mariana
+//	 */
+//	private void beginTransaction(Session session) {
+//		if (!session.getTransaction().isActive()) {
+//			session.beginTransaction();
+//		}
+//	}
 
 }
