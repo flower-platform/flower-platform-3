@@ -10,8 +10,14 @@ public class GitPlugin extends AbstractFlowerJavaPlugin {
 
 	protected static GitPlugin INSTANCE;
 	
+	private GitUtils utils = new GitUtils();
+	
 	public static GitPlugin getInstance() {
 		return INSTANCE;
+	}
+
+	public GitUtils getUtils() {
+		return utils;
 	}
 
 	public void start(BundleContext context) throws Exception {
@@ -26,8 +32,4 @@ public class GitPlugin extends AbstractFlowerJavaPlugin {
 		INSTANCE = null;		
 	}
 	
-	@Override
-	public void registerMessageBundle() throws Exception {
-		// do nothing, because we don't have messages (yet)
-	}
 }

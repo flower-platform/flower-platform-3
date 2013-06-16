@@ -1,3 +1,0 @@
-== Icons allowed for commercial use (NO link required)
-
-== Icons to be mentioned in license file (copy to AboutDialog.mxml as well)! ==

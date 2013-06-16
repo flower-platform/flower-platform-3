@@ -1,61 +1,58 @@
 package org.flowerplatform.web.git.explorer;
 
-import java.io.File;
 import java.util.List;
 
-import org.flowerplatform.common.util.Pair;
+import org.eclipse.jgit.lib.Repository;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
-import org.flowerplatform.web.explorer.RootChildrenProvider;
 import org.flowerplatform.web.git.GitPlugin;
+import org.flowerplatform.web.git.entity.RemoteNode;
+import org.flowerplatform.web.git.entity.SimpleNode;
 
 /**
  * @author Cristina Constantienscu
  */
-public class GitRootNodeDataProvider implements INodeDataProvider {
-	
+public class RemoteNodeDataProvider implements INodeDataProvider {
+
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
-		destination.setLabel(GitPlugin.getInstance().getMessage("git.repositories"));
-		destination.setIcon(GitPlugin.getInstance().getResourceUrl("images/eview16/repo_rep.gif"));
+		RemoteNode remoteNode = (RemoteNode) source;
+		destination.setLabel(remoteNode.getObject());
+		destination.setIcon(GitPlugin.getInstance().getResourceUrl("images/full/obj16/remotespec.gif"));
 		return true;
 	}
 
 	@Override
 	public Object getParent(Object node, String nodeType, GenericTreeContext context) {
-		@SuppressWarnings("unchecked")
-		File parentFile = ((Pair<File, String>) node).a;
-		return parentFile;
+		RemoteNode remoteNode = (RemoteNode) node;
+		return remoteNode.getParent();
 	}
 
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
-		@SuppressWarnings("unchecked")
-		String nodeType1 = ((Pair<File, String>) node).b;
-		return new PathFragment(nodeType1, nodeType1);
+		RemoteNode remoteNode = (RemoteNode) node;
+		return new PathFragment(remoteNode.getObject(), nodeType);
 	}
 
 	@Override
 	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {
-		throw new UnsupportedOperationException();
+		SimpleNode simpleNode = (SimpleNode) parent;
+		Repository repo = simpleNode.getRepository();
+		return new RemoteNode(simpleNode, repo, pathFragment.getName());
 	}
 
 	@Override
 	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) {
-		if (fullPath == null || fullPath.size() != 2 || !RootChildrenProvider.NODE_TYPE_ORGANIZATION.equals(fullPath.get(0).getType())) {
-			throw new IllegalArgumentException("We were expecting a path with 2 items (no 0 being an org), but we got: " + fullPath);
-		}
-		return new Pair<File, String>(new File(RootChildrenProvider.getWorkspaceRoot(), fullPath.get(0).getName()), fullPath.get(1).getType());
+		return null;
 	}
 
 	@Override
 	public String getLabelForLog(Object node, String nodeType) {
-		@SuppressWarnings("unchecked")
-		File file = ((Pair<File, String>) node).a;
-		return file.getName();
+		RemoteNode remoteNode = (RemoteNode) node;
+		return remoteNode.getObject();
 	}
 
 	@Override
