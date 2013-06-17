@@ -95,7 +95,7 @@ package  com.crispico.flower.util.layout {
 	 * @flowerModelElementId _kp2YQCunEeG6vrEjfFek0Q
 	 */
 	[SecureSWF(rename="off")]
-	public class Workbench extends Canvas implements IContextMenuLogicProvider, IActionProvider2, IPopupHost {
+	public class Workbench extends Canvas implements IContextMenuLogicProvider, IActionProvider2 {
 		
 		/**
 		 * Represents the percent applied to newly added child on workbench.
@@ -2002,26 +2002,19 @@ package  com.crispico.flower.util.layout {
 		 * If component is <code>null</code>, an exception is thrown (this must not happen).
 		 */ 
 		private function getNewViewComponentInstance(viewLayoutData:ViewLayoutData):Container {
-			var actualContainer:Container = null;
 			var component:UIComponent = _viewProvider.createView(viewLayoutData);
 			if (component == null) {
 				throw new Error("A graphical component must be associated for view id '" + viewLayoutData.viewId + "'!");
 			}
-			if (component is Container) {
-				actualContainer = Container(component);
-			} else {
-				// there is an issue with NavigatorContent: https://github.com/flex-users/flexlib/issues/301
-				// so we use Container instead of a NavigatorContent that should wrap spark components
-				actualContainer = new Canvas();
-				actualContainer.addElement(component);
-				component.percentHeight = 100;
-				component.percentWidth = 100;
-			}
+			
 			if (component is IPopupContent) {
-				IPopupContent(component).popupHost = this;
-			}
-			actualContainer.addEventListener(FlexEvent.CREATION_COMPLETE, componentCreationCompleteHandler);
-			return Container(actualContainer);
+				component = new PopupHostViewWrapper(IPopupContent(component));
+			} else if (!(component is Container)) {
+				throw new Error("A view should be either a Container or an IPopupContent");
+			} 
+
+			component.addEventListener(FlexEvent.CREATION_COMPLETE, componentCreationCompleteHandler);
+			return Container(component);
 		}
 		
 		private function componentCreationCompleteHandler(event:FlexEvent):void {
@@ -2533,25 +2526,6 @@ package  com.crispico.flower.util.layout {
 			for each (var view:UIComponent in views) {
 				view.dispatchEvent(new ViewRemovedEvent());
 			}
-		}
-		
-		public function refreshActions(popupContent:IPopupContent):void
-		{
-			// TODO Auto Generated method stub
-			// TODO CS/FP2 implement IPopupHost for Workbench
-			
-		}
-		
-		public function setIcon(value:Object):void
-		{
-			// TODO Auto Generated method stub
-			
-		}
-		
-		public function setLabel(value:String):void
-		{
-			// TODO Auto Generated method stub
-			
 		}
 		
 	}

@@ -45,26 +45,24 @@ package org.flowerplatform.web.git {
 		
 		protected var gitCommonPlugin:GitCommonPlugin = new GitCommonPlugin();
 		
-		override public function start():void {
-			super.start();
+		override public function preStart():void {
+			super.preStart();
+			gitCommonPlugin.preStart();
 			if (INSTANCE != null) {
 				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
 			}
 			INSTANCE = this;	
-			
-			gitCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
-			gitCommonPlugin.start();
-			
+						
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new GitHistoryViewProvider());
-			WebPlugin.getInstance().perspectives.push(new GitPerspective());
-			
+			WebPlugin.getInstance().perspectives.push(new GitPerspective());			
 		}
 		
-		override public function setupExtensionPointsAndExtensions():void {
-			super.setupExtensionPointsAndExtensions();
-			gitCommonPlugin.setupExtensionPointsAndExtensions();		
+		override public function start():void {
+			super.start();
+			gitCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
+			gitCommonPlugin.start();
 		}
-				
+		
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CommitDto);
 			registerClassAliasFromAnnotation(CommitPageDto);

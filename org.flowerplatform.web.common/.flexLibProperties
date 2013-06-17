@@ -4,6 +4,7 @@
     <classEntry path="org.flowerplatform.web.common.communication.AuthenticationView"/>
     <classEntry path="org.flowerplatform.web.common.communication.ConnectingView"/>
     <classEntry path="org.flowerplatform.web.common.explorer.ExplorerTreeList"/>
+    <classEntry path="org.flowerplatform.web.common.TestSampleExplorerTreeActionProvider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

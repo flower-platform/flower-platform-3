@@ -65,12 +65,16 @@ package org.flowerplatform.communication {
 			registerClassAliasFromAnnotation(PathFragment);
 		}
 		
-		override public function start():void {
-			super.start();
+		override public function preStart():void {
+			super.preStart();
 			if (INSTANCE != null) {
-				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
+				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
+		}
+		
+		override public function start():void {
+			super.start();
 			
 			bridge = new BlazeDSBridge();
 			bridge.addEventListener(BridgeEvent.OBJECT_RECEIVED, handleReceivedObject);

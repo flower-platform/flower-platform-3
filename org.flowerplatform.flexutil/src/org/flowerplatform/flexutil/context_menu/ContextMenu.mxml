@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:mx="library://ns.adobe.com/flex/mx"
+				   backgroundAlpha="0.9" backgroundColor="#DDEEEE"
+				   borderVisible="true" dropShadowVisible="true">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import org.flowerplatform.flexutil.popup.ActionUtil;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IComposedAction;
+			
+			import spark.events.IndexChangeEvent;
+			
+			protected static const GAP_BETWEEN_MENUS:int = 3;
+			
+			[Bindable]
+			public var actions:IList;
+			
+			public var contextMenuManager:ContextMenuManager;
+			
+			protected var indexInStack:int;
+			
+			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, rootActionId:String):void {
+				this.contextMenuManager = contextMenuManager;
+				this.x = x;
+				this.y = y;
+				addEventListener(FlexEvent.UPDATE_COMPLETE, adjustPositionIfNeededHandler);
+				
+				contextMenuManager.contextMenuStack.push(this);
+				indexInStack = contextMenuManager.contextMenuStack.length - 1;
+				if (indexInStack == 0) {
+					// only the first one listens for click outside the menu
+					addEventListener(Event.ADDED_TO_STAGE, function (event:Event):void {
+						stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+					});
+				}
+
+				if (actionsForCurrentLevelAreadyCalculated) {
+					actions = actionsForCurrentLevelAreadyCalculated;
+				} else {
+					actions = new ArrayList();
+					ActionUtil.processAndIterateActions(rootActionId, contextMenuManager.allActions, contextMenuManager.selection, this, function (action:IAction):void {
+						actions.addItem(action);
+					});
+				}
+				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
+			}
+			
+			protected function adjustPositionIfNeededHandler(event:FlexEvent):void {
+				removeEventListener(FlexEvent.UPDATE_COMPLETE, adjustPositionIfNeededHandler);
+				var appWidth:Number = FlexGlobals.topLevelApplication.width;
+				var appHeight:Number = FlexGlobals.topLevelApplication.height;
+				if (x + width > appWidth) {
+					// exits the visible area / horizontal axis
+					if (indexInStack == 0) {
+						// for the first menu, just keep it in the screen 
+						x = Math.max(0, appWidth - width);
+					} else {
+						// for the next menus, try to display to the left
+						var parentMenu:org.flowerplatform.flexutil.context_menu.ContextMenu = contextMenuManager.contextMenuStack[indexInStack - 1];
+						x = Math.max(0, parentMenu.x - width - GAP_BETWEEN_MENUS);
+					}
+				}
+				if (y + height > appHeight) {
+					// exits the visible area / vertical axis
+					if (y - height > 0) {
+						// if the whole menu can be translated before the cursor, do it!
+						y -= height;
+					} else {
+						// try at least to make it not exit the screen
+						y = Math.max(0, appHeight - height);
+					}
+				}
+			}
+			
+			public function closeContextMenu():void {
+				if (indexInStack == 0) {
+					// only the first one listens for click outside the menu
+					stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+					contextMenuManager.allActions = null;
+					contextMenuManager.selection = null;
+				}
+				PopUpManager.removePopUp(this);
+				if (contextMenuManager.contextMenuStack[contextMenuManager.contextMenuStack.length - 1] != this) {
+					throw new Error("Trying to close a context menu, but it's not on the top of the stack");
+				}
+				contextMenuManager.contextMenuStack.pop();
+			}
+			
+			protected function mouseDownHandler(event:MouseEvent):void {
+				var currentElementUnderMouse:DisplayObject = DisplayObject(event.target);
+				while (currentElementUnderMouse != null) {
+					if (currentElementUnderMouse is ContextMenuItemRenderer || currentElementUnderMouse is org.flowerplatform.flexutil.context_menu.ContextMenu) {
+						// don't do anything; just exit
+						return;
+					}
+					currentElementUnderMouse = currentElementUnderMouse.parent;
+				}
+				closeContextMenuStack(0);
+			}
+			
+			public function closeContextMenuStack(startingIndex:int):void {
+				for (var i:int = contextMenuManager.contextMenuStack.length - 1; i >= startingIndex; i--) {
+					contextMenuManager.contextMenuStack[i].closeContextMenu();
+				}
+			}
+
+			protected function listSelectionChangeHandler(event:IndexChangeEvent):void {
+				closeContextMenuStack(indexInStack + 1);
+				if (list.selectedItem is IComposedAction) {
+					new org.flowerplatform.flexutil.context_menu.ContextMenu().openContextMenu(
+						contextMenuManager,
+						x + width + GAP_BETWEEN_MENUS,
+						y + list.selectedIndex * ContextMenuItemRenderer.HEIGHT,
+						null,
+						IComposedAction(list.selectedItem).id);
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<s:layout>
+		<s:VerticalLayout id="verticalLayout" paddingTop="3" paddingBottom="3"/>
+	</s:layout>
+	<s:addedEffect>
+		<s:Fade alphaFrom="0" alphaTo="1" duration="150"/>
+	</s:addedEffect>
+<!--	<s:removedEffect>
+		<s:Fade alphaFrom="1" alphaTo="0" duration="300"/>
+	</s:removedEffect>-->
+	<s:List id="list" minHeight="10" borderVisible="false" contentBackgroundAlpha="0" itemRenderer="org.flowerplatform.flexutil.context_menu.ContextMenuItemRenderer"
+			change="listSelectionChangeHandler(event)" dataProvider="{actions}">
+		<!-- 
+		This allows taking into consideration the minHeight; otherwise the minHeight would be something like 110;
+		However, the minWidth still cannot go below 30, but this is not a big problem, as actions are usually bigger then that (on width).
+		Perhaps another solution would have been to change the mins from the skin.
+		-->
+		<s:layout>
+			<s:VerticalLayout requestedMinRowCount="1" horizontalAlign="contentJustify" gap="0"/>
+		</s:layout>	
+	</s:List>
+</s:BorderContainer>
