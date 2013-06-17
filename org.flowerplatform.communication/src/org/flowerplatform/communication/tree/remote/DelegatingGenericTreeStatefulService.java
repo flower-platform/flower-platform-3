@@ -12,6 +12,7 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.INodeDataProvider;
+import org.flowerplatform.communication.tree.INodePopulator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,8 +29,8 @@ public class DelegatingGenericTreeStatefulService extends
 	
 	private Map<String, INodeDataProvider> nodeDataProviders = new HashMap<String, INodeDataProvider>();
 	
+	private Map<String, List<INodePopulator>> additionalNodePopulators = new HashMap<String, List<INodePopulator>>();
 	
-
 	public String getStatefulClientPrefixId() {
 		return statefulClientPrefixId;
 	}
@@ -44,6 +45,10 @@ public class DelegatingGenericTreeStatefulService extends
 
 	public Map<String, INodeDataProvider> getNodeDataProviders() {
 		return nodeDataProviders;
+	}
+
+	public Map<String, List<INodePopulator>> getAdditionalNodePopulators() {
+		return additionalNodePopulators;
 	}
 
 	@Override
@@ -97,7 +102,16 @@ public class DelegatingGenericTreeStatefulService extends
 			logger.error("Tree delegate not found, for method populateTreeNode(); node = {}, nodeType = {}", getLabelForLog(source, nodeType), nodeType);
 			return false;
 		}
-		return provider.populateTreeNode(source, destination, context);
+		boolean result = provider.populateTreeNode(source, destination, context);
+		
+		List<INodePopulator> populators = additionalNodePopulators.get(nodeType);
+		if (populators != null) {
+			for (INodePopulator populator : populators) {
+				populator.populateTreeNode(source, destination, context);
+			}
+		}
+		
+		return result;
 	}
 
 	@Override

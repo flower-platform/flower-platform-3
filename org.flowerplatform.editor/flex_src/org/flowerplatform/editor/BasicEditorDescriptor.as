@@ -12,6 +12,13 @@ package  org.flowerplatform.editor {
 	public class BasicEditorDescriptor {
 		
 		/**
+		 * Should return the same value as the corresponding Java <code>EditorStatefulService</code>. 
+		 */
+		public function getEditorName():String {
+			throw new Error("This method should be implemented");
+		}
+		
+		/**
 		 * Abstract method. Called with a <code>null</code> parameter, should
 		 * return the icon of the editor.
 		 * 
@@ -38,13 +45,6 @@ package  org.flowerplatform.editor {
 		 * @flowerModelElementId _1UHNYE2ZEeGsUPSh9UfXpw
 		 */
 		public function openEditor(editableResourcePath:String, forceNewEditor:Boolean=false, openForcedByServer:Boolean=false, handleAsClientSubscription:Boolean=false):UIComponent {
-			throw new Error("This method should be implemented");
-		}
-		
-		/**
-		 * Should return the same value as the corresponding Java <code>EditorStatefulService</code>. 
-		 */
-		public function getEditorName():String {
 			throw new Error("This method should be implemented");
 		}
 		

@@ -13,7 +13,14 @@ package org.flowerplatform.web.common {
 			var action:ActionBase;
 			
 			action = new ActionBase();
-			action.label = "Action 1";
+			action.label = "Disabled";
+			action.enabled = false;
+			actions.push(action);
+			
+			action = new ActionBase();
+			action.label = "Disabled/top";
+			action.preferShowOnActionBar = true;
+			action.enabled = false;
 			actions.push(action);
 			
 			action = new ActionBase();

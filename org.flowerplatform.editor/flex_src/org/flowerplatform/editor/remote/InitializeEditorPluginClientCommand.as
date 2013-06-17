@@ -1,5 +1,6 @@
 package  org.flowerplatform.editor.remote {
 	import mx.collections.ArrayCollection;
+	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.command.AbstractClientCommand;
 	import org.flowerplatform.editor.EditorPlugin;
@@ -23,7 +24,7 @@ package  org.flowerplatform.editor.remote {
 		/**
 		 * @flowerModelElementId _KcENcE1sEeGsUPSh9UfXpw
 		 */
-		public var contentTypeDescriptors:Vector.<ContentTypeDescriptor>;
+		public var contentTypeDescriptors:IList;
 		
 		/**
 		 * @flowerModelElementId _akNHcLoREeGbWKUNv6VenQ

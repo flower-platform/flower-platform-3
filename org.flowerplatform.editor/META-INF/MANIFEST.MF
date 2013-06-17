@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Editor
-Bundle-SymbolicName: org.flowerplatform.editor
+Bundle-SymbolicName: org.flowerplatform.editor;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.flowerplatform.editor.EditorPlugin
 Require-Bundle: org.eclipse.core.runtime,
@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.communication
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: org.flowerplatform.editor

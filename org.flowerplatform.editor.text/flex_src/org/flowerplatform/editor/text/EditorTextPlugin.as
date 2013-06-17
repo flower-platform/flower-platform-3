@@ -1,5 +1,7 @@
 package org.flowerplatform.editor.text {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**
@@ -19,10 +21,8 @@ package org.flowerplatform.editor.text {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
-		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
+			
+			EditorPlugin.getInstance().editorDescriptors.push(new TextEditorDescriptor());
 		}
 		
 	}
