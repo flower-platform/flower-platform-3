@@ -33,13 +33,19 @@ package org.flowerplatform.web {
 		
 		public var workbench:Workbench;
 		
-		override public function start():void {
-			super.start();
+		override public function preStart():void {
+			super.preStart();
+			webCommonPlugin.preStart();
 			if (INSTANCE != null) {
-				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
+				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
-
+			
+			perspectives.push(new DefaultPerspective());
+		}
+		
+		override public function start():void {
+			super.start();
 			// pass the same descriptor; to be used for images (that need the descriptor for the URL)
 			webCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			webCommonPlugin.start();
@@ -55,13 +61,6 @@ package org.flowerplatform.web {
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
 			perspectives[0].resetPerspective(workbench);
-		}
-		
-		override public function setupExtensionPointsAndExtensions():void {
-			super.setupExtensionPointsAndExtensions();
-			webCommonPlugin.setupExtensionPointsAndExtensions();
-			
-			perspectives.push(new DefaultPerspective());
 		}
 		
 		override protected function registerMessageBundle():void {

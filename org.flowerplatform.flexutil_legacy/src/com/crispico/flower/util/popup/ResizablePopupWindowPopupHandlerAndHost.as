@@ -7,11 +7,11 @@ package com.crispico.flower.util.popup {
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
 	
-	public class ResizablePopupWindowPopupHandler extends ResizablePopupWindow implements IPopupHandler, IPopupHost	{
+	public class ResizablePopupWindowPopupHandlerAndHost extends ResizablePopupWindow implements IPopupHandler, IPopupHost	{
 		
-		protected var popupContent:IVisualElement;
+		protected var popupContent:IPopupContent;
 		
-		public function ResizablePopupWindowPopupHandler() {
+		public function ResizablePopupWindowPopupHandlerAndHost() {
 			super();
 		}
 		
@@ -25,15 +25,14 @@ package com.crispico.flower.util.popup {
 			return this;
 		}
 		
-		public function setPopupContentClass(value:Class):IPopupHandler {
-			popupContent = IVisualElement(new value());
+		public function setPopupContent(value:IPopupContent):IPopupHandler {
+			popupContent = value;
 			popupContent.percentHeight = 100;
 			popupContent.percentWidth = 100;
-			addElement(popupContent);
 			return this;
 		}
 		
-		public function getPopupContent():IVisualElement {
+		public function get activePopupContent():IPopupContent {
 			return popupContent;
 		}
 		
@@ -43,9 +42,8 @@ package com.crispico.flower.util.popup {
 		}
 		
 		public function show(modal:Boolean = true):void {
-			if (popupContent is IPopupContent) {
-				IPopupContent(popupContent).popupHost = this;
-			}
+			IPopupContent(popupContent).popupHost = this;
+			addElement(popupContent);
 			showPopup(NaN, NaN, null, modal);
 		}
 		
@@ -54,15 +52,12 @@ package com.crispico.flower.util.popup {
 		 * The existing ModalSpinner mechanism is used for displaying the popup content.
 		 */
 		public function showModalOverAllApplication():void {
-			var modalSpinner:ModalSpinner = new ModalSpinner();
-			modalSpinner.dontShowSpinner = true;
-			modalSpinner.childrenUnderSpinner = [popupContent];
+			var modalSpinner:ModalSpinner = new ModalSpinnerPopupHost(popupContent);
 			ModalSpinner.addGlobalModalSpinner(null, modalSpinner);
 		}
 		
 		public function refreshActions(popupContent:IPopupContent):void {
-			// TODO Auto Generated method stub
-			
+			// not supported			
 		}
 		
 		public function setIcon(value:Object):void {
@@ -70,7 +65,7 @@ package com.crispico.flower.util.popup {
 		}
 		
 		public function setLabel(value:String):void {
-			title = "Login";
+			title = value;
 		}
 		
 	}

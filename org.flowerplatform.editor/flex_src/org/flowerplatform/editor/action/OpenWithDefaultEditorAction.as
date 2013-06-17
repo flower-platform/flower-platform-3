@@ -6,41 +6,23 @@ package  org.flowerplatform.editor.action {
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	
 	/**
-	 * Opens an editor. Exists directly in the context menu or
-	 * as a child of "Open with" menu.
-	 * 
 	 * @author Cristi
-	 * @author Mariana
-     * @author Sorin
-	 * @flowerModelElementId _c1aTwE2iEeGsUPSh9UfXpw
 	 */
-	public class OpenAction extends ActionBase {
+	public class OpenWithDefaultEditorAction extends ActionBase {
 		
 		public static const ICON_URL:String = EditorPlugin.getInstance().getResourceUrl("images/open_resource.png");
 		
-//		private var editorEntry:BasicEditorDescriptor;
-		
-		public var forceNewEditor:Boolean;
-		
-		/**
-		 * There will be an editorEntry only when this action is added in the Open With submenu
-		 * @flowerModelElementId _wb413FJdEeGnQ71Q1-0lCg
-		 */ 
-		public function OpenAction(/*editorEntry:BasicEditorDescriptor=null, forceNewEditor:Boolean = false*/):void {
+		public function OpenWithDefaultEditorAction() {
 			label = EditorPlugin.getInstance().getMessage("editor.open");
 			icon = ICON_URL;
-//			this.editorEntry = editorEntry;
-//			this.forceNewEditor = forceNewEditor;
-//			if (editorEntry == null) {
-//				label = "Open";
-//				image = ICON_URL;
-//			} else {
-//				label = editorEntry.getTitle();
-//				image = editorEntry.getIcon();
-//			}
-//			sortIndex = 150;
+			preferShowOnActionBar = true;
 		}
-//		
+		
+		override public function run():void {
+			trace("running action");
+		}
+		
+		//		
 //		public function openEditor(editorInput:String, editorContentTypeId:int):UIComponent {
 //			var editorEntry:BasicEditorDescriptor = EditorSupport.INSTANCE.getFirstEditorDescriptorForNodeUnsafe(editorContentTypeId);
 //			return editorEntry.openEditor(editorInput, forceNewEditor);

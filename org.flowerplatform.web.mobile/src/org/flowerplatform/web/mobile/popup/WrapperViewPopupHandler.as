@@ -2,13 +2,12 @@ package org.flowerplatform.web.mobile.popup {
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElement;
 	
+	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	
 	public class WrapperViewPopupHandler implements IPopupHandler {
 		
-		protected var popupContentClass:Class;
-		
-		protected var _popupContent:IVisualElement;
+		protected var _popupContent:IPopupContent;
 		
 		public function setTitle(value:String):IPopupHandler {
 			return this;
@@ -22,8 +21,8 @@ package org.flowerplatform.web.mobile.popup {
 			return this;
 		}
 		
-		public function setPopupContentClass(value:Class):IPopupHandler {
-			popupContentClass = value;
+		public function setPopupContent(value:IPopupContent):IPopupHandler {
+			_popupContent = value;
 			return this;
 		}
 		
@@ -36,19 +35,11 @@ package org.flowerplatform.web.mobile.popup {
 		}
 		
 		private function showInternal(modalOverAllApplication:Boolean):void {
-			FlexGlobals.topLevelApplication.viewNavigator.pushView(WrapperView, { 
-				popupContentClass: popupContentClass,
+			FlexGlobals.topLevelApplication.navigator.pushView(WrapperView, { 
+				popupContent: _popupContent,
 				popupHandler: this, 
 				modalOverAllApplication: modalOverAllApplication
 			});
-		}
-		
-		public function getPopupContent():IVisualElement {
-			return _popupContent;
-		}
-
-		public function set popupContent(value:IVisualElement):void {
-			_popupContent = value;
 		}
 		
 	}

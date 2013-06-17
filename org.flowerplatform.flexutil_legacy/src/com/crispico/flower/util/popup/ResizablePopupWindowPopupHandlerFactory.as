@@ -14,7 +14,7 @@ package com.crispico.flower.util.popup {
 	
 	public class ResizablePopupWindowPopupHandlerFactory implements IPopupHandlerFactory {
 		public function createPopupHandler():IPopupHandler {
-			return new ResizablePopupWindowPopupHandler();
+			return new ResizablePopupWindowPopupHandlerAndHost();
 		}
 		
 		public function removePopup(popupContent:IVisualElement):void {
@@ -32,10 +32,10 @@ package com.crispico.flower.util.popup {
 		private function iteratePopups(childList:IChildList, popupContent:IVisualElement):UIComponent {
 			for (var i:int = 0; i < childList.numChildren; i++) {
 				var child:DisplayObject = childList.getChildAt(i);
-				if (!(child is ResizablePopupWindowPopupHandler || child is ModalSpinner) || !UIComponent(child).isPopUp) {
+				if (!(child is ResizablePopupWindowPopupHandlerAndHost || child is ModalSpinner) || !UIComponent(child).isPopUp) {
 					continue;
 				}
-				if (child is ResizablePopupWindowPopupHandler) {
+				if (child is ResizablePopupWindowPopupHandlerAndHost) {
 					var d:UIComponent = UIComponent(child);
 					if (d.numChildren == 0 || !(d.getChildAt(0) == popupContent)) {
 						continue;

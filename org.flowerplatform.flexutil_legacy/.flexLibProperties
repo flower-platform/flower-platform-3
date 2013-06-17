@@ -4,7 +4,10 @@
     <classEntry path="com.crispico.flower.util.popup.TextAreaPopupMessageBoxFactory"/>
     <classEntry path="com.crispico.flower.util.layout.view.ITabCustomizer"/>
     <classEntry path="com.crispico.flower.util.popup.ResizablePopupWindowPopupHandlerFactory"/>
-    <classEntry path="com.crispico.flower.util.popup.ResizablePopupWindowPopupHandler"/>
+    <classEntry path="com.crispico.flower.util.popup.ResizablePopupWindowPopupHandlerAndHost"/>
+    <classEntry path="com.crispico.flower.util.layout.PopupHostViewWrapper"/>
+    <classEntry path="com.crispico.flower.util.layout.ActionButton"/>
+    <classEntry path="com.crispico.flower.util.popup.ModalSpinnerPopupHost"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

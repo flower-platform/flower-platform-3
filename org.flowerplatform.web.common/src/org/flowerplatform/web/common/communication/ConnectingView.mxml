@@ -1,11 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Group currentState="connecting"
+<s:Group implements="org.flowerplatform.flexutil.popup.IPopupContent" currentState="connecting"
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx">
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.IList;
+			
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			// TODO CS/FP2 msg
+			
+			public function getActions(selection:IList):Vector.<IAction>
+			{
+				return null;
+			}
+			
+			public function getSelection():IList
+			{
+				return null;
+			}
+			
+			public function set popupHost(popupHost:IPopupHost):void
+			{
+			}
+			
 		]]>
 	</fx:Script>
 	<s:layout>

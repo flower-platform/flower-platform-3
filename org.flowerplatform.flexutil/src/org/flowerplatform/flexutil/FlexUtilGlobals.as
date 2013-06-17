@@ -1,6 +1,7 @@
 package org.flowerplatform.flexutil {
 	import mx.utils.LoaderUtil;
 	
+	import org.flowerplatform.flexutil.context_menu.ContextMenuManager;
 	import org.flowerplatform.flexutil.layout.ComposedViewProvider;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.popup.IMessageBoxFactory;
@@ -21,6 +22,8 @@ package org.flowerplatform.flexutil {
 		public var popupHandlerFactory:IPopupHandlerFactory;
 		
 		public var isMobile:Boolean;
+		
+		public var contextMenuManager:ContextMenuManager;
 		
 		/**
 		 * The normal app, shouldn't do anything.

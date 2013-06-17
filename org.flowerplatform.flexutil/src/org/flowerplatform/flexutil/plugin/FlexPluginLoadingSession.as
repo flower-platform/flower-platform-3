@@ -230,7 +230,7 @@ package org.flowerplatform.flexutil.plugin {
 						var clazz:Class = Class(getDefinitionByName(className));
 						descriptor.flexPlugin = new clazz();
 						descriptor.flexPlugin.flexPluginDescriptor = descriptor;
-						descriptor.flexPlugin.setupExtensionPointsAndExtensions();
+						descriptor.flexPlugin.preStart();
 						
 						flexPluginManager.flexPluginEntries.addItem(descriptor);
 					} catch (e:Object) {
@@ -278,9 +278,17 @@ package org.flowerplatform.flexutil.plugin {
 			var package_:String = groups[1];
 			var individualPackages:Array = package_.split(".");
 			var lastPackage:String = individualPackages[individualPackages.length - 1];
-			var lastPackageWithFirstLetterCapitalized:String = lastPackage.charAt(0).toUpperCase() + lastPackage.substr(1);
 			
-			return groups[1] + "." + lastPackageWithFirstLetterCapitalized + "Plugin";
+			// do we have custom plugin class?
+			var customPluginClassRegEx:RegExp = new RegExp("[\\?&]pluginClass=(.*?)\\z|&");
+			var customPluginClassRegExGroups:Array = customPluginClassRegEx.exec(url);
+			if (customPluginClassRegExGroups != null && customPluginClassRegExGroups.length == 2) {
+				return groups[1] + "." + customPluginClassRegExGroups[1];
+			} else {
+				// no custom class name specified
+				var lastPackageWithFirstLetterCapitalized:String = lastPackage.charAt(0).toUpperCase() + lastPackage.substr(1);
+				return groups[1] + "." + lastPackageWithFirstLetterCapitalized + "Plugin";
+			}
 		}
 		
 		protected function handlePluginsWithErrors(failedEntries:ArrayCollection):void {

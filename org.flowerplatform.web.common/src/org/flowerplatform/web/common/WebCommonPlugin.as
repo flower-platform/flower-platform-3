@@ -4,8 +4,10 @@ package org.flowerplatform.web.common {
 	import mx.core.IVisualElementContainer;
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	
@@ -22,18 +24,23 @@ package org.flowerplatform.web.common {
 		
 		public var authenticationManager:AuthenticationManager;
 		
-		override public function start():void {
-			super.start();
+		public var explorerTreeActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
+		
+		override public function preStart():void {
+			super.preStart();
 			if (INSTANCE != null) {
-				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
+				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
-			authenticationManager = new AuthenticationManager();
+			
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new ExplorerViewProvider());
+			explorerTreeActionProviders.push(EditorPlugin.getInstance().editorTreeActionProvider);
+			explorerTreeActionProviders.push(new TestSampleExplorerTreeActionProvider());
 		}
 		
-		override public function setupExtensionPointsAndExtensions():void {
-			super.setupExtensionPointsAndExtensions();
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new ExplorerViewProvider());
+		override public function start():void {
+			super.start();
+			authenticationManager = new AuthenticationManager();
 		}
 		
 		override protected function registerMessageBundle():void {

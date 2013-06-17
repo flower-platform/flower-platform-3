@@ -4,6 +4,7 @@ package org.flowerplatform.communication.tree.remote {
 	
 	import mx.collections.ArrayCollection;
 	
+	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.flexutil.tree.TreeList;
 	
 	/**
@@ -149,7 +150,11 @@ package org.flowerplatform.communication.tree.remote {
 				}
 			}
 			return node;			
-		}		
+		}	
+		 
+		 public static function getTreeNodeFromTreeListDataProviderItem(object:Object):TreeNode {
+			 return TreeNode(HierarchicalModelWrapper(object).treeNode);
+		 }
 	}
 	
 }

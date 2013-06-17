@@ -1,15 +1,39 @@
 package org.flowerplatform.flexutil.popup {
+	import mx.collections.IList;
 	import mx.messaging.AbstractConsumer;
 
 	public class ActionBase implements IAction {
 
+		private var _id:String;
+		private var _parentId:String;
 		private var _orderIndex:int;
 		private var _preferShowOnActionBar:Boolean;
 		private var _visible:Boolean = true;
 		private var _enabled:Boolean = true;
 		private var _label:String;
 		private var _icon:Object;
+		private var _selection:IList;
 		
+		public function get id():String
+		{
+			return _id;
+		}
+		
+		public function set id(value:String):void
+		{
+			_id = value;
+		}
+		
+		public function get parentId():String
+		{
+			return _parentId;
+		}
+		
+		public function set parentId(value:String):void
+		{
+			_parentId = value;
+		}
+	
 		public function get orderIndex():int
 		{
 			return _orderIndex;
@@ -70,9 +94,18 @@ package org.flowerplatform.flexutil.popup {
 			_icon = value;
 		}
 		
+		public function get selection():IList
+		{
+			return _selection;
+		}
+		
+		public function set selection(value:IList):void
+		{
+			_selection = value;
+		}
+		
 		public function run():void {
 		}
-
 		
 	}
 }

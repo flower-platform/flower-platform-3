@@ -15,10 +15,10 @@ package org.flowerplatform.common {
 		
 		public static const VERSION:String = "2.0.0.M2_2013-06-04";
 		
-		override public function start():void {
-			super.start();
+		override public function preStart():void {
+			super.preStart();
 			if (INSTANCE != null) {
-				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
+				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
 		}

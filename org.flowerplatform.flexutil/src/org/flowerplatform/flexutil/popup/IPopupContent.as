@@ -1,6 +1,9 @@
 package org.flowerplatform.flexutil.popup {
-	public interface IPopupContent {
+	import mx.collections.IList;
+	import mx.core.IVisualElement;
+
+	public interface IPopupContent extends IVisualElement, IActionProvider {
 		function set popupHost(popupHost:IPopupHost):void;
-		function getActions():Vector.<IAction>;
+		function getSelection():IList;
 	}
 }

@@ -24,6 +24,16 @@
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
+	
+	<s:viewMenuItems>
+		<s:ViewMenuItem label="test"/>
+		<s:ViewMenuItem label="test"/>
+		<s:ViewMenuItem label="test"/>
+		<s:ViewMenuItem label="test"/>
+		<s:ViewMenuItem label="test"/>
+		<s:ViewMenuItem label="test"/>
+	</s:viewMenuItems>
+	
 	<s:Label text="Recent Activity Content ..." />
 	<s:Button label="Open Split View" click="navigator.pushView(SplitView);"/>
 	<s:Button label="Test Svc" click="CommunicationPlugin.getInstance().bridge.sendObject('salut')"/>
