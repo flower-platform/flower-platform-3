@@ -154,4 +154,11 @@
          </nodeType>
       </explorerChildrenProvider>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="GitHistoryStatefulService"
+            serviceClass="org.flowerplatform.web.git.history.communication.GitHistoryStatefulService">
+      </service>
+   </extension>
 </plugin>

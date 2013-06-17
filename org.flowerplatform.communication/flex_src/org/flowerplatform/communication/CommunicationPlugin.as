@@ -40,7 +40,7 @@ package org.flowerplatform.communication {
 		
 		public var bridge:BlazeDSBridge;
 		
-		public var lastCallbackId:int = -1;
+		public var lastCallbackId:int = 0;
 		
 		public var pendingCallbacks:Dictionary = new Dictionary();
 		

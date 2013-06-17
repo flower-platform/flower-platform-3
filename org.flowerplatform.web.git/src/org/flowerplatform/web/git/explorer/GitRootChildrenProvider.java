@@ -18,16 +18,10 @@ import org.flowerplatform.web.git.entity.RepositoryNode;
  * @author Cristina Constantienscu
  */
 public class GitRootChildrenProvider implements IChildrenProvider {
-
-	public static final String GIT_REPOSITORIES_NAME = ".git-repositories";
-	
-	public static File getGitRepositoriesFile() {
-		return new File(RootChildrenProvider.getWorkspaceRoot(), "org1/" + GIT_REPOSITORIES_NAME + "/");
-	}
 	
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
-		File[] children = getGitRepositoriesFile().listFiles();
+		File[] children = GitPlugin.getInstance().getUtils().getGitRepositoriesFile().listFiles();
 		
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>(children.length);
 		for (File child : children) {		
@@ -44,7 +38,7 @@ public class GitRootChildrenProvider implements IChildrenProvider {
 
 	@Override
 	public Boolean nodeHasChildren(Object node, TreeNode treeNode,  GenericTreeContext context) {
-		File file = GitRootChildrenProvider.getGitRepositoriesFile();
+		File file = GitPlugin.getInstance().getUtils().getGitRepositoriesFile();
 		return file.isDirectory() && file.list().length > 0;
 	}
 

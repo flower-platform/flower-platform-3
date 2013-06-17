@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ @author Cristina Constantinescu
+-->
+<mx:DataGrid xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			 xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:mx="library://ns.adobe.com/flex/mx"
+			 
+			 sortableColumns="false" 
+			 labelFunction="getLabelForItem"
+			 rightClick="clickHandler(event)"			 
+			 itemRollOver="itemRollOverHandler(event)"
+			 implements="com.crispico.flower.flexdiagram.contextmenu.IContextMenuLogicProvider, com.crispico.flower.flexdiagram.action.IActionProvider2">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.flexdiagram.action.ActionContext;
+			import com.crispico.flower.flexdiagram.action.HRuleContextMenuEntry;
+			import com.crispico.flower.flexdiagram.contextmenu.ContextMenuManager;
+			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
+			import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntry;
+			import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntryModel;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.ListEvent;
+			
+			import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
+			
+			public var historyView:GitHistoryView;
+			
+			private var itemIndexUnderMouse:int = -1;
+			
+			public function registerMenu():void {
+				ContextMenuManager.INSTANCE.registerClient(this, true, this, this, null, null, null, this, true);
+			}
+				
+			public function unregisterMenu():void {
+				ContextMenuManager.INSTANCE.unregisterClient(this, null);
+			}
+			
+			protected function itemRollOverHandler(event:ListEvent):void {				
+				itemIndexUnderMouse = itemRendererToIndex(event.itemRenderer);
+			}
+			
+			protected function clickHandler(event:MouseEvent):void {
+				if (!isOverSelection(event)) {
+					itemIndexUnderMouse = -1;
+					return;
+				}
+				if (selectedIndex != itemIndexUnderMouse) {
+					selectedIndex = itemIndexUnderMouse;
+					ContextMenuManager.INSTANCE.refresh(this);
+				}
+			}
+			
+			private function getLabelForItem(item:Object, column:DataGridColumn):String {
+				var label:String;
+				if (column.dataField == "shortId") {
+					label = HistoryEntryDto(item).shortId;
+				} else if (column.dataField == "author") {
+					label = HistoryEntryDto(item).author;
+					if (historyView.btnShowEmail.selected) {
+						label += ' <' + HistoryEntryDto(item).authorEmail + '>';
+					}
+				} else if (column.dataField == "committer") {
+					label = HistoryEntryDto(item).committer;
+					if (historyView.btnShowEmail.selected) {
+						label += ' <' + HistoryEntryDto(item).committerEmail + '>';
+					}
+				} else if (column.dataField == "authoredDate") {
+					label = formatDateTime.format(HistoryEntryDto(item).authoredDate);
+				} else if (column.dataField == "committeredDate") {
+					label = formatDateTime.format(HistoryEntryDto(item).committeredDate);
+				}
+				return label;
+			}
+						
+			public function fillContextMenu(contextMenu:FlowerContextMenu):void {				
+//				if (itemIndexUnderMouse == -1 || selectedItem == null) {
+//					return;
+//				}
+//					
+//				if (historyView.info.selectedObject is NavigatorTreeNode) {
+//					var treeNode:NavigatorTreeNode = NavigatorTreeNode(historyView.info.selectedObject);
+//					if (treeNode.customData != null && treeNode.customData.hasOwnProperty(ProjectExplorerTree.WRITE_PERMISSION_TAG)) {
+//						var hasWritePermissions:Boolean = treeNode.customData[ProjectExplorerTree.WRITE_PERMISSION_TAG];
+//						if (!hasWritePermissions) {
+//							return;
+//						}					
+//					}
+//				}
+//				
+//				contextMenu.setTitle(HistoryEntryDto(selectedItem).shortId);
+//				
+//				contextMenu.addActionEntryIfVisible(new CheckoutAction(historyView.info.repositoryLocation));
+//				contextMenu.addActionEntryIfVisible(new PushAction(historyView.info.repositoryLocation));
+//				
+//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.action.push.sortIndex")) + 1)); // after Push
+//				
+//				contextMenu.addActionEntryIfVisible(new CreateBranchAction(historyView.info.repositoryLocation));
+//				contextMenu.addActionEntryIfVisible(new CreateTagAction(historyView.info.repositoryLocation));
+//				
+//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.action.createTag.sortIndex")) + 1)); // after Create Tag
+//				
+//				contextMenu.addActionEntryIfVisible(new CherryPickAction(historyView.info.repositoryLocation));
+//				contextMenu.addActionEntryIfVisible(new RevertAction(historyView.info.repositoryLocation));
+//				contextMenu.addActionEntryIfVisible(new MergeAction(historyView.info.repositoryLocation));
+//				contextMenu.addActionEntryIfVisible(new RebaseAction(historyView.info.repositoryLocation));
+//				
+//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.action.revert.sortIndex")) + 1)); // after Revert
+//								
+//				var newMenu:SubMenuEntry = new SubMenuEntry(new SubMenuEntryModel(
+//					SWTImageUtil.INSTANCE.getImageURLFromAlias("git_reset"), 
+//					GitPlugin.getInstance().getMessage("git.history.menu.reset.label"),
+//					int(GitPlugin.getInstance().getMessage("git.history.menu.reset.sortIndex"))), contextMenu);
+//				
+//				newMenu.getSubMenu().addActionEntryIfVisible(new ResetAction(historyView.info.repositoryLocation, 0));
+//				newMenu.getSubMenu().addActionEntryIfVisible(new ResetAction(historyView.info.repositoryLocation, 1));
+//				newMenu.getSubMenu().addActionEntryIfVisible(new ResetAction(historyView.info.repositoryLocation, 2));
+//				
+//				if (newMenu.getSubMenu().getChildren().length > 0) {
+//					contextMenu.addChild(newMenu);				
+//				}	
+//				
+//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.menu.reset.sortIndex")) + 1)); // after Reset
+//								
+//				contextMenu.addActionEntryIfVisible(new CopyIdToClipboardAction());
+//				
+//				contextMenu.removeMultipleHRuleMenuEntries();
+			}
+						
+			public function getSelection():ArrayCollection {	
+				return new ArrayCollection([selectedItem]);
+			}
+			
+			public function isOverSelection(event:MouseEvent):Boolean {	
+				var mousePoint:Point = new Point(event.stageX, event.stageY);
+				
+				var point:Point = localToGlobal(new Point(stage.x, stage.y));
+				
+				if (mousePoint.x >= point.x 
+					&& mousePoint.y >= point.y + headerHeight
+					&& mousePoint.x <= point.x + width
+					&& mousePoint.y <= point.y + height) {
+					return true;
+				}
+				return false;
+			}
+			
+			public function get displayAreaOfSelection():Rectangle {				
+				return null;  
+			}
+			
+			public function getContext():ActionContext {
+				return null;
+			}
+			
+			public function setFocusOnMainSelectedObject():void {			
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<mx:DateFormatter id="formatDateTime" formatString="MM/DD/YYYY HH:NN" />
+		
+	</fx:Declarations>
+		
+	<mx:columns>
+		<mx:DataGridColumn headerText="" width=".10" dataField="drawings" 
+						   itemRenderer="org.flowerplatform.web.git.history.HistoryDrawingBox" />			
+		
+		<mx:DataGridColumn headerText="Id" width=".06" dataField="shortId" />
+		<mx:DataGridColumn headerText="Message" width=".30" dataField="message" >
+			<mx:itemRenderer>
+				<fx:Component>
+					<mx:VBox horizontalScrollPolicy="off">
+						<fx:Script>
+							<![CDATA[								
+								import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
+								
+							]]>
+						</fx:Script>								
+						<mx:Label htmlText="{'&lt;p&gt;&lt;b&gt;' + HistoryEntryDto(data).specialMessage + '&lt;/b&gt; ' + HistoryEntryDto(data).message + '&lt;/p&gt;'}"/>
+					</mx:VBox>												
+				</fx:Component>
+			</mx:itemRenderer>
+		</mx:DataGridColumn>
+		<mx:DataGridColumn headerText="Author" width=".15" dataField="author" />				
+		<mx:DataGridColumn headerText="Authored Date" width=".12" dataField="authoredDate" />
+		<mx:DataGridColumn headerText="Committer" width=".15" dataField="committer" />			
+		<mx:DataGridColumn headerText="Committered Date" width=".12" dataField="committeredDate" />				
+	</mx:columns>
+	
+</mx:DataGrid>

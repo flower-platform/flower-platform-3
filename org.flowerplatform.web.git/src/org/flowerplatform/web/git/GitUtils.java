@@ -8,6 +8,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.util.FS;
+import org.flowerplatform.web.explorer.RootChildrenProvider;
 
 /**
  * @author Cristina Constantienscu
@@ -16,6 +17,12 @@ public class GitUtils {
 	
 	public static final String MAIN_REPOSITORY = "main";
 		
+	public static final String GIT_REPOSITORIES_NAME = ".git-repositories";
+	
+	public File getGitRepositoriesFile() {
+		return new File(RootChildrenProvider.getWorkspaceRoot(), "org1/" + GIT_REPOSITORIES_NAME + "/");
+	}
+	
 	public Repository getRepository(File repoFile) {
 		File gitDir = getGitDir(repoFile);
 		if (gitDir != null) {
@@ -48,6 +55,10 @@ public class GitUtils {
 	
 	public boolean isRepository(File file) {
 		return getGitDir(file) != null;
+	}
+	
+	public String getRepositoryName(Repository repo) {
+		return repo.getDirectory().getParent();
 	}
 	
 }

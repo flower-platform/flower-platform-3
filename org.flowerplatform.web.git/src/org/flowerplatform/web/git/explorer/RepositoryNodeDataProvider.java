@@ -38,7 +38,7 @@ public class RepositoryNodeDataProvider implements INodeDataProvider {
 
 	@Override
 	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {
-		File repoFile = new File(GitRootChildrenProvider.getGitRepositoriesFile(), pathFragment.getName());
+		File repoFile = new File(GitPlugin.getInstance().getUtils().getGitRepositoriesFile(), pathFragment.getName());
 		Repository repo = GitPlugin.getInstance().getUtils().getMainRepository(repoFile);
 		return new RepositoryNode(parent, repo, repoFile);
 	}

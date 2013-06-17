@@ -24,6 +24,7 @@ package org.flowerplatform.communication.callback {
 			this.callbackFunction = callbackFunction;
 			this.callbackObject = callbackObject;
 			callbackId = ++CommunicationPlugin.getInstance().lastCallbackId;
+			CommunicationPlugin.getInstance().pendingCallbacks[callbackId] = this;
 		}
 		
 		/**

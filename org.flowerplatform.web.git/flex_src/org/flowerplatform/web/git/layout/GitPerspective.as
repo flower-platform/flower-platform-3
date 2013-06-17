@@ -9,6 +9,7 @@ package  org.flowerplatform.web.git.layout {
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.git.GitPlugin;
+	import org.flowerplatform.web.git.history.GitHistoryViewProvider;
 	import org.flowerplatform.web.layout.Perspective;
 	
 	/**
@@ -69,11 +70,11 @@ package  org.flowerplatform.web.git.layout {
 			stack.parent = sash;
 			sash.children.addItem(stack);
 			
-//			// history view
-//			view = new ViewLayoutData();
-//			view.viewId = GitHistoryViewProvider.ID;
-//			stack.children.addItem(view);
-//			view.parent = stack;
+			// history view
+			view = new ViewLayoutData();
+			view.viewId = GitHistoryViewProvider.ID;
+			stack.children.addItem(view);
+			view.parent = stack;
 			
 			load(workbench, wld, sashEditor);
 		}
