@@ -2,28 +2,42 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 	import flash.display.DisplayObject;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.ui.Multitouch;
 	
 	import mx.core.IVisualElement;
 	import mx.events.MoveEvent;
 	import mx.events.ResizeEvent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.tool.ResizeTool;
+	import org.flowerplatform.flexdiagram.ui.ResizeAnchor;
 
 	/**	
 	 * @author Cristina Constantinescu
 	 */
 	public class AnchorsSelectionRenderer extends AbstractSelectionRenderer {
 		
+		[Embed(source="../icons/diag1Cursor.gif")]		
+		protected var diag1Cursor:Class;
+		
+		[Embed(source="../icons/diag2Cursor.gif")]		
+		protected var diag2Cursor:Class;
+		
+		[Embed(source="../icons/horizCursor.gif")]		
+		protected var horizCursor:Class;
+		
+		[Embed(source="../icons/vertCursor.gif")]		
+		protected var vertCursor:Class;
+		
 		override public function activate(diagramShell:DiagramShell, target:IVisualElement):void {
 			super.activate(diagramShell, target);			
 			
 			// set the handler that move/resize anchors with parent renderer.
 			DisplayObject(target).addEventListener(MoveEvent.MOVE, handleTargetMoveResize); 
-			DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);
-			
-			// TODO CC: modify when working at tools
-//			DisplayObject(target.getEditPart().getViewer().getRootEditPart().getFigure()).addEventListener(MouseEvent.MOUSE_OVER, changeCursor);
-			
+			DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);	
+			if(!Multitouch.supportsGestureEvents) {  // don't add cursor on touch screen
+				DisplayObject(diagramShell.diagramRenderer).addEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler);
+			}
 			// update position
 			handleTargetMoveResize(null);
 		}
@@ -37,10 +51,10 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 		override public function deactivate():void {
 			// remove move/resize listeners
 			DisplayObject(target).removeEventListener(MoveEvent.MOVE, handleTargetMoveResize);
-			DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);
-			
-			// TODO CC: modify when working at tools
-//			DisplayObject(target.getEditPart().getViewer().getRootEditPart().getFigure()).removeEventListener(MouseEvent.MOUSE_OVER, changeCursor);
+			DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);	
+			if(!Multitouch.supportsGestureEvents) { // don't add cursor on touch screen
+				DisplayObject(diagramShell.diagramRenderer).removeEventListener(MouseEvent.MOUSE_OVER, mouseOverHandler);
+			}
 			
 			super.deactivate();
 		}
@@ -48,6 +62,42 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 		protected function handleTargetMoveResize(event:Event):void {
 			setLayoutBoundsPosition(target.x, target.y);
 			setLayoutBoundsSize(target.width, target.height);
+		}
+		
+		protected function mouseOverHandler(event:MouseEvent):void {
+			var currentCursor:Class = null;
+			if (event.target is ResizeAnchor) {
+				switch (ResizeAnchor(event.target).type) {
+					case ResizeAnchor.LEFT_DOWN:
+						currentCursor = diag2Cursor;
+						break;
+					case ResizeAnchor.LEFT_MIDDLE:
+						currentCursor = horizCursor;
+						break;
+					case ResizeAnchor.LEFT_UP:
+						currentCursor = diag1Cursor;
+						break;
+					case ResizeAnchor.MIDDLE_DOWN:
+						currentCursor = vertCursor;
+						break;
+					case ResizeAnchor.MIDDLE_UP:
+						currentCursor = vertCursor;
+						break;
+					case ResizeAnchor.RIGHT_DOWN:
+						currentCursor = diag1Cursor;
+						break;
+					case ResizeAnchor.RIGHT_MIDDLE:
+						currentCursor = horizCursor;
+						break;
+					case ResizeAnchor.RIGHT_UP:
+						currentCursor = diag2Cursor;
+						break;
+				}
+				cursorManager.removeAllCursors();
+				cursorManager.setCursor(currentCursor, 2, -16, -16);		
+			} else if (!(diagramShell.mainTool is ResizeTool)) {
+				cursorManager.removeAllCursors();
+			}				
 		}
 	}
 	

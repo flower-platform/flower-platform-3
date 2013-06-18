@@ -1,14 +1,18 @@
 package org.flowerplatform.flexdiagram.renderer {
+	import flash.display.DisplayObject;
+	import flash.events.FocusEvent;
 	import flash.geom.Rectangle;
 	
-	import spark.components.DataRenderer;
-	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+	import mx.managers.IFocusManagerComponent;
+	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteDataRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
 	 */
-	public class DiagramRenderer extends DataRenderer implements IDiagramShellAware, IVisualChildrenRefreshable, IAbsoluteLayoutRenderer {
+	public class DiagramRenderer extends InfiniteDataRenderer implements IDiagramShellAware, IVisualChildrenRefreshable, IAbsoluteLayoutRenderer, IFocusManagerComponent {
 
 		private var _diagramShell:DiagramShell;
 		protected var visualChildrenController:IVisualChildrenController;
@@ -16,7 +20,7 @@ package org.flowerplatform.flexdiagram.renderer {
 		private var _noNeedToRefreshRect:Rectangle;
 		
 		public var viewPortRectOffsetTowardOutside:int = 0;
-		
+									
 		public function get diagramShell():DiagramShell {
 			return _diagramShell;
 		}
@@ -63,6 +67,22 @@ package org.flowerplatform.flexdiagram.renderer {
 				visualChildrenController.refreshVisualChildren(data);
 			}
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
+		}
+		
+		override protected function focusInHandler(event:FocusEvent):void {
+			super.focusInHandler(event);
+			
+			diagramShell.activateTools();			
+		}
+		
+		override protected function focusOutHandler(event:FocusEvent):void {
+			super.focusOutHandler(event);
+			
+			var parent:DisplayObject;
+			if (!getBounds(stage).contains(stage.mouseX, stage.mouseY)) { // if outside diagram area
+				diagramShell.deactivateTools();	
+			}							
 		}	
+		
 	}
 }

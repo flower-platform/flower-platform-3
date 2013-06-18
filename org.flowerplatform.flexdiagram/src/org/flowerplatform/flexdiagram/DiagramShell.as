@@ -1,6 +1,9 @@
 package org.flowerplatform.flexdiagram {
+	import flash.ui.Multitouch;
+	import flash.ui.MultitouchInputMode;
 	import flash.utils.Dictionary;
 	
+	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.core.IDataRenderer;
 	import mx.core.IInvalidating;
@@ -9,7 +12,6 @@ package org.flowerplatform.flexdiagram {
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.PropertyChangeEvent;
-	import mx.messaging.events.ChannelEvent;
 	
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
@@ -17,9 +19,18 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
+	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
+	import org.flowerplatform.flexdiagram.tool.DragTool;
+	import org.flowerplatform.flexdiagram.tool.IWakeUpableTool;
+	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
+	import org.flowerplatform.flexdiagram.tool.ResizeTool;
+	import org.flowerplatform.flexdiagram.tool.ScrollTool;
+	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
+	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
+	import org.flowerplatform.flexdiagram.tool.Tool;
+	import org.flowerplatform.flexdiagram.tool.WakeUpTool;
+	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
-	
-	import spark.components.supportClasses.ItemRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -34,6 +45,14 @@ package org.flowerplatform.flexdiagram {
 
 		private var _mainSelectedItem:Object;
 		private var _selectedItems:ParentAwareArrayList = new ParentAwareArrayList(null);
+		
+		private var _defaultTool:Tool;
+		
+		private var _mainTool:Tool;
+		
+		public var tools:Dictionary = new Dictionary();
+		
+		private var _toolsActivated:Boolean = false;
 		
 		public function get modelToExtraInfoMap():Dictionary {
 			return _modelToExtraInfoMap;
@@ -85,9 +104,47 @@ package org.flowerplatform.flexdiagram {
 		public function get mainSelectedItem():Object {			
 			return _mainSelectedItem;
 		}
+				
+		[Bindable]
+		public function get mainTool():Tool {			
+			return _mainTool;
+		}
+		
+		public function set mainTool(value:Tool):void {
+			if (_mainTool != value) {
+				if (_mainTool != null) {
+					_mainTool.deactivateAsMainTool();					
+				}
+				
+				_mainTool = value;
+				
+				if (mainTool != null) {
+					_mainTool.activateAsMainTool();					
+				}
+			}
+		}
+		
+		public function mainToolFinishedItsJob():void {
+			mainTool = _defaultTool;
+		}
 		
 		public function DiagramShell() {
 			selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangeHandler);
+			
+			var wakeUpTool:WakeUpTool = new WakeUpTool(this);
+			_defaultTool = wakeUpTool;
+			
+			tools[WakeUpTool.ID] = wakeUpTool;
+			tools[ScrollTool.ID] = new ScrollTool(this);
+			tools[SelectOnClickTool.ID] = new SelectOnClickTool(this);
+			tools[InplaceEditorTool.ID] = new InplaceEditorTool(this);
+			tools[ResizeTool.ID] = new ResizeTool(this);
+			tools[DragToCreateRelationTool.ID] = new DragToCreateRelationTool(this);
+			tools[DragTool.ID] = new DragTool(this);
+			tools[SelectOrDragToCreateElementTool.ID] = new SelectOrDragToCreateElementTool(this);
+			tools[ZoomTool.ID] = new ZoomTool(this);
+			
+			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {
@@ -207,19 +264,22 @@ package org.flowerplatform.flexdiagram {
 			}
 			if (renderer is IVisualChildrenRefreshable) {
 				IVisualChildrenRefreshable(renderer).shouldRefreshVisualChildren = true;
-			}		
+			}
 		}
 		
 		private function selectionChangeHandler(event:CollectionEvent):void {
 			var model:Object = event.items[0];
 			var selectionController:ISelectionController = getControllerProvider(model).getSelectionController(model);
 			
-			// set main selected item to last item from list
-			mainSelectedItem = selectedItems.length == 0 ? null : selectedItems.getItemAt(selectedItems.length  - 1);
-			
+			if (selectedItems.getItemIndex(mainSelectedItem) == -1) {
+				// set main selected item to last item from list
+				mainSelectedItem = selectedItems.length == 0 ? null : selectedItems.getItemAt(selectedItems.length  - 1);					
+			}
+		
 			if (selectionController != null) {				
 				if (event.kind == CollectionEventKind.ADD) {
-					selectionController.setSelectedState(model, getRendererForModel(model), true, _mainSelectedItem == model);					
+					mainSelectedItem = model;
+					//selectionController.setSelectedState(model, getRendererForModel(model), true, _mainSelectedItem == model);					
 				} else if (event.kind == CollectionEventKind.REMOVE ||  event.kind == CollectionEventKind.REPLACE) {
 					
 					if (event.kind == CollectionEventKind.REPLACE) {
@@ -228,6 +288,33 @@ package org.flowerplatform.flexdiagram {
 					selectionController.setSelectedState(model, getRendererForModel(model), false, false);
 				}
 			}
+		}
+		
+		public function activateTools():void {
+			// activate only if they weren't yet activated
+			if (!_toolsActivated) {
+				for (var key:Object in tools) {
+					Tool(tools[key]).activateDozingMode();
+				}	
+				if (mainTool == null) {
+					mainTool = _defaultTool;
+				}
+				_toolsActivated = true;
+			}
 		}		
+	
+		public function deactivateTools():void {
+			// deactivate only if they were activated
+			if (_toolsActivated) {
+				if (mainTool is IWakeUpableTool) { // return to default tool in case of a wakeupable tool
+					mainTool = _defaultTool;
+				}
+				for (var key:Object in tools) {
+					Tool(tools[key]).deactivateDozingMode();
+				}	
+				_toolsActivated = false;
+			}
+		}
+		
 	}
 }
