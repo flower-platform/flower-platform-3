@@ -18,8 +18,8 @@ package org.flowerplatform.web.git.action {
 		}
 		
 		override public function get visible():Boolean {
-			if (selection.length == 1 && selection.getItemAt(0) is HierarchicalModelWrapper) {
-				var node:TreeNode = HierarchicalModelWrapper(selection.getItemAt(0)).treeNode as TreeNode; 
+			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
+				var node:TreeNode = selection.getItemAt(0) as TreeNode; 
 				return node.pathFragment.type == GitNodeType.NODE_TYPE_GIT_REPOSITORIES;
 			}
 			return false;
@@ -27,7 +27,7 @@ package org.flowerplatform.web.git.action {
 		
 		override public function run():void {
 			var cloneWindow:CloneWindow = new CloneWindow();
-			cloneWindow.selectedNode = HierarchicalModelWrapper(selection.getItemAt(0)).treeNode as TreeNode;
+			cloneWindow.selectedNode = selection.getItemAt(0) as TreeNode;
 			cloneWindow.showPopup();
 		}
 		

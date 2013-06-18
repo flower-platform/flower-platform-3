@@ -26,8 +26,8 @@ package  org.flowerplatform.web.git.action {
 		}
 				
 		override public function get visible():Boolean {	
-			if (selection.length == 1 && selection.getItemAt(0) is HierarchicalModelWrapper) {
-				selectedNode = HierarchicalModelWrapper(selection.getItemAt(0)).treeNode as TreeNode; 
+			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
+				selectedNode = selection.getItemAt(0) as TreeNode; 
 				return selectedNode.pathFragment.type == GitNodeType.NODE_TYPE_REPOSITORY;
 			}
 			return false;

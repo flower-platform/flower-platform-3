@@ -77,7 +77,7 @@ package org.flowerplatform.web {
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-			perspectives[1].resetPerspective(workbench);
+			perspectives[0].resetPerspective(workbench);
 		}
 		
 		override protected function registerMessageBundle():void {
