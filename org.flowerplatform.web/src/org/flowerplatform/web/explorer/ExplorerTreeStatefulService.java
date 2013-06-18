@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.communication.tree.IChildrenProvider;
+import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
 import org.slf4j.Logger;
@@ -31,7 +32,9 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 					list = new ArrayList<IChildrenProvider>(configurationElement.getChildren().length);
 					getChildrenProviders().put(nodeType, list);
 				}
-				
+				if (provider instanceof IGenericTreeStatefulServiceAware) {
+					((IGenericTreeStatefulServiceAware) provider).setGenericTreeStatefulService(this);
+				}
 				list.add(provider);
 			}
 		}
@@ -44,6 +47,9 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 				if (getNodeDataProviders().get(nodeType) != null) {
 					logger.error("Trying to register an INodeDataProvider for nodeType = {}, but another one already exists: {}", nodeType, getNodeDataProviders().get(nodeType));
 				} else {
+					if (provider instanceof IGenericTreeStatefulServiceAware) {
+						((IGenericTreeStatefulServiceAware) provider).setGenericTreeStatefulService(this);
+					}
 					getNodeDataProviders().put(nodeType, provider);
 				}
 			}

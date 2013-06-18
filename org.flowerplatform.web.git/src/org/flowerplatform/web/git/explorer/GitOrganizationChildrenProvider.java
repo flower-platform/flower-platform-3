@@ -7,13 +7,16 @@ import java.util.Collection;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
+import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.web.git.GitPlugin;
 import org.flowerplatform.web.git.entity.GitNodeType;
 
 /**
  * @author Cristina Constantienscu
  */
-public class GitOrganizationChildrenProvider implements IChildrenProvider {
+public class GitOrganizationChildrenProvider implements IChildrenProvider, IGenericTreeStatefulServiceAware {
 
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {	
@@ -32,6 +35,11 @@ public class GitOrganizationChildrenProvider implements IChildrenProvider {
 	@Override
 	public Boolean nodeHasChildren(Object node, TreeNode treeNode, GenericTreeContext context) {
 		return true;
+	}
+
+	@Override
+	public void setGenericTreeStatefulService(GenericTreeStatefulService genericTreeStatefulService) {
+		GitPlugin.getInstance().getTreeStatefulServicesDisplayingGitContent().add(genericTreeStatefulService);
 	}
 
 }

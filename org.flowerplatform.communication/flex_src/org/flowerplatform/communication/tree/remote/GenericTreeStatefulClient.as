@@ -12,6 +12,7 @@ package org.flowerplatform.communication.tree.remote {
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClientLocalState;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.flexutil.tree.TreeList;
 	
 	import temp.tree.GenericTree;
@@ -56,7 +57,7 @@ package org.flowerplatform.communication.tree.remote {
 		///////////////////////////////////////////////////////////////
 		// Normal methods
 		///////////////////////////////////////////////////////////////
-				
+		
 		/**
 		 * The number is calculated by choosing the smallest number 
 		 * that isn't used by other stateful client ids that
@@ -115,6 +116,8 @@ package org.flowerplatform.communication.tree.remote {
 		 */
 		public override function subscribeToStatefulService(dataFromRegistrator:Object):void {		
 			super.subscribeToStatefulService(dataFromRegistrator);
+			
+			TreeNode(treeList.rootNode).pathFragment = new PathFragment(statefulServiceId, "r");
 			
 			// request data from server and expand root node
 			if (requestDataOnSubscribe) {

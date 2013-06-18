@@ -20,8 +20,10 @@ import org.flowerplatform.web.git.entity.RepositoryNode;
 public class GitRootChildrenProvider implements IChildrenProvider {
 	
 	@Override
-	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
-		File[] children = GitPlugin.getInstance().getUtils().getGitRepositoriesFile().listFiles();
+	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {		
+		@SuppressWarnings("unchecked")
+		File parentFile = (File) ((Pair<Object, String>) node).a;
+		File[] children = GitPlugin.getInstance().getUtils().getGitRepositoriesFile(parentFile).listFiles();
 		
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>(children.length);
 		for (File child : children) {		
@@ -38,7 +40,8 @@ public class GitRootChildrenProvider implements IChildrenProvider {
 
 	@Override
 	public Boolean nodeHasChildren(Object node, TreeNode treeNode,  GenericTreeContext context) {
-		File file = GitPlugin.getInstance().getUtils().getGitRepositoriesFile();
+		@SuppressWarnings("unchecked")
+		File file = (File) ((Pair<Object, String>) node).a;	
 		return file.isDirectory() && file.list().length > 0;
 	}
 

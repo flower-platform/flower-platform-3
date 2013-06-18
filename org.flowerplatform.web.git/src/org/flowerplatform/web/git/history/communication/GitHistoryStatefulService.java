@@ -469,7 +469,7 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 //			info.setResource1(resource);
 //			info.setRepository1(GitPlugin.getInstance().getGitUtils().getRepository(mapping));	
 		} else {
-			Repository repo = GitPlugin.getInstance().getUtils().getMainRepository(GitPlugin.getInstance().getUtils().getGitRepositoriesFile().listFiles()[0]);
+//			Repository repo = GitPlugin.getInstance().getUtils().getMainRepository(GitPlugin.getInstance().getUtils().getGitRepositoriesFile().listFiles()[0]);
 			
 //			if (!(node instanceof RepositoryNode)) {
 //				throw new IOException();
@@ -481,7 +481,7 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 //				file = ((FileNode) node).getObject();
 //			}
 			info.setFile1(null);
-			info.setRepository1(repo);
+//			info.setRepository1(repo);
 		}
 	}	
 	

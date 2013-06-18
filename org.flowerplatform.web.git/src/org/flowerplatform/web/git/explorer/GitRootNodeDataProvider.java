@@ -11,6 +11,7 @@ import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.explorer.RootChildrenProvider;
 import org.flowerplatform.web.git.GitPlugin;
+import org.flowerplatform.web.git.entity.GitNodeType;
 
 /**
  * @author Cristina Constantienscu
@@ -33,22 +34,31 @@ public class GitRootNodeDataProvider implements INodeDataProvider {
 
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
-		@SuppressWarnings("unchecked")
-		String nodeType1 = ((Pair<File, String>) node).b;
-		return new PathFragment(nodeType1, nodeType1);
+		//@SuppressWarnings("unchecked")
+		//String nodeType1 = ((Pair<File, String>) node).b;
+		return new PathFragment(nodeType, nodeType);
 	}
 
 	@Override
 	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {
-		throw new UnsupportedOperationException();
+		Pair<File, String> realChild;
+		//Pair<Object, String> child;
+		realChild = new Pair<File, String>((File) parent, GitNodeType.NODE_TYPE_GIT_REPOSITORIES);
+		//child = new Pair<Object, String>(realChild, GitNodeType.NODE_TYPE_GIT_REPOSITORIES);
+		return realChild;
 	}
 
 	@Override
 	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) {
-		if (fullPath == null || fullPath.size() != 2 || !RootChildrenProvider.NODE_TYPE_ORGANIZATION.equals(fullPath.get(0).getType())) {
-			throw new IllegalArgumentException("We were expecting a path with 2 items (no 0 being an org), but we got: " + fullPath);
-		}
-		return new Pair<File, String>(new File(RootChildrenProvider.getWorkspaceRoot(), fullPath.get(0).getName()), fullPath.get(1).getType());
+//		if (fullPath == null || fullPath.size() != 2 || !RootChildrenProvider.NODE_TYPE_ORGANIZATION.equals(fullPath.get(0).getType())) {
+//			throw new IllegalArgumentException("We were expecting a path with 2 items (no 0 being an org), but we got: " + fullPath);
+//		}
+//		Pair<File, String> realChild;
+//		Pair<Object, String> child;
+//		realChild = new Pair<File, String>((File) RootChildrenProvider.getWorkspaceRoot(), GitNodeType.NODE_TYPE_GIT_REPOSITORIES);
+//		child = new Pair<Object, String>(realChild, GitNodeType.NODE_TYPE_GIT_REPOSITORIES);
+//		return child;
+		return null;
 	}
 
 	@Override

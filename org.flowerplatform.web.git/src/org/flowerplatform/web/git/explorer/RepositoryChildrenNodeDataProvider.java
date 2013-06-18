@@ -70,10 +70,8 @@ public class RepositoryChildrenNodeDataProvider implements INodeDataProvider {
 	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {			
 		RepositoryNode repoNode = (RepositoryNode) parent;
 	
-		Pair<SimpleNode, String> child;
-		SimpleNode childNode = new SimpleNode(repoNode, repoNode.getRepository(), pathFragment.getType());
-		child = new Pair<SimpleNode, String>(childNode, pathFragment.getType());
-		return child;
+		SimpleNode childNode = new SimpleNode(repoNode, repoNode.getRepository(), pathFragment.getType());		
+		return childNode;
 	}
 
 	@Override

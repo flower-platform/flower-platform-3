@@ -26,10 +26,5 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 		super.stop(bundleContext);
 		INSTANCE = null;
 	}
-
-	@Override
-	public void registerMessageBundle() throws Exception {
-		// do nothing, because we don't have messages (yet)
-	}
-
+	
 }

@@ -3,6 +3,7 @@ package org.flowerplatform.web.git {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.WebPlugin;
+	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.dto.CleanPageDto;
 	import org.flowerplatform.web.git.dto.CommitDto;
@@ -45,6 +46,8 @@ package org.flowerplatform.web.git {
 		
 		protected var gitCommonPlugin:GitCommonPlugin = new GitCommonPlugin();
 		
+		public var service:GitService = new GitService();
+		
 		override public function preStart():void {
 			super.preStart();
 			gitCommonPlugin.preStart();
@@ -54,7 +57,9 @@ package org.flowerplatform.web.git {
 			INSTANCE = this;	
 						
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new GitHistoryViewProvider());
-			WebPlugin.getInstance().perspectives.push(new GitPerspective());			
+			WebPlugin.getInstance().perspectives.push(new GitPerspective());	
+			
+			WebCommonPlugin.getInstance().explorerTreeActionProviders.push(new GitExplorerTreeActionProvider());
 		}
 		
 		override public function start():void {

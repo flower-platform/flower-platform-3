@@ -3,6 +3,10 @@
   <includeClasses>
     <classEntry path="org.flowerplatform.web.git.history.GitHistoryView"/>
     <classEntry path="org.flowerplatform.web.git.GitNodeType"/>
+    <classEntry path="org.flowerplatform.web.git.GitExplorerTreeActionProvider"/>
+    <classEntry path="org.flowerplatform.web.git.action.CloneAction"/>
+    <classEntry path="org.flowerplatform.web.git.ui.CloneWindow"/>
+    <classEntry path="org.flowerplatform.web.git.GitService"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
