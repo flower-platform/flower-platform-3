@@ -78,8 +78,10 @@
 					visualChildrenController.refreshVisualChildren(data);
 				}
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
 				graphics.clear();
 				graphics.lineStyle(1);
+				graphics.beginFill(0xCCCCCC, 0);
 				graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
 			}
 		]]>

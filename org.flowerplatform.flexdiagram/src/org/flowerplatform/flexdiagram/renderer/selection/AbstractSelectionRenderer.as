@@ -1,4 +1,5 @@
 package org.flowerplatform.flexdiagram.renderer.selection {
+	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	
@@ -32,6 +33,13 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 			diagramShell.diagramRenderer.removeElement(this);
 		}
 
+		public function getTargetModel():Object {
+			if (target != null) 
+				return IDataRenderer(target).data;
+			else 
+				return null;
+		}
+		
 		public function getMainSelection():Boolean {
 			return isMainSelection;
 		}

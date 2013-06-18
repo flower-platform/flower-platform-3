@@ -2,14 +2,14 @@
 <s:Application implements="org.flowerplatform.flexdiagram.samples.IModelHolder" creationComplete="ModelPopulator.populateRootModel(this)"
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
-	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:samples="org.flowerplatform.flexdiagram.samples.*" xmlns:flexdiagram="org.flowerplatform.flexdiagram.*" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*">
+	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:samples="org.flowerplatform.flexdiagram.samples.*" xmlns:flexdiagram="org.flowerplatform.flexdiagram.*" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*" xmlns:infinitegroup="org.flowerplatform.flexdiagram.util.infinitegroup.*">
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.flexdiagram.DiagramShell;
-			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 			import org.flowerplatform.flexdiagram.samples.SamplesDiagramShell;
+			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 			
 			private var _rootModel:ParentAwareArrayList;
 			
@@ -27,14 +27,16 @@
 		<samples:SamplesDiagramShell id="diagramShell" diagramRenderer="{diagramRenderer}" rootModel="{rootModel}"/>
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
-		<mx:TabNavigator width="350" height="100%" creationPolicy="all">
+		
+		<mx:TabNavigator width="350" height="100%" creationPolicy="all">			
 			<s:NavigatorContent label="Model Editor">
-				<samples:ModelEditor id="modelEditor" height="100%" width="100%" modelHolder="{this}"/>
-			</s:NavigatorContent>
+				<samples:ModelEditor id="modelEditor" height="100%" width="100%" modelHolder="{this}" diagramShell="{diagramShell}"/>
+			</s:NavigatorContent>			
 			<s:NavigatorContent label="Model Populator">
 				<samples:ModelPopulator id="modelPopulator" height="100%" width="100%" modelHolder="{this}"/>
 			</s:NavigatorContent>
 		</mx:TabNavigator>
+		
 		<s:Group width="100%" height="100%">
 			<s:Rect x="{-diagramRenderer.viewPortRectOffsetTowardOutside}" y="{-diagramRenderer.viewPortRectOffsetTowardOutside}"
 					width="{scroller.width + 2 * diagramRenderer.viewPortRectOffsetTowardOutside}" height="{scroller.height + 2 * diagramRenderer.viewPortRectOffsetTowardOutside}">
@@ -42,11 +44,12 @@
 					<s:SolidColorStroke color="0x0000FF" weight="2" />
 				</s:stroke>
 			</s:Rect>
-			<s:Scroller id="scroller" width="100%" height="100%">
-				<renderer:DiagramRenderer id="diagramRenderer" viewPortRectOffsetTowardOutside="-100">
+			<infinitegroup:InfiniteScroller id="scroller" width="100%" height="100%">
+				<renderer:DiagramRenderer id="diagramRenderer" viewPortRectOffsetTowardOutside="-100" width="100%" height="100%" 
+										  creationComplete="{diagramRenderer.contentRect=new Rectangle(0, 0, 9000, 9000)}" >
 					<s:Label x="9000" y="9000" text="end"/>
 				</renderer:DiagramRenderer>
-			</s:Scroller>
+			</infinitegroup:InfiniteScroller>
 		</s:Group>
 	</mx:HDividedBox>
 </s:Application>

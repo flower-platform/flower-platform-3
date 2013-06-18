@@ -3,11 +3,14 @@
 @author Cristian Spiescu
 --><s:View destructionPolicy="never" 
 		xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="ModelEditorView" xmlns:samples="org.flowerplatform.flexdiagram.samples.*">
+		xmlns:s="library://ns.adobe.com/flex/spark" title="ModelEditorView" xmlns:samples="org.flowerplatform.flexdiagram.samples.*" >
 	<fx:Script>
 		<![CDATA[
-			import org.flowerplatform.flexdiagram.samples.IModelHolder;
 			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.flexdiagram.samples.IModelHolder;
+						
 		]]>
 	</fx:Script>
 	<fx:Declarations>
