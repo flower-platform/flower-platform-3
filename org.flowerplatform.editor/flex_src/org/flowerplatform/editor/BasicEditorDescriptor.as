@@ -1,6 +1,8 @@
 package  org.flowerplatform.editor {
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 
 	/**
@@ -48,30 +50,30 @@ package  org.flowerplatform.editor {
 			throw new Error("This method should be implemented");
 		}
 		
-//		/**
-//		 * Abstract method.
-//		 * 
-//		 * <p>
-//		 * Should create a new instance of the corresponding
-//		 * <code>EditorStatefulClient</code>.
-//		 * @flowerModelElementId _NJ-x8AcIEeK49485S7r3Vw
-//		 */ 
-//		protected function createEditorStatefulClient():EditorStatefulClient {
-//			throw new Error("This method should be implemented.");
-//		}
-//		
-//		protected function getOrCreateEditorStatefulClient(editableResourcePath:String):EditorStatefulClient {
-//			var editorStatefulClient:EditorStatefulClient = EditorStatefulClient(StatefulClientRegistry.INSTANCE.getStatefulClientById(
-//				calculateStatefulClientId(editableResourcePath)));
-//			
-//			if (editorStatefulClient == null) {
-//				editorStatefulClient = createEditorStatefulClient();
-//				editorStatefulClient.editorDescriptor = this;
-//				editorStatefulClient.editableResourcePath = editableResourcePath;
-//			}		
-//			
-//			return editorStatefulClient;
-//		}
+		/**
+		 * Abstract method.
+		 * 
+		 * <p>
+		 * Should create a new instance of the corresponding
+		 * <code>EditorStatefulClient</code>.
+		 * @flowerModelElementId _NJ-x8AcIEeK49485S7r3Vw
+		 */ 
+		protected function createEditorStatefulClient():EditorStatefulClient {
+			throw new Error("This method should be implemented.");
+		}
+		
+		protected function getOrCreateEditorStatefulClient(editableResourcePath:String):EditorStatefulClient {
+			var editorStatefulClient:EditorStatefulClient = EditorStatefulClient(CommunicationPlugin.getInstance().statefulClientRegistry.getStatefulClientById(
+				calculateStatefulClientId(editableResourcePath)));
+			
+			if (editorStatefulClient == null) {
+				editorStatefulClient = createEditorStatefulClient();
+				editorStatefulClient.editorDescriptor = this;
+				editorStatefulClient.editableResourcePath = editableResourcePath;
+			}		
+			
+			return editorStatefulClient;
+		}
 		
 		/**
 		 * Has the same behavior like the similar method from Java <code>EditorStatefulService</code>. 

@@ -19,7 +19,7 @@ package org.flowerplatform.web.common {
 			
 			action = new ActionBase();
 			action.label = "Disabled/top";
-			action.preferShowOnActionBar = true;
+//			action.preferShowOnActionBar = true;
 			action.enabled = false;
 			actions.push(action);
 			

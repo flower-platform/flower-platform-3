@@ -10,6 +10,7 @@ package org.flowerplatform.web.common.explorer {
 	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	import spark.events.IndexChangeEvent;
@@ -42,7 +43,7 @@ package org.flowerplatform.web.common.explorer {
 				var count:int = selectedIndices.length;
 				
 				for (var i:int = 0; i < count; i++)
-					result.push(dataProvider.getItemAt(selectedIndices[i]));  
+					result.push(HierarchicalModelWrapper(dataProvider.getItemAt(selectedIndices[i])).treeNode);  
 			}
 			
 			return new ArrayList(result);

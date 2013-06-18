@@ -1,0 +1,2546 @@
+/**
+ *  The <code>DataGrid</code> control is like a List except that it can 
+ *  show more than one column of data making it suited for showing 
+ *  objects with multiple properties.
+ *  <p>
+ *  The DataGrid control provides the following features:
+ *  <ul>
+ *  <li>Columns of different widths or identical fixed widths</li>
+ *  <li>Columns that the user can resize at runtime </li>
+ *  <li>Columns that the user can reorder at runtime </li>
+ *  <li>Optional customizable column headers</li>
+   <li>Ability to use a custom item renderer for any column to display 
+       data 
+   other than text</li>
+   <li>Support for sorting the data by clicking on a column</li>
+   </ul>
+   </p>
+   The DataGrid control is intended for viewing data, and not as a
+   layout tool like an HTML table.
+   The mx.containers package provides those layout tools.
+   
+   <p>The DataGrid control has the following default sizing 
+      characteristics:</p>
+      <table class="innertable">
+         <tr>
+            <th>Characteristic</th>
+            <th>Description</th>
+         </tr>
+         <tr>
+            <td>Default size</td>
+            <td>If the columns are empty, the default width is 300 
+                pixels. If the columns contain information but define 
+                no explicit widths, the default width is 100 pixels 
+                per column. The DataGrid width is sized to fit the 
+                width of all columns, if possible. 
+                The default number of displayed rows, including the 
+                header is 7, and each row, by default, is 20 pixels 
+                high.
+            </td>
+         </tr>
+         <tr>
+            <td>Minimum size</td>
+            <td>0 pixels.</td>
+         </tr>
+         <tr>
+            <td>Maximum size</td>
+            <td>5000 by 5000.</td>
+         </tr>
+      </table>
+ 
+   @mxml
+   <p>
+   The <code>&lt;mx:DataGrid&gt;</code> tag inherits all of the tag 
+   attributes of its superclass, except for <code>labelField</code>, 
+   <code>iconField</code>, and <code>iconFunction</code>, and adds the 
+   following tag attributes:
+   </p>
+   <pre>
+   &lt;mx:DataGrid
+     <b>Properties</b>
+     columns="<i>From dataProvider</i>"
+     draggableColumns="true|false"
+     editable="false|true"
+     editedItemPosition="<code>null</code>"
+     horizontalScrollPosition="null"
+     imeMode="null"
+     itemEditorInstance="null"
+     minColumnWidth="<code>NaN</code>"
+     resizableColumns="true|false"
+     sortableColumns="true|false"
+     
+     <b>Styles</b>
+     backgroundDisabledColor="0xEFEEEF"
+     columnDropIndicatorSkin="DataGridColumnDropIndicator"
+     columnResizeSkin="DataGridColumnResizeSkin"
+     disabledIconColor="0x999999"
+     headerColors="[#FFFFFF, #E6E6E6]"
+     headerDragProxyStyleName="headerDragProxyStyle"
+     headerSeparatorSkin="DataGridHeaderSeparator"
+     headerStyleName="dataGridStyles"
+     horizontalGridLineColor="<i>No default</i>"
+     horizontalGridLines="false|true"
+     horizontalLockedSeparatorSkin="undefined"
+     horizontalSeparatorSkin="undefined"
+     iconColor="0x111111"
+     rollOverColor="#E3FFD6"
+     selectionColor="#CDFFC1"
+     sortArrowSkin="DataGridSortArrow"
+     stretchCursor="<i>"cursorStretch" symbol from the Assets.swf file</i>"
+     verticalGridLineColor="#666666"
+     verticalGridLines="false|true"
+     verticalLockedSeparatorSkin="undefined"
+     verticalSeparatorSkin="undefined"
+      
+     <b>Events</b>
+     columnStretch="<i>No default</i>"
+     headerRelease="<i>No default</i>"
+     headerShift="<i>No default</i>"
+     itemEditBegin="<i>No default</i>"
+     itemEditBeginning="<i>No default</i>" 
+     itemEditEnd="<i>No default</i>"
+     itemFocusIn="<i>No default</i>"
+     itemFocusOut="<i>No default</i>"
+   /&gt;
+    
+   <b>The following DataGrid code sample specifies the column order:</b>
+   &lt;mx:DataGrid&gt;
+     &lt;mx:dataProvider&gt;
+         &lt;mx:Object Artist="Pavement" Price="11.99"
+           Album="Slanted and Enchanted"/&gt;
+         &lt;mx:Object Artist="Pavement"
+           Album="Brighten the Corners" Price="11.99"/&gt;
+     &lt;/mx:dataProvider&gt;
+     &lt;mx:columns&gt;
+         &lt;mx:DataGridColumn dataField="Album"/&gt;
+         &lt;mx:DataGridColumn dataField="Price"/&gt;
+     &lt;/mx:columns&gt;
+   &lt;/mx:DataGrid&gt;
+   </pre>
+   </p>
+ 
+   @see mx.controls.dataGridClasses.DataGridItemRenderer
+   @see mx.controls.dataGridClasses.DataGridColumn
+   @see mx.controls.dataGridClasses.DataGridDragProxy
+   @see mx.events.DataGridEvent
+ 
+   @includeExample examples/SimpleDataGrid.mxml
+ 
+public class DataGrid extends DataGridBase implements IIMESupport
+{
+    include "../core/Version.as";
+
+    //--------------------------------------------------------------------------
+    //
+    //  Class mixins
+    //
+    //--------------------------------------------------------------------------
+
+    /
+       @private
+       Placeholder for mixin by DataGridAccImpl.
+     
+    mx_internal static var createAccessibilityImplementation:Function;
+
+    //--------------------------------------------------------------------------
+    //
+    //  Constructor
+    //
+    //--------------------------------------------------------------------------
+
+    /
+       Constructor.
+     
+    public function DataGrid()
+    {
+        super();
+
+        _columns = [];
+
+        // pick a default row height
+        setRowHeight(20);
+
+        // Register default handlers for item editing and sorting events.
+
+        addEventListener(DataGridEvent.ITEM_EDIT_BEGINNING,
+                        itemEditorItemEditBeginningHandler,
+                        false, EventPriority.DEFAULT_HANDLER);
+
+        addEventListener(DataGridEvent.ITEM_EDIT_BEGIN,
+                         itemEditorItemEditBeginHandler,
+                         false, EventPriority.DEFAULT_HANDLER);
+
+        addEventListener(DataGridEvent.ITEM_EDIT_END,
+                         itemEditorItemEditEndHandler,
+                         false, EventPriority.DEFAULT_HANDLER);
+
+        addEventListener(DataGridEvent.HEADER_RELEASE,
+                         headerReleaseHandler,
+                         false, EventPriority.DEFAULT_HANDLER);
+                         
+        addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);                         
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Variables
+    //
+    //--------------------------------------------------------------------------
+
+    [Inspectable(environment="none")]
+
+    /
+       A reference to the currently active instance of the item editor, 
+       if it exists.
+     
+       <p>To access the item editor instance and the new item value when an 
+       item is being edited, you use the <code>itemEditorInstance</code> 
+       property. The <code>itemEditorInstance</code> property
+       is not valid until after the event listener for
+       the <code>itemEditBegin</code> event executes. Therefore, you typically
+       only access the <code>itemEditorInstance</code> property from within 
+       the event listener for the <code>itemEditEnd</code> event.</p>
+     
+       <p>The <code>DataGridColumn.itemEditor</code> property defines the
+       class of the item editor
+       and, therefore, the data type of the item editor instance.</p>
+     
+       <p>You do not set this property in MXML.</p>
+     
+    public var itemEditorInstance:IListItemRenderer;
+
+    /
+       A reference to the item renderer
+       in the DataGrid control whose item is currently being edited.
+     
+       <p>From within an event listener for the <code>itemEditBegin</code>
+       and <code>itemEditEnd</code> events,
+       you can access the current value of the item being edited
+       using the <code>editedItemRenderer.data</code> property.</p>
+     
+    public function get editedItemRenderer():IListItemRenderer
+    {
+        if (!itemEditorInstance) return null;
+
+        return actualContentHolder.listItems[actualRowIndex][actualColIndex];
+    }
+
+    /
+       @private
+       true if we want to skip updating the headers during adjustListContent
+     
+    private var skipHeaderUpdate:Boolean = false;
+
+    /
+       @private
+       true if we want to block editing on mouseUp
+     
+    private var dontEdit:Boolean = false;
+
+    /
+       @private
+       true if we want to block editing on mouseUp
+     
+    private var losingFocus:Boolean = false;
+
+    /
+       @private
+       true if we're in the endEdit call.  Used to handle
+       some timing issues with collection updates
+     
+    private var inEndEdit:Boolean = false;
+
+    /
+       @private
+       true if we've disabled updates in the collection
+     
+    private var collectionUpdatesDisabled:Boolean = false;
+
+    /
+       @private
+       The index of the column being sorted.
+     
+    mx_internal var sortIndex:int = -1;
+
+    /
+       @private
+       The column being sorted.
+     
+    private var sortColumn:DataGridColumn;
+
+    /
+       @private
+       The direction of the sort
+     
+    mx_internal var sortDirection:String;
+
+    /
+       @private
+       The index of the last column being sorted on.
+     
+    mx_internal var lastSortIndex:int = -1;
+
+    /
+       @private
+     
+    private var lastItemDown:IListItemRenderer;
+
+    /
+       @private
+     
+    private var displayWidth:Number;
+
+    /
+       @private
+     
+    private var lockedColumnWidth:Number = 0;
+
+    /
+       @private
+       The column that is being moved.
+     
+    mx_internal var movingColumn:DataGridColumn;
+
+    /
+       @private
+       The column that is being resized.
+     
+    mx_internal var resizingColumn:DataGridColumn;
+
+    /
+       @private
+       Columns with visible="true"
+     
+    private var displayableColumns:Array;
+
+    /
+       @private
+       Whether we have auto-generated the set of columns
+       Defaults to true so we'll run the auto-generation at init time if needed
+     
+    private var generatedColumns:Boolean = true;
+
+    // last known position of item editor instance
+    private var actualRowIndex:int;
+    private var actualColIndex:int;
+    private var actualContentHolder:ListBaseContentHolder;
+
+    /
+       @private
+       Flag to indicate whether sorting is manual or programmatic.  If it's
+       not manual, we try to draw the sort arrow on the right column header.
+     
+    private var manualSort:Boolean;
+
+
+    //--------------------------------------------------------------------------
+    //
+    //  Overridden properties
+    //
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  baselinePosition
+    //----------------------------------
+
+    /
+       @private
+       The baselinePosition of a DataGrid is calculated
+       for its first column header.
+       If the headers aren't shown, it is calculated as for List.
+     
+    override public function get baselinePosition():Number
+    {
+        if (FlexVersion.compatibilityVersion < FlexVersion.VERSION_3_0)
+        {
+            var top:Number = 0;
+    
+            if (border && border is IRectangularBorder)
+                top = IRectangularBorder(border).borderMetrics.top;
+    
+            return top + measureText(" ").ascent;
+        }
+                    
+        if (!validateBaselinePosition())
+            return NaN;
+
+        if (!showHeaders)
+            return super.baselinePosition;
+        
+        var header0:IUIComponent = DataGridHeader(header).rendererArray[0];
+        if (!header0)
+            return super.baselinePosition;
+            
+        return header.y + header0.y + header0.baselinePosition;
+    }
+
+    /
+       @private
+       Number of columns that can be displayed.
+       Some may be offscreen depending on horizontalScrollPolicy
+       and the width of the DataGrid.
+     
+    override public function get columnCount():int
+    {
+        if (_columns)
+            return _columns.length;
+        else
+            return 0;
+    }
+
+    //----------------------------------
+    //  enabled
+    //----------------------------------
+
+    [Inspectable(category="General", enumeration="true,false", defaultValue="true")]
+
+    /
+       @private
+     
+    override public function set enabled(value:Boolean):void
+    {
+        super.enabled = value;
+        
+        if (header)
+            header.enabled = value;
+
+        if (itemEditorInstance)
+            endEdit(DataGridEventReason.OTHER);
+
+        invalidateDisplayList();
+    }
+
+    //----------------------------------
+    //  headerHeight
+    //----------------------------------
+
+    /
+       @private
+     
+    override public function set headerHeight(value:Number):void
+    {
+        super.headerHeight = value;
+        _originalHeaderHeight = isNaN(value) ? 22 : value;
+        _originalExplicitHeaderHeight = !isNaN(value);        
+    }
+
+    //----------------------------------
+    //  horizontalScrollPosition
+    //----------------------------------
+
+    /
+       The offset into the content from the left edge. 
+       This can be a pixel offset in some subclasses or some other metric 
+       like the number of columns in a DataGrid control. 
+     
+       The DataGrid scrolls by columns so the value of the 
+       <code>horizontalScrollPosition</code> property is always
+       in the range of 0 to the index of the columns
+       that will make the last column visible.  This is different from the
+       List control that scrolls by pixels.  The DataGrid control always aligns the left edge
+       of a column with the left edge of the DataGrid control.
+     
+    override public function set horizontalScrollPosition(value:Number):void
+    {
+        // if not init or no data;
+        if (!initialized || listItems.length == 0)
+        {
+            super.horizontalScrollPosition = value;
+            return;
+        }
+
+        var oldValue:int = super.horizontalScrollPosition;
+        super.horizontalScrollPosition = value;
+
+        // columns have variable width so we need to recalc scroll parms
+        scrollAreaChanged = true;
+
+        columnsInvalid = true;
+        calculateColumnSizes();
+
+        // we are going to get a full repaint so don't repaint now
+        if (itemsSizeChanged)
+            return;
+
+        if (oldValue != value)
+        {
+            removeClipMask();
+
+            var bookmark:CursorBookmark;
+
+            if (iterator)
+                bookmark = iterator.bookmark;
+
+            clearIndicators();
+            clearVisibleData();
+            //if we scrolled more than the number of scrollable columns
+            makeRowsAndColumns(0, 0, listContent.width, listContent.height, 0, 0);
+            if (lockedRowCount)
+            {           
+                var cursorPos:CursorBookmark;
+                cursorPos = lockedRowContent.iterator.bookmark;
+                makeRows(lockedRowContent, 0, 0, unscaledWidth, unscaledHeight, 0, 0, true, lockedRowCount);
+                if (iteratorValid)
+                    lockedRowContent.iterator.seek(cursorPos, 0);
+            }
+
+            if (headerVisible && header)
+            {
+                header.visibleColumns = visibleColumns;
+                header.headerItemsChanged = true;
+                header.invalidateSize();
+                header.validateNow();
+            }
+
+            if (iterator && bookmark)
+                iterator.seek(bookmark, 0);
+
+            invalidateDisplayList();
+
+            addClipMask(false);
+        }
+    }
+
+    //----------------------------------
+    //  horizontalScrollPolicy
+    //----------------------------------
+
+    /
+       @private
+       Accomodates ScrollPolicy.AUTO.
+       Makes sure column widths stay in synch.
+     
+       @param policy on, off, or auto
+     
+    override public function set horizontalScrollPolicy(value:String):void
+    {
+        super.horizontalScrollPolicy = value;
+        columnsInvalid = true;
+        itemsSizeChanged = true;
+        invalidateDisplayList();
+    }
+
+    /
+       @private
+     
+    override public function set verticalScrollPosition(value:Number):void
+    {
+        skipHeaderUpdate = true;
+
+        var oldValue:Number = super.verticalScrollPosition;
+        super.verticalScrollPosition = value;
+        if (oldValue != value)
+        {
+            if (lockedColumnContent)
+                drawRowGraphics(lockedColumnContent)
+        }
+        skipHeaderUpdate = false;
+    }
+
+    /
+       @private
+       
+     
+    override protected function createChildren():void
+    {
+        super.createChildren();
+
+        if (!header)
+        {
+            header = new headerClass();
+            header.styleName = this;
+            addChild(header);
+        }
+    }
+
+    //----------------------------------
+    //  imeMode
+    //----------------------------------
+
+    /
+       @private
+     
+    private var _imeMode:String = null;
+
+    [Inspectable(environment="none")]
+
+    /
+       Specifies the IME (input method editor) mode.
+       The IME enables users to enter text in Chinese, Japanese, and Korean.
+       Flex sets the specified IME mode when the control gets the focus,
+       and sets it back to the previous value when the control loses the focus.
+     
+      <p>The flash.system.IMEConversionMode class defines constants for the
+       valid values for this property.
+       You can also specify <code>null</code> to specify no IME.</p>
+     
+       @see flash.system.IMEConversionMode
+     
+       @default null
+     
+    public function get imeMode():String
+    {
+        return _imeMode;
+    }
+
+    /
+       @private
+     
+    public function set imeMode(value:String):void
+    {
+        _imeMode = value;
+    }
+
+    //----------------------------------
+    //  itemRenderer
+    //----------------------------------
+    
+    /
+       @private
+      
+       Defer creations of the class factory
+       to give a chance for the moduleFactory to be set.
+     
+    override public function get itemRenderer():IFactory
+    {
+        if (super.itemRenderer == null)
+        {       
+            var fontName:String =
+                StringUtil.trimArrayElements(getStyle("fontFamily"), ",");
+            var fontWeight:String = getStyle("fontWeight");
+            var fontStyle:String = getStyle("fontStyle");
+            var bold:Boolean = (fontWeight == "bold");
+            var italic:Boolean = (fontStyle == "italic");
+            
+            var flexModuleFactory:IFlexModuleFactory =
+                getFontContext(fontName, bold, italic);
+
+            super.itemRenderer = new ContextualClassFactory(
+                DataGridItemRenderer, flexModuleFactory);
+        }
+        
+        return super.itemRenderer;
+    }
+    
+    //----------------------------------
+    //  minColumnWidth
+    //----------------------------------
+
+    /
+       @private
+     
+    private var _minColumnWidth:Number;
+
+    /
+       @private
+     
+    private var minColumnWidthInvalid:Boolean = false;
+
+    [Inspectable(defaultValue="NaN")]
+
+    /
+       The minimum width of the columns, in pixels.  If not NaN,
+       the DataGrid control applies this value as the minimum width for
+       all columns.  Otherwise, individual columns can have
+       their own minimum widths.
+       
+       @default NaN
+     
+    public function get minColumnWidth():Number
+    {
+        return _minColumnWidth;
+    }
+
+    /
+       @private
+     
+    public function set minColumnWidth(value:Number):void
+    {
+        _minColumnWidth = value;
+        minColumnWidthInvalid = true;
+        itemsSizeChanged = true;
+        columnsInvalid = true;
+        invalidateDisplayList();
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Properties
+    //
+    //--------------------------------------------------------------------------
+
+    //----------------------------------
+    //  columns
+    //----------------------------------
+
+    /
+       @private
+     
+    private var _columns:Array; // the array of our DataGridColumns
+
+    [Bindable("columnsChanged")]
+    [Inspectable(category="General", arrayType="mx.controls.dataGridClasses.DataGridColumn")]
+
+    /
+       An array of DataGridColumn objects, one for each column that
+       can be displayed.  If not explicitly set, the DataGrid control 
+       attempts to examine the first data provider item to determine the
+       set of properties and display those properties in alphabetic
+       order.
+     
+       <p>If you want to change the set of columns, you must get this array,
+       make modifications to the columns and order of columns in the array,
+       and then assign the new array to the columns property.  This is because
+       the DataGrid control returned a new copy of the array of columns and therefore
+       did not notice the changes.</p>
+     
+    override public function get columns():Array
+    {
+        return _columns.slice(0);
+    }
+
+    /
+       @private
+     
+    override public function set columns(value:Array):void
+    {
+        var n:int;
+        var i:int;
+
+        n = _columns.length;
+        for (i = 0; i < n; i++)
+        {
+            columnRendererChanged(_columns[i]);
+        }
+        
+        freeItemRenderersTable = new Dictionary(false);
+        columnMap = {};
+
+        _columns = value.slice(0);
+        columnsInvalid = true;
+        generatedColumns = false;
+
+        n = value.length;
+        for (i = 0; i < n; i++)
+        {
+            var column:DataGridColumn = _columns[i];
+            column.owner = this;
+            column.colNum = i;
+            if (column.cachedHeaderRenderer)
+            {
+                var item:DisplayObject = column.cachedHeaderRenderer as DisplayObject
+                if (item.parent)
+                    item.parent.removeChild(item);
+                column.cachedHeaderRenderer = null;
+            }
+        }
+
+        updateSortIndexAndDirection();
+
+        itemsSizeChanged = true;
+        invalidateDisplayList();
+        dispatchEvent(new Event("columnsChanged"));
+    }
+
+    //----------------------------------
+    //  draggableColumns
+    //----------------------------------
+
+    /
+       @private
+       Storage for the draggableColumns property.
+     
+    private var _draggableColumns:Boolean = true;
+
+    [Inspectable(defaultValue="true")]
+
+    /
+       A flag that indicates whether the user is allowed to reorder columns.
+       If <code>true</code>, the user can reorder the columns
+       of the DataGrid control by dragging the header cells.
+     
+       @default true
+     
+    public function get draggableColumns():Boolean
+    {
+        return _draggableColumns;
+    }
+    
+    /
+       @private
+     
+    public function set draggableColumns(value:Boolean):void
+    {
+        _draggableColumns = value;
+    }
+
+    //----------------------------------
+    //  editable
+    //----------------------------------
+
+    [Inspectable(category="General")]
+
+    /
+       A flag that indicates whether or not the user can edit
+       items in the data provider.
+       If <code>true</code>, the item renderers in the control are editable.
+       The user can click on an item renderer to open an editor.
+     
+       <p>You can turn off editing for individual columns of the
+       DataGrid control using the <code>DataGridColumn.editable</code> property,
+       or by handling the <code>itemEditBeginning</code> and
+       <code>itemEditBegin</code> events</p>
+     
+       @default false
+     
+    public var editable:Boolean = false;
+
+    //----------------------------------
+    //  editedItemPosition
+    //----------------------------------
+
+    /
+       @private
+     
+    private var bEditedItemPositionChanged:Boolean = false;
+
+    /
+       @private
+       undefined means we've processed it
+       null means don't put up an editor
+       {} is the coordinates for the editor
+     
+    private var _proposedEditedItemPosition:;
+
+    /
+       @private
+       the last editedItemPosition and the last
+       position where editing was attempted if editing
+       was cancelled.  We restore editing
+       to this point if we get focus from the TAB key
+     
+    private var lastEditedItemPosition:;
+
+    /
+       @private
+     
+    private var _editedItemPosition:Object;
+
+    /
+       @private
+     
+    private var itemEditorPositionChanged:Boolean = false;
+
+
+    [Bindable("itemFocusIn")]
+
+    /
+       The column and row index of the item renderer for the
+       data provider item being edited, if any.
+     
+       <p>This Object has two fields, <code>columnIndex</code> and 
+       <code>rowIndex</code>,
+       the zero-based column and row indexes of the item.
+       For example: {columnIndex:2, rowIndex:3}</p>
+     
+       <p>Setting this property scrolls the item into view and
+       dispatches the <code>itemEditBegin</code> event to
+       open an item editor on the specified item renderer.</p>
+     
+       @default null
+     
+    public function get editedItemPosition():Object
+    {
+        if (_editedItemPosition)
+            return {rowIndex: _editedItemPosition.rowIndex,
+                columnIndex: _editedItemPosition.columnIndex};
+        else
+            return _editedItemPosition;
+    }
+
+    /
+       @private
+     
+    public function set editedItemPosition(value:Object):void
+    {
+        if (!value)
+        {
+            setEditedItemPosition(null);
+            return;
+        }
+ 
+        var newValue:Object = {rowIndex: value.rowIndex,
+            columnIndex: value.columnIndex};
+
+        setEditedItemPosition(newValue);
+    }
+
+
+    //----------------------------------
+    //  resizableColumns
+    //----------------------------------
+
+    [Inspectable(category="General")]
+
+    /
+       A flag that indicates whether the user can change the size of the
+       columns.
+       If <code>true</code>, the user can stretch or shrink the columns of 
+       the DataGrid control by dragging the grid lines between the header cells.
+       If <code>true</code>, individual columns must also have their 
+       <code>resizable</code> properties set to <code>false</code> to 
+       prevent the user from resizing a particular column.  
+     
+       @default true
+     
+    public var resizableColumns:Boolean = true;
+
+    //----------------------------------
+    //  sortableColumns
+    //----------------------------------
+
+    [Inspectable(category="General")]
+
+    /
+       A flag that indicates whether the user can sort the data provider items
+       by clicking on a column header cell.
+       If <code>true</code>, the user can sort the data provider items by
+       clicking on a column header cell. 
+       The <code>DataGridColumn.dataField</code> property of the column
+       or the <code>DataGridColumn.sortCompareFunction</code> property 
+       of the column is used as the sort field.  
+       If a column is clicked more than once
+       the sort alternates between ascending and descending order.
+       If <code>true</code>, individual columns can be made to not respond
+       to a click on a header by setting the column's <code>sortable</code>
+       property to <code>false</code>.
+     
+       <p>When a user releases the mouse button over a header cell, the DataGrid
+       control dispatches a <code>headerRelease</code> event if both
+       this property and the column's sortable property are <code>true</code>.  
+       If no handler calls the <code>preventDefault()</code> method on the event, the 
+       DataGrid sorts using that column's <code>DataGridColumn.dataField</code> or  
+       <code>DataGridColumn.sortCompareFunction</code> properties.</p>
+      
+       @default true
+     
+       @see mx.controls.dataGridClasses.DataGridColumn#dataField
+       @see mx.controls.dataGridClasses.DataGridColumn#sortCompareFunction
+     
+    public var sortableColumns:Boolean = true;
+
+    //--------------------------------------------------------------------------
+    //
+    //  Overridden methods
+    //
+    //--------------------------------------------------------------------------
+
+    /
+       @private
+     
+    override public function invalidateDisplayList():void
+    {
+        super.invalidateDisplayList();
+        if (header)
+        {
+            header.headerItemsChanged = true;
+            header.invalidateSize();
+            header.invalidateDisplayList();
+        }
+        if (lockedColumnHeader)
+        {
+            lockedColumnHeader.headerItemsChanged = true;
+            lockedColumnHeader.invalidateSize();
+            lockedColumnHeader.invalidateDisplayList();
+        }
+    }
+
+    [Inspectable(category="Data", defaultValue="undefined")]
+
+    /
+       @private
+     
+    override public function set dataProvider(value:Object):void
+    {
+        if (itemEditorInstance)
+            endEdit(DataGridEventReason.OTHER);
+
+        lastEditedItemPosition = null;
+
+        super.dataProvider = value;
+    }
+
+    /
+       @private
+     
+    override protected function initializeAccessibility():void
+    {
+        if (DataGrid.createAccessibilityImplementation != null)
+            DataGrid.createAccessibilityImplementation(this);
+    }
+
+    /
+       @private
+       Measures the DataGrid based on its contents,
+       summing the total of the visible column widths.
+     
+    override protected function measure():void
+    {
+        super.measure();
+
+        if (explicitRowCount != -1)
+        {
+            measuredHeight += headerHeight;
+            measuredMinHeight += headerHeight;
+        }
+
+        var o:EdgeMetrics = viewMetrics;
+
+        var n:int = columns.length;
+        if (n == 0)
+        {
+            measuredWidth = DEFAULT_MEASURED_WIDTH;
+            measuredMinWidth = DEFAULT_MEASURED_MIN_WIDTH;
+            return;
+        }
+
+        var columnWidths:Number = 0;
+        var columnMinWidths:Number = 0;
+        for (var i:int = 0; i < n; i++)
+        {
+            if (columns[i].visible)
+            {
+                columnWidths += columns[i].preferredWidth;
+                if (isNaN(_minColumnWidth))
+                    columnMinWidths += columns[i].minWidth;
+            }
+        }
+
+        if (!isNaN(_minColumnWidth))
+            columnMinWidths = n  _minColumnWidth;
+
+        measuredWidth = columnWidths + o.left + o.right;
+        measuredMinWidth = columnMinWidths + o.left + o.right;
+
+        // factor out scrollbars if policy == AUTO.  See Container.viewMetrics
+        if (verticalScrollPolicy == ScrollPolicy.AUTO &&
+            verticalScrollBar && verticalScrollBar.visible)
+        {
+            measuredWidth -= verticalScrollBar.minWidth;
+            measuredMinWidth -= verticalScrollBar.minWidth;
+        }
+        if (horizontalScrollPolicy == ScrollPolicy.AUTO &&
+            horizontalScrollBar && horizontalScrollBar.visible)
+        {
+            measuredHeight -= horizontalScrollBar.minHeight;
+            measuredMinHeight -= horizontalScrollBar.minHeight;
+        }
+
+    }
+
+    /
+       @private
+       Sizes and positions the column headers, columns, and items based on the
+       size of the DataGrid.
+     
+    override protected function updateDisplayList(unscaledWidth:Number,
+                                                  unscaledHeight:Number):void
+    {
+        // Note: We can't immediately call super.updateDisplayList()
+        // because the visibleColumns array must be populated first.
+
+        // trace(">>updateDisplayList");
+        if (displayWidth != unscaledWidth - viewMetrics.right - viewMetrics.left)
+        {
+            displayWidth = unscaledWidth - viewMetrics.right - viewMetrics.left;
+            columnsInvalid = true;
+        }
+
+        calculateColumnSizes();
+
+        if (itemEditorPositionChanged)
+        {
+            itemEditorPositionChanged = false;
+            // don't do this if mouse is down on an item
+            // on mouse up, we'll let the edit session logic
+            // request a new position
+            if (!lastItemDown)
+                scrollToEditedItem(editedItemPosition.rowIndex, editedItemPosition.colIndex);
+        }
+
+        super.updateDisplayList(unscaledWidth, unscaledHeight);
+
+        if (collection && collection.length)
+        {
+            setRowCount(listItems.length);
+
+            if (listItems.length)
+                setColumnCount(listItems[0].length);
+            else
+                setColumnCount(0);
+        }
+
+        // If we have a vScroll only, we want the scrollbar to be below
+        // the header.
+        if (verticalScrollBar != null && verticalScrollBar.visible &&
+           (horizontalScrollBar == null || !horizontalScrollBar.visible) && 
+           headerVisible)
+        {
+            var hh:Number = header.height;
+            var bm:EdgeMetrics = borderMetrics;
+            
+            if (roomForScrollBar(verticalScrollBar, 
+                        unscaledWidth-bm.left-bm.right, 
+                        unscaledHeight-hh-bm.top-bm.bottom))
+            {
+                verticalScrollBar.move(verticalScrollBar.x, viewMetrics.top + hh);
+                verticalScrollBar.setActualSize(
+                    verticalScrollBar.width,
+                    unscaledHeight - viewMetrics.top - viewMetrics.bottom - hh);
+                verticalScrollBar.visible = true;
+                headerMask.width += verticalScrollBar.getExplicitOrMeasuredWidth();
+                
+                if (!DataGridHeader(header).needRightSeparator)
+                {
+                    header.invalidateDisplayList();
+                    DataGridHeader(header).needRightSeparator = true;
+                }
+            }
+            else
+            {
+                if (DataGridHeader(header).needRightSeparator)
+                {
+                    header.invalidateDisplayList();
+                    DataGridHeader(header).needRightSeparator = false;
+                }
+            }
+        }
+        else
+        {
+            if (DataGridHeader(header).needRightSeparator)
+            {
+                header.invalidateDisplayList();
+                DataGridHeader(header).needRightSeparator = false;
+            }
+        }
+
+        if (bEditedItemPositionChanged)
+        {
+            bEditedItemPositionChanged = false;
+            // don't do this if mouse is down on an item
+            // on mouse up, we'll let the edit session logic
+            // request a new position
+            if (!lastItemDown)
+                commitEditedItemPosition(_proposedEditedItemPosition);
+            _proposedEditedItemPosition = undefined;
+            itemsSizeChanged = false;
+        }
+
+        drawRowBackgrounds();
+        drawLinesAndColumnBackgrounds();
+
+        if (lockedRowCount && lockedRowContent)
+        {
+            drawRowGraphics(lockedRowContent);
+            drawLinesAndColumnGraphics(lockedRowContent, visibleColumns, { bottom: 1});
+            if (lockedColumnCount)
+            {
+                drawRowGraphics(lockedColumnAndRowContent);
+                drawLinesAndColumnGraphics(lockedColumnAndRowContent, visibleLockedColumns, { right: 1, bottom: 1});
+            }
+        }
+        if (lockedColumnCount)
+        {
+            drawRowGraphics(lockedColumnContent)
+            drawLinesAndColumnGraphics(lockedColumnContent, visibleLockedColumns, { right: 1})
+        }
+
+        // trace("<<updateDisplayList");
+    }
+
+    /
+       @private
+     
+    override protected function makeRowsAndColumns(left:Number, top:Number,
+                                                right:Number, bottom:Number,
+                                                firstCol:int, firstRow:int,
+                                                byCount:Boolean = false, rowsNeeded:uint = 0):Point
+    {
+        allowItemSizeChangeNotification = false;
+
+        var pt:Point = super.makeRowsAndColumns(left, top, right, bottom,
+                                                firstCol, firstRow, byCount, rowsNeeded);
+        if (itemEditorInstance)
+        {
+            actualContentHolder.setChildIndex(DisplayObject(itemEditorInstance),
+                                      actualContentHolder.numChildren - 1);
+            var col:DataGridColumn;
+            if (lockedColumnCount && editedItemPosition.columnIndex && visibleLockedColumns[lockedColumnCount - 1].colNum)
+                col = visibleLockedColumns[actualColIndex];
+            else
+                col = visibleColumns[actualColIndex];
+
+            var item:IListItemRenderer = actualContentHolder.listItems[actualRowIndex][actualColIndex];
+            var rowData:ListRowInfo = actualContentHolder.rowInfo[actualRowIndex];
+            if (item && !col.rendererIsEditor)
+            {
+                var dx:Number = col.editorXOffset;
+                var dy:Number = col.editorYOffset;
+                var dw:Number = col.editorWidthOffset;
+                var dh:Number = col.editorHeightOffset;
+                itemEditorInstance.move(item.x + dx, rowData.y + dy);
+                itemEditorInstance.setActualSize(Math.min(col.width + dw, actualContentHolder.width - itemEditorInstance.x),
+                                         Math.min(rowData.height + dh, actualContentHolder.height - itemEditorInstance.y));
+                item.visible = false;
+
+            }
+
+            var lines:Sprite = Sprite(actualContentHolder.getChildByName("lines"));
+            if (lines)
+                actualContentHolder.setChildIndex(lines, actualContentHolder.numChildren - 1);
+        }
+
+        allowItemSizeChangeNotification = variableRowHeight;
+        return pt;
+    }
+
+   /
+       @private
+     
+    override protected function commitProperties():void
+    {
+        super.commitProperties();
+
+        if (itemsNeedMeasurement)
+        {
+            itemsNeedMeasurement = false;
+            if (isNaN(explicitRowHeight))
+            {
+                if (iterator && columns.length > 0)
+                {
+                    //set DataGridBase.visibleColumns to the set of 
+                    //all columns
+                    visibleColumns = columns;
+                    columnsInvalid = true;
+
+                    var paddingTop:Number = getStyle("paddingTop");
+                    var paddingBottom:Number = getStyle("paddingBottom");
+
+                    var data:Object = iterator.current;
+                    var item:IListItemRenderer;
+                    var c:DataGridColumn;
+                    var ch:Number = 0;
+                    var n:int = columns.length;
+                    for (var j:int = 0; j < n; j++)
+                    {
+                        c = columns[j];
+
+                        if (!c.visible)
+                            continue;
+
+                        item = c.getMeasuringRenderer(false, data);
+                        if (DisplayObject(item).parent == null)
+                            listContent.addChild(DisplayObject(item));
+                        setupRendererFromData(c, item, data);
+                        ch = Math.max(ch, item.getExplicitOrMeasuredHeight() + paddingBottom + paddingTop);
+                    }
+
+                    // unless specified otherwise, rowheight defaults to 20
+                    setRowHeight(Math.max(ch, 20));
+                }
+                else
+                    setRowHeight(20);
+            }
+        }
+    }
+
+    /
+       @private
+       Instead of measuring the items, we measure the visible columns instead.
+     
+    override public function measureWidthOfItems(index:int = -1, count:int = 0):Number
+    {
+        var w:Number = 0;
+
+        var n:int = columns ? columns.length : 0;
+        for (var i:int = 0; i < n; i++)
+        {
+            if (columns[i].visible)
+                w += columns[i].width;
+        }
+
+        return w;
+    }
+
+    /
+       @private
+     
+
+    mx_internal function setupRendererFromData(c:DataGridColumn, item:IListItemRenderer, data:Object):void
+    {
+        var rowData:DataGridListData = DataGridListData(makeListData(data, itemToUID(data), 0, c.colNum, c));
+        if (item is IDropInListItemRenderer)
+            IDropInListItemRenderer(item).listData = data ? rowData : null;
+        item.data = data;
+        item.explicitWidth = getWidthOfItem(item, c);
+        UIComponentGlobals.layoutManager.validateClient(item, true);
+    }
+
+    /
+       @private
+     
+    override public function measureHeightOfItems(index:int = -1, count:int = 0):Number
+    {
+        return measureHeightOfItemsUptoMaxHeight(index, count);
+    }
+
+    /
+       @private
+     
+    mx_internal function measureHeightOfItemsUptoMaxHeight(index:int = -1, count:int = 0, maxHeight:Number = -1):Number
+    {
+        if (!columns.length)
+            return rowHeight  count;
+
+        var h:Number = 0;
+
+        var item:IListItemRenderer;
+        var c:DataGridColumn;
+        var ch:Number = 0;
+        var n:int;
+        var j:int;
+
+        var paddingTop:Number = getStyle("paddingTop");
+        var paddingBottom:Number = getStyle("paddingBottom");
+
+        var lockedCount:int = lockedRowCount;
+
+        if (headerVisible && count > 0 && index == -1)
+        {
+            h = calculateHeaderHeight();
+
+            if (maxHeight != -1 && h > maxHeight)
+            {
+                setRowCount(0);
+                return 0;
+            }
+
+            // trace(this + " header preferredHeight = " + h);
+            count --;
+            index = 0;
+        }
+
+        var bookmark:CursorBookmark = (iterator) ? iterator.bookmark : null;
+
+        var bMore:Boolean = iterator != null;
+        if (index != -1 && iterator)
+        {
+            try
+            {
+                iterator.seek(CursorBookmark.FIRST, index);
+            }
+            catch(e:ItemPendingError)
+            {
+                bMore = false;
+            }
+        }
+
+        if (lockedCount > 0)
+        {
+            try
+            {
+                collectionIterator.seek(CursorBookmark.FIRST,0);
+            }
+            catch(e:ItemPendingError)
+            {
+                bMore = false;
+            }
+        }
+
+        for (var i:int = 0; i < count; i++)
+        {
+            var data:Object;
+            if (bMore)
+            {
+                data = (lockedCount > 0) ? collectionIterator.current : iterator.current;
+                ch = 0;
+                n = columns.length;
+                for (j = 0; j < n; j++)
+                {
+                    c = columns[j];
+
+                    if (!c.visible)
+                        continue;
+
+                    item = c.getMeasuringRenderer(false, data);
+                    if (DisplayObject(item).parent == null)
+                        listContent.addChild(DisplayObject(item));
+                    setupRendererFromData(c, item, data);
+                    ch = Math.max(ch, variableRowHeight ? item.getExplicitOrMeasuredHeight() + paddingBottom + paddingTop : rowHeight);
+                }
+            }
+
+            if (maxHeight != -1 && (h + ch > maxHeight || !bMore))
+            {
+                try
+                {
+                    if (iterator)
+                        iterator.seek(bookmark, 0);
+                }
+                catch(e:ItemPendingError)
+                {
+                    // we don't recover here since we'd only get here if the first seek failed.
+                }
+                count = (headerVisible) ? i + 1 : i;
+                setRowCount(count);
+                return h;
+            }
+
+            h += ch;
+            if (iterator)
+            {
+                try
+                {
+                    bMore = iterator.moveNext();
+                    if (lockedCount > 0)
+                    {
+                        collectionIterator.moveNext();
+                        lockedCount--;
+                    }
+                }
+                catch(e:ItemPendingError)
+                {
+                    // if we run out of data, assume all remaining rows are the size of the previous row
+                    bMore = false;
+                }
+            }
+        }
+
+        if (iterator)
+        {
+            try
+            {
+                iterator.seek(bookmark, 0);
+            }
+            catch(e:ItemPendingError)
+            {
+                // we don't recover here since we'd only get here if the first seek failed.
+            }
+        }
+
+        // trace("calcheight = " + h);
+        return h;
+    }
+
+    /
+       @private
+     
+    mx_internal function calculateHeaderHeight():Number
+    {
+        if (!columns.length)
+            return rowHeight;
+
+        // block bad behavior from PDG
+        if (!listContent)
+            return rowHeight;
+
+        var item:IListItemRenderer;
+        var c:DataGridColumn;
+        var rowData:DataGridListData;
+        var ch:Number = 0;
+        var n:int;
+        var j:int;
+
+        var paddingTop:Number = getStyle("paddingTop");
+        var paddingBottom:Number = getStyle("paddingBottom");
+
+        if (showHeaders)
+        {
+            ch = 0;
+            n = columns.length;
+
+            if (_headerWordWrapPresent)
+            {
+                _headerHeight = _originalHeaderHeight;
+                _explicitHeaderHeight = _originalExplicitHeaderHeight;
+            }
+
+            for (j = 0; j < n; j++)
+            {
+                c = columns[j];
+
+                if (!c.visible)
+                    continue;
+
+                item = c.getMeasuringRenderer(true, c);
+                if (DisplayObject(item).parent == null)
+                    listContent.addChild(DisplayObject(item));
+                rowData = DataGridListData(makeListData(c, uid, 0, c.colNum, c));
+                rowMap[item.name] = rowData;
+                if (item is IDropInListItemRenderer)
+                    IDropInListItemRenderer(item).listData = rowData;
+                item.data = c;
+                item.explicitWidth = c.width;
+                UIComponentGlobals.layoutManager.validateClient(item, true);
+                ch = Math.max(ch, _explicitHeaderHeight ? headerHeight : item.getExplicitOrMeasuredHeight() + paddingBottom + paddingTop);
+
+                if (columnHeaderWordWrap(c))
+                    _headerWordWrapPresent = true;
+            }
+
+            if (_headerWordWrapPresent)
+            {
+                // take backups
+                _originalHeaderHeight = _headerHeight;
+                _originalExplicitHeaderHeight = _explicitHeaderHeight;
+
+                _headerHeight = ch;
+                _explicitHeaderHeight = true;
+            }
+        }
+        return ch;
+    }
+
+    private var _headerWordWrapPresent:Boolean = false;
+    private var _originalExplicitHeaderHeight:Boolean = false;
+    private var _originalHeaderHeight:Number = 0;
+
+    /
+       @private
+     
+    override protected function calculateRowHeight(data:Object, hh:Number, skipVisible:Boolean = false):Number
+    {
+        var item:IListItemRenderer;
+        var c:DataGridColumn;
+
+        var n:int = columns.length;
+        var j:int;
+        var k:int = 0;
+        var l:int = visibleLockedColumns.length;
+
+        if (skipVisible && visibleColumns.length == _columns.length)
+            return hh;
+
+        var paddingTop:Number = getStyle("paddingTop");
+        var paddingBottom:Number = getStyle("paddingBottom");
+
+        for (j = 0; j < n; j++)
+        {
+            // skip any columns that are visible
+            if (skipVisible && k < l && visibleLockedColumns[k].colNum == columns[j].colNum)
+            {
+                k++;
+                continue;
+            }
+            if (skipVisible && k - l < visibleColumns.length && visibleColumns[k - l].colNum == columns[j].colNum)
+            {
+                k++;
+                continue;
+            }
+            c = columns[j];
+
+            if (!c.visible)
+                continue;
+
+            item = c.getMeasuringRenderer(false, data);
+            if (DisplayObject(item).parent == null)
+                listContent.addChild(DisplayObject(item));
+            setupRendererFromData(c, item, data);
+            hh = Math.max(hh, item.getExplicitOrMeasuredHeight() + paddingBottom + paddingTop);
+        }
+        return hh;
+    }
+
+    /
+       @private
+     
+    override protected function scrollHandler(event:Event):void
+    {
+        if (event.target == verticalScrollBar ||
+            event.target == horizontalScrollBar)
+        {
+            // TextField.scroll bubbles so you might see it here
+            if (event is ScrollEvent)
+            {
+                if (!liveScrolling &&
+                    ScrollEvent(event).detail == ScrollEventDetail.THUMB_TRACK)
+                {
+                    return;
+                }
+
+                if (itemEditorInstance)
+                    endEdit(DataGridEventReason.OTHER);
+
+                var scrollBar:ScrollBar = ScrollBar(event.target);
+                var pos:Number = scrollBar.scrollPosition;
+
+                if (scrollBar == verticalScrollBar)
+                    verticalScrollPosition = pos;
+                else if (scrollBar == horizontalScrollBar)
+                    horizontalScrollPosition = pos;
+
+                super.scrollHandler(event);
+            }
+        }
+    }
+
+    private function displayingPartialRow():Boolean
+    {
+        var index:int = listItems.length - 1 - offscreenExtraRowsBottom;
+        if (rowInfo[index].y + rowInfo[index].height > listContent.heightExcludingOffsets - listContent.topOffset)
+            return true;
+        return false;
+    }
+
+    /
+       @private
+     
+    override protected function configureScrollBars():void
+    {
+        if (columnsInvalid)
+            return;
+
+        if (!displayableColumns)
+            return;
+
+        // for purposes of computing rows, we need to accomodate
+        // the case where all the visible columns are locked columns
+        var countableContentListItems:Array = this.listItems;
+        if (visibleColumns && !visibleColumns.length && visibleLockedColumns && visibleLockedColumns.length)
+            countableContentListItems = lockedColumnContent.listItems;
+            
+        var oldHorizontalScrollBar:Object = horizontalScrollBar;
+        var oldVerticalScrollBar:Object = verticalScrollBar;
+
+        var rowCount:int = countableContentListItems.length;
+        if (rowCount == 0)
+        {
+            // Get rid of any existing scrollbars.
+            if (oldHorizontalScrollBar || oldVerticalScrollBar)
+                // protect against situation where the scrollbars
+                // cause re-layout and the listContent is sized
+                // to zero because of number of lockedRowCount
+                if (listContent.height) 
+                    setScrollBarProperties(0, 0, 0, 0);
+
+            return;
+        }
+
+        // partial last rows don't count
+        if (rowCount > 1 && displayingPartialRow()) 
+            rowCount--;
+
+        // offset, when added to rowCount, is the index of the dataProvider
+        // item for that row.  IOW, row 10 in listItems is showing dataProvider
+        // item 10 + verticalScrollPosition - lockedRowCount;
+        var offset:int = verticalScrollPosition;
+        // don't count filler rows at the bottom either.
+        var fillerRows:int = 0;
+        while (rowCount && countableContentListItems[rowCount - 1].length == 0)
+        {
+            // as long as we're past the end of the collection, add up
+            // fillerRows
+            if (collection && rowCount + offset >= collection.length - lockedRowCount)
+            {
+                rowCount--;
+                ++fillerRows;
+            }
+            else
+                break;
+        }
+
+        // we have to scroll up.  We can't have filler rows unless the scrollPosition is 0
+        if (verticalScrollPosition > 0 && fillerRows > 0)
+        {
+            if (adjustVerticalScrollPositionDownward(Math.max(rowCount, 1)))
+                return;
+        }
+
+        rowCount -= (offscreenExtraRowsTop + offscreenExtraRowsBottom);
+
+        var collectionHasRows:Boolean = collection && collection.length > 0;
+
+        var colCount:int = (collectionHasRows && rowCount > 0) ? listItems[0].length : visibleColumns.length;
+
+        // if the last column is visible and partially offscreen (but it isn't the only
+        // column) then adjust the column count so we can scroll to see it
+        if (collectionHasRows && rowCount > 0 && colCount > 1 && 
+            listItems[0][colCount - 1].x + 
+            visibleColumns[colCount - 1].width > (displayWidth - listContent.x + viewMetrics.left))
+            colCount--;
+        else if (colCount > 1 && !collectionHasRows)
+        {
+            // the slower computation requires adding up the previous columns
+            var colX:int = 0;
+            for (var i:int = 0; i < visibleColumns.length; i++)
+            {
+                colX += visibleColumns[i].width;
+            }
+            if (colX > (displayWidth - listContent.x + viewMetrics.left))
+                colCount--;
+        }
+
+        // trace("configureSB", verticalScrollPosition);
+
+        setScrollBarProperties(displayableColumns.length - lockedColumnCount, Math.max(colCount, 1),
+                            collection ? collection.length - lockedRowCount : 0,
+                            Math.max(rowCount, 1));
+
+        if ((!verticalScrollBar || !verticalScrollBar.visible) && collection &&
+            collection.length - lockedRowCount > rowCount)
+            maxVerticalScrollPosition = collection.length - lockedRowCount - rowCount;
+        if ((!horizontalScrollBar || !horizontalScrollBar.visible) && 
+            displayableColumns.length - lockedColumnCount  > colCount - lockedColumnCount)
+            maxHorizontalScrollPosition = displayableColumns.length - lockedColumnCount - colCount;
+    }
+
+    /
+       @private
+       Makes verticalScrollPosition smaller until it is 0 or there
+       are no empty rows.  This is needed if we're scrolled to the
+       bottom and something is deleted or the rows resize so more
+       rows can be shown.
+     
+    private function adjustVerticalScrollPositionDownward(rowCount:int):Boolean
+    {
+        var bookmark:CursorBookmark = iterator.bookmark;
+
+        // add up how much space we're currently taking with valid items
+        var h:Number = 0;
+
+        var item:IListItemRenderer;
+        var c:DataGridColumn;
+        var ch:Number = 0;
+        var n:int;
+        var j:int;
+
+        var paddingTop:Number = getStyle("paddingTop");
+        var paddingBottom:Number = getStyle("paddingBottom");
+
+        h = rowInfo[rowCount - 1].y + rowInfo[rowCount - 1].height;
+        h = listContent.heightExcludingOffsets - listContent.topOffset - h;
+
+        // back up one
+        var numRows:int = 0;
+        try
+        {
+            if (iterator.afterLast)
+                iterator.seek(CursorBookmark.LAST, 0)
+            else
+                var bMore:Boolean = iterator.movePrevious();
+        }
+        catch(e:ItemPendingError)
+        {
+            bMore = false;
+        }
+        if (!bMore)
+        {
+            // reset to 0;
+            super.verticalScrollPosition = 0;
+            try
+            {
+                iterator.seek(CursorBookmark.FIRST, 0);
+                // sometimes, if the iterator is invalid we'll get lucky and succeed
+                // here, then we have to make the iterator valid again
+                if (!iteratorValid)
+                {
+                    iteratorValid = true;
+                    lastSeekPending = null;
+                }
+            }
+            catch(e:ItemPendingError)
+            {
+                lastSeekPending = new ListBaseSeekPending(CursorBookmark.FIRST, 0);
+                e.addResponder(new ItemResponder(seekPendingResultHandler, seekPendingFailureHandler,
+                                                lastSeekPending));
+                iteratorValid = false;
+                invalidateList();
+                return true;
+            }
+            updateList();
+            return true;
+        }
+    
+        // now work backwards to see how many more rows we need to create
+        while (h > 0 && bMore)
+        {
+            var data:Object;
+            if (bMore)
+            {
+                data = iterator.current;
+                ch = 0;
+                n = columns.length;
+                for (j = 0; j < n; j++)
+                {
+                    c = columns[j];
+
+                    if (!c.visible)
+                        continue;
+
+                    if (variableRowHeight)
+                    {
+                        item = c.getMeasuringRenderer(false, data);
+                        if (DisplayObject(item).parent == null)
+                            listContent.addChild(DisplayObject(item));
+                        setupRendererFromData(c, item, data);
+                    }
+                    ch = Math.max(ch, variableRowHeight ? item.getExplicitOrMeasuredHeight() + paddingBottom + paddingTop : rowHeight);
+                }
+            }
+            h -= ch;
+            try
+            {
+                bMore = iterator.movePrevious();
+                numRows++;
+            }
+            catch(e:ItemPendingError)
+            {
+                // if we run out of data, assume all remaining rows are the size of the previous row
+                bMore = false;
+            }
+        }
+        // if we overrun, go back one.
+        if (h < 0)
+        {
+            numRows--;
+        }
+
+        iterator.seek(bookmark, 0);
+        verticalScrollPosition = Math.max(0, verticalScrollPosition - numRows);
+
+        // make sure we get through configureScrollBars w/o coming in here.
+        if (numRows > 0 && !variableRowHeight)
+            configureScrollBars();
+
+        return (numRows > 0);
+    }
+
+    /
+       @private
+     
+    override public function calculateDropIndex(event:DragEvent = null):int
+    {
+        if (event)
+        {
+            var item:IListItemRenderer;
+            var lastItem:IListItemRenderer;
+            var pt:Point = new Point(event.localX, event.localY);
+            pt = DisplayObject(event.target).localToGlobal(pt);
+            pt = listContent.globalToLocal(pt);
+
+            var n:int = listItems.length;
+            for (var i:int = 0; i < n; i++)
+            {
+                if (listItems[i][0])
+                    lastItem = listItems[i][0];
+                    
+                if (rowInfo[i].y <= pt.y && pt.y < rowInfo[i].y + rowInfo[i].height)
+                {
+                    item = listItems[i][0];
+                    break;
+                }
+            }
+            if (!item && lockedRowContent)
+            {
+                pt = listContent.localToGlobal(pt);
+                pt = lockedRowContent.globalToLocal(pt);
+                n = lockedRowContent.listItems.length;
+                for (i = 0; i < n; i++)
+                {
+                    if (lockedRowContent.rowInfo[i].y <= pt.y && pt.y < lockedRowContent.rowInfo[i].y + lockedRowContent.rowInfo[i].height)
+                    {
+                        item = lockedRowContent.listItems[i][0];
+                        break;
+                    }
+                }
+            }
+
+
+            if (item)
+                lastDropIndex = itemRendererToIndex(item);
+            else
+            {
+                if (lastItem)
+                    lastDropIndex = itemRendererToIndex(lastItem) + 1;
+                else
+                    lastDropIndex = collection ? collection.length : 0;
+            }
+        }
+
+        return lastDropIndex;
+    }
+    
+    /
+       @private
+     
+    override protected function drawRowBackgrounds():void
+    {
+        drawRowGraphics(listContent);
+    }
+
+    /
+       @private
+     
+    protected function drawRowGraphics(contentHolder:ListBaseContentHolder):void
+    {
+        var rowBGs:Sprite = Sprite(contentHolder.getChildByName("rowBGs"));
+        if (!rowBGs)
+        {
+            rowBGs = new FlexSprite();
+            rowBGs.mouseEnabled = false;
+            rowBGs.name = "rowBGs";
+            contentHolder.addChildAt(rowBGs, 0);
+        }
+
+        var colors:Array;
+
+        colors = getStyle("alternatingItemColors");
+
+        if (!colors || colors.length == 0)
+        {
+            while (rowBGs.numChildren > n)
+            {
+                rowBGs.removeChildAt(rowBGs.numChildren - 1);
+            }
+            return;
+        }
+
+        StyleManager.getColorNames(colors);
+
+        var curRow:int = 0;
+
+        var i:int = 0;
+        var actualRow:int = verticalScrollPosition;
+        var n:int = contentHolder.listItems.length;
+
+        while (curRow < n)
+        {
+            drawRowBackground(rowBGs, i++, contentHolder.rowInfo[curRow].y, contentHolder.rowInfo[curRow].height, 
+                colors[actualRow % colors.length], actualRow);
+            curRow++;
+            actualRow++;
+        }
+
+        while (rowBGs.numChildren > i)
+        {
+            rowBGs.removeChildAt(rowBGs.numChildren - 1);
+        }
+    }
+
+    /
+       @private
+     
+    override protected function mouseEventToItemRenderer(event:MouseEvent):IListItemRenderer
+    {
+        var r:IListItemRenderer;
+
+        r = super.mouseEventToItemRenderer(event);
+
+        return r == itemEditorInstance ? null : r;
+    }
+
+    /
+       @private
+     
+    override protected function get dragImage():IUIComponent
+    {
+        var image:DataGridDragProxy = new DataGridDragProxy();
+        image.owner = this;
+        image.moduleFactory = moduleFactory;
+        return image;
+    }
+
+    //--------------------------------------------------------------------------
+    //
+    //  Methods
+    //
+    //--------------------------------------------------------------------------
+
+
+    /
+       @private
+       Move a column to a new position in the columns array, shifting all
+       other columns left or right and updating the sortIndex and
+       lastSortIndex variables accordingly.
+     
+    mx_internal function shiftColumns(oldIndex:int, newIndex:int,
+                                      trigger:Event = null):void
+    {
+        if (newIndex >= 0 && oldIndex != newIndex)
+        {
+            var incr:int = oldIndex < newIndex ? 1 : -1;
+            for (var i:int = oldIndex; i != newIndex; i += incr)
+            {
+                var j:int = i + incr;
+                var c:DataGridColumn = _columns[i];
+                _columns[i] = _columns[j];
+                _columns[j] = c;
+                _columns[i].colNum = i;
+                _columns[j].colNum = j;
+            }
+
+            if (sortIndex == oldIndex)
+                sortIndex += newIndex - oldIndex;
+            else if ((oldIndex < sortIndex && sortIndex <= newIndex)
+                    || (newIndex <= sortIndex && sortIndex < oldIndex))
+                sortIndex -= incr;
+
+            if (lastSortIndex == oldIndex)
+                lastSortIndex += newIndex - oldIndex;
+            else if ((oldIndex < lastSortIndex
+                        && lastSortIndex <= newIndex)
+                    || (newIndex <= lastSortIndex
+                        && lastSortIndex < oldIndex))
+                lastSortIndex -= incr;
+
+            columnsInvalid = true;
+            itemsSizeChanged = true;
+            invalidateDisplayList();
+            if (lockedColumnHeader)
+                lockedColumnHeader.invalidateDisplayList();
+
+            var icEvent:IndexChangedEvent =
+                new IndexChangedEvent(IndexChangedEvent.HEADER_SHIFT);
+            icEvent.oldIndex = oldIndex;
+            icEvent.newIndex = newIndex;
+            icEvent.triggerEvent = trigger;
+            dispatchEvent(icEvent);
+        }
+    }
+
+    /
+       @private
+       Searches the iterator to determine columns.
+     
+    private function generateCols():void
+    {
+        if (collection.length > 0)
+        {
+            var col:DataGridColumn;
+            var newCols:Array = [];
+            var cols:Array;
+            if (dataProvider)
+            {
+                try
+                {
+                    iterator.seek(CursorBookmark.FIRST);
+                    if (!iteratorValid)
+                    {
+                        iteratorValid = true;
+                        lastSeekPending = null;
+                    }
+                }
+                catch(e:ItemPendingError)
+                {
+                    lastSeekPending = new ListBaseSeekPending(CursorBookmark.FIRST, 0);
+                    e.addResponder(new ItemResponder(generateColumnsPendingResultHandler, seekPendingFailureHandler,
+                                                    lastSeekPending));
+                    iteratorValid = false;
+                    return;
+                }
+                var info:Object =
+                    ObjectUtil.getClassInfo(iterator.current,
+                                            ["uid", "mx_internal_uid"]);
+
+                if (info)
+                    cols = info.properties;
+            }
+
+            if (!cols)
+            {
+                // introspect the first item and use its fields
+                var itmObj:Object = iterator.current;
+                for (var p:String in itmObj)
+                {
+                    if (p != "uid")
+                    {
+                        col = new DataGridColumn();
+                        col.dataField = p;
+                        newCols.push(col);
+                    }
+                }
+            }
+            else
+            {
+                // this is an old recordset - use its columns
+                var n:int = cols.length;
+                var colName:Object;
+                for (var i:int = 0; i < n; i++)
+                {
+                    colName = cols[i];
+                    if (colName is QName)
+                        colName = QName(colName).localName;
+                    col = new DataGridColumn();
+                    col.dataField = String(colName);
+                    newCols.push(col);
+                }
+            }
+            columns = newCols;
+            generatedColumns = true;
+        }
+    }
+
+    /
+       @private
+     
+    private function generateColumnsPendingResultHandler(data:Object, info:ListBaseSeekPending):void
+    {
+        // generate cols if we haven't successfully generated them
+        if (columns.length == 0)
+            generateCols();
+        seekPendingResultHandler(data, info);
+    }
+
+    /
+       @private
+     
+    private function calculateColumnSizes():void
+    {
+        var delta:Number;
+        var n:int;
+        var i:int;
+        var totalWidth:Number = 0;
+        var col:DataGridColumn;
+        var cw:Number;
+
+        if (columns.length == 0)
+        {
+            visibleColumns = [];
+            visibleLockedColumns = [];
+            lockedColumnWidth = 0;
+            columnsInvalid = false;
+            return;
+        }
+
+        // no columns are visible so figure out which ones
+        // to make visible
+        if (columnsInvalid)
+        {
+            columnsInvalid = false;
+            visibleColumns = [];
+            visibleLockedColumns = [];
+            lockedColumnWidth = 0;
+
+            if (minColumnWidthInvalid)
+            {
+                n = columns.length;
+                for (i = 0; i < n; i++)
+                {
+                    columns[i].minWidth = minColumnWidth;
+                }
+                minColumnWidthInvalid = false;
+            }
+
+            displayableColumns = null;
+            n = _columns.length;
+            for (i = 0; i < n; i++)
+            {
+                if (displayableColumns && _columns[i].visible)
+                {
+                    displayableColumns.push(_columns[i]);
+                }
+                else if (!displayableColumns && !_columns[i].visible)
+                {
+                    displayableColumns = new Array(i);
+                    for (var k:int = 0; k < i; k++)
+                        displayableColumns[k] = _columns[k];
+                }
+            }
+
+            // If there are no hidden columns, displayableColumns points to
+            // _columns (we don't need a duplicate copy of _columns).
+            if (!displayableColumns)
+                displayableColumns = _columns;
+
+            // if no hscroll, then pack columns in available space
+            if (horizontalScrollPolicy == ScrollPolicy.OFF)
+            {
+                n = displayableColumns.length;
+                for (i = 0; i < n; i++)
+                {
+                    col = displayableColumns[i];
+
+                    if (i < lockedColumnCount)
+                    {
+                        visibleLockedColumns.push(col);
+                    }
+                    else
+                        visibleColumns.push(col);
+                }
+            }
+            else
+            {
+                n = displayableColumns.length;
+                for (i = 0; i < n; i++)
+                {
+                    if (i >= lockedColumnCount &&
+                        i < lockedColumnCount + horizontalScrollPosition)
+                    {
+                        continue;
+                    }
+
+                    col = displayableColumns[i];
+                    if (col.preferredWidth < col.minWidth)
+                        col.preferredWidth = col.minWidth;
+
+                    if (totalWidth < displayWidth)
+                    {
+                        if (i < lockedColumnCount)
+                        {
+                            lockedColumnWidth += Math.max(isNaN(col.explicitWidth) ? col.preferredWidth : col.explicitWidth, col.minWidth);
+                            visibleLockedColumns.push(col);
+                        }
+                        else
+                            visibleColumns.push(col);
+                        totalWidth += Math.max(isNaN(col.explicitWidth) ? col.preferredWidth : col.explicitWidth, col.minWidth);
+                        if (col.width != col.preferredWidth)
+                            col.setWidth(col.preferredWidth);
+                    }
+                    else
+                    {
+                        if (visibleColumns.length == 0)
+                            visibleColumns.push(displayableColumns[0]);
+                        break;
+                    }
+                }
+            }
+        }
+
+        var lastColumn:DataGridColumn;
+        var newSize:Number;
+
+        // if no hscroll, then pack columns in available space
+        if (horizontalScrollPolicy == ScrollPolicy.OFF)
+        {
+            var numResizable:int = 0;
+            var fixedWidth:Number = 0;
+
+            // trace("resizing columns");
+
+            // count how many resizable columns and how wide they are
+            n = visibleColumns.length;
+            for (i = 0; i < n; i++)
+            {
+                // trace("column " + i + " width = " + visibleColumns[i].width);
+                if (visibleColumns[i].resizable && !visibleColumns[i].newlyVisible)
+                {
+                    // trace("    resizable");
+                    if (!isNaN(visibleColumns[i].explicitWidth))
+                    {
+                        // trace("    explicit width " + visibleColumns[i].width);
+                        fixedWidth += visibleColumns[i].width;
+                    }
+                    else
+                    {
+                        // trace("    implicitly resizable");
+                        numResizable++;
+                        fixedWidth += visibleColumns[i].minWidth;
+                        // trace("    minWidth " + visibleColumns[i].minWidth);
+                    }
+                }
+                else
+                {
+                    // trace("    not resizable");
+                    fixedWidth += visibleColumns[i].width;
+                }
+
+                totalWidth += visibleColumns[i].width;
+            }
+            n = visibleLockedColumns.length;
+            for (i = 0; i < n; i++)
+            {
+                // trace("column " + i + " width = " + visibleLockedColumns[i].width);
+                if (visibleLockedColumns[i].resizable && !visibleLockedColumns[i].newlyVisible)
+                {
+                    // trace("    resizable");
+                    if (!isNaN(visibleLockedColumns[i].explicitWidth))
+                    {
+                        // trace("    explicit width " + visibleLockedColumns[i].width);
+                        fixedWidth += visibleLockedColumns[i].width;
+                    }
+                    else
+                    {
+                        // trace("    implicitly resizable");
+                        numResizable++;
+                        fixedWidth += visibleLockedColumns[i].minWidth;
+                        // trace("    minWidth " + visibleLockedColumns[i].minWidth);
+                    }
+                }
+                else
+                {
+                    // trace("    not resizable");
+                    fixedWidth += visibleLockedColumns[i].width;
+                }
+
+                totalWidth += visibleLockedColumns[i].width;
+            }
+            // trace("totalWidth = " + totalWidth);
+            // trace("displayWidth = " + displayWidth);
+
+            var ratio:Number;
+            var newTotal:Number = displayWidth;
+            var minWidth:Number;
+            if (displayWidth > fixedWidth && numResizable)
+            {
+                // we have flexible columns and room to honor minwidths and non-resizable
+                // trace("have enough room");
+
+                // divide and distribute the excess among the resizable
+                n = visibleLockedColumns.length;
+                for (i = 0; i < n; i++)
+                {
+                    if (visibleLockedColumns[i].resizable && !visibleLockedColumns[i].newlyVisible && isNaN(visibleLockedColumns[i].explicitWidth))
+                    {
+                        lastColumn = visibleLockedColumns[i];
+                        if (totalWidth > displayWidth)
+                            ratio = (lastColumn.width - lastColumn.minWidth)/ (totalWidth - fixedWidth);
+                        else
+                            ratio = lastColumn.width / totalWidth;
+                        newSize = lastColumn.width - (totalWidth - displayWidth)  ratio;
+                        minWidth = visibleLockedColumns[i].minWidth;
+                        visibleLockedColumns[i].setWidth(newSize > minWidth ? newSize : minWidth);
+                        // trace("column " + i + " set to " + visibleLockedColumns[i].width);
+                    }
+                    newTotal -= visibleLockedColumns[i].width;
+                    visibleLockedColumns[i].newlyVisible = false;
+                }
+                n = visibleColumns.length;
+                for (i = 0; i < n; i++)
+                {
+                    if (visibleColumns[i].resizable && !visibleColumns[i].newlyVisible && isNaN(visibleColumns[i].explicitWidth))
+                    {
+                        lastColumn = visibleColumns[i];
+                        if (totalWidth > displayWidth)
+                            ratio = (lastColumn.width - lastColumn.minWidth)/ (totalWidth - fixedWidth);
+                        else
+                            ratio = lastColumn.width / totalWidth;
+                        newSize = lastColumn.width - (totalWidth - displayWidth)  ratio;
+                        minWidth = visibleColumns[i].minWidth;
+                        visibleColumns[i].setWidth(newSize > minWidth ? newSize : minWidth);
+                        // trace("column " + i + " set to " + visibleColumns[i].width);
+                    }
+                    newTotal -= visibleColumns[i].width;
+                    visibleColumns[i].newlyVisible = false;
+                }
+                if (newTotal && lastColumn)
+                {
+                    // trace("excess = " + newTotal);
+                    lastColumn.setWidth(lastColumn.width + newTotal);
+                }
+            }
+            else // can't honor minwidth and non-resizables so just scale everybody
+            {
+                // trace("too small or too big");
+                n = visibleLockedColumns.length;
+                for (i = 0; i < n; i++)
+                {
+                    lastColumn = visibleLockedColumns[i];
+                    ratio = lastColumn.width / totalWidth;
+                    //totalWidth -= visibleLockedColumns[i].width;
+                    newSize = displayWidth  ratio;
+                    lastColumn.setWidth(newSize);
+                    lastColumn.explicitWidth = NaN;
+                    // trace("column " + i + " set to " + visibleLockedColumns[i].width);
+                    newTotal -= newSize;
+                }
+                n = visibleColumns.length;
+                for (i = 0; i < n; i++)
+                {
+                    lastColumn = visibleColumns[i];
+                    ratio = lastColumn.width / totalWidth;
+                    //totalWidth -= visibleColumns[i].width;
+                    newSize = displayWidth  ratio;
+                    lastColumn.setWidth(newSize);
+                    lastColumn.explicitWidth = NaN;
+                    // trace("column " + i + " set to " + visibleColumns[i].width);
+                    newTotal -= newSize;
+                }
+                if (newTotal && lastColumn)
+                {
+                    // trace("excess = " + newTotal);
+                    lastColumn.setWidth(lastColumn.width + newTotal);
+                }
+            }
+        }
+        else // we have or can have an horizontalScrollBar
+        {
+            totalWidth = 0;
+            // drop any that completely overflow
+            n = visibleColumns.length;
+            for (i = 0; i < n; i++)
+            {
+                if (totalWidth > displayWidth - lockedColumnWidth)
+                {
+                    visibleColumns.splice(i);
+                    break;
+                }
+                totalWidth += isNaN(visibleColumns[i].explicitWidth) ? visibleColumns[i].preferredWidth : visibleColumns[i].explicitWidth;
+            }
+
+            if (visibleColumns.length == 0)
+                return;
+
+            i = visibleColumns[visibleColumns.length - 1].colNum + 1;
+            // add more if we have room
+            if (totalWidth < displayWidth - lockedColumnWidth && i < displayableColumns.length)
+            {
+                n = displayableColumns.length;
+                for (; i < n && totalWidth < displayWidth - lockedColumnWidth; i++)
+                {
+                    col = displayableColumns[i];
+
+                    visibleColumns.push(col);
+                    totalWidth += isNaN(col.explicitWidth) ? col.preferredWidth : col.explicitWidth;
+                }
+            }
+            else if (totalWidth < displayWidth - lockedColumnWidth && horizontalScrollPosition > 0)
+            {
+                while (totalWidth < displayWidth - lockedColumnWidth && horizontalScrollPosition > 0)
+                {
+                    col = displayableColumns[lockedColumnCount + horizontalScrollPosition - 1];
+                    cw = isNaN(col.explicitWidth) ? col.preferredWidth : col.explicitWidth;
+                    if (cw < displayWidth - lockedColumnWidth - totalWidth)
+                    {
+                        visibleColumns.splice(0, 0, col);
+                        super.horizontalScrollPosition--;
+                        totalWidth += cw;
+                    }
+                    else
+                        break;
+                }
+            }
+
+            lastColumn = visibleColumns[visibleColumns.length - 1];
+            cw = isNaN(lastColumn.explicitWidth) ? lastColumn.preferredWidth : lastColumn.explicitWidth;
+            newSize = cw + displayWidth - lockedColumnWidth - totalWidth;
+            if (lastColumn == displayableColumns[displayableColumns.length - 1]
+                && lastColumn.resizable 
+                && newSize >= lastColumn.minWidth
+                && newSize > cw)
+            {
+                lastColumn.setWidth(newSize);
+                maxHorizontalScrollPosition =
+                    displayableColumns.length - visibleColumns.length;
+            }
+            else
+            {
+                maxHorizontalScrollPosition =
+                    displayableColumns.length - visibleColumns.length + 1;
+            }
+        }
+        lockedColumnWidth = 0;
+        if (visibleLockedColumns.length)
+        {
+            n = visibleLockedColumns.length;
+            for (i = 0; i < n; i++)
+            {
+                col = visibleLockedColumns[i];
+                lockedColumnWidth += col.width;
+            }
+        }
+    }
+
+    /
+       @private
+       If there is no horizontal scroll bar, changes the display width of other columns when
+       one column's width is changed.
+       @param col column whose width is changed
+       @param w width of column
+     
+    override mx_internal function resizeColumn(col:int, w:Number):void
+    {
+        // there's a window of time before we calccolumnsizes
+        // that someone can set width in AS
+        if ((!visibleColumns || visibleColumns.length == 0) && (!visibleLockedColumns || visibleLockedColumns.length == 0))
+        {
+            _columns[col].setWidth(w);
+            _columns[col].preferredWidth = w;
+            return;
+        }
+
+        if (w < _columns[col].minWidth)
+            w = _columns[col].minWidth;
+
+        // hScrollBar is present
+        if (_horizontalScrollPolicy == ScrollPolicy.ON ||
+            _horizontalScrollPolicy == ScrollPolicy.AUTO)
+        {
+            // adjust the column's width
+            _columns[col].setWidth(w);
+            _columns[col].explicitWidth = w;
+            _columns[col].preferredWidth = w;
+            columnsInvalid = true;
+        }
+        else
+        {
+            // find the columns in the set of visible columns;
+            var n:int = _columns.length;
+            var i:int;
+            for (i = 0; i < n; i++)
+            {
+                if (col == _columns[i].colNum)
+                    break;
+            }
+            if (i >= _columns.length - 1)   // no resize of right most column
+                return;
+            col = i;
+
+            // we want all cols's new widths to the right of this to be in proportion
+            // to what they were before the stretch.
+
+            // get the original space to the right not taken up by the column
+            var totalSpace:Number = 0;
+            var lastColumn:DataGridColumn;
+            var newWidth:Number;
+            //non-resizable columns don't count though
+            for (i = col + 1; i < n; i++)
+            {
+                if (_columns[i].visible)
+                    if (_columns[i].resizable)
+                        totalSpace += _columns[i].width;
+            }
+
+            var newTotalSpace:Number = _columns[col].width - w + totalSpace;
+            if (totalSpace)
+            {
+                _columns[col].setWidth(w);
+                _columns[col].explicitWidth = w;
+            }
+
+            var totX:Number = 0;
+            // resize the columns to the right proportionally to what they were
+            for (i = col + 1; i < n; i++)
+            {
+                if (_columns[i].visible)
+                    if (_columns[i].resizable)
+                    {
+                        newWidth = Math.floor(_columns[i].width
+                                                     newTotalSpace / totalSpace);
+                        if (newWidth < _columns[i].minWidth)
+                            newWidth = _columns[i].minWidth;
+                        _columns[i].setWidth(newWidth);
+                        totX += _columns[i].width;
+                        lastColumn = _columns[i];
+                    }
+            }
+
+            if (totX > newTotalSpace)
+            {
+                // if excess then should be taken out only from changing column
+                // cause others would have already gone to their minimum
+                newWidth = _columns[col].width - totX + newTotalSpace;
+                if (newWidth < _columns[col].minWidth)
+                    newWidth = _columns[col].minWidth;
+                _columns[col].setWidth(newWidth);
+            }
+            else if (lastColumn)
+            {
+                // if less then should be added in last column
+                // dont need to check for minWidth as we are adding
+                lastColumn.setWidth(lastColumn.width - totX + newTotalSpace);
+            }
+        }
+        itemsSizeChanged = true
+
+        invalidateDisplayList();
+    }

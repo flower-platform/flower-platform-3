@@ -886,11 +886,11 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		return unlockedNow;		
 	}
 
-	//TODO : Temporary code (see #6777)
-	/**
-	 * @flowerModelElementId _rZ8D0CJvEeKovflGC_YAeQ
-	 */
-	protected abstract File getEditableResourceFile(EditableResource editableResource);
+//	//TODO : Temporary code (see #6777)
+//	/**
+//	 * @flowerModelElementId _rZ8D0CJvEeKovflGC_YAeQ
+//	 */
+//	protected abstract File getEditableResourceFile(EditableResource editableResource);
 	
 	/**
 	 * @return the <code>friendlName</code> encoded.

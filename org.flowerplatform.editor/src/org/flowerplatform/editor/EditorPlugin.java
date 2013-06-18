@@ -7,8 +7,11 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.remote.ContentTypeDescriptor;
+import org.flowerplatform.editor.remote.EditableResource;
+import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,6 +87,27 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 			logger.debug("Content types and compatible editors: {}", contentTypeDescriptorsList);
 			logger.debug("File extensions to content types mappings: {}", fileExtensionToContentTypeMap);
 		}
+		
+		// some custom serialzation descriptors
+		new CustomSerializationDescriptor(EditableResource.class)
+			.addDeclaredProperty("dirty")
+			.addDeclaredProperty("lockOwner")
+			.addDeclaredProperty("editorInput")
+			.addDeclaredProperty("label")
+			.addDeclaredProperty("lockUpdateTime")
+			.addDeclaredProperty("masterEditorStatefulClientId")
+			.addDeclaredProperty("iconUrl")
+			.addDeclaredProperty("locked")
+			.addDeclaredProperty("lockExpireTime")
+			.addDeclaredProperty("editorStatefulClientId")
+			.register();
+	
+		new CustomSerializationDescriptor(EditableResourceClient.class)
+			.addDeclaredProperty("name")
+			.addDeclaredProperty("login")
+			.addDeclaredProperty("clientId")
+			.register();
+
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

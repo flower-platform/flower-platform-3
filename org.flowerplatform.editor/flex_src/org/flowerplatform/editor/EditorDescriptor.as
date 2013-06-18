@@ -1,8 +1,14 @@
 package  org.flowerplatform.editor {
+	import com.crispico.flower.util.layout.Workbench;
+	
 	import mx.collections.ArrayCollection;
+	import mx.core.FlexGlobals;
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.editor.BasicEditorDescriptor;
+	import org.flowerplatform.editor.remote.EditorStatefulClient;
+	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 
@@ -36,26 +42,26 @@ package  org.flowerplatform.editor {
 			throw new Error("This method should be implemented.");
 		}
 		
-//		/**
-//		 * Abstract method.
-//		 * 
-//		 * <p>
-//		 * Should create a new (unpopulated) instance of the corresponding
-//		 * <code>EditorFrontend</code>.
-//		 * 
-//		 * @flowerModelElementId _ROn7MKgVEeGLHLPNLE28hw
-//		 */
-//		protected function createViewInstance():EditorFrontend {
-//			throw new Error("This method should be implemented.");
-//		}
-//		
-//		/**
-//		 * Adds a new view in the global <code>Workbench</code>, which will then
-//		 * trigger the creation of the view (i.e. <code>EditorFrontend</code>).
-//		 * 
-//		 * @flowerModelElementId _Fk6KAKseEeGkXYK9TZw9sA
-//		 */
-//		override public function openEditor(editableResourcePath:String, forceNewEditor:Boolean = false, openForcedByServer:Boolean = false, handleAsClientSubscription:Boolean = false):UIComponent {
+		/**
+		 * Abstract method.
+		 * 
+		 * <p>
+		 * Should create a new (unpopulated) instance of the corresponding
+		 * <code>EditorFrontend</code>.
+		 * 
+		 * @flowerModelElementId _ROn7MKgVEeGLHLPNLE28hw
+		 */
+		protected function createViewInstance():EditorFrontend {
+			throw new Error("This method should be implemented.");
+		}
+		
+		/**
+		 * Adds a new view in the global <code>Workbench</code>, which will then
+		 * trigger the creation of the view (i.e. <code>EditorFrontend</code>).
+		 * 
+		 * @flowerModelElementId _Fk6KAKseEeGkXYK9TZw9sA
+		 */
+		override public function openEditor(editableResourcePath:String, forceNewEditor:Boolean = false, openForcedByServer:Boolean = false, handleAsClientSubscription:Boolean = false):UIComponent {
 //			if (!forceNewEditor) {
 //				// we want to see if the resource is already open by this type of editor
 //				// if force = true => it doesn't matter
@@ -76,20 +82,20 @@ package  org.flowerplatform.editor {
 //					}
 //				}
 //			}
-//			
-//			var viewLayoutData:ViewLayoutData = new ViewLayoutData();
-//			viewLayoutData.viewId = getId();
-//			viewLayoutData.customData = editableResourcePath;
-//			
-//			// we need to pass this info to .createView(), so using a suffix is the only way
-//			if (openForcedByServer) {
-//				viewLayoutData.customData += OPEN_FORCED_BY_SERVER_EDITOR_INPUT_MARKER;
-//			}
-//			viewLayoutData.isEditor = true;
-//			
-//			var workbench:Workbench = SingletonRefsFromPrePluginEra.workbench;
-//			return workbench.addEditorView(viewLayoutData, true);		
-//		}
+			
+			var viewLayoutData:ViewLayoutData = new ViewLayoutData();
+			viewLayoutData.viewId = getId();
+			viewLayoutData.customData = editableResourcePath;
+			
+			// we need to pass this info to .createView(), so using a suffix is the only way
+			if (openForcedByServer) {
+				viewLayoutData.customData += OPEN_FORCED_BY_SERVER_EDITOR_INPUT_MARKER;
+			}
+			viewLayoutData.isEditor = true;
+			
+			var workbench:Workbench = Workbench(FlexGlobals.topLevelApplication.workbench);
+			return workbench.addEditorView(viewLayoutData, true);		
+		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {			
 			return null;
@@ -125,23 +131,22 @@ package  org.flowerplatform.editor {
 		 * @flowerModelElementId _cBMwJqWoEeGAT8h2VXeJdg
 		 */
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {	
-//			var editor:EditorFrontend = createViewInstance();
-//
-//			var openForcedByServer:Boolean = false;
-//			if (Utils.endsWith(viewLayoutData.customData, OPEN_FORCED_BY_SERVER_EDITOR_INPUT_MARKER)) {
-//				// an open forced by server => cleanup the editorInput
-//				viewLayoutData.customData = viewLayoutData.customData.replace(OPEN_FORCED_BY_SERVER_EDITOR_INPUT_MARKER, "");
-//				openForcedByServer = true;
-//			}
-//				
-//			var editableResourcePath:String = viewLayoutData.customData;
-//			
-//			var editorStatefulClient:EditorStatefulClient = getOrCreateEditorStatefulClient(editableResourcePath);
-//			
-//			StatefulClientRegistry.INSTANCE.register(editorStatefulClient, { editorFrontend: editor, openForcedByServer: openForcedByServer });
-//			
-//			return editor;
-			return null;
+			var editor:EditorFrontend = createViewInstance();
+
+			var openForcedByServer:Boolean = false;
+			if (Utils.endsWith(viewLayoutData.customData, OPEN_FORCED_BY_SERVER_EDITOR_INPUT_MARKER)) {
+				// an open forced by server => cleanup the editorInput
+				viewLayoutData.customData = viewLayoutData.customData.replace(OPEN_FORCED_BY_SERVER_EDITOR_INPUT_MARKER, "");
+				openForcedByServer = true;
+			}
+				
+			var editableResourcePath:String = viewLayoutData.customData;
+			
+			var editorStatefulClient:EditorStatefulClient = getOrCreateEditorStatefulClient(editableResourcePath);
+			
+			CommunicationPlugin.getInstance().statefulClientRegistry.register(editorStatefulClient, { editorFrontend: editor, openForcedByServer: openForcedByServer });
+			
+			return editor;
 		}
 		
 	}

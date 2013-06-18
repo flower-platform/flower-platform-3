@@ -6,7 +6,9 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.flowerplatform.editor.EditorPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.common,
- org.flowerplatform.communication
+ org.flowerplatform.communication,
+ org.flowerplatform.blazeds
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: org.flowerplatform.editor
+Export-Package: org.flowerplatform.editor,
+ org.flowerplatform.editor.remote

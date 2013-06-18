@@ -1,0 +1,11 @@
+/**
+* @author test
+*/
+public void functie() {
+	// single line comment
+	int x=0;
+	System.out.println("test");
+	/* multiline
+	*  comment
+	*/
+}

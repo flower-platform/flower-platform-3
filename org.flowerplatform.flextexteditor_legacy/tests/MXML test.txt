@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:s="library://ns.adobe.com/flex/spark" xmlns:editor="editor.*" xmlns:mx="http://www.adobe.com/2006/mxml">
+       	<mx:Style>
+       		#textArea /* comment */
+       		{ 
+       			color : white; 
+       			property : "value";
+       			/* another 
+       			 * comment 
+       			 */
+       		}
+       	</mx:Style> 
+   	<mx:Script>  
+		<![CDATA[
+		import editor.base.providers.IFormatProvider;
+		import editor.base.providers.IColoringScannerProvider;
+		import editor.base.partitionScanners.IPartitionScanner;
+		import editor.AS3.providers.AS3FormatProvider;
+		import editor.AS3.providers.AS3ColoringScannerProvider;
+		import editor.AS3.partitionScanners.AS3PartitionScanner;
+		import editor.Java.partitionScanners.JavaPartitionScanner;
+		import editor.Java.providers.JavaFormatProvider;
+		import editor.Java.providers.JavaColoringScannerProvider;
+		import editor.MXML.partitionScanners.MXMLPartitionScanner;
+		import editor.MXML.providers.MXMLFormatProvider;
+		import editor.MXML.providers.MXMLColoringScannerProvider;
+		import flashx.textLayout.elements.Configuration;
+		import flashx.textLayout.container.ContainerController;
+		import editor.WebSyntaxEditor;
+		import flashx.textLayout.operations.InsertTextOperation;
+		import mx.events.StyleEvent;
+		import mx.controls.Alert; 
+		import flashx.textLayout.tlf_internal;
+		use namespace tlf_internal;   
+		import spark.events.TextOperationEvent;
+		import flashx.textLayout.elements.TextFlow;
+		import flashx.textLayout.elements.FlowElement;
+		import flashx.textLayout.elements.DivElement;
+		import flashx.textLayout.elements.ParagraphElement;
+		import flashx.textLayout.elements.SpanElement;
+		import flashx.textLayout.elements.FlowGroupElement;
+		import flashx.textLayout.elements.FlowLeafElement;
+		import flashx.textLayout.formats.TextLayoutFormat;
+		import mx.managers.CursorManager;
+		var startedTyping:Date = new Date();
+		var b:Boolean = true;
+		var flow:TextFlow;
+		var partitionScanner:IPartitionScanner;
+		var scannerProvider:IColoringScannerProvider;
+		var formatProvider:IFormatProvider;
+		
+		public function loadTextFromFile(fileName:String):void {
+			var url:URLRequest = new URLRequest(fileName);
+			var loader:URLLoader = new URLLoader();
+			loader.addEventListener(Event.COMPLETE, loadText);
+			loader.load(url);
+		}
+		
+		public function loadText(evt:Event):void {
+			textArea.loadContent(evt.target.data, partitionScanner, scannerProvider, formatProvider);
+		}
+		
+		public function loadLargeFile():void {
+			loadTextFromFile("../tests/DataGrid.as");
+			partitionScanner = new AS3PartitionScanner();
+			scannerProvider = new AS3ColoringScannerProvider();
+			formatProvider = new AS3FormatProvider();
+		}
+		
+		public function loadMXML():void {
+			loadTextFromFile("../tests/MXML test.txt");
+			partitionScanner = new MXMLPartitionScanner();
+			scannerProvider = new MXMLColoringScannerProvider();
+			formatProvider = new MXMLFormatProvider();
+		}
+		
+		public function testPartitioning():void {
+			textArea.testPartitioning();
+		}
+		]]>
+	</mx:Script>
+	<editor:WebSyntaxEditor id="textArea" width="100%" heightInLines="25" lineHeight="15" lineBreak="explicit"/>
+	<mx:Label text = "Loading text - {textArea.loadingDiff}" />
+	<mx:Label text = "Partitioning - {textArea.partitioningDiff}" />
+	<mx:Label text = "Computing styles - {textArea.computingDiff}" />
+	<mx:Label text = "Formatting - {textArea.formattingDiff}" />
+	<mx:Button label = "Load Large AS3 File" click = "loadLargeFile()" />
+	<mx:Button label = "Load MXML File" click = "loadMXML()" />
+	<mx:Button label = "Test Partitioning" click = "testPartitioning()" />
+</mx:Application>

@@ -1,0 +1,2 @@
+if (start != lastPosition)  /* add gap partition with default content type */ //text
+	partitionUpdater.addPartition(new Partition(lastPosition, start - lastPosition, defaultContentType));

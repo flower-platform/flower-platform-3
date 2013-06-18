@@ -21,15 +21,15 @@ package org.flowerplatform.editor.action {
 			
 			if (selection.length == 1) {
 				// add Open and Open with
-				var treeNode:TreeNode = TreeNode.getTreeNodeFromTreeListDataProviderItem(selection.getItemAt(0));
+				var treeNode:TreeNode = TreeNode(selection.getItemAt(0));
 				if (treeNode.customData == null || treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
 					// node not openable
 					return null;
 				}
-				result.push(new OpenWithDefaultEditorAction());
+				result.push(new OpenAction(null, false));
 				var openWithAction:ComposedAction = new ComposedAction();
 				openWithAction.label = EditorPlugin.getInstance().getMessage("editor.openWith");
-				openWithAction.icon = OpenWithDefaultEditorAction.ICON_URL;
+				openWithAction.icon = OpenAction.ICON_URL;
 				openWithAction.id = OPEN_WITH_ACTION_ID;
 				result.push(openWithAction);
 				
@@ -37,20 +37,20 @@ package org.flowerplatform.editor.action {
 				var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
 				var defaultEditorDescriptorProcessed:Boolean = false;
 				for each (var editorName:String in ctDescriptor.compatibleEditors) {
-					result.push(new OpenWithSpecifiedEditorAction(EditorPlugin.getInstance().getEditorDescriptorByName(editorName), !defaultEditorDescriptorProcessed));
+					result.push(new OpenAction(EditorPlugin.getInstance().getEditorDescriptorByName(editorName), !defaultEditorDescriptorProcessed));
 					if (!defaultEditorDescriptorProcessed) {
 						// i.e. for index == 0; this ensures that the first item will have an action with "force..."
 						defaultEditorDescriptorProcessed = true;
 					}
 				}
 			} else {
-				for each (treeNode in selection) {
-					if (treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
+				for (var i:int = 0; i < selection.length; i++) {
+					if (TreeNode(selection.getItemAt(i)).customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
 						// found at least one node not openable
 						return null;
 					}
 				}
-				result.push(new OpenWithDefaultEditorAction());
+				result.push(new OpenAction(null, false));
 			}
 			
 			return result;

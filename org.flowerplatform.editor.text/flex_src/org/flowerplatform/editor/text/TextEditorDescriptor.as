@@ -1,5 +1,8 @@
 package org.flowerplatform.editor.text {
 	import org.flowerplatform.editor.EditorDescriptor;
+	import org.flowerplatform.editor.EditorFrontend;
+	import org.flowerplatform.editor.remote.EditorStatefulClient;
+	import org.flowerplatform.editor.text.remote.TextEditorStatefulClient;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
 	
@@ -9,16 +12,16 @@ package org.flowerplatform.editor.text {
 			return "text";
 		}
 		
-//		override protected function createViewInstance():EditorFrontend	{
-//			return new TextEditorFrontend();
-//		}
-//		
-//		override protected function createEditorStatefulClient():EditorStatefulClient {
-//			return new TextEditorStatefulClient("TextEditorStatefulService");
-//		}
+		override protected function createViewInstance():EditorFrontend	{
+			return new TextEditorFrontend();
+		}
+		
+		override protected function createEditorStatefulClient():EditorStatefulClient {
+			return new TextEditorStatefulClient("TextEditorStatefulService");
+		}
 		
 		public override function getId():String {	
-			return "com.crispico.flower.mp.web.editor.text";
+			return "org.flowerplatform.editor.text";
 		}
 		
 		public override function getIcon(viewLayoutData:ViewLayoutData=null):Object {	
