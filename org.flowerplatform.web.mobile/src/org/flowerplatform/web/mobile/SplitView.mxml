@@ -3,8 +3,8 @@
 @author Cristian Spiescu
 -->
 <popup:WrapperViewBase implements="org.flowerplatform.flexutil.popup.IPopupHost" creationComplete="creationCompleteHandler()"
-	xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="SplitView" xmlns:mobile="org.flowerplatform.web.mobile.*" xmlns:popup="org.flowerplatform.web.mobile.popup.*">
+					   xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" title="SplitView" xmlns:mobile="org.flowerplatform.web.mobile.*" xmlns:popup="org.flowerplatform.web.mobile.popup.*">
 	<fx:Declarations>
 		<mobile:MainNavigatorContent id="mainNavigatorContent" navigator="{navigator}"/>
 	</fx:Declarations>
@@ -32,30 +32,30 @@
 			private var _leftActiveComponent:IVisualElement;
 			
 			private var _rightActiveComponent:IVisualElement;
-
+			
 			public function get leftActiveComponent():IVisualElement {
 				return _leftActiveComponent;
 			}
-
+			
 			public function set leftActiveComponent(value:IVisualElement):void {
 				_leftActiveComponent = value;
 				rearrangeLayout();
 			}
-
+			
 			public function get rightActiveComponent():IVisualElement {
 				return _rightActiveComponent;
 			}
-
+			
 			public function set rightActiveComponent(value:IVisualElement):void {
 				_rightActiveComponent = value;
 				rearrangeLayout();
 			}
-
+			
 			[Bindable]
 			public function get oneViewMode():Boolean {
 				return _oneViewMode;
 			}
-
+			
 			public function set oneViewMode(value:Boolean):void {
 				_oneViewMode = value;
 				rearrangeLayout();
@@ -104,7 +104,7 @@
 					}					
 				}
 			}
-
+			
 			protected function creationCompleteHandler():void {
 				navigationContent = mainNavigatorContent.navigatorContent.concat(navigationContent);
 				leftActiveComponent = FlexUtilGlobals.getInstance().composedViewProvider.createView(new ViewLayoutData(ExplorerViewProvider.ID));

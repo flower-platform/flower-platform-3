@@ -62,5 +62,7 @@ package com.crispico.flower.util {
 		[Embed(source="/calendar.png")]
 		public var _calendar:Class;
 		
+		[Embed(source="/info.png")]
+		public var _infoIcon:Class;
 	}
 }

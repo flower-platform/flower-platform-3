@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Cristina Constantinescu
+-->
+<layout:GitAbstractView xmlns:mx="http://www.adobe.com/2006/mxml" 				 
+					 xmlns:s="library://ns.adobe.com/flex/spark" 					 
+					 creationComplete="creationComplete()"
+					 initialize="initHandler(event)"
+					 xmlns:git="org.flowerplatform.web.git.*" 
+					 xmlns:layout="org.flowerplatform.web.git.layout.*" 
+					 xmlns:util="com.crispico.flower.util.*" 
+					 xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+					 xmlns:history="org.flowerplatform.web.git.history.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.layout.event.ViewAddedEvent;
+			
+			import org.flowerplatform.web.git.dto.ViewInfoDto;
+			
+			import com.crispico.flower.util.layout.event.ViewRemovedEvent;
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import flashx.textLayout.conversion.TextConverter;
+			import flashx.textLayout.elements.FlowElement;
+			import flashx.textLayout.elements.FlowGroupElement;
+			import flashx.textLayout.elements.LinkElement;
+			import flashx.textLayout.events.FlowElementMouseEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.flexutil.Utils;
+			import org.flowerplatform.web.git.history.communication.GitHistoryStatefulClient;
+			import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
+			import org.flowerplatform.web.git.history.dto.HistoryViewInfoDto;
+			
+			/**
+			 * Not null when the view is open; null otherwise.
+			 */
+			public static var INSTANCE:GitHistoryView;
+			
+			/**
+			 * Stores info regarding this view as:
+			 * selected object, view selected options etc.
+			 */ 
+			public var info:HistoryViewInfoDto = new HistoryViewInfoDto();
+			
+			public var statefulClient:GitHistoryStatefulClient;
+			
+			public override function getInfo():ViewInfoDto {
+				return info;
+			}
+			
+			/**
+			 * @flowerModelElementId _NutKIAh9EeKOJLhiYa8G-w
+			 */
+			public function initHandler(event:FlexEvent):void {
+				// default filter
+				info.filter = HistoryViewInfoDto.SHOWALLRESOURCE;
+				
+				addEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+				addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);				
+			}
+			
+			private function creationComplete():void {		
+				INSTANCE = this;
+				//historyEntriesTable.registerMenu();			
+			}
+			
+			private function viewAddedHandler(event:ViewAddedEvent):void {				
+				statefulClient = new GitHistoryStatefulClient(this);
+				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, this);	
+				//refresh();
+			}
+			
+			private function viewRemovedHandler(event:ViewRemovedEvent):void {				
+				//historyEntriesTable.unregisterMenu();
+				INSTANCE = null;
+				
+				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(statefulClient, this);
+				
+				removeEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+				removeEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
+			}
+			
+			public function refreshClickHandler(refreshFromTreeSelection:Boolean = false):void {				
+				if (refreshFromTreeSelection || info.selectedObject == null) { // refresh the entire view
+					clearView();
+					
+					refresh();
+				} else { // refresh only the history table
+					clearView(false);
+					
+					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.refreshingData"), modalSpinner);
+					statefulClient.getLogEntries(info, this, getEntriesCallbackHandler);
+				}
+			}
+			
+			/**
+			 * If the selected object isn't known, get it from available views.
+			 * Refreshes the entire view (_info + table).
+			 * 
+			 * @see getSelectedObjectIdFromTree()
+			 */ 
+			public function refresh():void {
+//				if (info.selectedObject == null) { // get new selected object
+//					var obj:Object = getSelectedObjectFromExplorer();
+//					if (obj == null) {
+//						return;
+//					}					
+//					info.selectedObject = obj;
+//				}
+				// get histoy view _info from server used to populate the table
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.refreshingData"), modalSpinner); 
+				statefulClient.getObjectInfo(info, this, getObjectInfoCallbackHandler);
+			}
+			
+			/**
+			 * Sets the view _info and asks the server about table entries.
+			 * 
+			 * <p>
+			 * If something went wrong, clears the view info & table.
+			 */ 
+			private function getObjectInfoCallbackHandler(value:HistoryViewInfoDto):void {				
+				if (value != null) {
+					info = value;
+					objectInfo.text = value.info;
+					
+					statefulClient.getLogEntries(info, this, getEntriesCallbackHandler);
+				} else {
+					ModalSpinner.removeModalSpinner(this);
+					clearView();
+				}
+			}
+			
+			/**
+			 * Stores the last selected entry id.
+			 * 
+			 * <p>
+			 * Used to maintain the selection after refresh.
+			 * @see  getEntriesCallbackHandler()
+			 */ 
+			private var lastSelectedEntryId:String;
+			
+			/**
+			 * Sets the table entries, updates the view info with new data 
+			 * and restores the user table selection.
+			 * 
+			 * <p>
+			 * If something went wrong, clears the view info & table.
+			 */ 
+			private function getEntriesCallbackHandler(value:ArrayCollection):void {
+				ModalSpinner.removeModalSpinner(this);
+				if (value != null) {
+					// store selection
+					if (historyEntriesTable.selectedItem != null) {
+						lastSelectedEntryId = HistoryEntryDto(historyEntriesTable.selectedItem).id;
+					}
+					
+					// set new data
+					historyEntriesTable.dataProvider = value[0];
+					info = value[1];
+					
+					
+					if (lastSelectedEntryId != null) { // restore selection
+						for each (var entry:HistoryEntryDto in ArrayCollection(historyEntriesTable.dataProvider)) {
+							if (lastSelectedEntryId == entry.id) {
+								historyEntriesTable.selectedIndex = ArrayCollection(historyEntriesTable.dataProvider).getItemIndex(entry);								
+								break;
+							}
+						}
+						lastSelectedEntryId = null;
+					} else {
+						historyEntriesTable.selectedIndex = 0;
+					}
+					// scroll to new selection
+					historyEntriesTable.scrollToIndex(historyEntriesTable.selectedIndex);
+				} else {
+					clearView();
+				}
+			}
+			
+			private function showEmailAddressesClickHandler(event:MouseEvent):void {
+				ArrayCollection(historyEntriesTable.dataProvider).refresh();
+			}
+			
+			private function showCommitMessageClickHandler(event:MouseEvent):void {
+				commitMessage.includeInLayout = btnShowCommitMessage.selected;
+				commitMessage.visible = btnShowCommitMessage.selected;
+				
+				if (!btnShowCommitMessage.selected) {
+					detailArea.includeInLayout = fileDiffs.includeInLayout;
+					detailArea.visible = fileDiffs.visible;	
+				} else {
+					detailArea.includeInLayout = true;
+					detailArea.visible = true;	
+				}		
+			}
+			
+			private function showAffectedFilesClickHandler(event:MouseEvent):void {
+				fileDiffs.includeInLayout = btnShowAffectedFiles.selected;
+				fileDiffs.visible = btnShowAffectedFiles.selected;	
+				
+				if (!btnShowAffectedFiles.selected) {
+					detailArea.includeInLayout = commitMessage.includeInLayout;
+					detailArea.visible = commitMessage.visible;	
+				} else {
+					detailArea.includeInLayout = true;
+					detailArea.visible = true;	
+				}	
+			}
+			
+			protected function filterChangedClickHandler(event:ItemClickEvent):void {
+				info.filter = event.item.type;
+				refreshClickHandler(false);
+			}
+			
+			private function historyEntriesTable_changeHandler(event:Event):void {
+				var selectedCommit:Object = HistoryDataGrid(event.currentTarget).selectedItem;
+				if (selectedCommit == null) {
+					return;
+				}				
+				
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.gettingData"), modalSpinner);
+				
+				statefulClient.getCommitFileDiffs(
+					HistoryEntryDto(selectedCommit), info, 
+					this, getCommitFileDiffsCallbackHandler);				
+				
+				statefulClient.getCommitMessage(
+					HistoryEntryDto(selectedCommit), info.repositoryLocation, 
+					this, getCommitMessageCallbackHandler);					
+			}
+			
+			private function getCommitFileDiffsCallbackHandler(value:ArrayCollection):void {
+				ModalSpinner.removeModalSpinner(this);
+				if (value != null) {
+					fileDiffs.dataProvider = value;					
+				}
+			}
+			
+			private function getCommitMessageCallbackHandler(value:String):void {			
+				if (value != null) {
+					commitMessage.content = TextConverter.importToFlow(value, TextConverter.TEXT_FIELD_HTML_FORMAT);					
+					var linksArray:Array = [];					
+					findLinkElement(commitMessage.textFlow, linksArray);
+					
+					var iter:int=0;
+					for (iter = 0 ; iter<linksArray.length ; iter++) {
+						linksArray[iter].addEventListener(FlowElementMouseEvent.MOUSE_DOWN, linkSelectHandler, false, 0, true);
+					}
+				}
+			}
+			
+			private function findLinkElement(group:FlowGroupElement, linksArray:Array):void {
+				var childGroups:Array = [];
+				// First check all the child elements of the current group,
+				// Also save any children that are FlowGroupElement
+				for (var i:int = 0; i < group.numChildren; i++) {
+					var element:FlowElement = group.getChildAt(i);
+					if (element is LinkElement) {
+						linksArray.push(element as LinkElement);
+					} else if (element is FlowGroupElement) {
+						childGroups.push(element);
+					}
+				}
+				// Recursively check the child FlowGroupElements now
+				for (i = 0; i < childGroups.length; i++) {
+					var childGroup:FlowGroupElement = childGroups[i];
+					findLinkElement(childGroup, linksArray);
+				}				
+			}
+			
+			private function linkSelectHandler(event:FlowElementMouseEvent):void {
+				if (event.flowElement is LinkElement) {
+					var id:String = LinkElement(event.flowElement).mxmlChildren[0].text;
+					for each (var entry:HistoryEntryDto in ArrayCollection(historyEntriesTable.dataProvider)) {
+						if (entry.id == id) {
+							historyEntriesTable.selectedItem = entry;
+							historyEntriesTable.scrollToIndex(historyEntriesTable.selectedIndex);
+							break;
+						}
+					}
+				}				
+			}
+			
+			private function clearView(includeInfo:Boolean = true):void {
+				historyEntriesTable.dataProvider = null;
+				
+				if (includeInfo) {
+					info = new HistoryViewInfoDto();
+					//info.filter = ArrayCollection(bbFilter.dataProvider).getItemAt(bbFilter.selectedIndex).type;
+				}
+				commitMessage.text = "";
+				fileDiffs.dataProvider = null;
+			}		
+			
+		]]>
+	</mx:Script>
+	
+	<mx:HBox id="buttonArea" width="100%" horizontalGap="2"
+			 verticalAlign="middle" horizontalAlign="right" 
+			 paddingTop="5" paddingRight="5" paddingLeft="5">	
+		
+		<mx:TextInput id="objectInfo" initialize="{Utils.makePseudoDisabled(objectInfo);}" width="95%" />
+		<mx:Spacer width="3%" />
+		<util:ButtonWithIconComponent id="btnRefresh" toolTip="Refresh" width="22" height="22"	
+									  click="refreshClickHandler()"								  								  
+									  creationComplete="{refreshImage.retrieveImage(getResourceUrl('images/refresh.gif'))}">
+			<util:iconComponent>
+				<common:BitmapContainer id="refreshImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<util:ButtonWithIconComponent id="btnRefreshFromSelection" toolTip="Refresh from Selection" width="22" height="22"			
+									  click="refreshClickHandler(true)"
+									  creationComplete="{refreshFromSelectionImage.retrieveImage(getResourceUrl('images/switch.gif'))}" >
+			<util:iconComponent>
+				<common:BitmapContainer id="refreshFromSelectionImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<mx:Spacer width="1%" />
+		<!--buttonbar:CustomToggleButtonBar id="bbFilter" toolTipField="toolTip" showLabel="false" selectedIndex="3" itemClick="filterChangedClickHandler(event)" 
+		dataProvider="{[ 
+		{ type: HistoryViewInfoDto.SHOWALLREPO, label: 'R', toolTip: getMessage('git.history.filterrepo.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_repo') },
+		{ type: HistoryViewInfoDto.SHOWALLPROJECT, label: 'P', toolTip: getMessage('git.history.filterproject.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_filter_project') },
+		{ type: HistoryViewInfoDto.SHOWALLFOLDER, label: 'F', toolTip: getMessage('git.history.filterfolder.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_filter_folder') },
+		{ type: HistoryViewInfoDto.SHOWALLRESOURCE, label: 'Re', toolTip: getMessage('git.history.filterresource.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_filter_resource') } ]}"/-->
+		
+		<mx:Spacer width="1%" />
+		<util:ButtonWithIconComponent id="btnShowCommitMessage" selected="true" width="22" height="22" toggle="true" toolTip="Show Commit Message"
+									  click="showCommitMessageClickHandler(event)"
+									  creationComplete="{showCommitMessageImage.retrieveImage(getResourceUrl('images/comments.gif'))}" >
+			<util:iconComponent>
+				<common:BitmapContainer id="showCommitMessageImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<util:ButtonWithIconComponent id="btnShowAffectedFiles" selected="true" width="22" height="22" toggle="true" toolTip="Show Commit Files"
+									  click="showAffectedFilesClickHandler(event)"
+									  creationComplete="{showAffectedFilesImage.retrieveImage(getResourceUrl('images/flatLayout.gif'))}" >
+			<util:iconComponent>
+				<common:BitmapContainer id="showAffectedFilesImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<util:ButtonWithIconComponent id="btnShowEmail" selected="false" width="22" height="22" toggle="true" toolTip="Show E-mail Addresses"
+									  click="showEmailAddressesClickHandler(event)"
+									  creationComplete="{showEmailImage.retrieveImage(getResourceUrl('images/mail.png'))}" >
+			<util:iconComponent>
+				<common:BitmapContainer id="showEmailImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+	</mx:HBox>
+	
+	<mx:VDividedBox id="dataArea" verticalGap="3" width="100%" height="100%" >	
+		
+		<history:HistoryDataGrid id="historyEntriesTable" width="100%" height="50%"
+								 historyView="{this}"
+								 change="historyEntriesTable_changeHandler(event)" valueCommit="historyEntriesTable_changeHandler(event)" />
+		
+		<mx:HDividedBox id="detailArea" width="100%" height="50%" horizontalGap="3" >	
+			<s:TextArea id="commitMessage" width="50%" height="100%" editable="false" />
+			<mx:List id="fileDiffs" width="50%" height="100%">
+				<mx:itemRenderer>
+					<mx:Component>
+						<mx:HBox horizontalScrollPolicy="off" horizontalGap="2">			                    
+							<common:BitmapContainer id="image" creationComplete="{if (data != null) image.retrieveImage(data.image)}"/>			                    
+							<mx:Label text="{data.file}"/>							
+						</mx:HBox>
+					</mx:Component>
+				</mx:itemRenderer>
+			</mx:List>
+		</mx:HDividedBox>
+		
+	</mx:VDividedBox>
+</layout:GitAbstractView>

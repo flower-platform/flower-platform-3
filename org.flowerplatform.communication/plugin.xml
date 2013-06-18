@@ -12,5 +12,12 @@
             servlet="org.flowerplatform.communication.public_resources.PublicResourcesServlet">
       </servlet>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="ProgressMonitorStatefulService"
+            serviceClass="org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulService">
+      </service>
+   </extension>
 
 </plugin>

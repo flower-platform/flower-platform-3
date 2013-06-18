@@ -30,11 +30,6 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 		INSTANCE = null;
 	}
 
-	@Override
-	public void registerMessageBundle() throws Exception {
-		// do nothing, because we don't have messages (yet)
-	}
-	
 	public File getWorkspaceRoot() {
 		return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().makeAbsolute().toFile();
 	}

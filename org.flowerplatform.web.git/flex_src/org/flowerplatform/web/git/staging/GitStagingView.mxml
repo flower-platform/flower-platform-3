@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Cristina Constantinescu
+-->
+<layout:GitAbstractView xmlns:mx="http://www.adobe.com/2006/mxml" 
+										 
+					 paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"
+					 initialize="initializeHandler(event)"
+					 creationComplete="creationCompleteHandler(event)"
+					 xmlns:git="org.flowerplatform.web.git.*" 
+					 xmlns:layout="org.flowerplatform.web.git.layout.*" 
+					 xmlns:util="com.crispico.flower.util.*" 
+					 xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+					 xmlns:staging="org.flowerplatform.web.git.staging.*">		
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.layout.event.ViewAddedEvent;
+			
+			import org.flowerplatform.web.git.GitPlugin;
+			
+			import com.crispico.flower.util.layout.event.ViewRemovedEvent;
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
+			import org.flowerplatform.web.git.dto.ViewInfoDto;
+			import org.flowerplatform.web.git.staging.communication.GitStagingStatefulClient;
+			import org.flowerplatform.web.git.staging.dto.StagingViewInfoDto;
+			
+			public var info:StagingViewInfoDto = new StagingViewInfoDto();
+			
+			public var statefulClient:GitStagingStatefulClient;
+			
+			public override function getInfo():ViewInfoDto {
+				return info;
+			}
+						
+			protected function initializeHandler(event:FlexEvent):void {
+				addEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+				addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				unstagedChanges.registerMenu();
+				stagedChanges.registerMenu();
+			}
+			
+			private function viewAddedHandler(event:ViewAddedEvent):void {				
+				statefulClient = new GitStagingStatefulClient(this);
+				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, this);	
+				refresh();
+			}
+			
+			private function viewRemovedHandler(event:ViewRemovedEvent):void {				
+				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(statefulClient, this);
+				
+				removeEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+				removeEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
+			}
+			
+			private function refresh():void {
+				if (info.selectedObject == null) { // get new selected object
+					var obj:Object = getSelectedObjectFromExplorer();
+					if (obj == null) {
+						return;
+					}					
+					info.selectedObject = obj;
+				}
+				// get histoy view _info from server used to populate the table
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.refreshingData"), modalSpinner); 
+				statefulClient.getViewInfo(info, this, getViewInfoCallbackHandler);			
+			}
+						
+			public function refreshClickHandler(refreshFromTreeSelection:Boolean = false):void {			
+				if (refreshFromTreeSelection || info.selectedObject == null) { // refresh the entire view
+					clearView();					
+				} else { // refresh only the table
+					clearView(false);
+				}				
+				refresh();
+			}
+			
+			private function getViewInfoCallbackHandler(value:StagingViewInfoDto):void {
+				ModalSpinner.removeModalSpinner(this);
+				if (value != null) {
+					info = value;
+					repoInfo.text = value.repositoryName;
+					unstagedChanges.dataProvider = value.unstagedChanges;
+					stagedChanges.dataProvider = value.stagedChanges;
+					authorName.text = value.author;
+					committerName.text = value.committer;
+				} else {					
+					clearView();
+				}
+			}
+			
+			private function clearView(includeInfo:Boolean = true):void {
+				unstagedChanges.dataProvider = null;
+				stagedChanges.dataProvider = null;
+				authorName.text = "";
+				committerName.text = "";
+				
+				if (includeInfo) {
+					info = new StagingViewInfoDto();	
+					repoInfo.text = getMessage('git.staging.noRepositorySelected');
+				}
+				commitMessage.text = "";
+			}
+			
+			protected function commit_clickHandler(event:MouseEvent):void {
+				// validate form
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"GitRepositoriesTreeStatefulService", "commit", 
+						[info.repositoryLocation, ArrayCollection(stagedChanges.dataProvider), authorName.text, committerName.text, commitMessage.text, amendCommit.selected], 
+						this, commitCallbackHandler));	
+			}
+			
+			private function commitCallbackHandler(value:Boolean):void {
+				ModalSpinner.removeModalSpinner(this);
+				if (value) {
+					refreshClickHandler();					
+				}
+			}
+			
+		]]>
+	</mx:Script>
+		
+	<mx:Array id="validators">
+		<mx:StringValidator source="{commitMessage}" property="text" minLength="1"/>
+		<mx:StringValidator source="{authorName}" property="text" minLength="1"/>
+		<mx:StringValidator source="{committerName}" property="text" minLength="1"/>		
+		<mx:RegExpValidator source="{authorName}" property="text" expression="^(.+) [&lt;](.+)[&gt;]$" />		
+		<mx:RegExpValidator source="{committerName}" property="text" expression="^(.+) [&lt;](.+)[&gt;]$" />
+	</mx:Array>
+	
+	<mx:HBox height="25" width="100%" verticalAlign="middle" horizontalGap="1">
+		<common:BitmapContainer id="imgRepo" creationComplete="{imgRepo.retrieveImage(getResourceUrl('images/full/eview16/staging.png'))}"/>
+		<mx:Label id="repoInfo" text="{getMessage('git.staging.noRepositorySelected')}" fontWeight="bold" fontSize="14"/>
+		
+		<mx:Spacer width="99%" />
+		<util:ButtonWithIconComponent id="btnRefresh" toolTip="Refresh" width="22" height="22"	
+									  click="refreshClickHandler()"								  								  
+									  creationComplete="{refreshImage.retrieveImage(getResourceUrl('images/full/obj16/refresh.gif'))}" >
+			<util:iconComponent>
+				<common:BitmapContainer id="refreshImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<util:ButtonWithIconComponent id="btnRefreshFromSelection" toolTip="Refresh from Selection" width="22" height="22"			
+									  click="refreshClickHandler(true)"
+									  creationComplete="{refreshFromSelectionImage.retrieveImage(getResourceUrl('images/full/obj16/refresh.gif'))}" >
+			<util:iconComponent>
+				<common:BitmapContainer id="refreshFromSelectionImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<mx:Spacer width="1%" />
+		<util:ButtonWithIconComponent id="amendCommit" width="22" height="22" toggle="true" 
+									  toolTip="{getMessage('git.commit.amend.tooltip')}"
+									  creationComplete="{amendCommitImage.retrieveImage(getResourceUrl('images/full/obj16/commit_amend.gif'))}" >
+			<util:iconComponent>
+				<common:BitmapContainer id="amendCommitImage" />	
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+	</mx:HBox>
+		
+	<mx:HDividedBox width="100%" height="100%" >
+		<mx:VDividedBox width="50%" height="100%">
+			<mx:VBox width="100%" height="50%" verticalGap="1">
+				<mx:Label text="{getMessage('git.staging.unstagedChanges')}" />			
+				<staging:StagingList id="unstagedChanges" width="100%" height="100%" showStagingActions="false" stagingView="{this}" allowMultipleSelection="true">
+					<staging:itemRenderer>
+						<mx:Component>
+							<mx:HBox horizontalScrollPolicy="off" horizontalGap="2">
+								<mx:Script>
+									<![CDATA[
+										
+										override public function set data(value:Object):void {
+											super.data = value;
+											
+											if (data != null) {
+												image1.retrieveImage(data.image);
+											}
+										}
+									]]>
+								</mx:Script>
+								<common:BitmapContainer id="image1" />			                    
+								<mx:Label text="{data.label}"/>								
+							</mx:HBox>
+						</mx:Component>
+					</staging:itemRenderer>
+				</staging:StagingList>
+			</mx:VBox>
+			
+			<mx:VBox width="100%" height="50%" verticalGap="1">
+				<mx:Label text="{GitPlugin.getInstance().getMessage('git.staging.stagedChanges')}" />			
+				<staging:StagingList id="stagedChanges" width="100%" height="100%" showStagingActions="true" stagingView="{this}" allowMultipleSelection="true" >
+					
+					<staging:itemRenderer>						
+						<mx:Component>							
+							<mx:HBox horizontalScrollPolicy="off" horizontalGap="2">			                    
+								<mx:Script>
+									<![CDATA[
+																				
+										override public function set data(value:Object):void {
+											super.data = value;
+																						
+											if (data != null) {
+												image2.retrieveImage(data.image);
+											}
+										}
+									]]>
+								</mx:Script>
+								<common:BitmapContainer id="image2" />			                    
+								<mx:Label text="{data.label}"/>									
+							</mx:HBox>
+						</mx:Component>
+					</staging:itemRenderer>
+				</staging:StagingList>
+			</mx:VBox>
+		</mx:VDividedBox>
+		
+		<mx:VBox width="50%" height="100%" verticalGap="1">				
+			<mx:Label text="{getMessage('git.commitPage.message')}" />			
+			
+			<mx:TextArea id="commitMessage" width="100%" height="100%"/>
+			<mx:HBox width="100%" verticalAlign="middle" paddingTop="5">
+				<mx:VBox width="100%">
+					<mx:FormItem label="{getMessage('git.commitPage.author')}" width="100%" labelWidth="70">
+						<mx:TextInput id="authorName" width="100%" />	
+					</mx:FormItem>
+					<mx:FormItem label="{getMessage('git.commitPage.committer')}" width="100%" labelWidth="70">
+						<mx:TextInput id="committerName" width="100%"/>	
+					</mx:FormItem>								
+				</mx:VBox>							
+				<util:HintButton id="hintButton" toolTip="{getMessage('git.commit.author.tooltip')}"/>
+			</mx:HBox>		
+			
+			<mx:HBox width="100%" horizontalAlign="right" paddingTop="20">
+				<mx:Button label="{getMessage('git.staging.commit')}" click="commit_clickHandler(event)" />
+			</mx:HBox>
+			
+		</mx:VBox>
+	</mx:HDividedBox>
+</layout:GitAbstractView>

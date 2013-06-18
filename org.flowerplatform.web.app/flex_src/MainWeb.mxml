@@ -106,6 +106,7 @@
 					'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf',
 					'servlet/public-resources/org.flowerplatform.editor.text/swc/org.flowerplatform.editor.text.swc|library.swf?pluginClass=EditorTextPlugin',
 					'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf',
+					'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'
 				]));
 				
 				FlexUtilGlobals.getInstance().contextMenuManager = new ContextMenuManager();

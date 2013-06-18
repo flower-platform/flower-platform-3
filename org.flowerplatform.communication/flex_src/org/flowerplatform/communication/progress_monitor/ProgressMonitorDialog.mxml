@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ 
+ @author Cristina
+ @author Sorin
+ @flowerModelElementId _NoDcYBLtEeKIW4So6X04UQ
+-->
+<popUp:ResizablePopupWindow
+		xmlns:mx="http://www.adobe.com/2006/mxml" 
+		xmlns:popUp="com.crispico.flower.util.popup.*"
+		xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+		title="In Progress" showCloseButton="false"
+		width="500" height="170" minWidth="500" minHeight="170" 
+		paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0"
+	creationComplete="creationCompleteHandler();">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.utils.StringUtil;
+			
+			import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulClient;
+
+			
+			private static const TRACE_ENABLED:Boolean = true;
+			
+			/**
+			 * Needed to know to which progress monitor to call cancel on the server.
+			 * @flowerModelElementId _bVsZMBN-EeK1ssFHNoNwQg
+			 */
+			public var progressMonitorStatefulClient:ProgressMonitorStatefulClient;
+			
+			public var allowCancellation:Boolean;
+			
+			private function creationCompleteHandler():void {
+				progressBar.mx_internal::_labelField.multiline = true;
+				progressBar.mx_internal::_labelField.wordWrap = true;
+				progressBar.mx_internal::_labelField.autoSize = TextFieldAutoSize.LEFT;
+				
+				cancelButton.visible = allowCancellation;
+			}
+			
+			public function set progressTotalWork(value:Number):void {
+				progressBar.minimum = 0;
+				progressBar.maximum = value;
+				progressBar.setProgress(0, value);
+				if (TRACE_ENABLED)
+					trace(progressMonitorStatefulClient.getStatefulClientId() + " totalWork = " + value);
+			}
+			
+			/**
+			 * If the label value was modified (not null) change it.
+			 */ 
+			public function set progressLabel(value:String):void {
+				if (value != null && StringUtil.trim(value) != "") {
+					progressBar.label = value;
+					if (TRACE_ENABLED)
+						trace(progressMonitorStatefulClient.getStatefulClientId() + " progressLabel = " + value);
+				}
+			}
+			
+			/**
+			 * If the worked value was modified ( > 0) change it.
+			 */ 
+			public function set workUntilNow(value:Number):void {
+				progressBar.setProgress(value, progressBar.maximum);
+				if (TRACE_ENABLED)
+					trace(progressMonitorStatefulClient.getStatefulClientId() + " workUntilNow = " + value + " totalWork = " + progressBar.maximum);
+			}
+			
+			/**
+			 * @flowerModelElementId _LMl5kBN8EeK1ssFHNoNwQg
+			 */
+			private function cancelButtonHandler():void {
+				cancelButton.enabled = false;
+				cancelButton.label = "Canceling...";
+				progressMonitorStatefulClient.attemptCancelProgressMonitor();
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%" >
+		<mx:ProgressBar id="progressBar" 
+						width="100%" height="100%"
+						trackHeight="20" verticalGap="10"
+						fontWeight="normal" fontSize="10" labelWidth="{this.width - 25}" labelPlacement="bottom" mode="manual" />
+		<mx:HBox width="100%" horizontalAlign="right" paddingTop="5" paddingBottom="5" paddingRight="5">		
+			<mx:Button id="cancelButton" label="Cancel" click="cancelButtonHandler();"/>
+		</mx:HBox>
+	</mx:VBox>	
+</popUp:ResizablePopupWindow>

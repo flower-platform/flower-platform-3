@@ -16,6 +16,9 @@ package org.flowerplatform.communication {
 	import org.flowerplatform.communication.command.HelloServerCommand;
 	import org.flowerplatform.communication.command.ServerSnapshotClientCommand;
 	import org.flowerplatform.communication.command.WelcomeClientCommand;
+	import org.flowerplatform.communication.progress_monitor.remote.CreateProgressMonitorStatefulClientCommand;
+	import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulClient;
+	import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulLocalClient;
 	import org.flowerplatform.communication.sequential_execution.SequentialExecutionServerCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.InvokeStatefulClientMethodClientCommand;
@@ -40,7 +43,7 @@ package org.flowerplatform.communication {
 		
 		public var bridge:BlazeDSBridge;
 		
-		public var lastCallbackId:int = -1;
+		public var lastCallbackId:int = 0;
 		
 		public var pendingCallbacks:Dictionary = new Dictionary();
 		
@@ -63,6 +66,9 @@ package org.flowerplatform.communication {
 			registerClassAliasFromAnnotation(GenericTreeStatefulClientLocalState);
 			registerClassAliasFromAnnotation(TreeNode);
 			registerClassAliasFromAnnotation(PathFragment);
+			
+			registerClassAliasFromAnnotation(ProgressMonitorStatefulLocalClient);			
+			registerClassAliasFromAnnotation(CreateProgressMonitorStatefulClientCommand);			
 		}
 		
 		override public function preStart():void {

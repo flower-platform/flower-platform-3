@@ -64,7 +64,7 @@
 				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";
 				
 				startPlugins();
-
+				
 				CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 			}
 			
@@ -78,8 +78,8 @@
 		<mobile:MainNavigatorContent id="mainNavigatorContent" navigator="{navigator}"/>
 		<s:CrossFadeViewTransition id="crossFadeTransition"/>
 	</fx:Declarations>
-<!--	<s:ViewNavigator id="navigator1" width="100%" height="100%" firstView="org.flowerplatform.web.mobile.RecentActivityView"
-					 navigationContent="{mainNavigatorContent.navigatorContent}" defaultPushTransition="{crossFadeTransition}" defaultPopTransition="{crossFadeTransition}">
+	<!--	<s:ViewNavigator id="navigator1" width="100%" height="100%" firstView="org.flowerplatform.web.mobile.RecentActivityView"
+	navigationContent="{mainNavigatorContent.navigatorContent}" defaultPushTransition="{crossFadeTransition}" defaultPopTransition="{crossFadeTransition}">
 	</s:ViewNavigator>
-</s:Application>-->
+	</s:Application>-->
 </s:ViewNavigatorApplication>

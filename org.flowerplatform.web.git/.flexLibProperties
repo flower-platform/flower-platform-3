@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="org.flowerplatform.web.git.history.GitHistoryView"/>
+    <classEntry path="org.flowerplatform.web.git.GitNodeType"/>
+    <classEntry path="org.flowerplatform.web.git.GitExplorerTreeActionProvider"/>
+    <classEntry path="org.flowerplatform.web.git.action.CloneAction"/>
+    <classEntry path="org.flowerplatform.web.git.ui.CloneWindow"/>
+    <classEntry path="org.flowerplatform.web.git.GitService"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

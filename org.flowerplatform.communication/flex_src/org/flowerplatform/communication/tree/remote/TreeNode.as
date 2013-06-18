@@ -92,13 +92,16 @@ package org.flowerplatform.communication.tree.remote {
         /**
          * @flowerModelElementId _ZFk8kJpwEeGg5ZWNBtAGAA
          */
-        public function getPathForNode():ArrayCollection {
+        public function getPathForNode(addRootNode:Boolean = false):ArrayCollection {
         	var node:TreeNode = this;
-        	if (node == null || node.parent == null) {
+        	if (node == null) {
+				return null;
+			}
+			if(!addRootNode && node.parent == null) {
         		return null;
         	}
         	var path:ArrayCollection = new ArrayCollection();
-        	while (node.parent != null) {        		
+        	while (addRootNode ? node != null :  node.parent != null) {        		
         		path.addItemAt(node.pathFragment, 0);
         		node = node.parent;
         	}			

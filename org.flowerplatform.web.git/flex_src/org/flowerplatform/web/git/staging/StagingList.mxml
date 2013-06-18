@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:List xmlns:mx="http://www.adobe.com/2006/mxml"
+		 rightClick="clickHandler(event)"			 
+		 itemRollOver="itemRollOverHandler(event)"
+		 implements="com.crispico.flower.flexdiagram.contextmenu.IContextMenuLogicProvider, com.crispico.flower.flexdiagram.action.IActionProvider2">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.flexdiagram.action.ActionContext;
+			
+			import org.flowerplatform.web.git.GitPlugin;
+			
+			import com.crispico.flower.flexdiagram.contextmenu.ContextMenuManager;
+			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.ListEvent;
+			
+			import org.flowerplatform.web.git.dto.CommitResourceDto;
+
+			public var stagingView:GitStagingView;
+			
+			public var showStagingActions:Boolean = false;
+			
+			private var itemIndexUnderMouse:int = -1;
+			
+			public function registerMenu():void {
+				ContextMenuManager.INSTANCE.registerClient(this, true, this, this, null, null, null, this, true);
+			}
+			
+			public function unregisterMenu():void {
+				ContextMenuManager.INSTANCE.unregisterClient(this, null);
+			}
+			
+			protected function itemRollOverHandler(event:ListEvent):void {				
+				itemIndexUnderMouse = itemRendererToIndex(event.itemRenderer);
+			}
+			
+			protected function clickHandler(event:MouseEvent):void {
+				if (!isOverSelection(event)) {
+					itemIndexUnderMouse = -1;
+					return;
+				}
+				if (selectedIndex != itemIndexUnderMouse) {
+					selectedIndex = itemIndexUnderMouse;
+					ContextMenuManager.INSTANCE.refresh(this);
+				}
+			}
+						
+			public function fillContextMenu(contextMenu:FlowerContextMenu):void {				
+				if (itemIndexUnderMouse == -1 || selectedItem == null) {
+					return;
+				}
+				
+				var selection:ArrayCollection = getSelection();
+				if (selection == null || selection.length == 0) {
+					return;
+				} else if (selection.length == 1) {
+					contextMenu.setTitle(CommitResourceDto(selectedItem).label);
+				} else {
+					contextMenu.setTitle("Files");
+				}
+				
+				if (showStagingActions) {
+//					contextMenu.addActionEntryIfVisible(new ActionDelegatingToFunction(
+//						GitPlugin.getInstance().getMessage("git.staging.action.removeFromIndex"), 
+//						GitPlugin.getInstance().getResourceUrl("images/full/obj16/remove.gif"), 
+//						function (selection:ArrayCollection):void {
+//							stagingView.statefulClient.removeFromIndex(selection, this, actionExecutedHandler);
+//						}
+//					));
+				} else {
+//					contextMenu.addActionEntryIfVisible(new ActionDelegatingToFunction(
+//						GitPlugin.getInstance().getMessage("git.staging.action.addToIndex"), 
+//						GitPlugin.getInstance().getResourceUrl("images/full/obj16/add.gif"), 
+//						function (selection:ArrayCollection):void {
+//							stagingView.statefulClient.addToIndex(selection, this, actionExecutedHandler);
+//						}
+//					));					
+				}
+			}
+			
+			public function getSelection():ArrayCollection {	
+				return new ArrayCollection(selectedItems);
+			}
+			
+			public function isOverSelection(event:MouseEvent):Boolean {	
+				var mousePoint:Point = new Point(event.stageX, event.stageY);
+				
+				var point:Point = localToGlobal(new Point(stage.x, stage.y));
+				
+				if (mousePoint.x >= point.x 
+					&& mousePoint.y >= point.y
+					&& mousePoint.x <= point.x + width
+					&& mousePoint.y <= point.y + height) {
+					return true;
+				}
+				return false;
+			}
+			
+			public function get displayAreaOfSelection():Rectangle {				
+				return null;  
+			}
+			
+			public function getContext():ActionContext {
+				return null;
+			}
+			
+			public function setFocusOnMainSelectedObject():void {			
+			}
+			
+			private function actionExecutedHandler(value:Boolean):void {
+				stagingView.refreshClickHandler();
+			}
+			
+		]]>
+	</mx:Script>
+		
+</mx:List>
+

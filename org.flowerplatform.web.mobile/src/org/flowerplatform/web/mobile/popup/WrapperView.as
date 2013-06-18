@@ -18,7 +18,7 @@ package org.flowerplatform.web.mobile.popup {
 		
 		override protected function createChildren():void {
 			super.createChildren();
-
+			
 			popupContent = IPopupContent(data.popupContent);
 			popupContent.popupHost = this;
 			popupContent.percentHeight = 100;
@@ -28,7 +28,7 @@ package org.flowerplatform.web.mobile.popup {
 			if (data.modalOverAllApplication) {
 				navigationContent = [];
 			}
-
+			
 			refreshActions(activePopupContent);
 		}
 		
