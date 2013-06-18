@@ -1,8 +1,9 @@
 package org.flowerplatform.flexdiagram.controller.model_extra_info {
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElement;
-	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -34,5 +35,13 @@ package org.flowerplatform.flexdiagram.controller.model_extra_info {
 		public function createExtraInfo(model:Object):Object {
 			return NO_RENDERER_ASSOCIATED_MARKER;
 		}
+		
+		public function isSelected(model:Object):Boolean {
+			return false;
+		}
+		
+		public function setSelected(model:Object, value:Boolean):void {			
+		}
+				
 	}
 }

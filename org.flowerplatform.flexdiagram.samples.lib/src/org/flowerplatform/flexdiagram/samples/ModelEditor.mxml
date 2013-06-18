@@ -13,13 +13,15 @@
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
+			import mx.core.FlexGlobals;
 			import mx.events.CollectionEvent;
 			import mx.events.FlexEvent;
 			
-			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
+			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexdiagram.samples.model.BasicConnection;
 			import org.flowerplatform.flexdiagram.samples.model.BasicModel;
 			import org.flowerplatform.flexdiagram.samples.model.BasicSubModel;
+			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 
 			[Bindable]
 			public var modelHolder:IModelHolder;
@@ -29,6 +31,9 @@
 
 			[Bindable]
 			private var selectedSubModel:BasicSubModel;
+			
+			[Bindable]
+			private var selectedItems:ArrayList = SamplesDiagramShell(FlexGlobals.topLevelApplication.diagramShell).selectedItems;
 			
 		]]>
 	</fx:Script>
@@ -43,7 +48,7 @@
 	
 	<fx:Binding source="list.selectedItem" destination="selectedModel"/>
 	<fx:Binding source="subModelsList.selectedItem" destination="selectedSubModel"/>
-	
+		
 	<s:VGroup width="100%" height="100%">
 		<s:Label id="selectionLabel"/>
 		<s:Form width="100%" enabled="{selectedModel != null}">
@@ -111,6 +116,48 @@
 					</s:Button>				
 				</s:HGroup>
 				<s:List id="subModelsList" dataProvider="{list.selectedItem.subModels}" width="100%" height="200"/>
+			</s:VGroup>
+		</s:HGroup>
+		<s:HGroup width="100%" height="100%">
+			<s:VGroup id="vg3" width="100%" height="100%">
+				<s:Label text="SelectedItems"/>
+				<s:HGroup width="100%">
+					<s:List id="selectedItemsList" dataProvider="{selectedItems}" width="100%" height="200"/>
+					<s:VGroup>
+						<s:Button label="Add Model" enabled="{list.selectedItem != null}">
+							<s:click>
+								<![CDATA[
+									var diagramShell:DiagramShell = SamplesDiagramShell(FlexGlobals.topLevelApplication.diagramShell);								
+									diagramShell.selectedItems.addItem(list.selectedItem);
+								]]>
+							</s:click>
+						</s:Button>		
+						<s:Button label="Add SubModel" enabled="{list.selectedItem != null}">
+							<s:click>
+								<![CDATA[
+									var diagramShell:DiagramShell = SamplesDiagramShell(FlexGlobals.topLevelApplication.diagramShell);								
+									diagramShell.selectedItems.addItem(subModelsList.selectedItem);
+								]]>
+							</s:click>
+						</s:Button>	
+						<s:Button label="Remove" enabled="{list.selectedItem != null}">
+							<s:click>
+								<![CDATA[
+									var diagramShell:DiagramShell = SamplesDiagramShell(FlexGlobals.topLevelApplication.diagramShell);							
+									diagramShell.selectedItems.removeItem(selectedItemsList.selectedItem);
+								]]>
+							</s:click>
+						</s:Button>	
+						<s:Button label="Remove All" enabled="{list.selectedItem != null}">
+							<s:click>
+								<![CDATA[
+								var diagramShell:DiagramShell = SamplesDiagramShell(FlexGlobals.topLevelApplication.diagramShell);							
+								diagramShell.selectedItems.removeAll();
+								]]>
+							</s:click>
+						</s:Button>	
+					</s:VGroup>					
+				</s:HGroup>
 			</s:VGroup>
 		</s:HGroup>
 	</s:VGroup>
