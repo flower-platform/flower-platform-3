@@ -63,6 +63,23 @@
                </documentation>
             </annotation>
          </attribute>
+         <attribute name="serviceId" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="editorStatefulService" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="java" basedOn="org.flowerplatform.editor.remote.EditorStatefulService:"/>
+               </appinfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

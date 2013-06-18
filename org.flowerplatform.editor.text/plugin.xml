@@ -11,7 +11,9 @@
          point="org.flowerplatform.editor.contentTypeToEditorMapping">
       <contentTypeToEditorMapping
             compatibleEditor="text"
-            contentType="text">
+            contentType="text"
+            editorStatefulService="org.flowerplatform.editor.text.remote.TextEditorStatefulService"
+            serviceId="textEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>
    <extension

@@ -1,18 +1,15 @@
 package org.flowerplatform.editor.text.remote;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.core.runtime.CoreException;
+import org.apache.commons.io.FileUtils;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
@@ -40,20 +37,13 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(TextEditorStatefulService.class);
 
-	public static final String TEXT_CONTENT = "text_ct";
-	
-	public static final String TEXT_EDITOR = "text";
-
-	public static final String SERVICE_ID = "TextEditorStatefulService";
-	
 	public static final String CLIENT_KEYSTROKE_AGGREGATION_INTERVAL = "client.keystroke.aggregation.interval"; //milliseconds
 
 //	static {
 //		FlowerWebProperties.INSTANCE.addProperty(new AddIntegerProperty(CLIENT_KEYSTROKE_AGGREGATION_INTERVAL, "3000"));
 //	}
 	
-	public TextEditorStatefulService(String editorName) {
-		super(editorName);
+	public TextEditorStatefulService() {
 		createRegexConfiguration();
 	}
 	
@@ -87,29 +77,27 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 */
 	@Override
 	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource newlyCreatedEditableResource) throws FileNotFoundException {
-//		TextEditableResource er = (TextEditableResource) newlyCreatedEditableResource;
-//
-//		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path((String) er.getEditorInput()));
-//		er.setFile(file);
-//		
-//		StringBuffer content;
-//		try {
-//			content = Utilities.loadFileContent(file);
-//		} catch (Throwable e) {
-//			if (!file.exists()) {
-//				throw new FileNotFoundException(newlyCreatedEditableResource.getEditableResourcePath());
-//			} else {
-//				throw new RuntimeException("Error while loading file content " + file, e);
-//			}
-//		}
-//		
-//		er.setFileContent(content);
-//		
-//		// See class comment for purpose of eoln delimiter converting.
-//		String replacedEolnDelimiter = Utilities.makeFlexCompatibleDelimiters(content); // Inplace replacement of delimiters.
-//		er.setReplacedEolnDelimiter(replacedEolnDelimiter);
-//		
-//		er.setDirty(false);
+		TextEditableResource er = (TextEditableResource) newlyCreatedEditableResource;
+		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), er.getEditableResourcePath());
+		er.setFile(file);
+		if (!file.exists()) {
+			throw new FileNotFoundException(newlyCreatedEditableResource.getEditableResourcePath());
+		}
+		
+		String content;
+		try {
+			content = FileUtils.readFileToString(er.getFile());
+		} catch (Throwable e) {
+			throw new RuntimeException("Error while loading file content " + file, e);
+		}
+		
+		er.setFileContent(new StringBuffer(content));
+		
+		// See class comment for purpose of eoln delimiter converting.
+		String replacedEolnDelimiter = Utilities.makeFlexCompatibleDelimiters(er.getFileContent()); // Inplace replacement of delimiters.
+		er.setReplacedEolnDelimiter(replacedEolnDelimiter);
+		
+		er.setDirty(false);
 	}
 
 	@Override
@@ -240,30 +228,6 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 //				}
 //			}
 		}		
-		
-		/**
-		 * Throw an exception if the file content could not be loaded. The exception will be handled 
-		 * in {@link #loadFileContent(IFile)}.
-		 * 
-		 * @author Mariana
-		 * 
-		 * @flowerModelElementId _Ywm0MKXLEeG-cPK59Sm4Wg
-		 */
-		private static StringBuffer loadFileContent(File file) throws CoreException, IOException {
-			StringBuffer loadedContent = new StringBuffer();
-//			file.refreshLocal(IResource.DEPTH_ZERO, null);
-//			logger.debug("Loading text file {}", file.getName());
-//			InputStreamReader fileEditorInputReader = new InputStreamReader(file.getContents());
-//			char[] buffer = new char[1024];
-//				int bytesRead; 
-//			do {
-//				bytesRead = fileEditorInputReader.read(buffer);
-//				if (bytesRead > 0) 
-//					loadedContent.append(buffer, 0, bytesRead);				
-//			} while (bytesRead > 0);
-//			fileEditorInputReader.close();
-			return loadedContent;
-		}
 	}
 
 	public void selectRange(CommunicationChannel channel, String editableResourcePath, int offset, int length) {

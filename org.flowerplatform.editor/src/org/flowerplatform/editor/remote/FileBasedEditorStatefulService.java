@@ -24,8 +24,7 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	/**
 	 * @flowerModelElementId _B5SMcCJ1EeKovflGC_YAeQ
 	 */
-	public FileBasedEditorStatefulService(String editorName) {
-		super(editorName);
+	public FileBasedEditorStatefulService() {
 //		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
 	}
 

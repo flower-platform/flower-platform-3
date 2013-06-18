@@ -49,13 +49,13 @@ public class EditableResourceClient {
 		this.communicationChannel = communicationChannel;
 	}
 	
-//	/**
-//	 * @flowerModelElementId _O0sFULV8EeGL6Md0-RjoBw
-//	 */
-//	public String getClientId() {
-//		return cachedClientId;
-//	}
-//	
+	/**
+	 * @flowerModelElementId _O0sFULV8EeGL6Md0-RjoBw
+	 */
+	public String getCommunicationChannelId() {
+		return (String) communicationChannel.getId();
+	}
+	
 //	/**
 //	 * @flowerModelElementId _O0sFUrV8EeGL6Md0-RjoBw
 //	 */

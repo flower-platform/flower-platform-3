@@ -131,7 +131,7 @@
 			/**
 			 * @author Dana
 			 */ 
-			public function setContent (newContent:String):void {
+			public function setContent(newContent:String):void {
 				syntaxTextEditor.setContent(newContent);
 				// set the hyperlinkManager now, because the textFlow component is reinitialized after setContent()
 				if (hyperlinkManager !=  null)

@@ -9,9 +9,11 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
+import org.flowerplatform.editor.remote.EditorStatefulService;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +61,11 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 		for (IConfigurationElement configurationElement : configurationElements) {
 			String contentType = configurationElement.getAttribute("contentType");
 			String compatibleEditor = configurationElement.getAttribute("compatibleEditor");
+			String serviceId = configurationElement.getAttribute("serviceId");
+			EditorStatefulService editorStatefulService = (EditorStatefulService) configurationElement.createExecutableExtension("editorStatefulService");
+			editorStatefulService.setEditorName(compatibleEditor);
+			CommunicationPlugin.getInstance().getServiceRegistry().registerService(serviceId, editorStatefulService);
+			
 			ContentTypeDescriptor descriptor = contentTypeDescriptorsMap.get(contentType);
 			if (descriptor == null) {
 				throw new IllegalArgumentException("Cannot find contentType = " + contentType + 

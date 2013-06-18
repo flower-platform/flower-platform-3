@@ -274,18 +274,14 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _rZy54CJvEeKovflGC_YAeQ
-	 */
-	public EditorStatefulService(String editorName) {
-		super();
-		this.editorName = editorName;
-	}
-
-	/**
 	 * @flowerModelElementId _rZy54iJvEeKovflGC_YAeQ
 	 */
 	public String getEditorName() {
 		return editorName;
+	}
+
+	public void setEditorName(String editorName) {
+		this.editorName = editorName;
 	}
 
 	/**

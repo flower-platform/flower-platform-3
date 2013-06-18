@@ -2,6 +2,7 @@ package org.flowerplatform.editor.text {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
+	import org.flowerplatform.editor.text.remote.TextEditorUpdate;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
@@ -27,6 +28,11 @@ package org.flowerplatform.editor.text {
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 		}
+		
+		override protected function registerClassAliases():void	{
+			registerClassAliasFromAnnotation(TextEditorUpdate);
+		}
+		
 		
 	}
 }

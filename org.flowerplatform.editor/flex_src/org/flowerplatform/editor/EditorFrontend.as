@@ -209,6 +209,10 @@ package org.flowerplatform.editor {
 			resourceStatusBar.percentWidth = 100; // Streach so that buttons may appear on the right side
 			addChildAt(resourceStatusBar, 0);
 			
+			editor.percentHeight = 100;
+			editor.percentWidth = 100;
+			addChild(editor);
+			
 //			_rootFigure = createRootFigure();
 //			
 //			editorAndDiagramContainer = createEditorAndDiagramContainer();	

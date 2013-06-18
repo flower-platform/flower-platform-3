@@ -1,5 +1,8 @@
 package org.flowerplatform.common;
 
+import java.io.File;
+
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -31,5 +34,10 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 	public void registerMessageBundle() throws Exception {
 		// do nothing, because we don't have messages (yet)
 	}
+	
+	public File getWorkspaceRoot() {
+		return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().makeAbsolute().toFile();
+	}
+
 
 }

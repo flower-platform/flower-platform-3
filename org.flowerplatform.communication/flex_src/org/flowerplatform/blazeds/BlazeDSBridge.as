@@ -513,8 +513,11 @@ package  org.flowerplatform.blazeds {
 			return channelSet.currentChannel.id;
 		}
 		
-		public function get clientId() : String {
-			return consumer.clientId;
+		/**
+		 * It's the Flex Client ID. Don't mistake this with message client id.
+		 */
+		public function get communicationChannelId() : String {
+			return FlexClient.getInstance().id;
 		}
 		
 		public function getLastLoginUserName():String {

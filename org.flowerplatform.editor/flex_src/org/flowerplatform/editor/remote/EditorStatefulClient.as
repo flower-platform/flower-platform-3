@@ -116,7 +116,7 @@ package  org.flowerplatform.editor.remote {
 			}
 			
 			// update the lock expire time, because the server won't contact us to update this time
-			if (editableResourceStatus != null && editableResourceStatus.locked && editableResourceStatus.lockOwner.clientId == CommunicationPlugin.getInstance().bridge.clientId) {
+			if (editableResourceStatus != null && editableResourceStatus.locked && editableResourceStatus.lockOwner.communicationChannelId == CommunicationPlugin.getInstance().bridge.communicationChannelId) {
 				editableResourceStatus.lockExpireTime = new Date(new Date().time + EditorPlugin.getInstance().lockLeaseSeconds * 1000);
 			}
 			
@@ -431,7 +431,7 @@ package  org.flowerplatform.editor.remote {
 		public function clientRemoved(removedClientId:String):void {
 			for (var i:int = 0; i < editableResourceStatus.clients.length; i++) {
 				// search for the entry with the proper clientId
-				if (EditableResourceClient(editableResourceStatus.clients[i]).clientId == removedClientId) {
+				if (EditableResourceClient(editableResourceStatus.clients[i]).communicationChannelId == removedClientId) {
 					break;
 				}
 			}

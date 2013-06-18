@@ -13,7 +13,7 @@ package org.flowerplatform.editor.remote {
 		 * @flowerModelElementId _dp-UALV7EeGL6Md0-RjoBw
 		 */
 		[SecureSWF(rename="off")]
-		public var clientId:String;
+		public var communicationChannelId:String;
 		
 		/**
 		 * @flowerModelElementId _gxgssLV7EeGL6Md0-RjoBw

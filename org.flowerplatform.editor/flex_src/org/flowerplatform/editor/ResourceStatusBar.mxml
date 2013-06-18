@@ -44,17 +44,17 @@
 			/**
 			 * @flowerModelElementId _T_7CcLoOEeGmmdms_o5fxQ
 			 */
-			private static const LOCKED_ICON:String = "icons/Web/icons/locks/lock.png";
+			private static const LOCKED_ICON:String =  EditorPlugin.getInstance().getResourceUrl("images/locks/lock.png");
 			
 			/**
 			 * @flowerModelElementId _T_-FwroOEeGmmdms_o5fxQ
 			 */
-			private static const UNLOCKED_ICON:String = "icons/Web/icons/locks/unlock.png";
+			private static const UNLOCKED_ICON:String = EditorPlugin.getInstance().getResourceUrl("images/locks/unlock.png");
 			
 			/**
 			 * @flowerModelElementId _iQw-sLq6EeGcctunuFRi4Q
 			 */
-			public static const LOCK_ICON_SMALL:String = "icons/Web/icons/locks/lock_small.png";
+			public static const LOCK_ICON_SMALL:String = EditorPlugin.getInstance().getResourceUrl("images/Web/icons/locks/lock_small.png");
 			
 			/**
 			 * @flowerModelElementId _UABwI7oOEeGmmdms_o5fxQ
@@ -162,7 +162,7 @@
 			 */
 			private function getState():int {
 				if (editableResource.locked){
-					if (editableResource.lockOwner.clientId == CommunicationPlugin.getInstance().bridge.clientId) {				
+					if (editableResource.lockOwner.communicationChannelId == CommunicationPlugin.getInstance().bridge.communicationChannelId) {				
 						return LOCKED_BY_ME;
 					} else {
 						return LOCKED_BY_OTHER;
@@ -326,9 +326,9 @@
 	
 	<mx:HBox id="collaborativeFiguresBox" paddingTop="1" paddingBottom="1" paddingLeft="2" paddingRight="2" verticalAlign="middle" horizontalGap="3">
 		
-		<mx:Label text="Presentation:"/>
+<!--		<mx:Label text="Presentation:"/>
 
-<!--		<util:ButtonWithIconComponent id="createdDashedRectangle" width="{createdDashedRectangle.height}" click="createCollaborativeFigureButtonClickHandler(event)">
+		<util:ButtonWithIconComponent id="createdDashedRectangle" width="{createdDashedRectangle.height}" click="createCollaborativeFigureButtonClickHandler(event)">
 			<util:data>
 				<tool:CreateCollaborativeFigureTool 
 					figureType="{CollaborativeFigureModel.DASHED_RECTANGLE}"
