@@ -1,0 +1,31 @@
+<!-- This is a test file for the MXML partitioner and partition tokenizer. -->
+
+<!-- Some simple tags. -->
+<mx:Button text="this is a string" text="another \" string">
+</mx:Button>
+<mx:Button text='this is a string' text='another \' string'/>
+
+<!-- Special script tag. -->
+<mx:Script text="string">
+	// text here should not be colored
+	import function package
+	<![CDATA[
+		// some AS code
+		import function package
+	]]>
+	// text here should not be colored
+	import function package
+</mx:Script>
+
+// text here should not be colored
+
+<!-- Special style tag. -->
+<mx:Style text="string">
+	#textArea { color : black; color : "whi\"te" }
+	// single line comment
+	/*
+	multiline
+	comment
+	*/
+	#textArea { color : 'bl\'ack'; color : white }
+</mx:Style>

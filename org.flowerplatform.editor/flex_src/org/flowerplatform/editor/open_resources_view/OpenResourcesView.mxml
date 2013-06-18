@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+@author Cristi
+@flowerModelElementId _XwsekK5LEeG228WnpVvrPA
+-->
+<mx:TabNavigator xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="creationCompleteHandler()" xmlns:openresourcesview="com.crispico.flower.mp.web.editorsupport.openresourcesview.*"
+				 >
+	<fx:Script>
+		<![CDATA[
+			import org.flowerplatform.editor.remote.EditableResource;
+//			implements="com.crispico.flower.mp.web.editorsupport.IDirtyStateProvider"
+			
+//			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
+//			import com.crispico.flower.mp.communication.stateful_service.StatefulClient;
+//			import com.crispico.flower.mp.communication.stateful_service.StatefulClientRegistry;
+//			import com.crispico.flower.mp.web.editor.GlobalEditorOperationsManager;
+//			import com.crispico.flower.mp.web.editor.communication.EditorStatefulClient;
+//			import com.crispico.flower.mp.web.editorsupport.EditableResource;
+//			import com.crispico.flower.mp.web.editorsupport.EditableResourceClient;
+//			import com.crispico.flower.mp.web.editorsupport.openresourcesview.action.UnsubscribeFromEditableResourceAction;
+//			import com.crispico.flower.util.layout.event.ViewRemovedEvent;
+//			
+//			import mx.collections.ArrayCollection;
+			
+			/**
+			 * Not null when the view is open; null otherwise.
+			 * 
+			 * @flowerModelElementId _ZacvcLVCEeGHQ9UXq6mt1g
+			 */
+			public static var INSTANCE:OpenResourcesView;
+			
+//			/**
+//			 * Populated directly by <code>UpdateEditableResourceClientCommand</code>. We know
+//			 * all the ERs in the application in <code>EditorSupport.editableResources</code>, but
+//			 * they are held as a dictionary which is not an valid data provider for a graphical
+//			 * component. That's why we duplicate the data here, in a list format.
+//			 * 
+//			 * @flowerModelElementId _Xwu60K5LEeG228WnpVvrPA
+//			 */
+//			[Bindable]
+//			public var editableResourcesCollection:ArrayCollection = new ArrayCollection();
+//			
+//			private var unsubscribeFromEditableResourceAction:UnsubscribeFromEditableResourceAction = new UnsubscribeFromEditableResourceAction();
+			
+			/**
+			 * Initialize the list with the existing elements, by iterating through all <code>EditorStatefulClients</code>s.
+			 * 
+			 * @flowerModelElementId _Xw1ogK5LEeG228WnpVvrPA
+			 */
+			private function creationCompleteHandler():void	{
+//				INSTANCE = this;
+//				addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
+//	
+//				for each (var sc:StatefulClient in StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList) {
+//					if (sc is EditorStatefulClient && EditorStatefulClient(sc).editableResourceStatus != null) {
+//						editableResourcesCollection.addItem(EditorStatefulClient(sc).editableResourceStatus);
+//					}
+//				}
+//				tree.addEventListener(Event.CHANGE, selectionChangedHandler);
+			}
+			
+//			/**
+//			 * @author Daniela
+//			 */ 
+//			private function selectionChangedHandler(event:Event):void {
+//				// update the target of the Save action
+//				GlobalEditorOperationsManager.INSTANCE.editorInputChangedForComponent(this);
+//			}
+//			
+//			/**
+//			 * @flowerModelElementId _Zahn8LVCEeGHQ9UXq6mt1g
+//			 */			
+//			private function viewRemovedHandler(event:ViewRemovedEvent):void {
+//				INSTANCE = null;				
+//			}
+//			
+//			/**
+//			 * @flowerModelElementId _avAMoLkpEeG4yKAWAH18iQ
+//			 */
+//			private function fillContextMenu(contextMenu:FlowerContextMenu):void {
+//				contextMenu.addActionEntryIfVisible(unsubscribeFromEditableResourceAction);
+//			}
+//			
+//			/**
+//			 * @flowerModelElementId _Spl-8LndEeGTi8MPVfmTnA
+//			 */
+//			private function getLabel(object:Object):String {
+//				if (object is EditableResource) {
+//					var editableResource:EditableResource = EditableResource(object);
+//					return GlobalEditorOperationsManager.INSTANCE.getEditableResourceLabel(editableResource, true);
+//				} else if (object is EditableResourceClient) {
+//					return EditableResourceClient(object).name + " (" + 
+//						EditableResourceClient(object).login + ")";
+//				} else {
+//					return null;
+//				}
+//			}			
+//			
+//			/**
+//			* Returns true if at least one of the resources it displays is dirty.
+//			* 
+//			* @author Daniela
+//			* @author Mariana 
+//			*/ 
+//			public function isDirty():Boolean {
+//				for each (var editableResource:EditableResource in editableResourcesCollection) {
+//					if (editableResource.dirty)
+//						return true;
+//				}
+//				return false;
+//			}
+//			
+//			public function getEditorStatefulClientForSelectedElement():EditorStatefulClient {
+//				if (!(tree.selectedItem is EditableResource)) {
+//					return null;
+//				}
+//				// TODO CS/STFL de scos castul la string
+//				var editableResourcePath:String = String(EditableResource(tree.selectedItem).editorInput);
+//				return GlobalEditorOperationsManager.INSTANCE.getInterestingEditorStatefulClientForEditableResourcePath(editableResourcePath);
+//			}
+			
+			public function editableResourceStatusAdded(editableResourceStatus:EditableResource):void {
+//				editableResourcesCollection.addItem(editableResourceStatus);
+			}
+			
+			public function editableResourceStatusRemoved(editableResourceStatus:EditableResource):void {
+//				if (editableResourceStatus == null) {
+//					return;
+//					// I haven't actually seen this case (i.e. == null), but in theory could happen,
+//					// if the editor is closed really quickly, before the data arrives
+//				}
+//				
+//				var itemIndex:int = editableResourcesCollection.getItemIndex(editableResourceStatus);
+//				
+//				if (itemIndex < 0) {
+//					// However I seen this case: something went wrong when first registering
+//					// and the element is not in the list
+//					return;
+//				}
+//				
+//				editableResourcesCollection.removeItemAt(itemIndex);
+			}
+			
+			public function editableResourceClientAddedOrRemoved():void {
+//				// inject a refresh, in order to force the refresh of the item renderer;
+//				// needed for: change state from "no children" <-> "has children"; and for the label
+//				// update, because we show the size of the list, which is not binded/listened
+//				tree.invalidateDisplayList();
+			}
+			
+		]]>
+		
+	</fx:Script>
+	<mx:VBox label="All Resources" width="100%" height="100%">
+<!--		<openresourcesview:OpenResourcesTree id="tree"
+				width="100%" height="100%" dataProvider="{editableResourcesCollection}" 
+				contextMenuEnabled="true" fillContextMenuFunction="fillContextMenu"
+				allowMultipleSelection="true" labelFunction="getLabel"/>
+-->	</mx:VBox>
+		
+</mx:TabNavigator>

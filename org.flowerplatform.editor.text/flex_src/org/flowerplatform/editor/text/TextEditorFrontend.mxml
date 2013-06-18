@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Text editor with syntax coloring. 
+
+ <p>
+ This class is meant to be extended by plugins. Extending classes must
+ initialize the protected fields <code>partitionScanner</code>,
+ <code>partitionTokenizerProvider</code>, <code>partitionTokenFormatProvider</code>
+ and <code>hyperlinkManager</code> for a specific syntax.
+
+ <p>
+ It is also a <code>IEditorInputProvider</code>, as it displays a dirty sign (*)
+ in its label if the editable resource that it displays is dirty.
+
+ @flowerModelElementId _Xc7FQFYrEeGgtLw8YArqtQ
+-->
+
+<editorsupport:EditorFrontend
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:texteditor="com.crispico.flower.texteditor.*"
+	xmlns:editor="com.crispico.flower.mp.web.texteditor.*"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:editorsupport="org.flowerplatform.editor.*"
+	initialize="initializeHandler()">
+	 
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.texteditor.SyntaxTextEditor;
+			import com.crispico.flower.texteditor.events.BufferedTextChangesEvent;
+			import com.crispico.flower.texteditor.events.TextChangedEvent;
+			import com.crispico.flower.texteditor.hyperlink.HyperlinkManager;
+			import com.crispico.flower.texteditor.partitioning.scanners.IPartitionScanner;
+			import com.crispico.flower.texteditor.providers.IPartitionTokenFormatProvider;
+			import com.crispico.flower.texteditor.providers.IPartitionTokenizerProvider;
+			
+			import mx.collections.ArrayCollection;
+			
+			import org.flowerplatform.editor.text.remote.TextEditorUpdate;
+			
+			protected var partitionScanner:IPartitionScanner;
+			protected var partitionTokenizerProvider:IPartitionTokenizerProvider;
+			protected var partitionTokenFormatProvider:IPartitionTokenFormatProvider;
+			
+			protected var hyperlinkManager:HyperlinkManager;
+			
+			private static const CLIENT_KEYSTROKE_AGGREGATION_INTERVAL:String = "client.keystroke.aggregation.interval";
+			
+			private static var _keystrokeAggregationInterval:int = 0;
+			
+			/**
+			 * The interval (in ms) when buffered text events are aggregated 
+			 * and sent to other editors that display the same file. Set it 
+			 * to 0 to disable event buffering (i.e. all text events are sent
+			 * imediately to other editors).
+			 * 
+			 * <p>
+			 * The value is cached so all the editors that will be open will
+			 * use this value, and also updated on all already open editors.
+			 * 
+			 * @author Mariana
+			 * @author Sorin
+			 */ 
+			public static function updateProperties(properties:Object):void { 
+//				if (properties[CLIENT_KEYSTROKE_AGGREGATION_INTERVAL] != null)
+//					_keystrokeAggregationInterval = int(properties[CLIENT_KEYSTROKE_AGGREGATION_INTERVAL]);
+//				
+//				// update already open editors
+//				for each (var editorFrontendController:EditorFrontendController in EditorSupport.INSTANCE.editorFrontendControllers) {
+//					if (editorFrontendController is TextEditorFrontendController)
+//						for each (var editorFrontend:EditorFrontend in editorFrontendController.editorFrontends)
+//						TextEditorFrontend(editorFrontend).setKeystrokeAggregationIntervalForSyntaxTextEditor();
+//				}
+			}
+			
+			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void	{
+				var updates:ArrayCollection = ArrayCollection(content);
+				updateTextEditor(updates, isFullContent);
+			}
+			
+			/**
+			 * Changes the dirty state for the keystroke aggregation buffer.
+			 */ 
+			public function updateDirtyState(dirtyState:Boolean):void {
+				(editor as SyntaxTextEditor).setKeystrokeAggregationBufferDirtyState(dirtyState);
+			}
+			
+			/**
+			 * Updates the text in the editor. First modifies the text, then dispatches a
+			 * <code>TextChangedEvent</code> to the editor to trigger syntax recoloring.
+			 * @flowerModelElementId _MhSHwVlEEeGRrZ75u0k71A
+			 */ 
+			public function updateTextEditor(updates:ArrayCollection, fullText:Boolean):void {
+				/** FIXME Sorin:*/
+				// De vb cu Cristi si Florin ca Este ineficient sa se transmita tot fisierul in cazul in care un client care modifica o resursa,
+				// si nu stie ca s-a pus lock. Teoretic asta s-ar intampla de fiecare cand se editeaza textul,
+				// probabilitatea fiind mai mare daca editeaza mai multi, dar totusi nu e un caz chiar asa de des sa necesite prea multa atentie.
+				// A doua problema e ca ia mult incarcarea fisierului desi arata probabil la fel, mai putin cateva caractere.
+				// Ia mult din cauza partitionarii lui SyntaxTextEditor.
+				
+				// Prima solutie care nu rezolva trimiterea tot continutului fisierului dar rezolva problema cu repartitionarea
+				// este sa se calculeze exact zona diferita si sa se simuleze un replace intre niste indici si cu un text foarte mic.
+				
+				// A doua solutie care rezolva trimiterea continutului fisierului este ca atunci cand se detecteaza pe server primirea
+				// unor comenzi de editare pe o resursa care este locked, sa se trimita inapoi pe client comenzile care au fost repinse.
+				// Pe client se va tine intr-un buffer aceste comenzi (fiindca vor urma si alte comenzi neacceptate sa soseasca) cu scopul de a recalcula corect indicii,
+				// si bufferul se va elibera in clipa in care serverul va spune ca resursa va fi deblocata.
+				
+				// cache the client's current selection to restore it after updating the text
+				var cachedAnchorIndex:int = Math.max(syntaxTextEditor.selectionAnchorPosition, 0);
+				var cachedActiveIndex:int = Math.max(syntaxTextEditor.selectionActivePosition, 0);
+				var minIndex:int = cachedActiveIndex < cachedAnchorIndex ? cachedActiveIndex : cachedAnchorIndex;
+				var diff:int = 0;
+				if (fullText) {
+					// Taking the first because probably only one exists with fullText.
+					var update:TextEditorUpdate = TextEditorUpdate(updates[0]); 
+					setContent(update.newText);
+				} else { 
+					// apply the updates
+					for each (var update:TextEditorUpdate in updates) {
+						if (update.offset < minIndex)
+							diff += update.newText.length - update.oldTextLength;
+						syntaxTextEditor.updateText(update.offset, update.oldTextLength, update.newText);
+					}
+				}
+				// restore the cached selection
+				syntaxTextEditor.selectRange(cachedAnchorIndex + diff, cachedActiveIndex + diff);
+				// keep the page scroll relative to cursor position
+				syntaxTextEditor.scrollToRange(cachedAnchorIndex + diff, cachedActiveIndex + diff);
+			}
+			
+			/**
+			 * @author Dana
+			 */ 
+			public function setContent (newContent:String):void {
+				syntaxTextEditor.setContent(newContent);
+				// set the hyperlinkManager now, because the textFlow component is reinitialized after setContent()
+				if (hyperlinkManager !=  null)
+					syntaxTextEditor.addHyperlinkManager(hyperlinkManager);
+			}
+			
+			/**
+			 * Listens for <code>BufferedTextChangesEvent</code>s dispatched by the editor
+			 * and sends a <code>UpdateFileContentServerCommand</code> containing the text
+			 * changes so the server can update other editors that display this file.
+			 * Also updates other editors that display this file.
+			 * 
+			 * @flowerModelElementId _MhT881lEEeGRrZ75u0k71A
+			 */ 
+			private function textEditorChangedHandler(evt:BufferedTextChangesEvent):void {
+//				var er:EditableResource = EditorSupport.INSTANCE.editableResources[editorInput];
+//				er.dirty = true;
+//				EditorSupport.INSTANCE.dirtyStateUpdated(er);
+				
+				var buffer:ArrayCollection = evt.buffer;
+				
+				var updates:ArrayCollection = new ArrayCollection();
+				for each (var textChangedEvent:TextChangedEvent in buffer) {
+					var update:TextEditorUpdate = new TextEditorUpdate();
+					update.offset = textChangedEvent.offset;
+					update.oldTextLength = textChangedEvent.oldTextLength;
+					update.newText = textChangedEvent.newText;
+					updates.addItem(update);
+				}
+
+				editorStatefulClient.attemptUpdateContent(this, updates);
+			}
+			
+			/**
+			 * Initializes specific syntax elements to the <code>SyntaxTextEditor</code> 
+			 * and registers event listeners for editing and closing the container.
+			 * @flowerModelElementId _MhYOYVlEEeGRrZ75u0k71A
+			 */
+			private function initializeHandler():void {
+				if (partitionScanner != null && partitionTokenizerProvider != null && partitionTokenFormatProvider != null)
+					syntaxTextEditor.initializeSyntax(partitionScanner, partitionTokenizerProvider, partitionTokenFormatProvider);
+				setKeystrokeAggregationIntervalForSyntaxTextEditor();
+				
+				addEventListener(BufferedTextChangesEvent.BUFFERED_TEXT_CHANGES, textEditorChangedHandler);
+			}
+			
+			public function setKeystrokeAggregationIntervalForSyntaxTextEditor():void {
+				if (syntaxTextEditor)
+					syntaxTextEditor.setKeystrokeAggregationInterval(_keystrokeAggregationInterval);
+			}
+			
+			public function getHyperlinkManager():HyperlinkManager {
+				return hyperlinkManager;			
+			}
+			
+			public override function disableEditing():void {
+				syntaxTextEditor.editable = false;
+			}
+			
+			public override function enableEditing():void {
+				syntaxTextEditor.editable = true;
+			}
+//			/**
+//			 * @flowerModelElementId _WTy3IDLvEeKrMsw303uxEA
+//			 */
+//			public function get displayAreaOfSelection():Rectangle {
+//			// TODO implement
+//			return null;
+//		}
+//			/**
+//			 * @flowerModelElementId _ZY-fYDLvEeKrMsw303uxEA
+//			 */
+//			public function isOverSelection(event:MouseEvent):Boolean {
+//			// TODO implement
+//			return null;
+//		}
+//			/**
+//			 * @flowerModelElementId _ad-_oDLvEeKrMsw303uxEA
+//			 */
+//			public function setFocusOnMainSelectedObject():void {
+//			// TODO implement
+//		}
+//			/**
+//			 * @flowerModelElementId _fvsw4DLvEeKrMsw303uxEA
+//			 */
+//			public function fillContextMenu(menu:FlowerContextMenu):void {
+//			// TODO implement
+//		}
+//			
+//			public function getSelection():ArrayCollection {
+//				//TODO implement
+//				return null;
+//			}
+		]]>
+	</mx:Script>
+ 
+	<editorsupport:editor>
+		<texteditor:SyntaxTextEditor id="syntaxTextEditor"/>
+	</editorsupport:editor>
+	
+</editorsupport:EditorFrontend>

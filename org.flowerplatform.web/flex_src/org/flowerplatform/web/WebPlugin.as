@@ -8,6 +8,8 @@ package org.flowerplatform.web {
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
@@ -24,6 +26,10 @@ package org.flowerplatform.web {
 		public static function getInstance():WebPlugin {
 			return INSTANCE;
 		}
+		
+		public static const NODE_TYPE_ORGANIZATION:String = "or";
+
+		public static const NODE_TYPE_FILE:String = "f";
 		
 		protected var webCommonPlugin:WebCommonPlugin = new WebCommonPlugin();
 		
@@ -42,6 +48,16 @@ package org.flowerplatform.web {
 			INSTANCE = this;
 			
 			perspectives.push(new DefaultPerspective());
+			EditorPlugin.getInstance().addPathFragmentToEditableResourcePathCallback = function (treeNode:TreeNode):String {
+				if (treeNode.pathFragment == null) {
+					return null;
+				}
+				if (treeNode.pathFragment.type == NODE_TYPE_ORGANIZATION || treeNode.pathFragment.type == NODE_TYPE_FILE) {
+					return treeNode.pathFragment.name;
+				} else {
+					return null;
+				}
+			}
 		}
 		
 		override public function start():void {
@@ -55,6 +71,7 @@ package org.flowerplatform.web {
 			workbench.percentHeight = 100;
 			workbench.percentWidth = 100;
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
+			FlexGlobals.topLevelApplication.workbench = workbench;
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 		}

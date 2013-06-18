@@ -112,6 +112,7 @@
 				FlexUtilGlobals.getInstance().contextMenuManager = new ContextMenuManager();
 			}
 			
+			public var workbench:Object;
 		]]>
 	</fx:Script>
 </s:Application>

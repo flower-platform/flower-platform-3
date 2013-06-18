@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeDataProvider;
+import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,12 +56,29 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 			}
 		}
 		
+		configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.explorerAdditionalNodePopulator");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			INodePopulator populator = (INodePopulator) configurationElement.createExecutableExtension("populator");
+			for (IConfigurationElement nodeTypeConfigurationElement : configurationElement.getChildren()) {
+				String nodeType = nodeTypeConfigurationElement.getAttribute("nodeType");
+				List<INodePopulator> populators = getAdditionalNodePopulators().get(nodeType);
+				if (populators == null) {
+					populators = new ArrayList<INodePopulator>();
+					getAdditionalNodePopulators().put(nodeType, populators);
+				}
+				populators.add(populator);
+			}
+		}
+		
 		if (logger.isDebugEnabled()) {
 			for (Map.Entry<String, List<IChildrenProvider>> entry : getChildrenProviders().entrySet()) {
 				logger.debug("ExplorerTreeStatefulService: for nodeType = {}, these are the children providers = {}", entry.getKey(), entry.getValue());
 			}
 			for (Map.Entry<String, INodeDataProvider> entry : getNodeDataProviders().entrySet()) {
 				logger.debug("ExplorerTreeStatefulService: for nodeType = {}, this is the node data provider = {}", entry.getKey(), entry.getValue());
+			}
+			for (Map.Entry<String, List<INodePopulator>> entry : getAdditionalNodePopulators().entrySet()) {
+				logger.debug("ExplorerTreeStatefulService: for nodeType = {}, these are the additional node populators = {}", entry.getKey(), entry.getValue());
 			}
 		}
 	}

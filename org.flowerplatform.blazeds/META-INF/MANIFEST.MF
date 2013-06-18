@@ -20,7 +20,6 @@ Bundle-ClassPath: lib/commons-codec-1.3.jar,
  lib/flex-messaging-proxy.jar,
  lib/flex-messaging-remoting.jar,
  lib/flex-rds-server.jar,
-  .
+ .
+Export-Package: org.flowerplatform.blazeds.custom_serialization
 Eclipse-BuddyPolicy: dependent
-
-

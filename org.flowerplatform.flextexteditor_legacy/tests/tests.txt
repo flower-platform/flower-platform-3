@@ -1,0 +1,201 @@
+Delimiters:
+<start_tag>
+</end_tag> 
+<!--comment-->
+<%code%>
+<%@directive name=value %>
+/* multiline comment */
+
+Ierarhie:
+(prefix )
+< (prefix start_tag_)
+	>
+	/>
+	eoln
+	eof
+</ (prefix end_tag_)
+	>
+	eoln
+	eof
+<!-- (prefix comment_)
+	-->
+	eof
+<%@ (prefix directive_)
+	%>
+	eof
+<% (prefix script_)
+	eof
+	%>
+	/* (prefix comment_)
+		*/
+		%>
+		eof
+
+==========================================================================================
+Initial:
+start_tag_start_del
+	start_tag_default_content
+start_tag_end_del
+<tag_name>
+
+Modif:
+insert "/" in start_tag_default_content
+
+Final:
+end_tag_start_del
+	end_tag_default_content
+end_tag_end_del
+</tag_name>
+
+Obs: Reparsarea se face de la "<" -- zona precedenta
+		
+=========================================================================================================================
+Initial:
+script_start_del 
+	script_default_content 
+	script_comment_start_del
+		script_comment_default_content
+	script_comment_end_del
+	script_default_content 
+script_end_del
+
+<%
+	public void inc(int i) {
+		i++;
+	/*	return 0;  */
+	}
+%>
+
+Modif:
+insert "%>" in script_comment_default_content
+
+Final:
+script_start_del
+script_default_content
+	script_comment_start_del
+		script_comment_default_content
+script_script_end_del
+default_content
+
+<%
+	public void inc(int i) {
+		i++; 
+	/*	return %> 0;  */
+	}
+%>
+
+Obs: Reparsarea ar trebui sa se faca de la "<%", nu de la "<*" sau nu!!!
+
+==========================================================================================
+Initial:
+script_start_del 
+	script_default_content 
+	script_comment_start_del
+		script_comment_default_content
+	script_comment_end_del
+	script_default_content 
+script_end_del
+
+<%
+	i++;
+	/*	return i;  */
+%>
+
+Modif:
+delete "*" in script_start_del
+
+Final:
+script_start_del
+	script_default_content
+scrip_end_del
+<%
+	i++;
+	/	return i;  */
+%>
+
+Obs: Reparsarea ar trebui sa se faca de la zona precedenta
+
+============================================================================================
+Initial:
+script_start_del
+	script_default_content
+	script_comment_start_del
+		script_comment_default_content
+	script_comment_end_del
+	script_default_content
+script_end_del
+<%
+	int i=0; /* unu * doi */
+%>
+
+Modif:
+insert "/" in script_comment_default_content
+
+Final:
+script_start_del
+	script_default_content
+	script_comment_start_del
+		script_comment_default_content
+	script_comment_end_del
+	script_default_content
+script_end_del
+<%
+	int i=0; /* unu */ doi */
+%>
+Obs:
+
+=============================================================================================
+
+Initial:
+default_content
+script_start_del
+	script_default_content
+script_end_del
+default_content
+
+...
+<%
+	int i=0;
+%>
+-->
+
+Modif:
+insert "<!--" in default_content
+
+Final:
+default_content
+comment_start_del
+	comment_default_content
+comment_end_del
+...<!--
+<%
+	int i=0;
+%>
+-->
+
+Obs: Reparsarea se face din zona introdusa, cu regulile de baza !!!
+
+==========================================================================================
+Initial:
+start_tag_start_del
+	start_tag_default_content
+start_tag_end_del
+default_content
+<tag/> default>
+
+Modif:
+delete ">" in start_tag_end_del
+
+Final:
+start_tag_start_del
+	start_tag_default_content
+start_tag_end_del
+<tag/ default>
+
+Obs: Reparsarea se face din zona precedenta
+==========================================================================================
+Concluzie:
+	(1) determinata partitia in care s-a facut modificarea
+	(2) determinate regulile de folosit la reparsare - din (1)
+	(3) pornita reparsarea din zona precedenta zonei modificate (uneori nu e nevoie...)
+	

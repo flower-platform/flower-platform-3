@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.editor.contentType">
+      <contentType
+            contentType="text">
+      </contentType>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.contentTypeToEditorMapping">
+      <contentTypeToEditorMapping
+            compatibleEditor="text"
+            contentType="text">
+      </contentTypeToEditorMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.fileExtensionToContentTypeMapping">
+      <fileExtensionToContentTypeMapping
+            contentType="text"
+            fileExtension="*">
+      </fileExtensionToContentTypeMapping>
+   </extension>
+
+</plugin>
