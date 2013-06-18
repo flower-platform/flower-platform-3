@@ -7,6 +7,8 @@ package org.flowerplatform.web.git.layout {
 	import mx.containers.VBox;
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.git.GitPlugin;
@@ -22,9 +24,9 @@ package org.flowerplatform.web.git.layout {
 		}
 		
 		protected function getSelectedObjectFromExplorer():Object {	
-			var workbench:Workbench = WebPlugin.getInstance().workbench;
+			var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
 			
-			var explorer:UIComponent = UIComponent(WebPlugin.getInstance().workbench.getComponent(ExplorerViewProvider.ID));
+			var explorer:UIComponent = workbench.getComponent(ExplorerViewProvider.ID);
 		
 			return null;				
 		}

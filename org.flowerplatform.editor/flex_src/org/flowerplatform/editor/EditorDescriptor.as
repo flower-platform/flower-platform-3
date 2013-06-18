@@ -1,13 +1,9 @@
 package  org.flowerplatform.editor {
-	import com.crispico.flower.util.layout.Workbench;
-	
-	import mx.collections.ArrayCollection;
-	import mx.core.FlexGlobals;
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
@@ -93,8 +89,7 @@ package  org.flowerplatform.editor {
 			}
 			viewLayoutData.isEditor = true;
 			
-			var workbench:Workbench = Workbench(FlexGlobals.topLevelApplication.workbench);
-			return workbench.addEditorView(viewLayoutData, true);		
+			return FlexUtilGlobals.getInstance().workbench.addEditorView(viewLayoutData, true);		
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {			

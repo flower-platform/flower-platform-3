@@ -27,17 +27,11 @@ package org.flowerplatform.web {
 			return INSTANCE;
 		}
 		
-		public static const NODE_TYPE_ORGANIZATION:String = "or";
-
-		public static const NODE_TYPE_FILE:String = "f";
-		
 		protected var webCommonPlugin:WebCommonPlugin = new WebCommonPlugin();
 		
 		public var currentPerspective:Perspective;
 		
 		public var perspectives:Vector.<Perspective> = new Vector.<Perspective>();
-		
-		public var workbench:Workbench;
 		
 		override public function preStart():void {
 			super.preStart();
@@ -48,16 +42,6 @@ package org.flowerplatform.web {
 			INSTANCE = this;
 			
 			perspectives.push(new DefaultPerspective());
-			EditorPlugin.getInstance().addPathFragmentToEditableResourcePathCallback = function (treeNode:TreeNode):String {
-				if (treeNode.pathFragment == null) {
-					return null;
-				}
-				if (treeNode.pathFragment.type == NODE_TYPE_ORGANIZATION || treeNode.pathFragment.type == NODE_TYPE_FILE) {
-					return treeNode.pathFragment.name;
-				} else {
-					return null;
-				}
-			}
 		}
 		
 		override public function start():void {
@@ -66,18 +50,18 @@ package org.flowerplatform.web {
 			webCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			webCommonPlugin.start();
 			
-			workbench= new Workbench();
+			var workbench:Workbench = new Workbench();
+			FlexUtilGlobals.getInstance().workbench = workbench;
 			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
 			workbench.percentHeight = 100;
 			workbench.percentWidth = 100;
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			FlexGlobals.topLevelApplication.workbench = workbench;
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-			perspectives[0].resetPerspective(workbench);
+			perspectives[0].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
 		}
 		
 		override protected function registerMessageBundle():void {

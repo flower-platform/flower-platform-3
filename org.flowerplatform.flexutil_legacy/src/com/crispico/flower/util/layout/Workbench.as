@@ -65,6 +65,7 @@ package  com.crispico.flower.util.layout {
 	import mx.styles.IStyleClient;
 	
 	import org.flowerplatform.flexutil.layout.IViewProvider;
+	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.LayoutData;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
@@ -95,7 +96,7 @@ package  com.crispico.flower.util.layout {
 	 * @flowerModelElementId _kp2YQCunEeG6vrEjfFek0Q
 	 */
 	[SecureSWF(rename="off")]
-	public class Workbench extends Canvas implements IContextMenuLogicProvider, IActionProvider2 {
+	public class Workbench extends Canvas implements IContextMenuLogicProvider, IActionProvider2, IWorkbench {
 		
 		/**
 		 * Represents the percent applied to newly added child on workbench.

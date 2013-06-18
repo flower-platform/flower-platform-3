@@ -15,6 +15,8 @@ package org.flowerplatform.flexutil {
 			return INSTANCE;
 		}
 		
+		public var workbench:IWorkbench;
+		
 		public var composedViewProvider:ComposedViewProvider = new ComposedViewProvider();
 		
 		public var messageBoxFactory:IMessageBoxFactory;

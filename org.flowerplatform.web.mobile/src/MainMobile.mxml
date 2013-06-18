@@ -15,6 +15,7 @@
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.EditorPlugin;
+			import org.flowerplatform.editor.text.EditorTextPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
@@ -40,7 +41,8 @@
 			private var plugins:Array = [
 				setDescriptorWithUrl(new CommonPlugin(), 'servlet/public-resources/org.flowerplatform.common/swc/org.flowerplatform.common.swc|library.swf'),
 				setDescriptorWithUrl(new CommunicationPlugin(), 'servlet/public-resources/org.flowerplatform.communication/swc/org.flowerplatform.communication.swc|library.swf'),
-				setDescriptorWithUrl(new EditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf'), 
+				setDescriptorWithUrl(new EditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf'),
+				setDescriptorWithUrl(new EditorTextPlugin(), 'servlet/public-resources/org.flowerplatform.editor.text/swc/org.flowerplatform.editor.text.swc|library.swf?pluginClass=EditorTextPlugin'),
 				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf')
 			];
 			

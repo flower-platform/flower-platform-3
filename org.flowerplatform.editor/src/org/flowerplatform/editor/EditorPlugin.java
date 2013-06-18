@@ -112,7 +112,7 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 		new CustomSerializationDescriptor(EditableResourceClient.class)
 			.addDeclaredProperty("name")
 			.addDeclaredProperty("login")
-			.addDeclaredProperty("clientId")
+			.addDeclaredProperty("communicationChannelId")
 			.register();
 
 	}
