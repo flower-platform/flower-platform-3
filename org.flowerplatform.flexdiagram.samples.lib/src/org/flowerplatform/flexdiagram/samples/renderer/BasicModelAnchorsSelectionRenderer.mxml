@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristina Constantinescu
+-->
+<selection:AnchorsSelectionRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+									xmlns:s="library://ns.adobe.com/flex/spark" 
+									xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:selection="org.flowerplatform.flexdiagram.renderer.selection.*">
+	<fx:Declarations>
+		<selection:ResizeAnchor id="anchor1" />
+		<selection:ResizeAnchor id="anchor2" />
+		<selection:ResizeAnchor id="anchor3" />
+		<selection:ResizeAnchor id="anchor4" />
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			override protected function createChildren():void {
+				addChild(anchor1);
+				addChild(anchor2);
+				addChild(anchor3);
+				addChild(anchor4);
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+				anchor1.x = 0;
+				anchor1.y = 0;
+				
+				anchor2.x = target.width;
+				anchor2.y = 0;
+				
+				anchor3.x = 0;
+				anchor3.y = target.height;
+				
+				anchor4.x = target.width;
+				anchor4.y = target.height;
+			}
+			
+			override protected function invalidateActiveAnchors():void {
+				anchor1.invalidateDisplayList();
+				anchor2.invalidateDisplayList();
+				anchor3.invalidateDisplayList();
+				anchor4.invalidateDisplayList();				
+			}
+		]]>
+	</fx:Script>
+</selection:AnchorsSelectionRenderer>

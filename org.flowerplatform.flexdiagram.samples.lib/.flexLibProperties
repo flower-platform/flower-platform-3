@@ -8,6 +8,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.samples.ModelPopulator"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.renderer.SubModelIconItemRenderer"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.IModelHolder"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicSubModelSelectionController"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

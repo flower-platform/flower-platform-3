@@ -6,13 +6,20 @@ package org.flowerplatform.flexdiagram {
 	import mx.core.IInvalidating;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
+	import mx.events.CollectionEvent;
+	import mx.events.CollectionEventKind;
+	import mx.events.PropertyChangeEvent;
+	import mx.messaging.events.ChannelEvent;
 	
-	import spark.components.supportClasses.ItemRenderer;
+	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
-	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
+	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
+	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
+	
+	import spark.components.supportClasses.ItemRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -25,6 +32,9 @@ package org.flowerplatform.flexdiagram {
 		
 		private var _diagramRenderer:IVisualElementContainer;
 
+		private var _mainSelectedItem:Object;
+		private var _selectedItems:ParentAwareArrayList = new ParentAwareArrayList(null);
+		
 		public function get modelToExtraInfoMap():Dictionary {
 			return _modelToExtraInfoMap;
 		}
@@ -50,6 +60,34 @@ package org.flowerplatform.flexdiagram {
 		
 		public function set diagramRenderer(value:IVisualElementContainer):void {
 			_diagramRenderer = value;
+		}
+		
+		public function get selectedItems():ParentAwareArrayList {
+			return _selectedItems;
+		}
+		
+		public function set mainSelectedItem(value:Object):void {
+			if (_mainSelectedItem != value) {			
+				if (_mainSelectedItem != null) {				
+					getControllerProvider(_mainSelectedItem).getSelectionController(_mainSelectedItem).
+						setSelectedState(_mainSelectedItem, getRendererForModel(_mainSelectedItem), true, false);
+				}
+				// mark the new main selection 
+				_mainSelectedItem = value;
+							
+				if (_mainSelectedItem != null) {
+					getControllerProvider(_mainSelectedItem).getSelectionController(_mainSelectedItem).
+						setSelectedState(_mainSelectedItem, getRendererForModel(_mainSelectedItem), true, true);			
+				}
+			}
+		}
+		
+		public function get mainSelectedItem():Object {			
+			return _mainSelectedItem;
+		}
+		
+		public function DiagramShell() {
+			selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangeHandler);
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {
@@ -102,6 +140,11 @@ package org.flowerplatform.flexdiagram {
 				// "leaf" models don't have children, i.e. no provider
 				modelChildrenController.beginListeningForChanges(model);
 			}
+			
+			var selectionController:ISelectionController = controllerProvider.getSelectionController(model);
+			if (selectionController != null) {
+				selectionController.associatedModelToSelectionRenderer(model, renderer);
+			}
 		}
 		
 		public function unassociateModelFromRenderer(model:Object, renderer:IVisualElement, modelIsDisposed:Boolean, controllerProvider:IControllerProvider = null):void {
@@ -119,7 +162,7 @@ package org.flowerplatform.flexdiagram {
 				// "leaf" models don't have children, i.e. no provider
 				modelChildrenController.endListeningForChanges(model);
 			}
-
+		
 			// update the renderer in model map
 			controllerProvider.getModelExtraInfoController(model).setRenderer(model, modelToExtraInfoMap[model], null);
 			
@@ -134,6 +177,11 @@ package org.flowerplatform.flexdiagram {
 			if (rendererController != null) {
 				// is null just for the diagram
 				rendererController.unassociatedModelFromRenderer(model, renderer, modelIsDisposed);
+			}
+						
+			var selectionController:ISelectionController = controllerProvider.getSelectionController(model);
+			if (selectionController != null) {
+				selectionController.unassociatedModelFromSelectionRenderer(model, renderer);
 			}
 			
 			if (modelIsDisposed) {
@@ -159,9 +207,27 @@ package org.flowerplatform.flexdiagram {
 			}
 			if (renderer is IVisualChildrenRefreshable) {
 				IVisualChildrenRefreshable(renderer).shouldRefreshVisualChildren = true;
-			}
-		
+			}		
 		}
 		
+		private function selectionChangeHandler(event:CollectionEvent):void {
+			var model:Object = event.items[0];
+			var selectionController:ISelectionController = getControllerProvider(model).getSelectionController(model);
+			
+			// set main selected item to last item from list
+			mainSelectedItem = selectedItems.length == 0 ? null : selectedItems.getItemAt(selectedItems.length  - 1);
+			
+			if (selectionController != null) {				
+				if (event.kind == CollectionEventKind.ADD) {
+					selectionController.setSelectedState(model, getRendererForModel(model), true, _mainSelectedItem == model);					
+				} else if (event.kind == CollectionEventKind.REMOVE ||  event.kind == CollectionEventKind.REPLACE) {
+					
+					if (event.kind == CollectionEventKind.REPLACE) {
+						model = PropertyChangeEvent(event.items[0]).oldValue;	
+					}				
+					selectionController.setSelectedState(model, getRendererForModel(model), false, false);
+				}
+			}
+		}		
 	}
 }
