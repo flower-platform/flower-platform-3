@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" useMultiPlatformConfig="false" version="1">
+  <includeClasses>
+    <classEntry path="com.crispico.flower.texteditor.mxml.partitioning.MXMLPartitionScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.partitioning.MXMLDefaultPartitionScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.SyntaxTextEditor"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.providers.AS3PartitionTokenizerProvider"/>
+    <classEntry path="com.crispico.flower.texteditor.java.tokenizing.JavaCommentScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.providers.AS3PartitionTokenFormatProvider"/>
+    <classEntry path="com.crispico.flower.texteditor.hyperlink.HyperlinkManager"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.providers.MXMLPartitionTokenizerProvider"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.MXMLContentTypeConstants"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.AS3ContentTypeConstants"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.tokenizing.AS3Scanner"/>
+    <classEntry path="com.crispico.flower.texteditor.java.providers.JavaPartitionTokenizerProvider"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.tokenizing.MXMLSpecialTagScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.tokenizing.MXMLTagScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.events.BufferedTextChangesEvent"/>
+    <classEntry path="com.crispico.flower.texteditor.java.tokenizing.JavaDocScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.java.providers.JavaPartitionTokenFormatProvider"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.tokenizing.MXMLScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.java.tokenizing.JavaScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.partitioning.AS3PartitionScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.java.JavaContentTypeConstants"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.tokenizing.MXMLCommentScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.tokenizing.AS3CommentScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.providers.MXMLPartitionTokenFormatProvider"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.tokenizing.AS3StringScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.actionscript.tokenizing.AS3DocScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.java.partitioning.JavaPartitionScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.java.tokenizing.JavaStringScanner"/>
+    <classEntry path="com.crispico.flower.texteditor.mxml.rules.SpecialTagRule"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

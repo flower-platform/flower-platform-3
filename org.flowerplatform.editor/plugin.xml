@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="contentType" name="contentType" schema="schema/contentType.exsd"/>
+   <extension-point id="contentTypeToEditorMapping" name="contentTypeToEditorMapping" schema="schema/contentTypeToEditorMapping.exsd"/>
+   <extension-point id="fileExtensionToContentTypeMapping" name="fileExtensionToContentTypeMapping" schema="schema/fileExtensionToContentTypeMapping.exsd"/>
+   <extension
+         point="org.flowerplatform.communication.welcomeInitializationsContributor">
+      <welcomeInitializationsContributor
+            commandToAppendToWelcomeClientCommand="org.flowerplatform.editor.remote.InitializeEditorPluginClientCommand">
+      </welcomeInitializationsContributor>
+   </extension>
+
+</plugin>

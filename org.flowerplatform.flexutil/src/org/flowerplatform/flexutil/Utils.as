@@ -61,6 +61,6 @@ package org.flowerplatform.flexutil {
 			
 			return simpleClassName;
 		}
-
+		
 	}
 }

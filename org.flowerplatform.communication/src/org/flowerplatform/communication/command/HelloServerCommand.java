@@ -1,5 +1,8 @@
 package org.flowerplatform.communication.command;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.slf4j.Logger;
@@ -98,6 +101,15 @@ public class HelloServerCommand extends AbstractServerCommand {
 				// => send initial data
 				logger.debug("Hello received from client = {}. Sending initializations.", getCommunicationChannel());
 				welcome.setContainsFirstTimeInitializations(true);
+				IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.communication.welcomeInitializationsContributor");
+				for (IConfigurationElement configurationElement : configurationElements) {
+					try {
+						AbstractClientCommand command = (AbstractClientCommand) configurationElement.createExecutableExtension("commandToAppendToWelcomeClientCommand");
+						welcome.appendCommand(command);
+					} catch (CoreException e) {
+						logger.error("Error while adding welcome initialization command", e);
+					}
+				}
 			} else {
 				// client already initialized
 				logger.debug("Hello received from client = {}. Client is initialized.", getCommunicationChannel());

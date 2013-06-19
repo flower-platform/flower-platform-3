@@ -57,6 +57,9 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 		super.appendCommandToCurrentHttpResponse(new ServerSnapshotClientCommand(command));
 	}
 
+	/**
+	 * It's the Flex Client ID. Don't mistake this with message client id.
+	 */
 	@Override
 	public Object getId() {
 		return messageClient == null ? null : messageClient.getFlexClient().getId();

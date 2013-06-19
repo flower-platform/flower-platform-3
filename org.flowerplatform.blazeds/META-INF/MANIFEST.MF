@@ -27,4 +27,5 @@ Export-Package: flex.messaging,
  org.flowerplatform.blazeds,
  org.flowerplatform.blazeds.channel,
  org.flowerplatform.blazeds.endpoint,
- org.flowerplatform.blazeds.heartbeat
+ org.flowerplatform.blazeds.heartbeat,
+ org.flowerplatform.blazeds.custom_serialization

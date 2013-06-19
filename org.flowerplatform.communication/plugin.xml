@@ -4,6 +4,7 @@
    <extension-point id="servlet" name="servlet" schema="schema/servlet.exsd"/>
    <extension-point id="service" name="service" schema="schema/service.exsd"/>
    <extension-point id="authenticator" name="authenticator" schema="schema/authenticator.exsd"/>
+   <extension-point id="welcomeInitializationsContributor" name="welcomeInitializationsContributor" schema="schema/welcomeInitializationsContributor.exsd"/>
    <extension
          point="org.flowerplatform.communication.servlet">
       <servlet
@@ -11,6 +12,13 @@
             priority="100"
             servlet="org.flowerplatform.communication.public_resources.PublicResourcesServlet">
       </servlet>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="ProgressMonitorStatefulService"
+            serviceClass="org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulService">
+      </service>
    </extension>
 
 </plugin>

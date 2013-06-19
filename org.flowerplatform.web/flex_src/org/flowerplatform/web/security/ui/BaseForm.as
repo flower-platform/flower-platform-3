@@ -4,9 +4,13 @@ package org.flowerplatform.web.security.ui {
 	
 	import flash.events.Event;
 	
+	import mx.collections.IList;
 	import mx.containers.VBox;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.popup.IPopupContent;
+	import org.flowerplatform.flexutil.popup.IPopupHost;
 	import org.flowerplatform.web.common.entity.dto.Dto;
 		
 	/**
@@ -16,7 +20,7 @@ package org.flowerplatform.web.security.ui {
 	 * @author Cristina
 	 * @flowerModelElementId _LA5mkFc1EeG6S8FiFZ8nVA
 	 */
-	public class BaseForm extends VBox {
+	public class BaseForm extends VBox implements IPopupContent {
 				
 		/**
 		 * @flowerModelElementId _gJ5hsFfGEeGs_rPsEt9lFQ
@@ -76,7 +80,18 @@ package org.flowerplatform.web.security.ui {
 		public function set parentListPanel(value:BaseListPanel):void {
 			this._parentListPanel = value;
 		}
-            					
+            	
+		public function getActions(selection:IList):Vector.<IAction> {
+			return null;
+		}
+		
+		public function getSelection():IList {
+			return null;
+		}
+		
+		public function set popupHost(value:IPopupHost):void {
+		}
+		
 		/**
 		 * @flowerModelElementId _mVQecFfLEeGs_rPsEt9lFQ
 		 */

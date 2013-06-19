@@ -15,7 +15,7 @@ package org.flowerplatform.web.mobile.popup {
 		}
 		
 		public function removePopup(popupContent:IVisualElement):void {
-			var viewNavigator:ViewNavigator = ViewNavigator(FlexGlobals.topLevelApplication.viewNavigator);
+			var viewNavigator:ViewNavigator = ViewNavigator(FlexGlobals.topLevelApplication.navigator);
 			var view:View = View(viewNavigator.activeView);
 			if (view is WrapperView && view.numElements > 0 && view.getElementAt(0) == popupContent) {
 				viewNavigator.popView();

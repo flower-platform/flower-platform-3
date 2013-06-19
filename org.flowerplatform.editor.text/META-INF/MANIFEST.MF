@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Text
+Bundle-SymbolicName: org.flowerplatform.editor.text;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.flowerplatform.editor.text.EditorTextPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.flowerplatform.common,
+ org.flowerplatform.editor,
+ org.flowerplatform.communication
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

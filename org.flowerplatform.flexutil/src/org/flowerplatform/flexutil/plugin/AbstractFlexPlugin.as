@@ -22,13 +22,32 @@ package org.flowerplatform.flexutil.plugin {
 		}
 		
 		/**
+		 * The start mechanism is: call preStart() for all plugins and then call start() for all plugins.
+		 * 
+		 * <p>
+		 * The plugin should init (and check) it's singleton access point (i.e. INSTANCE / getInstance()).
+		 * It should create any extension points (e.g. create list of IDataProvider), and declare extensions
+		 * (e.g. add an IDataProvider into a plugin that it depends on).
+		 * 
+		 * <p>
+		 * Plugins MUST NOT process the extension points here. This should be done in start()
+		 * 
+		 * <p>
 		 * Subclasses should call super at the beginning.
 		 */
-		public function setupExtensionPointsAndExtensions():void {
+		public function preStart():void {
 			// nothing to do (yet)
 		}
 		
 		/**
+		 * The start mechanism is: call preStart() for all plugins and then call start() for all plugins.
+		 * 
+		 * <p>
+		 * If the plugin declares extension points, it should process them here (e.g. iterate the list
+		 * of IDataProvider and do something with those elements). The start mechanism (see preStart()) ensures that
+		 * by the time this method is called, all other plugins have registered already their extensions.
+		 *
+		 * <p> 
 		 * Subclasses should call super at the beginning.
 		 */
 		public function start():void {

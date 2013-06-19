@@ -15,6 +15,7 @@ import org.flowerplatform.common.log.AuditDetails;
 import org.flowerplatform.common.log.LogUtil;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.common.util.RunnableWithParam;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
@@ -101,6 +102,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	private static final String SELECT_NODE_KEY = "selectNode";
 	
 	/**
+	 * NO USED
 	 * Adding this key to <code>context</code> will retrieve the node's 
 	 * path by going up the {@link NodeInfo} hierarchy, instead of using
 	 * {@link #getParent(Object)}. Should be used when the node was deleted
@@ -701,6 +703,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		for (Pair<Object, String> pair : getChildrenForNode(node, treeNode, context)) {
 			Object child = pair.a;
 			TreeNode childNode = createTreeNode();
+			childNode.setPathFragment(new PathFragment(null, pair.b));
 			populateTreeNodeInternal(child, childNode, context);
 			treeNode.getChildren().add(childNode);
 			childNode.setParent(treeNode);
@@ -941,17 +944,12 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 			NodeInfo parentNodeInfo = openNodes.get(node);
 			if (parentNodeInfo != null) { // found, get its path fragment
 				path.add(0, parentNodeInfo.getPathFragment());
-			} else { // not found
-				path.add(0, getPathFragmentForNode(node, nodeType, context));
-			}
-			
-			// go up
-			// in case the node was deleted, we won't find the correct path using the resource's parents
-			// instead we go up using NodeInfo
-			if (context != null && context.get(GO_UP_ON_NODE_INFO_KEY) != null) {
 				node = parentNodeInfo.getParent().getNode();
-			} else {
+			} else { // not found				
+				path.add(0, getPathFragmentForNode(node, nodeType, context));
 				node = getParent(node, nodeType, context);
+				// TODO: The above operations works only if this service has dispatchEnabled and only one provider registered!
+				// TODO: must be modified to support all cases
 			}
 		}		
 
@@ -1055,6 +1053,18 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		return node;
 	}
 
+	public static Object getNodeByPathFor(List<PathFragment> path, GenericTreeContext context) {
+		PathFragment firstNodePath = path.get(0);
+		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {			
+			GenericTreeStatefulService service = 
+					(GenericTreeStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(firstNodePath.getName());
+			List<PathFragment> pathWithoutRootFragment = path.subList(1, path.size());
+			
+			return service.getNodeByPath(pathWithoutRootFragment, context);
+		}
+		return null;
+	}
+	
 	///////////////////////////////////////////////////////////////
 	// @RemoteInvocation methods
 	///////////////////////////////////////////////////////////////

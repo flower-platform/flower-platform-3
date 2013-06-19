@@ -6,8 +6,7 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 
-public interface INodeDataProvider {
-	boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context);
+public interface INodeDataProvider extends INodePopulator {
 	
 	Object getParent(Object node, String nodeType, GenericTreeContext context);
 	

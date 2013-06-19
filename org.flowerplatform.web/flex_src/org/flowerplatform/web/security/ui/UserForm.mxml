@@ -24,6 +24,7 @@
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.events.CloseEvent;
 			import mx.events.FlexEvent;
@@ -43,11 +44,15 @@
 			import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
 			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
 			
-			public function getActions():Vector.<IAction> {
+			override public function getActions(selection:IList):Vector.<IAction> {
 				return null;
 			}
 			
-			public function set popupHost(value:IPopupHost):void {
+			override public function getSelection():IList {
+				return null;
+			}
+			
+			override public function set popupHost(value:IPopupHost):void {
 				value.setLabel("User Form");
 			}
 			

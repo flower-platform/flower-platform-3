@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="explorerNodeDataProvider" name="explorerNodeDataProvider" schema="schema/explorerNodeDataProvider.exsd"/>
    <extension-point id="explorerChildrenProvider" name="explorerChildrenProvider" schema="schema/explorerChildrenProvider.exsd"/>
+   <extension-point id="explorerAdditionalNodePopulator" name="explorerAdditionalNodePopulator" schema="schema/explorerAdditionalNodePopulator.exsd"/>
    <extension
          id="org.flowerplatform.web.DummyApplication"
          point="org.eclipse.core.runtime.applications">
@@ -129,6 +130,15 @@
             authenticatorClass="org.flowerplatform.web.security.sandbox.FlowerWebAuthenticator"
             id="flowerWebAuthenticator">
       </authenticator>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerAdditionalNodePopulator">
+      <explorerAdditionalNodePopulator
+            populator="org.flowerplatform.editor.FileContentTypeNodePopulator">
+         <nodeType
+               nodeType="f">
+         </nodeType>
+      </explorerAdditionalNodePopulator>
    </extension>
 
 </plugin>

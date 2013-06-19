@@ -32,7 +32,7 @@ public class RootChildrenNodeDataProvider implements INodeDataProvider {
 
 	@Override
 	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {
-		throw new UnsupportedOperationException("This should not be called, as we provide an implementation quicker implementation; i.e. for getNodeByPath()");
+		return new File(RootChildrenProvider.getWorkspaceRoot(), pathFragment.getName());
 	}
 
 	@Override

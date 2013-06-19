@@ -8,7 +8,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.communication.tree.IChildrenProvider;
+import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeDataProvider;
+import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +33,9 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 					list = new ArrayList<IChildrenProvider>(configurationElement.getChildren().length);
 					getChildrenProviders().put(nodeType, list);
 				}
-				
+				if (provider instanceof IGenericTreeStatefulServiceAware) {
+					((IGenericTreeStatefulServiceAware) provider).setGenericTreeStatefulService(this);
+				}
 				list.add(provider);
 			}
 		}
@@ -44,8 +48,25 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 				if (getNodeDataProviders().get(nodeType) != null) {
 					logger.error("Trying to register an INodeDataProvider for nodeType = {}, but another one already exists: {}", nodeType, getNodeDataProviders().get(nodeType));
 				} else {
+					if (provider instanceof IGenericTreeStatefulServiceAware) {
+						((IGenericTreeStatefulServiceAware) provider).setGenericTreeStatefulService(this);
+					}
 					getNodeDataProviders().put(nodeType, provider);
 				}
+			}
+		}
+		
+		configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.explorerAdditionalNodePopulator");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			INodePopulator populator = (INodePopulator) configurationElement.createExecutableExtension("populator");
+			for (IConfigurationElement nodeTypeConfigurationElement : configurationElement.getChildren()) {
+				String nodeType = nodeTypeConfigurationElement.getAttribute("nodeType");
+				List<INodePopulator> populators = getAdditionalNodePopulators().get(nodeType);
+				if (populators == null) {
+					populators = new ArrayList<INodePopulator>();
+					getAdditionalNodePopulators().put(nodeType, populators);
+				}
+				populators.add(populator);
 			}
 		}
 		
@@ -55,6 +76,9 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 			}
 			for (Map.Entry<String, INodeDataProvider> entry : getNodeDataProviders().entrySet()) {
 				logger.debug("ExplorerTreeStatefulService: for nodeType = {}, this is the node data provider = {}", entry.getKey(), entry.getValue());
+			}
+			for (Map.Entry<String, List<INodePopulator>> entry : getAdditionalNodePopulators().entrySet()) {
+				logger.debug("ExplorerTreeStatefulService: for nodeType = {}, these are the additional node populators = {}", entry.getKey(), entry.getValue());
 			}
 		}
 	}

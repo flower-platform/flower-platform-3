@@ -6,6 +6,7 @@ has in the organizations.
 @author Mariana
 -->
 <mx:VBox
+	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:ui="org.flowerplatform.web.security.ui.*"
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
@@ -17,17 +18,33 @@ has in the organizations.
 			import com.crispico.flower.util.popup.TextAreaPopup;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupContent;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.WebPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.entity.dto.NamedDto;
 			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
 			import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
 			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				value.setLabel("Users Screen");
+			}
 			
 			protected function onCreationComplete(event:FlexEvent):void {
 				if (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.hasAdminSecurityEntitiesPermissions)

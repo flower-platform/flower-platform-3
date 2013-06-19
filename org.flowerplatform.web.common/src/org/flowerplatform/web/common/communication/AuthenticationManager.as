@@ -51,7 +51,7 @@ package  org.flowerplatform.web.common.communication {
 			var crt:User_CurrentUserLoggedInDto = new User_CurrentUserLoggedInDto();
 			crt.isAdmin = true;
 			crt.hasAdminSecurityEntitiesPermissions = true;
-			crt.id = 6;
+			crt.id = 1;
 			crt.login = "admin";
 			crt.name = "admin";
 			return crt;
@@ -64,7 +64,7 @@ package  org.flowerplatform.web.common.communication {
 		 */ 
 		public var keepLayoutStructure:Boolean;
 		
-		private var spinnerPopupHandler:IPopupHandler;
+		private var connectingView:ConnectingView;
 		
 		/**
 		 * @flowerModelElementId _PHn7YG3eEeGYiLzscjdrpg
@@ -97,16 +97,16 @@ package  org.flowerplatform.web.common.communication {
 		
 		protected function showAuthenticationView():void {
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContentClass(AuthenticationView)
+				.setPopupContent(new AuthenticationView())
 				.show();
 				
 		}
 		
 		public function handleConnecting(event:BridgeEvent):void {
 //			ModalSpinner.addGlobalModalSpinner(CommonPlugin.getInstance().getMessage("spinner.connecting"), new ReconnectingSpinner());
-			spinnerPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
-			spinnerPopupHandler
-				.setPopupContentClass(ConnectingView)
+			connectingView = new ConnectingView()
+			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+				.setPopupContent(connectingView)
 				.showModalOverAllApplication();
 		}
 		
@@ -114,7 +114,7 @@ package  org.flowerplatform.web.common.communication {
 		 * @flowerModelElementId _X9AnsG3eEeGYiLzscjdrpg
 		 */
 		public function handleConnected(event:BridgeEvent):void {
-			ConnectingView(spinnerPopupHandler.getPopupContent()).currentState = "initializing";
+			connectingView.currentState = "initializing";
 			
 			var hello:HelloServerCommand = new HelloServerCommand();
 			hello.clientApplicationVersion = CommonPlugin.VERSION;
@@ -129,13 +129,13 @@ package  org.flowerplatform.web.common.communication {
 		}
 
 		public function handleWelcomeReceivedFromServer(event:BridgeEvent):void {
-			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(spinnerPopupHandler.getPopupContent());
-			spinnerPopupHandler = null;
+			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(connectingView);
+			connectingView = null;
 		}
 		
 		public function handleConnectingCanceled(event:BridgeEvent):void {
-			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(spinnerPopupHandler.getPopupContent());
-			spinnerPopupHandler = null;
+			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(connectingView);
+			connectingView = null;
 
 //			// We have established a connection for the first time so we clear this flag, in order
 //			// for the user to be able to login anonymously.

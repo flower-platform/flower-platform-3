@@ -11,6 +11,8 @@
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.IList;
+			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.popup.ActionBase;
@@ -26,7 +28,7 @@
 				CommunicationPlugin.getInstance().bridge.connect(loginInput.text, passwordInput.text);
 			}
 			
-			public function getActions():Vector.<IAction> {
+			public function getActions(selection:IList):Vector.<IAction> {
 				var result:Vector.<IAction> = new Vector.<IAction>();
 				var action:ActionBase
 				
@@ -40,6 +42,11 @@
 				
 				return result;
 			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
 			
 			public function get popupHost():IPopupHost {
 				return _popupHost;

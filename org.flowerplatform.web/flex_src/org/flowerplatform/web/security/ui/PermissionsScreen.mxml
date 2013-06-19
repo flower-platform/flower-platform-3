@@ -8,6 +8,7 @@
  @flowerModelElementId _mI2gkFcPEeGL3vi-zPhopA
 -->
 <mx:VBox
+	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:popup="com.crispico.flower.util.popup.*" 
 	xmlns:navigator="com.crispico.flower.mp.web.navigator.*"
@@ -23,6 +24,11 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.collections.IList;
+			
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupContent;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.WebPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.security.dto.PermissionsByResourceFilter;
@@ -31,6 +37,18 @@
 			 * @flowerModelElementId _RBwYMV34EeGwLIVyv_iqEg
 			 */
 			private static const CURRENT_FILTER_LABEL:String = WebPlugin.getInstance().getMessage("entity.filter.current");
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				value.setLabel("Permissions Screen");
+			}
 			
 			/**
 			 * Fills the resource tree and permission panel with data.

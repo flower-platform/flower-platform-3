@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Git
+Bundle-SymbolicName: org.flowerplatform.web.git;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.flowerplatform.common,
+ org.flowerplatform.communication,
+ org.eclipse.core.runtime,
+ org.flowerplatform.web,
+ org.eclipse.core.resources,
+ org.eclipse.jgit,
+ org.flowerplatform.blazeds;visibility:=reexport
+Bundle-Activator: org.flowerplatform.web.git.GitPlugin
+Bundle-ActivationPolicy: lazy
+
+
+

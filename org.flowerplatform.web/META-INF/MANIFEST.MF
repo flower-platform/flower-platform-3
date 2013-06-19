@@ -14,7 +14,9 @@ Require-Bundle: org.eclipse.core.runtime,
  javax.mail;visibility:=reexport,
  org.postgresql;visibility:=reexport,
  org.hsqldb;visibility:=reexport,
- org.flowerplatform.blazeds
+ org.flowerplatform.blazeds,
+ org.eclipse.core.resources,
+ org.flowerplatform.editor
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.persistence,
@@ -31,6 +33,8 @@ Export-Package: org.flowerplatform.web,
  org.flowerplatform.web.security.sandbox,
  org.flowerplatform.web.security.service,
  org.flowerplatform.web.temp,
- org.h2
+ org.h2,
+ org.flowerplatform.web,
+ org.flowerplatform.web.explorer
 Bundle-ClassPath: lib/h2-1.3.172.jar,
  .

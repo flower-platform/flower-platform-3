@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Status bar containing the lock status (locked by me, locked by other, editable).
+ 
+ @author Florin
+ @author Daniela
+ @author Cristi
+ @flowerModelElementId _1VbNcIrNEeGuitfORwqcpg
+-->
+<mx:HBox 
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	verticalAlign="middle" 
+	paddingBottom="1" paddingTop="1" 
+	xmlns:collaboration="com.crispico.flower.mp.web.editorsupport.collaboration.*" 
+	xmlns:util="com.crispico.flower.util.*" 
+	xmlns:tool="com.crispico.flower.mp.web.editorsupport.collaboration.tool.*" 
+	xmlns:figure="com.crispico.flower.mp.web.editorsupport.collaboration.figure.*" xmlns:effects="com.crispico.flower.util.effects.*">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Button;
+			import mx.utils.StringUtil;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.editor.remote.EditableResource;
+			
+			/**
+			 * @flowerModelElementId _SKaRM6WoEeGAT8h2VXeJdg
+			 */
+			public static const LOCKED_BY_ME:int = 0;
+			
+			/**
+			 * @flowerModelElementId _SKgX0aWoEeGAT8h2VXeJdg
+			 */
+			public static const LOCKED_BY_OTHER:int = 1;
+			
+			/**
+			 * @flowerModelElementId _SKgX06WoEeGAT8h2VXeJdg
+			 */
+			public static const EDITABLE:int = 2;
+			
+			/**
+			 * @flowerModelElementId _T_7CcLoOEeGmmdms_o5fxQ
+			 */
+			private static const LOCKED_ICON:String =  EditorPlugin.getInstance().getResourceUrl("images/locks/lock.png");
+			
+			/**
+			 * @flowerModelElementId _T_-FwroOEeGmmdms_o5fxQ
+			 */
+			private static const UNLOCKED_ICON:String = EditorPlugin.getInstance().getResourceUrl("images/locks/unlock.png");
+			
+			/**
+			 * @flowerModelElementId _iQw-sLq6EeGcctunuFRi4Q
+			 */
+			public static const LOCK_ICON_SMALL:String = EditorPlugin.getInstance().getResourceUrl("images/Web/icons/locks/lock_small.png");
+			
+			/**
+			 * @flowerModelElementId _UABwI7oOEeGmmdms_o5fxQ
+			 */
+			private static const LOCKED_BY_ME_COLOR:uint = 0x0000FF;
+			
+			/**
+			 * @flowerModelElementId _UAK6FLoOEeGmmdms_o5fxQ
+			 */
+			private static const LOCKED_BY_OTHER_COLOR:uint = 0xFF0000;
+			
+			/**
+			 * @flowerModelElementId _UAQZoroOEeGmmdms_o5fxQ
+			 */
+			private static const LOCKED_BY_OTHER_DISABLED_COLOR:uint = 0xDE8A8A;
+			
+			/**
+			 * @flowerModelElementId _UAYVcLoOEeGmmdms_o5fxQ
+			 */
+			private static const EDITABLE_COLOR:uint = 0x008000;
+									
+			/**
+			 * The editable resource from the last update;
+			 * @flowerModelElementId _jpmWoo-IEeGlZvO-ph04FQ
+			 */
+			private var editableResource:EditableResource;			
+									
+			/**
+			 * The current lock state. -1 if not yet initialized
+			 * 
+			 * @flowerModelElementId _SKgX1aWoEeGAT8h2VXeJdg
+			 */
+			public var currentLockState:int = -1;
+			
+//			private var _collaborativeDiagramViewer:DiagramViewer;
+			
+			/**
+			 * @flowerModelElementId _SKgX16WoEeGAT8h2VXeJdg
+			 */
+			[Bindable]
+			private var startColor:Number;
+			
+			private static const normalToolButtonFill:Array = [0xFFFFFF, 0xCCCCCC];
+			
+			private static const lockedToolButtonFill:Array = [0xFFFFFF, 0xFFF955];
+			
+			///////////////////////////////////////////////////////
+			// Lock/unlock related logic
+			///////////////////////////////////////////////////////
+			/**
+			 * Updates the label of the button, the icon and the color animation.
+			 * 
+			 * @flowerModelElementId _SKgX2aWoEeGAT8h2VXeJdg
+			 */
+			public function updateState(editableResource:EditableResource):void {
+				this.editableResource = editableResource;	
+				// dirty info
+				saveButton.enabled = editableResource.dirty;
+				
+				// lock info
+				var state:int = getState();
+				
+				switch (state) {
+				case LOCKED_BY_ME:
+					lockButton.label = "Locked by me";
+					startColor = LOCKED_BY_ME_COLOR;
+					lockButton.setStyle("color", startColor);
+					lockButton.setStyle("iconURL", LOCKED_ICON);
+					lockButton.enabled = true;
+					lockButton.selected = true;
+
+					editorFrontend.enableEditing();
+					break;
+				case LOCKED_BY_OTHER:
+					lockButton.label = "Locked by " + editableResource.lockOwner.name + " (" + editableResource.lockOwner.login + ")";
+					// ignored; will be displayed in gray
+					startColor = LOCKED_BY_OTHER_COLOR
+					lockButton.setStyle("disabledColor", LOCKED_BY_OTHER_DISABLED_COLOR);
+					lockButton.setStyle("iconURL", LOCKED_ICON);
+					lockButton.enabled = false;
+					lockButton.selected = true;
+					
+					editorFrontend.disableEditing();
+					break;
+				case EDITABLE:
+					lockButton.label = "Editable";
+					startColor = EDITABLE_COLOR;
+					lockButton.setStyle("color", startColor);
+					lockButton.setStyle("iconURL", UNLOCKED_ICON);
+					lockButton.enabled = true;
+					lockButton.selected = false;
+
+					editorFrontend.enableEditing();
+					break;
+				}
+				if (state != currentLockState && !fadeColor.isPlaying) {
+						fadeColor.play();
+				} 
+				currentLockState = state;		
+				lockButton.toolTip = getTooltipText(editableResource);
+			} 
+			
+			/**
+			 * @flowerModelElementId _SKmecaWoEeGAT8h2VXeJdg
+			 */
+			private function getState():int {
+				if (editableResource.locked){
+					if (editableResource.lockOwner.communicationChannelId == CommunicationPlugin.getInstance().bridge.communicationChannelId) {				
+						return LOCKED_BY_ME;
+					} else {
+						return LOCKED_BY_OTHER;
+					}
+				} else {
+					return EDITABLE;
+				}
+			}
+
+			/**
+			 * @flowerModelElementId _SKmec6WoEeGAT8h2VXeJdg
+			 */
+			private function getTooltipText(editableResource:EditableResource):String {
+				var owner:String = "";
+				if (editableResource.lockOwner != null) {
+					owner = StringUtil.substitute("{0} ({1})", editableResource.lockOwner.name, editableResource.lockOwner.login);	
+				}
+				if (editableResource.locked) { 		
+//					var difference:Number = editableResource.lockExpireTime.time - editableResource.lockUpdateTime.time;
+//					return StringUtil.substitute("Locked by: {0} \rLock expires: in {1} (at {2})", 
+//						owner, durationFormatter.format(new Date(difference)), timeFormatter.format(editableResource.lockExpireTime));
+					var time:String = timeFormatter.format(editableResource.lockExpireTime);
+					var seconds:Number = int((editableResource.lockExpireTime.time - new Date().time) / 1000);
+					var date:Date = new Date();
+					if (seconds > 0) {
+						date.minutes = int(seconds / 60); 
+						date.seconds = int(seconds % 60);
+					} else {
+						date.minutes = 0;
+						date.seconds = 0;
+					}
+					time += " (in " + durationFormatter.format(date) + ")";
+					return StringUtil.substitute("Locked by: {0} \rLock expires: {1}", owner, time);
+				} else {
+					var lastUpdate:String = ""; 
+					if (editableResource.lockUpdateTime != null) {
+						lastUpdate = timeFormatter.format(editableResource.lockUpdateTime);
+					}
+					return StringUtil.substitute("Last user: {0} \rLast update: {1}", owner, lastUpdate);
+				} 
+			}
+			
+			private function get editorFrontend():EditorFrontend {
+				return EditorFrontend(this.parent);
+			}
+			
+			/**
+			 * @flowerModelElementId _SKmeeaWoEeGAT8h2VXeJdg
+			 */
+			private function lockClick():void {
+				if (editorFrontend.editorStatefulClient == null) {
+					// TODO CS/STFL compatibilitatea cu legacy
+					if (editableResource.locked) {
+						// unlock
+						CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand("editorSupport", "unlockAndNotify", [editorFrontend.editorInput]));
+					} else {
+						// lock
+						CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand("editorSupport", "lockAndNotify", [editorFrontend.editorInput]));
+					}
+				} else {
+					if (editableResource.locked) {
+						// unlock
+						editorFrontend.editorStatefulClient.unlockFromButton();
+					} else {
+						// lock
+						editorFrontend.editorStatefulClient.tryLockFromButton();
+					}
+				}
+			}
+			
+			private function saveButtonClickHandler():void{
+				if (editorFrontend.editorStatefulClient == null) {
+					// TODO CS/STFL compatibilitatea cu legacy
+					return;
+				}
+				editorFrontend.editorStatefulClient.save();		
+			}
+			
+//			///////////////////////////////////////////////////////
+//			// Collaboration related logic
+//			///////////////////////////////////////////////////////
+//			
+//			/**
+//			 * The CollaborativeDiagramViewer that is needed to activate and deactivate 
+//			 * the tools according to the selected buttons.
+//			 */
+//			public function get collaborativeDiagramViewer():DiagramViewer {
+//				return _collaborativeDiagramViewer;
+//			}
+//			
+//			/**
+//			 * @private
+//			 */
+//			public function set collaborativeDiagramViewer(value:DiagramViewer):void {
+//				_collaborativeDiagramViewer = value;
+//				collaborativeDiagramViewer.addEventListener(ToolEvent.EXCLUSIVE_TOOL_ACTIVATED, exclusiveToolActivatedHandler);
+//				collaborativeDiagramViewer.addEventListener(ToolEvent.EXCLUSIVE_TOOL_DEACTIVATED, exclusiveToolDeactivatedHandler);
+//				collaborativeDiagramViewer.addEventListener(ToolEvent.EXCLUSIVE_TOOL_LOCKED, exclusiveToolLockedHandler);
+//			}
+//			
+//			private function findButtonCorrespondingToTool(tool:Tool):Button {
+//				for (var i:int = 0; i < collaborativeFiguresBox.numChildren; i++) {
+//					var child:DisplayObject = collaborativeFiguresBox.getChildAt(i);
+//					if (child is Button && Button(child).data == tool) {
+//						return Button(child);
+//					}
+//				}
+//				return null;
+//			}
+//			
+//			/**
+//			 * Finds the button that corresponds to the tool, and selects it.
+//			 */ 
+//			private function exclusiveToolActivatedHandler(event:ToolEvent):void {
+//				var button:Button = findButtonCorrespondingToTool(event.tool);
+//				if (button != null) {
+//					button.selected = true;
+//				}
+//			}
+//			
+//			/**
+//			 * Finds the button that corresponds to the tool, and deselects it.
+//			 */ 
+//			private function exclusiveToolDeactivatedHandler(event:ToolEvent):void {
+//				var button:Button = findButtonCorrespondingToTool(event.tool);
+//				if (button != null) {
+//					button.selected = false;
+//					button.setStyle("fillColors", normalToolButtonFill);
+//				}
+//			}
+//			
+//			private function exclusiveToolLockedHandler(event:ToolEvent):void {
+//				var button:Button = findButtonCorrespondingToTool(event.tool);
+//				if (button != null) {
+//					button.setStyle("fillColors", lockedToolButtonFill);
+//				}
+//			}
+//			
+//			private function createCollaborativeFigureButtonClickHandler(event:MouseEvent):void {
+//				// we force an activation because the viewer might not be active, and we
+//				// want the user to see the visual feedback (i.e. the clicked button changing color)
+//				collaborativeDiagramViewer.activate(true);
+//				collaborativeDiagramViewer.activateTool(
+//					Tool(event.target.data));
+//			}
+//			
+		]]>
+	</mx:Script>
+	  
+	<mx:DateFormatter id="timeFormatter" formatString="HH:NN:SS"/>
+	<mx:DateFormatter id="durationFormatter" formatString="NN':SS''" />  
+	
+	<common:FlowerButton id="saveButton"/>
+<!--	<common:FlowerButton id="saveButton" label="Save" fontWeight="normal" iconURL="{SWTImageUtil.INSTANCE.getImageURLFromAlias('save_img')}" enabled="false" click="saveButtonClickHandler()"/>
+-->	
+	<mx:HBox id="lockStatusBox" paddingTop="1" paddingBottom="1" paddingLeft="2" paddingRight="2" verticalAlign="middle" horizontalGap="3">
+		<mx:Label text="Lock:"/>
+		<common:FlowerButton id="lockButton" label="Loading..." enabled="false" click="lockClick()" fontWeight="normal" 
+							 toggle="true" width="200" mouseMove="if (editableResource != null) { lockButton.toolTip = getTooltipText(editableResource);}"/>
+	</mx:HBox>  	
+	
+	<mx:HBox id="collaborativeFiguresBox" paddingTop="1" paddingBottom="1" paddingLeft="2" paddingRight="2" verticalAlign="middle" horizontalGap="3">
+		
+<!--		<mx:Label text="Presentation:"/>
+
+		<util:ButtonWithIconComponent id="createdDashedRectangle" width="{createdDashedRectangle.height}" click="createCollaborativeFigureButtonClickHandler(event)">
+			<util:data>
+				<tool:CreateCollaborativeFigureTool 
+					figureType="{CollaborativeFigureModel.DASHED_RECTANGLE}"
+					figureBorderColor="{CollaborativeFigureModel.RED}" figureBorderThickness="2"/>
+			</util:data>
+			<util:iconComponent>
+				<figure:CollaborativeDashedRectangleFigure
+					width="{createdDashedRectangle.height - 8}" figureHeight="{createdDashedRectangle.height - 8}" 
+					borderThickness="{createdDashedRectangle.data.figureBorderThickness}" borderColor="{createdDashedRectangle.data.figureBorderColor}"/>
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<util:ButtonWithIconComponent id="createSolidRectangleButton" width="{createSolidRectangleButton.height}" click="createCollaborativeFigureButtonClickHandler(event)">
+			<util:data>
+				<tool:CreateCollaborativeFigureTool 
+					figureType="{CollaborativeFigureModel.SOLID_RECTANGLE}"
+					figureBorderColor="{CollaborativeFigureModel.BLUE}" figureBorderThickness="2"/>
+			</util:data>
+			<util:iconComponent>
+				<figure:CollaborativeSolidRectangleFigure
+					width="{createSolidRectangleButton.height - 8}" figureHeight="{createSolidRectangleButton.height - 8}" 
+					borderThickness="{createSolidRectangleButton.data.figureBorderThickness}" borderColor="{createSolidRectangleButton.data.figureBorderColor}"
+					cornerRadius="{CollaborativeFigureModel.SOLID_RECTANGLE_ICON_CORNER_RADIUS}"/>
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+
+		<util:ButtonWithIconComponent id="createEllipseButton" width="{createEllipseButton.height}" click="createCollaborativeFigureButtonClickHandler(event)">
+			<util:data>
+				<tool:CreateCollaborativeFigureTool 
+					figureType="{CollaborativeFigureModel.OVAL}"
+					figureBorderColor="{CollaborativeFigureModel.GREEN}" 
+					figureBorderThickness="2"/>
+			</util:data>
+			<util:iconComponent>
+				<figure:CollaborativeOvalFigure
+					width="{createEllipseButton.height - 8}" figureHeight="{createEllipseButton.height - 8}" 
+					borderThickness="{createEllipseButton.data.figureBorderThickness}" borderColor="{createEllipseButton.data.figureBorderColor}"/>
+			</util:iconComponent>
+		</util:ButtonWithIconComponent>
+		
+		<util:ButtonWithIconComponent id="createDashedRectangleWithPropertiesEditor" width="{createDashedRectangleWithPropertiesEditor.height}" click="createCollaborativeFigureButtonClickHandler(event)"
+											   label="..." fontWeight="bold" paddingLeft="0" paddingRight="0">
+			<util:data>
+				<tool:CreateCollaborativeFigureTool 
+					bringUpPropertiesEditorAfterCreation="true"
+					figureType="{CollaborativeFigureModel.DASHED_RECTANGLE}"
+					figureBorderColor="{CollaborativeFigureModel.RED}" figureBorderThickness="2"/>
+			</util:data>
+		</util:ButtonWithIconComponent>
+-->		
+	</mx:HBox>
+	
+	<mx:Spacer width="100%" />
+	
+<!--	<common:FlowerButton id="urlGenerateNavigate" 
+						 label="URL..." toolTip="Open URL Generate / Navigate Dialog" 
+						 fontWeight="normal" iconURL="{SingletonRefsFromPrePluginEra.iconURLGenerateNavigateDialog}" 
+						 click="SingletonRefsFromPrePluginEra.showURLGenerateNavigateDialogFunction()" />
+-->	
+	
+	<effects:FadeColor
+		id="fadeColor"
+		target="{lockStatusBox}"
+		property="backgroundColor" isStyle="true" 
+        fromValue="{startColor}" 
+        toValue="#FFFFFF" 
+        duration="1000"/>
+	
+</mx:HBox>

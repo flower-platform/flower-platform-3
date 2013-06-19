@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ @author Cristina Constantinescu
+-->
+<popUp:ResizablePopupWindow
+						 xmlns:mx="http://www.adobe.com/2006/mxml" 
+						 xmlns:ui="com.crispico.flower.mp.web.svn.ui.*" 
+						 xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+						 xmlns:popUp="com.crispico.flower.util.popup.*"
+						 
+						 width="400" height="250" minWidth="400" minHeight="250" showCloseButton="true" 
+						 paddingTop="5" paddingBottom="10" paddingLeft="5" paddingRight="5"
+										 						
+						 titleIconURL="{GitPlugin.getInstance().getResourceUrl('images/permission.png')}"
+						 
+						 defaultButton="{ok}">
+	<mx:Script>
+		<![CDATA[
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.flexutil.Utils;
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.web.git.GitPlugin;
+
+				
+			public var repositoryURI:String;
+		
+			public var user:String;
+			
+			public var pageHandler:GitPageHandler = new GitPageHandler();
+			
+			/**
+			 * @flowerModelElementId _rsERIHH5EeK0WoOyJtfqdw
+			 */
+			public function formOkHandler():void {
+				// validate form
+				if (Validator.validateAll([usernameValidator]).length > 0) {
+					return;
+				}
+				
+				pageHandler.executeHandler(username.text, password.text);
+				
+				closeForm();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:StringValidator id="usernameValidator" source="{username}" property="text" minLength="1"/>
+	
+	<mx:Form id="form" height="100%" width="100%" verticalGap="10">			
+		<mx:FormItem label="{GitPlugin.getInstance().getMessage('git.login.repository')}" width="100%">
+			<mx:TextInput id="repository" text="{repositoryURI}" initialize="Utils.makePseudoDisabled(repository)" width="100%"/>
+		</mx:FormItem>
+		
+		<mx:FormItem label="{GitPlugin.getInstance().getMessage('git.login.username')}" width="100%">
+			<mx:TextInput id="username" text="{user}" width="100%" creationComplete="{callLater(username.setFocus)}"/>
+		</mx:FormItem>
+		
+		<mx:FormItem label="{GitPlugin.getInstance().getMessage('git.login.password')}" width="100%">
+			<mx:TextInput id="password" displayAsPassword="true" width="100%"/>
+		</mx:FormItem>
+	</mx:Form>
+	<mx:Text text="{GitPlugin.getInstance().getMessage('git.login.message')}" width="100%" />			
+	
+	<mx:HBox width="100%" horizontalAlign="right" paddingTop="5">
+		<mx:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="formOkHandler()" width="80"/>
+		<mx:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="formCancelHandler()" width="80"/>
+	</mx:HBox>	
+	
+</popUp:ResizablePopupWindow>

@@ -274,18 +274,14 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _rZy54CJvEeKovflGC_YAeQ
-	 */
-	public EditorStatefulService(String editorName) {
-		super();
-		this.editorName = editorName;
-	}
-
-	/**
 	 * @flowerModelElementId _rZy54iJvEeKovflGC_YAeQ
 	 */
 	public String getEditorName() {
 		return editorName;
+	}
+
+	public void setEditorName(String editorName) {
+		this.editorName = editorName;
 	}
 
 	/**
@@ -886,11 +882,11 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		return unlockedNow;		
 	}
 
-	//TODO : Temporary code (see #6777)
-	/**
-	 * @flowerModelElementId _rZ8D0CJvEeKovflGC_YAeQ
-	 */
-	protected abstract File getEditableResourceFile(EditableResource editableResource);
+//	//TODO : Temporary code (see #6777)
+//	/**
+//	 * @flowerModelElementId _rZ8D0CJvEeKovflGC_YAeQ
+//	 */
+//	protected abstract File getEditableResourceFile(EditableResource editableResource);
 	
 	/**
 	 * @return the <code>friendlName</code> encoded.

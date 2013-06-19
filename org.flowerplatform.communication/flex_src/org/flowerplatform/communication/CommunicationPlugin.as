@@ -17,6 +17,9 @@ package org.flowerplatform.communication {
 	import org.flowerplatform.communication.command.HelloServerCommand;
 	import org.flowerplatform.communication.command.ServerSnapshotClientCommand;
 	import org.flowerplatform.communication.command.WelcomeClientCommand;
+	import org.flowerplatform.communication.progress_monitor.remote.CreateProgressMonitorStatefulClientCommand;
+	import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulClient;
+	import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulLocalClient;
 	import org.flowerplatform.communication.sequential_execution.SequentialExecutionServerCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.InvokeStatefulClientMethodClientCommand;
@@ -65,14 +68,21 @@ package org.flowerplatform.communication {
 			registerClassAliasFromAnnotation(GenericTreeStatefulClientLocalState);
 			registerClassAliasFromAnnotation(TreeNode);
 			registerClassAliasFromAnnotation(PathFragment);
+			
+			registerClassAliasFromAnnotation(ProgressMonitorStatefulLocalClient);			
+			registerClassAliasFromAnnotation(CreateProgressMonitorStatefulClientCommand);			
+		}
+		
+		override public function preStart():void {
+			super.preStart();
+			if (INSTANCE != null) {
+				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
+			}
+			INSTANCE = this;
 		}
 		
 		override public function start():void {
 			super.start();
-			if (INSTANCE != null) {
-				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
-			}
-			INSTANCE = this;
 			
 			bridge = new BlazeDSBridge();
 			bridge.addEventListener(BridgeEvent.OBJECT_RECEIVED, handleReceivedObject);
