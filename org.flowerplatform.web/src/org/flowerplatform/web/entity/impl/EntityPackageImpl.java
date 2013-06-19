@@ -1229,30 +1229,4 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 		createResource(eNS_URI);
 	}
 
-	/**
-	 * @author Mariana
-	 */
-	@Override
-	public HbDataStore createAndInitializeHbDataStore(Properties properties, Configuration config) {
-		try {
-			// the name of the session factory
-			String hbName = "Entity";
-			// create the HbDataStore using the name
-			final HbDataStore hbds = HbHelper.INSTANCE.createRegisterDataStore(hbName);
-			 
-			// set the properties
-			hbds.setDataStoreProperties(properties);
-			// sets its epackages stored in this datastore
-			hbds.setEPackages(new EPackage[] { EntityPackage.eINSTANCE });
-			((HbSessionDataStore) hbds).setConfiguration(config); 
-			
-			// initialize
-			hbds.initialize();
-			return hbds;
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-		return null;
-	}
-
 } //EntityPackageImpl
