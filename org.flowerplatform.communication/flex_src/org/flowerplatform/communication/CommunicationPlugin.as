@@ -12,6 +12,7 @@ package org.flowerplatform.communication {
 	import org.flowerplatform.communication.callback.InvokeCallbackClientCommand;
 	import org.flowerplatform.communication.command.AbstractClientCommand;
 	import org.flowerplatform.communication.command.CompoundClientCommand;
+	import org.flowerplatform.communication.command.CompoundServerCommand;
 	import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 	import org.flowerplatform.communication.command.HelloServerCommand;
 	import org.flowerplatform.communication.command.ServerSnapshotClientCommand;
@@ -53,6 +54,7 @@ package org.flowerplatform.communication {
 
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CompoundClientCommand);
+			registerClassAliasFromAnnotation(CompoundServerCommand);
 			registerClassAliasFromAnnotation(DisplaySimpleMessageClientCommand);
 			registerClassAliasFromAnnotation(InvokeCallbackClientCommand);
 			registerClassAliasFromAnnotation(InvokeServiceMethodServerCommand);

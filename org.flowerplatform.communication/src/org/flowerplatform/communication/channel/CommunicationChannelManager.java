@@ -12,6 +12,7 @@ import javax.security.auth.Subject;
 import org.flowerplatform.common.log.AuditDetails;
 import org.flowerplatform.common.log.LogUtil;
 import org.flowerplatform.common.util.RunnableWithParam;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.IPrincipal;
 import org.flowerplatform.communication.command.IServerCommand;
 import org.slf4j.Logger;
@@ -112,31 +113,36 @@ public class CommunicationChannelManager {
 	 */
 	public Object handleReceivedObject(Object messageClientId, IPrincipal principal, final Object object) {
 		final CommunicationChannel communicationChannel = idToCommunicationChannelMap.get(messageClientId);
-		
-		// Message arrived too late, a channel for corresponding client does not exist anymore.
-		if (communicationChannel == null) 
-			return null;
-		
-		PrivilegedAction<Void> priviledgedAction = new PrivilegedAction<Void>() {
-			@Override
-			public Void run() {
-				handleReceivedObject(communicationChannel, object);
-				return null;
-			}
-		};
-
-		communicationChannel.handleReceivedObjectWillStart();
-		Object response = null;
 		try {
-			if (principal == null) {
-				priviledgedAction.run();
-			} else {
-				Subject.doAsPrivileged(principal.getSubject(), priviledgedAction, null);
+			CommunicationPlugin.tlCurrentPrincipal.set(principal);
+		
+			// Message arrived too late, a channel for corresponding client does not exist anymore.
+			if (communicationChannel == null) 
+				return null;
+			
+			PrivilegedAction<Void> priviledgedAction = new PrivilegedAction<Void>() {
+				@Override
+				public Void run() {
+					handleReceivedObject(communicationChannel, object);
+					return null;
+				}
+			};
+	
+			communicationChannel.handleReceivedObjectWillStart();
+			Object response = null;
+			try {
+				if (principal == null) {
+					priviledgedAction.run();
+				} else {
+					Subject.doAsPrivileged(principal.getSubject(), priviledgedAction, null);
+				}
+			} finally {
+				response = communicationChannel.handleReceivedObjectEnded();
 			}
+			return response;
 		} finally {
-			response = communicationChannel.handleReceivedObjectEnded();
+			CommunicationPlugin.tlCurrentPrincipal.set(null);
 		}
-		return response;
 	}
 	
 	public void addWebCommunicationLifecycleListener(ICommunicationChannelLifecycleListener listener) {

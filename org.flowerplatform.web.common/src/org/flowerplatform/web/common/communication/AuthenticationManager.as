@@ -1,13 +1,13 @@
 package  org.flowerplatform.web.common.communication {
+	
 	import org.flowerplatform.blazeds.BlazeDSBridge;
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.HelloServerCommand;
-	import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
-	
+	import org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto;
 	
 	/**
 	 * @author Sorin
@@ -44,10 +44,18 @@ package  org.flowerplatform.web.common.communication {
 		 */
 		private var anonymousAuthenticationRejected:Boolean;
 
-//		/**
-//		 * @author Cristi
-//	 	 */
-//		public var currentUserLoggedIn:User_CurrentUserLoggedInDto;
+		/**
+		 * @author Cristi
+	 	 */
+		public function get currentUserLoggedIn():User_CurrentUserLoggedInDto {
+			var crt:User_CurrentUserLoggedInDto = new User_CurrentUserLoggedInDto();
+			crt.isAdmin = true;
+			crt.hasAdminSecurityEntitiesPermissions = true;
+			crt.id = 1;
+			crt.login = "admin";
+			crt.name = "admin";
+			return crt;
+		}
 		
 		/**
 		 * Keeps the value for "Keep layout structure" checkbox from auth dialog.

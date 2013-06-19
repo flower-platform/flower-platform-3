@@ -36,11 +36,21 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static final String SERVICE_EXTENSION_POINT = "org.flowerplatform.communication.service";
 	
+	/**
+	 * @author Mariana
+	 */
+	public static final String AUTHENTICATOR_EXTENSION_POINT = "org.flowerplatform.communication.authenticator";
+	
 	private List<ServletMapping> servletMappings;
 	
 	private CommunicationChannelManager communicationChannelManager = new CommunicationChannelManager();
 	
 	private ServiceRegistry serviceRegistry = new ServiceRegistry();
+	
+	/**
+	 * @author Mariana
+	 */
+	private IAuthenticator authenticator;
 	
 	private ScheduledExecutorServiceFactory scheduledExecutorServiceFactory = new ScheduledExecutorServiceFactory();
 
@@ -55,16 +65,27 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	public ServiceRegistry getServiceRegistry() {
 		return serviceRegistry;
 	}
+	
+	/**
+	 * @author Mariana
+	 */
+	public IAuthenticator getAuthenticator() {
+		return authenticator;
+	}
 
 	public ScheduledExecutorServiceFactory getScheduledExecutorServiceFactory() {
 		return scheduledExecutorServiceFactory;
 	}
+	
+	public static final ThreadLocal<IPrincipal> tlCurrentPrincipal = new ThreadLocal<IPrincipal>();
 
+	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
 		initExtensionPoint_servlet();
 		initExtensionPoint_service();
+		initExtensionPoint_authenticator();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -98,6 +119,19 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 		
 	}
 
+	/**
+	 * @author Mariana
+	 */
+	protected void initExtensionPoint_authenticator() throws CoreException {
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(AUTHENTICATOR_EXTENSION_POINT);
+		for (IConfigurationElement configurationElement : configurationElements) {
+			String id = configurationElement.getAttribute("id");
+			Object authenticatorInstance = configurationElement.createExecutableExtension("authenticatorClass");
+			authenticator = (IAuthenticator) authenticatorInstance;
+			logger.debug("Added authenticator with id = {} with class = {}", id, authenticatorInstance.getClass());
+		}
+	}
+	
 	public void stop(BundleContext bundleContext) throws Exception {
 		scheduledExecutorServiceFactory.dispose();
 		super.stop(bundleContext);

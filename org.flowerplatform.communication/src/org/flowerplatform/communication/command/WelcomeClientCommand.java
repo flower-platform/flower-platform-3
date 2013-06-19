@@ -2,7 +2,7 @@ package org.flowerplatform.communication.command;
 
 public class WelcomeClientCommand extends CompoundClientCommand {
 	private boolean containsFirstTimeInitializations;
-
+	
 	public boolean isContainsFirstTimeInitializations() {
 		return containsFirstTimeInitializations;
 	}
@@ -11,5 +11,4 @@ public class WelcomeClientCommand extends CompoundClientCommand {
 			boolean containsFirstTimeInitializations) {
 		this.containsFirstTimeInitializations = containsFirstTimeInitializations;
 	}
-	
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Mariana
+-->
+<mx:VBox
+	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:popup="com.crispico.flower.util.popup.*"
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	minWidth="900" minHeight="500">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.IList;
+			
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupContent;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				value.setLabel("Groups Screen");
+			}
+		]]>
+	</mx:Script>
+	
+	<ui:GroupsPanel id="groupsPanel" width="100%" height="100%"/>
+</mx:VBox>

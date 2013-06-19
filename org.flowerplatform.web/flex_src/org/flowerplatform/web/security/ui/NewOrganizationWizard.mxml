@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	Wizard to request a new organization. First page contains the organization form, second page a comment box.
+
+	@author Mariana
+-->
+<ui:CommentTextBoxWizard 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*" 
+	xmlns:ns="com.crispico.flower.util.ui_inheritance.*"
+	title="{WebPlugin.getInstance().getMessage('entity.organization.request.title')}" 
+	titleIconURL="icons/Web/icons/usr_admin/organization.png" 
+	creationComplete="creationCompleteHandler()"
+	minWidth="545" minHeight="400">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			
+			public var organizationsPanel:OrganizationsPanel;
+			
+			private function get commentPageName():String {
+				return "commentPageName";
+			}
+			
+			/**
+			 * Because of the validation mechanism in the <code>Wizard</code> class, the states must have numeric names
+			 * and be in consecutive order, starting from 0. To be able to change the index of the comment page, we first
+			 * set it to the index from super, and then switch back to the specific index <code>commentPageName</code>.
+			 */ 
+			override public function set states(value:Array):void {
+				value[0].name = 0;
+				super.states = value;
+				states[0].name = commentPageName;
+			}
+			
+			override protected function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				titleArea.height = 120;
+				
+				commentBoxLabel = WebPlugin.getInstance().getMessage('entity.organization.commentForAdmin');
+				commentPageTitle = WebPlugin.getInstance().getMessage('entity.organization.commentForAdmin.title');
+				commentPageDescription = WebPlugin.getInstance().getMessage('entity.organization.commentForAdmin.hint');
+				
+				// the request may not go through (e.g. org name may already exist), so don't close the form
+				closeFormAfterConfirmation = false;
+				confirmationMessage = WebPlugin.getInstance().getMessage("entity.organization.confirmation");
+				
+				finishFunction = function(obj:Object):void {
+					var organization:OrganizationAdminUIDto = new OrganizationAdminUIDto();
+					organization.id = 0;
+					organization.name = organizationForm.orgName.text;
+					organization.URL = organizationForm.orgUrl.text;
+					organization.label = organizationForm.orgLabel.text;
+					organization.logoURL = organizationForm.orgLogoUrl.text;
+					organization.iconURL = organizationForm.orgIconUrl.text;
+					var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand("userService", "requestNewOrganization", 
+						[organization, comment.text], this, 
+						saveOkCallback, exceptionCallback);
+					CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+				};
+			}
+			
+			override protected function nextClickHandler():void {
+				if (Validator.validateAll(organizationForm.validators).length > 0) 
+					return;
+				super.nextClickHandler();
+			}
+			
+			
+			private function saveOkCallback(errorMessage:String):void {
+				if (errorMessage) {
+					Alert.show(errorMessage, WebPlugin.getInstance().getMessage('error'));
+					exceptionCallback(null);
+				} else {
+					organizationsPanel.refreshBtnHandler();
+					closeForm();
+				}
+			}
+			
+			/**
+			 * Go back to the first page of the wizard.
+			 */ 
+			private function exceptionCallback(exception:Object):void {
+				currentState = "0"
+			}
+		]]>
+	</mx:Script>
+			
+	<ns:InheritableStates component="{this}" currentState="0">
+		<ns:inheritableStates>
+			
+			<!-- This needs to exist, even if empty -->
+			<mx:State name="default"/>
+			
+			<!-- Add a new state, with the organizations form -->
+			<mx:State name="0" basedOn="default">
+				<mx:SetProperty target="wizardTitle" name="text" value="{title}"/>
+				<mx:SetProperty target="wizardDescription" name="text" value="{WebPlugin.getInstance().getMessage('entity.organization.form.hint')}"/>
+				<mx:AddChild relativeTo="{contentArea}">
+					<ui:BasicOrganizationForm id="organizationForm" width="100%" height="100%"/>
+				</mx:AddChild>
+			</mx:State>
+			
+			<!-- Move the comment box to the next page -->
+			<mx:State name="1" basedOn="{commentPageName}"/>
+			
+		</ns:inheritableStates>
+	</ns:InheritableStates>
+	
+</ui:CommentTextBoxWizard>

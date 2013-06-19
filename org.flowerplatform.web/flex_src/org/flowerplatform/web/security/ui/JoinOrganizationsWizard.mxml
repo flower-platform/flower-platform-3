@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	The first page of this wizard contains a list populated with all the available organizations.
+	Second page contains the comment box. The comment will be sent to the selected organization's admins.
+
+	@author Mariana
+-->
+<ui:CommentTextBoxWizard 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	xmlns:utils="com.crispico.flower.mp.web.utils.*"
+	xmlns:ns="com.crispico.flower.util.ui_inheritance.*"
+	title="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestMembership')}"
+	titleIconURL="icons/Web/icons/usr_admin/organization.png"
+	creationComplete="creationCompleteHandler()" 
+	minWidth="550" minHeight="360" 
+	getIndexForStateFunction="getIndexForState">
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.utils.StringUtil;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.command.CompoundServerCommand;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.entity.dto.NamedDto;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			
+			public var userForm:UserForm;
+			
+			override protected function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				commentBoxLabel = WebPlugin.getInstance().getMessage("entity.organization.commentForAdmin");
+				commentPageTitle = WebPlugin.getInstance().getMessage("entity.organization.commentForAdmin.title");
+				commentPageDescription = WebPlugin.getInstance().getMessage("entity.user.organizations.requestMembership.commentForAdministrator.hint");
+				confirmationMessage = WebPlugin.getInstance().getMessage('entity.user.organizations.requestMembership.confirmation');
+				// we use the super wizardResult (the comment), and the selected items directly from the table
+				finishFunction = function(commentForAdmin:Object):void {
+					var command:CompoundServerCommand = new CompoundServerCommand();
+					for each (var dto:NamedDto in table.selectedItems) {
+						command.append(new InvokeServiceMethodServerCommand(
+							"userService", 
+							"requestMembership", 
+							[userForm.user.id, dto.name, commentForAdmin], 
+							userForm, userForm.resultHandler));
+					}
+					if (command.commandsList.length > 0)
+						CommunicationPlugin.getInstance().bridge.sendObject(command);
+					closeForm();
+				};
+				
+				// fill the organizations list
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"organizationService", "findAllAsAdminUIDto", [true], 
+						this, function(dtos:ArrayCollection):void {
+							table.dataProvider = dtos;
+						}));
+			}
+			
+			/**
+			 * Substitute the {0} in the confirmation message with the label selected in the combobox.
+			 */ 
+			override protected function getSpecificConfirmationMessage():String {
+				var selectedOrganizationsLabels:String = "";
+				for each (var dto:OrganizationAdminUIDto in table.selectedItems) {
+					selectedOrganizationsLabels += dto.label + ", ";
+				}
+				selectedOrganizationsLabels = selectedOrganizationsLabels.substring(0, selectedOrganizationsLabels.length - 2);
+				return StringUtil.substitute(confirmationMessage, [selectedOrganizationsLabels]);
+			}
+			
+			/**
+			 * Returns the index for given state. Used in <code>Wizard</code>
+			 * to identify previous/next state.
+			 * 
+			 * @author Cristina
+			 */ 
+			private function getIndexForState(stateName:String):int {
+				switch (stateName) {
+					case "orgsTablePage":
+						return 0;
+					case "commentPage":
+						return 1;					
+					default: 
+						return -1;
+				}
+			}
+			
+		]]>
+	</mx:Script>
+
+	<ns:InheritableStates component="{this}" currentState="orgsTablePage">
+		<ns:inheritableStates>
+			
+			<!-- This needs to exist, even if empty -->
+			<mx:State name="default"/>
+			
+			<!-- Add a new state, with the organizations table -->
+			<mx:State name="orgsTablePage" basedOn="default">
+				
+				<mx:SetProperty target="wizardTitle" name="text" value="{title}"/>
+				<mx:SetProperty target="wizardDescription" name="text" value="{WebPlugin.getInstance().getMessage('entity.user.organizations.requestMembership.hint')}"/>
+				<mx:SetProperty target="next" name="enabled" value="{table.selectedItems.length > 0}"/>
+				<mx:SetProperty target="finish" name="enabled" value="false"/>
+				
+				<mx:AddChild relativeTo="{contentArea}">
+					<mx:DataGrid width="100%" height="100%" id="table" allowMultipleSelection="true" paddingLeft="3" paddingBottom="3" paddingRight="3" paddingTop="3">
+						<mx:columns>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.name')}" dataField="name"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.label')}" dataField="label"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.url')}">
+								<mx:itemRenderer>
+									<mx:Component>
+										<ui:ClickableUrlDataGridItemRenderer urlField="URL"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:AddChild>
+			</mx:State>
+			
+			<!-- Move the comment box to the next page -->
+			<mx:State name="commentPage" basedOn="commentPageName"/>
+			
+		</ns:inheritableStates>
+	</ns:InheritableStates>
+	
+</ui:CommentTextBoxWizard>

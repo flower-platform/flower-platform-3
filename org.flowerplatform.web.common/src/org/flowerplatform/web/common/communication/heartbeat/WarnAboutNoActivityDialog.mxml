@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Popup that warns the user using a countdown that it will be disconnected by the server
+ due to inactivity. User can stop the disconnecting by closing popup.
+ 
+ @see ChannelObserverStatefulClient
+
+ @author Sorin
+-->
+<mx:VBox
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	minWidth="200" minHeight="150"
+	horizontalAlign="center"
+	>
+	
+	<mx:Text textAlign="center">
+		<mx:htmlText>
+Because you did not have any activity, you will be
+automatically disconnected in {secondsUntilDisconnect} seconds.
+
+If you do not want to be disconnected close this popup.
+		</mx:htmlText>
+	</mx:Text>
+	
+	<!--<mx:Button label="Close" click="formCancelHandler()" />-->
+	
+	<fx:Script>
+		<![CDATA[
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			
+			[Bindable]
+			private var secondsUntilDisconnect:Number;
+			
+			private var secondsUpdater:Timer; 
+			
+			public function show(seconds:Number):void {
+				secondsUntilDisconnect = seconds;
+
+				secondsUpdater = new Timer(1000, seconds);
+				secondsUpdater.addEventListener(TimerEvent.TIMER, updateSeconds);
+				secondsUpdater.start();
+				
+//				showPopup(NaN, NaN, null, true, true /* close on escape */);
+			}
+			
+//			override public function closeForm():void {
+//				super.closeForm();
+//				
+//				if (secondsUpdater == null)
+//					return;
+//				secondsUpdater.stop();
+//				secondsUpdater.removeEventListener(TimerEvent.TIMER, updateSeconds);
+//				secondsUpdater = null;
+//			}
+				
+			private function updateSeconds(event:TimerEvent):void {
+				secondsUntilDisconnect --;
+				if (secondsUntilDisconnect <= 0) {
+//					closeForm();
+					WebCommonPlugin.getInstance().authenticationManager.bridge.disconnect(); // Connection not lost or connection lost but undetected, so disconnect ourself.
+				}
+			}
+			
+//			override protected function formCancelHandler(event:Event = null):void {
+//				super.formCancelHandler();
+//				HeartbeatStatefulClient.INSTANCE.signalActivity();
+//			}			
+		]]>
+	</fx:Script>
+</mx:VBox>

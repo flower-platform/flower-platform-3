@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Contains the users panel: for each user, displays its info and all the organizations he belongs to, with the status he
+has in the organizations.
+
+@author Mariana
+-->
+<mx:VBox
+	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+	minWidth="1100" minHeight="500" 
+	creationComplete="onCreationComplete(event)">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.popup.TextAreaPopup;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupContent;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.entity.dto.NamedDto;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				value.setLabel("Users Screen");
+			}
+			
+			protected function onCreationComplete(event:FlexEvent):void {
+				if (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.hasAdminSecurityEntitiesPermissions)
+					currentState = "manageMembershipRequestsState";
+			}
+			
+			public function selectionChangeHandler():void {
+				approveRequestButton.enabled = false;
+				denyRequestButton.enabled = false;
+				addToOrganizationButton.enabled = false;
+				removeFromOrganizationButton.enabled = false;
+				upgradeToAdminButton.enabled = false;
+				downgradeToMemberButton.enabled = false;
+				
+				if (usersPanel.table.selectedItems.length == 1) {
+					var user:UserAdminUIDto = usersPanel.table.selectedItems[0];
+					
+					if (user.id != WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id) {
+						// add to org button will only be enabled if the selected user is not the current user logged in
+						// reason: the current user is already a member of all the organizations where he is admin
+						addToOrganizationButton.enabled = true;
+						
+						// remove from org button is enabled only if the user belongs to at least one org
+						if (user.organizationUsers && user.organizationUsers.length > 0) {
+							removeFromOrganizationButton.enabled = true;
+						}
+						
+						// only if the selected user is not the current user logged in; reason: the current user cannot approve his own pending memberships
+						for each (var ou:OrganizationUserAdminUIDto in user.organizationUsers) {
+							// approve/deny membership requests buttons enablement
+							if (ou.status == OrganizationUserAdminUIDto.PENDING_MEMBERSHIP_APPROVAL) {
+								approveRequestButton.enabled = true;
+								denyRequestButton.enabled = true;
+							}
+							
+							// upgrade/downgrade buttons enablement
+							if (ou.status == OrganizationUserAdminUIDto.ADMIN) {
+								downgradeToMemberButton.enabled = true;
+							}
+							if (ou.status == OrganizationUserAdminUIDto.MEMBER) {
+								upgradeToAdminButton.enabled = true;
+							}
+						}
+					}
+				}
+			}
+						
+			private function approveDenyMembershipRequests(approve:Boolean):void {
+				if (usersPanel.table.selectedItems.length == 1) {
+					var user:UserAdminUIDto = usersPanel.table.selectedItems[0];
+					var list:ArrayCollection = getOrganizationUsers(user, OrganizationUserAdminUIDto.PENDING_MEMBERSHIP_APPROVAL);
+					
+					openOrganizationComboboxWizard(approve ? WebPlugin.getInstance().getMessage("entity.user.approveMembership") : WebPlugin.getInstance().getMessage("entity.user.denyMembership"),
+						list, "organization", 
+						approve ? WebPlugin.getInstance().getMessage("entity.user.wizard.approveMembership.description") : WebPlugin.getInstance().getMessage("entity.user.wizard.denyMembership.description"), 
+						approve ? WebPlugin.getInstance().getMessage("entity.user.wizard.approveMembership.confirmation") : WebPlugin.getInstance().getMessage("entity.user.wizard.denyMembership.confirmation"),
+						function(object:Object):void {
+							var ou:OrganizationUserAdminUIDto = OrganizationUserAdminUIDto(object[0]);
+							var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+								"userService", "approveDenyMembership", [ou.id, approve, object[1]], this, displayReturnedMessageHandler);
+							CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+						});
+				}
+			}
+			
+			/**
+			 * Display the message received from the server and refresh the users panel.
+			 */ 
+			private function displayReturnedMessageHandler(message:String):void {
+				if (message) {
+					var popup:TextAreaPopup = new TextAreaPopup();
+					popup.title = WebPlugin.getInstance().getMessage("form.info");
+					popup.isHTML = true;
+					popup.text = message;
+					popup.minWidth = 300;
+					popup.minHeight = 170;
+					popup.showPopup();
+				}
+				usersPanel.refreshBtnHandler();
+			}			
+			
+			private function upgradeDowngradeUser(upgrade:Boolean):void {
+				if (usersPanel.table.selectedItems.length == 1) {
+					var user:UserAdminUIDto = usersPanel.table.selectedItems[0];
+					var list:ArrayCollection = getOrganizationUsers(user, upgrade ? OrganizationUserAdminUIDto.MEMBER : OrganizationUserAdminUIDto.ADMIN);
+					
+					var title:String = upgrade ? WebPlugin.getInstance().getMessage("entity.user.upgrade") : 
+											     WebPlugin.getInstance().getMessage("entity.user.downgrade"); 
+					var description:String = upgrade ? WebPlugin.getInstance().getMessage("entity.user.wizard.upgrade.description") :
+													   WebPlugin.getInstance().getMessage("entity.user.wizard.downgrade.description");	
+					var confirmationMessage:String = upgrade ? WebPlugin.getInstance().getMessage("entity.user.wizard.upgrade.confirmation") : 
+															   WebPlugin.getInstance().getMessage("entity.user.wizard.downgrade.confirmation");
+					
+					openOrganizationComboboxWizard(title, list, "organization", description, confirmationMessage,
+						function(object:Object):void {
+							var ouIds:ArrayCollection = new ArrayCollection();
+							ouIds.addItem(OrganizationUserAdminUIDto(object[0]).id);
+							var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+								"userService", 
+								"upgradeDowngradeUser", 
+								[ouIds, upgrade], 
+								usersPanel, displayReturnedMessageHandler);
+							CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+						}, false, true /* don't show the comment page */);
+				}
+			}
+			
+			private function getOrganizationUsers(user:UserAdminUIDto, status:String):ArrayCollection {
+				var rslt:ArrayCollection = new ArrayCollection();
+				for each (var organizationUser:OrganizationUserAdminUIDto in user.organizationUsers) {
+					if (organizationUser.status == status) {
+						rslt.addItem(organizationUser);
+					}
+				}
+				return rslt;
+			}
+			
+			protected function addToOrganization():void {
+				if (usersPanel.table.selectedItems.length == 1) {
+					// get all the organizations where the current user is admin					
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("organizationService", "findAllAsAdminUIDto", [false], this,
+							function(allOrganizations:ArrayCollection):void {
+								
+								var user:UserAdminUIDto = usersPanel.table.selectedItems[0];
+								var list:ArrayCollection = new ArrayCollection();
+								
+								// from the organizations where the current user is admin, keep only those organizations where the selected user does not belong to
+								for each (var dto:NamedDto in allOrganizations) {
+									var alreadyInOrg:Boolean = false;
+									for each (var ou:OrganizationUserAdminUIDto in user.organizationUsers) {
+										if (dto.id == ou.organization.id) {
+											alreadyInOrg = true;
+											break;
+										}
+									}
+									if (!alreadyInOrg) {
+										list.addItem(dto);
+									}
+								}
+								
+								if (list.length == 0) {
+									Alert.show(WebPlugin.getInstance().getMessage("entity.user.addToOrganization.alreadyInAllOrganizations"), WebPlugin.getInstance().getMessage("form.info"));
+								} else {
+									openOrganizationComboboxWizard(WebPlugin.getInstance().getMessage("entity.user.addToOrganization"), list, "label",
+										WebPlugin.getInstance().getMessage("entity.user.wizard.addToOrganization.description"),
+										WebPlugin.getInstance().getMessage("entity.user.wizard.addToOrganization.confirmation"),
+										function(object:Object):void {
+											var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+												"userService", 
+												"requestMembership", 
+												[user.id, OrganizationAdminUIDto(object[0]).name, object[1]], 
+												usersPanel, displayReturnedMessageHandler);
+											CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+										}, true /* user can chose not to add a comment */);
+								}
+							}));
+				}
+			}
+			
+			protected function removeFromOrganization():void {
+				if (usersPanel.table.selectedItems.length == 1) {
+					var user:UserAdminUIDto = usersPanel.table.selectedItems[0];
+					
+					openOrganizationComboboxWizard(WebPlugin.getInstance().getMessage("entity.user.removeFromOrganization"), user.organizationUsers, "organization",
+						WebPlugin.getInstance().getMessage("entity.user.wizard.removeFromOrganization.description"),
+						WebPlugin.getInstance().getMessage("entity.user.wizard.removeFromOrganization.confirmation"),
+						function(object:Object):void {
+							var cmd:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+								"userService", 
+								"leaveOrganizations", 
+								[user, new ArrayCollection([OrganizationUserAdminUIDto(object[0]).organization]), object[1]], 
+								usersPanel, displayReturnedMessageHandler);
+							CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+						}, true /* user can chose not to add a comment */);
+				}
+			}
+			
+			private function openOrganizationComboboxWizard(popupTitle:String, list:ArrayCollection, 
+															comboBoxLabelField:String, comboBoxPageDescription:String,
+															confirmationMessage:String, finishFunction:Function, 
+															canCommentBeDisabled:Boolean = false,
+															removeCommentPage:Boolean = false):void {
+				var wizard:ComboBoxWizard = new ComboBoxWizard();
+				wizard.title = popupTitle;
+				wizard.titleIconURL = WebCommonPlugin.getInstance().getResourceUrl("images/usr_admin/user.png");
+				
+				wizard.comboBoxLabel = WebPlugin.getInstance().getMessage("entity.organization");;
+				wizard.comboBoxPageDescription = comboBoxPageDescription;
+				wizard.comboBoxPageTitle = popupTitle;
+				wizard.setList(list, comboBoxLabelField, list.length > 1);
+				wizard.errorMessageIfEmptyLabelSelected = WebPlugin.getInstance().getMessage("entity.user.organizations.confirmation.error");
+				
+				wizard.commentBoxLabel = WebPlugin.getInstance().getMessage("entity.user.commentForUser.label");
+				wizard.commentPageTitle = WebPlugin.getInstance().getMessage("entity.user.wizard.commentForUser.title");
+				wizard.commentPageDescription = WebPlugin.getInstance().getMessage("entity.user.wizard.commentForUser.description");
+				
+				wizard.confirmationMessage = confirmationMessage;
+				wizard.finishFunction = finishFunction;
+				
+				wizard.canCommentBeDisabled = canCommentBeDisabled;
+				wizard.commentEnablementLabel = WebPlugin.getInstance().getMessage("entity.user.wizard.notifyUser");
+				wizard.removeCommentPage = removeCommentPage;
+				
+				wizard.showPopup();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		<mx:State name="manageMembershipRequestsState">
+			<mx:AddChild relativeTo="{usersPanel.menuBarFirstHBox}" position="firstChild">
+				<mx:Spacer width="100%"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{usersPanel.menuBarFirstHBox}" position="firstChild">
+				<mx:HBox width="100%" horizontalAlign="left">
+					<common:FlowerLinkButton id="approveRequestButton" label="{WebPlugin.getInstance().getMessage('entity.user.approveMembership')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/ok.png")}' click="approveDenyMembershipRequests(true)" enabled="true"/>
+					<common:FlowerLinkButton id="denyRequestButton" label="{WebPlugin.getInstance().getMessage('entity.user.denyMembership')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/cancel.png")}' click="approveDenyMembershipRequests(false)" enabled="true"/>
+				</mx:HBox>
+			</mx:AddChild>
+			
+			<mx:AddChild relativeTo="{usersPanel.menuBarFirstHBox}" position="after">
+				<mx:HBox width="100%" horizontalAlign="left">
+					<common:FlowerLinkButton id="addToOrganizationButton" label="{WebPlugin.getInstance().getMessage('entity.user.addToOrganization')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/usr_admin/user_add.png")}' click="addToOrganization()"/> 
+					<common:FlowerLinkButton id="removeFromOrganizationButton" label="{WebPlugin.getInstance().getMessage('entity.user.removeFromOrganization')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/usr_admin/user_delete.png")}' click="removeFromOrganization()"/>
+					<common:FlowerLinkButton id="upgradeToAdminButton" label="{WebPlugin.getInstance().getMessage('entity.user.upgrade')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/upgrade.png")}' enabled="false" click="{upgradeDowngradeUser(true)}"/>
+					<common:FlowerLinkButton id="downgradeToMemberButton" label="{WebPlugin.getInstance().getMessage('entity.user.downgrade')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/downgrade.png")}' enabled="false" click="{upgradeDowngradeUser(false)}"/>
+				</mx:HBox>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	
+	<mx:VBox width="100%" height="100%">
+		<ui:UsersPanel id="usersPanel" usersScreen="{this}" width="100%" height="100%"/>
+	</mx:VBox>
+	
+</mx:VBox>

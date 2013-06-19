@@ -1,0 +1,216 @@
+########################################################################
+# Default properties
+########################################################################
+
+###########
+## Temp 
+###########
+temp.new_ws_er = true
+
+###########
+## The persistence unit to be used for database access. This entry should exist in the persistence.xml file.
+###########
+# [DEFAULT] database.persistence-unit = production
+#database.persistence-unit = dev-hsql-in-memory
+#database.persistence-unit = dev-postgresql-with-drop-create
+#database.persistence-unit = production
+
+###########
+## Whether to populate the database with test data or not. 
+###########
+# [DEFAULT] database.init-with-test-data = false
+#database.init-with-test-data = internal
+#database.init-with-test-data = true
+
+###########
+## Performance monitor logging in csv file : cpu, heap, perm gen, threads. 
+###########
+# After how many seconds to write in the file, 0 means disabled.
+# [DEFAULT] performance.monitor.logging.periodicity = 0
+
+###########
+## Shows the Debug menu on the client, that contains commands useful during debugging/development. If this is set to false,
+## you can append ?showDebugMenu=true to the URL, and you will force the display of the menu. This property controls the Debug tab
+## in the login screen as well. Please note, that for an initial login, the Debug tab is not available based on the server setting, because no cl/server comm has been done. 
+## If you need to see the log, please append the ?showDebugMenu=true
+###########
+# [DEFAULT] client.debugMenu.show = false
+
+###########
+## Shows the experimental features on client
+###########
+# [DEFAULT] client.debug.show-experimental-features = false
+
+###########
+## Download Clean Scheduler 
+###########
+# Periodicity in seconds for the download scheduler to perform a clean operation on temporary download folder
+# [DEFAULT] download.clean-scheduler = 3600
+
+# Flag to perform clean operation on temporary download folder if a channel has been destroyed
+# [DEFAULT] download.removeFilesAfterDisconnect = true
+
+###########
+## Upload Clean Scheduler 
+###########
+# Periodicity in seconds for the upload scheduler to perform a clean operation on temporary upload folder
+# [DEFAULT] upload.clean-scheduler = 3600
+
+
+###########
+## BlazeDS Channel settings 
+###########
+
+# Periodicity in milliseconds for the server to check last message from client. Must be set a multiple of 4 for client.heartbeat.period
+# [DEFAULT] server.heartbeat.period = 60000
+
+# Maximum time in milliseconds allowed for a client to exist without activity but connected to the server.
+# [DEFAULT] client.no.activity.period = 900000
+
+# How many milliseconds, before client.no.activity.period, should we display the "warning, you will be disconnected" popup  
+# [DEFAULT] warn.about.no.activity.interval = 60000
+
+# Periodicity in milliseconds for the client to send signals to the server that it is still alive.
+# [DEFAULT] client.heartbeat.period = 15000
+
+# Periodicity in milliseconds for trying to establish the connection again.
+# [DEFAULT] client.connecting.retry.period = 3000
+
+# Time in milliseconds to wait in case of switching user. Helps for avoiding certain blazeDS problems. 
+# [DEFAULT] client.switch.user.interval = 300
+
+# Time in milliseconds to wait in case that the connection did not fail and there were problems sending the objects.
+# [DEFAULT] client.dispatch.undelivered.objects.interval = 2000
+
+###########
+## Eclipse GUI settings 
+###########
+
+# Flag to show the graphical interface of the inner eclipse. Useful if debug and testing mode to work directly on the server side.  
+# [DEFAULT] show.eclipse.gui = false
+# Flag to show the graphical interface when server is stopping.
+# [DEFAULT] show.eclipse.gui.at.server.stop = false
+
+###########
+## SVN Settings 
+###########
+
+# Java HL Native libraries location for linux
+# [DEFAULT] linux.svnjavahl.native.libraries = /opt/CollabNet_Subversion/lib
+
+###########
+## GIT Preferences
+###########
+# Location for local GIT repositories
+# [DEFAULT] git.git-repositories-location = {0}/root/{1}/.git-repositories
+# where
+# {0} = workspace location; e.g. d:/.../workspace
+# {1} = organization directory name; e.g. /org; /organizations/org1
+=======
+# GIT Installation Directory (mandatory for Windows)
+# [NO DEFAULT VALUE] git.git-install-dir
+
+###########
+## TextEditor client settings
+###########
+# Interval when keystrokes on text editors are aggregated and sent to the server (milliseconds)
+# [DEFAULT] client.keystroke.aggregation.interval = 3000
+
+###########
+## Users settings
+###########
+
+# List of groups that will be created when an organization is approved
+# Parameters: organization name
+# [DEFAULT] users.on-approve-organization.create-groups = {0}.admin, {0}.user
+
+# List of users that will be created when an organization is approved
+# Parameters: organization name
+# [DEFAULT] users.on-approve-organization.create-users = anonymous.{0}
+
+# List of directories that will be created when an organization is approved
+# Parameters: organization name
+# [DEFAULT] users.on-approve-organization.create-dirs = {0}, {0}/ws_trunk
+
+# List of directories corresponding to the organization; should match the users.on-approve-organization.create-dirs property
+# Parameters: organization name
+# [DEFAULT] users.directories-for-organization = {0}
+
+# The default directory found inside the organization directories; should match the users.on-approve-organization.create-dirs property
+# [DEFAULT] users.default-directory-for-organization = ws_trunk
+
+# List of permissions that will be created when an organization is approved
+# Parameters: organization name
+# [DEFAULT] users.on-approve-organization.create-permissions = \
+# @{0}.admin: AdminSecurityEntitiesPermission(null, #{0}),\
+# @{0}.admin: ModifyTreePermissionsPermission(root/{0}, #{0}),\
+# @{0}.admin: ModifyTreePermissionsPermission(root/{0}/*, #{0}),\
+# @{0}.admin: FlowerWebFilePermission(root/{0}, read-write-delete),\
+# @{0}.admin: FlowerWebFilePermission(root/{0}/*, read-write-delete),\
+# #{0}: FlowerWebFilePermission(root/{0}, read),\
+# #{0}: FlowerWebFilePermission(root/{0}/*, read)
+
+# List of groups for organization admins
+# Parameters: organization name
+# [DEFAULT] users.on-become-org-admin.add-user-to-groups = {0}.admin
+
+# List of groups that new users will be added to after they are approved as members of an organization
+# Parameters: organization name
+# [DEFAULT] users.on-approve-membership-to-organization.add-member-to-groups = {0}.user
+
+# If true, there cannot be two users with the same email
+# [DEFAULT] users.email-unique = true
+
+# Minimum length for the password
+# [DEFAULT] users.min-password-length = 4
+
+# Display all permissions to the user, even if they are not editable by the user
+# [DEFAULT] users.permissions.showAllApplicablePermissionsPerFilteredResource = true
+
+# The name of the demo organization
+# [DEFAULT] users.organizations.demo = demo
+
+# The name of the demo project
+# [DEFAULT] users.demoProjectName = demo_project
+
+# The name of the playground organization
+# [DEFAULT] users.organizations.playground = playground
+
+###########
+## Server settings
+###########
+
+# Server url. Mandatory property, must be set
+# [NO DEFAULT VALUE] server.url
+
+# Global server url
+# Parameters: server url, context
+# [DEFAULT] server.url.global = {0}/{1}
+
+# Server url for organization
+# Paramters: server url, context, organization url
+# [DEFAULT] server.url.for-organization = {0}/{1}/org/{2}
+
+###########
+## Mail server settings
+###########
+
+# Host name. Mandatory property, must be set
+# [NO DEFAULT VALUE] mail.smtp.host
+
+# Port. Values: Default, or a specified port
+# [Default] mail.smtp.port = Default
+
+# Security. Values: None, SSL/TLS, STARTTLS
+# [DEFAULT] mail.smtp.security = None
+
+# User name
+# [NO DEFAULT VALUE] mail.smtp.user
+
+# User password
+# [NO DEFAULT VALUE] mail.smtp.password
+
+########################################################################
+# Default properties: END
+########################################################################
+

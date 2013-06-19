@@ -78,6 +78,18 @@ public abstract class CommunicationChannel {
 	public abstract Object getId();
 	
 	public abstract IPrincipal getPrincipal();
+
+	/**
+	 * @author Mariana
+	 */
+	public abstract void disconnect();
+	
+	/**
+	 * @author Mariana
+	 */
+	public static IPrincipal getCurrentPrincipal() {
+		throw new UnsupportedOperationException();
+	}
 	
 	public abstract boolean isDisposed();
 	

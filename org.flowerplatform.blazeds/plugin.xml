@@ -9,5 +9,12 @@
             servlet="flex.messaging.MessageBrokerServlet">
       </servlet>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="heartbeatStatefulService"
+            serviceClass="org.flowerplatform.blazeds.heartbeat.HeartbeatStatefulService">
+      </service>
+   </extension>
 
 </plugin>

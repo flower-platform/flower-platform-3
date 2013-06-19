@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ @flowerModelElementId _JENFoFcPEeGL3vi-zPhopA
+-->
+<ui:BaseListPanel 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns="com.crispico.flower.util.ui_inheritance.*" 
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+	xmlns:utils="org.flowerplatform.web.utils.*" 
+	xmlns:ui="org.flowerplatform.web.security.ui.*"
+	creationComplete="onCreationComplete(event)" 
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.core.ClassFactory;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.entity.dto.Dto;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
+			
+			/**
+			 * This panel belongs either to an <code>OrganizationsScreen</code>, available in the administration menu,
+			 * or to the <code>UserForm</code>.
+			 */
+			public var organizationsScreen:OrganizationsScreen;
+			
+			[Bindable]
+			public var userForm:UserForm;
+			
+			/**
+			 * If true, obtain all the existing <code>Organization</code>s; used to select organizations when a user
+			 * wants to request membership.
+			 */ 
+			public var getAll:Boolean = false;
+			
+			/**
+			 * @flowerModelElementId _RBZy4F34EeGwLIVyv_iqEg
+			 */
+			private function onCreationComplete(event:FlexEvent):void {
+				this.formClass = OrganizationForm;
+				refreshBtnHandler();
+			}
+			
+			/**
+			 * Changes the enablement of the add/edit/delete buttons, depending of the current user logged in.
+			 */ 
+			override protected function selectionChangeHandler(event:ListEvent):void {
+				super.selectionChangeHandler(event);
+				
+				// can only add if global admin (any member can add a new org from the organizations panel in the user details screen)
+				addBtn.enabled &&= WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin;
+				// edit/delete only enabled for organizations where the user is admin
+				var isOrgAdminForAllSelected:Boolean = true;
+				for each (var org:OrganizationAdminUIDto in table.selectedItems) {
+					isOrgAdminForAllSelected &&= (OrganizationAdminUIDto(org).status == OrganizationUserAdminUIDto.ADMIN);
+				}
+				editBtn.enabled &&= (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin || isOrgAdminForAllSelected);
+				deleteBtn.enabled &&= (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin || isOrgAdminForAllSelected);
+				
+				if (organizationsScreen)
+					organizationsScreen.selectionChangeHandler();
+			}
+			
+			/**
+			 * @flowerModelElementId _RBZy4134EeGwLIVyv_iqEg
+			 */
+			override public function refreshBtnHandler(rslt:Object = null):void {
+				super.refreshBtnHandler();
+				var method:String;
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"organizationService", 
+						// if the panel belongs to a user form, display the organizations that the user belongs to
+						userForm ? "findMyOrganizationsAsADminUIDto" : "findAllAsAdminUIDto",
+						userForm ? [userForm.entityId] : [false], 
+						this, dataReceivedCallback, exceptionHandler));
+			}
+			
+			/**
+			 * Sends command to server to delete selected items.
+			 * @flowerModelElementId _RBaZ8V34EeGwLIVyv_iqEg
+			 */
+			override protected function deleteResultHandler(event:CloseEvent):void {
+				if (event.detail == Alert.YES) {
+					var dtos:ArrayCollection = new ArrayCollection();
+					for each (var object:Object in table.selectedItems) {
+						dtos.addItem(Dto(object).id);
+					}
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("organizationService", "delete", [dtos], this, refreshBtnHandler));		
+				}
+			}	
+
+		]]>
+	</mx:Script>
+	<ns:InheritableStates component="{this}" currentState="default">
+		<ns:inheritableStates>
+			<mx:State name="default">
+				
+				<mx:AddChild relativeTo="{menuBarVBox}">
+					<mx:HBox id="menuBarSecondHBox" width="100%" horizontalAlign="right" horizontalGap="0">
+						<utils:HintButton id="whatIsButton" label="{WebPlugin.getInstance().getMessage('entity.organization.help.whatis.title')}" popupText="{WebPlugin.getInstance().getMessage('entity.organization.help.whatis.content')}"/>
+					</mx:HBox>
+				</mx:AddChild>
+
+				<mx:SetProperty target="{table}" name="columns">
+					<mx:value>
+						<mx:Array>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.name')}" dataField="name"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.label')}" dataField="label"/>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.url')}">
+								<mx:itemRenderer>
+									<mx:Component>
+										<ui:ClickableUrlDataGridItemRenderer urlField="URL"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.groups')}">
+								<mx:itemRenderer>
+									<mx:Component>
+										<ui:MultiLineDataGridItemRenderer listName="groups"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.activated')}">
+								<mx:itemRenderer>
+									<mx:Component>
+										<ui:CenteredCheckBoxItemRenderer selectedState="activated"/>
+									</mx:Component>
+								</mx:itemRenderer>
+							</mx:DataGridColumn>
+							<mx:DataGridColumn headerText="{WebPlugin.getInstance().getMessage('entity.organization.status')}" dataField="status" visible="{userForm != null}"/>
+						</mx:Array>
+					</mx:value>
+				</mx:SetProperty>
+				
+				<mx:SetEventHandler target="{table}" name="{ResizeEvent.RESIZE}">
+					<mx:handler>
+						<![CDATA[
+						// I couldn't use the "pseudo-percentages" (i.e. set decimals < 1 to col width), because it didn't work, probably
+						// because of the fact that the last column may be hidden
+						//
+						// and this still has a glitch, for the case of "User's Organizations"
+						//
+						// @author Cristi
+						table.callLater(function():void {
+							
+							const activatedWidth:int = 75;
+							var remainingWidth:Number = table.width - activatedWidth;
+							// I use floor because otherwise, the sum might be a little bit greater than width =>
+							// the grid would start to resize itself (to infinity) to the right
+							var colWidth:Number = Math.floor(remainingWidth / (userForm != null ? 5 : 4));
+							
+							table.columns[4].width = activatedWidth;
+						
+							table.columns[0].width = colWidth;
+							table.columns[1].width = colWidth;
+							table.columns[2].width = colWidth;
+							table.columns[3].width = colWidth;
+							table.columns[5].width = colWidth;
+						});
+						]]>
+					</mx:handler>
+				</mx:SetEventHandler>
+			</mx:State>
+		</ns:inheritableStates>
+	</ns:InheritableStates>
+</ui:BaseListPanel>

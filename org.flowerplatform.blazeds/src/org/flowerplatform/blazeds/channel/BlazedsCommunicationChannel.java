@@ -18,6 +18,14 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 	
 	protected MessageClient messageClient;
 	
+	/**
+	 * Lock intended to be acquired by the channel state observer (heartbeat manager) for disposing a channel or 
+	 * by the channel manager to update channel's flag when an object has been just received or is about to be sent.
+	 * Note: the lock isn't kept while processing the received object.
+	 * Note: the lock is kept while disposing a channel. 
+	 */
+	public final Object lock = new Object();
+	
 	public BlazedsCommunicationChannel(
 			CommunicationChannelMessagingAdapter communicationChannelMessagingAdapter,
 			MessageClient messageClient) {
@@ -59,7 +67,24 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 
 	@Override
 	public IPrincipal getPrincipal() {
-		return null;
+		// Inspired from FlexContext.getUserPrincipal()
+		if (messageClient == null) {
+			return null;
+		}
+		
+		if (messageClient.getDestination().getService().getMessageBroker().getLoginManager().isPerClientAuthentication()) {
+			return (IPrincipal) messageClient.getFlexClient().getUserPrincipal();
+		} else {
+			return (IPrincipal) messageClient.getFlexSession().getUserPrincipal();
+		}
+	}
+
+	/**
+	 * @author Mariana
+	 */
+	@Override
+	public void disconnect() {
+		messageClient.getFlexClient().invalidate();
 	}
 
 	@Override

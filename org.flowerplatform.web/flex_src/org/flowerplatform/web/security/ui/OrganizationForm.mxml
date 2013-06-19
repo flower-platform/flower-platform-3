@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Organization form.
+ 
+ @author Cristi
+ @author Cristina
+ @author Mariana
+
+ @flowerModelElementId _K79RcFcPEeGL3vi-zPhopA
+-->
+<ns:BaseForm 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:ns="org.flowerplatform.web.security.ui.*" 
+	xmlns:utils="org.flowerplatform.web.utils.*" 
+	xmlns:form="com.crispico.flower.util.form.*"  
+	minWidth="500" minHeight="260" 
+	currentStateChange="PopUpManager.centerPopUp(this)">
+
+<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.controls.Alert;
+			import mx.managers.PopUpManager;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.web.WebPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+						
+			/**
+			 * @flowerModelElementId _RBU6YF34EeGwLIVyv_iqEg
+			 */
+			override public function set entityId(_entityId:Number):void {
+				super.entityId = _entityId;
+				
+				if (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin)
+					currentState = "asAdminState";
+				
+				if (entityId != 0) {
+					form.enabled = false;
+					save.enabled = false;
+					ModalSpinner.addModalSpinner(this, WebPlugin.getInstance().getMessage('spinner.processing'));
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand("organizationService", "findByIdAsAdminUIDto", [entityId], this, dataReceivedCallback, exceptionCallback));
+				} else {
+					dto = new OrganizationAdminUIDto();	
+					form.orgName.setFocus();
+				}
+			}
+			
+			/**
+			 * @flowerModelElementId _RBVhcF34EeGwLIVyv_iqEg
+			 */
+			private function dataReceivedCallback(result:OrganizationAdminUIDto):void {
+				ModalSpinner.removeModalSpinner(this);
+				dto = result;
+				form.organization = OrganizationAdminUIDto(dto);
+				form.enabled = true;
+				save.enabled = true;
+			}
+						
+			/**
+			 * Casted instance of the Dto.
+			 * @flowerModelElementId _RBVhc134EeGwLIVyv_iqEg
+			 */ 
+			[Bindable(event="dtoChangedEvent")] 
+			public function get organization():OrganizationAdminUIDto {
+				return OrganizationAdminUIDto(dto);
+			}	
+			
+			/**
+			 * @flowerModelElementId _RBWIgV34EeGwLIVyv_iqEg
+			 */
+			protected override function formOkHandler():void {	
+				if (Validator.validateAll(form.validators).length > 0) {
+					return;
+				}							
+				organization.name = form.orgName.text;
+				organization.URL = form.orgUrl.text;
+				organization.label = form.orgLabel.text;
+				organization.logoURL = form.orgLogoUrl.text;
+				organization.iconURL = form.orgIconUrl.text;
+				if (orgIsActivated)
+					organization.activated = orgIsActivated.selected;
+				
+				var cmd:InvokeServiceMethodServerCommand;
+				cmd = new InvokeServiceMethodServerCommand("organizationService", "mergeAdminUIDto", [organization], this, saveOkCallback, exceptionCallback);
+				CommunicationPlugin.getInstance().bridge.sendObject(cmd);
+			}
+			
+			/**
+			 * @flowerModelElementId _RBWIg134EeGwLIVyv_iqEg
+			 */
+			private function saveOkCallback(errorMessage:String):void {
+				if (errorMessage) {
+					Alert.show(errorMessage, WebPlugin.getInstance().getMessage('error'));
+					exceptionCallback(null);
+				} else {
+					OrganizationsPanel(parentListPanel).refreshBtnHandler();
+					super.formOkHandler();
+				}
+			}	
+				
+		]]>
+	</mx:Script>
+	
+	<ns:states>
+		
+		<!--
+			Adds an activated checkbox; only for FDC admins.
+			@author Mariana
+		-->
+		<mx:State name="asAdminState">
+			<mx:AddChild relativeTo="{form}">
+				<mx:FormItem label="{WebPlugin.getInstance().getMessage('entity.organization.activated')}" width="100%">
+					<mx:HBox width="100%" verticalAlign="middle" horizontalGap="1">
+						<mx:CheckBox id="orgIsActivated" selected="{organization.activated}" enabled="false"/>
+						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.organization.activated.hint')}"/>
+					</mx:HBox>
+				</mx:FormItem>
+			</mx:AddChild>
+		</mx:State>
+	</ns:states>
+            
+	<ns:BasicOrganizationForm id="form" height="100%" width="100%" verticalGap="10" paddingTop="3" paddingBottom="3"/>
+	
+	<mx:ControlBar id="organizationFormControlBar" width="100%" horizontalAlign="center">
+		 <mx:Button id="save" label="{WebPlugin.getInstance().getMessage('form.save')}" click="formOkHandler()"/>
+         <!--<mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>-->
+	</mx:ControlBar>   
+	
+</ns:BaseForm>
