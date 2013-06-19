@@ -8,6 +8,7 @@ package org.flowerplatform.web.entity.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -103,11 +104,33 @@ public class GroupUserImpl extends EntityImpl implements GroupUser {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setGroup(Group newGroup) {
+	public NotificationChain basicSetGroup(Group newGroup, NotificationChain msgs) {
 		Group oldGroup = group;
 		group = newGroup;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.GROUP_USER__GROUP, oldGroup, group));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.GROUP_USER__GROUP, oldGroup, newGroup);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setGroup(Group newGroup) {
+		if (newGroup != group) {
+			NotificationChain msgs = null;
+			if (group != null)
+				msgs = ((InternalEObject)group).eInverseRemove(this, EntityPackage.GROUP__GROUP_USERS, Group.class, msgs);
+			if (newGroup != null)
+				msgs = ((InternalEObject)newGroup).eInverseAdd(this, EntityPackage.GROUP__GROUP_USERS, Group.class, msgs);
+			msgs = basicSetGroup(newGroup, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.GROUP_USER__GROUP, newGroup, newGroup));
 	}
 
 	/**
@@ -141,11 +164,69 @@ public class GroupUserImpl extends EntityImpl implements GroupUser {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setUser(User newUser) {
+	public NotificationChain basicSetUser(User newUser, NotificationChain msgs) {
 		User oldUser = user;
 		user = newUser;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.GROUP_USER__USER, oldUser, user));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.GROUP_USER__USER, oldUser, newUser);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUser(User newUser) {
+		if (newUser != user) {
+			NotificationChain msgs = null;
+			if (user != null)
+				msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__GROUP_USERS, User.class, msgs);
+			if (newUser != null)
+				msgs = ((InternalEObject)newUser).eInverseAdd(this, EntityPackage.USER__GROUP_USERS, User.class, msgs);
+			msgs = basicSetUser(newUser, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.GROUP_USER__USER, newUser, newUser));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.GROUP_USER__GROUP:
+				if (group != null)
+					msgs = ((InternalEObject)group).eInverseRemove(this, EntityPackage.GROUP__GROUP_USERS, Group.class, msgs);
+				return basicSetGroup((Group)otherEnd, msgs);
+			case EntityPackage.GROUP_USER__USER:
+				if (user != null)
+					msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__GROUP_USERS, User.class, msgs);
+				return basicSetUser((User)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.GROUP_USER__GROUP:
+				return basicSetGroup(null, msgs);
+			case EntityPackage.GROUP_USER__USER:
+				return basicSetUser(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

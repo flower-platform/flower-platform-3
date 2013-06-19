@@ -169,6 +169,7 @@ public interface Organization extends NamedEntity, ISecurityEntity {
 	/**
 	 * Returns the value of the '<em><b>Groups</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.Group}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.Group#getOrganization <em>Organization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Groups</em>' reference list isn't clear,
@@ -177,7 +178,8 @@ public interface Organization extends NamedEntity, ISecurityEntity {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Groups</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getOrganization_Groups()
-	 * @model
+	 * @see org.flowerplatform.web.entity.Group#getOrganization
+	 * @model opposite="organization"
 	 * @generated
 	 */
 	EList<Group> getGroups();
@@ -185,6 +187,7 @@ public interface Organization extends NamedEntity, ISecurityEntity {
 	/**
 	 * Returns the value of the '<em><b>Organization Users</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.OrganizationUser}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.OrganizationUser#getOrganization <em>Organization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Organization Users</em>' reference list isn't clear,
@@ -193,7 +196,8 @@ public interface Organization extends NamedEntity, ISecurityEntity {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Organization Users</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getOrganization_OrganizationUsers()
-	 * @model
+	 * @see org.flowerplatform.web.entity.OrganizationUser#getOrganization
+	 * @model opposite="organization"
 	 * @generated
 	 */
 	EList<OrganizationUser> getOrganizationUsers();
@@ -201,6 +205,7 @@ public interface Organization extends NamedEntity, ISecurityEntity {
 	/**
 	 * Returns the value of the '<em><b>Svn Repository UR Ls</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.SVNRepositoryURLEntity}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.SVNRepositoryURLEntity#getOrganization <em>Organization</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Svn Repository UR Ls</em>' reference list isn't clear,
@@ -209,7 +214,8 @@ public interface Organization extends NamedEntity, ISecurityEntity {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Svn Repository UR Ls</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getOrganization_SvnRepositoryURLs()
-	 * @model
+	 * @see org.flowerplatform.web.entity.SVNRepositoryURLEntity#getOrganization
+	 * @model opposite="organization"
 	 * @generated
 	 */
 	EList<SVNRepositoryURLEntity> getSvnRepositoryURLs();

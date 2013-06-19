@@ -10,20 +10,26 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityPackage;
 import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.ISecurityEntity;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
+import org.flowerplatform.web.entity.User;
+import org.hibernate.Query;
 
 /**
  * <!-- begin-user-doc -->
@@ -391,7 +397,7 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 	 */
 	public EList<Group> getGroups() {
 		if (groups == null) {
-			groups = new EObjectResolvingEList<Group>(Group.class, this, EntityPackage.ORGANIZATION__GROUPS);
+			groups = new EObjectWithInverseResolvingEList<Group>(Group.class, this, EntityPackage.ORGANIZATION__GROUPS, EntityPackage.GROUP__ORGANIZATION);
 		}
 		return groups;
 	}
@@ -403,7 +409,7 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 	 */
 	public EList<OrganizationUser> getOrganizationUsers() {
 		if (organizationUsers == null) {
-			organizationUsers = new EObjectResolvingEList<OrganizationUser>(OrganizationUser.class, this, EntityPackage.ORGANIZATION__ORGANIZATION_USERS);
+			organizationUsers = new EObjectWithInverseResolvingEList<OrganizationUser>(OrganizationUser.class, this, EntityPackage.ORGANIZATION__ORGANIZATION_USERS, EntityPackage.ORGANIZATION_USER__ORGANIZATION);
 		}
 		return organizationUsers;
 	}
@@ -415,7 +421,7 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 	 */
 	public EList<SVNRepositoryURLEntity> getSvnRepositoryURLs() {
 		if (svnRepositoryURLs == null) {
-			svnRepositoryURLs = new EObjectResolvingEList<SVNRepositoryURLEntity>(SVNRepositoryURLEntity.class, this, EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS);
+			svnRepositoryURLs = new EObjectWithInverseResolvingEList<SVNRepositoryURLEntity>(SVNRepositoryURLEntity.class, this, EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS, EntityPackage.SVN_REPOSITORY_URL_ENTITY__ORGANIZATION);
 		}
 		return svnRepositoryURLs;
 	}
@@ -507,12 +513,72 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated NOT
+	 * @author Mariana
+	 */
+	public boolean contains(final ISecurityEntity securityEntity) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				boolean includes = false;
+				
+				if (securityEntity instanceof User) {
+					User user = (User) securityEntity;
+					Query query = wrapper.createQuery("SELECT u " +
+													"FROM User u join u.organizationUsers ou join ou.organization o " +
+													"WHERE o.id = :organization_id AND u.id = :user_id");
+					query.setParameter("organization_id", getId());
+					query.setParameter("user_id", user.getId());
+					includes = query.list().size() > 0;
+				} else if (securityEntity instanceof Group) {
+					Organization organization = wrapper.find(Organization.class, getId());
+					includes = organization.getGroups().contains(securityEntity);
+				} else if (securityEntity instanceof Organization) {
+					includes = this.equals(securityEntity);
+				}
+				
+				wrapper.setOperationResult(includes);
+			}
+		});
+		return (boolean) wrapper.getOperationResult();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean contains(ISecurityEntity securityEntity) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.ORGANIZATION__GROUPS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getGroups()).basicAdd(otherEnd, msgs);
+			case EntityPackage.ORGANIZATION__ORGANIZATION_USERS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOrganizationUsers()).basicAdd(otherEnd, msgs);
+			case EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getSvnRepositoryURLs()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.ORGANIZATION__GROUPS:
+				return ((InternalEList<?>)getGroups()).basicRemove(otherEnd, msgs);
+			case EntityPackage.ORGANIZATION__ORGANIZATION_USERS:
+				return ((InternalEList<?>)getOrganizationUsers()).basicRemove(otherEnd, msgs);
+			case EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS:
+				return ((InternalEList<?>)getSvnRepositoryURLs()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

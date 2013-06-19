@@ -8,6 +8,7 @@ package org.flowerplatform.web.entity.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -154,11 +155,33 @@ public class SVNCommentEntityImpl extends EntityImpl implements SVNCommentEntity
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setUser(User newUser) {
+	public NotificationChain basicSetUser(User newUser, NotificationChain msgs) {
 		User oldUser = user;
 		user = newUser;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.SVN_COMMENT_ENTITY__USER, oldUser, user));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.SVN_COMMENT_ENTITY__USER, oldUser, newUser);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUser(User newUser) {
+		if (newUser != user) {
+			NotificationChain msgs = null;
+			if (user != null)
+				msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__SVN_COMMENTS, User.class, msgs);
+			if (newUser != null)
+				msgs = ((InternalEObject)newUser).eInverseAdd(this, EntityPackage.USER__SVN_COMMENTS, User.class, msgs);
+			msgs = basicSetUser(newUser, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.SVN_COMMENT_ENTITY__USER, newUser, newUser));
 	}
 
 	/**
@@ -180,6 +203,36 @@ public class SVNCommentEntityImpl extends EntityImpl implements SVNCommentEntity
 		timestamp = newTimestamp;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.SVN_COMMENT_ENTITY__TIMESTAMP, oldTimestamp, timestamp));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.SVN_COMMENT_ENTITY__USER:
+				if (user != null)
+					msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__SVN_COMMENTS, User.class, msgs);
+				return basicSetUser((User)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.SVN_COMMENT_ENTITY__USER:
+				return basicSetUser(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

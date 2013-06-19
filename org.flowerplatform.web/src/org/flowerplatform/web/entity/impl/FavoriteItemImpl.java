@@ -8,6 +8,7 @@ package org.flowerplatform.web.entity.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -136,11 +137,33 @@ public class FavoriteItemImpl extends EntityImpl implements FavoriteItem {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setUser(User newUser) {
+	public NotificationChain basicSetUser(User newUser, NotificationChain msgs) {
 		User oldUser = user;
 		user = newUser;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.FAVORITE_ITEM__USER, oldUser, user));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.FAVORITE_ITEM__USER, oldUser, newUser);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUser(User newUser) {
+		if (newUser != user) {
+			NotificationChain msgs = null;
+			if (user != null)
+				msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__FAVORITE_ITEMS, User.class, msgs);
+			if (newUser != null)
+				msgs = ((InternalEObject)newUser).eInverseAdd(this, EntityPackage.USER__FAVORITE_ITEMS, User.class, msgs);
+			msgs = basicSetUser(newUser, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.FAVORITE_ITEM__USER, newUser, newUser));
 	}
 
 	/**
@@ -260,6 +283,36 @@ public class FavoriteItemImpl extends EntityImpl implements FavoriteItem {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.FAVORITE_ITEM__USER:
+				if (user != null)
+					msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__FAVORITE_ITEMS, User.class, msgs);
+				return basicSetUser((User)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.FAVORITE_ITEM__USER:
+				return basicSetUser(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

@@ -26,6 +26,7 @@ package org.flowerplatform.web.entity;
 public interface SVNRepositoryURLEntity extends NamedEntity {
 	/**
 	 * Returns the value of the '<em><b>Organization</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.Organization#getSvnRepositoryURLs <em>Svn Repository UR Ls</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Organization</em>' reference isn't clear,
@@ -35,7 +36,8 @@ public interface SVNRepositoryURLEntity extends NamedEntity {
 	 * @return the value of the '<em>Organization</em>' reference.
 	 * @see #setOrganization(Organization)
 	 * @see org.flowerplatform.web.entity.EntityPackage#getSVNRepositoryURLEntity_Organization()
-	 * @model
+	 * @see org.flowerplatform.web.entity.Organization#getSvnRepositoryURLs
+	 * @model opposite="svnRepositoryURLs"
 	 * @generated
 	 */
 	Organization getOrganization();

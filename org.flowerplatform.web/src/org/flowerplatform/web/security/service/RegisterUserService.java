@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.User;
 
 /**
@@ -23,16 +25,23 @@ public class RegisterUserService extends UserService {
 	 * Check if there is already an existing user with the same login, or if the
 	 * email address is valid before registering this new user.
 	 */
-	public String register(UserAdminUIDto dto, String organizationPrefix) {
+	public String register(final UserAdminUIDto dto, final String organizationPrefix) {
 		logger.debug("Register new user with login = {}", dto.getLogin());
 		
 		dto.setIsActivated(false);
-		String message = mergeAdminUIDto(dto);
+		final String message = mergeAdminUIDto(dto);
 		
-		if (message == null) {
-			User user = getDao().findByField(User.class, "login", dto.getLogin()).get(0);
-			sendActivationCodeForUser(user, organizationPrefix);
-		}
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				if (message == null) {
+					User user = wrapper.findByField(User.class, "login", dto.getLogin()).get(0);
+					sendActivationCodeForUser(user, organizationPrefix);
+				}
+				
+			}
+		});
 		
 		logger.debug("Resistration successful");
 		return message;
@@ -43,19 +52,26 @@ public class RegisterUserService extends UserService {
 	 * If user is not yet activated, resend the activation code. Returns a message that will
 	 * be displayed to the client.
 	 */
-	public String resendActivationCode(String login, String organizationFilter) {
+	public String resendActivationCode(final String login, final String organizationFilter) {
 		logger.debug("Resend activation code for user with login = {}", login);
-		List<User> existingUsers = getDao().findByField(User.class, "login", login);
-		if (existingUsers.size() == 1) {
-			if (!existingUsers.get(0).isActivated()) {
-				sendActivationCodeForUser(existingUsers.get(0), organizationFilter);
-				return "The activation code was sent to your mail box.";
-			} else {
-				return "This user is already activated!";
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<User> existingUsers = wrapper.findByField(User.class, "login", login);
+				if (existingUsers.size() == 1) {
+					if (!existingUsers.get(0).isActivated()) {
+						sendActivationCodeForUser(existingUsers.get(0), organizationFilter);
+						wrapper.setOperationResult("The activation code was sent to your mail box.");
+					} else {
+						wrapper.setOperationResult("This user is already activated!");
+					}
+				} else {
+					wrapper.setOperationResult("This user does not exist!");
+				}
 			}
-		} else {
-			return "This user does not exist!";
-		}
+		});
+		return (String) wrapper.getOperationResult();
 	}
 	
 	private final String RECOVER_PASSWORD_SUBJECT = "mail.template.recover.password.subject";
@@ -68,35 +84,44 @@ public class RegisterUserService extends UserService {
 	 * by email. Returns <code>true</code> if the password was reset and sent, and 
 	 * <code>false</code> if the user does not exist.
 	 */
-	public boolean forgotPassword(String login) {
+	public boolean forgotPassword(final String login) {
 		logger.debug("Forgot password request for user with login = {}", login);
-		
-		List<User> existingUsers = getDao().findByField(User.class, "login", login);
-		if (existingUsers.size() == 0)
-			return false;
-		
-		User user = existingUsers.get(0);
-		
-		if (user.getLogin().startsWith(SecurityEntityAdaptor.ANONYMOUS)) {
-			return false; // do not allow reset for anonymous
-		}
-		
-		String newPassword = generateRandomString();
-		user.setHashedPassword(Util.encrypt(newPassword));
-		getDao().merge(user);
-		
-		String subject = WebPlugin.getInstance().getMessage(RECOVER_PASSWORD_SUBJECT);
-		String content = WebPlugin.getInstance().getMessage(RECOVER_PASSWORD_BODY,
-				new Object[] { 
-					user.getLogin(),
-					user.getName(),
-					user.getEmail(),
-					SendMailService.getInstance().getServerUrl(),
-					newPassword 
-				});
-		
-		SendMailService.getInstance().send(user.getEmail(), subject, content);
-		return true;
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<User> existingUsers = wrapper.findByField(User.class, "login", login);
+				if (existingUsers.size() == 0) {
+					wrapper.setOperationResult(false);
+					return;
+				}
+				
+				User user = existingUsers.get(0);
+				
+				if (user.getLogin().startsWith(SecurityEntityAdaptor.ANONYMOUS)) {
+					wrapper.setOperationResult(false); // do not allow reset for anonymous
+					return;
+				}
+				
+				String newPassword = generateRandomString();
+				user.setHashedPassword(Util.encrypt(newPassword));
+				wrapper.merge(user);
+				
+				String subject = WebPlugin.getInstance().getMessage(RECOVER_PASSWORD_SUBJECT);
+				String content = WebPlugin.getInstance().getMessage(RECOVER_PASSWORD_BODY,
+						new Object[] { 
+							user.getLogin(),
+							user.getName(),
+							user.getEmail(),
+							SendMailService.getInstance().getServerUrl(),
+							newPassword 
+						});
+				
+				SendMailService.getInstance().send(user.getEmail(), subject, content);
+				wrapper.setOperationResult(true);
+			}
+		});
+		return (boolean) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -105,36 +130,45 @@ public class RegisterUserService extends UserService {
 	 * Returns <code>false</code> if the user does not exist, <code>true</code>
 	 * otherwise.
 	 */
-	public boolean forgotUsername(String email) {
+	public boolean forgotUsername(final String email) {
 		logger.debug("Forgot username request for user with email = {}", email);
-		
-		List<User> existingUsers = getDao().findByField(User.class, "email", email);
-		if (existingUsers.size() == 0)
-			return false;
-		
-		User user = existingUsers.get(0);
-		
-		if (user.getLogin().startsWith(SecurityEntityAdaptor.ANONYMOUS)) {
-			return false; // do not allow reset for anonymous
-		}
-		
-		String newPassword = generateRandomString();
-		user.setHashedPassword(Util.encrypt(newPassword));
-		getDao().merge(user);
-		
-		String subject = WebPlugin.getInstance().getMessage(RECOVER_USERNAME_SUBJECT);
-		String content = WebPlugin.getInstance().getMessage(RECOVER_USERNAME_BODY,
-				new Object[] { 
-					user.getLogin(),
-					user.getName(),
-					user.getEmail(),
-					SendMailService.getInstance().getServerUrl(),
-					newPassword 
-				});
-		
-		SendMailService.getInstance().send(user.getEmail(), subject, content);
-		
-		return true;
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<User> existingUsers = wrapper.findByField(User.class, "email", email);
+				if (existingUsers.size() == 0) {
+					wrapper.setOperationResult(false);
+					return;
+				}
+				
+				User user = existingUsers.get(0);
+				
+				if (user.getLogin().startsWith(SecurityEntityAdaptor.ANONYMOUS)) {
+					wrapper.setOperationResult(false); // do not allow reset for anonymous
+					return;
+				}
+				
+				String newPassword = generateRandomString();
+				user.setHashedPassword(Util.encrypt(newPassword));
+				wrapper.merge(user);
+				
+				String subject = WebPlugin.getInstance().getMessage(RECOVER_USERNAME_SUBJECT);
+				String content = WebPlugin.getInstance().getMessage(RECOVER_USERNAME_BODY,
+						new Object[] { 
+							user.getLogin(),
+							user.getName(),
+							user.getEmail(),
+							SendMailService.getInstance().getServerUrl(),
+							newPassword 
+						});
+				
+				SendMailService.getInstance().send(user.getEmail(), subject, content);
+				
+				wrapper.setOperationResult(true);
+			}
+		});
+		return (boolean) wrapper.getOperationResult();
 	}
 	
 	public OrganizationAdminUIDto getOrganizationFilter(String organizationName) {

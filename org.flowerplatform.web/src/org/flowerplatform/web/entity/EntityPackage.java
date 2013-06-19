@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
+import org.hibernate.cfg.Configuration;
 
 /**
  * <!-- begin-user-doc -->
@@ -1109,7 +1110,7 @@ public interface EntityPackage extends EPackage {
 	/**
 	 * @author Mariana
 	 */
-	HbDataStore createAndInitializeHbDataStore(Properties properties);
+	HbDataStore createAndInitializeHbDataStore(Properties properties, Configuration config);
 	
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.web.entity.Entity <em>Entity</em>}'.

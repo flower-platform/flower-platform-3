@@ -11,8 +11,13 @@ import javax.security.auth.Subject;
 import org.eclipse.emf.teneo.PersistenceOptions;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
 import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
+import org.hibernate.dialect.H2Dialect;
 import org.hibernate.dialect.PostgresPlusDialect;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +39,7 @@ import org.flowerplatform.web.security.permission.FlowerWebFilePermission;
 import org.flowerplatform.web.security.permission.ModifyTreePermissionsPermission;
 import org.flowerplatform.web.security.sandbox.FlowerWebPolicy;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
+import org.flowerplatform.web.security.sandbox.SecurityEntityListener;
 import org.flowerplatform.web.security.service.OrganizationService;
 import org.flowerplatform.web.security.service.UserService;
 import org.flowerplatform.web.temp.GeneralService;
@@ -76,15 +82,29 @@ public class DatabaseManager {
 			}
 			
 		});
+	}
+	
+	/**
+	 * @author Mariana
+	 */
+	public void initialize() {
+		Configuration config = new Configuration();
+		Properties props = config.getProperties();
+//		props.setProperty(Environment.DRIVER, "org.postgresql.Driver");
+//		props.setProperty(Environment.USER, "postgres");
+//		props.setProperty(Environment.URL, "jdbc:postgresql://localhost/flower-dev-center");
+//		props.setProperty(Environment.PASS, "postgres");
+//		props.setProperty(Environment.DIALECT, PostgresPlusDialect.class.getName());
+//		props.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
+//		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+//		props.setProperty(Environment.SHOW_SQL, "true");
 		
-		Properties props = new Properties();
-		props.setProperty(Environment.DRIVER, "org.postgresql.Driver");
-		props.setProperty(Environment.USER, "postgres");
-		props.setProperty(Environment.URL, "jdbc:postgresql://localhost/flower-dev-center");
-		props.setProperty(Environment.PASS, "postgres");
-		props.setProperty(Environment.DIALECT, PostgresPlusDialect.class.getName());
-		props.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
-		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
+		props.setProperty(Environment.DRIVER, "org.h2.Driver");
+		props.setProperty(Environment.USER, "sa");
+		props.setProperty(Environment.URL, "jdbc:h2:mem:temp_flower_web;MVCC=TRUE");
+		props.setProperty(Environment.PASS, "");
+		props.setProperty(Environment.DIALECT, H2Dialect.class.getName());
+		props.setProperty(Environment.HBM2DDL_AUTO, "create");
 		props.setProperty(Environment.SHOW_SQL, "true");
 		
 		props.setProperty(PersistenceOptions.CASCADE_POLICY_ON_NON_CONTAINMENT, "REFRESH,PERSIST,MERGE");
@@ -92,15 +112,17 @@ public class DatabaseManager {
 		props.setProperty(PersistenceOptions.JOIN_TABLE_FOR_NON_CONTAINED_ASSOCIATIONS, "false");
 		props.setProperty(PersistenceOptions.ALWAYS_VERSION, "false");
 		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
+		props.setProperty(PersistenceOptions.ADD_INDEX_FOR_FOREIGN_KEY, "false");
 		
-		HbDataStore hbds = EntityPackage.eINSTANCE.createAndInitializeHbDataStore(props);
+		HbDataStore hbds = EntityPackage.eINSTANCE.createAndInitializeHbDataStore(props, config);
 		factory = hbds.getSessionFactory();
-	}
-	
-	/**
-	 * @author Mariana
-	 */
-	public void initialize() {
+		EventListenerRegistry registry = ((SessionFactoryImpl) factory).getServiceRegistry().getService(EventListenerRegistry.class);
+		SecurityEntityListener listener = new SecurityEntityListener();
+		registry.appendListeners(EventType.POST_INSERT, listener);
+		registry.appendListeners(EventType.POST_DELETE, listener);
+		registry.appendListeners(EventType.POST_UPDATE, listener);
+		registry.appendListeners(EventType.PRE_DELETE, listener);
+		
 		initWithTestData();
 
 		new DatabaseOperationWrapper(new DatabaseOperation() {
@@ -123,8 +145,12 @@ public class DatabaseManager {
 		});
 	}
 	
-	/* package */ SessionFactory getFactory() {
+	public SessionFactory getFactory() {
 		return factory;
+	}
+	
+	public void setFactory(SessionFactory factory) {
+		this.factory = factory;
 	}
 	
 	/**
@@ -135,13 +161,13 @@ public class DatabaseManager {
 	 */
 	private void createTestOrganization(final String organizationName, final String label, final String URL, final String logo) {
 		Subject subject = new Subject();
-		final Principal principal = new FlowerWebPrincipal(6); // FDC admin
+		final Principal principal = new FlowerWebPrincipal(1); // FDC admin
 		subject.getPrincipals().add(principal);
 		Subject.doAsPrivileged(subject, new PrivilegedAction<Void>() {
 
 			@Override
 			public Void run() {
-				new DatabaseOperationWrapper(new DatabaseOperation() {
+				DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 					
 					@Override
 					public void run() {
@@ -160,25 +186,21 @@ public class DatabaseManager {
 						ou.setUser(user);
 						ou.setOrganization(organization);
 						ou.setStatus(OrganizationMembershipStatus.ADMIN);
-						ou = wrapper.merge(ou);
-						user.getOrganizationUsers().add(ou);
-						organization.getOrganizationUsers().add(ou);
-						user = wrapper.merge(user);
 						organization.setActivated(false);
-						organization = wrapper.merge(organization);
-						
-						// approve org => will automatically create groups, users, permissions
-						OrganizationAdminUIDto dto = OrganizationService.getInstance().convertOrganizationToOrganizationAdminUIDto(organization, user);
-						UserService.getInstance().approveDenyNewOrganization(null, dto, true, null);
-						
-						organization = wrapper.find(Organization.class, organization.getId());
 						
 						// SVN test data
-						service.createSVNRepositoryURLAndAddToOrg("svn://csp1/flower2", organization, wrapper);
-						service.createSVNCommentAndAddToUser("comment " + user.getName(), user, wrapper);
+						service.createSVNRepositoryURLAndAddToOrg("svn://csp1/flower2", organization);
+						service.createSVNCommentAndAddToUser("comment " + user.getName(), user);
+						
+						wrapper.setOperationResult(OrganizationService.getInstance()
+								.convertOrganizationToOrganizationAdminUIDto(organization, user));
 					}
 				});
 					
+				// approve org => will automatically create groups, users, permissions
+				// this is done outside of the session that create the organization and user, because this operation will try to find the objects in the DB
+				UserService.getInstance().approveDenyNewOrganization(null, (OrganizationAdminUIDto) wrapper.getOperationResult(), true, null);
+				
 				return null;
 			}
 			

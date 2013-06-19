@@ -8,6 +8,7 @@ package org.flowerplatform.web.entity.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -91,11 +92,63 @@ public class SVNRepositoryURLEntityImpl extends NamedEntityImpl implements SVNRe
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOrganization(Organization newOrganization) {
+	public NotificationChain basicSetOrganization(Organization newOrganization, NotificationChain msgs) {
 		Organization oldOrganization = organization;
 		organization = newOrganization;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.SVN_REPOSITORY_URL_ENTITY__ORGANIZATION, oldOrganization, organization));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.SVN_REPOSITORY_URL_ENTITY__ORGANIZATION, oldOrganization, newOrganization);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setOrganization(Organization newOrganization) {
+		if (newOrganization != organization) {
+			NotificationChain msgs = null;
+			if (organization != null)
+				msgs = ((InternalEObject)organization).eInverseRemove(this, EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS, Organization.class, msgs);
+			if (newOrganization != null)
+				msgs = ((InternalEObject)newOrganization).eInverseAdd(this, EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS, Organization.class, msgs);
+			msgs = basicSetOrganization(newOrganization, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.SVN_REPOSITORY_URL_ENTITY__ORGANIZATION, newOrganization, newOrganization));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.SVN_REPOSITORY_URL_ENTITY__ORGANIZATION:
+				if (organization != null)
+					msgs = ((InternalEObject)organization).eInverseRemove(this, EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS, Organization.class, msgs);
+				return basicSetOrganization((Organization)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.SVN_REPOSITORY_URL_ENTITY__ORGANIZATION:
+				return basicSetOrganization(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

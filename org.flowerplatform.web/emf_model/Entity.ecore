@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="entity"
-    nsURI="http://www.flower-platform.com/xmi/entity_1.0.0" nsPrefix="org.flowerplatform.web.entity">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="entity" nsURI="http://www.flower-platform.com/xmi/entity_1.0.0"
+    nsPrefix="org.flowerplatform.web.entity">
   <eClassifiers xsi:type="ecore:EClass" name="Entity" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
         iD="true"/>
@@ -22,20 +21,21 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="iconURL" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="activated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"
-        eType="#//Group"/>
+        eType="#//Group" eOpposite="#//Group/organization"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="organizationUsers" upperBound="-1"
-        eType="#//OrganizationUser"/>
+        eType="#//OrganizationUser" eOpposite="#//OrganizationUser/organization"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="svnRepositoryURLs" upperBound="-1"
-        eType="#//SVNRepositoryURLEntity"/>
+        eType="#//SVNRepositoryURLEntity" eOpposite="#//SVNRepositoryURLEntity/organization"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="projectsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filesCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="diagramsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="#//NamedEntity #//ISecurityEntity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"
+        eOpposite="#//Organization/groups"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groupUsers" upperBound="-1"
-        eType="#//GroupUser"/>
+        eType="#//GroupUser" eOpposite="#//GroupUser/group"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="User" eSuperTypes="#//NamedEntity #//ISecurityEntity">
     <eOperations name="getFavoriteItem" eType="#//FavoriteItem">
@@ -49,25 +49,27 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="activated" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="activationCode" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groupUsers" upperBound="-1"
-        eType="#//GroupUser"/>
+        eType="#//GroupUser" eOpposite="#//GroupUser/user"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="organizationUsers" upperBound="-1"
-        eType="#//OrganizationUser"/>
+        eType="#//OrganizationUser" eOpposite="#//OrganizationUser/user"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="perspectiveUserEntries"
-        upperBound="-1" eType="#//PerspectiveUserEntry"/>
+        upperBound="-1" eType="#//PerspectiveUserEntry" eOpposite="#//PerspectiveUserEntry/user"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="lastPerspective" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="svnComments" upperBound="-1"
-        eType="#//SVNCommentEntity"/>
+        eType="#//SVNCommentEntity" eOpposite="#//SVNCommentEntity/user"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="favoriteItems" upperBound="-1"
-        eType="#//FavoriteItem"/>
+        eType="#//FavoriteItem" eOpposite="#//FavoriteItem/user"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OrganizationUser" eSuperTypes="#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"
+        eOpposite="#//Organization/organizationUsers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User" eOpposite="#//User/organizationUsers"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="#//OrganizationMembershipStatus"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="GroupUser" eSuperTypes="#//Entity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//Group"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="group" eType="#//Group"
+        eOpposite="#//Group/groupUsers"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User" eOpposite="#//User/groupUsers"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PermissionEntity" eSuperTypes="#//NamedEntity">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -75,15 +77,16 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="assignedTo" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SVNRepositoryURLEntity" eSuperTypes="#//NamedEntity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"
+        eOpposite="#//Organization/svnRepositoryURLs"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SVNCommentEntity" eSuperTypes="#//Entity">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="body" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User" eOpposite="#//User/svnComments"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="timestamp" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PerspectiveUserEntry" eSuperTypes="#//NamedEntity">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User" eOpposite="#//User/perspectiveUserEntries"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="serializedLayoutData" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="FavoriteItem" eSuperTypes="#//Entity">
@@ -91,7 +94,7 @@
     <eOperations name="setItem">
       <eParameters name="item" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User" eOpposite="#//User/favoriteItems"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="resource" eType="#//RecentResource"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="category" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>

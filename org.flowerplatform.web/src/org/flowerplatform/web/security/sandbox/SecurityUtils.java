@@ -133,7 +133,7 @@ public class SecurityUtils {
 	 * @param groupCsvList
 	 */
 	public static void checkCurrentUserIsAdmin(String errorMessage) {
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentUser.get();
+		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
 		if (principal != null) {
 			User user = principal.getUser();
 			if (!user.isAdmin()) {

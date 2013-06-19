@@ -77,8 +77,9 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 		return scheduledExecutorServiceFactory;
 	}
 	
-	public static final ThreadLocal<IPrincipal> tlCurrentUser = new ThreadLocal<IPrincipal>();
+	public static final ThreadLocal<IPrincipal> tlCurrentPrincipal = new ThreadLocal<IPrincipal>();
 
+	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;

@@ -52,7 +52,7 @@ public class GeneralService {
 	public User createUserAndAddToGroups(String name, String password, List<Group> groups, DatabaseOperationWrapper wrapper) {
 		User user = createUser(name, password, wrapper);
 		for (Group g: groups) {
-			addUserToGroup(user, g, wrapper);
+			addUserToGroup(user, g);
 		}
 		return user;
 	}
@@ -72,26 +72,19 @@ public class GeneralService {
 		return wrapper.merge(user);
 	}
 	
-	public User createSVNCommentAndAddToUser(String body, User user, DatabaseOperationWrapper wrapper) {
+	public void createSVNCommentAndAddToUser(String body, User user) {
 		SVNCommentEntity comment;
 		comment = EntityFactory.eINSTANCE.createSVNCommentEntity();
 		comment.setBody(body);
 		comment.setTimestamp(System.currentTimeMillis());
 		comment.setUser(user);
-		comment = wrapper.merge(comment);
-		user.getSvnComments().add(comment);	
-		return wrapper.merge(user);
 	}
 	
-	public Organization createSVNRepositoryURLAndAddToOrg(String name, Organization organization, DatabaseOperationWrapper wrapper) {
+	public void createSVNRepositoryURLAndAddToOrg(String name, Organization organization) {
 		SVNRepositoryURLEntity url;
 		url = EntityFactory.eINSTANCE.createSVNRepositoryURLEntity();
 		url.setName(name);
 		url.setOrganization(organization);
-		url = wrapper.merge(url);
-		url = wrapper.find(SVNRepositoryURLEntity.class, url.getId());
-		organization.getSvnRepositoryURLs().add(url);		
-		return wrapper.merge(organization);
 	}
 	
 	/**
@@ -101,15 +94,11 @@ public class GeneralService {
 	 * @param user
 	 * @param group
 	 */
-	public void addUserToGroup(User user, Group group, DatabaseOperationWrapper wrapper) {
+	public void addUserToGroup(User user, Group group) {
 		GroupUser gu = EntityFactory.eINSTANCE.createGroupUser();
 		OrganizationUser organizationUser = EntityFactory.eINSTANCE.createOrganizationUser();
 		gu.setUser(user);
 		gu.setGroup(group);				
-		
-		gu = wrapper.merge(gu); 	
-		user = wrapper.merge(user);
-		group = wrapper.merge(group);
 		
 		// find operations will go to cache, not to the database
 		// this will update the cache, so subsequent find operations will return proper results		
@@ -136,13 +125,11 @@ public class GeneralService {
 			else
 				organizationUser.setStatus(OrganizationMembershipStatus.MEMBER);
 			
-			organizationUser = wrapper.merge(organizationUser);
-			
 //			user.getOrganizationUsers().add(organizationUser);
 //			organization.getOrganizationUsers().add(organizationUser);
 			
-			user = wrapper.merge(user);
-			organization = wrapper.merge(organization);
+//			user = wrapper.merge(user);
+//			organization = wrapper.merge(organization);
 		}
 	}
 	

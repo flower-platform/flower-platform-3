@@ -34,6 +34,7 @@ public interface Group extends NamedEntity, ISecurityEntity {
 	
 	/**
 	 * Returns the value of the '<em><b>Organization</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.Organization#getGroups <em>Groups</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Organization</em>' reference isn't clear,
@@ -43,7 +44,8 @@ public interface Group extends NamedEntity, ISecurityEntity {
 	 * @return the value of the '<em>Organization</em>' reference.
 	 * @see #setOrganization(Organization)
 	 * @see org.flowerplatform.web.entity.EntityPackage#getGroup_Organization()
-	 * @model
+	 * @see org.flowerplatform.web.entity.Organization#getGroups
+	 * @model opposite="groups"
 	 * @generated
 	 */
 	Organization getOrganization();
@@ -61,6 +63,7 @@ public interface Group extends NamedEntity, ISecurityEntity {
 	/**
 	 * Returns the value of the '<em><b>Group Users</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.GroupUser}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.GroupUser#getGroup <em>Group</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group Users</em>' reference list isn't clear,
@@ -69,7 +72,8 @@ public interface Group extends NamedEntity, ISecurityEntity {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Group Users</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getGroup_GroupUsers()
-	 * @model
+	 * @see org.flowerplatform.web.entity.GroupUser#getGroup
+	 * @model opposite="group"
 	 * @generated
 	 */
 	EList<GroupUser> getGroupUsers();

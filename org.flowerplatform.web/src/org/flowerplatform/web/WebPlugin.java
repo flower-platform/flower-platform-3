@@ -5,12 +5,16 @@ import java.lang.reflect.Method;
 import javax.servlet.http.HttpServlet;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
-import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.database.DatabaseManager;
+import org.flowerplatform.web.security.service.GroupService;
+import org.flowerplatform.web.security.service.OrganizationService;
+import org.flowerplatform.web.security.service.PermissionService;
+import org.flowerplatform.web.security.service.UserService;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Cristi
+ * @author Mariana
  */
 public class WebPlugin extends AbstractFlowerJavaPlugin {
 
@@ -19,6 +23,14 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public static WebPlugin getInstance() {
 		return INSTANCE;
 	}
+	
+	/**
+	 * Only set by plugin test project activator, to avoid {@link ClassNotFoundException}
+	 * for <code>BridgeServlet</code>.
+	 * 
+	 * @author Mariana
+	 */
+	private String TESTING_FLAG = "testing";
 	
 	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
 	
@@ -29,9 +41,9 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public WebPlugin() {
 		super();
 		INSTANCE = this;
+		
 		flowerWebProperties = new FlowerWebProperties();
 		databaseManager = new DatabaseManager();
-		databaseManager.initialize();
 	}
 	
 	/**
@@ -68,12 +80,22 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
-		invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
+		UserService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+		GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+		OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+		OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
+		// do the initializations after the bundle is activated, because we need the resources bundle
+		if (bundleContext.getProperty(TESTING_FLAG) == null) {
+			databaseManager.initialize();
+			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
+		}
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
 		super.stop(bundleContext);
-		invokeBridgeServletMethod("unregisterServletDelegate", eclipseDispatcherServlet);
+		if (bundleContext.getProperty(TESTING_FLAG) == null) {
+			invokeBridgeServletMethod("unregisterServletDelegate", eclipseDispatcherServlet);
+		}
 		INSTANCE = null;
 	}
 

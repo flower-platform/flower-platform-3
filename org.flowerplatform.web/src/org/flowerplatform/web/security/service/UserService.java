@@ -50,7 +50,6 @@ import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.flowerplatform.web.security.sandbox.SecurityEntityAdaptor;
 import org.flowerplatform.web.security.sandbox.SecurityUtils;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,7 +97,7 @@ public class UserService extends ServiceObservable {
 		if (user.getGroupUsers() != null) {
 			for (GroupUser groupUser : user.getGroupUsers()) {
 				try {
-					if (user.getId() != CommunicationPlugin.tlCurrentUser.get().getUserId())
+					if (user.getId() != CommunicationPlugin.tlCurrentPrincipal.get().getUserId())
 						SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.GROUP_PREFIX + groupUser.getGroup().getName());
 					Group group = groupUser.getGroup();
 					NamedDto orgDto = null;
@@ -117,7 +116,7 @@ public class UserService extends ServiceObservable {
 		if (user.getOrganizationUsers() != null) {
 			for (OrganizationUser organizationUser : user.getOrganizationUsers()) {
 				try {
-					if (user.getId() != CommunicationPlugin.tlCurrentUser.get().getUserId()) 
+					if (user.getId() != CommunicationPlugin.tlCurrentPrincipal.get().getUserId()) 
 						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organizationUser.getOrganization(), null));
 					OrganizationUserAdminUIDto ouDto = new OrganizationUserAdminUIDto();
 					ouDto.setId(organizationUser.getId());
@@ -155,8 +154,7 @@ public class UserService extends ServiceObservable {
 	public UserAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find user with id = {}", id);
 		
-		final UserAdminUIDto[] result = new UserAdminUIDto[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 
 			@Override
 			public void run() {
@@ -167,17 +165,17 @@ public class UserService extends ServiceObservable {
 				String orgOwners = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, true), null, PermissionEntity.ORGANIZATION_PREFIX);
 				String owners = groupOwners + (groupOwners.length() > 0 && orgOwners.length() > 0 ? "," : "") + orgOwners;
 				try {
-					if (id != CommunicationPlugin.tlCurrentUser.get().getUserId()) {
+					if (id != CommunicationPlugin.tlCurrentPrincipal.get().getUserId()) {
 						SecurityUtils.checkAdminSecurityEntitiesPermission(owners);
 					}
 				} catch (SecurityException e) {
 					throw new RuntimeException(String.format("User with id=%s is not available.", id));
 				}
-				result[0] = convertUserToUserAdminUIDto(user);
+				wrapper.setOperationResult(convertUserToUserAdminUIDto(user));
 			}
 		});
 		
-		return result[0];
+		return (UserAdminUIDto) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -324,26 +322,28 @@ public class UserService extends ServiceObservable {
 	public String mergeAdminUIDto(final UserAdminUIDto dto) {
 		logger.debug("Merge user = {}", dto.getLogin());
 		
-		final String[] result = new String[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
 				// first check if there is already a user with the same login
 				List<User> usersWithSameLogin = wrapper.findByField(User.class, "login", dto.getLogin());
 				if (dto.getId() == 0 && usersWithSameLogin != null && usersWithSameLogin.size() > 0) {
-					result[0] = WebPlugin.getInstance().getMessage("authentication.register.loginAlreadyExists");
+					wrapper.setOperationResult(WebPlugin.getInstance().getMessage("authentication.register.loginAlreadyExists"));
+					return;
 				}
 				
 				if (dto.getLogin().startsWith(ANONYMOUS)) {
-					if (CommunicationPlugin.tlCurrentUser.get() != null) {
-						if (dto.getId() == 0 && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentUser.get()).getUser().isAdmin()) {
-							result[0] = "You cannot create an anonymous user!";
+					if (CommunicationPlugin.tlCurrentPrincipal.get() != null) {
+						if (dto.getId() == 0 && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUser().isAdmin()) {
+							wrapper.setOperationResult("You cannot create an anonymous user!");
+							return;
 						} else {
-							if (dto.getId() == CommunicationPlugin.tlCurrentUser.get().getUserId()) {
-								result[0] = "You cannot edit an anonymous user!"; // don't allow an anonymous user to edit its own details
+							if (dto.getId() == CommunicationPlugin.tlCurrentPrincipal.get().getUserId()) {
+								wrapper.setOperationResult("You cannot edit an anonymous user!"); // don't allow an anonymous user to edit its own details
 								// note: the permissions logic will take care of the case when another user tries to edit anonymous
 								// i.e. org1 admin will be allowed to edit anonymous.org1, but not anonymous.org2; FDC admin can edit any user by default
+								return;
 							}
 						}
 					}
@@ -352,11 +352,12 @@ public class UserService extends ServiceObservable {
 				User initialUser = wrapper.find(User.class, dto.getId());
 				
 				User user = wrapper.mergeDto(User.class, dto);
+				user = wrapper.merge(user);
 				
 				// check permissions
 				List<Group> originalGroups = getUserGroups(user);
-				if (CommunicationPlugin.tlCurrentUser.get() != null &&
-						CommunicationPlugin.tlCurrentUser.get().getUserId() != user.getId()) {
+				if (CommunicationPlugin.tlCurrentPrincipal.get() != null &&
+						CommunicationPlugin.tlCurrentPrincipal.get().getUserId() != user.getId()) {
 					String groupsCsvList = SecurityEntityAdaptor.toCsvString(originalGroups, dto.getGroups(), PermissionEntity.GROUP_PREFIX);
 					String orgsCsvList = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, false), dto.getOrganizations(false), PermissionEntity.ORGANIZATION_PREFIX);
 					String csvList = groupsCsvList + (groupsCsvList.length() > 0 && orgsCsvList.length() > 0 ? "," : "") + orgsCsvList;
@@ -367,7 +368,8 @@ public class UserService extends ServiceObservable {
 						// in this case, return the corresponding error message
 						String orgsWithPendingStatus = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, true), dto.getOrganizations(true), PermissionEntity.ORGANIZATION_PREFIX);
 						SecurityUtils.checkAdminSecurityEntitiesPermission(orgsWithPendingStatus);
-						result[0] = "The user cannot be updated while his/her membership is not approved!";
+						wrapper.setOperationResult("The user cannot be updated while his/her membership is not approved!");
+						return;
 					}
 				}
 				user.setLogin(dto.getLogin());
@@ -376,7 +378,8 @@ public class UserService extends ServiceObservable {
 				if (!dto.getLogin().startsWith(ANONYMOUS)) {
 					if (dto.getEmail() == null || !dto.getEmail().equals(user.getEmail())) {
 						if (!SendMailService.getInstance().validate(dto.getEmail())) {
-							result[0] = WebPlugin.getInstance().getMessage("authentication.register.emailNotValid");
+							wrapper.setOperationResult(WebPlugin.getInstance().getMessage("authentication.register.emailNotValid"));
+							return;
 						}
 						
 						// check for uniqueness
@@ -386,7 +389,8 @@ public class UserService extends ServiceObservable {
 														"WHERE u.email = :email");
 							query.setParameter("email", dto.getEmail());
 							if (query.list().size() > 0) {
-								result[0] = WebPlugin.getInstance().getMessage("authentication.register.emailNotUnique");
+								wrapper.setOperationResult(WebPlugin.getInstance().getMessage("authentication.register.emailNotUnique"));
+								return;
 							}
 						}
 					}
@@ -398,14 +402,14 @@ public class UserService extends ServiceObservable {
 					// check for min length
 					int minLength = Integer.parseInt(WebPlugin.getInstance().getFlowerWebProperties().getProperty(MIN_PASSWORD_LENGTH));
 					if (dto.getPassword().length() < minLength) {
-						result[0] = WebPlugin.getInstance().getMessage("authentication.register.passwordTooShort", minLength);
+						wrapper.setOperationResult(WebPlugin.getInstance().getMessage("authentication.register.passwordTooShort", minLength));
 					}
 					user.setHashedPassword(Util.encrypt(dto.getPassword()));
 				}
 				
 				user.setActivated(dto.getIsActivated());
 
-				user = wrapper.merge(user);
+//				user = wrapper.merge(user);
 				
 				// get original organizations
 				List<Organization> originalOrganizations = getOrganizationsWhereUserBelongs(user, true);
@@ -418,13 +422,13 @@ public class UserService extends ServiceObservable {
 						OrganizationUser organizationUser = it.next();
 						try {
 							// check if the current user has permissions, unless the current user is leaving the organization
-							if (CommunicationPlugin.tlCurrentUser.get() != null &&
-									CommunicationPlugin.tlCurrentUser.get().getUserId() != user.getId()) {
+							if (CommunicationPlugin.tlCurrentPrincipal.get() != null &&
+									CommunicationPlugin.tlCurrentPrincipal.get().getUserId() != user.getId()) {
 								SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(organizationUser.getOrganization()), null, PermissionEntity.ORGANIZATION_PREFIX));
 							}
 							if (organizationUser.getOrganization().getId() == id) {
 								it.remove();
-								wrapper.merge(organizationUser.getUser());
+//								wrapper.merge(organizationUser.getUser());
 								removeOrganizationUserDependency(organizationUser);
 								break;
 							}
@@ -438,7 +442,7 @@ public class UserService extends ServiceObservable {
 					Organization organization = wrapper.find(Organization.class, id);
 					try {
 						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organization, null));
-						addOrganizationUserDependency(user, organization, OrganizationMembershipStatus.MEMBER);
+						addOrganizationUserDependency(user, organization, OrganizationMembershipStatus.MEMBER, wrapper);
 					} catch (Exception e) {
 						// do nothing
 					}
@@ -455,7 +459,7 @@ public class UserService extends ServiceObservable {
 							SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(groupUser.getGroup()), null, PermissionEntity.GROUP_PREFIX));
 							if (groupUser.getGroup().getId() == id) {
 								it.remove();
-								wrapper.merge(groupUser.getUser());
+//								wrapper.merge(groupUser.getUser());
 								removeGroupUserDependency(groupUser);
 								break;
 							}
@@ -472,22 +476,23 @@ public class UserService extends ServiceObservable {
 					
 						// only if the user is a member of the organization of the group
 						if (group.getOrganization() == null || OrganizationService.getInstance().getOrganizationMembershipStatus(group.getOrganization(), user) != null) {
-							addGroupUserDependency(user, group);
+							addGroupUserDependency(user, group, wrapper);
 						} else {
-							result[0] = "The user cannot be added to a group of an organization that he doesn't belong to!";
+							wrapper.setOperationResult("The user cannot be added to a group of an organization that he doesn't belong to!");
+							return;
 						}
 					} catch (Exception e) {
 						// do nothing
 					}
 				}
 			
-				// save changes
-				wrapper.merge(user);
+//				// save changes
+//				wrapper.merge(user);
 				observable.notifyObservers(Arrays.asList(UPDATE, initialUser, user));
 			}
 		});
 		
-		return result[0];
+		return (String) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -495,61 +500,57 @@ public class UserService extends ServiceObservable {
 	 * 
 	 * @flowerModelElementId _QUUqcl34EeGwLIVyv_iqEg
 	 */
-	public String delete(ServiceInvocationContext context, List<Integer> ids) {
-		for (Integer id : ids) {
-			if (((CommunicationChannel) context.getCommunicationChannel()).getPrincipal().getUserId() != id)
-				SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.ANY_ENTITY);	
+	public String delete(final ServiceInvocationContext context, final List<Integer> ids) {
+		final String[] result = new String[1];
+		
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			User user = wrapper.find(User.class, Long.valueOf(id));
-			
-			if (user.getLogin().startsWith(ANONYMOUS) &&
-					!((User) context.getCommunicationChannel().getPrincipal().getUser()).isAdmin()) {
-				return "You cannot delete an anonymous user!";
-			}
+			@Override
+			public void run() {
+				for (Integer id : ids) {
+					if (((CommunicationChannel) context.getCommunicationChannel()).getPrincipal().getUserId() != id)
+						SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.ANY_ENTITY);	
 					
-			logger.debug("Delete {}", user);
-			
-			// user is removed so remove entities from GroupUser
-			for (Iterator<GroupUser> it = user.getGroupUsers().iterator(); it.hasNext();) {
-				GroupUser groupUser = it.next(); 
-				it.remove();
-				user = wrapper.merge(user);
-				removeGroupUserDependency(groupUser);
-			} 
-			
-			// user is removed so remove entities from OrganizationUser
-			for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
-				OrganizationUser organizationUser = it.next();
-				it.remove();
-				user = wrapper.merge(user);
-				removeOrganizationUserDependency(organizationUser);
+					User user = wrapper.find(User.class, Long.valueOf(id));
+					
+					if (user.getLogin().startsWith(ANONYMOUS) &&
+							!((User) context.getCommunicationChannel().getPrincipal().getUser()).isAdmin()) {
+						result[0] = "You cannot delete an anonymous user!";
+					}
+							
+					logger.debug("Delete {}", user);
+					
+					// user is removed so remove entities from GroupUser
+					for (Iterator<GroupUser> it = user.getGroupUsers().iterator(); it.hasNext();) {
+						GroupUser groupUser = it.next(); 
+						it.remove();
+						user = wrapper.merge(user);
+						removeGroupUserDependency(groupUser);
+					} 
+					
+					// user is removed so remove entities from OrganizationUser
+					for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
+						OrganizationUser organizationUser = it.next();
+						it.remove();
+						user = wrapper.merge(user);
+						removeOrganizationUserDependency(organizationUser);
+					}
+					
+					// user is removed so update entities from RecentResource
+					Query q = wrapper.createQuery("UPDATE RecentResource r SET lastAccessUser = NULL WHERE r.lastAccessUser = :user");
+					q.setParameter("user", user);
+					q.executeUpdate();
+					
+					q = wrapper.createQuery("UPDATE RecentResource r SET lastSaveUser = NULL WHERE r.lastSaveUser = :user");
+					q.setParameter("user", user);
+					q.executeUpdate();
+					
+					wrapper.delete(user);
+					observable.notifyObservers(Arrays.asList(DELETE, user));
+				}
 			}
-			
-			// user is removed so update entities from RecentResource
-			Session wrapper = wrapper.getFactory().openSession();
-			try {
-				wrapper.getTransaction().begin();
-
-				Query q = wrapper.createQuery("UPDATE RecentResource r SET lastAccessUser = NULL WHERE r.lastAccessUser = :user");
-				q.setParameter("user", user);
-				q.executeUpdate();
-				
-				q = wrapper.createQuery("UPDATE RecentResource r SET lastSaveUser = NULL WHERE r.lastSaveUser = :user");
-				q.setParameter("user", user);
-				q.executeUpdate();
-				
-				wrapper.getTransaction().commit();
-			} catch (Exception e) {
-				wrapper.getTransaction().rollback();
-				throw new RuntimeException(e);
-			} finally {
-				wrapper.close();
-			}
-			
-			wrapper.delete(user);
-			observable.notifyObservers(Arrays.asList(DELETE, user));
-		}
-		return null;
+		});
+		return result[0];
 	}
 	
 	/**
@@ -563,18 +564,14 @@ public class UserService extends ServiceObservable {
 	 * Note cache: Because of the cache mechanism, this isn't done automatically.
 	 * @flowerModelElementId _QUVRgF34EeGwLIVyv_iqEg
 	 */
-	private void removeGroupUserDependency(GroupUser groupUser) {
+	private void removeGroupUserDependency(final GroupUser groupUser) {
 		logger.debug("Remove {} from {}", groupUser.getUser(), groupUser.getGroup());
-		
 		groupUser.getGroup().getGroupUsers().remove(groupUser);
-		wrapper.merge(groupUser.getGroup());		
 	}
 	
-	private void removeOrganizationUserDependency(OrganizationUser organizationUser) {
+	private void removeOrganizationUserDependency(final OrganizationUser organizationUser) {
 		logger.debug("Remove {} from {}", organizationUser.getUser(), organizationUser.getOrganization());
-		
 		organizationUser.getOrganization().getOrganizationUsers().remove(organizationUser);
-		wrapper.merge(organizationUser.getOrganization());
 	}
 	
 	/**
@@ -585,85 +582,93 @@ public class UserService extends ServiceObservable {
 	 * Note cache: Because of the cache mechanism, this isn't done automatically.
 	 * @flowerModelElementId _QUVRhF34EeGwLIVyv_iqEg
 	 */
-	private void addGroupUserDependency(User user, Group group) {	
+	private void addGroupUserDependency(final User user, final Group group, DatabaseOperationWrapper wrapper) {	
 		logger.debug("Add {} to {}", user, group);
-		
 		GroupUser gr = EntityFactory.eINSTANCE.createGroupUser();		
 		gr.setGroup(group);
 		gr.setUser(user);
-		gr = (GroupUser) wrapper.merge(gr);
-					
-		group.getGroupUsers().add(gr);
-		group = wrapper.merge(group);
-		
-		user.getGroupUsers().add(gr);	
-		user = wrapper.merge(user);
 	}
 	
-	private OrganizationUser addOrganizationUserDependency(User user, Organization organization, OrganizationMembershipStatus status) {
+	private OrganizationUser addOrganizationUserDependency(final User user, final Organization organization, final OrganizationMembershipStatus status, DatabaseOperationWrapper wrapper) {
 		if (logger.isDebugEnabled()) {
 			String[] params = {user.toString(), organization.toString(), status.toString()};
 			logger.debug("Add {} to {} with status {}", params);
 		}
-		
 		OrganizationUser ou = EntityFactory.eINSTANCE.createOrganizationUser();
+		ou = wrapper.merge(ou);
 		ou.setOrganization(organization);
 		ou.setUser(user);
 		ou.setStatus(status);
-		ou = (OrganizationUser) wrapper.merge(ou);
-		
-		organization.getOrganizationUsers().add(ou);
-		organization = wrapper.merge(organization);
-		
-		user.getOrganizationUsers().add(ou);
-		user = wrapper.merge(user);
-	
 		return ou;
 	}
-		
-	public List<Group> getUserGroups(User user) {
-		Session wrapper =  wrapper.getFactory().openSession();
-		Query query =  wrapper.createQuery("SELECT g " +
-									  "FROM User u JOIN u.groupUsers gu JOIN gu.group g " +
-									  "WHERE u.id = :user_id");
-		query.setParameter("user_id", user.getId());
-		return query.list();
+
+	public List<Group> getUserGroups(final User user) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				Query query =  wrapper.createQuery("SELECT g " +
+											  "FROM User u JOIN u.groupUsers gu JOIN gu.group g " +
+											  "WHERE u.id = :user_id");
+				query.setParameter("user_id", user.getId());
+				wrapper.setOperationResult(query.list());
+			}
+		});
+		return (List<Group>) wrapper.getOperationResult();
 	}
 	
-	private List<Organization> getOrganizationsWhereUserBelongs(User user, boolean withPendingStatus) {
-		Session wrapper =  wrapper.getFactory().openSession();
-		Query query;
-		query =  wrapper.createQuery("SELECT o " +
-								"FROM User u JOIN u.organizationUsers ou JOIN ou.organization o " +
-								"WHERE u.id = :user_id" + 
-								(withPendingStatus ? "" : " AND ou.status != :pending_status"));
-		query.setParameter("user_id", user.getId());
-		if (!withPendingStatus) {
-			query.setParameter("pending_status", OrganizationMembershipStatus.PENDING_MEMBERSHIP_APPROVAL);
-		}
-		return query.list();
+	private List<Organization> getOrganizationsWhereUserBelongs(final User user, final boolean withPendingStatus) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				Query query;
+				query =  wrapper.createQuery("SELECT o " +
+										"FROM User u JOIN u.organizationUsers ou JOIN ou.organization o " +
+										"WHERE u.id = :user_id" + 
+										(withPendingStatus ? "" : " AND ou.status != :pending_status"));
+				query.setParameter("user_id", user.getId());
+				if (!withPendingStatus) {
+					query.setParameter("pending_status", OrganizationMembershipStatus.PENDING_MEMBERSHIP_APPROVAL);
+				}
+				wrapper.setOperationResult(query.list());
+			}
+		});
+		return (List<Organization>) wrapper.getOperationResult();
 	}
 	
-	public List<Organization> getOrganizations(User user) {
-		if (user.isAdmin()) {
-			return wrapper.findAll(Organization.class);
-		} else {
-			return getOrganizationsWhereUserBelongs(user, true);
-		}
+	public List<Organization> getOrganizations(final User user) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				if (user.isAdmin()) {
+					wrapper.setOperationResult(wrapper.findAll(Organization.class));
+				} else {
+					wrapper.setOperationResult(getOrganizationsWhereUserBelongs(user, true));
+				}
+			}
+		});
+		return (List<Organization>) wrapper.getOperationResult();
 	}
 	
-	public Organization getOrganization(User user, long orgId) {
-		Session wrapper =  wrapper.getFactory().openSession();
-		Query query =  wrapper.createQuery("SELECT o " +
-									  "FROM User u JOIN u.organizationUsers ou JOIN  ou.organization o " +
-									  "WHERE u.id = :user_id AND o.id = :org_id");
-		query.setParameter("user_id", user.getId());
-		query.setParameter("org_id", orgId);
-		List<Organization> list = query.list();
-		if (list.isEmpty()) {
-			return null;
-		}
-		return list.get(0);
+	public Organization getOrganization(final User user, final long orgId) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				Query query =  wrapper.createQuery("SELECT o " +
+						  "FROM User u JOIN u.organizationUsers ou JOIN  ou.organization o " +
+						  "WHERE u.id = :user_id AND o.id = :org_id");
+				query.setParameter("user_id", user.getId());
+				query.setParameter("org_id", orgId);
+				List<Organization> list = query.list();
+				if (!list.isEmpty()) {
+					wrapper.setOperationResult(list.get(0));
+				}
+			}
+		});
+		return (Organization) wrapper.getOperationResult();
 	}
 	
 	public List<String> getAllUserRepositories(User user) {
@@ -679,12 +684,18 @@ public class UserService extends ServiceObservable {
 		return repositories;	
 	}
 	
-	public List<SVNCommentEntity> getSVNCommentsOrderedByTimestamp(User user, boolean asc) {
-		Session wrapper =  wrapper.getFactory().openSession();	
-		Query query =  wrapper.createQuery("SELECT s " +
-									  "FROM SVNCommentEntity s JOIN s.user u WHERE u.id = :user_id ORDER BY s.timestamp " + (asc ? "ASC" : "DESC"));
-		query.setParameter("user_id", user.getId());
-		return query.list();	
+	public List<SVNCommentEntity> getSVNCommentsOrderedByTimestamp(final User user, final boolean asc) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				Query query =  wrapper.createQuery("SELECT s " +
+						  "FROM SVNCommentEntity s JOIN s.user u WHERE u.id = :user_id ORDER BY s.timestamp " + (asc ? "ASC" : "DESC"));
+				query.setParameter("user_id", user.getId());
+				wrapper.setOperationResult(query.list());	
+			}
+		});
+		return (List<SVNCommentEntity>) wrapper.getOperationResult();
 	}
 	
 	public List<OrganizationAdminUIDto> getUserOrganizations(ServiceInvocationContext context, boolean addUnassignedNode) {
@@ -707,20 +718,29 @@ public class UserService extends ServiceObservable {
 	/**
 	 * Checks if the <code>activationCode</code> provided is correct and activates the user.
 	 */
-	public boolean activateUser(String login, String activationCode) {
-		User user = wrapper.findByField(User.class, "login", login).get(0);
-		if (user.isActivated()) {
-			return true;
-		}
-		if (user.getActivationCode().equals(activationCode)) {
-			// activation successful
-			user.setActivated(true);
-			wrapper.merge(user);
-			logger.debug("Activation successful for {} with activation code = {}", user, activationCode);
-			return true;
-		}
-		logger.debug("Activation failed for {}. Reason: wrong activation code.", user);
-		return false;
+	public boolean activateUser(final String login, final String activationCode) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				User user = wrapper.findByField(User.class, "login", login).get(0);
+				if (user.isActivated()) {
+					wrapper.setOperationResult(true);
+					return;
+				}
+				if (user.getActivationCode().equals(activationCode)) {
+					// activation successful
+					user.setActivated(true);
+					wrapper.merge(user);
+					logger.debug("Activation successful for {} with activation code = {}", user, activationCode);
+					wrapper.setOperationResult(true);
+					return;
+				}
+				logger.debug("Activation failed for {}. Reason: wrong activation code.", user);
+				wrapper.setOperationResult(false);
+			}
+		});
+		return (boolean) wrapper.getOperationResult();
 	}
 	
 	private final String USER_ACTIVATED_SUBJECT = "mail.template.user-activated.subject";
@@ -735,32 +755,39 @@ public class UserService extends ServiceObservable {
 	 * 
 	 * @param organizationName the organization filter; a membership request was automatically made for the user on activation
 	 */
-	public void sendActivationEmail(long userId, String organizationName) {
-		User user = wrapper.find(User.class, userId);
+	public void sendActivationEmail(final long userId, final String organizationName) {
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				User user = wrapper.find(User.class, userId);
+				
+				String subject = WebPlugin.getInstance().getMessage(USER_ACTIVATED_SUBJECT);
+				
+				String url, welcomeMessage;
+				if (organizationName == null) {
+					url = SendMailService.getInstance().getServerUrl();
+					welcomeMessage = WebPlugin.getInstance().getMessage(USER_ACTIVATED_WELCOME_MESSAGE_WITHOUT_ORGANIZATION);
+				} else {
+					url = SendMailService.getInstance().getServerUrlForOrganization(organizationName);
+					Organization organization = wrapper.findByField(Organization.class, "name", organizationName).get(0);
+					welcomeMessage = WebPlugin.getInstance().getMessage(USER_ACTIVATED_WELCOME_MESSAGE_WITH_ORGANIZATION, organization.getLabel());
+				}
+				
+				String text = WebPlugin.getInstance().getMessage(USER_ACTIVATED_BODY,  
+							new Object[] {
+								user.getLogin(),
+								user.getName(),
+								user.getEmail(),
+								url,
+								welcomeMessage.replace("\n", "<br/>"),
+								WebPlugin.getInstance().getMessage(ORGANIZATION_INFORMATION)
+							});
+				
+				SendMailService.getInstance().send(user.getEmail(), subject, text);
+			}
+		});
 		
-		String subject = WebPlugin.getInstance().getMessage(USER_ACTIVATED_SUBJECT);
-		
-		String url, welcomeMessage;
-		if (organizationName == null) {
-			url = SendMailService.getInstance().getServerUrl();
-			welcomeMessage = WebPlugin.getInstance().getMessage(USER_ACTIVATED_WELCOME_MESSAGE_WITHOUT_ORGANIZATION);
-		} else {
-			url = SendMailService.getInstance().getServerUrlForOrganization(organizationName);
-			Organization organization = wrapper.findByField(Organization.class, "name", organizationName).get(0);
-			welcomeMessage = WebPlugin.getInstance().getMessage(USER_ACTIVATED_WELCOME_MESSAGE_WITH_ORGANIZATION, organization.getLabel());
-		}
-		
-		String text = WebPlugin.getInstance().getMessage(USER_ACTIVATED_BODY,  
-					new Object[] {
-						user.getLogin(),
-						user.getName(),
-						user.getEmail(),
-						url,
-						welcomeMessage.replace("\n", "<br/>"),
-						WebPlugin.getInstance().getMessage(ORGANIZATION_INFORMATION)
-					});
-		
-		SendMailService.getInstance().send(user.getEmail(), subject, text);
 	}
 	
 	public final static String ORGANIZATION_DIRECTORIES = "users.directories-for-organization";
@@ -876,7 +903,7 @@ public class UserService extends ServiceObservable {
 	 * @param commentForAdmin will be sent to the FDC administrators
 	 * @return error message if the organization could not be created
 	 */
-	public String requestNewOrganization(ServiceInvocationContext context, OrganizationAdminUIDto dto, String commentForAdmin) {
+	public String requestNewOrganization(final ServiceInvocationContext context, final OrganizationAdminUIDto dto, final String commentForAdmin) {
 		logger.debug("New organization request from {} with comment = {}",
 				((User) context.getCommunicationChannel().getPrincipal().getUser()), commentForAdmin);
 		
@@ -884,55 +911,64 @@ public class UserService extends ServiceObservable {
 			return "Anonymous user cannot request a new organization!";
 		}
 		
-		String errorMessage = OrganizationService.getInstance().mergeAdminUIDto(context, dto, true);
-		if (errorMessage != null)
-			return errorMessage;
-		
-		long userId = CommunicationPlugin.tlCurrentUser.get().getUserId();
-		User currentUser = wrapper.find(User.class, userId);
-		if (currentUser.isAdmin()) {
-			// activate org automatically if this user is FDC admin
-			return approveDenyNewOrganization(context, dto, true, null);
-		} else {
-			// add the user to the organization
-			Organization organization = wrapper.findByField(Organization.class, "name", dto.getName()).get(0);
-			User organizationOwner = currentUser;
-			UserService.getInstance().addOrganizationUserDependency(organizationOwner, organization, OrganizationMembershipStatus.ADMIN);
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			// send email to user
-			String subject = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_USER_SUBJECT, dto.getLabel());
-			String content = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_USER_BODY,
-					new Object[] {
-						organizationOwner.getLogin(),
-						organizationOwner.getName(),
-						organizationOwner.getEmail(),
-						SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
-						dto.getLabel(),
-						getCommentForTemplate(COMMENT_TEMPLATE_WITH_YOUR_COMMENT, commentForAdmin)
-					});
-			
-			SendMailService.getInstance().send(organizationOwner.getEmail(), subject, content);
-			
-			// send email to FDC admins
-			subject = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_FDC_ADMIN_SUBJECT, dto.getLabel());
-			for (User user : wrapper.findAll(User.class)) {
-				if (user.isAdmin()) {
-					content = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_FDC_ADMIN_BODY,
+			@Override
+			public void run() {
+				String errorMessage = OrganizationService.getInstance().mergeAdminUIDto(context, dto, true);
+				if (errorMessage != null) {
+					wrapper.setOperationResult(errorMessage);
+					return;
+				}
+				
+				long userId = CommunicationPlugin.tlCurrentPrincipal.get().getUserId();
+				User currentUser = wrapper.find(User.class, userId);
+				if (currentUser.isAdmin()) {
+					// activate org automatically if this user is FDC admin
+					wrapper.setOperationResult(approveDenyNewOrganization(context, dto, true, null));
+					return;
+				} else {
+					// add the user to the organization
+					Organization organization = wrapper.findByField(Organization.class, "name", dto.getName()).get(0);
+					User organizationOwner = currentUser;
+					UserService.getInstance().addOrganizationUserDependency(organizationOwner, organization, OrganizationMembershipStatus.ADMIN, wrapper);
+					
+					// send email to user
+					String subject = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_USER_SUBJECT, dto.getLabel());
+					String content = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_USER_BODY,
 							new Object[] {
-								user.getLogin(),
-								user.getName(),
-								user.getEmail(),
+								organizationOwner.getLogin(),
+								organizationOwner.getName(),
+								organizationOwner.getEmail(),
 								SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
-								organizationOwner.getName(), 
-								dto.getLabel(), 
-								getCommentForTemplate(COMMENT_TEMPLATE_WITH_USER_COMMENT, commentForAdmin)
+								dto.getLabel(),
+								getCommentForTemplate(COMMENT_TEMPLATE_WITH_YOUR_COMMENT, commentForAdmin)
 							});
 					
-					SendMailService.getInstance().send(user.getEmail(), subject, content);
+					SendMailService.getInstance().send(organizationOwner.getEmail(), subject, content);
+					
+					// send email to FDC admins
+					subject = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_FDC_ADMIN_SUBJECT, dto.getLabel());
+					for (User user : wrapper.findAll(User.class)) {
+						if (user.isAdmin()) {
+							content = WebPlugin.getInstance().getMessage(ORGANIZATION_CREATED_TO_FDC_ADMIN_BODY,
+									new Object[] {
+										user.getLogin(),
+										user.getName(),
+										user.getEmail(),
+										SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
+										organizationOwner.getName(), 
+										dto.getLabel(), 
+										getCommentForTemplate(COMMENT_TEMPLATE_WITH_USER_COMMENT, commentForAdmin)
+									});
+							
+							SendMailService.getInstance().send(user.getEmail(), subject, content);
+						}
+					}
 				}
 			}
-		}
-		return null;
+		});
+		return (String) wrapper.getOperationResult();
 	}
 	
 	private final String ORGANIZATION_APPROVED_SUBJECT = "mail.template.organization-approved.subject";
@@ -944,165 +980,171 @@ public class UserService extends ServiceObservable {
 	/**
 	 * Only available to FDC admin.
 	 */
-	public String approveDenyNewOrganization(ServiceInvocationContext context, OrganizationAdminUIDto dto, boolean approve, String commentFromAdmin) {
+	public String approveDenyNewOrganization(final ServiceInvocationContext context, final OrganizationAdminUIDto dto, final boolean approve, final String commentFromAdmin) {
 		SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.ANY_ENTITY);
 		
-		Organization organization = wrapper.findByField(Organization.class, "name", dto.getName()).get(0);
-		
-		List<OrganizationUser> list = organization.getOrganizationUsers();
-		User organizationOwner =  null;
-		if (list.size() > 0) {
-			OrganizationUser organizationUser = (OrganizationUser) list.toArray()[0];
-			organizationOwner = organizationUser.getUser();
-		}
-		
-		if (approve) {
-			// approve request 
-			logger.debug("Approve {}", organization);
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			organization.setActivated(true);
-			organization = wrapper.merge(organization);
-			
-			// create directories
-			String createDirsProp = MessageFormat.format(
-					WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_DIRS), 
-					organization.getName());
-			logger.debug("Create directories = {}", createDirsProp);
-			String[] dirsList = createDirsProp.split(",\\s*");
-			for (String dirName : dirsList) {
-				IFolder dir = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(RootChildrenProvider.getWorkspaceRoot().getName() + "/" + dirName));
-				if (!dir.exists()) {
-					try {
-						dir.create(true, true, null);
-					} catch (CoreException e) {
-						logger.error(e.getMessage());
+			@Override
+			public void run() {
+				Organization organization = wrapper.findByField(Organization.class, "name", dto.getName()).get(0);
+				
+				List<OrganizationUser> list = organization.getOrganizationUsers();
+				User organizationOwner =  null;
+				if (list.size() > 0) {
+					OrganizationUser organizationUser = (OrganizationUser) list.toArray()[0];
+					organizationOwner = organizationUser.getUser();
+				}
+				
+				if (approve) {
+					// approve request 
+					logger.debug("Approve {}", organization);
+					
+					organization.setActivated(true);
+					organization = wrapper.merge(organization);
+					
+					// create directories
+					String createDirsProp = MessageFormat.format(
+							WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_DIRS), 
+							organization.getName());
+					logger.debug("Create directories = {}", createDirsProp);
+					String[] dirsList = createDirsProp.split(",\\s*");
+					for (String dirName : dirsList) {
+						IFolder dir = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(RootChildrenProvider.getWorkspaceRoot().getName() + "/" + dirName));
+						if (!dir.exists()) {
+							try {
+								dir.create(true, true, null);
+							} catch (CoreException e) {
+								logger.error(e.getMessage());
+							}
+						}
+					}
+					
+					// create groups
+					String createGroupsProp = MessageFormat.format(
+							WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS), 
+							organization.getName());
+					logger.debug("Create new groups = {}", createGroupsProp);
+					String[] groupNames = createGroupsProp.split(",\\s*");
+					for (String groupName : groupNames) {
+						GroupAdminUIDto groupDto = new GroupAdminUIDto();
+						groupDto.setName(groupName);
+						groupDto.setOrganization(new NamedDto(dto.getId(), dto.getName()));
+						groupDto.setOrganizationLabel(dto.getLabel());
+						GroupService.getInstance().mergeAdminUIDto(context, groupDto);
+					}
+					
+					// create users
+					String createUsersProp = MessageFormat.format(WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_USERS), organization.getName());
+					logger.debug("Create new users = {}", createUsersProp);
+					String[] userNames = createUsersProp.split(",\\s*");
+					for (String username : userNames) {
+						UserAdminUIDto userDto = new UserAdminUIDto();
+						userDto.setName(username);
+						userDto.setLogin(username);
+						userDto.setPassword(username);
+						userDto.setIsActivated(true);
+						try {
+							mergeAdminUIDto(userDto);
+							User newUser = wrapper.findByField(User.class, "login", username).get(0);
+							addOrganizationUserDependency(newUser, organization, OrganizationMembershipStatus.MEMBER, wrapper);
+						} catch (Exception e) {
+							// do nothing
+						}
+					}
+					
+					// add admin to admin groups
+					String adminGroups = MessageFormat.format(
+							WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
+							organization.getName());
+					if (organizationOwner != null) {
+						logger.debug("Add {} to admin groups = {}", organizationOwner, adminGroups);
+						addRemoveUserFromGroups(organizationOwner, adminGroups, true, wrapper);
+					}
+					
+					// create permissions
+					String createPermissionsProp = MessageFormat.format(
+							WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_PERMISSIONS), 
+							organization.getName());
+					logger.debug("Create permissions = {}", createPermissionsProp);
+					Pattern pattern = Pattern.compile("\\s*?(.*?)\\s*:\\s*(\\w*)\\s*\\((.*?)\\),?\\s*?");
+					Matcher matcher = pattern.matcher(createPermissionsProp);
+					String permissionsCreated = "";
+					while (matcher.find()) {
+						String assignedTo = matcher.group(1);
+						String permissionType = "org.flowerplatform.web.security.permission." + matcher.group(2);
+						String paramList = matcher.group(3);
+						String[] params = paramList.split("\\s*,\\s*");
+						
+						PermissionAdminUIDto permissionDto = new PermissionAdminUIDto();
+						permissionDto.setAssignedTo(assignedTo);
+						permissionDto.setType(permissionType);
+						permissionDto.setName(params[0].equals("null") ? "" : params[0]);
+						permissionDto.setActions(params[1]);
+						
+						try {
+							PermissionService.getInstance().mergeAdminUIDto(context, permissionDto);
+							permissionsCreated += "<br/>	" + permissionDto; // HTML format, because this info will be sent via mail
+						} catch (Exception e) {
+							logger.error(e.getMessage());
+							// do nothing
+						}
+					}
+					
+					// compose message to send to client
+					String message = WebPlugin.getInstance().getMessage(ORGANIZATION_APPROVED_OPERATIONS_EXECUTED, 
+							new Object[] { 
+								createDirsProp,
+								createGroupsProp,
+								createUsersProp,
+								organizationOwner != null ? organizationOwner.getName() : "null",
+								adminGroups,
+								permissionsCreated
+							});
+							
+					if (organizationOwner != null) {
+						// send mail
+						String subject = WebPlugin.getInstance().getMessage(ORGANIZATION_APPROVED_SUBJECT, organization.getLabel());
+						String content = WebPlugin.getInstance().getMessage(ORGANIZATION_APPROVED_BODY, 
+								new Object[] { 
+									organizationOwner.getLogin(),
+									organizationOwner.getName(),
+									organizationOwner.getEmail(),
+									SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
+									organization.getLabel(), 
+									message,
+									getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentFromAdmin)
+								});
+						
+						SendMailService.getInstance().send(organizationOwner.getEmail(), subject, content);
+					}
+					
+					wrapper.setOperationResult(message);
+					return;
+				} else {
+					// deny request => delete organization
+					logger.debug("Deny organization = {}", dto.getName());
+					
+					OrganizationService.getInstance().delete(Arrays.asList((int) dto.getId()));
+					
+					// send mail to user
+					if (organizationOwner != null) {
+						String subject = WebPlugin.getInstance().getMessage(ORGANIZATION_DENIED_SUBJECT, organization.getLabel());
+						String content = WebPlugin.getInstance().getMessage(ORGANIZATION_DENIED_BODY, 
+								new Object[] { 
+									organizationOwner.getLogin(),
+									organizationOwner.getName(),
+									organizationOwner.getEmail(),
+									SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
+									organization.getLabel(),
+									getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentFromAdmin)
+								});
+						SendMailService.getInstance().send(organizationOwner.getEmail(), subject, content);
 					}
 				}
 			}
-			
-			// create groups
-			String createGroupsProp = MessageFormat.format(
-					WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS), 
-					organization.getName());
-			logger.debug("Create new groups = {}", createGroupsProp);
-			String[] groupNames = createGroupsProp.split(",\\s*");
-			for (String groupName : groupNames) {
-				GroupAdminUIDto groupDto = new GroupAdminUIDto();
-				groupDto.setName(groupName);
-				groupDto.setOrganization(new NamedDto(dto.getId(), dto.getName()));
-				groupDto.setOrganizationLabel(dto.getLabel());
-				GroupService.getInstance().mergeAdminUIDto(context, groupDto);
-			}
-			
-			// create users
-			String createUsersProp = MessageFormat.format(WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_USERS), organization.getName());
-			logger.debug("Create new users = {}", createUsersProp);
-			String[] userNames = createUsersProp.split(",\\s*");
-			for (String username : userNames) {
-				UserAdminUIDto userDto = new UserAdminUIDto();
-				userDto.setName(username);
-				userDto.setLogin(username);
-				userDto.setPassword(username);
-				userDto.setIsActivated(true);
-				try {
-					mergeAdminUIDto(userDto);
-					User newUser = wrapper.findByField(User.class, "login", username).get(0);
-					addOrganizationUserDependency(newUser, organization, OrganizationMembershipStatus.MEMBER);
-				} catch (Exception e) {
-					// do nothing
-				}
-			}
-			
-			// add admin to admin groups
-			String adminGroups = MessageFormat.format(
-					WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
-					organization.getName());
-			if (organizationOwner != null) {
-				logger.debug("Add {} to admin groups = {}", organizationOwner, adminGroups);
-				addRemoveUserFromGroups(organizationOwner, adminGroups, true);
-			}
-			
-			// create permissions
-			String createPermissionsProp = MessageFormat.format(
-					WebPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_PERMISSIONS), 
-					organization.getName());
-			logger.debug("Create permissions = {}", createPermissionsProp);
-			Pattern pattern = Pattern.compile("\\s*?(.*?)\\s*:\\s*(\\w*)\\s*\\((.*?)\\),?\\s*?");
-			Matcher matcher = pattern.matcher(createPermissionsProp);
-			String permissionsCreated = "";
-			while (matcher.find()) {
-				String assignedTo = matcher.group(1);
-				String permissionType = "org.flowerplatform.web.security.permission." + matcher.group(2);
-				String paramList = matcher.group(3);
-				String[] params = paramList.split("\\s*,\\s*");
-				
-				PermissionAdminUIDto permissionDto = new PermissionAdminUIDto();
-				permissionDto.setAssignedTo(assignedTo);
-				permissionDto.setType(permissionType);
-				permissionDto.setName(params[0].equals("null") ? "" : params[0]);
-				permissionDto.setActions(params[1]);
-				
-				try {
-					PermissionService.getInstance().mergeAdminUIDto(context, permissionDto);
-					permissionsCreated += "<br/>	" + permissionDto; // HTML format, because this info will be sent via mail
-				} catch (Exception e) {
-					logger.error(e.getMessage());
-					// do nothing
-				}
-			}
-			
-			// compose message to send to client
-			String message = WebPlugin.getInstance().getMessage(ORGANIZATION_APPROVED_OPERATIONS_EXECUTED, 
-					new Object[] { 
-						createDirsProp,
-						createGroupsProp,
-						createUsersProp,
-						organizationOwner != null ? organizationOwner.getName() : "null",
-						adminGroups,
-						permissionsCreated
-					});
-					
-			if (organizationOwner != null) {
-				// send mail
-				String subject = WebPlugin.getInstance().getMessage(ORGANIZATION_APPROVED_SUBJECT, organization.getLabel());
-				String content = WebPlugin.getInstance().getMessage(ORGANIZATION_APPROVED_BODY, 
-						new Object[] { 
-							organizationOwner.getLogin(),
-							organizationOwner.getName(),
-							organizationOwner.getEmail(),
-							SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
-							organization.getLabel(), 
-							message,
-							getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentFromAdmin)
-						});
-				
-				SendMailService.getInstance().send(organizationOwner.getEmail(), subject, content);
-			}
-			
-			return message;
-		} else {
-			// deny request => delete organization
-			logger.debug("Deny organization = {}", dto.getName());
-			
-			OrganizationService.getInstance().delete(Arrays.asList((int) dto.getId()));
-			
-			// send mail to user
-			if (organizationOwner != null) {
-				String subject = WebPlugin.getInstance().getMessage(ORGANIZATION_DENIED_SUBJECT, organization.getLabel());
-				String content = WebPlugin.getInstance().getMessage(ORGANIZATION_DENIED_BODY, 
-						new Object[] { 
-							organizationOwner.getLogin(),
-							organizationOwner.getName(),
-							organizationOwner.getEmail(),
-							SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
-							organization.getLabel(),
-							getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentFromAdmin)
-						});
-				SendMailService.getInstance().send(organizationOwner.getEmail(), subject, content);
-			}
-			
-			return null;
-		}
+		});
+		return (String) wrapper.getOperationResult();
 	}
 	
 	private final String MEMBERSHIP_REQUESTED_TO_USER_SUBJECT = "mail.template.membership-requested.to-user.subject";
@@ -1114,83 +1156,94 @@ public class UserService extends ServiceObservable {
 	 * Called from client side. Adds the user to the organization's members list, with
 	 * the {@link OrganizationMembershipStatus#PENDING_MEMBERSHIP_APPROVAL} status.
 	 */
-	public String requestMembership(ServiceInvocationContext context, long userId, String organizationName, String commmentForAdmin) {
-		User user = wrapper.find(User.class, userId);
-		
-		if (user.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentUser.get()).getUser().isAdmin()) {
-			return "Anonymous user cannot join organizations!";
-		}
-		
-		List<Organization> list = wrapper.findByField(Organization.class, "name", organizationName);
-		if (list.size() != 1) {
-			return "Organization does not exist";
-		}
-		Organization organization = list.get(0);
-		
-		logger.debug("{} requesting membership to {}", user, organization);
+	public String requestMembership(final ServiceInvocationContext context, final long userId, final String organizationName, final String commmentForAdmin) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-		// cannot request membership for an organization that was not activated yet
-		if (organization.isActivated()) {
-			// first check if the user is already a member/has requested to be a member before
-			if (OrganizationService.getInstance().getOrganizationMembershipStatus(organization, user) == null) {
-				OrganizationUser ou = addOrganizationUserDependency(user, organization, OrganizationMembershipStatus.PENDING_MEMBERSHIP_APPROVAL);
+			@Override
+			public void run() {
+				User user = wrapper.find(User.class, userId);
 				
-				// NOTE: if this is in fact the organization owner adding a new user to his organization, the following mails won't be sent at all
-				if (((CommunicationChannel) context.getCommunicationChannel()).getPrincipal().getUserId() == user.getId()) {
-					// send mail to user
-					String subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_USER_SUBJECT, organization.getLabel());
-					String content = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_USER_BODY,
-							new Object[] { 
-								user.getLogin(),
-								user.getName(),
-								user.getEmail(),
-								SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
-								organization.getLabel(),
-								getCommentForTemplate(COMMENT_TEMPLATE_WITH_YOUR_COMMENT, commmentForAdmin)
-							});
-					SendMailService.getInstance().send(user.getEmail(), subject, content);
+				if (user.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUser().isAdmin()) {
+					wrapper.setOperationResult("Anonymous user cannot join organizations!");
+					return;
+				}
 				
-					// send mail to organization admins
-					subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_ORG_ADMIN_SUBJECT, organization.getLabel());
-					for (OrganizationUser organizationUser : organization.getOrganizationUsers()) {
-						if (organizationUser.getStatus().equals(OrganizationMembershipStatus.ADMIN)) {
-							User orgOwner = organizationUser.getUser();
-							content = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_ORG_ADMIN_BODY,
+				List<Organization> list = wrapper.findByField(Organization.class, "name", organizationName);
+				if (list.size() != 1) {
+					wrapper.setOperationResult("Organization does not exist");
+					return;
+				}
+				Organization organization = list.get(0);
+				
+				logger.debug("{} requesting membership to {}", user, organization);
+					
+				// cannot request membership for an organization that was not activated yet
+				if (organization.isActivated()) {
+					// first check if the user is already a member/has requested to be a member before
+					if (OrganizationService.getInstance().getOrganizationMembershipStatus(organization, user) == null) {
+						OrganizationUser ou = addOrganizationUserDependency(user, organization, OrganizationMembershipStatus.PENDING_MEMBERSHIP_APPROVAL, wrapper);
+						
+						// NOTE: if this is in fact the organization owner adding a new user to his organization, the following mails won't be sent at all
+						if (((CommunicationChannel) context.getCommunicationChannel()).getPrincipal().getUserId() == user.getId()) {
+							// send mail to user
+							String subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_USER_SUBJECT, organization.getLabel());
+							String content = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_USER_BODY,
 									new Object[] { 
-										orgOwner.getLogin(),
-										orgOwner.getName(),
-										orgOwner.getEmail(),
-										SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
-										organization.getLabel(), 
-										getCommentForTemplate(COMMENT_TEMPLATE_WITH_USER_COMMENT , commmentForAdmin),
 										user.getLogin(),
-										user.getName(), 
-										user.getEmail()
+										user.getName(),
+										user.getEmail(),
+										SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
+										organization.getLabel(),
+										getCommentForTemplate(COMMENT_TEMPLATE_WITH_YOUR_COMMENT, commmentForAdmin)
 									});
-							
-							SendMailService.getInstance().send(orgOwner.getEmail(), subject, content);
+							SendMailService.getInstance().send(user.getEmail(), subject, content);
+						
+							// send mail to organization admins
+							subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_ORG_ADMIN_SUBJECT, organization.getLabel());
+							for (OrganizationUser organizationUser : organization.getOrganizationUsers()) {
+								if (organizationUser.getStatus().equals(OrganizationMembershipStatus.ADMIN)) {
+									User orgOwner = organizationUser.getUser();
+									content = WebPlugin.getInstance().getMessage(MEMBERSHIP_REQUESTED_TO_ORG_ADMIN_BODY,
+											new Object[] { 
+												orgOwner.getLogin(),
+												orgOwner.getName(),
+												orgOwner.getEmail(),
+												SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
+												organization.getLabel(), 
+												getCommentForTemplate(COMMENT_TEMPLATE_WITH_USER_COMMENT , commmentForAdmin),
+												user.getLogin(),
+												user.getName(), 
+												user.getEmail()
+											});
+									
+									SendMailService.getInstance().send(orgOwner.getEmail(), subject, content);
+								}
+							}
 						}
+						
+						// approve membership if current user is FDC admin or org admin
+						String message = null;
+						try {
+							SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organization, null));
+							message = approveDenyMembership(context, ou.getId(), true, commmentForAdmin);
+						} catch (Exception e) {
+							// do nothing
+						}
+						
+						wrapper.setOperationResult(message);
+						return;
+					} else {
+						logger.debug("{} is already a member of {}", user, organization);
+						wrapper.setOperationResult("User is already a member of " + organization.getName() + ".");
+						return;
 					}
+				} else {
+					logger.debug("Cannot request membership to an organization that is not yet activated!");
+					wrapper.setOperationResult("Cannot request membership to an organization that is not yet activated!");
 				}
-				
-				// approve membership if current user is FDC admin or org admin
-				String message = null;
-				try {
-					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organization, null));
-					message = approveDenyMembership(context, ou.getId(), true, commmentForAdmin);
-				} catch (Exception e) {
-					// do nothing
-				}
-				
-				return message;
-			} else {
-				logger.debug("{} is already a member of {}", user, organization);
-				return "User is already a member of " + organization.getName() + ".";
 			}
-		} else {
-			logger.debug("Cannot request membership to an organization that is not yet activated!");
-			return "Cannot request membership to an organization that is not yet activated!";
-		}
+		});
+		return (String) wrapper.getOperationResult();
 	}
 	
 	private final String MEMBERSHIP_ACCEPTED_SUBJECT = "mail.template.membership.accepted.subject";
@@ -1203,103 +1256,116 @@ public class UserService extends ServiceObservable {
 	 * the client about the groups that the user was added to upon approving his membership request, or <code>null</code>
 	 * if the user's request was denied.
 	 */
-	public String approveDenyMembership(ServiceInvocationContext context, long organizationUserId, boolean approve, String commentForUser) {
-		OrganizationUser organizationUser = wrapper.find(OrganizationUser.class, organizationUserId);
-		
-		SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organizationUser.getOrganization(), null));
-		
-		if (approve) {
-			// accept membership request, add user to organization
-			logger.debug("Approve membership request from {} to {}", organizationUser.getUser(), organizationUser.getOrganization());
+	public String approveDenyMembership(ServiceInvocationContext context, final long organizationUserId, final boolean approve, final String commentForUser) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			organizationUser.setStatus(OrganizationMembershipStatus.MEMBER);
-			organizationUser = wrapper.merge(organizationUser);
-			User user = organizationUser.getUser();
-			for (OrganizationUser ou : user.getOrganizationUsers()) {
-				if (ou.getId() == organizationUser.getId()) {
-					ou.setStatus(OrganizationMembershipStatus.MEMBER);
-					user = wrapper.merge(user);
-					wrapper.merge(organizationUser.getOrganization());
-					break;
-				}
-			}
-			
-			// send mail to user if comment was added
-			if (commentForUser != null) {
-				String subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_ACCEPTED_SUBJECT, organizationUser.getOrganization().getLabel());
-				String content = WebPlugin.getInstance().getMessage(MEMBERSHIP_ACCEPTED_BODY,
-						new Object[] { 
-							user.getLogin(),
-							user.getName(),
-							user.getEmail(),
-							SendMailService.getInstance().getServerUrlForOrganization(organizationUser.getOrganization().getName()),
-							organizationUser.getOrganization().getLabel(),
-							commentForUser == null ? "" : getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentForUser)
-							// don't add the comment if no comment was sent
-						});
+			@Override
+			public void run() {
+				OrganizationUser organizationUser = wrapper.find(OrganizationUser.class, organizationUserId);
 				
-				SendMailService.getInstance().send(user.getEmail(), subject, content);	
-			}
-			
-			// add user to groups
-			String prop = WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS);
-			
-			String groupsString = MessageFormat.format(prop, organizationUser.getOrganization().getName());
-			String result = addRemoveUserFromGroups(user, groupsString, true);
-			result += WebPlugin.getInstance().getMessage("entity.group.manuallyAddUserToGroups");
-			return result;
-		} else {
-			// deny membership request, unassociate user from organization
-			logger.debug("Deny membership request from {} to {}", organizationUser.getUser(), organizationUser.getOrganization());
-			
-			User user = organizationUser.getUser();
-			for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
-				OrganizationUser ou = it.next();
-				if (ou.getId() == organizationUser.getId()) {
-					it.remove();
-					user = wrapper.merge(user);
-					organizationUser.getOrganization().getOrganizationUsers().remove(ou);
-					wrapper.merge(organizationUser.getOrganization());
-					break;
+				SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organizationUser.getOrganization(), null));
+				
+				if (approve) {
+					// accept membership request, add user to organization
+					logger.debug("Approve membership request from {} to {}", organizationUser.getUser(), organizationUser.getOrganization());
+					
+					organizationUser.setStatus(OrganizationMembershipStatus.MEMBER);
+					organizationUser = wrapper.merge(organizationUser);
+					User user = organizationUser.getUser();
+					for (OrganizationUser ou : user.getOrganizationUsers()) {
+						if (ou.getId() == organizationUser.getId()) {
+							ou.setStatus(OrganizationMembershipStatus.MEMBER);
+							user = wrapper.merge(user);
+							wrapper.merge(organizationUser.getOrganization());
+							break;
+						}
+					}
+					
+					// send mail to user if comment was added
+					if (commentForUser != null) {
+						String subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_ACCEPTED_SUBJECT, organizationUser.getOrganization().getLabel());
+						String content = WebPlugin.getInstance().getMessage(MEMBERSHIP_ACCEPTED_BODY,
+								new Object[] { 
+									user.getLogin(),
+									user.getName(),
+									user.getEmail(),
+									SendMailService.getInstance().getServerUrlForOrganization(organizationUser.getOrganization().getName()),
+									organizationUser.getOrganization().getLabel(),
+									commentForUser == null ? "" : getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentForUser)
+									// don't add the comment if no comment was sent
+								});
+						
+						SendMailService.getInstance().send(user.getEmail(), subject, content);	
+					}
+					
+					// add user to groups
+					String prop = WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS);
+					
+					String groupsString = MessageFormat.format(prop, organizationUser.getOrganization().getName());
+					String result = addRemoveUserFromGroups(user, groupsString, true, wrapper);
+					result += WebPlugin.getInstance().getMessage("entity.group.manuallyAddUserToGroups");
+					wrapper.setOperationResult(result);
+					return;
+				} else {
+					// deny membership request, unassociate user from organization
+					logger.debug("Deny membership request from {} to {}", organizationUser.getUser(), organizationUser.getOrganization());
+					
+					Organization organization = organizationUser.getOrganization();
+					
+					User user = organizationUser.getUser();
+					for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
+						OrganizationUser ou = it.next();
+						if (ou.getId() == organizationUser.getId()) {
+							it.remove();
+							organizationUser.getOrganization().getOrganizationUsers().remove(ou);
+							break;
+						}
+					}
+					wrapper.delete(organizationUser);
+					
+					// send mail to user
+					String subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_DENIED_SUBJECT, organization.getLabel());
+					String content = WebPlugin.getInstance().getMessage(MEMBERSHIP_DENIED_BODY,
+							new Object[] { 
+								user.getLogin(),
+								user.getName(),
+								user.getEmail(),
+								SendMailService.getInstance().getServerUrlForOrganization(organization.getName()),
+								organization.getLabel(),
+								getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentForUser)
+							});
+					SendMailService.getInstance().send(user.getEmail(), subject, content);	
 				}
 			}
-			wrapper.delete(organizationUser);
-			
-			// send mail to user
-			String subject = WebPlugin.getInstance().getMessage(MEMBERSHIP_DENIED_SUBJECT, organizationUser.getOrganization().getLabel());
-			String content = WebPlugin.getInstance().getMessage(MEMBERSHIP_DENIED_BODY,
-					new Object[] { 
-						user.getLogin(),
-						user.getName(),
-						user.getEmail(),
-						SendMailService.getInstance().getServerUrlForOrganization(organizationUser.getOrganization().getName()),
-						organizationUser.getOrganization().getLabel(),
-						getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentForUser)
-					});
-			SendMailService.getInstance().send(user.getEmail(), subject, content);	
-			
-			return null;
-		}
+		});
+		return (String) wrapper.getOperationResult();
 	}
 	
-	public String createAndApproveAsOrganizationMember(ServiceInvocationContext context, UserAdminUIDto userDto) {
-		String errorMessage = mergeAdminUIDto(userDto);
-		if (errorMessage != null) {
-			return errorMessage;
-		}
-		
-		User user = wrapper.findByField(User.class, "login", userDto.getLogin()).get(0);
-		OrganizationUser ou = null;
-		if (user.getOrganizationUsers().size() > 0) {
-			ou = (OrganizationUser) user.getOrganizationUsers().toArray()[0];
-		}
-		if (!user.isActivated()) {
-			sendActivationCodeForUser(user, ou == null ? null : ou.getOrganization().getName());
-		}
-		if (ou != null) {
-			approveDenyMembership(context, ou.getId(), true, null);
-		}
-		return null;
+	public String createAndApproveAsOrganizationMember(final ServiceInvocationContext context, final UserAdminUIDto userDto) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				String errorMessage = mergeAdminUIDto(userDto);
+				if (errorMessage != null) {
+					wrapper.setOperationResult(errorMessage);
+					return;
+				}
+				
+				User user = wrapper.findByField(User.class, "login", userDto.getLogin()).get(0);
+				OrganizationUser ou = null;
+				if (user.getOrganizationUsers().size() > 0) {
+					ou = (OrganizationUser) user.getOrganizationUsers().toArray()[0];
+				}
+				if (!user.isActivated()) {
+					sendActivationCodeForUser(user, ou == null ? null : ou.getOrganization().getName());
+				}
+				if (ou != null) {
+					approveDenyMembership(context, ou.getId(), true, null);
+				}
+			}
+		});
+		return (String) wrapper.getOperationResult();
 	}
 	
 	private final String LEAVE_ORGANIZATION_TO_USER_SUBJECT = "mail.template.leave-organization.to-user.subject";
@@ -1314,119 +1380,135 @@ public class UserService extends ServiceObservable {
 	 * @param userDto user that requested to leave
 	 * @param organizationDtos the organizations that the user is leaving
 	 */
-	public String leaveOrganizations(ServiceInvocationContext context, UserAdminUIDto userDto, List<OrganizationAdminUIDto> organizationDtos, String commentForAdmin) {
-		if (userDto.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentUser.get()).getUser().isAdmin()) {
+	public String leaveOrganizations(final ServiceInvocationContext context, final UserAdminUIDto userDto, final List<OrganizationAdminUIDto> organizationDtos, final String commentForAdmin) {
+		if (userDto.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUser().isAdmin()) {
 			return "Anonymous user cannot be removed from organizations!";
 		}
 		
-		String removedFromGroupsMessage = new String();
-		for (Iterator<OrganizationUserAdminUIDto> organizationIt = userDto.getOrganizationUsers().iterator(); organizationIt.hasNext();) {
-			OrganizationUserAdminUIDto ou = organizationIt.next();
-			for (OrganizationAdminUIDto removedOrg : organizationDtos) {
-				if (ou.getOrganization().getId() == removedOrg.getId()) {
-					// remove from organization
-					logger.debug("Remove user = {} from organization = {}", userDto.getLogin(), removedOrg.getName());
-					organizationIt.remove();
-					
-					// remove from groups belonging to organization
-					for (Iterator<GroupAdminUIDto> groupIt = (Iterator<GroupAdminUIDto>) userDto.getGroups().iterator(); groupIt.hasNext();) {
-						GroupAdminUIDto group = groupIt.next();
-						if (group.getOrganization() != null && group.getOrganization().getId() == ou.getOrganization().getId()) {
-							groupIt.remove();
-							removedFromGroupsMessage += "<li>" + group.getName() + "</li>";
-						}
-					}
-					boolean wasRemovedByAdmin = ((CommunicationChannel) context.getCommunicationChannel()).getPrincipal().getUserId() != userDto.getId();
-					if (!wasRemovedByAdmin) {
-						removedFromGroupsMessage = WebPlugin.getInstance().getMessage("entity.group.youWereRemovedFromGroups", removedFromGroupsMessage);
-					} else {
-						removedFromGroupsMessage = WebPlugin.getInstance().getMessage("entity.group.userWasRemovedFromGroups", removedFromGroupsMessage); 
-					}
-					
-					// send mail to user if a comment was added
-					if (commentForAdmin != null) {
-						String subject = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_USER_SUBJECT, ou.getOrganization().getLabel());
-						String text = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_USER_BODY,
-								new Object[] { 
-									userDto.getLogin(),
-									userDto.getName(),
-									userDto.getEmail(),
-									SendMailService.getInstance().getServerUrlForOrganization(ou.getOrganization().getURL()),
-									ou.getOrganization().getLabel(),
-									wasRemovedByAdmin && (commentForAdmin != null) ? getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentForAdmin) : ""
-								});
-						
-						SendMailService.getInstance().send(userDto.getEmail(), subject, text);
-					}
-					
-					// send mail to organization admins
-					Organization organization = wrapper.findByField(Organization.class, "name", ou.getOrganization().getName()).get(0);
-					for (OrganizationUser orgAdmin : organization.getOrganizationUsers()) {
-						if (orgAdmin.getStatus().equals(OrganizationMembershipStatus.ADMIN)) {
-							String subject = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_ADMIN_SUBJECT, ou.getOrganization().getLabel());
-							String text = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_ADMIN_BODY,
-									new Object[] { 
-										orgAdmin.getUser().getLogin(),
-										orgAdmin.getUser().getName(),
-										orgAdmin.getUser().getEmail(),
-										SendMailService.getInstance().getServerUrlForOrganization(ou.getOrganization().getURL()),
-										ou.getOrganization().getName(),
-										userDto.getLogin(), 
-										userDto.getName(),
-										userDto.getEmail()
-									});
-							
-							SendMailService.getInstance().send(orgAdmin.getUser().getEmail(), subject, text);
-						}
-					}
-					break;
-				}
-			}
-		}
-		
-		// add changes to DB
-		String message = mergeAdminUIDto(userDto);
-		if (message != null)
-			return message;
-		return removedFromGroupsMessage;
-	}
-	
-	public String upgradeDowngradeUser(List<Integer> organizationUserIds, boolean upgrade) {
-		OrganizationMembershipStatus newStatus = upgrade ? OrganizationMembershipStatus.ADMIN : OrganizationMembershipStatus.MEMBER;
-		String message = "";
-		for (int ouId : organizationUserIds) {
-			OrganizationUser ou = wrapper.find(OrganizationUser.class, (long) ouId);
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			if (!ou.getStatus().equals(newStatus)) {
-				try {
-					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(ou.getOrganization(), null));
-					
-					ou.setStatus(newStatus);
-					ou = wrapper.merge(ou);
-					
-					logger.debug("{} is now " + newStatus + " in {}", ou.getUser(), ou.getOrganization());
-				
-					// in case of upgrade, add to admin groups and remove from member groups
-					// in case of downgrade, add to member groups and remove from admin groups
-					String adminGroups = MessageFormat.format(WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
-							ou.getOrganization().getName());
-					message += addRemoveUserFromGroups(ou.getUser(), adminGroups, upgrade);
-					
-					String memberGroups = MessageFormat.format(WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS), 
-							ou.getOrganization().getName());
-					message += addRemoveUserFromGroups(ou.getUser(), memberGroups, !upgrade);
-					
-				} catch (Exception e) {
-					logger.debug("{} is not allowed to upgrade/downgrade members of {}",
-							CommunicationPlugin.tlCurrentUser.get().getUser(),
-							ou.getOrganization());
+			@Override
+			public void run() {
+				String removedFromGroupsMessage = new String();
+				for (Iterator<OrganizationUserAdminUIDto> organizationIt = userDto.getOrganizationUsers().iterator(); organizationIt.hasNext();) {
+					OrganizationUserAdminUIDto ou = organizationIt.next();
+					for (OrganizationAdminUIDto removedOrg : organizationDtos) {
+						if (ou.getOrganization().getId() == removedOrg.getId()) {
+							// remove from organization
+							logger.debug("Remove user = {} from organization = {}", userDto.getLogin(), removedOrg.getName());
+							organizationIt.remove();
+							
+							// remove from groups belonging to organization
+							for (Iterator<GroupAdminUIDto> groupIt = (Iterator<GroupAdminUIDto>) userDto.getGroups().iterator(); groupIt.hasNext();) {
+								GroupAdminUIDto group = groupIt.next();
+								if (group.getOrganization() != null && group.getOrganization().getId() == ou.getOrganization().getId()) {
+									groupIt.remove();
+									removedFromGroupsMessage += "<li>" + group.getName() + "</li>";
+								}
+							}
+							boolean wasRemovedByAdmin = ((CommunicationChannel) context.getCommunicationChannel()).getPrincipal().getUserId() != userDto.getId();
+							if (!wasRemovedByAdmin) {
+								removedFromGroupsMessage = WebPlugin.getInstance().getMessage("entity.group.youWereRemovedFromGroups", removedFromGroupsMessage);
+							} else {
+								removedFromGroupsMessage = WebPlugin.getInstance().getMessage("entity.group.userWasRemovedFromGroups", removedFromGroupsMessage); 
+							}
+							
+							// send mail to user if a comment was added
+							if (commentForAdmin != null) {
+								String subject = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_USER_SUBJECT, ou.getOrganization().getLabel());
+								String text = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_USER_BODY,
+										new Object[] { 
+											userDto.getLogin(),
+											userDto.getName(),
+											userDto.getEmail(),
+											SendMailService.getInstance().getServerUrlForOrganization(ou.getOrganization().getURL()),
+											ou.getOrganization().getLabel(),
+											wasRemovedByAdmin && (commentForAdmin != null) ? getCommentForTemplate(COMMENT_TEMPLATE_WITH_ADMIN_COMMENT, commentForAdmin) : ""
+										});
+								
+								SendMailService.getInstance().send(userDto.getEmail(), subject, text);
+							}
+							
+							// send mail to organization admins
+							Organization organization = wrapper.findByField(Organization.class, "name", ou.getOrganization().getName()).get(0);
+							for (OrganizationUser orgAdmin : organization.getOrganizationUsers()) {
+								if (orgAdmin.getStatus().equals(OrganizationMembershipStatus.ADMIN)) {
+									String subject = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_ADMIN_SUBJECT, ou.getOrganization().getLabel());
+									String text = WebPlugin.getInstance().getMessage(LEAVE_ORGANIZATION_TO_ADMIN_BODY,
+											new Object[] { 
+												orgAdmin.getUser().getLogin(),
+												orgAdmin.getUser().getName(),
+												orgAdmin.getUser().getEmail(),
+												SendMailService.getInstance().getServerUrlForOrganization(ou.getOrganization().getURL()),
+												ou.getOrganization().getName(),
+												userDto.getLogin(), 
+												userDto.getName(),
+												userDto.getEmail()
+											});
+									
+									SendMailService.getInstance().send(orgAdmin.getUser().getEmail(), subject, text);
+								}
+							}
+							break;
+						}
+					}
 				}
+				
+				// add changes to DB
+				String message = mergeAdminUIDto(userDto);
+				if (message != null) {
+					wrapper.setOperationResult(message);
+					return;
+				}
+				wrapper.setOperationResult(removedFromGroupsMessage);
 			}
-		}
-		return message;
+		});
+		return (String) wrapper.getOperationResult();
 	}
 	
-	private String addRemoveUserFromGroups(User user, String groupsNames, boolean add) {
+	public String upgradeDowngradeUser(final List<Integer> organizationUserIds, final boolean upgrade) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				OrganizationMembershipStatus newStatus = upgrade ? OrganizationMembershipStatus.ADMIN : OrganizationMembershipStatus.MEMBER;
+				String message = "";
+				for (int ouId : organizationUserIds) {
+					OrganizationUser ou = wrapper.find(OrganizationUser.class, (long) ouId);
+					
+					if (!ou.getStatus().equals(newStatus)) {
+						try {
+							SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(ou.getOrganization(), null));
+							
+							ou.setStatus(newStatus);
+							ou = wrapper.merge(ou);
+							
+							logger.debug("{} is now " + newStatus + " in {}", ou.getUser(), ou.getOrganization());
+						
+							// in case of upgrade, add to admin groups and remove from member groups
+							// in case of downgrade, add to member groups and remove from admin groups
+							String adminGroups = MessageFormat.format(WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
+									ou.getOrganization().getName());
+							message += addRemoveUserFromGroups(ou.getUser(), adminGroups, upgrade, wrapper);
+							
+							String memberGroups = MessageFormat.format(WebPlugin.getInstance().getFlowerWebProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS), 
+									ou.getOrganization().getName());
+							message += addRemoveUserFromGroups(ou.getUser(), memberGroups, !upgrade, wrapper);
+							
+						} catch (Exception e) {
+							logger.debug("{} is not allowed to upgrade/downgrade members of {}",
+									CommunicationPlugin.tlCurrentPrincipal.get().getUser(),
+									ou.getOrganization());
+						}
+					}
+				}
+				wrapper.setOperationResult(message);
+			}
+		});
+		return (String) wrapper.getOperationResult();
+	}
+	
+	private String addRemoveUserFromGroups(final User user, final String groupsNames, final boolean add, DatabaseOperationWrapper wrapper) {
 		String[] adminGroupNames = groupsNames.split(",\\s*");
 		String namesList = "";
 		String doNotExist = "";
@@ -1446,14 +1528,14 @@ public class UserService extends ServiceObservable {
 						}
 					}
 					if (!alreadyInGroup) {
-						addGroupUserDependency(user, group);
+						addGroupUserDependency(user, group, wrapper);
 					}
 				} else {
 					for (GroupUser gu : group.getGroupUsers()) {
 						if (gu.getUser().getId() == user.getId()) {
 							removeGroupUserDependency(gu);
 							user.getGroupUsers().remove(gu);
-							user = wrapper.merge(user);
+							wrapper.merge(user);
 							break;
 						}
 					}
@@ -1475,15 +1557,21 @@ public class UserService extends ServiceObservable {
 	 * Sends an email containing the user's activation link and activation code. Returns
 	 * the activation code.
 	 */
-	protected String sendActivationCodeForUser(User user, String organizationFilter) {
-		String activationCode = user.getActivationCode();
-		
-		if (activationCode == null) {
-			activationCode = generateRandomString();
-			user.setActivationCode(activationCode);
-			wrapper.merge(user);
-		}
-		
+	protected String sendActivationCodeForUser(final User user, String organizationFilter) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				String activationCode = user.getActivationCode();
+				if (activationCode == null) {
+					activationCode = generateRandomString();
+					user.setActivationCode(activationCode);
+					wrapper.merge(user);
+					wrapper.setOperationResult(activationCode);
+				}
+			}
+		});
+		String activationCode = (String) wrapper.getOperationResult();
 		String subject = WebPlugin.getInstance().getMessage(SEND_ACTIVATION_CODE_SUBJECT);
 		String url = organizationFilter == null ? SendMailService.getInstance().getServerUrl() : 
 												  SendMailService.getInstance().getServerUrlForOrganization(organizationFilter);

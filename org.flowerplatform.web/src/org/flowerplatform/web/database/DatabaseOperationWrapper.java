@@ -22,6 +22,8 @@ import org.flowerplatform.web.entity.dto.NamedDto;
 public class DatabaseOperationWrapper {
 
 	private Session session;
+	
+	private Object operationResult;
 
 	public DatabaseOperationWrapper(DatabaseOperation operation) {
 		operation.wrapper = this;
@@ -32,11 +34,20 @@ public class DatabaseOperationWrapper {
 			session.getTransaction().commit();
 		} catch (Exception e) {
 			session.getTransaction().rollback();
+			throw new RuntimeException(e);
 		} finally {
 			session.close();
 		}
 	}
 	
+	public Object getOperationResult() {
+		return operationResult;
+	}
+
+	public void setOperationResult(Object operationResult) {
+		this.operationResult = operationResult;
+	}
+
 	public Query createQuery(String query) {
 		return session.createQuery(query);
 	}
@@ -72,7 +83,7 @@ public class DatabaseOperationWrapper {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T merge(T object) {
-		return object = (T) session.merge(object);
+		return (T) session.merge(object);
 	}
 	
 	/**
@@ -124,14 +135,5 @@ public class DatabaseOperationWrapper {
 	    object = (T) session.merge(object);
 	    session.delete(object);
 	}
-	
-//	/**
-//	 * @author Mariana
-//	 */
-//	private void beginTransaction(Session session) {
-//		if (!session.getTransaction().isActive()) {
-//			session.beginTransaction();
-//		}
-//	}
 
 }

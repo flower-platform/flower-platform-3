@@ -13,9 +13,17 @@
 			</property>
 		</eclass>
 		
+		<eclass name="Entity">
+			<mapped-superclass/>
+		</eclass>
+		
+		<eclass name="NamedEntity">
+			<mapped-superclass/>
+		</eclass>
+		
 		<eclass name="User">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="name">
 				<column length="30"/>
@@ -39,7 +47,7 @@
 		
 		<eclass name="Group">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="name">
 				<column length="61" unique="true"/>
@@ -48,7 +56,7 @@
 		
 		<eclass name="Organization">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="name">
 				<column length="30" unique="true"/>
@@ -69,19 +77,19 @@
 		
 		<eclass name="GroupUser">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 		</eclass>
 		
 		<eclass name="OrganizationUser">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 		</eclass>
 		
 		<eclass name="PermissionEntity">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="name">
 				<column length="512"/>
@@ -99,7 +107,7 @@
 		
 		<eclass name="SVNRepositoryURLEntity">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="name">
 				<column name="name" length="255"/>
@@ -108,7 +116,7 @@
 		
 		<eclass name="SVNCommentEntity">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="body">
 				<lob/>
@@ -117,7 +125,7 @@
 		
 		<eclass name="PerspectiveUserEntry">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="name">
 				<column length="100"/>
@@ -129,7 +137,7 @@
 		
 		<eclass name="RecentResource">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="label">
 				<column length="50"/>
@@ -141,13 +149,13 @@
 		
 		<eclass name="FavoriteItem">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 		</eclass>
 		
 		<eclass name="AuditEntry">
 			<property name="id">
-				<generated-value generator="IDENTITY"/>
+				<generated-value generator="TABLE"/>
 			</property>
 			<property name="username">
 				<column length="30"/>

@@ -8,7 +8,6 @@ import java.util.Map;
 import javax.security.auth.Subject;
 
 import org.flowerplatform.communication.IPrincipal;
-import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 

@@ -28,6 +28,7 @@ package org.flowerplatform.web.entity;
 public interface OrganizationUser extends Entity {
 	/**
 	 * Returns the value of the '<em><b>Organization</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.Organization#getOrganizationUsers <em>Organization Users</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Organization</em>' reference isn't clear,
@@ -37,7 +38,8 @@ public interface OrganizationUser extends Entity {
 	 * @return the value of the '<em>Organization</em>' reference.
 	 * @see #setOrganization(Organization)
 	 * @see org.flowerplatform.web.entity.EntityPackage#getOrganizationUser_Organization()
-	 * @model
+	 * @see org.flowerplatform.web.entity.Organization#getOrganizationUsers
+	 * @model opposite="organizationUsers"
 	 * @generated
 	 */
 	Organization getOrganization();
@@ -54,6 +56,7 @@ public interface OrganizationUser extends Entity {
 
 	/**
 	 * Returns the value of the '<em><b>User</b></em>' reference.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.User#getOrganizationUsers <em>Organization Users</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>User</em>' reference isn't clear,
@@ -63,7 +66,8 @@ public interface OrganizationUser extends Entity {
 	 * @return the value of the '<em>User</em>' reference.
 	 * @see #setUser(User)
 	 * @see org.flowerplatform.web.entity.EntityPackage#getOrganizationUser_User()
-	 * @model
+	 * @see org.flowerplatform.web.entity.User#getOrganizationUsers
+	 * @model opposite="organizationUsers"
 	 * @generated
 	 */
 	User getUser();

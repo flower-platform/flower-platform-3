@@ -3,6 +3,7 @@ package org.flowerplatform.web.security.service;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -96,9 +97,9 @@ public class OrganizationService extends ServiceObservable {
 	}
 
 	public OrganizationMembershipStatus getOrganizationMembershipStatus(Organization organization, User user) {
-		if (user.getOrganizationUsers() != null) {
-			for (OrganizationUser ou : user.getOrganizationUsers()) {
-				if (ou.getOrganization().getId() == organization.getId()) {
+		if (organization.getOrganizationUsers() != null) {
+			for (OrganizationUser ou : organization.getOrganizationUsers()) {
+				if (ou.getUser().getId() == user.getId()) {
 					return ou.getStatus();
 				}
 			}
@@ -113,8 +114,7 @@ public class OrganizationService extends ServiceObservable {
 	 */
 	public OrganizationAdminUIDto findByIdAsAdminUIDto(final ServiceInvocationContext context, final long id) {
 		logger.debug("Find organization with id = {}", id);
-		final OrganizationAdminUIDto[] result = new OrganizationAdminUIDto[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
@@ -127,10 +127,10 @@ public class OrganizationService extends ServiceObservable {
 					throw new RuntimeException(String.format("Organization with id=%s was not available.", id));
 				}
 				User user = (User) context.getCommunicationChannel().getPrincipal().getUser();
-				result[0] = convertOrganizationToOrganizationAdminUIDto(org, user);
+				wrapper.setOperationResult(convertOrganizationToOrganizationAdminUIDto(org, user));
 			}
 		});
-		return result[0];
+		return (OrganizationAdminUIDto) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -138,18 +138,17 @@ public class OrganizationService extends ServiceObservable {
 	 */
 	public OrganizationAdminUIDto findByNameAsAdminUIDto(final String name) {
 		logger.debug("Find organization with name = {}", name);
-		final OrganizationAdminUIDto[] result = new OrganizationAdminUIDto[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
 				List<Organization> rslt = wrapper.findByField(Organization.class, "name", name);
 				if (rslt.size() == 1) {
-					result[0] = convertOrganizationToOrganizationAdminUIDto(rslt.get(0), null);
+					wrapper.setOperationResult(convertOrganizationToOrganizationAdminUIDto(rslt.get(0), null));
 				}
 			}
 		});
-		return result[0];
+		return (OrganizationAdminUIDto) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -201,7 +200,7 @@ public class OrganizationService extends ServiceObservable {
 					
 					for (OrganizationUser ou : user.getOrganizationUsers()) {
 						try {
-							if (user.getId() != CommunicationPlugin.tlCurrentUser.get().getUserId())
+							if (user.getId() != CommunicationPlugin.tlCurrentPrincipal.get().getUserId())
 								SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(ou.getOrganization(), null));
 							list.add(convertOrganizationToOrganizationAdminUIDto(ou.getOrganization(), user));
 						} catch (Exception e) {
@@ -255,15 +254,15 @@ public class OrganizationService extends ServiceObservable {
 	
 	String mergeAdminUIDto(ServiceInvocationContext context, final OrganizationAdminUIDto dto, final boolean requestMode) {
 		logger.debug("Merge organization = {}", dto.getName());
-		final String[] result = new String[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
 				// first check if there is already an organization with the same name
 				List<Organization> orgsWithSameName = wrapper.findByField(Organization.class, "name", dto.getName());
 				if (dto.getId() == 0 && orgsWithSameName != null && orgsWithSameName.size() > 0) {
-					result[0] = "There is already an organization with this name!";
+					wrapper.setOperationResult("There is already an organization with this name!");
+					return;
 				}
 				
 				Organization initialOrg = wrapper.find(Organization.class, dto.getId());
@@ -285,7 +284,7 @@ public class OrganizationService extends ServiceObservable {
 			}
 		});
 		
-		return result[0];
+		return (String) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -303,15 +302,16 @@ public class OrganizationService extends ServiceObservable {
 					
 					logger.debug("Delete {}", org);
 					
-					for (Group group : org.getGroups()) {
-						group.setOrganization(null);
-						wrapper.merge(group);
-					}		
+					// this will also remove the Organization from the Group
+					org.getGroups().clear(); 
 					
-					for (OrganizationUser ou : org.getOrganizationUsers()) {
-						User user = ou.getUser();
-						user.getOrganizationUsers().remove(ou);
-						wrapper.merge(user);
+					for (Iterator<OrganizationUser> it = org.getOrganizationUsers().iterator(); it.hasNext();) {
+						OrganizationUser ou = it.next();
+						// manually remove the OrganizationUser from the User
+						ou.getUser().getOrganizationUsers().remove(ou);
+						it.remove();
+						// and delete the OrganizationUser
+						wrapper.delete(ou);
 					}
 					
 					Query recentResources = wrapper.createQuery("SELECT e FROM RecentResource e WHERE e.organization = :organization");
@@ -319,7 +319,6 @@ public class OrganizationService extends ServiceObservable {
 					for (Object object : recentResources.list()) {
 						RecentResource rr = (RecentResource) object;
 						rr.setOrganization(null);
-						wrapper.merge(rr);
 					}
 					
 					Query favoriteItems = wrapper.createQuery("SELECT e FROM FavoriteItem e WHERE e.organization = :organization");
@@ -343,7 +342,7 @@ public class OrganizationService extends ServiceObservable {
 	 * @author Mariana
 	 */
 	public String getOrganizationDefaultPath(List<String> organizationsFilter) {
-		List<OrganizationAdminUIDto> organizations = findMyOrganizationsAsADminUIDto(CommunicationPlugin.tlCurrentUser.get().getUserId());
+		List<OrganizationAdminUIDto> organizations = findMyOrganizationsAsADminUIDto(CommunicationPlugin.tlCurrentPrincipal.get().getUserId());
 		for (OrganizationAdminUIDto organization : organizations) {
 			if (organizationsFilter.contains(organization.getName()) || organizationsFilter.size() == 0) {
 				String organizationDir = WebPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*")[0];
@@ -368,18 +367,17 @@ public class OrganizationService extends ServiceObservable {
 			matcher.find();
 			try {
 				final String organizationName = matcher.group(1);
-				final Organization[] result = new Organization[1];
-				new DatabaseOperationWrapper(new DatabaseOperation() {
+				DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 					
 					@Override
 					public void run() {
 						List<Organization> orgs = wrapper.findByField(Organization.class, "name", organizationName);
 						if (orgs.size() > 0) {
-							result[0] = orgs.get(0);
+							wrapper.setOperationResult(orgs.get(0));
 						}
 					}
 				});
-				return result[0];
+				return (Organization) wrapper.getOperationResult();
 			} catch (IllegalStateException e) {
 				// do nothing
 			}

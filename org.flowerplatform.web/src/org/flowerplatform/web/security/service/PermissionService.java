@@ -37,7 +37,6 @@ import org.flowerplatform.web.security.sandbox.FlowerWebPolicy;
 import org.flowerplatform.web.security.sandbox.SecurityEntityAdaptor;
 import org.flowerplatform.web.security.sandbox.SecurityUtils;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,18 +95,17 @@ public class PermissionService {
 	public PermissionAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find permission with id = {}", id);
 		
-		final PermissionAdminUIDto[] result = new PermissionAdminUIDto[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
 				PermissionEntity permission = wrapper.find(PermissionEntity.class, id);
 				if (permission == null)
 					throw new RuntimeException(String.format("Permission with id=%s was not found in the DB.", id));
-				result[0] = convertPermissionToPermissionAdminUIDto(permission);
+				wrapper.setOperationResult(convertPermissionToPermissionAdminUIDto(permission));
 			}
 		});
-		return result[0];
+		return (PermissionAdminUIDto) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -145,7 +143,7 @@ public class PermissionService {
 		if (resourceFilter == null) {
 			return findAllAsAdminUIDto();
 		}				
-		List<String> patterns = new ArrayList<String>();
+		final List<String> patterns = new ArrayList<String>();
 		patterns.add(resourceFilter.getResource());
 		// add filter by root/dir/* for root/dir
 		if (!resourceFilter.getResource().endsWith("/*"))
@@ -160,33 +158,39 @@ public class PermissionService {
 			index = resourceFilter.getResource().indexOf("/", fromIndex);
 		}
 		
-		List<PermissionEntity> permissionEntities;
-		Query q = wrapper.createQuery("SELECT e FROM PermissionEntity e WHERE e.name in :names ORDER by e.type, e.name");
-		q.setParameter("names", patterns);
-		q.setReadOnly(true);					
-		permissionEntities = q.list();
-		
-		boolean showAllApplicablePermissions = Boolean.valueOf(WebPlugin.getInstance().getFlowerWebProperties().getProperty(SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE));
-		
-		List<PermissionAdminUIDto> listDtos = new ArrayList<PermissionAdminUIDto>();
-		for (PermissionEntity permission : permissionEntities) {
-			boolean isEditable = false;
-			try { 
-				SecurityUtils.checkModifyTreePermission(permission);
-				// permission check did not throw a security exception => permission is editable by the current user
-				isEditable = true;
-			} catch (SecurityException e) {
-				// do nothing
-			}
+		final List<PermissionAdminUIDto> listDtos = new ArrayList<PermissionAdminUIDto>();
+		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
-			// return this permission if it is editable OR if all applicable permissions must be displayed (even if they are not editable by the current user)
-			if (isEditable || showAllApplicablePermissions) {
-				PermissionAdminUIDto dto = convertPermissionToPermissionAdminUIDto(permission);
-				dto.setIsEditable(isEditable);
-				listDtos.add(dto);
+			@Override
+			public void run() {
+				List<PermissionEntity> permissionEntities;
+				Query q = wrapper.createQuery("SELECT e FROM PermissionEntity e WHERE e.name in :names ORDER by e.type, e.name");
+				q.setParameter("names", patterns);
+				q.setReadOnly(true);					
+				permissionEntities = q.list();
+				
+				boolean showAllApplicablePermissions = Boolean.valueOf(WebPlugin.getInstance().getFlowerWebProperties().getProperty(SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE));
+				
+				for (PermissionEntity permission : permissionEntities) {
+					boolean isEditable = false;
+					try { 
+						SecurityUtils.checkModifyTreePermission(permission);
+						// permission check did not throw a security exception => permission is editable by the current user
+						isEditable = true;
+					} catch (SecurityException e) {
+						// do nothing
+					}
+					
+					// return this permission if it is editable OR if all applicable permissions must be displayed (even if they are not editable by the current user)
+					if (isEditable || showAllApplicablePermissions) {
+						PermissionAdminUIDto dto = convertPermissionToPermissionAdminUIDto(permission);
+						dto.setIsEditable(isEditable);
+						listDtos.add(dto);
+					}
+				}
 			}
-		}
-		return listDtos;		
+		});
+		return listDtos;
 	}
 	
 	/**
@@ -207,8 +211,7 @@ public class PermissionService {
 	public Map<String, String> mergeAdminUIDto(ServiceInvocationContext context, final PermissionAdminUIDto dto) {
 		logger.debug("Merge permission = {}", dto.getName());
 		
-		final Object[] result = new Object[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
@@ -243,7 +246,8 @@ public class PermissionService {
 				}
 				
 				if (!validationResults.isEmpty()) {
-					result[0] = validationResults;
+					wrapper.setOperationResult(validationResults);
+					return;
 				}		
 				SecurityUtils.checkModifyTreePermission(permissionEntity);		
 				wrapper.merge(permissionEntity);
@@ -257,10 +261,10 @@ public class PermissionService {
 					}
 				}
 				
-				result[0] = rslt;
+				wrapper.setOperationResult(rslt);
 			}
 		});
-		return (Map<String, String>) result[0];
+		return (Map<String, String>) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -317,17 +321,16 @@ public class PermissionService {
 	}
 	
 	public List<PermissionEntity> findPermissionsByType(final String type) {
-		final Object[] result = new Object[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
 				Query q = wrapper.createQuery("SELECT p FROM PermissionEntity p WHERE p.type = :type ORDER BY p.name");
 				q.setParameter("type", type);
-				result[0] = q.list();
+				wrapper.setOperationResult(q.list());
 			}
 		});
-		return (List<PermissionEntity>) result[0];
+		return (List<PermissionEntity>) wrapper.getOperationResult();
 	}
 	
 	public void onSecurityEntityDelete(final ISecurityEntity securityEntity) {

@@ -8,15 +8,29 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.common,
  org.flowerplatform.communication,
  org.eclipse.core.resources,
- org.eclipse.emf.teneo,
- org.eclipse.emf.teneo.hibernate,
- org.hibernate,
- javax.mail,
- org.postgresql
+ org.eclipse.emf.teneo;visibility:=reexport,
+ org.eclipse.emf.teneo.hibernate;visibility:=reexport,
+ org.hibernate;visibility:=reexport,
+ javax.mail;visibility:=reexport,
+ org.postgresql;visibility:=reexport,
+ org.hsqldb;visibility:=reexport,
+ org.flowerplatform.blazeds
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.persistence,
  javax.servlet,
  javax.servlet.http
-Eclipse-BuddyPolicy: registered
-Export-Package: org.flowerplatform.web.security.dto
+Export-Package: org.flowerplatform.web,
+ org.flowerplatform.web.database,
+ org.flowerplatform.web.entity,
+ org.flowerplatform.web.entity.dto,
+ org.flowerplatform.web.explorer,
+ org.flowerplatform.web.security.dto,
+ org.flowerplatform.web.security.mail,
+ org.flowerplatform.web.security.permission,
+ org.flowerplatform.web.security.sandbox,
+ org.flowerplatform.web.security.service,
+ org.flowerplatform.web.temp,
+ org.h2
+Bundle-ClassPath: lib/h2-1.3.172.jar,
+ .

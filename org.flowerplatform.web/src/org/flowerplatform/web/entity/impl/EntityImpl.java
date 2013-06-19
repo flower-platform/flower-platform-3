@@ -149,6 +149,17 @@ public abstract class EntityImpl extends EObjectImpl implements Entity {
 	}
 
 	/**
+	 * @author Mariana
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj.getClass().isAssignableFrom(this.getClass())) {
+			return getId() == ((Entity) obj).getId();
+		}
+		return false;
+	}
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated

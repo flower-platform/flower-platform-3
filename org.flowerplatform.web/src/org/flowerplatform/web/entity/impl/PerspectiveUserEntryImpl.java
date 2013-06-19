@@ -8,6 +8,7 @@ package org.flowerplatform.web.entity.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -112,11 +113,33 @@ public class PerspectiveUserEntryImpl extends NamedEntityImpl implements Perspec
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setUser(User newUser) {
+	public NotificationChain basicSetUser(User newUser, NotificationChain msgs) {
 		User oldUser = user;
 		user = newUser;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.PERSPECTIVE_USER_ENTRY__USER, oldUser, user));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.PERSPECTIVE_USER_ENTRY__USER, oldUser, newUser);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUser(User newUser) {
+		if (newUser != user) {
+			NotificationChain msgs = null;
+			if (user != null)
+				msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__PERSPECTIVE_USER_ENTRIES, User.class, msgs);
+			if (newUser != null)
+				msgs = ((InternalEObject)newUser).eInverseAdd(this, EntityPackage.USER__PERSPECTIVE_USER_ENTRIES, User.class, msgs);
+			msgs = basicSetUser(newUser, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.PERSPECTIVE_USER_ENTRY__USER, newUser, newUser));
 	}
 
 	/**
@@ -138,6 +161,36 @@ public class PerspectiveUserEntryImpl extends NamedEntityImpl implements Perspec
 		serializedLayoutData = newSerializedLayoutData;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.PERSPECTIVE_USER_ENTRY__SERIALIZED_LAYOUT_DATA, oldSerializedLayoutData, serializedLayoutData));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.PERSPECTIVE_USER_ENTRY__USER:
+				if (user != null)
+					msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__PERSPECTIVE_USER_ENTRIES, User.class, msgs);
+				return basicSetUser((User)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.PERSPECTIVE_USER_ENTRY__USER:
+				return basicSetUser(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

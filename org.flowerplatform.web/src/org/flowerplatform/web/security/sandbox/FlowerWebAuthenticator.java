@@ -17,8 +17,7 @@ public class FlowerWebAuthenticator implements IAuthenticator {
 
 	@Override
 	public AuthenticationResult authenticate(final String login, final String password, final String activationCode) {
-		final AuthenticationResult[] result = new AuthenticationResult[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
@@ -26,7 +25,8 @@ public class FlowerWebAuthenticator implements IAuthenticator {
 				
 				// No user found, or too many, or no password, or password not correct according to GeneralService#createUser 
 				if (users.size() != 1 || password == null || !Util.encrypt((String) password).equals( users.get(0).getHashedPassword())) { 
-					result[0] = AuthenticationResult.INCORRECT_CREDENTIALS;
+					wrapper.setOperationResult(AuthenticationResult.INCORRECT_CREDENTIALS);
+					return;
 				}
 				
 				User user = users.get(0);
@@ -35,7 +35,8 @@ public class FlowerWebAuthenticator implements IAuthenticator {
 				if (activationCode != null) {
 					if (user.isActivated()) {
 						// the user is already activated
-						result[0] = getResult(AuthenticationResult.ALREADY_ACTIVATED, user.getId());
+						wrapper.setOperationResult(getResult(AuthenticationResult.ALREADY_ACTIVATED, user.getId()));
+						return;
 					} else {
 						UserService.getInstance().activateUser(login, activationCode);
 					}
@@ -44,14 +45,15 @@ public class FlowerWebAuthenticator implements IAuthenticator {
 				// check if the user is activated
 				user = wrapper.find(User.class, user.getId());
 				if (!user.isActivated()) {
-					result[0] = getResult(AuthenticationResult.NOT_ACTIVATED, user.getId());
+					wrapper.setOperationResult(getResult(AuthenticationResult.NOT_ACTIVATED, user.getId()));
+					return;
 				}
 				
-				result[0] = getResult(AuthenticationResult.OK, user.getId());
+				wrapper.setOperationResult(getResult(AuthenticationResult.OK, user.getId()));
 			}
 		});
 		
-		return result[0];
+		return (AuthenticationResult) wrapper.getOperationResult();
 	}
 
 	@Override

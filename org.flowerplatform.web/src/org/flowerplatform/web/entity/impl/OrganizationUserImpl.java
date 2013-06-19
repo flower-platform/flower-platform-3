@@ -8,6 +8,7 @@ package org.flowerplatform.web.entity.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -125,11 +126,33 @@ public class OrganizationUserImpl extends EntityImpl implements OrganizationUser
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setOrganization(Organization newOrganization) {
+	public NotificationChain basicSetOrganization(Organization newOrganization, NotificationChain msgs) {
 		Organization oldOrganization = organization;
 		organization = newOrganization;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.ORGANIZATION_USER__ORGANIZATION, oldOrganization, organization));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.ORGANIZATION_USER__ORGANIZATION, oldOrganization, newOrganization);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setOrganization(Organization newOrganization) {
+		if (newOrganization != organization) {
+			NotificationChain msgs = null;
+			if (organization != null)
+				msgs = ((InternalEObject)organization).eInverseRemove(this, EntityPackage.ORGANIZATION__ORGANIZATION_USERS, Organization.class, msgs);
+			if (newOrganization != null)
+				msgs = ((InternalEObject)newOrganization).eInverseAdd(this, EntityPackage.ORGANIZATION__ORGANIZATION_USERS, Organization.class, msgs);
+			msgs = basicSetOrganization(newOrganization, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.ORGANIZATION_USER__ORGANIZATION, newOrganization, newOrganization));
 	}
 
 	/**
@@ -163,11 +186,33 @@ public class OrganizationUserImpl extends EntityImpl implements OrganizationUser
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setUser(User newUser) {
+	public NotificationChain basicSetUser(User newUser, NotificationChain msgs) {
 		User oldUser = user;
 		user = newUser;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.ORGANIZATION_USER__USER, oldUser, user));
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, EntityPackage.ORGANIZATION_USER__USER, oldUser, newUser);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setUser(User newUser) {
+		if (newUser != user) {
+			NotificationChain msgs = null;
+			if (user != null)
+				msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__ORGANIZATION_USERS, User.class, msgs);
+			if (newUser != null)
+				msgs = ((InternalEObject)newUser).eInverseAdd(this, EntityPackage.USER__ORGANIZATION_USERS, User.class, msgs);
+			msgs = basicSetUser(newUser, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.ORGANIZATION_USER__USER, newUser, newUser));
 	}
 
 	/**
@@ -189,6 +234,42 @@ public class OrganizationUserImpl extends EntityImpl implements OrganizationUser
 		status = newStatus == null ? STATUS_EDEFAULT : newStatus;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, EntityPackage.ORGANIZATION_USER__STATUS, oldStatus, status));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.ORGANIZATION_USER__ORGANIZATION:
+				if (organization != null)
+					msgs = ((InternalEObject)organization).eInverseRemove(this, EntityPackage.ORGANIZATION__ORGANIZATION_USERS, Organization.class, msgs);
+				return basicSetOrganization((Organization)otherEnd, msgs);
+			case EntityPackage.ORGANIZATION_USER__USER:
+				if (user != null)
+					msgs = ((InternalEObject)user).eInverseRemove(this, EntityPackage.USER__ORGANIZATION_USERS, User.class, msgs);
+				return basicSetUser((User)otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.ORGANIZATION_USER__ORGANIZATION:
+				return basicSetOrganization(null, msgs);
+			case EntityPackage.ORGANIZATION_USER__USER:
+				return basicSetUser(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

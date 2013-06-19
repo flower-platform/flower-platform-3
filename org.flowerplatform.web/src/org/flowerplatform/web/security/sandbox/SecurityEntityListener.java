@@ -4,11 +4,6 @@ import java.security.Policy;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.PostPersist;
-import javax.persistence.PostRemove;
-import javax.persistence.PostUpdate;
-import javax.persistence.PreRemove;
-
 import org.flowerplatform.common.util.RunnableWithParam;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
@@ -16,6 +11,14 @@ import org.flowerplatform.web.entity.Entity;
 import org.flowerplatform.web.entity.ISecurityEntity;
 import org.flowerplatform.web.entity.PermissionEntity;
 import org.flowerplatform.web.entity.User;
+import org.hibernate.event.spi.PostDeleteEvent;
+import org.hibernate.event.spi.PostDeleteEventListener;
+import org.hibernate.event.spi.PostInsertEvent;
+import org.hibernate.event.spi.PostInsertEventListener;
+import org.hibernate.event.spi.PostUpdateEvent;
+import org.hibernate.event.spi.PostUpdateEventListener;
+import org.hibernate.event.spi.PreDeleteEvent;
+import org.hibernate.event.spi.PreDeleteEventListener;
 
 /**
  * Responsibility of this class is to listen for modifications 
@@ -24,16 +27,21 @@ import org.flowerplatform.web.entity.User;
  * 
  * @author Cristi
  * @author Florin
+ * @author Mariana
  * 
  * @flowerModelElementId _o9bbIGRvEeGyd4yTk74SKw
  */
-public class SecurityEntityListener {
+public class SecurityEntityListener implements 
+	PostInsertEventListener, PostDeleteEventListener, PostUpdateEventListener, PreDeleteEventListener {
+
+	private static final long serialVersionUID = 1377271602960613446L;
 
 	/**
 	 * @flowerModelElementId _Z-8r0HgGEeGtTo1wOb4S9A
 	 */
-	@PostPersist
-	public void permissionEntityInserted(Entity entity) {
+	@Override
+	public void onPostInsert(PostInsertEvent evt) {
+		Object entity = evt.getEntity();
 		if (!(Policy.getPolicy() instanceof FlowerWebPolicy)) {
 			return;
 		}
@@ -52,9 +60,10 @@ public class SecurityEntityListener {
 	 * @author Cristi
 	 * @flowerModelElementId _reYU8GRvEeGyd4yTk74SKw
 	 */
-	@PostUpdate
-	public void entityUpdated(final Entity entity) {		
-		if (entity instanceof User) {
+	@Override
+	public void onPostUpdate(PostUpdateEvent evt) {		
+		if (evt.getEntity() instanceof User) {
+			final Entity entity = (Entity) evt.getEntity();
 			// when user is deleted we do not clear it from the principal, because the can still be logged on
 			
 			CommunicationPlugin.getInstance().getCommunicationChannelManager().iterateCommunicationChannels(new RunnableWithParam<Boolean, CommunicationChannel>() {
@@ -71,17 +80,19 @@ public class SecurityEntityListener {
 			
 		}
 		
-		entityUpdatedOrDeleted(entity);
+		entityUpdatedOrDeleted(evt.getEntity());
 	}
 	
 	/**
 	 * @author Florin
 	 * @author Cristi
+	 * @return 
 	 * @flowerModelElementId _pufnAIMAEeG2LdcUX32kBA
 	 */
-	@PreRemove
-	public void preRemoveEntity(final Entity entity) {	
-		if (entity instanceof User) {
+	@Override
+	public boolean onPreDelete(PreDeleteEvent evt) {	
+		if (evt.getEntity() instanceof User) {
+			final Entity entity = (Entity) evt.getEntity();
 			if (CommunicationPlugin.getInstance().getCommunicationChannelManager() != null) { // condition for junit tests
 				final List<CommunicationChannel> clientsToDisconnect = new ArrayList<CommunicationChannel>();
 				
@@ -103,20 +114,21 @@ public class SecurityEntityListener {
 				}
 			}
 		}
+		return false;
 	}
 	
 	/**
 	 * @flowerModelElementId _YN6VQHl1EeG7_fzMWZxiHA
 	 */
-	@PostRemove
-	public void entityDeleted(Entity entity) {				
-		entityUpdatedOrDeleted(entity);
+	@Override
+	public void onPostDelete(PostDeleteEvent evt) {				
+		entityUpdatedOrDeleted(evt.getEntity());
 	}
 	
 	/**
 	 * @flowerModelElementId _YN68U3l1EeG7_fzMWZxiHA
 	 */
-	private void entityUpdatedOrDeleted(Entity entity) {
+	private void entityUpdatedOrDeleted(Object entity) {
 		if (!(Policy.getPolicy() instanceof FlowerWebPolicy)) {
 			return;
 		}

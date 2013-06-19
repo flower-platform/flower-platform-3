@@ -6,29 +6,34 @@
  */
 package org.flowerplatform.web.entity.impl;
 
+import java.security.PrivilegedAction;
 import java.util.Collection;
+
+import javax.security.auth.Subject;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
-
-import org.flowerplatform.web.WebPlugin;
-import org.flowerplatform.web.database.DatabaseOperationWrapper;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.flowerplatform.web.entity.EntityPackage;
 import org.flowerplatform.web.entity.FavoriteItem;
 import org.flowerplatform.web.entity.GroupUser;
 import org.flowerplatform.web.entity.ISecurityEntity;
 import org.flowerplatform.web.entity.OrganizationUser;
+import org.flowerplatform.web.entity.PermissionEntity;
 import org.flowerplatform.web.entity.PerspectiveUserEntry;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.User;
-import org.hibernate.Session;
+import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
+import org.flowerplatform.web.security.sandbox.SecurityUtils;
 
 /**
  * <!-- begin-user-doc -->
@@ -355,7 +360,7 @@ public class UserImpl extends NamedEntityImpl implements User {
 	 */
 	public EList<GroupUser> getGroupUsers() {
 		if (groupUsers == null) {
-			groupUsers = new EObjectResolvingEList<GroupUser>(GroupUser.class, this, EntityPackage.USER__GROUP_USERS);
+			groupUsers = new EObjectWithInverseResolvingEList<GroupUser>(GroupUser.class, this, EntityPackage.USER__GROUP_USERS, EntityPackage.GROUP_USER__USER);
 		}
 		return groupUsers;
 	}
@@ -367,7 +372,7 @@ public class UserImpl extends NamedEntityImpl implements User {
 	 */
 	public EList<OrganizationUser> getOrganizationUsers() {
 		if (organizationUsers == null) {
-			organizationUsers = new EObjectResolvingEList<OrganizationUser>(OrganizationUser.class, this, EntityPackage.USER__ORGANIZATION_USERS);
+			organizationUsers = new EObjectWithInverseResolvingEList<OrganizationUser>(OrganizationUser.class, this, EntityPackage.USER__ORGANIZATION_USERS, EntityPackage.ORGANIZATION_USER__USER);
 		}
 		return organizationUsers;
 	}
@@ -379,7 +384,7 @@ public class UserImpl extends NamedEntityImpl implements User {
 	 */
 	public EList<PerspectiveUserEntry> getPerspectiveUserEntries() {
 		if (perspectiveUserEntries == null) {
-			perspectiveUserEntries = new EObjectResolvingEList<PerspectiveUserEntry>(PerspectiveUserEntry.class, this, EntityPackage.USER__PERSPECTIVE_USER_ENTRIES);
+			perspectiveUserEntries = new EObjectWithInverseResolvingEList<PerspectiveUserEntry>(PerspectiveUserEntry.class, this, EntityPackage.USER__PERSPECTIVE_USER_ENTRIES, EntityPackage.PERSPECTIVE_USER_ENTRY__USER);
 		}
 		return perspectiveUserEntries;
 	}
@@ -412,7 +417,7 @@ public class UserImpl extends NamedEntityImpl implements User {
 	 */
 	public EList<SVNCommentEntity> getSvnComments() {
 		if (svnComments == null) {
-			svnComments = new EObjectResolvingEList<SVNCommentEntity>(SVNCommentEntity.class, this, EntityPackage.USER__SVN_COMMENTS);
+			svnComments = new EObjectWithInverseResolvingEList<SVNCommentEntity>(SVNCommentEntity.class, this, EntityPackage.USER__SVN_COMMENTS, EntityPackage.SVN_COMMENT_ENTITY__USER);
 		}
 		return svnComments;
 	}
@@ -424,7 +429,7 @@ public class UserImpl extends NamedEntityImpl implements User {
 	 */
 	public EList<FavoriteItem> getFavoriteItems() {
 		if (favoriteItems == null) {
-			favoriteItems = new EObjectResolvingEList<FavoriteItem>(FavoriteItem.class, this, EntityPackage.USER__FAVORITE_ITEMS);
+			favoriteItems = new EObjectWithInverseResolvingEList<FavoriteItem>(FavoriteItem.class, this, EntityPackage.USER__FAVORITE_ITEMS, EntityPackage.FAVORITE_ITEM__USER);
 		}
 		return favoriteItems;
 	}
@@ -442,13 +447,27 @@ public class UserImpl extends NamedEntityImpl implements User {
 
 	/**
 	 * <!-- begin-user-doc -->
+	 * @return <code>true</code> if the user has {@link AdminSecurityEntitiesPermission} for * (any entity)
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
+	 * @author Mariana
 	 */
 	public boolean isAdmin() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		Subject subject = new Subject();
+		subject.getPrincipals().add(new FlowerWebPrincipal(getId()));
+		return Subject.doAsPrivileged(subject, new PrivilegedAction<Boolean>() {
+
+			@Override
+			public Boolean run() {
+				try { 
+					SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.ANY_ENTITY);
+					return true;
+				} catch (SecurityException e) {
+					return false;
+				}
+			}
+			
+		}, null);
 	}
 
 	/**
@@ -459,6 +478,51 @@ public class UserImpl extends NamedEntityImpl implements User {
 	 */
 	public boolean contains(ISecurityEntity securityEntity) {
 		return this.equals(securityEntity);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.USER__GROUP_USERS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getGroupUsers()).basicAdd(otherEnd, msgs);
+			case EntityPackage.USER__ORGANIZATION_USERS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOrganizationUsers()).basicAdd(otherEnd, msgs);
+			case EntityPackage.USER__PERSPECTIVE_USER_ENTRIES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getPerspectiveUserEntries()).basicAdd(otherEnd, msgs);
+			case EntityPackage.USER__SVN_COMMENTS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getSvnComments()).basicAdd(otherEnd, msgs);
+			case EntityPackage.USER__FAVORITE_ITEMS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getFavoriteItems()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case EntityPackage.USER__GROUP_USERS:
+				return ((InternalEList<?>)getGroupUsers()).basicRemove(otherEnd, msgs);
+			case EntityPackage.USER__ORGANIZATION_USERS:
+				return ((InternalEList<?>)getOrganizationUsers()).basicRemove(otherEnd, msgs);
+			case EntityPackage.USER__PERSPECTIVE_USER_ENTRIES:
+				return ((InternalEList<?>)getPerspectiveUserEntries()).basicRemove(otherEnd, msgs);
+			case EntityPackage.USER__SVN_COMMENTS:
+				return ((InternalEList<?>)getSvnComments()).basicRemove(otherEnd, msgs);
+			case EntityPackage.USER__FAVORITE_ITEMS:
+				return ((InternalEList<?>)getFavoriteItems()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

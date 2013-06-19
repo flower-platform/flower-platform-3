@@ -36,7 +36,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.communication.ICurrentUserLoggedIn {
+public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.communication.IUser {
 	/**
 	 * Returns the value of the '<em><b>Login</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -170,6 +170,7 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	/**
 	 * Returns the value of the '<em><b>Group Users</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.GroupUser}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.GroupUser#getUser <em>User</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Group Users</em>' reference list isn't clear,
@@ -178,7 +179,8 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Group Users</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getUser_GroupUsers()
-	 * @model
+	 * @see org.flowerplatform.web.entity.GroupUser#getUser
+	 * @model opposite="user"
 	 * @generated
 	 */
 	EList<GroupUser> getGroupUsers();
@@ -186,6 +188,7 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	/**
 	 * Returns the value of the '<em><b>Organization Users</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.OrganizationUser}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.OrganizationUser#getUser <em>User</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Organization Users</em>' reference list isn't clear,
@@ -194,7 +197,8 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Organization Users</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getUser_OrganizationUsers()
-	 * @model
+	 * @see org.flowerplatform.web.entity.OrganizationUser#getUser
+	 * @model opposite="user"
 	 * @generated
 	 */
 	EList<OrganizationUser> getOrganizationUsers();
@@ -202,6 +206,7 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	/**
 	 * Returns the value of the '<em><b>Perspective User Entries</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.PerspectiveUserEntry}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.PerspectiveUserEntry#getUser <em>User</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Perspective User Entries</em>' reference list isn't clear,
@@ -210,7 +215,8 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Perspective User Entries</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getUser_PerspectiveUserEntries()
-	 * @model
+	 * @see org.flowerplatform.web.entity.PerspectiveUserEntry#getUser
+	 * @model opposite="user"
 	 * @generated
 	 */
 	EList<PerspectiveUserEntry> getPerspectiveUserEntries();
@@ -244,6 +250,7 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	/**
 	 * Returns the value of the '<em><b>Svn Comments</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.SVNCommentEntity}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.SVNCommentEntity#getUser <em>User</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Svn Comments</em>' reference list isn't clear,
@@ -252,7 +259,8 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Svn Comments</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getUser_SvnComments()
-	 * @model
+	 * @see org.flowerplatform.web.entity.SVNCommentEntity#getUser
+	 * @model opposite="user"
 	 * @generated
 	 */
 	EList<SVNCommentEntity> getSvnComments();
@@ -260,6 +268,7 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	/**
 	 * Returns the value of the '<em><b>Favorite Items</b></em>' reference list.
 	 * The list contents are of type {@link org.flowerplatform.web.entity.FavoriteItem}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.FavoriteItem#getUser <em>User</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Favorite Items</em>' reference list isn't clear,
@@ -268,7 +277,8 @@ public interface User extends NamedEntity, ISecurityEntity, org.flowerplatform.c
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Favorite Items</em>' reference list.
 	 * @see org.flowerplatform.web.entity.EntityPackage#getUser_FavoriteItems()
-	 * @model
+	 * @see org.flowerplatform.web.entity.FavoriteItem#getUser
+	 * @model opposite="user"
 	 * @generated
 	 */
 	EList<FavoriteItem> getFavoriteItems();

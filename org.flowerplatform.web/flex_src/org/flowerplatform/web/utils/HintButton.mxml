@@ -3,10 +3,13 @@
 						 xmlns:s="library://ns.adobe.com/flex/spark" 
 						 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
 						 click="buttonClickHandler()"
-						 textDecoration="underline" fontWeight="normal" enabled="{popupText != null}">
+						 textDecoration="underline" fontWeight="normal" enabled="{popupText != null}"
+						 iconURL="{WebPlugin.getInstance().getResourceUrl('images/common/info.png')}">
 	<fx:Script>
 		<![CDATA[
 			import com.crispico.flower.util.popup.TextAreaPopup;
+			
+			import org.flowerplatform.web.WebPlugin;
 
 			public var popupTitle:String;
 			
@@ -24,7 +27,7 @@
 				popup.title = popupTitle != null ? popupTitle : label;
 				popup.isHTML = popupHTML;
 				popup.text = popupText;
-//				popup.titleIcon = FlexDiagramAssets.INSTANCE.info_icon;
+				popup.titleIconURL = WebPlugin.getInstance().getResourceUrl('images/common/info.png');
 				popup.showPopup(popupInitialWidth, popupInitialHeight, null, false);
 			}
 			

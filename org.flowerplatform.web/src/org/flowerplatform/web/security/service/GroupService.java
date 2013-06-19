@@ -67,8 +67,7 @@ public class GroupService extends ServiceObservable {
 	 */
 	public GroupAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find group with id = {}", id);
-		final GroupAdminUIDto[] result = new GroupAdminUIDto[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
@@ -80,10 +79,10 @@ public class GroupService extends ServiceObservable {
 				} catch (SecurityException e) {
 					throw new RuntimeException(String.format("Group with id=%s is not available.", id));
 				}
-				result[0] = convertGroupToGroupAdminUIDto(group);
+				wrapper.setOperationResult(convertGroupToGroupAdminUIDto(group));
 			}
 		});
-		return result[0];
+		return (GroupAdminUIDto) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -157,8 +156,7 @@ public class GroupService extends ServiceObservable {
 	 */
 	public String mergeAdminUIDto(ServiceInvocationContext context, final GroupAdminUIDto dto) {
 		logger.debug("Merge group = {}", dto.getName());
-		final String[] result = new String[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
@@ -196,9 +194,11 @@ public class GroupService extends ServiceObservable {
 				// check if there is already a group with the same name
 				List<Group> groupsWithSameName = wrapper.findByField(Group.class, "name", dto.getName());
 				if (dto.getId() == 0 && groupsWithSameName != null && groupsWithSameName.size() > 0) {
-					result[0] = "There is already a group with the same name!";
+					wrapper.setOperationResult("There is already a group with the same name!");
+					return;
 				}
 				
+				group = (Group) wrapper.merge(group);
 				// set organization
 				Organization org = group.getOrganization();
 				if (dto.getOrganization() != null) {
@@ -206,25 +206,12 @@ public class GroupService extends ServiceObservable {
 					group.setOrganization(org);			
 				} else {			
 					group.setOrganization(null);
-					// update also the organization list of groups
-					// TODO Note cache: Because of the cache mechanism, this isn't done automatically.
-					if (org != null) {
-						org.getGroups().remove(group);
-						wrapper.merge(org);
-					}
 				}
 				
-				group = (Group) wrapper.merge(group);
-				// update also the organization list of groups
-				// TODO Note cache: Because of the cache mechanism, this isn't done automatically.
-//				if (org != null && dto.getOrganization() != null) {
-//					org.getGroups().add(group);
-//					wrapper.merge(org);
-//				}
 				observable.notifyObservers(Arrays.asList(UPDATE, initialGroup, group));
 			}
 		});
-		return result[0];
+		return (String) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -252,15 +239,13 @@ public class GroupService extends ServiceObservable {
 					// TODO Note cache: Because of the cache mechanism, this isn't done automatically.
 					if (group.getOrganization() != null) {
 						group.getOrganization().getGroups().remove(group);
-						wrapper.merge(group.getOrganization());
 					}
 					// update GroupUser 
 					// TODO Note cache: Because of the cache mechanism, this isn't done automatically.
 					for (Iterator<GroupUser> it =  group.getGroupUsers().iterator(); it.hasNext();) {
 						GroupUser groupUser = it.next();				
-						it.remove();
-						wrapper.merge(group);
 						removeGroupUserDependency(groupUser);
+						it.remove();
 					}			
 					wrapper.delete(group);
 					observable.notifyObservers(Arrays.asList(DELETE, group));
@@ -279,13 +264,6 @@ public class GroupService extends ServiceObservable {
 	 * @flowerModelElementId _QTu0kl34EeGwLIVyv_iqEg
 	 */
 	private void removeGroupUserDependency(final GroupUser groupUser) {
-		new DatabaseOperationWrapper(new DatabaseOperation() {
-			
-			@Override
-			public void run() {
-				groupUser.getUser().getGroupUsers().remove(groupUser);
-				wrapper.merge(groupUser.getUser());	
-			}
-		});
+		groupUser.getUser().getGroupUsers().remove(groupUser);
 	}
 }

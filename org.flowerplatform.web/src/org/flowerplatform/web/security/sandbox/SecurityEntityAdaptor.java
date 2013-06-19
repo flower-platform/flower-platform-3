@@ -59,38 +59,41 @@ public class SecurityEntityAdaptor {
 	 * @author Mariana
 	 */
 	public static ISecurityEntity toSecurityEntity(final String assignedTo) {
-		final ISecurityEntity[] result = new ISecurityEntity[1];
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 					
 			@Override
 			public void run() {
 				if (assignedTo.startsWith(ORGANIZATION_PREFIX)) {
 					List<Organization> orgs = wrapper.findByField(Organization.class, "name", assignedTo.substring(1));
 					if (orgs.size() > 0) {
-						result[0] = orgs.get(0);
+						wrapper.setOperationResult(orgs.get(0));
+						return;
 					}
 				} else if (assignedTo.startsWith(GROUP_PREFIX)) {
 					// if @ALL group exists in database this is ok, if not this case should be handled.
 					List<Group> groups = wrapper.findByField(Group.class, "name", assignedTo.substring(1));
 					if (groups.size() > 0) {
-						result[0] = groups.get(0);
+						wrapper.setOperationResult(groups.get(0));
+						return;
 					} else {
 						// @ALL does not exist in the DB
 						if (assignedTo.equals("@ALL")) {
 							Group all = EntityFactory.eINSTANCE.createGroup();
 							all.setName("ALL");
-							result[0] = all;
+							wrapper.setOperationResult(all);
+							return;
 						}
 					}
 				} else if (assignedTo.startsWith(USER_PREFIX)) {
 					List<User> users = wrapper.findByField(User.class, "login", assignedTo.substring(1));
 					if (users.size() > 0) {
-						result[0] = users.get(0);
+						wrapper.setOperationResult(users.get(0));
+						return;
 					}
 				}
 			}
 		});
-		return result[0];
+		return (ISecurityEntity) wrapper.getOperationResult();
 	}
 	
 	/**
