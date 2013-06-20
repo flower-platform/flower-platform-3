@@ -60,7 +60,7 @@ package org.flowerplatform.flexdiagram.renderer {
 		}
 		
 		public function setContentRect(rect:Rectangle):void {
-			
+			contentRect = rect;
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {

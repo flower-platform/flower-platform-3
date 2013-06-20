@@ -19,28 +19,47 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	public class InfiniteVScrollBar extends VScrollBar {
 		
 		private var clickOffset:Point;   
+				
+		override public function set minimum(value:Number):void {	
+			var myValue:Number = getMyMinimumValue(value);		
+			if (myValue== super.minimum) {
+				return;
+			}
+			super.minimum = myValue;
+			invalidateDisplayList();
+		}
+		
+		override public function set maximum(value:Number):void {			
+			var myValue:Number = getMyMaximumValue(value);
+			if (myValue == super.maximum) {
+				return;
+			}
+			super.maximum = myValue;
+			invalidateSkinState();
+		}
+
+		private function getMyMinimumValue(flexValue:Number = NaN):Number {
+			var myValue:Number = flexValue;
+			if (viewport != null) {
+				myValue = Math.min(0, viewport.verticalScrollPosition);
+			}
+			return myValue;
+		}
+		
+		private function getMyMaximumValue(flexValue:Number = NaN):Number {		
+			var myValue:Number = flexValue;
+			var infiniteViewport:InfiniteDataRenderer = InfiniteDataRenderer(viewport);
+			if (infiniteViewport != null && infiniteViewport.contentRect != null) {
+				myValue = Math.max(infiniteViewport.getMaxVerticalScrollPosition(), viewport.verticalScrollPosition);
+			}
+			return myValue;
+		}
 		
 		override mx_internal function viewportVerticalScrollPositionChangeHandler(event:PropertyChangeEvent):void {
 			super.viewportVerticalScrollPositionChangeHandler(event);
 			if (viewport) {					
-				if (!isNaN(contentMinimum)) {
-					minimum = Math.min(contentMinimum, viewport.verticalScrollPosition);
-				} else {
-					if (event.oldValue <= event.newValue) {
-						minimum = minimum < 0 ? minimum = viewport.verticalScrollPosition : 0;
-					} else {
-						minimum = Math.min(minimum, viewport.verticalScrollPosition - 1);
-					}
-				}
-				if (!isNaN(contentMaximum)) {
-					maximum = Math.max(contentMaximum, viewport.verticalScrollPosition);
-				} else {					
-					if (event.oldValue >= event.newValue) {						
-						maximum = maximum > viewport.contentHeight - viewport.height ? viewport.verticalScrollPosition : viewport.contentHeight - viewport.height;
-					} else {
-						maximum =  Math.max(maximum, viewport.verticalScrollPosition + 1);
-					}
-				}	
+				minimum = getMyMinimumValue();
+				maximum = getMyMaximumValue();
 			}
 		}
 		
@@ -56,17 +75,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			var p:Point = track.globalToLocal(new Point(event.stageX, event.stageY));
 			var newValue:Number = pointToValue(p.x - clickOffset.x, p.y - clickOffset.y);
 			newValue = nearestValidValue(newValue, snapInterval);
-			
-			if (!isNaN(contentMinimum)) {
-				if (newValue < contentMinimum) {
-					newValue = contentMinimum;
-				}
-			}
-			if (!isNaN(contentMaximum)) {
-				if (newValue > contentMaximum) {
-					newValue = contentMaximum;
-				}
-			}
+					
 			if (newValue != pendingValue) {
 				dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
 				if (getStyle("liveDragging") === true) {

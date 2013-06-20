@@ -51,10 +51,17 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 		public function InfiniteDataRenderer() {
 			super();
 			
-			layout = new InfiniteGroupBasicLayout();
-			
+			layout = new InfiniteGroupBasicLayout();			
 		}
 	
+		public function getMaxVerticalScrollPosition():Number {
+			return contentRect.height + Math.abs(contentRect.y) - height;
+		}
+		
+		public function getMaxHorizontalScrollPosition():Number {
+			return contentRect.width + Math.abs(contentRect.x) - width;
+		}
+		
 		/**
 		 * Don't allow changing contentWidth/contentHeight.
 		 * 

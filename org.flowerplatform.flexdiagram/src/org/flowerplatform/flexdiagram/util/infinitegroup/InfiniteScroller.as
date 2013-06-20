@@ -11,6 +11,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	
 	import spark.components.Group;
 	import spark.components.supportClasses.SkinnableComponent;
+	import spark.core.ContentRequest;
 
 	use namespace mx_internal;
 	
@@ -135,17 +136,11 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 					
 					viewport.setContentSize(viewport.contentRect.width, viewport.contentRect.height);
 										
-					verticalScrollBar.contentMinimum = viewport.contentRect.y;					
-					verticalScrollBar.contentMaximum = viewport.contentRect.height - Math.abs(viewport.contentRect.y);	
 					verticalScrollBar.minimum = viewport.contentRect.y;
 					verticalScrollBar.maximum = viewport.contentRect.height - Math.abs(viewport.contentRect.y);
 					
-					horizontalScrollBar.contentMinimum = viewport.contentRect.x;					
-					horizontalScrollBar.contentMaximum = viewport.contentRect.width - Math.abs(viewport.contentRect.x);
 					horizontalScrollBar.minimum = viewport.contentRect.x;
 					horizontalScrollBar.maximum = viewport.contentRect.width - Math.abs(viewport.contentRect.x);
-				case "contentWidth":
-				case "contentHeight":
 				case "scrollByToolInProgress":
 				case "verticalScrollPosition": 			
 				case "horizontalScrollPosition":					

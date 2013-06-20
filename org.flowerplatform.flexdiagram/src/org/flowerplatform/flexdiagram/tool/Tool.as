@@ -86,15 +86,7 @@ package org.flowerplatform.flexdiagram.tool {
 			var localPoint:Point = diagramRenderer.globalToLocal(new Point(x, y));
 			localPoint = diagramRenderer.localToContent(localPoint);
 			return localPoint;
-		}
-				
-		protected function getMaxVerticalScrollPosition():Number {
-			return diagramRenderer.contentHeight - diagramRenderer.height;
-		}
-		
-		protected function getMaxHorizontalScrollPosition():Number {
-			return diagramRenderer.contentWidth - diagramRenderer.width;
-		}
-		
-	}		
+		}	
+	}	
+	
 }

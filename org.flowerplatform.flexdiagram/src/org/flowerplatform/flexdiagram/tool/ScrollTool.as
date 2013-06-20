@@ -17,6 +17,7 @@ package org.flowerplatform.flexdiagram.tool {
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
+	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	
 	import spark.components.Scroller;
 	import spark.core.IViewport;
@@ -37,10 +38,10 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG);
 		}
 	
-		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
-			// TODO: s-ar putea aici sa nu fie ok localX/localY
-			context.initialX = initialEvent.localX;
-			context.initialY = initialEvent.localY;
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {	
+			// TODO CC: de revazut
+			context.initialX = initialEvent.stageX + diagramRenderer.scrollRect.x;
+			context.initialY = initialEvent.stageY + diagramRenderer.scrollRect.y;
 			
 			return getRendererFromDisplayCoordinates() is DiagramRenderer;
 		}
@@ -73,6 +74,7 @@ package org.flowerplatform.flexdiagram.tool {
 			}
 		}
 		
+		// TODO CC: de revazut
 		private function scrollUnscaledPointToDiagramScreenPoint(unscaledPointX:Number, unscaledPointY:Number, diagramScreenPointX:Number, diagramScreenPointY:Number):void {
 			var localPoint:Point = new Point();		
 			localPoint.x = diagramScreenPointX + diagramRenderer.scrollRect.x;
@@ -80,26 +82,15 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			var deltaX:int = unscaledPointX - localPoint.x;
 			var deltaY:int = unscaledPointY -  localPoint.y;				
-			
-			var scrollPositionChanged:Boolean = false;							
-			var maxScrollPosition:Number = getMaxHorizontalScrollPosition();
-			if (maxScrollPosition != 0) {
-				var newPosX:Number = diagramRenderer.horizontalScrollPosition + deltaX;				
-				diagramRenderer.horizontalScrollPosition = newPosX;
-				scrollPositionChanged = true;	
-			}
-			
-			maxScrollPosition = getMaxHorizontalScrollPosition();
-			if (maxScrollPosition != 0) {
-				var newPosY:Number = diagramRenderer.verticalScrollPosition + deltaY;					
-				diagramRenderer.verticalScrollPosition = newPosY;
-				scrollPositionChanged = true;
-			}			
-			// track changes to scroll position because calling refreshVisualChildren can be expensive
-			if (scrollPositionChanged) {
-				diagramShell.getControllerProvider(diagramShell.rootModel).
-					getVisualChildrenController(diagramShell.rootModel).refreshVisualChildren(diagramShell.rootModel);
-			}			
+						
+			var newPosX:Number = diagramRenderer.horizontalScrollPosition + deltaX;				
+			diagramRenderer.horizontalScrollPosition = newPosX;
+				
+			var newPosY:Number = diagramRenderer.verticalScrollPosition + deltaY;					
+			diagramRenderer.verticalScrollPosition = newPosY;
+					
+			diagramShell.getControllerProvider(diagramShell.rootModel).
+				getVisualChildrenController(diagramShell.rootModel).refreshVisualChildren(diagramShell.rootModel);				
 		}
 		
 		private function mouseUpHandler(event:MouseEvent):void {			
