@@ -2,6 +2,7 @@ package org.flowerplatform.editor.action {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.flexutil.popup.ActionBase;
@@ -37,7 +38,11 @@ package org.flowerplatform.editor.action {
 				var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
 				var defaultEditorDescriptorProcessed:Boolean = false;
 				for each (var editorName:String in ctDescriptor.compatibleEditors) {
-					result.push(new OpenAction(EditorPlugin.getInstance().getEditorDescriptorByName(editorName), !defaultEditorDescriptorProcessed));
+					var descriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(editorName);
+					if (descriptor == null) {
+						throw new Error("Cannot find editor descriptor for editor name = " + editorName);
+					}
+					result.push(new OpenAction(descriptor, !defaultEditorDescriptorProcessed));
 					if (!defaultEditorDescriptorProcessed) {
 						// i.e. for index == 0; this ensures that the first item will have an action with "force..."
 						defaultEditorDescriptorProcessed = true;

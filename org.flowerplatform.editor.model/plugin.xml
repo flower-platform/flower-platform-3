@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.editor.contentType">
+      <contentType
+            contentType="diagram">
+      </contentType>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.contentTypeToEditorMapping">
+      <contentTypeToEditorMapping
+            compatibleEditor="diagram"
+            contentType="diagram"
+            editorStatefulService="org.flowerplatform.editor.model.remote.DiagramEditorStatefulService"
+            serviceId="diagramEditorStatefulService">
+      </contentTypeToEditorMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.fileExtensionToContentTypeMapping">
+      <fileExtensionToContentTypeMapping
+            contentType="diagram"
+            fileExtension="notation">
+      </fileExtensionToContentTypeMapping>
+   </extension>
+
+</plugin>

@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Model
+Bundle-SymbolicName: org.flowerplatform.editor.model;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.flowerplatform.editor.model.EditorModelPlugin
+Require-Bundle: org.eclipse.core.runtime,
+ org.flowerplatform.blazeds,
+ org.flowerplatform.common,
+ org.flowerplatform.communication,
+ org.flowerplatform.editor,
+ org.flowerplatform.emf_model.notation
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
