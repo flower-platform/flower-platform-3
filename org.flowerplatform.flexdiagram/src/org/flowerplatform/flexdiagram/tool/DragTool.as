@@ -1,5 +1,6 @@
 package org.flowerplatform.flexdiagram.tool {
 	
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
@@ -24,7 +25,7 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG);
 		}
 		
-		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates();
 			if (renderer is DiagramRenderer) {
 				return false;

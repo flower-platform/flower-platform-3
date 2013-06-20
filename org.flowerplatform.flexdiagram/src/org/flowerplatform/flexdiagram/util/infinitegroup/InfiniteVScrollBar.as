@@ -3,8 +3,10 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import mx.core.InteractionMode;
 	import mx.core.mx_internal;
 	import mx.events.PropertyChangeEvent;
+	import mx.events.ResizeEvent;
 	
 	import spark.components.VScrollBar;
 	import spark.events.TrackBaseEvent;
@@ -20,9 +22,25 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 		
 		override mx_internal function viewportVerticalScrollPositionChangeHandler(event:PropertyChangeEvent):void {
 			super.viewportVerticalScrollPositionChangeHandler(event);
-			if (viewport) {
-				minimum = Math.min(contentMinimum, viewport.verticalScrollPosition);
-				maximum = Math.max(contentMaximum, viewport.verticalScrollPosition);
+			if (viewport) {					
+				if (!isNaN(contentMinimum)) {
+					minimum = Math.min(contentMinimum, viewport.verticalScrollPosition);
+				} else {
+					if (event.oldValue <= event.newValue) {
+						minimum = minimum < 0 ? minimum = viewport.verticalScrollPosition : 0;
+					} else {
+						minimum = Math.min(minimum, viewport.verticalScrollPosition - 1);
+					}
+				}
+				if (!isNaN(contentMaximum)) {
+					maximum = Math.max(contentMaximum, viewport.verticalScrollPosition);
+				} else {					
+					if (event.oldValue >= event.newValue) {						
+						maximum = maximum > viewport.contentHeight - viewport.height ? viewport.verticalScrollPosition : viewport.contentHeight - viewport.height;
+					} else {
+						maximum =  Math.max(maximum, viewport.verticalScrollPosition + 1);
+					}
+				}	
 			}
 		}
 		
@@ -39,11 +57,15 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			var newValue:Number = pointToValue(p.x - clickOffset.x, p.y - clickOffset.y);
 			newValue = nearestValidValue(newValue, snapInterval);
 			
-			if (newValue < contentMinimum) {
-				newValue = contentMinimum;
+			if (!isNaN(contentMinimum)) {
+				if (newValue < contentMinimum) {
+					newValue = contentMinimum;
+				}
 			}
-			if (newValue > contentMaximum) {
-				newValue = contentMaximum;
+			if (!isNaN(contentMaximum)) {
+				if (newValue > contentMaximum) {
+					newValue = contentMaximum;
+				}
 			}
 			if (newValue != pendingValue) {
 				dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
@@ -73,6 +95,6 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			var validValue:Number = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
 			
 			return validValue / scale;
-		}
+		}		
 	}
 }

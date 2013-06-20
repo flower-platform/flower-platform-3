@@ -35,21 +35,38 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 		}
 		
 		private function mouseClickHandler(event:MouseEvent):void {
-			// reset scroll positions
-			viewport.horizontalScrollPosition = viewport.contentRect.x;
-			viewport.verticalScrollPosition = viewport.contentRect.y;
+			// reset scroll positions			
+			var x:Number = viewport.contentRect != null ? viewport.contentRect.x : viewport.x;
+			var y:Number = viewport.contentRect != null ? viewport.contentRect.y : viewport.y;
+			switch (position) {
+				case TOP_LEFT:
+				case TOP_RIGHT:
+				case BOTTOM_LEFT:
+				case BOTTOM_RIGHT:
+					viewport.horizontalScrollPosition = x;
+					viewport.verticalScrollPosition = y;
+					break;				
+				case LEFT:
+				case RIGHT:
+					viewport.horizontalScrollPosition = x;
+					break;			
+				case TOP:
+				case BOTTOM:
+					viewport.verticalScrollPosition = y;
+					break;				
+			}			
 		}
 		
 		/**
 		 * @see InfiniteScroller.viewport_propertyChangeHandler()
 		 */ 
 		public function calculatePosition():void {
-			if (viewport == null || viewport.contentRect == null) {
+			if (viewport == null) {
 				return;
 			}
 			var hpos:Number = viewport.horizontalScrollPosition;
 			var vpos:Number = viewport.verticalScrollPosition;
-			var rect:Rectangle = viewport.contentRect;
+			var rect:Rectangle = viewport.contentRect == null ? viewport.getBounds(viewport) : viewport.contentRect;
 			
 			if (hpos < rect.x) {
 				if (vpos < rect.y) {

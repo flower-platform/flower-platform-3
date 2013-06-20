@@ -52,6 +52,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			super();
 			
 			layout = new InfiniteGroupBasicLayout();
+			
 		}
 	
 		/**

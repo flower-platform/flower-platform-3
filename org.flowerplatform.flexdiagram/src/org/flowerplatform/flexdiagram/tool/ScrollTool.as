@@ -3,6 +3,7 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.display.DisplayObject;
 	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
@@ -36,14 +37,15 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG);
 		}
 	
-		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
+			// TODO: s-ar putea aici sa nu fie ok localX/localY
+			context.initialX = initialEvent.localX;
+			context.initialY = initialEvent.localY;
+			
 			return getRendererFromDisplayCoordinates() is DiagramRenderer;
 		}
 		
 		override public function activateAsMainTool():void {			
-			context.initialX = diagramRenderer.stage.mouseX;
-			context.initialY = diagramRenderer.stage.mouseY;
-			
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
@@ -64,36 +66,40 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 			
 		private function mouseMoveHandler(event:MouseEvent):void {
-			if (event.buttonDown) {				
-				var deltaX:int = context.initialX - event.stageX;
-				var deltaY:int = context.initialY - event.stageY;				
-				context.initialX = event.stageX;
-				context.initialY = event.stageY;
-					
-				var scrollPositionChanged:Boolean = false;
-				
-				var maxScrollPosition:Number = getMaxHorizontalScrollPosition();
-				if (maxScrollPosition != 0) {
-					var newPosX:Number = diagramRenderer.horizontalScrollPosition + deltaX;				
-					diagramRenderer.horizontalScrollPosition = newPosX;
-					scrollPositionChanged = true;	
-				}
-				
-				maxScrollPosition = getMaxHorizontalScrollPosition();
-				if (maxScrollPosition != 0) {
-					var newPosY:Number = diagramRenderer.verticalScrollPosition + deltaY;				
-					diagramRenderer.verticalScrollPosition = newPosY;
-					scrollPositionChanged = true;
-				}
-				
-				// track changes to scroll position because calling refreshVisualChildren can be expensive
-				if (scrollPositionChanged) {
-					diagramShell.getControllerProvider(diagramShell.rootModel).
-						getVisualChildrenController(diagramShell.rootModel).refreshVisualChildren(diagramShell.rootModel);
-				}				
+			if (event.buttonDown) {		
+				scrollUnscaledPointToDiagramScreenPoint(context.initialX, context.initialY, event.stageX, event.stageY);
 			} else {
 				diagramShell.mainToolFinishedItsJob();
 			}
+		}
+		
+		private function scrollUnscaledPointToDiagramScreenPoint(unscaledPointX:Number, unscaledPointY:Number, diagramScreenPointX:Number, diagramScreenPointY:Number):void {
+			var localPoint:Point = new Point();		
+			localPoint.x = diagramScreenPointX + diagramRenderer.scrollRect.x;
+			localPoint.y = diagramScreenPointY + diagramRenderer.scrollRect.y;
+			
+			var deltaX:int = unscaledPointX - localPoint.x;
+			var deltaY:int = unscaledPointY -  localPoint.y;				
+			
+			var scrollPositionChanged:Boolean = false;							
+			var maxScrollPosition:Number = getMaxHorizontalScrollPosition();
+			if (maxScrollPosition != 0) {
+				var newPosX:Number = diagramRenderer.horizontalScrollPosition + deltaX;				
+				diagramRenderer.horizontalScrollPosition = newPosX;
+				scrollPositionChanged = true;	
+			}
+			
+			maxScrollPosition = getMaxHorizontalScrollPosition();
+			if (maxScrollPosition != 0) {
+				var newPosY:Number = diagramRenderer.verticalScrollPosition + deltaY;					
+				diagramRenderer.verticalScrollPosition = newPosY;
+				scrollPositionChanged = true;
+			}			
+			// track changes to scroll position because calling refreshVisualChildren can be expensive
+			if (scrollPositionChanged) {
+				diagramShell.getControllerProvider(diagramShell.rootModel).
+					getVisualChildrenController(diagramShell.rootModel).refreshVisualChildren(diagramShell.rootModel);
+			}			
 		}
 		
 		private function mouseUpHandler(event:MouseEvent):void {			
