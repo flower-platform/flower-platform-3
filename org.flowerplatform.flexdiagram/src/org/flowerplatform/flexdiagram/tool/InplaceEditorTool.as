@@ -1,4 +1,5 @@
 package org.flowerplatform.flexdiagram.tool {
+	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
@@ -25,7 +26,7 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN, -1);
 		}
 		
-		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates();
 			if (renderer is IDataRenderer && !(renderer is DiagramRenderer)) {
 				var model:Object = IDataRenderer(renderer).data;
@@ -35,7 +36,7 @@ package org.flowerplatform.flexdiagram.tool {
 						// if not selected or multiple selection
 						return false;
 					}
-					return !ctrlPressed && !shiftPressed;
+					return !initialEvent.ctrlKey && !initialEvent.shiftKey;
 				}
 			}
 			return false;

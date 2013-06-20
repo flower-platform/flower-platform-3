@@ -7,6 +7,7 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.ui.Keyboard;
 	
 	import mx.collections.ArrayList;
+	import mx.core.mx_internal;
 	import mx.utils.ArrayUtil;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -70,12 +71,12 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		private function mouseDownHandler(event:MouseEvent):void {
-			myEventType = MOUSE_DOWN;
+			myEventType = MOUSE_DOWN;			
 			dispatchMyEvent(myEventType, event);			
 		}
 		
 		private function mouseMoveHandler(event:MouseEvent):void {
-			if (event.buttonDown) {
+			if (event.buttonDown) {			
 				myEventType = MOUSE_DRAG;
 				dispatchMyEvent(myEventType, event);
 			}			
@@ -93,7 +94,7 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			while (array.length != 0) {				
 				var tool:IWakeUpableTool = array.pop().tool;
-				if (tool.wakeUp(eventType, initialEvent.ctrlKey, initialEvent.shiftKey)) {
+				if (tool.wakeUp(eventType, initialEvent)) {
 					diagramShell.mainTool = Tool(tool);
 					break;
 				}

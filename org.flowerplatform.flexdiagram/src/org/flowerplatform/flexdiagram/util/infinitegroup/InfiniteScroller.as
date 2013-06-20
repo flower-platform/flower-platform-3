@@ -128,9 +128,8 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 		}
 				
 		private function viewport_propertyChangeHandler(event:PropertyChangeEvent):void {
-			switch(event.property) {
-				case "contentRect":
-					
+			switch(event.property) {			
+				case "contentRect":					
 					viewport.setLayoutBoundsSize(viewport.contentRect.width, viewport.contentRect.height);
 					viewport.setLayoutBoundsPosition(viewport.contentRect.x, viewport.contentRect.y);
 					
@@ -145,11 +144,10 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 					horizontalScrollBar.contentMaximum = viewport.contentRect.width - Math.abs(viewport.contentRect.x);
 					horizontalScrollBar.minimum = viewport.contentRect.x;
 					horizontalScrollBar.maximum = viewport.contentRect.width - Math.abs(viewport.contentRect.x);
-				
 				case "contentWidth":
 				case "contentHeight":
 				case "scrollByToolInProgress":
-				case "verticalScrollPosition": 
+				case "verticalScrollPosition": 			
 				case "horizontalScrollPosition":					
 					goBackButton.calculatePosition();
 					skin.invalidateDisplayList();		
