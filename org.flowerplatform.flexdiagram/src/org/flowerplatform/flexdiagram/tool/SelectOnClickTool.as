@@ -29,14 +29,14 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_UP);	
 		}
 		
-		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
-			context.ctrlPressed = ctrlPressed;
-			context.shiftPressed = shiftPressed;
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
+			context.ctrlPressed = initialEvent.ctrlKey;
+			context.shiftPressed = initialEvent.shiftKey;
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates();	
 						
 			var model:Object;
 			
-			if (eventType == WakeUpTool.MOUSE_UP && !ctrlPressed && !shiftPressed) {
+			if (eventType == WakeUpTool.MOUSE_UP && !context.ctrlPressed && !context.shiftPressed) {
 				if (renderer is DiagramRenderer) {
 					return true;
 				}
@@ -53,7 +53,7 @@ package org.flowerplatform.flexdiagram.tool {
 				if (renderer is IDataRenderer) {
 					model = IDataRenderer(renderer).data;
 					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
-						return (diagramShell.selectedItems.getItemIndex(model) == -1) || ctrlPressed || shiftPressed;
+						return (diagramShell.selectedItems.getItemIndex(model) == -1) || context.ctrlPressed || context.shiftPressed;
 					}				
 				}
 			}

@@ -86,30 +86,7 @@ package org.flowerplatform.flexdiagram.tool {
 			var localPoint:Point = diagramRenderer.globalToLocal(new Point(x, y));
 			localPoint = diagramRenderer.localToContent(localPoint);
 			return localPoint;
-		}
-		
-		protected function getVisibleAreaRect():Array {			
-			return [diagramRenderer.horizontalScrollPosition, diagramRenderer.verticalScrollPosition, diagramRenderer.width, diagramRenderer.height];			
-		}
-		
-		protected function inDiagramVisibleArea(x:int, y:int):Boolean {
-			var visibleArray:Array = getVisibleAreaRect();			
-			if (x < visibleArray[0] || x > visibleArray[0] + visibleArray[2]) {
-				return false;
-			}
-			if (y < visibleArray[1] || y > visibleArray[1] + visibleArray[3]) {
-				return false;
-			}
-			return true;			
-		}
-		
-		protected function getMaxVerticalScrollPosition():Number {
-			return diagramRenderer.contentHeight - diagramRenderer.height;
-		}
-		
-		protected function getMaxHorizontalScrollPosition():Number {
-			return diagramRenderer.contentWidth - diagramRenderer.width;
-		}
-		
-	}		
+		}	
+	}	
+	
 }

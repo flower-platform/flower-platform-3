@@ -59,7 +59,7 @@
         when there is too much data to fit vertically in a display area.
         The Scroller determines whether the vertical ScrollBar is visible. -->
         <fx:Component id="verticalScrollBarFactory">
-            <infinitegroup:InfiniteVScrollBar visible="false" />
+            <infinitegroup:InfiniteVScrollBar visible="false"  />
         </fx:Component>
         
         <!---  A horizontal scrollbar that lets you control the portion of data that is displayed 

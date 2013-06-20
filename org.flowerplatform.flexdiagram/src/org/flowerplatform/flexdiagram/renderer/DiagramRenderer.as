@@ -3,6 +3,7 @@ package org.flowerplatform.flexdiagram.renderer {
 	import flash.events.FocusEvent;
 	import flash.geom.Rectangle;
 	
+	import mx.core.UIComponent;
 	import mx.managers.IFocusManagerComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -20,7 +21,7 @@ package org.flowerplatform.flexdiagram.renderer {
 		private var _noNeedToRefreshRect:Rectangle;
 		
 		public var viewPortRectOffsetTowardOutside:int = 0;
-									
+								
 		public function get diagramShell():DiagramShell {
 			return _diagramShell;
 		}
@@ -59,7 +60,7 @@ package org.flowerplatform.flexdiagram.renderer {
 		}
 		
 		public function setContentRect(rect:Rectangle):void {
-			
+			contentRect = rect;
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
@@ -67,6 +68,11 @@ package org.flowerplatform.flexdiagram.renderer {
 				visualChildrenController.refreshVisualChildren(data);
 			}
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			
+			graphics.clear();
+			graphics.lineStyle(1);
+			graphics.beginFill(0xCCCCCC, 0);
+			graphics.drawRect(horizontalScrollPosition, verticalScrollPosition, width, height);
 		}
 		
 		override protected function focusInHandler(event:FocusEvent):void {
@@ -83,6 +89,6 @@ package org.flowerplatform.flexdiagram.renderer {
 				diagramShell.deactivateTools();	
 			}							
 		}	
-		
+				
 	}
 }
