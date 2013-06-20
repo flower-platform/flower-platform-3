@@ -35,9 +35,26 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 		}
 		
 		private function mouseClickHandler(event:MouseEvent):void {
-			// reset scroll positions
-			viewport.horizontalScrollPosition = viewport.contentRect.x;
-			viewport.verticalScrollPosition = viewport.contentRect.y;
+			// reset scroll positions						
+			var x:Number = viewport.contentRect.x;
+			var y:Number = viewport.contentRect.y;
+			switch (position) {
+				case TOP_LEFT:
+				case TOP_RIGHT:
+				case BOTTOM_LEFT:
+				case BOTTOM_RIGHT:
+					viewport.horizontalScrollPosition = x;
+					viewport.verticalScrollPosition = y;
+					break;				
+				case LEFT:
+				case RIGHT:
+					viewport.horizontalScrollPosition = x;
+					break;			
+				case TOP:
+				case BOTTOM:
+					viewport.verticalScrollPosition = y;
+					break;				
+			}			
 		}
 		
 		/**
@@ -49,34 +66,36 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			}
 			var hpos:Number = viewport.horizontalScrollPosition;
 			var vpos:Number = viewport.verticalScrollPosition;
-			var rect:Rectangle = viewport.contentRect;
 			
-			if (hpos < rect.x) {
-				if (vpos < rect.y) {
+			var scrollRect:Rectangle = viewport.scrollRect;
+			var contentRect:Rectangle = viewport.contentRect;
+
+			
+			if (contentRect.x < scrollRect.x) {
+				if (contentRect.y < scrollRect.y) {
 					position = BOTTOM_RIGHT;
-				} else if (vpos > rect.y + rect.height) {
+				} else if (contentRect.y > scrollRect.y + scrollRect.height) {
 					position = TOP_RIGHT;
 				} else {
 					position = RIGHT;
 				}				
-			} else if (hpos > rect.x + rect.width) {
-				if (vpos < rect.y) {
+			} else if (contentRect.x + contentRect.width > scrollRect.x + scrollRect.width) {
+				if (contentRect.y < scrollRect.y) {
 					position = BOTTOM_LEFT;
-				} else if (vpos > rect.y + rect.height) {
+				} else if (contentRect.y > scrollRect.y + scrollRect.height) {
 					position = TOP_LEFT;
 				} else {
 					position = LEFT;
 				}
 			} else {
-				if (vpos < rect.y) {
+				if (contentRect.y < scrollRect.y) {
 					position = BOTTOM;
-				} else if (vpos > rect.y + rect.height) {
+				} else if (contentRect.y > scrollRect.y + scrollRect.height) {
 					position = TOP;
 				} else {
 					position = MIDDLE;
 				}
-			}
-		}
-				
+			}			
+		}				
 	}
 }
