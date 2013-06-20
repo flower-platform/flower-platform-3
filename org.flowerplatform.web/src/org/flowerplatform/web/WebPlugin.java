@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
+import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.service.GroupService;
 import org.flowerplatform.web.security.service.OrganizationService;
 import org.flowerplatform.web.security.service.PermissionService;
@@ -84,6 +85,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
 		OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
 		OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
+		SendMailService.getInstance().initializeProperties();
 		// do the initializations after the bundle is activated, because we need the resources bundle
 		if (bundleContext.getProperty(TESTING_FLAG) == null) {
 			databaseManager.initialize();

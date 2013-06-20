@@ -43,7 +43,8 @@ has in the organizations.
 			}
 			
 			public function set popupHost(value:IPopupHost):void {
-				value.setLabel("Users Screen");
+				value.setLabel(WebPlugin.getInstance().getMessage('entity.user._table'));
+				value.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"));
 			}
 			
 			protected function onCreationComplete(event:FlexEvent):void {

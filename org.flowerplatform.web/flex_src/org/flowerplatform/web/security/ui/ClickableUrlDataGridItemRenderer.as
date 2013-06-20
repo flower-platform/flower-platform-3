@@ -23,7 +23,9 @@ package org.flowerplatform.web.security.ui {
 			setStyle("textDecoration", "underline");
 			
 			addEventListener(MouseEvent.CLICK, function(event:MouseEvent):void {
-				navigateToURL(new URLRequest(url), "_blank");
+				if (url) {
+					navigateToURL(new URLRequest(url), "_blank");
+				}
 			});
 			
 			super.data = value;

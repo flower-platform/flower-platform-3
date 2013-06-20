@@ -6,14 +6,9 @@ import java.util.Arrays;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.Group;
-import org.flowerplatform.web.entity.GroupUser;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.PermissionEntity;
 import org.flowerplatform.web.entity.User;
@@ -22,6 +17,9 @@ import org.flowerplatform.web.security.permission.FlowerWebFilePermission;
 import org.flowerplatform.web.temp.GeneralService;
 import org.flowerplatform.web.tests.security.sandbox.helpers.FlowerWebPolicyTest;
 import org.flowerplatform.web.tests.security.sandbox.helpers.Utils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /** 
  * 
@@ -214,10 +212,7 @@ public class SecurityEntityListenerTest {
 			
 			@Override
 			public void run() {
-				User user = (User) wrapper.merge(u);
-				for (GroupUser gu: user.getGroupUsers()) {
-					wrapper.delete(gu);
-				}			
+				User user = wrapper.find(User.class, u.getId());
 				wrapper.delete(user);
 			}
 		});
@@ -228,10 +223,7 @@ public class SecurityEntityListenerTest {
 			
 			@Override
 			public void run() {
-				Group group = (Group) wrapper.merge(g);
-				for (GroupUser gu: group.getGroupUsers()) {
-					wrapper.delete(gu);
-				}			
+				Group group = wrapper.find(Group.class, g.getId());
 				wrapper.delete(group);
 			}
 		});
@@ -242,10 +234,7 @@ public class SecurityEntityListenerTest {
 			
 			@Override
 			public void run() {
-				Organization org = (Organization) wrapper.merge(o);
-				for (Group g: org.getGroups()) {
-					g.setOrganization(null);				
-				}
+				Organization org = wrapper.find(Organization.class, o.getId());
 				wrapper.delete(org);	
 			}
 		});

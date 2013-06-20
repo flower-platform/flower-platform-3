@@ -13,7 +13,7 @@
 	xmlns:popup="com.crispico.flower.util.popup.*" 
 	xmlns:ui="org.flowerplatform.web.security.ui.*"
 	title="{WebPlugin.getInstance().getMessage('form.add', [WebPlugin.getInstance().getMessage('entity.user')])}" 
-	titleIconURL="icons/Web/icons/usr_admin/user.png" 
+	titleIconURL="{WebPlugin.getInstance().getResourceUrl('images/usr_admin/user.png')}" 
 	width="550" height="585" minWidth="550" minHeight="585" >
 
 	<mx:Script>
@@ -47,8 +47,8 @@
 				userForm.entityId = 0;
 				userForm.save.includeInLayout = false;
 				userForm.save.visible = false;
-//				userForm.cancel.includeInLayout = false;
-//				userForm.cancel.visible = false;
+				userForm.cancel.includeInLayout = false;
+				userForm.cancel.visible = false;
 				
 				var tab:DisplayObject = userForm.tabNavigator.getChildAt(0);
 				userForm.visible = false;

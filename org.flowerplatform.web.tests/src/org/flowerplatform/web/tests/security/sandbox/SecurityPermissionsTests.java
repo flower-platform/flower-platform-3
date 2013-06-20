@@ -8,8 +8,6 @@ import org.eclipse.emf.teneo.hibernate.HbDataStore;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.H2Dialect;
-import org.hibernate.dialect.HSQLDialect;
-import org.hibernate.dialect.PostgresPlusDialect;
 import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.internal.SessionFactoryImpl;
@@ -74,13 +72,6 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 //		props.setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");
 //		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
 //		props.setProperty(Environment.SHOW_SQL, "true");
-//		
-//		props.setProperty(PersistenceOptions.CASCADE_POLICY_ON_NON_CONTAINMENT, "REFRESH,PERSIST,MERGE");
-//		props.setProperty(PersistenceOptions.PERSISTENCE_XML, "annotations.xml");
-//		props.setProperty(PersistenceOptions.JOIN_TABLE_FOR_NON_CONTAINED_ASSOCIATIONS, "false");
-//		props.setProperty(PersistenceOptions.ALWAYS_VERSION, "false");
-//		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
-//		props.setProperty(PersistenceOptions.ADD_INDEX_FOR_FOREIGN_KEY, "false");
 		
 		HbDataStore hbds = EntityPackage.eINSTANCE.createAndInitializeHbDataStore(props, config);
 		WebPlugin.getInstance().getDatabaseManager().setFactory(hbds.getSessionFactory());

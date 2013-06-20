@@ -437,12 +437,16 @@ public class UserImpl extends NamedEntityImpl implements User {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
+	 * @author Mariana
 	 */
 	public FavoriteItem getFavoriteItem(Object item, int category) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		for (FavoriteItem fav : getFavoriteItems()) {
+			if (fav.getItem().equals(item) && fav.getCategory() == category) {
+				return fav;
+			}
+		}
+		return null;
 	}
 
 	/**

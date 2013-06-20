@@ -43,6 +43,22 @@
 			<property name="lastPerspective">
 				<column length="40"/>
 			</property>
+			<property name="groupUsers">
+				<one-to-many>
+					<cascade>MERGE</cascade>
+					<cascade>PERSIST</cascade>
+					<cascade>REFRESH</cascade>
+					<cascade>REMOVE</cascade>
+				</one-to-many>
+			</property>
+			<property name="organizationUsers">
+				<one-to-many>
+					<cascade>MERGE</cascade>
+					<cascade>PERSIST</cascade>
+					<cascade>REFRESH</cascade>
+					<cascade>REMOVE</cascade>
+				</one-to-many>
+			</property>
 		</eclass>
 		
 		<eclass name="Group">
@@ -51,6 +67,14 @@
 			</property>
 			<property name="name">
 				<column length="61" unique="true"/>
+			</property>
+			<property name="groupUsers">
+				<one-to-many>
+					<cascade>MERGE</cascade>
+					<cascade>PERSIST</cascade>
+					<cascade>REFRESH</cascade>
+					<cascade>REMOVE</cascade>
+				</one-to-many>
 			</property>
 		</eclass>
 		
@@ -72,6 +96,14 @@
 			</property>
 			<property name="iconURL">
 				<column length="110"/>
+			</property>
+			<property name="organizationUsers">
+				<one-to-many>
+					<cascade>MERGE</cascade>
+					<cascade>PERSIST</cascade>
+					<cascade>REFRESH</cascade>
+					<cascade>REMOVE</cascade>
+				</one-to-many>
 			</property>
 		</eclass>
 		

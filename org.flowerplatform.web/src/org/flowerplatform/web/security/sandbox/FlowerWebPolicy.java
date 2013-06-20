@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.osgi.internal.permadmin.BundlePermissions;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.security.permission.AbstractTreePermission;
@@ -241,7 +241,7 @@ public class FlowerWebPolicy extends Policy {
 	 * @flowerModelElementId _psohMXJqEeG32IfhnS7SDQ
 	 */
 	public File getRuntimeWorkspace() {
-		return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+		return CommonPlugin.getInstance().getWorkspaceRoot();
 	}
 	
 	/**
@@ -297,6 +297,7 @@ public class FlowerWebPolicy extends Policy {
 					q.setParameter("assigned_to", '$' + user.getLogin());
 					q.setParameter("login", user.getLogin());
 
+					@SuppressWarnings("unchecked")
 					List<PermissionEntity> resultList = q.list();
 					PermissionService permissionService = (PermissionService) PermissionService.getInstance();
 					for (PermissionEntity entity: resultList) {				

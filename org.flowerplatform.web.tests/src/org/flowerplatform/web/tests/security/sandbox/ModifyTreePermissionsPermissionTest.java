@@ -4,9 +4,9 @@ import static org.flowerplatform.web.tests.security.sandbox.helpers.Utils.test;
 
 import java.util.Arrays;
 
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import org.flowerplatform.common.util.RunnableWithParam;
@@ -46,10 +46,10 @@ public class ModifyTreePermissionsPermissionTest {
 	
 	private static PermissionEntity filePermission_2;
 	
-	private static String filePath = "root/*";
+	private static String filePath = "*";
 	
-	@BeforeClass
-	public static void setup() {
+	@Before
+	public void setup() {
 		
 		final GeneralService service = new GeneralService();
 		new DatabaseOperationWrapper(new DatabaseOperation() {
@@ -96,7 +96,7 @@ public class ModifyTreePermissionsPermissionTest {
 				dto.setActions(FlowerWebFilePermission.READ);
 				try {
 					permissionService.mergeAdminUIDto(context, dto);
-				} catch (SecurityException e) {					
+				} catch (Exception e) {					
 					///////////////////////////
 					// Check result: permission created successfully
 					///////////////////////////
@@ -114,7 +114,7 @@ public class ModifyTreePermissionsPermissionTest {
 				
 				try {
 					permissionService.mergeAdminUIDto(context, dto);
-				} catch (SecurityException e) {
+				} catch (Exception e) {
 					///////////////////////////
 					// Check result: permission created successfully
 					///////////////////////////
@@ -135,7 +135,7 @@ public class ModifyTreePermissionsPermissionTest {
 					// Check result: not allowed
 					///////////////////////////
 					Assert.fail();
-				} catch (SecurityException e) {		
+				} catch (Exception e) {		
 					// do nothing
 				}
 				return null;
@@ -161,7 +161,7 @@ public class ModifyTreePermissionsPermissionTest {
 				
 				try {
 					permissionService.mergeAdminUIDto(context, dto);
-				} catch (SecurityException e) {			
+				} catch (Exception e) {			
 					///////////////////////////
 					// Check result: permission created successfully
 					///////////////////////////
@@ -182,7 +182,7 @@ public class ModifyTreePermissionsPermissionTest {
 					// Check result: not allowed
 					///////////////////////////
 					Assert.fail();
-				} catch (SecurityException e) {	
+				} catch (Exception e) {	
 					// do nothing
 				}
 				return null;
@@ -208,7 +208,7 @@ public class ModifyTreePermissionsPermissionTest {
 				dto.setActions("read-write-delete");
 				try {
 					permissionService.mergeAdminUIDto(context, dto);					
-				} catch (SecurityException e) {						
+				} catch (Exception e) {						
 					///////////////////////////
 					// Check result: permission updated successfully
 					///////////////////////////
@@ -230,7 +230,7 @@ public class ModifyTreePermissionsPermissionTest {
 					// Check result: not allowed
 					///////////////////////////
 					Assert.fail();
-				} catch (SecurityException e) {											
+				} catch (Exception e) {											
 				}
 				
 				return null;
@@ -249,7 +249,7 @@ public class ModifyTreePermissionsPermissionTest {
 					// Do action: delete permission for organization where user has ModifyTreePerm
 					///////////////////////////// 
 					permissionService.delete(Arrays.asList((int)filePermission.getId()));
-				} catch (SecurityException e) {
+				} catch (Exception e) {
 					///////////////////////////
 					// Check result: permission deleted successfully
 					///////////////////////////
@@ -265,7 +265,7 @@ public class ModifyTreePermissionsPermissionTest {
 					// Check result: not allowed
 					///////////////////////////
 					Assert.fail();
-				} catch (SecurityException e) {
+				} catch (Exception e) {
 					
 				}
 
@@ -275,8 +275,8 @@ public class ModifyTreePermissionsPermissionTest {
 		});
 	}
 	
-	@AfterClass
-	public static void tearDown() {
+	@After
+	public void tearDown() {
 		Utils.deleteAllData();
 	}
 }

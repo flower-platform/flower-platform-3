@@ -178,7 +178,7 @@ public class GroupImpl extends NamedEntityImpl implements Group {
 						}
 					}
 				} else if (securityEntity instanceof Group) {
-					includes = this.equals(securityEntity);
+					includes = GroupImpl.this.equals(securityEntity);
 				} 		
 
 				wrapper.setOperationResult(includes);

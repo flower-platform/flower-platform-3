@@ -143,12 +143,12 @@ temp.new_ws_er = true
 # Parameters: organization name
 # [DEFAULT] users.on-approve-organization.create-permissions = \
 # @{0}.admin: AdminSecurityEntitiesPermission(null, #{0}),\
-# @{0}.admin: ModifyTreePermissionsPermission(root/{0}, #{0}),\
-# @{0}.admin: ModifyTreePermissionsPermission(root/{0}/*, #{0}),\
-# @{0}.admin: FlowerWebFilePermission(root/{0}, read-write-delete),\
-# @{0}.admin: FlowerWebFilePermission(root/{0}/*, read-write-delete),\
-# #{0}: FlowerWebFilePermission(root/{0}, read),\
-# #{0}: FlowerWebFilePermission(root/{0}/*, read)
+# @{0}.admin: ModifyTreePermissionsPermission({0}, #{0}),\
+# @{0}.admin: ModifyTreePermissionsPermission({0}/*, #{0}),\
+# @{0}.admin: FlowerWebFilePermission({0}, read-write-delete),\
+# @{0}.admin: FlowerWebFilePermission({0}/*, read-write-delete),\
+# #{0}: FlowerWebFilePermission({0}, read),\
+# #{0}: FlowerWebFilePermission({0}/*, read)
 
 # List of groups for organization admins
 # Parameters: organization name

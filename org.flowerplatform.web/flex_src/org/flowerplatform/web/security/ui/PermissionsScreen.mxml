@@ -13,30 +13,28 @@
 	xmlns:popup="com.crispico.flower.util.popup.*" 
 	xmlns:navigator="com.crispico.flower.mp.web.navigator.*"
 	xmlns:ui="org.flowerplatform.web.security.ui.*" 
-	xmlns:tree="com.crispico.flower.mp.web.tree.*"
+	xmlns:tree="org.flowerplatform.communication.tree.*"
+	xmlns:explorer="org.flowerplatform.web.common.explorer.*"
 	xmlns:utils="org.flowerplatform.web.utils.*"
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
 	paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
 	creationComplete="onCreationComplete()" 
 	minWidth="900" minHeight="500" 
-	currentState="default"
+	currentState="default" xmlns:tree1="org.flowerplatform.communication.tree.*"
 	>
 	
 	<mx:Script>
 		<![CDATA[
 			import mx.collections.IList;
 			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupContent;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.WebPlugin;
-			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.security.dto.PermissionsByResourceFilter;
-			
-			/**
-			 * @flowerModelElementId _RBwYMV34EeGwLIVyv_iqEg
-			 */
-			private static const CURRENT_FILTER_LABEL:String = WebPlugin.getInstance().getMessage("entity.filter.current");
 			
 			public function getActions(selection:IList):Vector.<IAction> {
 				return null;
@@ -47,7 +45,8 @@
 			}
 			
 			public function set popupHost(value:IPopupHost):void {
-				value.setLabel("Permissions Screen");
+				value.setLabel(WebPlugin.getInstance().getMessage('entity.permission._table'));
+				value.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/permission.png"));
 			}
 			
 			/**
@@ -64,13 +63,17 @@
 				permissionsPanel.refreshBtnHandler();
 				permissionsPanel.addEventListener("filterChangedEvent", filterChangedHandler);
 				
-//				resourceTree.statefulClient = new GenericTreeStatefulClient();
-//				resourceTree.statefulClient.genericTree = resourceTree;
-//				CommunicationPlugin.getInstance().statefulClientRegistry.register(resourceTree.statefulClient, null);
+				var statefulClient:GenericTreeStatefulClient = new GenericTreeStatefulClient();
+				treeList.statefulClient = statefulClient;
+				statefulClient.statefulServiceId = "explorerTreeStatefulService";
+				statefulClient.clientIdPrefix = "Permissions Filter";
+				statefulClient.treeList = treeList;
+				
+				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 				
 				// this is only to show the root node; the path won't be computed correctly, so the PermissionsByFilterResource still needs to add the root prefix
-//				TreeNode(resourceTree.dataProvider[0]).label = ProjectExplorerTreeNew.workspaceRootName;
-//				TreeNode(resourceTree.dataProvider[0]).iconUrls = new ArrayCollection([WebCommonPlugin.getInstance().getResourceUrl("images/folder.gif")]);
+//				TreeNode(treeList.dataProvider[0]).label = ProjectExplorerTreeNew.workspaceRootName;
+//				TreeNode(treeList.dataProvider[0]).icon = WebCommonPlugin.getInstance().getResourceUrl("images/folder.gif");
 			}		
 			
 			/**
@@ -80,9 +83,9 @@
 			 * @flowerModelElementId _RBy0c134EeGwLIVyv_iqEg
 			 */ 
 			private function doubleClickHandler(event:MouseEvent):void {
-//				var node:TreeNode = TreeNode(resourceTree.selectedItem);				
-//				// puts filter on panel				
-//				permissionsPanel.currentFilter = new PermissionsByResourceFilter(node.getPath());
+				var node:TreeNode = TreeNode(treeList.getSelection().getItemAt(0));				
+				// puts filter on panel				
+				permissionsPanel.currentFilter = new PermissionsByResourceFilter(node.getPath());
 			}
 			
 			/**
@@ -92,9 +95,9 @@
 			 */ 			
 			private function filterChangedHandler(event:Event):void {
 				if (permissionsPanel.currentFilter != null) {
-					filter.text = CURRENT_FILTER_LABEL + PermissionsByResourceFilter(permissionsPanel.currentFilter).resource;
+					filter.text = WebPlugin.getInstance().getMessage("entity.filter.current", [PermissionsByResourceFilter(permissionsPanel.currentFilter).resource]);
 				} else {
-					filter.text = CURRENT_FILTER_LABEL + WebPlugin.getInstance().getMessage("entity.filter.none");
+					filter.text = WebPlugin.getInstance().getMessage("entity.filter.current", [WebPlugin.getInstance().getMessage("entity.filter.none")]);
 				}
 				permissionsPanel.refreshBtnHandler();
 				clearBtn.enabled = true;
@@ -110,7 +113,7 @@
 			}
 			
 			public function closeForm():void {	
-//				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(resourceTree.statefulClient, null);
+				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(treeList.statefulClient, null);
 //				super.closeForm();
 			}
 			
@@ -121,8 +124,8 @@
 		<mx:State name="default">
 			<mx:AddChild relativeTo="{permissionsPanel.menuBarFirstHBox}" position="after">
 				<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle">
-					<mx:Label id="filter" width="100%" text="{CURRENT_FILTER_LABEL + 'none'}" fontWeight="bold"/>	
-					<common:FlowerLinkButton id="clearBtn" label="{WebPlugin.getInstance().getMessage('entity.filter.clear')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/filter/filter_delete.png")}' click="clearBtnHandler(event)" enabled="false"/>
+					<mx:Label id="filter" width="100%" fontWeight="bold"/>	
+					<common:FlowerLinkButton id="clearBtn" label="{WebPlugin.getInstance().getMessage('entity.filter.clear')}" iconURL='{WebPlugin.getInstance().getResourceUrl("images/filter/filter_delete.png")}' click="clearBtnHandler(event)" enabled="false"/>
 					<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.filter.permissionsFilter')}"/>
 				</mx:HBox>
 			</mx:AddChild>
@@ -130,8 +133,7 @@
 	</mx:states>
 	
 	<mx:HDividedBox width="100%" height="100%">		
-		<!--tree:ResourceTree id="resourceTree" requestInitialDataAutomatically="true" serviceId="ResourceTreeStatefulService" clientIdPrefix="Resource Tree"
-			width="30%" height="100%" doubleClick="doubleClickHandler(event)" doubleClickEnabled="true" showRoot="true"/-->
+		<explorer:ExplorerTreeList id="treeList" width="30%" height="100%" doubleClick="doubleClickHandler(event)" doubleClickEnabled="true"/>
 		<ui:PermissionsPanel id="permissionsPanel" width="100%" height="100%"/>		
 	</mx:HDividedBox>
 </mx:VBox>

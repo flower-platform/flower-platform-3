@@ -9,7 +9,6 @@
  @flowerModelElementId _HwKUoJqLEeGyKfvGQd78qg
 -->
 <ui:BaseForm
-	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:ui="org.flowerplatform.web.security.ui.*"
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
@@ -44,16 +43,9 @@
 			import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
 			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
 			
-			override public function getActions(selection:IList):Vector.<IAction> {
-				return null;
-			}
-			
-			override public function getSelection():IList {
-				return null;
-			}
-			
 			override public function set popupHost(value:IPopupHost):void {
-				value.setLabel("User Form");
+				super.popupHost = value;
+				popupHost.setIcon(WebPlugin.getInstance().getResourceUrl('images/usr_admin/user.png'));
 			}
 			
 			/**
@@ -71,7 +63,9 @@
 				if (entityId != 0) {
 					form.enabled = false;
 					save.enabled = false;
-//					title = WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.user")]);;
+					if (popupHost) {
+						popupHost.setLabel(WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.user")]));
+					}
 					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
 					CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
 						"userService", 
@@ -79,7 +73,9 @@
 						[entityId], 
 						this, dataReceivedCallback, exceptionCallback));
 				} else {
-//					title = WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.user")]);
+					if (popupHost) {
+						popupHost.setLabel(WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.user")]));
+					}
 					dto = new UserAdminUIDto();
 					userName.setFocus();	
 				}
@@ -489,7 +485,7 @@
 				<mx:Button id="deleteAccount" label="{WebPlugin.getInstance().getMessage('entity.user.form.deleteAccount')}" click="deleteAccountButtonHandler()"/>
 				<mx:HBox width="100%" horizontalAlign="center" paddingLeft="0" paddingRight="0">
 					<mx:Button id="save" label="{WebPlugin.getInstance().getMessage('form.save')}" click="formOkHandler()"/>
-					<!--<mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>-->
+					<mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>
 				</mx:HBox>
 			</mx:HBox>   
 		</mx:Box>

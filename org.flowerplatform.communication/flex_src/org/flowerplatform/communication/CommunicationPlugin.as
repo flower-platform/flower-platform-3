@@ -51,6 +51,11 @@ package org.flowerplatform.communication {
 		public var statefulClientRegistry:StatefulClientRegistry = new StatefulClientRegistry();
 		
 		public var firstWelcomeWithInitializationsReceived:Boolean;
+		
+		/**
+		 * @author Mariana
+		 */
+		public var applicationParametersProvider:ApplicationParametersProvider = new ApplicationParametersProvider();
 
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CompoundClientCommand);

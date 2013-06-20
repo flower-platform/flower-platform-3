@@ -252,7 +252,7 @@ public class DatabaseManager {
 				service.createPermission(AdminSecurityEntitiesPermission.class, "", fdc_admin, "*", wrapper);
 				// make sure that admin can create/edit/delete any permission
 				service.createPermission(ModifyTreePermissionsPermission.class, "*", fdc_admin, "*", wrapper);
-				service.createPermission(FlowerWebFilePermission.class, "root/*", fdc_admin, FlowerWebFilePermission.READ_WRITE_DELETE, wrapper);
+				service.createPermission(FlowerWebFilePermission.class, "*", fdc_admin, FlowerWebFilePermission.READ_WRITE_DELETE, wrapper);
 			}
 		});
 		
