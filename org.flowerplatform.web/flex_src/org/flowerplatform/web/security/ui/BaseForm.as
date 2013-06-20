@@ -1,6 +1,7 @@
 package org.flowerplatform.web.security.ui {
 	
 	import com.crispico.flower.util.spinner.ModalSpinner;
+	import com.crispico.flower.util.spinner.ModalSpinnerSupport;
 	
 	import flash.events.Event;
 	
@@ -18,9 +19,10 @@ package org.flowerplatform.web.security.ui {
 	 * 
 	 * @author Cristi
 	 * @author Cristina
+	 * @author Mariana
 	 * @flowerModelElementId _LA5mkFc1EeG6S8FiFZ8nVA
 	 */
-	public class BaseForm extends VBox implements IPopupContent {
+	public class BaseForm extends VBox implements IPopupContent, ModalSpinnerSupport {
 				
 		/**
 		 * @flowerModelElementId _gJ5hsFfGEeGs_rPsEt9lFQ
@@ -36,6 +38,8 @@ package org.flowerplatform.web.security.ui {
 		 * @flowerModelElementId _CnbI0VyIEeGwx-0cTKUc5w
 		 */
 		private var _parentListPanel:BaseListPanel;
+		
+		private var _popupHost:IPopupHost;
 				
 		/**
 		 * @flowerModelElementId _KKbXkFlkEeGRrZ75u0k71A
@@ -90,6 +94,11 @@ package org.flowerplatform.web.security.ui {
 		}
 		
 		public function set popupHost(value:IPopupHost):void {
+			_popupHost = value;
+		}
+		
+		public function get popupHost():IPopupHost {
+			return _popupHost;
 		}
 		
 		/**
@@ -99,10 +108,33 @@ package org.flowerplatform.web.security.ui {
 			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 		}
 		
+		/**
+		 * @author Mariana
+		 */
+		protected function formCancelHandler():void {
+			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+		}
+		
 		protected function exceptionCallback(exception:Object):void {
 			ModalSpinner.removeModalSpinner(this);
 		}
 
+		private var _modalSpinner:ModalSpinner;
+		
+		public function get modalSpinner():ModalSpinner	{
+			return _modalSpinner;
+		}
+		
+		public function set modalSpinner(value:ModalSpinner):void {
+			_modalSpinner = value;
+		}
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			if (modalSpinner != null) {
+				modalSpinner.setActualSize(unscaledWidth, unscaledHeight);
+			}
+		}
+		
 	}
-	
 }

@@ -24,6 +24,7 @@
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.WebPlugin;
 			import org.flowerplatform.web.common.security.dto.PermissionAdminUIDto;
 			import org.flowerplatform.web.common.security.dto.PermissionsByResourceFilter;
@@ -31,6 +32,11 @@
 			private const ADMIN_SECURITY_ENTITIES_PERMISSION:String = "com.crispico.flower.mp.web.security.permission.AdminSecurityEntitiesPermission";
 			private const FLOWER_WEB_FILE_PERMISSION:String = "com.crispico.flower.mp.web.security.permission.FlowerWebFilePermission";
 			private const MODIFY_TREE_PERMISSIONS_PERMISSION:String = "com.crispico.flower.mp.web.security.permission.ModifyTreePermissionsPermission";
+			
+			override public function set popupHost(value:IPopupHost):void {
+				super.popupHost = value;
+				popupHost.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/permission.png"));
+			}
 			
 			/**
 			 * @flowerModelElementId _RBkK8F34EeGwLIVyv_iqEg
@@ -43,12 +49,12 @@
 				if (entityId != 0) {
 					form.enabled = false;
 					save.enabled = false;
-//					title = WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.permission")]);
+					popupHost.setLabel(WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.permission")]));
 					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("permissionService", "findByIdAsAdminUIDto", [entityId], this, dataReceivedCallback, exceptionCallback));
 				} else {
-//					title = WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.permission")]);
+					popupHost.setLabel(WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.permission")]));
 					dto = new PermissionAdminUIDto();
 					permission.id = 0;
 					type.selectedItem = permissionsPanel.permissionDescriptors.getItemAt(0);
@@ -233,7 +239,7 @@
 	
 	<mx:ControlBar horizontalAlign="center" paddingBottom="15">
 		 <mx:Button id="save" label="{WebPlugin.getInstance().getMessage('form.save')}" click="formOkHandler()"/>
-        <!-- <mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>-->
+         <mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>
 	</mx:ControlBar>  
 	
 </ns:BaseForm>

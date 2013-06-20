@@ -17,18 +17,12 @@ package org.flowerplatform.web.common.security.dto {
 		public var resource:String;
 		
 		/**
-		 * The resource path generated selecting the tree node will have to be prefixed with "root/"
-		 * to correspond to the real resource path.
-		 * 
 		 * @author Mariana
 		 * 
 		 * @flowerModelElementId _Q9I99V34EeGwLIVyv_iqEg
 		 */
 		public function PermissionsByResourceFilter(resource:String) {
-//			this.resource = ProjectExplorerTree.workspaceRootName; TODO
-			if (resource.length > 0) {
-				this.resource += "/" + resource;
-			}
+			this.resource = resource;
 		}
 	}
 	

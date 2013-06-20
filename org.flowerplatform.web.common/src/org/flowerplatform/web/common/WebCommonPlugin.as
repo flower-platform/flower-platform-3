@@ -12,10 +12,12 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;
+	import org.flowerplatform.web.common.communication.AuthenticationViewProvider;
 	import org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient;
 	import org.flowerplatform.web.common.entity.dto.NamedDto;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
+	import org.flowerplatform.web.common.security.dto.InitializeCurrentUserLoggedInClientCommand;
 	import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
 	import org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto;
 	import org.flowerplatform.web.common.security.dto.PermissionAdminUIDto;
@@ -87,6 +89,7 @@ package org.flowerplatform.web.common {
 			registerClassAlias("org.flowerplatform.web.security.dto.OrganizationUserAdminUIDto", OrganizationUserAdminUIDto);
 			registerClassAlias("org.flowerplatform.web.security.dto.PermissionAdminUIDto", PermissionAdminUIDto);
 			registerClassAlias("org.flowerplatform.web.security.dto.PermissionsByResourceFilter", PermissionsByResourceFilter);
+			registerClassAliasFromAnnotation(InitializeCurrentUserLoggedInClientCommand);
 		}
 		
 	}

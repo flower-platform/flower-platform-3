@@ -23,9 +23,5 @@ package org.flowerplatform.common {
 			INSTANCE = this;
 		}
 		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
-		}
-		
 	}
 }

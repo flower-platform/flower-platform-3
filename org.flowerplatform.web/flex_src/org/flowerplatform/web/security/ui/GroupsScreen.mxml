@@ -16,6 +16,7 @@
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupContent;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.WebPlugin;
 			
 			public function getActions(selection:IList):Vector.<IAction> {
 				return null;
@@ -26,7 +27,8 @@
 			}
 			
 			public function set popupHost(value:IPopupHost):void {
-				value.setLabel("Groups Screen");
+				value.setLabel(WebPlugin.getInstance().getMessage('entity.group._table'));
+				value.setIcon(WebPlugin.getInstance().getResourceUrl('images/usr_admin/group.png'));
 			}
 		]]>
 	</mx:Script>

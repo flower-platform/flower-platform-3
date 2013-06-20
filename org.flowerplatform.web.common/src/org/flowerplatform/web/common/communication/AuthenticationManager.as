@@ -6,7 +6,10 @@ package  org.flowerplatform.web.common.communication {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.HelloServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.layout.IViewProvider;
+	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
+	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto;
 	
 	/**
@@ -44,18 +47,12 @@ package  org.flowerplatform.web.common.communication {
 		 */
 		private var anonymousAuthenticationRejected:Boolean;
 
+		private var authenticationView:IPopupContent;
+		
 		/**
 		 * @author Cristi
 	 	 */
-		public function get currentUserLoggedIn():User_CurrentUserLoggedInDto {
-			var crt:User_CurrentUserLoggedInDto = new User_CurrentUserLoggedInDto();
-			crt.isAdmin = true;
-			crt.hasAdminSecurityEntitiesPermissions = true;
-			crt.id = 1;
-			crt.login = "admin";
-			crt.name = "admin";
-			return crt;
-		}
+		public var currentUserLoggedIn:User_CurrentUserLoggedInDto;
 		
 		/**
 		 * Keeps the value for "Keep layout structure" checkbox from auth dialog.
@@ -95,9 +92,16 @@ package  org.flowerplatform.web.common.communication {
 //			bridge.connect();
 		}
 		
+		/**
+		 * @author Cristi
+		 * @author Mariana
+		 */
 		protected function showAuthenticationView():void {
+//			var authenticationViewProvider:IViewProvider = FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(AuthenticationViewProvider.ID);
+//			authenticationView = IPopupContent(authenticationViewProvider.createView(null));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(new AuthenticationView())
+//				.setPopupContent(authenticationView)
 				.show();
 				
 		}
@@ -214,6 +218,8 @@ package  org.flowerplatform.web.common.communication {
 			if (authenticatedUser != getAnonymousUser()) {
 				lastProvidedUsername = authenticatedUser;	
 			}
+			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(authenticationView);
+			authenticationView = null;
 		}
 		
 		/**

@@ -266,23 +266,30 @@ public class FavoriteItemImpl extends EntityImpl implements FavoriteItem {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
+	 * @author Mariana
 	 */
 	public Object getItem() {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		if (getResource() != null) {
+			return getResource();
+		}
+		return getOrganization();
 	}
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
+	 * @author Mariana
 	 */
 	public void setItem(Object item) {
-		// TODO: implement this method
-		// Ensure that you remove @generated or mark it @generated NOT
-		throw new UnsupportedOperationException();
+		if (item instanceof RecentResource) {
+			setResource((RecentResource) item);
+		} else {
+			if (item instanceof Organization) {
+				setOrganization((Organization) item);
+			}
+		}
 	}
 
 	/**

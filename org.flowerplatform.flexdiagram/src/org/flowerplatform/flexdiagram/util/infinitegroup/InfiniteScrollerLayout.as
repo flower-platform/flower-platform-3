@@ -1,6 +1,7 @@
 package org.flowerplatform.flexdiagram.util.infinitegroup {
 	
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import mx.core.IUIComponent;
 	import mx.core.InteractionMode;
@@ -475,6 +476,8 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			var oldShowHSB:Boolean = hsbVisible;
 			var oldShowVSB:Boolean = vsbVisible;
 			
+			var infiniteViewport:InfiniteDataRenderer = InfiniteDataRenderer(viewport);
+			
 			var hAuto:Boolean = false;
 			var hsbTakeUpSpace:Boolean = true; // if visible
 			switch(scroller.getStyle("horizontalScrollPolicy")) {
@@ -486,7 +489,10 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 				case ScrollPolicy.AUTO: 
 					if (viewport) {
 						hAuto = true;
-						_canScrollHorizontally = (contentW >= (viewportW + SDT));
+						if (infiniteViewport.contentRect != null) {
+							var rect:Rectangle = new Rectangle(infiniteViewport.contentRect.x, infiniteViewport.scrollRect.y, infiniteViewport.contentRect.width,  infiniteViewport.scrollRect.height);
+							_canScrollHorizontally = !infiniteViewport.scrollRect.containsRect(rect);
+						}
 						hsbVisible = (hsb && _canScrollHorizontally);
 					} 
 					break;
@@ -494,7 +500,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 				default:
 					_canScrollHorizontally = false;
 					hsbVisible = false;
-			}
+			}		
 			
 			var vAuto:Boolean = false;
 			var vsbTakeUpSpace:Boolean = true; // if visible
@@ -506,8 +512,11 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 				
 				case ScrollPolicy.AUTO: 
 					if (viewport) { 
-						vAuto = true;
-						_canScrollVertically = (contentH >= (viewportH + SDT));
+						vAuto = true;				
+						if (infiniteViewport.contentRect != null) {
+							var rect:Rectangle = new Rectangle(infiniteViewport.scrollRect.x, infiniteViewport.contentRect.y, infiniteViewport.scrollRect.width,  infiniteViewport.contentRect.height);
+							_canScrollVertically = !infiniteViewport.scrollRect.containsRect(rect);
+						}
 						vsbVisible = (vsb && _canScrollVertically);
 					}                        
 					break;
@@ -516,7 +525,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 					_canScrollVertically = false;
 					vsbVisible = false;
 			}
-						
+
 			goBackButtonVisible = (goBackBtn.position != GoBackButton.MIDDLE);
 			
 			// Reset the viewport's width,height to account for the visible scrollbars, unless

@@ -2,6 +2,7 @@ package org.flowerplatform.web.security.service;
 
 import static org.flowerplatform.web.security.sandbox.SecurityEntityAdaptor.ANONYMOUS;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,10 +14,7 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -38,7 +36,6 @@ import org.flowerplatform.web.entity.PermissionEntity;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.entity.dto.NamedDto;
-import org.flowerplatform.web.explorer.RootChildrenProvider;
 import org.flowerplatform.web.security.dto.GroupAdminUIDto;
 import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
 import org.flowerplatform.web.security.dto.OrganizationUserAdminUIDto;
@@ -266,6 +263,7 @@ public class UserService extends ServiceObservable {
 					}
 					
 					if (query != null) {
+						@SuppressWarnings("unchecked")
 						List<User> newList = query.list();
 						if (union) {
 							for (User u : newList) {
@@ -322,6 +320,14 @@ public class UserService extends ServiceObservable {
 	public String mergeAdminUIDto(final UserAdminUIDto dto) {
 		logger.debug("Merge user = {}", dto.getLogin());
 		
+		User initialUser = (User) new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				wrapper.setOperationResult(wrapper.find(User.class, dto.getId()));
+			}
+		}).getOperationResult();
+		
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
@@ -348,8 +354,6 @@ public class UserService extends ServiceObservable {
 						}
 					}
 				} 
-				
-				User initialUser = wrapper.find(User.class, dto.getId());
 				
 				User user = wrapper.mergeDto(User.class, dto);
 				user = wrapper.merge(user);
@@ -488,10 +492,18 @@ public class UserService extends ServiceObservable {
 			
 //				// save changes
 //				wrapper.merge(user);
-				observable.notifyObservers(Arrays.asList(UPDATE, initialUser, user));
 			}
 		});
 		
+		User newUser = (User) new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				wrapper.setOperationResult(wrapper.find(User.class, dto.getId()));
+			}
+		}).getOperationResult();
+		
+		observable.notifyObservers(Arrays.asList(UPDATE, initialUser, newUser));
 		return (String) wrapper.getOperationResult();
 	}
 	
@@ -501,9 +513,8 @@ public class UserService extends ServiceObservable {
 	 * @flowerModelElementId _QUUqcl34EeGwLIVyv_iqEg
 	 */
 	public String delete(final ServiceInvocationContext context, final List<Integer> ids) {
-		final String[] result = new String[1];
-		
-		new DatabaseOperationWrapper(new DatabaseOperation() {
+		final User[] deletedUser = new User[1];
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
@@ -515,26 +526,27 @@ public class UserService extends ServiceObservable {
 					
 					if (user.getLogin().startsWith(ANONYMOUS) &&
 							!((User) context.getCommunicationChannel().getPrincipal().getUser()).isAdmin()) {
-						result[0] = "You cannot delete an anonymous user!";
+						wrapper.setOperationResult("You cannot delete an anonymous user!");
+						return;
 					}
 							
 					logger.debug("Delete {}", user);
 					
 					// user is removed so remove entities from GroupUser
-					for (Iterator<GroupUser> it = user.getGroupUsers().iterator(); it.hasNext();) {
-						GroupUser groupUser = it.next(); 
-						it.remove();
-						user = wrapper.merge(user);
-						removeGroupUserDependency(groupUser);
-					} 
+//					for (Iterator<GroupUser> it = user.getGroupUsers().iterator(); it.hasNext();) {
+//						GroupUser groupUser = it.next(); 
+//						it.remove();
+//						user = wrapper.merge(user);
+//						removeGroupUserDependency(groupUser);
+//					} 
 					
 					// user is removed so remove entities from OrganizationUser
-					for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
-						OrganizationUser organizationUser = it.next();
-						it.remove();
-						user = wrapper.merge(user);
-						removeOrganizationUserDependency(organizationUser);
-					}
+//					for (Iterator<OrganizationUser> it = user.getOrganizationUsers().iterator(); it.hasNext();) {
+//						OrganizationUser organizationUser = it.next();
+//						it.remove();
+//						user = wrapper.merge(user);
+//						removeOrganizationUserDependency(organizationUser);
+//					}
 					
 					// user is removed so update entities from RecentResource
 					Query q = wrapper.createQuery("UPDATE RecentResource r SET lastAccessUser = NULL WHERE r.lastAccessUser = :user");
@@ -546,11 +558,12 @@ public class UserService extends ServiceObservable {
 					q.executeUpdate();
 					
 					wrapper.delete(user);
-					observable.notifyObservers(Arrays.asList(DELETE, user));
+					deletedUser[0] = user;
 				}
 			}
 		});
-		return result[0];
+		observable.notifyObservers(Arrays.asList(DELETE, deletedUser[0]));
+		return (String) wrapper.getOperationResult();
 	}
 	
 	/**
@@ -576,7 +589,6 @@ public class UserService extends ServiceObservable {
 	
 	/**
 	 * TODO : temporary method
-	 * Adds the corresponding {@link GroupUser} in database.
 	 * This method makes also modifications on target entities (User and Group).
 	 * 
 	 * Note cache: Because of the cache mechanism, this isn't done automatically.
@@ -602,6 +614,7 @@ public class UserService extends ServiceObservable {
 		return ou;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Group> getUserGroups(final User user) {
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
@@ -617,6 +630,7 @@ public class UserService extends ServiceObservable {
 		return (List<Group>) wrapper.getOperationResult();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private List<Organization> getOrganizationsWhereUserBelongs(final User user, final boolean withPendingStatus) {
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
@@ -637,6 +651,7 @@ public class UserService extends ServiceObservable {
 		return (List<Organization>) wrapper.getOperationResult();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Organization> getOrganizations(final User user) {
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
@@ -662,6 +677,7 @@ public class UserService extends ServiceObservable {
 						  "WHERE u.id = :user_id AND o.id = :org_id");
 				query.setParameter("user_id", user.getId());
 				query.setParameter("org_id", orgId);
+				@SuppressWarnings("unchecked")
 				List<Organization> list = query.list();
 				if (!list.isEmpty()) {
 					wrapper.setOperationResult(list.get(0));
@@ -684,6 +700,7 @@ public class UserService extends ServiceObservable {
 		return repositories;	
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<SVNCommentEntity> getSVNCommentsOrderedByTimestamp(final User user, final boolean asc) {
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
@@ -837,12 +854,12 @@ public class UserService extends ServiceObservable {
 		WebPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(ORGANIZATION_APPROVED_CREATE_USERS, "anonymous.{0}"));
 		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(ORGANIZATION_APPROVED_CREATE_PERMISSIONS, 
 				"@{0}.admin: AdminSecurityEntitiesPermission(null, #{0})," +
-				"@{0}.admin: ModifyTreePermissionsPermission(root/{0}, #{0})," +
-				"@{0}.admin: ModifyTreePermissionsPermission(root/{0}/*, #{0})," +
-				"@{0}.admin: FlowerWebFilePermission(root/{0}, read-write-delete)," +
-				"@{0}.admin: FlowerWebFilePermission(root/{0}/*, read-write-delete)," +
-				"#{0}: FlowerWebFilePermission(root/{0}, read)," +
-				"#{0}: FlowerWebFilePermission(root/{0}/*, read)") {
+				"@{0}.admin: ModifyTreePermissionsPermission({0}, #{0})," +
+				"@{0}.admin: ModifyTreePermissionsPermission({0}/*, #{0})," +
+				"@{0}.admin: FlowerWebFilePermission({0}, read-write-delete)," +
+				"@{0}.admin: FlowerWebFilePermission({0}/*, read-write-delete)," +
+				"#{0}: FlowerWebFilePermission({0}, read)," +
+				"#{0}: FlowerWebFilePermission({0}/*, read)") {
 
 					@Override
 					protected String validateProperty(String input) {
@@ -1010,13 +1027,9 @@ public class UserService extends ServiceObservable {
 					logger.debug("Create directories = {}", createDirsProp);
 					String[] dirsList = createDirsProp.split(",\\s*");
 					for (String dirName : dirsList) {
-						IFolder dir = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(RootChildrenProvider.getWorkspaceRoot().getName() + "/" + dirName));
+						File dir = new File(CommonPlugin.getInstance().getWorkspaceRoot(), dirName);
 						if (!dir.exists()) {
-							try {
-								dir.create(true, true, null);
-							} catch (CoreException e) {
-								logger.error(e.getMessage());
-							}
+							dir.mkdirs();
 						}
 					}
 					
@@ -1399,7 +1412,8 @@ public class UserService extends ServiceObservable {
 							organizationIt.remove();
 							
 							// remove from groups belonging to organization
-							for (Iterator<GroupAdminUIDto> groupIt = (Iterator<GroupAdminUIDto>) userDto.getGroups().iterator(); groupIt.hasNext();) {
+							for (@SuppressWarnings("unchecked")
+							Iterator<GroupAdminUIDto> groupIt = (Iterator<GroupAdminUIDto>) userDto.getGroups().iterator(); groupIt.hasNext();) {
 								GroupAdminUIDto group = groupIt.next();
 								if (group.getOrganization() != null && group.getOrganization().getId() == ou.getOrganization().getId()) {
 									groupIt.remove();

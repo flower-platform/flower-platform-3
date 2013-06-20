@@ -84,6 +84,7 @@ public class TestUtil {
 			project.create(pd, null);
 			project.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
 			project.open(IResource.BACKGROUND_REFRESH, null);
+			project.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
 		} catch (Throwable e) {
 			throw new RuntimeException("Cannot copy files/create project needed for test", e);
 		}

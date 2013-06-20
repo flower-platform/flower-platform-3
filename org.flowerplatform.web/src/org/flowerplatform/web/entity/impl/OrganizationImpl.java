@@ -535,7 +535,7 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 					Organization organization = wrapper.find(Organization.class, getId());
 					includes = organization.getGroups().contains(securityEntity);
 				} else if (securityEntity instanceof Organization) {
-					includes = this.equals(securityEntity);
+					includes = OrganizationImpl.this.equals(securityEntity);
 				}
 				
 				wrapper.setOperationResult(includes);

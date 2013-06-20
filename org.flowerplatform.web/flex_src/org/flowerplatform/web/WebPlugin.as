@@ -12,8 +12,6 @@ package org.flowerplatform.web {
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
@@ -21,10 +19,12 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
+	import org.flowerplatform.web.security.ui.AuthenticationViewProvider;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.PermissionsScreen;
 	import org.flowerplatform.web.security.ui.UserForm;
+	import org.flowerplatform.web.security.ui.UserFormViewProvider;
 	import org.flowerplatform.web.security.ui.UsersScreen;
 	
 	/**
@@ -53,6 +53,9 @@ package org.flowerplatform.web {
 			INSTANCE = this;
 			
 			perspectives.push(new DefaultPerspective());
+			
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new AuthenticationViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());
 		}
 		
 		override public function start():void {
@@ -62,11 +65,11 @@ package org.flowerplatform.web {
 			webCommonPlugin.start();
 			
 			var hBox:HBox = new HBox();
-			test_addButton("User Form", new UserForm(), hBox, 6);
-			test_addButton("Users Screen", new UsersScreen(), hBox);
-			test_addButton("Organizations Screen", new OrganizationsScreen(), hBox);
-			test_addButton("Groups Screen", new GroupsScreen(), hBox);
-			test_addButton("Permissions Screen", new PermissionsScreen(), hBox);
+			test_addButton("User Form", UserForm, hBox);
+			test_addButton("Users Screen", UsersScreen, hBox);
+			test_addButton("Organizations Screen", OrganizationsScreen, hBox);
+			test_addButton("Groups Screen", GroupsScreen, hBox);
+			test_addButton("Permissions Screen", PermissionsScreen, hBox);
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
 			
 			var workbench:Workbench = new Workbench();
@@ -82,14 +85,15 @@ package org.flowerplatform.web {
 		/**
 		 * @author Mariana
 		 */
-		private function test_addButton(label:String, content:IPopupContent, hBox:HBox, entityId:int = -1):void {
+		private function test_addButton(label:String, cls:Class, hBox:HBox):void {
 			var btn:Button = new Button();
 			btn.label = label;
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
+				var content:IPopupContent = new cls();
 				handler.setPopupContent(content).show();
 				if (Object(content).hasOwnProperty("entityId")) {
-					Object(content).entityId = entityId;
+					Object(content).entityId = WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id;
 				}
 			});
 			hBox.addElement(btn);

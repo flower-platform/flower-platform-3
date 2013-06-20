@@ -22,11 +22,11 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG, 1);
 		}
 		
-		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {		
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {	
+			context.ctrlPressed = initialEvent.ctrlKey;
+			context.shiftPressed = initialEvent.shiftKey;
 			// used to know if tool activated from WakeUpTool
-			context.wakedUp = (getRendererFromDisplayCoordinates() is DiagramRenderer) && (ctrlPressed || shiftPressed);
-			context.ctrlPressed = ctrlPressed;
-			context.shiftPressed = shiftPressed;
+			context.wakedUp = (getRendererFromDisplayCoordinates() is DiagramRenderer) && (context.ctrlPressed || context.shiftPressed);			
 			return context.wakedUp;
 		}	
 		

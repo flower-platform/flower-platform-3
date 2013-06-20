@@ -39,7 +39,8 @@ after pressing OK.
 			}
 			
 			public function set popupHost(value:IPopupHost):void {
-				value.setLabel("Organizations Screen");
+				value.setLabel(WebPlugin.getInstance().getMessage("entity.organization._table"));
+				value.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"));
 			}
 			
 			private function approveDenyNewOrganizationRequest(approve:Boolean):void {

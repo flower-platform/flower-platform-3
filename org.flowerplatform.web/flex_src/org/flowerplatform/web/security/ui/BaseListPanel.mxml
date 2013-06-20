@@ -118,6 +118,10 @@
 			 * @flowerModelElementId _JBUmQVi7EeGbZZLUWiYvBA
 			 */ 		
 			protected function deleteBtnHandler():void {
+//				FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+//					.setTitle(CommonPlugin.getInstance().getMessage("warning"))
+//					.setText(CommonPlugin.getInstance().getMessage("delete.confirmation"))
+//					.s
 				Alert.show(CommonPlugin.getInstance().getMessage("delete.confirmation"), CommonPlugin.getInstance().getMessage("warning"), Alert.YES | Alert.NO, this, deleteResultHandler, null, Alert.YES);
 			}
 			
@@ -142,7 +146,6 @@
 				if (editMode && table.selectedItem == null) {
 					return;
 				}
-//				form.showPopup();
 				var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
 				var form:BaseForm = new formClass();
 				handler.setPopupContent(form).show();

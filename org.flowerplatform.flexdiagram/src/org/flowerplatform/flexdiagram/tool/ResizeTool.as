@@ -21,7 +21,7 @@ package org.flowerplatform.flexdiagram.tool {
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN);
 		}
 		
-		public function wakeUp(eventType:String, ctrlPressed:Boolean, shiftPressed:Boolean):Boolean {
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
 			return getResizeAnchorFromDisplayCoordinates() != null;
 		}
 		

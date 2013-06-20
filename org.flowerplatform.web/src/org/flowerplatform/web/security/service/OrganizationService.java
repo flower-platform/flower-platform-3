@@ -3,26 +3,18 @@ package org.flowerplatform.web.security.service;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.flowerplatform.web.database.DatabaseOperation;
-import org.flowerplatform.web.database.DatabaseOperationWrapper;
-import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
-import org.flowerplatform.web.security.sandbox.SecurityEntityAdaptor;
-import org.flowerplatform.web.security.sandbox.SecurityUtils;
-import org.hibernate.Query;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.service.ServiceRegistry;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.FavoriteItem;
 import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.NamedEntity;
@@ -34,6 +26,12 @@ import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.entity.dto.NamedDto;
 import org.flowerplatform.web.explorer.RootChildrenProvider;
+import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
+import org.flowerplatform.web.security.sandbox.SecurityEntityAdaptor;
+import org.flowerplatform.web.security.sandbox.SecurityUtils;
+import org.hibernate.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Service used to make CRUD operations on <code>Organization</code> entity.
@@ -254,6 +252,15 @@ public class OrganizationService extends ServiceObservable {
 	
 	String mergeAdminUIDto(ServiceInvocationContext context, final OrganizationAdminUIDto dto, final boolean requestMode) {
 		logger.debug("Merge organization = {}", dto.getName());
+		
+		final Organization initialOrganization = (Organization) new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				wrapper.setOperationResult(wrapper.find(Organization.class, dto.getId()));
+			}
+		}).getOperationResult();
+		
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
@@ -265,11 +272,9 @@ public class OrganizationService extends ServiceObservable {
 					return;
 				}
 				
-				Organization initialOrg = wrapper.find(Organization.class, dto.getId());
-				
 				// normal users are only allowed to add new organizations in request mode
 				if (!requestMode)
-					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(initialOrg, dto));
+					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(initialOrganization, dto));
 				
 				Organization org = wrapper.mergeDto(Organization.class, dto);
 				org.setName(dto.getName());
@@ -280,10 +285,17 @@ public class OrganizationService extends ServiceObservable {
 				org.setActivated(dto.isActivated());
 				
 				org = wrapper.merge(org);
-				observable.notifyObservers(Arrays.asList(UPDATE, initialOrg, org));
 			}
 		});
 		
+		Organization newOrganization = (Organization) new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				wrapper.setOperationResult(wrapper.find(Organization.class, dto.getId()));
+			}
+		}).getOperationResult();
+		observable.notifyObservers(Arrays.asList(UPDATE, initialOrganization, newOrganization));
 		return (String) wrapper.getOperationResult();
 	}
 	
@@ -292,11 +304,11 @@ public class OrganizationService extends ServiceObservable {
 	 * @flowerModelElementId _QTzGAl34EeGwLIVyv_iqEg
 	 */
 	public void delete(final List<Integer> ids) {
-		new DatabaseOperationWrapper(new DatabaseOperation() {
-			
-			@Override
-			public void run() {
-				for (Integer id : ids) {
+		for (final Integer id : ids) {
+			DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+						
+				@Override
+				public void run() {
 					Organization org = wrapper.find(Organization.class, Long.valueOf(id));
 					SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(org, null));
 					
@@ -305,14 +317,14 @@ public class OrganizationService extends ServiceObservable {
 					// this will also remove the Organization from the Group
 					org.getGroups().clear(); 
 					
-					for (Iterator<OrganizationUser> it = org.getOrganizationUsers().iterator(); it.hasNext();) {
-						OrganizationUser ou = it.next();
-						// manually remove the OrganizationUser from the User
-						ou.getUser().getOrganizationUsers().remove(ou);
-						it.remove();
-						// and delete the OrganizationUser
-						wrapper.delete(ou);
-					}
+//					for (Iterator<OrganizationUser> it = org.getOrganizationUsers().iterator(); it.hasNext();) {
+//						OrganizationUser ou = it.next();
+//						// manually remove the OrganizationUser from the User
+//						ou.getUser().getOrganizationUsers().remove(ou);
+//						it.remove();
+//						// and delete the OrganizationUser
+//						wrapper.delete(ou);
+//					}
 					
 					Query recentResources = wrapper.createQuery("SELECT e FROM RecentResource e WHERE e.organization = :organization");
 					recentResources.setParameter("organization", org);
@@ -329,11 +341,11 @@ public class OrganizationService extends ServiceObservable {
 					}
 					
 					wrapper.delete(org);
-					observable.notifyObservers(Arrays.asList(DELETE, org));
-					
+					wrapper.setOperationResult(org);
 				}
-			}
-		});
+			});
+			observable.notifyObservers(Arrays.asList(DELETE, wrapper.getOperationResult()));
+		}
 	}
 	
 	/**
@@ -434,17 +446,20 @@ public class OrganizationService extends ServiceObservable {
 	 * Delete the anonymous user belonging to the organization.
 	 */
 	private void onOrganizationDelete(final Organization organization) {
+		final List<User> list = new ArrayList<User>();
 		new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
-				List<User> list = wrapper.findByField(User.class, "login", SecurityEntityAdaptor.getAnonymousUserLogin(organization));
+				list.addAll(wrapper.findByField(User.class, "login", SecurityEntityAdaptor.getAnonymousUserLogin(organization)));
 				if (list.size() > 0) {
 					wrapper.delete(list.get(0));
-					observable.notifyObservers(Arrays.asList(DELETE, list.get(0)));
 				}
 			}
 		});
+		if (list.size() > 0) {
+			observable.notifyObservers(Arrays.asList(DELETE, list.get(0)));
+		}
 	}
 	
 	private Observer organizationObserver = new Observer() {

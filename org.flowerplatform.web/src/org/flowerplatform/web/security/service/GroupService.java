@@ -2,7 +2,6 @@ package org.flowerplatform.web.security.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -10,7 +9,6 @@ import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.Group;
-import org.flowerplatform.web.entity.GroupUser;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.PermissionEntity;
 import org.flowerplatform.web.entity.dto.NamedDto;
@@ -156,12 +154,19 @@ public class GroupService extends ServiceObservable {
 	 */
 	public String mergeAdminUIDto(ServiceInvocationContext context, final GroupAdminUIDto dto) {
 		logger.debug("Merge group = {}", dto.getName());
+		
+		Group initialGroup = (Group) new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				wrapper.setOperationResult(wrapper.find(Group.class, dto.getId()));
+			}
+		}).getOperationResult();
+		
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
 			@Override
 			public void run() {
-				Group initialGroup = wrapper.find(Group.class, dto.getId());
-				
 				Group group = wrapper.mergeDto(Group.class, dto);
 				
 				// check initial organization and new organization separately
@@ -207,10 +212,17 @@ public class GroupService extends ServiceObservable {
 				} else {			
 					group.setOrganization(null);
 				}
-				
-				observable.notifyObservers(Arrays.asList(UPDATE, initialGroup, group));
 			}
 		});
+		
+		Group newGroup = (Group) new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				wrapper.setOperationResult(wrapper.find(Group.class, dto.getId()));
+			}
+		}).getOperationResult();
+		observable.notifyObservers(Arrays.asList(UPDATE, initialGroup, newGroup));
 		return (String) wrapper.getOperationResult();
 	}
 	
@@ -219,11 +231,11 @@ public class GroupService extends ServiceObservable {
 	 * @flowerModelElementId _QTuNgl34EeGwLIVyv_iqEg
 	 */
 	public void delete(final List<Integer> ids) {
-		new DatabaseOperationWrapper(new DatabaseOperation() {
-			
-			@Override
-			public void run() {
-				for (Integer id : ids) {
+		for (final Integer id : ids) {
+			DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
+				
+				@Override
+				public void run() {
 					Group group = wrapper.find(Group.class, Long.valueOf(id));
 					
 					logger.debug("Delete {}", group);
@@ -236,34 +248,16 @@ public class GroupService extends ServiceObservable {
 					}
 					SecurityUtils.checkAdminSecurityEntitiesPermission(owners);
 					// update organization list of groups
-					// TODO Note cache: Because of the cache mechanism, this isn't done automatically.
 					if (group.getOrganization() != null) {
 						group.getOrganization().getGroups().remove(group);
 					}
-					// update GroupUser 
-					// TODO Note cache: Because of the cache mechanism, this isn't done automatically.
-					for (Iterator<GroupUser> it =  group.getGroupUsers().iterator(); it.hasNext();) {
-						GroupUser groupUser = it.next();				
-						removeGroupUserDependency(groupUser);
-						it.remove();
-					}			
+					// all GroupUsers will be deleted automatically 
 					wrapper.delete(group);
-					observable.notifyObservers(Arrays.asList(DELETE, group));
+					wrapper.setOperationResult(group);
 				} 
-			}
-		});
-	}
+			});
+			observable.notifyObservers(Arrays.asList(DELETE, wrapper.getOperationResult()));
+		}
+	}	
 	
-	/**
-	 * This method does not remove the groupUser from the groupUsers 
-	 * of the group (it does not have access to the iterator from which the method
-	 * is called).
-	 * 
-	 * Removes the association between groupUser and user.
-	 * 
-	 * @flowerModelElementId _QTu0kl34EeGwLIVyv_iqEg
-	 */
-	private void removeGroupUserDependency(final GroupUser groupUser) {
-		groupUser.getUser().getGroupUsers().remove(groupUser);
-	}
 }

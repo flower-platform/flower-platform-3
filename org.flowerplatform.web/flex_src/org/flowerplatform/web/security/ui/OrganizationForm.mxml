@@ -13,28 +13,37 @@
 	xmlns:ns="org.flowerplatform.web.security.ui.*" 
 	xmlns:utils="org.flowerplatform.web.utils.*" 
 	xmlns:form="com.crispico.flower.util.form.*"  
-	minWidth="500" minHeight="260" 
-	currentStateChange="PopUpManager.centerPopUp(this)">
+	minWidth="500" minHeight="260">
 
 <mx:Script>
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
 			import mx.controls.Alert;
-			import mx.managers.PopUpManager;
 			import mx.validators.Validator;
 			
+			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.WebPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
-						
+			
+			override public function set popupHost(value:IPopupHost):void {
+				super.popupHost = value;
+				popupHost.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"));
+			}
+			
 			/**
 			 * @flowerModelElementId _RBU6YF34EeGwLIVyv_iqEg
 			 */
 			override public function set entityId(_entityId:Number):void {
 				super.entityId = _entityId;
+				
+				popupHost.setLabel(entityId == 0
+					? WebPlugin.getInstance().getMessage('form.add', [WebPlugin.getInstance().getMessage('entity.organization')]) 
+					: WebPlugin.getInstance().getMessage('form.edit', [WebPlugin.getInstance().getMessage('entity.organization')]));
 				
 				if (WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.isAdmin)
 					currentState = "asAdminState";
@@ -42,7 +51,7 @@
 				if (entityId != 0) {
 					form.enabled = false;
 					save.enabled = false;
-					ModalSpinner.addModalSpinner(this, WebPlugin.getInstance().getMessage('spinner.processing'));
+					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage('spinner.processing'));
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("organizationService", "findByIdAsAdminUIDto", [entityId], this, dataReceivedCallback, exceptionCallback));
 				} else {
@@ -78,6 +87,8 @@
 				if (Validator.validateAll(form.validators).length > 0) {
 					return;
 				}							
+				
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
 				organization.name = form.orgName.text;
 				organization.URL = form.orgUrl.text;
 				organization.label = form.orgLabel.text;
@@ -129,7 +140,7 @@
 	
 	<mx:ControlBar id="organizationFormControlBar" width="100%" horizontalAlign="center">
 		 <mx:Button id="save" label="{WebPlugin.getInstance().getMessage('form.save')}" click="formOkHandler()"/>
-         <!--<mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>-->
+         <mx:Button id="cancel" label="{WebPlugin.getInstance().getMessage('form.cancel')}" click="formCancelHandler()"/>
 	</mx:ControlBar>   
 	
 </ns:BaseForm>

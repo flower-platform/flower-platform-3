@@ -30,7 +30,6 @@
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 			import org.flowerplatform.web.WebPlugin;
-			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.entity.dto.Dto;
 			import org.flowerplatform.web.common.security.dto.PermissionAdminUIDto;
 			
@@ -302,7 +301,7 @@
 			<mx:State name="default">
 				<mx:AddChild relativeTo="{menuBarFirstHBox}" position="firstChild">
 					<mx:HBox width="100%" horizontalAlign="left" verticalAlign="middle">
-						<common:FlowerLinkButton id="sortButton" label="{WebPlugin.getInstance().getMessage('entity.sort')}" iconURL='{WebCommonPlugin.getInstance().getResourceUrl("images/sort.png")}' enabled="false" click="sort(event)"/>
+						<common:FlowerLinkButton id="sortButton" label="{WebPlugin.getInstance().getMessage('entity.sort')}" iconURL='{WebPlugin.getInstance().getResourceUrl("images/sort.png")}' enabled="false" click="sort(event)"/>
 						<utils:HintButton toolTip="{WebPlugin.getInstance().getMessage('entity.sort.permissions.tooltip')}"/>
 					</mx:HBox>
 				</mx:AddChild>

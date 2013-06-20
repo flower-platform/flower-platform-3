@@ -1,5 +1,6 @@
 package org.flowerplatform.web.security.service;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.security.Permission;
 import java.security.Policy;
@@ -14,9 +15,7 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.regex.Matcher;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.service.ServiceRegistry;
@@ -165,7 +164,7 @@ public class PermissionService {
 			public void run() {
 				List<PermissionEntity> permissionEntities;
 				Query q = wrapper.createQuery("SELECT e FROM PermissionEntity e WHERE e.name in :names ORDER by e.type, e.name");
-				q.setParameter("names", patterns);
+				q.setParameterList("names", patterns);
 				q.setReadOnly(true);					
 				permissionEntities = q.list();
 				
@@ -208,6 +207,7 @@ public class PermissionService {
 	 * @see #validDto()
 	 * @flowerModelElementId _QT3-gl34EeGwLIVyv_iqEg
 	 */
+	@SuppressWarnings("unchecked")
 	public Map<String, String> mergeAdminUIDto(ServiceInvocationContext context, final PermissionAdminUIDto dto) {
 		logger.debug("Merge permission = {}", dto.getName());
 		
@@ -250,7 +250,6 @@ public class PermissionService {
 					return;
 				}		
 				SecurityUtils.checkModifyTreePermission(permissionEntity);		
-				wrapper.merge(permissionEntity);
 				
 				Map<String, String> rslt = new HashMap<String, String>();
 				
@@ -261,6 +260,7 @@ public class PermissionService {
 					}
 				}
 				
+				wrapper.merge(permissionEntity);
 				wrapper.setOperationResult(rslt);
 			}
 		});
@@ -310,16 +310,20 @@ public class PermissionService {
 	}
 	
 	private boolean isFolder(String path) {
-		path = path.split("/\\*")[0];
-		IResource resource;
-		try {
-			resource = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(path));
-		} catch (IllegalArgumentException e) {
-			return false;
-		}
-		return resource.exists();
+		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), path.split("/\\*")[0]);
+		return file.isDirectory() && file.exists();
+//		
+//		path = path.split("/\\*")[0];
+//		IResource resource;
+//		try {
+//			resource = ResourcesPlugin.getWorkspace().getRoot().getFolder(new Path(path));
+//		} catch (IllegalArgumentException e) {
+//			return false;
+//		}
+//		return resource.exists();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<PermissionEntity> findPermissionsByType(final String type) {
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 			
@@ -348,6 +352,7 @@ public class PermissionService {
 				String actions = SecurityEntityAdaptor.getAssignedTo(securityEntity);
 				Query q = wrapper.createQuery("SELECT p FROM PermissionEntity p WHERE p.actions LIKE :actions");
 				q.setParameter("actions", "%" + actions + "%");
+				@SuppressWarnings("unchecked")
 				List<PermissionEntity> list = q.list();
 					
 				for (PermissionEntity permission : list) {
@@ -402,6 +407,7 @@ public class PermissionService {
 					// update permissions where actions contain entity
 					Query q = wrapper.createQuery("SELECT p FROM PermissionEntity p WHERE p.actions LIKE :actions");
 					q.setParameter("actions", "%" + initialAssignedTo + "%");
+					@SuppressWarnings("unchecked")
 					List<PermissionEntity> list = q.list();
 					
 					for (PermissionEntity permission : list) {

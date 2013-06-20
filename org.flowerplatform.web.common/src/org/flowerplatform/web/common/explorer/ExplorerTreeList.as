@@ -27,7 +27,9 @@ package org.flowerplatform.web.common.explorer {
 		}
 		
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {
-			popupHost.refreshActions(this);
+			if (popupHost) {
+				popupHost.refreshActions(this);
+			}
 		}
 		
 		/**

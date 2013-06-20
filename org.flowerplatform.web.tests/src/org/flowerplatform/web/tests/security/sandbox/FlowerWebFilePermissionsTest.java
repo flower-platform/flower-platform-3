@@ -10,11 +10,11 @@ import java.security.PrivilegedAction;
 
 import javax.security.auth.Subject;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.RunnableWithParam;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.IPrincipal;
@@ -64,7 +64,7 @@ public class FlowerWebFilePermissionsTest {
 			}
 		});
 		
-		testFile = ResourcesPlugin.getWorkspace().getRoot().getLocation().makeAbsolute().toFile();
+		testFile = CommonPlugin.getInstance().getWorkspaceRoot();
 	}
 	
 	@After
