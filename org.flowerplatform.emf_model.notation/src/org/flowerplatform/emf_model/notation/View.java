@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface View extends EObject {
+public interface View extends NotationElement {
 	/**
 	 * Returns the value of the '<em><b>View Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->

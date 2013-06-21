@@ -1,4 +1,4 @@
-package org.flowerplatform.flexdiagram.tool.controller {
+package org.flowerplatform.flexdiagram.tool.controller.drag {
 	
 	/**
 	 * @author Cristina Constantinescu

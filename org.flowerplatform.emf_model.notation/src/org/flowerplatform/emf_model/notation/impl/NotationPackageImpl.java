@@ -18,6 +18,7 @@ import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.LayoutConstraint;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.Node;
+import org.flowerplatform.emf_model.notation.NotationElement;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.Note;
@@ -30,6 +31,13 @@ import org.flowerplatform.emf_model.notation.View;
  * @generated
  */
 public class NotationPackageImpl extends EPackageImpl implements NotationPackage {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass notationElementEClass = null;
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -138,6 +146,15 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		// Update the registry and return the package
 		EPackage.Registry.INSTANCE.put(NotationPackage.eNS_URI, theNotationPackage);
 		return theNotationPackage;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getNotationElement() {
+		return notationElementEClass;
 	}
 
 	/**
@@ -330,6 +347,8 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		isCreated = true;
 
 		// Create classes and their features
+		notationElementEClass = createEClass(NOTATION_ELEMENT);
+
 		viewEClass = createEClass(VIEW);
 		createEAttribute(viewEClass, VIEW__VIEW_TYPE);
 		createEReference(viewEClass, VIEW__PERSISTENT_CHILDREN);
@@ -384,13 +403,17 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
+		viewEClass.getESuperTypes().add(this.getNotationElement());
 		nodeEClass.getESuperTypes().add(this.getView());
 		diagramEClass.getESuperTypes().add(this.getView());
+		locationEClass.getESuperTypes().add(this.getNotationElement());
 		locationEClass.getESuperTypes().add(this.getLayoutConstraint());
 		boundsEClass.getESuperTypes().add(this.getLocation());
 		noteEClass.getESuperTypes().add(this.getNode());
 
 		// Initialize classes and features; add operations and parameters
+		initEClass(notationElementEClass, NotationElement.class, "NotationElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
 		initEClass(viewEClass, View.class, "View", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getView_ViewType(), ecorePackage.getEString(), "viewType", null, 1, 1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getView_PersistentChildren(), this.getNode(), null, "persistentChildren", null, 0, -1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

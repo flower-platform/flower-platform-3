@@ -72,6 +72,10 @@ public class NotationAdapterFactory extends AdapterFactoryImpl {
 	protected NotationSwitch<Adapter> modelSwitch =
 		new NotationSwitch<Adapter>() {
 			@Override
+			public Adapter caseNotationElement(NotationElement object) {
+				return createNotationElementAdapter();
+			}
+			@Override
 			public Adapter caseView(View object) {
 				return createViewAdapter();
 			}
@@ -118,6 +122,20 @@ public class NotationAdapterFactory extends AdapterFactoryImpl {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.flowerplatform.emf_model.notation.NotationElement <em>Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.flowerplatform.emf_model.notation.NotationElement
+	 * @generated
+	 */
+	public Adapter createNotationElementAdapter() {
+		return null;
+	}
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.flowerplatform.emf_model.notation.View <em>View</em>}'.

@@ -1,6 +1,7 @@
 package org.flowerplatform.editor.model {
 	import flash.utils.Dictionary;
 	
+	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProvider;
@@ -14,9 +15,7 @@ package org.flowerplatform.editor.model {
 		 */
 		protected var composedControllerProviders:Dictionary = new Dictionary();
 		
-		public function NotationDiagramShell() {
-			super();
-		}
+		public var editorStatefulClient:DiagramEditorStatefulClient;
 		
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			var viewType:String = View(model).viewType;

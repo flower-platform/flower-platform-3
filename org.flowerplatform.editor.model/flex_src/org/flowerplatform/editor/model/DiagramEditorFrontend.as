@@ -5,6 +5,7 @@ package org.flowerplatform.editor.model {
 	import mx.messaging.errors.NoChannelAvailableError;
 	
 	import org.flowerplatform.editor.EditorFrontend;
+	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
@@ -16,7 +17,7 @@ package org.flowerplatform.editor.model {
 	
 	public class DiagramEditorFrontend extends EditorFrontend {
 	
-		public var diagramShell:DiagramShell;
+		public var diagramShell:NotationDiagramShell;
 		
 		override protected function createChildren():void {
 			var scroller:InfiniteScroller = new InfiniteScroller();
@@ -47,6 +48,7 @@ package org.flowerplatform.editor.model {
 //			
 			diagramShell = new NotationDiagramShell();
 			diagramShell.diagramRenderer = diagramRenderer;
+			diagramShell.editorStatefulClient = DiagramEditorStatefulClient(editorStatefulClient);
 //			diagramShell.rootModel = diagram;
 
 			super.createChildren();

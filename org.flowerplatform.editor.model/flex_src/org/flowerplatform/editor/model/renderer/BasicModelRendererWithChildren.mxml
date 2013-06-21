@@ -67,18 +67,19 @@
 			}
 			
 			private function modelChangedHandler(event:PropertyChangeEvent):void {
+				var bounds:Bounds = Bounds(event.target);
 				switch (event.property) {
 					case "x":
-						x = data.x;
+						x = bounds.x;
 						break;
 					case "y":
-						y = data.y;
+						y = bounds.y;
 						break;
 					case "height":
-						height = data.height;
+						height = bounds.height;
 						break;
 					case "width":
-						width = data.width;
+						width = bounds.width;
 						break;
 				}
 			}

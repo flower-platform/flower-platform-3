@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!---
 @author Cristina Constantinescu
+@author Cristian Spiescu
 -->
 <selection:AnchorsSelectionRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 									xmlns:s="library://ns.adobe.com/flex/spark" 
@@ -14,7 +15,6 @@
 		<ui:ResizeAnchor id="anchorRightDown" type="right_down" />
 		<ui:ResizeAnchor id="anchorRightMiddle" type="right_middle" />		
 		<ui:ResizeAnchor id="anchorRightUp" type="right_up" />
-		
 		
 		<ui:RelationAnchor id="relationAnchor1" />
 		<ui:RelationAnchor id="relationAnchor2" />

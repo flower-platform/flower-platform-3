@@ -5,12 +5,13 @@ package org.flowerplatform.flexdiagram.controller.selection {
 	
 	/**
 	 * @author Cristina Constantinescu
+	 * @author Cristian Spiescu
 	 */ 
 	public class AnchorsSelectionDynamicModelExtraInfoController extends DynamicModelExtraInfoController {
 		
-		protected var anchorsSelectionRendererClass:Class;
+		public var anchorsSelectionRendererClass:Class;
 		
-		public function AnchorsSelectionDynamicModelExtraInfoController(diagramShell:DiagramShell, anchorsSelectionRendererClass:Class) {
+		public function AnchorsSelectionDynamicModelExtraInfoController(diagramShell:DiagramShell, anchorsSelectionRendererClass:Class = null) {
 			super(diagramShell);
 			this.anchorsSelectionRendererClass = anchorsSelectionRendererClass;
 		}

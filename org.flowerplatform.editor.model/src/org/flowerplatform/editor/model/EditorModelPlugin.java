@@ -2,6 +2,8 @@ package org.flowerplatform.editor.model;
 
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
+import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Location;
@@ -17,9 +19,25 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 	
+	protected ComposedChangeProcessor composedChangeProcessor;
+	
+	protected DiagramUpdaterChangeProcessor diagramUpdaterChangeProcessor;
+	
+	public ComposedChangeProcessor getComposedChangeProcessor() {
+		return composedChangeProcessor;
+	}
+
+	public DiagramUpdaterChangeProcessor getDiagramUpdaterChangeProcessor() {
+		return diagramUpdaterChangeProcessor;
+	}
+
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
+		
+		composedChangeProcessor = new ComposedChangeProcessor();
+		diagramUpdaterChangeProcessor = new DiagramUpdaterChangeProcessor();
+		composedChangeProcessor.addChangeDescriptionProcessor(diagramUpdaterChangeProcessor);
 		
 		CustomSerializationDescriptor viewSD = new CustomSerializationDescriptor(View.class)
 		.addDeclaredProperty("id")

@@ -3,9 +3,11 @@ package org.flowerplatform.editor.model {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BasicModelRendererController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Location;
@@ -16,7 +18,11 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.LightweightModelExtraInfoController;
+	import org.flowerplatform.flexdiagram.controller.selection.AnchorsSelectionController;
+	import org.flowerplatform.flexdiagram.controller.selection.AnchorsSelectionDynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
+	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
+	import org.flowerplatform.flexdiagram.tool.controller.drag.AbsoluteLayoutChildPlaceHolderDragController;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
@@ -57,10 +63,11 @@ package org.flowerplatform.editor.model {
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactories["class"] = composedControllerProviderFactory;
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(AnchorsSelectionDynamicModelExtraInfoController, { anchorsSelectionRendererClass: StandardAnchorsSelectionRenderer });
 			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new ControllerFactory(NodeAbsoluteLayoutRectangleController);
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(BasicModelRendererController);
-			
+			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(AnchorsSelectionController);
+			composedControllerProviderFactory.dragControllerClass = new ControllerFactory(AbsoluteNodePlaceHolderDragController);
 		}
 
 		override protected function registerClassAliases():void {
@@ -69,6 +76,8 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
 			registerClassAliasFromAnnotation(Bounds);
+			
+			registerClassAliasFromAnnotation(MoveResizeServerCommand);
 		}
 		
 		override protected function registerMessageBundle():void {

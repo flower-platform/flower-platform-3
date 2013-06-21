@@ -12,6 +12,9 @@ package org.flowerplatform.communication.transferable_object {
 			}
 			return registry.getObjectById(id);	
 		}
-
+		
+		public function get referenceIdAsString():String {
+			return String(referenceId);
+		}
 	}
 }

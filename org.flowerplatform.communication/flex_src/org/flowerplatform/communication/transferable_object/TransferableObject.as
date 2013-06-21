@@ -59,5 +59,9 @@ package org.flowerplatform.communication.transferable_object {
 			_id = 0;
 		}
 		
+		public function get idAsString():String {
+			return String(id);
+		}
+		
 	}
 }

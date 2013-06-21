@@ -24,7 +24,7 @@ package org.flowerplatform.emf_model.notation;
  * @model
  * @generated
  */
-public interface Location extends LayoutConstraint {
+public interface Location extends NotationElement, LayoutConstraint {
 	/**
 	 * Returns the value of the '<em><b>X</b></em>' attribute.
 	 * <!-- begin-user-doc -->

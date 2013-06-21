@@ -43,7 +43,7 @@ import org.flowerplatform.emf_model.notation.View;
  *
  * @generated
  */
-public abstract class ViewImpl extends EObjectImpl implements View {
+public abstract class ViewImpl extends NotationElementImpl implements View {
 	/**
 	 * The default value of the '{@link #getViewType() <em>View Type</em>}' attribute.
 	 * <!-- begin-user-doc -->

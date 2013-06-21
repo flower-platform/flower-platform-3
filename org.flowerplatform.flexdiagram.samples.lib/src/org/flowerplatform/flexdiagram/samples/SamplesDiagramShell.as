@@ -17,6 +17,7 @@ package org.flowerplatform.flexdiagram.samples {
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
+	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelDragController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelDragToCreateRelationController;
@@ -27,14 +28,13 @@ package org.flowerplatform.flexdiagram.samples {
 	import org.flowerplatform.flexdiagram.samples.controller.BasicSubModelSelectionController;
 	import org.flowerplatform.flexdiagram.samples.model.BasicModel;
 	import org.flowerplatform.flexdiagram.samples.model.BasicSubModel;
-	import org.flowerplatform.flexdiagram.samples.renderer.BasicModelAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.samples.renderer.SubModelIconItemRenderer;
-	import org.flowerplatform.flexdiagram.tool.controller.IDragController;
 	import org.flowerplatform.flexdiagram.tool.controller.IDragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	import org.flowerplatform.flexdiagram.tool.controller.IResizeController;
 	import org.flowerplatform.flexdiagram.tool.controller.ISelectOrDragToCreateElementController;
 	import org.flowerplatform.flexdiagram.tool.controller.SelectOrDragToCreateElementController;
+	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -80,7 +80,7 @@ package org.flowerplatform.flexdiagram.samples {
 			basicSubModelRendererController = new ClassReferenceRendererController(this, SubModelIconItemRenderer);
 			
 			basicModelSelectionController = new AnchorsSelectionController(this);
-			basicModelExtraInfoController = new AnchorsSelectionDynamicModelExtraInfoController(this, BasicModelAnchorsSelectionRenderer);
+			basicModelExtraInfoController = new AnchorsSelectionDynamicModelExtraInfoController(this, StandardAnchorsSelectionRenderer);
 			
 			basicSubModelSelectionController = new BasicSubModelSelectionController(this);
 			basicSubModelInplaceEditorController = new BasicSubModelInplaceEditorController(this);
