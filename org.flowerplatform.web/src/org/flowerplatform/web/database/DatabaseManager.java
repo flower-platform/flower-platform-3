@@ -8,19 +8,11 @@ import java.util.Properties;
 
 import javax.security.auth.Subject;
 
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.teneo.PersistenceOptions;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
-import org.hibernate.dialect.H2Dialect;
-import org.hibernate.dialect.PostgresPlusDialect;
-import org.hibernate.event.service.spi.EventListenerRegistry;
-import org.hibernate.event.spi.EventType;
-import org.hibernate.internal.SessionFactoryImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import org.eclipse.emf.teneo.hibernate.HbHelper;
+import org.eclipse.emf.teneo.hibernate.HbSessionDataStore;
 import org.flowerplatform.web.FlowerWebProperties;
 import org.flowerplatform.web.FlowerWebProperties.AddBooleanProperty;
 import org.flowerplatform.web.FlowerWebProperties.AddProperty;
@@ -43,6 +35,14 @@ import org.flowerplatform.web.security.sandbox.SecurityEntityListener;
 import org.flowerplatform.web.security.service.OrganizationService;
 import org.flowerplatform.web.security.service.UserService;
 import org.flowerplatform.web.temp.GeneralService;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Environment;
+import org.hibernate.dialect.H2Dialect;
+import org.hibernate.event.service.spi.EventListenerRegistry;
+import org.hibernate.event.spi.EventType;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DatabaseManager {
 
@@ -55,6 +55,8 @@ public class DatabaseManager {
 	private static final String PROP_DB_INIT_WITH_TEST_DATA = "database.init-with-test-data";
 	
 	private static final String PROP_DB_INIT_WITH_TEST_DATA_INTERNAL = "internal";
+	
+	public static final String DS_NAME = "flowerDataStore";
 	
 	private SessionFactory factory;
 	
@@ -88,8 +90,10 @@ public class DatabaseManager {
 	 * @author Mariana
 	 */
 	public void initialize() {
-		Configuration config = new Configuration();
-		Properties props = config.getProperties();
+//		Configuration config = new Configuration();
+//		Properties props = config.getProperties();
+		Properties props = new Properties();
+		
 //		props.setProperty(Environment.DRIVER, "org.postgresql.Driver");
 //		props.setProperty(Environment.USER, "postgres");
 //		props.setProperty(Environment.URL, "jdbc:postgresql://localhost/flower-dev-center");
@@ -114,7 +118,22 @@ public class DatabaseManager {
 		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
 		props.setProperty(PersistenceOptions.ADD_INDEX_FOR_FOREIGN_KEY, "false");
 		
-		HbDataStore hbds = EntityPackage.eINSTANCE.createAndInitializeHbDataStore(props, config);
+		// create the HbDataStore using the name
+		final HbDataStore hbds = HbHelper.INSTANCE.createRegisterDataStore(DS_NAME);
+		 
+		// set the properties
+		hbds.setDataStoreProperties(props);
+		// sets its epackages stored in this datastore
+		hbds.setEPackages(new EPackage[] { EntityPackage.eINSTANCE });
+//		((HbSessionDataStore) hbds).setConfiguration(config); 
+		
+		// initialize
+		try {
+			hbds.initialize();
+		} catch (Throwable e) {
+			logger.error("FATAL: error while initializing the HbDataStore", e);
+		}
+
 		factory = hbds.getSessionFactory();
 		EventListenerRegistry registry = ((SessionFactoryImpl) factory).getServiceRegistry().getService(EventListenerRegistry.class);
 		SecurityEntityListener listener = new SecurityEntityListener();

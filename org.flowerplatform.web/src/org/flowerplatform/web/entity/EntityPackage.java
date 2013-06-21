@@ -1108,11 +1108,6 @@ public interface EntityPackage extends EPackage {
 	int ORGANIZATION_MEMBERSHIP_STATUS = 16;
 
 	/**
-	 * @author Mariana
-	 */
-	HbDataStore createAndInitializeHbDataStore(Properties properties, Configuration config);
-	
-	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.web.entity.Entity <em>Entity</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.flowerplatform.emf_model.notation/src"
+    editDirectory="" editorDirectory="" modelPluginID="org.flowerplatform.emf_model.notation"
+    modelName="Notation" editorPluginClass="org.flowerplatform.emf_model.eclipse_editor.EclipseEditorPlugin"
+    testsDirectory="" importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0"
+    copyrightFields="false" editorPluginID="org.flowerplatform.emf_model.notation.edit">
+  <foreignModel>Notation.ecore</foreignModel>
+  <genPackages prefix="Notation" basePackage="org.flowerplatform.emf_model" disposableProviderFactory="true"
+      ecorePackage="Notation.ecore#/">
+    <genClasses image="false" ecoreClass="Notation.ecore#//View">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//View/viewType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Notation.ecore#//View/persistentChildren"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//View/viewDetails"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Notation.ecore#//View/diagrammableElement"/>
+      <genOperations ecoreOperation="Notation.ecore#//View/getAllChildren"/>
+    </genClasses>
+    <genClasses ecoreClass="Notation.ecore#//Node">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Notation.ecore#//Node/layoutConstraint"/>
+    </genClasses>
+    <genClasses ecoreClass="Notation.ecore#//Diagram">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Diagram/name"/>
+    </genClasses>
+    <genClasses image="false" ecoreClass="Notation.ecore#//LayoutConstraint"/>
+    <genClasses ecoreClass="Notation.ecore#//Location">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Location/x"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Location/y"/>
+    </genClasses>
+    <genClasses ecoreClass="Notation.ecore#//Bounds">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Bounds/width"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Bounds/height"/>
+    </genClasses>
+    <genClasses ecoreClass="Notation.ecore#//Note">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Note/text"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

@@ -34,6 +34,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool"/>
     <classEntry path="org.flowerplatform.flexdiagram.controller.ISelectOrDragToCreateElementController"/>
     <classEntry path="org.flowerplatform.flexdiagram.tool.ZoomTool"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.ControllerFactory"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

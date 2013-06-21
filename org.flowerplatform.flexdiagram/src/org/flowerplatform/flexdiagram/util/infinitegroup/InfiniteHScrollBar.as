@@ -18,11 +18,46 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 				
 		private var clickOffset:Point;      
 				
+		override public function set minimum(value:Number):void {	
+			var myValue:Number = getMyMinimumValue(value);
+			if (myValue== super.minimum) {
+				return;
+			}
+			super.minimum = myValue;
+			invalidateDisplayList();
+		}
+		
+		override public function set maximum(value:Number):void {
+			var myValue:Number = getMyMaximumValue(value);
+			if (myValue == super.maximum) {
+				return;
+			}
+			super.maximum = myValue;
+			invalidateSkinState();
+		}
+		
+		private function getMyMinimumValue(flexValue:Number = NaN):Number {
+			var myValue:Number = flexValue;
+			if (viewport != null) {
+				myValue = Math.min(0, viewport.horizontalScrollPosition);
+			}
+			return myValue;
+		}
+		
+		private function getMyMaximumValue(flexValue:Number = NaN):Number {		
+			var myValue:Number = flexValue;
+			var infiniteViewport:InfiniteDataRenderer = InfiniteDataRenderer(viewport);
+			if (infiniteViewport != null && infiniteViewport.contentRect != null) {
+				myValue = Math.max(infiniteViewport.getMaxHorizontalScrollPosition(), viewport.horizontalScrollPosition);
+			}
+			return myValue;
+		}
+		
 		override mx_internal function viewportHorizontalScrollPositionChangeHandler(event:PropertyChangeEvent):void {
 			super.viewportHorizontalScrollPositionChangeHandler(event);
 			if (viewport) {
-				minimum = Math.min(contentMinimum, viewport.horizontalScrollPosition);
-				maximum = Math.max(contentMaximum, viewport.horizontalScrollPosition);
+				minimum = getMyMinimumValue();
+				maximum = getMyMaximumValue();
 			}
 		}
 		
@@ -38,13 +73,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			var p:Point = track.globalToLocal(new Point(event.stageX, event.stageY));
 			var newValue:Number = pointToValue(p.x - clickOffset.x, p.y - clickOffset.y);
 			newValue = nearestValidValue(newValue, snapInterval);
-			
-			if (newValue < contentMinimum) {
-				newValue = contentMinimum;
-			}
-			if (newValue > contentMaximum) {
-				newValue = contentMaximum;
-			}
+		
 			if (newValue != pendingValue) {
 				dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
 				if (getStyle("liveDragging") === true) {

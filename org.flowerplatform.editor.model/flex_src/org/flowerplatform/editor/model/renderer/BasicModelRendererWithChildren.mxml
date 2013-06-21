@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristian Spiescu
+--><s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
+	cacheAsBitmap="true"
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" >
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.PropertyChangeEvent;
+			
+			import org.flowerplatform.emf_model.notation.Bounds;
+			import org.flowerplatform.emf_model.notation.Node;
+			import org.flowerplatform.emf_model.notation.View;
+			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+			
+			private var _diagramShell:DiagramShell;
+			protected var visualChildrenController:IVisualChildrenController;
+			private var _shouldRefreshVisualChildren:Boolean;
+			
+			public function get diagramShell():DiagramShell {
+				return _diagramShell;
+			}
+			
+			public function set diagramShell(value:DiagramShell):void {
+				_diagramShell = value;
+			}
+			
+			public function get shouldRefreshVisualChildren():Boolean {
+				return _shouldRefreshVisualChildren;
+			}
+			
+			public function set shouldRefreshVisualChildren(value:Boolean):void {
+				_shouldRefreshVisualChildren = value;
+			}
+			
+			override public function set data(value:Object):void {
+				if (super.data == value) {
+					return;
+				}
+				if (super.data != null) {
+					var bounds:Bounds = Bounds(Node(data).layoutConstraint);
+					bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+				}
+				
+				super.data = value;
+				
+				if (data == null) {
+					visualChildrenController = null;
+				} else {
+					visualChildrenController = diagramShell.getControllerProvider(data).getVisualChildrenController(data);
+				}
+				if (data != null) {
+					bounds = Bounds(Node(data).layoutConstraint);
+					bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					x = bounds.x;
+					y = bounds.y;
+					width = bounds.width;
+					height = bounds.height;
+				}
+			}
+			
+			private function modelChangedHandler(event:PropertyChangeEvent):void {
+				switch (event.property) {
+					case "x":
+						x = data.x;
+						break;
+					case "y":
+						y = data.y;
+						break;
+					case "height":
+						height = data.height;
+						break;
+					case "width":
+						width = data.width;
+						break;
+				}
+			}
+
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+				if (visualChildrenController != null) {
+					visualChildrenController.refreshVisualChildren(data);
+				}
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
+				graphics.clear();
+				graphics.lineStyle(1);
+				graphics.beginFill(0xCCCCCC, 0);
+				graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
+			}
+		]]>
+	</fx:Script>
+<!--	<s:Rect width="100%" height="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="0x0000FF" weight="2"/>
+		</s:stroke>
+	</s:Rect>
+--></s:DataRenderer>

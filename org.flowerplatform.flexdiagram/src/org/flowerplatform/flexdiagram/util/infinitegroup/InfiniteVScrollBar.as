@@ -3,8 +3,10 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import mx.core.InteractionMode;
 	import mx.core.mx_internal;
 	import mx.events.PropertyChangeEvent;
+	import mx.events.ResizeEvent;
 	
 	import spark.components.VScrollBar;
 	import spark.events.TrackBaseEvent;
@@ -17,12 +19,47 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 	public class InfiniteVScrollBar extends VScrollBar {
 		
 		private var clickOffset:Point;   
+				
+		override public function set minimum(value:Number):void {	
+			var myValue:Number = getMyMinimumValue(value);		
+			if (myValue== super.minimum) {
+				return;
+			}
+			super.minimum = myValue;
+			invalidateDisplayList();
+		}
+		
+		override public function set maximum(value:Number):void {			
+			var myValue:Number = getMyMaximumValue(value);
+			if (myValue == super.maximum) {
+				return;
+			}
+			super.maximum = myValue;
+			invalidateSkinState();
+		}
+
+		private function getMyMinimumValue(flexValue:Number = NaN):Number {
+			var myValue:Number = flexValue;
+			if (viewport != null) {
+				myValue = Math.min(0, viewport.verticalScrollPosition);
+			}
+			return myValue;
+		}
+		
+		private function getMyMaximumValue(flexValue:Number = NaN):Number {		
+			var myValue:Number = flexValue;
+			var infiniteViewport:InfiniteDataRenderer = InfiniteDataRenderer(viewport);
+			if (infiniteViewport != null && infiniteViewport.contentRect != null) {
+				myValue = Math.max(infiniteViewport.getMaxVerticalScrollPosition(), viewport.verticalScrollPosition);
+			}
+			return myValue;
+		}
 		
 		override mx_internal function viewportVerticalScrollPositionChangeHandler(event:PropertyChangeEvent):void {
 			super.viewportVerticalScrollPositionChangeHandler(event);
-			if (viewport) {
-				minimum = Math.min(contentMinimum, viewport.verticalScrollPosition);
-				maximum = Math.max(contentMaximum, viewport.verticalScrollPosition);
+			if (viewport) {					
+				minimum = getMyMinimumValue();
+				maximum = getMyMaximumValue();
 			}
 		}
 		
@@ -38,13 +75,7 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			var p:Point = track.globalToLocal(new Point(event.stageX, event.stageY));
 			var newValue:Number = pointToValue(p.x - clickOffset.x, p.y - clickOffset.y);
 			newValue = nearestValidValue(newValue, snapInterval);
-			
-			if (newValue < contentMinimum) {
-				newValue = contentMinimum;
-			}
-			if (newValue > contentMaximum) {
-				newValue = contentMaximum;
-			}
+					
 			if (newValue != pendingValue) {
 				dispatchEvent(new TrackBaseEvent(TrackBaseEvent.THUMB_DRAG));
 				if (getStyle("liveDragging") === true) {
@@ -73,6 +104,6 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 			var validValue:Number = ((value - lower) >= ((upper - lower) / 2)) ? upper : lower;
 			
 			return validValue / scale;
-		}
+		}		
 	}
 }

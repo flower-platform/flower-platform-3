@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ <copyright>
+ </copyright>
+
+ $Id$
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.ui.newWizards">
+      <category
+            id="org.eclipse.emf.ecore.Wizard.category.ID"
+            name="%_UI_Wizard_category"/>
+      <wizard
+            id="com.crispico.flower.mp.model.notation.presentation.NotationModelWizardID"
+            name="%_UI_NotationModelWizard_label"
+            class="com.crispico.flower.mp.model.eclipse_editor.ModelWizard"
+            category="org.eclipse.emf.ecore.Wizard.category.ID"
+            icon="icons/full/obj16/NotationModelFile.gif">
+         <description>%_UI_NotationModelWizard_description</description>
+         <selection class="org.eclipse.core.resources.IResource"/>
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.editors">
+      <editor
+            id="com.crispico.flower.mp.model.notation.presentation.NotationEditorID"
+            name="%_UI_NotationEditor_label"
+            icon="icons/full/obj16/NotationModelFile.gif"
+            extensions="notation"
+            class="com.crispico.flower.mp.model.eclipse_editor.Editor"
+            contributorClass="com.crispico.flower.mp.model.eclipse_editor.ActionBarContributor">
+      </editor>
+   </extension>
+
+</plugin>

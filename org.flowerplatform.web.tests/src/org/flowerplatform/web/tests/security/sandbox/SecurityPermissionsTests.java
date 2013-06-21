@@ -3,8 +3,11 @@ package org.flowerplatform.web.tests.security.sandbox;
 import java.security.Policy;
 import java.util.Properties;
 
+import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.teneo.PersistenceOptions;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
+import org.eclipse.emf.teneo.hibernate.HbHelper;
+import org.eclipse.emf.teneo.hibernate.HbSessionDataStore;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.H2Dialect;
@@ -73,7 +76,25 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 //		props.setProperty(Environment.HBM2DDL_AUTO, "create-drop");
 //		props.setProperty(Environment.SHOW_SQL, "true");
 		
-		HbDataStore hbds = EntityPackage.eINSTANCE.createAndInitializeHbDataStore(props, config);
+			// the name of the session factory
+			String hbName = "Entity";
+			// create the HbDataStore using the name
+			final HbDataStore hbds = HbHelper.INSTANCE.createRegisterDataStore(hbName);
+			 
+			// set the properties
+			hbds.setDataStoreProperties(props);
+			// sets its epackages stored in this datastore
+			hbds.setEPackages(new EPackage[] { EntityPackage.eINSTANCE });
+			((HbSessionDataStore) hbds).setConfiguration(config); 
+			
+			try {
+			// initialize
+			hbds.initialize();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+
+		
 		WebPlugin.getInstance().getDatabaseManager().setFactory(hbds.getSessionFactory());
 		EventListenerRegistry registry = ((SessionFactoryImpl) hbds.getSessionFactory()).getServiceRegistry().getService(EventListenerRegistry.class);
 		SecurityEntityListener listener = new SecurityEntityListener();
