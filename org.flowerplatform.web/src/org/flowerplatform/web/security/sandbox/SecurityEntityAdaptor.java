@@ -49,16 +49,19 @@ public class SecurityEntityAdaptor {
 		String[] entityNames = assignedTo.split(",");
 		for (String name: entityNames) {
 			name = name.trim();
-			securityEntities.add(toSecurityEntity(name));
+			securityEntities.add(toSecurityEntity(name, false));
 		}
 		return securityEntities;
 	}
 	
 	/**
+	 * If <code>eager</code> is true, will also fetch the associations for the entity. This is
+	 * to avoid lazy initialization exception when the entity is accessed from the permissions cache.
+	 * 
 	 * @author Florin
 	 * @author Mariana
 	 */
-	public static ISecurityEntity toSecurityEntity(final String assignedTo) {
+	public static ISecurityEntity toSecurityEntity(final String assignedTo, final boolean eager) {
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
 					
 			@Override
@@ -66,14 +69,23 @@ public class SecurityEntityAdaptor {
 				if (assignedTo.startsWith(ORGANIZATION_PREFIX)) {
 					List<Organization> orgs = wrapper.findByField(Organization.class, "name", assignedTo.substring(1));
 					if (orgs.size() > 0) {
-						wrapper.setOperationResult(orgs.get(0));
+						Organization organization = orgs.get(0);
+						if (eager) {
+							organization.getOrganizationUsers().size();
+							organization.getGroups().size();
+						}
+						wrapper.setOperationResult(organization);
 						return;
 					}
 				} else if (assignedTo.startsWith(GROUP_PREFIX)) {
 					// if @ALL group exists in database this is ok, if not this case should be handled.
 					List<Group> groups = wrapper.findByField(Group.class, "name", assignedTo.substring(1));
 					if (groups.size() > 0) {
-						wrapper.setOperationResult(groups.get(0));
+						Group group = groups.get(0);
+						if (eager) {
+							group.getGroupUsers().size();
+						}
+						wrapper.setOperationResult(group);
 						return;
 					} else {
 						// @ALL does not exist in the DB
@@ -87,7 +99,12 @@ public class SecurityEntityAdaptor {
 				} else if (assignedTo.startsWith(USER_PREFIX)) {
 					List<User> users = wrapper.findByField(User.class, "login", assignedTo.substring(1));
 					if (users.size() > 0) {
-						wrapper.setOperationResult(users.get(0));
+						User user = users.get(0);
+						if (eager) {
+							user.getOrganizationUsers().size();
+							user.getGroupUsers().size();
+						}
+						wrapper.setOperationResult(user);
 						return;
 					}
 				}

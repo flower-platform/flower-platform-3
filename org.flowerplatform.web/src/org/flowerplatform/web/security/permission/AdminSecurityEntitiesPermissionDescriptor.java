@@ -86,7 +86,7 @@ public class AdminSecurityEntitiesPermissionDescriptor extends PermissionDescrip
 		if (!permission.getActions().equals(PermissionEntity.ANY_ENTITY)) {		
 			String[] entityNames = permission.getActions().split(",");
 			for (String name: entityNames) {				
-				ISecurityEntity entity = SecurityEntityAdaptor.toSecurityEntity(name.trim());
+				ISecurityEntity entity = SecurityEntityAdaptor.toSecurityEntity(name.trim(), false);
 				if (entity != null) {
 					// only groups and organizations are allowed here
 					if (!(entity instanceof Organization) && !(entity instanceof Group)) {

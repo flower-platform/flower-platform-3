@@ -259,7 +259,8 @@ public class FlowerWebPolicy extends Policy {
 
 			treePermissionCollection = new TreePermissionCollection(treePermissionType, getRuntimeWorkspace());
 			for (org.flowerplatform.web.entity.PermissionEntity permissionEntity : permissions) {
-				ISecurityEntity securityEntity = SecurityEntityAdaptor.toSecurityEntity(permissionEntity.getAssignedTo());
+				// use eager loading for the entity's associations because we're keeping the entity in the cache
+				ISecurityEntity securityEntity = SecurityEntityAdaptor.toSecurityEntity(permissionEntity.getAssignedTo(), true);
 				AbstractTreePermission treePermission = (AbstractTreePermission) permissionService.createPermission(permissionEntity);
 				treePermissionCollection.addPermission(securityEntity, treePermission);
 			}

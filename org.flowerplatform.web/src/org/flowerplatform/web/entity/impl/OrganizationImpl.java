@@ -20,8 +20,6 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.flowerplatform.web.database.DatabaseOperation;
-import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityPackage;
 import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.ISecurityEntity;
@@ -29,7 +27,6 @@ import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.entity.User;
-import org.hibernate.Query;
 
 /**
  * <!-- begin-user-doc -->
@@ -517,31 +514,22 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 	 * @author Mariana
 	 */
 	public boolean contains(final ISecurityEntity securityEntity) {
-		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
-			
-			@Override
-			public void run() {
-				boolean includes = false;
-				
-				if (securityEntity instanceof User) {
-					User user = (User) securityEntity;
-					Query query = wrapper.createQuery("SELECT u " +
-													"FROM User u join u.organizationUsers ou join ou.organization o " +
-													"WHERE o.id = :organization_id AND u.id = :user_id");
-					query.setParameter("organization_id", getId());
-					query.setParameter("user_id", user.getId());
-					includes = query.list().size() > 0;
-				} else if (securityEntity instanceof Group) {
-					Organization organization = wrapper.find(Organization.class, getId());
-					includes = organization.getGroups().contains(securityEntity);
-				} else if (securityEntity instanceof Organization) {
-					includes = OrganizationImpl.this.equals(securityEntity);
+		boolean includes = false;
+		
+		if (securityEntity instanceof User) {
+			User user = (User) securityEntity;
+			for (OrganizationUser ou : getOrganizationUsers()) {
+				if (user.equals(ou.getUser())) {
+					includes = true;
+					break;
 				}
-				
-				wrapper.setOperationResult(includes);
 			}
-		});
-		return (boolean) wrapper.getOperationResult();
+		} else if (securityEntity instanceof Group) {
+			includes = getGroups().contains(securityEntity);
+		} else if (securityEntity instanceof Organization) {
+			includes = OrganizationImpl.this.equals(securityEntity);
+		}
+		return includes;
 	}
 
 	/**

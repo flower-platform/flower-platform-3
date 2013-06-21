@@ -160,7 +160,7 @@ public class SecurityUtils {
 	 * @author Mariana
 	 */
 	public static String validateSecurityEntity(String assignedTo) {
-		ISecurityEntity entity = SecurityEntityAdaptor.toSecurityEntity(assignedTo);
+		ISecurityEntity entity = SecurityEntityAdaptor.toSecurityEntity(assignedTo, false);
 		if (entity == null) {
 			String message;
 			if (assignedTo.startsWith(PermissionEntity.ORGANIZATION_PREFIX)) {
