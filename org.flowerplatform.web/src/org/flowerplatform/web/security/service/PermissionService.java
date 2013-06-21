@@ -361,7 +361,7 @@ public class PermissionService {
 						wrapper.delete(permission);
 					} else {
 						// update actions
-						List<ISecurityEntity> assignableEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(permission.getActions());
+						List<ISecurityEntity> assignableEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(permission.getActions(), true);
 						for (Iterator<ISecurityEntity> it = assignableEntities.iterator(); it.hasNext();) {
 							Entity entity = (Entity) it.next();
 							if (entity != null) {

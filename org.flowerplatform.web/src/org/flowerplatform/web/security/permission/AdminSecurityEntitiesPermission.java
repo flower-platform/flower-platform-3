@@ -73,14 +73,14 @@ public class AdminSecurityEntitiesPermission extends Permission {
 			return true;
 		}
 		if (assignableSecurityEntities == null) {			
-			assignableSecurityEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(actions);
+			assignableSecurityEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(actions, true);
 		}
 		
 		AdminSecurityEntitiesPermission other = (AdminSecurityEntitiesPermission) permission;
 		if (other.actions.equals(PermissionEntity.ANY_ENTITY)) {
 			return false;
 		}
-		List<ISecurityEntity> securityEntitiesToBeChecked = SecurityEntityAdaptor.csvStringToSecurityEntityList(other.actions);
+		List<ISecurityEntity> securityEntitiesToBeChecked = SecurityEntityAdaptor.csvStringToSecurityEntityList(other.actions, false);
 		boolean implies = false;
 		for (ISecurityEntity securityEntity: securityEntitiesToBeChecked) {
 			implies |= SecurityUtils.securityEntityIsAssignable(assignableSecurityEntities, securityEntity); 
