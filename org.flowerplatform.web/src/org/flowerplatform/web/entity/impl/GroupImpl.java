@@ -16,8 +16,6 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.flowerplatform.web.database.DatabaseOperation;
-import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityPackage;
 import org.flowerplatform.web.entity.Group;
 import org.flowerplatform.web.entity.GroupUser;
@@ -158,33 +156,25 @@ public class GroupImpl extends NamedEntityImpl implements Group {
 	 * @author Mariana
 	 */
 	public boolean contains(final ISecurityEntity securityEntity) {
-		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {
-			
-			@Override
-			public void run() {
-				boolean includes = false;
-				
-				if (securityEntity instanceof User) {
-					User user = (User) securityEntity;
-					if (ALL.equals(getName())) {
+		boolean includes = false;
+		
+		if (securityEntity instanceof User) {
+			User user = (User) securityEntity;
+			if (ALL.equals(getName())) {
+				includes = true;
+			} else {
+				for (GroupUser groupUser: getGroupUsers()) {
+					if (user.equals(groupUser.getUser())) {
 						includes = true;
-					} else {
-						Group group = wrapper.find(Group.class, getId());
-						for (GroupUser groupUser: group.getGroupUsers()) {
-							if (user.equals(groupUser.getUser())) {
-								includes = true;
-								break;
-							}
-						}
+						break;
 					}
-				} else if (securityEntity instanceof Group) {
-					includes = GroupImpl.this.equals(securityEntity);
-				} 		
-
-				wrapper.setOperationResult(includes);
+				}
 			}
-		});
-		return (boolean) wrapper.getOperationResult();
+		} else if (securityEntity instanceof Group) {
+			includes = GroupImpl.this.equals(securityEntity);
+		} 		
+
+		return includes;
 	}
 
 	/**
