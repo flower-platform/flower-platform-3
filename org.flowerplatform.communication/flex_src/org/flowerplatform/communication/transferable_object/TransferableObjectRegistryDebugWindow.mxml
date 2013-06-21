@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristi
+-->
+<popup:ResizablePopupWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+							xmlns:s="library://ns.adobe.com/flex/spark" 
+							xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:popup="com.crispico.flower.util.popup.*"
+							title="{TITLE}" creationComplete="refreshClickHanlder()">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.mx_internal;
+			import mx.utils.DescribeTypeCache;
+			
+			import org.flowerplatform.flexutil.Utils;
+			
+			public static const TITLE:String = "TransferableRegistry Debug Window";
+			
+			public var transferableObjectRegistry:AbstractTransferableObjectRegistry;
+			
+			private function refreshClickHanlder():void	{
+				var totalObjectsCount:int;
+				var shownObjectsCount:int;
+				var excludedClasses:Array = excludedClassesText.text.split(",");
+				
+				var list:ArrayCollection = new ArrayCollection();
+				for each (var obj:TransferableObject in transferableObjectRegistry.mx_internal::registry) {
+					totalObjectsCount++;
+					var currentClassName:String = showObjectClassName(obj, null);
+					
+					// see if the current element is excluded
+					var excludeObject:Boolean = false;
+					for each (var excludedClass:String in excludedClasses) {
+						if (currentClassName == excludedClass) {
+							excludeObject = true;
+							break;
+						}
+					}
+					
+					if (!excludeObject) {
+						shownObjectsCount++;
+						list.addItem(obj);
+					}
+				}
+				dataGrid.dataProvider = list;
+				objectCount.text = "Objects displayed: " + shownObjectsCount + " of total: " + totalObjectsCount;
+			}
+			
+			private function showObjectClassName(item:Object, column:DataGridColumn):String {
+				return Utils.getClassNameForObject(item, false);
+			}
+			
+			private function showObjectProperties(item:Object, column:DataGridColumn):String {
+				var result:String = "";
+				var classInfo:XML = DescribeTypeCache.describeType(item).typeDescription;
+				for each (var v:XML in classInfo..accessor) {
+					if (v.@name != null/* && v.@access != 'readonly'*/) {
+						result += v.@name + " = " + item[v.@name] + ", ";
+					}
+				}
+				return result;
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:HBox width="100%">
+		<mx:Label text="Exclude classes (comma separated, no blank):"/>
+		<mx:TextInput width="150" id="excludedClassesText" text="Style,ViewDescriptor"/>
+		<mx:Button label="Refresh" click="refreshClickHanlder()"/>
+		<mx:Label id="objectCount"/>
+	</mx:HBox>
+	<mx:DataGrid id="dataGrid" width="100%" height="100%">
+		<mx:columns>
+			<mx:DataGridColumn width="40" headerText="Id" dataField="id"/>
+			<mx:DataGridColumn width="40" headerText="Id" dataField="localId"/>
+			<mx:DataGridColumn width="120" headerText="Class" labelFunction="showObjectClassName"/>
+			<mx:DataGridColumn headerText="Properties" labelFunction="showObjectProperties"/>
+		</mx:columns>
+	</mx:DataGrid>
+</popup:ResizablePopupWindow>

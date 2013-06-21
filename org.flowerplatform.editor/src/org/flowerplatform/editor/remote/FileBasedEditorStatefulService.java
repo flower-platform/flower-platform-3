@@ -1,6 +1,11 @@
 package org.flowerplatform.editor.remote;
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +31,16 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	 */
 	public FileBasedEditorStatefulService() {
 //		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
+	}
+
+	@Override
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
+		FileBasedEditableResource er = (FileBasedEditableResource) editableResource;
+		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), er.getEditableResourcePath());
+		er.setFile(file);
+		if (!file.exists()) {
+			throw new FileNotFoundException(editableResource.getEditableResourcePath());
+		}
 	}
 
 //	/**

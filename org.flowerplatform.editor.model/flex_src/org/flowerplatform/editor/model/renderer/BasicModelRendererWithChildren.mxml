@@ -13,6 +13,7 @@
 		<![CDATA[
 			import mx.events.PropertyChangeEvent;
 			
+			import org.flowerplatform.communication.transferable_object.ReferenceHolder;
 			import org.flowerplatform.emf_model.notation.Bounds;
 			import org.flowerplatform.emf_model.notation.Node;
 			import org.flowerplatform.emf_model.notation.View;
@@ -44,7 +45,7 @@
 					return;
 				}
 				if (super.data != null) {
-					var bounds:Bounds = Bounds(Node(data).layoutConstraint);
+					var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
 					bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 				}
 				
@@ -56,7 +57,7 @@
 					visualChildrenController = diagramShell.getControllerProvider(data).getVisualChildrenController(data);
 				}
 				if (data != null) {
-					bounds = Bounds(Node(data).layoutConstraint);
+					bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
 					bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 					x = bounds.x;
 					y = bounds.y;

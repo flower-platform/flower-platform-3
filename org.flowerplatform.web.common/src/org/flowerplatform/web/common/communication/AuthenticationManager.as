@@ -87,9 +87,9 @@ package  org.flowerplatform.web.common.communication {
 			bridge.addEventListener(BridgeEvent.FAULT, handleFault);
 			bridge.addEventListener(BridgeEvent.OBJECT_UNDELIVERED, handleObjectUndelivered);
 			
-			showAuthenticationView();
+//			showAuthenticationView();
 			
-//			bridge.connect();
+			bridge.connect("admin", "a");
 		}
 		
 		/**
@@ -118,7 +118,9 @@ package  org.flowerplatform.web.common.communication {
 		 * @flowerModelElementId _X9AnsG3eEeGYiLzscjdrpg
 		 */
 		public function handleConnected(event:BridgeEvent):void {
-			connectingView.currentState = "initializing";
+			if (connectingView != null) {
+				connectingView.currentState = "initializing";
+			}
 			
 			var hello:HelloServerCommand = new HelloServerCommand();
 			hello.clientApplicationVersion = CommonPlugin.VERSION;
@@ -133,14 +135,17 @@ package  org.flowerplatform.web.common.communication {
 		}
 
 		public function handleWelcomeReceivedFromServer(event:BridgeEvent):void {
-			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(connectingView);
-			connectingView = null;
+			if (connectingView != null) {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(connectingView);
+				connectingView = null;
+			}
 		}
 		
 		public function handleConnectingCanceled(event:BridgeEvent):void {
-			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(connectingView);
-			connectingView = null;
-
+			if (connectingView != null) {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(connectingView);
+				connectingView = null;
+			}
 //			// We have established a connection for the first time so we clear this flag, in order
 //			// for the user to be able to login anonymously.
 //			anonymousAuthenticationRejected = false;

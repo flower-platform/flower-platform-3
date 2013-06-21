@@ -6,6 +6,11 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.BasicModelRendererController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.emf_model.notation.Bounds;
+	import org.flowerplatform.emf_model.notation.Diagram;
+	import org.flowerplatform.emf_model.notation.Location;
+	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
@@ -56,6 +61,14 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new ControllerFactory(NodeAbsoluteLayoutRectangleController);
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(BasicModelRendererController);
 			
+		}
+
+		override protected function registerClassAliases():void {
+			registerClassAliasFromAnnotation(View);
+			registerClassAliasFromAnnotation(Node);
+			registerClassAliasFromAnnotation(Diagram);
+			registerClassAliasFromAnnotation(Location);
+			registerClassAliasFromAnnotation(Bounds);
 		}
 		
 		override protected function registerMessageBundle():void {
