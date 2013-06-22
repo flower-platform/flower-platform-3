@@ -4,6 +4,7 @@ package org.flowerplatform.flexutil.tree {
 	import flash.events.MouseEvent;
 	import flash.system.Capabilities;
 	
+	import mx.core.UIComponent;
 	import mx.core.mx_internal;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -141,13 +142,14 @@ package org.flowerplatform.flexutil.tree {
 			
 			paddingLeft += levelWidth * HierarchicalModelWrapper(data).nestingLevel;
 			
-			expandIconWidth = expandIconDisplay.parent.width;
-			expandIconHeight = expandIconDisplay.parent.height;
+			expandIconWidth = UIComponent(expandIconDisplay.parent).getExplicitOrMeasuredWidth();
+			expandIconHeight = UIComponent(expandIconDisplay.parent).getExplicitOrMeasuredHeight();
 			
 			// use vAlign to position the icon.
 			var expandIconDisplayY:Number = Math.round(vAlign * (viewHeight - expandIconHeight)) + paddingTop;
-			setElementPosition(expandIconDisplay.parent, paddingLeft, expandIconDisplayY);
-			
+			if (expandIconDisplay.parent.x != paddingLeft || expandIconDisplay.parent.y != expandIconDisplayY) {
+				setElementPosition(expandIconDisplay.parent, paddingLeft, expandIconDisplayY);
+			}
 			// icon is on the left
 			if (iconDisplay) {
 				// set the icon's position and size

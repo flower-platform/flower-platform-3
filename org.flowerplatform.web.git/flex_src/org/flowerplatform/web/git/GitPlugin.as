@@ -4,6 +4,8 @@ package org.flowerplatform.web.git {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.git.command.client.OpenGitCredentialsWindowClientCommand;
+	import org.flowerplatform.web.git.command.client.OpenOperationResultWindowClientCommand;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.dto.CleanPageDto;
 	import org.flowerplatform.web.git.dto.CommitDto;
@@ -109,6 +111,8 @@ package org.flowerplatform.web.git {
 //			registerClassAliasFromAnnotation(ShowGitViewClientCommand);
 			
 			registerClassAliasFromAnnotation(GitHistoryStatefulClientLocalState);
+			registerClassAliasFromAnnotation(OpenOperationResultWindowClientCommand);		
+			registerClassAliasFromAnnotation(OpenGitCredentialsWindowClientCommand);					
 		}
 	}
 }

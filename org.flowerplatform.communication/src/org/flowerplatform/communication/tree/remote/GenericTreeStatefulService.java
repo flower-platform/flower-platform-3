@@ -101,6 +101,8 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 */
 	private static final String SELECT_NODE_KEY = "selectNode";
 	
+	public static final String DONT_UPDATE_MAP_KEY = "dontUpdateMap";	
+	
 	/**
 	 * NO USED
 	 * Adding this key to <code>context</code> will retrieve the node's 
@@ -514,12 +516,19 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 			childNode.setParent(treeNode);
 			
 			if (recurse) { // get child whole structure
+				childNode.setChildren(new ArrayList<TreeNode>());
 				populateChildren(channel, statefulClientId, child, childNode, context, recurse);
 			}
 			
 			// for dispatched trees, update the server tree structure
 			if (isDispatchEnabled(child)) {	
-				addNodeInfo(channel, statefulClientId, child, getNodeType(childNode), false, false, context);
+				boolean updateMap = true;
+				if (context.get(DONT_UPDATE_MAP_KEY) != null) {
+					updateMap = !((Boolean) context.get(DONT_UPDATE_MAP_KEY)).booleanValue();
+				}
+				if (updateMap) {
+					addNodeInfo(channel, statefulClientId, child, getNodeType(childNode), false, false, context);
+				}
 			}
 		}		
 	}
@@ -1011,7 +1020,13 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		
 		// for dispatched trees, update the server tree structure
 		if (isDispatchEnabled(source)) {	
-			addNodeInfo(channel, statefulClientId, source, getNodeType(treeNode), fullPath == null, true, treeContext);
+			boolean updateMap = true;
+			if (context.get(DONT_UPDATE_MAP_KEY) != null) {
+				updateMap = !((Boolean) context.get(DONT_UPDATE_MAP_KEY)).booleanValue();
+			}
+			if (updateMap) {
+				addNodeInfo(channel, statefulClientId, source, getNodeType(treeNode), fullPath == null, true, treeContext);
+			}
 		}
 		
 		// create structure for current tree node or create structure for entire tree

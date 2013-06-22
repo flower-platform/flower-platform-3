@@ -31,27 +31,7 @@ package org.flowerplatform.web.common.explorer {
 				popupHost.refreshActions(this);
 			}
 		}
-		
-		/**
-		 * This method is inspired from <code>get selectedItems()</code>. We convert
-		 * the selection like this (and not by converting selectedItems), because
-		 * <code>get selectedItems()</code> does an iteration as well; so that would
-		 * mean 2 iterations. This way, we iterate only once.
-		 */
-		public function getSelection():IList {
-			var result:Array = new Array();
-			
-			if (selectedIndices) {
-				var count:int = selectedIndices.length;
 				
-				for (var i:int = 0; i < count; i++)
-					result.push(HierarchicalModelWrapper(dataProvider.getItemAt(selectedIndices[i])).treeNode);  
-			}
-			
-			return new ArrayList(result);
-		}
-		
-		
 		public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			

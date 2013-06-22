@@ -7,22 +7,20 @@ import java.util.List;
  */
 public class RemoteConfig {
 	
-	private String remoteName;
+	private String name;
 	
-	private String fetchUri;
+	private String uri;
 	
 	private List<String> fetchMappings;
-	
-	private String pushUri;
-	
+		
 	private List<String> pushMappings;
-
-	public String getRemoteName() {
-		return remoteName;
+	
+	public String getName() {
+		return name;
 	}
 
-	public void setRemoteName(String remoteName) {
-		this.remoteName = remoteName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public List<String> getFetchMappings() {
@@ -41,20 +39,12 @@ public class RemoteConfig {
 		this.pushMappings = pushMappings;
 	}
 
-	public String getFetchUri() {
-		return fetchUri;
+	public String getUri() {
+		return uri;
 	}
 
-	public void setFetchUri(String fetchUri) {
-		this.fetchUri = fetchUri;
+	public void setUri(String uri) {
+		this.uri = uri;
 	}
-
-	public String getPushUri() {
-		return pushUri;
-	}
-
-	public void setPushUri(String pushUri) {
-		this.pushUri = pushUri;
-	}
-		
+	
 }

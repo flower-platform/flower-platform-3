@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--	
+@author Cristina 
+-->
+<popup:ResizablePopupWindow implements="com.crispico.flower.flexdiagram.dialog.IDialog" 
+							xmlns:mx="http://www.adobe.com/2006/mxml" 
+							
+							width="400" height="200" 
+							title="{GitPlugin.getInstance().getMessage('git.editConfigEntryPage.title')}" 
+							
+							xmlns:popup="com.crispico.flower.util.popup.*" >
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.flexdiagram.dialog.IDialogResultHandler;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.web.git.GitPlugin;
+			
+			[Bindable]
+			public var currentKey:String;
+			
+			[Bindable]
+			public var currentValue:String;
+			
+			private var resultHandler:IDialogResultHandler;
+			
+			public function setResultHandler(resultHandler:IDialogResultHandler):void {
+				this.resultHandler = resultHandler;
+			}
+			
+			public function formOkHandler(event:MouseEvent):void {
+				// validate form
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				var key:String = keyConfig.text;
+				if (key.split(".").length != 2 && key.split(".").length != 3) {
+					return;
+				}
+				resultHandler.handleDialogResult([keyConfig.text, valueConfig.text]);
+				closeForm();
+			}
+			
+			override protected function formCancelHandler(event:Event=null):void {
+				resultHandler.handleDialogResult(null);
+				super.formCancelHandler(event);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Array id="validators">
+		<mx:StringValidator source="{keyConfig}" property="text" minLength="1"/>
+	</mx:Array>	
+	
+	<mx:Form id="form" height="100%" width="100%" verticalGap="15">			
+		<mx:FormItem label="{GitPlugin.getInstance().getMessage('git.configPage.key.label') + ':'}" width="100%">
+			<mx:TextInput id="keyConfig" text="{currentKey}" width="100%" creationComplete="{callLater(keyConfig.setFocus)}"/>					
+		</mx:FormItem>
+		<mx:FormItem label="{GitPlugin.getInstance().getMessage('git.configPage.value.label') + ':'}" width="100%">			
+			<mx:TextInput id="valueConfig" text="{currentValue}" width="100%"/>				
+		</mx:FormItem>
+	</mx:Form>
+	
+	<mx:HBox width="100%" horizontalAlign="center" paddingBottom="15">
+		<mx:Button id="okBtn" label="{CommonPlugin.getInstance().getMessage('ok')}" click="formOkHandler(event)"/>
+		<mx:Button id="cancelBtn" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="formCancelHandler(event)"/>
+	</mx:HBox> 
+	
+</popup:ResizablePopupWindow>

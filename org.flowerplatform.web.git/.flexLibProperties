@@ -7,6 +7,8 @@
     <classEntry path="org.flowerplatform.web.git.action.CloneAction"/>
     <classEntry path="org.flowerplatform.web.git.ui.CloneWindow"/>
     <classEntry path="org.flowerplatform.web.git.GitService"/>
+    <classEntry path="org.flowerplatform.web.git.BranchTreeStatefulClient"/>
+    <classEntry path="org.flowerplatform.web.git.action.ConfigRemoteAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

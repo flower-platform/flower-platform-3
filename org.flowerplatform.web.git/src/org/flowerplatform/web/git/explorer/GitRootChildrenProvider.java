@@ -42,7 +42,8 @@ public class GitRootChildrenProvider implements IChildrenProvider {
 	public Boolean nodeHasChildren(Object node, TreeNode treeNode,  GenericTreeContext context) {
 		@SuppressWarnings("unchecked")
 		File file = (File) ((Pair<Object, String>) node).a;	
-		return file.isDirectory() && file.list().length > 0;
+		File gitRepos = GitPlugin.getInstance().getUtils().getGitRepositoriesFile(file);
+		return gitRepos.exists() && gitRepos.isDirectory() && gitRepos.list().length > 0;
 	}
 
 }
