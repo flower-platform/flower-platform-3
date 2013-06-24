@@ -13,12 +13,13 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
-import org.eclipse.emf.ecore.change.util.ChangeRecorder;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.remote.command.AbstractEMFServerCommand;
+import org.flowerplatform.editor.model.teneo.FlowerTeneoResource;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.FileBasedEditorStatefulService;
@@ -58,15 +59,15 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	@Override
 	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
 		super.loadEditableResource(context, editableResource);		
-		DiagramEditableResource er = (DiagramEditableResource) editableResource;
-		URI resourceURI = URI.createFileURI(er.getFile().getAbsolutePath());
-		er.setChangeRecorder(new ChangeRecorder());
-		
-		try {
-			er.setMainResource(er.getResourceSet().getResource(resourceURI, true));
-		} catch (Exception e) {
-			throw new RuntimeException("Error while loading file content " + er.getFile(), e);
-		}		
+//		DiagramEditableResource er = (DiagramEditableResource) editableResource;
+//		URI resourceURI = URI.createFileURI(er.getFile().getAbsolutePath());
+//		er.setChangeRecorder(new ChangeRecorder());
+//		
+//		try {
+//			er.setMainResource(er.getResourceSet().getResource(resourceURI, true));
+//		} catch (Exception e) {
+//			throw new RuntimeException("Error while loading file content " + er.getFile(), e);
+//		}		
 	}
 
 	@Override
@@ -90,6 +91,15 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 
 	@Override
 	protected void sendFullContentToClient(EditableResource editableResource, EditableResourceClient client) {
+		Resource hbResource = new FlowerTeneoResource(URI.createURI("hb:/?dsname=flowerDataStore&query=from Diagram"));
+		try {
+			hbResource.load(Collections.EMPTY_MAP);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		((DiagramEditableResource) editableResource).setMainResource(hbResource);
+		
 		Diagram diagram = getDiagram(editableResource);
 		List<EObject> list = new ArrayList<EObject>();
 		// walking the tree this way breaks the convention that ensures sending the children before the parents
@@ -112,6 +122,8 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, null);
 		String diagramId = diagram.eResource().getURIFragment(diagram);
 		invokeClientMethod(client.getCommunicationChannel(), client.getStatefulClientId(), "openDiagram", new Object[] { diagramId });
+		
+		hbResource.unload();
 	}
 
 	// TODO CS/CS3 de facut semnatura sa accepte ERC; e absurd, ca eu il calculez prin iteratie din nou aici; si semnatura nu e uniforma cu celelalte
@@ -123,8 +135,13 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			logger.error("Content update cannot be casted to a command: {}", updatesToApply);
 		}
 
+		FlowerTeneoResource hbResource = new FlowerTeneoResource(URI.createURI("hb:/?dsname=flowerDataStore&query=from Diagram"));
+		hbResource.load(Collections.EMPTY_MAP);
+		((DiagramEditableResource) editableResource).setMainResource(hbResource);
+		((DiagramEditableResource) editableResource).setChangeRecorder(hbResource.getChangeRecorder());
+		
 		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) editableResource;
-		diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource()));
+//		diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource()));
 		
 		try {
 			AbstractEMFServerCommand command = (AbstractEMFServerCommand) updatesToApply;
@@ -168,6 +185,9 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 				}
 			}
 		}
+		
+		hbResource.save(Collections.EMPTY_MAP);
+		hbResource.unload();
 		
 //		try {
 //			diagramEditableResource.mainResource.save(Collections.emptyMap());

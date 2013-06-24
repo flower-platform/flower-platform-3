@@ -70,13 +70,22 @@ public interface NotationPackage extends EPackage {
 	int NOTATION_ELEMENT = 0;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTATION_ELEMENT__ID = 0;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NOTATION_ELEMENT_FEATURE_COUNT = 0;
+	int NOTATION_ELEMENT_FEATURE_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.ViewImpl <em>View</em>}' class.
@@ -87,6 +96,15 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	int VIEW = 1;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIEW__ID = NOTATION_ELEMENT__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -142,6 +160,15 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	int NODE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__ID = VIEW__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -206,6 +233,15 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	int DIAGRAM = 3;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__ID = VIEW__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -291,6 +327,15 @@ public interface NotationPackage extends EPackage {
 	int LOCATION = 5;
 
 	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION__ID = NOTATION_ELEMENT__ID;
+
+	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -326,6 +371,15 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	int BOUNDS = 6;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUNDS__ID = LOCATION__ID;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -381,6 +435,15 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	int NOTE = 7;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTE__ID = NODE__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -455,6 +518,17 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getNotationElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.NotationElement#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.flowerplatform.emf_model.notation.NotationElement#getId()
+	 * @see #getNotationElement()
+	 * @generated
+	 */
+	EAttribute getNotationElement_Id();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.View <em>View</em>}'.
@@ -678,6 +752,14 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EClass NOTATION_ELEMENT = eINSTANCE.getNotationElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NOTATION_ELEMENT__ID = eINSTANCE.getNotationElement_Id();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.ViewImpl <em>View</em>}' class.

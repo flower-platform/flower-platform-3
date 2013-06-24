@@ -33,12 +33,12 @@ public interface Node extends View {
 	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Layout Constraint</em>' containment reference.
-	 * @see #setLayoutConstraint(LayoutConstraint)
+	 * @see #setLayoutConstraint(Bounds)
 	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getNode_LayoutConstraint()
 	 * @model containment="true"
 	 * @generated
 	 */
-	LayoutConstraint getLayoutConstraint();
+	Bounds getLayoutConstraint();
 
 	/**
 	 * Sets the value of the '{@link org.flowerplatform.emf_model.notation.Node#getLayoutConstraint <em>Layout Constraint</em>}' containment reference.
@@ -48,6 +48,6 @@ public interface Node extends View {
 	 * @see #getLayoutConstraint()
 	 * @generated
 	 */
-	void setLayoutConstraint(LayoutConstraint value);
+	void setLayoutConstraint(Bounds value);
 
 } // Node

@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.LayoutConstraint;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationPackage;
@@ -40,7 +41,7 @@ public class NodeImpl extends ViewImpl implements Node {
 	 * @generated
 	 * @ordered
 	 */
-	protected LayoutConstraint layoutConstraint;
+	protected Bounds layoutConstraint;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -66,7 +67,7 @@ public class NodeImpl extends ViewImpl implements Node {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public LayoutConstraint getLayoutConstraint() {
+	public Bounds getLayoutConstraint() {
 		return layoutConstraint;
 	}
 
@@ -75,8 +76,8 @@ public class NodeImpl extends ViewImpl implements Node {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetLayoutConstraint(LayoutConstraint newLayoutConstraint, NotificationChain msgs) {
-		LayoutConstraint oldLayoutConstraint = layoutConstraint;
+	public NotificationChain basicSetLayoutConstraint(Bounds newLayoutConstraint, NotificationChain msgs) {
+		Bounds oldLayoutConstraint = layoutConstraint;
 		layoutConstraint = newLayoutConstraint;
 		if (eNotificationRequired()) {
 			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, NotationPackage.NODE__LAYOUT_CONSTRAINT, oldLayoutConstraint, newLayoutConstraint);
@@ -90,7 +91,7 @@ public class NodeImpl extends ViewImpl implements Node {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setLayoutConstraint(LayoutConstraint newLayoutConstraint) {
+	public void setLayoutConstraint(Bounds newLayoutConstraint) {
 		if (newLayoutConstraint != layoutConstraint) {
 			NotificationChain msgs = null;
 			if (layoutConstraint != null)
@@ -141,7 +142,7 @@ public class NodeImpl extends ViewImpl implements Node {
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case NotationPackage.NODE__LAYOUT_CONSTRAINT:
-				setLayoutConstraint((LayoutConstraint)newValue);
+				setLayoutConstraint((Bounds)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -156,7 +157,7 @@ public class NodeImpl extends ViewImpl implements Node {
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case NotationPackage.NODE__LAYOUT_CONSTRAINT:
-				setLayoutConstraint((LayoutConstraint)null);
+				setLayoutConstraint((Bounds)null);
 				return;
 		}
 		super.eUnset(featureID);

@@ -10,6 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.communication,
  org.flowerplatform.editor,
  org.flowerplatform.emf_model.notation,
- org.eclipse.emf.ecore.change
+ org.eclipse.emf.ecore.change,
+ org.eclipse.emf.teneo.hibernate,
+ org.hibernate
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7

@@ -208,6 +208,51 @@
 				<column length="110"/>
 			</property>
 		</eclass>
-		
 	</epackage>
+
+<!-- 
+	<epackage namespace-uri="http://www.flower-platform.com/xmi/notation_1.0.0">
+		<eclass name="View">
+			<mapped-superclass/>
+		</eclass>
+		
+		<eclass name="Diagram">
+			<property name="id">
+				<generated-value generator="TABLE"/>
+			</property>
+			<property name="name">
+				<column length="255"/>
+			</property>
+		</eclass>
+
+		<eclass name="Node">
+			<property name="id">
+				<generated-value generator="TABLE"/>
+			</property>
+ 		</eclass>
+
+		<eclass name="Note">
+			<property name="id">
+				<generated-value generator="TABLE"/>
+			</property>
+			<property name="text">
+				<column length="255"/>
+			</property>
+		</eclass>
+				
+		<eclass name="LayoutConstraint">
+			<mapped-superclass/>
+		</eclass>
+		
+		<eclass name="Location">
+			<mapped-superclass/>
+		</eclass>
+		
+		<eclass name="Bounds">
+			<property name="id">
+				<generated-value generator="TABLE"/>
+			</property>
+		</eclass>
+	</epackage>
+ -->	
 </persistence-mapping>
