@@ -82,12 +82,12 @@ public class ModifyTreePermissionsPermission extends AbstractTreePermission {
 			return true;
 		}
 		if (assignableSecurityEntities == null) {			
-			assignableSecurityEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(actions);
+			assignableSecurityEntities = SecurityEntityAdaptor.csvStringToSecurityEntityList(actions, true);
 		}
 				
 		ModifyTreePermissionsPermission modifyPermission = (ModifyTreePermissionsPermission) permission;
 		// security entities that we must check if they are allowed to be used by a PermissionEntity
-		List<ISecurityEntity> securityEntitiesToBeChecked = SecurityEntityAdaptor.csvStringToSecurityEntityList(modifyPermission.actions);
+		List<ISecurityEntity> securityEntitiesToBeChecked = SecurityEntityAdaptor.csvStringToSecurityEntityList(modifyPermission.actions, false);
 		boolean implies = true; 
 		for (ISecurityEntity securityEntity: securityEntitiesToBeChecked) {
 			implies &= SecurityUtils.securityEntityIsAssignable(assignableSecurityEntities, securityEntity);

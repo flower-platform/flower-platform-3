@@ -44,12 +44,12 @@ public class SecurityEntityAdaptor {
 	 * @return
 	 * @flowerModelElementId _Z-xFoXgGEeGtTo1wOb4S9A
 	 */
-	public static List<ISecurityEntity> csvStringToSecurityEntityList(String assignedTo) {
+	public static List<ISecurityEntity> csvStringToSecurityEntityList(String assignedTo, boolean eager) {
 		List<ISecurityEntity> securityEntities = new ArrayList<ISecurityEntity>();				
 		String[] entityNames = assignedTo.split(",");
 		for (String name: entityNames) {
 			name = name.trim();
-			securityEntities.add(toSecurityEntity(name, false));
+			securityEntities.add(toSecurityEntity(name, eager));
 		}
 		return securityEntities;
 	}
