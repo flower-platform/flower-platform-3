@@ -1,14 +1,19 @@
 package org.flowerplatform.web.git.layout {
 	
+	import com.crispico.flower.util.layout.PopupHostViewWrapper;
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	import com.crispico.flower.util.spinner.ModalSpinnerSupport;
 	
+	import mx.collections.IList;
 	import mx.containers.VBox;
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
+	import org.flowerplatform.flexutil.popup.IPopupContent;
+	import org.flowerplatform.flexutil.popup.IPopupHost;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.git.GitPlugin;
@@ -26,8 +31,14 @@ package org.flowerplatform.web.git.layout {
 		protected function getSelectedObjectFromExplorer():Object {	
 			var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
 			
-			var explorer:UIComponent = workbench.getComponent(ExplorerViewProvider.ID);
+			var explorer:UIComponent = workbench.getComponent("explorer");
 		
+			if (explorer is PopupHostViewWrapper) {
+				var selection:IList = PopupHostViewWrapper(explorer).activePopupContent.getSelection();
+				if (selection != null && selection.length == 1 && selection.getItemAt(0) is TreeNode) {
+					return TreeNode(selection.getItemAt(0)).getPathForNode(true);
+				}
+			}
 			return null;				
 		}
 		

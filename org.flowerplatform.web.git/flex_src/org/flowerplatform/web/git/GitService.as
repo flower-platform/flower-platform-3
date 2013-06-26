@@ -121,6 +121,84 @@ package org.flowerplatform.web.git {
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
+		public function deleteRemote(selectedNode:TreeNode):void {
+			invokeServiceMethod(
+				"deleteRemote",
+				[selectedNode.getPathForNode(true)]);
+		}
+		
+		public function getFetchPushConfigData(selectedNode:TreeNode, fetchData:Boolean,
+										   resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"getFetchPushConfigData",
+				[selectedNode.getPathForNode(true), fetchData],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function fetch(selectedNode:TreeNode, remoteConfig:RemoteConfig, tagOpt:int, saveConfig:Boolean,
+							  resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"fetch",
+				[selectedNode.getPathForNode(true), remoteConfig, tagOpt, saveConfig],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function push(selectedNode:TreeNode, remoteConfig:RemoteConfig, saveConfig:Boolean,
+							  resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"push",
+				[selectedNode.getPathForNode(true), remoteConfig, saveConfig],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function checkout(selectedNode:TreeNode, name:String,
+								 resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"checkout", 
+				[selectedNode.getPathForNode(true), name],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function getProjects(selection:ArrayList,
+								 resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"getProjects", 
+				[convertSelection(selection)],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function importExistingProjects(selection:ArrayCollection,
+									resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"importExistingProjects", 
+				[selection],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function importAsProjects(selection:ArrayCollection,
+											   resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"importAsProjects", 
+				[selection],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function getCommitData(selection:ArrayList,
+							   resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"getCommitData", 
+				[convertSelection(selection)],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function commit(repositoryLocation:String, files:ArrayCollection, author:String, committer:String, message:String, amending:Boolean,
+										 resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"commit", 
+				[repositoryLocation, files, author, committer, message, amending],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
 		public function openCredentials(selectedNode:TreeNode):void {
 			invokeServiceMethod("openCredentials", [selectedNode.getPathForNode(true)]);
 		}

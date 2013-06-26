@@ -107,13 +107,13 @@
 			 * @see getSelectedObjectIdFromTree()
 			 */ 
 			public function refresh():void {
-//				if (info.selectedObject == null) { // get new selected object
-//					var obj:Object = getSelectedObjectFromExplorer();
-//					if (obj == null) {
-//						return;
-//					}					
-//					info.selectedObject = obj;
-//				}
+				if (info.selectedObject == null) { // get new selected object
+					var obj:Object = getSelectedObjectFromExplorer();
+					if (obj == null) {
+						return;
+					}					
+					info.selectedObject = obj;
+				}
 				// get histoy view _info from server used to populate the table
 				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.refreshingData"), modalSpinner); 
 				statefulClient.getObjectInfo(info, this, getObjectInfoCallbackHandler);

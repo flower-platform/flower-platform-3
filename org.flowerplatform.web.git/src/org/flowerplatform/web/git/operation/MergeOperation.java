@@ -78,7 +78,6 @@ public class MergeOperation {
 	public void execute() {
 		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.merge"), channel);
 		
-		MergeResult mergeResult = null;
 		try {
 			monitor.beginTask(GitPlugin.getInstance().getMessage("git.merge.title", new Object[] {refName}), 3);
 //			IProject[] validProjects = GitPlugin.getInstance().getUtils().getValidProjects(repository);

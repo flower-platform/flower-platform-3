@@ -1,16 +1,12 @@
 package  org.flowerplatform.web.git.action {
-	import mx.collections.ArrayCollection;
-	import mx.collections.IList;
-	import mx.controls.Alert;
-	import mx.events.CloseEvent;
+	import flash.events.MouseEvent;
 	
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.web.git.GitNodeType;
 	import org.flowerplatform.web.git.GitPlugin;
-	import org.flowerplatform.web.git.GitService;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -34,16 +30,16 @@ package  org.flowerplatform.web.git.action {
 		}
 		
 		override public function run():void {
-			Alert.show(
-				GitPlugin.getInstance().getMessage("git.deleteRepo.message"),
-				CommonPlugin.getInstance().getMessage("confirmation"), 
-				Alert.YES | Alert.NO, null, confirmDeleteHandler, null, Alert.YES); 
+			FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+				.setTitle(CommonPlugin.getInstance().getMessage("confirmation"))
+				.setText(GitPlugin.getInstance().getMessage("git.deleteRepo.message"))
+				.addButton("Yes", confirmDeleteHandler)
+				.addButton("No")
+				.showMessageBox();			
 		}
 		
-		private function confirmDeleteHandler(event:CloseEvent):void {
-			if (event.detail == Alert.YES) {
-				GitPlugin.getInstance().service.deleteRepository(selectedNode);
-			}
+		private function confirmDeleteHandler(event:MouseEvent):void {
+			GitPlugin.getInstance().service.deleteRepository(selectedNode);
 		}
 	}
 }

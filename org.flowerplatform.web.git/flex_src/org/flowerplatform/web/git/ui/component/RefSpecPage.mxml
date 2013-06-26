@@ -25,6 +25,9 @@
 			 * @flowerModelElementId _hRBaMHErEeK0WoOyJtfqdw
 			 */
 			public function getRefMappings():ArrayCollection {
+				if (refMappings == null) { 
+					return new ArrayCollection();
+				}
 				return refMappings;
 			}
 			

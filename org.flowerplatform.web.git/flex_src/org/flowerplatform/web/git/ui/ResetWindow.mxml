@@ -15,16 +15,13 @@
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
-			import org.flowerplatform.web.git.dto.GitActionDto;
-			
-			import mx.controls.Alert;
-			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.web.git.BranchTreeStatefulClient;
 			import org.flowerplatform.web.git.GitPlugin;
-			import org.flowerplatform.web.git.dto.ResetPageDto;
+			import org.flowerplatform.web.git.dto.GitActionDto;
 			
 			[Bindable]
 			public var dto:GitActionDto;
@@ -51,9 +48,10 @@
 			protected override function finishClickHandler():void {	
 				var branch:String = branchPage.getSelectedBranch();
 				if (branch == null) {
-					Alert.show(
-						GitPlugin.getInstance().getMessage("git.merge.selectRef"),
-						CommonPlugin.getInstance().getMessage("error"));
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setTitle(CommonPlugin.getInstance().getMessage("error"))
+						.setText(GitPlugin.getInstance().getMessage("git.merge.selectRef"))
+						.showMessageBox();					
 					return;
 				}
 				GitPlugin.getInstance().service.reset(dto.repository, branch, int(resetTypeGroup.selectedValue), this, rebase_callbackHandler);

@@ -5,6 +5,7 @@ package org.flowerplatform.web.git.dto {
 	 *	@author Cristina Constantinescu
 	 */  
 	[RemoteClass]
+	[Bindable]
 	public class ImportProjectPageDto {
 		
 		public var selectedFolders:ArrayCollection;

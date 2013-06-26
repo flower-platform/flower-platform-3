@@ -15,12 +15,18 @@
 			import flashx.textLayout.conversion.TextConverter;
 			import flashx.textLayout.formats.LineBreak;
 			
+			import mx.collections.ArrayList;
+			
 			import org.flowerplatform.flexutil.popup.IMessageBox;
+			
+			import spark.components.Button;
 
 			private var _text:String;
 			
 			private var _isHTML:Boolean;
 
+			private var buttons:ArrayList = new ArrayList();
+			
 			public function get text():String {
 				return _text;
 			}
@@ -73,6 +79,25 @@
 				return this;
 			}
 			
+			/**
+			 * @author Cristina Constantinescu
+			 */ 
+			public function addButton(title:String, handler:Function = null):IMessageBox {
+				var newBtn:mx.controls.Button = new mx.controls.Button();
+				newBtn.label = title;
+				
+				newBtn.addEventListener(MouseEvent.CLICK, 
+					function(event:MouseEvent):void {
+						if (handler != null) {
+							handler(event);
+						}
+						closeForm();
+					}
+				);
+				buttons.addItem(newBtn);
+				return this;
+			}
+			
 			public function setWordWrap(value:Boolean):IMessageBox {
 				var styleValue:String = value ? LineBreak.TO_FIT : LineBreak.EXPLICIT;
 //				callLater(textArea.setStyle, ["lineBreak", styleValue]);
@@ -82,14 +107,33 @@
 				return this;
 			}
 			
+			/**
+			 * @author Cristina Constantinescu
+			 */ 
+			override protected function createChildren():void	{
+				super.createChildren();
+				
+				if (buttons.length == 0) {
+					textAreaPopupControlBar.addElement(okButton);
+				} else {
+					for (var i:int=0; i < buttons.length; i++) {
+						textAreaPopupControlBar.addElement(mx.controls.Button(buttons.getItemAt(i)));
+					}
+				}
+			}
+			
 			public function showMessageBox(modal:Boolean = true):void {
 				showPopup(NaN, NaN, null, modal);
 			}
 			
 		]]>
 	</fx:Script>
-	<s:TextArea id="textArea" width="100%" height="100%" editable="false"/>
-	<mx:ControlBar id="textAreaPopupControlBar" horizontalAlign="center">
+		
+	<fx:Declarations>
 		<mx:Button id="okButton" label="{UtilAssets.INSTANCE.getMessage('dialog.ok')}" click="formOkHandler(event)"/>
+	</fx:Declarations>
+	
+	<s:TextArea id="textArea" width="100%" height="100%" editable="false"/>
+	<mx:ControlBar id="textAreaPopupControlBar" horizontalAlign="center">		
 	</mx:ControlBar>
 </popup:ResizablePopupWindow>

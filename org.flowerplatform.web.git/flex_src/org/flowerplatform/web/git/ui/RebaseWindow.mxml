@@ -14,15 +14,14 @@
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
-			import org.flowerplatform.web.git.GitNodeType;
-			
 			import mx.collections.ArrayCollection;
-			import mx.controls.Alert;
 			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.web.git.BranchTreeStatefulClient;
+			import org.flowerplatform.web.git.GitNodeType;
 			import org.flowerplatform.web.git.GitPlugin;
 			import org.flowerplatform.web.git.dto.GitActionDto;
 			
@@ -54,9 +53,10 @@
 			protected override function finishClickHandler():void {	
 				var branch:String = branchPage.getSelectedBranch();
 				if (branch == null) {
-					Alert.show(
-						GitPlugin.getInstance().getMessage("git.merge.selectRef"),
-						CommonPlugin.getInstance().getMessage("error"));
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setTitle(CommonPlugin.getInstance().getMessage("error"))
+						.setText(GitPlugin.getInstance().getMessage("git.merge.selectRef"))
+						.showMessageBox();				
 					return;
 				}
 				GitPlugin.getInstance().service.rebase(dto.repository, branch, this, rebase_callbackHandler);
