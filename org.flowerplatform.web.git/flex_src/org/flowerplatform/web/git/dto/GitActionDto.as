@@ -1,4 +1,5 @@
 package org.flowerplatform.web.git.dto {
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	
 	/**
 	 *	@author Cristina Constantinescu
@@ -11,5 +12,6 @@ package org.flowerplatform.web.git.dto {
 	
 		public var branch:String;
 		
+		public var repositoryNode:TreeNode;
 	}
 }

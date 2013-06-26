@@ -31,7 +31,9 @@ package org.flowerplatform.communication.tree.remote {
 //		
 //		public static const EXPAND_ALL_NODES_KEY:String = "expandAllNodes"
 //			
-//		public static const WHOLE_TREE_KEY:String = "wholeTree";	
+		public static const WHOLE_TREE_KEY:String = "wholeTree";	
+		
+		public static const DONT_UPDATE_MAP_KEY:String = "dontUpdateMap";	
 //
 //		/**
 //		 * @flowerModelElementId _OZRKkBN0EeKR8sYuzDGiDQ
@@ -53,6 +55,8 @@ package org.flowerplatform.communication.tree.remote {
 		public var treeList:TreeList;
 		
 		public var requestDataOnSubscribe:Boolean = true;
+		
+		public var requestDataOnServer:Boolean = true;
 		
 		///////////////////////////////////////////////////////////////
 		// Normal methods

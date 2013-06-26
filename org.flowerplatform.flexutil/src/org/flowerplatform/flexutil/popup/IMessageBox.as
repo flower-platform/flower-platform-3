@@ -6,6 +6,11 @@ package org.flowerplatform.flexutil.popup {
 		function setHeight(value:int):IMessageBox;
 		function setWordWrap(value:Boolean):IMessageBox;
 		
-		function showMessageBox(modal:Boolean = true):void;
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		function addButton(title:String, handler:Function = null):IMessageBox;
+		
+		function showMessageBox(modal:Boolean = true):void;		
 	}
 }

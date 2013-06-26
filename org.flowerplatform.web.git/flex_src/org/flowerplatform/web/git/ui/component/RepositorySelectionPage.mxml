@@ -39,9 +39,9 @@
 			
 			private function getRemoteConfigLabel(item:Object):String {
 				if (isFetchConfig) {
-					return RemoteConfig(item).remoteName + " - " + RemoteConfig(item).fetchUri;
+					return RemoteConfig(item).name + " - " + RemoteConfig(item).uri;
 				}
-				return RemoteConfig(item).remoteName + " - " + RemoteConfig(item).pushUri;
+				return RemoteConfig(item).name + " - " + RemoteConfig(item).uri;
 			}
 			
 			public function getURI():String {	

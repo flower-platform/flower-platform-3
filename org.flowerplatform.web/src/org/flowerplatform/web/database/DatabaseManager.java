@@ -120,7 +120,7 @@ public class DatabaseManager {
 		props.setProperty(Environment.PASS, "");
 		props.setProperty(Environment.DIALECT, H2Dialect.class.getName());
 		props.setProperty(Environment.HBM2DDL_AUTO, "create");
-		props.setProperty(Environment.SHOW_SQL, "true");
+		props.setProperty(Environment.SHOW_SQL, "false");
 		
 		props.setProperty(PersistenceOptions.CASCADE_POLICY_ON_NON_CONTAINMENT, "REFRESH,PERSIST,MERGE");
 		props.setProperty(PersistenceOptions.PERSISTENCE_XML, "annotations.xml");

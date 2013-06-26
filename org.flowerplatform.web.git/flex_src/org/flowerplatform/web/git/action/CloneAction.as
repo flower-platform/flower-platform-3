@@ -18,9 +18,8 @@ package org.flowerplatform.web.git.action {
 		}
 		
 		override public function get visible():Boolean {
-			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-				var node:TreeNode = selection.getItemAt(0) as TreeNode; 
-				return node.pathFragment.type == GitNodeType.NODE_TYPE_GIT_REPOSITORIES;
+			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {				
+				return TreeNode(selection.getItemAt(0)).pathFragment.type == GitNodeType.NODE_TYPE_GIT_REPOSITORIES;
 			}
 			return false;
 		}

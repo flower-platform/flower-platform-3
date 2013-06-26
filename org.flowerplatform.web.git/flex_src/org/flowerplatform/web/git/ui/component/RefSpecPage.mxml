@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ @flowerModelElementId _LD5QsHErEeK0WoOyJtfqdw
+-->
+<ns:CustomTitlePanel xmlns:mx="http://www.adobe.com/2006/mxml" 
+					 implements="com.crispico.flower.flexdiagram.dialog.IDialogResultHandler" 
+					
+					 headerHeight="0" borderStyle="none"
+					
+					 xmlns:ns="com.crispico.flower.util.panel.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.web.git.GitPlugin;
+			import org.flowerplatform.web.git.ui.EditRefSpecWindow;
+		
+			[Bindable]
+			public var refMappings:ArrayCollection = new ArrayCollection();
+			
+			private var lastBtnPressed:Button;
+				
+			/**
+			 * @flowerModelElementId _hRBaMHErEeK0WoOyJtfqdw
+			 */
+			public function getRefMappings():ArrayCollection {
+				if (refMappings == null) { 
+					return new ArrayCollection();
+				}
+				return refMappings;
+			}
+			
+			private function addHandler():void {
+				lastBtnPressed = btnAdd;				
+				var popUp:EditRefSpecWindow = new EditRefSpecWindow();				
+				popUp.currentRef = "";
+				popUp.setResultHandler(this);
+				popUp.showPopup();
+			}
+			
+			private function editHandler():void {
+				lastBtnPressed = btnEdit;				
+				var popUp:EditRefSpecWindow = new EditRefSpecWindow();				
+				popUp.currentRef = String(lstRefMappings.selectedItem);
+				popUp.setResultHandler(this);
+				popUp.showPopup();
+			}
+			
+			private function deleteHandler():void {
+				refMappings.removeItemAt(lstRefMappings.selectedIndex);
+			}
+			
+			public function handleDialogResult(result:Object):void {
+				if (result == null) {
+					return;
+				}
+				if (lastBtnPressed == btnAdd) {					
+					refMappings.addItem(result);
+				} else if (lastBtnPressed == btnEdit) {
+					refMappings.setItemAt(result, lstRefMappings.selectedIndex);
+				}
+			}			
+			
+		]]>
+	</mx:Script>
+	
+				
+	<mx:HBox width="100%" height="100%" >
+		<mx:List id="lstRefMappings" width="100%" height="100%" dataProvider="{refMappings}"  />
+		<mx:VBox verticalGap="2">
+			<mx:Button id="btnAdd" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
+					   click="addHandler()"/>
+			<mx:Button id="btnEdit" width="70" label="{CommonPlugin.getInstance().getMessage('edit')}" 
+					   click="editHandler()" enabled="{lstRefMappings.selectedItem != null}" />
+			<mx:Button id="btnDelete" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
+					   click="deleteHandler()" enabled="{lstRefMappings.selectedItem != null}"/>
+		</mx:VBox>
+	</mx:HBox>
+	
+</ns:CustomTitlePanel>
