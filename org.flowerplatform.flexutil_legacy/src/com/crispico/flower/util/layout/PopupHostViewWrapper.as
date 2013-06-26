@@ -32,6 +32,8 @@ package com.crispico.flower.util.layout {
 		
 		public function PopupHostViewWrapper(popupContent:IPopupContent) {
 			super();
+			percentHeight = 100;
+			percentWidth = 100;
 			addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU,fillContextMenuHandler); 
 			setStyle("verticalGap", 0);
 			this.popupContent = popupContent;

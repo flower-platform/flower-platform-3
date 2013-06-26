@@ -52,6 +52,8 @@ import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.git.GitPlugin;
 import org.flowerplatform.web.git.dto.CommitDto;
+import org.flowerplatform.web.git.entity.GitNode;
+import org.flowerplatform.web.git.entity.GitNodeType;
 import org.flowerplatform.web.git.entity.RepositoryNode;
 import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
 import org.flowerplatform.web.git.history.dto.HistoryFileDiffEntryDto;
@@ -472,13 +474,13 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 //			info.setResource1(resource);
 //			info.setRepository1(GitPlugin.getInstance().getGitUtils().getRepository(mapping));	
 		} else {
-			RepositoryNode node = (RepositoryNode) GenericTreeStatefulService.getNodeByPathFor((List<PathFragment>) info.getSelectedObject(), null);
-			if (!(node instanceof RepositoryNode)) {
+			Object node = GenericTreeStatefulService.getNodeByPathFor((List<PathFragment>) info.getSelectedObject(), null);
+			if (!(node instanceof GitNode<?>)) {
 				throw new IOException();
 			}
 			
 			info.setFile1(null);
-			info.setRepository1(node.getRepository());
+			info.setRepository1(((GitNode<?>) node).getRepository());
 		}
 	}	
 	

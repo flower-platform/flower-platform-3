@@ -68,6 +68,7 @@ import org.flowerplatform.web.git.entity.SimpleNode;
 import org.flowerplatform.web.git.operation.CheckoutOperation;
 import org.flowerplatform.web.git.operation.CommitOperation;
 import org.flowerplatform.web.git.operation.MergeOperation;
+import org.flowerplatform.web.git.operation.PullOperation;
 import org.flowerplatform.web.git.operation.RebaseOperation;
 import org.flowerplatform.web.git.operation.ResetOperation;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
@@ -105,9 +106,7 @@ public class GitService {
 			service.dispatchContentUpdate(node);
 		}
 	}
-	
-	
-	
+			
 	/**
 	 * Sends command to client to open the login window 
 	 * based on the info stored in {@link #tlCommand}.
@@ -167,7 +166,7 @@ public class GitService {
 			}
 			
 			GitRef headRef = head != null ? new GitRef(head.getName(), Repository.shortenRefName(head.getName())) : null;			
-			return Arrays.asList(new Object[] {branches, headRef, Constants.DEFAULT_REMOTE_NAME});			
+			return Arrays.asList(new Object[] {branches, headRef});			
 		} catch (JGitInternalException | GitAPIException e) {			
 			context.getCommunicationChannel().appendOrSendCommand(
 					new DisplaySimpleMessageClientCommand(
@@ -234,7 +233,7 @@ public class GitService {
 
 	@RemoteInvocation
 	public boolean cloneRepository(final ServiceInvocationContext context, List<PathFragment> selectedPath, 
-			String repositoryUrl, final List<String> selectedBranches, final String initialBranch, final String remoteName, final boolean cloneAllBranches) {		
+			String repositoryUrl, final List<String> selectedBranches, final String remoteName, final boolean cloneAllBranches) {		
 		tlCommand.set((InvokeServiceMethodServerCommand) context.getCommand());
 		
 		final URIish uri;
@@ -265,12 +264,8 @@ public class GitService {
 				Repository repository = null;
 				try {			
 					CloneCommand cloneRepository = Git.cloneRepository();
-								
-					if (initialBranch != null)
-						cloneRepository.setBranch(initialBranch);
-					else {
-						cloneRepository.setNoCheckout(true);
-					}
+					
+					cloneRepository.setNoCheckout(true);					
 					cloneRepository.setDirectory(mainRepo);
 					cloneRepository.setProgressMonitor(new GitProgressMonitor(new SubProgressMonitor(monitor, 1)));
 					cloneRepository.setRemote(remoteName);
@@ -287,15 +282,8 @@ public class GitService {
 					
 					// notify clients about changes
 					dispatchContentUpdate(node);
-					// reveal and select the main working directory
-//					revealNode(context, new RepositoryNode(null, repository));
-					monitor.worked(1);
 					
-					context.getCommunicationChannel().sendCommandWithPush(
-							new DisplaySimpleMessageClientCommand(
-									CommonPlugin.getInstance().getMessage("info"), 
-									GitPlugin.getInstance().getMessage("git.cloneWizard.importProjects.info"),							
-									DisplaySimpleMessageClientCommand.ICON_INFORMATION));	
+					monitor.worked(1);	
 				} catch (Exception e) {			
 					if (repository != null)
 						repository.close();
@@ -392,7 +380,7 @@ public class GitService {
 			MergeOperation op = new MergeOperation(repo, refName, squash, context.getCommunicationChannel());
 			op.execute();
 			
-			String result = op.handleMergeResult();
+			String result = GitPlugin.getInstance().getUtils().handleMergeResult(op.getMergeResult());
 			if (result != null) {
 				context.getCommunicationChannel().appendOrSendCommand(
 					new OpenOperationResultWindowClientCommand(GitPlugin.getInstance().getMessage("git.merge.result"), result));
@@ -485,23 +473,7 @@ public class GitService {
 				repoConfig.removeURI(uri);
 			}		
 			repoConfig.addURI(new URIish(remoteConfig.getUri().trim()));
-			
-			while (repoConfig.getFetchRefSpecs().size() > 0) {
-				RefSpec refspec = repoConfig.getFetchRefSpecs().get(0);
-				repoConfig.removeFetchRefSpec(refspec);
-			}			
-			for (String refMapping : remoteConfig.getFetchMappings()) {
-					repoConfig.addFetchRefSpec(new RefSpec(refMapping));
-			}			
-			
-			while (repoConfig.getPushRefSpecs().size() > 0) {
-				RefSpec refspec = repoConfig.getPushRefSpecs().get(0);
-				repoConfig.removePushRefSpec(refspec);
-			}
-			for (String refMapping : remoteConfig.getPushMappings()) {
-					repoConfig.addPushRefSpec(new RefSpec(refMapping));
-			}
-			
+						
 			repoConfig.update(repo.getConfig());			
 			repo.getConfig().save();
 			
@@ -792,16 +764,24 @@ public class GitService {
 	}
 	
 	@RemoteInvocation
-	public boolean checkout(ServiceInvocationContext context, List<PathFragment> path, String name) {
-		RefNode node = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);	
+	public boolean checkout(ServiceInvocationContext context, List<PathFragment> path, 
+			String name, GitRef upstreamBranch, RemoteConfig remote, boolean rebase) {
+		
+		GitNode<?> node = (GitNode<?>) GenericTreeStatefulService.getNodeByPathFor(path, null);	
 		Repository repo = node.getRepository();
-				
-		boolean result = new CheckoutOperation(name, node, context.getCommunicationChannel()).execute();
+		
+		boolean result = new CheckoutOperation(node, name, remote, upstreamBranch, rebase, context.getCommunicationChannel()).execute();
 		
 		if (result) {
-			RepositoryNode repoNode = (RepositoryNode) ((SimpleNode) node.getParent()).getParent();
+			RepositoryNode repoNode;
+			if (GitNodeType.NODE_TYPE_TAG.equals(node.getType())) {
+				repoNode = (RepositoryNode) ((SimpleNode) node.getParent()).getParent();
+			} else {
+				repoNode = (RepositoryNode) node.getParent();
+			}			
 			dispatchContentUpdate(new SimpleNode(repoNode, repo, GitNodeType.NODE_TYPE_LOCAL_BRANCHES));
 			dispatchContentUpdate(new SimpleNode(repoNode, repo, GitNodeType.NODE_TYPE_WDIRS));
+			dispatchContentUpdate(new SimpleNode(repoNode, repo, GitNodeType.NODE_TYPE_REMOTE_BRANCHES));
 		}
 		return result;
 	}
@@ -862,6 +842,31 @@ public class GitService {
 	}
 	
 	@RemoteInvocation
+	public boolean pull(ServiceInvocationContext context, List<PathFragment> path) {
+		tlCommand.set((InvokeServiceMethodServerCommand) context.getCommand());
+			
+		try {			
+			RefNode node = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);
+				
+			File mainRepoFile = node.getRepository().getDirectory().getParentFile();		
+			File wdirFile = new File(mainRepoFile.getParentFile(), GitUtils.WORKING_DIRECTORY_PREFIX + Repository.shortenRefName(node.getObject().getName()));
+			if (!wdirFile.exists()) {
+				return false;
+			}			
+			new PullOperation(node.getObject(), GitPlugin.getInstance().getUtils().getRepository(wdirFile), context.getCommunicationChannel()).execute();
+			
+			return true;
+		} catch (Exception e) {		
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							e.getMessage(), 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		}
+	}
+		
+	@RemoteInvocation
 	public boolean importExistingProjects(ServiceInvocationContext context, List<ProjectDto> projects) {
 		for (ProjectDto project : projects) {
 			
@@ -885,6 +890,33 @@ public class GitService {
 			files.add(file);
 		}
 		return new CommitOperation(context.getCommunicationChannel(), files).getPageDto();
+	}
+	
+	@RemoteInvocation
+	public Object getAllRemotes(ServiceInvocationContext context, List<PathFragment> path) {
+		try {
+			SimpleNode node = (SimpleNode) GenericTreeStatefulService.getNodeByPathFor(path, null);
+			Repository repo = node.getRepository();
+			
+			List<RemoteConfig> list = new ArrayList<RemoteConfig>();
+			List<org.eclipse.jgit.transport.RemoteConfig> remotes = org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs(repo.getConfig());
+			
+			for (org.eclipse.jgit.transport.RemoteConfig remote : remotes) {
+				RemoteConfig remoteConfig = new RemoteConfig();
+				remoteConfig.setName(remote.getName());
+				remoteConfig.setUri(remote.getURIs().get(0).toString());			
+				list.add(remoteConfig);
+			}
+			return list;
+		} catch (Exception e) {		
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), path, e);
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							e.getMessage(), 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));	
+			return null;
+		}
 	}
 	
 	@RemoteInvocation

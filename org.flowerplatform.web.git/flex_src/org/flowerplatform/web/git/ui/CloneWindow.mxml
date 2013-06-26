@@ -2,11 +2,18 @@
 <!--
 @author Cristina Constantinescu
 -->
-<ns:Wizard xmlns:ns="com.crispico.flower.util.popup.*" xmlns:mx="http://www.adobe.com/2006/mxml"
+<ns:Wizard xmlns:ns="com.crispico.flower.util.popup.*" 
+		   xmlns:mx="http://www.adobe.com/2006/mxml"
+		   
 		   titleIconURL="{GitPlugin.getInstance().getResourceUrl('images/full/obj16/cloneGit.gif')}"
 		   title="{GitPlugin.getInstance().getMessage('git.action.cloneRepo.label')}"
 		   width="500" height="450" minWidth="500" minHeight="450"
-		   showCloseButton="true" xmlns:component="org.flowerplatform.web.git.ui.component.*" xmlns:common="com.crispico.flower.flexdiagram.util.common.*" xmlns:panel="com.crispico.flower.util.panel.*" >
+		   showCloseButton="true" 
+		   
+		   xmlns:component="org.flowerplatform.web.git.ui.component.*" 
+		   xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+		   xmlns:panel="com.crispico.flower.util.panel.*" >
+	
 	<mx:Script>
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
@@ -30,7 +37,7 @@
 			private var head:GitRef;
 			
 			[Bindable]
-			private var defaultRemoteName:String;
+			private var defaultRemoteName:String = "origin";
 			
 			override protected function creationCompleteHandler():void {
 				super.creationCompleteHandler();		
@@ -58,27 +65,7 @@
 							.setText(GitPlugin.getInstance().getMessage("git.cloneWizard.noBranchSelected.error"))
 							.showMessageBox();
 					} else {
-						super.nextClickHandler();
-						
-						// we can have repository without branches, so this cond is needed
-						if (selectedBranches.length > 0) {
-							cbInitialBranch.dataProvider = selectedBranches;
-							// select the initial branch as the head branch if it is contained in selected branches
-							var initialBranchSelected:Boolean = false;
-							if (head != null) {
-								for each (var ref:GitRef in selectedBranches) {
-									if (ref.name == head.name) {
-										cbInitialBranch.selectedItem = ref;
-										initialBranchSelected = true;
-										break;
-									}
-								}
-							}
-							// otherwise select the first branch from list
-							if (!initialBranchSelected) {								
-								cbInitialBranch.selectedItem = selectedBranches.getItemAt(0);
-							}		
-						}
+						super.nextClickHandler();						
 					}
 				}
 			}
@@ -107,16 +94,13 @@
 				
 				if (data != null) {
 					allBranches = ArrayCollection(data[0]);					
-					head = GitRef(data[1]);
-					defaultRemoteName = String(data[2]);
+					head = GitRef(data[1]);					
 				} else {
 					allBranches.removeAll();
-					head = null;
-					defaultRemoteName = "";
+					head = null;					
 				}
 				allBranches.refresh();
 				
-				next.enabled = (data != null);
 				applyFilterHandler();
 				
 				ModalSpinner.removeModalSpinner(this);
@@ -154,8 +138,7 @@
 					cloneRepository(selectedNode,
 						repositorySelectionPage.getURI(),
 						selectedBranches,
-						GitRef(cbInitialBranch.selectedItem).name,
-						remoteName.text,
+						remoteName != null ? remoteName.text : defaultRemoteName,
 						allBranches.length == 0 || selectedBranches.length == allBranches.length,
 						this, serverResponseHandler);
 			}
@@ -174,18 +157,16 @@
 		<mx:State name="0">			
 			<mx:SetProperty target="{wizardTitle}" name="text" value="{GitPlugin.getInstance().getMessage('git.repoSelection.title')}"/>					
 			<mx:SetProperty target="{wizardDescription}" name="text" value="{GitPlugin.getInstance().getMessage('git.repoSelection.description')}"/>
-			<mx:SetProperty target="{finish}" name="enabled" value="false"/>
-			
+						
 			<mx:AddChild relativeTo="{contentArea}">
 				<component:RepositorySelectionPage id="repositorySelectionPage" width="100%" height="100%" />	
 			</mx:AddChild>
 		</mx:State>
 		
 		<mx:State name="1" >			
-			<mx:SetProperty target="{wizardTitle}" name="text" value="{GitPlugin.getInstance().getMessage('git.cloneWizard.branch.title')}"/>					
-			<mx:SetProperty target="{wizardDescription}" name="text" value="{GitPlugin.getInstance().getMessage('git.cloneWizard.branch.description')}"/>
-			<mx:SetProperty target="{finish}" name="enabled" value="false"/>
-			
+			<mx:SetProperty target="{wizardTitle}" name="text" value="{GitPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.title')}"/>					
+			<mx:SetProperty target="{wizardDescription}" name="text" value="{GitPlugin.getInstance().getMessage('git.cloneWizard.branch.description')}"/>			
+						
 			<mx:AddChild relativeTo="{contentArea}">
 				<mx:VBox width="100%" height="100%" paddingTop="10">
 					<mx:Label text="{GitPlugin.getInstance().getMessage('git.cloneWizard.branch.branchOf', [repositorySelectionPage.getURI()])}"/>
@@ -204,39 +185,20 @@
 										]]>
 									</mx:Script>
 									
-									<mx:CheckBox click="{GitRef(data).setSelected(!GitRef(data).getSelected())}" selected="{GitRef(data).getSelected()}" />
-									
+									<mx:CheckBox click="{GitRef(data).setSelected(!GitRef(data).getSelected())}" selected="{GitRef(data).getSelected()}" />									
 									<common:BitmapContainer id="image" creationComplete="{image.retrieveImage(GitPlugin.getInstance().getResourceUrl('images/full/obj16/branch_obj.gif'))}"/>	
 									<mx:Label text="{data.shortName}" />
 								</mx:HBox>					
 							</mx:Component>
 						</mx:itemRenderer>
 					</mx:List>
+					<mx:HBox paddingTop="10" width="100%">
+						<mx:Label text="{GitPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.remoteName')}"/>
+						<mx:TextInput id="remoteName" width="100%" text="{defaultRemoteName}" />
+					</mx:HBox>
 				</mx:VBox>
 			</mx:AddChild>
-		</mx:State>
-		
-		<mx:State name="2">			
-			<mx:SetProperty target="{wizardTitle}" name="text" value="{GitPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.title')}"/>					
-			<mx:SetProperty target="{wizardDescription}" name="text" value="{GitPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.description')}"/>
-			
-			<mx:AddChild relativeTo="{contentArea}">
-				<panel:CustomTitlePanel 
-										headerHeight="0" borderStyle="none"
-										width="100%" height="100%">
-					<mx:Form width="100%" verticalGap="15">
-						<mx:FormItem 
-							label="{GitPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.initBranch')}" width="100%">
-							<mx:ComboBox id="cbInitialBranch" width="100%" labelField="shortName" />							
-						</mx:FormItem>		
-						<mx:FormItem 
-							label="{GitPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.remoteName')}" width="100%">
-							<mx:TextInput id="remoteName" width="100%" text="{defaultRemoteName}" />
-						</mx:FormItem>										
-					</mx:Form>				
-				</panel:CustomTitlePanel>
-			</mx:AddChild>
-		</mx:State>
+		</mx:State>		
 	</ns:states>
 	
 </ns:Wizard>

@@ -7,65 +7,127 @@ import org.eclipse.jgit.api.CheckoutCommand;
 import org.eclipse.jgit.api.CheckoutResult;
 import org.eclipse.jgit.api.CreateBranchCommand.SetupUpstreamMode;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.ConfigConstants;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.URIish;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
 import org.flowerplatform.web.git.GitPlugin;
-import org.flowerplatform.web.git.entity.RefNode;
+import org.flowerplatform.web.git.GitUtils;
+import org.flowerplatform.web.git.dto.GitRef;
+import org.flowerplatform.web.git.dto.RemoteConfig;
+import org.flowerplatform.web.git.entity.GitNode;
+import org.flowerplatform.web.git.entity.GitNodeType;
 
 /**
  * @author Cristina Constantinescu
  */ 
 public class CheckoutOperation {
 
-	private RefNode node;	
+	private GitNode<?> node;	
 	private String name;
+	private RemoteConfig remote;
+	private GitRef upstreamBranch;
+	private boolean rebase;
 	private CommunicationChannel channel;
-		
-	public CheckoutOperation(String name, RefNode node, CommunicationChannel channel) {
-		this.name = name;
-		this.channel = channel;
-		this.node = node;
-	}
+			
 
+	public CheckoutOperation(GitNode<?> node, String name, RemoteConfig remote,
+			GitRef upstreamBranch, boolean rebase, CommunicationChannel channel) {	
+		this.node = node;
+		this.name = name;
+		this.remote = remote;
+		this.upstreamBranch = upstreamBranch;
+		this.rebase = rebase;
+		this.channel = channel;
+	}
+	
 	public boolean execute() {
 		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.checkout.monitor.title"), channel);
 		
 		try {	
-			monitor.beginTask(GitPlugin.getInstance().getMessage("git.checkout.monitor.message", new Object[] {name}), 3);
-			Git git = new Git(node.getRepository());
+			monitor.beginTask(GitPlugin.getInstance().getMessage("git.checkout.monitor.message", new Object[] {name}), 4);			
+			Repository repo = node.getRepository();
 			
+			Git git = new Git(repo);
+			Ref ref;
+			if (GitNodeType.NODE_TYPE_TAG.equals(node.getType())) {
+				ref = (Ref) node.getObject();
+			} else {
+				// get remote branch
+				String dst = Constants.R_REMOTES + remote.getName();
+				String remoteRefName = dst + "/" + upstreamBranch.getShortName();
+				ref = repo.getRef(remoteRefName);
+				if (ref == null) { // doesn't exist, fetch it
+					RefSpec refSpec = new RefSpec();
+					refSpec = refSpec.setForceUpdate(true);
+					refSpec = refSpec.setSourceDestination(upstreamBranch.getName(), remoteRefName);
+		
+					git.fetch()
+						.setRemote(new URIish(remote.getUri()).toPrivateString())
+						.setRefSpecs(refSpec)
+						.call();
+					
+					ref = repo.getRef(remoteRefName);
+				}
+			}					
+			monitor.worked(1);
+			
+			// create local branch
 			git.branchCreate().
 				setName(name).
-				setStartPoint(node.getObject().getName()).
-				setUpstreamMode(SetupUpstreamMode.TRACK).
+				setStartPoint(ref.getName()).
+				setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM).
 				call();
 		
+			if (GitNodeType.NODE_TYPE_REMOTE_BRANCHES.equals(node.getType())) {
+				// save upstream configuration
+				StoredConfig config = node.getRepository().getConfig();			
+				
+				config.setString(ConfigConstants.CONFIG_BRANCH_SECTION,
+							name, ConfigConstants.CONFIG_KEY_MERGE,
+							upstreamBranch.getName());
+							
+				config.setString(ConfigConstants.CONFIG_BRANCH_SECTION,
+						name, ConfigConstants.CONFIG_KEY_REMOTE,
+						remote.getName());
+				
+				if (rebase) {
+					config.setBoolean(ConfigConstants.CONFIG_BRANCH_SECTION,
+							name, ConfigConstants.CONFIG_KEY_REBASE,
+							true);
+				} else {
+					config.unset(ConfigConstants.CONFIG_BRANCH_SECTION,
+							name, ConfigConstants.CONFIG_KEY_REBASE);
+				}			
+				config.save();				
+			}			
 			monitor.worked(1);
 			
+			// create working directory for local branch
 			File mainRepoFile = node.getRepository().getDirectory().getParentFile();		
-			File wdirFile = new File(mainRepoFile.getParentFile(), "wd_" + name);
+			File wdirFile = new File(mainRepoFile.getParentFile(), GitUtils.WORKING_DIRECTORY_PREFIX + name);
 			if (wdirFile.exists()) {
 				GitPlugin.getInstance().getUtils().delete(wdirFile);
-			}
-			
-			GitPlugin.getInstance().getUtils().run_git_workdir_cmd(mainRepoFile.getAbsolutePath(), wdirFile.getAbsolutePath());
-			
+			}			
+			GitPlugin.getInstance().getUtils().run_git_workdir_cmd(mainRepoFile.getAbsolutePath(), wdirFile.getAbsolutePath());			
 			monitor.worked(1);
 			
+			// checkout local branch
 			Repository wdirRepo = GitPlugin.getInstance().getUtils().getRepository(wdirFile);
 			git = new Git(wdirRepo);
-//			IProject[] validProjects = GitPlugin.getInstance().getGitUtils().getValidProjects(repository);
-//
-//			GitPlugin.getInstance().getGitUtils().backupProjectConfigFiles(null, validProjects);
 								
-			CheckoutCommand cc = git.checkout().setName(name).setForce(true);
-						
+			CheckoutCommand cc = git.checkout().setName(name).setForce(true);						
 			cc.call();				
 			
+			// show checkout result
 			if (cc.getResult().getStatus() == CheckoutResult.Status.CONFLICTS)
 				channel.appendOrSendCommand(
 						new DisplaySimpleMessageClientCommand(
@@ -99,15 +161,8 @@ public class CheckoutOperation {
 								GitPlugin.getInstance().getMessage("git.checkout.detachedHead.title"), 
 								GitPlugin.getInstance().getMessage("git.checkout.detachedHead.message"),
 								DisplaySimpleMessageClientCommand.ICON_ERROR));		
-			}
-			
-			monitor.worked(1);
-//			GitPlugin.getInstance().getGitUtils().refreshValidProjects(validProjects, new SubProgressMonitor(monitor, 1));
-			
-			monitor.worked(1);
-			
-//			GitRepositoriesTreeStatefulService.getInstance().getUpdateDispatcher().dispatchContentUpdate(repository, GitTreeUpdateDispatcher.CHECKOUT, null);
-								
+			}			
+			monitor.worked(1);				
 			return true;
 		} catch (Exception e) {		
 			channel.appendOrSendCommand(
@@ -118,7 +173,6 @@ public class CheckoutOperation {
 			return false;
 		} finally {
 			monitor.done();
-//			GitPlugin.getInstance().getGitUtils().restoreProjectConfigFiles(repository, null);
 		}
 	}
 	
