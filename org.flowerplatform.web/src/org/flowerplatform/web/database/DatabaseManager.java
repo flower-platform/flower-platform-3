@@ -5,6 +5,7 @@ import java.security.Policy;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import javax.security.auth.Subject;
@@ -33,6 +34,8 @@ import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.OrganizationMembershipStatus;
 import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.User;
+import org.flowerplatform.web.entity.WorkingDirectory;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
 import org.flowerplatform.web.security.permission.AdminSecurityEntitiesPermission;
 import org.flowerplatform.web.security.permission.FlowerWebFilePermission;
@@ -344,6 +347,45 @@ public class DatabaseManager {
 		createTestOrganization("hibernate", "Hibernate", "http://www.hibernate.org/", "https://forum.hibernate.org/styles/hibernate/imageset/site_logo.gif");
 		createTestOrganization("spring", "Spring", "http://www.springsource.org/", "http://www.springsource.org/files/Logo_Spring_258x151.png");
 		createTestOrganization("flex", "Apache Flex", "http://flex.apache.org/", "http://flex.apache.org/images/logo_01_fullcolor-sm.png");
+		
+		// TODO CS/FP2 remove this
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<Organization> list = wrapper.findByField(Organization.class, "name", "hibernate");
+				
+				WorkingDirectory wd;
+				
+				wd = EntityFactory.eINSTANCE.createWorkingDirectory();
+				wd.setPathFromOrganization("path/to/file");
+				wd.setColor(1);
+				wd.setOrganization(list.get(0));
+				wrapper.getSession().persist(wd);
+				
+				
+				wd = EntityFactory.eINSTANCE.createWorkingDirectory();
+				wd.setPathFromOrganization("path/to/file");
+				wd.setColor(2);
+				wd.setOrganization(list.get(0));
+				wrapper.getSession().persist(wd);
+			}
+			
+		});
+	
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<WorkingDirectory> list = wrapper.findAll(WorkingDirectory.class);
+				for (WorkingDirectory wd : list) {
+					System.out.println(wd.getPathFromOrganization());
+				}
+				
+			}
+			
+		});
+		
 	}
 	
 }

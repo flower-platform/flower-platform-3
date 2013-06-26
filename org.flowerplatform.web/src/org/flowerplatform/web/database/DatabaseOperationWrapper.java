@@ -25,6 +25,10 @@ public class DatabaseOperationWrapper {
 	
 	private Object operationResult;
 
+	public Session getSession() {
+		return session;
+	}
+
 	public DatabaseOperationWrapper(DatabaseOperation operation) {
 		operation.wrapper = this;
 		session = WebPlugin.getInstance().getDatabaseManager().getFactory().openSession();

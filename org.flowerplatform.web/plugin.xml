@@ -146,5 +146,48 @@
             commandToAppendToWelcomeClientCommand="org.flowerplatform.web.security.dto.InitializeCurrentUserLoggedInClientCommand">
       </welcomeInitializationsContributor>
    </extension>
+   <extension
+         point="org.flowerplatform.web.explorerChildrenProvider">
+      <explorerChildrenProvider
+            provider="org.flowerplatform.web.projects.WorkingDirectories_OrganizationChildrenProvider">
+         <nodeType
+               nodeType="or">
+         </nodeType>
+      </explorerChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerNodeDataProvider">
+      <explorerNodeDataProvider
+            provider="org.flowerplatform.web.projects.WorkingDirectoriesNodeDataProvider">
+         <nodeType
+               nodeType="workingDirectories">
+         </nodeType>
+      </explorerNodeDataProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="projectsService"
+            serviceClass="org.flowerplatform.web.projects.remote.ProjectsService">
+      </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerChildrenProvider">
+      <explorerChildrenProvider
+            provider="org.flowerplatform.web.projects.WorkingDirectory_WorkingDirectoriesChildrenProvider">
+         <nodeType
+               nodeType="workingDirectories">
+         </nodeType>
+      </explorerChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerNodeDataProvider">
+      <explorerNodeDataProvider
+            provider="org.flowerplatform.web.projects.WorkingDirectoryNodeDataProvider">
+         <nodeType
+               nodeType="workingDirectory">
+         </nodeType>
+      </explorerNodeDataProvider>
+   </extension>
 
 </plugin>

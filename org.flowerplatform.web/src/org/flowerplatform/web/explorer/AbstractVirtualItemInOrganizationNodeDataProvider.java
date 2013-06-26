@@ -9,44 +9,17 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
-import org.flowerplatform.web.WebPlugin;
 
-public class OrganizationChildrenNodeDataProvider implements INodeDataProvider {
+public class AbstractVirtualItemInOrganizationNodeDataProvider implements INodeDataProvider {
 
-	private String getLabel(Object node) {
-		@SuppressWarnings("unchecked")
-		String nodeType = ((Pair<File, String>) node).b;
-		if (OrganizationChildrenProvider.NODE_TYPE_WORKSPACES.equals(nodeType)) {
-			// TODO CS/FP2 msg
-			return "Workspaces";
-		} else if (OrganizationChildrenProvider.NODE_TYPE_REPOSITORIES.equals(nodeType)) {
-			return "Src Repositories";
-		} else if (OrganizationChildrenProvider.NODE_TYPE_ISSUES.equals(nodeType)) {
-			return "Issues";
-		} else if (OrganizationChildrenProvider.NODE_TYPE_WIKI.equals(nodeType)) {
-			return "Wiki";
-		} else {
-			return null;
-		}
-	}
+	protected String nodeLabel;
+	
+	protected String nodeIcon;
 	
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
-		destination.setLabel(getLabel(source));
-		
-		@SuppressWarnings("unchecked")
-		String nodeType = ((Pair<File, String>) source).b;
-		String icon = null;
-		if (OrganizationChildrenProvider.NODE_TYPE_WORKSPACES.equals(nodeType)) {
-			icon = "images/workset.gif";
-		} else if (OrganizationChildrenProvider.NODE_TYPE_REPOSITORIES.equals(nodeType)) {
-			icon = "images/repo_rep.gif";
-		} else if (OrganizationChildrenProvider.NODE_TYPE_ISSUES.equals(nodeType)) {
-			icon = "images/workset.gif";
-		} else if (OrganizationChildrenProvider.NODE_TYPE_WIKI.equals(nodeType)) {
-			icon = "images/repo_rep.gif";
-		}
-		destination.setIcon(WebPlugin.getInstance().getResourceUrl(icon));
+		destination.setLabel(nodeLabel);
+		destination.setIcon(nodeIcon);
 
 		return true;
 	}
@@ -80,7 +53,7 @@ public class OrganizationChildrenNodeDataProvider implements INodeDataProvider {
 
 	@Override
 	public String getLabelForLog(Object node, String nodeType) {
-		return getLabel(node);
+		return nodeLabel;
 	}
 
 	@Override

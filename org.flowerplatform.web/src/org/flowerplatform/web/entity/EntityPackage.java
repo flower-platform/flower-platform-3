@@ -285,13 +285,22 @@ public interface EntityPackage extends EPackage {
 	int ORGANIZATION__DIAGRAMS_COUNT = NAMED_ENTITY_FEATURE_COUNT + 11;
 
 	/**
+	 * The feature id for the '<em><b>Working Directories</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ORGANIZATION__WORKING_DIRECTORIES = NAMED_ENTITY_FEATURE_COUNT + 12;
+
+	/**
 	 * The number of structural features of the '<em>Organization</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ORGANIZATION_FEATURE_COUNT = NAMED_ENTITY_FEATURE_COUNT + 12;
+	int ORGANIZATION_FEATURE_COUNT = NAMED_ENTITY_FEATURE_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.web.entity.impl.GroupImpl <em>Group</em>}' class.
@@ -1098,6 +1107,61 @@ public interface EntityPackage extends EPackage {
 	int DB_VERSION_FEATURE_COUNT = 2;
 
 	/**
+	 * The meta object id for the '{@link org.flowerplatform.web.entity.impl.WorkingDirectoryImpl <em>Working Directory</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.flowerplatform.web.entity.impl.WorkingDirectoryImpl
+	 * @see org.flowerplatform.web.entity.impl.EntityPackageImpl#getWorkingDirectory()
+	 * @generated
+	 */
+	int WORKING_DIRECTORY = 16;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKING_DIRECTORY__ID = ENTITY__ID;
+
+	/**
+	 * The feature id for the '<em><b>Organization</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKING_DIRECTORY__ORGANIZATION = ENTITY_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Path From Organization</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKING_DIRECTORY__PATH_FROM_ORGANIZATION = ENTITY_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Color</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKING_DIRECTORY__COLOR = ENTITY_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Working Directory</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int WORKING_DIRECTORY_FEATURE_COUNT = ENTITY_FEATURE_COUNT + 3;
+
+	/**
 	 * The meta object id for the '{@link org.flowerplatform.web.entity.OrganizationMembershipStatus <em>Organization Membership Status</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1105,7 +1169,7 @@ public interface EntityPackage extends EPackage {
 	 * @see org.flowerplatform.web.entity.impl.EntityPackageImpl#getOrganizationMembershipStatus()
 	 * @generated
 	 */
-	int ORGANIZATION_MEMBERSHIP_STATUS = 16;
+	int ORGANIZATION_MEMBERSHIP_STATUS = 17;
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.web.entity.Entity <em>Entity</em>}'.
@@ -1300,6 +1364,17 @@ public interface EntityPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getOrganization_DiagramsCount();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.flowerplatform.web.entity.Organization#getWorkingDirectories <em>Working Directories</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Working Directories</em>'.
+	 * @see org.flowerplatform.web.entity.Organization#getWorkingDirectories()
+	 * @see #getOrganization()
+	 * @generated
+	 */
+	EReference getOrganization_WorkingDirectories();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.web.entity.Group <em>Group</em>}'.
@@ -1950,6 +2025,49 @@ public interface EntityPackage extends EPackage {
 	EAttribute getDBVersion_DbVersion();
 
 	/**
+	 * Returns the meta object for class '{@link org.flowerplatform.web.entity.WorkingDirectory <em>Working Directory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Working Directory</em>'.
+	 * @see org.flowerplatform.web.entity.WorkingDirectory
+	 * @generated
+	 */
+	EClass getWorkingDirectory();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.flowerplatform.web.entity.WorkingDirectory#getOrganization <em>Organization</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Organization</em>'.
+	 * @see org.flowerplatform.web.entity.WorkingDirectory#getOrganization()
+	 * @see #getWorkingDirectory()
+	 * @generated
+	 */
+	EReference getWorkingDirectory_Organization();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.web.entity.WorkingDirectory#getPathFromOrganization <em>Path From Organization</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Path From Organization</em>'.
+	 * @see org.flowerplatform.web.entity.WorkingDirectory#getPathFromOrganization()
+	 * @see #getWorkingDirectory()
+	 * @generated
+	 */
+	EAttribute getWorkingDirectory_PathFromOrganization();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.web.entity.WorkingDirectory#getColor <em>Color</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Color</em>'.
+	 * @see org.flowerplatform.web.entity.WorkingDirectory#getColor()
+	 * @see #getWorkingDirectory()
+	 * @generated
+	 */
+	EAttribute getWorkingDirectory_Color();
+
+	/**
 	 * Returns the meta object for enum '{@link org.flowerplatform.web.entity.OrganizationMembershipStatus <em>Organization Membership Status</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2132,6 +2250,14 @@ public interface EntityPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ORGANIZATION__DIAGRAMS_COUNT = eINSTANCE.getOrganization_DiagramsCount();
+
+		/**
+		 * The meta object literal for the '<em><b>Working Directories</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ORGANIZATION__WORKING_DIRECTORIES = eINSTANCE.getOrganization_WorkingDirectories();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.web.entity.impl.GroupImpl <em>Group</em>}' class.
@@ -2636,6 +2762,40 @@ public interface EntityPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DB_VERSION__DB_VERSION = eINSTANCE.getDBVersion_DbVersion();
+
+		/**
+		 * The meta object literal for the '{@link org.flowerplatform.web.entity.impl.WorkingDirectoryImpl <em>Working Directory</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.web.entity.impl.WorkingDirectoryImpl
+		 * @see org.flowerplatform.web.entity.impl.EntityPackageImpl#getWorkingDirectory()
+		 * @generated
+		 */
+		EClass WORKING_DIRECTORY = eINSTANCE.getWorkingDirectory();
+
+		/**
+		 * The meta object literal for the '<em><b>Organization</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference WORKING_DIRECTORY__ORGANIZATION = eINSTANCE.getWorkingDirectory_Organization();
+
+		/**
+		 * The meta object literal for the '<em><b>Path From Organization</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute WORKING_DIRECTORY__PATH_FROM_ORGANIZATION = eINSTANCE.getWorkingDirectory_PathFromOrganization();
+
+		/**
+		 * The meta object literal for the '<em><b>Color</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute WORKING_DIRECTORY__COLOR = eINSTANCE.getWorkingDirectory_Color();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.web.entity.OrganizationMembershipStatus <em>Organization Membership Status</em>}' enum.

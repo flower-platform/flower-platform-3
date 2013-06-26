@@ -10,9 +10,11 @@ import java.util.Map;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
+import org.flowerplatform.communication.tree.IChildNodeAdjusterBeforeProcessing;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.INodePopulator;
+import org.flowerplatform.communication.tree.NodeInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -201,6 +203,20 @@ public class DelegatingGenericTreeStatefulService extends
 		}
 		
 		return super.getNodeByPath(fullPath, context);
+	}
+
+	@Override
+	public Object adjustChild(Object originalChild, String nodeType, NodeInfo nodeInfo) {
+		INodeDataProvider provider = nodeDataProviders.get(nodeType);
+		if (provider == null) {
+			logger.error("Tree delegate not found, for method adjustChild(); node = {}, nodeType = {}", getLabelForLog(originalChild, nodeType), nodeType);
+			return null;
+		}
+		if (provider instanceof IChildNodeAdjusterBeforeProcessing) {
+			return ((IChildNodeAdjusterBeforeProcessing) provider).adjustChild(originalChild, nodeType, nodeInfo);
+		} else {
+			return super.adjustChild(originalChild, nodeType, nodeInfo);
+		}
 	}
 
 }

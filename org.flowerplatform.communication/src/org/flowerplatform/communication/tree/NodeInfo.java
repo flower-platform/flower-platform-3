@@ -3,8 +3,10 @@ package org.flowerplatform.communication.tree;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.flowerplatform.communication.channel.CommunicationChannel;
@@ -58,6 +60,7 @@ public class NodeInfo {
 	 */
 	private List<NodeInfoClient> clientsReadOnly = Collections.unmodifiableList(clients);
 	
+	private Map<String, Object> customData;
 	/**
 	 * The server object representing the node on client.
 	 * @flowerModelElementId _NmwtoKTpEeGJQ4vD1xX4gA
@@ -202,6 +205,13 @@ public class NodeInfo {
 	 */
 	public String toString() {
 		return String.format("%s[path=%s]", getClass().getSimpleName(), getPathFragment());
+	}
+
+	public Map<String, Object> getCustomData() {
+		if (customData == null) {
+			customData = new HashMap<String, Object>();
+		}
+		return customData;
 	}
 
 }

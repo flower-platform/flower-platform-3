@@ -23,6 +23,7 @@ import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulService;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
+import org.flowerplatform.communication.tree.IChildNodeAdjusterBeforeProcessing;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.NodeInfo;
@@ -82,7 +83,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @flowerModelElementId _qwPpwA7rEeKbvNML8mcTuA
  */
-public abstract class GenericTreeStatefulService extends StatefulService implements INodeInfoStatefulServiceMXBean, IChildrenProvider, INodeDataProvider {
+public abstract class GenericTreeStatefulService extends StatefulService implements INodeInfoStatefulServiceMXBean, IChildrenProvider, INodeDataProvider, IChildNodeAdjusterBeforeProcessing {
 	
 	public final static String NODE_TYPE_ROOT = "r";
 	
@@ -506,7 +507,9 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	private void populateChildren(CommunicationChannel channel, String statefulClientId, Object node, TreeNode treeNode, GenericTreeContext context, boolean recurse) {
 		// create and populate the children list
 		for (Pair<Object, String> pair : getChildrenForNode(node, treeNode, context)) {
+			NodeInfo newNodeInfoWithCustomData = new NodeInfo();
 			Object child = pair.a;
+			child = adjustChild(child, pair.b, newNodeInfoWithCustomData);
 			TreeNode childNode = createTreeNode();
 			childNode.setPathFragment(new PathFragment(null, pair.b));
 			populateTreeNodeInternal(child, childNode, context);	
@@ -519,7 +522,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 			
 			// for dispatched trees, update the server tree structure
 			if (isDispatchEnabled(child)) {	
-				addNodeInfo(channel, statefulClientId, child, getNodeType(childNode), false, false, context);
+				addNodeInfo(channel, statefulClientId, child, getNodeType(childNode), false, false, context, newNodeInfoWithCustomData);
 			}
 		}		
 	}
@@ -532,7 +535,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * 
 	 * @flowerModelElementId _G-7_NKr2EeG3eZ1Jezjhtw
 	 */
-	private void addNodeInfo(CommunicationChannel channel, String statefulClientId, Object node, String nodeType, boolean isRoot, boolean addInOpenNodes, GenericTreeContext context) {
+	private void addNodeInfo(CommunicationChannel channel, String statefulClientId, Object node, String nodeType, boolean isRoot, boolean addInOpenNodes, GenericTreeContext context, NodeInfo newNodeInfoWithCustomData) {
 		NodeInfo nodeInfo = openNodes.get(node);
 		if (nodeInfo == null) {	
 			namedLockPool.lock(node);	
@@ -565,7 +568,11 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 					if (nodeInfo == null) { // not found in parent, add it
 						logger.trace("Node {} never added in structure; adding it", getLabelForLog(node, nodeType));	
 						// create new open node entry and populate it
-						nodeInfo = new NodeInfo();
+						if (newNodeInfoWithCustomData != null) {
+							nodeInfo = newNodeInfoWithCustomData;
+						} else {
+							nodeInfo = new NodeInfo();
+						}
 						nodeInfo.setNode(node);
 						nodeInfo.setParent(parentInfo);
 						nodeInfo.setPathFragment(getPathFragmentForNode(node, nodeType, context));					
@@ -1011,7 +1018,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		
 		// for dispatched trees, update the server tree structure
 		if (isDispatchEnabled(source)) {	
-			addNodeInfo(channel, statefulClientId, source, getNodeType(treeNode), fullPath == null, true, treeContext);
+			addNodeInfo(channel, statefulClientId, source, getNodeType(treeNode), fullPath == null, true, treeContext, null);
 		}
 		
 		// create structure for current tree node or create structure for entire tree
@@ -1213,6 +1220,36 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		treeContexts.put(treeInfo, treeContext);
 		
 		return true;
+	}
+
+	@Override
+	public Object adjustChild(Object originalChild, String nodeType, NodeInfo nodeInfo) {
+		return originalChild;
+	}
+	
+	public NodeInfo getNodeInfoForObject(Object node, String nodeType) {
+		NodeInfo result = openNodes.get(node);
+		if (result != null) {
+			// we found the node info for a node that's expanded
+			return result;
+		}
+		
+		Object parentNode = getParent(node, nodeType, new GenericTreeContext());
+		NodeInfo parentNodeInfo = openNodes.get(parentNode);
+		if (parentNodeInfo == null) {
+			// parent node not open; this should not happen
+			return null;
+		}
+		
+		for (NodeInfo childNodeInfo : parentNodeInfo.getChildren()) {
+			if (childNodeInfo.getNode().equals(node)) {
+				// we found the node info for a node which is closed
+				return childNodeInfo;
+			}
+		}
+		
+		// this shouldn't happen either
+		return null;
 	}
 	
 }

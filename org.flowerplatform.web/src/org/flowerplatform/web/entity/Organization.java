@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.flowerplatform.web.entity.Organization#getFilesCount <em>Files Count</em>}</li>
  *   <li>{@link org.flowerplatform.web.entity.Organization#getModelsCount <em>Models Count</em>}</li>
  *   <li>{@link org.flowerplatform.web.entity.Organization#getDiagramsCount <em>Diagrams Count</em>}</li>
+ *   <li>{@link org.flowerplatform.web.entity.Organization#getWorkingDirectories <em>Working Directories</em>}</li>
  * </ul>
  * </p>
  *
@@ -323,5 +324,23 @@ public interface Organization extends NamedEntity, ISecurityEntity {
 	 * @generated
 	 */
 	void setDiagramsCount(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Working Directories</b></em>' reference list.
+	 * The list contents are of type {@link org.flowerplatform.web.entity.WorkingDirectory}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.web.entity.WorkingDirectory#getOrganization <em>Organization</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Working Directories</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Working Directories</em>' reference list.
+	 * @see org.flowerplatform.web.entity.EntityPackage#getOrganization_WorkingDirectories()
+	 * @see org.flowerplatform.web.entity.WorkingDirectory#getOrganization
+	 * @model opposite="organization"
+	 * @generated
+	 */
+	EList<WorkingDirectory> getWorkingDirectories();
 
 } // Organization

@@ -39,6 +39,7 @@ import org.flowerplatform.web.entity.RecentResource;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.entity.User;
+import org.flowerplatform.web.entity.WorkingDirectory;
 import org.hibernate.cfg.Configuration;
 
 /**
@@ -159,6 +160,13 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 	 * @generated
 	 */
 	private EClass dbVersionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass workingDirectoryEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -388,6 +396,15 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 	 */
 	public EAttribute getOrganization_DiagramsCount() {
 		return (EAttribute)organizationEClass.getEStructuralFeatures().get(11);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getOrganization_WorkingDirectories() {
+		return (EReference)organizationEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -935,6 +952,42 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getWorkingDirectory() {
+		return workingDirectoryEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getWorkingDirectory_Organization() {
+		return (EReference)workingDirectoryEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getWorkingDirectory_PathFromOrganization() {
+		return (EAttribute)workingDirectoryEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getWorkingDirectory_Color() {
+		return (EAttribute)workingDirectoryEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getOrganizationMembershipStatus() {
 		return organizationMembershipStatusEEnum;
 	}
@@ -988,6 +1041,7 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 		createEAttribute(organizationEClass, ORGANIZATION__FILES_COUNT);
 		createEAttribute(organizationEClass, ORGANIZATION__MODELS_COUNT);
 		createEAttribute(organizationEClass, ORGANIZATION__DIAGRAMS_COUNT);
+		createEReference(organizationEClass, ORGANIZATION__WORKING_DIRECTORIES);
 
 		groupEClass = createEClass(GROUP);
 		createEReference(groupEClass, GROUP__ORGANIZATION);
@@ -1061,6 +1115,11 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 		createEAttribute(dbVersionEClass, DB_VERSION__ID);
 		createEAttribute(dbVersionEClass, DB_VERSION__DB_VERSION);
 
+		workingDirectoryEClass = createEClass(WORKING_DIRECTORY);
+		createEReference(workingDirectoryEClass, WORKING_DIRECTORY__ORGANIZATION);
+		createEAttribute(workingDirectoryEClass, WORKING_DIRECTORY__PATH_FROM_ORGANIZATION);
+		createEAttribute(workingDirectoryEClass, WORKING_DIRECTORY__COLOR);
+
 		// Create enums
 		organizationMembershipStatusEEnum = createEEnum(ORGANIZATION_MEMBERSHIP_STATUS);
 	}
@@ -1109,6 +1168,7 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 		favoriteItemEClass.getESuperTypes().add(this.getEntity());
 		recentResourceEClass.getESuperTypes().add(this.getEntity());
 		auditEntryEClass.getESuperTypes().add(this.getEntity());
+		workingDirectoryEClass.getESuperTypes().add(this.getEntity());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(entityEClass, Entity.class, "Entity", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1135,6 +1195,7 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 		initEAttribute(getOrganization_FilesCount(), ecorePackage.getEInt(), "filesCount", null, 0, 1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getOrganization_ModelsCount(), ecorePackage.getEInt(), "modelsCount", null, 0, 1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getOrganization_DiagramsCount(), ecorePackage.getEInt(), "diagramsCount", null, 0, 1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getOrganization_WorkingDirectories(), this.getWorkingDirectory(), this.getWorkingDirectory_Organization(), "workingDirectories", null, 0, -1, Organization.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(groupEClass, Group.class, "Group", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGroup_Organization(), this.getOrganization(), this.getOrganization_Groups(), "organization", null, 0, 1, Group.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1218,6 +1279,11 @@ public class EntityPackageImpl extends EPackageImpl implements EntityPackage {
 		initEClass(dbVersionEClass, DBVersion.class, "DBVersion", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDBVersion_Id(), ecorePackage.getELong(), "id", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getDBVersion_DbVersion(), ecorePackage.getELong(), "dbVersion", null, 0, 1, DBVersion.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(workingDirectoryEClass, WorkingDirectory.class, "WorkingDirectory", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getWorkingDirectory_Organization(), this.getOrganization(), this.getOrganization_WorkingDirectories(), "organization", null, 0, 1, WorkingDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getWorkingDirectory_PathFromOrganization(), ecorePackage.getEString(), "pathFromOrganization", null, 0, 1, WorkingDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getWorkingDirectory_Color(), ecorePackage.getEInt(), "color", null, 0, 1, WorkingDirectory.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(organizationMembershipStatusEEnum, OrganizationMembershipStatus.class, "OrganizationMembershipStatus");
