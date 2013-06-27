@@ -15,7 +15,7 @@
 	xmlns:ui="org.flowerplatform.web.security.ui.*" 
 	xmlns:tree="org.flowerplatform.communication.tree.*"
 	xmlns:explorer="org.flowerplatform.web.common.explorer.*"
-	xmlns:utils="org.flowerplatform.web.utils.*"
+	xmlns:utils="com.crispico.flower.util.*"
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
 	paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10"
 	creationComplete="onCreationComplete()" 

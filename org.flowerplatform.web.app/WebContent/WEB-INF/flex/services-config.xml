@@ -3,7 +3,7 @@
 
     <services>
         <service-include file-path="messaging-config.xml" />
-<!--         <service-include file-path="register-user-remoting-config.xml" /> -->
+        <service-include file-path="register-user-remoting-config.xml" />
 <!--         <service-include file-path="activity-remoting-config.xml" /> -->
 	</services>
 	
@@ -99,12 +99,12 @@
 			</properties>
 		</channel-definition>
 		
-<!--         <channel-definition id="registerUserServiceAmf" class="mx.messaging.channels.AMFChannel"> -->
-<!--             <endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/register-user-amf" class="flex.messaging.endpoints.AMFEndpoint"/> -->
-<!--             <properties> -->
-<!--                 <polling-enabled>false</polling-enabled> -->
-<!--             </properties> -->
-<!--         </channel-definition> -->
+        <channel-definition id="registerUserServiceAmf" class="mx.messaging.channels.AMFChannel">
+            <endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/register-user-amf" class="flex.messaging.endpoints.AMFEndpoint"/>
+            <properties>
+                <polling-enabled>false</polling-enabled>
+            </properties>
+        </channel-definition>
         
 <!--         <channel-definition id="activityServiceAmf" class="mx.messaging.channels.AMFChannel"> -->
 <!--             <endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/activity-amf" class="flex.messaging.endpoints.AMFEndpoint"/> -->

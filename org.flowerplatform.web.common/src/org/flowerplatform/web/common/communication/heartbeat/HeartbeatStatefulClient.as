@@ -7,9 +7,9 @@ package org.flowerplatform.web.common.communication.heartbeat {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.communication.heartbeat.WarnAboutNoActivityDialog;
-	import org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto;
 
 	/**
 	 * StatefulClient that helps the server monitoring the traveling data 
@@ -27,13 +27,13 @@ package org.flowerplatform.web.common.communication.heartbeat {
 		
 		public static const SERVICE_ID:String = "heartbeatStatefulService";
 		
-		private static const CLIENT_ID:String = "heartbeatStatefulClient";
+		public static const CLIENT_ID:String = "heartbeatStatefulClient";
 		
 		private static const CLIENT_HEARTBEAT_PERIOD:String = "client.heartbeat.period";
 
 		private static var HEARTBEAT_PERIOD:int = 60 * 1000 / 4; // milliseconds
 		
-		private const warnAboutNoActivityDialog:WarnAboutNoActivityDialog = new WarnAboutNoActivityDialog();
+		private var warnAboutNoActivityDialog:WarnAboutNoActivityDialog;
 
 		/**
 		 * Records time for last object sent or received to/from the server.
@@ -77,7 +77,7 @@ package org.flowerplatform.web.common.communication.heartbeat {
 		private function registerStatefulClient(event:BridgeEvent):void {
 			CommunicationPlugin.getInstance().statefulClientRegistry.register(this, this);
 			// Remove listener because the registry already listens the event to subscribe again.
-			WebCommonPlugin.getInstance().authenticationManager.bridge.removeEventListener(BridgeEvent.CONNECTED, registerStatefulClient);
+//			WebCommonPlugin.getInstance().authenticationManager.bridge.removeEventListener(BridgeEvent.CONNECTED, registerStatefulClient);
 		}
 
 		public override function getCurrentStatefulClientLocalState(dataFromRegistrator:Object = null):IStatefulClientLocalState {	
@@ -94,8 +94,8 @@ package org.flowerplatform.web.common.communication.heartbeat {
 				
 			} else if (event.type == BridgeEvent.CONNECTING || event.type == BridgeEvent.DISCONNECTED) { // Connection lost or disconnected
 				heart.stop();
-//				warnAboutNoActivityDialog.closeForm();
-				
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(warnAboutNoActivityDialog);
+				warnAboutNoActivityDialog = null;
 			} else if (event.type == BridgeEvent.OBJECT_SENT || event.type == BridgeEvent.OBJECT_RECEIVED) { // Object sent or received
 				lastTravelingDataTimestamp = new Date().time;
 				heart.stop();
@@ -132,12 +132,11 @@ package org.flowerplatform.web.common.communication.heartbeat {
 		 */
 		[RemoteInvocation]
 		public function warnAboutNoActivity(secondsUntilDisconnect:Number):void {
-			warnAboutNoActivityDialog.show(secondsUntilDisconnect);
-		}
-		
-		[RemoteInvocation]
-		public function updateCurrentUserLoggedIn(user:User_CurrentUserLoggedInDto):void {
-//			WebPlugin.getInstance().userLoggedIn(user);
+			warnAboutNoActivityDialog = new WarnAboutNoActivityDialog();
+			warnAboutNoActivityDialog.secondsUntilDisconnect = secondsUntilDisconnect;
+			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+				.setPopupContent(warnAboutNoActivityDialog)
+				.show();
 		}
 		
 		[RemoteInvocation]

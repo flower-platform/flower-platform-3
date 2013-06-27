@@ -367,8 +367,11 @@ package  org.flowerplatform.blazeds {
 		private function loginFailHandler(event:FaultEvent, credentials:Object=null):void {
 			if (logger.isLogEnabled())
 				logger.log("login FAULT , event.type = " + event.type + ", event.fault.code = " + event.fault.faultCode);
+
+			establishingConnection = false;
 			
 			if (Utils.beginsWith(event.fault.faultCode, "Client.Authentication")) {
+				credentials.faultCode = event.fault.faultCode;
 				dispatchEvent(new BridgeEvent(BridgeEvent.AUTHENTICATION_NEEDED, credentials, false)); // Notifies about the rejected credentials. 
 			} else {
 				disconnectAndConnect(credentials.username, credentials.password, true /* reconnecting state, no notifications about disconnect and connect*/);
@@ -399,6 +402,8 @@ package  org.flowerplatform.blazeds {
 		private function subscribeFaultHandler(event:MessageFaultEvent):void {
 			if (logger.isLogEnabled())
 				logger.log("subscription FAULT , event.type = " + event.type + " , event.fault.code = " + event.faultCode);
+			
+			establishingConnection = false;
 			
 			if (event.faultCode == "Client.Authentication" && !channelSet.authenticated) {
 				dispatchEvent(new BridgeEvent(BridgeEvent.AUTHENTICATION_NEEDED, null, true));

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Form 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
-	xmlns:utils="org.flowerplatform.web.utils.*">
+	xmlns:utils="com.crispico.flower.util.*">
 	<mx:Script>
 		<![CDATA[
 			import org.flowerplatform.web.WebPlugin;

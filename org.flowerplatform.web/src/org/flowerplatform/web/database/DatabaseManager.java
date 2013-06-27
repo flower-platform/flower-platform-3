@@ -13,9 +13,10 @@ import org.eclipse.emf.teneo.PersistenceOptions;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
 import org.eclipse.emf.teneo.hibernate.HbHelper;
 import org.eclipse.emf.teneo.hibernate.HbSessionDataStore;
-import org.flowerplatform.web.FlowerWebProperties;
-import org.flowerplatform.web.FlowerWebProperties.AddBooleanProperty;
-import org.flowerplatform.web.FlowerWebProperties.AddProperty;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.FlowerWebProperties;
+import org.flowerplatform.common.FlowerWebProperties.AddBooleanProperty;
+import org.flowerplatform.common.FlowerWebProperties.AddProperty;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.DBVersion;
 import org.flowerplatform.web.entity.EntityFactory;
@@ -64,7 +65,7 @@ public class DatabaseManager {
 		Policy.setPolicy(new FlowerWebPolicy(Policy.getPolicy())); // FlowerWebPolicy uses the permissionServer. 
 		
 		// adding properties
-		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(PROP_DB_PERSISTENCE_UNIT, PROP_DEFAULT_PROD_PERSISTENCE_UNIT) {
+		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(PROP_DB_PERSISTENCE_UNIT, PROP_DEFAULT_PROD_PERSISTENCE_UNIT) {
 			@Override
 			protected String validateProperty(String input) {
 				// nothing to do; if the persistence unit is not found, an exception will be
@@ -72,7 +73,7 @@ public class DatabaseManager {
 				return null;
 			}
 		});
-		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(PROP_DB_INIT_WITH_TEST_DATA, "false") {
+		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(PROP_DB_INIT_WITH_TEST_DATA, "false") {
 
 			@Override
 			protected String validateProperty(String input) {
@@ -109,7 +110,7 @@ public class DatabaseManager {
 		props.setProperty(Environment.PASS, "");
 		props.setProperty(Environment.DIALECT, H2Dialect.class.getName());
 		props.setProperty(Environment.HBM2DDL_AUTO, "create");
-		props.setProperty(Environment.SHOW_SQL, "true");
+//		props.setProperty(Environment.SHOW_SQL, "true");
 		
 		props.setProperty(PersistenceOptions.CASCADE_POLICY_ON_NON_CONTAINMENT, "REFRESH,PERSIST,MERGE");
 		props.setProperty(PersistenceOptions.PERSISTENCE_XML, "annotations.xml");
@@ -232,7 +233,7 @@ public class DatabaseManager {
 	 */
 	//TODO: eventually, this will have to be removed
 	protected void initWithTestData() {
-		if ("false".equals(WebPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
+		if ("false".equals(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
 			return;
 		}
 
@@ -275,7 +276,7 @@ public class DatabaseManager {
 			}
 		});
 		
-		if (!PROP_DB_INIT_WITH_TEST_DATA_INTERNAL.equals(WebPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
+		if (!PROP_DB_INIT_WITH_TEST_DATA_INTERNAL.equals(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
 			return;
 		}
 

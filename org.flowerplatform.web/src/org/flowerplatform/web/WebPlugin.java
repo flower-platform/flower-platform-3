@@ -1,9 +1,12 @@
 package org.flowerplatform.web;
 
+import java.io.InputStream;
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServlet;
 
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.FlowerWebProperties;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.security.mail.SendMailService;
@@ -35,15 +38,14 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	
 	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
 	
-	private FlowerWebProperties flowerWebProperties;
-	
 	private DatabaseManager databaseManager;
 	
 	public WebPlugin() {
 		super();
 		INSTANCE = this;
 		
-		flowerWebProperties = new FlowerWebProperties();
+		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
+				.getResourceAsStream("META-INF/flower-web.properties"));
 		databaseManager = new DatabaseManager();
 	}
 	
@@ -65,13 +67,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 	
-	/**
-	 * @author Mariana
-	 */
-	public FlowerWebProperties getFlowerWebProperties() {
-		return flowerWebProperties;
-	}
-
 	/**
 	 * @author Mariana
 	 */

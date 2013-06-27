@@ -1,4 +1,4 @@
-package org.flowerplatform.web;
+package org.flowerplatform.common;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,13 +27,12 @@ public class FlowerWebProperties extends Properties {
 	
 	public static final long DB_VERSION = 8;
 	
-	protected FlowerWebProperties() {
+	/* package */ FlowerWebProperties(InputStream inputStream) {
 		super();
 		
 		defaults = new Properties();
 		
 		try {
-			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("META-INF/flower-web.properties");
 			this.load(inputStream);
 			inputStream.close();
 		} catch (IOException e) {

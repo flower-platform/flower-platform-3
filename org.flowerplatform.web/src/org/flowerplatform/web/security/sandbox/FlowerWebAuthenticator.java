@@ -32,23 +32,19 @@ public class FlowerWebAuthenticator implements IAuthenticator {
 				User user = users.get(0);
 				
 				// if an activation code was sent, try activating the user
-				if (activationCode != null) {
-					if (user.isActivated()) {
+				if (user.isActivated()) {
+					if (activationCode != null) {
 						// the user is already activated
 						wrapper.setOperationResult(getResult(AuthenticationResult.ALREADY_ACTIVATED, user.getId()));
 						return;
-					} else {
-						UserService.getInstance().activateUser(login, activationCode);
+					} 
+				} else {
+					if (activationCode == null || !UserService.getInstance().activateUser(login, activationCode)) {
+						wrapper.setOperationResult(getResult(AuthenticationResult.NOT_ACTIVATED, user.getId()));
+						return;
 					}
 				}
 			
-				// check if the user is activated
-				user = wrapper.find(User.class, user.getId());
-				if (!user.isActivated()) {
-					wrapper.setOperationResult(getResult(AuthenticationResult.NOT_ACTIVATED, user.getId()));
-					return;
-				}
-				
 				wrapper.setOperationResult(getResult(AuthenticationResult.OK, user.getId()));
 			}
 		});

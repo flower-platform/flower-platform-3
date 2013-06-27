@@ -16,11 +16,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.FlowerWebProperties.AddBooleanProperty;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.service.ServiceRegistry;
-import org.flowerplatform.web.FlowerWebProperties.AddBooleanProperty;
-import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.Entity;
@@ -60,7 +59,7 @@ public class PermissionService {
 	private static final String SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE = "users.permissions.showAllApplicablePermissionsPerFilteredResource";
 	
 	static {
-		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE, "true"));
+		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE, "true"));
 	}
 	
 	public static PermissionService getInstance() {	
@@ -168,7 +167,7 @@ public class PermissionService {
 				q.setReadOnly(true);					
 				permissionEntities = q.list();
 				
-				boolean showAllApplicablePermissions = Boolean.valueOf(WebPlugin.getInstance().getFlowerWebProperties().getProperty(SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE));
+				boolean showAllApplicablePermissions = Boolean.valueOf(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(SHOW_ALL_APPLICABLE_PERMISSIONS_PER_FILTERED_RESOURCE));
 				
 				for (PermissionEntity permission : permissionEntities) {
 					boolean isEditable = false;

@@ -11,7 +11,7 @@
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:ns="com.crispico.flower.util.ui_inheritance.*" 
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
-	xmlns:utils="org.flowerplatform.web.utils.*" 
+	xmlns:utils="com.crispico.flower.util.*" 
 	xmlns:ui="org.flowerplatform.web.security.ui.*"
 	creationComplete="onCreationComplete(event)" 
 	>

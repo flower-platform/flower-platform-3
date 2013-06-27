@@ -4,5 +4,8 @@ package org.flowerplatform.flexutil.popup {
 		function setLabel(value:String):void;
 		function setIcon(value:Object):void;
 		function refreshActions(popupContent:IPopupContent):void;	
+		
+		function displayCloseButton(value:Boolean):void;
+		function addToControlBar(value:Object):void;
 	}
 }

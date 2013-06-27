@@ -79,6 +79,9 @@ public class HelloServerCommand extends AbstractServerCommand {
 	 * </ul>
 	 * 
 	 * @flowerModelElementId _yC7yEM9iEeG9Xt8Mxhv6rg
+	 * 
+	 * @author Cristi
+	 * @author Mariana
 	 */
 	public void executeCommand() {
 		if (!CommonPlugin.VERSION.equals(getClientApplicationVersion())) {
@@ -101,21 +104,29 @@ public class HelloServerCommand extends AbstractServerCommand {
 				// => send initial data
 				logger.debug("Hello received from client = {}. Sending initializations.", getCommunicationChannel());
 				welcome.setContainsFirstTimeInitializations(true);
-				IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.communication.welcomeInitializationsContributor");
-				for (IConfigurationElement configurationElement : configurationElements) {
-					try {
-						AbstractClientCommand command = (AbstractClientCommand) configurationElement.createExecutableExtension("commandToAppendToWelcomeClientCommand");
-						welcome.appendCommand(command);
-					} catch (CoreException e) {
-						logger.error("Error while adding welcome initialization command", e);
-					}
-				}
+				appendCommands(welcome, "org.flowerplatform.communication.welcomeInitializationsContributor");
 			} else {
 				// client already initialized
 				logger.debug("Hello received from client = {}. Client is initialized.", getCommunicationChannel());
 			}
+			appendCommands(welcome, "org.flowerplatform.communication.welcomeClientContributor");
 			getCommunicationChannel().appendCommandToCurrentHttpResponse(welcome);
 		}
 	}
 
+	/**
+	 * @author Mariana
+	 */
+	private void appendCommands(WelcomeClientCommand welcome, String id) {
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(id);
+		for (IConfigurationElement configurationElement : configurationElements) {
+			try {
+				AbstractClientCommand command = (AbstractClientCommand) configurationElement.createExecutableExtension("commandToAppendToWelcomeClientCommand");
+				welcome.appendCommand(command);
+			} catch (CoreException e) {
+				logger.error("Error while adding welcome initialization command", e);
+			}
+		}
+	}
+	
 }

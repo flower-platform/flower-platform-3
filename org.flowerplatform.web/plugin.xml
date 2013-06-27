@@ -141,10 +141,10 @@
       </explorerAdditionalNodePopulator>
    </extension>
    <extension
-         point="org.flowerplatform.communication.welcomeInitializationsContributor">
-      <welcomeInitializationsContributor
+         point="org.flowerplatform.communication.welcomeClientContributor">
+      <welcomeClientContributor
             commandToAppendToWelcomeClientCommand="org.flowerplatform.web.security.dto.InitializeCurrentUserLoggedInClientCommand">
-      </welcomeInitializationsContributor>
+      </welcomeClientContributor>
    </extension>
 
 </plugin>
