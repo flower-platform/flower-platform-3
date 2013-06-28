@@ -2,9 +2,15 @@ package org.flowerplatform.web.projects;
 
 import org.flowerplatform.web.explorer.AbstractVirtualItemInOrganizationChildrenProvider;
 
+/**
+ * Parent node = Organization (i.e. File).<br/>
+ * Child node is a virtual node, i.e. Pair<Org File, nodeType>.
+ * 
+ * @author Cristian Spiescu
+ */
 public class WorkingDirectories_OrganizationChildrenProvider extends AbstractVirtualItemInOrganizationChildrenProvider {
 
-	public static final String NODE_TYPE_WORKING_DIRECTORIES = "workingDirectories";
+	protected static final String NODE_TYPE_WORKING_DIRECTORIES = "workingDirectories";
 
 	public WorkingDirectories_OrganizationChildrenProvider() {
 		super();

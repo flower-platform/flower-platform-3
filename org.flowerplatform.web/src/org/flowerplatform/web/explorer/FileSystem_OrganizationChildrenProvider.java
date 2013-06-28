@@ -1,6 +1,6 @@
-package org.flowerplatform.web.explorer2;
+package org.flowerplatform.web.explorer;
 
-import org.flowerplatform.web.explorer2.AbstractVirtualItemInOrganizationChildrenProvider;
+import org.flowerplatform.web.explorer.AbstractVirtualItemInOrganizationChildrenProvider;
 
 /**
  * Parent node = Organization (i.e. File).<br/>

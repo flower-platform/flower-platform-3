@@ -1,7 +1,6 @@
 package org.flowerplatform.communication.tree;
 
 import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 
 /**
  * Represents a generic tree on server side.

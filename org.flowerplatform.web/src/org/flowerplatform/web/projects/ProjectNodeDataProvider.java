@@ -1,4 +1,4 @@
-package org.flowerplatform.web.projects2;
+package org.flowerplatform.web.projects;
 
 import java.io.File;
 
@@ -7,7 +7,7 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.WebPlugin;
-import org.flowerplatform.web.explorer2.AbstractFileWrapperNodeDataProvider;
+import org.flowerplatform.web.explorer.AbstractFileWrapperNodeDataProvider;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
 /**

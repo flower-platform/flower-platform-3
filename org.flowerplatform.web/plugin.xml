@@ -23,7 +23,7 @@
          name="rw"
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.explorer2.AbstractFileWrapperNodeDataProvider">
+            provider="org.flowerplatform.web.explorer.AbstractFileWrapperNodeDataProvider">
          <nodeType
                nodeType="fsFile">
          </nodeType>
@@ -45,7 +45,7 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.explorer2.Organization_RootChildrenProvider">
+            provider="org.flowerplatform.web.explorer.Organization_RootChildrenProvider">
          <nodeType
                nodeType="r">
          </nodeType>
@@ -54,7 +54,7 @@
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.explorer2.OrganizationNodeDataProvider">
+            provider="org.flowerplatform.web.explorer.OrganizationNodeDataProvider">
          <nodeType
                nodeType="organization">
          </nodeType>
@@ -63,7 +63,7 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.explorer2.FileSystem_OrganizationChildrenProvider">
+            provider="org.flowerplatform.web.explorer.FileSystem_OrganizationChildrenProvider">
          <nodeType
                nodeType="organization">
          </nodeType>
@@ -72,7 +72,7 @@
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.explorer2.FileSystemNodeDataProvider">
+            provider="org.flowerplatform.web.explorer.FileSystemNodeDataProvider">
          <nodeType
                nodeType="fileSystem">
          </nodeType>
@@ -93,7 +93,7 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.explorer2.FsFile_FileSystemChildrenProvider">
+            provider="org.flowerplatform.web.explorer.FsFile_FileSystemChildrenProvider">
          <nodeType
                nodeType="fileSystem">
          </nodeType>
@@ -105,7 +105,7 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.projects2.WorkingDirectories_OrganizationChildrenProvider">
+            provider="org.flowerplatform.web.projects.WorkingDirectories_OrganizationChildrenProvider">
          <nodeType
                nodeType="organization">
          </nodeType>
@@ -114,7 +114,7 @@
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.projects2.WorkingDirectoriesNodeDataProvider">
+            provider="org.flowerplatform.web.projects.WorkingDirectoriesNodeDataProvider">
          <nodeType
                nodeType="workingDirectories">
          </nodeType>
@@ -132,7 +132,7 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.projects2.WorkingDirectory_WorkingDirectoriesChildrenProvider">
+            provider="org.flowerplatform.web.projects.WorkingDirectory_WorkingDirectoriesChildrenProvider">
          <nodeType
                nodeType="workingDirectories">
          </nodeType>
@@ -141,7 +141,7 @@
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.projects2.WorkingDirectoryNodeDataProvider">
+            provider="org.flowerplatform.web.projects.WorkingDirectoryNodeDataProvider">
          <nodeType
                nodeType="workingDirectory">
          </nodeType>
@@ -162,7 +162,7 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.projects2.Project_WorkingDirectoryChildrenProvider">
+            provider="org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider">
          <nodeType
                nodeType="workingDirectory">
          </nodeType>
@@ -171,7 +171,7 @@
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.projects2.ProjectNodeDataProvider">
+            provider="org.flowerplatform.web.projects.ProjectNodeDataProvider">
          <nodeType
                nodeType="project">
          </nodeType>
@@ -192,7 +192,7 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.projects2.ProjFile_ProjectChildrenProvider">
+            provider="org.flowerplatform.web.projects.ProjFile_ProjectChildrenProvider">
          <nodeType
                nodeType="project">
          </nodeType>

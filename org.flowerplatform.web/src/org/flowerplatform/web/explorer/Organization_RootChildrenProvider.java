@@ -1,4 +1,4 @@
-package org.flowerplatform.web.explorer2;
+package org.flowerplatform.web.explorer;
 
 import java.io.File;
 import java.util.Collection;
@@ -7,7 +7,7 @@ import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService2;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 
 public class Organization_RootChildrenProvider extends AbstractFileWrapperChildrenProvider implements IChildrenProvider {
@@ -31,7 +31,7 @@ public class Organization_RootChildrenProvider extends AbstractFileWrapperChildr
 
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
-		if (node != GenericTreeStatefulService2.ROOT_NODE_MARKER) {
+		if (node != GenericTreeStatefulService.ROOT_NODE_MARKER) {
 			throw new IllegalArgumentException("Trying to get children of root, but the argument is not root: " + node);
 		}
 

@@ -1,4 +1,4 @@
-package org.flowerplatform.web.explorer2;
+package org.flowerplatform.web.explorer;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,14 +8,14 @@ import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
-import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware2;
+import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeByPathRetriever;
-import org.flowerplatform.communication.tree.INodeDataProvider2;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService2;
+import org.flowerplatform.communication.tree.INodeDataProvider;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.WebPlugin;
-import org.flowerplatform.web.explorer2.remote.ExplorerTreeStatefulService;
+import org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService;
 
 /**
  * This class can be used as is, without overriding anything. This class doesn't need
@@ -28,7 +28,7 @@ import org.flowerplatform.web.explorer2.remote.ExplorerTreeStatefulService;
  * 
  * @author Cristian Spiescu
  */
-public class AbstractFileWrapperNodeDataProvider implements INodeDataProvider2, INodeByPathRetriever {
+public class AbstractFileWrapperNodeDataProvider implements INodeDataProvider, INodeByPathRetriever {
 
 	public static final String NODE_TYPE_CATEGORY_PATH_FRAGMENT_NAME_POINTS_TO_FILE = "pathFragmentNamePointsToFile";
 	

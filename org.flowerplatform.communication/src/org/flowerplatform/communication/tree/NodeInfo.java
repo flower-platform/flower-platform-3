@@ -207,6 +207,14 @@ public class NodeInfo {
 		return String.format("%s[path=%s]", getClass().getSimpleName(), getPathFragment());
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof NodeInfo)) {
+			return false;
+		}
+		return node.equals(((NodeInfo) obj).node);
+	}
+
 	public Map<String, Object> getCustomData() {
 		if (customData == null) {
 			customData = new HashMap<String, Object>();

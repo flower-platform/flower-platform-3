@@ -9,6 +9,7 @@ import java.util.Observer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.service.ServiceRegistry;
@@ -25,7 +26,6 @@ import org.flowerplatform.web.entity.RecentResource;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.entity.dto.NamedDto;
-import org.flowerplatform.web.explorer.RootChildrenProvider;
 import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
 import org.flowerplatform.web.security.sandbox.SecurityEntityAdaptor;
 import org.flowerplatform.web.security.sandbox.SecurityUtils;
@@ -369,7 +369,7 @@ public class OrganizationService extends ServiceObservable {
 	public Organization getOrganizationForResource(String resourcePath) {
 		String[] organizationDirectories = WebPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*");
 		for (String dir : organizationDirectories) {
-			dir = RootChildrenProvider.getWorkspaceRoot().getPath() + "/" + dir;
+			dir = CommonPlugin.getInstance().getWorkspaceRoot().getPath() + "/" + dir;
 			// append a / if the dir doesn't end in /
 			if (dir.lastIndexOf("/") != dir.length() - 1) {
 				dir += "/";

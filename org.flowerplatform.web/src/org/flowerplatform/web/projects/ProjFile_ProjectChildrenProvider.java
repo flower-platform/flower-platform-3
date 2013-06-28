@@ -1,6 +1,6 @@
-package org.flowerplatform.web.projects2;
+package org.flowerplatform.web.projects;
 
-import org.flowerplatform.web.explorer2.AbstractFileWrapperChildrenProvider;
+import org.flowerplatform.web.explorer.AbstractFileWrapperChildrenProvider;
 
 /**
  * Parent node = projFile or project (both of them Pair<File, nodeType>).<br/>

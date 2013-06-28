@@ -1,4 +1,4 @@
-package org.flowerplatform.web.projects2;
+package org.flowerplatform.web.projects;
 
 import java.io.File;
 import java.util.ArrayList;

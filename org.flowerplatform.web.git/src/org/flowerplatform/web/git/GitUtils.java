@@ -39,12 +39,10 @@ import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
-import org.flowerplatform.web.FlowerWebProperties;
-import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.explorer.RootChildrenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -138,7 +136,7 @@ public class GitUtils {
 	}
 	
 	public File getGitRepositoriesFile(File orgFile) {
-		return new File(RootChildrenProvider.getWorkspaceRoot(), orgFile.getName() + "/" + GIT_REPOSITORIES_NAME + "/");
+		return new File(CommonPlugin.getInstance().getWorkspaceRoot(), orgFile.getName() + "/" + GIT_REPOSITORIES_NAME + "/");
 	}
 	
 	public Repository getRepository(File repoFile) {

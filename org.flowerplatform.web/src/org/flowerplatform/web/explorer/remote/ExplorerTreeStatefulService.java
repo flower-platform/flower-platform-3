@@ -1,4 +1,4 @@
-package org.flowerplatform.web.explorer2.remote;
+package org.flowerplatform.web.explorer.remote;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,15 +9,15 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.communication.tree.IChildrenProvider;
-import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware2;
-import org.flowerplatform.communication.tree.INodeDataProvider2;
+import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
+import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.INodePopulator;
-import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService2;
+import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
 import org.flowerplatform.web.WebPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulService2 {
+public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulService {
 
 	private static Logger logger = LoggerFactory.getLogger(ExplorerTreeStatefulService.class);
 
@@ -37,8 +37,8 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 						list = new ArrayList<IChildrenProvider>(configurationElement.getChildren().length);
 						getChildrenProviders().put(nodeType, list);
 					}
-					if (provider instanceof IGenericTreeStatefulServiceAware2) {
-						((IGenericTreeStatefulServiceAware2) provider).setGenericTreeStatefulService(this);
+					if (provider instanceof IGenericTreeStatefulServiceAware) {
+						((IGenericTreeStatefulServiceAware) provider).setGenericTreeStatefulService(this);
 					}
 					list.add(provider);
 				}
@@ -54,21 +54,21 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 			// explorerNodeDataProvider
 			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.explorerNodeDataProvider");
 			for (IConfigurationElement configurationElement : configurationElements) {
-				INodeDataProvider2 provider = (INodeDataProvider2) configurationElement.createExecutableExtension("provider");
+				INodeDataProvider provider = (INodeDataProvider) configurationElement.createExecutableExtension("provider");
 				for (IConfigurationElement nodeTypeConfigurationElement : configurationElement.getChildren()) {
 					String nodeType = nodeTypeConfigurationElement.getAttribute("nodeType");
 					if (getNodeDataProviders().get(nodeType) != null) {
 						logger.error("Trying to register an INodeDataProvider for nodeType = {}, but another one already exists: {}", nodeType, getNodeDataProviders().get(nodeType));
 					} else {
-						if (provider instanceof IGenericTreeStatefulServiceAware2) {
-							((IGenericTreeStatefulServiceAware2) provider).setGenericTreeStatefulService(this);
+						if (provider instanceof IGenericTreeStatefulServiceAware) {
+							((IGenericTreeStatefulServiceAware) provider).setGenericTreeStatefulService(this);
 						}
 						getNodeDataProviders().put(nodeType, provider);
 					}
 				}
 			}
 			if (logger.isDebugEnabled()) {
-				for (Map.Entry<String, INodeDataProvider2> entry : getNodeDataProviders().entrySet()) {
+				for (Map.Entry<String, INodeDataProvider> entry : getNodeDataProviders().entrySet()) {
 					logger.debug("ExplorerTreeStatefulService: for nodeType = {}, this is the node data provider = {}", entry.getKey(), entry.getValue());
 				}
 			}
@@ -111,8 +111,8 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 			populators = new ArrayList<INodePopulator>();
 			getAdditionalNodePopulators().put(nodeType, populators);
 		}
-		if (populator instanceof IGenericTreeStatefulServiceAware2) {
-			((IGenericTreeStatefulServiceAware2) populator).setGenericTreeStatefulService(this);
+		if (populator instanceof IGenericTreeStatefulServiceAware) {
+			((IGenericTreeStatefulServiceAware) populator).setGenericTreeStatefulService(this);
 		}
 		populators.add(populator);
 	}

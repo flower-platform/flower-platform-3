@@ -26,7 +26,7 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService2;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
@@ -224,7 +224,7 @@ public class ProjectsService {
 	@RemoteInvocation
 	public void markAsWorkingDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService2.getNodeByPathFor(pathWithRoot, null)).a;
+		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
 		final Pair<File, Boolean> organizationDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.markAsWorkingDirectory.error.title", file, true);
 
@@ -268,7 +268,7 @@ public class ProjectsService {
 	@RemoteInvocation
 	public void createOrImportProject(ServiceInvocationContext context, List<PathFragment> pathWithRoot) throws CoreException, URISyntaxException {
 		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService2.getNodeByPathFor(pathWithRoot, null)).a;
+		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
 		final Pair<File, Boolean> workingDirectoryDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.createOrImportProject.error.title", file, false);
 

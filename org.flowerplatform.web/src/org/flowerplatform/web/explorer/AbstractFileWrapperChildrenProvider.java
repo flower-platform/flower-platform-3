@@ -1,4 +1,4 @@
-package org.flowerplatform.web.explorer2;
+package org.flowerplatform.web.explorer;
 
 import java.io.File;
 import java.util.ArrayList;

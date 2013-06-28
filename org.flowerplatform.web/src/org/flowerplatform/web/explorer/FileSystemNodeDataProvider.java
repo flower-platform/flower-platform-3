@@ -1,7 +1,7 @@
-package org.flowerplatform.web.explorer2;
+package org.flowerplatform.web.explorer;
 
 import org.flowerplatform.web.WebPlugin;
-import org.flowerplatform.web.explorer2.AbstractVirtualItemInOrganizationNodeDataProvider;
+import org.flowerplatform.web.explorer.AbstractVirtualItemInOrganizationNodeDataProvider;
 
 public class FileSystemNodeDataProvider extends AbstractVirtualItemInOrganizationNodeDataProvider {
 

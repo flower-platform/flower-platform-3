@@ -109,7 +109,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		initExtensionPoint_nodeTypeToCategoriesMapping();
 		
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer2.remote.ExplorerTreeStatefulService());
+		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());
 	}
 	
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {

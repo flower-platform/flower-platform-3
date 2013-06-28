@@ -9,7 +9,12 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 
-public class AbstractVirtualItemInOrganizationChildrenProvider implements IChildrenProvider {
+/**
+ * The subclasses should populate {@link #childNodeType} in constructor.
+ * 
+ * @author Cristian Spiescu
+ */
+public abstract class AbstractVirtualItemInOrganizationChildrenProvider implements IChildrenProvider {
 
 	protected String childNodeType;
 	

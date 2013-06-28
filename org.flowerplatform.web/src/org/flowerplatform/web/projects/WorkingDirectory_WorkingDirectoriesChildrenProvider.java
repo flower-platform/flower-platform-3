@@ -12,9 +12,15 @@ import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
+/**
+ * Parent node = Working Directories virtual node (i.e. Pair<File, String>).<br/>
+ * Child node is a {@link WorkingDirectory}.
+ * 
+ * @author Cristian Spiescu
+ */
 public class WorkingDirectory_WorkingDirectoriesChildrenProvider implements IChildrenProvider {
 
-	public static final String NODE_TYPE_WORKING_DIRECTORY = "workingDirectory";
+	protected static final String NODE_TYPE_WORKING_DIRECTORY = "workingDirectory";
 
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
@@ -26,9 +32,7 @@ public class WorkingDirectory_WorkingDirectoriesChildrenProvider implements IChi
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>(list.size());
 		
 		for (WorkingDirectory wd : list) {
-			// we pass the File pointing to the working directory, and the WorkingDirectory
-			Pair<File, WorkingDirectory> childToBeAdjusted = new Pair<File, WorkingDirectory>(new File(organizationFile, wd.getPathFromOrganization()), wd);
-			Pair<Object, String> child = new Pair<Object, String>(childToBeAdjusted, NODE_TYPE_WORKING_DIRECTORY);
+			Pair<Object, String> child = new Pair<Object, String>(wd, NODE_TYPE_WORKING_DIRECTORY);
 			result.add(child);
 		}
 		return result;		
