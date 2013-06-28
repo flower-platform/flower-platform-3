@@ -8,7 +8,7 @@ package  org.flowerplatform.web.common.communication {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHandler;
+	import org.flowerplatform.flexutil.resources.ResourceUpdatedEvent;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto;
 	
@@ -47,7 +47,10 @@ package  org.flowerplatform.web.common.communication {
 		 */
 		private var anonymousAuthenticationRejected:Boolean;
 
-		private var authenticationView:IPopupContent;
+		/**
+		 * @author Mariana
+		 */
+		public var authenticationView:AuthenticationView;
 		
 		/**
 		 * @author Cristi
@@ -96,14 +99,18 @@ package  org.flowerplatform.web.common.communication {
 		 * @author Cristi
 		 * @author Mariana
 		 */
-		protected function showAuthenticationView():void {
-//			var authenticationViewProvider:IViewProvider = FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(AuthenticationViewProvider.ID);
-//			authenticationView = IPopupContent(authenticationViewProvider.createView(null));
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(new AuthenticationView())
-//				.setPopupContent(authenticationView)
-				.show();
-				
+		public function showAuthenticationView(switchUserMode:Boolean = false, providedUsername:String = null, anonymousFailed:Boolean = false, showActivationCodeField:Boolean = false):void {
+			if (authenticationView == null) {
+				var authenticationViewProvider:IViewProvider = FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(AuthenticationViewProvider.ID);
+				authenticationView = IPopupContent(authenticationViewProvider.createView(null)) as AuthenticationView;
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContent(authenticationView)
+					.show();
+			}
+			authenticationView.addEventListener(ResourceUpdatedEvent.RESOURCE_UPDATED, authenticationView.resourceUpdated);
+			authenticationView.switchUserMode = switchUserMode;
+			authenticationView.providedUsername = providedUsername;
+			authenticationView.showActivationCodeField = showActivationCodeField;
 		}
 		
 		public function handleConnecting(event:BridgeEvent):void {
@@ -129,7 +136,7 @@ package  org.flowerplatform.web.common.communication {
 			
 //			// We have established a connection for the first time so we clear this flag, in order
 //			// for the user to be able to login anonymously.
-//			anonymousAuthenticationRejected = false; 
+			anonymousAuthenticationRejected = false; 
 //		
 //			ModalSpinner.removeGlobalModalSpinner();
 		}
@@ -148,7 +155,7 @@ package  org.flowerplatform.web.common.communication {
 			}
 //			// We have established a connection for the first time so we clear this flag, in order
 //			// for the user to be able to login anonymously.
-//			anonymousAuthenticationRejected = false;
+			anonymousAuthenticationRejected = false;
 //
 //			ModalSpinner.removeGlobalModalSpinner();
 //			AuthenticationPopup.showPopup(false, lastProvidedUsername, anonymousAuthenticationRejected); // login mode
@@ -161,59 +168,67 @@ package  org.flowerplatform.web.common.communication {
 		 * @flowerModelElementId _kOYSsG3eEeGYiLzscjdrpg
 		 */
 		public function handleAuthenticationNeeded(event:BridgeEvent):void {
-			showAuthenticationView();
-//			var failedUsername:String = event.rejectedCredentials ? event.rejectedCredentials.username : null;
-//			var failedIsAnonymous:Boolean = failedUsername == getAnonymousUser();
-//			
-//			if (event.firstCredentialsRequest) {
-//				// If user provided login, show the login popup pre-filled with the login
-//				if (ApplicationParametersProvider.INSTANCE.getLogin()) {
-//					AuthenticationPopup.showPopup(false, ApplicationParametersProvider.INSTANCE.getLogin(), anonymousAuthenticationRejected);
-//				} else {
-//					// Try automatically the anonymous user. 
-//					bridge.connect(getAnonymousUser());
-//				}
-//				// No need to save last authenticating user because first time correspond to a server request 
-//				// for authentication and not for a server faild for authentication.
-//			} else {
-//				var activationFailed:Boolean = false;
-//				if (failedIsAnonymous) {
-//					// From now on, we are not allowed anymore to present to the user the popup with 
-//					// anonymous login being activated. It can be seen disabled if the ststem tried 
-//					// to login automatically, or if the user tried to enter anonymous and it was rejected.  
-//					anonymousAuthenticationRejected = true;
-//				} else {
-//					// Updates the last provided username in order to show it again in the popup  
-//					lastProvidedUsername = failedUsername;
-//					if (event.rejectedCredentials) {
-//						var faultCode:String = event.rejectedCredentials.faultCode;
-//						if (faultCode == "Client.Authentication.NotActivated") {
-//							// user is not activated
-//							handleActivationNeeded(event);
-//							return;
-//						} else { 
-//							if (faultCode == "Client.Authentication.UserAlreadyActivated") {
-//								// user already activated
+			var failedUsername:String = event.rejectedCredentials ? event.rejectedCredentials.username : null;
+			var failedIsAnonymous:Boolean = failedUsername == getAnonymousUser();
+			
+			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(connectingView);
+			connectingView = null;
+			
+			if (event.firstCredentialsRequest) {
+				// If user provided login, show the login popup pre-filled with the login
+				if (CommunicationPlugin.getInstance().applicationParametersProvider.getLogin()) {
+					showAuthenticationView(false, CommunicationPlugin.getInstance().applicationParametersProvider.getLogin(), anonymousAuthenticationRejected);
+				} else {
+					// Try automatically the anonymous user. 
+					bridge.connect(getAnonymousUser());
+				}
+				// No need to save last authenticating user because first time correspond to a server request 
+				// for authentication and not for a server faild for authentication.
+			} else {
+				var activationFailed:Boolean = false;
+				if (failedIsAnonymous) {
+					// From now on, we are not allowed anymore to present to the user the popup with 
+					// anonymous login being activated. It can be seen disabled if the ststem tried 
+					// to login automatically, or if the user tried to enter anonymous and it was rejected.  
+					anonymousAuthenticationRejected = true;
+				} else {
+					// Updates the last provided username in order to show it again in the popup  
+					lastProvidedUsername = failedUsername;
+					if (event.rejectedCredentials) {
+						var faultCode:String = event.rejectedCredentials.faultCode;
+						if (faultCode == "Client.Authentication.NotActivated") {
+							// user is not activated
+							handleActivationNeeded(event);
+							return;
+						} else { 
+							if (faultCode == "Client.Authentication.UserAlreadyActivated") {
+								// user already activated
 //								AuthenticationPopup.activationNeeded = false; // don't show the activation code field again
-//								activationFailed = true;
-//							}
-//						}
-//					}
-//				}
-//				// Shows the popup with the last provided username by the user itself (can not be the anonymous),
-//				// and with the entering anonymously enabled or not.
-//				AuthenticationPopup.showPopup(false, lastProvidedUsername, anonymousAuthenticationRejected);
-//				if (activationFailed) {
-//					Alert.show("This user is already activated!", "Error");
-//					return;
-//				}
-//			} 
-//			// When being notified the first time it means that no explicit login was done, 
-//			// no credentials were provided so there is no sense to report that the credentials are wrong.
-//			// If the current user that failed it's credentials is anonymous then again there
-//			// is no need to show warning that credentials were not correct because no user inputed them.
-//			if (!event.firstCredentialsRequest && !failedIsAnonymous)
-//				Alert.show(WebPlugin.getInstance().getMessage("authentication.error.wrongLoginOrPassword"), CommonPlugin.getInstance().getMessage("error")); 			
+								activationFailed = true;
+							}
+						}
+					}
+				}
+				// Shows the popup with the last provided username by the user itself (can not be the anonymous),
+				// and with the entering anonymously enabled or not.
+				showAuthenticationView(false, lastProvidedUsername, anonymousAuthenticationRejected);
+				if (activationFailed) {
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setText("This user is already activated!")
+						.setTitle("Error")
+						.showMessageBox();
+					return;
+				}
+			} 
+			// When being notified the first time it means that no explicit login was done, 
+			// no credentials were provided so there is no sense to report that the credentials are wrong.
+			// If the current user that failed it's credentials is anonymous then again there
+			// is no need to show warning that credentials were not correct because no user inputed them.
+			if (!event.firstCredentialsRequest && !failedIsAnonymous)
+				FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+					.setText(WebCommonPlugin.getInstance().getMessage("authentication.error.wrongLoginOrPassword"))
+					.setText(CommonPlugin.getInstance().getMessage("error"))
+					.showMessageBox();
 		}
 		
 		public function handleAuthenticationAccepted(event:BridgeEvent):void {
@@ -234,21 +249,25 @@ package  org.flowerplatform.web.common.communication {
 		 * @author Mariana
 		 */ 
 		public function handleActivationNeeded(event:BridgeEvent):void {
-//			lastProvidedUsername = event.rejectedCredentials ? event.rejectedCredentials.username : null;
-//			anonymousAuthenticationRejected = lastProvidedUsername == getAnonymousUser();
+			lastProvidedUsername = event.rejectedCredentials ? event.rejectedCredentials.username : null;
+			anonymousAuthenticationRejected = lastProvidedUsername == getAnonymousUser();
 //			AuthenticationPopup.activationNeeded = true;
-//			AuthenticationPopup.showPopup(false, lastProvidedUsername, anonymousAuthenticationRejected, true);
-//			Alert.show(WebPlugin.getInstance().getMessage("authentication.error.noActivationCode"), CommonPlugin.getInstance().getMessage("error"));
+			showAuthenticationView(false, lastProvidedUsername, anonymousAuthenticationRejected, true);
+			FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+				.setText(WebCommonPlugin.getInstance().getMessage("authentication.error.noActivationCode"))
+				.setTitle(CommonPlugin.getInstance().getMessage("error"))
+				.showMessageBox();
 		}
 		
 		public function handleDisconnected(event:BridgeEvent):void {
-//			// After disconnecting we invalidate the local kept authenticated user.
-//			authenticatedUser = null;
-//			
+			// After disconnecting we invalidate the local kept authenticated user.
+			authenticatedUser = null;
+			
 //			WebPlugin.getInstance().authenticationMenuBar.updateMenuItems(false); // disconnected
-//			// When disconnecting we automatically show the login popup until the user reacts and provides credentials.
-//			// Until the no connection establishing is in progress (no spinner).
+			// When disconnecting we automatically show the login popup until the user reacts and provides credentials.
+			// Until the no connection establishing is in progress (no spinner).
 //			AuthenticationPopup.showPopup(false, lastProvidedUsername, anonymousAuthenticationRejected); // login mode
+			showAuthenticationView(false, lastProvidedUsername, anonymousAuthenticationRejected);
 		}
 
 		/**

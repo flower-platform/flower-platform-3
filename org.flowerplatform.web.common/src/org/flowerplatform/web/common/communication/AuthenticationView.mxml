@@ -1,17 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Mariana
+-->
 <s:Group implements="org.flowerplatform.flexutil.popup.IPopupContent" 
-	xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx">
+		 xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+		 xmlns:validators="org.flowerplatform.flexutil.validators.*"
+		 currentState="login"
+		 creationComplete="onCreationComplete()">
+	
 	<s:layout>
-		<s:VerticalLayout verticalAlign="middle"/>
+		<s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
 	</s:layout>
+	
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		<s:RemoteObject id="registerUserService" destination="registerUserService">
+			<s:method name="resendActivationCode" result="resendActivationCodeResultHandler(event)"/>
+			<s:method name="register" result="registerResultHandler(event)"/>
+			<s:method name="forgotPassword" result="forgotPasswordResultHandler(event)"/>
+			<s:method name="forgotUsername" result="forgotUsernameResultHandler(event)"/>
+			<s:method name="getOrganizationFilter" result="getOrganizationFilterHandler(event)"/>
+		</s:RemoteObject>
+		
+		<mx:StringValidator id="loginViewPasswordValidator" source="{loginViewPasswordInput}" property="text" minLength="1"/>
+		<mx:StringValidator id="usernameValidator" source="{usernameInput}" property="text" minLength="1"/>
+		
+		<fx:Array id="registerValidators">
+			<mx:StringValidator id="nameValidator" source="{nameInput}" property="text" minLength="1" maxLength="30"/>
+			<mx:StringValidator id="loginValidator" source="{loginInput}" property="text" minLength="1" maxLength="30"/>
+			<mx:RegExpValidator source="{loginInput}" property="text" expression="^[a-z|A-Z|0-9|_|\.|-]+$" noMatchError="{getMessage('entity.user.login.validation')}"/>
+			<mx:StringValidator id="passwordValidator" source="{registerViewPasswordInput}" property="text" minLength="1"/>
+			<mx:EmailValidator source="{emailInput}" property="text"/>
+			<mx:StringValidator id="emailLengthValidator" source="{emailInput}" property="text" minLength="1" maxLength="50"/>
+			<validators:CompareValidator id="comparePasswords" source="{passwordAgainInput}" property="text" valueToCompare="{registerViewPasswordInput.text}" errorMessage="{getMessage('authentication.error.doNotMatch.passwords')}"/> 
+			<validators:CompareValidator id="compareEmails" source="{emailAgainInput}" property="text" valueToCompare="{emailInput.text}" errorMessage="{getMessage('authentication.error.doNotMatch.emails')}"/>
+		</fx:Array>
+		
+		<s:RadioButtonGroup id="group"/>
+		
+		<s:ButtonBar id="buttonBar" labelField="label" click="{switchState(buttonBar.selectedIndex)}" dataProvider="{buttonBarDataProvider}"
+					 selectedIndex="0"/>
+		
 	</fx:Declarations>
+	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayList;
 			import mx.collections.IList;
+			import mx.core.IFlexDisplayObject;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.ResultEvent;
+			import mx.validators.Validator;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -19,13 +62,40 @@
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
+			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
 			// TODO CS/FP2 msg
 			
 			private var _popupHost:IPopupHost;
 			
-			protected function loginClickHandler(event:MouseEvent):void	{
-				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
-				CommunicationPlugin.getInstance().bridge.connect(loginInput.text, passwordInput.text);
+			public static const ORGANIZATION_LOGO_MAX_WIDTH:int = 180;
+			
+			public static const ORGANIZATION_LOGO_MAX_HEIGHT:int = 90;
+			
+			[Bindable]
+			public var switchUserMode:Boolean;
+			
+			[Bindable]
+			public var providedUsername:String;
+			
+			[Bindable]
+			public var showActivationCodeField:Boolean;
+			
+			/**
+			 * @author Mariana
+			 */ 
+			[Bindable(event="resourceUpdated")]
+			protected function get buttonBarDataProvider():IList {
+				var dp:Array = new Array();
+				dp.push(
+					{ label : switchUserMode ? getMessage('authentication.switch') : getMessage('authentication.login'), icon : getResourceUrl("images/login.png"), state : "login" },
+					{ label : getMessage('authentication.register'), icon : getResourceUrl("images/usr_admin/user.png"), state : "register" },
+					{ label : getMessage('authentication.iForgot'), icon : getResourceUrl("images/question.png"), state : "iForgot" });
+				var showDebugButtonFromUrl:String = CommunicationPlugin.getInstance().applicationParametersProvider.getShowDebugMenu();
+				if (showDebugButtonFromUrl == "true") {
+					dp.push({ label : getMessage('authentication.debug'), icon : getResourceUrl("images/debug.gif"), state : "debug" });
+				}
+				return new ArrayList(dp);
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction> {
@@ -51,26 +121,414 @@
 			public function get popupHost():IPopupHost {
 				return _popupHost;
 			}
-
+			
 			public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;
-				popupHost.setLabel("Login");
-				popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/login.png"));
+				popupHost.setLabel(getMessage('authentication.login'));
+				popupHost.setIcon(getResourceUrl("images/login.png"));
+				popupHost.displayCloseButton(false);
 			}
 			
+			[Bindable(event="resourceUpdated")]
+			public function getResourceUrl(resource:String):String {
+				return FlexUtilGlobals.getInstance().createAbsoluteUrl(
+					WebCommonPlugin.getInstance().getResourceUrl(resource));
+			}
+			
+			[Bindable(event="resourceUpdated")]
+			public function getMessage(messageId:String, params:Array=null):String {
+				return WebCommonPlugin.getInstance().getMessage(messageId, params);
+			}
+			
+			/////////////////////////////////////////////
+			// Login/Switch and activation logic
+			/////////////////////////////////////////////
+			
+			/**
+			 * Depending on the type of authentication popup (login or switch user), this method
+			 * either, calls the bridge's actions for connecting with some credentials.
+			 * @flowerModelElementId _w4GPcG3iEeGYiLzscjdrpg
+			 */
+			private function authenticateButtonClickHandler():void {
+				// validate form
+				if (Validator.validateAll([usernameValidator, loginViewPasswordValidator]).length > 0) {
+					return;
+				}
+				
+				var username:String = usernameInput.text;
+				if (showActivationCodeField && activationCodeInput) {
+					username += "|" + activationCodeInput.text;
+				}
+				
+//				CommunicationPlugin.getInstance().bridge.keepLayoutStructure = switchUserMode && keepWorkspaceCheckbox.selected;
+				if (switchUserMode) {							
+					// Possible enhancement : send command to server to detect if the username and password are good
+					// in order not to deconnect the user. In this way it may return back to it's perspective after
+					// entering some bad credentials.
+					CommunicationPlugin.getInstance().bridge.disconnectAndConnect(username, loginViewPasswordInput.text);
+				} else {
+					CommunicationPlugin.getInstance().bridge.connect(username, loginViewPasswordInput.text);
+				}
+			}
+			
+			private function anonymousButtonClickHandler():void {
+				// Assign into the UI the credentials because they will be automatically be processed as
+				// clicking the authentication button.
+				usernameInput.text = WebCommonPlugin.getInstance().authenticationManager.getAnonymousUser();
+				loginViewPasswordInput.text = WebCommonPlugin.getInstance().authenticationManager.getAnonymousUser(); // The user may alter it before clicking anonymous auth and it may send wrong password (not empty). 
+				authenticateButtonClickHandler();
+			}
+			
+			/**
+			 * Fill in the activation code from the URL and deactivate the text field.
+			 * 
+			 * @author Mariana
+			 */ 
+			private function fillInActivationCode(event:FlexEvent):void {
+				var code:String = CommunicationPlugin.getInstance().applicationParametersProvider.getActivationCode();
+				if (code != null) {
+					spark.components.TextInput(event.target).text = code;
+					spark.components.TextInput(event.target).enabled = false;
+				}
+			}
+			
+			/**
+			 * Resend the activation code for the user.
+			 * 
+			 * @author Mariana
+			 */ 
+			private function resendActivationCodeHandler():void {
+				registerUserService.resendActivationCode(usernameInput.text, CommunicationPlugin.getInstance().applicationParametersProvider.getOrganization());
+			}
+			
+			private function resendActivationCodeResultHandler(event:ResultEvent):void {
+				FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+					.setText(String(event.result))
+					.setTitle(getMessage("form.info"))
+					.showMessageBox();
+			}
+			
+			/////////////////////////////////////////////
+			// Register logic
+			/////////////////////////////////////////////
+			
+			/**
+			 * A request is made to the server to create the user with the provided details.
+			 * 
+			 * @author Mariana
+			 */ 
+			private function registerButtonClickHandler():void {
+				// validate form
+				if (Validator.validateAll(registerValidators).length > 0) {
+					return;
+				}
+				
+				var dto:UserAdminUIDto = new UserAdminUIDto();
+				dto.name = nameInput.text;
+				dto.login = loginInput.text;
+				dto.email = emailInput.text;
+				dto.password = registerViewPasswordInput.text;
+				dto.isActivated = false;
+				
+				registerUserService.register(dto, CommunicationPlugin.getInstance().applicationParametersProvider.getOrganization());		
+			}
+			
+			/**
+			 * If the account was created successfuly, the user is informed and the login view
+			 * is displayed. Otherwise, the account could not be created, an error message is
+			 * displayed and the user is asked to retry.
+			 * 
+			 * @author Mariana
+			 */ 
+			private function registerResultHandler(event:ResultEvent):void {
+				if (event.result == null) {
+					buttonBar.selectedIndex = 0;
+					switchState(0);
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setText(getMessage('authentication.register.complete.content', [emailInput.text]))
+						.setTitle(getMessage('authentication.register.complete.title'))
+						.setWidth(350)
+						.showMessageBox();
+				} else {
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setText(event.result.toString())
+						.setTitle(getMessage('authentication.register.error.title'))
+						.showMessageBox();
+				}
+			}
+			
+			/////////////////////////////////////////////
+			// I Forgot... logic
+			/////////////////////////////////////////////
+			
+			/**
+			 * @author Mariana
+			 */ 
+			private function sendPasswordOrUsernameHandler():void {
+				if (group.selection == forgotPassword) {
+					registerUserService.forgotPassword(forgotTextInput.text);
+				} else {
+					registerUserService.forgotUsername(forgotTextInput.text);
+				}
+			}
+			
+			/**
+			 * @author Mariana
+			 */ 
+			private function forgotPasswordResultHandler(event:ResultEvent):void {
+				if (event.result) {
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setText(getMessage('authentication.iForgot.passwordRecovery.content'))
+						.setTitle(getMessage('authentication.iForgot.passwordRecovery.title'))
+						.showMessageBox();
+					buttonBar.selectedIndex = 0;
+					switchState(0); // show the login view
+				} else {
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setText(getMessage('authentication.iForgot.loginDoesNotExist'))
+						.setTitle(getMessage('authentication.iForgot.passwordRecovery.title'))
+						.showMessageBox();
+				}
+			}
+			
+			/**
+			 * @author Mariana
+			 */ 
+			private function forgotUsernameResultHandler(event:ResultEvent):void {
+				if (event.result) {
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setText(getMessage('authentication.iForgot.loginRecovery.content'))
+						.setTitle(getMessage('authentication.iForgot.loginRecovery.title'))
+						.showMessageBox();
+					buttonBar.selectedIndex = 0;
+					switchState(0); // show the login view
+				} else {
+					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+						.setText(getMessage('authentication.iForgot.emailDoesNotExist'))
+						.setTitle(getMessage('authentication.iForgot.loginRecovery.title'))
+						.showMessageBox();
+				}
+			}
+			
+			/////////////////////////////////////////////
+			// Debug logic
+			/////////////////////////////////////////////
+			
+			private function restrictChannelComboBoxChangeHandler():void {
+				CommunicationPlugin.getInstance().bridge.restrictToChannel(restrictChannelComboBox.selectedItem);
+			}
+			
+			private function switchState(index:int):void {
+				if (index >= 0) {
+					currentState = buttonBar.dataProvider.getItemAt(index).state;
+					popupHost.setLabel(buttonBar.dataProvider.getItemAt(index).label);
+					popupHost.setIcon(buttonBar.dataProvider.getItemAt(index).icon);
+				}
+			}
+			
+			public function onCreationComplete():void {
+				popupHost.addToControlBar(buttonBar);
+				
+				if (CommunicationPlugin.getInstance().applicationParametersProvider.getLogin() != null) {
+					usernameInput.text = CommunicationPlugin.getInstance().applicationParametersProvider.getLogin();
+				}
+				if (providedUsername) {
+					var index:int = providedUsername.indexOf("|"); 
+					usernameInput.text = index == -1 ? providedUsername : providedUsername.substring(0, index);
+				}
+				
+				if (!FlexUtilGlobals.getInstance().isMobile) {
+					// only for desktop; otherwise it will mess up the scrolling on mobile
+					minHeight = 318;
+					minWidth = 351;
+					PopUpManager.centerPopUp(popupHost as IFlexDisplayObject);
+				}
+				
+				if (CommunicationPlugin.getInstance().applicationParametersProvider.getOrganization()) {
+					registerUserService.getOrganizationFilter(CommunicationPlugin.getInstance().applicationParametersProvider.getOrganization());
+				}
+			}
+			
+			private function getOrganizationFilterHandler(event:ResultEvent):void {
+				if (event.result) {
+					var organizationDto:OrganizationAdminUIDto = OrganizationAdminUIDto(event.result);
+					atLabel.includeInLayout = true;
+					atLabel.visible = true;
+					// if there's a logo, use it; otherwise only show the organization label
+					if (organizationDto.logoURL != null && organizationDto.logoURL.length > 0) {
+						organizationLogo.source = organizationDto.logoURL;
+						organizationLabel.includeInLayout = false;
+						organizationLabel.visible = false;
+					} else {
+						// don't show the organization logo
+						organizationLogo.includeInLayout = false;
+						organizationLogo.visible = false;
+						organizationLabel.text = organizationDto.label;
+					}
+				}
+			}
+			
+			private function cancelButtonClickHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+				WebCommonPlugin.getInstance().authenticationManager.authenticationView = null;
+			}
+			
+			private function getAnonymous():String {
+				return WebCommonPlugin.getInstance().authenticationManager.getAnonymousUser();
+			}
+			
+			public function resourceUpdated(evt:Event):void {
+				popupHost.setLabel(getMessage('authentication.login'));
+			}
 			
 		]]>
 	</fx:Script>
-	<s:Form width="100%">
-		<s:FormItem width="100%" label="Login">
-			<s:TextInput id="loginInput" width="100%"/>
-		</s:FormItem>
-		<s:FormItem width="100%" label="Password">
-			<s:TextInput id="passwordInput" width="100%" displayAsPassword="true"/>
-		</s:FormItem>
-	</s:Form>
-	<s:HGroup width="100%" horizontalAlign="center">
-		<s:Button label="Login" click="loginClickHandler(event)"/>
-		<s:Button label="Cancel" click="FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this)"/>
-	</s:HGroup>
+	
+	<s:states>
+		<s:State name="login"/>
+		<s:State name="register"/>
+		<s:State name="iForgot"/>
+		<s:State name="debug"/>
+	</s:states>
+	
+	<s:VGroup width="100%" height="100%" verticalAlign="middle" horizontalAlign="center">
+		
+		<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
+			<s:VGroup height="100%" verticalAlign="middle" horizontalAlign="center">
+				<s:Image id="organizationLogo" maxWidth="{ORGANIZATION_LOGO_MAX_WIDTH}" maxHeight="{ORGANIZATION_LOGO_MAX_HEIGHT}" horizontalAlign="center" verticalAlign="middle"/>
+				<s:Label id="organizationLabel" maxWidth="{ORGANIZATION_LOGO_MAX_WIDTH}" maxHeight="{ORGANIZATION_LOGO_MAX_HEIGHT}" fontSize="20" fontWeight="bold" color="{0x777777}" textAlign="center"/>
+			</s:VGroup>
+			<s:Label id="atLabel" text="@" fontSize="20" fontWeight="bold" color="{0x777777}" includeInLayout="false" visible="false"/>
+			<s:Image id="iconLogo" source="{getResourceUrl('images/logo_flower_small.png')}"/>
+		</s:HGroup>
+		
+		<!-- Login/Switch View -->
+		
+		<s:VGroup id="loginView" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" 
+				  includeIn="login">
+			
+			<s:Form width="100%">
+				<s:FormItem width="100%" label="{getMessage('entity.user.login')}">
+					<s:TextInput id="usernameInput" width="100%"/>
+				</s:FormItem>
+				
+				<s:FormItem width="100%" label="{getMessage('entity.user.password')}">
+					<s:TextInput id="loginViewPasswordInput" text="" width="100%" displayAsPassword="true"/>
+				</s:FormItem>
+				
+				<s:FormItem label="{getMessage('authentication.activationCode')}" width="100%"
+							visible="{showActivationCodeField}" includeInLayout="{showActivationCodeField}">
+					<s:TextInput id="activationCodeInput" enter="authenticateButtonClickHandler();"
+								 creationComplete="fillInActivationCode(event)" width="100%" />
+				</s:FormItem>
+			</s:Form>
+			
+			<s:VGroup width="100%" verticalAlign="middle" horizontalAlign="center">
+				
+				<!-- Login/Switch and Cancel buttons -->
+				
+				<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">		
+					<s:Button id="authenticateButton" click="authenticateButtonClickHandler();"
+							  label="{switchUserMode ? getMessage('authentication.switch') : getMessage('authentication.login')}"/>										
+					<s:Button id="cancelButton" label="{getMessage('form.cancel')}" click="cancelButtonClickHandler();"
+							  enabled="{switchUserMode}"/>
+				</s:HGroup>
+				
+				<!-- Anonymous login button and Keep workspace layout button -->
+				
+				<s:Button id="anonymousButton" click="anonymousButtonClickHandler();"
+						  label="{(switchUserMode ? getMessage('authentication.switchAs', [getAnonymous()]) : getMessage('authentication.loginAs', [getAnonymous()]))}"/>
+				<s:CheckBox id="keepWorkspaceCheckbox" label="{getMessage('authentication.keepLayoutAfterSwitch')}"
+							enabled="{switchUserMode}" selected="{switchUserMode}"/>
+			</s:VGroup>
+			
+		</s:VGroup>
+		
+		<!-- Register View -->
+		
+		<s:VGroup id="registerView" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center" 
+				  includeIn="register">
+			
+			<!-- Register Form -->
+			
+			<s:Form width="100%" >
+				<s:FormItem label="{getMessage('entity.user.login')}" width="100%">
+					<s:TextInput id="loginInput" text="" width="100%"/>
+				</s:FormItem>
+				
+				<s:FormItem label="{getMessage('entity.user.name')}" width="100%">
+					<s:TextInput id="nameInput" text="" width="100%"/>
+				</s:FormItem>
+				
+				<s:FormItem label="{getMessage('entity.user.email')}" width="100%">
+					<s:TextInput id="emailInput" text="" width="100%"/>
+				</s:FormItem>
+				
+				<s:FormItem label="{getMessage('entity.user.form.emailAgain')}" width="100%">
+					<s:TextInput id="emailAgainInput" text="" width="100%"/>
+				</s:FormItem>
+				
+				<s:FormItem label="{getMessage('entity.user.password')}" width="100%">
+					<s:TextInput id="registerViewPasswordInput" displayAsPassword="true" text="" width="100%"/>	
+				</s:FormItem>
+				
+				<s:FormItem label="{getMessage('entity.user.form.passwordAgain')}" width="100%">
+					<s:TextInput id="passwordAgainInput" displayAsPassword="true" text="" width="100%"/>
+				</s:FormItem>
+			</s:Form>
+			
+			<!-- Register button -->
+			
+			<s:Button label="{getMessage('authentication.register')}" click="registerButtonClickHandler()"/>
+			
+		</s:VGroup>
+		
+		<!-- I Forgot... View -->
+		
+		<s:VGroup id="iForgotView" width="100%" height="100%" verticalAlign="middle" horizontalAlign="center"
+				  includeIn="iForgot">
+			
+			<s:Form width="100%">
+				<!-- Password and Username radio buttons -->
+				
+				<s:FormItem label="{getMessage('authentication.iForgot')}">
+					<s:VGroup>
+						<s:RadioButton id="forgotPassword" label="{getMessage('authentication.iForgot.myPassword')}" group="{group}" selected="true"/>
+						<s:RadioButton id="forgotUsername" label="{getMessage('authentication.iForgot.myLogin')}" group="{group}" selected="false"/>
+					</s:VGroup>
+				</s:FormItem>
+				
+				<!-- Username/Email text field -->
+				
+				<s:FormItem id="forgotFormItem" width="100%"
+							label="{group.selection == forgotPassword ? getMessage('entity.user.login') : getMessage('entity.user.email')}">
+					<s:TextInput id="forgotTextInput" width="100%" enter="sendPasswordOrUsernameHandler()"/>
+				</s:FormItem>
+				
+			</s:Form>
+			
+			<!-- OK button -->
+			
+			<s:Button id="okButton" label="{getMessage('authentication.iForgot.button')}" click="sendPasswordOrUsernameHandler()"/>
+			
+		</s:VGroup>
+		
+		<!-- Debug View -->
+		
+		<s:VGroup id="debugView" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"
+				  includeIn="debug">
+			
+			<s:HGroup width="100%">
+				<s:Label text="{getMessage('authentication.debug.connectUsing')}" verticalAlign="middle"/>
+				<s:ComboBox id="restrictChannelComboBox" width="100%" enabled="{!switchUserMode}" 
+							dataProvider="{CommunicationPlugin.getInstance().bridge.getAvaiableChannels()}" 
+							change="restrictChannelComboBoxChangeHandler();"/>
+			</s:HGroup>
+			
+			<s:Button label="{getMessage('authentication.debug.log')}" click="CommunicationPlugin.getInstance().bridge.logger.showAllMessages();"/>
+			
+		</s:VGroup>
+		
+	</s:VGroup>
+	
 </s:Group>

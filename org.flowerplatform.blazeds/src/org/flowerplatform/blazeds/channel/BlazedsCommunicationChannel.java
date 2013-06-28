@@ -3,6 +3,8 @@ package org.flowerplatform.blazeds.channel;
 import java.util.Collections;
 import java.util.Set;
 
+import org.flowerplatform.blazeds.heartbeat.HeartbeatStatefulService;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.IPrincipal;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractClientCommand;
@@ -37,6 +39,14 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 	}
 
 	@Override
+	public void handleReceivedObjectWillStart(Object object) {
+		super.handleReceivedObjectWillStart(object);
+		HeartbeatStatefulService heartbeatStatefulService = (HeartbeatStatefulService) CommunicationPlugin.getInstance()
+        		.getServiceRegistry().getService(HeartbeatStatefulService.SERVICE_ID);
+		heartbeatStatefulService.notifyObjectReceived(this, object);
+	}
+
+	@Override
 	public void sendCommandWithPush(AbstractClientCommand command) {
 		if (command == null)
 			return;
@@ -50,6 +60,10 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
         MessageService messageService = (MessageService) messageClient.getDestination().getService();
         Set<Object> messageClientIds = Collections.singleton(messageClient.getClientId());
         messageService.pushMessageToClients(messageClientIds, asyncMessage, false);
+        
+        HeartbeatStatefulService heartbeatStatefulService = (HeartbeatStatefulService) CommunicationPlugin.getInstance()
+        		.getServiceRegistry().getService(HeartbeatStatefulService.SERVICE_ID);
+        heartbeatStatefulService.notifyObjectSent(this, command);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import sun.security.provider.PolicyFile;
 
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.EntityPackage;
@@ -113,7 +114,7 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 		System.setSecurityManager(new SecurityManager());
 		
 		// disable sending mails during testing
-		WebPlugin.getInstance().getFlowerWebProperties().remove("mail.smtp.host");
+		CommonPlugin.getInstance().getFlowerWebProperties().remove("mail.smtp.host");
 		SendMailService service = (SendMailService) CommunicationPlugin.getInstance().getServiceRegistry().getService(SendMailService.SERVICE_ID);
 		service.initializeProperties();
 	}

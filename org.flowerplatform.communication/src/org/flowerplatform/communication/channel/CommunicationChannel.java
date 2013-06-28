@@ -10,7 +10,7 @@ public abstract class CommunicationChannel {
 	 * If this command is not <code>null</code>, it means that we are on the thread
 	 * that is processing the HTTP request.
 	 */
-	protected CompoundClientCommand queueForCurrentResponse;
+	protected ThreadLocal<CompoundClientCommand> queueForCurrentResponse = new ThreadLocal<CompoundClientCommand>();
 	
 	protected long cachedUserId;
 	
@@ -26,11 +26,11 @@ public abstract class CommunicationChannel {
 	 * 
 	 * @see #handleReceivedObjectEnded()
 	 */
-	public synchronized void appendCommandToCurrentHttpResponse(AbstractClientCommand command) {
-		if (queueForCurrentResponse == null) {
+	public void appendCommandToCurrentHttpResponse(AbstractClientCommand command) {
+		if (queueForCurrentResponse.get() == null) {
 			throw new IllegalStateException("Trying to append command to current response, but no client request processing in progress!");
 		} else {
-			queueForCurrentResponse.appendCommand(command);
+			queueForCurrentResponse.get().appendCommand(command);
 		}
 	}
 	
@@ -38,8 +38,8 @@ public abstract class CommunicationChannel {
 	 * Here, the <code>synchronized</code> shouldn't be necessary, as in theory there cannot
 	 * be 2 threads invoking this method at the same time.
 	 */
-	public synchronized void handleReceivedObjectWillStart() {
-		queueForCurrentResponse = new CompoundClientCommand();
+	public void handleReceivedObjectWillStart(Object object) {
+		queueForCurrentResponse.set(new CompoundClientCommand());
 	}
 	
 	/**
@@ -48,16 +48,16 @@ public abstract class CommunicationChannel {
 	 * 
 	 * @see #appendCommandToCurrentHttpResponse()
 	 */
-	public synchronized AbstractClientCommand handleReceivedObjectEnded() {
+	public AbstractClientCommand handleReceivedObjectEnded(Object object) {
 		AbstractClientCommand result;
-		if (queueForCurrentResponse.getCommandsList().isEmpty()) {
+		if (queueForCurrentResponse.get().getCommandsList().isEmpty()) {
 			result = null;
-		} else if (queueForCurrentResponse.getCommandsList().size() == 1) {
-			result = queueForCurrentResponse.getCommandsList().get(0);
+		} else if (queueForCurrentResponse.get().getCommandsList().size() == 1) {
+			result = queueForCurrentResponse.get().getCommandsList().get(0);
 		} else {
-			result = queueForCurrentResponse;
+			result = queueForCurrentResponse.get();
 		}
-		queueForCurrentResponse = null;
+		queueForCurrentResponse.set(null);
 		return result;
 	}
 	
@@ -66,7 +66,7 @@ public abstract class CommunicationChannel {
 	}
 	
 	public void appendOrSendCommand(AbstractClientCommand command) {
-		if (queueForCurrentResponse != null) {
+		if (queueForCurrentResponse.get() != null) {
 			appendCommandToCurrentHttpResponse(command);
 		} else {
 			sendCommandWithPush(command);

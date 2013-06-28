@@ -6,67 +6,91 @@
  @see ChannelObserverStatefulClient
 
  @author Sorin
+ @author Mariana
 -->
-<mx:VBox
-	xmlns:fx="http://ns.adobe.com/mxml/2009"
-	xmlns:s="library://ns.adobe.com/flex/spark" 
+<s:VGroup
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	minWidth="200" minHeight="150"
 	horizontalAlign="center"
+	implements="org.flowerplatform.flexutil.popup.IPopupContent"
+	creationComplete="onCreationComplete()"
 	>
 	
-	<mx:Text textAlign="center">
-		<mx:htmlText>
-Because you did not have any activity, you will be
-automatically disconnected in {secondsUntilDisconnect} seconds.
+	<s:Label textAlign="center" width="100%" height="100%">
+Because you did not have any activity, you will be automatically disconnected in {secondsUntilDisconnect} seconds.
 
 If you do not want to be disconnected close this popup.
-		</mx:htmlText>
-	</mx:Text>
+	</s:Label>
 	
-	<!--<mx:Button label="Close" click="formCancelHandler()" />-->
+	<s:Button label="Close" click="formCancelHandler()" />
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.IList;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			
+			private var _popupHost:IPopupHost;
+			
 			[Bindable]
-			private var secondsUntilDisconnect:Number;
+			public var secondsUntilDisconnect:Number;
 			
 			private var secondsUpdater:Timer; 
 			
-			public function show(seconds:Number):void {
-				secondsUntilDisconnect = seconds;
-
-				secondsUpdater = new Timer(1000, seconds);
+			public function onCreationComplete():void {
+				secondsUpdater = new Timer(1000, secondsUntilDisconnect);
 				secondsUpdater.addEventListener(TimerEvent.TIMER, updateSeconds);
 				secondsUpdater.start();
-				
-//				showPopup(NaN, NaN, null, true, true /* close on escape */);
 			}
 			
-//			override public function closeForm():void {
-//				super.closeForm();
-//				
-//				if (secondsUpdater == null)
-//					return;
-//				secondsUpdater.stop();
-//				secondsUpdater.removeEventListener(TimerEvent.TIMER, updateSeconds);
-//				secondsUpdater = null;
-//			}
-				
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;
+				popupHost.setLabel("Automatic Disconnect");
+				popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/login.png"));
+				popupHost.displayCloseButton(false);
+			}
+			
+			public function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public function closeForm():void {
+				if (secondsUpdater == null)
+					return;
+				secondsUpdater.stop();
+				secondsUpdater.removeEventListener(TimerEvent.TIMER, updateSeconds);
+				secondsUpdater = null;
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+			}
+			
 			private function updateSeconds(event:TimerEvent):void {
 				secondsUntilDisconnect --;
 				if (secondsUntilDisconnect <= 0) {
-//					closeForm();
+					closeForm();
 					WebCommonPlugin.getInstance().authenticationManager.bridge.disconnect(); // Connection not lost or connection lost but undetected, so disconnect ourself.
 				}
 			}
 			
-//			override protected function formCancelHandler(event:Event = null):void {
-//				super.formCancelHandler();
-//				HeartbeatStatefulClient.INSTANCE.signalActivity();
-//			}			
+			protected function formCancelHandler(event:Event = null):void {
+				var client:HeartbeatStatefulClient = HeartbeatStatefulClient(CommunicationPlugin.getInstance()
+					.statefulClientRegistry.getStatefulClientById(HeartbeatStatefulClient.CLIENT_ID));
+				client.signalActivity();
+				closeForm();
+			}			
 		]]>
 	</fx:Script>
-</mx:VBox>
+</s:VGroup>

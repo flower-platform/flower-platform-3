@@ -8,6 +8,25 @@
 			<mx:method name="testMet" result="Alert.show('res')"/>
 		</s:RemoteObject>
 	</fx:Declarations>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		
+		s|FormItem {
+			skinClass: ClassReference("org.flowerplatform.flexutil.form.FlowerFormItemSkin");
+		}
+		
+		s|Button {
+			cornerRadius: 4;
+			skinClass: ClassReference("org.flowerplatform.flexutil.button.HaloButtonSkin");
+		}
+
+		s|ButtonBar {
+			skinClass: ClassReference("org.flowerplatform.flexutil.button.HaloButtonBarSkin");
+		}
+		
+	</fx:Style>
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>

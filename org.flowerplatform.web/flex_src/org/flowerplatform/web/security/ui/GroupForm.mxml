@@ -11,7 +11,7 @@
 <ns:BaseForm 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
 	xmlns:ns="org.flowerplatform.web.security.ui.*" 
-	xmlns:utils="org.flowerplatform.web.utils.*"
+	xmlns:utils="com.crispico.flower.util.*"
 	minWidth="400" minHeight="200">
 
 	<mx:Script>

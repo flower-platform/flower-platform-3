@@ -15,7 +15,7 @@
 	xmlns:ns="com.crispico.flower.util.ui_inheritance.*" 
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
 	xmlns:ui="org.flowerplatform.web.security.ui.*"
-	xmlns:utils="org.flowerplatform.web.utils.*" 
+	xmlns:utils="com.crispico.flower.util.*" 
 	creationComplete="onCreationComplete(event)"
 	>
 	<mx:Script>

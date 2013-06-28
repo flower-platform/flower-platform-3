@@ -13,7 +13,6 @@ import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.service.ServiceRegistry;
-import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.FavoriteItem;
@@ -357,9 +356,9 @@ public class OrganizationService extends ServiceObservable {
 		List<OrganizationAdminUIDto> organizations = findMyOrganizationsAsADminUIDto(CommunicationPlugin.tlCurrentPrincipal.get().getUserId());
 		for (OrganizationAdminUIDto organization : organizations) {
 			if (organizationsFilter.contains(organization.getName()) || organizationsFilter.size() == 0) {
-				String organizationDir = WebPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*")[0];
+				String organizationDir = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*")[0];
 				organizationDir = MessageFormat.format(organizationDir, organization.getName());
-				organizationDir += "/" + WebPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DEFAULT_DIRECTORY);
+				organizationDir += "/" + CommonPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DEFAULT_DIRECTORY);
 				return organizationDir;
 			}
 		}
@@ -367,7 +366,7 @@ public class OrganizationService extends ServiceObservable {
 	}
 	
 	public Organization getOrganizationForResource(String resourcePath) {
-		String[] organizationDirectories = WebPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*");
+		String[] organizationDirectories = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*");
 		for (String dir : organizationDirectories) {
 			dir = CommonPlugin.getInstance().getWorkspaceRoot().getPath() + "/" + dir;
 			// append a / if the dir doesn't end in /

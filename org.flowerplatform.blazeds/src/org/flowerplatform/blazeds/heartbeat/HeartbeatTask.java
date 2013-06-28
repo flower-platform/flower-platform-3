@@ -1,12 +1,16 @@
 package org.flowerplatform.blazeds.heartbeat;
 
 import static org.flowerplatform.blazeds.heartbeat.HeartbeatStatefulService.logger;
+import static org.flowerplatform.blazeds.heartbeat.HeartbeatProperties.CLIENT_NO_ACTIVITY_PERIOD;
+import static org.flowerplatform.blazeds.heartbeat.HeartbeatProperties.SERVER_HEARTBEAT_PERIOD;
+import static org.flowerplatform.blazeds.heartbeat.HeartbeatProperties.WARN_ABOUT_NO_ACTIVITY_INTERVAL;
 import static java.lang.Integer.valueOf;
 
 import java.text.DecimalFormat;
 import java.util.concurrent.Future;
 
 import org.flowerplatform.blazeds.channel.BlazedsCommunicationChannel;
+import org.flowerplatform.common.CommonPlugin;
 
 import flex.messaging.util.TimeoutAbstractObject;
 
@@ -24,9 +28,12 @@ public abstract class HeartbeatTask extends TimeoutAbstractObject {
 	protected static long noActivityOnClientInterval;
 	
 	static {
-//		noHeartbeatFromClientInterval = valueOf(INSTANCE.getProperty(SERVER_HEARTBEAT_PERIOD));
-//		warnAboutNoActivityInterval = valueOf(INSTANCE.getProperty(WARN_ABOUT_NO_ACTIVITY_INTERVAL));
-//		noActivityOnClientInterval = valueOf(INSTANCE.getProperty(CLIENT_NO_ACTIVITY_PERIOD));			
+		noHeartbeatFromClientInterval = valueOf(CommonPlugin.getInstance().getFlowerWebProperties()
+				.getProperty(SERVER_HEARTBEAT_PERIOD));
+		warnAboutNoActivityInterval = valueOf(CommonPlugin.getInstance().getFlowerWebProperties()
+				.getProperty(WARN_ABOUT_NO_ACTIVITY_INTERVAL));
+		noActivityOnClientInterval = valueOf(CommonPlugin.getInstance().getFlowerWebProperties()
+				.getProperty(CLIENT_NO_ACTIVITY_PERIOD));			
 	} 
 	
 	private boolean taskExecuted = false;

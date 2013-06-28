@@ -1,10 +1,11 @@
 package org.flowerplatform.web.common {
 	
+	import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	import flash.net.registerClassAlias;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
-	import mx.core.IVisualElementContainer;
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
@@ -13,6 +14,8 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
+	import org.flowerplatform.flexutil.resources.ResourceUpdatedEvent;
+	import org.flowerplatform.flexutil.resources.ResourcesUtils;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;
 	import org.flowerplatform.web.common.communication.AuthenticationViewProvider;
 	import org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient;
@@ -53,6 +56,9 @@ package org.flowerplatform.web.common {
 		
 		public var authenticationManager:AuthenticationManager;
 		
+		/**
+		 * @author Mariana
+		 */
 		public var heartbeatStatefulClient:HeartbeatStatefulClient;
 		
 		public var explorerTreeActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
@@ -72,6 +78,9 @@ package org.flowerplatform.web.common {
 			explorerTreeActionProviders.push(explorerTreeClassFactoryActionProvider);
 			explorerTreeActionProviders.push(EditorPlugin.getInstance().editorTreeActionProvider);
 			
+//			if (FlexUtilGlobals.getInstance().isMobile)
+				FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new AuthenticationViewProvider());
+			
 			EditorPlugin.getInstance().addPathFragmentToEditableResourcePathCallback = function (treeNode:TreeNode):String {
 				if (treeNode.pathFragment == null) {
 					return null;
@@ -83,20 +92,34 @@ package org.flowerplatform.web.common {
 					return null;
 				}
 			}
-//			heartbeatStatefulClient = new HeartbeatStatefulClient();
 				
 			// actions
 			explorerTreeClassFactoryActionProvider.actionClasses.push(MarkAsWorkingDirectoryAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateOrImportProjectAction);
 		}
 		
+		/**
+		 * @author Cristi
+		 * @author Mariana
+		 */
 		override public function start():void {
 			super.start();
 			authenticationManager = new AuthenticationManager();
+			var application:IEventDispatcher = IEventDispatcher(FlexGlobals.topLevelApplication);
+			application.addEventListener(ResourceUpdatedEvent.RESOURCE_UPDATED, function(event:ResourceUpdatedEvent):void {
+				if (authenticationManager.authenticationView != null) {
+					// this was null e.g. while testing and calling connect(user, pass) directly, so no popup
+					authenticationManager.authenticationView.dispatchEvent(event);
+				}
+			});
+			heartbeatStatefulClient = new HeartbeatStatefulClient();
 		}
 		
+		/**
+		 * @author Mariana
+		 */
 		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
+			ResourcesUtils.registerMessageBundle("en_US", getResourceUrl(""), getResourceUrl(MESSAGES_FILE), FlexGlobals.topLevelApplication);
 		}
 		
 		override protected function registerClassAliases():void {

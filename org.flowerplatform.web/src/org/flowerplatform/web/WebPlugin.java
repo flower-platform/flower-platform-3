@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
@@ -43,8 +44,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	
 	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
 	
-	private FlowerWebProperties flowerWebProperties;
-	
 	private DatabaseManager databaseManager;
 	
 	private Map<String, List<String>> nodeTypeCategoryToNodeTypesMap = new HashMap<String, List<String>>();
@@ -57,7 +56,8 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		super();
 		INSTANCE = this;
 		
-		flowerWebProperties = new FlowerWebProperties();
+		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
+				.getResourceAsStream("META-INF/flower-web.properties"));
 		databaseManager = new DatabaseManager();
 	}
 	
@@ -79,13 +79,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 	
-	/**
-	 * @author Mariana
-	 */
-	public FlowerWebProperties getFlowerWebProperties() {
-		return flowerWebProperties;
-	}
-
 	/**
 	 * @author Mariana
 	 */

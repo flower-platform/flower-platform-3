@@ -14,7 +14,7 @@
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
 	xmlns:validators="com.crispico.flower.util.validators.*"
 	xmlns:duallistbox="com.crispico.flower.util.duallistbox.*"
-	xmlns:utils="org.flowerplatform.web.utils.*"
+	xmlns:utils="com.crispico.flower.util.*"
 	>
 	
 	<mx:Script>

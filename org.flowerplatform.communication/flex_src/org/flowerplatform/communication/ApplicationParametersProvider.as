@@ -3,6 +3,8 @@ package org.flowerplatform.communication
 	import flash.external.ExternalInterface;
 	
 	import mx.core.FlexGlobals;
+	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 
 	/**
 	 * Exposes a map with parameters and value for the Application.
@@ -23,11 +25,13 @@ package org.flowerplatform.communication
 		public const parameters:Object = new Object();
 		
 		public function ApplicationParametersProvider() {
-//			for (var key:String in FlexGlobals.topLevelApplication.parameters)
-//				parameters[key] = FlexGlobals.topLevelApplication.parameters[key];
-//
-//			var browserURL:String = getBrowserURL();
-//			parseURLQueryParamters(browserURL, parameters);
+			if (FlexGlobals.topLevelApplication) {
+				for (var key:String in FlexGlobals.topLevelApplication.parameters)
+					parameters[key] = FlexGlobals.topLevelApplication.parameters[key];
+			}
+			
+			var browserURL:String = getBrowserURL();
+			parseURLQueryParamters(browserURL, parameters);
 			// printParameters(); // To show the available parameters
 		}
 		
@@ -90,8 +94,13 @@ package org.flowerplatform.communication
 		//   URL & Browser Utilities
 		////////////////////////////////////////
 		
+		/**
+		 * @author Mariana
+		 */
 		public static function getBrowserURL():String {
-			return String(ExternalInterface.call("getBrowserURL"));
+			if (ExternalInterface.available)
+				return String(ExternalInterface.call("window.location.href.toString"));
+			return "";
 		}
 		
 		public static function getBrowserURLWithoutQuery():String {
