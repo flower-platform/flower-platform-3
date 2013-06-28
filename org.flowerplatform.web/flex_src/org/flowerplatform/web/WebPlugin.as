@@ -100,7 +100,7 @@ package org.flowerplatform.web {
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-			perspectives[1].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
+			perspectives[0].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
 		}
 		
 		override protected function registerMessageBundle():void {

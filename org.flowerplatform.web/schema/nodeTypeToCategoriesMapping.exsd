@@ -3,7 +3,7 @@
 <schema targetNamespace="org.flowerplatform.web" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.flowerplatform.web" id="explorerAdditionalNodePopulator" name="explorerAdditionalNodePopulator"/>
+         <meta.schema plugin="org.flowerplatform.web" id="nodeTypeToCategoriesMapping" name="nodeTypeToCategoriesMapping"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -18,7 +18,7 @@
       </annotation>
       <complexType>
          <choice>
-            <element ref="explorerAdditionalNodePopulator"/>
+            <element ref="nodeTypeToCategoriesMapping"/>
          </choice>
          <attribute name="point" type="string" use="required">
             <annotation>
@@ -47,27 +47,11 @@
       </complexType>
    </element>
 
-   <element name="explorerAdditionalNodePopulator">
+   <element name="nodeTypeToCategoriesMapping">
       <complexType>
-         <sequence>
-            <element ref="nodeType" minOccurs="1" maxOccurs="unbounded"/>
+         <sequence minOccurs="1" maxOccurs="unbounded">
             <element ref="nodeTypeCategory"/>
          </sequence>
-         <attribute name="populator" type="string" use="required">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-               <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.flowerplatform.communication.tree.INodePopulator"/>
-               </appinfo>
-            </annotation>
-         </attribute>
-      </complexType>
-   </element>
-
-   <element name="nodeType">
-      <complexType>
          <attribute name="nodeType" type="string" use="required">
             <annotation>
                <documentation>
@@ -80,7 +64,7 @@
 
    <element name="nodeTypeCategory">
       <complexType>
-         <attribute name="nodeTypeCategory" type="string">
+         <attribute name="nodeTypeCategory" type="string" use="required">
             <annotation>
                <documentation>
                   

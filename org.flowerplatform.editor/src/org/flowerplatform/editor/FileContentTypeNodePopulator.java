@@ -2,6 +2,7 @@ package org.flowerplatform.editor;
 
 import java.io.File;
 
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.TreeNode;
@@ -10,10 +11,11 @@ public class FileContentTypeNodePopulator implements INodePopulator {
 
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
-		if (!(source instanceof File)) {
+		if (!(source instanceof Pair<?, ?> && ((Pair<?, ?>) source).a instanceof File)) {
 			return false;
 		}
-		File file = (File) source;
+		@SuppressWarnings("unchecked")
+		File file = ((Pair<File, String>) source).a;
 		if (file.isDirectory()) {
 			return false;
 		}

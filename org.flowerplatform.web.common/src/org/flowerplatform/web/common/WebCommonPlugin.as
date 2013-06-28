@@ -2,6 +2,7 @@ package org.flowerplatform.web.common {
 	
 	import flash.net.registerClassAlias;
 	
+	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
 	
@@ -10,12 +11,16 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;
 	import org.flowerplatform.web.common.communication.AuthenticationViewProvider;
 	import org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient;
 	import org.flowerplatform.web.common.entity.dto.NamedDto;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
+	import org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction;
+	import org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction;
+	import org.flowerplatform.web.common.remote.InitializeNodeTypeCategoryToNodeTypesMapClientCommand;
 	import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
 	import org.flowerplatform.web.common.security.dto.InitializeCurrentUserLoggedInClientCommand;
 	import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
@@ -36,15 +41,25 @@ package org.flowerplatform.web.common {
 			return INSTANCE;
 		}
 		
-		public static const NODE_TYPE_ORGANIZATION:String = "or";
+		public static const NODE_TYPE_ORGANIZATION:String = "organization";
 		
-		public static const NODE_TYPE_FILE:String = "f";
+		public static const NODE_TYPE_PROJECT:String = "project";
+		
+		public static const NODE_TYPE_PROJ_FILE:String = "projFile";
+		
+		public static const NODE_TYPE_CATEGORY_PATH_FRAGMENT_NAME_POINTS_TO_FILE:String = "pathFragmentNamePointsToFile";
+		
+		public static const NODE_TYPE_CATEGORY_DECORATABLE_FILE:String = "decoratableFile";
 		
 		public var authenticationManager:AuthenticationManager;
 		
 		public var heartbeatStatefulClient:HeartbeatStatefulClient;
 		
 		public var explorerTreeActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
+		
+		public var explorerTreeClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
+		
+		public var nodeTypeCategoryToNodeTypesMap:Object;
 		
 		override public function preStart():void {
 			super.preStart();
@@ -54,20 +69,25 @@ package org.flowerplatform.web.common {
 			INSTANCE = this;
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new ExplorerViewProvider());
+			explorerTreeActionProviders.push(explorerTreeClassFactoryActionProvider);
 			explorerTreeActionProviders.push(EditorPlugin.getInstance().editorTreeActionProvider);
-			explorerTreeActionProviders.push(new TestSampleExplorerTreeActionProvider());
 			
 			EditorPlugin.getInstance().addPathFragmentToEditableResourcePathCallback = function (treeNode:TreeNode):String {
 				if (treeNode.pathFragment == null) {
 					return null;
 				}
-				if (treeNode.pathFragment.type == NODE_TYPE_ORGANIZATION || treeNode.pathFragment.type == NODE_TYPE_FILE) {
+				
+				if (nodeTypeBelongsToNodeTypeCategory(treeNode.pathFragment.type, NODE_TYPE_CATEGORY_PATH_FRAGMENT_NAME_POINTS_TO_FILE)) {
 					return treeNode.pathFragment.name;
 				} else {
 					return null;
 				}
 			}
 //			heartbeatStatefulClient = new HeartbeatStatefulClient();
+				
+			// actions
+			explorerTreeClassFactoryActionProvider.actionClasses.push(MarkAsWorkingDirectoryAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateOrImportProjectAction);
 		}
 		
 		override public function start():void {
@@ -90,7 +110,16 @@ package org.flowerplatform.web.common {
 			registerClassAlias("org.flowerplatform.web.security.dto.PermissionAdminUIDto", PermissionAdminUIDto);
 			registerClassAlias("org.flowerplatform.web.security.dto.PermissionsByResourceFilter", PermissionsByResourceFilter);
 			registerClassAliasFromAnnotation(InitializeCurrentUserLoggedInClientCommand);
+			registerClassAliasFromAnnotation(InitializeNodeTypeCategoryToNodeTypesMapClientCommand);
 		}
 		
+		public function nodeTypeBelongsToNodeTypeCategory(nodeType:String, nodeTypeCategory:String):Boolean {
+			var categories_pathFragmentNamePointsToFile:ArrayCollection = ArrayCollection(nodeTypeCategoryToNodeTypesMap[nodeTypeCategory]);
+			if (categories_pathFragmentNamePointsToFile == null) {
+				return false;
+			}
+			
+			return categories_pathFragmentNamePointsToFile.getItemIndex(nodeType) >= 0;
+		}
 	}
 }

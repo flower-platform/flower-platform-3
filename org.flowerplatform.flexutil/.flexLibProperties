@@ -16,6 +16,7 @@
     <classEntry path="org.flowerplatform.flexutil.popup.IAction"/>
     <classEntry path="org.flowerplatform.flexutil.popup.ActionBase"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IActionProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.ClassFactoryActionProvider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

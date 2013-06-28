@@ -34,5 +34,16 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 		return ResourcesPlugin.getWorkspace().getRoot().getRawLocation().makeAbsolute().toFile();
 	}
 
+	public String getPathRelativeToWorkspaceRoot(File file) {
+		return getPathRelativeToFile(file, getWorkspaceRoot());
+	}
+	
+	public String getPathRelativeToFile(File file, File relativeTo) {
+		String relative = relativeTo.toURI().relativize(file.toURI()).getPath();
+		if (relative.length() > 0 && relative.endsWith("/")) {
+			relative = relative.substring(0, relative.length() - 1);
+		}
+		return relative;
+	}
 
 }

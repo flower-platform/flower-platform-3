@@ -358,14 +358,14 @@ public class DatabaseManager {
 				WorkingDirectory wd;
 				
 				wd = EntityFactory.eINSTANCE.createWorkingDirectory();
-				wd.setPathFromOrganization("path/to/file");
+				wd.setPathFromOrganization("git_repos");
 				wd.setColor(1);
 				wd.setOrganization(list.get(0));
 				wrapper.getSession().persist(wd);
 				
 				
 				wd = EntityFactory.eINSTANCE.createWorkingDirectory();
-				wd.setPathFromOrganization("path/to/file");
+				wd.setPathFromOrganization("git_repos_c");
 				wd.setColor(2);
 				wd.setOrganization(list.get(0));
 				wrapper.getSession().persist(wd);

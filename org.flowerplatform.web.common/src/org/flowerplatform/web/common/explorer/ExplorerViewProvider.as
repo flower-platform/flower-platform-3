@@ -29,7 +29,7 @@ package org.flowerplatform.web.common.explorer {
 			CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 			return treeList;
 		}
-		
+		// TODO CS/FP2 msg
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String	{
 			return "Explorer";
 		}
