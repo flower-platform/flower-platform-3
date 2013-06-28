@@ -59,60 +59,13 @@ package org.flowerplatform.web.git {
 			INSTANCE = this;	
 						
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new GitHistoryViewProvider());
-			WebPlugin.getInstance().perspectives.push(new GitPerspective());	
-			
-			WebCommonPlugin.getInstance().explorerTreeActionProviders.push(new GitExplorerTreeActionProvider());
+			WebPlugin.getInstance().perspectives.push(new GitPerspective());				
 		}
 		
 		override public function start():void {
 			super.start();
 			gitCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			gitCommonPlugin.start();
-		}
-		
-		override protected function registerClassAliases():void {
-			registerClassAliasFromAnnotation(CommitDto);
-			registerClassAliasFromAnnotation(CommitPageDto);
-			registerClassAliasFromAnnotation(CommitResourceDto);
-			registerClassAliasFromAnnotation(CreateBranchPageDto);
-			registerClassAliasFromAnnotation(ConfigFetchPushPageDto);
-			registerClassAliasFromAnnotation(ConfigTagPageDto);
-			registerClassAliasFromAnnotation(GitRef);
-			registerClassAliasFromAnnotation(RemoteConfig);
-			registerClassAliasFromAnnotation(ResetPageDto);
-			registerClassAliasFromAnnotation(ProjectDto);
-			registerClassAliasFromAnnotation(ImportProjectPageDto);			
-//			registerClassAliasFromAnnotation(GitAction);
-			registerClassAliasFromAnnotation(GitActionDto);	
-			registerClassAliasFromAnnotation(ConfigBranchPageDto);
-			registerClassAliasFromAnnotation(CleanPageDto);
-			registerClassAliasFromAnnotation(SharePageDto);
-			registerClassAliasFromAnnotation(RepositoryDto);
-			registerClassAliasFromAnnotation(ConfigPropertiesPageDto);
-			registerClassAliasFromAnnotation(ConfigEntryDto);
-			registerClassAliasFromAnnotation(ViewInfoDto);
-			
-			registerClassAliasFromAnnotation(HistoryEntryDto);
-			registerClassAliasFromAnnotation(HistoryDrawingDto);
-			registerClassAliasFromAnnotation(HistoryFileDiffEntryDto);
-			registerClassAliasFromAnnotation(HistoryCommitMessageDto);
-			registerClassAliasFromAnnotation(HistoryViewInfoDto);
-			
-//			registerClassAliasFromAnnotation(GitStagingStatefulClientLocalState);
-//			registerClassAliasFromAnnotation(StagingViewInfoDto);
-			
-//			registerClassAliasFromAnnotation(GitReflogStatefulClientLocalState);
-//			registerClassAliasFromAnnotation(ReflogViewInfoDto);
-//			registerClassAliasFromAnnotation(ReflogEntryDto);
-			
-//			registerClassAliasFromAnnotation(OpenGitWindowClientCommand);
-//			registerClassAliasFromAnnotation(OpenGitCredentialsWindowClientCommand);
-//			registerClassAliasFromAnnotation(OpenOperationResultWindowClientCommand);
-//			registerClassAliasFromAnnotation(ShowGitViewClientCommand);
-			
-			registerClassAliasFromAnnotation(GitHistoryStatefulClientLocalState);
-			registerClassAliasFromAnnotation(OpenOperationResultWindowClientCommand);		
-			registerClassAliasFromAnnotation(OpenGitCredentialsWindowClientCommand);					
-		}
+		}		
 	}
 }

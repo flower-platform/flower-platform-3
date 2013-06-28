@@ -11,6 +11,7 @@
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
@@ -43,7 +44,8 @@
 				setDescriptorWithUrl(new CommunicationPlugin(), 'servlet/public-resources/org.flowerplatform.communication/swc/org.flowerplatform.communication.swc|library.swf'),
 				setDescriptorWithUrl(new EditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf'),
 				setDescriptorWithUrl(new EditorTextPlugin(), 'servlet/public-resources/org.flowerplatform.editor.text/swc/org.flowerplatform.editor.text.swc|library.swf?pluginClass=EditorTextPlugin'),
-				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf')
+				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf'),
+				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf')
 			];
 			
 			private function startPlugins():void {

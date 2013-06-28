@@ -1,4 +1,4 @@
-package org.flowerplatform.web.git.dto;
+package org.flowerplatform.web.git.remote.dto;
 
 /**
  *	@author Cristina Constantinescu

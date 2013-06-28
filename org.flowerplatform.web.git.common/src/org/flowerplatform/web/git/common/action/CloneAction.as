@@ -1,12 +1,10 @@
-package org.flowerplatform.web.git.action {
+package org.flowerplatform.web.git.common.action {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
-	import org.flowerplatform.web.git.GitNodeType;
-	import org.flowerplatform.web.git.GitPlugin;
+	import org.flowerplatform.web.git.common.GitCommonPlugin;
+	import org.flowerplatform.web.git.common.GitNodeType;
 	import org.flowerplatform.web.git.common.ui.CloneView;
-	import org.flowerplatform.web.git.ui.CloneWindow;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -14,9 +12,9 @@ package org.flowerplatform.web.git.action {
 	public class CloneAction extends ActionBase {
 		
 		public function CloneAction() {
-			label = GitPlugin.getInstance().getMessage("git.action.cloneRepo.label");
-			icon = GitPlugin.getInstance().getResourceUrl("images/full/obj16/cloneGit.gif");
-			orderIndex = int(GitPlugin.getInstance().getMessage("git.action.cloneRepo.sortIndex"));
+			label = GitCommonPlugin.getInstance().getMessage("git.action.cloneRepo.label");
+			icon = GitCommonPlugin.getInstance().getResourceUrl("images/full/obj16/cloneGit.gif");
+			orderIndex = int(GitCommonPlugin.getInstance().getMessage("git.action.cloneRepo.sortIndex"));
 		}
 		
 		override public function get visible():Boolean {
@@ -28,8 +26,8 @@ package org.flowerplatform.web.git.action {
 		
 		override public function run():void {
 			var cloneWindow:CloneView = new CloneView();
-			//cloneWindow.selectedNode = selection.getItemAt(0) as TreeNode;
-//			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler().setPopupContent(cloneWindow).show();
+			cloneWindow.selectedNode = selection.getItemAt(0) as TreeNode;
+			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler().setPopupContent(cloneWindow).show();
 //			cloneWindow.showPopup();
 		}
 		

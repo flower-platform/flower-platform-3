@@ -21,10 +21,10 @@ import org.flowerplatform.communication.command.DisplaySimpleMessageClientComman
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
 import org.flowerplatform.web.git.GitPlugin;
 import org.flowerplatform.web.git.GitUtils;
-import org.flowerplatform.web.git.dto.GitRef;
-import org.flowerplatform.web.git.dto.RemoteConfig;
 import org.flowerplatform.web.git.entity.GitNode;
 import org.flowerplatform.web.git.entity.GitNodeType;
+import org.flowerplatform.web.git.remote.dto.GitRef;
+import org.flowerplatform.web.git.remote.dto.RemoteConfig;
 
 /**
  * @author Cristina Constantinescu
