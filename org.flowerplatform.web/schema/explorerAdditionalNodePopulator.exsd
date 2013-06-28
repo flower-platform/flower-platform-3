@@ -51,7 +51,7 @@
       <complexType>
          <sequence>
             <element ref="nodeType" minOccurs="1" maxOccurs="unbounded"/>
-            <element ref="nodeTypeCategory"/>
+            <element ref="nodeTypeCategory" minOccurs="1" maxOccurs="unbounded"/>
          </sequence>
          <attribute name="populator" type="string" use="required">
             <annotation>
