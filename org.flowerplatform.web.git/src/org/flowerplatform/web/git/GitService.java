@@ -50,7 +50,6 @@ import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMe
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.web.git.command.client.OpenGitCredentialsWindowClientCommand;
 import org.flowerplatform.web.git.command.client.OpenOperationResultWindowClientCommand;
 import org.flowerplatform.web.git.dto.CommitPageDto;
 import org.flowerplatform.web.git.dto.ConfigFetchPushPageDto;
@@ -68,6 +67,7 @@ import org.flowerplatform.web.git.operation.MergeOperation;
 import org.flowerplatform.web.git.operation.PullOperation;
 import org.flowerplatform.web.git.operation.RebaseOperation;
 import org.flowerplatform.web.git.operation.ResetOperation;
+import org.flowerplatform.web.git.remote.OpenGitCredentialsWindowClientCommand;
 import org.flowerplatform.web.git.remote.dto.GitActionDto;
 import org.flowerplatform.web.git.remote.dto.GitRef;
 import org.flowerplatform.web.git.remote.dto.RemoteConfig;

@@ -2,6 +2,7 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.web.git.common.ui.CloneView"/>
+    <classEntry path="org.flowerplatform.web.git.common.ui.LoginView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

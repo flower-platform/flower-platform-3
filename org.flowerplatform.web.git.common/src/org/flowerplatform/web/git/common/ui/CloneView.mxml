@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Cristina Constantinescu
+-->
 <popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml" 
 			  xmlns:s="library://ns.adobe.com/flex/spark" 
 			  xmlns:mx="library://ns.adobe.com/flex/mx" 
@@ -48,7 +51,6 @@
 			protected override function nextClickHandler():void {
 				if (currentState == "repositoryURIPage") {
 					popupHost.showSpinner(GitCommonPlugin.getInstance().getMessage("git.cloneWizard.validate.spinner"));
-					//ModalSpinner.addModalSpinner(this, GitCommonPlugin.getInstance().getMessage("git.cloneWizard.validate.spinner"));
 					GitCommonPlugin.getInstance().service.
 						validateRepositoryURL(selectedNode, repositorySelectionPage.getURI(), this, validateRepositoryCallbackHandler);					
 				} else if (currentState == "branchesPage") {
@@ -69,8 +71,7 @@
 			 * @flowerModelElementId _mCRiMDVgEeKsnMbt6YrXWQ
 			 */
 			private function validateRepositoryCallbackHandler(value:int):void {
-				popupHost.hideSpinner();
-				//ModalSpinner.removeModalSpinner(this);
+				popupHost.hideSpinner();			
 				switch (value) {
 					case 1:
 						FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
@@ -79,7 +80,7 @@
 						.showMessageBox();
 						break;
 					case 0:
-						//ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+						popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
 						GitCommonPlugin.getInstance().service.
 						getBranches(repositorySelectionPage.getURI(), this, getBranchesCallbackHandler);
 				}				
@@ -99,7 +100,7 @@
 				
 				applyFilterHandler();
 				
-				//ModalSpinner.removeModalSpinner(this);
+				popupHost.hideSpinner();
 			}
 			
 			private function getSelectedBranches(onlyName:Boolean = false):ArrayCollection {
@@ -128,7 +129,7 @@
 			 * @flowerModelElementId _0LbYwDVhEeKsnMbt6YrXWQ
 			 */
 			protected override function finishClickHandler():void {
-				//ModalSpinner.addModalSpinner(this, GitCommonPlugin.getInstance().getMessage("git.cloneWizard.cloneRepo.spinner"));
+				popupHost.showSpinner(GitCommonPlugin.getInstance().getMessage("git.cloneWizard.cloneRepo.spinner"));
 				var selectedBranches:ArrayCollection = getSelectedBranches(true);				
 				GitCommonPlugin.getInstance().service.
 					cloneRepository(selectedNode,
@@ -140,7 +141,7 @@
 			}
 			
 			private function serverResponseHandler(value:Boolean):void {
-			//	ModalSpinner.removeModalSpinner(this);
+				popupHost.hideSpinner();
 				if (value) {
 					super.finishClickHandler();
 				}

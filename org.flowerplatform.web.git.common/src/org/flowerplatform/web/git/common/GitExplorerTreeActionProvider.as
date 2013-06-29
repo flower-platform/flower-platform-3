@@ -3,7 +3,10 @@ package org.flowerplatform.web.git.common {
 	
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
+	import org.flowerplatform.web.git.common.action.ChangeCredentialsAction;
+	import org.flowerplatform.web.git.common.action.ClearCredentialsAction;
 	import org.flowerplatform.web.git.common.action.CloneAction;
+	import org.flowerplatform.web.git.common.action.DeleteRepositoryAction;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -16,7 +19,7 @@ package org.flowerplatform.web.git.common {
 		public function getActions(selection:IList):Vector.<IAction> {
 			var actions:Vector.<IAction> = new Vector.<IAction>();
 			actions.push(new CloneAction());
-//			actions.push(new DeleteRepositoryAction());
+			actions.push(new DeleteRepositoryAction());
 //			
 //			actions.push(new MergeAction());
 //			actions.push(new RebaseAction());
@@ -27,8 +30,8 @@ package org.flowerplatform.web.git.common {
 //			actions.push(new ConfigRemoteAction());
 //			actions.push(new DeleteRemoteAction());
 //			
-//			actions.push(new ChangeCredentialsAction());
-//			actions.push(new ClearCredentialsAction());
+			actions.push(new ChangeCredentialsAction());
+			actions.push(new ClearCredentialsAction());
 //			
 ////			actions.push(new FetchAction());
 //			actions.push(new FetchAction(true));

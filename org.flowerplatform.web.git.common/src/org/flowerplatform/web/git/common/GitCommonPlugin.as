@@ -5,6 +5,7 @@ package org.flowerplatform.web.git.common {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.git.common.remote.GitService;
+	import org.flowerplatform.web.git.common.remote.OpenGitCredentialsWindowClientCommand;
 	import org.flowerplatform.web.git.common.remote.dto.GitActionDto;
 	import org.flowerplatform.web.git.common.remote.dto.GitRef;
 	import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
@@ -67,7 +68,7 @@ package org.flowerplatform.web.git.common {
 			
 //			registerClassAliasFromAnnotation(GitHistoryStatefulClientLocalState);
 //			registerClassAliasFromAnnotation(OpenOperationResultWindowClientCommand);		
-//			registerClassAliasFromAnnotation(OpenGitCredentialsWindowClientCommand);					
+			registerClassAlias("org.flowerplatform.web.git.remote.OpenGitCredentialsWindowClientCommand", OpenGitCredentialsWindowClientCommand);					
 		}
 	}	
 }
