@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="entity" nsURI="http://www.flower-platform.com/xmi/entity_1.0.0"
-    nsPrefix="org.flowerplatform.web.entity">
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="entity"
+    nsURI="http://www.flower-platform.com/xmi/entity_1.0.0" nsPrefix="org.flowerplatform.web.entity">
   <eClassifiers xsi:type="ecore:EClass" name="Entity" abstract="true">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
         iD="true"/>
@@ -30,6 +31,8 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="filesCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="modelsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="diagramsCount" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="workingDirectories" upperBound="-1"
+        eType="#//WorkingDirectory" eOpposite="#//WorkingDirectory/organization"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Group" eSuperTypes="#//NamedEntity #//ISecurityEntity">
     <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"
@@ -127,5 +130,11 @@
     <eLiterals name="MEMBER"/>
     <eLiterals name="ADMIN" value="1"/>
     <eLiterals name="PENDING_MEMBERSHIP_APPROVAL" value="2"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WorkingDirectory" eSuperTypes="#//Entity">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="organization" eType="#//Organization"
+        eOpposite="#//Organization/workingDirectories"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="pathFromOrganization" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="color" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>

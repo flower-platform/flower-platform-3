@@ -1,21 +1,31 @@
 package org.flowerplatform.web.database;
 
+import java.io.IOException;
 import java.security.Policy;
 import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 import javax.security.auth.Subject;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.teneo.PersistenceOptions;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
 import org.eclipse.emf.teneo.hibernate.HbHelper;
-import org.eclipse.emf.teneo.hibernate.HbSessionDataStore;
-import org.flowerplatform.web.FlowerWebProperties;
-import org.flowerplatform.web.FlowerWebProperties.AddBooleanProperty;
-import org.flowerplatform.web.FlowerWebProperties.AddProperty;
+import org.eclipse.emf.teneo.hibernate.resource.HibernateResource;
+import org.flowerplatform.emf_model.notation.Bounds;
+import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Node;
+import org.flowerplatform.emf_model.notation.NotationFactory;
+import org.flowerplatform.emf_model.notation.NotationPackage;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.FlowerWebProperties;
+import org.flowerplatform.common.FlowerWebProperties.AddBooleanProperty;
+import org.flowerplatform.common.FlowerWebProperties.AddProperty;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.DBVersion;
 import org.flowerplatform.web.entity.EntityFactory;
@@ -25,6 +35,8 @@ import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.OrganizationMembershipStatus;
 import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.User;
+import org.flowerplatform.web.entity.WorkingDirectory;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
 import org.flowerplatform.web.security.permission.AdminSecurityEntitiesPermission;
 import org.flowerplatform.web.security.permission.FlowerWebFilePermission;
@@ -64,7 +76,7 @@ public class DatabaseManager {
 		Policy.setPolicy(new FlowerWebPolicy(Policy.getPolicy())); // FlowerWebPolicy uses the permissionServer. 
 		
 		// adding properties
-		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(PROP_DB_PERSISTENCE_UNIT, PROP_DEFAULT_PROD_PERSISTENCE_UNIT) {
+		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(PROP_DB_PERSISTENCE_UNIT, PROP_DEFAULT_PROD_PERSISTENCE_UNIT) {
 			@Override
 			protected String validateProperty(String input) {
 				// nothing to do; if the persistence unit is not found, an exception will be
@@ -72,7 +84,7 @@ public class DatabaseManager {
 				return null;
 			}
 		});
-		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(PROP_DB_INIT_WITH_TEST_DATA, "false") {
+		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(PROP_DB_INIT_WITH_TEST_DATA, "false") {
 
 			@Override
 			protected String validateProperty(String input) {
@@ -109,13 +121,14 @@ public class DatabaseManager {
 		props.setProperty(Environment.PASS, "");
 		props.setProperty(Environment.DIALECT, H2Dialect.class.getName());
 		props.setProperty(Environment.HBM2DDL_AUTO, "create");
-		props.setProperty(Environment.SHOW_SQL, "false");
+//		props.setProperty(Environment.SHOW_SQL, "true");
 		
 		props.setProperty(PersistenceOptions.CASCADE_POLICY_ON_NON_CONTAINMENT, "REFRESH,PERSIST,MERGE");
 		props.setProperty(PersistenceOptions.PERSISTENCE_XML, "annotations.xml");
 		props.setProperty(PersistenceOptions.JOIN_TABLE_FOR_NON_CONTAINED_ASSOCIATIONS, "false");
 		props.setProperty(PersistenceOptions.ALWAYS_VERSION, "false");
-		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
+//		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
+		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "SINGLE_TABLE");
 		props.setProperty(PersistenceOptions.ADD_INDEX_FOR_FOREIGN_KEY, "false");
 		
 		// create the HbDataStore using the name
@@ -124,15 +137,17 @@ public class DatabaseManager {
 		// set the properties
 		hbds.setDataStoreProperties(props);
 		// sets its epackages stored in this datastore
-		hbds.setEPackages(new EPackage[] { EntityPackage.eINSTANCE });
+		hbds.setEPackages(new EPackage[] { EntityPackage.eINSTANCE, NotationPackage.eINSTANCE });
 //		((HbSessionDataStore) hbds).setConfiguration(config); 
 		
 		// initialize
 		try {
 			hbds.initialize();
 		} catch (Throwable e) {
+			System.err.println(hbds.getMappingXML());
 			logger.error("FATAL: error while initializing the HbDataStore", e);
 		}
+		System.err.println(hbds.getMappingXML());
 
 		factory = hbds.getSessionFactory();
 		EventListenerRegistry registry = ((SessionFactoryImpl) factory).getServiceRegistry().getService(EventListenerRegistry.class);
@@ -232,7 +247,49 @@ public class DatabaseManager {
 	 */
 	//TODO: eventually, this will have to be removed
 	protected void initWithTestData() {
-		if ("false".equals(WebPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
+		// TODO CS/FP2 remove this
+		Resource hbResource = new HibernateResource(URI.createURI("hb:/?dsname=" + DS_NAME));
+		
+		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
+		diagram.setName("D1");
+		diagram.setViewType("classDiagram");
+		hbResource.getContents().add(diagram);
+		
+		Node node;
+		Bounds bounds;
+		
+		node = NotationFactory.eINSTANCE.createNode();
+		node.setViewType("class");
+		diagram.getPersistentChildren().add(node);
+		
+		bounds = NotationFactory.eINSTANCE.createBounds();
+		bounds.setX(120);
+		bounds.setY(10);
+		bounds.setWidth(100);
+		bounds.setHeight(100);
+		node.setLayoutConstraint(bounds);
+		
+		node = NotationFactory.eINSTANCE.createNode();
+		node.setViewType("class");
+		diagram.getPersistentChildren().add(node);
+		
+		bounds = NotationFactory.eINSTANCE.createBounds();
+		bounds.setX(10);
+		bounds.setY(10);
+		bounds.setWidth(100);
+		bounds.setHeight(100);
+		node.setLayoutConstraint(bounds);
+		
+		try {
+			hbResource.save(Collections.EMPTY_MAP);
+			System.out.println("Saved diagram with id = " + hbResource.getURIFragment(diagram));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		hbResource.unload();
+		
+		if ("false".equals(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
 			return;
 		}
 
@@ -275,7 +332,7 @@ public class DatabaseManager {
 			}
 		});
 		
-		if (!PROP_DB_INIT_WITH_TEST_DATA_INTERNAL.equals(WebPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
+		if (!PROP_DB_INIT_WITH_TEST_DATA_INTERNAL.equals(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
 			return;
 		}
 
@@ -291,6 +348,45 @@ public class DatabaseManager {
 		createTestOrganization("hibernate", "Hibernate", "http://www.hibernate.org/", "https://forum.hibernate.org/styles/hibernate/imageset/site_logo.gif");
 		createTestOrganization("spring", "Spring", "http://www.springsource.org/", "http://www.springsource.org/files/Logo_Spring_258x151.png");
 		createTestOrganization("flex", "Apache Flex", "http://flex.apache.org/", "http://flex.apache.org/images/logo_01_fullcolor-sm.png");
+		
+		// TODO CS/FP2 remove this
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<Organization> list = wrapper.findByField(Organization.class, "name", "hibernate");
+				
+				WorkingDirectory wd;
+				
+				wd = EntityFactory.eINSTANCE.createWorkingDirectory();
+				wd.setPathFromOrganization("git_repos");
+				wd.setColor(1);
+				wd.setOrganization(list.get(0));
+				wrapper.getSession().persist(wd);
+				
+				
+				wd = EntityFactory.eINSTANCE.createWorkingDirectory();
+				wd.setPathFromOrganization("git_repos_c");
+				wd.setColor(2);
+				wd.setOrganization(list.get(0));
+				wrapper.getSession().persist(wd);
+			}
+			
+		});
+	
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				List<WorkingDirectory> list = wrapper.findAll(WorkingDirectory.class);
+				for (WorkingDirectory wd : list) {
+					System.out.println(wd.getPathFromOrganization());
+				}
+				
+			}
+			
+		});
+		
 	}
 	
 }

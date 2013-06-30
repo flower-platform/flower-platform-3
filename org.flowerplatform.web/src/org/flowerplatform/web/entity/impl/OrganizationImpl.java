@@ -26,6 +26,7 @@ import org.flowerplatform.web.entity.ISecurityEntity;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
+import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.entity.User;
 
 /**
@@ -47,6 +48,7 @@ import org.flowerplatform.web.entity.User;
  *   <li>{@link org.flowerplatform.web.entity.impl.OrganizationImpl#getFilesCount <em>Files Count</em>}</li>
  *   <li>{@link org.flowerplatform.web.entity.impl.OrganizationImpl#getModelsCount <em>Models Count</em>}</li>
  *   <li>{@link org.flowerplatform.web.entity.impl.OrganizationImpl#getDiagramsCount <em>Diagrams Count</em>}</li>
+ *   <li>{@link org.flowerplatform.web.entity.impl.OrganizationImpl#getWorkingDirectories <em>Working Directories</em>}</li>
  * </ul>
  * </p>
  *
@@ -262,6 +264,16 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 	 * @ordered
 	 */
 	protected int diagramsCount = DIAGRAMS_COUNT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getWorkingDirectories() <em>Working Directories</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getWorkingDirectories()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<WorkingDirectory> workingDirectories;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -510,6 +522,18 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<WorkingDirectory> getWorkingDirectories() {
+		if (workingDirectories == null) {
+			workingDirectories = new EObjectWithInverseResolvingEList<WorkingDirectory>(WorkingDirectory.class, this, EntityPackage.ORGANIZATION__WORKING_DIRECTORIES, EntityPackage.WORKING_DIRECTORY__ORGANIZATION);
+		}
+		return workingDirectories;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated NOT
 	 * @author Mariana
 	 */
@@ -547,6 +571,8 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOrganizationUsers()).basicAdd(otherEnd, msgs);
 			case EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS:
 				return ((InternalEList<InternalEObject>)(InternalEList<?>)getSvnRepositoryURLs()).basicAdd(otherEnd, msgs);
+			case EntityPackage.ORGANIZATION__WORKING_DIRECTORIES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getWorkingDirectories()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -565,6 +591,8 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 				return ((InternalEList<?>)getOrganizationUsers()).basicRemove(otherEnd, msgs);
 			case EntityPackage.ORGANIZATION__SVN_REPOSITORY_UR_LS:
 				return ((InternalEList<?>)getSvnRepositoryURLs()).basicRemove(otherEnd, msgs);
+			case EntityPackage.ORGANIZATION__WORKING_DIRECTORIES:
+				return ((InternalEList<?>)getWorkingDirectories()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -601,6 +629,8 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 				return getModelsCount();
 			case EntityPackage.ORGANIZATION__DIAGRAMS_COUNT:
 				return getDiagramsCount();
+			case EntityPackage.ORGANIZATION__WORKING_DIRECTORIES:
+				return getWorkingDirectories();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -653,6 +683,10 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 			case EntityPackage.ORGANIZATION__DIAGRAMS_COUNT:
 				setDiagramsCount((Integer)newValue);
 				return;
+			case EntityPackage.ORGANIZATION__WORKING_DIRECTORIES:
+				getWorkingDirectories().clear();
+				getWorkingDirectories().addAll((Collection<? extends WorkingDirectory>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -701,6 +735,9 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 			case EntityPackage.ORGANIZATION__DIAGRAMS_COUNT:
 				setDiagramsCount(DIAGRAMS_COUNT_EDEFAULT);
 				return;
+			case EntityPackage.ORGANIZATION__WORKING_DIRECTORIES:
+				getWorkingDirectories().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -737,6 +774,8 @@ public class OrganizationImpl extends NamedEntityImpl implements Organization {
 				return modelsCount != MODELS_COUNT_EDEFAULT;
 			case EntityPackage.ORGANIZATION__DIAGRAMS_COUNT:
 				return diagramsCount != DIAGRAMS_COUNT_EDEFAULT;
+			case EntityPackage.ORGANIZATION__WORKING_DIRECTORIES:
+				return workingDirectories != null && !workingDirectories.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

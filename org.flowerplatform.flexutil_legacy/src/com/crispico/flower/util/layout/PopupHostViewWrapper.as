@@ -93,5 +93,17 @@ package com.crispico.flower.util.layout {
 		public function setIcon(value:Object):void
 		{
 		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function displayCloseButton(value:Boolean):void {
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function addToControlBar(value:Object):void {
+		}
 	}
 }

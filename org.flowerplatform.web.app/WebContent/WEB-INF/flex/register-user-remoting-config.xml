@@ -10,7 +10,7 @@
 	        <channel ref="registerUserServiceAmf"/>
 	    </channels>
         <properties>
-            <source>com.crispico.flower.mp.web.security.service.RegisterUserService</source>
+            <source>org.flowerplatform.web.security.service.RegisterUserService</source>
         </properties>
     </destination>
     

@@ -1,11 +1,20 @@
 package org.flowerplatform.web;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.service.GroupService;
 import org.flowerplatform.web.security.service.OrganizationService;
@@ -35,15 +44,20 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	
 	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
 	
-	private FlowerWebProperties flowerWebProperties;
-	
 	private DatabaseManager databaseManager;
+	
+	private Map<String, List<String>> nodeTypeCategoryToNodeTypesMap = new HashMap<String, List<String>>();
+	
+	public Map<String, List<String>> getNodeTypeCategoryToNodeTypesMap() {
+		return nodeTypeCategoryToNodeTypesMap;
+	}
 	
 	public WebPlugin() {
 		super();
 		INSTANCE = this;
 		
-		flowerWebProperties = new FlowerWebProperties();
+		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
+				.getResourceAsStream("META-INF/flower-web.properties"));
 		databaseManager = new DatabaseManager();
 	}
 	
@@ -68,13 +82,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public FlowerWebProperties getFlowerWebProperties() {
-		return flowerWebProperties;
-	}
-
-	/**
-	 * @author Mariana
-	 */
 	public DatabaseManager getDatabaseManager() {
 		return databaseManager;
 	}
@@ -91,6 +98,37 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
 		}
 		SendMailService.getInstance().initializeProperties();
+
+		initExtensionPoint_nodeTypeToCategoriesMapping();
+		
+		CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
+		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());
+	}
+	
+	private void initExtensionPoint_nodeTypeToCategoriesMapping() {
+		// nodeTypeToCategoriesMapping 
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.nodeTypeToCategoriesMapping");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			String nodeType = configurationElement.getAttribute("nodeType");
+			for (IConfigurationElement nodeTypeConfigurationElement : configurationElement.getChildren()) {
+				String nodeTypeCategory = nodeTypeConfigurationElement.getAttribute("nodeTypeCategory");
+				
+				List<String> nodesTypesForCurrentCategoryNodeType = nodeTypeCategoryToNodeTypesMap.get(nodeTypeCategory);
+				if (nodesTypesForCurrentCategoryNodeType == null) {
+					nodesTypesForCurrentCategoryNodeType = new ArrayList<String>();
+					nodeTypeCategoryToNodeTypesMap.put(nodeTypeCategory, nodesTypesForCurrentCategoryNodeType);
+				}
+
+				nodesTypesForCurrentCategoryNodeType.add(nodeType);
+			}				
+		}		
+		
+		if (logger.isDebugEnabled()) {
+			for (Map.Entry<String, List<String>> entry : nodeTypeCategoryToNodeTypesMap.entrySet()) {
+				logger.debug("ExplorerTreeStatefulService: for nodeCategoryType = {}, these are the nodeTypes that have subscribed = {}", entry.getKey(), entry.getValue());
+			}
+		}
+
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

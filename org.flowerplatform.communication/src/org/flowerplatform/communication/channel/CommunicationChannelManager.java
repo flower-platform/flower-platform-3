@@ -128,7 +128,7 @@ public class CommunicationChannelManager {
 				}
 			};
 	
-			communicationChannel.handleReceivedObjectWillStart();
+			communicationChannel.handleReceivedObjectWillStart(object);
 			Object response = null;
 			try {
 				if (principal == null) {
@@ -137,7 +137,7 @@ public class CommunicationChannelManager {
 					Subject.doAsPrivileged(principal.getSubject(), priviledgedAction, null);
 				}
 			} finally {
-				response = communicationChannel.handleReceivedObjectEnded();
+				response = communicationChannel.handleReceivedObjectEnded(object);
 			}
 			return response;
 		} finally {

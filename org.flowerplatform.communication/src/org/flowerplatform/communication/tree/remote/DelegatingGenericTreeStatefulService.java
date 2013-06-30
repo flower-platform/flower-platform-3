@@ -11,6 +11,7 @@ import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
+import org.flowerplatform.communication.tree.INodeByPathRetriever;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.INodePopulator;
 import org.slf4j.Logger;
@@ -20,8 +21,6 @@ public class DelegatingGenericTreeStatefulService extends
 		GenericTreeStatefulService {
 
 	private static Logger logger = LoggerFactory.getLogger(DelegatingGenericTreeStatefulService.class);
-	
-	public static final Object ROOT_NODE_MARKER = DelegatingGenericTreeStatefulService.class;
 	
 	private String statefulClientPrefixId;
 	
@@ -85,16 +84,6 @@ public class DelegatingGenericTreeStatefulService extends
 	}
 
 	@Override
-	public Object getParent(Object node, String nodeType, GenericTreeContext context) {
-		INodeDataProvider provider = nodeDataProviders.get(nodeType);
-		if (provider == null) {
-			logger.error("Tree delegate not found, for method getParent(); node = {}, nodeType = {}", getLabelForLog(node, nodeType), nodeType);
-			return null;
-		}
-		return provider.getParent(node, nodeType, context);
-	}
-
-	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
 		String nodeType = getNodeType(destination);
 		INodeDataProvider provider = nodeDataProviders.get(nodeType);
@@ -111,21 +100,10 @@ public class DelegatingGenericTreeStatefulService extends
 			}
 		}
 		
+		// used for debugging
+//		destination.setLabel("<" + destination.getPathFragment().getType() + "> " + destination.getLabel());
+		
 		return result;
-	}
-
-	@Override
-	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {
-		String nodeType = getNodeType(pathFragment);
-		if (NODE_TYPE_ROOT.equals(nodeType)) {
-			return ROOT_NODE_MARKER;
-		}
-		INodeDataProvider provider = nodeDataProviders.get(nodeType);
-		if (provider == null) {
-			logger.error("Tree delegate not found, for method getNodeByPathFragment(); node = {}, nodeType = {}", getLabelForLog(parent, nodeType), nodeType);
-			return false;
-		}
-		return provider.getNodeByPathFragment(parent, pathFragment, context);
 	}
 
 	@Override
@@ -191,8 +169,8 @@ public class DelegatingGenericTreeStatefulService extends
 		if (fullPath != null && !fullPath.isEmpty()) {
 			String nodeType = fullPath.get(fullPath.size() - 1).getType();
 			INodeDataProvider provider = nodeDataProviders.get(nodeType);
-			if (provider != null) {
-				Object result = provider.getNodeByPath(fullPath, context);
+			if (provider instanceof INodeByPathRetriever) {
+				Object result = ((INodeByPathRetriever) provider).getNodeByPath(fullPath, context);
 				if (result != null) {
 					return result;
 				}

@@ -10,7 +10,7 @@ package org.flowerplatform.flexdiagram.tool {
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
-	import org.flowerplatform.flexdiagram.tool.controller.IDragController;
+	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
 	
 	/**
 	 * @author Cristina Constantinescu

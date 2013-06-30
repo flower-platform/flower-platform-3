@@ -76,19 +76,14 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 * @flowerModelElementId _M-X-5QcIEeK49485S7r3Vw
 	 */
 	@Override
-	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource newlyCreatedEditableResource) throws FileNotFoundException {
-		TextEditableResource er = (TextEditableResource) newlyCreatedEditableResource;
-		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), er.getEditableResourcePath());
-		er.setFile(file);
-		if (!file.exists()) {
-			throw new FileNotFoundException(newlyCreatedEditableResource.getEditableResourcePath());
-		}
-		
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
+		super.loadEditableResource(context, editableResource);
+		TextEditableResource er = (TextEditableResource) editableResource;
 		String content;
 		try {
 			content = FileUtils.readFileToString(er.getFile());
 		} catch (Throwable e) {
-			throw new RuntimeException("Error while loading file content " + file, e);
+			throw new RuntimeException("Error while loading file content " + er.getFile(), e);
 		}
 		
 		er.setFileContent(new StringBuffer(content));

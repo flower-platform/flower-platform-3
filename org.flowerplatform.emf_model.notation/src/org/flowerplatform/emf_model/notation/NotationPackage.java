@@ -60,6 +60,34 @@ public interface NotationPackage extends EPackage {
 	NotationPackage eINSTANCE = org.flowerplatform.emf_model.notation.impl.NotationPackageImpl.init();
 
 	/**
+	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.NotationElementImpl <em>Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.flowerplatform.emf_model.notation.impl.NotationElementImpl
+	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getNotationElement()
+	 * @generated
+	 */
+	int NOTATION_ELEMENT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTATION_ELEMENT__ID = 0;
+
+	/**
+	 * The number of structural features of the '<em>Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTATION_ELEMENT_FEATURE_COUNT = 1;
+
+	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.ViewImpl <em>View</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -67,7 +95,16 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getView()
 	 * @generated
 	 */
-	int VIEW = 0;
+	int VIEW = 1;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIEW__ID = NOTATION_ELEMENT__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -76,7 +113,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__VIEW_TYPE = 0;
+	int VIEW__VIEW_TYPE = NOTATION_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Persistent Children</b></em>' containment reference list.
@@ -85,7 +122,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__PERSISTENT_CHILDREN = 1;
+	int VIEW__PERSISTENT_CHILDREN = NOTATION_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>View Details</b></em>' attribute.
@@ -94,7 +131,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__VIEW_DETAILS = 2;
+	int VIEW__VIEW_DETAILS = NOTATION_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Diagrammable Element</b></em>' reference.
@@ -103,7 +140,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__DIAGRAMMABLE_ELEMENT = 3;
+	int VIEW__DIAGRAMMABLE_ELEMENT = NOTATION_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>View</em>' class.
@@ -112,7 +149,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW_FEATURE_COUNT = 4;
+	int VIEW_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.NodeImpl <em>Node</em>}' class.
@@ -122,7 +159,16 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getNode()
 	 * @generated
 	 */
-	int NODE = 1;
+	int NODE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__ID = VIEW__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -186,7 +232,16 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getDiagram()
 	 * @generated
 	 */
-	int DIAGRAM = 2;
+	int DIAGRAM = 3;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__ID = VIEW__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -250,7 +305,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getLayoutConstraint()
 	 * @generated
 	 */
-	int LAYOUT_CONSTRAINT = 3;
+	int LAYOUT_CONSTRAINT = 4;
 
 	/**
 	 * The number of structural features of the '<em>Layout Constraint</em>' class.
@@ -269,7 +324,16 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getLocation()
 	 * @generated
 	 */
-	int LOCATION = 4;
+	int LOCATION = 5;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION__ID = NOTATION_ELEMENT__ID;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -278,7 +342,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOCATION__X = LAYOUT_CONSTRAINT_FEATURE_COUNT + 0;
+	int LOCATION__X = NOTATION_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Y</b></em>' attribute.
@@ -287,7 +351,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOCATION__Y = LAYOUT_CONSTRAINT_FEATURE_COUNT + 1;
+	int LOCATION__Y = NOTATION_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Location</em>' class.
@@ -296,7 +360,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int LOCATION_FEATURE_COUNT = LAYOUT_CONSTRAINT_FEATURE_COUNT + 2;
+	int LOCATION_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.BoundsImpl <em>Bounds</em>}' class.
@@ -306,7 +370,16 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getBounds()
 	 * @generated
 	 */
-	int BOUNDS = 5;
+	int BOUNDS = 6;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUNDS__ID = LOCATION__ID;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -361,7 +434,16 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getNote()
 	 * @generated
 	 */
-	int NOTE = 6;
+	int NOTE = 7;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTE__ID = NODE__ID;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -426,6 +508,27 @@ public interface NotationPackage extends EPackage {
 	 */
 	int NOTE_FEATURE_COUNT = NODE_FEATURE_COUNT + 1;
 
+
+	/**
+	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.NotationElement <em>Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Element</em>'.
+	 * @see org.flowerplatform.emf_model.notation.NotationElement
+	 * @generated
+	 */
+	EClass getNotationElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.NotationElement#getId <em>Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id</em>'.
+	 * @see org.flowerplatform.emf_model.notation.NotationElement#getId()
+	 * @see #getNotationElement()
+	 * @generated
+	 */
+	EAttribute getNotationElement_Id();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.View <em>View</em>}'.
@@ -640,6 +743,24 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	interface Literals {
+		/**
+		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.NotationElementImpl <em>Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.emf_model.notation.impl.NotationElementImpl
+		 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getNotationElement()
+		 * @generated
+		 */
+		EClass NOTATION_ELEMENT = eINSTANCE.getNotationElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NOTATION_ELEMENT__ID = eINSTANCE.getNotationElement_Id();
+
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.ViewImpl <em>View</em>}' class.
 		 * <!-- begin-user-doc -->

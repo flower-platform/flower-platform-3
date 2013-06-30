@@ -110,6 +110,7 @@
 			 * @flowerModelElementId _SKgX2aWoEeGAT8h2VXeJdg
 			 */
 			public function updateState(editableResource:EditableResource):void {
+				return;
 				this.editableResource = editableResource;	
 				// dirty info
 				saveButton.enabled = editableResource.dirty;

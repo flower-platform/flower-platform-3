@@ -13,6 +13,7 @@
 <stringAttribute key="com.adobe.flexbuilder.debug.ATTR_MOBILE_PLATFORM" value="com.adobe.flexide.multiplatform.android.platform"/>
 <stringAttribute key="com.adobe.flexbuilder.debug.ATTR_PROJECT" value="org.flowerplatform.web.app.mobile"/>
 <stringAttribute key="com.adobe.flexbuilder.debug.ATTR_RUN_URL" value="file:/D:/data/java_work/git_repo_fp/org.flowerplatform.web.mobile/bin/MainMobile-app.xml"/>
+<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_SELECTED_BUILD_TARGET" value=""/>
 <booleanAttribute key="com.adobe.flexbuilder.debug.ATTR_USE_DEFAULT_URLS" value="true"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/org.flowerplatform.web.app.mobile"/>

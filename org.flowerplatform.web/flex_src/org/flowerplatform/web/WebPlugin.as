@@ -1,4 +1,5 @@
 package org.flowerplatform.web {
+	import com.crispico.flower.util.HTMLToolTip;
 	import com.crispico.flower.util.layout.Workbench;
 	
 	import flash.events.MouseEvent;
@@ -6,6 +7,7 @@ package org.flowerplatform.web {
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
+	import mx.managers.ToolTipManager;
 	
 	import spark.components.Button;
 	
@@ -19,7 +21,6 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
-	import org.flowerplatform.web.security.ui.AuthenticationViewProvider;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.PermissionsScreen;
@@ -54,7 +55,6 @@ package org.flowerplatform.web {
 			
 			perspectives.push(new DefaultPerspective());
 			
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new AuthenticationViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());
 		}
 		
@@ -64,12 +64,37 @@ package org.flowerplatform.web {
 			webCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			webCommonPlugin.start();
 			
+			ToolTipManager.showDelay = 0;
+			ToolTipManager.toolTipClass = HTMLToolTip;
+			
 			var hBox:HBox = new HBox();
 			test_addButton("User Form", UserForm, hBox);
 			test_addButton("Users Screen", UsersScreen, hBox);
 			test_addButton("Organizations Screen", OrganizationsScreen, hBox);
 			test_addButton("Groups Screen", GroupsScreen, hBox);
 			test_addButton("Permissions Screen", PermissionsScreen, hBox);
+			
+			var btn:Button = new Button();
+			btn.label = "Logout";
+			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
+			});
+			hBox.addChild(btn);
+			
+			var btn:Button = new Button();
+			btn.label = "Switch";
+			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				WebCommonPlugin.getInstance().authenticationManager.showAuthenticationView(true);
+			});
+			hBox.addChild(btn);
+			
+			btn = new Button();
+			btn.label = "Get Current User";
+			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
+			});
+			hBox.addChild(btn);
+			
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
 			
 			var workbench:Workbench = new Workbench();
@@ -100,7 +125,7 @@ package org.flowerplatform.web {
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-			perspectives[1].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
+			perspectives[0].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
 		}
 		
 		override protected function registerMessageBundle():void {

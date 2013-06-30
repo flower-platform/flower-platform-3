@@ -136,6 +136,10 @@ public class EntityAdapterFactory extends AdapterFactoryImpl {
 				return createDBVersionAdapter();
 			}
 			@Override
+			public Adapter caseWorkingDirectory(WorkingDirectory object) {
+				return createWorkingDirectoryAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -376,6 +380,20 @@ public class EntityAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createDBVersionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.flowerplatform.web.entity.WorkingDirectory <em>Working Directory</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.flowerplatform.web.entity.WorkingDirectory
+	 * @generated
+	 */
+	public Adapter createWorkingDirectoryAdapter() {
 		return null;
 	}
 

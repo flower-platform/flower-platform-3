@@ -3,7 +3,11 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="notation"
     nsURI="http://www.flower-platform.com/xmi/notation_1.0.0" nsPrefix="notation">
-  <eClassifiers xsi:type="ecore:EClass" name="View" abstract="true">
+  <eClassifiers xsi:type="ecore:EClass" name="NotationElement" abstract="true">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"
+        iD="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="View" abstract="true" eSuperTypes="#//NotationElement">
     <eOperations name="getAllChildren" upperBound="-1" eType="#//Node"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewType" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -14,14 +18,14 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="diagrammableElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Node" eSuperTypes="#//View">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="layoutConstraint" eType="#//LayoutConstraint"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="layoutConstraint" eType="#//Bounds"
         containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Diagram" eSuperTypes="#//View">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LayoutConstraint" abstract="true"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Location" eSuperTypes="#//LayoutConstraint">
+  <eClassifiers xsi:type="ecore:EClass" name="Location" eSuperTypes="#//NotationElement #//LayoutConstraint">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="x" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="y" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>

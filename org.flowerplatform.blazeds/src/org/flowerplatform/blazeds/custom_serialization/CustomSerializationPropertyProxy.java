@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,11 +35,21 @@ public class CustomSerializationPropertyProxy extends BeanProxy {
 		setIncludeReadOnly(true);
 	}
 
-//	protected abstract String getIdProperty();
-//	
-//	protected abstract Object getIdForObject(Object object); 
-//	
-//	protected abstract AbstractReferenceHolder createReferenceHolder();
+	protected String getIdProperty() {
+		return "id";
+	}
+
+	protected Object getIdForObject(Object object) {
+		if (!(object instanceof EObject)) {
+			throw new IllegalArgumentException(String.format("Trying to obtain an id for a class that's not EObject; class = %s, object = %s", object.getClass(), object));
+		}
+		EObject eObject = (EObject) object;
+		return eObject.eResource().getURIFragment(eObject);
+	}
+
+	protected ReferenceHolder createReferenceHolder() {
+		return new ReferenceHolder();
+	}
 	
 	@SuppressWarnings({ "rawtypes" })
 	@Override
@@ -49,11 +60,11 @@ public class CustomSerializationPropertyProxy extends BeanProxy {
 	@Override
 	public Object getValue(Object instance, String propertyName) {
 		try {
-//			if (getIdProperty().equals(propertyName)) {
-//				return getIdForObject(instance);
-//			} else if (propertyName.endsWith(REFERENCE_HOLDER_SUFFIX)) {
-//				return convertToReferenceHolder(instance, propertyName);
-//			} else
+			if (getIdProperty().equals(propertyName)) {
+				return getIdForObject(instance);
+			} else if (propertyName.endsWith(REFERENCE_HOLDER_SUFFIX)) {
+				return convertToReferenceHolder(instance, propertyName);
+			} else
 				return super.getValue(instance, propertyName);
 		} catch (Throwable e) {
 			logger.error(String.format("Exception caught while serializing property = %s for TransferableObject = %s", propertyName, instance), e);
@@ -70,30 +81,30 @@ public class CustomSerializationPropertyProxy extends BeanProxy {
 		}
 	}
 
-//	protected Object convertToReferenceHolder(Object o, String propertyName) {
-//		if (o == null) {
-//			return null;
-//		}
-//		String realPropertyName = propertyName.replaceFirst(REFERENCE_HOLDER_SUFFIX, "");
-//		Object referencedObject = super.getValue(o, realPropertyName);
-//
-//		if (referencedObject == null)
-//			return null;
-//		else if (referencedObject instanceof Collection<?>) {
-//			Collection<?> src = (Collection<?>) referencedObject;
-//			List<AbstractReferenceHolder> list = new ArrayList<AbstractReferenceHolder>(src.size());
-//			for (Object crt : src) {
-//				AbstractReferenceHolder ref = createReferenceHolder();
-//				ref.setReferenceId(getIdForObject(crt));
-//				list.add(ref);
-//			}
-//			return list;
-//		} else {
-//			AbstractReferenceHolder ref = createReferenceHolder();
-//			ref.setReferenceId(getIdForObject(referencedObject));
-//			return ref;
-//		}
-//	}
+	protected Object convertToReferenceHolder(Object o, String propertyName) {
+		if (o == null) {
+			return null;
+		}
+		String realPropertyName = propertyName.replaceFirst(REFERENCE_HOLDER_SUFFIX, "");
+		Object referencedObject = super.getValue(o, realPropertyName);
+
+		if (referencedObject == null)
+			return null;
+		else if (referencedObject instanceof Collection<?>) {
+			Collection<?> src = (Collection<?>) referencedObject;
+			List<ReferenceHolder> list = new ArrayList<ReferenceHolder>(src.size());
+			for (Object crt : src) {
+				ReferenceHolder ref = createReferenceHolder();
+				ref.setReferenceId(getIdForObject(crt));
+				list.add(ref);
+			}
+			return list;
+		} else {
+			ReferenceHolder ref = createReferenceHolder();
+			ref.setReferenceId(getIdForObject(referencedObject));
+			return ref;
+		}
+	}
 
 
 }

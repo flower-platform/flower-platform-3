@@ -41,12 +41,12 @@ import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.web.FlowerWebProperties.AddProperty;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.explorer.RootChildrenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

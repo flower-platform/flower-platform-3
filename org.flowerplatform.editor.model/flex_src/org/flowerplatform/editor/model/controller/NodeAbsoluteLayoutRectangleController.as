@@ -1,6 +1,7 @@
 package org.flowerplatform.editor.model.controller {
 	import flash.geom.Rectangle;
 	
+	import org.flowerplatform.communication.transferable_object.ReferenceHolder;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -16,7 +17,7 @@ package org.flowerplatform.editor.model.controller {
 		}
 		
 		public function getBounds(model:Object):Rectangle {
-			var bounds:Bounds = Bounds(Node(model).layoutConstraint);
+			var bounds:Bounds = Bounds(ReferenceHolder(Node(model).layoutConstraint_RH).referencedObject);
 			return new Rectangle(bounds.x, bounds.y, bounds.width, bounds.height);
 		}
 		

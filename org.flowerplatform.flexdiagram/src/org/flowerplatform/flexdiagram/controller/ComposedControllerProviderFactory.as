@@ -5,7 +5,7 @@ package org.flowerplatform.flexdiagram.controller {
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
-	import org.flowerplatform.flexdiagram.tool.controller.IDragController;
+	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
 	import org.flowerplatform.flexdiagram.tool.controller.IDragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	import org.flowerplatform.flexdiagram.tool.controller.IResizeController;

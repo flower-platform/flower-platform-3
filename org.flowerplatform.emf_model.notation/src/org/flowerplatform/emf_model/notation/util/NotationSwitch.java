@@ -70,9 +70,16 @@ public class NotationSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
+			case NotationPackage.NOTATION_ELEMENT: {
+				NotationElement notationElement = (NotationElement)theEObject;
+				T result = caseNotationElement(notationElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case NotationPackage.VIEW: {
 				View view = (View)theEObject;
 				T result = caseView(view);
+				if (result == null) result = caseNotationElement(view);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -80,6 +87,7 @@ public class NotationSwitch<T> extends Switch<T> {
 				Node node = (Node)theEObject;
 				T result = caseNode(node);
 				if (result == null) result = caseView(node);
+				if (result == null) result = caseNotationElement(node);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -87,6 +95,7 @@ public class NotationSwitch<T> extends Switch<T> {
 				Diagram diagram = (Diagram)theEObject;
 				T result = caseDiagram(diagram);
 				if (result == null) result = caseView(diagram);
+				if (result == null) result = caseNotationElement(diagram);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -99,6 +108,7 @@ public class NotationSwitch<T> extends Switch<T> {
 			case NotationPackage.LOCATION: {
 				Location location = (Location)theEObject;
 				T result = caseLocation(location);
+				if (result == null) result = caseNotationElement(location);
 				if (result == null) result = caseLayoutConstraint(location);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -107,6 +117,7 @@ public class NotationSwitch<T> extends Switch<T> {
 				Bounds bounds = (Bounds)theEObject;
 				T result = caseBounds(bounds);
 				if (result == null) result = caseLocation(bounds);
+				if (result == null) result = caseNotationElement(bounds);
 				if (result == null) result = caseLayoutConstraint(bounds);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -116,11 +127,27 @@ public class NotationSwitch<T> extends Switch<T> {
 				T result = caseNote(note);
 				if (result == null) result = caseNode(note);
 				if (result == null) result = caseView(note);
+				if (result == null) result = caseNotationElement(note);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			default: return defaultCase(theEObject);
 		}
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseNotationElement(NotationElement object) {
+		return null;
 	}
 
 	/**

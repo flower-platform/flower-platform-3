@@ -25,6 +25,7 @@ package org.flowerplatform.communication {
 	import org.flowerplatform.communication.stateful_service.InvokeStatefulClientMethodClientCommand;
 	import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
+	import org.flowerplatform.communication.transferable_object.ReferenceHolder;
 	import org.flowerplatform.communication.tree.GenericTreeList;
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClientLocalState;
@@ -69,6 +70,7 @@ package org.flowerplatform.communication {
 			registerClassAliasFromAnnotation(ServerSnapshotClientCommand);
 			registerClassAliasFromAnnotation(HelloServerCommand);
 			registerClassAliasFromAnnotation(WelcomeClientCommand);
+			registerClassAliasFromAnnotation(ReferenceHolder);
 			
 			registerClassAliasFromAnnotation(GenericTreeStatefulClientLocalState);
 			registerClassAliasFromAnnotation(TreeNode);
@@ -91,24 +93,6 @@ package org.flowerplatform.communication {
 			
 			bridge = new BlazeDSBridge();
 			bridge.addEventListener(BridgeEvent.OBJECT_RECEIVED, handleReceivedObject);
-//			bridge.connect(); 
-//			bridge.addEventListener(BridgeEvent.CONNECTED, function (event:BridgeEvent):void {
-////				var tree:ProjectExplorerTreeNew = new ProjectExplorerTreeNew();
-////				IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(tree);
-//				var treeList:GenericTreeList = new GenericTreeList();
-//				var statefulClient:GenericTreeStatefulClient = new GenericTreeStatefulClient();
-//				
-//				treeList.dispatchEnabled = true;
-//				treeList.statefulClient = statefulClient;
-//				IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(treeList);
-//				
-//				statefulClient.statefulServiceId = "ProjectExplorerTreeStatefulService";
-//				statefulClient.clientIdPrefix = "Project Explorer";
-//				statefulClient.treeList = treeList;
-//				
-//				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
-//
-//			});
 		}
 
 		override protected function registerMessageBundle():void {

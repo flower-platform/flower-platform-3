@@ -1,7 +1,9 @@
 package com.crispico.flower.util.popup {
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	
-	import mx.core.IVisualElement;
+	import flash.display.DisplayObject;
+	
+	import mx.containers.ControlBar;
 	
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
@@ -66,6 +68,31 @@ package com.crispico.flower.util.popup {
 		
 		public function setLabel(value:String):void {
 			title = value;
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function displayCloseButton(value:Boolean):void {
+			showCloseButton = value;
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function addToControlBar(value:Object):void {
+			if (controlBar == null) {
+				controlBar = new ControlBar();
+				controlBar.document = this;
+				controlBar.enabled = true;
+				
+				var cBar:ControlBar = ControlBar(controlBar);
+				cBar.setStyle("horizontalAlign", "center");
+				cBar.setStyle("verticalAlign", "middle");
+				addChild(cBar);
+			}
+			
+			ControlBar(controlBar).addChild(DisplayObject(value));
 		}
 		
 	}

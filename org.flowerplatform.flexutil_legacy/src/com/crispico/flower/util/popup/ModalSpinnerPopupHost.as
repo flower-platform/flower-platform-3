@@ -28,5 +28,19 @@ package com.crispico.flower.util.popup {
 			// doesn't support this			
 		}
 		
+		/**
+		 * @author Mariana
+		 */
+		public function displayCloseButton(value:Boolean):void {
+			// doesn't support this	
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function addToControlBar(value:Object):void {
+			// doesn't support this	
+		}
+		
 	}
 }

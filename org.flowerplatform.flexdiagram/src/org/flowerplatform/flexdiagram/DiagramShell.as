@@ -267,7 +267,17 @@ package org.flowerplatform.flexdiagram {
 			}
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 * @author Cristian Spiescu
+		 */
 		private function selectionChangeHandler(event:CollectionEvent):void {
+			if (event.kind == CollectionEventKind.RESET) {
+				// we don't need to react to this, because our overriden list (ParentAwareArrayList) dispatches
+				// a removed event for all children. I.e. this method will be called shortly after, for each
+				// element that was previously there
+				return;
+			}
 			var model:Object = event.items[0];
 			var selectionController:ISelectionController = getControllerProvider(model).getSelectionController(model);
 			

@@ -21,7 +21,10 @@ package org.flowerplatform.flexutil.popup {
 				}
 				actionsInMap.push(action);
 			}
-			actionsInMap = parentActionIdToActions[rootActionId];			
+			actionsInMap = parentActionIdToActions[rootActionId];	
+			if (actionsInMap == null) {
+				return;
+			}
 			
 			for (i = 0; i < actionsInMap.length; i++) {
 				action = actionsInMap[i];

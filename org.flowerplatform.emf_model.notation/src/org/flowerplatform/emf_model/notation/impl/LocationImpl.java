@@ -29,7 +29,7 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
  *
  * @generated
  */
-public class LocationImpl extends LayoutConstraintImpl implements Location {
+public class LocationImpl extends NotationElementImpl implements Location {
 	/**
 	 * The default value of the '{@link #getX() <em>X</em>}' attribute.
 	 * <!-- begin-user-doc -->

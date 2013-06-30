@@ -24,6 +24,7 @@ import org.flowerplatform.communication.stateful_service.StatefulService;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
+import org.flowerplatform.communication.tree.INodeByPathRetriever;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.NodeInfo;
 import org.flowerplatform.communication.tree.NodeInfoClient;
@@ -32,32 +33,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service used to provide functionality for generic trees.
+ * Service used to provide functionality for generic dispatched trees -> shows and updates tree data by dispatching notifications to 
+ * a list of subscribed clients.
  * 
- * <p>
- * There are 3 different types of trees:
- * <ul>
- * 	<li> non-dispatched trees (simple trees) -> only shows tree data
- * 	<li> dispatched trees -> shows and updates tree data by dispatching notifications to 
- * 		a list of subscribed clients
- * 	<li> partial dispatched trees -> only a limited number of tree nodes are dispatched;
- * 		if a node is dispatched, all its upper structure must be also in dispatched mode.
- * </ul>
- * 
- * To provide functionality for a non-dispatched tree, the following methods must be implemented:
- * <ul>
- * 	<li> {@link #populateTreeNode()}
- * 	<li> {@link #getPathFragmentForNode()}
- * 	<li> {@link #getNodeByPathFragment()}
- * 	<li> {@link #getChildrenForNode()}
- * 	<li> {@link #getParent()}
- * </ul>
- * 
- * To provide functionality for a dispatched/partial dispatched tree, the following methods must be implemented
- * in addition to the list mentioned above:
- * <ul>
- * 	<li> {@link #isDispatchEnabled()()} 
- * </ul>
  * Also, a service for dispatched trees is responsible to listen for label/content updates
  * and to call {@link #dispatchLabelUpdate()}/{@link #dispatchContentUpdate()}.
  * 
@@ -82,7 +60,9 @@ import org.slf4j.LoggerFactory;
  * 
  * @flowerModelElementId _qwPpwA7rEeKbvNML8mcTuA
  */
-public abstract class GenericTreeStatefulService extends StatefulService implements INodeInfoStatefulServiceMXBean, IChildrenProvider, INodeDataProvider {
+public abstract class GenericTreeStatefulService extends StatefulService implements INodeInfoStatefulServiceMXBean, IChildrenProvider, INodeDataProvider, INodeByPathRetriever {
+	
+	public final static Object ROOT_NODE_MARKER = GenericTreeStatefulService.class;
 	
 	public final static String NODE_TYPE_ROOT = "r";
 	
@@ -101,6 +81,11 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 */
 	private static final String SELECT_NODE_KEY = "selectNode";
 	
+	/**
+	 * Useful, for trees that want to display a subset of a bigger tree, with data
+	 * taken in "one-shot". E.g. some GIT tree that displays only a part of what
+	 * is already displayed in the explorer tree. 
+	 */
 	public static final String DONT_UPDATE_MAP_KEY = "dontUpdateMap";	
 	
 	/**
@@ -108,7 +93,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * Adding this key to <code>context</code> will retrieve the node's 
 	 * path by going up the {@link NodeInfo} hierarchy, instead of using
 	 * {@link #getParent(Object)}. Should be used when the node was deleted
-	 * to ensure that it will be removed from {@link #openNodes} map, for
+	 * to ensure that it will be removed from {@link #visibleNodes} map, for
 	 * example, if deleting model files.
 	 * 
 	 * @see #dispatchExpandedUpdate(Object, CommunicationChannel, boolean)
@@ -118,18 +103,6 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * @flowerModelElementId _PlC_0AIeEeKqVJdl4mrwww
 	 */
 	private static final String GO_UP_ON_NODE_INFO_KEY = "goUpOnNodeInfo";
-	
-	/**
-	 * This key will be used in the getNodeByPath method. 
-	 * If the context parameter will have this key set, then the node
-	 * will be search only by using the rootNodeInfo and the pathFragments 
-	 * making no use for the stored tree structure 
-	 * 
-	 * @see #getNodeByPath(List, Map)
-	 * @see ProjectExplorerTreeService#getNodeByPath(List, Map)
-	 * @flowerModelElementId _yYoOAAh1EeKBk5gFLRykjQ
-	 */
-	public static final String GO_DOWN_ON_PATH_FRAGMENT_KEY = "goDownOnPathFragment";
 	
 	/**
 	 * Notifications will only be dispatched to the client with {@link CommunicationChannel#getClientId()}
@@ -144,7 +117,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	/**
 	 * @flowerModelElementId _3pTm4A7rEeKbvNML8mcTuA
 	 */
-	protected Map<Object, NodeInfo> openNodes = new ConcurrentHashMap<Object, NodeInfo>();
+	protected Map<Object, NodeInfo> visibleNodes = new ConcurrentHashMap<Object, NodeInfo>();
 	
 	/**
 	 * Holds the tree structure of all displayed nodes on clients (opened or not).
@@ -184,7 +157,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	public String printNodeInfos() {
 		StringBuffer sb = new StringBuffer();
 		
-		for (NodeInfo node : openNodes.values()) {			
+		for (NodeInfo node : visibleNodes.values()) {			
 			sb.append(node).append("\n");
 			for (NodeInfoClient client : node.getClients()) {
 				sb.append("  ").append(client).append("\n");
@@ -236,7 +209,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		Map<String, CommunicationChannelAndNodeInfos> map = new HashMap<String, CommunicationChannelAndNodeInfos>();
 				
 		// build the inverse hierarchy
-		for (NodeInfo node : openNodes.values()) {	
+		for (NodeInfo node : visibleNodes.values()) {	
 			for (NodeInfoClient client : node.getClients()) {
 				// execute if no filter or if filter matches
 				if (webCommunicationChannelIdFilter == null || webCommunicationChannelIdFilter.equals(client.getCommunicationChannel().getId())) {
@@ -265,7 +238,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	
 	public Collection<String> getStatefulClientIdsForCommunicationChannel(CommunicationChannel communicationChannel) {
 		List<String> ids = new ArrayList<String>();
-		for (NodeInfo nodeInfo : openNodes.values()) {		
+		for (NodeInfo nodeInfo : visibleNodes.values()) {		
 			for (NodeInfoClient clientInfo : nodeInfo.getClients()) {
 				if (clientInfo.getCommunicationChannel().equals(communicationChannel) && !ids.contains(clientInfo.getStatefulClientId(this))) {				
 					ids.add(clientInfo.getStatefulClientId(this));
@@ -279,7 +252,17 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	// Normal methods
 	///////////////////////////////////////////////////////////////
 
+	public GenericTreeStatefulService() {
+		super();
+		rootNodeInfo = new NodeInfo();
+		rootNodeInfo.setNode(ROOT_NODE_MARKER);
+		visibleNodes.put(ROOT_NODE_MARKER, rootNodeInfo);				
+	}
 	
+	public Map<Object, NodeInfo> getVisibleNodes() {
+		return visibleNodes;
+	}
+
 	/**
 	 * Subclasses that implement this method must provide 
 	 * a list of children for given node. If the parameter
@@ -308,14 +291,6 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	public abstract Boolean nodeHasChildren(Object node, TreeNode treeNode, GenericTreeContext context);
 
 	/**
-	 * Subclasses that implement this method must provide 
-	 * a parent for given node.	
-	 *  
-	 * @flowerModelElementId _NxVukJ9aEeGYPK0E1LmMXw
-	 */
-	public abstract Object getParent(Object node, String nodeType, GenericTreeContext context);
-
-	/**
 	 * Subclasses that implement this method must 
 	 * populate the <code>destination</code> tree node with
 	 * information stored in <code>source</code>.
@@ -336,14 +311,6 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * how to handle the call). 
 	 */
 	public abstract boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context);
-
-	/**
-	 * Subclasses that implement this method must provide 
-	 * a node for given {@link PathFragment}.
-	 * 	
-	 * @flowerModelElementId _i-hGwKD2EeG5ENNne79MAQ
-	 */
-	public abstract Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context);
 
 	/**
 	 * Subclasses that implement this method must provide 
@@ -376,50 +343,28 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) {		
 		NodeInfo nodeInfo;
 		NodeInfo parentInfo;		
-		if (isDispatchEnabled(null) && rootNodeInfo != null) {
-			// get the root node
-			nodeInfo = rootNodeInfo;
-		} else {
-			// create a dummy root node
-			nodeInfo = new NodeInfo();
-			nodeInfo.setParent(null);
-			nodeInfo.setNode(getNodeByPathFragment(null, null, context));
-		}
+
+		// get the root node
+		nodeInfo = rootNodeInfo;
+		
 		if (fullPath != null) {
 			for (PathFragment pathFragment : fullPath) {
 				// hold the parent
 				parentInfo = nodeInfo;
 				// this will be filled if node found
 				nodeInfo = null;
-				// if in the call context for this method there is no special
-				// requirement for taking the node in real time by using only its
-				// pathFragment and if node dispatched we first try to search in 
-				// the stored tree structure
-				if (context != null && !context.containsKey(GO_DOWN_ON_PATH_FRAGMENT_KEY) && parentInfo != null && isDispatchEnabled(parentInfo.getNode())) {							
-					for (NodeInfo child : parentInfo.getChildren()) {		
-						if (child.getPathFragment().getName().equals(pathFragment.getName()) && 
-							child.getPathFragment().getType().equals(pathFragment.getType())) {
-							nodeInfo = child;
-							break;
-						}
-					}				
-				}
-				// if special requirement for taking the node in real time by using only its
-				// pathFragment or not dispatched or not found in tree structure
-				if (nodeInfo == null) {
-					// get node from fragment and create a dummy nodeInfo
-					// to be used in next iteration
-					Object node = getNodeByPathFragment(parentInfo.getNode(), pathFragment, context);
-					
-					// There was a problem with the given path because no node is uniquely identify by it
-					if (node == null)
-						return null;
-					else {
-						// create a dummy nodeInfo
-						nodeInfo = new NodeInfo();
-						nodeInfo.setParent(parentInfo);
-						nodeInfo.setNode(node);
+
+				for (NodeInfo child : parentInfo.getChildren()) {		
+					if (child.getPathFragment().getName().equals(pathFragment.getName()) && 
+						child.getPathFragment().getType().equals(pathFragment.getType())) {
+						
+						nodeInfo = child;
+						break;
 					}
+				}	
+				
+				if (nodeInfo == null) {
+					return null;
 				}
 			}
 		}
@@ -468,24 +413,6 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	}
 	
 	/**
-	 * Should return <code>true</code> if the service provides functionality
-	 * for a dispatched tree. <br>
-	 * By default, returns <code>false</code> (functionality for simple tree).
-	 * <p>
-	 * If a node is provided, then it should return whether or not
-	 * the given node will be seen as dispatched. <br>
-	 * This is the case of a "partial dispatched tree":
-	 * some nodes are dispatched, but not all.
-	 * <p>
-	 * Note: all the above structure of a dispatched node must be in dispatched mode
-	 * (the parents must be seen as dispatched nodes) in order to work properly.
-	 * @flowerModelElementId _NcjBsKTpEeGJQ4vD1xX4gA
-	 */
-	protected boolean isDispatchEnabled(Object node) {
-		return false;
-	}
-
-	/**
 	 * Factory method returning the instance of tree node used.
 	 * 
 	 * @see #openNode()
@@ -509,6 +436,9 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		// create and populate the children list
 		for (Pair<Object, String> pair : getChildrenForNode(node, treeNode, context)) {
 			Object child = pair.a;
+			
+			addNodeInfo(channel, statefulClientId, node, child, pair.b, context);
+			
 			TreeNode childNode = createTreeNode();
 			childNode.setPathFragment(new PathFragment(null, pair.b));
 			populateTreeNodeInternal(child, childNode, context);	
@@ -519,73 +449,47 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 				childNode.setChildren(new ArrayList<TreeNode>());
 				populateChildren(channel, statefulClientId, child, childNode, context, recurse);
 			}
-			
-			// for dispatched trees, update the server tree structure
-			if (isDispatchEnabled(child)) {	
-				boolean updateMap = true;
-				if (context.get(DONT_UPDATE_MAP_KEY) != null) {
-					updateMap = !((Boolean) context.get(DONT_UPDATE_MAP_KEY)).booleanValue();
-				}
-				if (updateMap) {
-					addNodeInfo(channel, statefulClientId, child, getNodeType(childNode), false, false, context);
-				}
-			}
 		}		
 	}
 	
 	/**
-	 * Adds node information to tree structure and 
-	 * updates the {@link #openNodes} map if requested.
+	 * Adds NodeInfo in map + in the parent's NodeInfo.children.
+	 * 
 	 * <p>
 	 * At the end, subscribe the given channel and clientId to node.
 	 * 
 	 * @flowerModelElementId _G-7_NKr2EeG3eZ1Jezjhtw
 	 */
-	private void addNodeInfo(CommunicationChannel channel, String statefulClientId, Object node, String nodeType, boolean isRoot, boolean addInOpenNodes, GenericTreeContext context) {
-		NodeInfo nodeInfo = openNodes.get(node);
+	private void addNodeInfo(CommunicationChannel channel, String statefulClientId, Object parent, Object node, String nodeType, GenericTreeContext context) {
+		boolean updateMap = true;
+		if (context.get(DONT_UPDATE_MAP_KEY) != null) {
+			updateMap = !((Boolean) context.get(DONT_UPDATE_MAP_KEY)).booleanValue();
+		}
+		if (!updateMap) {
+			return;
+		}
+		
+		NodeInfo nodeInfo = visibleNodes.get(node);
 		if (nodeInfo == null) {	
+			// the node was not yet visible to the client
 			namedLockPool.lock(node);	
 			try {
-				if (isRoot) { // must create the root node
-					logger.trace("Root node never opened; adding it to structure & map");				
-					// if root node, create one, don't add it to open nodes					
-					rootNodeInfo = new NodeInfo();
-					rootNodeInfo.setNode(node);					
-					nodeInfo = rootNodeInfo;
-					openNodes.put(node, nodeInfo);				
-				} else { // not opened
-					// get parent open node
-					Object parent = getParent(node, nodeType, context);
-					if (parent == null) { // this shouldn't happen
-						throw new RuntimeException("Parent node not found for node " + getLabelForLog(node, nodeType));
-					}
-					NodeInfo parentInfo = openNodes.get(parent); // parent must be opened
-					if (parentInfo == null) {
-						logger.debug("Parent info for {} was already closed!", parent);
-						return;
-					}
-					// search node info in list of parent's children
-					for (NodeInfo childInfo : parentInfo.getChildren()) {
-						if (childInfo.getNode().equals(node)) {
-							nodeInfo = childInfo;
-							break;
-						}
-					}
-					if (nodeInfo == null) { // not found in parent, add it
-						logger.trace("Node {} never added in structure; adding it", getLabelForLog(node, nodeType));	
-						// create new open node entry and populate it
-						nodeInfo = new NodeInfo();
-						nodeInfo.setNode(node);
-						nodeInfo.setParent(parentInfo);
-						nodeInfo.setPathFragment(getPathFragmentForNode(node, nodeType, context));					
-						// add node to tree
-						parentInfo.getChildren().add(nodeInfo);	
-					}
-					if (addInOpenNodes) { // add node to map
-						logger.trace("Node {} added to openNodes", getLabelForLog(node, nodeType));	
-						openNodes.put(node, nodeInfo);
-					}
+				// get parent open node
+				NodeInfo parentInfo = visibleNodes.get(parent); // parent must be opened
+				if (parentInfo == null) {
+					logger.error("Parent info for {} was already closed!", parent);
+					return;
 				}
+
+				// create new open node entry and populate it
+				nodeInfo = new NodeInfo();
+				nodeInfo.setNode(node);
+				nodeInfo.setParent(parentInfo);
+				nodeInfo.setPathFragment(getPathFragmentForNode(node, nodeType, context));					
+				
+				parentInfo.getChildren().add(nodeInfo);	
+				visibleNodes.put(node, nodeInfo);
+				logger.trace("Node {} added to openNodes", getLabelForLog(node, nodeType));	
 			} finally {
 				namedLockPool.unlock(node);
 			}
@@ -619,17 +523,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * @flowerModelElementId _KIZOsJF0EeGZxtPbjaCZxw
 	 */
 	public void dispatchLabelUpdate(Object node, String nodeType) {
-		NodeInfo nodeInfo = openNodes.get(node); // check if opened
-		if (nodeInfo == null) { // not found, check if parent is opened and gets its info
-			// check if parent is opened
-			Object parent = getParent(node, nodeType, null);
-			if (parent == null) {
-				// this shouldn't normally happen, because the root node is not visible
-				// so a label update doesn't make sense
-				return;
-			}
-			nodeInfo = openNodes.get(parent);
-		}		
+		NodeInfo nodeInfo = visibleNodes.get(node); // check if opened
 		if (nodeInfo != null) {
 			for (NodeInfoClient nodeClient : nodeInfo.getClients()) {	
 				dispatchLabelUpdateForClient(node, nodeInfo, nodeClient);
@@ -675,7 +569,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * @flowerModelElementId _GlGHEJF0EeGZxtPbjaCZxw
 	 */
 	public void dispatchContentUpdate(Object node) {
-		NodeInfo nodeInfo = openNodes.get(node);
+		NodeInfo nodeInfo = visibleNodes.get(node);
 		if (nodeInfo == null) { // not opened, return
 			return;
 		}		
@@ -694,7 +588,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	protected void dispatchContentUpdateForClient(Object node, NodeInfoClient nodeClient) {	
 		GenericTreeContext context = getTreeContext(nodeClient.getCommunicationChannel(), nodeClient.getStatefulClientId(this));
 		
-		NodeInfo nodeInfo = openNodes.get(node);
+		NodeInfo nodeInfo = visibleNodes.get(node);
 		// cleanup map if unavailable nodes
 		List<NodeInfo> openChildren = nodeInfo.getChildren();
 
@@ -721,7 +615,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 
 		// cleanup old nodes
 		for (NodeInfo oldChild : oldNodes.values()) {
-			cleanupAfterNodeClosed(oldChild, oldChild.getPathFragment().getType(), nodeClient.getStatefulClientId(this), nodeClient.getCommunicationChannel(), null);
+			cleanupAfterNodeClosed(oldChild, oldChild.getPathFragment().getType(), nodeClient.getStatefulClientId(this), nodeClient.getCommunicationChannel(), null, true);
 		}
 
 		List<PathFragment> path = getPathForNode(node, nodeInfo.getPathFragment().getType(), context);
@@ -748,7 +642,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * @flowerModelElementId _js9gMP0DEeGZPtPdwyatgg
 	 */
 	public void dispatchExpandedUpdate(Object node, CommunicationChannel client, boolean expandNode) {
-		NodeInfo nodeInfo = openNodes.get(node);
+		NodeInfo nodeInfo = visibleNodes.get(node);
 		if (nodeInfo == null) {
 			return;
 		}
@@ -770,7 +664,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		populateTreeNodeInternal(node, treeNode, treeContext);
 	
 		Map<Object, Object> context = new HashMap<Object, Object>();
-		// adding this key will ensure that the correct path will be found using the NodeInfo hierarchy
+		// adding this key will ensure that the correct path will be found using the NodeInfo2 hierarchy
 		context.put(GO_UP_ON_NODE_INFO_KEY, true);		
 		treeContext.setClientContext(context);
 		
@@ -805,7 +699,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	}
 
 	/**
-	 * Cleans up the {@link #openNodes} and {@link #rootNodeInfo}.
+	 * Cleans up the {@link #visibleNodes} and {@link #rootNodeInfo}.
 	 * <p>
 	 * Removes the given client form list of subscribed clients. <br>
 	 * After that, verifies if the node has multiple subscribed clients.
@@ -823,29 +717,20 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * 
 	 * @flowerModelElementId _p0v2QJF1EeGZxtPbjaCZxw
 	 */
-	protected void cleanupAfterNodeClosed(Object node, String nodeType, String statefulClientId, CommunicationChannel channel, RunnableWithParam<Void, NodeInfo> removeNodeInfoRunnable) {
+	protected void cleanupAfterNodeClosed(Object node, String nodeType, String statefulClientId, CommunicationChannel channel, RunnableWithParam<Void, NodeInfo> removeNodeInfoRunnable, final boolean removeFromMapAndParentAndUnsubscribe) {
 		if (logger.isTraceEnabled()) {
 			logger.trace("Cleanup node {} to client [{} with statefulClientId={}]", new Object[] { getLabelForLog(node, nodeType), channel, statefulClientId });			
 		}
-		
-		if (removeNodeInfoRunnable == null) {
-			removeNodeInfoRunnable = new RunnableWithParam<Void, NodeInfo>() {				
-				public Void run(NodeInfo nodeInfo) {
-					logger.debug("Removing node from openNodes {}", nodeInfo);
-					openNodes.remove(nodeInfo.getNode());					
-					return null;
-				}
-			};
-		}		
-		NodeInfo nodeInfo = (NodeInfo) ((node instanceof NodeInfo) ? node : openNodes.get(node));
+
+		NodeInfo nodeInfo = (NodeInfo) ((node instanceof NodeInfo) ? node : visibleNodes.get(node));
 		if (nodeInfo == null) {
 			if (rootNodeInfo.getNode().equals(node)) {
 				nodeInfo = rootNodeInfo;
 			} else {
 				// CS: cf. remarca mm
 				return;
-//				NodeInfo parentNodeInfo = openNodes.get(getParent(node, getTreeContext(channel,statefulClientId)));
-//				for (NodeInfo child : parentNodeInfo.getChildren()) {
+//				NodeInfo2 parentNodeInfo = openNodes.get(getParent(node, getTreeContext(channel,statefulClientId)));
+//				for (NodeInfo2 child : parentNodeInfo.getChildren()) {
 //					if (node.equals(child.getNode())) {
 //						nodeInfo = child;
 //						break;
@@ -853,7 +738,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 //				}
 			}
 		}		
-		if (openNodes.containsKey(nodeInfo.getNode())) { // open node
+		if (visibleNodes.containsKey(nodeInfo.getNode())) { // open node
 			for (final Iterator<NodeInfo> it = nodeInfo.getChildren().iterator(); it.hasNext();) {	
 				NodeInfo childInfo = it.next();			
 				NodeInfoClient childNodeInfoClient = childInfo.getNodeInfoClientByCommunicationChannelThreadSafe(channel, statefulClientId, this);
@@ -861,12 +746,12 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 					cleanupAfterNodeClosed(childInfo, childInfo.getPathFragment().getType(), statefulClientId, channel, new RunnableWithParam<Void, NodeInfo>() {
 						
 						public Void run(NodeInfo nodeInfo) {
-							logger.debug("Removing node from openNodes & rootNode {}", nodeInfo);
-							openNodes.remove(nodeInfo.getNode());							
+							logger.debug("Removing node from visibleNodes & parent node {}", nodeInfo);
+							visibleNodes.remove(nodeInfo.getNode());							
 							it.remove();
 							return null;
 						}
-					});		
+					}, true);		
 				}
 			}
 		}
@@ -874,7 +759,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		boolean removeOpenNode = false;
 		if (channel == null) { // no channel, no open node, mark to be deleted
 			removeOpenNode = true;			
-		} else {
+		} else if (removeFromMapAndParentAndUnsubscribe) {
 			if (nodeInfo.equals(rootNodeInfo)) {
 				for (Iterator<TreeInfoClient> iter = treeContexts.keySet().iterator(); iter.hasNext(); ) {
 					TreeInfoClient treeInfoClient = iter.next();
@@ -895,7 +780,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 			}
 			
 			if (logger.isTraceEnabled()) {
-				logger.trace("Removing client = {} to NodeInfo with path = {}. Now there are {} clients subscribed to this resource.", new Object[] {channel, nodeInfo.getPathFragment(), nodeInfo.getClients().size() });
+				logger.trace("Removing client = {} to NodeInfo2 with path = {}. Now there are {} clients subscribed to this resource.", new Object[] {channel, nodeInfo.getPathFragment(), nodeInfo.getClients().size() });
 			}
 			
 			if (nodeInfo.getClients().size() == 0) { // no other clients, mark to be deleted
@@ -903,12 +788,27 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 			}		
 		}
 		
-		if (removeOpenNode)	{
+		if (removeOpenNode && nodeInfo != rootNodeInfo) {
+			// don't delete the rootNodeInfo
 			namedLockPool.lock(nodeInfo.getNode());
 			try {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Removing open node {} for statefulClientId={}]", new Object[] { getLabelForLog(node, nodeType), statefulClientId });			
 				}
+				
+				if (removeNodeInfoRunnable == null) {
+					removeNodeInfoRunnable = new RunnableWithParam<Void, NodeInfo>() {				
+						public Void run(NodeInfo nodeInfo) {
+							logger.debug("Removing node from openNodes {}", nodeInfo);
+							// remove from parent
+							nodeInfo.getParent().getChildren().remove(nodeInfo);
+							// remove from map
+							visibleNodes.remove(nodeInfo.getNode());					
+							return null;
+						}
+					};
+				}		
+
 				removeNodeInfoRunnable.run(nodeInfo);
 				if (nodeInfo.equals(rootNodeInfo)) {
 					treeContexts.clear();
@@ -942,24 +842,12 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 */
 	public List<PathFragment> getPathForNode(Object node, String nodeType, GenericTreeContext context) {		
 		List<PathFragment> path = new ArrayList<PathFragment>();
-		// when renaming occurs, the node is destroyed and recreated in another thread
-		// because if this, there are cases when it comes in this method as null
-		if (node == null) {
-			return null;
-		}
 		
-		while (node != null && !node.equals(getNodeByPath(null, context))) {
-			// search in map
-			NodeInfo parentNodeInfo = openNodes.get(node);
-			if (parentNodeInfo != null) { // found, get its path fragment
-				path.add(0, parentNodeInfo.getPathFragment());
-				node = parentNodeInfo.getParent().getNode();
-			} else { // not found				
-				path.add(0, getPathFragmentForNode(node, nodeType, context));
-				node = getParent(node, nodeType, context);
-				// TODO: The above operations works only if this service has dispatchEnabled and only one provider registered!
-				// TODO: must be modified to support all cases
-			}
+		NodeInfo nodeInfo = visibleNodes.get(node);
+		
+		while (nodeInfo != null && !nodeInfo.equals(rootNodeInfo)) {
+			path.add(0, nodeInfo.getPathFragment());
+			nodeInfo = nodeInfo.getParent();
 		}		
 
 		return path;		
@@ -990,7 +878,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 
 	/**
 	 * Creates the client tree structure and
-	 * modifies the server structure by updating {@link #rootNodeInfo} and {@link #openNodes}.	
+	 * modifies the server structure by updating {@link #rootNodeInfo} and {@link #visibleNodes}.	
 	 * 
 	 * @return - the {@link TreeNode} created
 	 * 
@@ -1016,17 +904,6 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 			populateTreeNodeInternal(source, treeNode, treeContext);
 		} else {
 			treeNode.setHasChildren(true);
-		}
-		
-		// for dispatched trees, update the server tree structure
-		if (isDispatchEnabled(source)) {	
-			boolean updateMap = true;
-			if (context.get(DONT_UPDATE_MAP_KEY) != null) {
-				updateMap = !((Boolean) context.get(DONT_UPDATE_MAP_KEY)).booleanValue();
-			}
-			if (updateMap) {
-				addNodeInfo(channel, statefulClientId, source, getNodeType(treeNode), fullPath == null, true, treeContext);
-			}
 		}
 		
 		// create structure for current tree node or create structure for entire tree
@@ -1128,9 +1005,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	@RemoteInvocation
 	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
 		logger.info("Unsubscribing from {} with {}", context.getStatefulClientId(), context.getCommunicationChannel());
-		if (isDispatchEnabled(null)) {
-			cleanupAfterNodeClosed(rootNodeInfo.getNode(), null, context.getStatefulClientId(), context.getCommunicationChannel(), null);
-		}
+		cleanupAfterNodeClosed(rootNodeInfo.getNode(), null, context.getStatefulClientId(), context.getCommunicationChannel(), null, true);
 	}
 
 	/**
@@ -1150,7 +1025,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * an update command to client.
 	 * 
 	 * <p>
-	 * For dispatched trees, registers the object in {@link #openNodes} map
+	 * For dispatched trees, registers the object in {@link #visibleNodes} map
 	 * and adds it in the list of parent's children (the parent must be already in map).
 	 * 
 	 * @param siContext
@@ -1187,7 +1062,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	 * Used only for dispatched trees.
 	 * 
 	 * <p>
-	 * Cleans the {@link #openNodes} map.
+	 * Cleans the {@link #visibleNodes} map.
 	 * 
 	 * @param context	
 	 * @param path - path of the node that must be closed. 
@@ -1203,16 +1078,14 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		if (source == null) { // something happened
 			throw new RuntimeException("Source node not found for path " + path);
 		}
-		if (isDispatchEnabled(source)) {
-			if (logger.isTraceEnabled()) {
-				logger.trace("Closing node with path {} for client [{} with statefulClientId={}]", new Object[] { path, context.getCommunicationChannel(), context.getStatefulClientId() });				
-			}
-			String nodeType = null;
-			if (path != null && path.size() > 0) {
-				nodeType = path.get(path.size() - 1).getType();
-			}
-			cleanupAfterNodeClosed(source, nodeType, context.getStatefulClientId(), context.getCommunicationChannel(), null);
+		if (logger.isTraceEnabled()) {
+			logger.trace("Closing node with path {} for client [{} with statefulClientId={}]", new Object[] { path, context.getCommunicationChannel(), context.getStatefulClientId() });				
 		}
+		String nodeType = null;
+		if (path != null && path.size() > 0) {
+			nodeType = path.get(path.size() - 1).getType();
+		}
+		cleanupAfterNodeClosed(source, nodeType, context.getStatefulClientId(), context.getCommunicationChannel(), null, false);
 	}
 
 	@RemoteInvocation	

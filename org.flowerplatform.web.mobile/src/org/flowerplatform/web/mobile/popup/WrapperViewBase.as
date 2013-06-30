@@ -3,7 +3,18 @@ package org.flowerplatform.web.mobile.popup {
 	
 	import mx.collections.IList;
 	import mx.core.FlexGlobals;
+	import mx.core.IVisualElement;
+	import mx.core.IVisualElementContainer;
 	import mx.events.FlexEvent;
+	
+	import spark.components.Group;
+	import spark.components.Label;
+	import spark.components.SkinnableContainer;
+	import spark.components.View;
+	import spark.components.ViewMenuItem;
+	import spark.components.supportClasses.ButtonBase;
+	import spark.components.supportClasses.SkinnableComponent;
+	import spark.primitives.BitmapImage;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionUtil;
@@ -11,12 +22,6 @@ package org.flowerplatform.web.mobile.popup {
 	import org.flowerplatform.flexutil.popup.IComposedAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
-	
-	import spark.components.Label;
-	import spark.components.View;
-	import spark.components.ViewMenuItem;
-	import spark.components.supportClasses.ButtonBase;
-	import spark.primitives.BitmapImage;
 	
 	public class WrapperViewBase extends View implements IPopupHost {
 		
@@ -61,7 +66,22 @@ package org.flowerplatform.web.mobile.popup {
 		}
 		
 		public function setLabel(value:String):void {
-			labelComponent.text = value;			
+			labelComponent.text = value;	
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function displayCloseButton(value:Boolean):void {
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function addToControlBar(value:Object):void {
+			var elt:IVisualElement = IVisualElement(value);
+			elt.includeInLayout = true;
+			Group(activePopupContent).addElement(elt);
 		}
 		
 		/**

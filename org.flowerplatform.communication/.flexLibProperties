@@ -5,6 +5,7 @@
     <classEntry path="org.flowerplatform.communication.tree.GenericTreeItemRenderer"/>
     <classEntry path="org.flowerplatform.communication.tree.GenericTreeList"/>
     <classEntry path="org.flowerplatform.communication.command.WelcomeClientCommand"/>
+    <classEntry path="org.flowerplatform.communication.transferable_object.ReferenceHolderList"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

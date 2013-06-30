@@ -5,29 +5,23 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
-import org.junit.Assert;
-
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
-import org.flowerplatform.communication.service.ServiceRegistry;
 import org.flowerplatform.communication.stateful_service.InvokeStatefulClientMethodClientCommand;
 import org.flowerplatform.editor.remote.CreateEditorStatefulClientCommand;
 import org.flowerplatform.editor.remote.EditorStatefulService;
 import org.flowerplatform.web.communication.IRecordingTestWebCommunicationChannelProvider;
 import org.flowerplatform.web.communication.TestStatefulServiceInvocationContext;
-import org.flowerplatform.web.explorer.RootChildrenProvider;
+import org.junit.Assert;
 
 /**
  * @author Cristi

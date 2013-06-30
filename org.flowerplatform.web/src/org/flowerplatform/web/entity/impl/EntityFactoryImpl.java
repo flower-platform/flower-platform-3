@@ -83,6 +83,7 @@ public class EntityFactoryImpl extends EFactoryImpl implements EntityFactory {
 			case EntityPackage.RECENT_RESOURCE: return createRecentResource();
 			case EntityPackage.AUDIT_ENTRY: return createAuditEntry();
 			case EntityPackage.DB_VERSION: return createDBVersion();
+			case EntityPackage.WORKING_DIRECTORY: return createWorkingDirectory();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -246,6 +247,16 @@ public class EntityFactoryImpl extends EFactoryImpl implements EntityFactory {
 	public DBVersion createDBVersion() {
 		DBVersionImpl dbVersion = new DBVersionImpl();
 		return dbVersion;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public WorkingDirectory createWorkingDirectory() {
+		WorkingDirectoryImpl workingDirectory = new WorkingDirectoryImpl();
+		return workingDirectory;
 	}
 
 	/**

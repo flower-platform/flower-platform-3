@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.flowerplatform.blazeds.channel.BlazedsCommunicationChannel;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.RegularStatefulService;
@@ -29,15 +30,13 @@ import org.slf4j.LoggerFactory;
  * @author Sorin
  * @flowerModelElementId _sTw3wAlVEeK1a-Ic5xjg1Q
  */
-public class HeartbeatStatefulService extends RegularStatefulService<BlazedsCommunicationChannel, HeartbeatDetails> { 
+public class HeartbeatStatefulService extends RegularStatefulService<BlazedsCommunicationChannel, HeartbeatDetails> implements ICommunicationChannelLifecycleListener { 
 	
 	/* package */ static final Logger logger = LoggerFactory.getLogger(HeartbeatStatefulService.class);
 	
 	public static final String SERVICE_ID = "heartbeatStatefulService";
 	
 	private static final String CLIENT_ID = "heartbeatStatefulClient";
-	
-	public static final HeartbeatStatefulService INSTANCE = new HeartbeatStatefulService();
 	
 	///////////////////////////////////////////////////////////////
 	// JMX Methods
@@ -90,8 +89,9 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	}
 	
 	public HeartbeatStatefulService() {
-//		initializeCommunicationProperties();
+		HeartbeatProperties.initializeCommunicationProperties();
 		clients = new ConcurrentHashMap<BlazedsCommunicationChannel, HeartbeatDetails>(); // 2 clients may arrive at the same time.
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
 	}
 
 	public void dispose() {
@@ -176,14 +176,9 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 		subscribe(new StatefulServiceInvocationContext(communicationChannel, null, null), null);
 	}
 	
-//	/**
-//	 * @author Cristi
-//	 */
-//	public void sendCurrentUserLoggedIn(BlazedsCommunicationChannel communicationChannel) {
-//		User user = (User) communicationChannel.getPrincipal().getUser();
-//		User_CurrentUserLoggedInDto dto = UserService.getInstance().convertUserToUser_LoggedInDto(user);
-//		invokeClientMethod(communicationChannel, CLIENT_ID, "updateCurrentUserLoggedIn", new Object[] { dto });
-//	}
+	public void communicationChannelDestroyed(CommunicationChannel webCommunicationChannel) {
+		unsubscribe(new StatefulServiceInvocationContext(webCommunicationChannel, null, null), null);
+	}
 	
 	///////////////////////////////////////////////////////////////
 	//@RemoteInvocation methods

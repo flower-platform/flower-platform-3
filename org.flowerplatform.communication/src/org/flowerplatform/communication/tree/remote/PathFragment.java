@@ -1,6 +1,5 @@
 package org.flowerplatform.communication.tree.remote;
 
-import org.flowerplatform.communication.tree.NodeInfo;
 
 
 /**

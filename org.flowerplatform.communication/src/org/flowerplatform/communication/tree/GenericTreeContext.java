@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
-
 
 /**
  * Represents the context of a tree subscribed in {@link GenericTreeStatefulService}.

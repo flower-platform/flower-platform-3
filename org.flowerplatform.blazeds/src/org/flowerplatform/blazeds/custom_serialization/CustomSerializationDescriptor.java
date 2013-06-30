@@ -62,7 +62,15 @@ public class CustomSerializationDescriptor {
 		return this;
 	}
 	
-	public void register() {
+	public CustomSerializationDescriptor addDeclaredProperties(List<String> propertiesToCopy) {
+		if (declaredProperties == null) {
+			declaredProperties = new ArrayList<String>();
+		}
+		declaredProperties.addAll(propertiesToCopy);
+		return this;
+	}
+	
+	public CustomSerializationDescriptor register() {
 		@SuppressWarnings("rawtypes")
 		Class clazz;
 		try {
@@ -72,6 +80,7 @@ public class CustomSerializationDescriptor {
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Error registering TransferableObjectDescriptor", e);
 		}
+		return this;
 	}
 	
 	public String toString() {

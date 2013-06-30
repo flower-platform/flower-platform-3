@@ -58,7 +58,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.flowerplatform.communication.tree.INodeDataProvider"/>
+                  <meta.attribute kind="java" basedOn=":org.flowerplatform.communication.tree.INodeDataProvider2"/>
                </appinfo>
             </annotation>
          </attribute>
