@@ -11,14 +11,13 @@
 	
 	<fx:Script>
 		<![CDATA[
-			import com.crispico.flower.util.spinner.ModalSpinner;
-			
 			import mx.collections.ArrayCollection;
 			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.text.TextUtils;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.git.common.remote.dto.GitRef;
 			
@@ -48,6 +47,7 @@
 			 */
 			protected override function nextClickHandler():void {
 				if (currentState == "repositoryURIPage") {
+					popupHost.showSpinner(GitCommonPlugin.getInstance().getMessage("git.cloneWizard.validate.spinner"));
 					//ModalSpinner.addModalSpinner(this, GitCommonPlugin.getInstance().getMessage("git.cloneWizard.validate.spinner"));
 					GitCommonPlugin.getInstance().service.
 						validateRepositoryURL(selectedNode, repositorySelectionPage.getURI(), this, validateRepositoryCallbackHandler);					
@@ -69,6 +69,7 @@
 			 * @flowerModelElementId _mCRiMDVgEeKsnMbt6YrXWQ
 			 */
 			private function validateRepositoryCallbackHandler(value:int):void {
+				popupHost.hideSpinner();
 				//ModalSpinner.removeModalSpinner(this);
 				switch (value) {
 					case 1:
@@ -176,35 +177,36 @@
 			<mx:SetProperty name="wizardDescription" value="{GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.description')}"/>			
 			
 			<mx:AddChild relativeTo="{contentArea}">
-				<mx:VBox width="100%" height="100%" paddingTop="10" borderVisible="false">
-					<mx:Label text="{GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.branchOf', [repositorySelectionPage.getURI()])}"/>
+				<mx:VBox width="100%" height="100%" borderVisible="false">
+					<!--s:Label text="{GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.branchOf', [repositorySelectionPage.getURI()])}"/-->
 					<s:TextInput id="filter" width="100%" 
-								  change="applyFilterHandler()" />
-								<!--  creationComplete="{TextUtils.setTextComponentHint(filter, GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.filter'));}"/-->
-					<mx:List id="listBranches" width="100%" height="100%" dataProvider="{branches}"  >
-						<mx:itemRenderer>
+								  change="applyFilterHandler()"
+								 creationComplete="{TextUtils.setTextComponentHint(filter, GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.filter'));}"/>
+					<s:List id="listBranches" width="100%" height="100%" dataProvider="{branches}" minHeight="100"  >
+						<s:itemRenderer>
 							<fx:Component>
-								<mx:HBox>
+								<s:ItemRenderer>
 									<fx:Script>
-										<![CDATA[								
+										<![CDATA[																			
+											import org.flowerplatform.flexutil.FlexUtilGlobals;
 											import org.flowerplatform.web.git.common.GitCommonPlugin;
-											import org.flowerplatform.web.git.common.remote.dto.GitRef;
-										
-										
+											import org.flowerplatform.web.git.common.remote.dto.GitRef;		
 										]]>
 									</fx:Script>
 									
-									<mx:CheckBox click="{GitRef(data).setSelected(!GitRef(data).getSelected())}" selected="{GitRef(data).getSelected()}" />									
-									<common:BitmapContainer id="image" creationComplete="{image.retrieveImage(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/branch_obj.gif'))}"/>	
-									<s:Label text="{data.shortName}" />
-								</mx:HBox>					
+									<s:HGroup verticalAlign="middle" paddingLeft="5" gap="5">
+										<s:CheckBox click="{GitRef(data).setSelected(!GitRef(data).getSelected())}" selected="{GitRef(data).getSelected()}" />									
+										<s:BitmapImage id="image" source="{FlexUtilGlobals.getInstance().createAbsoluteUrl(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/branch_obj.gif'))}"/>	
+										<s:Label text="{data.shortName}" />
+									</s:HGroup>									
+								</s:ItemRenderer>					
 							</fx:Component>
-						</mx:itemRenderer>
-					</mx:List>
-					<mx:HBox paddingTop="10" width="100%">
+						</s:itemRenderer>
+					</s:List>
+					<s:HGroup paddingTop="10" width="100%" verticalAlign="middle">
 						<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.remoteName')}"/>
 						<s:TextInput id="remoteName" width="100%" text="{defaultRemoteName}" />
-					</mx:HBox>
+					</s:HGroup>
 				</mx:VBox>
 			</mx:AddChild>
 		</mx:State>		

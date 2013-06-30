@@ -17,7 +17,8 @@
 	<mx:Script>
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
-			import com.crispico.flower.util.text.TextUtils;
+			
+			import org.flowerplatform.flexutil.text.TextUtils;
 			
 			import mx.collections.ArrayCollection;
 			

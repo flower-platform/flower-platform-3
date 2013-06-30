@@ -46,7 +46,7 @@
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
-			import org.flowerplatform.web.git.common.GitCommonPlugin;
+			import org.flowerplatform.flexutil.popup.AlertPopupMessageBoxFactory;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
@@ -57,6 +57,7 @@
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
 			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.mobile.RecentActivityView;
 			import org.flowerplatform.web.mobile.SplitView;
 			import org.flowerplatform.web.mobile.popup.WrapperViewPopupHandlerFactory;
@@ -102,6 +103,7 @@
 				
 				FlexUtilGlobals.getInstance().isMobile = true;	
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new WrapperViewPopupHandlerFactory();
+				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
 				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";
 				
 				startPlugins();

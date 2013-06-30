@@ -105,5 +105,17 @@ package com.crispico.flower.util.layout {
 		 */
 		public function addToControlBar(value:Object):void {
 		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function showSpinner(text:String):void {			
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function hideSpinner():void {			
+		}
 	}
 }

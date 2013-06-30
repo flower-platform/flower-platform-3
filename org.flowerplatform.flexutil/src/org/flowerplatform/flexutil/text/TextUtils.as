@@ -1,12 +1,12 @@
-package com.crispico.flower.util.text
-{
+package org.flowerplatform.flexutil.text {
 	import flash.events.FocusEvent;
 	
-	import mx.controls.TextArea;
-	import mx.controls.TextInput;
 	import mx.core.UIComponent;
 	import mx.core.UITextField;
 	import mx.utils.StringUtil;
+	
+	import spark.components.TextArea;
+	import spark.components.TextInput;
 
 	public class TextUtils {
 		
@@ -21,7 +21,7 @@ package com.crispico.flower.util.text
 		 */ 
 		public static function setTextComponentHint(uiComponent:UIComponent, hint:String, textProperty:String = null):void {
 			if (textProperty == null) {
-				if (uiComponent is TextArea || uiComponent is TextInput || UITextField) 
+				if (uiComponent is TextArea || uiComponent is TextInput || uiComponent is UITextField) 
 					textProperty = "text";
 			}
 			

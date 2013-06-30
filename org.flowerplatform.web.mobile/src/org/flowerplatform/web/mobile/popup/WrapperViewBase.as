@@ -7,6 +7,14 @@ package org.flowerplatform.web.mobile.popup {
 	import mx.core.IVisualElementContainer;
 	import mx.events.FlexEvent;
 	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.popup.ActionUtil;
+	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.popup.IComposedAction;
+	import org.flowerplatform.flexutil.popup.IPopupContent;
+	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.web.mobile.spinner.MobileSpinner;
+	
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.SkinnableContainer;
@@ -15,13 +23,6 @@ package org.flowerplatform.web.mobile.popup {
 	import spark.components.supportClasses.ButtonBase;
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.primitives.BitmapImage;
-	
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionUtil;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IComposedAction;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHost;
 	
 	public class WrapperViewBase extends View implements IPopupHost {
 		
@@ -34,6 +35,8 @@ package org.flowerplatform.web.mobile.popup {
 		protected var allActionsForActivePopupContent:Vector.<IAction>;
 		
 		protected var selectionForActivePopupContent:IList;
+		
+		protected var spinner:MobileSpinner;
 		
 		public function WrapperViewBase() {
 			super();
@@ -183,6 +186,28 @@ package org.flowerplatform.web.mobile.popup {
 					action.selection = null;
 				}
 			}
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function showSpinner(text:String):void {
+			if (spinner != null) {
+				throw new Error("Spinner is already displayed!");
+			}
+			spinner = new MobileSpinner();
+			spinner.percentWidth = 100;
+			spinner.percentHeight = 100;			
+			spinner.text = text;			
+			addElement(spinner);
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function hideSpinner():void {		
+			removeElement(spinner);
+			spinner = null;
 		}
 		
 	}
