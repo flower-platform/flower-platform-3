@@ -6,7 +6,6 @@ package  org.flowerplatform.web.git.common.action {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
-	import org.flowerplatform.web.git.common.GitNodeType;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -24,7 +23,7 @@ package  org.flowerplatform.web.git.common.action {
 		override public function get visible():Boolean {	
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
 				selectedNode = selection.getItemAt(0) as TreeNode; 
-				return selectedNode.pathFragment.type == GitNodeType.NODE_TYPE_REPOSITORY;
+				return selectedNode.pathFragment.type == GitCommonPlugin.NODE_TYPE_REPOSITORY;
 			}
 			return false;
 		}

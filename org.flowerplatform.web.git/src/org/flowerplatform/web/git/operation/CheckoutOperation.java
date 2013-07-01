@@ -21,8 +21,6 @@ import org.flowerplatform.communication.command.DisplaySimpleMessageClientComman
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
 import org.flowerplatform.web.git.GitPlugin;
 import org.flowerplatform.web.git.GitUtils;
-import org.flowerplatform.web.git.entity.GitNode;
-import org.flowerplatform.web.git.entity.GitNodeType;
 import org.flowerplatform.web.git.remote.dto.GitRef;
 import org.flowerplatform.web.git.remote.dto.RemoteConfig;
 
@@ -31,7 +29,8 @@ import org.flowerplatform.web.git.remote.dto.RemoteConfig;
  */ 
 public class CheckoutOperation {
 
-	private GitNode<?> node;	
+	private Object node;	
+	private Repository repository;	
 	private String name;
 	private RemoteConfig remote;
 	private GitRef upstreamBranch;
@@ -39,9 +38,10 @@ public class CheckoutOperation {
 	private CommunicationChannel channel;
 			
 
-	public CheckoutOperation(GitNode<?> node, String name, RemoteConfig remote,
+	public CheckoutOperation(Object node, Repository repository, String name, RemoteConfig remote,
 			GitRef upstreamBranch, boolean rebase, CommunicationChannel channel) {	
 		this.node = node;
+		this.repository = repository;
 		this.name = name;
 		this.remote = remote;
 		this.upstreamBranch = upstreamBranch;
@@ -54,17 +54,16 @@ public class CheckoutOperation {
 		
 		try {	
 			monitor.beginTask(GitPlugin.getInstance().getMessage("git.checkout.monitor.message", new Object[] {name}), 4);			
-			Repository repo = node.getRepository();
 			
-			Git git = new Git(repo);
+			Git git = new Git(repository);
 			Ref ref;
-			if (GitNodeType.NODE_TYPE_TAG.equals(node.getType())) {
-				ref = (Ref) node.getObject();
+			if (node instanceof Ref) {
+				ref = (Ref) node;
 			} else {
 				// get remote branch
 				String dst = Constants.R_REMOTES + remote.getName();
 				String remoteRefName = dst + "/" + upstreamBranch.getShortName();
-				ref = repo.getRef(remoteRefName);
+				ref = repository.getRef(remoteRefName);
 				if (ref == null) { // doesn't exist, fetch it
 					RefSpec refSpec = new RefSpec();
 					refSpec = refSpec.setForceUpdate(true);
@@ -75,7 +74,7 @@ public class CheckoutOperation {
 						.setRefSpecs(refSpec)
 						.call();
 					
-					ref = repo.getRef(remoteRefName);
+					ref = repository.getRef(remoteRefName);
 				}
 			}					
 			monitor.worked(1);
@@ -87,9 +86,9 @@ public class CheckoutOperation {
 				setUpstreamMode(SetupUpstreamMode.SET_UPSTREAM).
 				call();
 		
-			if (GitNodeType.NODE_TYPE_REMOTE_BRANCHES.equals(node.getType())) {
+			if (!(node instanceof Ref)) {
 				// save upstream configuration
-				StoredConfig config = node.getRepository().getConfig();			
+				StoredConfig config = repository.getConfig();			
 				
 				config.setString(ConfigConstants.CONFIG_BRANCH_SECTION,
 							name, ConfigConstants.CONFIG_KEY_MERGE,
@@ -112,7 +111,7 @@ public class CheckoutOperation {
 			monitor.worked(1);
 			
 			// create working directory for local branch
-			File mainRepoFile = node.getRepository().getDirectory().getParentFile();		
+			File mainRepoFile = repository.getDirectory().getParentFile();		
 			File wdirFile = new File(mainRepoFile.getParentFile(), GitUtils.WORKING_DIRECTORY_PREFIX + name);
 			if (wdirFile.exists()) {
 				GitPlugin.getInstance().getUtils().delete(wdirFile);

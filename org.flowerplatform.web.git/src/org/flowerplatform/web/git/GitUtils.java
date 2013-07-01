@@ -142,7 +142,7 @@ public class GitUtils {
 	}
 	
 	public File getGitRepositoriesFile(File orgFile) {
-		return new File(RootChildrenProvider.getWorkspaceRoot(), orgFile.getName() + "/" + GIT_REPOSITORIES_NAME + "/");
+		return new File(CommonPlugin.getInstance().getWorkspaceRoot(), orgFile.getName() + "/" + GIT_REPOSITORIES_NAME + "/");
 	}
 	
 	public Repository getRepository(File repoFile) {

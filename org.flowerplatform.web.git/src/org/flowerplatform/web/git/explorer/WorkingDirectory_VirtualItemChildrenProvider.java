@@ -9,33 +9,29 @@ import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.web.git.GitNodeType;
 import org.flowerplatform.web.git.GitPlugin;
-import org.flowerplatform.web.git.entity.GitNodeType;
-import org.flowerplatform.web.git.entity.RepositoryNode;
-import org.flowerplatform.web.git.entity.SimpleNode;
-import org.flowerplatform.web.git.entity.WorkingDirNode;
 
 /**
- * @author Cristina Constantienscu
+ * Parent node = Virtual node (Working Directories) (i.e. Pair<Repository, nodeType>).<br/>
+ * Child node = File, i.e. Pair<File, nodeType>.
+ * 
+ * @author Cristina Constantinescu
  */
-public class WorkingDirsChildrenProvider implements IChildrenProvider {
+public class WorkingDirectory_VirtualItemChildrenProvider implements IChildrenProvider {
 	
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {	
-		SimpleNode simpleNode = (SimpleNode) node;
-		RepositoryNode repoNode = (RepositoryNode) simpleNode.getParent();
-		File repoFile = repoNode.getObject();
-		
-		File[] children = repoFile.listFiles();
+		@SuppressWarnings("unchecked")
+		Repository repository = ((Pair<Repository, String>) node).a;	
+		File[] children = repository.getDirectory().getParentFile().getParentFile().listFiles();
 		
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>(children.length);
 		for (File child : children) {		
 			Repository repo = GitPlugin.getInstance().getUtils().getRepository(child);
 			
 			if (repo != null) {
-				WorkingDirNode childNode = new WorkingDirNode(node, repo, child);
-				
-				Pair<Object, String> pair = new Pair<Object, String>(childNode, GitNodeType.NODE_TYPE_WDIR);
+				Pair<Object, String> pair = new Pair<Object, String>(child, GitNodeType.NODE_TYPE_WDIR);
 				result.add(pair);
 			}
 		}		

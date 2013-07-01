@@ -683,7 +683,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		TreeInfoClient treeInfoClient = new TreeInfoClient(channel, statefulClientId);
 		
 		if (!treeContexts.containsKey(treeInfoClient)) {
-			treeContexts.put(treeInfoClient, new GenericTreeContext());
+			treeContexts.put(treeInfoClient, new GenericTreeContext(this));
 		}
 		return treeContexts.get(treeInfoClient);
 	}
@@ -946,13 +946,18 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 	}
 
 	public static Object getNodeByPathFor(List<PathFragment> path, GenericTreeContext context) {
+		GenericTreeStatefulService service = getServiceFromPathWithRoot(path);		
+		if (service != null) {			
+			List<PathFragment> pathWithoutRootFragment = path.subList(1, path.size());			
+			return service.getNodeByPath(pathWithoutRootFragment, context);
+		}
+		return null;
+	}
+	
+	public static GenericTreeStatefulService getServiceFromPathWithRoot(List<PathFragment> path) {
 		PathFragment firstNodePath = path.get(0);
 		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {			
-			GenericTreeStatefulService service = 
-					(GenericTreeStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(firstNodePath.getName());
-			List<PathFragment> pathWithoutRootFragment = path.subList(1, path.size());
-			
-			return service.getNodeByPath(pathWithoutRootFragment, context);
+			return (GenericTreeStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(firstNodePath.getName());			
 		}
 		return null;
 	}
@@ -1094,7 +1099,7 @@ public abstract class GenericTreeStatefulService extends StatefulService impleme
 		GenericTreeContext treeContext = treeContexts.get(treeInfo);
 					
 		if (treeContext == null) {
-			treeContext = new GenericTreeContext();			
+			treeContext = new GenericTreeContext(this);			
 		}		
 		treeContext.getStatefulContext().put(key, value);
 		

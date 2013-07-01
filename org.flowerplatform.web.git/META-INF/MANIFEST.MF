@@ -13,6 +13,7 @@ Require-Bundle: org.flowerplatform.common,
  org.flowerplatform.blazeds;visibility:=reexport
 Bundle-Activator: org.flowerplatform.web.git.GitPlugin
 Bundle-ActivationPolicy: lazy
+Import-Package: org.eclipse.jgit.storage.file
 
 
 

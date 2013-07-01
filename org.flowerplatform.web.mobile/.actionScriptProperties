@@ -32,11 +32,8 @@
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.editor/public-resources/swc/org.flowerplatform.editor.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.common/public-resources/swc/org.flowerplatform.common.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.editor.text/public-resources/swc/org.flowerplatform.editor.text.swc" useDefaultLinkType="false"/>
-<<<<<<< HEAD
-      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.web.git.common/bin/org.flowerplatform.web.git.common.swc" useDefaultLinkType="false"/>
-=======
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.editor.model/public-resources/swc/org.flowerplatform.editor.model.swc" useDefaultLinkType="false"/>
->>>>>>> refs/remotes/origin/master
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.web.git.common/bin/org.flowerplatform.web.git.common.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

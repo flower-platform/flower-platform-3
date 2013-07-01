@@ -3,7 +3,6 @@ package org.flowerplatform.web.git.common.action {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
-	import org.flowerplatform.web.git.common.GitNodeType;
 	import org.flowerplatform.web.git.common.ui.CloneView;
 	
 	/**
@@ -19,7 +18,7 @@ package org.flowerplatform.web.git.common.action {
 		
 		override public function get visible():Boolean {
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {				
-				return TreeNode(selection.getItemAt(0)).pathFragment.type == GitNodeType.NODE_TYPE_GIT_REPOSITORIES;
+				return TreeNode(selection.getItemAt(0)).pathFragment.type == GitCommonPlugin.NODE_TYPE_GIT_REPOSITORIES;
 			}
 			return false;
 		}

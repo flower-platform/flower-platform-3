@@ -21,6 +21,27 @@ package org.flowerplatform.web.git.common {
 			return INSTANCE;
 		}		
 		
+		public static const NODE_TYPE_GIT_REPOSITORIES:String = "gitRepositories";
+		
+		public static const NODE_TYPE_REPOSITORY:String = "gitRepository";
+		
+		public static const NODE_TYPE_LOCAL_BRANCHES:String = "gitLocalBranches";
+		public static const NODE_TYPE_REMOTE_BRANCHES:String = "gitRemoteBranches";
+		public static const NODE_TYPE_TAGS:String = "gitTags";
+		public static const NODE_TYPE_REMOTES:String = "gitRemotes";
+		public static const NODE_TYPE_WDIRS:String = "gitWDirs";
+		
+		public static const NODE_TYPE_LOCAL_BRANCH:String = "gitLocalBranch";
+		public static const NODE_TYPE_REMOTE_BRANCH:String = "gitRemoteBranch";
+		public static const NODE_TYPE_TAG:String = "gitTag";
+		
+		public static const NODE_TYPE_REMOTE:String = "gitRemote";
+		
+		public static const NODE_TYPE_WDIR:String = "gitWDir";
+		
+		public static const NODE_TYPE_FILE:String = "gitFile";
+		public static const NODE_TYPE_FOLDER:String = "gitFolder";
+		
 		public var service:GitService = new GitService();
 		
 		override public function start():void {

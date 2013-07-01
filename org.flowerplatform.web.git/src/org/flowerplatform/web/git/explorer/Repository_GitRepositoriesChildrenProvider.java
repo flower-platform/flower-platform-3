@@ -9,15 +9,16 @@ import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
-import org.flowerplatform.web.explorer.RootChildrenProvider;
+import org.flowerplatform.web.git.GitNodeType;
 import org.flowerplatform.web.git.GitPlugin;
-import org.flowerplatform.web.git.entity.GitNodeType;
-import org.flowerplatform.web.git.entity.RepositoryNode;
 
 /**
- * @author Cristina Constantienscu
+ * Parent node = Git Repositories virtual node (i.e. Pair<File, String>).<br/>
+ * Child node = repository, i.e. Repository.
+ * 
+ * @author Cristina Constantinescu
  */
-public class GitRootChildrenProvider implements IChildrenProvider {
+public class Repository_GitRepositoriesChildrenProvider implements IChildrenProvider {
 	
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {		
@@ -28,10 +29,8 @@ public class GitRootChildrenProvider implements IChildrenProvider {
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>(children.length);
 		for (File child : children) {		
 			Repository repo = GitPlugin.getInstance().getUtils().getMainRepository(child);
-			if (repo != null) {
-				RepositoryNode childNode = new RepositoryNode(node, repo, child);
-				
-				Pair<Object, String> pair = new Pair<Object, String>(childNode, GitNodeType.NODE_TYPE_REPOSITORY);
+			if (repo != null) {		
+				Pair<Object, String> pair = new Pair<Object, String>(repo, GitNodeType.NODE_TYPE_REPOSITORY);
 				result.add(pair);
 			}
 		}		

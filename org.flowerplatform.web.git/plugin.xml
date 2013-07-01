@@ -4,27 +4,27 @@
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.git.explorer.GitOrganizationChildrenProvider">
+            provider="org.flowerplatform.web.git.explorer.GitRepositories_OrganizationChildrenProvider">
          <nodeType
-               nodeType="or">
+               nodeType="organization">
          </nodeType>
       </explorerChildrenProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.git.explorer.GitRootNodeDataProvider">
+            provider="org.flowerplatform.web.git.explorer.GitRepositoriesNodeDataProvider">
          <nodeType
-               nodeType="gitrp">
+               nodeType="gitRepositories">
          </nodeType>
       </explorerNodeDataProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.git.explorer.GitRootChildrenProvider">
+            provider="org.flowerplatform.web.git.explorer.Repository_GitRepositoriesChildrenProvider">
          <nodeType
-               nodeType="gitrp">
+               nodeType="gitRepositories">
          </nodeType>
       </explorerChildrenProvider>
    </extension>
@@ -33,52 +33,52 @@
       <explorerNodeDataProvider
             provider="org.flowerplatform.web.git.explorer.RepositoryNodeDataProvider">
          <nodeType
-               nodeType="rp">
+               nodeType="gitRepository">
          </nodeType>
       </explorerNodeDataProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.git.explorer.RepositoryChildrenProvider">
+            provider="org.flowerplatform.web.git.explorer.VirtualItem_RepositoryChildrenProvider">
          <nodeType
-               nodeType="rp">
+               nodeType="gitRepository">
          </nodeType>
       </explorerChildrenProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.git.explorer.RepositoryChildrenNodeDataProvider">
+            provider="org.flowerplatform.web.git.explorer.VirtualItemDataProvider">
          <nodeType
-               nodeType="lbrs">
+               nodeType="gitLocalBranches">
          </nodeType>
          <nodeType
-               nodeType="rbrs">
+               nodeType="gitRemoteBranches">
          </nodeType>
          <nodeType
-               nodeType="tgs">
+               nodeType="gitTags">
          </nodeType>
          <nodeType
-               nodeType="rmts">
+               nodeType="gitRemotes">
          </nodeType> 
          <nodeType
-               nodeType="wdirs">
+               nodeType="gitWDirs">
          </nodeType>          
       </explorerNodeDataProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.git.explorer.RefsChildrenProvider">
+            provider="org.flowerplatform.web.git.explorer.Ref_VirtualItemChildrenProvider">
          <nodeType
-               nodeType="lbrs">
+               nodeType="gitLocalBranches">
          </nodeType>
          <nodeType
-               nodeType="rbrs">
+               nodeType="gitRemoteBranches">
          </nodeType>
          <nodeType
-               nodeType="tgs">
+               nodeType="gitTags">
          </nodeType>
       </explorerChildrenProvider>
    </extension>
@@ -87,22 +87,22 @@
       <explorerNodeDataProvider
             provider="org.flowerplatform.web.git.explorer.RefNodeDataProvider">
          <nodeType
-               nodeType="lbr">
+               nodeType="gitLocalBranch">
          </nodeType>
          <nodeType
-               nodeType="rbr">
+               nodeType="gitRemoteBranch">
          </nodeType>
          <nodeType
-               nodeType="tg">
+               nodeType="gitTag">
          </nodeType>
       </explorerNodeDataProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.git.explorer.RemotesChildrenProvider">
+            provider="org.flowerplatform.web.git.explorer.Remote_VirtualItemChildrenProvider">
          <nodeType
-               nodeType="rmts">
+               nodeType="gitRemotes">
          </nodeType>
       </explorerChildrenProvider>
    </extension>
@@ -111,46 +111,46 @@
       <explorerNodeDataProvider
             provider="org.flowerplatform.web.git.explorer.RemoteNodeDataProvider">
          <nodeType
-               nodeType="rmt">
+               nodeType="gitRemote">
          </nodeType>
       </explorerNodeDataProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.git.explorer.WorkingDirsChildrenProvider">
+            provider="org.flowerplatform.web.git.explorer.WorkingDirectory_VirtualItemChildrenProvider">
          <nodeType
-               nodeType="wdirs">
+               nodeType="gitWDirs">
          </nodeType>
       </explorerChildrenProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerNodeDataProvider">
       <explorerNodeDataProvider
-            provider="org.flowerplatform.web.git.explorer.WorkingDirNodeDataProvider">
+            provider="org.flowerplatform.web.git.explorer.GitFileNodeDataProvider">
          <nodeType
-               nodeType="wdir">
+               nodeType="gitWDir">
          </nodeType>
          <nodeType
-               nodeType="fld">
+               nodeType="gitFile">
          </nodeType>
          <nodeType
-               nodeType="fl">
+               nodeType="gitFolder">
          </nodeType>
       </explorerNodeDataProvider>
    </extension>
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
-            provider="org.flowerplatform.web.git.explorer.WorkingDirChildrenProvider">
+            provider="org.flowerplatform.web.git.explorer.GitFile_WorkingDirectoryChildrenProvider">
          <nodeType
-               nodeType="wdir">
+               nodeType="gitWDir">
          </nodeType>
          <nodeType
-               nodeType="fld">
+               nodeType="gitFile">
          </nodeType>
          <nodeType
-               nodeType="fl">
+               nodeType="gitFolder">
          </nodeType>
       </explorerChildrenProvider>
    </extension>
@@ -167,5 +167,47 @@
             id="gitService"
             serviceClass="org.flowerplatform.web.git.GitService">
       </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.nodeTypeToCategoriesMapping">
+      <nodeTypeToCategoriesMapping
+            nodeType="gitRepositories">
+         <nodeTypeCategory
+               nodeTypeCategory="pathFragmentNamePointsToFile">
+         </nodeTypeCategory>
+      </nodeTypeToCategoriesMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.nodeTypeToCategoriesMapping">
+      <nodeTypeToCategoriesMapping
+            nodeType="gitRepository">
+         <nodeTypeCategory
+               nodeTypeCategory="pathFragmentNamePointsToFile">
+         </nodeTypeCategory>
+      </nodeTypeToCategoriesMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.nodeTypeToCategoriesMapping">
+      <nodeTypeToCategoriesMapping
+            nodeType="gitWDir">
+         <nodeTypeCategory
+               nodeTypeCategory="pathFragmentNamePointsToFile">
+         </nodeTypeCategory>
+         <nodeTypeCategory
+               nodeTypeCategory="decoratableFile">
+         </nodeTypeCategory>
+      </nodeTypeToCategoriesMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.nodeTypeToCategoriesMapping">
+      <nodeTypeToCategoriesMapping
+            nodeType="gitFile">
+         <nodeTypeCategory
+               nodeTypeCategory="pathFragmentNamePointsToFile">
+         </nodeTypeCategory>
+         <nodeTypeCategory
+               nodeTypeCategory="decoratableFile">
+         </nodeTypeCategory>
+      </nodeTypeToCategoriesMapping>
    </extension>
 </plugin>
