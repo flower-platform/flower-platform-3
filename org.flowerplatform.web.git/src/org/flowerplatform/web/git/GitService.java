@@ -48,28 +48,24 @@ import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
+import org.flowerplatform.communication.tree.NodeInfo;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.web.git.command.client.OpenGitCredentialsWindowClientCommand;
 import org.flowerplatform.web.git.command.client.OpenOperationResultWindowClientCommand;
 import org.flowerplatform.web.git.dto.CommitPageDto;
 import org.flowerplatform.web.git.dto.ConfigFetchPushPageDto;
-import org.flowerplatform.web.git.dto.GitActionDto;
-import org.flowerplatform.web.git.dto.GitRef;
 import org.flowerplatform.web.git.dto.ImportProjectPageDto;
 import org.flowerplatform.web.git.dto.ProjectDto;
-import org.flowerplatform.web.git.dto.RemoteConfig;
-import org.flowerplatform.web.git.entity.GitNode;
-import org.flowerplatform.web.git.entity.GitNodeType;
-import org.flowerplatform.web.git.entity.RefNode;
-import org.flowerplatform.web.git.entity.RemoteNode;
-import org.flowerplatform.web.git.entity.RepositoryNode;
-import org.flowerplatform.web.git.entity.SimpleNode;
 import org.flowerplatform.web.git.operation.CheckoutOperation;
 import org.flowerplatform.web.git.operation.CommitOperation;
 import org.flowerplatform.web.git.operation.MergeOperation;
+import org.flowerplatform.web.git.operation.PullOperation;
 import org.flowerplatform.web.git.operation.RebaseOperation;
 import org.flowerplatform.web.git.operation.ResetOperation;
+import org.flowerplatform.web.git.remote.OpenGitCredentialsWindowClientCommand;
+import org.flowerplatform.web.git.remote.dto.GitActionDto;
+import org.flowerplatform.web.git.remote.dto.GitRef;
+import org.flowerplatform.web.git.remote.dto.RemoteConfig;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +77,8 @@ public class GitService {
 
 	private static Logger logger = LoggerFactory.getLogger(GitService.class);
 	
+	private static final String SERVICE_ID = "gitService";
+		
 	/**
 	 * Keeps the {@link InvokeStatefulServiceMethodServerCommand command} that needs authentication data before
 	 * in order to be executed.
@@ -100,13 +98,28 @@ public class GitService {
 	 */
 	public static final ThreadLocal<String> tlURI = new ThreadLocal<String>();
 	
+	public static GitService getInstance() {		
+		return (GitService) CommunicationPlugin.getInstance().getServiceRegistry().getService(SERVICE_ID);
+	}
+	
 	private void dispatchContentUpdate(Object node) {
 		for (GenericTreeStatefulService service : GitPlugin.getInstance().getTreeStatefulServicesDisplayingGitContent()) {
 			service.dispatchContentUpdate(node);
 		}
 	}
-	
-	
+			
+	public Repository getRepository(NodeInfo nodeInfo) {
+		if (nodeInfo == null) {
+			return null;
+		}
+		if (nodeInfo.getNode() instanceof File && GitUtils.GIT_REPOSITORIES_NAME.equals(((File) nodeInfo.getNode()).getName())) {
+			return null;
+		}
+		if (nodeInfo.getNode() instanceof Repository) {
+			return (Repository) nodeInfo.getNode();
+		}
+		return getRepository(nodeInfo.getParent());		
+	}
 	
 	/**
 	 * Sends command to client to open the login window 
@@ -167,7 +180,7 @@ public class GitService {
 			}
 			
 			GitRef headRef = head != null ? new GitRef(head.getName(), Repository.shortenRefName(head.getName())) : null;			
-			return Arrays.asList(new Object[] {branches, headRef, Constants.DEFAULT_REMOTE_NAME});			
+			return Arrays.asList(new Object[] {branches, headRef});			
 		} catch (JGitInternalException | GitAPIException e) {			
 			context.getCommunicationChannel().appendOrSendCommand(
 					new DisplaySimpleMessageClientCommand(
@@ -234,7 +247,7 @@ public class GitService {
 
 	@RemoteInvocation
 	public boolean cloneRepository(final ServiceInvocationContext context, List<PathFragment> selectedPath, 
-			String repositoryUrl, final List<String> selectedBranches, final String initialBranch, final String remoteName, final boolean cloneAllBranches) {		
+			String repositoryUrl, final List<String> selectedBranches, final String remoteName, final boolean cloneAllBranches) {		
 		tlCommand.set((InvokeServiceMethodServerCommand) context.getCommand());
 		
 		final URIish uri;
@@ -265,12 +278,8 @@ public class GitService {
 				Repository repository = null;
 				try {			
 					CloneCommand cloneRepository = Git.cloneRepository();
-								
-					if (initialBranch != null)
-						cloneRepository.setBranch(initialBranch);
-					else {
-						cloneRepository.setNoCheckout(true);
-					}
+					
+					cloneRepository.setNoCheckout(true);					
 					cloneRepository.setDirectory(mainRepo);
 					cloneRepository.setProgressMonitor(new GitProgressMonitor(new SubProgressMonitor(monitor, 1)));
 					cloneRepository.setRemote(remoteName);
@@ -287,15 +296,8 @@ public class GitService {
 					
 					// notify clients about changes
 					dispatchContentUpdate(node);
-					// reveal and select the main working directory
-//					revealNode(context, new RepositoryNode(null, repository));
-					monitor.worked(1);
 					
-					context.getCommunicationChannel().sendCommandWithPush(
-							new DisplaySimpleMessageClientCommand(
-									CommonPlugin.getInstance().getMessage("info"), 
-									GitPlugin.getInstance().getMessage("git.cloneWizard.importProjects.info"),							
-									DisplaySimpleMessageClientCommand.ICON_INFORMATION));	
+					monitor.worked(1);	
 				} catch (Exception e) {			
 					if (repository != null)
 						repository.close();
@@ -330,27 +332,29 @@ public class GitService {
 	}
 	
 	public void deleteRepository(ServiceInvocationContext context, List<PathFragment> selectedNode) {
-		RepositoryNode node = (RepositoryNode) GenericTreeStatefulService.getNodeByPathFor(selectedNode, null);
-				
+		Repository repository = (Repository) GenericTreeStatefulService.getNodeByPathFor(selectedNode, null);			
+		GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(selectedNode);
+		NodeInfo repositoryNodeInfo = service.getVisibleNodes().get(repository);
+		
 		ProgressMonitor monitor = ProgressMonitor.create(
 				GitPlugin.getInstance().getMessage("git.deleteRepo.monitor.title"), context.getCommunicationChannel());
 		
 		try {						
 			monitor.beginTask(GitPlugin.getInstance().getMessage("git.deleteRepo.monitor.message", 
-					new Object[] {GitPlugin.getInstance().getUtils().getRepositoryName(node.getRepository())}), 2);
+					new Object[] {GitPlugin.getInstance().getUtils().getRepositoryName(repository)}), 2);
 			
-			node.getRepository().getObjectDatabase().close();
-			node.getRepository().getRefDatabase().close();			
+			repository.getObjectDatabase().close();
+			repository.getRefDatabase().close();			
 			monitor.worked(1);		
 			
-			node.getRepository().close();	
-			File repoFile = node.getRepository().getDirectory().getParentFile().getParentFile();
+			repository.close();	
+			File repoFile = repository.getDirectory().getParentFile().getParentFile();
 			if (GitUtils.GIT_REPOSITORIES_NAME.equals(repoFile.getParentFile().getName())) {
 				GitPlugin.getInstance().getUtils().delete(repoFile);
 			}
 			monitor.worked(1);		
 			
-			dispatchContentUpdate(node.getParent());
+			dispatchContentUpdate(repositoryNodeInfo.getParent().getNode());
 		} catch (Exception e) {
 			logger.debug(GitPlugin.getInstance().getMessage("git.deleteRepo.error"), e);
 			context.getCommunicationChannel().appendOrSendCommand(
@@ -366,12 +370,21 @@ public class GitService {
 	@RemoteInvocation
 	public GitActionDto getNodeAdditionalData(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
-			RefNode node = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			Repository repo = node.getRepository();
-
+			Ref ref = (Ref) GenericTreeStatefulService.getNodeByPathFor(path, null);			
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo refNodeInfo = service.getVisibleNodes().get(ref);
+			Repository repository = getRepository(refNodeInfo);
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + ref, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return null;
+			}
 			GitActionDto data = new GitActionDto();		
-			data.setRepository(repo.getDirectory().getAbsolutePath());		
-			data.setBranch(repo.getBranch());		
+			data.setRepository(repository.getDirectory().getAbsolutePath());		
+			data.setBranch(repository.getBranch());		
 			
 			return data;			
 		} catch (Exception e) {	
@@ -392,7 +405,7 @@ public class GitService {
 			MergeOperation op = new MergeOperation(repo, refName, squash, context.getCommunicationChannel());
 			op.execute();
 			
-			String result = op.handleMergeResult();
+			String result = GitPlugin.getInstance().getUtils().handleMergeResult(op.getMergeResult());
 			if (result != null) {
 				context.getCommunicationChannel().appendOrSendCommand(
 					new OpenOperationResultWindowClientCommand(GitPlugin.getInstance().getMessage("git.merge.result"), result));
@@ -475,35 +488,21 @@ public class GitService {
 	public boolean configRemote(ServiceInvocationContext context, List<PathFragment> path,
 			RemoteConfig remoteConfig) {
 		try {
-			SimpleNode node = (SimpleNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			Repository repo = node.getRepository();
-					
-			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repo.getConfig(), remoteConfig.getName());
+			Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);		
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
+			Repository repository = getRepository(nodeInfo);
+										
+			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), remoteConfig.getName());
 			
 			while (repoConfig.getURIs().size() > 0) {
 				URIish uri = repoConfig.getURIs().get(0);
 				repoConfig.removeURI(uri);
 			}		
 			repoConfig.addURI(new URIish(remoteConfig.getUri().trim()));
-			
-			while (repoConfig.getFetchRefSpecs().size() > 0) {
-				RefSpec refspec = repoConfig.getFetchRefSpecs().get(0);
-				repoConfig.removeFetchRefSpec(refspec);
-			}			
-			for (String refMapping : remoteConfig.getFetchMappings()) {
-					repoConfig.addFetchRefSpec(new RefSpec(refMapping));
-			}			
-			
-			while (repoConfig.getPushRefSpecs().size() > 0) {
-				RefSpec refspec = repoConfig.getPushRefSpecs().get(0);
-				repoConfig.removePushRefSpec(refspec);
-			}
-			for (String refMapping : remoteConfig.getPushMappings()) {
-					repoConfig.addPushRefSpec(new RefSpec(refMapping));
-			}
-			
-			repoConfig.update(repo.getConfig());			
-			repo.getConfig().save();
+						
+			repoConfig.update(repository.getConfig());			
+			repository.getConfig().save();
 			
 			// notify clients about changes			
 			dispatchContentUpdate(node);
@@ -531,15 +530,24 @@ public class GitService {
 	@RemoteInvocation
 	public RemoteConfig getRemoteConfigData(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
-			RemoteNode node = (RemoteNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			Repository repo = node.getRepository();
+			@SuppressWarnings("unchecked")
+			Pair<String, String> remote = (Pair<String, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);		
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo remoteNodeInfo = service.getVisibleNodes().get(remote);
+			Repository repository = getRepository(remoteNodeInfo);
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + remote, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return null;
+			}
 			
-			String remoteName = node.getObject();
-			
-			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repo.getConfig(), remoteName);
+			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), remote.a);
 			
 			RemoteConfig result = new RemoteConfig();
-			result.setName(remoteName);
+			result.setName(remote.a);
 			result.setUri(repoConfig.getURIs().get(0).toString());
 			
 			List<String> fetchSpecs = new ArrayList<String>();
@@ -569,13 +577,25 @@ public class GitService {
 	@RemoteInvocation
 	public boolean deleteRemote(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
-			RemoteNode node = (RemoteNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-				
-			StoredConfig config = node.getRepository().getConfig();
-			config.unsetSection("remote", (String) node.getObject());
+			@SuppressWarnings("unchecked")
+			Pair<String, String> remote = (Pair<String, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);		
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo remoteNodeInfo = service.getVisibleNodes().get(remote);
+			Repository repository = getRepository(remoteNodeInfo);
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + remote, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}
+							
+			StoredConfig config = repository.getConfig();
+			config.unsetSection("remote", remote.a);
 			config.save();
 				
-			dispatchContentUpdate(node.getParent());
+			dispatchContentUpdate(remoteNodeInfo.getParent().getNode());
 			
 			return true;
 		} catch (Exception e) {		
@@ -593,12 +613,11 @@ public class GitService {
 	@RemoteInvocation
 	public ConfigFetchPushPageDto getFetchPushConfigData(ServiceInvocationContext context, List<PathFragment> path, boolean getFetchData) {
 		try {
-			RepositoryNode node = (RepositoryNode) GenericTreeStatefulService.getNodeByPathFor(path, null);	
-			Repository repo = node.getRepository();
-					
+			Repository repository = (Repository) GenericTreeStatefulService.getNodeByPathFor(path, null);			
+							
 			ConfigFetchPushPageDto result = new ConfigFetchPushPageDto();
 			List<RemoteConfig> list = new ArrayList<RemoteConfig>();
-			List<org.eclipse.jgit.transport.RemoteConfig> remotes = org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs(repo.getConfig());
+			List<org.eclipse.jgit.transport.RemoteConfig> remotes = org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs(repository.getConfig());
 			
 			for (org.eclipse.jgit.transport.RemoteConfig remote : remotes) {
 				RemoteConfig remoteConfig = new RemoteConfig();
@@ -640,25 +659,37 @@ public class GitService {
 		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.fetch.monitor.title"), context.getCommunicationChannel());
 		
 		try {
-			GitNode<?> node = (GitNode<?>) GenericTreeStatefulService.getNodeByPathFor(path, null);
-			Repository repo = node.getRepository();
-			
-			RemoteNode remote = null;
-			if (node.getType().equals(GitNodeType.NODE_TYPE_REMOTE)) {
-				remote = (RemoteNode) node;
+			Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
+			Repository repository = getRepository(nodeInfo);
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + node, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}
+						
+			String remote = null;
+			if (GitNodeType.NODE_TYPE_REMOTE.equals(nodeInfo.getPathFragment().getType())) {
+				@SuppressWarnings("unchecked")
+				Pair<String, String> pair = (Pair<String, String>) node;
+				remote = pair.a;		
 			}
 			
 			GitProgressMonitor gitMonitor = new GitProgressMonitor(monitor);
 			FetchCommand command;
 			
 			if (remote != null) {
-				command = new Git(repo).fetch().setRemote(remote.getObject());
+				command = new Git(repository).fetch().setRemote(remote);
 			} else {
 				List<RefSpec> specs = new ArrayList<RefSpec>();
 				for (String refMapping : fetchConfig.getFetchMappings()) {
 					specs.add(new RefSpec(refMapping));
 				}			
-				command = new Git(repo).fetch().setRemote(new URIish(fetchConfig.getUri()).toPrivateString()).setRefSpecs(specs);
+				command = new Git(repository).fetch().setRemote(new URIish(fetchConfig.getUri()).toPrivateString()).setRefSpecs(specs);
 			}
 			command.setProgressMonitor(gitMonitor);
 			
@@ -689,7 +720,7 @@ public class GitService {
 					GitPlugin.getInstance().getUtils().handleFetchResult(fetchResult)));
 			
 			if (saveConfig) {
-				org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repo.getConfig(), fetchConfig.getName());
+				org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), fetchConfig.getName());
 				
 				while (repoConfig.getFetchRefSpecs().size() > 0) {
 					RefSpec refspec = repoConfig.getFetchRefSpecs().get(0);
@@ -699,8 +730,8 @@ public class GitService {
 					repoConfig.addFetchRefSpec(new RefSpec(refMapping));
 				}
 				
-				repoConfig.update(repo.getConfig());			
-				repo.getConfig().save();
+				repoConfig.update(repository.getConfig());			
+				repository.getConfig().save();
 			}
 			
 			return true;			
@@ -728,25 +759,37 @@ public class GitService {
 		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.push.monitor.title"), context.getCommunicationChannel());
 		
 		try {
-			GitNode<?> node = (GitNode<?>) GenericTreeStatefulService.getNodeByPathFor(path, null);
-			Repository repo = node.getRepository();
-			
-			RemoteNode remote = null;
-			if (node.getType().equals(GitNodeType.NODE_TYPE_REMOTE)) {
-				remote = (RemoteNode) node;
+			Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
+			Repository repository = getRepository(nodeInfo);
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + node, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}
+						
+			String remote = null;
+			if (GitNodeType.NODE_TYPE_REMOTE.equals(nodeInfo.getPathFragment().getType())) {				
+				@SuppressWarnings("unchecked")
+				Pair<String, String> pair = (Pair<String, String>) node;
+				remote = pair.a;		
 			}
 			
 			GitProgressMonitor gitMonitor = new GitProgressMonitor(monitor);
 			PushCommand command;
 			
 			if (remote != null) {
-				command = new Git(repo).push().setRemote(remote.getObject());
+				command = new Git(repository).push().setRemote(remote);
 			} else {
 				List<RefSpec> specs = new ArrayList<RefSpec>();
 				for (String refMapping : pushConfig.getPushMappings()) {
 					specs.add(new RefSpec(refMapping));
 				}			
-				command = new Git(repo).push().setRemote(new URIish(pushConfig.getUri()).toPrivateString()).setRefSpecs(specs);
+				command = new Git(repository).push().setRemote(new URIish(pushConfig.getUri()).toPrivateString()).setRefSpecs(specs);
 			}
 			command.setProgressMonitor(gitMonitor);
 			command.setCredentialsProvider(new GitUsernamePasswordCredentialsProvider());
@@ -758,7 +801,7 @@ public class GitService {
 					GitPlugin.getInstance().getUtils().handlePushResult(pushResult)));
 			
 			if (saveConfig) {
-				org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repo.getConfig(), pushConfig.getName());
+				org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), pushConfig.getName());
 			
 				while (repoConfig.getPushRefSpecs().size() > 0) {
 					RefSpec refspec = repoConfig.getPushRefSpecs().get(0);
@@ -768,8 +811,8 @@ public class GitService {
 					repoConfig.addPushRefSpec(new RefSpec(refMapping));
 				}
 
-				repoConfig.update(repo.getConfig());			
-				repo.getConfig().save();
+				repoConfig.update(repository.getConfig());			
+				repository.getConfig().save();
 			}
 			
 			return true;
@@ -792,16 +835,24 @@ public class GitService {
 	}
 	
 	@RemoteInvocation
-	public boolean checkout(ServiceInvocationContext context, List<PathFragment> path, String name) {
-		RefNode node = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);	
-		Repository repo = node.getRepository();
-				
-		boolean result = new CheckoutOperation(name, node, context.getCommunicationChannel()).execute();
+	public boolean checkout(ServiceInvocationContext context, List<PathFragment> path, 
+			String name, GitRef upstreamBranch, RemoteConfig remote, boolean rebase) {
 		
-		if (result) {
-			RepositoryNode repoNode = (RepositoryNode) ((SimpleNode) node.getParent()).getParent();
-			dispatchContentUpdate(new SimpleNode(repoNode, repo, GitNodeType.NODE_TYPE_LOCAL_BRANCHES));
-			dispatchContentUpdate(new SimpleNode(repoNode, repo, GitNodeType.NODE_TYPE_WDIRS));
+		Object node =GenericTreeStatefulService.getNodeByPathFor(path, null);			
+		GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+		NodeInfo nodeInfo = service.getVisibleNodes().get(node);
+		Repository repository = getRepository(nodeInfo);
+		
+		boolean result = new CheckoutOperation(node, repository, name, remote, upstreamBranch, rebase, context.getCommunicationChannel()).execute();
+		
+		if (result) {		
+			for (NodeInfo repoChildNodeInfo : service.getVisibleNodes().get(repository).getChildren()) {
+				if (GitNodeType.NODE_TYPE_LOCAL_BRANCHES.equals(repoChildNodeInfo.getPathFragment().getType())
+					|| GitNodeType.NODE_TYPE_WDIRS.equals(repoChildNodeInfo.getPathFragment().getType())
+					|| GitNodeType.NODE_TYPE_REMOTE_BRANCHES.equals(repoChildNodeInfo.getPathFragment().getType())) {
+					dispatchContentUpdate(repoChildNodeInfo);
+				}
+			}		
 		}
 		return result;
 	}
@@ -813,18 +864,21 @@ public class GitService {
 			List<String> directories = new ArrayList<String>();
 			List<File> files = new ArrayList<File>();
 			for (List<PathFragment> path : paths) {
-				GitNode<?> node = (GitNode<?>) GenericTreeStatefulService.getNodeByPathFor(path, null);				
+				Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);		
+				GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+				NodeInfo nodeInfo = service.getVisibleNodes().get(node);
+							
 				if (repo == null) {
-					repo = node.getRepository();
+					repo = getRepository(nodeInfo);
 				}
 				File directory = null;
-				switch (node.getType()) {
+				switch (nodeInfo.getPathFragment().getType()) {
 					case GitNodeType.NODE_TYPE_REPOSITORY:
 					case GitNodeType.NODE_TYPE_WDIR:
 						directory = repo.getWorkTree();				
 						break;
 					case GitNodeType.NODE_TYPE_FOLDER:
-						directory = (File) node.getObject();					
+						directory = (File) node;					
 						break;
 				}		
 				directories.add(directory.getCanonicalPath());
@@ -862,21 +916,41 @@ public class GitService {
 	}
 	
 	@RemoteInvocation
-	public boolean importExistingProjects(ServiceInvocationContext context, List<ProjectDto> projects) {
-		for (ProjectDto project : projects) {
+	public boolean pull(ServiceInvocationContext context, List<PathFragment> path) {
+		tlCommand.set((InvokeServiceMethodServerCommand) context.getCommand());
 			
-		}
-		return true;
-	}
-	
-	@RemoteInvocation
-	public boolean importAsProjects(ServiceInvocationContext context, List<String> folders) {
-		for (String folder : folders) {
+		try {			
+			Ref ref = (Ref) GenericTreeStatefulService.getNodeByPathFor(path, null);			
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo refNodeInfo = service.getVisibleNodes().get(ref);
+			Repository repository = getRepository(refNodeInfo);
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + ref, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}
 				
+			File mainRepoFile = repository.getDirectory().getParentFile();		
+			File wdirFile = new File(mainRepoFile.getParentFile(), GitUtils.WORKING_DIRECTORY_PREFIX + Repository.shortenRefName(ref.getName()));
+			if (!wdirFile.exists()) {
+				return false;
+			}			
+			new PullOperation(ref, GitPlugin.getInstance().getUtils().getRepository(wdirFile), context.getCommunicationChannel()).execute();
+			
+			return true;
+		} catch (Exception e) {		
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							e.getMessage(), 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
 		}
-		return true;
 	}
-	
+		
 	@RemoteInvocation
 	public CommitPageDto getCommitData(ServiceInvocationContext context, List<List<PathFragment>> paths) {
 		List<File> files = new ArrayList<File>();
@@ -888,12 +962,52 @@ public class GitService {
 	}
 	
 	@RemoteInvocation
+	public Object getAllRemotes(ServiceInvocationContext context, List<PathFragment> path) {
+		try {
+			Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);		
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
+			Repository repository = getRepository(nodeInfo);
+			
+			List<RemoteConfig> list = new ArrayList<RemoteConfig>();
+			List<org.eclipse.jgit.transport.RemoteConfig> remotes = org.eclipse.jgit.transport.RemoteConfig.getAllRemoteConfigs(repository.getConfig());
+			
+			for (org.eclipse.jgit.transport.RemoteConfig remote : remotes) {
+				RemoteConfig remoteConfig = new RemoteConfig();
+				remoteConfig.setName(remote.getName());
+				remoteConfig.setUri(remote.getURIs().get(0).toString());			
+				list.add(remoteConfig);
+			}
+			return list;
+		} catch (Exception e) {		
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), path, e);
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							e.getMessage(), 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));	
+			return null;
+		}
+	}
+	
+	@RemoteInvocation
 	public boolean openCredentials(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
-			RemoteNode node = (RemoteNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			Repository repo = node.getRepository();
-			
-			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repo.getConfig(), node.getObject());
+			@SuppressWarnings("unchecked")
+			Pair<String, String> remote = (Pair<String, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);		
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo remoteNodeInfo = service.getVisibleNodes().get(remote);
+			Repository repository = getRepository(remoteNodeInfo);
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + remote, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}
+						
+			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), remote.a);
 						
 			URIish uri = repoConfig.getURIs().get(0);		
 			List<String> credentials = ((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUserGitRepositories().get(uri.toString());
@@ -917,10 +1031,19 @@ public class GitService {
 	@RemoteInvocation
 	public boolean clearCredentials(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
-			RemoteNode node = (RemoteNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			Repository repo = node.getRepository();
-			
-			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repo.getConfig(), node.getObject());
+			@SuppressWarnings("unchecked")
+			Pair<String, String> remote = (Pair<String, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);		
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			Repository repository = getRepository(service.getVisibleNodes().get(remote));
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + remote, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}
+			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), remote.a);
 			
 			URIish uri = repoConfig.getURIs().get(0);			
 			((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUserGitRepositories().remove(uri.toString());

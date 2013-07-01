@@ -5,6 +5,7 @@ package org.flowerplatform.web.git {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.web.git.dto.GitRef;
 	import org.flowerplatform.web.git.dto.RemoteConfig;
 
 	/**
@@ -44,12 +45,12 @@ package org.flowerplatform.web.git {
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
-		public function cloneRepository(selectedNode:TreeNode, repositoryURL:String, branches:ArrayCollection, initialBranch:String, 
+		public function cloneRepository(selectedNode:TreeNode, repositoryURL:String, branches:ArrayCollection,
 										remoteName:String, cloneAllBranches:Boolean, 
 										resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {
 			invokeServiceMethod(
 				"cloneRepository", 
-				[selectedNode.getPathForNode(true), repositoryURL, branches, initialBranch, remoteName, cloneAllBranches], 
+				[selectedNode.getPathForNode(true), repositoryURL, branches, remoteName, cloneAllBranches], 
 				resultCallbackObject, resultCallbackFunction);	
 		}
 	
@@ -151,11 +152,11 @@ package org.flowerplatform.web.git {
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
-		public function checkout(selectedNode:TreeNode, name:String,
+		public function checkout(selectedNode:TreeNode, name:String, upstreamBranch:GitRef, remote:RemoteConfig, rebase:Boolean,
 								 resultCallbackObject:Object, resultCallbackFunction:Function):void {
 			invokeServiceMethod(
 				"checkout", 
-				[selectedNode.getPathForNode(true), name],
+				[selectedNode.getPathForNode(true), name, upstreamBranch, remote, rebase],
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
@@ -196,6 +197,30 @@ package org.flowerplatform.web.git {
 			invokeServiceMethod(
 				"commit", 
 				[repositoryLocation, files, author, committer, message, amending],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function getAllRemotes(selectedNode:TreeNode,
+										 resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {			
+			invokeServiceMethod(
+				"getAllRemotes", 
+				[selectedNode.getPathForNode(true)], 
+				resultCallbackObject, resultCallbackFunction);	
+		}
+		
+		public function getRemoteBranches(selectedNode:TreeNode, remote:RemoteConfig,
+									  resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {			
+			invokeServiceMethod(
+				"getRemoteBranches", 
+				[selectedNode.getPathForNode(true), remote], 
+				resultCallbackObject, resultCallbackFunction);	
+		}
+		
+		public function pull(selectedNode:TreeNode,
+								 resultCallbackObject:Object = null, resultCallbackFunction:Function = null):void {
+			invokeServiceMethod(
+				"pull", 
+				[selectedNode.getPathForNode(true)],
 				resultCallbackObject, resultCallbackFunction);
 		}
 		

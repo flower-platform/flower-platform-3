@@ -220,7 +220,7 @@ public class ProjectsService {
 
 		return new Pair<File, Boolean>(null, false);
 	}
-
+	
 	@RemoteInvocation
 	public void markAsWorkingDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")

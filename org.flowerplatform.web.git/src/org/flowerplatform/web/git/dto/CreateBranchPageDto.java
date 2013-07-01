@@ -3,6 +3,8 @@ package org.flowerplatform.web.git.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.flowerplatform.web.git.remote.dto.GitRef;
+
 /**
  *	@author Cristina Constantinescu
  */

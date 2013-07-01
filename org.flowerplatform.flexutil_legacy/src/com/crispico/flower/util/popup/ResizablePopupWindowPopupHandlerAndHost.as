@@ -95,5 +95,19 @@ package com.crispico.flower.util.popup {
 			ControlBar(controlBar).addChild(DisplayObject(value));
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function showSpinner(text:String):void {	
+			ModalSpinner.addModalSpinner(this, text);
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function hideSpinner():void {		
+			ModalSpinner.removeModalSpinner(this);
+		}
+		
 	}
 }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Cristina Constantinescu
+-->
+<ns:CustomTitlePanel xmlns:mx="http://www.adobe.com/2006/mxml" 
+					 headerHeight="0" borderStyle="none" borderVisible="false"
+					 creationComplete="creationCompleteHandler()" xmlns:ns="com.crispico.flower.util.panel.*" xmlns:s="library://ns.adobe.com/flex/spark">
+
+	<mx:Script>
+
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
+			import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
+		
+			[Bindable]
+			public var selectConfiguredRemotes:Boolean = false;
+			
+			[Bindable]
+			private var remoteConfigs:ArrayCollection;
+			
+			public var isFetchConfig:Boolean;
+			
+			private function creationCompleteHandler():void {
+				if (!selectConfiguredRemotes) {
+					callLater(uri.setFocus);
+				} else {
+					remoteConfig.selected = true;
+					changeSelection();
+				}
+			}
+			
+			private function changeSelection():void {
+				remotes.enabled = remoteConfig.selected;
+				uri.enabled = customUri.selected;				
+			}
+			
+			private function getRemoteConfigLabel(item:Object):String {
+				if (isFetchConfig) {
+					return RemoteConfig(item).name + " - " + RemoteConfig(item).uri;
+				}
+				return RemoteConfig(item).name + " - " + RemoteConfig(item).uri;
+			}
+			
+			public function getURI():String {	
+				return uri.text;
+			}	
+			
+			public function getRemoteConfig():RemoteConfig {	
+				return RemoteConfig(remotes.selectedItem);
+			}
+	
+		]]>
+	</mx:Script>
+	
+	<mx:VBox width="100%" height="100%">
+		<mx:RadioButtonGroup id="group" change="changeSelection()"/>
+		
+		<mx:RadioButton id="remoteConfig"  group="{group}" 
+						label="{GitCommonPlugin.getInstance().getMessage('git.repoSelection.configRemote.label')}"
+						visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}"	
+						/>
+		<mx:ComboBox id="remotes"  dataProvider="{remoteConfigs}" labelFunction="getRemoteConfigLabel"
+					 visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}" />
+					
+		<mx:RadioButton id="customUri" group="{group}" 
+						label="{GitCommonPlugin.getInstance().getMessage('git.repoSelection.customUri.label')}"
+						visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}"	/>
+		
+		<mx:Form id="form" width="100%" height="100%">
+			<mx:FormItem label="{GitCommonPlugin.getInstance().getMessage('git.uri.label')}" width="100%">
+				<s:TextInput id="uri" width="100%" />
+			</mx:FormItem>
+		</mx:Form>
+	</mx:VBox>	
+	
+</ns:CustomTitlePanel>

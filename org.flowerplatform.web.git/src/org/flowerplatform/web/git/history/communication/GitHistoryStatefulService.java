@@ -1,6 +1,5 @@
 package org.flowerplatform.web.git.history.communication;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -51,8 +51,8 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.git.GitPlugin;
+import org.flowerplatform.web.git.GitService;
 import org.flowerplatform.web.git.dto.CommitDto;
-import org.flowerplatform.web.git.entity.RepositoryNode;
 import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
 import org.flowerplatform.web.git.history.dto.HistoryFileDiffEntryDto;
 import org.flowerplatform.web.git.history.dto.HistoryViewInfoDto;
@@ -472,13 +472,15 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 //			info.setResource1(resource);
 //			info.setRepository1(GitPlugin.getInstance().getGitUtils().getRepository(mapping));	
 		} else {
-			RepositoryNode node = (RepositoryNode) GenericTreeStatefulService.getNodeByPathFor((List<PathFragment>) info.getSelectedObject(), null);
-			if (!(node instanceof RepositoryNode)) {
+			Object node = GenericTreeStatefulService.getNodeByPathFor((List<PathFragment>) info.getSelectedObject(), null);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot((List<PathFragment>) info.getSelectedObject());
+			Repository repository = GitService.getInstance().getRepository(service.getVisibleNodes().get(node));
+			if (repository == null) {
 				throw new IOException();
 			}
 			
 			info.setFile1(null);
-			info.setRepository1(node.getRepository());
+			info.setRepository1(repository);
 		}
 	}	
 	

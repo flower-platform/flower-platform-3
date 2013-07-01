@@ -1,5 +1,7 @@
 package org.flowerplatform.communication.command {
 	import mx.controls.Alert;
+	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 		
 	/**
 	 * @see JavaDoc
@@ -67,7 +69,10 @@ package org.flowerplatform.communication.command {
 //			}
 			// TODO CS/FP2: copy DisplayMessageDialog; but more precisely: make this class compatible with mobile
 //			if (details == null) // We use the Alert because the custom dialog doesn't know how to use establish it's size
-				Alert.show(_message, _title, Alert.OK, null, null, image); 
+				FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+					.setText(_message)
+					.setTitle(_title)
+					.showMessageBox(); 
 //			else
 //				DisplayMessageDialog.show(title, image, message, details); 
 		}

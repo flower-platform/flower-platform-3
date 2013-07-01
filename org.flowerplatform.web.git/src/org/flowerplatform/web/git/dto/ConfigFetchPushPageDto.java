@@ -2,6 +2,9 @@ package org.flowerplatform.web.git.dto;
 
 import java.util.List;
 
+import org.flowerplatform.web.git.remote.dto.GitRef;
+import org.flowerplatform.web.git.remote.dto.RemoteConfig;
+
 /**
  *	@author Cristina Constantinescu
  */

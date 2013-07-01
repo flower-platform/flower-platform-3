@@ -33,6 +33,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
@@ -40,6 +42,7 @@ import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.FlowerWebProperties;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.web.entity.User;
@@ -54,7 +57,8 @@ public class GitUtils {
 	private static Logger logger = LoggerFactory.getLogger(GitUtils.class);
 	
 	public static final String MAIN_REPOSITORY = "main";
-		
+	public static final String WORKING_DIRECTORY_PREFIX = "wd_";
+	
 	public static final String GIT_REPOSITORIES_NAME = ".git-repositories";
 	
 	/**
@@ -76,20 +80,22 @@ public class GitUtils {
 	private static final String GIT_NEW_WORKDIR_LINUX = "git-new-workdir_linux.sh";
 	
 	static {
-//		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(GIT_INSTALL_DIR, "") {			
-//			/**
-//			 * Verify if git.exe exists at given location.
-//			 */
-//			@Override			
-//			protected String validateProperty(String input) {				
-//				String git = WebPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
-//				if (!new File(git).exists()) {
-//					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
-//				}
-//				return null;
-//			}
-//		}.setInputFromFileMandatory(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0));
-//				
+		FlowerWebProperties.AddProperty addProperty = new FlowerWebProperties.AddProperty(GIT_INSTALL_DIR, "") {			
+			/**
+			 * Verify if git.exe exists at given location.
+			 */
+			@Override			
+			protected String validateProperty(String input) {				
+				String git = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
+				if (!new File(git).exists()) {
+					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
+				}
+				return null;
+			}
+		}.setInputFromFileMandatory(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0);
+		
+		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(addProperty);
+				
 		// verify JavaVM version; it must be >= 1.7
 		String jvmVersion = System.getProperty("java.vm.specification.version");
 		if (jvmVersion.compareTo("1.7") < 0) {
@@ -188,7 +194,7 @@ public class GitUtils {
 	}
 	
 	public String getRepositoryName(Repository repo) {
-		return repo.getDirectory().getParent();
+		return repo.getDirectory().getParentFile().getParentFile().getName();
 	}
 	
 	/**
@@ -396,6 +402,18 @@ public class GitUtils {
 		return true;
 	}
 	
+	public RevCommit getHeadCommit(Repository repository) {
+		RevCommit headCommit = null;
+		try {
+			ObjectId parentId = repository.resolve(Constants.HEAD);
+			if (parentId != null) {
+				headCommit = new RevWalk(repository).parseCommit(parentId);
+			}
+		} catch (IOException e) {
+			return null;
+		}
+		return headCommit;
+	}
 	
 	private NamedLockPool namedLockPool = new NamedLockPool();
 	
@@ -464,7 +482,7 @@ public class GitUtils {
 			cmd.add(source);
 			cmd.add(destination);
 			if (isWindows) {
-				String git = "D:/Program Files/Git/cmd/git.exe";//FlowerWebProperties.INSTANCE.getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
+				String git = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
 				if (!new File(git).exists()) {
 					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
 				}
