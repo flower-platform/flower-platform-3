@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.flowerplatform.emf_model.astcache.code/src"
+    editDirectory="" editorDirectory="" modelPluginID="org.flowerplatform.emf_model.astcache.code"
+    modelName="AstCacheCode" modelPluginClass="" testsDirectory="" importerID="org.eclipse.emf.importer.ecore"
+    complianceLevel="6.0" copyrightFields="false" usedGenPackages="../../org.flowerplatform.emf_model.codesync/emf_model/CodeSync.genmodel#//codesync platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>AstCacheCode.ecore</foreignModel>
+  <genPackages prefix="Astcache" disposableProviderFactory="true" ecorePackage="AstCacheCode.ecore#/">
+    <nestedGenPackages prefix="AstCacheCode" basePackage="com.crispico.flower.mp.model.astcache"
+        disposableProviderFactory="true" ecorePackage="AstCacheCode.ecore#//code">
+      <genClasses image="false" ecoreClass="AstCacheCode.ecore#//code/DocumentableElement">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/DocumentableElement/documentation"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="AstCacheCode.ecore#//code/TypedElement">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/TypedElement/type"/>
+      </genClasses>
+      <genClasses ecoreClass="AstCacheCode.ecore#//code/ModifiableElement">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AstCacheCode.ecore#//code/ModifiableElement/modifiers"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="AstCacheCode.ecore#//code/ExtendedModifier"/>
+      <genClasses image="false" ecoreClass="AstCacheCode.ecore#//code/Modifier">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/Modifier/type"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="AstCacheCode.ecore#//code/Annotation">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/Annotation/name"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AstCacheCode.ecore#//code/Annotation/values"/>
+      </genClasses>
+      <genClasses image="false" ecoreClass="AstCacheCode.ecore#//code/AnnotationValue">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/AnnotationValue/name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/AnnotationValue/value"/>
+      </genClasses>
+      <genClasses ecoreClass="AstCacheCode.ecore#//code/Class">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/Class/superClasses"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/Class/superInterfaces"/>
+      </genClasses>
+      <genClasses ecoreClass="AstCacheCode.ecore#//code/Attribute">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/Attribute/initializer"/>
+      </genClasses>
+      <genClasses ecoreClass="AstCacheCode.ecore#//code/Operation">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference AstCacheCode.ecore#//code/Operation/parameters"/>
+      </genClasses>
+      <genClasses ecoreClass="AstCacheCode.ecore#//code/Parameter">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/Parameter/name"/>
+      </genClasses>
+      <genClasses ecoreClass="AstCacheCode.ecore#//code/EnumConstant">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/EnumConstant/arguments"/>
+      </genClasses>
+      <genClasses ecoreClass="AstCacheCode.ecore#//code/AnnotationMember">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute AstCacheCode.ecore#//code/AnnotationMember/defaultValue"/>
+      </genClasses>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>

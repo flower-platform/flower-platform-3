@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.flowerplatform.emf_model.astcache.code;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Bundle-Localization: plugin
+Export-Package: com.crispico.flower.mp.model.astcache.code,
+ com.crispico.flower.mp.model.astcache.code.impl,
+ com.crispico.flower.mp.model.astcache.code.util
+Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
+ org.flowerplatform.emf_model.codesync
+Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
+Bundle-RegisterBuddy: com.crispico.flower.mp.model.codesync, org.eclipse.emf.ecore
