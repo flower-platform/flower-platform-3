@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" paddingLeft="3" paddingTop="3" paddingRight="3" paddingBottom="3">
+	<mx:Panel id="leftPanel" title="Left" headerHeight="15" borderThicknessTop="4" borderThicknessLeft="4" borderThicknessBottom="4" borderThicknessRight="4" cornerRadius="0" borderColor="#D39BF6">
+	</mx:Panel>
+	<mx:Panel id="rightPanel" title="Right" headerHeight="15" borderThicknessTop="4" borderThicknessLeft="4" borderThicknessBottom="4" borderThicknessRight="4" cornerRadius="0" borderColor="#D39BF6">
+	</mx:Panel>
+</mx:HBox>

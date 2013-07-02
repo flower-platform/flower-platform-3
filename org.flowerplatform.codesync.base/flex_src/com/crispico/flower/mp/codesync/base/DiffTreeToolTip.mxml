@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" 
+	implements="mx.core.IToolTip">
+	
+	<mx:Script>
+		<![CDATA[
+
+			public function get text():String {
+				return null;
+			}
+	
+			public function set text(value:String):void {
+				var array:Array = value == null ? [] : value.split("|||");
+				if (array.length == 2) {
+					leftLabel.text = array[0];
+					rightLabel.text = array[1];
+				} else {
+					leftLabel.text = null;
+					rightLabel.text = null;
+				}
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:Panel title="Left">
+		<mx:Label id="leftLabel" width="400" height="100"/>
+	</mx:Panel>
+	<mx:Panel title="Right">
+		<mx:Label id="rightLabel" width="400" height="100"/>
+	</mx:Panel>
+</mx:HBox>
