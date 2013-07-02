@@ -107,7 +107,7 @@ package  org.flowerplatform.blazeds {
 		 */ 
 		private var laterUnderliveredObjects:ArrayCollection = new ArrayCollection();		
 		
-		public var explicitEndpointURI:String;
+		private var explicitEndpointURI:String;
 		
 		/**
 		 * Initializes ChannelSet, Producer, Consumer, assigns their properties and their listeners.
@@ -569,33 +569,48 @@ package  org.flowerplatform.blazeds {
 			channelSet.channels = newChannels;
 		}
 		
+		/**
+		 * @author Mariana
+		 */
+		public function setExplicitEndpointURI(value:String):void {
+			if (value != null && value.length > 0) {
+				this.explicitEndpointURI = value;
+				configureEndpoints();
+			}
+		}
+		
 		private function configureEndpoints():void {
-//			if (explicitEndpointURI == null) {
-//				// Determine context root dynamically
-//				var applicationURL:String = FlexGlobals.topLevelApplication.url;
-//				var newContextRoot:String = getContextRootFromURL(applicationURL);
-//			}
+			if (explicitEndpointURI == null) {
+				// Determine context root dynamically
+				var applicationURL:String = FlexGlobals.topLevelApplication.url;
+				var newContextRoot:String = getContextRootFromURL(applicationURL);
+			}
 			
 			// Replace services-config.xml uri endpoint with the dynamicly computed context root.
 			// We need to do this because {context.root} in services-config.xml is replaced at compile time
 			// so moving the application in a different context at the runtime would make it to stop working.
 			for each(var endpoint:XML in ServerConfig.xml..endpoint) {
-				if (explicitEndpointURI == null) {
+//				if (explicitEndpointURI == null) {
 					var uri:String = String(endpoint.@uri);
 					var oldContextRoot:String = getContextRootFromURL(uri);
-//					endpoint.@uri = uri.replace(oldContextRoot, newContextRoot);
-					uri = uri.replace("{server.name}", "localhost");
-					endpoint.@uri = uri.replace("{server.port}", "8080");
-				} else {
-					endpoint.@uri = explicitEndpointURI;
-				}
+					if (newContextRoot)
+						endpoint.@uri = uri.replace(oldContextRoot, newContextRoot);
+					if (explicitEndpointURI) {
+						uri = uri.replace("{server.name}", explicitEndpointURI.split(":")[0]);
+						endpoint.@uri = uri.replace("{server.port}", explicitEndpointURI.split(":")[1]);
+					}
+//				} else {
+//					endpoint.@uri = explicitEndpointURI;
+//				}
 			}
 		}
 		
 		private function getContextRootFromURL(fullURL:String):String {
 			var serverURL:String = URLUtil.getServerNameWithPort(fullURL) + "/";
 			var restURL:String = fullURL.split(serverURL)[1];
-			return restURL.substring(0, restURL.indexOf("/"));
+			if (restURL)
+				return restURL.substring(0, restURL.indexOf("/"));
+			return null;
 		}
 		
 		private static const CLIENT_CONNECTING_RETRY_PERIOD:String = "client.connecting.retry.period";
