@@ -16,6 +16,7 @@ package org.flowerplatform.web.mobile.text
 	import mx.core.DPIClassification;
 	import mx.core.mx_internal;
 	
+	import spark.components.Scroller;
 	import spark.components.TextArea;
 	import spark.components.supportClasses.StyleableTextField;
 	
@@ -93,16 +94,46 @@ package org.flowerplatform.web.mobile.text
 		//
 		//--------------------------------------------------------------------------
 		
+		/**
+		 *  Scroller skin part.
+		 *
+		 *  @langversion 3.0
+		 *  @playerversion Flash 10
+		 *  @playerversion AIR 2.5 
+		 *  @productversion Flex 4.5
+		 */ 
+		public var scroller:Scroller;
+		
 		/** 
 		 *  @copy spark.skins.spark.ApplicationSkin#hostComponent
 		 */
-		public var hostComponent:TextArea;  // SkinnableComponent will populate
+		public var hostComponent:TextArea;
+		
+		// SkinnableComponent will populate
 		
 		//--------------------------------------------------------------------------
 		//
 		//  Overridden methods
 		//
 		//--------------------------------------------------------------------------
+		
+		override protected function createChildren():void
+		{
+			super.createChildren();
+			
+			if (!scroller)
+			{
+				scroller = new Scroller();
+				scroller.minViewportInset = 0;
+				scroller.measuredSizeIncludesScrollBars = false;
+				scroller.ensureElementIsVisibleForSoftKeyboard = false;
+				
+				addChild(scroller);
+			}
+			
+			if (!scroller.viewport)
+				scroller.viewport = textDisplay;
+		}
 		
 		/**
 		 *  @private
@@ -112,6 +143,16 @@ package org.flowerplatform.web.mobile.text
 		{
 			// base class handles border position & size
 			super.layoutContents(unscaledWidth, unscaledHeight);
+			
+			// position & size border
+			if (border)
+			{
+				setElementSize(border, unscaledWidth, unscaledHeight);
+				setElementPosition(border, 0, 0);
+			}
+			
+			setElementSize(scroller, unscaledWidth, unscaledHeight);
+			setElementPosition(scroller, 0, 0);
 			
 			// position & size the text
 			var paddingLeft:Number = getStyle("paddingLeft");

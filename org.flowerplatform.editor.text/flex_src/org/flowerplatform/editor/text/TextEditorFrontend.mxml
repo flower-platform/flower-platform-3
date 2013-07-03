@@ -188,7 +188,7 @@
 			}
 			
 			public override function disableEditing():void {
-				syntaxTextEditor.editable = false;
+//				syntaxTextEditor.editable = false;
 			}
 			
 			public override function enableEditing():void {

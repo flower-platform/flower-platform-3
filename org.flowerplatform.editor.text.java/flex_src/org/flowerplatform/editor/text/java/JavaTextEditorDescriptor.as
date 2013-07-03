@@ -28,7 +28,7 @@ package org.flowerplatform.editor.text.java {
 		}
 		
 		override public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return null;
+			return EditorTextJavaPlugin.getInstance().getResourceUrl("images/java_file.gif");
 		}
 		
 		override public function getTitle(viewLayoutData:ViewLayoutData=null):String {
