@@ -158,7 +158,7 @@
          point="org.flowerplatform.communication.service">
       <service
             id="GitHistoryStatefulService"
-            serviceClass="org.flowerplatform.web.git.history.communication.GitHistoryStatefulService">
+            serviceClass="org.flowerplatform.web.git.history.remote.GitHistoryStatefulService">
       </service>
    </extension>
    <extension
@@ -209,5 +209,17 @@
                nodeTypeCategory="decoratableFile">
          </nodeTypeCategory>
       </nodeTypeToCategoriesMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.explorerAdditionalNodePopulator">
+      <explorerAdditionalNodePopulator
+            populator="org.flowerplatform.web.git.explorer.FSFile_GitNodePopulator">
+         <nodeType
+               nodeType="projFile">
+         </nodeType>
+         <nodeType
+               nodeType="project">
+         </nodeType>
+      </explorerAdditionalNodePopulator>
    </extension>
 </plugin>

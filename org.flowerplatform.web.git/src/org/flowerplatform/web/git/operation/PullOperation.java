@@ -16,7 +16,6 @@ import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
 import org.flowerplatform.web.git.GitPlugin;
 import org.flowerplatform.web.git.GitProgressMonitor;
 import org.flowerplatform.web.git.GitService;
-import org.flowerplatform.web.git.command.client.OpenOperationResultWindowClientCommand;
 import org.flowerplatform.web.git.operation.internal.PullCommand;
 import org.flowerplatform.web.git.operation.internal.PullResult;
 
@@ -59,9 +58,10 @@ public class PullOperation {
 			String result = GitPlugin.getInstance().getUtils().handleFetchResult(pullResult.getFetchResult()) + "\n" 
 								+ GitPlugin.getInstance().getUtils().handleMergeResult(pullResult.getMergeResult());
 			
-			channel.appendOrSendCommand(new OpenOperationResultWindowClientCommand(
+			channel.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					GitPlugin.getInstance().getMessage("git.pull.result"), 
-					result));
+					result,
+					DisplaySimpleMessageClientCommand.ICON_INFORMATION));
 			
 			return true;
 		} catch (DetachedHeadException e) {

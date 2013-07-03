@@ -14,6 +14,7 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.git.GitNodeType;
+import org.flowerplatform.web.git.explorer.entity.RefNode;
 
 /**
  * Parent node = Virtual node (Local Branches, Remote Branches, Tags) (i.e. Pair<Repository, nodeType>).<br/>
@@ -50,7 +51,7 @@ public class Ref_VirtualItemChildrenProvider implements IChildrenProvider {
 			Pair<Object, String> child;	
 	
 			for (Ref ref : refs) {			
-				child = new Pair<Object, String>(ref, childType);
+				child = new Pair<Object, String>(new RefNode(repository, ref), childType);
 				result.add(child);
 			}
 		} catch (Exception e) {

@@ -34,6 +34,8 @@ package  org.flowerplatform.web.git.common.action {
 				.setText(GitCommonPlugin.getInstance().getMessage("git.deleteRepo.message"))
 				.addButton("Yes", confirmDeleteHandler)
 				.addButton("No")
+				.setWidth(300)
+				.setHeight(300)
 				.showMessageBox();			
 		}
 		

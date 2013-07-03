@@ -11,6 +11,7 @@ package org.flowerplatform.web.git.action {
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.git.GitNodeType;
 	import org.flowerplatform.web.git.GitPlugin;
+	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.history.GitHistoryView;
 	import org.flowerplatform.web.git.history.GitHistoryViewProvider;
 	
@@ -28,8 +29,8 @@ package org.flowerplatform.web.git.action {
 		override public function get visible():Boolean {
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {			
 				var node:TreeNode = TreeNode(selection.getItemAt(0));
-				return node.pathFragment.type == GitNodeType.NODE_TYPE_REPOSITORY ||
-					node.pathFragment.type == GitNodeType.NODE_TYPE_LOCAL_BRANCH;
+				return node.pathFragment.type == GitCommonPlugin.NODE_TYPE_REPOSITORY ||
+					node.pathFragment.type == GitCommonPlugin.NODE_TYPE_LOCAL_BRANCH;
 			}
 			return false;
 		}

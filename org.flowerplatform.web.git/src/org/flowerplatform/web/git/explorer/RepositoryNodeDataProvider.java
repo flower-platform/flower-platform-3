@@ -1,5 +1,6 @@
 package org.flowerplatform.web.git.explorer;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.jgit.lib.Repository;
@@ -29,7 +30,8 @@ public class RepositoryNodeDataProvider implements INodeDataProvider {
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
 		Repository repository = (Repository) node;	
-		return new PathFragment(repository.getDirectory().getParentFile().getParentFile().getName(), nodeType);
+		File mainRepoFile = repository.getDirectory().getParentFile();
+		return new PathFragment(mainRepoFile.getParentFile().getName(), nodeType);
 	}
 
 	@Override

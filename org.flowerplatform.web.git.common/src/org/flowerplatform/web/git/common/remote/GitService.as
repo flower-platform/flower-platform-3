@@ -136,19 +136,19 @@ package org.flowerplatform.web.git.common.remote {
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
-		public function fetch(selectedNode:TreeNode, remoteConfig:RemoteConfig, tagOpt:int, saveConfig:Boolean,
+		public function fetch(selectedNode:TreeNode, remoteConfig:RemoteConfig,
 							  resultCallbackObject:Object, resultCallbackFunction:Function):void {
 			invokeServiceMethod(
 				"fetch",
-				[selectedNode.getPathForNode(true), remoteConfig, tagOpt, saveConfig],
+				[selectedNode.getPathForNode(true), remoteConfig],
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
-		public function push(selectedNode:TreeNode, remoteConfig:RemoteConfig, saveConfig:Boolean,
+		public function push(selectedNode:TreeNode, remoteConfig:RemoteConfig,
 							  resultCallbackObject:Object, resultCallbackFunction:Function):void {
 			invokeServiceMethod(
 				"push",
-				[selectedNode.getPathForNode(true), remoteConfig, saveConfig],
+				[selectedNode.getPathForNode(true), remoteConfig],
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
@@ -160,30 +160,22 @@ package org.flowerplatform.web.git.common.remote {
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
-		public function getProjects(selection:ArrayList,
+		public function getProjects(selectedNode:TreeNode,
 								 resultCallbackObject:Object, resultCallbackFunction:Function):void {
 			invokeServiceMethod(
 				"getProjects", 
-				[convertSelection(selection)],
+				[selectedNode.getPathForNode(true)],
 				resultCallbackObject, resultCallbackFunction);
 		}
 		
-		public function importExistingProjects(selection:ArrayCollection,
+		public function importProjects(selection:ArrayCollection,
 									resultCallbackObject:Object, resultCallbackFunction:Function):void {
 			invokeServiceMethod(
-				"importExistingProjects", 
+				"importProjects", 
 				[selection],
 				resultCallbackObject, resultCallbackFunction);
 		}
-		
-		public function importAsProjects(selection:ArrayCollection,
-											   resultCallbackObject:Object, resultCallbackFunction:Function):void {
-			invokeServiceMethod(
-				"importAsProjects", 
-				[selection],
-				resultCallbackObject, resultCallbackFunction);
-		}
-		
+				
 		public function getCommitData(selection:ArrayList,
 							   resultCallbackObject:Object, resultCallbackFunction:Function):void {
 			invokeServiceMethod(
@@ -198,6 +190,12 @@ package org.flowerplatform.web.git.common.remote {
 				"commit", 
 				[repositoryLocation, files, author, committer, message, amending],
 				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function pushToUpstream(repositoryLocation:String):void {
+			invokeServiceMethod(
+				"pushToUpstream", 
+				[repositoryLocation]);
 		}
 		
 		public function getAllRemotes(selectedNode:TreeNode,
@@ -230,6 +228,30 @@ package org.flowerplatform.web.git.common.remote {
 		
 		public function clearCredentials(selectedNode:TreeNode):void {
 			invokeServiceMethod("clearCredentials", [selectedNode.getPathForNode(true)]);
+		}
+		
+		public function deleteBranch(selectedNode:TreeNode,
+									resultCallbackObject:Object, resultCallbackFunction:Function):void {
+			invokeServiceMethod(
+				"deleteBranch", 
+				[selectedNode.getPathForNode(true)],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function configBranch(selectedNode:TreeNode, upstreamBranch:GitRef, remote:RemoteConfig, rebase:Boolean, 
+									 resultCallbackObject:Object = null, resultCallbackFunction:Function = null):void {
+			invokeServiceMethod(
+				"configBranch", 
+				[selectedNode.getPathForNode(true), upstreamBranch, remote, rebase],
+				resultCallbackObject, resultCallbackFunction);
+		}
+		
+		public function getConfigBranchData(selectedNode:TreeNode,
+									  resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {			
+			invokeServiceMethod(
+				"getConfigBranchData", 
+				[selectedNode.getPathForNode(true)], 
+				resultCallbackObject, resultCallbackFunction);	
 		}
 	}
 }

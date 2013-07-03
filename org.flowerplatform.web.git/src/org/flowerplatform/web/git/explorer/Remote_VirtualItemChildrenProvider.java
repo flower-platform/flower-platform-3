@@ -11,6 +11,7 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.git.GitNodeType;
+import org.flowerplatform.web.git.explorer.entity.RemoteNode;
 
 /**
  * Parent node = Virtual node (Remotes) (i.e. Pair<Repository, nodeType>).<br/>
@@ -29,9 +30,9 @@ public class Remote_VirtualItemChildrenProvider implements IChildrenProvider {
 		Set<String> configNames = repository.getConfig().getSubsections(ConfigConstants.CONFIG_KEY_REMOTE);
 
 		Pair<Object, String> child;	
-		Pair<String, String> realChild;
+		RemoteNode realChild;
 		for (String configName : configNames) {
-			realChild = new Pair<String, String>(configName, GitNodeType.NODE_TYPE_REMOTE);
+			realChild = new RemoteNode(repository, configName);
 			child = new Pair<Object, String>(realChild, GitNodeType.NODE_TYPE_REMOTE);
 			result.add(child);
 		}

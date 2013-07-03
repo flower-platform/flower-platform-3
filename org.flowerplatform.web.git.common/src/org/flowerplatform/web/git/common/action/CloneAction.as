@@ -26,8 +26,11 @@ package org.flowerplatform.web.git.common.action {
 		override public function run():void {
 			var cloneWindow:CloneView = new CloneView();
 			cloneWindow.selectedNode = selection.getItemAt(0) as TreeNode;
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler().setPopupContent(cloneWindow).show();
-//			cloneWindow.showPopup();
+			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+				.setPopupContent(cloneWindow)
+				.setWidth(400)
+				.setHeight(350)					
+				.show();	
 		}
 		
 	}

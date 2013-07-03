@@ -3,9 +3,19 @@ package org.flowerplatform.web.git {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.WebPlugin;
+	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.git.action.ShowHistoryAction;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.history.GitHistoryViewProvider;
+	import org.flowerplatform.web.git.history.remote.GitHistoryStatefulClientLocalState;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryCommitMessageDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryDrawingDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryFileDiffEntryDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryViewInfoDto;
 	import org.flowerplatform.web.git.layout.GitPerspective;
+	import org.flowerplatform.web.git.remote.dto.CommitDto;
+	import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -31,13 +41,26 @@ package org.flowerplatform.web.git {
 			INSTANCE = this;	
 						
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new GitHistoryViewProvider());
-			WebPlugin.getInstance().perspectives.push(new GitPerspective());				
+			WebPlugin.getInstance().perspectives.push(new GitPerspective());	
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(ShowHistoryAction);
 		}
 		
 		override public function start():void {
 			super.start();
 			gitCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			gitCommonPlugin.start();
-		}		
+		}	
+		
+		override protected function registerClassAliases():void {
+			registerClassAliasFromAnnotation(CommitDto);	
+			registerClassAliasFromAnnotation(ViewInfoDto);			
+			registerClassAliasFromAnnotation(HistoryEntryDto);
+			registerClassAliasFromAnnotation(HistoryDrawingDto);
+			registerClassAliasFromAnnotation(HistoryFileDiffEntryDto);
+			registerClassAliasFromAnnotation(HistoryCommitMessageDto);
+			registerClassAliasFromAnnotation(HistoryViewInfoDto);			
+			registerClassAliasFromAnnotation(GitHistoryStatefulClientLocalState);			
+		}
+		
 	}
 }

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Cristina Constantinescu
+-->
+<popup:Wizard xmlns:popup="org.flowerplatform.flexutil.popup.*"		
+			  xmlns:fx="http://www.adobe.com/2006/mxml" 
+			  xmlns:s="library://ns.adobe.com/flex/spark" 
+			  xmlns:mx="library://ns.adobe.com/flex/mx"  >
+	
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.IndexChangedEvent;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.Utils;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
+			import org.flowerplatform.web.git.common.remote.dto.ConfigBranchPageDto;
+			import org.flowerplatform.web.git.common.remote.dto.GitRef;
+			import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
+			
+			import spark.events.IndexChangeEvent;
+
+			
+			public var node:TreeNode;
+			
+			[Bindable]
+			private var ref:GitRef;
+			
+			override public function set popupHost(value:IPopupHost):void {
+				super.popupHost = value;
+				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.configBranch.label'));
+				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/editconfig.gif'));
+			}
+			override protected function creationCompleteHandler():void {
+				super.creationCompleteHandler();		
+				wizardImage.source = GitCommonPlugin.getInstance().getResourceUrl("images/newconnect_wizban.png");
+				
+				Utils.makePseudoDisabled(brName);
+				
+				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+				GitCommonPlugin.getInstance().service.getConfigBranchData(
+					node, this, getConfigBranchDataCallbackHandler);
+			}
+			
+			private function getConfigBranchDataCallbackHandler(value:ConfigBranchPageDto):void {
+				popupHost.hideSpinner();
+				if (value != null) {
+					ref = value.ref;		
+					brName.text = ref.name;
+					
+					cbRemotes.dataProvider = value.remotes;
+					cbRemotes.selectedItem = value.selectedRemote;
+					
+					cbRemoteBranches.dataProvider = value.refs;
+					cbRemoteBranches.selectedItem = value.selectedRef;
+					
+					cbRebase.selected = value.rebase;
+				} else {
+					super.removePopup();
+				}
+			}
+						
+			protected function cbRemotes_changeHandler(event:IndexChangeEvent):void 	{
+				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+				GitCommonPlugin.getInstance().service.getBranches(RemoteConfig(cbRemotes.selectedItem).uri, this, getRemoteBranchesCallbackHandler);
+			}
+			
+			private function getRemoteBranchesCallbackHandler(result:ArrayCollection):void {
+				popupHost.hideSpinner();
+				if (result != null) {
+					cbRemoteBranches.dataProvider = result[0];
+				} else {
+					cbRemoteBranches.dataProvider = null;
+				}
+			}
+			
+			protected override function finishClickHandler():void {	
+				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
+				GitCommonPlugin.getInstance().service.configBranch(
+					node, GitRef(cbRemoteBranches.selectedItem), RemoteConfig(cbRemotes.selectedItem), cbRebase.selected, 
+					this, configBranch_callbackHandler);
+			}
+			
+			private function configBranch_callbackHandler(value:Boolean):void {
+				popupHost.hideSpinner();
+				if (value) {
+					super.finishClickHandler();
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	
+	<popup:states>				
+		<mx:State name="0">			
+			<mx:SetProperty name="wizardTitle" value="{GitCommonPlugin.getInstance().getMessage('git.configBranch.title')}"/>					
+			<mx:SetProperty name="wizardDescription" value="{GitCommonPlugin.getInstance().getMessage('git.configBranch.description', [ref.shortName])}"/>
+			<mx:SetProperty target="{finish}" name="label" value="Save"/>
+			<mx:SetProperty target="{next}" name="visible" value="false"/>
+			<mx:SetProperty target="{back}" name="visible" value="false"/>
+			
+			<mx:AddChild relativeTo="{contentArea}">							
+				<s:VGroup width="100%" height="100%" horizontalAlign="center">						
+					<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
+						<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.branch.label')}" />
+						<s:TextInput id="brName" width="100%" editable="false"/>													
+					</s:HGroup>		
+					<s:VGroup width="100%" id="upstreamPanel" >
+						<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
+							<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.remote.label')}"/>
+							<s:ComboBox id="cbRemotes" width="100%" labelField="name" change="cbRemotes_changeHandler(event)"/>
+						</s:HGroup>
+						<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
+							<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.upstream.label')}"/>
+							<s:ComboBox id="cbRemoteBranches" width="100%" labelField="name"/>								
+						</s:HGroup>
+						<s:CheckBox id="cbRebase" label="{GitCommonPlugin.getInstance().getMessage('git.configBranch.rebase')}" />
+					</s:VGroup>
+				</s:VGroup>							
+			</mx:AddChild>		
+		</mx:State>
+		
+	</popup:states>
+	
+</popup:Wizard>

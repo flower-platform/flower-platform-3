@@ -151,7 +151,9 @@
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setPopupContent(this)
 					.setTitle(_title)
-					.show();
+					.setWidth(width)
+					.setHeight(height)
+					.show(modal);
 			}
 			
 			protected function closeMessageBox():void {

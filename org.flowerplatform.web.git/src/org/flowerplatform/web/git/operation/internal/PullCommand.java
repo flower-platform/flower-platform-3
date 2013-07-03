@@ -32,6 +32,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
+import org.flowerplatform.web.git.GitPlugin;
 
 /**
  * @author Cristina Constantinescu
@@ -107,6 +108,7 @@ public class PullCommand extends TransportCommand<PullCommand, PullResult> {
 	 * @throws org.eclipse.jgit.api.errors.TransportException
 	 * @throws GitAPIException
 	 */	
+	@SuppressWarnings("restriction")
 	public PullResult call() throws GitAPIException,
 			WrongRepositoryStateException, InvalidConfigurationException,
 			DetachedHeadException, InvalidRemoteException, CanceledException,
@@ -116,24 +118,10 @@ public class PullCommand extends TransportCommand<PullCommand, PullResult> {
 
 		monitor.beginTask(JGitText.get().pullTaskName, 2);
 
-		String branchName;
-		String fullBranch;
-		try {
-			fullBranch = repo.getFullBranch();
-			if (fullBranch == null)
-				throw new NoHeadException(
-						JGitText.get().pullOnRepoWithoutHEADCurrentlyNotSupported);
-			if (!fullBranch.startsWith(Constants.R_HEADS)) {
-				// we can not pull if HEAD is detached and branch is not
-				// specified explicitly
-				throw new DetachedHeadException();
-			}
-			branchName = fullBranch.substring(Constants.R_HEADS.length());
-		} catch (IOException e) {
-			throw new JGitInternalException(
-					JGitText.get().exceptionCaughtDuringExecutionOfPullCommand,
-					e);
-		}
+		Object[] data = GitPlugin.getInstance().getUtils().getFetchPushUpstreamDataRefSpecAndRemote(repo);
+		
+		String fullBranch = (String) data[0];
+		String branchName = fullBranch.substring(Constants.R_HEADS.length());
 
 		if (!repo.getRepositoryState().equals(RepositoryState.SAFE))
 			throw new WrongRepositoryStateException(MessageFormat.format(
@@ -152,48 +140,16 @@ public class PullCommand extends TransportCommand<PullCommand, PullResult> {
 
 		// get the name of the branch in the remote repository
 		// stored in configuration key branch.<branch name>.merge
-		String remoteBranchName = repoConfig.getString(
-				ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
-				ConfigConstants.CONFIG_KEY_MERGE);
+		String remoteBranchName = (String) data[1];
 
         // determines whether rebase should be used after fetching
-        boolean doRebase = false;
-        switch (pullRebaseMode) {
-            case REBASE:
-                doRebase = true;
-                break;
-            case NO_REBASE:
-                doRebase = false;
-                break;
-            case USE_CONFIG:
-            default:
-                // check if the branch is configured for pull-rebase
-                doRebase = repoConfig.getBoolean(
-                        ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
-                        ConfigConstants.CONFIG_KEY_REBASE, false);
-                break;
-        }
-
-		if (remoteBranchName == null) {
-			String missingKey = ConfigConstants.CONFIG_BRANCH_SECTION + DOT
-					+ branchName + DOT + ConfigConstants.CONFIG_KEY_MERGE;
-			throw new InvalidConfigurationException(MessageFormat.format(
-					JGitText.get().missingConfigurationForKey, missingKey));
-		}
+        boolean doRebase = (boolean) data[3];
 
 		final boolean isRemote = !remote.equals("."); //$NON-NLS-1$
 		String remoteUri;
 		FetchResult fetchRes;
 		if (isRemote) {
-			remoteUri = repoConfig.getString(
-					ConfigConstants.CONFIG_REMOTE_SECTION, remote,
-					ConfigConstants.CONFIG_KEY_URL);
-			if (remoteUri == null) {
-				String missingKey = ConfigConstants.CONFIG_REMOTE_SECTION + DOT
-						+ remote + DOT + ConfigConstants.CONFIG_KEY_URL;
-				throw new InvalidConfigurationException(MessageFormat.format(
-						JGitText.get().missingConfigurationForKey, missingKey));
-			}
+			remoteUri = (String) data[2];
 
 			if (monitor.isCancelled())
 				throw new CanceledException(MessageFormat.format(

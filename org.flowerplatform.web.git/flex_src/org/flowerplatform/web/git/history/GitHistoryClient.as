@@ -1,8 +1,8 @@
 package org.flowerplatform.web.git.history {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-	import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
-	import org.flowerplatform.web.git.history.dto.HistoryViewInfoDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryViewInfoDto;
 	
 	/**
 	 *	@author Cristina Constantinescu

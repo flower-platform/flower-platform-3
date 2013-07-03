@@ -14,7 +14,7 @@ package com.crispico.flower.util.popup {
 		protected var popupContent:IPopupContent;
 		
 		public function ResizablePopupWindowPopupHandlerAndHost() {
-			super();
+			super();		
 		}
 		
 		public function setHeight(value:int):IPopupHandler	{

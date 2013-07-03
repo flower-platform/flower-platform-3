@@ -21,13 +21,32 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.jgit.api.FetchCommand;
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.GitCommand;
+import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.RebaseCommand;
+import org.eclipse.jgit.api.RebaseResult;
+import org.eclipse.jgit.api.RebaseCommand.Operation;
+import org.eclipse.jgit.api.errors.CanceledException;
+import org.eclipse.jgit.api.errors.DetachedHeadException;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidConfigurationException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
+import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.lib.AnyObjectId;
+import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -37,6 +56,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.util.FS;
@@ -46,6 +66,7 @@ import org.flowerplatform.common.FlowerWebProperties;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.web.entity.User;
+import org.flowerplatform.web.git.operation.internal.PullResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -252,7 +273,9 @@ public class GitUtils {
 	
 	public String handleMergeResult(MergeResult mergeResult) {
 		StringBuilder sb = new StringBuilder();		
-		
+		if (mergeResult == null) {
+			return sb.toString();
+		}
 		sb.append("Status: ");
 		sb.append(mergeResult.getMergeStatus());
 		sb.append("\n");
@@ -413,6 +436,73 @@ public class GitUtils {
 			return null;
 		}
 		return headCommit;
+	}
+	
+	@SuppressWarnings("restriction")
+	public Object[] getFetchPushUpstreamDataRefSpecAndRemote(Repository repository) 
+			throws InvalidConfigurationException, NoHeadException, DetachedHeadException {		
+		
+		String branchName;
+		String fullBranch;
+		try {
+			fullBranch = repository.getFullBranch();
+			if (fullBranch == null) {
+				throw new NoHeadException(JGitText.get().pullOnRepoWithoutHEADCurrentlyNotSupported);
+			}
+			if (!fullBranch.startsWith(Constants.R_HEADS)) {
+				// we can not pull if HEAD is detached and branch is not
+				// specified explicitly
+				throw new DetachedHeadException();
+			}
+			branchName = fullBranch.substring(Constants.R_HEADS.length());
+		} catch (IOException e) {
+			throw new JGitInternalException(JGitText.get().exceptionCaughtDuringExecutionOfPullCommand, e);
+		}
+		// get the configured remote for the currently checked out branch
+		// stored in configuration key branch.<branch name>.remote
+		Config repoConfig = repository.getConfig();
+		String remote = repoConfig.getString(
+				ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
+				ConfigConstants.CONFIG_KEY_REMOTE);
+		if (remote == null) {
+			// fall back to default remote
+			remote = Constants.DEFAULT_REMOTE_NAME;
+		}
+
+		// get the name of the branch in the remote repository
+		// stored in configuration key branch.<branch name>.merge
+		String remoteBranchName = repoConfig.getString(
+				ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
+				ConfigConstants.CONFIG_KEY_MERGE);
+
+		if (remoteBranchName == null) {
+			String missingKey = ConfigConstants.CONFIG_BRANCH_SECTION + "."
+					+ branchName + "." + ConfigConstants.CONFIG_KEY_MERGE;
+			throw new InvalidConfigurationException(MessageFormat.format(
+					JGitText.get().missingConfigurationForKey, missingKey));
+		}
+		
+        // check if the branch is configured for pull-rebase
+        boolean doRebase = repoConfig.getBoolean(
+                        ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
+                        ConfigConstants.CONFIG_KEY_REBASE, false);
+          
+		final boolean isRemote = !remote.equals("."); //$NON-NLS-1$
+		String remoteUri;	
+		if (isRemote) {
+			remoteUri = repoConfig.getString(
+					ConfigConstants.CONFIG_REMOTE_SECTION, remote,
+					ConfigConstants.CONFIG_KEY_URL);
+			if (remoteUri == null) {
+				String missingKey = ConfigConstants.CONFIG_REMOTE_SECTION + "."
+						+ remote + "." + ConfigConstants.CONFIG_KEY_URL;
+				throw new InvalidConfigurationException(MessageFormat.format(
+						JGitText.get().missingConfigurationForKey, missingKey));
+			}
+
+			return new Object[] {fullBranch, remoteBranchName, remoteUri, doRebase};			
+		}
+		return null;
 	}
 	
 	private NamedLockPool namedLockPool = new NamedLockPool();

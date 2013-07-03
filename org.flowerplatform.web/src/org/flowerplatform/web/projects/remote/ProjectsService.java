@@ -264,11 +264,8 @@ public class ProjectsService {
 			logger.debug("In Organization = {}, added a new Working Directory = {}", getOrganizationName(organizationDir.a), file);
 		}
 	}
-
-	@RemoteInvocation
-	public void createOrImportProject(ServiceInvocationContext context, List<PathFragment> pathWithRoot) throws CoreException, URISyntaxException {
-		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+	
+	public void createOrImportProjectFromFile(ServiceInvocationContext context, File file) throws CoreException, URISyntaxException {		
 		final Pair<File, Boolean> workingDirectoryDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.createOrImportProject.error.title", file, false);
 
@@ -330,7 +327,16 @@ public class ProjectsService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("In Working Directory = {}, added a new Project = {}", workingDirectoryDir.a, file);
 		}
-		
+	}
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	@RemoteInvocation
+	public void createOrImportProject(ServiceInvocationContext context, List<PathFragment> pathWithRoot) throws CoreException, URISyntaxException {
+		@SuppressWarnings("unchecked")
+		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		createOrImportProjectFromFile(context, file);		
 	}
 
 }

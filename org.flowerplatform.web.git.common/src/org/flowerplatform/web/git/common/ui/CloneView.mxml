@@ -8,7 +8,7 @@
 			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
 			  
 			  getIndexForStateFunction="getIndexForState" 
-			  
+			  			  
 			  xmlns:component="org.flowerplatform.web.git.common.ui.component.*" 
 			  xmlns:common="com.crispico.flower.flexdiagram.util.common.*">
 	
@@ -77,6 +77,8 @@
 						FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
 						.setTitle(CommonPlugin.getInstance().getMessage("error"))
 						.setText(GitCommonPlugin.getInstance().getMessage("git.cloneWizard.repoExists.error"))
+						.setWidth(200)
+						.setHeight(200)
 						.showMessageBox();
 						break;
 					case 0:

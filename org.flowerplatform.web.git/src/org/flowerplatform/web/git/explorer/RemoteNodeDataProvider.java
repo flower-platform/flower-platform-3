@@ -2,13 +2,13 @@ package org.flowerplatform.web.git.explorer;
 
 import java.util.List;
 
-import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.git.GitPlugin;
+import org.flowerplatform.web.git.explorer.entity.RemoteNode;
 
 /**
  * @author Cristina Constantienscu
@@ -17,25 +17,20 @@ public class RemoteNodeDataProvider implements INodeDataProvider {
 
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
-		@SuppressWarnings("unchecked")
-		String remote = ((Pair<String, String>) source).a;
-		destination.setLabel(remote);
+		RemoteNode node = (RemoteNode) source;
+		destination.setLabel(node.getRemote());
 		destination.setIcon(GitPlugin.getInstance().getResourceUrl("images/full/obj16/remotespec.gif"));
 		return true;
 	}
 
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
-		@SuppressWarnings("unchecked")
-		String remote = ((Pair<String, String>) node).a;
-		return new PathFragment(remote, nodeType);
+		return new PathFragment(((RemoteNode) node).getRemote(), nodeType);
 	}
 
 	@Override
 	public String getLabelForLog(Object node, String nodeType) {
-		@SuppressWarnings("unchecked")
-		String remote = ((Pair<String, String>) node).a;
-		return remote;
+		return ((RemoteNode) node).getRemote();
 	}
 
 	@Override

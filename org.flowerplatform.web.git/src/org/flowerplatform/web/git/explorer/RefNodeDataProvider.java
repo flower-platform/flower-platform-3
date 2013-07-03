@@ -2,7 +2,6 @@ package org.flowerplatform.web.git.explorer;
 
 import java.util.List;
 
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
@@ -11,6 +10,7 @@ import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.git.GitNodeType;
 import org.flowerplatform.web.git.GitPlugin;
+import org.flowerplatform.web.git.explorer.entity.RefNode;
 
 /**
  * @author Cristina Constantienscu
@@ -19,10 +19,10 @@ public class RefNodeDataProvider implements INodeDataProvider {
 
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination,	GenericTreeContext context) {
-		Ref ref = (Ref) source;
+		RefNode refNode = (RefNode) source;
 		String nodeType = destination.getPathFragment().getType();
 		
-		destination.setLabel(Repository.shortenRefName(ref.getName()));
+		destination.setLabel(Repository.shortenRefName(refNode.getRef().getName()));
 		String icon;
 		if (GitNodeType.NODE_TYPE_TAG.equals(nodeType)) {
 			icon = "images/full/obj16/annotated-tag.gif";
@@ -35,14 +35,14 @@ public class RefNodeDataProvider implements INodeDataProvider {
 
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
-		Ref ref = (Ref) node;
-		return new PathFragment(ref.getName(), nodeType);
+		RefNode refNode = (RefNode) node;
+		return new PathFragment(refNode.getRef().getName(), nodeType);
 	}
 	
 	@Override
 	public String getLabelForLog(Object node, String nodeType) {
-		Ref ref = (Ref) node;
-		return ref.getName();
+		RefNode refNode = (RefNode) node;
+		return refNode.getRef().getName();
 	}
 
 	@Override

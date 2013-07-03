@@ -9,7 +9,9 @@ package org.flowerplatform.web.mobile.popup {
 	
 	import spark.components.Button;
 	import spark.components.Label;
+	import spark.components.Scroller;
 	import spark.components.View;
+	import spark.core.IViewport;
 	import spark.primitives.BitmapImage;
 	
 	public class WrapperView extends WrapperViewBase {
@@ -19,11 +21,16 @@ package org.flowerplatform.web.mobile.popup {
 		override protected function createChildren():void {
 			super.createChildren();
 			
+			var scroller:Scroller = new Scroller();
+			scroller.percentWidth = 100;
+			scroller.percentHeight = 100;
+			addElement(scroller);
+			
 			popupContent = IPopupContent(data.popupContent);
 			popupContent.popupHost = this;
 			popupContent.percentHeight = 100;
 			popupContent.percentWidth = 100;
-			addElement(popupContent);
+			scroller.viewport = IViewport(popupContent);
 			
 			if (data.modalOverAllApplication) {
 				navigationContent = [];

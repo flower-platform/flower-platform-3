@@ -72,6 +72,8 @@ package org.flowerplatform.communication.command {
 				FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
 					.setText(_message)
 					.setTitle(_title)
+					.setWidth(350)
+					.setHeight(300)
 					.showMessageBox(); 
 //			else
 //				DisplayMessageDialog.show(title, image, message, details); 

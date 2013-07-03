@@ -6,8 +6,14 @@ package org.flowerplatform.web.git.common {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.git.common.remote.GitService;
 	import org.flowerplatform.web.git.common.remote.OpenGitCredentialsWindowClientCommand;
+	import org.flowerplatform.web.git.common.remote.dto.CommitPageDto;
+	import org.flowerplatform.web.git.common.remote.dto.CommitResourceDto;
+	import org.flowerplatform.web.git.common.remote.dto.ConfigBranchPageDto;
+	import org.flowerplatform.web.git.common.remote.dto.ConfigFetchPushPageDto;
 	import org.flowerplatform.web.git.common.remote.dto.GitActionDto;
 	import org.flowerplatform.web.git.common.remote.dto.GitRef;
+	import org.flowerplatform.web.git.common.remote.dto.ImportProjectPageDto;
+	import org.flowerplatform.web.git.common.remote.dto.ProjectDto;
 	import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
 	
 	/**
@@ -42,6 +48,8 @@ package org.flowerplatform.web.git.common {
 		public static const NODE_TYPE_FILE:String = "gitFile";
 		public static const NODE_TYPE_FOLDER:String = "gitFolder";
 		
+		public static const TREE_NODE_GIT_FILE_TYPE:String = "gitFileType";
+		
 		public var service:GitService = new GitService();
 		
 		override public function start():void {
@@ -58,37 +66,28 @@ package org.flowerplatform.web.git.common {
 		}
 		
 		override protected function registerClassAliases():void {
-//			registerClassAliasFromAnnotation(CommitDto);
-//			registerClassAliasFromAnnotation(CommitPageDto);
-//			registerClassAliasFromAnnotation(CommitResourceDto);
+
+			registerClassAlias("org.flowerplatform.web.git.remote.dto.CommitPageDto", CommitPageDto);
+			registerClassAlias("org.flowerplatform.web.git.remote.dto.CommitResourceDto", CommitResourceDto);
 //			registerClassAliasFromAnnotation(CreateBranchPageDto);
-//			registerClassAliasFromAnnotation(ConfigFetchPushPageDto);
+			registerClassAlias("org.flowerplatform.web.git.remote.dto.ConfigFetchPushPageDto", ConfigFetchPushPageDto);
 //			registerClassAliasFromAnnotation(ConfigTagPageDto);
 			registerClassAlias("org.flowerplatform.web.git.remote.dto.GitRef", GitRef);
 			registerClassAlias("org.flowerplatform.web.git.remote.dto.GitActionDto", GitActionDto);
 			registerClassAlias("org.flowerplatform.web.git.remote.dto.RemoteConfig", RemoteConfig);
 //			registerClassAliasFromAnnotation(RemoteConfig);
 //			registerClassAliasFromAnnotation(ResetPageDto);
-//			registerClassAliasFromAnnotation(ProjectDto);
-//			registerClassAliasFromAnnotation(ImportProjectPageDto);			
+			registerClassAlias("org.flowerplatform.web.git.remote.dto.ProjectDto", ProjectDto);
+			registerClassAlias("org.flowerplatform.web.git.remote.dto.ImportProjectPageDto", ImportProjectPageDto);			
 			//			registerClassAliasFromAnnotation(GitAction);
 //			registerClassAliasFromAnnotation(GitActionDto);	
-//			registerClassAliasFromAnnotation(ConfigBranchPageDto);
+			registerClassAlias("org.flowerplatform.web.git.remote.dto.ConfigBranchPageDto", ConfigBranchPageDto);
 //			registerClassAliasFromAnnotation(CleanPageDto);
 //			registerClassAliasFromAnnotation(SharePageDto);
 //			registerClassAliasFromAnnotation(RepositoryDto);
 //			registerClassAliasFromAnnotation(ConfigPropertiesPageDto);
 //			registerClassAliasFromAnnotation(ConfigEntryDto);
-//			registerClassAliasFromAnnotation(ViewInfoDto);
-			
-//			registerClassAliasFromAnnotation(HistoryEntryDto);
-//			registerClassAliasFromAnnotation(HistoryDrawingDto);
-//			registerClassAliasFromAnnotation(HistoryFileDiffEntryDto);
-//			registerClassAliasFromAnnotation(HistoryCommitMessageDto);
-//			registerClassAliasFromAnnotation(HistoryViewInfoDto);
-			
-//			registerClassAliasFromAnnotation(GitHistoryStatefulClientLocalState);
-//			registerClassAliasFromAnnotation(OpenOperationResultWindowClientCommand);		
+	
 			registerClassAlias("org.flowerplatform.web.git.remote.OpenGitCredentialsWindowClientCommand", OpenGitCredentialsWindowClientCommand);					
 		}
 	}	

@@ -20,12 +20,9 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.RawParseUtils;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -34,8 +31,8 @@ import org.flowerplatform.communication.command.DisplaySimpleMessageClientComman
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.git.GitPlugin;
-import org.flowerplatform.web.git.dto.CommitPageDto;
-import org.flowerplatform.web.git.dto.CommitResourceDto;
+import org.flowerplatform.web.git.remote.dto.CommitPageDto;
+import org.flowerplatform.web.git.remote.dto.CommitResourceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +47,12 @@ public class CommitOperation {
 	private List<File> selection;
 	private Repository repository;
 		
+	public CommitOperation(CommunicationChannel channel) {
+		this.channel = channel;		
+	}
+	
 	public CommitOperation(CommunicationChannel channel, List<File> selection) {
-		this.channel = channel;
+		this(channel);
 		this.selection = selection;
 	}
 
@@ -185,7 +186,11 @@ public class CommitOperation {
 				CommitResourceDto commitDto = new CommitResourceDto();
 				commitDto.setLabel(path);
 				commitDto.setPath(path);
+				commitDto.setImage("images/file.gif");
 				
+				if (repoStatus.getUntracked().contains(path)) {
+					commitDto.setState(CommitResourceDto.UNTRACKED);
+				}
 				commitResources.add(commitDto);
 			}
 			monitor.worked(1);
@@ -227,7 +232,7 @@ public class CommitOperation {
 		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.commit.monitor.title"), channel);
 			
 		try {
-			Repository repo = RepositoryCache.open(FileKey.exact(new File(repositoryLocation), FS.DETECTED));
+			Repository repo = GitPlugin.getInstance().getUtils().getRepository(new File(repositoryLocation));
 			
 			Collection<String> notTracked = new HashSet<String>(); 	
 			Collection<String> resources = new HashSet<String>();
@@ -302,7 +307,6 @@ public class CommitOperation {
 			channel.appendOrSendCommand(
 					new DisplaySimpleMessageClientCommand(
 							CommonPlugin.getInstance().getMessage("error"), 
-							GitPlugin.getInstance().getMessage("git.commit.error"),
 							e.getMessage(),
 							DisplaySimpleMessageClientCommand.ICON_ERROR));	
 			return false;
