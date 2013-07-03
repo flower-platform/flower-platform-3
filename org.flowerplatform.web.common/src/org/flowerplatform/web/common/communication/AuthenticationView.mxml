@@ -420,7 +420,7 @@
 				</s:FormItem>
 				
 				<s:FormItem width="100%" label="Server">
-					<s:TextInput id="server" text="localhost:8080" width="100%"/>
+					<s:TextInput id="server" text="188.27.183.186:8080" width="100%"/>
 				</s:FormItem>
 				
 				<s:FormItem label="{getMessage('authentication.activationCode')}" width="100%"
