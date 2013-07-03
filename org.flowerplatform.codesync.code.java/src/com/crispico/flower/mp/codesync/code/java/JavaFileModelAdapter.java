@@ -111,6 +111,11 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 			Map options = new HashMap<>(JavaCore.getOptions());
 			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
 			parser.setCompilerOptions(options);
+			try {
+				file.refreshLocal(IResource.DEPTH_ZERO, null);
+			} catch (CoreException e) {
+				// the file may not exist; we test this below before getting the content
+			}
 			char[] initialContent = file.exists() ? getFileContent(file) : new char[0];
 			parser.setSource(initialContent);
 			CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
