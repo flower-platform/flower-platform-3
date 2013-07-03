@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="1">
-  <includeClasses>
-    <classEntry path="com.crispico.flower.mp.codesync.base.DiffContextMenuContainer"/>
-    <classEntry path="com.crispico.flower.mp.codesync.base.DiffDialog"/>
-    <classEntry path="com.crispico.flower.mp.codesync.base.DiffTreeNodeItemRenderer"/>
-    <classEntry path="com.crispico.flower.mp.codesync.base.DiffTreeToolTip"/>
-    <classEntry path="com.crispico.flower.mp.codesync.base.action.DummyAction"/>
-    <classEntry path="org.flowerplatform.codesync.remote.CodeSyncAction"/>
-  </includeClasses>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses/>
   <includeResources/>
   <namespaceManifests/>
 </flexLibProperties>
