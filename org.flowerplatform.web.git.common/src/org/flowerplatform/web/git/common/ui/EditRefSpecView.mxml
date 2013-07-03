@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Cristina Constantinescu
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog"
+		 creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.flexutil.FlexUtilAssets;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
+						
+			/**
+			 * @flowerModelElementId _cec0QLX4EeG0VsiZvxFIVQ
+			 */
+			[Bindable]
+			public var currentRef:String;
+			
+			private var _popupHost:IPopupHost;
+			
+			/**
+			 * @flowerModelElementId _cfNpQLX4EeG0VsiZvxFIVQ
+			 */
+			private var resultHandler:IDialogResultHandler;
+			
+			/**
+			 * @flowerModelElementId _cfxC4LX4EeG0VsiZvxFIVQ
+			 */
+			public function setResultHandler(resultHandler:IDialogResultHandler):void {
+				this.resultHandler = resultHandler;
+			}
+						
+			public function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.editRefSpecPage.title'));
+				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/remote_entry_tbl.gif'));
+			}
+			
+			public function getActions(selection:IList):Vector.<IAction>{
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			private function creationCompleteHandler(event:FlexEvent):void {
+				popupHost.addToControlBar(buttonBar);
+			}
+			
+			/**
+			 * @flowerModelElementId _cgEk4bX4EeG0VsiZvxFIVQ
+			 */
+			private function okHandler():void {
+				// validate form
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				resultHandler.handleDialogResult(refSpec.text);
+				cancelHandler();
+			}
+			
+			private function cancelHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		
+		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="middle">
+			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
+			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
+		</s:HGroup>
+		
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
+	</s:layout>
+	
+	<fx:Declarations>
+		<fx:Array id="validators">
+			<mx:StringValidator source="{refSpec}" property="text" minLength="1"/>		
+			<mx:RegExpValidator source="{refSpec}" property="text" expression="^\+?(.*):(.*)$" />
+		</fx:Array>	
+	</fx:Declarations>	
+	
+	<s:Form id="form" height="100%" width="100%">	 
+		
+		<s:FormItem label="{GitCommonPlugin.getInstance().getMessage('git.editRefSpecPage.ref.label')}" width="100%">
+			<s:HGroup width="100%" verticalAlign="middle">
+				<s:TextInput id="refSpec" text="{currentRef}" width="100%" creationComplete="{callLater(refSpec.setFocus)}"/>
+				<s:CalloutButton id="info" icon="{FlexUtilAssets._iconInfo}" verticalPosition="after" >
+					<s:calloutDestructionPolicy>auto</s:calloutDestructionPolicy>
+					<s:calloutContent>
+						<s:TextArea text="{GitCommonPlugin.getInstance().getMessage('git.editRefSpecPage.hint')}" 
+									color="0x000000" width="100%" skinClass="spark.skins.mobile.TextAreaSkin" editable="false"/>
+					</s:calloutContent>
+				</s:CalloutButton>
+			</s:HGroup>			
+		</s:FormItem>		
+	</s:Form>
+		
+</s:Group>

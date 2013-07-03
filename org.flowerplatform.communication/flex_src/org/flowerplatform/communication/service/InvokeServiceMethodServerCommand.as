@@ -1,4 +1,6 @@
 package org.flowerplatform.communication.service {
+	import mx.collections.ArrayCollection;
+	
 	import org.flowerplatform.communication.callback.FlexCallback;
 	
 	/**
@@ -23,7 +25,7 @@ package org.flowerplatform.communication.service {
 		/**
 		 * @flowerModelElementId _TASyAFZkEeGL3vi-zPhopA
 		 */
-		public var parameters:Array;
+		public var parameters:ArrayCollection;
 		
 		/**
 		 * @flowerModelElementId _ukeNYFbgEeGL3vi-zPhopA
@@ -31,15 +33,15 @@ package org.flowerplatform.communication.service {
 		public var callbackId:Number = 0;
 		
 		public var exceptionCallbackId:Number = 0;
-		
+				
 		/**
 		 * @flowerModelElementId _ukh3w1bgEeGL3vi-zPhopA
 		 */
-		public function InvokeServiceMethodServerCommand(serviceId:String, methodName:String, parameters:Array, resultCallbackObject:Object = null, resultCallbackFunction:Function = null, exceptionCallbackFunction:Function = null) {
+		public function InvokeServiceMethodServerCommand(serviceId:String = null, methodName:String = null, parameters:Array = null, resultCallbackObject:Object = null, resultCallbackFunction:Function = null, exceptionCallbackFunction:Function = null) {
 			this.serviceId = serviceId;
 			this.methodName = methodName;
-			this.parameters = parameters;
-
+			this.parameters = new ArrayCollection(parameters);
+			
 			if (resultCallbackFunction != null) {
 				var flexCallback:FlexCallback = new FlexCallback(resultCallbackFunction, resultCallbackObject);
 				callbackId = flexCallback.callbackId;

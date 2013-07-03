@@ -1,7 +1,6 @@
 package org.flowerplatform.web.git.layout {
 	
 	import com.crispico.flower.util.layout.PopupHostViewWrapper;
-	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	import com.crispico.flower.util.spinner.ModalSpinnerSupport;
 	
@@ -12,12 +11,8 @@ package org.flowerplatform.web.git.layout {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHost;
-	import org.flowerplatform.web.WebPlugin;
-	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.git.GitPlugin;
-	import org.flowerplatform.web.git.dto.ViewInfoDto;
+	import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 
 	/**
 	 *	@author Cristina Constantinescu

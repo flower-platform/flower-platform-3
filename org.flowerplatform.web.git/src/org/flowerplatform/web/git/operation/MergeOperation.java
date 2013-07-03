@@ -26,7 +26,7 @@ public class MergeOperation {
 	private String refName;
 	private boolean squash;	
 	private CommunicationChannel channel;
-	 private MergeResult mergeResult;
+	private MergeResult mergeResult;
 	 
 	public MergeOperation(Repository repository, String refName, boolean squash, CommunicationChannel channel) {
 		this.repository = repository;
@@ -34,47 +34,11 @@ public class MergeOperation {
 		this.squash = squash;
 		this.channel = channel;
 	}
-	
-	public String handleMergeResult() {
-		if (mergeResult == null) {
-			return null;
-		}
-		StringBuilder sb = new StringBuilder();		
 		
-		sb.append("Status: ");
-		sb.append(mergeResult.getMergeStatus());
-		sb.append("\n");
-		
-		if (mergeResult.getMergedCommits() != null) {
-			sb.append("\nMerged commits: ");
-			sb.append("\n");
-			for (ObjectId id : mergeResult.getMergedCommits()) {
-				sb.append(id.getName());
-				sb.append("\n");
-			}
-		}
-		if (mergeResult.getCheckoutConflicts() != null) {
-			sb.append("\nConflicts: ");
-			sb.append("\n");
-			for (String conflict : mergeResult.getCheckoutConflicts()) {
-				sb.append(conflict);
-				sb.append("\n");
-			}
-		}
-				
-		if (mergeResult.getFailingPaths() != null) {
-			sb.append("\nFailing paths: ");
-			sb.append("\n");
-			for (String path : mergeResult.getFailingPaths().keySet()) {
-				sb.append(path);
-				sb.append(" -> ");
-				sb.append(mergeResult.getFailingPaths().get(path).toString());
-				sb.append("\n");
-			}
-		}
-		return sb.toString();
+	public MergeResult getMergeResult() {
+		return mergeResult;
 	}
-	
+
 	public void execute() {
 		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.merge"), channel);
 		

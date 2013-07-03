@@ -142,14 +142,13 @@ package org.flowerplatform.flexutil.tree {
 			
 			paddingLeft += levelWidth * HierarchicalModelWrapper(data).nestingLevel;
 			
-			expandIconWidth = UIComponent(expandIconDisplay.parent).getExplicitOrMeasuredWidth();
-			expandIconHeight = UIComponent(expandIconDisplay.parent).getExplicitOrMeasuredHeight();
+			expandIconWidth = getElementPreferredWidth(expandIconDisplay.parent);
+			expandIconHeight = getElementPreferredHeight(expandIconDisplay.parent);
 			
 			// use vAlign to position the icon.
 			var expandIconDisplayY:Number = Math.round(vAlign * (viewHeight - expandIconHeight)) + paddingTop;
-			if (expandIconDisplay.parent.x != paddingLeft || expandIconDisplay.parent.y != expandIconDisplayY) {
-				setElementPosition(expandIconDisplay.parent, paddingLeft, expandIconDisplayY);
-			}
+			setElementPosition(expandIconDisplay.parent, paddingLeft, expandIconDisplayY);
+
 			// icon is on the left
 			if (iconDisplay) {
 				// set the icon's position and size
@@ -230,6 +229,18 @@ package org.flowerplatform.flexutil.tree {
 			
 		}
 				
+		override protected function measure():void {
+			super.measure();
+			// calculate expand icon width & left padding
+			var expandIconParent:UIComponent = UIComponent(expandIconDisplay.parent);
+			var expandIconParentLeftPadding:Number = getStyle("horizontalGap") + expandIconParent.x;
+			var expandIconParentWidth:Number = getElementPreferredWidth(expandIconParent);
+			var verticalScrollCompensation:Number = 15;
+			
+			measuredWidth += expandIconParentLeftPadding + expandIconParentWidth + verticalScrollCompensation;			
+			measuredMinWidth += expandIconParentLeftPadding + expandIconParentWidth + verticalScrollCompensation;			
+		}
+		
 		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {			
 		}
 	}

@@ -13,9 +13,18 @@
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
+			import org.flowerplatform.web.git.dto.GitRef;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.events.ListEvent;
+			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.web.git.GitNodeType;
 			import org.flowerplatform.web.git.GitPlugin;
+			import org.flowerplatform.web.git.dto.RemoteConfig;
 		
 			public var node:TreeNode;
 			
@@ -23,12 +32,50 @@
 				super.creationCompleteHandler();
 				wizardImage.source = GitPlugin.getInstance().getResourceUrl("images/newconnect_wizban.png");
 				
-				callLater(brName.setFocus);				
+				callLater(brName.setFocus);
+				if (node.pathFragment.type == GitNodeType.NODE_TYPE_REMOTE_BRANCHES) {
+					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+					GitPlugin.getInstance().service.getAllRemotes(node, this, getAllRemotesCallbackHandler);
+				} else {
+					upstreamPanel.visible = false;
+				}
 			}
 		
-			protected override function finishClickHandler():void {	
+			private function getAllRemotesCallbackHandler(result:ArrayCollection):void {
+				ModalSpinner.removeModalSpinner(this);
+				if (result != null) {
+					cbRemotes.dataProvider = result;
+					cbRemotes.selectedIndex = 0;
+					cbRemotes_changeHandler(null);
+				}
+			}
+			
+			protected function cbRemotes_changeHandler(event:ListEvent):void 	{
+				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+				GitPlugin.getInstance().service.getBranches(RemoteConfig(cbRemotes.selectedItem).uri, this, getRemoteBranchesCallbackHandler);
+			}
+			
+			private function getRemoteBranchesCallbackHandler(result:ArrayCollection):void {
+				ModalSpinner.removeModalSpinner(this);
+				if (result != null) {
+					cbRemoteBranches.dataProvider = result[0];
+				} else {
+					cbRemoteBranches.dataProvider = null;
+				}
+			}
+			
+			protected override function finishClickHandler():void {
+				if (node.pathFragment.type == GitNodeType.NODE_TYPE_REMOTE_BRANCHES) {
+					if (cbRemotes.selectedItem == null || cbRemoteBranches.selectedItem == null) {
+						FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+							.setTitle(CommonPlugin.getInstance().getMessage("error"))
+							.setText("Set the upstream branch configuration!")
+							.showMessageBox();
+						return;
+					}
+				}
 				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
-				GitPlugin.getInstance().service.checkout(node, brName.text, this, checkoutBranchCallbackHandler);
+				GitPlugin.getInstance().service.checkout(node, brName.text, GitRef(cbRemoteBranches.selectedItem), RemoteConfig(cbRemotes.selectedItem), cbRebase.selected, this, checkoutBranchCallbackHandler);
 			}
 			
 			private function checkoutBranchCallbackHandler(result:Boolean):void {
@@ -37,6 +84,8 @@
 					super.finishClickHandler();
 				}				
 			}
+			
+			
 		]]>
 	</mx:Script>
 	
@@ -50,12 +99,23 @@
 			<mx:AddChild relativeTo="{contentArea}">
 				<panel:CustomTitlePanel headerHeight="0" borderStyle="none"
 										width="100%" height="100%">							
-					<mx:VBox width="100%" height="100%">
+					<mx:VBox width="100%" height="100%">						
 						<mx:HBox width="100%">
 							<mx:Label text="{GitPlugin.getInstance().getMessage('git.createBranch.branch.label')}" />
 							<mx:Label text="refs/heads/"/>
 							<mx:TextInput id="brName" width="100%"/>
-						</mx:HBox>						
+						</mx:HBox>		
+						<mx:VBox width="100%" id="upstreamPanel">
+							<mx:HBox width="100%">
+								<mx:Label text="Remote:"/>
+								<mx:ComboBox id="cbRemotes" width="100%" labelField="name" change="cbRemotes_changeHandler(event)"/>
+							</mx:HBox>
+							<mx:HBox width="100%">
+								<mx:Label text="Upstream Branch:"/>
+								<mx:ComboBox id="cbRemoteBranches" width="100%" labelField="name"/>								
+							</mx:HBox>
+							<mx:CheckBox id="cbRebase" label="{GitPlugin.getInstance().getMessage('git.configBranch.rebase')}" />
+						</mx:VBox>
 					</mx:VBox>							 							
 				</panel:CustomTitlePanel>				
 			</mx:AddChild>

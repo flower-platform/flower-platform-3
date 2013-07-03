@@ -6,17 +6,24 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
+import org.eclipse.jgit.api.AddCommand;
+import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryState;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.util.RawParseUtils;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
@@ -24,8 +31,8 @@ import org.flowerplatform.communication.command.DisplaySimpleMessageClientComman
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.git.GitPlugin;
-import org.flowerplatform.web.git.dto.CommitPageDto;
-import org.flowerplatform.web.git.dto.CommitResourceDto;
+import org.flowerplatform.web.git.remote.dto.CommitPageDto;
+import org.flowerplatform.web.git.remote.dto.CommitResourceDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +47,12 @@ public class CommitOperation {
 	private List<File> selection;
 	private Repository repository;
 		
+	public CommitOperation(CommunicationChannel channel) {
+		this.channel = channel;		
+	}
+	
 	public CommitOperation(CommunicationChannel channel, List<File> selection) {
-		this.channel = channel;
+		this(channel);
 		this.selection = selection;
 	}
 
@@ -175,7 +186,11 @@ public class CommitOperation {
 				CommitResourceDto commitDto = new CommitResourceDto();
 				commitDto.setLabel(path);
 				commitDto.setPath(path);
+				commitDto.setImage("images/file.gif");
 				
+				if (repoStatus.getUntracked().contains(path)) {
+					commitDto.setState(CommitResourceDto.UNTRACKED);
+				}
 				commitResources.add(commitDto);
 			}
 			monitor.worked(1);
@@ -199,6 +214,103 @@ public class CommitOperation {
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return null;
 		} finally {
+			monitor.done();
+		}
+	}
+		
+	private void addUntracked(Collection<String> notTracked, Repository repo) throws Exception {
+		if (notTracked == null || notTracked.size() == 0)
+			return;
+		AddCommand addCommand = new Git(repo).add();		
+		for (String path : notTracked) {
+			addCommand.addFilepattern(path);
+		}	
+		addCommand.call();			
+	}
+	
+	public boolean commit(String repositoryLocation, List<CommitResourceDto> files, String author, String committer, String message, boolean amending) {		
+		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.commit.monitor.title"), channel);
+			
+		try {
+			Repository repo = GitPlugin.getInstance().getUtils().getRepository(new File(repositoryLocation));
+			
+			Collection<String> notTracked = new HashSet<String>(); 	
+			Collection<String> resources = new HashSet<String>();
+			
+			for (CommitResourceDto file : files) {
+				resources.add(file.getPath());
+				if (file.getState() == CommitResourceDto.UNTRACKED) {
+					notTracked.add(file.getPath());
+				}
+			}
+							
+			monitor.beginTask(GitPlugin.getInstance().getMessage("git.commit.monitor.message"), 10);
+			addUntracked(notTracked, repo);
+			monitor.worked(1);
+			
+			CommitCommand commitCommand = new Git(repo).commit();			
+			commitCommand.setAmend(amending).setMessage(message);						
+						
+			for (String path : resources) {
+				commitCommand.setOnly(path);
+			}
+			
+			Date commitDate = new Date();
+			TimeZone timeZone = TimeZone.getDefault();
+
+			PersonIdent enteredAuthor = RawParseUtils.parsePersonIdent(author);
+			PersonIdent enteredCommitter = RawParseUtils.parsePersonIdent(committer);
+			if (enteredAuthor == null) {
+				channel.appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								GitPlugin.getInstance().getMessage("git.commit.errorParsingPersonIdent", new Object[] {author}), 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}				
+			if (enteredCommitter == null) {
+				channel.appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								GitPlugin.getInstance().getMessage("git.commit.errorParsingPersonIdent", new Object[] {committer}), 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return false;
+			}
+		
+			PersonIdent authorIdent = new PersonIdent(enteredAuthor, commitDate, timeZone);
+			PersonIdent committerIdent = new PersonIdent(enteredCommitter, commitDate, timeZone);
+
+			if (amending) {				
+				RevCommit headCommit = GitPlugin.getInstance().getUtils().getHeadCommit(repo);
+				if (headCommit != null) {
+					PersonIdent headAuthor = headCommit.getAuthorIdent();
+					authorIdent = new PersonIdent(enteredAuthor, headAuthor.getWhen(), headAuthor.getTimeZone());
+				}
+			}
+			commitCommand.setAuthor(authorIdent);
+			commitCommand.setCommitter(committerIdent);
+			
+			monitor.worked(1);			
+			commitCommand.call();
+			if (monitor.isCanceled()) {
+				return false;
+			}
+			monitor.worked(8);
+			
+//			GitLightweightDecorator.refresh();
+//			
+//			updateDispatcher.dispatchContentUpdate(null, repo, GitTreeUpdateDispatcher.COMMIT, null);
+		
+			return true;
+		} catch (Exception e) {
+			logger.debug(GitPlugin.getInstance().getMessage("git.commit.error"), e);
+			channel.appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							e.getMessage(),
+							DisplaySimpleMessageClientCommand.ICON_ERROR));	
+			return false;
+		} finally {			
 			monitor.done();
 		}
 	}
