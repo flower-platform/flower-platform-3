@@ -33,7 +33,7 @@ package org.flowerplatform.web.git.common.action {
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(popup)	
 				.setWidth(400)
-				.setHeight(460)
+				.setHeight(450)
 				.show();	
 		}
 		

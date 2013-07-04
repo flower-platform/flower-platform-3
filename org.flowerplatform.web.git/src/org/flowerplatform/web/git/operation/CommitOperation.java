@@ -118,12 +118,8 @@ public class CommitOperation {
 		return repo;
 	}
 	
-	public CommitPageDto getPageDto() {		
-		ProgressMonitor monitor = ProgressMonitor.create(GitPlugin.getInstance().getMessage("git.precommit.monitor.title"), channel);
-			
-		try {
-			monitor.beginTask(GitPlugin.getInstance().getMessage("git.precommit.monitor.message"), 4);
-			
+	public CommitPageDto getPageDto() {	
+		try {			
 			repository = getRepository(selection);
 			if (repository == null) {
 				channel.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
@@ -167,12 +163,7 @@ public class CommitOperation {
 			}
 			
 			org.eclipse.jgit.api.Status repoStatus = new Git(repository).status().call();
-			monitor.worked(1);
 					
-			if (monitor.isCanceled()) {
-				 return null;
-			}
-			
 			Set<String> files = new HashSet<String>();
 			includeList(repoStatus.getAdded(), files);
 			includeList(repoStatus.getChanged(), files);
@@ -193,7 +184,6 @@ public class CommitOperation {
 				}
 				commitResources.add(commitDto);
 			}
-			monitor.worked(1);
 			
 			CommitPageDto dto = new CommitPageDto();			
 			dto.setCommitResources(commitResources);
@@ -202,8 +192,6 @@ public class CommitOperation {
 			dto.setMessage(message);
 			dto.setRepository(repository.getDirectory().getAbsolutePath());
 			
-			monitor.worked(1);
-
 			return dto;
 		} catch (Exception e) {
 			logger.debug(GitPlugin.getInstance().getMessage("git.commit.error"), e);
@@ -213,8 +201,6 @@ public class CommitOperation {
 					e.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return null;
-		} finally {
-			monitor.done();
 		}
 	}
 		
