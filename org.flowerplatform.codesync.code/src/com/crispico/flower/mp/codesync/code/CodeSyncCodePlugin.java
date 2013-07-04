@@ -25,6 +25,7 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
 import org.osgi.framework.BundleContext;
 
@@ -228,9 +229,9 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 */
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel) {
 	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IFile file, String technology, CommunicationChannel communicationChannel) {
-//		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-//		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
-		CodeSyncEditableResource editableResource = new CodeSyncEditableResource();
+		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
+		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+//		CodeSyncEditableResource editableResource = new CodeSyncEditableResource();
 	
 		Match match = new Match();
 		match.setAncestor(model);
@@ -274,11 +275,11 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);
 		
-//		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
-//		service.attemptUpdateEditableResourceContent(context, project.getFullPath().toString(), null);
-//		
-//		return editableResource;
-		return null;
+		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
+		service.attemptUpdateEditableResourceContent(context, project.getFullPath().toString(), null);
+		
+		return editableResource;
+//		return null;
 	}
 	
 	/**
