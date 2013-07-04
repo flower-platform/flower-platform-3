@@ -241,6 +241,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 //				ast = project.getFile(path);
 //			}
 //		}
+		ast = file;
 		match.setRight(ast);
 		
 		// right - AST

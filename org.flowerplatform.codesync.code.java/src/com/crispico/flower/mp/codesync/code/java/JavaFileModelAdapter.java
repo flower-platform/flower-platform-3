@@ -114,7 +114,7 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 			try {
 				file.refreshLocal(IResource.DEPTH_ZERO, null);
 			} catch (CoreException e) {
-				// the file may not exist; we test this below before getting the content
+				throw new RuntimeException(e);
 			}
 			char[] initialContent = file.exists() ? getFileContent(file) : new char[0];
 			parser.setSource(initialContent);
