@@ -1,6 +1,11 @@
 package org.flowerplatform.codesync {
+	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorDescriptor;
+	
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.editor.EditorDescriptor;
+	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
@@ -22,7 +27,10 @@ package org.flowerplatform.codesync {
 			}
 			INSTANCE = this;
 			
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CodeSyncAction);
+			var editorDescriptor:EditorDescriptor = new CodeSyncEditorDescriptor();
+			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
+
 		}
 		
 		override protected function registerClassAliases():void {

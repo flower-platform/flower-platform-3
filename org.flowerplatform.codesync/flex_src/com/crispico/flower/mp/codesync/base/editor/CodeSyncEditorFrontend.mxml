@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	@author Mariana
+-->
+<editorsupport:EditorFrontend xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:base="com.crispico.flower.mp.codesync.base.*"
+		  xmlns:editorsupport="org.flowerplatform.editor.*">
+	
+	<mx:Script>
+		<![CDATA[
+		
+			override public function disableEditing():void {
+			}
+			
+			override public function enableEditing():void {
+			}
+			
+			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {
+				diffDialog.diffTree.statefulClient.openNode(null);
+				diffDialog.ancestorTree.statefulClient.openNode(null);
+				diffDialog.leftTree.statefulClient.openNode(null);
+				diffDialog.rightTree.statefulClient.openNode(null);
+			}
+		
+			protected function synchronize():void {
+				codeSyncEditorStatefulClient.synchronize();
+				synchronizeButton.enabled = false;
+			}
+			
+			protected function applySelectedActions():void {
+				codeSyncEditorStatefulClient.applySelectedActions();
+				synchronizeButton.enabled = false;
+				applySelectedActionsButton.enabled = false;
+			}
+			
+			protected function cancelSelectedActions():void {
+				codeSyncEditorStatefulClient.cancelSelectedActions();
+				synchronizeButton.enabled = false;
+				applySelectedActionsButton.enabled = false;
+				cancelButton.enabled = false;
+			}
+			
+			private function get codeSyncEditorStatefulClient():CodeSyncEditorStatefulClient {
+				return CodeSyncEditorStatefulClient(editorStatefulClient);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Button id="synchronizeButton" label="Synchronize" click="synchronize()"/>
+	
+	<base:DiffDialog id="diffDialog" projectPath="{editorStatefulClient.editableResourcePath}" width="100%" height="100%" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+	
+	<mx:HBox width="100%" horizontalAlign="right" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
+		<mx:Button id="applySelectedActionsButton" label="Apply Selected Actions" click="applySelectedActions()"/>
+		<mx:Button id="cancelButton" label="Cancel Selected Actions" click="cancelSelectedActions()"/>
+	</mx:HBox>
+	
+</editorsupport:EditorFrontend>

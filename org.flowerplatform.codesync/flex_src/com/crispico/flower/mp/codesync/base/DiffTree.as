@@ -27,6 +27,7 @@ package com.crispico.flower.mp.codesync.base
 	import mx.events.ListEvent;
 	import mx.events.ToolTipEvent;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	
@@ -80,9 +81,9 @@ package com.crispico.flower.mp.codesync.base
 			serviceId = "DiffTreeStatefulService";
 			
 			requestInitialDataAutomatically = true;
-//			statefulClient = new DiffTreeStatefulClient();
-//			statefulClient.genericTree = this;
-//			StatefulClientRegistry.INSTANCE.register(statefulClient, null);
+			statefulClient = new DiffTreeStatefulClient();
+			statefulClient.genericTree = this;
+			CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 		}
 		
 		protected override function createRootTreeNode():TreeNode {
