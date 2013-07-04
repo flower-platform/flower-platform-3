@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 
-import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
+import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
@@ -38,7 +38,7 @@ public class JavaExtendedModifierModelAdapter extends JavaAbstractAstNodeModelAd
 				MemberValuePair pair = ast.newMemberValuePair();
 				Expression value = ((SingleMemberAnnotation) element).getValue();
 				ASTNode newValue = ASTNode.copySubtree(ast, value);
-				pair.setName(ast.newSimpleName(CodeSyncMergePlugin.SINGLE_MEMBER_ANNOTATION_VALUE_NAME));
+				pair.setName(ast.newSimpleName(CodeSyncCodePlugin.SINGLE_MEMBER_ANNOTATION_VALUE_NAME));
 				pair.setValue((Expression) newValue);
 				return Collections.singletonList(pair);
 			}
@@ -133,12 +133,12 @@ public class JavaExtendedModifierModelAdapter extends JavaAbstractAstNodeModelAd
 			Annotation annotation = (Annotation) modelElement;
 			String matchKey = (String) getAnnotationName(modelElement);
 			if (annotation instanceof MarkerAnnotation) {
-				matchKey += CodeSyncMergePlugin.MARKER_ANNOTATION;
+				matchKey += CodeSyncCodePlugin.MARKER_ANNOTATION;
 			} else {
 				if (annotation instanceof SingleMemberAnnotation) {
-					matchKey += CodeSyncMergePlugin.SINGLE_MEMBER_ANNOTATION;
+					matchKey += CodeSyncCodePlugin.SINGLE_MEMBER_ANNOTATION;
 				} else {
-					matchKey += CodeSyncMergePlugin.NORMAL_ANNOTATION;
+					matchKey += CodeSyncCodePlugin.NORMAL_ANNOTATION;
 				}
 			}
 			return matchKey;

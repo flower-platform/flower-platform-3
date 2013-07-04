@@ -25,7 +25,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
 
 import com.crispico.flower.mp.codesync.code.AstModelElementAdapter;
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.code.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 

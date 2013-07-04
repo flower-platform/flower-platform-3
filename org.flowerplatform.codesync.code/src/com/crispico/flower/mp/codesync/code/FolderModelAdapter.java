@@ -11,7 +11,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 

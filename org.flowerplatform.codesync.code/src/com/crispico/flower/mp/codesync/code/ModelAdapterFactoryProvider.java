@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementFeatureProvider;
 
 /**
  * @author Mariana

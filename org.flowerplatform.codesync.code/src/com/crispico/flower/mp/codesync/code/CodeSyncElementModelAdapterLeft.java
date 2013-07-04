@@ -8,9 +8,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
+import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.Operation;
 import com.crispico.flower.mp.model.astcache.code.Parameter;

@@ -11,9 +11,9 @@ import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
+import com.crispico.flower.mp.codesync.code.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.codesync.code.FolderModelAdapter;
 import com.crispico.flower.mp.codesync.code.StringModelAdapter;
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementFeatureProvider;
 
 /**
  * @author Mariana

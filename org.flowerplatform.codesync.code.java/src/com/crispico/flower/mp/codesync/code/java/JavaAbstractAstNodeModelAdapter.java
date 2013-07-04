@@ -26,7 +26,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 import com.crispico.flower.mp.codesync.code.AstModelElementAdapter;
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.code.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 

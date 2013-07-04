@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementFeatureProvider;
 
 /**
  * @flowerModelElementId _j9MV0LLCEeC7r409C3qpqw

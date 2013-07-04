@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.IJavaElementDelta;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 import org.flowerplatform.communication.CommunicationPlugin;
-import org.flowerplatform.communication.service.ServiceRegistry;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.EditorStatefulService;

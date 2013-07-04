@@ -1,5 +1,7 @@
 package com.crispico.flower.mp.codesync.code;
 
+import static com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm.UNDEFINED;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +9,6 @@ import java.util.Map;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
-
-import static com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm.UNDEFINED;
 
 /**
  * @author Mariana

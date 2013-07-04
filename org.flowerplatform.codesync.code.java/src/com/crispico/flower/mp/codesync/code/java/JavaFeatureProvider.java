@@ -1,7 +1,7 @@
 package com.crispico.flower.mp.codesync.code.java;
 
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
-import com.crispico.flower.mp.codesync.merge.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.code.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 
 /**
