@@ -31,9 +31,9 @@ package org.flowerplatform.web.git.common.action {
 			var popup:CommitView = new CommitView();
 			popup.selectedNodes = ArrayList(selection);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(popup)
+				.setPopupContent(popup)	
 				.setWidth(400)
-				.setHeight(450)					
+				.setHeight(460)
 				.show();	
 		}
 		

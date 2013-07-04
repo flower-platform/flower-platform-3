@@ -10,8 +10,12 @@
 	<fx:Script>
 
 		<![CDATA[
+			import com.flextras.mobile.dropDownList.DropDownList;
+			
+			import mx.binding.utils.BindingUtils;
 			import mx.collections.ArrayCollection;
 			
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
 		
@@ -23,6 +27,8 @@
 			
 			public var isFetchConfig:Boolean;
 			
+			public var remotes:spark.components.DropDownList;
+			
 			private function creationCompleteHandler():void {
 				if (!selectConfiguredRemotes) {
 					callLater(uri.setFocus);
@@ -30,6 +36,21 @@
 					remoteConfig.selected = true;
 					changeSelection();
 				}
+			}
+			
+			override protected function createChildren():void {
+				super.createChildren();
+				
+				if (FlexUtilGlobals.getInstance().isMobile) {
+					remotes = new com.flextras.mobile.dropDownList.DropDownList();										
+				} else {
+					remotes = new spark.components.DropDownList();											
+				}
+				remotes.labelFunction = getRemoteConfigLabel;
+				remotes.percentWidth = 100;
+				BindingUtils.bindProperty(remotes, "visible", this, "selectConfiguredRemotes");
+				BindingUtils.bindProperty(remotes, "includeInLayout", this, "selectConfiguredRemotes");
+				addElementAt(remotes, 1);
 			}
 			
 			private function changeSelection():void {
@@ -64,9 +85,7 @@
 					label="{GitCommonPlugin.getInstance().getMessage('git.repoSelection.configRemote.label')}"
 					visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}"	
 					/>
-	<s:ComboBox id="remotes"  dataProvider="{remoteConfigs}" labelFunction="getRemoteConfigLabel" width="100%" 
-				 visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}" />
-				
+	
 	<s:RadioButton id="customUri" group="{group}" 
 					label="{GitCommonPlugin.getInstance().getMessage('git.repoSelection.customUri.label')}"
 					visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}"	/>

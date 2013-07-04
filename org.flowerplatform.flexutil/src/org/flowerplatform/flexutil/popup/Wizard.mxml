@@ -280,7 +280,7 @@
 			</s:HGroup>			
 		</s:HGroup>
 				
-		<s:HGroup id="buttonBar" width="100%" horizontalAlign="right" verticalAlign="middle">
+		<s:HGroup id="buttonBar" width="100%" horizontalAlign="right" verticalAlign="middle" >
 			<s:Button id="back" label="&#60; Back" width="75" click="backClickHandler()" />
 			<s:Button id="next" label="Next &#62;" width="75" click="nextClickHandler()" />
 			<s:Button id="finish" label="Finish" width="75" click="finishClickHandler()" />
@@ -296,7 +296,7 @@
 	
 	<mx:HRule width="100%"/>
 
-	<mx:VBox id="contentArea" width="100%" height="100%" borderVisible="false"
+	<mx:VBox id="contentArea" width="100%" borderVisible="false"
 			 horizontalAlign="center" paddingLeft="5" paddingRight="5"
 			 paddingTop="5" >
 	</mx:VBox>		

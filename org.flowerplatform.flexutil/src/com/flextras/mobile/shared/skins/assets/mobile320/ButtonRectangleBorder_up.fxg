@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!--
+
+Copyright 2012 DotComIt, LLC
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Additional Documentation, Samples, and Support may be available at http://www.flextras.com 
+
+Note: When built this file was based off of a file in the Adobe Flex Framework; and had an Adobe copyright notice.
+Said notice was removed from the source file when it was donated to Apache Flex. That original copyright notice is not repeated here.
+-->
+
+<Graphic version="2.0" xmlns="http://ns.adobe.com/fxg/2008"
+	scaleGridLeft="20" scaleGridRight="272" scaleGridTop="20" scaleGridBottom="66">
+	<!-- viewHeight="86" viewWidth="292"  -->
+	<!-- Outer Border -->
+	<!-- this is effectively a rectangle 
+		For some bizarre reason having the two paths works better than one path with a weight of 2
+		Weight of 2 leaves space between border and left and top of button background
+		Weight of 3 would not leave a space; but is a bit thick and inconsistent w/ original Flex Button
+	-->
+	<Path data="M 0 0 H 291 V 85 H 0 V 0 Z" alpha="1" >
+    	<stroke>
+    	  	<SolidColorStroke color="#646464"  weight="1"/>
+    	</stroke>
+  	</Path>
+	<Path data="M 1 1 H 290 V 84 H 1 V 1 Z" alpha="1" >
+    	<stroke>
+    	  	<SolidColorStroke color="#646464"  weight="1"/>
+    	</stroke>
+  	</Path>
+</Graphic>

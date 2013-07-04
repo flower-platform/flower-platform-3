@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
-    <classEntry path="temp.tree.ProjectExplorerTreeNew"/>
-    <classEntry path="org.flowerplatform.communication.tree.GenericTreeItemRenderer"/>
-    <classEntry path="org.flowerplatform.communication.tree.GenericTreeList"/>
     <classEntry path="org.flowerplatform.communication.command.WelcomeClientCommand"/>
     <classEntry path="org.flowerplatform.communication.transferable_object.ReferenceHolderList"/>
+    <classEntry path="org.flowerplatform.communication.tree.GenericTreeItemRenderer"/>
+    <classEntry path="org.flowerplatform.communication.tree.GenericTreeList"/>
+    <classEntry path="temp.tree.ProjectExplorerTreeNew"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

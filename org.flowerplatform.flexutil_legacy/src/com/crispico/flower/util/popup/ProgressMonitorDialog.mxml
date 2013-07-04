@@ -9,6 +9,7 @@
 		xmlns:mx="http://www.adobe.com/2006/mxml" 
 		xmlns:popUp="com.crispico.flower.util.popup.*"
 		xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
+		implements="org.flowerplatform.flexutil.popup.IProgressMonitor"
 		title="In Progress" showCloseButton="false"
 		width="500" height="170" minWidth="500" minHeight="170" 
 		paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0"
@@ -18,20 +19,21 @@
 		<![CDATA[
 			import mx.utils.StringUtil;
 			
-			import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulClient;
-
-			
+			import org.flowerplatform.flexutil.popup.IProgressMonitor;
+			import org.flowerplatform.flexutil.popup.IProgressMonitorHandler;
+		
 			private static const TRACE_ENABLED:Boolean = true;
 			
 			/**
 			 * Needed to know to which progress monitor to call cancel on the server.
 			 * @flowerModelElementId _bVsZMBN-EeK1ssFHNoNwQg
 			 */
-			public var progressMonitorStatefulClient:ProgressMonitorStatefulClient;
+			private var progressMonitorHandler:IProgressMonitorHandler;
 			
-			public var allowCancellation:Boolean;
-			
+			private var allowCancellation:Boolean;
+						
 			private function creationCompleteHandler():void {
+				progressBar.label = title;
 				progressBar.mx_internal::_labelField.multiline = true;
 				progressBar.mx_internal::_labelField.wordWrap = true;
 				progressBar.mx_internal::_labelField.autoSize = TextFieldAutoSize.LEFT;
@@ -39,41 +41,61 @@
 				cancelButton.visible = allowCancellation;
 			}
 			
-			public function set progressTotalWork(value:Number):void {
+			public function setAllowCancellation(value:Boolean):IProgressMonitor {
+				this.allowCancellation = value;
+				return this;
+			}	
+			
+			public function setHandler(value:IProgressMonitorHandler):IProgressMonitor {
+				this.progressMonitorHandler = value;
+				return this;
+			}
+			
+			public function setLabel(value:String):IProgressMonitor {
+				if (value != null && StringUtil.trim(value) != "") {
+					progressBar.label = value;
+					if (TRACE_ENABLED) {
+						trace(progressMonitorHandler.toString() + " progressLabel = " + value);
+					}
+				}
+				return this;
+			}
+			
+			public function setTitle(value:String):IProgressMonitor {
+				this.title = value;
+				return this;
+			}
+			
+			public function setTotalWork(value:Number):IProgressMonitor {
 				progressBar.minimum = 0;
 				progressBar.maximum = value;
 				progressBar.setProgress(0, value);
-				if (TRACE_ENABLED)
-					trace(progressMonitorStatefulClient.getStatefulClientId() + " totalWork = " + value);
-			}
-			
-			/**
-			 * If the label value was modified (not null) change it.
-			 */ 
-			public function set progressLabel(value:String):void {
-				if (value != null && StringUtil.trim(value) != "") {
-					progressBar.label = value;
-					if (TRACE_ENABLED)
-						trace(progressMonitorStatefulClient.getStatefulClientId() + " progressLabel = " + value);
+				if (TRACE_ENABLED) {
+					trace(progressMonitorHandler.toString() + " totalWork = " + value);
 				}
+				return this;
 			}
 			
-			/**
-			 * If the worked value was modified ( > 0) change it.
-			 */ 
-			public function set workUntilNow(value:Number):void {
+			public function setWorked(value:Number):IProgressMonitor {
 				progressBar.setProgress(value, progressBar.maximum);
-				if (TRACE_ENABLED)
-					trace(progressMonitorStatefulClient.getStatefulClientId() + " workUntilNow = " + value + " totalWork = " + progressBar.maximum);
+				if (TRACE_ENABLED) {
+					trace(progressMonitorHandler.toString() + " workUntilNow = " + value + " totalWork = " + progressBar.maximum);
+				}
+				return this;
 			}
 			
-			/**
-			 * @flowerModelElementId _LMl5kBN8EeK1ssFHNoNwQg
-			 */
+			public function show():void {
+				showPopup(NaN, NaN, null, true);
+			}
+
+			public function close():void {
+				closeForm();
+			}
+			
 			private function cancelButtonHandler():void {
 				cancelButton.enabled = false;
 				cancelButton.label = "Canceling...";
-				progressMonitorStatefulClient.attemptCancelProgressMonitor();
+				progressMonitorHandler.attemptCancelProgressMonitor();
 			}
 		]]>
 	</mx:Script>

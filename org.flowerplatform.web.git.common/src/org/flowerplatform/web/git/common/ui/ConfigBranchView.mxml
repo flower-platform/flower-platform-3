@@ -5,17 +5,17 @@
 <popup:Wizard xmlns:popup="org.flowerplatform.flexutil.popup.*"		
 			  xmlns:fx="http://www.adobe.com/2006/mxml" 
 			  xmlns:s="library://ns.adobe.com/flex/spark" 
-			  xmlns:mx="library://ns.adobe.com/flex/mx"  >
+			  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:dropDownList="com.flextras.mobile.dropDownList.*"  >
 	
 	<fx:Script>
 		<![CDATA[
-			import com.crispico.flower.util.spinner.ModalSpinner;
+			import com.flextras.mobile.dropDownList.DropDownList;
 			
 			import mx.collections.ArrayCollection;
-			import mx.events.IndexChangedEvent;
 			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.Utils;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
@@ -23,21 +23,26 @@
 			import org.flowerplatform.web.git.common.remote.dto.GitRef;
 			import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
 			
+			import spark.components.DropDownList;
 			import spark.events.IndexChangeEvent;
-
-			
+		
 			public var node:TreeNode;
 			
 			[Bindable]
 			private var ref:GitRef;
+									
+			private var cbRemotes:spark.components.DropDownList;
+			private var cbRemoteBranches:spark.components.DropDownList;
 			
 			override public function set popupHost(value:IPopupHost):void {
 				super.popupHost = value;
 				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.configBranch.label'));
 				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/editconfig.gif'));
 			}
+			
 			override protected function creationCompleteHandler():void {
 				super.creationCompleteHandler();		
+				
 				wizardImage.source = GitCommonPlugin.getInstance().getResourceUrl("images/newconnect_wizban.png");
 				
 				Utils.makePseudoDisabled(brName);
@@ -64,7 +69,7 @@
 					super.removePopup();
 				}
 			}
-						
+					
 			protected function cbRemotes_changeHandler(event:IndexChangeEvent):void 	{
 				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
 				GitCommonPlugin.getInstance().service.getBranches(RemoteConfig(cbRemotes.selectedItem).uri, this, getRemoteBranchesCallbackHandler);
@@ -91,11 +96,9 @@
 				if (value) {
 					super.finishClickHandler();
 				}
-			}
-			
+			}		
 		]]>
 	</fx:Script>
-	
 	
 	<popup:states>				
 		<mx:State name="0">			
@@ -112,13 +115,37 @@
 						<s:TextInput id="brName" width="100%" editable="false"/>													
 					</s:HGroup>		
 					<s:VGroup width="100%" id="upstreamPanel" >
-						<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
-							<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.remote.label')}"/>
-							<s:ComboBox id="cbRemotes" width="100%" labelField="name" change="cbRemotes_changeHandler(event)"/>
+						<s:HGroup id="remoteArea" width="100%" verticalAlign="middle" horizontalAlign="center" >
+							<s:creationComplete>
+								<![CDATA[
+									if (FlexUtilGlobals.getInstance().isMobile) {
+										cbRemotes = new com.flextras.mobile.dropDownList.DropDownList();										
+									} else {
+										cbRemotes = new spark.components.DropDownList();											
+									}
+									cbRemotes.labelField = "name";
+									cbRemotes.percentWidth = 100;
+									cbRemotes.addEventListener(IndexChangeEvent.CHANGE, cbRemotes_changeHandler);
+									remoteArea.addElement(cbRemotes);
+								]]>
+							</s:creationComplete>
+							<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.remote.label')}"/>							
 						</s:HGroup>
-						<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
-							<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.upstream.label')}"/>
-							<s:ComboBox id="cbRemoteBranches" width="100%" labelField="name"/>								
+						<s:HGroup id="branchArea" width="100%" verticalAlign="middle" horizontalAlign="center">
+							<s:creationComplete>
+								<![CDATA[
+									if (FlexUtilGlobals.getInstance().isMobile) {									
+										cbRemoteBranches = new com.flextras.mobile.dropDownList.DropDownList();
+									} else {									
+										cbRemoteBranches = new spark.components.DropDownList();		
+									}
+									
+									cbRemoteBranches.labelField = "name";
+									cbRemoteBranches.percentWidth = 100;	
+									branchArea.addElement(cbRemoteBranches);
+								]]>
+							</s:creationComplete>
+							<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.upstream.label')}"/>							
 						</s:HGroup>
 						<s:CheckBox id="cbRebase" label="{GitCommonPlugin.getInstance().getMessage('git.configBranch.rebase')}" />
 					</s:VGroup>

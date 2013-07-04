@@ -1,14 +1,17 @@
 package  org.flowerplatform.communication.progress_monitor.remote {
 	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.communication.progress_monitor.ProgressMonitorDialog;
 	import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.popup.IProgressMonitor;
+	import org.flowerplatform.flexutil.popup.IProgressMonitorHandler;
 		
 	/**
 	 * @author Sorin
+	 * @author Cristina Constantinescu
 	 * @flowerModelElementId _lW_MUBLsEeKIW4So6X04UQ
 	 */
-	public class ProgressMonitorStatefulClient extends StatefulClient  {
+	public class ProgressMonitorStatefulClient extends StatefulClient implements IProgressMonitorHandler {
 		
 		/**
 		 * @flowerModelElementId _pEupYBLsEeKIW4So6X04UQ
@@ -31,7 +34,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		 */
 		private var allowCancellation:Boolean;
 		
-		private var progressMonitorDialog:ProgressMonitorDialog;
+		private var progressMonitor:IProgressMonitor;
 	
 		/**
 		 * @flowerModelElementId _bE9ZEBN_EeK1ssFHNoNwQg
@@ -80,14 +83,12 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		
 		override public function afterAddInStatefulClientRegistry():void {
 			// When added to the registy also show popup
-			progressMonitorDialog = new ProgressMonitorDialog();
-			progressMonitorDialog.progressMonitorStatefulClient = this;
-			progressMonitorDialog.allowCancellation = allowCancellation;
+			progressMonitor = FlexUtilGlobals.getInstance().progressMonitorHandlerFactory.createProgressMonitor()
+				.setAllowCancellation(allowCancellation)
+				.setTitle(title)
+				.setHandler(this);
 			
-			progressMonitorDialog.showPopup();
-			
-			progressMonitorDialog.title = this.title;
-			progressMonitorDialog.progressLabel = this.title;
+			progressMonitor.show();			
 		}
 		 
 		override public function subscribeToStatefulService(dataFromRegistrator:Object):void {
@@ -116,7 +117,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		override public function toString():String {
 			return "ProgressMonitorStatefulClient statefulClientId = " + statefulClientId + " title = " + title;  
 		}
-		
+				
 		///////////////////////////////////////////////////////////////
 		//@RemoteInvocation methods
 		///////////////////////////////////////////////////////////////
@@ -126,8 +127,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		 */
 		[RemoteInvocation]
 		public function beginProgressMonitor(name:String, totalWork:int):void {
-			progressMonitorDialog.progressTotalWork = totalWork;
-			progressMonitorDialog.progressLabel = name;
+			progressMonitor.setTotalWork(totalWork).setLabel(name);
 		}
 		
 		/**
@@ -135,8 +135,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		 */
 		[RemoteInvocation]
 		public function updateProgressMonitor(name:String, workUntilNow:int):void {
-			progressMonitorDialog.progressLabel = name;
-			progressMonitorDialog.workUntilNow = workUntilNow;
+			progressMonitor.setWorked(workUntilNow).setLabel(name);			
 		}
 		
 		/**
@@ -145,7 +144,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		 */
 		[RemoteInvocation]
 		public function closeProgressMonitor():void {
-			progressMonitorDialog.closeForm();
+			progressMonitor.close();
 			CommunicationPlugin.getInstance().statefulClientRegistry.unregister(this, null);
 		}
 		

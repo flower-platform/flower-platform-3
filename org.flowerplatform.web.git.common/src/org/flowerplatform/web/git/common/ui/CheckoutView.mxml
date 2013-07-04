@@ -11,6 +11,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.flextras.mobile.dropDownList.DropDownList;
+			
 			import mx.collections.ArrayCollection;
 			
 			import org.flowerplatform.common.CommonPlugin;
@@ -24,6 +26,9 @@
 			import spark.events.IndexChangeEvent;
 		
 			public var node:TreeNode;
+			
+			private var cbRemotes:spark.components.DropDownList;
+			private var cbRemoteBranches:spark.components.DropDownList;
 			
 			override public function set popupHost(value:IPopupHost):void {
 				super.popupHost = value;
@@ -111,13 +116,37 @@
 							<s:TextInput id="brName" width="100%"/>													
 						</s:HGroup>		
 						<s:VGroup width="100%" id="upstreamPanel" >
-							<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
-								<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.remote.label')}"/>
-								<s:ComboBox id="cbRemotes" width="100%" labelField="name" change="cbRemotes_changeHandler(event)"/>
+							<s:HGroup id="remoteArea" width="100%" verticalAlign="middle" horizontalAlign="center">
+								<s:creationComplete>
+									<![CDATA[
+										if (FlexUtilGlobals.getInstance().isMobile) {
+											cbRemotes = new com.flextras.mobile.dropDownList.DropDownList();										
+										} else {
+											cbRemotes = new spark.components.DropDownList();											
+										}
+										cbRemotes.labelField = "name";
+										cbRemotes.percentWidth = 100;
+										cbRemotes.addEventListener(IndexChangeEvent.CHANGE, cbRemotes_changeHandler);
+										remoteArea.addElement(cbRemotes);
+									]]>
+								</s:creationComplete>
+								<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.remote.label')}"/>								
 							</s:HGroup>
-							<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
-								<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.upstream.label')}"/>
-								<s:ComboBox id="cbRemoteBranches" width="100%" labelField="name"/>								
+							<s:HGroup id="branchArea" width="100%" verticalAlign="middle" horizontalAlign="center">
+								<s:creationComplete>
+									<![CDATA[
+										if (FlexUtilGlobals.getInstance().isMobile) {									
+											cbRemoteBranches = new com.flextras.mobile.dropDownList.DropDownList();
+										} else {									
+											cbRemoteBranches = new spark.components.DropDownList();		
+										}
+										
+										cbRemoteBranches.labelField = "name";
+										cbRemoteBranches.percentWidth = 100;	
+										branchArea.addElement(cbRemoteBranches);
+									]]>
+								</s:creationComplete>
+								<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.upstream.label')}"/>								
 							</s:HGroup>
 							<s:CheckBox id="cbRebase" label="{GitCommonPlugin.getInstance().getMessage('git.configBranch.rebase')}" />
 						</s:VGroup>

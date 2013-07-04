@@ -1021,14 +1021,12 @@ public class GitService {
 			dto.setRef(new GitRef(branch.getName(), Repository.shortenRefName(branch.getName())));
 			
 			List<RemoteConfig> remotes = getAllRemotes(context, path);
-			if (remotes != null) {			
-				dto.setRemotes(remotes);
-			}
+			
 			String branchName = branch.getName().substring(Constants.R_HEADS.length());
 			String branchConfig = config.getString(
 					ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
 					ConfigConstants.CONFIG_KEY_MERGE);
-			dto.setSelectedRef(new GitRef(branchConfig, Repository.shortenRefName(branchConfig)));
+			
 
 			String remoteConfig = config.getString(
 					ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
@@ -1036,11 +1034,26 @@ public class GitService {
 			if (remoteConfig == null) {
 				remoteConfig = "";
 			}
-			for (RemoteConfig remote : remotes) {
-				if (remote.getName().equals(remoteConfig)) {
-					List<Object> branches = getBranches(context, remote.getUri());
-					dto.setRefs((List<GitRef>) branches.get(0));
-					dto.setSelectedRemote(remote);
+			if (remotes != null) {			
+				dto.setRemotes(remotes);
+			
+				for (RemoteConfig remote : remotes) {
+					if (remote.getName().equals(remoteConfig)) {
+						List<Object> branches = getBranches(context, remote.getUri());
+						if (branches != null) {
+							@SuppressWarnings("unchecked")
+							List<GitRef> refs = (List<GitRef>) branches.get(0);
+							for (GitRef ref : refs) {
+								if (ref.getName().equals(branchConfig)) {
+									dto.setSelectedRef(ref);
+									break;
+								}
+							}
+							dto.setRefs(refs);
+						}
+						dto.setSelectedRemote(remote);
+						break;
+					}
 				}
 			}
 		
