@@ -8,11 +8,16 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
 import org.osgi.framework.BundleContext;
 
 import astcache.wiki.FlowerBlock;
@@ -26,15 +31,14 @@ import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
 import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
 import com.crispico.flower.mp.codesync.wiki.dokuwiki.DokuWikiConfigurationProvider;
-import com.crispico.flower.mp.common.plugin.AbstractFlowerJavaPlugin;
-import com.crispico.flower.mp.communication.CommunicationChannel;
-import com.crispico.flower.mp.communication.service.ServiceRegistry;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 import com.crispico.flower.mp.model.codesync.util.CodeSyncAdapterFactory;
-import com.crispico.flower.mp.model.notation.util.NotationAdapterFactory;
 
+/**
+ * @author Mariana
+ */
 public class WikiPlugin extends AbstractFlowerJavaPlugin {
 
 	protected static WikiPlugin INSTANCE;
@@ -66,7 +70,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 
 	public void updateTree(CodeSyncElement left, CodeSyncElement right, IProject project, String technology, CommunicationChannel communicationChannel) {
-		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) ServiceRegistry.INSTANCE.getService(CodeSyncEditorStatefulService.SERVICE_ID);
+		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
 		
 		Match match = new Match();
@@ -128,7 +132,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	public void getWikiPageTree(String wikiText, CodeSyncElement page, String technology, List<FlowerBlock> flowerBlocks) {
 		WikiRegexConfiguration config = new WikiRegexConfiguration();
 		IConfigurationProvider configurationProvider = configurationProviders.get(technology);
-		configurationProvider.buildConfiguration(config);
+		configurationProvider.buildConfiguration(config, page);
 		config.setSessionClass(configurationProvider.getWikiTreeBuilderClass());
 		config.compile();
 		WikiTreeBuilder session = (WikiTreeBuilder) config.startSession(wikiText);
@@ -147,7 +151,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		if (tree == null) {
 			return null;
 		}
-		return configurationProviders.get(technology).getWikiTextBuilder().getWikiText(tree);
+		return configurationProviders.get(technology).getWikiTextBuilder(tree).getWikiText(tree);
 	}
 	
 	/**
@@ -195,6 +199,50 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	public void savePage(Page page, String technology) {
 		configurationProviders.get(technology).savePage(page);
 	}
+	
+	public String getLineDelimiter(String content) {
+		if (content.contains("\r\n")) {
+			return "\r\n";
+		}
+		if (content.contains("\r")) {
+			return "\r";
+		}
+		return "\n";
+	}
+	
+	public int getHeadlineLevel(String category) {
+		if (category == null) {
+			return -1;
+		}
+		if (category.startsWith("Headline")) {
+			return Integer.parseInt(category.substring(category.length() - 1)); 
+		}
+		return -1;
+	}
+	
+	public String getPagePath(Page page, String delimiter, boolean fromRoot) {
+		StringBuilder builder = new StringBuilder();
+		CodeSyncElement crt = page.getCodeSyncElement();
+		while (getParent(crt) != null) {
+			builder.insert(0, delimiter + crt.getName());
+			crt = getParent(crt);
+		}
+		if (fromRoot) {
+			builder.insert(0, crt.getName());
+		} else {
+			builder.deleteCharAt(0);
+		}
+		return builder.toString();
+	}
+	
+	private CodeSyncElement getParent(CodeSyncElement cse) {
+		EObject eObj = cse.eContainer();
+		if (eObj instanceof CodeSyncElement) {
+			return (CodeSyncElement) eObj;
+		}
+		return null;
+	}
+
 	
 	/**
 	 * TODO move to test

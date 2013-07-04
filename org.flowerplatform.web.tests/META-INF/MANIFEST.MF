@@ -13,7 +13,15 @@ Require-Bundle: org.flowerplatform.common,
  org.eclipse.core.resources,
  org.eclipse.equinox.common,
  org.eclipse.core.jobs,
- org.eclipse.osgi
+ org.eclipse.osgi,
+ org.flowerplatform.codesync,
+ org.flowerplatform.codesync.code,
+ org.flowerplatform.codesync.code.java,
+ org.flowerplatform.codesync.merge,
+ org.flowerplatform.codesync.wiki,
+ org.flowerplatform.emf_model.astcache.code,
+ org.flowerplatform.emf_model.astcache.wiki,
+ org.flowerplatform.emf_model.codesync
 Import-Package: javax.persistence,
  javax.servlet,
  javax.servlet.http

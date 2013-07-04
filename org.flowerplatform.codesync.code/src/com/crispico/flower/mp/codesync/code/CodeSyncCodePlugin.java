@@ -23,6 +23,7 @@ import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
 import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
 import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
 import org.osgi.framework.BundleContext;
@@ -32,6 +33,7 @@ import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
+import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
 import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
 import com.crispico.flower.mp.model.astcache.code.Annotation;
 import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
@@ -178,7 +180,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		
 		// STEP 2 : find the SrcDir corresponding to the 2nd path fragment
 //		CodeSyncElement srcDir = getSrcDir(cseResource, pathFragments[1]);
-		CodeSyncElement srcDir = getSrcDir(cseResource, "src");
+		CodeSyncElement srcDir = getSrcDir(cseResource, file.getParent().getName());
 		
 //		// STEP 3 : find the CSE corresponding to the name
 //		String[] path = Arrays.copyOfRange(pathFragments, 2, pathFragments.length);
@@ -226,7 +228,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 */
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel) {
 	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IFile file, String technology, CommunicationChannel communicationChannel) {
-//		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) ServiceRegistry.INSTANCE.getService(CodeSyncEditorStatefulService.SERVICE_ID);
+//		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 //		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
 		CodeSyncEditableResource editableResource = new CodeSyncEditableResource();
 	
@@ -241,7 +243,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 //				ast = project.getFile(path);
 //			}
 //		}
-		ast = file;
+		ast = file.getParent();
 		match.setRight(ast);
 		
 		// right - AST

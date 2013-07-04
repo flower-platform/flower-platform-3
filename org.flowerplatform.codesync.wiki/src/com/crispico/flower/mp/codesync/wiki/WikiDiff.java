@@ -132,12 +132,12 @@ public class WikiDiff extends Diff {
 	 */
 	public String getLeft() {
 		String wikiText = left.get();
-		CodeSyncElement root = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
-		root.setType(WikiTreeBuilder.PAGE_CATEGORY);
-		Page page = WikiPackage.eINSTANCE.getWikiFactory().createPage();
-		page.setLineDelimiter(getLineDelimiter());
-		root.setAstCacheElement(page);
-//		root.setConfigurationProvider(configurationProvider);
+		CodeSyncElement root = (CodeSyncElement) getParentMatch().getLeft();
+//		CodeSyncElement root = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
+//		root.setType(WikiTreeBuilder.PAGE_CATEGORY);
+//		Page page = WikiPackage.eINSTANCE.getWikiFactory().createPage();
+//		page.setLineDelimiter(getLineDelimiter());
+//		root.setAstCacheElement(page);
 		WikiPlugin.getInstance().getWikiPageTree(wikiText, root, technology, flowerBlocks);
 		return WikiPlugin.getInstance().getWikiText(root, technology);
 	}

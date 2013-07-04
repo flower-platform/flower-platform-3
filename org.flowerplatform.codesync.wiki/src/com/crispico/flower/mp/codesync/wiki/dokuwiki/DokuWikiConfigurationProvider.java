@@ -2,6 +2,8 @@ package com.crispico.flower.mp.codesync.wiki.dokuwiki;
 
 import java.util.List;
 
+import org.flowerplatform.common.regex.RegexWithAction;
+
 import astcache.wiki.Page;
 import astcache.wiki.WikiPackage;
 
@@ -9,64 +11,47 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 import com.crispico.flower.mp.codesync.wiki.IConfigurationProvider;
+import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
 import com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration;
 import com.crispico.flower.mp.codesync.wiki.WikiTextBuilder;
 import com.crispico.flower.mp.codesync.wiki.WikiTreeBuilder;
-import com.crispico.flower.mp.common.regex.RegexWithAction;
+
+import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.*;
 
 /**
  * @author Mariana
  */
 public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 
-	public static final String HEADLINE_LEVEL_1_CATEGORY = "Headline 1";
-	public static final String HEADLINE_LEVEL_2_CATEGORY = "Headline 2";
-	public static final String HEADLINE_LEVEL_3_CATEGORY = "Headline 3";
-	public static final String HEADLINE_LEVEL_4_CATEGORY = "Headline 4";
-	public static final String HEADLINE_LEVEL_5_CATEGORY = "Headline 5";
-	
-	public static final String PARAGRAPH_CATEGORY = "Paragraph";
-	
-	private final String CAPTURE_PARAGRAPH = "(\\S.*?)";	// must start with a non-whitespace char => skip empty paragraphs
-	
-	private final String PARAGRAPH = CAPTURE_PARAGRAPH + "[\r\n]";
-	private final String FINAL_PARAGRAPH = CAPTURE_PARAGRAPH + "\\z";
-	
 	@Override
-	public void buildConfiguration(WikiRegexConfiguration config) {
+	public void buildConfiguration(WikiRegexConfiguration config, CodeSyncElement cse) {
 		config
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_1_CATEGORY, getHeadline(1), HEADLINE_LEVEL_1_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_2_CATEGORY, getHeadline(2), HEADLINE_LEVEL_2_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_3_CATEGORY, getHeadline(3), HEADLINE_LEVEL_3_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_4_CATEGORY, getHeadline(4), HEADLINE_LEVEL_4_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_5_CATEGORY, getHeadline(5), HEADLINE_LEVEL_5_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(PARAGRAPH_CATEGORY, PARAGRAPH, PARAGRAPH_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(PARAGRAPH_CATEGORY, FINAL_PARAGRAPH, PARAGRAPH_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, PARAGRAPH_CATEGORY))
 		.setUseUntilFoundThisIgnoreAll(false);
 	}
 	
 	@Override
 	public Class<? extends WikiTreeBuilder> getWikiTreeBuilderClass() {
-		return DokuWikiTreeBuilder.class;
+		return WikiTreeBuilder.class;
 	}
 	
-	public WikiTextBuilder getWikiTextBuilder() {
+	@Override
+	public WikiTextBuilder getWikiTextBuilder(CodeSyncElement cse) {
 		return new DokuWikiTextBuilder();
 	}
 	
 	private String getHeadline(int level) {
-		String delim = String.format("={%s}", 7 - level);
-		return delim + "(.*?)" + delim;
-	}
-
-	public static int getHeadlineLevel(String category) {
-		if (category == null) {
-			return -1;
-		}
-		if (category.startsWith("Headline")) {
-			return Integer.parseInt(category.substring(category.length() - 1)); 
-		}
-		return -1;
+		return String.format("(={%s}", 7 - level) 
+				+ ".*?" 
+				+ String.format("={%s,}", 2) 		// at least 2 times
+				+ "\\s*?"
+				+ ")"
+				+ LINE_TERMINATOR;
 	}
 
 	/**
@@ -93,7 +78,7 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 							child.setType(WikiTreeBuilder.PAGE_CATEGORY);
 							Page wikiPage = WikiPackage.eINSTANCE.getWikiFactory().createPage();
 							wikiPage.setInitialContent(page.getContent());
-							wikiPage.setLineDelimiter(getLineDelimiter(page.getContent()));
+							wikiPage.setLineDelimiter(WikiPlugin.getInstance().getLineDelimiter(page.getContent()));
 							child.setAstCacheElement(wikiPage);
 						}
 						crtNode.getChildren().add(child);
@@ -114,16 +99,6 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 		return null;
 	}
 
-	private String getLineDelimiter(String content) {
-		if (content.contains("\r\n")) {
-			return "\r\n";
-		}
-		if (content.contains("\r")) {
-			return "\r";
-		}
-		return "\n";
-	}
-	
 	@Override
 	public void savePage(Page page) {
 		DokuWikiPlugin.getInstance().savePage(page);

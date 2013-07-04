@@ -19,5 +19,6 @@ Export-Package: org.apache.commons.io,
  org.flowerplatform.common,
  org.flowerplatform.common.log,
  org.flowerplatform.common.plugin,
+ org.flowerplatform.common.regex,
  org.flowerplatform.common.util,
  org.slf4j

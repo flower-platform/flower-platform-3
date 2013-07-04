@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.osgi.framework.BundleContext;
 
@@ -15,6 +16,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import dw.xmlrpc.DokuJClient;
 import dw.xmlrpc.Page;
 import dw.xmlrpc.PageDW;
+import dw.xmlrpc.exception.DokuException;
 
 public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 
@@ -66,7 +68,7 @@ public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 	public void savePage(astcache.wiki.Page page) {
 		try {
 			DokuJClient client = getClient();
-			client.putPage(getPageId(page), page.getInitialContent());
+			client.putPage(WikiPlugin.getInstance().getPagePath(page, ":", false), page.getInitialContent());
 		} catch (Exception e) {
 		}
 	}
@@ -81,7 +83,7 @@ public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	protected DokuWikiClientConfiguration getClientConfiguration() {
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationChannelMessagingAdapter.getCurrentFlowerWebPrincipal();
+		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
 		DokuWikiClientConfiguration clientConfig = (DokuWikiClientConfiguration) principal.getWikiClientConfigurations().get(TECHNOLOGY);
 		return clientConfig;
 	}
@@ -92,25 +94,6 @@ public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 		} catch (Exception e) {
 			return null;
 		}
-	}
-	
-	public String getPageId(astcache.wiki.Page page) {
-		StringBuilder builder = new StringBuilder();
-		CodeSyncElement crt = page.getCodeSyncElement();
-		while (getParent(crt) != null) {
-			builder.insert(0, ":" + crt.getName());
-			crt = getParent(crt);
-		}
-		builder.deleteCharAt(0);
-		return builder.toString();
-	}
-	
-	private CodeSyncElement getParent(CodeSyncElement cse) {
-		EObject eObj = cse.eContainer();
-		if (eObj instanceof CodeSyncElement) {
-			return (CodeSyncElement) eObj;
-		}
-		return null;
 	}
 	
 }

@@ -10,7 +10,7 @@ import astcache.wiki.Page;
 /**
  * @author Mariana
  */
-public class WikiTextBuilder {
+public abstract class WikiTextBuilder {
 
 	private StringBuilder builder = new StringBuilder();
 	
@@ -32,19 +32,27 @@ public class WikiTextBuilder {
 
 	private void generateWikiText(CodeSyncElement node) {
 		builder.append(buildText(node));
-		builder.append(lineDelimiter);
-		builder.append(lineDelimiter);
 		for (CodeSyncElement child : node.getChildren()) {
 			generateWikiText(child);
 		}
 	}
 	
 	protected String buildText(CodeSyncElement node) {
+		String category = node.getType();
+		if (PARAGRAPH_CATEGORY.equals(category)) {
+			return String.format("%s", node.getName() + lineDelimiter);
+		}
+		int headlineLevel = WikiPlugin.getInstance().getHeadlineLevel(category);
+		if (headlineLevel > 0) {
+			return formatHeadline(node, headlineLevel);
+		}
 		if (FLOWER_BLOCK_CATEGORY.equals(node.getType())) {
 			builder.append(formatFlowerBlock(node));
 		}
 		return "";
 	}
+	
+	protected abstract String formatHeadline(CodeSyncElement node, int headlineLevel);
 
 	private String formatFlowerBlock(CodeSyncElement node) {
 		if (node.getAstCacheElement() instanceof FlowerBlock) {

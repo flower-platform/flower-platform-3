@@ -1,5 +1,6 @@
 package com.crispico.flower.mp.codesync.wiki;
 
+import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.PARAGRAPH_CATEGORY;
 import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.FLOWER_BLOCK_CATEGORY;
 
 import java.util.ArrayList;
@@ -10,18 +11,18 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
+import org.flowerplatform.common.regex.RegexProcessingSession;
 
 import astcache.wiki.FlowerBlock;
 import astcache.wiki.WikiPackage;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
-import com.crispico.flower.mp.common.regex.RegexProcessingSession;
 
 /**
  * @author Mariana
  */
-public abstract class WikiTreeBuilder extends RegexProcessingSession {
+public class WikiTreeBuilder extends RegexProcessingSession {
 
 	public static final String FOLDER_CATEGORY = "Folder";
 	public static final String PAGE_CATEGORY = "Page";
@@ -175,6 +176,13 @@ public abstract class WikiTreeBuilder extends RegexProcessingSession {
 	 * level will contain nodes with higher levels.
 	 */
 	protected int getLevelForCategory(String category) {
+		if (PARAGRAPH_CATEGORY.equals(category)) {
+			return LEAF_LEVEL;
+		}
+		int headlineLevel = WikiPlugin.getInstance().getHeadlineLevel(category);
+		if (headlineLevel > 0) {
+			return headlineLevel;
+		}
 		if (FOLDER_CATEGORY.equals(category)) {
 			return -1;
 		}

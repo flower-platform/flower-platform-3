@@ -11,11 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.eclipse.emf.common.notify.Notification;
@@ -26,7 +21,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.EDataType;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -34,14 +28,11 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
-import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
-import java.util.Collection;
-import java.util.List;
 
-import com.crispico.flower.mp.model.codesync.util.EclipseObjectInputStream;
-import com.crispico.flower.mp.model.codesync.util.EclipseObjectOutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * <!-- begin-user-doc -->
@@ -242,10 +233,11 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 				} else {
 					try {
 						ByteArrayInputStream input = new ByteArrayInputStream(decode(getOldValueAsString().getBytes()));
-						ObjectInputStream ois = new EclipseObjectInputStream(input);
+						ObjectInputStream ois = new ObjectInputStream(input);
 						oldValue = ois.readObject();
 						ois.close();
 					} catch (Exception e) {
+						throw new RuntimeException(e);
 					}
 				}
 			}
@@ -279,11 +271,14 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 			} else {
 				try {
 					ByteArrayOutputStream output = new ByteArrayOutputStream();
-					ObjectOutputStream oos = new EclipseObjectOutputStream(output);
-					oos.writeObject(newOldValue);
+					ObjectOutputStream oos = new ObjectOutputStream(output);
+					Collection collection = new ArrayList<>();
+					collection.addAll((Collection) newOldValue);
+					oos.writeObject(collection);
 					oos.close();
 					setOldValueAsString(encode(output.toByteArray()));
-				} catch (IOException e) {
+				} catch (Exception e) {
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -344,10 +339,11 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 				} else {
 					try {
 						ByteArrayInputStream input = new ByteArrayInputStream(decode(getNewValueAsString().getBytes()));
-						ObjectInputStream ois = new EclipseObjectInputStream(input);
+						ObjectInputStream ois = new ObjectInputStream(input);
 						newValue = ois.readObject();
 						ois.close();
 					} catch (Exception e) {
+						throw new RuntimeException(e);
 					}
 				}
 			}
@@ -381,11 +377,14 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 			} else {
 				try {
 					ByteArrayOutputStream output = new ByteArrayOutputStream();
-					ObjectOutputStream oos = new EclipseObjectOutputStream(output);
-					oos.writeObject(newNewValue);
+					ObjectOutputStream oos = new ObjectOutputStream(output);
+					Collection collection = new ArrayList<>();
+					collection.addAll((Collection) newNewValue);
+					oos.writeObject(collection);
 					oos.close();
 					setNewValueAsString(encode(output.toByteArray()));
-				} catch (IOException e) {
+				} catch (Exception e) {
+					throw new RuntimeException(e);
 				}
 			}
 		}

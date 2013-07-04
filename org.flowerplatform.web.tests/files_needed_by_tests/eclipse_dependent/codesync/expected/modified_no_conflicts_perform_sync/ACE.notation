@@ -1,0 +1,92 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astcache_code="http://www.flower-platform.com/xmi/astcache_code_1.0.0">
+  <astcache_code:Class>
+    <codeSyncElement href="CSE.notation#/1/@children.0/@children.0"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+    <modifiers xsi:type="astcache_code:Annotation" name="Deprecated">
+      <values name="_" value="test"/>
+    </modifiers>
+    <superClasses>SuperClassFromModel</superClasses>
+    <superInterfaces>IFromModel</superInterfaces>
+    <superInterfaces>IFromSource</superInterfaces>
+  </astcache_code:Class>
+  <astcache_code:Operation type="int">
+    <codeSyncElement href="CSE.notation#/1/@children.0/@children.0/@children.0"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+    <modifiers xsi:type="astcache_code:Annotation" name="OneToMany">
+      <values name="mappedBy" value="&quot;modified_by_model&quot;"/>
+      <values name="orphanRemoval" value="true"/>
+    </modifiers>
+    <modifiers xsi:type="astcache_code:Modifier" type="8"/>
+    <parameters type="String" name="st">
+      <modifiers xsi:type="astcache_code:Modifier" type="16"/>
+    </parameters>
+  </astcache_code:Operation>
+  <astcache_code:Operation documentation="modified from model&#xA;@author test" type="Test">
+    <codeSyncElement href="CSE.notation#/1/@children.0/@children.0/@children.1"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+    <modifiers xsi:type="astcache_code:Annotation" name="OverrideAnnotationOf">
+      <values name="value1" value="true"/>
+      <values name="value2" value="false"/>
+    </modifiers>
+    <parameters type="int" name="a"/>
+  </astcache_code:Operation>
+  <astcache_code:Attribute type="int">
+    <codeSyncElement href="CSE.notation#/1/@children.0/@children.0/@children.2"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+  </astcache_code:Attribute>
+  <astcache_code:Attribute documentation="modified from source&#xA;@author test" type="Test" initializer="1">
+    <codeSyncElement href="CSE.notation#/1/@children.0/@children.0/@children.3"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+  </astcache_code:Attribute>
+  <astcache_code:Class>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.4"/>
+  </astcache_code:Class>
+  <astcache_code:Attribute documentation="doc from model @author test" type="int">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.5"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+  </astcache_code:Attribute>
+  <astcache_code:Class>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.5"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+  </astcache_code:Class>
+  <astcache_code:Attribute type="Object">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.5/@children.0"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+  </astcache_code:Attribute>
+  <astcache_code:Operation>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.5/@children.1"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+    <parameters type="Object" name="action"/>
+  </astcache_code:Operation>
+  <astcache_code:EnumConstant>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.5/@children.2"/>
+    <arguments>new InternalClsFromSource()</arguments>
+  </astcache_code:EnumConstant>
+  <astcache_code:EnumConstant>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.5/@children.3"/>
+    <arguments>new Test()</arguments>
+  </astcache_code:EnumConstant>
+  <astcache_code:Class>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.6"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+  </astcache_code:Class>
+  <astcache_code:Attribute type="int">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.6/@children.0"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+  </astcache_code:Attribute>
+  <astcache_code:Class>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.7"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+  </astcache_code:Class>
+  <astcache_code:AnnotationMember type="boolean" defaultValue="true">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.7/@children.0"/>
+  </astcache_code:AnnotationMember>
+  <astcache_code:AnnotationMember type="boolean" defaultValue="false">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.7/@children.1"/>
+  </astcache_code:AnnotationMember>
+  <astcache_code:Attribute type="int" initializer="3">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.8"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+  </astcache_code:Attribute>
+</xmi:XMI>
