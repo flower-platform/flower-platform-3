@@ -54,7 +54,7 @@ public class CheckoutOperation {
 		
 		try {	
 			monitor.beginTask(GitPlugin.getInstance().getMessage("git.checkout.monitor.message", new Object[] {name}), 4);			
-			
+			monitor.setTaskName("Getting remote branch...");
 			Git git = new Git(repository);
 			Ref ref;
 			if (node instanceof Ref) {
@@ -78,6 +78,7 @@ public class CheckoutOperation {
 				}
 			}					
 			monitor.worked(1);
+			monitor.setTaskName("Creating local branch...");
 			
 			// create local branch
 			git.branchCreate().
@@ -109,6 +110,7 @@ public class CheckoutOperation {
 				config.save();				
 			}			
 			monitor.worked(1);
+			monitor.setTaskName("Creating working directory");
 			
 			// create working directory for local branch
 			File mainRepoFile = repository.getDirectory().getParentFile();		
@@ -118,6 +120,7 @@ public class CheckoutOperation {
 			}			
 			GitPlugin.getInstance().getUtils().run_git_workdir_cmd(mainRepoFile.getAbsolutePath(), wdirFile.getAbsolutePath());			
 			monitor.worked(1);
+			monitor.setTaskName("Checkout branch");
 			
 			// checkout local branch
 			Repository wdirRepo = GitPlugin.getInstance().getUtils().getRepository(wdirFile);

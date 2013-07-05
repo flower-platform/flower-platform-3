@@ -83,16 +83,10 @@
 					}
 				}
 				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
-				GitCommonPlugin.getInstance().service.checkout(node, brName.text, GitRef(cbRemoteBranches.selectedItem), RemoteConfig(cbRemotes.selectedItem), cbRebase.selected, this, checkoutBranchCallbackHandler);
+				GitCommonPlugin.getInstance().service.checkout(node, brName.text, GitRef(cbRemoteBranches.selectedItem), RemoteConfig(cbRemotes.selectedItem), cbRebase.selected, null, null);
+				super.finishClickHandler();
 			}
-			
-			private function checkoutBranchCallbackHandler(result:Boolean):void {
-				popupHost.hideSpinner();
-				if (result) {
-					super.finishClickHandler();
-				}				
-			}
-			
+						
 			private function getIndexForState(stateName:String):int {
 				if (stateName == "checkoutPage") {
 					return 0;
@@ -105,6 +99,8 @@
 	<popup:states>				
 		<mx:State name="checkoutPage">			
 			<mx:SetProperty name="wizardTitle" value="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.title')}"/>
+			<mx:SetProperty name="wizardDescription" value="{GitCommonPlugin.getInstance().getMessage('git.checkoutBranch.description')}"/>
+			
 			<mx:SetProperty target="{finish}" name="enabled" value="{brName.text != ''}"/>
 			<mx:SetProperty target="{next}" name="visible" value="false"/>
 			<mx:SetProperty target="{back}" name="visible" value="false"/>

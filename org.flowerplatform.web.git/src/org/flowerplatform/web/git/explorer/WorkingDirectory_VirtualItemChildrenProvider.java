@@ -14,7 +14,7 @@ import org.flowerplatform.web.git.GitPlugin;
 
 /**
  * Parent node = Virtual node (Working Directories) (i.e. Pair<Repository, nodeType>).<br/>
- * Child node = File, i.e. Pair<File, nodeType>.
+ * Child node = Pair<File, nodeType>, i.e. Pair<Pair<File, nodeType>, nodeType>.
  * 
  * @author Cristina Constantinescu
  */
@@ -31,7 +31,7 @@ public class WorkingDirectory_VirtualItemChildrenProvider implements IChildrenPr
 			Repository repo = GitPlugin.getInstance().getUtils().getRepository(child);
 			
 			if (repo != null) {
-				Pair<Object, String> pair = new Pair<Object, String>(child, GitNodeType.NODE_TYPE_WDIR);
+				Pair<Object, String> pair = new Pair<Object, String>(new Pair<File, String>(child, GitNodeType.NODE_TYPE_WDIR), GitNodeType.NODE_TYPE_WDIR);
 				result.add(pair);
 			}
 		}		

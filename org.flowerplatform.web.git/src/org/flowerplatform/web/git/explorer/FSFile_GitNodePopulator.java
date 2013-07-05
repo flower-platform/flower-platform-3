@@ -22,6 +22,14 @@ public class FSFile_GitNodePopulator implements INodePopulator {
 		boolean isFileFromGitRepository = GitPlugin.getInstance().getUtils().isRepository(file);
 		if (isFileFromGitRepository) {
 			destination.getOrCreateCustomData().put(TREE_NODE_GIT_FILE_TYPE, true);
+		
+//			Repository repository = GitPlugin.getInstance().getUtils().getRepository(file);			
+//			try {
+//				destination.setLabel(String.format("%s [%s]", 
+//						destination.getLabel(),
+//						repository.getBranch()));
+//			} catch (IOException e) {
+//			}
 		}
 		return false;
 	}

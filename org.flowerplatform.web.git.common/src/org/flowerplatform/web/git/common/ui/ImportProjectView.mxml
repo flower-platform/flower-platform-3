@@ -93,7 +93,7 @@
 											</fx:Script>
 											<s:HGroup verticalAlign="middle" horizontalAlign="center" gap="5" paddingLeft="5">	
 												<s:CheckBox id="cbSelected" click="{ProjectDto(data).setSelected(!ProjectDto(data).getSelected())}" selected="{ProjectDto(data).getSelected()}" />
-												<s:BitmapImage id="image" source="{FlexUtilGlobals.getInstance().createAbsoluteUrl(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/branch_obj.gif'))}"/>				                    
+												<s:BitmapImage id="image" source="{FlexUtilGlobals.getInstance().createAbsoluteUrl(GitCommonPlugin.getInstance().getResourceUrl('images/project.gif'))}"/>				                    
 												<s:Label id="nameTxt" text="{data.name}"/>									
 											</s:HGroup>	
 										</s:ItemRenderer>					

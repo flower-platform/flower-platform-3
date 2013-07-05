@@ -113,6 +113,12 @@ public class GitService {
 		}
 	}
 			
+	private void dispatchLabelUpdate(Object node, String nodeType) {
+		for (GenericTreeStatefulService service : GitPlugin.getInstance().getTreeStatefulServicesDisplayingGitContent()) {
+			service.dispatchLabelUpdate(node, nodeType);
+		}
+	}
+	
 	public Repository getRepository(NodeInfo nodeInfo) {
 		if (nodeInfo == null) {
 			return null;
@@ -860,9 +866,9 @@ public class GitService {
 				if (GitNodeType.NODE_TYPE_LOCAL_BRANCHES.equals(repoChildNodeInfo.getPathFragment().getType())
 					|| GitNodeType.NODE_TYPE_WDIRS.equals(repoChildNodeInfo.getPathFragment().getType())
 					|| GitNodeType.NODE_TYPE_REMOTE_BRANCHES.equals(repoChildNodeInfo.getPathFragment().getType())) {
-					dispatchContentUpdate(repoChildNodeInfo);
+					dispatchContentUpdate(repoChildNodeInfo.getNode());
 				}
-			}		
+			}			
 		}
 		return result;
 	}
@@ -1146,7 +1152,9 @@ public class GitService {
 	@RemoteInvocation
 	public boolean deleteBranch(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
-			RefNode node = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);				
+			RefNode node = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);		
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 			Repository repository = node.getRepository();
 			
 			Git git = new Git(repository);
@@ -1164,6 +1172,7 @@ public class GitService {
 				GitPlugin.getInstance().getUtils().delete(wdirFile);
 			}			
 			
+			dispatchContentUpdate(nodeInfo.getParent().getNode());
 			return true;
 		} catch (GitAPIException e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), path, e);

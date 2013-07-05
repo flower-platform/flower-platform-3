@@ -15,6 +15,7 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.core.FlexGlobals;
 			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
@@ -39,7 +40,9 @@
 			override protected function creationCompleteHandler():void {
 				super.creationCompleteHandler();		
 				wizardImage.source = GitCommonPlugin.getInstance().getResourceUrl("images/import_wiz.png");
-				titleArea.height = 75;
+				if (!FlexUtilGlobals.getInstance().isMobile) {
+					desktopTitleArea.height = 80;
+				}
 				allBranches = new ArrayCollection();
 				//it doesn't work by simply apply focus
 				callLater(repositorySelectionPage.uri.setFocus);
@@ -131,7 +134,7 @@
 			 * @flowerModelElementId _0LbYwDVhEeKsnMbt6YrXWQ
 			 */
 			protected override function finishClickHandler():void {
-				popupHost.showSpinner(GitCommonPlugin.getInstance().getMessage("git.cloneWizard.cloneRepo.spinner"));
+				//popupHost.showSpinner(GitCommonPlugin.getInstance().getMessage("git.cloneWizard.cloneRepo.spinner"));
 				var selectedBranches:ArrayCollection = getSelectedBranches(true);				
 				GitCommonPlugin.getInstance().service.
 					cloneRepository(selectedNode,
@@ -139,16 +142,10 @@
 						selectedBranches,
 						remoteName != null ? remoteName.text : defaultRemoteName,
 						allBranches.length == 0 || selectedBranches.length == allBranches.length,
-						this, serverResponseHandler);
+						null, null);
+				super.finishClickHandler();
 			}
-			
-			private function serverResponseHandler(value:Boolean):void {
-				popupHost.hideSpinner();
-				if (value) {
-					super.finishClickHandler();
-				}
-			}
-			
+						
 			override public function set popupHost(value:IPopupHost):void {
 				super.popupHost = value;
 				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.cloneRepo.label'));
@@ -180,12 +177,13 @@
 			<mx:SetProperty name="wizardDescription" value="{GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.description')}"/>			
 			
 			<mx:AddChild relativeTo="{contentArea}">
-				<mx:VBox width="100%" height="100%" borderVisible="false">
+				<s:VGroup width="100%" height="100%" >
 					<!--s:Label text="{GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.branchOf', [repositorySelectionPage.getURI()])}"/-->
 					<s:TextInput id="filter" width="100%" 
 								  change="applyFilterHandler()"
 								 creationComplete="{TextUtils.setTextComponentHint(filter, GitCommonPlugin.getInstance().getMessage('git.cloneWizard.branch.filter'));}"/>
-					<s:List id="listBranches" width="100%" height="100%" dataProvider="{branches}" minHeight="100"  >
+					
+					<s:List id="listBranches" width="100%" height="100" dataProvider="{branches}" verticalScrollPolicy="auto"  >
 						<s:itemRenderer>
 							<fx:Component>
 								<s:ItemRenderer>
@@ -210,7 +208,7 @@
 						<s:Label text="{GitCommonPlugin.getInstance().getMessage('git.cloneWizard.cloneConfig.remoteName')}"/>
 						<s:TextInput id="remoteName" width="100%" text="{defaultRemoteName}" />
 					</s:HGroup>
-				</mx:VBox>
+				</s:VGroup>
 			</mx:AddChild>
 		</mx:State>		
 	</popup:states>

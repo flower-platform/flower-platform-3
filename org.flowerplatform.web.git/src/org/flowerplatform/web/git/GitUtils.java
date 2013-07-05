@@ -10,7 +10,13 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,32 +27,18 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.jgit.api.FetchCommand;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.GitCommand;
-import org.eclipse.jgit.api.MergeCommand;
 import org.eclipse.jgit.api.MergeResult;
-import org.eclipse.jgit.api.RebaseCommand;
-import org.eclipse.jgit.api.RebaseResult;
-import org.eclipse.jgit.api.RebaseCommand.Operation;
-import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidConfigurationException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.internal.JGitText;
-import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -56,7 +48,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.PushResult;
-import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.util.FS;
@@ -66,7 +57,6 @@ import org.flowerplatform.common.FlowerWebProperties;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.git.operation.internal.PullResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,8 +159,12 @@ public class GitUtils {
 	public Repository getRepository(File repoFile) {
 		File gitDir = getGitDir(repoFile);
 		if (gitDir != null) {
-			try {
-				return RepositoryCache.open(FileKey.exact(gitDir, FS.DETECTED));
+			try {				
+				Repository repository = RepositoryCache.open(FileKey.exact(gitDir, FS.DETECTED));
+				if (repository != null) {
+					GitPlugin.getInstance().getIndexDiffCache().getIndexDiffCacheEntry(repository);
+				}
+				return repository;
 			}  catch (IOException e) {
 				// TODO CC: log
 			}
@@ -504,6 +498,43 @@ public class GitUtils {
 		}
 		return null;
 	}
+	
+	public void listenForChanges(File file) throws IOException {
+        Path path = file.toPath();
+        if (file.isDirectory()) {
+            WatchService ws = path.getFileSystem().newWatchService();
+            path.register(ws, StandardWatchEventKinds.ENTRY_CREATE, 
+              StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+            WatchKey watch = null;
+            while (true) {
+                System.out.println("Watching directory: " + file.getPath());
+                try {
+                    watch = ws.take();
+                } catch (InterruptedException ex) {
+                    System.err.println("Interrupted");
+                }
+                List<WatchEvent<?>> events = watch.pollEvents();
+                if (!watch.reset()) {
+                	break;
+                }
+                for (WatchEvent<?> event : events) {
+                    Kind<Path> kind = (Kind<Path>) event.kind();
+                    Path context = (Path) event.context();
+                    if (kind.equals(StandardWatchEventKinds.OVERFLOW)) {
+                        System.out.println("OVERFLOW");
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
+                        System.out.println("Created: " + context.getFileName());
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+                        System.out.println("Deleted: " + context.getFileName());
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
+                        System.out.println("Modified: " + context.getFileName());
+                    }
+                }
+            }
+        } else {
+            System.err.println("Not a directory. Will exit.");
+        }
+    }
 	
 	private NamedLockPool namedLockPool = new NamedLockPool();
 	

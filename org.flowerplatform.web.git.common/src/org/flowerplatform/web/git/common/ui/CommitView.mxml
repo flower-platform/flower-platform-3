@@ -163,9 +163,8 @@
 									  toolTip="{CommonPlugin.getInstance().getMessage('deselect.all')}" 
 									icon="{FlexUtilGlobals.getInstance().createAbsoluteUrl(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/uncheck_all.gif'))}" >								
 								</s:Button>
-						</s:HGroup>		
-						
-						<s:List width="100%" dataProvider="{commitResources}" id="list" minHeight="50" >			
+						</s:HGroup>								
+						<s:List width="100%" height="100" dataProvider="{commitResources}" id="list" verticalScrollPolicy="auto">						
 							<s:itemRenderer>
 								<fx:Component>
 									<s:ItemRenderer>									

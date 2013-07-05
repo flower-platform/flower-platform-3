@@ -1,5 +1,6 @@
 package org.flowerplatform.web.git.explorer;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.jgit.lib.Repository;
@@ -10,6 +11,7 @@ import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.git.GitNodeType;
 import org.flowerplatform.web.git.GitPlugin;
+import org.flowerplatform.web.git.GitUtils;
 import org.flowerplatform.web.git.explorer.entity.RefNode;
 
 /**
@@ -22,7 +24,17 @@ public class RefNodeDataProvider implements INodeDataProvider {
 		RefNode refNode = (RefNode) source;
 		String nodeType = destination.getPathFragment().getType();
 		
-		destination.setLabel(Repository.shortenRefName(refNode.getRef().getName()));
+		String refShortName = Repository.shortenRefName(refNode.getRef().getName());
+		if (GitNodeType.NODE_TYPE_LOCAL_BRANCH.equals(destination.getPathFragment().getType())) {
+			// add additional information like working directory name
+			File mainRepoFile = refNode.getRepository().getDirectory().getParentFile();		
+			File wdirFile = new File(mainRepoFile.getParentFile(), GitUtils.WORKING_DIRECTORY_PREFIX + refShortName);
+			destination.setLabel(String.format("%s [%s]", 
+					refShortName, 
+					wdirFile.getName()));
+		} else {
+			destination.setLabel(refShortName);
+		}
 		String icon;
 		if (GitNodeType.NODE_TYPE_TAG.equals(nodeType)) {
 			icon = "images/full/obj16/annotated-tag.gif";
