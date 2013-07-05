@@ -48,10 +48,14 @@ import org.flowerplatform.communication.stateful_service.IStatefulServiceMXBean;
 import org.flowerplatform.communication.stateful_service.RegularStatefulService;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.NodeInfo;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.web.git.GitNodeType;
 import org.flowerplatform.web.git.GitPlugin;
 import org.flowerplatform.web.git.GitService;
+import org.flowerplatform.web.git.GitUtils;
+import org.flowerplatform.web.git.explorer.entity.RefNode;
 import org.flowerplatform.web.git.history.internal.FileDiff;
 import org.flowerplatform.web.git.history.internal.WebCommit;
 import org.flowerplatform.web.git.history.internal.WebCommitList;
@@ -474,7 +478,21 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 		} else {
 			Object node = GenericTreeStatefulService.getNodeByPathFor((List<PathFragment>) info.getSelectedObject(), null);
 			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot((List<PathFragment>) info.getSelectedObject());
-			Repository repository = GitService.getInstance().getRepository(service.getVisibleNodes().get(node));
+			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
+			Repository repository = GitService.getInstance().getRepository(nodeInfo);
+			
+			if (GitNodeType.NODE_TYPE_FILE.equals(nodeInfo.getPathFragment().getType()) 
+					|| GitNodeType.NODE_TYPE_WDIR.equals(nodeInfo.getPathFragment().getType())) {
+				repository = GitPlugin.getInstance().getUtils().getRepository((File) node);
+			} else if (node instanceof RefNode) {
+				// create working directory for local branch
+				File mainRepoFile = repository.getDirectory().getParentFile();		
+				String branchName = ((RefNode) node).getRef().getName().substring(Constants.R_HEADS.length());
+				File wdirFile = new File(mainRepoFile.getParentFile(), GitUtils.WORKING_DIRECTORY_PREFIX + branchName);			
+				repository = GitPlugin.getInstance().getUtils().getRepository(wdirFile);
+			} else {
+				throw new IOException();
+			}
 			if (repository == null) {
 				throw new IOException();
 			}

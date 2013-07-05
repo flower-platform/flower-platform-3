@@ -29,8 +29,8 @@ package org.flowerplatform.web.git.action {
 		override public function get visible():Boolean {
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {			
 				var node:TreeNode = TreeNode(selection.getItemAt(0));
-				return node.pathFragment.type == GitCommonPlugin.NODE_TYPE_REPOSITORY ||
-					node.pathFragment.type == GitCommonPlugin.NODE_TYPE_LOCAL_BRANCH;
+				return node.pathFragment.type == GitCommonPlugin.NODE_TYPE_LOCAL_BRANCH ||
+					node.pathFragment.type == GitCommonPlugin.NODE_TYPE_REMOTE_BRANCH;
 			}
 			return false;
 		}
