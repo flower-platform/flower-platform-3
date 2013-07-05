@@ -12,8 +12,8 @@ import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.EditorStatefulService;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
-import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 
 /**
  * @author Mariana
@@ -38,7 +38,7 @@ public class JavaElementChangedListener implements IElementChangedListener {
 			if (editableResource != null) {
 				for (EditableResourceClient client : editableResource.getClients()) {
 					try {
-						CodeSyncCodePlugin.getInstance().getDragOnDiagramHandler().handleDragOnDiagram(Arrays.asList(deltaToProcess.getElement().getCorrespondingResource()), null, null, null, client.getCommunicationChannel());
+						CodeSyncPlugin.getInstance().getDragOnDiagramHandler().handleDragOnDiagram(Arrays.asList(deltaToProcess.getElement().getCorrespondingResource()), null, null, null, client.getCommunicationChannel());
 					} catch (JavaModelException e) {
 //						e.printStackTrace();
 					}

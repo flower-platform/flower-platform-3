@@ -31,6 +31,10 @@ import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.codesync.base.ComposedDragOnDiagramHandler;
+import com.crispico.flower.mp.codesync.base.ComposedFullyQualifiedNameProvider;
+import com.crispico.flower.mp.codesync.base.ICodeSyncAlgorithmRunner;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
@@ -73,10 +77,6 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 	
-	protected ComposedDragOnDiagramHandler dragOnDiagramHandler;
-	
-	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
-	
 	protected ModelAdapterFactoryProvider modelAdapterFactoryProvider;
 	
 	protected List<String> srcDirs = null;
@@ -106,14 +106,6 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 */
 	public String ACE_FILE_LOCATION = "/ACE.notation";
 	
-	public ComposedDragOnDiagramHandler getDragOnDiagramHandler() {
-		return dragOnDiagramHandler;
-	}
-
-	public ComposedFullyQualifiedNameProvider getFullyQualifiedNameProvider() {
-		return fullyQualifiedNameProvider;
-	}
-	
 	/**
 	 * @author Mariana
 	 */
@@ -136,9 +128,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
-		dragOnDiagramHandler = new ComposedDragOnDiagramHandler();
-		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
-		
+		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().addRunner(new CodeSyncAlgorithmRunner());
 		modelAdapterFactoryProvider = new ModelAdapterFactoryProvider();
 	}
 
@@ -157,7 +147,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 //	public CodeSyncElement getCodeSyncElement(String fullyQualifiedName, String technology, CommunicationChannel communicationChannel) {
-	public CodeSyncElement getCodeSyncElement(IProject project, IFile file, String technology, CommunicationChannel communicationChannel) {
+	public CodeSyncElement getCodeSyncElement(IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 //		if (fullyQualifiedName.startsWith("/")) {
 //			fullyQualifiedName = fullyQualifiedName.substring(1);
 //		}
@@ -181,7 +171,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		
 		// STEP 2 : find the SrcDir corresponding to the 2nd path fragment
 //		CodeSyncElement srcDir = getSrcDir(cseResource, pathFragments[1]);
-		CodeSyncElement srcDir = getSrcDir(cseResource, file.getParent().getName());
+		CodeSyncElement srcDir = getSrcDir(cseResource, file.getFullPath().segment(2));
 		
 //		// STEP 3 : find the CSE corresponding to the name
 //		String[] path = Arrays.copyOfRange(pathFragments, 2, pathFragments.length);
@@ -189,7 +179,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 ////		if (codeSyncElement == null) {
 //			// SUBSTEP : run the CodeSync algorithm if the CSE does not exist
 //			runCodeSyncAlgorithm(srcDir, project, pathFragments[1], technology, communicationChannel);
-			runCodeSyncAlgorithm(srcDir, project, file, technology, communicationChannel);
+			runCodeSyncAlgorithm(srcDir, project, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel);
 ////		}
 //		return getCodeSyncElement(srcDir, path);
 		return null;
@@ -227,24 +217,27 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-//	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel) {
-	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IFile file, String technology, CommunicationChannel communicationChannel) {
+	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel) {
+//	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
+		if (editableResource == null) {
+			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+		}
 //		CodeSyncEditableResource editableResource = new CodeSyncEditableResource();
 	
 		Match match = new Match();
 		match.setAncestor(model);
 		match.setLeft(model);
 		IResource ast = null;
-//		if (model.getType().equals(AstModelElementAdapter.FOLDER)) {
-//			ast = project.getFolder(path);
-//		} else {
-//			if (model.getType().equals(AstModelElementAdapter.FILE)) {
-//				ast = project.getFile(path);
-//			}
-//		}
-		ast = file.getParent();
+		if (model.getType().equals(AstModelElementAdapter.FOLDER)) {
+			ast = project.getFolder(path);
+		} else {
+			if (model.getType().equals(AstModelElementAdapter.FILE)) {
+				ast = project.getFile(path);
+			}
+		}
+//		ast = file.getParent();
 		match.setRight(ast);
 		
 		// right - AST
@@ -275,8 +268,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);
 		
-		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
-		service.attemptUpdateEditableResourceContent(context, project.getFullPath().toString(), null);
+//		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
+//		service.attemptUpdateEditableResourceContent(context, project.getFullPath().toString(), null);
 		
 		return editableResource;
 //		return null;

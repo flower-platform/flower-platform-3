@@ -2,6 +2,8 @@ package com.crispico.flower.mp.codesync.code;
 
 import org.eclipse.core.resources.IResource;
 
+import com.crispico.flower.mp.codesync.base.IFullyQualifiedNameProvider;
+
 /**
  * @author Mariana
  */

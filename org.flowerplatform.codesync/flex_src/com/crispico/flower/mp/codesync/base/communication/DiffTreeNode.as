@@ -10,7 +10,7 @@ package com.crispico.flower.mp.codesync.base.communication {
 	 * @flowerModelElementId _A62hcLOTEeCa6MHp-4L_Cw
 	 */ 
 	[Bindable]
-	[RemoteClass(alias="com.crispico.flower.mp.codesync.base.DiffTreeNode")]
+	[RemoteClass(alias="com.crispico.flower.mp.codesync.base.communication.DiffTreeNode")]
 	public class DiffTreeNode extends TreeNode {
 		public var topLeftColor:uint = 0xFFFFFF;
 		public var topRightColor:uint = 0xFFFFFF;

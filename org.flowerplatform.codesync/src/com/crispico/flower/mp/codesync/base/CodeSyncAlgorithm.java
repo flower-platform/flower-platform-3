@@ -103,7 +103,7 @@ public class CodeSyncAlgorithm {
 			IModelAdapter modelAdapter = modelAdapterFactorySet.getRightFactory().getModelAdapter(match.getRight());
 			rightList = modelAdapter.getContainmentFeatureIterable(match.getRight(), feature, null); 
 			for (Object rightChild : rightList) {
-				if (rightChildModelAdapter == null)
+//				if (rightChildModelAdapter == null)
 					rightChildModelAdapter = modelAdapterFactorySet.getRightFactory().getModelAdapter(rightChild);
 //						rightMap.put(rightChildModelAdapter.getMatchKey(rightChild), rightChild);
 				if (rightChildModelAdapter != null) {
@@ -118,7 +118,7 @@ public class CodeSyncAlgorithm {
 			IModelAdapter modelAdapter = modelAdapterFactorySet.getLeftFactory().getModelAdapter(match.getLeft());
 			Iterable<?> leftList = modelAdapter.getContainmentFeatureIterable(match.getLeft(), feature, rightList); 
 			for (Object leftChild : leftList) {
-				if (leftChildModelAdapter == null)
+//				if (leftChildModelAdapter == null)
 					leftChildModelAdapter = modelAdapterFactorySet.getLeftFactory().getModelAdapter(leftChild);
 //				leftMap.put(leftChildModelAdapter.getMatchKey(leftChild), leftChild);
 				if (leftChildModelAdapter != null) {
@@ -132,7 +132,7 @@ public class CodeSyncAlgorithm {
 			IModelAdapter modelAdapter = modelAdapterFactorySet.getAncestorFactory().getModelAdapter(match.getAncestor());
 			Iterable<?> ancestorList = modelAdapter.getContainmentFeatureIterable(match.getAncestor(), feature, rightList);
 			for (Object ancestorChild : ancestorList) {
-				if (ancestorChildModelAdapter == null)
+//				if (ancestorChildModelAdapter == null)
 					ancestorChildModelAdapter = modelAdapterFactorySet.getAncestorFactory().getModelAdapter(ancestorChild);
 				if (ancestorChildModelAdapter != null) {
 					// this will be a 3-match, 2-match or 1-match

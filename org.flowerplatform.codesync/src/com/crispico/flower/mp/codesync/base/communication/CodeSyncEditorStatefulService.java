@@ -1,15 +1,28 @@
 package com.crispico.flower.mp.codesync.base.communication;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
+import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.flowerplatform.editor.remote.EditorStatefulService;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
@@ -29,6 +42,40 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	public static final String SERVICE_ID = "CodeSyncEditorStatefulService";
 	
 	public static final String CODE_SYNC_EDITOR = "codeSync";
+
+	public CodeSyncEditorStatefulService() {
+		setEditorName("codeSync");
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+	}
+	
+//	@Override
+//	public void subscribe(StatefulServiceInvocationContext context,	IStatefulClientLocalState statefulClientLocalState) {
+//		EditorStatefulClientLocalState editorStatefulClientLocalState = (EditorStatefulClientLocalState) statefulClientLocalState;
+//		Pair<IProject, IResource> pair = getProjectAndResource(editorStatefulClientLocalState.getEditableResourcePath());
+//		IFile file = (IFile) pair.b; 
+//		IProject project = pair.a;
+//		editorStatefulClientLocalState.setEditableResourcePath(project.getFullPath().toString());
+//		super.subscribe(context, statefulClientLocalState);
+//		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, file, "java", context.getCommunicationChannel());
+//	}
+//	
+//	@Override
+//	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
+//		EditorStatefulClientLocalState editorStatefulClientLocalState = (EditorStatefulClientLocalState) statefulClientLocalState;
+//		editorStatefulClientLocalState.setEditableResourcePath(getProjectPath(editorStatefulClientLocalState.getEditableResourcePath()));
+//		super.unsubscribe(context, statefulClientLocalState);
+//	}
+
+	private Pair<IProject, IResource> getProjectAndResource(String editableResourcePath) {
+		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath().toString() + editableResourcePath;
+		return ProjectsService.getInstance().getEclipseProjectAndResource(new File(absolutePath));
+	}
+	
+	private String getProjectPath(String editableResourcePath) {
+//		Pair<IProject, IResource> pair = getProjectAndResource(editableResourcePath);
+//		return pair.a.getFullPath().toString();
+		return editableResourcePath;
+	}
 
 	@Override
 	protected boolean areLocalUpdatesAppliedImmediately() {
@@ -69,7 +116,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 //	}
 
 	public Match getMatchForPath(String path) {
-		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(path);
+		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(path));
 		if (er != null) {
 			return er.getMatch();
 		}
@@ -77,7 +124,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	}
 	
 	public ModelAdapterFactorySet getModelAdapterFactorySetForPath(String path) {
-		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(path);
+		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(path));
 		if (er != null) {
 			return er.getModelAdapterFactorySet();
 		}
@@ -183,7 +230,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	
 	@RemoteInvocation
 	public void synchronize(StatefulServiceInvocationContext context, String editableResourcePath) {
-		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(editableResourcePath);
+		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
 		if (er != null) {
 			synchronize(er.getMatch(), er.getModelAdapterFactorySet());
 			attemptUpdateEditableResourceContent(context, editableResourcePath, null);
@@ -192,7 +239,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	
 	@RemoteInvocation
 	public void applySelectedActions(StatefulServiceInvocationContext context, String editableResourcePath) {
-		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(editableResourcePath);
+		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
 		if (er != null) {
 			allActionsPerformed(er.getMatch(), er.getModelAdapterFactorySet());
 			saveModifications(er);
@@ -202,10 +249,10 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	
 	@RemoteInvocation
 	public void cancelSelectedActions(String editableResourcePath) {
-		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(editableResourcePath);
+		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
 		if (er != null) {
 			discardModifications(er);
-			unsubscribeAllClientsForcefully(editableResourcePath, true);
+			unsubscribeAllClientsForcefully(getProjectPath(editableResourcePath), true);
 		}
 	}
 	

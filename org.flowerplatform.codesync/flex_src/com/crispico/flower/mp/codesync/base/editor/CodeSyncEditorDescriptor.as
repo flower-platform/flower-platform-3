@@ -25,6 +25,10 @@ package com.crispico.flower.mp.codesync.base.editor {
 			return "com.crispico.flower.mp.web.codesync";
 		}
 		
+		public override function getIcon(viewLayoutData:ViewLayoutData=null):Object {
+			return null;
+		}
+		
 		public override function getTitle(viewLayoutData:ViewLayoutData=null):String {
 			return "CodeSync";
 		}

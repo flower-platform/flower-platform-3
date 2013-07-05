@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.codesync.code.CodeSyncElementFeatureProvider;
@@ -35,8 +36,8 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
-		CodeSyncCodePlugin.getInstance().getDragOnDiagramHandler().addDelegateHandler(new JavaDragOnDiagramHandler());
-		CodeSyncCodePlugin.getInstance().getFullyQualifiedNameProvider().addDelegateProvider(new JavaFullyQualifiedNameProvider());
+		CodeSyncPlugin.getInstance().getDragOnDiagramHandler().addDelegateHandler(new JavaDragOnDiagramHandler());
+		CodeSyncPlugin.getInstance().getFullyQualifiedNameProvider().addDelegateProvider(new JavaFullyQualifiedNameProvider());
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new JavaResourceChangeListener());
 		JavaCore.addElementChangedListener(new JavaElementChangedListener(), ElementChangedEvent.POST_RECONCILE);
 		

@@ -5,13 +5,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
 import org.flowerplatform.communication.service.ServiceRegistry;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.temp.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.GenericTreeContext;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 
@@ -56,12 +57,12 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 	}
 
 	@Override
-	public String getLabelForLog(Object node, String nodeType) {
+	public String getLabelForLog(Object node) {
 		return node.toString();
 	}
 
 	@Override
-	public Collection<?> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
+	public Collection<?> getChildrenForNode(Object node, GenericTreeContext context) {
 		IModelAdapterUI adapter = getModelAdapterUI(node, getTreeTypeFromContext(context), getProjectPathFromContext(context));
 		return adapter.getChildren(node);
 	}
@@ -84,7 +85,7 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
 		IModelAdapterUI adapter = getModelAdapterUI(source, getTreeTypeFromContext(context), getProjectPathFromContext(context));
 		destination.setLabel(adapter.getLabel(source));
-		destination.setIconUrls(adapter.getIconUrls(source));
+//		destination.setIcon((adapter.getIconUrls(source)));
 
 		matchModelAdapterUI.processDiffTreeNode(source, (DiffTreeNode) destination);
 		
@@ -142,6 +143,8 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 			return matchModelAdapterUI;
 		else {
 			switch (treeType) {
+			case TREE_TYPE_DIFF:
+				return matchModelAdapterUI;
 			case TREE_TYPE_ANCESTOR:
 				return getModelAdapterFactorySet(path).getAncestorFactory().getModelAdapter(modelElement);
 			case TREE_TYPE_LEFT:
@@ -258,17 +261,17 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 	}
 
 	private Match getMatch(String path) {
-		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) ServiceRegistry.INSTANCE.getService(CodeSyncEditorStatefulService.SERVICE_ID);
+		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		return service.getMatchForPath(path);
 	}
 	
 	private ModelAdapterFactorySet getModelAdapterFactorySet(String path) {
-		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) ServiceRegistry.INSTANCE.getService(CodeSyncEditorStatefulService.SERVICE_ID);
+		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		return service.getModelAdapterFactorySetForPath(path);
 	}
 	
 	@Override
-	public void webCommunicationChannelCreated(CommunicationChannel webCommunicationChannel) {
+	public void communicationChannelCreated(CommunicationChannel webCommunicationChannel) {
 		// nothing to do
 	}
 	

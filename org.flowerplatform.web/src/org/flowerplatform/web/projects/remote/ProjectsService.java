@@ -224,7 +224,11 @@ public class ProjectsService {
 	@RemoteInvocation
 	public void markAsWorkingDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		markAsWorkingDirectoryForFile(context, file);
+	}
+	
+	public void markAsWorkingDirectoryForFile(ServiceInvocationContext context, final File file) {
 		final Pair<File, Boolean> organizationDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.markAsWorkingDirectory.error.title", file, true);
 
@@ -268,7 +272,11 @@ public class ProjectsService {
 	@RemoteInvocation
 	public void createOrImportProject(ServiceInvocationContext context, List<PathFragment> pathWithRoot) throws CoreException, URISyntaxException {
 		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		createOrImportProjectForFile(context, file);
+	}
+	
+	public void createOrImportProjectForFile(ServiceInvocationContext context, final File file) throws URISyntaxException, CoreException {
 		final Pair<File, Boolean> workingDirectoryDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.createOrImportProject.error.title", file, false);
 
@@ -335,8 +343,11 @@ public class ProjectsService {
 	
 	public Pair<IProject, IResource> getEclipseProjectAndResource(List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
-
+		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		return getEclipseProjectAndResource(file);
+	}
+		
+	public Pair<IProject, IResource> getEclipseProjectAndResource(final File file) {
 		File currentFile = file;
 		IProject projectWrapper = null;
 		while (currentFile != null && currentFile != CommonPlugin.getInstance().getWorkspaceRoot()) {

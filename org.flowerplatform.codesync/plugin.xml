@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.editor.contentType">
+      <contentType
+            contentType="codeSync">
+      </contentType>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.contentTypeToEditorMapping">
+      <contentTypeToEditorMapping
+            compatibleEditor="codeSync"
+            contentType="codeSync"
+            editorStatefulService="com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService"
+            serviceId="codeSyncEditorStatefulService">
+      </contentTypeToEditorMapping>
+   </extension>
+
+</plugin>

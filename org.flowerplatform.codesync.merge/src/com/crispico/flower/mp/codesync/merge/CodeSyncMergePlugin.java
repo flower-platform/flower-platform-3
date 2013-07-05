@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -92,6 +94,11 @@ public class CodeSyncMergePlugin extends AbstractFlowerJavaPlugin {
 	 */
 	public Resource getResource(EditingDomain editingDomain, IFile file) {
 		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
+		try {
+			file.refreshLocal(IResource.DEPTH_ZERO, null);
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
+		}
 		boolean fileExists = file == null ? true : file.exists();
 		return getResource(editingDomain, uri, fileExists);
 	}

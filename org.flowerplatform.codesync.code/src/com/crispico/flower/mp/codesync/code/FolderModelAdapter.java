@@ -98,6 +98,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	@Override
 	public List<?> getChildren(Object modelElement) {
 		try {
+			((IFolder) modelElement).refreshLocal(IResource.DEPTH_ONE, null);
 			return Arrays.asList(((IFolder) modelElement).members());
 		} catch (CoreException e) {
 			throw new RuntimeException(e);

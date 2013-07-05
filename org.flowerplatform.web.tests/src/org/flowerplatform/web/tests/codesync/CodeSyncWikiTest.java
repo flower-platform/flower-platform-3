@@ -17,13 +17,17 @@ import javax.security.auth.Subject;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.flowerplatform.web.tests.TestUtil;
 import org.junit.Before;
@@ -56,23 +60,25 @@ public class CodeSyncWikiTest {
 	private static final String PROJECT = "codesync_wiki";
 	private static String DIR = TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/codesync/" +TestUtil.NORMAL;
 	
-	private String DOKUWIKI_FILE = PROJECT + "/dokuwiki/teste Scenarios in Diagrams.txt";
-	private String DOKUWIKI_FILE_2 = PROJECT + "/dokuwiki/teste Scenarios in Diagrams 2.txt";
-	private String DOKUWIKI_FILE_3 = PROJECT + "/dokuwiki/teste Scenarios in Diagrams 3.txt";
+	public static final String LINK = "/link-to-project";
 	
-	private String MD_FILE = PROJECT + "/markdown/Test.md";
-	private String MD_FILE_2 = PROJECT + "/markdown/left/Test.md";
-	private String MD_FILE_3 = PROJECT + "/markdown/right/Test.md";
+	private String DOKUWIKI_FILE = getProject().getFullPath().toString() + LINK + "/dokuwiki/teste Scenarios in Diagrams.txt";
+	private String DOKUWIKI_FILE_2 = getProject().getFullPath().toString() + LINK + "/dokuwiki/teste Scenarios in Diagrams 2.txt";
+	private String DOKUWIKI_FILE_3 = getProject().getFullPath().toString() + LINK + "/dokuwiki/teste Scenarios in Diagrams 3.txt";
+	
+	private String MD_FILE = getProject().getFullPath().toString() + LINK + "/markdown/Test.md";
+	private String MD_FILE_2 = getProject().getFullPath().toString() + LINK + "/markdown/left/Test.md";
+	private String MD_FILE_3 = getProject().getFullPath().toString() + LINK + "/markdown/right/Test.md";
 	
 	private Pair[] expected;
 	private int index;
 	
-	private CommunicationChannel communicationChannel = new RecordingTestWebCommunicationChannel();
+	private static CommunicationChannel communicationChannel = new RecordingTestWebCommunicationChannel();
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
-		TestUtil.copyFilesAndCreateProject(DIR, PROJECT);
+		TestUtil.copyFilesAndCreateProject(new ServiceInvocationContext(communicationChannel), DIR, PROJECT);
 	}
 	
 	@Before
@@ -266,7 +272,9 @@ public class CodeSyncWikiTest {
 	}
 	
 	private IProject getProject() {
-		return ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
+		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + PROJECT;
+		org.flowerplatform.common.util.Pair<IProject, IResource> pair = ProjectsService.getInstance().getEclipseProjectAndResource(new File(absolutePath));
+		return pair.a;
 	}
 	
 	private void test(CodeSyncRoot leftRoot, CodeSyncRoot rightRoot, String technology, Pair[] expected) {

@@ -1,4 +1,7 @@
 package org.flowerplatform.codesync {
+	import com.crispico.flower.mp.codesync.base.action.DiffActionEntry;
+	import com.crispico.flower.mp.codesync.base.action.DiffContextMenuEntry;
+	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorDescriptor;
 	
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
@@ -30,11 +33,15 @@ package org.flowerplatform.codesync {
 			var editorDescriptor:EditorDescriptor = new CodeSyncEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
-
+			
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CodeSyncAction);
 		}
 		
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CodeSyncAction);
+			registerClassAliasFromAnnotation(DiffTreeNode);
+			registerClassAliasFromAnnotation(DiffContextMenuEntry);
+			registerClassAliasFromAnnotation(DiffActionEntry);
 		}
 		
 		override protected function registerMessageBundle():void {

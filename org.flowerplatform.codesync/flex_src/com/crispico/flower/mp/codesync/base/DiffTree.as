@@ -61,7 +61,7 @@ package com.crispico.flower.mp.codesync.base
 			
 			showRoot = true;
 			_contextMenuEnabled = true;
-			fillContextMenuFunction = _fillContextMenu;
+//			fillContextMenuFunction = _fillContextMenu;
 		
 			itemRenderer = new ClassFactory(DiffTreeNodeItemRenderer);
 			addEventListener(ListEvent.ITEM_ROLL_OVER, rollOverHandler);
@@ -136,7 +136,7 @@ package com.crispico.flower.mp.codesync.base
 			return false;
 		}
 		
-		public function _fillContextMenu(contextMenu:FlowerContextMenu):void {
+		public function fillContextMenu(contextMenu:FlowerContextMenu):void {
 			if (selectedItems.length == 0 || selectedItems.length > 1) 
 				return;
 			// Set the title of the context menu according to the selection.
@@ -204,12 +204,6 @@ package com.crispico.flower.mp.codesync.base
 			context.treeType = treeType;
 			context.projectPath = projectPath;
 			return context;
-		}
-		
-		public function fillContextMenu(contextMenu:FlowerContextMenu):void
-		{
-			// TODO Auto Generated method stub
-			
 		}
 		
 		public function getContext():ActionContext

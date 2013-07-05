@@ -13,7 +13,10 @@ Require-Bundle: org.eclipse.core.resources,
  org.flowerplatform.communication,
  org.flowerplatform.common,
  org.flowerplatform.editor,
- org.flowerplatform.blazeds
+ org.flowerplatform.blazeds,
+ org.flowerplatform.emf_model.notation,
+ org.flowerplatform.emf_model.codesync,
+ org.flowerplatform.web
 Export-Package: com.crispico.flower.mp.codesync.base,
  com.crispico.flower.mp.codesync.base.action,
  com.crispico.flower.mp.codesync.base.communication
