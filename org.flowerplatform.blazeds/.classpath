@@ -4,7 +4,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/commons-httpclient-3.0.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flex-messaging-common_modified.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/flex-messaging-core.jar" sourcepath="D:/temp/blazeds-src/core/src"/>
+	<classpathentry exported="true" kind="lib" path="lib/flex-messaging-core.jar" sourcepath="D:/blazeds/modules/core/src"/>
 	<classpathentry exported="true" kind="lib" path="lib/flex-messaging-opt.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flex-messaging-proxy.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/flex-messaging-remoting.jar"/>

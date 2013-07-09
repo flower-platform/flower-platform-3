@@ -245,7 +245,11 @@ public class ProjectsService {
 	@RemoteInvocation
 	public void markAsWorkingDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		markAsWorkingDirectoryForFile(context, file);
+	}
+	
+	public void markAsWorkingDirectoryForFile(ServiceInvocationContext context, final File file) {
 		final Pair<File, Boolean> organizationDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.markAsWorkingDirectory.error.title", file, true);
 
@@ -285,8 +289,15 @@ public class ProjectsService {
 			logger.debug("In Organization = {}, added a new Working Directory = {}", getOrganizationName(organizationDir.a), file);
 		}
 	}
+
+	@RemoteInvocation
+	public void createOrImportProject(ServiceInvocationContext context, List<PathFragment> pathWithRoot) throws CoreException, URISyntaxException {
+		@SuppressWarnings("unchecked")
+		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		createOrImportProjectFromFile(context, file);
+	}
 	
-	public void createOrImportProjectFromFile(ServiceInvocationContext context, File file) throws CoreException, URISyntaxException {		
+	public void createOrImportProjectFromFile(ServiceInvocationContext context, final File file) throws URISyntaxException, CoreException {
 		final Pair<File, Boolean> workingDirectoryDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.createOrImportProject.error.title", file, false);
 
@@ -350,14 +361,37 @@ public class ProjectsService {
 		}
 	}
 	
-	/**
-	 * @author Cristina Constantinescu
-	 */
-	@RemoteInvocation
-	public void createOrImportProject(ServiceInvocationContext context, List<PathFragment> pathWithRoot) throws CoreException, URISyntaxException {
+	public Pair<IProject, IResource> getEclipseProjectAndResource(List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
-		final File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
-		createOrImportProjectFromFile(context, file);		
+		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
+		return getEclipseProjectAndResource(file);
 	}
+		
+	public Pair<IProject, IResource> getEclipseProjectAndResource(final File file) {
+		File currentFile = file;
+		IProject projectWrapper = null;
+		while (currentFile != null && currentFile != CommonPlugin.getInstance().getWorkspaceRoot()) {
+			Pair<File, IProject> pair = projectToWorkingDirectoryAndIProjectMap.get(currentFile);
+			if (pair != null) {
+				projectWrapper = pair.b;
+				break;
+			}
+			currentFile = currentFile.getParentFile();
+		}
+		// at the end of the loop, current file will be pointing toward the project file
 
+		if (projectWrapper == null) {
+			// the path doesn't point on a file within a project
+			return null;
+		}
+		
+		String pathInProjectWrapper = LINK_TO_PROJECT + "/" + CommonPlugin.getInstance().getPathRelativeToFile(file, currentFile);
+		if (file.isDirectory()) {
+			return new Pair<IProject, IResource>(projectWrapper, projectWrapper.getFolder(pathInProjectWrapper));
+		} else {
+			return new Pair<IProject, IResource>(projectWrapper, projectWrapper.getFile(pathInProjectWrapper));
+		}
+		
+	}
+	
 }

@@ -56,6 +56,15 @@ public class NodeInfoClient {
 	}
 	
 	/**
+	 * TODO test - delete
+	 * @param service
+	 * @return
+	 */
+	public String getStatefulClientId(org.flowerplatform.communication.temp.tree.remote.GenericTreeStatefulService service) {
+		return service.getStatefulClientPrefixId() + " " + treeNumber;	
+	}
+	
+	/**
 	 * @flowerModelElementId _i1xIIcBrEeG5PP70DrXYIQ
 	 */
 	public NodeInfoClient(CommunicationChannel communicationChannel, String statefulClientId, GenericTreeStatefulService service) {		

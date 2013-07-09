@@ -16,7 +16,6 @@
     <classEntry path="org.flowerplatform.web.git.action.ImportProjectsAction"/>
     <classEntry path="org.flowerplatform.web.git.action.CommitAction"/>
     <classEntry path="org.flowerplatform.web.git.action.PullAction"/>
-    <classEntry path="org.flowerplatform.web.git.action.ShowHistoryAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

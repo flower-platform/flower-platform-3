@@ -1,5 +1,6 @@
 package org.flowerplatform.web.tests.security.sandbox;
 
+import java.io.File;
 import java.security.Policy;
 import java.util.Properties;
 
@@ -23,7 +24,9 @@ import sun.security.provider.PolicyFile;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
 import org.flowerplatform.web.entity.EntityPackage;
 import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.sandbox.SecurityEntityListener;
@@ -106,8 +109,7 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 		
 		Utils.deleteAllData();
 		
-		TestUtil.copyFilesAndCreateProject(TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/user_admin", "user_admin");
-		System.setProperty("java.security.policy", TestUtil.getWorkspaceResourceAbsolutePath("/user_admin/all.policy"));
+		System.setProperty("java.security.policy", new File(TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/user_admin/all.policy").getAbsolutePath());
 		PolicyFile policyFile = new PolicyFile();
 		Policy.setPolicy(new FlowerWebPolicyTest(policyFile));
 		Policy.getPolicy().refresh();

@@ -10,7 +10,6 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.java.JavaEditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
@@ -100,9 +99,7 @@ package org.flowerplatform.web.common {
 			// actions
 			explorerTreeClassFactoryActionProvider.actionClasses.push(MarkAsWorkingDirectoryAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateOrImportProjectAction);
-			explorerTreeClassFactoryActionProvider.actionClasses.push(ProjectPropertiesAction);
-			
-			projectPropertyProviders.addAll(JavaEditorPlugin.getInstance().projectPropertyProviders);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(ProjectPropertiesAction);			
 		}
 		
 		/**

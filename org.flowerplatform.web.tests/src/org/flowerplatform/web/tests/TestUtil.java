@@ -16,11 +16,16 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.InvokeStatefulClientMethodClientCommand;
 import org.flowerplatform.editor.remote.CreateEditorStatefulClientCommand;
 import org.flowerplatform.editor.remote.EditorStatefulService;
 import org.flowerplatform.web.communication.IRecordingTestWebCommunicationChannelProvider;
 import org.flowerplatform.web.communication.TestStatefulServiceInvocationContext;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
+import org.flowerplatform.web.projects.remote.ProjectsService;
+import org.flowerplatform.web.temp.GeneralService;
 import org.junit.Assert;
 
 /**
@@ -51,12 +56,22 @@ public class TestUtil {
 	 * Copies the files from the specified folder into ws/root/projectName, and imports this as a project.
 	 * projectName may contain a leading /.
 	 */
-	public static final void copyFilesAndCreateProject(String from, String projectName) {
+	public static final void copyFilesAndCreateProject(ServiceInvocationContext context, String from, String projectName) {
 		try {
+			new DatabaseOperationWrapper(new DatabaseOperation() {
+				
+				@Override
+				public void run() {
+					new GeneralService().createOrganization("org", wrapper);
+				}
+			});
+			
 			if (projectName.startsWith("/")) {
 				projectName = projectName.substring(1);
 			}
-			FileUtils.copyDirectory(new File(from), new File(getWorkspaceResourceAbsolutePath("") + "/" + projectName));
+			
+			File to = new File(getWorkspaceResourceAbsolutePath("") + "/org/ws_trunk/" + projectName);
+			FileUtils.copyDirectory(new File(from), to);
 //			, new FileFilter() {
 //				
 //				@Override
@@ -68,17 +83,24 @@ public class TestUtil {
 //					}
 //				}
 //			});
+			
 //			WebWorkspace.INSTANCE.getRoot().refreshLocal(IResource.DEPTH_ONE, null);
 //			IFolder projectFolderWithinRootProject = WebWorkspace.INSTANCE.getRoot().getFolder(new Path(projectName));
 //			WebWorkspace.INSTANCE.importProject(projectFolderWithinRootProject, projectFolderWithinRootProject.getLocationURI());
 			
-			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_ONE, null);
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-			IProjectDescription pd = ResourcesPlugin.getWorkspace().newProjectDescription(project.getName());
-			project.create(pd, null);
-			project.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
-			project.open(IResource.BACKGROUND_REFRESH, null);
-			project.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+//			ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_ONE, null);
+//			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+//			IProjectDescription pd = ResourcesPlugin.getWorkspace().newProjectDescription(project.getName());
+//			project.create(pd, null);
+//			project.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+//			project.open(IResource.BACKGROUND_REFRESH, null);
+//			project.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+			
+			if (ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName("org").size() == 0) {
+				ProjectsService.getInstance().markAsWorkingDirectoryForFile(context, to.getParentFile());
+			}
+			ProjectsService.getInstance().createOrImportProjectFromFile(context, to);
+			
 		} catch (Throwable e) {
 			throw new RuntimeException("Cannot copy files/create project needed for test", e);
 		}

@@ -93,8 +93,8 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
 		OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
 		// do the initializations after the bundle is activated, because we need the resources bundle
+		databaseManager.initialize();
 		if (bundleContext.getProperty(TESTING_FLAG) == null) {
-			databaseManager.initialize();
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
 		}
 		SendMailService.getInstance().initializeProperties();

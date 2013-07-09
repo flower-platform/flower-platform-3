@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astcache_code="http://www.flower-platform.com/xmi/astcache_code_1.0.0" xmlns:codesync="http://www.flower-platform.com/xmi/codesync_1.0.0">
+  <codesync:CodeSyncRoot name="cache_deleted" type="Folder">
+    <children name="Test.java" type="File">
+      <children name="Test" type="Class">
+        <astCacheElement xsi:type="astcache_code:Class" href="ACE.notation#/0"/>
+        <children name="test(String)" type="Operation">
+          <astCacheElement xsi:type="astcache_code:Operation" href="ACE.notation#/1"/>
+        </children>
+        <children name="getTest()" type="Operation">
+          <astCacheElement xsi:type="astcache_code:Operation" href="ACE.notation#/2"/>
+        </children>
+        <children name="y" type="Attribute">
+          <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/3"/>
+        </children>
+        <children name="x" type="Attribute">
+          <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/4"/>
+        </children>
+      </children>
+    </children>
+  </codesync:CodeSyncRoot>
+</xmi:XMI>

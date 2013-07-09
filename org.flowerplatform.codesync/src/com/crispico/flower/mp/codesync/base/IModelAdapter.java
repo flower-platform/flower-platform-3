@@ -1,0 +1,107 @@
+package com.crispico.flower.mp.codesync.base;
+
+import java.util.List;
+import java.util.Map;
+
+import com.crispico.flower.mp.codesync.base.action.ActionResult;
+import com.crispico.flower.mp.codesync.base.action.DiffAction;
+
+/**
+ * @flowerModelElementId _DNAgsKrUEeCJ5K6O_TzIEg
+ */
+public interface IModelAdapter extends IModelAdapterUI {
+
+	public static final int FEATURE_TYPE_DONT_PROCESS = 0;
+	
+	public static final int FEATURE_TYPE_CONTAINMENT = 1;
+	
+	public static final int FEATURE_TYPE_VALUE = 2;
+	
+	public static final int FEATURE_TYPE_REFERENCE = 3;
+
+	public List<?> getFeatures(Object element);
+
+	public int getFeatureType(Object feature);
+	
+	public String getFeatureName(Object feature);
+
+	public Iterable<?> getContainmentFeatureIterable(Object element, Object feature, Iterable<?> correspondingIterable);
+	
+	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue);
+
+	public Object getMatchKey(Object element);
+	
+	public void addToMap(Object element, Map<Object, Object> map);
+	
+	public Object removeFromMap(Object element, Map<Object, Object> leftOrRightMap, boolean isRight);
+	
+	public void setValueFeatureValue(Object element, Object feature, Object value);
+	
+	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild);
+	
+	public void removeChildrenOnContainmentFeature(Object parent, Object feature, Object child);
+	
+	/**
+	 * Creates a model element corresponding to the given <code>element</code>.
+	 * 
+	 * @author Mariana
+	 */
+	public Object createCorrespondingModelElement(Object element);
+	
+	/**
+	 * Saves the given <code>element</code> to its underlying resource. Returns <code>true</code> if saving is also required
+	 * on this <code>element</code>'s children.
+	 * 
+	 * @author Mariana
+	 */
+	public boolean save(Object element);
+	
+	/**
+	 * Discards this element (i.e. for a file, discards the AST created from its content; for an EObject, unload the containing resource, etc).
+	 *
+	 * @author Mariana
+	 */
+	public boolean discard(Object element);
+	
+	/**
+	 * Called from {@link CodeSyncAlgorithm} before the features of <code>element</code> have been processed.
+	 * 
+	 * @author Mariana
+	 */
+	public void beforeFeaturesProcessed(Object element, Object correspondingElement);
+	
+	/**
+	 * Called from {@link CodeSyncAlgorithm} after all the features of <code>element</code> have been processed.
+	 * 
+	 * @author Mariana
+	 */
+	public void featuresProcessed(Object element);
+	
+	/**
+	 * Called after a {@link DiffAction} was performed.
+	 * 
+	 * @param element the element where the action was performed
+	 * @param feature the feature that was changed
+	 * @param result the action's result
+	 * 
+	 * @author Mariana
+	 */
+	public void actionPerformed(Object element, Object feature, ActionResult result);
+
+	/**
+	 * Called after all the {@link DiffAction}s were performed for the <code>element</code>,
+	 * on the given <code>feature</code>.
+	 * 
+	 * @author Mariana
+	 */
+	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature);
+	
+	/**
+	 * Calls {@link #allActionsPerformedForFeature(Object, Object, Object)} for all the containment features
+	 * for the <code>element</code>.
+	 * 
+	 * @author Mariana
+	 */
+	public void allActionsPerformed(Object element, Object correspondingElement);
+	
+}

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.editor.remote.EditableResource;
@@ -45,6 +46,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	
 	public TextEditorStatefulService() {
 		createRegexConfiguration();
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
 	}
 	
 	/**

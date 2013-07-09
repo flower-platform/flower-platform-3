@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astcache_code="http://www.flower-platform.com/xmi/astcache_code_1.0.0">
+  <astcache_code:Class>
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0"/>
+    <modifiers xsi:type="astcache_code:Annotation" name="Deprecated"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+    <superClasses>Test2</superClasses>
+    <superInterfaces>ITest</superInterfaces>
+  </astcache_code:Class>
+  <astcache_code:Operation type="int">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.0"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+    <modifiers xsi:type="astcache_code:Annotation" name="OneToMany">
+      <values name="mappedBy" value="&quot;test&quot;"/>
+    </modifiers>
+    <parameters type="String" name="st"/>
+  </astcache_code:Operation>
+  <astcache_code:Operation type="Test">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.1"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="1"/>
+    <modifiers xsi:type="astcache_code:Annotation" name="OverrideAnnotationOf">
+      <values name="_" value="x + y"/>
+    </modifiers>
+    <modifiers xsi:type="astcache_code:Modifier" type="8"/>
+  </astcache_code:Operation>
+  <astcache_code:Attribute type="int">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.2"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+  </astcache_code:Attribute>
+  <astcache_code:Attribute type="int">
+    <codeSyncElement href="CSE.notation#//@children.0/@children.0/@children.3"/>
+    <modifiers xsi:type="astcache_code:Modifier" type="2"/>
+  </astcache_code:Attribute>
+</xmi:XMI>

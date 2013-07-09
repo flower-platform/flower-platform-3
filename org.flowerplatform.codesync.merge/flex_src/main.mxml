@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mp:CommunicationChannelApplication implements="com.crispico.flexbridge.IFlexBridgeApplication" 
+	xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:mp="com.crispico.flower.mp.*"
+	layout="absolute" applicationComplete="applicationCompleteHandler()" xmlns:base="com.crispico.flower.mp.codesync.base.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flexbridge.FlexBridge;
+			import com.crispico.flexbridge.IFlexBridge;
+			import com.crispico.flexbridge.SocketFlexBridge;
+			import com.crispico.flower.mp.communication.callback.InvokeCallbackClientCommand;
+			import com.crispico.flower.mp.communication.command.AbstractClientCommand;
+			import com.crispico.flower.mp.communication.command.CompoundClientCommand;
+			import com.crispico.flower.mp.communication.command.DisplaySimpleMessageClientCommand;
+			import com.crispico.flower.mp.communication.sequential_execution.SequentialExecutionServerCommand;
+			import com.crispico.flower.mp.communication.service.InvokeServiceMethodServerCommand;
+			import com.crispico.flower.mp.communication.stateful_service.InvokeStatefulClientMethodClientCommand;
+			import com.crispico.flower.mp.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
+			import com.crispico.flower.mp.communication.transferable_object.GlobalIdReferenceHolder;
+			import com.crispico.flower.mp.communication.transferable_object.LocalIdReferenceHolder;
+			
+			import flash.net.registerClassAlias;
+			
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			
+			import plugin_migration.SingletonRefsFromPrePluginEra;
+			
+			/**
+			 * It needs to be public for the JS Bridge to work.
+			 */ 
+			public var flexBridge:IFlexBridge;
+			
+			private function applicationCompleteHandler():void {
+				SingletonRefsFromPrePluginEra.sendObject = sendObject;
+				
+				registerClassAlias("com.crispico.flower.mp.communication.command.CompoundClientCommand", CompoundClientCommand);
+				registerClassAlias("com.crispico.flower.mp.communication.command.DisplaySimpleMessageClientCommand", DisplaySimpleMessageClientCommand);
+				registerClassAlias("com.crispico.flower.mp.communication.callback.InvokeCallbackClientCommand", InvokeCallbackClientCommand);
+				registerClassAlias("com.crispico.flower.mp.communication.service.InvokeServiceMethodServerCommand", InvokeServiceMethodServerCommand);
+				registerClassAlias("com.crispico.flower.mp.communication.GlobalIdReferenceHolder", GlobalIdReferenceHolder);
+				registerClassAlias("com.crispico.flower.mp.communication.transferable_object.LocalIdReferenceHolder", LocalIdReferenceHolder);
+				registerClassAlias("com.crispico.flower.mp.communication.sequential_execution.SequentialExecutionServerCommand", SequentialExecutionServerCommand);
+				registerClassAlias("com.crispico.flower.mp.communication.stateful_service.InvokeStatefulServiceMethodServerCommand", InvokeStatefulServiceMethodServerCommand);
+				registerClassAlias("com.crispico.flower.mp.communication.stateful_service.InvokeStatefulClientMethodClientCommand", InvokeStatefulClientMethodClientCommand);
+				
+				var useJSBridge:String = Application.application.parameters.useJSBridge;
+				var id:int = Application.application.parameters.id;
+				var port:int = Application.application.parameters.port;
+				
+				if ("true" == useJSBridge)
+					flexBridge = new FlexBridge();
+				else
+					flexBridge = new SocketFlexBridge(port, "127.0.0.1", id);
+				flexBridge.flexBridgeApplication = this;
+			}
+			/**
+			 * Delegates the handling of a received object to the propEditor component;
+			 */ 
+			public function objectReceivedHandler(object:Object):void {
+				if (object is AbstractClientCommand) {
+					AbstractClientCommand(object).execute();
+				}
+			}
+
+			/**
+			 * PropertiesEditor will delegate to this method the sending of an object
+			 * throught the bridge.
+			 * <p/>
+			 * PropertiesEditor will be set with this function and this container.  
+			 */ 
+			public override function sendObject(object:Object, sendWithCallLater:Boolean=false):void {
+				if (sendWithCallLater) {
+					Application.application.callLater(flexBridge.sendObject, new Array(object));
+				} else {
+					flexBridge.sendObject(object);
+				}
+			}
+
+			/**
+			 * Manually create the component, now that the sendObject function was set.
+			 * 
+			 * @author Mariana
+			 */
+			public function initializeHandler():void {
+				diffDialog.createComponentsFromDescriptors();
+			}
+
+		]]>
+	</mx:Script>
+	
+	<!-- 
+		Set creationPolicy to "none" so we have time to set the sendObject function.
+	
+		@author Mariana
+	-->
+	<base:DiffDialog id="diffDialog" width="100%" height="100%" creationPolicy="none"/>
+</mp:CommunicationChannelApplication>

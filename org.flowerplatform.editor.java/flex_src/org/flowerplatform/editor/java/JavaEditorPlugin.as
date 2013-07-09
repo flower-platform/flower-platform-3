@@ -5,12 +5,11 @@ package org.flowerplatform.editor.java {
 	import org.flowerplatform.editor.java.propertypage.JavaPropertyPageProvider;
 	import org.flowerplatform.editor.java.propertypage.remote.JavaProjectPropertyPageService;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	public class JavaEditorPlugin extends AbstractFlowerFlexPlugin {
 		
 		protected static var INSTANCE:JavaEditorPlugin;
-		
-		public var projectPropertyProviders:ArrayList = new ArrayList();
 		
 		public var javaProjectPropertyPageService:JavaProjectPropertyPageService = new JavaProjectPropertyPageService();
 		
@@ -25,7 +24,7 @@ package org.flowerplatform.editor.java {
 			}
 			INSTANCE = this;
 			
-			projectPropertyProviders.addItem(new JavaPropertyPageProvider());
+			WebCommonPlugin.getInstance().projectPropertyProviders.addItem(new JavaPropertyPageProvider());
 		}
 	}
 }

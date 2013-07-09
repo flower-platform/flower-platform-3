@@ -1,6 +1,7 @@
 package  org.flowerplatform.editor.remote {
 	
 	import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.Application;
@@ -401,7 +402,7 @@ package  org.flowerplatform.editor.remote {
 					}
 				}
 				if (dirtyStateChanged && !newEditableResourceStatus.dirty) {
-					Application(FlexGlobals.topLevelApplication).dispatchEvent(new Event("resourceSaved"));
+					IEventDispatcher(FlexGlobals.topLevelApplication).dispatchEvent(new Event("resourceSaved"));
 				}
 			}
 			
