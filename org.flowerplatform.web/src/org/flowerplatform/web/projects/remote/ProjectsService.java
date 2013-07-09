@@ -361,13 +361,13 @@ public class ProjectsService {
 		}
 	}
 	
-	public Pair<IProject, IResource> getEclipseProjectAndResource(List<PathFragment> pathWithRoot) {
+	public IResource getProjectWrapperResourceFromFile(List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
 		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
-		return getEclipseProjectAndResource(file);
+		return getProjectWrapperResourceFromFile(file);
 	}
 		
-	public Pair<IProject, IResource> getEclipseProjectAndResource(final File file) {
+	public IResource getProjectWrapperResourceFromFile(final File file) {
 		File currentFile = file;
 		IProject projectWrapper = null;
 		while (currentFile != null && currentFile != CommonPlugin.getInstance().getWorkspaceRoot()) {
@@ -387,9 +387,9 @@ public class ProjectsService {
 		
 		String pathInProjectWrapper = LINK_TO_PROJECT + "/" + CommonPlugin.getInstance().getPathRelativeToFile(file, currentFile);
 		if (file.isDirectory()) {
-			return new Pair<IProject, IResource>(projectWrapper, projectWrapper.getFolder(pathInProjectWrapper));
+			return projectWrapper.getFolder(pathInProjectWrapper);
 		} else {
-			return new Pair<IProject, IResource>(projectWrapper, projectWrapper.getFile(pathInProjectWrapper));
+			return projectWrapper.getFile(pathInProjectWrapper);
 		}
 		
 	}

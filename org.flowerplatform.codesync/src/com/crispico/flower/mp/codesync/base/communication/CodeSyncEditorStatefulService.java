@@ -66,9 +66,9 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 //		super.unsubscribe(context, statefulClientLocalState);
 //	}
 
-	private Pair<IProject, IResource> getProjectAndResource(String editableResourcePath) {
+	private IResource getResource(String editableResourcePath) {
 		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath().toString() + editableResourcePath;
-		return ProjectsService.getInstance().getEclipseProjectAndResource(new File(absolutePath));
+		return ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
 	}
 	
 	private String getProjectPath(String editableResourcePath) {

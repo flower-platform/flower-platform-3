@@ -52,7 +52,7 @@ public class JavaDragOnDiagramHandler extends AbstractServerCommand implements I
 
 	@Override
 	public void executeCommand() {
-		Pair<IProject, IResource> pair = ProjectsService.getInstance().getEclipseProjectAndResource(pathWithRoot);
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(pair.a, pair.b, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(pathWithRoot);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 	}
 }
