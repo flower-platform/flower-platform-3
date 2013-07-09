@@ -14,7 +14,7 @@ package com.crispico.flower.util.popup {
 		protected var popupContent:IPopupContent;
 		
 		public function ResizablePopupWindowPopupHandlerAndHost() {
-			super();
+			super();		
 		}
 		
 		public function setHeight(value:int):IPopupHandler	{
@@ -93,6 +93,20 @@ package com.crispico.flower.util.popup {
 			}
 			
 			ControlBar(controlBar).addChild(DisplayObject(value));
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function showSpinner(text:String):void {	
+			ModalSpinner.addModalSpinner(this, text);
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function hideSpinner():void {		
+			ModalSpinner.removeModalSpinner(this);
 		}
 		
 	}

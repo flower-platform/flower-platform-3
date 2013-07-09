@@ -1,6 +1,7 @@
 package org.flowerplatform.web.explorer;
 
-import org.flowerplatform.web.explorer.AbstractVirtualItemInOrganizationChildrenProvider;
+import java.util.Collections;
+
 
 /**
  * Parent node = Organization (i.e. File).<br/>
@@ -8,13 +9,13 @@ import org.flowerplatform.web.explorer.AbstractVirtualItemInOrganizationChildren
  * 
  * @author Cristian Spiescu
  */
-public class FileSystem_OrganizationChildrenProvider extends AbstractVirtualItemInOrganizationChildrenProvider {
+public class FileSystem_OrganizationChildrenProvider extends AbstractVirtualItemChildrenProvider {
 
 	protected static final String NODE_TYPE_FILE_SYSTEM = "fileSystem";
 
 	public FileSystem_OrganizationChildrenProvider() {
 		super();
-		childNodeType = NODE_TYPE_FILE_SYSTEM;
+		childNodeTypes = Collections.singletonList(NODE_TYPE_FILE_SYSTEM);
 	}
 
 }

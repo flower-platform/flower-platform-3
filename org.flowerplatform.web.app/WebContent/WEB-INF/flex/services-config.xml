@@ -55,15 +55,15 @@
 				 -->
 				<user-agent-settings>
 					<!-- MSIE 8 limit is 6. -->
-					<user-agent match-on="MSIE" max-persistent-connections-per-session="5" kickstart-bytes="2048"/> 
+					<user-agent match-on="MSIE" max-persistent-connections-per-session="0" kickstart-bytes="2048"/> 
 					<!-- Firefox 3 limit is 6. --> 
-					<user-agent match-on="Firefox" max-persistent-connections-per-session="5"/> 
+					<user-agent match-on="Firefox" max-persistent-connections-per-session="0"/> 
 					<!-- Safari 3, 4 limit is 4. --> 
-					<user-agent match-on="Safari" max-persistent-connections-per-session="3"/> 
+					<user-agent match-on="Safari" max-persistent-connections-per-session="0"/> 
 					<!-- Chrome 0, 1, 2 limit is 6. --> 
-					<user-agent match-on="Chrome" max-persistent-connections-per-session="5"/> 
+					<user-agent match-on="Chrome" max-persistent-connections-per-session="0"/> 
 					
-					<user-agent match-on="*" max-persistent-connections-per-session="3"/>
+					<user-agent match-on="*" max-persistent-connections-per-session="0"/>
 				</user-agent-settings>
 			</properties> 
 		</channel-definition>

@@ -32,6 +32,8 @@ package com.crispico.flower.util.layout {
 		
 		public function PopupHostViewWrapper(popupContent:IPopupContent) {
 			super();
+			percentHeight = 100;
+			percentWidth = 100;
 			addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU,fillContextMenuHandler); 
 			setStyle("verticalGap", 0);
 			this.popupContent = popupContent;
@@ -102,6 +104,18 @@ package com.crispico.flower.util.layout {
 		 * @author Mariana
 		 */
 		public function addToControlBar(value:Object):void {
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function showSpinner(text:String):void {			
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function hideSpinner():void {			
 		}
 	}
 }

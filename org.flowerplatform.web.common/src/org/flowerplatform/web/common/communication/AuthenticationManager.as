@@ -90,9 +90,9 @@ package  org.flowerplatform.web.common.communication {
 			bridge.addEventListener(BridgeEvent.FAULT, handleFault);
 			bridge.addEventListener(BridgeEvent.OBJECT_UNDELIVERED, handleObjectUndelivered);
 			
-//			showAuthenticationView();
+			showAuthenticationView();
 			
-			bridge.connect("admin", "a");
+//			bridge.connect("admin", "a");
 		}
 		
 		/**

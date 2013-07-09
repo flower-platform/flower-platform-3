@@ -3,8 +3,8 @@ package org.flowerplatform.web.git.history {
 	import mx.collections.ArrayCollection;
 	import mx.containers.HBox;
 	
-	import org.flowerplatform.web.git.history.dto.HistoryDrawingDto;
-	import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryDrawingDto;
+	import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
 
 	/**
 	 *	@author Cristina Constantinescu

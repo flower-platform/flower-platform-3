@@ -6,9 +6,12 @@ package org.flowerplatform.flexutil {
 	 * @author Cristi
 	 */
 	public class FlexUtilAssets {
-		
+				
 		[Bindable]
 		public static var INSTANCE:FlexUtilAssets = new FlexUtilAssets(); 
+		
+		[Embed(source="/info.png")]			
+		public static const _iconInfo:Class;	
 		
 		/**
 		 * Retrieves a message from the properties files. Parameters can be passed

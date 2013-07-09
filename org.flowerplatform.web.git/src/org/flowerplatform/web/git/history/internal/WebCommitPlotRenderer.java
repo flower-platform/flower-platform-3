@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revplot.AbstractPlotRenderer;
-import org.flowerplatform.web.git.history.dto.HistoryDrawingDto;
+import org.flowerplatform.web.git.history.remote.dto.HistoryDrawingDto;
 
 /**
  *	@author Cristina Constantinescu

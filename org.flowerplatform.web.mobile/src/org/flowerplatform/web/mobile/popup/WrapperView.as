@@ -1,17 +1,23 @@
 package org.flowerplatform.web.mobile.popup {
-	import spark.components.Scroller;
-	import spark.core.IViewport;
+	import mx.core.IVisualElement;
 	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.popup.ActionUtil;
+	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
+	import org.flowerplatform.flexutil.popup.IPopupHost;
+	
+	import spark.components.Button;
+	import spark.components.Label;
+	import spark.components.Scroller;
+	import spark.components.View;
+	import spark.core.IViewport;
+	import spark.primitives.BitmapImage;
 	
 	public class WrapperView extends WrapperViewBase {
 		
 		protected var popupContent:IPopupContent;
 		
-		/**
-		 * @author Cristi
-		 * @author Mariana
-		 */
 		override protected function createChildren():void {
 			super.createChildren();
 			

@@ -12,8 +12,10 @@ public class WorkingDirectoriesNodeDataProvider extends AbstractVirtualItemInOrg
 
 	public WorkingDirectoriesNodeDataProvider() {
 		super();
-		nodeLabel = WebPlugin.getInstance().getMessage("explorer.workingDirectories");
-		nodeIcon = WebPlugin.getInstance().getResourceUrl("images/workset.gif");
+		nodeInfo.put(WorkingDirectories_OrganizationChildrenProvider.NODE_TYPE_WORKING_DIRECTORIES, 
+				new String[] {
+					WebPlugin.getInstance().getMessage("explorer.workingDirectories"), 
+					WebPlugin.getInstance().getResourceUrl("images/workset.gif")});
 	}
 
 }

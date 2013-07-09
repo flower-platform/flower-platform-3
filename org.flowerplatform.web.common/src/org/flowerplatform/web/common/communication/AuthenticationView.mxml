@@ -56,6 +56,7 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
 			
+			import org.flowerplatform.blazeds.BlazeDSBridge;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.popup.ActionBase;
@@ -159,6 +160,8 @@
 				if (showActivationCodeField && activationCodeInput) {
 					username += "|" + activationCodeInput.text;
 				}
+				
+				CommunicationPlugin.getInstance().bridge.setExplicitEndpointURI(server.text);
 				
 //				CommunicationPlugin.getInstance().bridge.keepLayoutStructure = switchUserMode && keepWorkspaceCheckbox.selected;
 				if (switchUserMode) {							
@@ -414,6 +417,10 @@
 				
 				<s:FormItem width="100%" label="{getMessage('entity.user.password')}">
 					<s:TextInput id="loginViewPasswordInput" text="" width="100%" displayAsPassword="true"/>
+				</s:FormItem>
+				
+				<s:FormItem width="100%" label="Server">
+					<s:TextInput id="server" text="localhost:8080" width="100%"/>
 				</s:FormItem>
 				
 				<s:FormItem label="{getMessage('authentication.activationCode')}" width="100%"

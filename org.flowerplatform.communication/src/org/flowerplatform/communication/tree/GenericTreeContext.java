@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+
 
 /**
  * Represents the context of a tree subscribed in {@link GenericTreeStatefulService}.
@@ -29,10 +31,16 @@ import java.util.Set;
  */
 public class GenericTreeContext implements Map<Object, Object> {
 
+	public static final String SERVICE_KEY = "service";
+	
 	private Map<Object, Object> clientContext;
 	
 	private Map<Object, Object> statefulContext;
-	
+		
+	public GenericTreeContext(GenericTreeStatefulService service) {
+		getStatefulContext().put(SERVICE_KEY, service);
+	}
+
 	public Map<Object, Object> getClientContext() {
 		if (clientContext == null) {
 			clientContext = new HashMap<Object, Object>();

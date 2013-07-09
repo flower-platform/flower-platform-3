@@ -7,6 +7,8 @@ package org.flowerplatform.flexutil {
 	import mx.core.UIComponent;
 	import mx.utils.DescribeTypeCache;
 	
+	import spark.components.TextInput;
+	
 	/**
 	 * @author Cristina
 	 */ 
@@ -15,10 +17,12 @@ package org.flowerplatform.flexutil {
 		/**
 		 * Makes the given text input non-editable and applies a grey color as background.
 		 */ 
-		public static function makePseudoDisabled(object:ITextInput):void {
-			object.editable = false;
-			object.setStyle("backgroundColor", "#DEDCDC");
-			object.setStyle("color", "#666666");
+		public static function makePseudoDisabled(object:Object):void {
+			if (object is spark.components.TextInput || object is ITextInput) {
+				object.editable = false;
+				object.setStyle("backgroundColor", "#DEDCDC");
+				object.setStyle("color", "#666666");
+			}
 		}
 		
 		/**
