@@ -22,9 +22,17 @@ package org.flowerplatform.editor.java {
 			if (INSTANCE != null) {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
-			INSTANCE = this;
-			
+			INSTANCE = this;			
+		}
+		
+		override public function start():void {
+			super.start();
 			WebCommonPlugin.getInstance().projectPropertyProviders.addItem(new JavaPropertyPageProvider());
 		}
+		
+		override protected function registerMessageBundle():void {
+			
+		}
+		
 	}
 }
