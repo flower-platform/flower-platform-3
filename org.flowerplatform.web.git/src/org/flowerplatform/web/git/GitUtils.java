@@ -160,10 +160,7 @@ public class GitUtils {
 		File gitDir = getGitDir(repoFile);
 		if (gitDir != null) {
 			try {				
-				Repository repository = RepositoryCache.open(FileKey.exact(gitDir, FS.DETECTED));
-				if (repository != null) {
-					GitPlugin.getInstance().getIndexDiffCache().getIndexDiffCacheEntry(repository);
-				}
+				Repository repository = RepositoryCache.open(FileKey.exact(gitDir, FS.DETECTED));				
 				return repository;
 			}  catch (IOException e) {
 				// TODO CC: log
