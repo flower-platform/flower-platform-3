@@ -2,7 +2,7 @@ package org.flowerplatform.web.git.staging.dto {
 	
 	import mx.collections.ArrayCollection;
 	
-	import org.flowerplatform.web.git.dto.ViewInfoDto;
+	import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 
 	/**
 	 *	@author Cristina Constantinescu

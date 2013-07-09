@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+@author Cristina Constantinescu
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		creationComplete="creationCompleteHandler()" >
+
+	<fx:Script>
+
+		<![CDATA[
+			import com.flextras.mobile.dropDownList.DropDownList;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
+			import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
+		
+			[Bindable]
+			public var selectConfiguredRemotes:Boolean = false;
+			
+			[Bindable]
+			private var remoteConfigs:ArrayCollection;
+			
+			public var isFetchConfig:Boolean;
+			
+			public var remotes:spark.components.DropDownList;
+			
+			private function creationCompleteHandler():void {
+				if (!selectConfiguredRemotes) {
+					callLater(uri.setFocus);
+				} else {
+					remoteConfig.selected = true;
+					changeSelection();
+				}
+			}
+			
+			override protected function createChildren():void {
+				super.createChildren();
+				
+				if (FlexUtilGlobals.getInstance().isMobile) {
+					remotes = new com.flextras.mobile.dropDownList.DropDownList();										
+				} else {
+					remotes = new spark.components.DropDownList();											
+				}
+				remotes.labelFunction = getRemoteConfigLabel;
+				remotes.percentWidth = 100;
+				BindingUtils.bindProperty(remotes, "visible", this, "selectConfiguredRemotes");
+				BindingUtils.bindProperty(remotes, "includeInLayout", this, "selectConfiguredRemotes");
+				addElementAt(remotes, 1);
+			}
+			
+			private function changeSelection():void {
+				remotes.enabled = remoteConfig.selected;
+				uri.enabled = customUri.selected;				
+			}
+			
+			private function getRemoteConfigLabel(item:Object):String {
+				return RemoteConfig(item).name + " - " + RemoteConfig(item).uri;
+			}
+			
+			public function getURI():String {	
+				return uri.text;
+			}	
+			
+			public function getRemoteConfig():RemoteConfig {	
+				return RemoteConfig(remotes.selectedItem);
+			}
+	
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:RadioButtonGroup id="group" change="changeSelection()"/>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+		
+	<s:RadioButton id="remoteConfig"  group="{group}" 
+					label="{GitCommonPlugin.getInstance().getMessage('git.repoSelection.configRemote.label')}"
+					visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}"	
+					/>
+	
+	<s:RadioButton id="customUri" group="{group}" 
+					label="{GitCommonPlugin.getInstance().getMessage('git.repoSelection.customUri.label')}"
+					visible="{selectConfiguredRemotes}" includeInLayout="{selectConfiguredRemotes}"	/>
+	<s:TextInput id="uri" width="100%" />		
+	
+</s:Group>

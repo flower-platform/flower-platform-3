@@ -10,7 +10,13 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Kind;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,8 +29,13 @@ import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.jgit.api.GitCommand;
 import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.errors.DetachedHeadException;
+import org.eclipse.jgit.api.errors.InvalidConfigurationException;
+import org.eclipse.jgit.api.errors.JGitInternalException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -33,6 +44,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.lib.StoredConfig;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
@@ -40,6 +53,7 @@ import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.FlowerWebProperties;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.web.entity.User;
@@ -54,7 +68,8 @@ public class GitUtils {
 	private static Logger logger = LoggerFactory.getLogger(GitUtils.class);
 	
 	public static final String MAIN_REPOSITORY = "main";
-		
+	public static final String WORKING_DIRECTORY_PREFIX = "wd_";
+	
 	public static final String GIT_REPOSITORIES_NAME = ".git-repositories";
 	
 	/**
@@ -76,20 +91,22 @@ public class GitUtils {
 	private static final String GIT_NEW_WORKDIR_LINUX = "git-new-workdir_linux.sh";
 	
 	static {
-//		WebPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(GIT_INSTALL_DIR, "") {			
-//			/**
-//			 * Verify if git.exe exists at given location.
-//			 */
-//			@Override			
-//			protected String validateProperty(String input) {				
-//				String git = WebPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
-//				if (!new File(git).exists()) {
-//					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
-//				}
-//				return null;
-//			}
-//		}.setInputFromFileMandatory(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0));
-//				
+		FlowerWebProperties.AddProperty addProperty = new FlowerWebProperties.AddProperty(GIT_INSTALL_DIR, "") {			
+			/**
+			 * Verify if git.exe exists at given location.
+			 */
+			@Override			
+			protected String validateProperty(String input) {				
+				String git = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
+				if (!new File(git).exists()) {
+					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
+				}
+				return null;
+			}
+		}.setInputFromFileMandatory(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0);
+		
+		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(addProperty);
+				
 		// verify JavaVM version; it must be >= 1.7
 		String jvmVersion = System.getProperty("java.vm.specification.version");
 		if (jvmVersion.compareTo("1.7") < 0) {
@@ -142,8 +159,9 @@ public class GitUtils {
 	public Repository getRepository(File repoFile) {
 		File gitDir = getGitDir(repoFile);
 		if (gitDir != null) {
-			try {
-				return RepositoryCache.open(FileKey.exact(gitDir, FS.DETECTED));
+			try {				
+				Repository repository = RepositoryCache.open(FileKey.exact(gitDir, FS.DETECTED));				
+				return repository;
 			}  catch (IOException e) {
 				// TODO CC: log
 			}
@@ -188,7 +206,7 @@ public class GitUtils {
 	}
 	
 	public String getRepositoryName(Repository repo) {
-		return repo.getDirectory().getParent();
+		return repo.getDirectory().getParentFile().getParentFile().getName();
 	}
 	
 	/**
@@ -246,7 +264,9 @@ public class GitUtils {
 	
 	public String handleMergeResult(MergeResult mergeResult) {
 		StringBuilder sb = new StringBuilder();		
-		
+		if (mergeResult == null) {
+			return sb.toString();
+		}
 		sb.append("Status: ");
 		sb.append(mergeResult.getMergeStatus());
 		sb.append("\n");
@@ -396,6 +416,122 @@ public class GitUtils {
 		return true;
 	}
 	
+	public RevCommit getHeadCommit(Repository repository) {
+		RevCommit headCommit = null;
+		try {
+			ObjectId parentId = repository.resolve(Constants.HEAD);
+			if (parentId != null) {
+				headCommit = new RevWalk(repository).parseCommit(parentId);
+			}
+		} catch (IOException e) {
+			return null;
+		}
+		return headCommit;
+	}
+	
+	@SuppressWarnings("restriction")
+	public Object[] getFetchPushUpstreamDataRefSpecAndRemote(Repository repository) 
+			throws InvalidConfigurationException, NoHeadException, DetachedHeadException {		
+		
+		String branchName;
+		String fullBranch;
+		try {
+			fullBranch = repository.getFullBranch();
+			if (fullBranch == null) {
+				throw new NoHeadException(JGitText.get().pullOnRepoWithoutHEADCurrentlyNotSupported);
+			}
+			if (!fullBranch.startsWith(Constants.R_HEADS)) {
+				// we can not pull if HEAD is detached and branch is not
+				// specified explicitly
+				throw new DetachedHeadException();
+			}
+			branchName = fullBranch.substring(Constants.R_HEADS.length());
+		} catch (IOException e) {
+			throw new JGitInternalException(JGitText.get().exceptionCaughtDuringExecutionOfPullCommand, e);
+		}
+		// get the configured remote for the currently checked out branch
+		// stored in configuration key branch.<branch name>.remote
+		Config repoConfig = repository.getConfig();
+		String remote = repoConfig.getString(
+				ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
+				ConfigConstants.CONFIG_KEY_REMOTE);
+		if (remote == null) {
+			// fall back to default remote
+			remote = Constants.DEFAULT_REMOTE_NAME;
+		}
+
+		// get the name of the branch in the remote repository
+		// stored in configuration key branch.<branch name>.merge
+		String remoteBranchName = repoConfig.getString(
+				ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
+				ConfigConstants.CONFIG_KEY_MERGE);
+
+		if (remoteBranchName == null) {
+			String missingKey = ConfigConstants.CONFIG_BRANCH_SECTION + "."
+					+ branchName + "." + ConfigConstants.CONFIG_KEY_MERGE;
+			throw new InvalidConfigurationException(MessageFormat.format(
+					JGitText.get().missingConfigurationForKey, missingKey));
+		}
+		
+        // check if the branch is configured for pull-rebase
+        boolean doRebase = repoConfig.getBoolean(
+                        ConfigConstants.CONFIG_BRANCH_SECTION, branchName,
+                        ConfigConstants.CONFIG_KEY_REBASE, false);
+          
+		final boolean isRemote = !remote.equals("."); //$NON-NLS-1$
+		String remoteUri;	
+		if (isRemote) {
+			remoteUri = repoConfig.getString(
+					ConfigConstants.CONFIG_REMOTE_SECTION, remote,
+					ConfigConstants.CONFIG_KEY_URL);
+			if (remoteUri == null) {
+				String missingKey = ConfigConstants.CONFIG_REMOTE_SECTION + "."
+						+ remote + "." + ConfigConstants.CONFIG_KEY_URL;
+				throw new InvalidConfigurationException(MessageFormat.format(
+						JGitText.get().missingConfigurationForKey, missingKey));
+			}
+
+			return new Object[] {fullBranch, remoteBranchName, remoteUri, doRebase};			
+		}
+		return null;
+	}
+	
+	public void listenForChanges(File file) throws IOException {
+        Path path = file.toPath();
+        if (file.isDirectory()) {
+            WatchService ws = path.getFileSystem().newWatchService();
+            path.register(ws, StandardWatchEventKinds.ENTRY_CREATE, 
+              StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
+            WatchKey watch = null;
+            while (true) {
+                System.out.println("Watching directory: " + file.getPath());
+                try {
+                    watch = ws.take();
+                } catch (InterruptedException ex) {
+                    System.err.println("Interrupted");
+                }
+                List<WatchEvent<?>> events = watch.pollEvents();
+                if (!watch.reset()) {
+                	break;
+                }
+                for (WatchEvent<?> event : events) {
+                    Kind<Path> kind = (Kind<Path>) event.kind();
+                    Path context = (Path) event.context();
+                    if (kind.equals(StandardWatchEventKinds.OVERFLOW)) {
+                        System.out.println("OVERFLOW");
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_CREATE)) {
+                        System.out.println("Created: " + context.getFileName());
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_DELETE)) {
+                        System.out.println("Deleted: " + context.getFileName());
+                    } else if (kind.equals(StandardWatchEventKinds.ENTRY_MODIFY)) {
+                        System.out.println("Modified: " + context.getFileName());
+                    }
+                }
+            }
+        } else {
+            System.err.println("Not a directory. Will exit.");
+        }
+    }
 	
 	private NamedLockPool namedLockPool = new NamedLockPool();
 	
@@ -464,7 +600,7 @@ public class GitUtils {
 			cmd.add(source);
 			cmd.add(destination);
 			if (isWindows) {
-				String git = "D:/Program Files/Git/cmd/git.exe";//FlowerWebProperties.INSTANCE.getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
+				String git = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
 				if (!new File(git).exists()) {
 					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
 				}

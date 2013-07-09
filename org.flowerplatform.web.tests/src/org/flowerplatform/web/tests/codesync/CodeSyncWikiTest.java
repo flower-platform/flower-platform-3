@@ -273,8 +273,8 @@ public class CodeSyncWikiTest {
 	
 	private IProject getProject() {
 		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + PROJECT;
-		org.flowerplatform.common.util.Pair<IProject, IResource> pair = ProjectsService.getInstance().getEclipseProjectAndResource(new File(absolutePath));
-		return pair.a;
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
+		return resource.getProject();
 	}
 	
 	private void test(CodeSyncRoot leftRoot, CodeSyncRoot rightRoot, String technology, Pair[] expected) {

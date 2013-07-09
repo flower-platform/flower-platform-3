@@ -42,5 +42,16 @@ package com.crispico.flower.util.popup {
 			// doesn't support this	
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function showSpinner(text:String):void {			
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function hideSpinner():void {			
+		}
 	}
 }

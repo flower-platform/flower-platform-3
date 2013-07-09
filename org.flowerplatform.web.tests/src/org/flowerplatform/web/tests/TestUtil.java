@@ -99,7 +99,7 @@ public class TestUtil {
 			if (ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName("org").size() == 0) {
 				ProjectsService.getInstance().markAsWorkingDirectoryForFile(context, to.getParentFile());
 			}
-			ProjectsService.getInstance().createOrImportProjectForFile(context, to);
+			ProjectsService.getInstance().createOrImportProjectFromFile(context, to);
 			
 		} catch (Throwable e) {
 			throw new RuntimeException("Cannot copy files/create project needed for test", e);

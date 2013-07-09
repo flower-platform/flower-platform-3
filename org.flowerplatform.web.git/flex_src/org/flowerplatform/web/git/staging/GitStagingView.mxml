@@ -17,7 +17,7 @@
 		<![CDATA[
 			import com.crispico.flower.util.layout.event.ViewAddedEvent;
 			
-			import org.flowerplatform.web.git.GitPlugin;
+			import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 			
 			import com.crispico.flower.util.layout.event.ViewRemovedEvent;
 			import com.crispico.flower.util.spinner.ModalSpinner;
@@ -29,8 +29,7 @@
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-			import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
-			import org.flowerplatform.web.git.dto.ViewInfoDto;
+			import org.flowerplatform.web.git.GitPlugin;
 			import org.flowerplatform.web.git.staging.communication.GitStagingStatefulClient;
 			import org.flowerplatform.web.git.staging.dto.StagingViewInfoDto;
 			

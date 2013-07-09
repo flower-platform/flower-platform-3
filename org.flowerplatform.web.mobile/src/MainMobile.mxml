@@ -11,9 +11,18 @@
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
 		@namespace mobile "org.flowerplatform.web.mobile.*";
+		@namespace texteditor "com.crispico.flower.texteditor.*";
 		
 		s|TextInput {
 			skinClass: ClassReference("org.flowerplatform.web.mobile.text.ValidatingTextInputSkin")
+		}
+		
+		texteditor|SyntaxTextEditor {
+			
+			skinClass: ClassReference("org.flowerplatform.web.mobile.text.RichEditableTextAreaSkin");
+			/* /
+			skinClass: ClassReference("spark.skins.mobile.TextAreaSkin");
+			*/
 		}
 		
 		s|FormItem {
@@ -46,18 +55,23 @@
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
+			import org.flowerplatform.editor.java.JavaEditorPlugin;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.EditorPlugin;
 			import org.flowerplatform.editor.model.EditorModelPlugin;
 			import org.flowerplatform.editor.text.EditorTextPlugin;
+			import org.flowerplatform.editor.text.java.EditorTextJavaPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
+			import org.flowerplatform.flexutil.popup.AlertPopupMessageBoxFactory;
 			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.mobile.RecentActivityView;
 			import org.flowerplatform.web.mobile.SplitView;
+			import org.flowerplatform.web.mobile.popup.ProgressMonitorSpinnerHandlerFactory;
 			import org.flowerplatform.web.mobile.popup.WrapperViewPopupHandlerFactory;
 			
 			public static function get mainApp():MainMobile {
@@ -79,8 +93,11 @@
 				setDescriptorWithUrl(new CommunicationPlugin(), 'servlet/public-resources/org.flowerplatform.communication/swc/org.flowerplatform.communication.swc|library.swf'),
 				setDescriptorWithUrl(new EditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf'),
 				setDescriptorWithUrl(new EditorTextPlugin(), 'servlet/public-resources/org.flowerplatform.editor.text/swc/org.flowerplatform.editor.text.swc|library.swf?pluginClass=EditorTextPlugin'),
+				setDescriptorWithUrl(new EditorTextJavaPlugin(), 'servlet/public-resources/org.flowerplatform.editor.text.java/swc/org.flowerplatform.editor.text.java.swc|library.swf?pluginClass=EditorTextJavaPlugin'),
 				setDescriptorWithUrl(new EditorModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.model/swc/org.flowerplatform.editor.model.swc|library.swf?pluginClass=EditorModelPlugin'),
-				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf')
+				setDescriptorWithUrl(new JavaEditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor.java/swc/org.flowerplatform.editor.java.swc|library.swf?pluginClass=JavaEditorPlugin'),
+				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf'),
+				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf')
 			];
 			
 			private function startPlugins():void {
@@ -100,7 +117,10 @@
 				
 				FlexUtilGlobals.getInstance().isMobile = true;	
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new WrapperViewPopupHandlerFactory();
-				FlexUtilGlobals.getInstance().rootUrl = "http://5.12.211.148:8080/org.flowerplatform.web.app/";
+				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
+				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorSpinnerHandlerFactory();
+				FlexUtilGlobals.getInstance().rootUrl = "http://192.168.0.100:8080/org.flowerplatform.web.app/";
+				
 				
 				startPlugins();
 				

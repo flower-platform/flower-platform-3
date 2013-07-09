@@ -592,7 +592,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 		TreeInfoClient treeInfoClient = new TreeInfoClient(channel, statefulClientId);
 		
 		if (!treeContexts.containsKey(treeInfoClient)) {
-			treeContexts.put(treeInfoClient, new GenericTreeContext());
+			treeContexts.put(treeInfoClient, new GenericTreeContext(null));
 		}
 		return treeContexts.get(treeInfoClient);
 	}
@@ -1196,7 +1196,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 		GenericTreeContext treeContext = treeContexts.get(treeInfo);
 					
 		if (treeContext == null) {
-			treeContext = new GenericTreeContext();			
+			treeContext = new GenericTreeContext(null);			
 		}		
 		treeContext.getStatefulContext().put(key, value);
 		

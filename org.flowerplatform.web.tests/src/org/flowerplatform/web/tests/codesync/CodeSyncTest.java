@@ -599,14 +599,14 @@ public class CodeSyncTest {
 	
 	private IProject getProject() {
 		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + PROJECT;
-		org.flowerplatform.common.util.Pair<IProject, IResource> pair = ProjectsService.getInstance().getEclipseProjectAndResource(new File(absolutePath));
-		return pair.a;
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
+		return resource.getProject();
 	}
 	
 	private IFile getFile(String path) {
 		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + path;
-		org.flowerplatform.common.util.Pair<IProject, IResource> pair = ProjectsService.getInstance().getEclipseProjectAndResource(new File(absolutePath));
-		return (IFile) pair.b;
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
+		return (IFile) resource;
 	}
 	
 	private Pair[] typeList;

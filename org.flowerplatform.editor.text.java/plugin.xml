@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.editor.contentType">
+      <contentType
+            contentType="java">
+      </contentType>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.contentTypeToEditorMapping">
+      <contentTypeToEditorMapping
+            compatibleEditor="java"
+            contentType="java"
+            editorStatefulService="org.flowerplatform.editor.text.remote.TextEditorStatefulService"
+            serviceId="javaTextEditorStatefulService">
+      </contentTypeToEditorMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.fileExtensionToContentTypeMapping">
+      <fileExtensionToContentTypeMapping
+            contentType="java"
+            fileExtension="java">
+      </fileExtensionToContentTypeMapping>
+   </extension>
+
+</plugin>

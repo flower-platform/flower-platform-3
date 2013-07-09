@@ -32,16 +32,14 @@
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
+			import com.crispico.flower.util.popup.ProgressMonitorDialogHandlerFactory;
 			import com.crispico.flower.util.popup.ResizablePopupWindowPopupHandlerFactory;
-			import com.crispico.flower.util.popup.TextAreaPopupMessageBoxFactory;
 			
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
-			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.graphics.ImageSnapshot;
-			import mx.managers.PopUpManager;
 			import mx.messaging.config.ConfigMap;
 			import mx.messaging.management.Attribute;
 			import mx.messaging.management.MBeanAttributeInfo;
@@ -68,13 +66,9 @@
 			import mx.utils.RpcClassAliasInitializer;
 			
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.context_menu.ContextMenu;
 			import org.flowerplatform.flexutil.context_menu.ContextMenuManager;
-			import org.flowerplatform.flexutil.context_menu.FillContextMenuEvent;
 			import org.flowerplatform.flexutil.plugin.FlexPluginManager;
-			import org.flowerplatform.flexutil.popup.ActionBase;
-			import org.flowerplatform.flexutil.popup.ComposedAction;
-			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.AlertPopupMessageBoxFactory;
 			
 			import spark.utils.DataItem;
 			
@@ -116,18 +110,21 @@
 			ImageSnapshot;
 			
 			protected function applicationCompleteHandler(event:FlexEvent):void	{
-				FlexUtilGlobals.getInstance().messageBoxFactory = new TextAreaPopupMessageBoxFactory();
+				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new ResizablePopupWindowPopupHandlerFactory();
-					
+				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorDialogHandlerFactory();
+				
 				FlexPluginManager.getInstance().loadPlugins(new ArrayCollection([
 					'servlet/public-resources/org.flowerplatform.common/swc/org.flowerplatform.common.swc|library.swf',
 					'servlet/public-resources/org.flowerplatform.communication/swc/org.flowerplatform.communication.swc|library.swf',
 					'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf',
 					'servlet/public-resources/org.flowerplatform.editor.text/swc/org.flowerplatform.editor.text.swc|library.swf?pluginClass=EditorTextPlugin',
+					'servlet/public-resources/org.flowerplatform.editor.text.java/swc/org.flowerplatform.editor.text.java.swc|library.swf?pluginClass=EditorTextJavaPlugin',
 					'servlet/public-resources/org.flowerplatform.editor.model/swc/org.flowerplatform.editor.model.swc|library.swf?pluginClass=EditorModelPlugin',
+					'servlet/public-resources/org.flowerplatform.editor.java/swc/org.flowerplatform.editor.java.swc|library.swf?pluginClass=JavaEditorPlugin',
 					'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf',
 					'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin',
-//					'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'
+					'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'
 				]));
 				
 				FlexUtilGlobals.getInstance().contextMenuManager = new ContextMenuManager();

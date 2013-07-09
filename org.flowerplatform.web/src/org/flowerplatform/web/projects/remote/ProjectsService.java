@@ -220,7 +220,28 @@ public class ProjectsService {
 
 		return new Pair<File, Boolean>(null, false);
 	}
+	
+	public File getFileFromProjectWrapperResource(IResource resource) {
+		IProject projectWrapper = resource.getProject();
+		// I don't use String.split, because it takes a regex, which means I
+		// should have another constant,
+		// because the current separator has regex special chars
+		StringTokenizer st = new StringTokenizer(projectWrapper.getName(), PROJECT_WRAPPER_NAME_SEPARATOR);
+		if (st.countTokens() < 3) {
+			logger.warn("Project = {} is invalid. We were expecting at minimum tree tokens (i.e. org/work_dir/proj), but got only = {}",
+					projectWrapper, st.countTokens());
+			return null;
+		}
 
+		// we begin directly with something like org/work_dir
+		// at the end of the iteration, this will be the file of the project
+		File currentFile = new File(CommonPlugin.getInstance().getWorkspaceRoot(), st.nextToken() + "/" + st.nextToken());
+		do {
+			currentFile = new File(currentFile, st.nextToken());
+		} while (st.hasMoreTokens());
+		return new File(currentFile, resource.getProjectRelativePath().toFile().getPath());
+	}
+	
 	@RemoteInvocation
 	public void markAsWorkingDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
@@ -273,10 +294,10 @@ public class ProjectsService {
 	public void createOrImportProject(ServiceInvocationContext context, List<PathFragment> pathWithRoot) throws CoreException, URISyntaxException {
 		@SuppressWarnings("unchecked")
 		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
-		createOrImportProjectForFile(context, file);
+		createOrImportProjectFromFile(context, file);
 	}
 	
-	public void createOrImportProjectForFile(ServiceInvocationContext context, final File file) throws URISyntaxException, CoreException {
+	public void createOrImportProjectFromFile(ServiceInvocationContext context, final File file) throws URISyntaxException, CoreException {
 		final Pair<File, Boolean> workingDirectoryDir = getOrganizationDirForWorkingDirectoryOrWorkindDirectoryForProject(context.getCommunicationChannel(),
 				"explorer.createOrImportProject.error.title", file, false);
 
@@ -338,16 +359,15 @@ public class ProjectsService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("In Working Directory = {}, added a new Project = {}", workingDirectoryDir.a, file);
 		}
-		
 	}
 	
-	public Pair<IProject, IResource> getEclipseProjectAndResource(List<PathFragment> pathWithRoot) {
+	public IResource getProjectWrapperResourceFromFile(List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
 		File file = ((Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null)).a;
-		return getEclipseProjectAndResource(file);
+		return getProjectWrapperResourceFromFile(file);
 	}
 		
-	public Pair<IProject, IResource> getEclipseProjectAndResource(final File file) {
+	public IResource getProjectWrapperResourceFromFile(final File file) {
 		File currentFile = file;
 		IProject projectWrapper = null;
 		while (currentFile != null && currentFile != CommonPlugin.getInstance().getWorkspaceRoot()) {
@@ -367,11 +387,11 @@ public class ProjectsService {
 		
 		String pathInProjectWrapper = LINK_TO_PROJECT + "/" + CommonPlugin.getInstance().getPathRelativeToFile(file, currentFile);
 		if (file.isDirectory()) {
-			return new Pair<IProject, IResource>(projectWrapper, projectWrapper.getFolder(pathInProjectWrapper));
+			return projectWrapper.getFolder(pathInProjectWrapper);
 		} else {
-			return new Pair<IProject, IResource>(projectWrapper, projectWrapper.getFile(pathInProjectWrapper));
+			return projectWrapper.getFile(pathInProjectWrapper);
 		}
 		
 	}
-
+	
 }

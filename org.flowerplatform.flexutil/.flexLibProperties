@@ -17,6 +17,8 @@
     <classEntry path="org.flowerplatform.flexutil.popup.ActionBase"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IActionProvider"/>
     <classEntry path="org.flowerplatform.flexutil.popup.ClassFactoryActionProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.dropdownlist.skin.DropDownListMobileSkin_Default"/>
+    <classEntry path="org.flowerplatform.flexutil.propertypage.IPropertyPageProvider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

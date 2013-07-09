@@ -40,14 +40,17 @@ public abstract class AbstractFileWrapperChildrenProvider implements IChildrenPr
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
 		File[] children = getFile(node).listFiles();
-		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>(children.length);
-		
-		for (File child : children) {
-			Pair<Object, String> pair = new Pair<Object, String>(getChildToProvide(child), getNodeType());
-			result.add(pair);
+		if (children != null) {
+			Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>(children.length);
+			
+			for (File child : children) {
+				Pair<Object, String> pair = new Pair<Object, String>(getChildToProvide(child), getNodeType());
+				result.add(pair);
+			}
+			
+			return result;
 		}
-		
-		return result;
+		return new ArrayList<Pair<Object, String>>();
 	}
 
 	@Override

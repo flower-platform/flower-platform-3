@@ -48,6 +48,9 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import com.flextras.mobile.dropDownList.DropDownList;
+			
+			import mx.binding.utils.BindingUtils;
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			import mx.core.IFlexDisplayObject;
@@ -56,6 +59,7 @@
 			import mx.rpc.events.ResultEvent;
 			import mx.validators.Validator;
 			
+			import org.flowerplatform.blazeds.BlazeDSBridge;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.popup.ActionBase;
@@ -64,6 +68,9 @@
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
 			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
+			
+			import spark.components.DropDownList;
+			import spark.events.IndexChangeEvent;
 			// TODO CS/FP2 msg
 			
 			private var _popupHost:IPopupHost;
@@ -81,6 +88,8 @@
 			[Bindable]
 			public var showActivationCodeField:Boolean;
 			
+			private var restrictChannelDropDownList:spark.components.DropDownList;
+			
 			/**
 			 * @author Mariana
 			 */ 
@@ -92,9 +101,9 @@
 					{ label : getMessage('authentication.register'), icon : getResourceUrl("images/usr_admin/user.png"), state : "register" },
 					{ label : getMessage('authentication.iForgot'), icon : getResourceUrl("images/question.png"), state : "iForgot" });
 				var showDebugButtonFromUrl:String = CommunicationPlugin.getInstance().applicationParametersProvider.getShowDebugMenu();
-				if (showDebugButtonFromUrl == "true") {
+//				if (showDebugButtonFromUrl == "true") {
 					dp.push({ label : getMessage('authentication.debug'), icon : getResourceUrl("images/debug.gif"), state : "debug" });
-				}
+//				}
 				return new ArrayList(dp);
 			}
 			
@@ -159,6 +168,8 @@
 				if (showActivationCodeField && activationCodeInput) {
 					username += "|" + activationCodeInput.text;
 				}
+				
+				CommunicationPlugin.getInstance().bridge.setExplicitEndpointURI(server.text);
 				
 //				CommunicationPlugin.getInstance().bridge.keepLayoutStructure = switchUserMode && keepWorkspaceCheckbox.selected;
 				if (switchUserMode) {							
@@ -314,8 +325,8 @@
 			// Debug logic
 			/////////////////////////////////////////////
 			
-			private function restrictChannelComboBoxChangeHandler():void {
-				CommunicationPlugin.getInstance().bridge.restrictToChannel(restrictChannelComboBox.selectedItem);
+			private function restrictChannelDropDownListChangeHandler(event:IndexChangeEvent):void {
+				CommunicationPlugin.getInstance().bridge.restrictToChannel(restrictChannelDropDownList.selectedItem);
 			}
 			
 			private function switchState(index:int):void {
@@ -414,6 +425,10 @@
 				
 				<s:FormItem width="100%" label="{getMessage('entity.user.password')}">
 					<s:TextInput id="loginViewPasswordInput" text="" width="100%" displayAsPassword="true"/>
+				</s:FormItem>
+				
+				<s:FormItem width="100%" label="Server">
+					<s:TextInput id="server" text="localhost:8080" width="100%"/>
 				</s:FormItem>
 				
 				<s:FormItem label="{getMessage('authentication.activationCode')}" width="100%"
@@ -518,11 +533,27 @@
 		<s:VGroup id="debugView" width="100%" height="100%" horizontalAlign="center" verticalAlign="middle"
 				  includeIn="debug">
 			
-			<s:HGroup width="100%">
-				<s:Label text="{getMessage('authentication.debug.connectUsing')}" verticalAlign="middle"/>
-				<s:ComboBox id="restrictChannelComboBox" width="100%" enabled="{!switchUserMode}" 
-							dataProvider="{CommunicationPlugin.getInstance().bridge.getAvaiableChannels()}" 
-							change="restrictChannelComboBoxChangeHandler();"/>
+			<s:HGroup id="debugArea" width="100%" verticalAlign="middle">
+				<s:creationComplete>
+					<![CDATA[
+						/**
+						* @author Cristina Contantinescu
+						*/
+						if (FlexUtilGlobals.getInstance().isMobile) {
+							restrictChannelDropDownList = new com.flextras.mobile.dropDownList.DropDownList();										
+						} else {
+							restrictChannelDropDownList = new spark.components.DropDownList();											
+						}
+						restrictChannelDropDownList.labelField = "name";
+						restrictChannelDropDownList.percentWidth = 100;
+						restrictChannelDropDownList.addEventListener(IndexChangeEvent.CHANGE, restrictChannelDropDownListChangeHandler);
+						restrictChannelDropDownList.dataProvider = CommunicationPlugin.getInstance().bridge.getAvaiableChannels();
+						restrictChannelDropDownList.selectedIndex = 0;
+						restrictChannelDropDownList.enabled = !switchUserMode;
+						debugArea.addElement(restrictChannelDropDownList);
+					]]>
+				</s:creationComplete>
+				<s:Label text="{getMessage('authentication.debug.connectUsing')}" verticalAlign="middle"/>				
 			</s:HGroup>
 			
 			<s:Button label="{getMessage('authentication.debug.log')}" click="CommunicationPlugin.getInstance().bridge.logger.showAllMessages();"/>

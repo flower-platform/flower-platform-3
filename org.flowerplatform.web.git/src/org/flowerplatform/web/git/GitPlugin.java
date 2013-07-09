@@ -34,6 +34,14 @@ public class GitPlugin extends AbstractFlowerJavaPlugin {
 		super.start(context);
 		
 		INSTANCE = this;		
+		
+//		File root = new File("d:\\data\\java_work\\git_repo_fp\\org.flowerplatform.web.app\\workspace\\");
+//		try {
+//			GitPlugin.getInstance().getUtils().listenForChanges(root);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 		
 	public void stop(BundleContext context) throws Exception {

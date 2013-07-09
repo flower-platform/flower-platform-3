@@ -99,18 +99,6 @@ temp.new_ws_er = true
 # [DEFAULT] linux.svnjavahl.native.libraries = /opt/CollabNet_Subversion/lib
 
 ###########
-## GIT Preferences
-###########
-# Location for local GIT repositories
-# [DEFAULT] git.git-repositories-location = {0}/root/{1}/.git-repositories
-# where
-# {0} = workspace location; e.g. d:/.../workspace
-# {1} = organization directory name; e.g. /org; /organizations/org1
-=======
-# GIT Installation Directory (mandatory for Windows)
-# [NO DEFAULT VALUE] git.git-install-dir
-
-###########
 ## TextEditor client settings
 ###########
 # Interval when keystrokes on text editors are aggregated and sent to the server (milliseconds)

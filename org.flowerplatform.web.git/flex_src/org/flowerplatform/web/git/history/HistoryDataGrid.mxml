@@ -15,16 +15,14 @@
 	<fx:Script>
 		<![CDATA[
 			import com.crispico.flower.flexdiagram.action.ActionContext;
-			import com.crispico.flower.flexdiagram.action.HRuleContextMenuEntry;
+			
+			import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
+			
 			import com.crispico.flower.flexdiagram.contextmenu.ContextMenuManager;
 			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
-			import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntry;
-			import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntryModel;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.ListEvent;
-			
-			import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
 			
 			public var historyView:GitHistoryView;
 			
@@ -177,7 +175,7 @@
 					<mx:VBox horizontalScrollPolicy="off">
 						<fx:Script>
 							<![CDATA[								
-								import org.flowerplatform.web.git.history.dto.HistoryEntryDto;
+								import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
 								
 							]]>
 						</fx:Script>								

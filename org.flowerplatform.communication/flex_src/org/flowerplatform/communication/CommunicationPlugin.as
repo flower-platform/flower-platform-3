@@ -2,12 +2,8 @@ package org.flowerplatform.communication {
 	
 	import flash.utils.Dictionary;
 	
-	import mx.core.FlexGlobals;
-	import mx.core.IVisualElementContainer;
-	
 	import org.flowerplatform.blazeds.BlazeDSBridge;
 	import org.flowerplatform.blazeds.BridgeEvent;
-	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.callback.InvokeCallbackClientCommand;
 	import org.flowerplatform.communication.command.AbstractClientCommand;
@@ -18,7 +14,6 @@ package org.flowerplatform.communication {
 	import org.flowerplatform.communication.command.ServerSnapshotClientCommand;
 	import org.flowerplatform.communication.command.WelcomeClientCommand;
 	import org.flowerplatform.communication.progress_monitor.remote.CreateProgressMonitorStatefulClientCommand;
-	import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulClient;
 	import org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulLocalClient;
 	import org.flowerplatform.communication.sequential_execution.SequentialExecutionServerCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -26,15 +21,11 @@ package org.flowerplatform.communication {
 	import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
 	import org.flowerplatform.communication.transferable_object.ReferenceHolder;
-	import org.flowerplatform.communication.tree.GenericTreeList;
-	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClientLocalState;
 	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.Utils;
-	
-	import temp.tree.ProjectExplorerTreeNew;
-	
+		
 	public class CommunicationPlugin extends AbstractFlowerFlexPlugin {
 		
 		protected static var INSTANCE:CommunicationPlugin;

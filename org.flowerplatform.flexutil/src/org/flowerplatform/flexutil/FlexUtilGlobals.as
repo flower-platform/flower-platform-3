@@ -6,6 +6,7 @@ package org.flowerplatform.flexutil {
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.popup.IMessageBoxFactory;
 	import org.flowerplatform.flexutil.popup.IPopupHandlerFactory;
+	import org.flowerplatform.flexutil.popup.IProgressMonitorFactory;
 
 	public class FlexUtilGlobals {
 
@@ -22,6 +23,11 @@ package org.flowerplatform.flexutil {
 		public var messageBoxFactory:IMessageBoxFactory;
 		
 		public var popupHandlerFactory:IPopupHandlerFactory;
+		
+		/**
+		 * @author Cristina Contantinescu
+		 */
+		public var progressMonitorHandlerFactory:IProgressMonitorFactory;
 		
 		public var isMobile:Boolean;
 		

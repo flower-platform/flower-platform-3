@@ -92,10 +92,12 @@ package com.crispico.flower.texteditor {
 		private function focusChangedHandler(event:FocusEvent):void {
 			var selectionformat : SelectionFormat =  new SelectionFormat(selectionColor, 1, BlendMode.NORMAL);
 			// TODO CS/FP2 dezact textFlow
-//			event.currentTarget.textFlow.interactionManager.inactiveSelectionFormat = selectionformat;
-//			event.currentTarget.textFlow.interactionManager.focusedSelectionFormat = selectionformat;
-//			event.currentTarget.textFlow.interactionManager.unfocusedSelectionFormat = selectionformat;
-//			event.currentTarget.textFlow.interactionManager = event.currentTarget.textFlow.interactionManager;
+			if (event.currentTarget.textFlow) {
+				event.currentTarget.textFlow.interactionManager.inactiveSelectionFormat = selectionformat;
+				event.currentTarget.textFlow.interactionManager.focusedSelectionFormat = selectionformat;
+				event.currentTarget.textFlow.interactionManager.unfocusedSelectionFormat = selectionformat;
+				event.currentTarget.textFlow.interactionManager = event.currentTarget.textFlow.interactionManager;
+			}
 		}
 		
 		/**
@@ -144,7 +146,8 @@ package com.crispico.flower.texteditor {
 			
 			// prevents several behaviours such as focusing out of the editor when pressing TAB
 			// TODO CS/FP2 dezact textFlow
-//			textFlow.interactionManager = customEditManager;
+			if (textFlow)
+				textFlow.interactionManager = customEditManager;
 			
 			if (initialSelectedRange != null) {
 				textDisplay.setFocus();
@@ -189,7 +192,8 @@ package com.crispico.flower.texteditor {
 			// the custom interaction manager needs to be set every time new text is loaded
 			// because the textFlow is reinitialized
 			// TODO CS/FP2 dezact textFlow			
-//			textFlow.interactionManager = customEditManager;
+			if (textFlow)
+				textFlow.interactionManager = customEditManager;
 			
 			// call later because the component first needs to load the new text  
 			// we need to scroll to top because after the text is loaded, the cursor is set at the end of the text
@@ -213,9 +217,11 @@ package com.crispico.flower.texteditor {
 		protected function getVisibleRange():Range {
 			// get the first and last visible lines
 			// TODO CS/FP2 dezact textFlow
-			var firstLine:TextFlowLine// = textFlow.flowComposer.getControllerAt(0).tlf_internal::getFirstVisibleLine();
-			var lastLine:TextFlowLine// = textFlow.flowComposer.getControllerAt(0).tlf_internal::getLastVisibleLine();
-			
+			if (textFlow) {
+				var firstLine:TextFlowLine = textFlow.flowComposer.getControllerAt(0).tlf_internal::getFirstVisibleLine();
+				var lastLine:TextFlowLine = textFlow.flowComposer.getControllerAt(0).tlf_internal::getLastVisibleLine();
+			}
+				
 			// get the index of the first character on the first visible line
 			// and the index of the last character on the last visible line
 			var firstIndex:int = firstLine != null ? firstLine.absoluteStart : 0;

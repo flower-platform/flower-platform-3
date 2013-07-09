@@ -1,5 +1,9 @@
 package org.flowerplatform.web.git.dto;
 
+import org.flowerplatform.web.git.remote.dto.CommitDto;
+import org.flowerplatform.web.git.remote.dto.GitActionDto;
+import org.flowerplatform.web.git.remote.dto.GitRef;
+
 /**
  *	@author Cristina Constantinescu
  */
