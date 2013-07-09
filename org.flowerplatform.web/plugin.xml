@@ -5,6 +5,8 @@
    <extension-point id="explorerChildrenProvider" name="explorerChildrenProvider" schema="schema/explorerChildrenProvider.exsd"/>
    <extension-point id="explorerAdditionalNodePopulator" name="explorerAdditionalNodePopulator" schema="schema/explorerAdditionalNodePopulator.exsd"/>
    <extension-point id="nodeTypeToCategoriesMapping" name="nodeTypeToCategoriesMapping" schema="schema/nodeTypeToCategoriesMapping.exsd"/>
+   <extension-point id="workingDirChildrenProvider" name="workingDirChildrenProvider" schema="schema/workingDirChildrenProvider.exsd"/>
+   <extension-point id="workingDirNodeDataProvider" name="workingDirNodeDataProvider" schema="schema/workingDirNodeDataProvider.exsd"/>
    <extension
          id="org.flowerplatform.web.DummyApplication"
          point="org.eclipse.core.runtime.applications">
@@ -265,5 +267,51 @@
       <welcomeInitializationsContributor
             commandToAppendToWelcomeClientCommand="org.flowerplatform.web.remote.InitializeNodeTypeCategoryToNodeTypesMapClientCommand">
       </welcomeInitializationsContributor>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.workingDirNodeDataProvider">
+      <workingDirNodeDataProvider
+            provider="org.flowerplatform.web.projects.WorkingDirectoryNodeDataProvider">
+         <nodeType
+               nodeType="workingDirectory">
+         </nodeType>
+      </workingDirNodeDataProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.workingDirChildrenProvider">
+      <workingDirChildrenProvider
+            provider="org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider">
+         <nodeType
+               nodeType="workingDirectory">
+         </nodeType>
+      </workingDirChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.workingDirNodeDataProvider">
+      <workingDirNodeDataProvider
+            provider="org.flowerplatform.web.projects.ProjectNodeDataProvider">
+         <nodeType
+               nodeType="project">
+         </nodeType>
+      </workingDirNodeDataProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.workingDirChildrenProvider">
+      <workingDirChildrenProvider
+            provider="org.flowerplatform.web.projects.ProjFile_ProjectChildrenProvider">
+         <nodeType
+               nodeType="project">
+         </nodeType>
+         <nodeType
+               nodeType="projFile">
+         </nodeType>
+      </workingDirChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="workingDirectoryTreeStatefulService"
+            serviceClass="org.flowerplatform.web.projects.remote.WorkingDirectoryTreeStatefulService">
+      </service>
    </extension>
 </plugin>

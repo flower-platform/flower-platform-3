@@ -109,7 +109,8 @@ public class JavaProjectPropertyPageService {
 		
 		IProject project = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).b;
 		IJavaProject javaProject = JavaCore.create(project);
-	
+		File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).a;
+		
 		List<String> srcFolders = new ArrayList<String>();
 		List<String> projects = new ArrayList<String>();
 		List<String> libraries = new ArrayList<String>();
@@ -123,13 +124,12 @@ public class JavaProjectPropertyPageService {
 				if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
 					srcFolders.add(entry.getPath().makeRelativeTo(project.getFullPath()).toFile().getPath());
 				} else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
-					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment()));
-					File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(file).a;
+					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment()));					
 					projects.add(CommonPlugin.getInstance().getPathRelativeToFile(file, wd));
 				} else if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
 					IFile resource = ResourcesPlugin.getWorkspace().getRoot().getFile(entry.getPath());
 					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(resource);
-					libraries.add(CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file));
+					libraries.add(CommonPlugin.getInstance().getPathRelativeToFile(file, wd));
 				}
 			}
 		} catch (CoreException | IOException e) {
@@ -158,7 +158,7 @@ public class JavaProjectPropertyPageService {
 		}
 		File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).a;
 		for (String library : libraries) {			
-			//entries.add(JavaCore.newLibraryEntry(CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(new File(wd, library))), null, null));
+			entries.add(JavaCore.newLibraryEntry(ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(wd, library)).getFullPath(), null, null));
 		}
 		try {
 			javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), new NullProgressMonitor());

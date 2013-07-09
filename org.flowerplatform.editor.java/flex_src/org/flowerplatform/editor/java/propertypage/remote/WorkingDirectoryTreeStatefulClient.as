@@ -9,19 +9,17 @@ package org.flowerplatform.editor.java.propertypage.remote {
 		public function WorkingDirectoryTreeStatefulClient() {
 			super();
 			
-			clientIdPrefix = "Explorer";
+			clientIdPrefix = "Working Directory";
 			requestDataOnSubscribe = false;
 			requestDataOnServer = false;
-			statefulServiceId = "explorerTreeStatefulService";
-			
-			context[GenericTreeStatefulClient.DONT_UPDATE_MAP_KEY] = true;
-			context[GenericTreeStatefulClient.WHOLE_TREE_KEY] = true;
+			statefulServiceId = "workingDirectoryTreeStatefulService";
 		}		
 		
-		[RemoteInvocation]
-		override public function updateNode(path:ArrayCollection, newNode:TreeNode, expandNode:Boolean = false, collapseNode:Boolean = false, selectNode:Boolean = false):void {
-			treeList.rootNode = newNode;
-		}
+		
+//		[RemoteInvocation]
+//		override public function updateNode(path:ArrayCollection, newNode:TreeNode, expandNode:Boolean = false, collapseNode:Boolean = false, selectNode:Boolean = false):void {
+//			treeList.rootNode = newNode;
+//		}
 		
 	}
 }

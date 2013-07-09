@@ -209,6 +209,11 @@
 					.show();
 			}
 			
+			protected function btnDeleteLibrary_clickHandler(event:MouseEvent):void {
+				lastBtnPressed = btnDeleteLibrary;
+				libraries.removeItemAt(lstLibraries.selectedIndex);
+			}
+			
 		]]>
 	</fx:Script>
 	<s:states>		
@@ -307,7 +312,8 @@
 			<s:Button id="btnAddLibrary" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
 					  click="btnAddLibrary_clickHandler(event)"/>			
 			<s:Button id="btnDeleteLibrary" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
-					  enabled="{lstLibraries.selectedItem != null}"/>
+					  enabled="{lstLibraries.selectedItem != null}"
+					  click="btnDeleteLibrary_clickHandler(event)"/>
 		</s:VGroup>
 	</s:HGroup>
 </s:Group>

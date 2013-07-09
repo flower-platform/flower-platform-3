@@ -19,6 +19,7 @@
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+			import org.flowerplatform.communication.tree.remote.PathFragment;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.editor.java.propertypage.remote.WorkingDirectoryTreeStatefulClient;
 			import org.flowerplatform.flexutil.FlexUtilAssets;
@@ -26,6 +27,7 @@
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 			
 			private var _popupHost:IPopupHost;			
 			private var resultHandler:IDialogResultHandler;
@@ -64,7 +66,13 @@
 				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 				
 				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
-				tree.statefulClient.openNode(node, this, getData_callbackHandler);				
+				
+				var fullPath:ArrayCollection = node.getPathForNode();
+				
+				var workingDirPath:ArrayCollection = new ArrayCollection([fullPath.getItemAt(0), node.pathFragment]);	
+				tree.statefulClient.context["workingDirectory"] = node.pathFragment.name;
+				tree.statefulClient.context["orgName"] = PathFragment(fullPath.getItemAt(0)).name;
+				tree.statefulClient.openNode(workingDirPath, this, getData_callbackHandler);				
 			}
 			
 			private function getData_callbackHandler(value:Object):void {
