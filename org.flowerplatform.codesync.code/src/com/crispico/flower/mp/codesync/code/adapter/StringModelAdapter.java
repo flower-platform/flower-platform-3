@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code;
+package com.crispico.flower.mp.codesync.code.adapter;
 
 import static com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm.UNDEFINED;
 
@@ -7,19 +7,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
-import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
 
 /**
  * @author Mariana
  */
 public class StringModelAdapter implements IModelAdapter {
-	
-	private ModelAdapterFactory factory;
-
-	public StringModelAdapter(ModelAdapterFactory factory) {
-		this.factory = factory;
-	}
 	
 	@Override
 	public boolean hasChildren(Object modelElement) {
@@ -106,7 +99,7 @@ public class StringModelAdapter implements IModelAdapter {
 
 	@Override
 	public void removeChildrenOnContainmentFeature(Object parent, Object feature, Object child) {
-		factory.getModelAdapter(parent).removeChildrenOnContainmentFeature(parent, feature, child);
+		throw new UnsupportedOperationException("String does not have children for feature " + feature);
 	}
 
 	@Override

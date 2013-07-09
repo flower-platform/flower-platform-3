@@ -10,8 +10,10 @@ package org.flowerplatform.codesync.remote {
 		
 		public var pathWithRoot:IList;
 		
+		
 		public function CodeSyncAction() {
 			super();
+			
 			// TODO CS/FP2 msg
 			label = "Code Sync";
 		}

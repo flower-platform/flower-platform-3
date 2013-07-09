@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code.java;
+package com.crispico.flower.mp.codesync.code.java.adapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.EnumConstantDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 
+import com.crispico.flower.mp.codesync.code.CodeSyncElementTypeConstants;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -18,7 +19,13 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavaEnumConstantDeclarationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	public final String ENUM_CONSTANT = "EnumConstant";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<?> getFeatures(Object element) {
+		List features = super.getFeatures(element);
+		features.add(AstCacheCodePackage.eINSTANCE.getEnumConstant_Arguments());
+		return features;
+	}
 	
 	@Override
 	public Object getMatchKey(Object element) {
@@ -31,7 +38,10 @@ public class JavaEnumConstantDeclarationModelAdapter extends JavaAbstractAstNode
 			return getMatchKey(element);
 		}
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return ENUM_CONSTANT;
+			return CodeSyncElementTypeConstants.ENUM_CONSTANT;
+		}
+		if (AstCacheCodePackage.eINSTANCE.getEnumConstant_Arguments().equals(feature)) {
+			return Collections.emptyList();
 		}
 		return super.getValueFeatureValue(element, feature, correspondingValue);
 	}

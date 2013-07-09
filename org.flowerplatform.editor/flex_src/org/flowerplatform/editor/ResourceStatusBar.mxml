@@ -110,7 +110,7 @@
 			 * @flowerModelElementId _SKgX2aWoEeGAT8h2VXeJdg
 			 */
 			public function updateState(editableResource:EditableResource):void {
-				return;
+//				return;
 				this.editableResource = editableResource;	
 				// dirty info
 				saveButton.enabled = editableResource.dirty;
@@ -182,9 +182,9 @@
 					owner = StringUtil.substitute("{0} ({1})", editableResource.lockOwner.name, editableResource.lockOwner.login);	
 				}
 				if (editableResource.locked) { 		
-//					var difference:Number = editableResource.lockExpireTime.time - editableResource.lockUpdateTime.time;
-//					return StringUtil.substitute("Locked by: {0} \rLock expires: in {1} (at {2})", 
-//						owner, durationFormatter.format(new Date(difference)), timeFormatter.format(editableResource.lockExpireTime));
+					var difference:Number = editableResource.lockExpireTime.time - editableResource.lockUpdateTime.time;
+					return StringUtil.substitute("Locked by: {0} \rLock expires: in {1} (at {2})", 
+						owner, durationFormatter.format(new Date(difference)), timeFormatter.format(editableResource.lockExpireTime));
 					var time:String = timeFormatter.format(editableResource.lockExpireTime);
 					var seconds:Number = int((editableResource.lockExpireTime.time - new Date().time) / 1000);
 					var date:Date = new Date();
@@ -316,7 +316,7 @@
 	<mx:DateFormatter id="timeFormatter" formatString="HH:NN:SS"/>
 	<mx:DateFormatter id="durationFormatter" formatString="NN':SS''" />  
 	
-	<common:FlowerButton id="saveButton"/>
+	<common:FlowerButton id="saveButton" label="Save" click="saveButtonClickHandler()"/>
 <!--	<common:FlowerButton id="saveButton" label="Save" fontWeight="normal" iconURL="{SWTImageUtil.INSTANCE.getImageURLFromAlias('save_img')}" enabled="false" click="saveButtonClickHandler()"/>
 -->	
 	<mx:HBox id="lockStatusBox" paddingTop="1" paddingBottom="1" paddingLeft="2" paddingRight="2" verticalAlign="middle" horizontalGap="3">

@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code.java;
+package com.crispico.flower.mp.codesync.code.java.adapter;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -24,8 +24,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.TextEdit;
 
-import com.crispico.flower.mp.codesync.code.AstModelElementAdapter;
-import com.crispico.flower.mp.codesync.code.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -39,11 +38,6 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	private Map<IPath, CompilationUnit> compilationUnits = new HashMap<IPath, CompilationUnit>();
 	
 	private final String RENAMED = "renamed";
-	
-	public JavaFileModelAdapter() {
-		super();
-		common = new CodeSyncElementFeatureProvider();
-	}
 	
 	@Override
 	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue) {

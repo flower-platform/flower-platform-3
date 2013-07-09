@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code;
+package com.crispico.flower.mp.codesync.code.adapter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -10,7 +10,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
+import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
+import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.Operation;
 import com.crispico.flower.mp.model.astcache.code.Parameter;
@@ -22,6 +24,14 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
  * @author Mariana
  */
 public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter {
+
+	public CodeSyncElementModelAdapterLeft() {
+		super();
+	}
+	
+	public CodeSyncElementModelAdapterLeft(SyncElementModelAdapter modelAdapter) {
+		super(modelAdapter);
+	}
 
 	/**
 	 * Filters out deleted {@link CodeSyncElement}s. Returns the new containment list from the {@link FeatureChange}s map for
@@ -63,7 +73,9 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	@Override
 	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue) {
 		// if the AST cache was deleted, recreate the value using the corresponding value from the right side
-		Object value = super.getValueFeatureValue(element, feature, correspondingValue);
+		Object value = astCacheElementModelAdapter != null 
+				? astCacheElementModelAdapter.getValueFeatureValue(element, feature, correspondingValue)
+				: super.getValueFeatureValue(element, feature, correspondingValue);
 		if (CodeSyncAlgorithm.UNDEFINED.equals(value)) {
 			setValueFeatureValue(element, feature, correspondingValue);
 		}
@@ -74,7 +86,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 		}
 		return value;
 	}
-
+	
 	/**
 	 * Before the features are processed for <code>element</code>, checks if the AST cache was deleted, and 
 	 * recreates it. Note: we cannot do this while the features are processed because upon requesting the 
@@ -118,7 +130,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 				// iterate through the children list; for each child not found in the new children, see if it exists in the corresponding element
 				for (Iterator it  = children.iterator(); it.hasNext();) {
 					Object existingChild = (Object) it .next();
-					Object matchKey = getMatchKey(existingChild);
+					Object matchKey = getModelAdapterFactory().getModelAdapter(existingChild).getMatchKey(existingChild);
 					Object newChild = findChild(newValues, matchKey);
 					if (newChild == null) {
 						if (!elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
@@ -130,7 +142,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 				
 				// iterate through the new values; for each child not found in the children list, see if it exists in the corresponding element
 				for (Object newChild : newValues) {
-					Object matchKey = getMatchKey(newChild);
+					Object matchKey = getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild);
 					Object existingChild = findChild(children, matchKey);
 					if (existingChild == null) {
 						if (elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
@@ -144,7 +156,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 				if (newValues.size() == children.size()) {
 					int matches = 0;
 					for (Object newChild : newValues) {
-						Object existingChild = findChild(children, getMatchKey(newChild));
+						Object existingChild = findChild(children, getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild));
 						if (existingChild != null) {
 							children.remove(existingChild);
 							children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
@@ -258,9 +270,9 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 		if (element == null || matchKey == null) {
 			return false;
 		}
-		Iterable<?> children = codeSyncElementConverter.getModelAdapter(element).getContainmentFeatureIterable(element, feature, null);
+		Iterable<?> children = getEObjectConverter().getModelAdapter(element).getContainmentFeatureIterable(element, feature, null);
 		for (Object child : children) {
-			if (matchKey.equals(codeSyncElementConverter.getModelAdapter(child).getMatchKey(child))) {
+			if (matchKey.equals(getEObjectConverter().getModelAdapter(child).getMatchKey(child))) {
 				return true;
 			}
 		}
@@ -273,8 +285,11 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	private Object findChild(List list, Object matchKey) {
 		if (matchKey == null)
 			return null;
+		ModelAdapterFactory modelAdapterFactory = astCacheElementModelAdapter != null 
+				? astCacheElementModelAdapter.getModelAdapterFactory()
+				: getModelAdapterFactory();
 		for (Object existingChild : list) {
-			if (matchKey.equals(getMatchKey(existingChild))) {
+			if (matchKey.equals(modelAdapterFactory.getModelAdapter(existingChild).getMatchKey(existingChild))) {
 				return existingChild;
 			}
 		}

@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code.java;
+package com.crispico.flower.mp.codesync.code.java.adapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
+import com.crispico.flower.mp.codesync.code.CodeSyncElementTypeConstants;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -31,10 +32,16 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	public static final String CLASS = "Class";
-	public static final String INTERFACE = "Interface";
-	public static final String ENUM = "Enum";
-	public static final String ANNOTATION = "Annotation";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<?> getFeatures(Object element) {
+		List features = super.getFeatures(element);
+		features.add(AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
+		features.add(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+		features.add(AstCacheCodePackage.eINSTANCE.getClass_SuperClasses());
+		features.add(AstCacheCodePackage.eINSTANCE.getClass_SuperInterfaces());
+		return features;
+	}
 	
 	/**
 	 * Returns only types, fields and methods.
@@ -116,14 +123,14 @@ public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
 			if (element instanceof TypeDeclaration) {
 				if (((TypeDeclaration) element).isInterface()) {
-					return INTERFACE;
+					return CodeSyncElementTypeConstants.INTERFACE;
 				}
-				return CLASS;
+				return CodeSyncElementTypeConstants.CLASS;
 			}
 			if (element instanceof EnumDeclaration) {
-				return ENUM;
+				return CodeSyncElementTypeConstants.ENUM;
 			}
-			return ANNOTATION;
+			return CodeSyncElementTypeConstants.ANNOTATION;
 		}
 		if (AstCacheCodePackage.eINSTANCE.getClass_SuperClasses().equals(feature)) {
 			if (element instanceof TypeDeclaration) {
@@ -134,6 +141,9 @@ public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 					return Collections.emptyList();
 				}
 			}
+			return Collections.emptyList();
+		}
+		if (AstCacheCodePackage.eINSTANCE.getClass_SuperInterfaces().equals(feature)) { 
 			return Collections.emptyList();
 		}
 		return super.getValueFeatureValue(element, feature, correspondingValue);
@@ -165,13 +175,30 @@ public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
 		// declared as containment by JavaFeatureProvider 
 		if (AstCacheCodePackage.eINSTANCE.getClass_SuperInterfaces().equals(feature)) {
-			if (element instanceof TypeDeclaration) {
+			if (element instanceof TypeDeclaration || element instanceof EnumDeclaration) {
 				String superInterface = (String) correspondingChild;
+				AbstractTypeDeclaration cls = (AbstractTypeDeclaration) element;
+				AST ast = cls.getAST();
+				Type type = getTypeFromString(ast, superInterface);
+				if (cls instanceof TypeDeclaration) {
+					((TypeDeclaration) cls).superInterfaceTypes().add(type);
+				}
+				if (cls instanceof EnumDeclaration) {
+					((EnumDeclaration) cls).superInterfaceTypes().add(type);
+				}
+				return getStringFromType(type);
+			}
+			return null;
+		}
+		
+		if (AstCacheCodePackage.eINSTANCE.getClass_SuperClasses().equals(feature)) {
+			if (element instanceof TypeDeclaration) {
+				String superClass = (String) correspondingChild;
 				TypeDeclaration cls = (TypeDeclaration) element;
 				AST ast = cls.getAST();
-				Type type = getTypeFromString(ast, (String) superInterface);
-				cls.superInterfaceTypes().add(type);
-				return type;
+				Type type = getTypeFromString(ast, superClass);
+				cls.setSuperclassType(type);
+				return getStringFromType(type);
 			}
 			return null;
 		}
@@ -196,26 +223,26 @@ public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 	
 	public static Object createCorrespondingModelElement(AST ast, CodeSyncElement cse) {
 		ASTNode child = null;
-		if (JavaAttributeModelAdapter.ATTRIBUTE.equals(cse.getType())) {
+		if (CodeSyncElementTypeConstants.ATTRIBUTE.equals(cse.getType())) {
 			VariableDeclarationFragment fragment = ast.newVariableDeclarationFragment();
 			FieldDeclaration field = ast.newFieldDeclaration(fragment);
 			child = field;
 		}
-		if (JavaOperationModelAdapter.OPERATION.equals(cse.getType())) {
+		if (CodeSyncElementTypeConstants.OPERATION.equals(cse.getType())) {
 			child = ast.newMethodDeclaration();
 		}
-		if (CLASS.equals(cse.getType())) {
+		if (CodeSyncElementTypeConstants.CLASS.equals(cse.getType())) {
 			child = ast.newTypeDeclaration();
 		}
-		if (INTERFACE.equals(cse.getType())) {
+		if (CodeSyncElementTypeConstants.INTERFACE.equals(cse.getType())) {
 			TypeDeclaration type = ast.newTypeDeclaration();
 			type.setInterface(true);
 			child = type;
 		}
-		if (ENUM.equals(cse.getType())) {
+		if (CodeSyncElementTypeConstants.ENUM.equals(cse.getType())) {
 			child = ast.newEnumDeclaration();
 		}
-		if (ANNOTATION.equals(cse.getType())) {
+		if (CodeSyncElementTypeConstants.ANNOTATION.equals(cse.getType())) {
 			child = ast.newAnnotationTypeDeclaration();
 		}
 		return child;

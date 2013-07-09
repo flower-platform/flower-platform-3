@@ -2,6 +2,8 @@ package com.crispico.flower.mp.codesync.base.communication;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -15,6 +17,8 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
@@ -42,6 +46,8 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	public static final String SERVICE_ID = "CodeSyncEditorStatefulService";
 	
 	public static final String CODE_SYNC_EDITOR = "codeSync";
+	
+	private DiffTreeStatefulService diffTree = new DiffTreeStatefulService();
 
 	public CodeSyncEditorStatefulService() {
 		setEditorName("codeSync");
@@ -105,6 +111,9 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 
 	@Override
 	protected void updateEditableResourceContentAndDispatchUpdates(CommunicationChannel originatingCommunicationChannel, String originatingStatefulClientId, EditableResource editableResource, Object updatesToApply) {
+		Runnable runnable = (Runnable) updatesToApply;
+		runnable.run();
+		
 		for (EditableResourceClient client : editableResource.getClients()) {
 			sendContentUpdateToClient(editableResource, client, null, true);
 		}
@@ -229,21 +238,42 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	///////////////////////////////////////////////////////////////
 	
 	@RemoteInvocation
+	public void openNode(StatefulServiceInvocationContext context, DiffTreeNode node, Map<Object, Object> treeContext) {
+		diffTree.openNode(context, node, treeContext);
+	}
+	
+	@RemoteInvocation
+	public void executeDiffAction(int actionType, int diffIndex, DiffTreeNode node) {
+		// TODO
+	}
+	
+	@RemoteInvocation
 	public void synchronize(StatefulServiceInvocationContext context, String editableResourcePath) {
-		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
+		final CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
 		if (er != null) {
-			synchronize(er.getMatch(), er.getModelAdapterFactorySet());
-			attemptUpdateEditableResourceContent(context, editableResourcePath, null);
+			attemptUpdateEditableResourceContent(context, editableResourcePath, new Runnable() {
+				
+				@Override
+				public void run() {
+					synchronize(er.getMatch(), er.getModelAdapterFactorySet());
+				}
+			});
 		}
 	}
 	
 	@RemoteInvocation
-	public void applySelectedActions(StatefulServiceInvocationContext context, String editableResourcePath) {
-		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
+	public void applySelectedActions(StatefulServiceInvocationContext context, final String editableResourcePath) {
+		final CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
 		if (er != null) {
-			allActionsPerformed(er.getMatch(), er.getModelAdapterFactorySet());
-			saveModifications(er);
-			attemptUpdateEditableResourceContent(context, editableResourcePath, null);
+			attemptUpdateEditableResourceContent(context, editableResourcePath, new Runnable() {
+				
+				@Override
+				public void run() {
+					allActionsPerformed(er.getMatch(), er.getModelAdapterFactorySet());
+					saveModifications(er);
+					unsubscribeAllClientsForcefully(getProjectPath(editableResourcePath), true);
+				}
+			});
 		}
 	}
 	

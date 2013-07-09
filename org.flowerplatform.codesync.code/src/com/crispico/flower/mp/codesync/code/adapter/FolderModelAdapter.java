@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code;
+package com.crispico.flower.mp.codesync.code.adapter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,7 +30,6 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	
 	public FolderModelAdapter() {
 		super();
-		common = new CodeSyncElementFeatureProvider();
 	}
 	
 	@Override

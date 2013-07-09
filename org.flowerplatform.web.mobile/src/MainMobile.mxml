@@ -100,7 +100,7 @@
 				
 				FlexUtilGlobals.getInstance().isMobile = true;	
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new WrapperViewPopupHandlerFactory();
-				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";
+				FlexUtilGlobals.getInstance().rootUrl = "http://5.12.211.148:8080/org.flowerplatform.web.app/";
 				
 				startPlugins();
 				

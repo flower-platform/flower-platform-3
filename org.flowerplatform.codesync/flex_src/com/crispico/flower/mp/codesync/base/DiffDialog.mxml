@@ -3,19 +3,26 @@
 
 	<mx:Script>
 		<![CDATA[
+			import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorStatefulClient;
+			
 			[Bindable]
 			public var projectPath:String;
+			
+			[Bindable]
+			public var statefulClient:CodeSyncEditorStatefulClient;
 		]]>
 	</mx:Script>
 	
 	<mx:VDividedBox width="50%" height="100%">
-		<base:DiffTree id="diffTree" treeType="{DiffTree.TREE_TYPE_DIFF}" projectPath="{projectPath}" width="100%" height="50%"/>
-		<mx:Label text="{diffTree.selectedItem.toolTip}" height="50" width="100%"/>
-		<base:DiffTree id="leftTree" treeType="{DiffTree.TREE_TYPE_LEFT}" projectPath="{projectPath}" width="100%" height="50%"/>
+		<base:DiffTree id="diffTree" treeType="{DiffTree.TREE_TYPE_DIFF}" projectPath="{projectPath}" container="{container}" codeSyncEditorStatefulClient="{statefulClient}" width="100%" height="50%"/>
+		<mx:Label text="{diffTree.selectedItem.treeNode.toolTip}" height="50" width="100%"/>
+		<!--<base:DiffTree id="leftTree" treeType="{DiffTree.TREE_TYPE_LEFT}" projectPath="{projectPath}" codeSyncEditorStatefulClient="{statefulClient}" width="100%" height="50%"/>
 	</mx:VDividedBox>
 	<mx:VDividedBox width="50%" height="100%">
-		<base:DiffTree id="ancestorTree" treeType="{DiffTree.TREE_TYPE_ANCESTOR}" projectPath="{projectPath}" width="100%" height="50%"/>
-		<base:DiffTree id="rightTree" treeType="{DiffTree.TREE_TYPE_RIGHT}" projectPath="{projectPath}" width="100%" height="50%"/>
+		<base:DiffTree id="ancestorTree" treeType="{DiffTree.TREE_TYPE_ANCESTOR}" projectPath="{projectPath}" codeSyncEditorStatefulClient="{statefulClient}" width="100%" height="50%"/>
+		<base:DiffTree id="rightTree" treeType="{DiffTree.TREE_TYPE_RIGHT}" projectPath="{projectPath}" codeSyncEditorStatefulClient="{statefulClient}" width="100%" height="50%"/>-->
 	</mx:VDividedBox>
+	
+	<base:DiffContextMenuContainer id="container" width="50%" height="100%"/>
 
 </mx:HDividedBox>

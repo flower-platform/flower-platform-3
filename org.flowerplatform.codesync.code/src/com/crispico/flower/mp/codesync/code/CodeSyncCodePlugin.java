@@ -39,12 +39,29 @@ import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
+import com.crispico.flower.mp.codesync.code.adapter.AnnotationMemberModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.AnnotationModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.AnnotationValueModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.AttributeModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.ClassModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterAncestor;
+import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterLeft;
+import com.crispico.flower.mp.codesync.code.adapter.EnumConstantModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.ModifierModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.OperationModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.ParameterModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.StringModelAdapter;
 import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
 import com.crispico.flower.mp.model.astcache.code.Annotation;
+import com.crispico.flower.mp.model.astcache.code.AnnotationMember;
 import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
+import com.crispico.flower.mp.model.astcache.code.Attribute;
 import com.crispico.flower.mp.model.astcache.code.Class;
+import com.crispico.flower.mp.model.astcache.code.EnumConstant;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.ModifiableElement;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
@@ -220,10 +237,11 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel) {
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
-		if (editableResource == null) {
-			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
-		}
+		CodeSyncEditableResource editableResource = //(CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
+//		if (editableResource == null) {
+//			editableResource = 
+			(CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+//		}
 //		CodeSyncEditableResource editableResource = new CodeSyncEditableResource();
 	
 		Match match = new Match();
@@ -243,24 +261,21 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		// right - AST
 		ModelAdapterFactory astModelAdapterFactory = modelAdapterFactoryProvider.getFactories().get(technology);
 		Resource aceResource = getAstCache(project);
-		CodeSyncElementFeatureProvider featureProvider = modelAdapterFactoryProvider.getFeatureProviders().get(technology);
 		
 		// ancestor - CodeSyncElements
-		ModelAdapterFactory codeSyncElementModelAdapterFactoryAncestor = new ModelAdapterFactory();
+		ModelAdapterFactory codeSyncElementModelAdapterFactoryAncestor = new CodeSyncModelAdapterFactory(astModelAdapterFactory, null, false);
 		CodeSyncElementModelAdapterAncestor ancestor = new CodeSyncElementModelAdapterAncestor();
-		ancestor.setFeatureProvider(featureProvider);
+		ancestor.setModelAdapterFactory(codeSyncElementModelAdapterFactoryAncestor);
 		ancestor.setEObjectConverter(astModelAdapterFactory);
-		codeSyncElementModelAdapterFactoryAncestor.addModelAdapter(EObject.class, ancestor);
-		codeSyncElementModelAdapterFactoryAncestor.addModelAdapter(String.class, new StringModelAdapter(codeSyncElementModelAdapterFactoryAncestor));
+		codeSyncElementModelAdapterFactoryAncestor.addModelAdapter(CodeSyncElement.class, ancestor);
 		
 		// left - CodeSyncElements
-		ModelAdapterFactory codeSyncElementModelAdapterFactoryLeft = new ModelAdapterFactory();
+		ModelAdapterFactory codeSyncElementModelAdapterFactoryLeft = new CodeSyncModelAdapterFactory(astModelAdapterFactory, aceResource, true);
 		CodeSyncElementModelAdapterLeft left = new CodeSyncElementModelAdapterLeft();
-		left.setFeatureProvider(featureProvider);
+		left.setModelAdapterFactory(codeSyncElementModelAdapterFactoryLeft);
 		left.setEObjectConverter(astModelAdapterFactory);
 		left.setResource(aceResource);
-		codeSyncElementModelAdapterFactoryLeft.addModelAdapter(EObject.class, left);
-		codeSyncElementModelAdapterFactoryLeft.addModelAdapter(String.class, new StringModelAdapter(codeSyncElementModelAdapterFactoryLeft));
+		codeSyncElementModelAdapterFactoryLeft.addModelAdapter(CodeSyncElement.class, left);
 		
 		match.setEditableResource(editableResource);
 		editableResource.setMatch(match);

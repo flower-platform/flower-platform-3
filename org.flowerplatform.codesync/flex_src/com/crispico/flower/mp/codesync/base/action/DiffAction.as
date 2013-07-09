@@ -1,8 +1,9 @@
 package com.crispico.flower.mp.codesync.base.action {
+	
 	import com.crispico.flower.flexdiagram.action.BaseAction;
 	import com.crispico.flower.mp.codesync.base.DiffTree;
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
-	import com.crispico.flower.mp.codesync.base.communication.DiffTreeStatefulClient;
+	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorStatefulClient;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -10,11 +11,11 @@ package com.crispico.flower.mp.codesync.base.action {
 		
 		private var diffActionEntry:DiffActionEntry;
 		
-		public var statefulClient:DiffTreeStatefulClient;
+		public var statefulClient:CodeSyncEditorStatefulClient;
 		
 		public function DiffAction(diffActionEntry:DiffActionEntry, tree:DiffTree) {
 			this.diffActionEntry = diffActionEntry;
-			this.statefulClient = DiffTreeStatefulClient(tree.statefulClient);
+			this.statefulClient = tree.codeSyncEditorStatefulClient;
 		}
 		
 		public override function run(selectedEditParts:ArrayCollection):void {

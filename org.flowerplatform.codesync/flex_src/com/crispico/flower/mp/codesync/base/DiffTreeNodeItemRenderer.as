@@ -1,47 +1,48 @@
 package com.crispico.flower.mp.codesync.base {
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
 	
-	import temp.tree.TreeNodeItemRenderer;
-
-	public class DiffTreeNodeItemRenderer extends TreeNodeItemRenderer {
+	import org.flowerplatform.communication.tree.GenericTreeItemRenderer;
+	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
+	
+	public class DiffTreeNodeItemRenderer extends GenericTreeItemRenderer {
 		
 		protected override function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
 
-			if (!(data is DiffTreeNode))
+			if (!(HierarchicalModelWrapper(data).treeNode is DiffTreeNode))
 				return;
 
 			const alpha:Number = 1;
 
-			var diffTreeNode:DiffTreeNode = DiffTreeNode(data);
+			var diffTreeNode:DiffTreeNode = DiffTreeNode(HierarchicalModelWrapper(data).treeNode);
 			
 			graphics.clear();
 			graphics.lineStyle(NaN);
 
 			graphics.beginFill(diffTreeNode.topLeftColor, alpha);
-			graphics.drawRect(label.x, 0, label.measuredWidth / 2, unscaledHeight / 2);
+			graphics.drawRect(labelDisplay.x, 0, labelDisplay.textWidth / 2, unscaledHeight / 2);
 
 			graphics.beginFill(diffTreeNode.bottomLeftColor, alpha);
-			graphics.drawRect(label.x, unscaledHeight / 2, label.measuredWidth / 2, unscaledHeight / 2);
+			graphics.drawRect(labelDisplay.x, unscaledHeight / 2, labelDisplay.textWidth / 2, unscaledHeight / 2);
 			
 			graphics.beginFill(diffTreeNode.topRightColor, alpha);
-			graphics.drawRect(label.x + label.measuredWidth / 2, 0, label.measuredWidth / 2, unscaledHeight / 2);
+			graphics.drawRect(labelDisplay.x + labelDisplay.textWidth / 2, 0, labelDisplay.textWidth / 2, unscaledHeight / 2);
 			
 			graphics.beginFill(diffTreeNode.bottomRightColor, alpha);
-			graphics.drawRect(label.x + label.measuredWidth / 2, unscaledHeight / 2, label.measuredWidth / 2, unscaledHeight / 2);
+			graphics.drawRect(labelDisplay.x + labelDisplay.textWidth / 2, unscaledHeight / 2, labelDisplay.textWidth / 2, unscaledHeight / 2);
 			
 			graphics.lineStyle(1, 0);
 			graphics.beginFill(0xFFFFFF, 0);
-			graphics.drawRect(label.x, 0, label.measuredWidth, unscaledHeight);
+			graphics.drawRect(labelDisplay.x, 0, labelDisplay.textWidth, unscaledHeight);
 			
 			if (diffTreeNode.crossColor < 0xFFFFFF) {
 				graphics.lineStyle(1, diffTreeNode.crossColor);
 				
-				graphics.moveTo(label.x, 0);
-				graphics.lineTo(label.x + label.measuredWidth, unscaledHeight);
+				graphics.moveTo(labelDisplay.x, 0);
+				graphics.lineTo(labelDisplay.x + labelDisplay.textWidth, unscaledHeight);
 	
-				graphics.moveTo(label.x, unscaledHeight);
-				graphics.lineTo(label.x + label.measuredWidth, 0);
+				graphics.moveTo(labelDisplay.x, unscaledHeight);
+				graphics.lineTo(labelDisplay.x + labelDisplay.textWidth, 0);
 			}
 		}
 	}

@@ -1,10 +1,11 @@
-package com.crispico.flower.mp.codesync.code.java;
+package com.crispico.flower.mp.codesync.code.java.adapter;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration;
 
+import com.crispico.flower.mp.codesync.code.CodeSyncElementTypeConstants;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -15,7 +16,16 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavaAnnotationTypeMemberDeclarationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	public final String ANNOTATION_MEMBER = "AnnotationMember";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<?> getFeatures(Object element) {
+		List features = super.getFeatures(element);
+		features.add(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+		features.add(AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
+		features.add(AstCacheCodePackage.eINSTANCE.getTypedElement_Type());
+		features.add(AstCacheCodePackage.eINSTANCE.getAnnotationMember_DefaultValue());
+		return features;
+	}
 	
 	@Override
 	public Object getMatchKey(Object element) {
@@ -28,7 +38,7 @@ public class JavaAnnotationTypeMemberDeclarationModelAdapter extends JavaAbstrac
 			return getMatchKey(element);
 		}
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return ANNOTATION_MEMBER;
+			return CodeSyncElementTypeConstants.ANNOTATION_MEMBER;
 		}
 		if (AstCacheCodePackage.eINSTANCE.getAnnotationMember_DefaultValue().equals(feature)) {
 			return getStringFromExpression(getAnnotationMember(element).getDefault());

@@ -5,14 +5,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
-import org.flowerplatform.communication.service.ServiceRegistry;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
-import org.flowerplatform.communication.temp.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.GenericTreeContext;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 
@@ -57,29 +57,46 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 	}
 
 	@Override
-	public String getLabelForLog(Object node) {
+	public String getLabelForLog(Object node, String nodeType) {
 		return node.toString();
 	}
-
-	@Override
-	public Collection<?> getChildrenForNode(Object node, GenericTreeContext context) {
-		IModelAdapterUI adapter = getModelAdapterUI(node, getTreeTypeFromContext(context), getProjectPathFromContext(context));
-		return adapter.getChildren(node);
+	
+	public void openNode(StatefulServiceInvocationContext context, DiffTreeNode node, Map<Object, Object> treeContext) {
+		openNode(context, getPathForNode(node), treeContext);
+	}
+	
+	private List<PathFragment> getPathForNode(DiffTreeNode node) {
+		List<PathFragment> path = new ArrayList<PathFragment>();
+		TreeNode crtNode = node;
+		while (crtNode != null) {
+			path.add(0, crtNode.getPathFragment());
+			crtNode = crtNode.getParent();
+		}
+		return path;
 	}
 
 	@Override
-	public Boolean nodeHasChildren(Object node, GenericTreeContext context) {
+	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
+		IModelAdapterUI adapter = getModelAdapterUI(node, getTreeTypeFromContext(context), getProjectPathFromContext(context));
+		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
+		for (Object child : adapter.getChildren(node)) {
+			result.add(new Pair<Object, String>(child, String.valueOf(getTreeTypeFromContext(context))));
+		}
+		return result;
+	}
+
+	@Override
+	public Boolean nodeHasChildren(Object node, TreeNode treeNode, GenericTreeContext context) {
 		IModelAdapterUI adapter = getModelAdapterUI(node, getTreeTypeFromContext(context), getProjectPathFromContext(context));
 		return adapter.hasChildren(node);
 	}
 
-	@Override
-	public Object getParent(Object node, GenericTreeContext context) {
-		if (node instanceof Match) {
-			return ((Match) node).getParentMatch();
-		}
-		return null;
-	}
+//	public Object getParent(Object node, GenericTreeContext context) {
+//		if (node instanceof Match) {
+//			return ((Match) node).getParentMatch();
+//		}
+//		return null;
+//	}
 
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
@@ -93,6 +110,14 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 	}
 
 	@Override
+	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) {
+		Object node = null;
+		for (PathFragment fragment : fullPath) {
+			node = getNodeByPathFragment(node, fragment, context);
+		}
+		return node;
+	}
+
 	public Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context) {
 		Object node = null;
 		
@@ -117,7 +142,7 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 		} else {
 			IModelAdapterUI adapter = getModelAdapterUI(parent, getTreeTypeFromContext(context), getProjectPathFromContext(context));
 			for (Object child : adapter.getChildren(parent)) {
-				if (getPathFragmentForNode(child, context).equals(pathFragment)) {
+				if (getPathFragmentForNode(child, null, context).equals(pathFragment)) {
 					node = child;
 					break;
 				}
@@ -128,14 +153,9 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 	}
 
 	@Override
-	public PathFragment getPathFragmentForNode(Object node) {
-		throw new UnsupportedOperationException("Cannot provide PathFragment without tree context!");
-	}
-	
-	@Override
-	public PathFragment getPathFragmentForNode(Object node, GenericTreeContext context) {
+	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
 		String name = getModelAdapterUI(node, getTreeTypeFromContext(context), getProjectPathFromContext(context)).getLabel(node);
-		return new PathFragment(name, "");
+		return new PathFragment(name, String.valueOf(getTreeTypeFromContext(context)));
 	}
 	
 	private IModelAdapterUI getModelAdapterUI(Object modelElement, int treeType, String path) {
@@ -246,11 +266,20 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 	}
 	
 	private void dispatchDiffTreeNodeUpdate(StatefulServiceInvocationContext context, Object source, Map<Object, Object> treeContext) {
-		List<PathFragment> path = getPathForNode(source, getTreeContext(context.getCommunicationChannel(), context.getStatefulClientId()));
+		List<PathFragment> path = getPathForNode(source, null, getTreeContext(context.getCommunicationChannel(), context.getStatefulClientId()));
 		TreeNode node = openNodeInternal(context.getCommunicationChannel(), context.getStatefulClientId(), path.size() > 0 ? path : null, treeContext);
 		updateNode(context.getCommunicationChannel(), context.getStatefulClientId(), path, node, false, false, false, true);
 	}
 	
+	@Override
+	protected void updateNode(CommunicationChannel channel, String statefulClientId, List<PathFragment> path, TreeNode treeNode, boolean expandNode, boolean colapseNode, boolean selectNode, boolean isContentUpdate) {
+		invokeClientMethod(
+				channel, 
+				statefulClientId, 
+				"updateNode", 
+				new Object[] {Integer.parseInt(path.get(0).getType()), path, treeNode, expandNode, colapseNode, selectNode});		
+	}
+
 	private List<PathFragment> getFullPath(TreeNode node) {
 		List<PathFragment> path = new ArrayList<PathFragment>();
 		while (node != null && node.getPathFragment() != null) {

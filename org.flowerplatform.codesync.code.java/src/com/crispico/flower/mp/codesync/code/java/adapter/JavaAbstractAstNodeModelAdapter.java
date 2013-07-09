@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code.java;
+package com.crispico.flower.mp.codesync.code.java.adapter;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,8 +25,7 @@ import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
-import com.crispico.flower.mp.codesync.code.AstModelElementAdapter;
-import com.crispico.flower.mp.codesync.code.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -37,11 +36,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public abstract class JavaAbstractAstNodeModelAdapter extends AstModelElementAdapter {
 
-	public JavaAbstractAstNodeModelAdapter() {
-		super();
-		common = new CodeSyncElementFeatureProvider();
-	}
-	
 	@Override
 	public boolean hasChildren(Object modelElement) {
 		return getChildren(modelElement).size() > 0;

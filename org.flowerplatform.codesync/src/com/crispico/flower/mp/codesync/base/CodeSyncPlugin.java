@@ -43,7 +43,6 @@ import com.crispico.flower.mp.codesync.base.communication.DiffTreeStatefulServic
 		codeSyncAlgorithmRunner = new ComposedCodeSyncAlgorithmRunner();
 		
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(DiffTreeStatefulService.SERVICE_ID, new DiffTreeStatefulService());
 	}
 	
 	
