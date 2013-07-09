@@ -6,6 +6,8 @@
     <classEntry path="org.flowerplatform.web.common.explorer.ExplorerTreeList"/>
     <classEntry path="org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction"/>
     <classEntry path="org.flowerplatform.web.common.remote.InitializeNodeTypeCategoryToNodeTypesMapClientCommand"/>
+    <classEntry path="org.flowerplatform.web.common.projects.properties.PropertiesView"/>
+    <classEntry path="org.flowerplatform.web.common.projects.ProjectPropertiesAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

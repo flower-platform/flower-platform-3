@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="org.flowerplatform.flexutil.propertypage.IPropertyPage, org.flowerplatform.flexutil.dialog.IDialogResultHandler"
+		 creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.editor.java.JavaEditorPlugin;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			
+			private var selectedNode:TreeNode;
+			
+			private var lastBtnPressed:Button;
+			
+			[Bindable]
+			private var sourceFolders:ArrayList = new ArrayList();
+			[Bindable]
+			private var projects:ArrayList = new ArrayList();
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				JavaEditorPlugin.getInstance().javaProjectPropertyPageService.hasJavaNature(selectedNode, this, hasJavaNatureCallbackHandler);
+				currentState = "source";
+			}
+			
+			private function hasJavaNatureCallbackHandler(result:Boolean):void {
+				cbNature.selected = result;
+			}
+			
+			protected function get buttonBarDataProvider():IList {
+				var dp:Array = new Array();
+				dp.push(
+					{ label : "Sources", icon : getResourceUrl("images/folder.gif") },
+					{ label : "Projects", icon : getResourceUrl("images/project.gif") },
+					{ label : "Libraries", icon : getResourceUrl("images/project.gif") });
+				return new ArrayList(dp);
+			}
+			
+			public function getResourceUrl(resource:String):String {
+				return FlexUtilGlobals.getInstance().createAbsoluteUrl(
+					JavaEditorPlugin.getInstance().getResourceUrl(resource));
+			}
+			
+			public function setSelectedNode(value:Object):void {
+				selectedNode = TreeNode(value);
+			}
+						
+			public function cancelHandler():void {
+				
+			}
+			
+			public function okHandler():void {
+				
+			}
+			
+			protected function buttonBar_clickHandler(event:MouseEvent):void {
+				switch (buttonBar.selectedIndex) {
+					case 0:
+						currentState = "source";
+						break;
+					case 1:
+						currentState = "projects";
+						break;
+					case 2:
+						currentState = "libraries";
+						break;
+				}
+			}	
+			
+			protected function cbNature_valueCommitHandler(event:FlexEvent):void {
+				if (sourceArea != null) {
+					sourceArea.enabled = cbNature.selected;
+				}
+				if (projectsArea != null) {
+					projectsArea.enabled = cbNature.selected;
+				}
+				if (libraryArea != null) {
+					libraryArea.enabled = cbNature.selected;
+				}
+				buttonBar.enabled = cbNature.selected;
+			
+				JavaEditorPlugin.getInstance().javaProjectPropertyPageService.setJavaNature(selectedNode, this, setJavaNatureCallbackHandler);			
+			}
+			
+			private function setJavaNatureCallbackHandler(value:Boolean):void {
+				if (value) {
+					if (cbNature.selected) {
+						JavaEditorPlugin.getInstance().javaProjectPropertyPageService.getClasspathEntries(selectedNode, this, getClasspathEntriesCallbackHandler);
+					}	
+				}
+			}
+			
+			private function getClasspathEntriesCallbackHandler(value:Object):void {
+				
+			}
+			
+			protected function btnAddSource_clickHandler(event:MouseEvent):void {
+				lastBtnPressed = btnAddSource;
+				var view:EditSourceBuildPathView = new EditSourceBuildPathView();
+				view.setResultHandler(this);
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContent(view)
+					.show();
+			}
+			
+			public function handleDialogResult(result:Object):void {
+				if (lastBtnPressed == btnAddSource) {
+					sourceFolders.addItem(result);	
+				} else if (lastBtnPressed == btnEditSource) {
+					sourceFolders.setItemAt(result, lstSource.selectedIndex);
+				} else if (lastBtnPressed == btnAddProject) {
+					projects.removeAll();
+					projects.addAll(ArrayList(result));
+				}
+			}
+						
+			protected function btnEditSource_clickHandler(event:MouseEvent):void {
+				lastBtnPressed = btnEditSource;
+				var view:EditSourceBuildPathView = new EditSourceBuildPathView();
+				view.setResultHandler(this);
+				view.currentSource = String(lstSource.selectedItem);
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContent(view)
+					.show();
+			}
+			
+			protected function btnAddProject_clickHandler(event:MouseEvent):void {
+				var projects:ArrayCollection = selectedNode.parent.children;
+				var list:ArrayList = new ArrayList();
+				if (projects.length > 1) {
+					for each (var node:TreeNode in projects) {
+						if (node != selectedNode) {
+							list.addItem({name: node.label, path: node.getPathForNode(true)});
+						}
+					}
+				}
+				lastBtnPressed = btnAddProject;
+				var view:AddProjectBuildPathView = new AddProjectBuildPathView();
+				view.setResultHandler(this);
+				view.projects = list;
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContent(view)
+					.setWidth(300)
+					.setHeight(200)
+					.show();
+			}
+			
+		]]>
+	</fx:Script>
+	<s:states>		
+		<s:State name="source"/>
+		<s:State name="projects"/>
+		<s:State name="libraries"/>		
+	</s:states>
+	
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+	
+	<s:CheckBox label="Enable Java Project Type" id="cbNature" valueCommit="cbNature_valueCommitHandler(event)"/>
+	
+	<s:Line width="100%"/>
+	
+	<s:ButtonBar id="buttonBar" labelField="label" 
+				 dataProvider="{buttonBarDataProvider}"
+				 click="buttonBar_clickHandler(event)"
+				 selectedIndex="0" width="100%"/>
+		
+	<s:HGroup id="sourceArea" width="100%" height="100%" includeIn="source">
+		<s:List id="lstSource" width="100%" height="100%" dataProvider="{sourceFolders}" />
+		<s:VGroup gap="2">
+			<s:Button id="btnAddSource" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
+					 click="btnAddSource_clickHandler(event)" />			
+			<s:Button id="btnEditSource" width="70" label="{CommonPlugin.getInstance().getMessage('edit')}" 
+					  click="btnEditSource_clickHandler(event)"
+					  enabled="{lstSource.selectedItem != null}" />
+			<s:Button id="btnDeleteSource" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
+					  enabled="{lstSource.selectedItem != null}"/>
+		</s:VGroup>
+	</s:HGroup>
+	<s:HGroup id="projectsArea" width="100%" height="100%" includeIn="projects">
+		<s:List id="lstProjects" width="100%" height="100%" dataProvider="{projects}" labelField="name"/>
+		<s:VGroup gap="2">
+			<s:Button id="btnAddProject" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
+					 click="btnAddProject_clickHandler(event)" />
+			<s:Button id="btnDeleteProject" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
+					  enabled="{lstProjects.selectedItem != null}"/>
+		</s:VGroup>
+	</s:HGroup>
+	<s:HGroup id="libraryArea" width="100%" height="100%" includeIn="libraries">
+		<s:List id="lstLibraries" width="100%" height="100%"  />
+		<s:VGroup gap="2">
+			<s:Button id="btnAddLibrary" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
+					  />			
+			<s:Button id="btnDeleteLibrary" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
+					  enabled="{lstLibraries.selectedItem != null}"/>
+		</s:VGroup>
+	</s:HGroup>
+</s:Group>

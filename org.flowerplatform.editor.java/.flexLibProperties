@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="org.flowerplatform.editor.java.JavaEditorPlugin"/>
+    <classEntry path="org.flowerplatform.editor.java.propertypage.JavaPropertyPage"/>
+    <classEntry path="org.flowerplatform.editor.java.propertypage.JavaPropertyPageProvider"/>
+    <classEntry path="org.flowerplatform.editor.java.propertypage.AddProjectBuildPathView"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
