@@ -5,9 +5,9 @@
 # use *.override-local file.
 ########################################################################
 
-database.persistence-unit = dev-hsql-in-memory
+#database.persistence-unit = dev-hsql-in-memory
 #database.persistence-unit = dev-postgresql-with-drop-create
-#database.persistence-unit = production
+database.persistence-unit = production
 
 database.init-with-test-data = internal
 #database.init-with-test-data = true
@@ -20,7 +20,7 @@ server.url = http://localhost:8080
 users.email-unique = false
 users.min-password-length = 1
 
-git.git-install-dir = D:/Program Files/Git/
+git.git-install-dir = D:/Programs/Git/
 
 ########################################################################
 # Properties overrides; global / for all team / commited on SVN: END

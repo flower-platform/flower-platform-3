@@ -2,21 +2,28 @@ package org.flowerplatform.editor.java.propertypage.remote;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.ClasspathEntry.AssertionFailedException;
 import org.eclipse.jdt.internal.core.JavaProject;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -103,18 +110,64 @@ public class JavaProjectPropertyPageService {
 		IProject project = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).b;
 		IJavaProject javaProject = JavaCore.create(project);
 	
+		List<String> srcFolders = new ArrayList<String>();
+		List<String> projects = new ArrayList<String>();
+		List<String> libraries = new ArrayList<String>();
 		try {
 			if (!project.getFile(IJavaProject.CLASSPATH_FILE_NAME).exists()) {
 				return null;
 			}
+			@SuppressWarnings("restriction")
 			IClasspathEntry[][] entries = ((JavaProject) javaProject).readFileEntriesWithException(null);
 			for (IClasspathEntry entry : entries[0]) {
-				entry.getEntryKind();
+				if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+					srcFolders.add(entry.getPath().makeRelativeTo(project.getFullPath()).toFile().getPath());
+				} else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
+					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment()));
+					File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(file).a;
+					projects.add(CommonPlugin.getInstance().getPathRelativeToFile(file, wd));
+				} else if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+					IFile resource = ResourcesPlugin.getWorkspace().getRoot().getFile(entry.getPath());
+					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(resource);
+					libraries.add(CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file));
+				}
 			}
-		} catch (AssertionFailedException | CoreException | IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (CoreException | IOException e) {
+			logger.error("Exception thrown while getting java classpath entries for {}", project.getName(), e);
+			return null;
 		}
-		return null;	
+		return new Object[] {srcFolders, projects, libraries};	
 	}
+	
+	public boolean setClasspathEntries(ServiceInvocationContext context, List<PathFragment> path, List<String> srcFolders, List<List<PathFragment>> projects, List<String> libraries) {
+		@SuppressWarnings("unchecked")
+		Pair<File, String> node = (Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);
+		File projectFile = node.a;
+		
+		IProject project = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).b;
+		IJavaProject javaProject = JavaCore.create(project);
+		
+		List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
+		for (String srcFolder : srcFolders) {
+			entries.add(JavaCore.newSourceEntry(project.getFullPath().append(srcFolder)));
+		}
+		for (List<PathFragment> projectPath : projects) {			
+			@SuppressWarnings("unchecked")
+			Pair<File, String> projectNode = (Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(projectPath, null);
+			entries.add(JavaCore.newProjectEntry(ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectNode.a).b.getFullPath()));
+		}
+		File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).a;
+		for (String library : libraries) {			
+			//entries.add(JavaCore.newLibraryEntry(CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(new File(wd, library))), null, null));
+		}
+		try {
+			javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), new NullProgressMonitor());
+		} catch (JavaModelException e) {
+			logger.error("Exception thrown while setting java classpath entries for {}", project.getName(), e);
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

@@ -221,6 +221,27 @@ public class ProjectsService {
 		return new Pair<File, Boolean>(null, false);
 	}
 	
+	public File getFileFromProjectWrapperResource(IResource resource) {
+		IProject projectWrapper = resource.getProject();
+		// I don't use String.split, because it takes a regex, which means I
+		// should have another constant,
+		// because the current separator has regex special chars
+		StringTokenizer st = new StringTokenizer(projectWrapper.getName(), PROJECT_WRAPPER_NAME_SEPARATOR);
+		if (st.countTokens() < 3) {
+			logger.warn("Project = {} is invalid. We were expecting at minimum tree tokens (i.e. org/work_dir/proj), but got only = {}",
+					projectWrapper, st.countTokens());
+			return null;
+		}
+
+		// we begin directly with something like org/work_dir
+		// at the end of the iteration, this will be the file of the project
+		File currentFile = new File(CommonPlugin.getInstance().getWorkspaceRoot(), st.nextToken() + "/" + st.nextToken());
+		do {
+			currentFile = new File(currentFile, st.nextToken());
+		} while (st.hasMoreTokens());
+		return new File(currentFile, resource.getProjectRelativePath().toFile().getPath());
+	}
+	
 	@RemoteInvocation
 	public void markAsWorkingDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")

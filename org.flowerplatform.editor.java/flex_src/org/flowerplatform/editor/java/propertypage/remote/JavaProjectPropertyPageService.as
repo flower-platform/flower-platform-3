@@ -10,7 +10,7 @@ package org.flowerplatform.editor.java.propertypage.remote {
 	
 		public static const SERVICE_ID:String = "javaProjectPropertyPageService";
 		
-		private function convertSelection(selection:ArrayList):ArrayCollection {
+		private function convertSelection(selection:ArrayCollection):ArrayCollection {
 			var array:ArrayCollection = new ArrayCollection();
 			for (var i:int=0; i <selection.length; i++) {
 				array.addItem(TreeNode(selection.getItemAt(i)).getPathForNode(true));
@@ -45,6 +45,14 @@ package org.flowerplatform.editor.java.propertypage.remote {
 			invokeServiceMethod(
 				"getClasspathEntries", 
 				[selectedNode.getPathForNode(true)], 
+				resultCallbackObject, resultCallbackFunction);	
+		}
+		
+		public function setClasspathEntries(selectedNode:TreeNode, srcFolders:ArrayCollection, projects:ArrayCollection, libraries:ArrayCollection,
+											resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {			
+			invokeServiceMethod(
+				"setClasspathEntries", 
+				[selectedNode.getPathForNode(true), srcFolders, projects, libraries], 
 				resultCallbackObject, resultCallbackFunction);	
 		}
 	}

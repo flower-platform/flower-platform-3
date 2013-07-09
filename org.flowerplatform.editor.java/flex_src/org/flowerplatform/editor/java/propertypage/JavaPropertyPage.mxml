@@ -10,7 +10,6 @@
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
-			import mx.core.UIComponent;
 			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.common.CommonPlugin;
@@ -23,17 +22,21 @@
 			private var lastBtnPressed:Button;
 			
 			[Bindable]
-			private var sourceFolders:ArrayList = new ArrayList();
+			private var sourceFolders:ArrayCollection = new ArrayCollection();
 			[Bindable]
-			private var projects:ArrayList = new ArrayList();
+			private var projects:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var libraries:ArrayCollection = new ArrayCollection();
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
-				JavaEditorPlugin.getInstance().javaProjectPropertyPageService.hasJavaNature(selectedNode, this, hasJavaNatureCallbackHandler);
+				JavaEditorPlugin.getInstance().javaProjectPropertyPageService.
+					hasJavaNature(selectedNode, this, hasJavaNatureCallbackHandler);
 				currentState = "source";
 			}
 			
 			private function hasJavaNatureCallbackHandler(result:Boolean):void {
 				cbNature.selected = result;
+				cbNature_valueCommitHandler();
 			}
 			
 			protected function get buttonBarDataProvider():IList {
@@ -59,7 +62,13 @@
 			}
 			
 			public function okHandler():void {
-				
+				if (cbNature.selected) {
+					var paths:ArrayCollection = new ArrayCollection();
+					for each (var node:Object in projects) {
+						paths.addItem(node.path);
+					}
+					JavaEditorPlugin.getInstance().javaProjectPropertyPageService.setClasspathEntries(selectedNode, sourceFolders, paths, libraries, null, null);
+				}
 			}
 			
 			protected function buttonBar_clickHandler(event:MouseEvent):void {
@@ -76,7 +85,7 @@
 				}
 			}	
 			
-			protected function cbNature_valueCommitHandler(event:FlexEvent):void {
+			protected function cbNature_valueCommitHandler(event:Event = null):void {
 				if (sourceArea != null) {
 					sourceArea.enabled = cbNature.selected;
 				}
@@ -88,18 +97,38 @@
 				}
 				buttonBar.enabled = cbNature.selected;
 			
-				JavaEditorPlugin.getInstance().javaProjectPropertyPageService.setJavaNature(selectedNode, this, setJavaNatureCallbackHandler);			
+				if (event != null) {
+					JavaEditorPlugin.getInstance().javaProjectPropertyPageService.
+						setJavaNature(selectedNode, this, setJavaNatureCallbackHandler);	
+				} else {
+					setJavaNatureCallbackHandler(true);
+				}
 			}
 			
 			private function setJavaNatureCallbackHandler(value:Boolean):void {
 				if (value) {
 					if (cbNature.selected) {
-						JavaEditorPlugin.getInstance().javaProjectPropertyPageService.getClasspathEntries(selectedNode, this, getClasspathEntriesCallbackHandler);
+						JavaEditorPlugin.getInstance().javaProjectPropertyPageService.
+							getClasspathEntries(selectedNode, this, getClasspathEntriesCallbackHandler);
 					}	
 				}
 			}
 			
 			private function getClasspathEntriesCallbackHandler(value:Object):void {
+				if (value != null) {
+					sourceFolders = ArrayCollection(value[0]);
+					var names:ArrayCollection = ArrayCollection(value[1]);
+					var nodes:ArrayCollection = selectedNode.parent.children;
+					var list:ArrayList = new ArrayList();
+					if (nodes.length > 1) {
+						for each (var node:TreeNode in nodes) {
+							if (node != selectedNode && names.contains(node.pathFragment.name)) {
+								projects.addItem({name: node.label, path: node.getPathForNode(true)});
+							}
+						}
+					}
+					libraries = ArrayCollection(value[2]);
+				}
 				
 			}
 			
@@ -120,6 +149,8 @@
 				} else if (lastBtnPressed == btnAddProject) {
 					projects.removeAll();
 					projects.addAll(ArrayList(result));
+				} else if (lastBtnPressed == btnAddLibrary) {
+					libraries.addItem(TreeNode(result).getPath());
 				}
 			}
 						
@@ -130,6 +161,8 @@
 				view.currentSource = String(lstSource.selectedItem);
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setPopupContent(view)
+					.setWidth(300)
+					.setHeight(200)
 					.show();
 			}
 			
@@ -149,8 +182,30 @@
 				view.projects = list;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setPopupContent(view)
-					.setWidth(300)
-					.setHeight(200)
+					.setWidth(400)
+					.setHeight(300)
+					.show();
+			}
+			
+			protected function btnDeleteSource_clickHandler(event:MouseEvent):void {
+				lastBtnPressed = btnDeleteSource;
+				sourceFolders.removeItemAt(lstSource.selectedIndex);
+			}
+			
+			protected function btnDeleteProject_clickHandler(event:MouseEvent):void {
+				lastBtnPressed = btnDeleteProject;
+				projects.removeItemAt(lstProjects.selectedIndex);
+			}
+			
+			protected function btnAddLibrary_clickHandler(event:MouseEvent):void {
+				lastBtnPressed = btnAddLibrary;
+				var view:AddLibraryBuildPathView = new AddLibraryBuildPathView();
+				view.setResultHandler(this);
+				view.node = selectedNode.parent;
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContent(view)
+					.setWidth(400)
+					.setHeight(300)
 					.show();
 			}
 			
@@ -166,7 +221,7 @@
 		<s:VerticalLayout />
 	</s:layout>
 	
-	<s:CheckBox label="Enable Java Project Type" id="cbNature" valueCommit="cbNature_valueCommitHandler(event)"/>
+	<s:CheckBox label="Enable Java Project Type" id="cbNature" change="cbNature_valueCommitHandler(event)"/>
 	
 	<s:Line width="100%"/>
 	
@@ -176,7 +231,32 @@
 				 selectedIndex="0" width="100%"/>
 		
 	<s:HGroup id="sourceArea" width="100%" height="100%" includeIn="source">
-		<s:List id="lstSource" width="100%" height="100%" dataProvider="{sourceFolders}" />
+		<s:List id="lstSource" width="100%" height="100%" dataProvider="{sourceFolders}" >
+			<s:itemRenderer>
+				<fx:Component>
+					
+					<s:IconItemRenderer iconFunction="getSourceFolderIcon" verticalAlign="middle" initialize="initializeHandler(event)">
+						<fx:Script>
+							<![CDATA[
+								import mx.events.FlexEvent;
+								
+								import org.flowerplatform.flexutil.FlexUtilGlobals;
+								
+								public function getSourceFolderIcon(item:Object):String {
+									return JavaPropertyPage(this.outerDocument).getResourceUrl('images/folder.gif');
+								}
+								
+								protected function initializeHandler(event:FlexEvent):void {
+									if (!FlexUtilGlobals.getInstance().isMobile) {
+										this.minHeight = 22;
+									}
+								}
+							]]>
+						</fx:Script>
+					</s:IconItemRenderer>
+				</fx:Component>
+			</s:itemRenderer>
+		</s:List>
 		<s:VGroup gap="2">
 			<s:Button id="btnAddSource" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
 					 click="btnAddSource_clickHandler(event)" />			
@@ -184,23 +264,48 @@
 					  click="btnEditSource_clickHandler(event)"
 					  enabled="{lstSource.selectedItem != null}" />
 			<s:Button id="btnDeleteSource" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
+					  click="btnDeleteSource_clickHandler(event)"
 					  enabled="{lstSource.selectedItem != null}"/>
 		</s:VGroup>
 	</s:HGroup>
 	<s:HGroup id="projectsArea" width="100%" height="100%" includeIn="projects">
-		<s:List id="lstProjects" width="100%" height="100%" dataProvider="{projects}" labelField="name"/>
+		<s:List id="lstProjects" width="100%" height="100%" dataProvider="{projects}" labelField="name" >
+			<s:itemRenderer>
+				<fx:Component>
+					<s:IconItemRenderer iconFunction="getProjectIcon" verticalAlign="middle" initialize="initializeHandler(event)">
+						<fx:Script>
+							<![CDATA[
+								import mx.events.FlexEvent;								
+								import org.flowerplatform.flexutil.FlexUtilGlobals;
+								
+								public function getProjectIcon(item:Object):String {
+									return JavaPropertyPage(this.outerDocument).getResourceUrl('images/project.gif');
+								}
+								
+								protected function initializeHandler(event:FlexEvent):void {
+									if (!FlexUtilGlobals.getInstance().isMobile) {
+										this.minHeight = 22;
+									}
+								}								
+							]]>
+						</fx:Script>
+					</s:IconItemRenderer>
+				</fx:Component>
+			</s:itemRenderer>
+		</s:List>
 		<s:VGroup gap="2">
 			<s:Button id="btnAddProject" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
 					 click="btnAddProject_clickHandler(event)" />
 			<s:Button id="btnDeleteProject" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
+					  click="btnDeleteProject_clickHandler(event)"
 					  enabled="{lstProjects.selectedItem != null}"/>
 		</s:VGroup>
 	</s:HGroup>
 	<s:HGroup id="libraryArea" width="100%" height="100%" includeIn="libraries">
-		<s:List id="lstLibraries" width="100%" height="100%"  />
+		<s:List id="lstLibraries" width="100%" height="100%" dataProvider="{libraries}" labelField="label"  />
 		<s:VGroup gap="2">
 			<s:Button id="btnAddLibrary" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
-					  />			
+					  click="btnAddLibrary_clickHandler(event)"/>			
 			<s:Button id="btnDeleteLibrary" width="70" label="{CommonPlugin.getInstance().getMessage('delete')}" 
 					  enabled="{lstLibraries.selectedItem != null}"/>
 		</s:VGroup>
