@@ -25,13 +25,10 @@ package org.flowerplatform.flexdiagram.controller.model_extra_info {
 		}
 		
 		public function setRenderer(model:Object, extraInfo:Object, renderer:IVisualElement):void {
-			if (extraInfo == null) {
-				diagramShell.addInModelMapIfNecesssary(model, diagramShell.getControllerProvider(model));
-			}
 			if (renderer == null) {
-				diagramShell.modelToExtraInfoMap[model].renderer = NO_RENDERER_ASSOCIATED_MARKER;	
+				getDynamicObject(model).renderer = NO_RENDERER_ASSOCIATED_MARKER;	
 			} else {
-				diagramShell.modelToExtraInfoMap[model].renderer = renderer;
+				getDynamicObject(model).renderer = renderer;
 			}
 		}
 		
@@ -40,11 +37,18 @@ package org.flowerplatform.flexdiagram.controller.model_extra_info {
 		}	
 		
 		public function isSelected(model:Object):Boolean {
-			return diagramShell.modelToExtraInfoMap[model].selected;
+			return getDynamicObject(model).selected;
 		}
 		
 		public function setSelected(model:Object, value:Boolean):void {		
-			diagramShell.modelToExtraInfoMap[model].selected = value;
+			getDynamicObject(model).selected = value;
+		}
+		
+		public function getDynamicObject(model:Object):Object {
+			if (diagramShell.modelToExtraInfoMap[model] == null) {
+				diagramShell.addInModelMapIfNecesssary(model, diagramShell.getControllerProvider(model));
+			}
+			return diagramShell.modelToExtraInfoMap[model];
 		}
 		
 	}	

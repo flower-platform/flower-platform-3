@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application implements="org.flowerplatform.flexdiagram.samples.IModelHolder"
+			   xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   
+			   creationComplete="creationCompleteHandler(event)"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:samples="org.flowerplatform.flexdiagram.samples.*" xmlns:flexdiagram="org.flowerplatform.flexdiagram.*" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*" xmlns:infinitegroup="org.flowerplatform.flexdiagram.util.infinitegroup.*" xmlns:mindmap="org.flowerplatform.flexdiagram.samples.mindmap.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.samples.IModelHolder;
+			import org.flowerplatform.flexdiagram.samples.SamplesDiagramShell;
+			import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
+			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
+			
+			private var _rootModel:ParentAwareArrayList;
+			
+			[Bindable]
+			public function get rootModel():ParentAwareArrayList {
+				return _rootModel;
+			}
+			
+			public function set rootModel(value:ParentAwareArrayList):void {
+				_rootModel = value;				
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				populateRootModel();
+			}
+			
+			private function populateRootModel():void {
+				if (rootModel == null) {
+					rootModel = new ParentAwareArrayList(null);
+					rootModel.parent = rootModel;
+				}
+				
+				var model:MindMapModel = getMindMapModel(null);				
+				model.children.addItem(getMindMapModel(model));
+				model.children.addItem(getMindMapModel(model));
+				model.children.addItem(getMindMapModel(model));
+				rootModel.addItem(model);
+				
+				var child:MindMapModel = getMindMapModel(model);	
+				child.children.addItem(getMindMapModel(child));
+				child.children.addItem(getMindMapModel(child));
+				child.children.addItem(getMindMapModel(child));
+				child.children.addItem(getMindMapModel(child));
+				child.parent = model;
+				model.children.addItem(child);
+				
+				var child1:MindMapModel = getMindMapModel(model);				
+				child1.children.addItem(getMindMapModel(child1));
+				child1.parent = model;
+				model.children.addItem(child1);	
+			}
+			
+			private function getMindMapModel(parent:MindMapModel):MindMapModel {
+				var model:MindMapModel;
+				
+				model = new MindMapModel();
+				model.text = "MindMap" + (new Date()).time;
+				model.width = 150;
+				model.height = 40;
+				
+				model.parent = parent;
+								
+				return model;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<mindmap:MindMapDiagramShell id="diagramShell" diagramRenderer="{diagramRenderer}" rootModel="{rootModel}"/>
+		
+	</fx:Declarations>
+	
+	<infinitegroup:InfiniteScroller id="scroller" width="100%" height="100%" >
+		<renderer:DiagramRenderer id="diagramRenderer" viewPortRectOffsetTowardOutside="0" width="100%" height="100%">
+			
+		</renderer:DiagramRenderer>				
+	</infinitegroup:InfiniteScroller>			
+	
+</s:Application>
