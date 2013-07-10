@@ -15,13 +15,12 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.ClasspathEntry.AssertionFailedException;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
@@ -34,6 +33,9 @@ import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Cristina Constantinescu
+ */
 public class JavaProjectPropertyPageService {
 
 	private static final String SERVICE_ID = "javaProjectPropertyPageService";
@@ -106,14 +108,15 @@ public class JavaProjectPropertyPageService {
 		@SuppressWarnings("unchecked")
 		Pair<File, String> node = (Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);
 		File projectFile = node.a;
+		File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).a;
 		
 		IProject project = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).b;
 		IJavaProject javaProject = JavaCore.create(project);
-		File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).a;
-		
+				
 		List<String> srcFolders = new ArrayList<String>();
 		List<String> projects = new ArrayList<String>();
 		List<String> libraries = new ArrayList<String>();
+		
 		try {
 			if (!project.getFile(IJavaProject.CLASSPATH_FILE_NAME).exists()) {
 				return null;
@@ -126,7 +129,7 @@ public class JavaProjectPropertyPageService {
 				} else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
 					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment()));					
 					projects.add(CommonPlugin.getInstance().getPathRelativeToFile(file, wd));
-				} else if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
+				} else if (entry.getEntryKind() == IClasspathEntry.CPE_LIBRARY && entry.getContentKind() == IPackageFragmentRoot.K_BINARY) {
 					IFile resource = ResourcesPlugin.getWorkspace().getRoot().getFile(entry.getPath());
 					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(resource);
 					libraries.add(CommonPlugin.getInstance().getPathRelativeToFile(file, wd));
@@ -139,24 +142,22 @@ public class JavaProjectPropertyPageService {
 		return new Object[] {srcFolders, projects, libraries};	
 	}
 	
-	public boolean setClasspathEntries(ServiceInvocationContext context, List<PathFragment> path, List<String> srcFolders, List<List<PathFragment>> projects, List<String> libraries) {
+	public boolean setClasspathEntries(ServiceInvocationContext context, List<PathFragment> path, List<String> srcFolders, List<String> projects, List<String> libraries) {
 		@SuppressWarnings("unchecked")
 		Pair<File, String> node = (Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);
 		File projectFile = node.a;
 		
 		IProject project = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).b;
 		IJavaProject javaProject = JavaCore.create(project);
+		File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).a;
 		
 		List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
 		for (String srcFolder : srcFolders) {
 			entries.add(JavaCore.newSourceEntry(project.getFullPath().append(srcFolder)));
 		}
-		for (List<PathFragment> projectPath : projects) {			
-			@SuppressWarnings("unchecked")
-			Pair<File, String> projectNode = (Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(projectPath, null);
-			entries.add(JavaCore.newProjectEntry(ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectNode.a).b.getFullPath()));
-		}
-		File wd = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap().get(projectFile).a;
+		for (String projectName : projects) {		
+			entries.add(JavaCore.newProjectEntry(ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(wd, projectName)).getFullPath()));
+		}		
 		for (String library : libraries) {			
 			entries.add(JavaCore.newLibraryEntry(ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(wd, library)).getFullPath(), null, null));
 		}

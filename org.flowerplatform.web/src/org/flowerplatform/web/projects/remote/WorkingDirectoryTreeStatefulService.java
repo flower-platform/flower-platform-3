@@ -1,6 +1,5 @@
 package org.flowerplatform.web.projects.remote;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -11,8 +10,8 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
@@ -23,11 +22,25 @@ import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.entity.WorkingDirectory;
+import org.flowerplatform.web.explorer.Organization_RootChildrenProvider;
+import org.flowerplatform.web.projects.WorkingDirectory_WorkingDirectoriesChildrenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Shows content of a given working directory.
+ * 
+ * <p>
+ * The working directory info is provided by client using
+ * {@link #WORKING_DIRECTORY_KEY} and {@link #ORGANIZATION_KEY}.
+ * 
+ * @author Cristina Constantinescu
+ */
 public class WorkingDirectoryTreeStatefulService extends AbstractTreeStatefulService {
 
+	private static String WORKING_DIRECTORY_KEY = "workingDirectory";
+	private static String ORGANIZATION_KEY = "organization";
+	
 	private static Logger logger = LoggerFactory.getLogger(WorkingDirectoryTreeStatefulService.class);
 	
 	private String statefulClientPrefixId;
@@ -40,7 +53,7 @@ public class WorkingDirectoryTreeStatefulService extends AbstractTreeStatefulSer
 		setStatefulClientPrefixId("Working Directory");
 		
 		{
-			// explorerChildrenProvider
+			// workingDirChildrenProvider
 			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.workingDirChildrenProvider");
 			for (IConfigurationElement configurationElement : configurationElements) {
 				IChildrenProvider provider = (IChildrenProvider) configurationElement.createExecutableExtension("provider");
@@ -63,7 +76,7 @@ public class WorkingDirectoryTreeStatefulService extends AbstractTreeStatefulSer
 		}
 		
 		{
-			// explorerNodeDataProvider
+			// workingDirNodeDataProvider
 			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.workingDirNodeDataProvider");
 			for (IConfigurationElement configurationElement : configurationElements) {
 				INodeDataProvider provider = (INodeDataProvider) configurationElement.createExecutableExtension("provider");
@@ -85,6 +98,23 @@ public class WorkingDirectoryTreeStatefulService extends AbstractTreeStatefulSer
 		
 	}
 	
+	protected String getNodeType(TreeNode treeNode) {
+		if (treeNode.getPathFragment() == null) {
+			// root node is a Working Directory
+			return WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY;
+		} else {
+			return treeNode.getPathFragment().getType();
+		}
+	}
+	
+	protected String getNodeType(PathFragment pathFragment) {
+		if (pathFragment == null) {
+			// root node is a Working Directory
+			return WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY;
+		} else {
+			return pathFragment.getType();
+		}
+	}
 	@Override
 	public String getStatefulClientPrefixId() {
 		return statefulClientPrefixId;
@@ -158,7 +188,7 @@ public class WorkingDirectoryTreeStatefulService extends AbstractTreeStatefulSer
 
 	@Override
 	public String getLabelForLog(Object node, String nodeType) {
-		if (NODE_TYPE_ROOT.equals(nodeType)) {
+		if (WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY.equals(nodeType)) {
 			return "root";
 		}
 		INodeDataProvider provider = nodeDataProviders.get(nodeType);
@@ -184,33 +214,49 @@ public class WorkingDirectoryTreeStatefulService extends AbstractTreeStatefulSer
 				if (result != null) {
 					return result;
 				}
-			} else if (nodeType.equals("r")) {
-				String orgName = (String) context.get("orgName");
-				String workingDirName = (String) context.get("workingDirectory");
-				for (WorkingDirectory wd : ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName(orgName)) {
-					if (wd.getPathFromOrganization().equals(workingDirName)) {
-						return wd;
-					}
-				}
 			}
 		}		
+		// root node, search for working directory based on valuew from context
+		String organization = (String) context.get(ORGANIZATION_KEY);
+		String workingDirectory = (String) context.get(WORKING_DIRECTORY_KEY);
+		for (WorkingDirectory wd : ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName(organization)) {
+			if (wd.getPathFromOrganization().equals(workingDirectory)) {				
+				return wd;
+			}
+		}
 		return null;
 	}
 
-
+	public TreeNode openNodeInternal(CommunicationChannel channel, String statefulClientId, List<PathFragment> fullPath, Map<Object, Object> context) {
+		String workingDirectory = (String) context.get(WORKING_DIRECTORY_KEY);
+		String organization = (String) context.get(ORGANIZATION_KEY);
+		if (fullPath != null) {
+			// add organization & working directory fragments to path
+			// needed to get data from providers
+			fullPath.add(0, new PathFragment(workingDirectory, WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY));
+			fullPath.add(0, new PathFragment(organization, Organization_RootChildrenProvider.NODE_TYPE_ORGANIZATION));
+		}
+		TreeNode node = super.openNodeInternal(channel, statefulClientId, fullPath, context);
+		
+		if (fullPath != null) {
+			// remove added fragments
+			fullPath.remove(0);
+			fullPath.remove(0);
+		}
+		return node;		
+	}
+	
 	@Override
 	public List<PathFragment> getPathForNode(Object node, String nodeType, GenericTreeContext context) {
-		return null;
+		return null; // isn't used
 	}
 
 	@Override
-	public void subscribe(StatefulServiceInvocationContext context,	IStatefulClientLocalState statefulClientLocalState) {
-		// TODO Auto-generated method stub
+	public void subscribe(StatefulServiceInvocationContext context,	IStatefulClientLocalState statefulClientLocalState) {		
 	}
 
 	@Override
-	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
-		// TODO Auto-generated method stub
+	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {		
 	}
 
 }

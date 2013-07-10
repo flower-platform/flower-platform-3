@@ -58,7 +58,7 @@
 				var selection:ArrayList = new ArrayList();
 				for (var i:int=0; i < projects.length; i++) {
 					if (projects.getItemAt(i).selected) {
-						selection.addItem(projects.getItemAt(i));
+						selection.addItem(projects.getItemAt(i).name);
 					}
 				}
 				resultHandler.handleDialogResult(selection);
@@ -72,13 +72,11 @@
 		]]>
 	</fx:Script>
 	
-	<fx:Declarations>
-		
+	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="middle">
 			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
 			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
-		</s:HGroup>
-		
+		</s:HGroup>		
 	</fx:Declarations>
 	
 	<s:layout>

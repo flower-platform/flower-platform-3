@@ -20,7 +20,7 @@ import org.flowerplatform.web.projects.remote.ProjectsService;
  */
 public class WorkingDirectory_WorkingDirectoriesChildrenProvider implements IChildrenProvider {
 
-	protected static final String NODE_TYPE_WORKING_DIRECTORY = "workingDirectory";
+	public static final String NODE_TYPE_WORKING_DIRECTORY = "workingDirectory";
 
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {

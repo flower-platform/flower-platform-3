@@ -2,7 +2,7 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 implements="org.flowerplatform.flexutil.propertypage.IPropertyPage, org.flowerplatform.flexutil.dialog.IDialogResultHandler"
+		 implements="org.flowerplatform.web.common.projects.properties.IPropertyPage, org.flowerplatform.flexutil.dialog.IDialogResultHandler"
 		 creationComplete="creationCompleteHandler(event)">
 	
 	<fx:Script>
@@ -62,12 +62,8 @@
 			}
 			
 			public function okHandler():void {
-				if (cbNature.selected) {
-					var paths:ArrayCollection = new ArrayCollection();
-					for each (var node:Object in projects) {
-						paths.addItem(node.path);
-					}
-					JavaEditorPlugin.getInstance().javaProjectPropertyPageService.setClasspathEntries(selectedNode, sourceFolders, paths, libraries, null, null);
+				if (cbNature.selected) {				
+					JavaEditorPlugin.getInstance().javaProjectPropertyPageService.setClasspathEntries(selectedNode, sourceFolders, projects, libraries, null, null);
 				}
 			}
 			
@@ -117,16 +113,7 @@
 			private function getClasspathEntriesCallbackHandler(value:Object):void {
 				if (value != null) {
 					sourceFolders = ArrayCollection(value[0]);
-					var names:ArrayCollection = ArrayCollection(value[1]);
-					var nodes:ArrayCollection = selectedNode.parent.children;
-					var list:ArrayList = new ArrayList();
-					if (nodes.length > 1) {
-						for each (var node:TreeNode in nodes) {
-							if (node != selectedNode && names.contains(node.pathFragment.name)) {
-								projects.addItem({name: node.label, path: node.getPathForNode(true)});
-							}
-						}
-					}
+					projects = ArrayCollection(value[1]);
 					libraries = ArrayCollection(value[2]);
 				}
 				
@@ -167,12 +154,12 @@
 			}
 			
 			protected function btnAddProject_clickHandler(event:MouseEvent):void {
-				var projects:ArrayCollection = selectedNode.parent.children;
+				var projectNodes:ArrayCollection = selectedNode.parent.children;
 				var list:ArrayList = new ArrayList();
-				if (projects.length > 1) {
-					for each (var node:TreeNode in projects) {
+				if (projectNodes.length > 1) {
+					for each (var node:TreeNode in projectNodes) {
 						if (node != selectedNode) {
-							list.addItem({name: node.label, path: node.getPathForNode(true)});
+							list.addItem({name: node.label, selected: projects.contains(node.label)});
 						}
 					}
 				}
@@ -307,7 +294,30 @@
 		</s:VGroup>
 	</s:HGroup>
 	<s:HGroup id="libraryArea" width="100%" height="100%" includeIn="libraries">
-		<s:List id="lstLibraries" width="100%" height="100%" dataProvider="{libraries}" labelField="label"  />
+		<s:List id="lstLibraries" width="100%" height="100%" dataProvider="{libraries}" labelField="label" >
+			<s:itemRenderer>
+				<fx:Component>
+					<s:IconItemRenderer iconFunction="getLibraryIcon" verticalAlign="middle" initialize="initializeHandler(event)">
+						<fx:Script>
+							<![CDATA[
+								import mx.events.FlexEvent;								
+								import org.flowerplatform.flexutil.FlexUtilGlobals;
+								
+								public function getLibraryIcon(item:Object):String {
+									return JavaPropertyPage(this.outerDocument).getResourceUrl('images/library.gif');
+								}
+								
+								protected function initializeHandler(event:FlexEvent):void {
+									if (!FlexUtilGlobals.getInstance().isMobile) {
+										this.minHeight = 22;
+									}
+								}								
+							]]>
+						</fx:Script>
+					</s:IconItemRenderer>
+				</fx:Component>
+			</s:itemRenderer>
+		</s:List>
 		<s:VGroup gap="2">
 			<s:Button id="btnAddLibrary" width="70" label="{CommonPlugin.getInstance().getMessage('add')}" 
 					  click="btnAddLibrary_clickHandler(event)"/>			

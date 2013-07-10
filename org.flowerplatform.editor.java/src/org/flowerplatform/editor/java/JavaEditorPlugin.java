@@ -2,13 +2,12 @@ package org.flowerplatform.editor.java;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.osgi.framework.BundleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * @author Cristina Constantinescu
+ */
 public class JavaEditorPlugin extends AbstractFlowerJavaPlugin {
 
-	private static final Logger logger = LoggerFactory.getLogger(JavaEditorPlugin.class);
-	
 	protected static JavaEditorPlugin INSTANCE;
 	
 	public static JavaEditorPlugin getInstance() {

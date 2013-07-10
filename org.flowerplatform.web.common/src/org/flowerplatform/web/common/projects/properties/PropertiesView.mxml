@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+	@author Cristina Constantinescu
+-->
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
@@ -7,21 +10,15 @@
 		 creationComplete="creationCompleteHandler(event)" xmlns:selectiontrianglelist="org.flowerplatform.flexutil.selectiontrianglelist.*">
 	<fx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
-			
-			import org.flowerplatform.communication.tree.remote.TreeNode;
-			
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
-			import mx.core.IVisualElement;
 			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
-			import org.flowerplatform.flexutil.propertypage.IPropertyPage;
-			import org.flowerplatform.flexutil.propertypage.IPropertyPageProvider;
 			import org.flowerplatform.flexutil.selectiontrianglelist.GradientBackgroundListSkin;
 			import org.flowerplatform.flexutil.selectiontrianglelist.mobile.GradientBackgroundMobileListSkin;
 			import org.flowerplatform.web.common.WebCommonPlugin;

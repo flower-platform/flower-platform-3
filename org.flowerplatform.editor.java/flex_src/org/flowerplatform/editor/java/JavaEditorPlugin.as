@@ -7,6 +7,9 @@ package org.flowerplatform.editor.java {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class JavaEditorPlugin extends AbstractFlowerFlexPlugin {
 		
 		protected static var INSTANCE:JavaEditorPlugin;
@@ -30,8 +33,7 @@ package org.flowerplatform.editor.java {
 			WebCommonPlugin.getInstance().projectPropertyProviders.addItem(new JavaPropertyPageProvider());
 		}
 		
-		override protected function registerMessageBundle():void {
-			
+		override protected function registerMessageBundle():void {			
 		}
 		
 	}

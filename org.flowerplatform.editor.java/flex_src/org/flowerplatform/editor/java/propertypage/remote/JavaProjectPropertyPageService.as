@@ -6,6 +6,9 @@ package org.flowerplatform.editor.java.propertypage.remote {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class JavaProjectPropertyPageService {
 	
 		public static const SERVICE_ID:String = "javaProjectPropertyPageService";

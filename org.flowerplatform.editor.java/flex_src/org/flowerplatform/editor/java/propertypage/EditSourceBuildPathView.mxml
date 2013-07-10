@@ -20,23 +20,14 @@
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
-						
-			/**
-			 * @flowerModelElementId _cec0QLX4EeG0VsiZvxFIVQ
-			 */
+					
 			[Bindable]
 			public var currentSource:String;
 			
 			private var _popupHost:IPopupHost;
 			
-			/**
-			 * @flowerModelElementId _cfNpQLX4EeG0VsiZvxFIVQ
-			 */
 			private var resultHandler:IDialogResultHandler;
 			
-			/**
-			 * @flowerModelElementId _cfxC4LX4EeG0VsiZvxFIVQ
-			 */
 			public function setResultHandler(resultHandler:IDialogResultHandler):void {
 				this.resultHandler = resultHandler;
 			}
@@ -48,7 +39,6 @@
 			public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
 				popupHost.setLabel("Add/Edit Source Folder");
-//				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/remote_entry_tbl.gif'));
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction>{
@@ -79,13 +69,11 @@
 		]]>
 	</fx:Script>
 	
-	<fx:Declarations>
-		
+	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="middle">
 			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
 			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
-		</s:HGroup>
-		
+		</s:HGroup>		
 	</fx:Declarations>
 	
 	<s:layout>

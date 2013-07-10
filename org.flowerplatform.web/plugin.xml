@@ -308,6 +308,15 @@
       </workingDirChildrenProvider>
    </extension>
    <extension
+         point="org.flowerplatform.web.workingDirNodeDataProvider">
+      <workingDirNodeDataProvider
+            provider="org.flowerplatform.web.explorer.AbstractFileWrapperNodeDataProvider">
+         <nodeType
+               nodeType="projFile">
+         </nodeType>
+      </workingDirNodeDataProvider>
+   </extension>
+   <extension
          point="org.flowerplatform.communication.service">
       <service
             id="workingDirectoryTreeStatefulService"

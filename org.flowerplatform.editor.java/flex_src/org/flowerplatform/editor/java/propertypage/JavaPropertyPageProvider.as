@@ -1,10 +1,10 @@
-package org.flowerplatform.editor.java.propertypage
-{
-	import mx.core.IVisualElement;
+package org.flowerplatform.editor.java.propertypage {	
+	import org.flowerplatform.web.common.projects.properties.IPropertyPage;
+	import org.flowerplatform.web.common.projects.properties.IPropertyPageProvider;
 	
-	import org.flowerplatform.flexutil.propertypage.IPropertyPage;
-	import org.flowerplatform.flexutil.propertypage.IPropertyPageProvider;
-	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class JavaPropertyPageProvider implements IPropertyPageProvider {
 				
 		public function getLabel():String{
