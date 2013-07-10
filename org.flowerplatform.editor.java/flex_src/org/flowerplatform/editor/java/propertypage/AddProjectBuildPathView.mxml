@@ -17,6 +17,7 @@
 			import mx.validators.Validator;
 			
 			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.editor.java.JavaEditorPlugin;
 			import org.flowerplatform.flexutil.FlexUtilAssets;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
@@ -39,7 +40,7 @@
 			
 			public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
-				popupHost.setLabel("Add Project");				
+				popupHost.setLabel(JavaEditorPlugin.getInstance().getMessage("java.propertypage.addProject"));				
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction>{

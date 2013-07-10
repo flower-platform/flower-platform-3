@@ -33,8 +33,6 @@ package org.flowerplatform.editor.java {
 			WebCommonPlugin.getInstance().projectPropertyProviders.addItem(new JavaPropertyPageProvider());
 		}
 		
-		override protected function registerMessageBundle():void {			
-		}
 		
 	}
 }

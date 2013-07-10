@@ -42,9 +42,9 @@
 			protected function get buttonBarDataProvider():IList {
 				var dp:Array = new Array();
 				dp.push(
-					{ label : "Sources", icon : getResourceUrl("images/folder.gif") },
-					{ label : "Projects", icon : getResourceUrl("images/project.gif") },
-					{ label : "Libraries", icon : getResourceUrl("images/project.gif") });
+					{ label : JavaEditorPlugin.getInstance().getMessage("java.propertypage.source"), icon : getResourceUrl("images/folder.gif") },
+					{ label : JavaEditorPlugin.getInstance().getMessage("java.propertypage.projects"), icon : getResourceUrl("images/project.gif") },
+					{ label : JavaEditorPlugin.getInstance().getMessage("java.propertypage.libraries"), icon : getResourceUrl("images/project.gif") });
 				return new ArrayList(dp);
 			}
 			
@@ -213,7 +213,7 @@
 		<s:VerticalLayout />
 	</s:layout>
 	
-	<s:CheckBox label="Enable Java Project Type" id="cbNature" change="cbNature_valueCommitHandler(event)"/>
+	<s:CheckBox label="{JavaEditorPlugin.getInstance().getMessage('java.propertypage.enableJavaType')}" id="cbNature" change="cbNature_valueCommitHandler(event)"/>
 	
 	<s:Line width="100%"/>
 	

@@ -11,9 +11,6 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
-			
-			import org.flowerplatform.web.common.projects.remote.WorkingDirectoryTreeStatefulClient;
-			
 			import mx.collections.IList;
 			import mx.events.FlexEvent;
 			
@@ -22,10 +19,12 @@
 			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 			import org.flowerplatform.communication.tree.remote.PathFragment;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.editor.java.JavaEditorPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.common.projects.remote.WorkingDirectoryTreeStatefulClient;
 			
 			private var _popupHost:IPopupHost;			
 			private var resultHandler:IDialogResultHandler;
@@ -42,7 +41,7 @@
 			
 			public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
-				popupHost.setLabel("Add Library");				
+				popupHost.setLabel(JavaEditorPlugin.getInstance().getMessage("java.propertypage.addLibrary"));				
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction>{

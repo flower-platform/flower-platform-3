@@ -39,6 +39,11 @@
 				}
 				list.dataProvider = pages;
 				
+				// show first page from list
+				list.selectedIndex = 0;
+				// this must be call manually because change event doesn't include it
+				changeHandler(new IndexChangeEvent(IndexChangeEvent.CHANGE, false, false, -1, 0));
+				
 				popupHost.addToControlBar(buttonBar);
 			}
 			

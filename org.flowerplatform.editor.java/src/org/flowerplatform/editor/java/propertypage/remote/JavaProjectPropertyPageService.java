@@ -15,6 +15,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -134,7 +135,8 @@ public class JavaProjectPropertyPageService {
 					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(resource);
 					libraries.add(CommonPlugin.getInstance().getPathRelativeToFile(file, wd));
 				}
-			}
+			}			
+			
 		} catch (CoreException | IOException e) {
 			logger.error("Exception thrown while getting java classpath entries for {}", project.getName(), e);
 			return null;
@@ -161,6 +163,9 @@ public class JavaProjectPropertyPageService {
 		for (String library : libraries) {			
 			entries.add(JavaCore.newLibraryEntry(ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(wd, library)).getFullPath(), null, null));
 		}
+		// default entry
+		entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER"), false));
+		
 		try {
 			javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), new NullProgressMonitor());
 		} catch (JavaModelException e) {
