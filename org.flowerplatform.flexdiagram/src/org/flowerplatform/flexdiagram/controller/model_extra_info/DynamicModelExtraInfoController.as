@@ -47,31 +47,5 @@ package org.flowerplatform.flexdiagram.controller.model_extra_info {
 			diagramShell.modelToExtraInfoMap[model].selected = value;
 		}
 		
-		/**
-		 * pt ca sa optimizam un pic; i.e. la pornire sa nu populam intreg mapul cu toate modelele; oricum cele vizibile vor fi ca e nevoie de renderer
-		 */ 
-		public function getDynamicObject(model:Object):Object {
-			// lazy in map, ca la setRenderer
-			// setRenderer foloseste asta; idem isSelected
-		}
-										 
-		// DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getExtraInfoController(model)).getDynamicObject(model);
-		// x, y, width, height
-		// expandedY, expandedHeight
-		
-		/*
-		alg: refreshNodePositions(node)
-		expandez un nod
-		1: parcurg recursiv copii, populez expHeight; => stiu expanded height al nodului parametru; stiu si diferenta dintre vechiul expHeight si noul expHeight = d
-		2: parcurg copii, si actualizez y-ul lor, pornind de la y_nod - 1/2 expHeight
-		3: fratii nodului expandat de sus: toti -d; de jos: +d; recursiv pe fratii parintelui, etc pana la root
-		
-		MindMapModelController: getChild(); getW, getH, getExp, set...
-		Mecanismul de notificare a modificarii dimensiunii: trimitem pe BD; posibil sa tr. recalculat
-		Tool care la selectie sa afiseze +
-		
-		
-		*/
-		
 	}	
 }
