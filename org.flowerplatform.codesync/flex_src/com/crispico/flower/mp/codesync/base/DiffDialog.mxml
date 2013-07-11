@@ -14,7 +14,7 @@
 	</mx:Script>
 	
 	<mx:VDividedBox width="50%" height="100%">
-		<base:DiffTree id="diffTree" treeType="{DiffTree.TREE_TYPE_DIFF}" projectPath="{projectPath}" codeSyncEditorStatefulClient="{statefulClient}" width="100%" height="50%"/>
+		<base:DiffTree id="diffTree" treeType="{DiffTree.TREE_TYPE_DIFF}" projectPath="{projectPath}" codeSyncEditorStatefulClient="{statefulClient}" contextMenuContainer="{contextMenuContainer}" width="100%" height="50%"/>
 		<mx:Label text="{diffTree.selectedItem.treeNode.toolTip}" height="50" width="100%"/>
 		<!--<base:DiffTree id="leftTree" treeType="{DiffTree.TREE_TYPE_LEFT}" projectPath="{projectPath}" codeSyncEditorStatefulClient="{statefulClient}" width="100%" height="50%"/>
 	</mx:VDividedBox>
@@ -23,8 +23,6 @@
 		<base:DiffTree id="rightTree" treeType="{DiffTree.TREE_TYPE_RIGHT}" projectPath="{projectPath}" codeSyncEditorStatefulClient="{statefulClient}" width="100%" height="50%"/>-->
 	</mx:VDividedBox>
 	
-	<!--<mx:VDividedBox width="50%" height="100%">
-		<contextmenu:FlowerContextMenu id="contextMenuContainer" width="100%" height="100%"/>
-	</mx:VDividedBox>-->
+	<mx:VBox id="contextMenuContainer" width="50%" height="100%"/>
 
 </mx:HDividedBox>

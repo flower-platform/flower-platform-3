@@ -243,8 +243,14 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	}
 	
 	@RemoteInvocation
-	public void executeDiffAction(int actionType, int diffIndex, DiffTreeNode node) {
-		// TODO
+	public void executeDiffAction(final StatefulServiceInvocationContext context, String editableResourcePath, final int actionType, final int diffIndex, final DiffTreeNode node, final Map<Object, Object> treeContext) {
+		attemptUpdateEditableResourceContent(context, getProjectPath(editableResourcePath), new Runnable() {
+			
+			@Override
+			public void run() {
+				diffTree.executeDiffAction(context, actionType, diffIndex, node, treeContext);
+			}
+		});
 	}
 	
 	@RemoteInvocation

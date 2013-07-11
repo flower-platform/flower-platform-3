@@ -249,10 +249,10 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 			Match thoroughUpdateMatch = match.getParentMatch() == null ? parentMatch : match;
 			// for a delete action, remove it from the "shallow" update list, and do a "thorough" update here (i.e. including children)
 			modifiedMatches.remove(thoroughUpdateMatch);
-			dispatchDiffTreeNodeUpdate(context, thoroughUpdateMatch, treeContext);
+//			dispatchDiffTreeNodeUpdate(context, thoroughUpdateMatch, treeContext);
 		}
 		for (Match modifiedMatch : modifiedMatches) {
-			dispatchDiffTreeNodeUpdate(context, modifiedMatch, treeContext);
+//			dispatchDiffTreeNodeUpdate(context, modifiedMatch, treeContext);
 		}
 	}
 	
@@ -277,7 +277,7 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 				channel, 
 				statefulClientId, 
 				"updateNode", 
-				new Object[] {Integer.parseInt(path.get(0).getType()), path, treeNode, expandNode, colapseNode, selectNode});		
+				new Object[] {Integer.parseInt(treeNode.getPathFragment().getType()), path, treeNode, expandNode, colapseNode, selectNode});		
 	}
 
 	private List<PathFragment> getFullPath(TreeNode node) {

@@ -3,18 +3,10 @@ package com.crispico.flower.mp.codesync.base
 	import com.crispico.flower.flexdiagram.action.ActionContext;
 	import com.crispico.flower.flexdiagram.action.BaseAction;
 	import com.crispico.flower.flexdiagram.action.IActionProvider2;
-	import com.crispico.flower.flexdiagram.contextmenu.ActionEntry;
-	import com.crispico.flower.flexdiagram.contextmenu.ClientNotifierData;
-	import com.crispico.flower.flexdiagram.contextmenu.ContextMenuManager;
-	import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
-	import com.crispico.flower.flexdiagram.contextmenu.IContextMenuLogicProvider;
-	import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntry;
-	import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntryModel;
 	import com.crispico.flower.mp.codesync.base.action.DiffAction;
 	import com.crispico.flower.mp.codesync.base.action.DiffActionEntry;
 	import com.crispico.flower.mp.codesync.base.action.DiffContextMenuEntry;
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
-	import com.crispico.flower.mp.codesync.base.communication.DiffTreeStatefulClient;
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorStatefulClient;
 	
 	import flash.display.DisplayObjectContainer;
@@ -24,7 +16,11 @@ package com.crispico.flower.mp.codesync.base
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.containers.Panel;
+	import mx.containers.VBox;
+	import mx.controls.Button;
 	import mx.core.ClassFactory;
+	import mx.core.Container;
 	import mx.core.UITextField;
 	import mx.core.mx_internal;
 	import mx.events.FlexEvent;
@@ -56,10 +52,9 @@ package com.crispico.flower.mp.codesync.base
 		
 		public var projectPath:String;
 		
-		public var contextMenuContainer:FlowerContextMenu;
+		public var contextMenuContainer:Container;
 		
 		public var codeSyncEditorStatefulClient:CodeSyncEditorStatefulClient;
-		
 		
 		public function DiffTree() {
 			super();
@@ -89,11 +84,17 @@ package com.crispico.flower.mp.codesync.base
 			if (!modelWrapper.expanded) {
 				// i.e. state = collapsed				
 				codeSyncEditorStatefulClient.openNode(modelWrapper.treeNode, getContext());			
-			} else {
-				// i.e. state = expanded; call server only if dispatch type tree
-//				statefulClient.closeNode(modelWrapper.treeNode);
 			}
 			super.expandCollapseNode(modelWrapper);
+		}
+		
+		public function updateFullContent():void {
+			for (var i:int = 0; i < dataProvider.length; i++) {
+				var wrapper:HierarchicalModelWrapper = HierarchicalModelWrapper(dataProvider.getItemAt(i));
+				if (wrapper.nestingLevel == 0) {
+					expandCollapseNode(wrapper);
+				}
+			}
 		}
 		
 		/**
@@ -187,28 +188,30 @@ package com.crispico.flower.mp.codesync.base
 //				contextMenu.setTitle("Multiple Selection");
 //			}
 		
-//			var entries:DiffContextMenuEntries = new DiffContextMenuEntries(contextMenu);			
-//			contextMenu.addChild(entries);	
-//			entries.fill();
 			var diffTreeNode:DiffTreeNode = DiffTreeNode(HierarchicalModelWrapper(selectedItems[0]).treeNode);
 			if (diffTreeNode.contextMenuEntries == null)
 				return;
 			
-			action = new DiffAction(null, this);
+			var action:DiffAction = new DiffAction(null, this);
 			action.label = "Synchronize";
-			ae = new ActionEntry(action);
+			var ae:Button = new Button();
+			ae.label = action.label;
+			ae.data = action;
+			ae.addEventListener(MouseEvent.CLICK, runDiffAction);
 			ae.enabled = diffTreeNode.crossColor == 0xFFFFFF;
-//			contextMenu.addChild(ae);
 			contextMenuContainer.addChild(ae);
 			
 			var container:DiffContextMenuContainer = new DiffContextMenuContainer();	
-//			contextMenu.addChild(container);		
 			contextMenuContainer.addChild(container);
 			for each (var cmEntry:DiffContextMenuEntry in diffTreeNode.contextMenuEntries) {
 				if (cmEntry.actionEntries == null || cmEntry.actionEntries.length == 0) {
 					var dummyAction:BaseAction = new BaseAction();
 					dummyAction.label = cmEntry.label;
-					var ae:ActionEntry = new ActionEntry(dummyAction);
+					ae = new Button();
+					ae.enabled = false;
+					ae.label = dummyAction.label;
+					ae.data = dummyAction;
+					ae.addEventListener(MouseEvent.CLICK, runDiffAction);
 					ae.setStyle("color", cmEntry.color);
 					ae.setStyle("textRollOverColor", cmEntry.color);
 					if (!cmEntry.right)
@@ -216,19 +219,22 @@ package com.crispico.flower.mp.codesync.base
 					else
 						container.rightPanel.addChild(ae);
 				} else {
-					var subMenu:SubMenuEntry = new SubMenuEntry(new SubMenuEntryModel(null, cmEntry.label), contextMenuContainer);
+					var subMenu:Panel = new Panel();
+					subMenu.title = cmEntry.label; // (new SubMenuEntryModel(null, cmEntry.label), contextMenuContainer);
 					
 					subMenu.setStyle("color", cmEntry.color);
 					subMenu.setStyle("textRollOverColor", cmEntry.color);
-					
 
 					for each (var actionEntry:DiffActionEntry in cmEntry.actionEntries) {
-						var action:DiffAction = new DiffAction(actionEntry, this);
+						action = new DiffAction(actionEntry, this);
 						action.label = actionEntry.label;
-						ae = new ActionEntry(action);
+						ae = new Button();
+						ae.data = action;
+						ae.addEventListener(MouseEvent.CLICK, runDiffAction);
+						ae.label = action.label;
 						ae.enabled = actionEntry.enabled;
 						ae.setStyle("textDecoration", actionEntry.default1 ? "underline" : "none");
-						subMenu.getSubMenu().addChild(ae);
+						subMenu.addChild(ae);
 					}
 					if (!cmEntry.right)
 						container.leftPanel.addChild(subMenu);
@@ -238,11 +244,16 @@ package com.crispico.flower.mp.codesync.base
 			}
 		}
 		
+		private function runDiffAction(evt:MouseEvent):void {
+			var action:DiffAction = evt.target.data;
+			action.run(new ArrayCollection(getSelection().toArray()));
+		}
+		
 		private function itemClickHandler(event:MouseEvent):void {
 //			ContextMenuManager.INSTANCE.refresh(this);
 //			container = new DiffContextMenuContainer();
 //			container.createComponentsFromDescriptors();
-//			fillContextMenu(/*new FlowerContextMenu(contextMenuContainer)*/);
+			fillContextMenu(/*new FlowerContextMenu(contextMenuContainer)*/);
 		}		
 		
 		public function getContext():ActionContext {

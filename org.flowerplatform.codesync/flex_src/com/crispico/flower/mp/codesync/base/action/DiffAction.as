@@ -11,18 +11,18 @@ package com.crispico.flower.mp.codesync.base.action {
 		
 		private var diffActionEntry:DiffActionEntry;
 		
-		public var statefulClient:CodeSyncEditorStatefulClient;
+		public var tree:DiffTree;
 		
 		public function DiffAction(diffActionEntry:DiffActionEntry, tree:DiffTree) {
 			this.diffActionEntry = diffActionEntry;
-			this.statefulClient = tree.codeSyncEditorStatefulClient;
+			this.tree = tree;
 		}
 		
 		public override function run(selectedEditParts:ArrayCollection):void {
 			var actionType:int = diffActionEntry != null ? diffActionEntry.actionType : -1;
 			var diffIndex:int = diffActionEntry != null ? diffActionEntry.diffIndex : -1;
 			var node:DiffTreeNode = DiffTreeNode(selectedEditParts[0]);
-			statefulClient.executeDiffAction(actionType, diffIndex, node);
+			tree.codeSyncEditorStatefulClient.executeDiffAction(actionType, diffIndex, node, tree.getContext());
 		}
 	}
 }

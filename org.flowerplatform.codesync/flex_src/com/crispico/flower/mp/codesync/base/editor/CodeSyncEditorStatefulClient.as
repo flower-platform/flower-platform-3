@@ -34,8 +34,8 @@ package com.crispico.flower.mp.codesync.base.editor {
 			invokeServiceMethod("openNode", [node, context]); 
 		}
 		
-		public function executeDiffAction(actionType:int, diffIndex:int, node:DiffTreeNode):void {
-			invokeServiceMethod("executeDiffAction", [actionType, diffIndex, node]);
+		public function executeDiffAction(actionType:int, diffIndex:int, node:DiffTreeNode, context:ActionContext):void {
+			invokeServiceMethod("executeDiffAction", [editableResourcePath, actionType, diffIndex, node, context]);
 		}
 		
 		public function synchronize():void {

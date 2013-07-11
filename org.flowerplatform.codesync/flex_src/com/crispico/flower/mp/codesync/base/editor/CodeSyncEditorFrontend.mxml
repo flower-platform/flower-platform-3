@@ -16,7 +16,7 @@
 			}
 			
 			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {
-//				diffDialog.diffTree.statefulClient.openNode(null);
+				diffDialog.diffTree.updateFullContent();
 //				diffDialog.ancestorTree.statefulClient.openNode(null);
 //				diffDialog.leftTree.statefulClient.openNode(null);
 //				diffDialog.rightTree.statefulClient.openNode(null);

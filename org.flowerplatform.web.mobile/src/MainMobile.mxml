@@ -55,11 +55,12 @@
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
-			import org.flowerplatform.editor.java.JavaEditorPlugin;
 			import org.flowerplatform.blazeds.BridgeEvent;
+			import org.flowerplatform.codesync.CodeSyncPlugin;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.EditorPlugin;
+			import org.flowerplatform.editor.java.JavaEditorPlugin;
 			import org.flowerplatform.editor.model.EditorModelPlugin;
 			import org.flowerplatform.editor.text.EditorTextPlugin;
 			import org.flowerplatform.editor.text.java.EditorTextJavaPlugin;
@@ -97,7 +98,8 @@
 				setDescriptorWithUrl(new EditorModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.model/swc/org.flowerplatform.editor.model.swc|library.swf?pluginClass=EditorModelPlugin'),
 				setDescriptorWithUrl(new JavaEditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor.java/swc/org.flowerplatform.editor.java.swc|library.swf?pluginClass=JavaEditorPlugin'),
 				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf'),
-				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf')
+				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'),
+				setDescriptorWithUrl(new CodeSyncPlugin(), 'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin')
 			];
 			
 			private function startPlugins():void {
@@ -119,7 +121,7 @@
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new WrapperViewPopupHandlerFactory();
 				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorSpinnerHandlerFactory();
-				FlexUtilGlobals.getInstance().rootUrl = "http://192.168.0.100:8080/org.flowerplatform.web.app/";
+				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";
 				
 				
 				startPlugins();
