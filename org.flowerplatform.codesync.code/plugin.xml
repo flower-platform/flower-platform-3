@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="modelAdapterFactorySet" name="modelAdapterFactorySet" schema="schema/modelAdapterFactorySet.exsd"/>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncAlgorithmRunner">
+      <codeSyncAlgorithmRunner
+            codeSyncAlgorithmRunnerClass="com.crispico.flower.mp.codesync.code.CodeSyncAlgorithmRunner"
+            id="org.flowerplatform.codesync.code.CodeSyncAlgorithmRunner">
+      </codeSyncAlgorithmRunner>
+   </extension>
+
+</plugin>

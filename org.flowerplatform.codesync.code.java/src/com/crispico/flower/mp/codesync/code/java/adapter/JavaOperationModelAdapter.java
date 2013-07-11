@@ -8,7 +8,6 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 
-import com.crispico.flower.mp.codesync.code.CodeSyncElementTypeConstants;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -19,16 +18,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavaOperationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<?> getFeatures(Object element) {
-		List features = super.getFeatures(element);
-		features.add(AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
-		features.add(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
-		features.add(AstCacheCodePackage.eINSTANCE.getTypedElement_Type());
-		features.add(AstCacheCodePackage.eINSTANCE.getOperation_Parameters());
-		return features;
-	}
+	public static final String OPERATION = "javaOperation";
 	
 	@Override
 	public List<?> getChildren(Object modelElement) {
@@ -49,7 +39,7 @@ public class JavaOperationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 			return getLabel(element);
 		}
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return CodeSyncElementTypeConstants.OPERATION;
+			return OPERATION;
 		}
 		if (AstCacheCodePackage.eINSTANCE.getTypedElement_Type().equals(feature)) {
 			return getStringFromType(getMethodDeclaration(element).getReturnType2());

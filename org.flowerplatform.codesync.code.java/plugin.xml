@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.codesync.code.modelAdapterFactorySet">
+      <modelAdapterFactorySet
+            id="org.flowerplatform.codesync.code.java.JavaModelAdapterFactorySet"
+            modelAdapterFactorySetClass="org.flowerplatform.codesync.code.java.JavaModelAdapterFactorySet"
+            technology="java">
+      </modelAdapterFactorySet>
+   </extension>
+
+</plugin>

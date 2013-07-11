@@ -3,12 +3,13 @@ package com.crispico.flower.mp.codesync.code.adapter;
 import java.util.List;
 
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
+import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
- * Mapped to {@link CodeSyncElement}.
+ * Mapped to {@link CodeSyncElement}. Delegates to the internal {@link #astCacheElementModelAdapter}.
  * 
  * @author Mariana
  */
@@ -22,22 +23,6 @@ public class CodeSyncElementModelAdapter extends SyncElementModelAdapter {
 	
 	public CodeSyncElementModelAdapter(SyncElementModelAdapter adapter) {
 		this.astCacheElementModelAdapter = adapter;
-	}
-	
-	@Override
-	public List<?> getFeatures(Object element) {
-		if (astCacheElementModelAdapter != null) {
-			return astCacheElementModelAdapter.getFeatures(element);
-		}
-		return super.getFeatures(element);
-	}
-	
-	@Override
-	public int getFeatureType(Object feature) {
-		if (astCacheElementModelAdapter != null) {
-			return astCacheElementModelAdapter.getFeatureType(feature);
-		}
-		return super.getFeatureType(feature);
 	}
 	
 	@Override
@@ -113,6 +98,14 @@ public class CodeSyncElementModelAdapter extends SyncElementModelAdapter {
 		} else {
 			super.addToResource(element);
 		}
+	}
+	
+	@Override
+	public ModelAdapterFactorySet getModelAdapterFactorySet() {
+		if (astCacheElementModelAdapter != null) {
+			return astCacheElementModelAdapter.getModelAdapterFactorySet();
+		}
+		return super.getModelAdapterFactorySet();
 	}
 	
 	@Override

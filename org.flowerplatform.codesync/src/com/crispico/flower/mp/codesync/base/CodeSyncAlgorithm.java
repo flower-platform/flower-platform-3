@@ -28,8 +28,8 @@ public class CodeSyncAlgorithm {
 		Object[] delegateAndAdapter = match.getDelegateAndModelAdapter(modelAdapterFactorySet);
 		if (delegateAndAdapter == null)
 			throw new IllegalArgumentException("A match with no members has been given as parameter.");
-		for (Object feature : ((IModelAdapter) delegateAndAdapter[1]).getFeatures(delegateAndAdapter[0])) {
-			switch (((IModelAdapter) delegateAndAdapter[1]).getFeatureType(feature)) {
+		for (Object feature : modelAdapterFactorySet.getFeatureProvider(delegateAndAdapter[0]).getFeatures(delegateAndAdapter[0])) {
+			switch (modelAdapterFactorySet.getFeatureProvider(delegateAndAdapter[0]).getFeatureType(feature)) {
 			case IModelAdapter.FEATURE_TYPE_CONTAINMENT:
 				processContainmentFeature(feature, match);
 				break;

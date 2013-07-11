@@ -111,7 +111,7 @@ public class CodeSyncTest {
 		IProject project = getProject();
 		
 		IFile file = getFile(fullyQualifiedName);
-		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
+//		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
 		Match match = getMatch();
@@ -161,7 +161,7 @@ public class CodeSyncTest {
 		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + CACHE_DELETED + "/ACE.notation";
 		
 		IFile file = getFile(fullyQualifiedName);
-		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
+//		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
 		Pair[] typeList = {
@@ -202,7 +202,7 @@ public class CodeSyncTest {
 		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + MODIFIED_NO_CONFLICTS + "/ACE.notation";
 
 		IFile file = getFile(fullyQualifiedName);
-		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
+//		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
 //		// create FeatureChanges to simulate model modifications
@@ -417,8 +417,6 @@ public class CodeSyncTest {
 							new Pair(MatchType._3MATCH, 3),					// public
 							new Pair(MatchType._1MATCH_LEFT, 3),				// @Deprecated(test) (added to model)
 								new Pair(MatchType._1MATCH_LEFT, 4),				// test
-							new Pair(MatchType._1MATCH_ANCESTOR, 3),			// Test2
-							new Pair(MatchType._1MATCH_LEFT, 3),				// SuperClassFromModel
 							new Pair(MatchType._2MATCH_ANCESTOR_LEFT, 3),		// ITest
 							new Pair(MatchType._1MATCH_LEFT, 3),				// IFromModel
 							new Pair(MatchType._1MATCH_RIGHT, 3),				// IFromSource
@@ -439,7 +437,7 @@ public class CodeSyncTest {
 		IProject project = getProject();
 		
 		IFile file = getFile(fullyQualifiedName);
-		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
+//		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
@@ -472,7 +470,7 @@ public class CodeSyncTest {
 		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + MODIFIED_CONFLICTS + "/ACE.notation";
 
 		IFile file = getFile(fullyQualifiedName);
-		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
+//		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
 //		// create FeatureChanges to simulate model modifications
@@ -552,8 +550,6 @@ public class CodeSyncTest {
 								
 							new Pair(MatchType._3MATCH, 3),				// @Deprecated
 							new Pair(MatchType._3MATCH, 3),				// public
-							new Pair(MatchType._1MATCH_ANCESTOR, 3),	// Test2
-							new Pair(MatchType._1MATCH_LEFT, 3),		// SuperClassFromModel
 							new Pair(MatchType._3MATCH, 3)				// ITest
 				};
 		boolean[] conflicts = {

@@ -10,7 +10,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
-import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
@@ -123,7 +122,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 		CodeSyncElement cse = getCodeSyncElement(element);
 		if (cse != null) {
 			FeatureChange change = cse.getFeatureChanges().get(feature);
-			if (change != null && getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
+			if (change != null && getModelAdapterFactorySet().getFeatureProvider(cse).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
 				List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
 				List<Object> newValues = (List<Object>) change.getNewValue();
 				
@@ -198,7 +197,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 			if (cse != null) {
 				FeatureChange change = cse.getFeatureChanges().get(feature);
 				if (change != null) {
-					int featureType = getFeatureType(feature);
+					int featureType = getModelAdapterFactorySet().getFeatureProvider(cse).getFeatureType(feature);
 					if (featureType == IModelAdapter.FEATURE_TYPE_VALUE) {
 						setValueFeatureValue(element, feature, change.getNewValue());
 						cse.getFeatureChanges().removeKey(feature);
@@ -285,11 +284,8 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	private Object findChild(List list, Object matchKey) {
 		if (matchKey == null)
 			return null;
-		ModelAdapterFactory modelAdapterFactory = astCacheElementModelAdapter != null 
-				? astCacheElementModelAdapter.getModelAdapterFactory()
-				: getModelAdapterFactory();
 		for (Object existingChild : list) {
-			if (matchKey.equals(modelAdapterFactory.getModelAdapter(existingChild).getMatchKey(existingChild))) {
+			if (matchKey.equals(getModelAdapterFactory().getModelAdapter(existingChild).getMatchKey(existingChild))) {
 				return existingChild;
 			}
 		}

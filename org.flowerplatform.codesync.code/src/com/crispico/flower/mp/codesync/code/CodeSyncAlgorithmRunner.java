@@ -1,7 +1,7 @@
 package com.crispico.flower.mp.codesync.code;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 
 import com.crispico.flower.mp.codesync.base.ICodeSyncAlgorithmRunner;
@@ -13,10 +13,9 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class CodeSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner {
 
 	@Override
-	public void runCodeSyncAlgorithm(IProject project,
-			IFile file, String technology, CommunicationChannel communicationChannel) {
+	public void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel) {
 		
-		CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, technology, communicationChannel);
+		CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, resource, technology, communicationChannel);
 	}
 
 }

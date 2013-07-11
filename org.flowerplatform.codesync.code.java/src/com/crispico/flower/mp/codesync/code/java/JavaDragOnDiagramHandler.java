@@ -15,6 +15,7 @@ import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.View;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.IDragOnDiagramHandler;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 
@@ -53,6 +54,7 @@ public class JavaDragOnDiagramHandler extends AbstractServerCommand implements I
 	@Override
 	public void executeCommand() {
 		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(pathWithRoot);
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+//		CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(resource.getProject(), resource, "java", communicationChannel);
 	}
 }

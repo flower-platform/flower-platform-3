@@ -138,6 +138,8 @@ package  org.flowerplatform.editor.remote {
 		 * @flowerModelElementId _CSYDsAJ9EeKGLqam5SXwYg
 		 */ 
 		override public function subscribeToStatefulService(dataFromRegistrator:Object):void {
+			hasBeenUnsubscribedForcefully = false;
+			
 			if (dataFromRegistrator != null) {
 				// a new view was added; init these fields
 				var newEditorFrontend:EditorFrontend = EditorFrontend(dataFromRegistrator.editorFrontend);

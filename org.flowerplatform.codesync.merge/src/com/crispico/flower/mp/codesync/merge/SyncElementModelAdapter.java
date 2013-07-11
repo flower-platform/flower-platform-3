@@ -1,13 +1,10 @@
 package com.crispico.flower.mp.codesync.merge;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -57,24 +54,6 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 	
 	public void addToResource(AstCacheElement element) {
 		resource.getContents().add(element);
-	}
-	
-	@Override
-	public List<?> getFeatures(Object element) {
-		List<EStructuralFeature> features = new ArrayList<EStructuralFeature>();
-		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type());
-		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
-		return features;
-	}
-	
-	@Override
-	public int getFeatureType(Object feature) {
-		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
-		if (structuralFeature.isMany())
-			return IModelAdapter.FEATURE_TYPE_CONTAINMENT;
-		else 
-			return IModelAdapter.FEATURE_TYPE_VALUE;
 	}
 	
 	@Override

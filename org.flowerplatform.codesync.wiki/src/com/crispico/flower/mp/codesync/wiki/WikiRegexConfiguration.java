@@ -10,18 +10,18 @@ public class WikiRegexConfiguration extends RegexConfiguration {
 	
 	public static final String LINE_TERMINATOR = "(?:\r\n|[\r\n]|\\z)";
 
-	public static final String HEADLINE_LEVEL_1_CATEGORY = "Headline 1";
-	public static final String HEADLINE_LEVEL_2_CATEGORY = "Headline 2";
-	public static final String HEADLINE_LEVEL_3_CATEGORY = "Headline 3";
-	public static final String HEADLINE_LEVEL_4_CATEGORY = "Headline 4";
-	public static final String HEADLINE_LEVEL_5_CATEGORY = "Headline 5";
-	public static final String HEADLINE_LEVEL_6_CATEGORY = "Headline 6";
+	public static final String HEADLINE_LEVEL_1_CATEGORY = "headline 1";
+	public static final String HEADLINE_LEVEL_2_CATEGORY = "headline 2";
+	public static final String HEADLINE_LEVEL_3_CATEGORY = "headline 3";
+	public static final String HEADLINE_LEVEL_4_CATEGORY = "headline 4";
+	public static final String HEADLINE_LEVEL_5_CATEGORY = "headline 5";
+	public static final String HEADLINE_LEVEL_6_CATEGORY = "headline 6";
 	
-	public static final String PARAGRAPH_CATEGORY = "Paragraph";
+	public static final String PARAGRAPH_CATEGORY = "paragraph";
 	
 	public static final String PARAGRAPH_REGEX = "(.*?)" + LINE_TERMINATOR;
 	
-	public static final String FLOWER_BLOCK_CATEGORY = "Flower Block";
+	public static final String FLOWER_BLOCK_CATEGORY = "flowerBlock";
 	
 	public static final String FLOWER_BLOCK_START = "@flower-platform-type";
 	

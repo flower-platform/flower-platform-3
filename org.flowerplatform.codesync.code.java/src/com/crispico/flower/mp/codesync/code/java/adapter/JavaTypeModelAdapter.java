@@ -19,7 +19,6 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
-import com.crispico.flower.mp.codesync.code.CodeSyncElementTypeConstants;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -32,16 +31,10 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<?> getFeatures(Object element) {
-		List features = super.getFeatures(element);
-		features.add(AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
-		features.add(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
-		features.add(AstCacheCodePackage.eINSTANCE.getClass_SuperClasses());
-		features.add(AstCacheCodePackage.eINSTANCE.getClass_SuperInterfaces());
-		return features;
-	}
+	public static final String CLASS = "javaClass";
+	public static final String INTERFACE = "javaInterface";
+	public static final String ENUM = "javaEnum";
+	public static final String ANNOTATION = "javaAnnotation";
 	
 	/**
 	 * Returns only types, fields and methods.
@@ -123,14 +116,14 @@ public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
 			if (element instanceof TypeDeclaration) {
 				if (((TypeDeclaration) element).isInterface()) {
-					return CodeSyncElementTypeConstants.INTERFACE;
+					return INTERFACE;
 				}
-				return CodeSyncElementTypeConstants.CLASS;
+				return CLASS;
 			}
 			if (element instanceof EnumDeclaration) {
-				return CodeSyncElementTypeConstants.ENUM;
+				return ENUM;
 			}
-			return CodeSyncElementTypeConstants.ANNOTATION;
+			return ANNOTATION;
 		}
 		if (AstCacheCodePackage.eINSTANCE.getClass_SuperClasses().equals(feature)) {
 			if (element instanceof TypeDeclaration) {
@@ -223,26 +216,26 @@ public class JavaTypeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 	
 	public static Object createCorrespondingModelElement(AST ast, CodeSyncElement cse) {
 		ASTNode child = null;
-		if (CodeSyncElementTypeConstants.ATTRIBUTE.equals(cse.getType())) {
+		if (JavaAttributeModelAdapter.ATTRIBUTE.equals(cse.getType())) {
 			VariableDeclarationFragment fragment = ast.newVariableDeclarationFragment();
 			FieldDeclaration field = ast.newFieldDeclaration(fragment);
 			child = field;
 		}
-		if (CodeSyncElementTypeConstants.OPERATION.equals(cse.getType())) {
+		if (JavaOperationModelAdapter.OPERATION.equals(cse.getType())) {
 			child = ast.newMethodDeclaration();
 		}
-		if (CodeSyncElementTypeConstants.CLASS.equals(cse.getType())) {
+		if (CLASS.equals(cse.getType())) {
 			child = ast.newTypeDeclaration();
 		}
-		if (CodeSyncElementTypeConstants.INTERFACE.equals(cse.getType())) {
+		if (INTERFACE.equals(cse.getType())) {
 			TypeDeclaration type = ast.newTypeDeclaration();
 			type.setInterface(true);
 			child = type;
 		}
-		if (CodeSyncElementTypeConstants.ENUM.equals(cse.getType())) {
+		if (ENUM.equals(cse.getType())) {
 			child = ast.newEnumDeclaration();
 		}
-		if (CodeSyncElementTypeConstants.ANNOTATION.equals(cse.getType())) {
+		if (ANNOTATION.equals(cse.getType())) {
 			child = ast.newAnnotationTypeDeclaration();
 		}
 		return child;

@@ -11,7 +11,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -94,7 +96,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 	
-	protected ModelAdapterFactoryProvider modelAdapterFactoryProvider;
+	protected ModelAdapterFactorySetProvider modelAdapterFactorySetProvider;
 	
 	protected List<String> srcDirs = null;
 	
@@ -126,8 +128,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public ModelAdapterFactoryProvider getModelAdapterFactoryProvider() {
-		return modelAdapterFactoryProvider;
+	public ModelAdapterFactorySetProvider getModelAdapterFactorySetProvider() {
+		return modelAdapterFactorySetProvider;
 	}
 
 	/**
@@ -145,8 +147,19 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
-		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().addRunner(new CodeSyncAlgorithmRunner());
-		modelAdapterFactoryProvider = new ModelAdapterFactoryProvider();
+		initializeExtensionPoint_modelAdapterFactorySet();
+	}
+	
+	private void initializeExtensionPoint_modelAdapterFactorySet() throws CoreException {
+		modelAdapterFactorySetProvider = new ModelAdapterFactorySetProvider();
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.code.modelAdapterFactorySet");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			String id = configurationElement.getAttribute("id");
+			String technology = configurationElement.getAttribute("technology");
+			Object instance = configurationElement.createExecutableExtension("modelAdapterFactorySetClass");
+			modelAdapterFactorySetProvider.getFactorieSets().put(technology, (ModelAdapterFactorySet) instance);
+			logger.debug("Added CodeSync ModelAdapterFactorySet with id = {} with class = {}", id, instance.getClass());
+		}
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {
@@ -258,29 +271,12 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 //		ast = file.getParent();
 		match.setRight(ast);
 		
-		// right - AST
-		ModelAdapterFactory astModelAdapterFactory = modelAdapterFactoryProvider.getFactories().get(technology);
-		Resource aceResource = getAstCache(project);
-		
-		// ancestor - CodeSyncElements
-		ModelAdapterFactory codeSyncElementModelAdapterFactoryAncestor = new CodeSyncModelAdapterFactory(astModelAdapterFactory, null, false);
-		CodeSyncElementModelAdapterAncestor ancestor = new CodeSyncElementModelAdapterAncestor();
-		ancestor.setModelAdapterFactory(codeSyncElementModelAdapterFactoryAncestor);
-		ancestor.setEObjectConverter(astModelAdapterFactory);
-		codeSyncElementModelAdapterFactoryAncestor.addModelAdapter(CodeSyncElement.class, ancestor);
-		
-		// left - CodeSyncElements
-		ModelAdapterFactory codeSyncElementModelAdapterFactoryLeft = new CodeSyncModelAdapterFactory(astModelAdapterFactory, aceResource, true);
-		CodeSyncElementModelAdapterLeft left = new CodeSyncElementModelAdapterLeft();
-		left.setModelAdapterFactory(codeSyncElementModelAdapterFactoryLeft);
-		left.setEObjectConverter(astModelAdapterFactory);
-		left.setResource(aceResource);
-		codeSyncElementModelAdapterFactoryLeft.addModelAdapter(CodeSyncElement.class, left);
-		
 		match.setEditableResource(editableResource);
 		editableResource.setMatch(match);
-		editableResource.setModelAdapterFactorySet(new ModelAdapterFactorySet(codeSyncElementModelAdapterFactoryAncestor, codeSyncElementModelAdapterFactoryLeft, astModelAdapterFactory));
-
+		ModelAdapterFactorySet modelAdapterFactorySet = getModelAdapterFactorySetProvider().getFactorieSets().get(technology);
+		modelAdapterFactorySet.initialize(getAstCache(project));
+		editableResource.setModelAdapterFactorySet(modelAdapterFactorySet);
+		
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);
 		
 //		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);

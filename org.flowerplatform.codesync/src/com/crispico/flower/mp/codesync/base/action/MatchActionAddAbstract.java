@@ -44,8 +44,8 @@ public abstract class MatchActionAddAbstract extends DiffAction {
 		// process value features 
 		IModelAdapter thisMa = getThisModelAdapter(match);
 		IModelAdapter oppositeMa = getOppositeModelAdapter(match);
-		for (Object childFeature : thisMa.getFeatures(this_)) {
-			switch (thisMa.getFeatureType(childFeature)) {
+		for (Object childFeature : match.getEditableResource().getModelAdapterFactorySet().getFeatureProvider(this_).getFeatures(this_)) {
+			switch (match.getEditableResource().getModelAdapterFactorySet().getFeatureProvider(this_).getFeatureType(childFeature)) {
 			case IModelAdapter.FEATURE_TYPE_VALUE:
 				Object value = thisMa.getValueFeatureValue(this_, childFeature, null);
 				Object valueOpposite = oppositeMa.getValueFeatureValue(opposite, childFeature, null);

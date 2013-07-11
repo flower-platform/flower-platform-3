@@ -25,12 +25,15 @@ import astcache.wiki.Page;
 import astcache.wiki.util.WikiAdapterFactory;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
+import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
 import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
-import com.crispico.flower.mp.codesync.wiki.dokuwiki.DokuWikiConfigurationProvider;
+import com.crispico.flower.mp.codesync.wiki.adapter.WikiNodeModelAdapter;
+import com.crispico.flower.mp.codesync.wiki.adapter.WikiNodeModelAdapterRight;
+import com.crispico.flower.mp.codesync.wiki.featureprovider.WikiPageFeatureProvider;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
@@ -98,9 +101,13 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		leftAdapter.setTechnology(technology);
 		leftFactory.addModelAdapter(CodeSyncElement.class, leftAdapter);
 		
+		ModelAdapterFactorySet factorySet = new ModelAdapterFactorySet(ancestorFactory, leftFactory, rightFactory);
+		factorySet.addFeatureProvider(CodeSyncElement.class, new CodeSyncElementFeatureProvider());
+		factorySet.addFeatureProvider(WikiTreeBuilder.PAGE_CATEGORY, new WikiPageFeatureProvider());
+		
 		match.setEditableResource(editableResource);
 		editableResource.setMatch(match);
-		editableResource.setModelAdapterFactorySet(new ModelAdapterFactorySet(ancestorFactory, leftFactory, rightFactory));
+		editableResource.setModelAdapterFactorySet(factorySet);
 		
 		new WikiSyncAlgorithm(editableResource.getModelAdapterFactorySet(), technology).generateDiff(match);
 	}
@@ -214,7 +221,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		if (category == null) {
 			return -1;
 		}
-		if (category.startsWith("Headline")) {
+		if (category.startsWith("headline")) {
 			return Integer.parseInt(category.substring(category.length() - 1)); 
 		}
 		return -1;

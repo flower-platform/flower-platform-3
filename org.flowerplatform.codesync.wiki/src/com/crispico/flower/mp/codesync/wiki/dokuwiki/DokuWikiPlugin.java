@@ -4,19 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-
 import dw.xmlrpc.DokuJClient;
 import dw.xmlrpc.Page;
 import dw.xmlrpc.PageDW;
-import dw.xmlrpc.exception.DokuException;
 
 public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 

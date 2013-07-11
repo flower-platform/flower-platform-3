@@ -1,10 +1,8 @@
 package com.crispico.flower.mp.codesync.code.java.adapter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.Modifier;
 
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
@@ -18,15 +16,13 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class JavaModifierModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
 	@Override
-	public List<?> getFeatures(Object element) {
-		return Arrays.asList(
-			AstCacheCodePackage.eINSTANCE.getModifier_Type()
-		);
-	}
-	
-	@Override
 	public Object getMatchKey(Object element) {
 		return String.valueOf(getModifierType(element));
+	}
+
+	@Override
+	public String getLabel(Object modelElement) {
+		return ((Modifier) modelElement).getKeyword().toString();
 	}
 
 	@Override

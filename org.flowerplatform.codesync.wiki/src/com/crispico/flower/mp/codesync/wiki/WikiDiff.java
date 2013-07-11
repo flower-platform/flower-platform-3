@@ -18,12 +18,10 @@ import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 
 import astcache.wiki.FlowerBlock;
-import astcache.wiki.Page;
 import astcache.wiki.WikiPackage;
 
 import com.crispico.flower.mp.codesync.base.Diff;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @author Mariana
@@ -133,11 +131,6 @@ public class WikiDiff extends Diff {
 	public String getLeft() {
 		String wikiText = left.get();
 		CodeSyncElement root = (CodeSyncElement) getParentMatch().getLeft();
-//		CodeSyncElement root = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
-//		root.setType(WikiTreeBuilder.PAGE_CATEGORY);
-//		Page page = WikiPackage.eINSTANCE.getWikiFactory().createPage();
-//		page.setLineDelimiter(getLineDelimiter());
-//		root.setAstCacheElement(page);
 		WikiPlugin.getInstance().getWikiPageTree(wikiText, root, technology, flowerBlocks);
 		return WikiPlugin.getInstance().getWikiText(root, technology);
 	}
@@ -341,18 +334,6 @@ public class WikiDiff extends Diff {
 		return true;
 	}
 	
-	private String getLineDelimiter() {
-		String lineDelimiter = null;
-		try {
-			lineDelimiter = left.getLineDelimiter(0);
-			if (lineDelimiter == null) {
-				lineDelimiter = ancestor.getLineDelimiter(0);
-			}
-		} catch (BadLocationException e) {
-		}
-		return lineDelimiter;
-	}
-
 	class DocumentAndPosition {
 		
 		public IDocument document;

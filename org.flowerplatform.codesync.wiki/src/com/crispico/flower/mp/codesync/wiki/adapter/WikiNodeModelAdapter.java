@@ -1,6 +1,5 @@
-package com.crispico.flower.mp.codesync.wiki;
+package com.crispico.flower.mp.codesync.wiki.adapter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,9 @@ import astcache.wiki.WikiPackage;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
+import com.crispico.flower.mp.codesync.wiki.WikiDiff;
+import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
+import com.crispico.flower.mp.codesync.wiki.WikiTreeBuilder;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -47,22 +49,6 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 	public List<String> getIconUrls(Object modelElement) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public List<?> getFeatures(Object element) {
-//		return Arrays.asList(NAME, CHILDREN, TYPE, CONTENT);
-		return Arrays.asList(
-					CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(),
-					CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children(),
-					CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type(),
-					WikiPackage.eINSTANCE.getPage_InitialContent()
-				);
-	}
-
-	@Override
-	public String getFeatureName(Object feature) {
-		return feature.toString();
 	}
 
 	@Override

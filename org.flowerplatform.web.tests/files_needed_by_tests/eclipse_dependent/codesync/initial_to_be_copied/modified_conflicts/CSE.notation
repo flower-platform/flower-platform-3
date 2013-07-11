@@ -1,9 +1,9 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <codesync:CodeSyncRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astcache_code="http://www.flower-platform.com/xmi/astcache_code_1.0.0" xmlns:codesync="http://www.flower-platform.com/xmi/codesync_1.0.0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="modified_conflicts" type="Folder">
   <children name="Test.java" type="File">
-    <children name="Test" type="Class">
+    <children name="Test" type="javaClass">
       <astCacheElement xsi:type="astcache_code:Class" href="ACE.notation#/0"/>
-      <children name="test(String)" type="Operation">
+      <children name="test(String)" type="javaOperation">
         <astCacheElement xsi:type="astcache_code:Operation" href="ACE.notation#/1"/>
         <featureChanges>
           <key xsi:type="ecore:EReference" href="http://www.flower-platform.com/xmi/astcache_code_1.0.0#//ModifiableElement/modifiers"/>
@@ -19,17 +19,17 @@
           </value>
         </featureChanges>
       </children>
-      <children name="getTest()" type="Operation">
+      <children name="getTest()" type="javaOperation">
         <astCacheElement xsi:type="astcache_code:Operation" href="ACE.notation#/2"/>
       </children>
-      <children name="y" type="Attribute">
+      <children name="y" type="javaAttribute">
         <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/3"/>
         <featureChanges>
           <key xsi:type="ecore:EAttribute" href="http://www.flower-platform.com/xmi/astcache_code_1.0.0#//TypedElement/type"/>
           <value oldValueAsString="int" newValueAsString="Test"/>
         </featureChanges>
       </children>
-      <children name="x" type="Attribute">
+      <children name="x" type="javaAttribute">
         <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/4"/>
         <featureChanges>
           <key xsi:type="ecore:EAttribute" href="http://www.flower-platform.com/xmi/astcache_code_1.0.0#//TypedElement/type"/>

@@ -14,9 +14,14 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.Javadoc;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
+import org.eclipse.jdt.core.dom.MemberRef;
+import org.eclipse.jdt.core.dom.MethodRef;
 import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.PrimitiveType;
+import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TagElement;
@@ -186,8 +191,7 @@ public abstract class JavaAbstractAstNodeModelAdapter extends AstModelElementAda
 						docComment += tag.getTagName();
 					}
 					for (Object o2 : tag.fragments()) {
-						TextElement text = (TextElement) o2;
-						docComment += text.getText();
+						docComment += getTextFromDocElement(o2);
 					}
 					docComment += "\n";
 				}
@@ -196,6 +200,31 @@ public abstract class JavaAbstractAstNodeModelAdapter extends AstModelElementAda
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * @param node an IDocElement
+	 */
+	private String getTextFromDocElement(Object node) {
+		if (node instanceof MemberRef) {
+			return ((MemberRef) node).getName().getIdentifier();
+		}
+		if (node instanceof MethodRef) {
+			return ((MethodRef) node).getName().getIdentifier();
+		}
+		if (node instanceof SimpleName) {
+			return ((SimpleName) node).getIdentifier();
+		}
+		if (node instanceof QualifiedName) {
+			return ((QualifiedName) node).getFullyQualifiedName();
+		}
+		if (node instanceof TagElement) {
+			return ((TagElement) node).getTagName();
+		}
+		if (node instanceof TextElement) {
+			return ((TextElement) node).getText();
+		}
+		return "";
 	}
 	
 	protected void setJavaDoc(Object element, Object docComment) {

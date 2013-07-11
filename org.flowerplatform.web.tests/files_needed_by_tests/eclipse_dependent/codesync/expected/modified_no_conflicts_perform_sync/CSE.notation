@@ -1,54 +1,54 @@
 <?xml version="1.1" encoding="UTF-8"?>
 <codesync:CodeSyncRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:astcache_code="http://www.flower-platform.com/xmi/astcache_code_1.0.0" xmlns:codesync="http://www.flower-platform.com/xmi/codesync_1.0.0" name="modified_no_conflicts_perform_sync" type="Folder">
   <children name="Test.java" type="File">
-    <children name="Test" type="Class">
+    <children name="Test" type="javaClass">
       <astCacheElement xsi:type="astcache_code:Class" href="ACE.notation#/0"/>
-      <children name="test(String)" type="Operation">
+      <children name="test(String)" type="javaOperation">
         <astCacheElement xsi:type="astcache_code:Operation" href="ACE.notation#/1"/>
       </children>
-      <children name="getTest(int)" type="Operation">
+      <children name="getTest(int)" type="javaOperation">
         <astCacheElement xsi:type="astcache_code:Operation" href="ACE.notation#/2"/>
       </children>
-      <children name="x" type="Attribute">
+      <children name="x" type="javaAttribute">
         <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/4"/>
       </children>
-      <children name="InternalClassFromModel" type="Class">
+      <children name="InternalClassFromModel" type="javaClass">
         <astCacheElement xsi:type="astcache_code:Class" href="ACE.notation#/5"/>
       </children>
-      <children name="t" type="Attribute">
+      <children name="t" type="javaAttribute">
         <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/6"/>
       </children>
-      <children name="ActionType" type="Enum">
+      <children name="ActionType" type="javaEnum">
         <astCacheElement xsi:type="astcache_code:Class" href="ACE.notation#/7"/>
-        <children name="diffAction" type="Attribute">
+        <children name="diffAction" type="javaAttribute">
           <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/8"/>
         </children>
-        <children name="ActionType(Object)" type="Operation">
+        <children name="ActionType(Object)" type="javaOperation">
           <astCacheElement xsi:type="astcache_code:Operation" href="ACE.notation#/9"/>
         </children>
-        <children name="ACTION_TYPE_COPY_RIGHT_LEFT" type="EnumConstant">
+        <children name="ACTION_TYPE_COPY_RIGHT_LEFT" type="javaEnumConstant">
           <astCacheElement xsi:type="astcache_code:EnumConstant" href="ACE.notation#/10"/>
         </children>
-        <children name="ACTION_TYPE_COPY_LEFT_RIGHT" type="EnumConstant">
+        <children name="ACTION_TYPE_COPY_LEFT_RIGHT" type="javaEnumConstant">
           <astCacheElement xsi:type="astcache_code:EnumConstant" href="ACE.notation#/11"/>
         </children>
       </children>
-      <children name="InternalClsFromSource" type="Class">
+      <children name="InternalClsFromSource" type="javaClass">
         <astCacheElement xsi:type="astcache_code:Class" href="ACE.notation#/12"/>
-        <children name="x" type="Attribute">
+        <children name="x" type="javaAttribute">
           <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/13"/>
         </children>
       </children>
-      <children name="AnnotationTest" type="Annotation">
+      <children name="AnnotationTest" type="javaAnnotation">
         <astCacheElement xsi:type="astcache_code:Class" href="ACE.notation#/14"/>
-        <children name="value1" type="AnnotationMember">
+        <children name="value1" type="javaAnnotationMember">
           <astCacheElement xsi:type="astcache_code:AnnotationMember" href="ACE.notation#/15"/>
         </children>
-        <children name="value2" type="AnnotationMember">
+        <children name="value2" type="javaAnnotationMember">
           <astCacheElement xsi:type="astcache_code:AnnotationMember" href="ACE.notation#/16"/>
         </children>
       </children>
-      <children name="z" type="Attribute">
+      <children name="z" type="javaAttribute">
         <astCacheElement xsi:type="astcache_code:Attribute" href="ACE.notation#/17"/>
       </children>
     </children>

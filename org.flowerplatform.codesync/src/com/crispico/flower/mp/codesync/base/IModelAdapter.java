@@ -18,12 +18,10 @@ public interface IModelAdapter extends IModelAdapterUI {
 	public static final int FEATURE_TYPE_VALUE = 2;
 	
 	public static final int FEATURE_TYPE_REFERENCE = 3;
-
-	public List<?> getFeatures(Object element);
-
-	public int getFeatureType(Object feature);
 	
-	public String getFeatureName(Object feature);
+	public ModelAdapterFactorySet getModelAdapterFactorySet();
+	
+	public IModelAdapter setModelAdapterFactorySet(ModelAdapterFactorySet modelAdapterFactorySet);
 
 	public Iterable<?> getContainmentFeatureIterable(Object element, Object feature, Iterable<?> correspondingIterable);
 	

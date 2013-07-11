@@ -7,7 +7,6 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 
-import com.crispico.flower.mp.codesync.code.CodeSyncElementTypeConstants;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -18,16 +17,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavaAttributeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<?> getFeatures(Object element) {
-		List features = super.getFeatures(element);
-		features.add(AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
-		features.add(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
-		features.add(AstCacheCodePackage.eINSTANCE.getTypedElement_Type());
-		features.add(AstCacheCodePackage.eINSTANCE.getAttribute_Initializer());
-		return features;
-	}
+	public static final String ATTRIBUTE = "javaAttribute";
 	
 	@Override
 	public List<?> getChildren(Object modelElement) {
@@ -46,7 +36,7 @@ public class JavaAttributeModelAdapter extends JavaAbstractAstNodeModelAdapter {
 			return getLabel(element);
 		}
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return CodeSyncElementTypeConstants.ATTRIBUTE;
+			return ATTRIBUTE;
 		}
 		if (AstCacheCodePackage.eINSTANCE.getTypedElement_Type().equals(feature)) {
 			return getStringFromType(getFieldDeclaration(element).getType());

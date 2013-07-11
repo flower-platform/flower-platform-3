@@ -7,12 +7,26 @@ import java.util.List;
 import java.util.Map;
 
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
+import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
 
 /**
  * @author Mariana
  */
 public class StringModelAdapter implements IModelAdapter {
+	
+	private ModelAdapterFactorySet modelAdapterFactorySet;
+	
+	@Override
+	public ModelAdapterFactorySet getModelAdapterFactorySet() {
+		return modelAdapterFactorySet;
+	}
+	
+	@Override
+	public IModelAdapter setModelAdapterFactorySet(ModelAdapterFactorySet modelAdapterFactorySet) {
+		this.modelAdapterFactorySet = modelAdapterFactorySet;
+		return this;
+	}
 	
 	@Override
 	public boolean hasChildren(Object modelElement) {
@@ -32,21 +46,6 @@ public class StringModelAdapter implements IModelAdapter {
 	@Override
 	public List<String> getIconUrls(Object modelElement) {
 		return null;
-	}
-
-	@Override
-	public List<?> getFeatures(Object element) {
-		return Collections.emptyList();
-	}
-
-	@Override
-	public int getFeatureType(Object feature) {
-		throw new UnsupportedOperationException("String does not have feature " + feature);
-	}
-
-	@Override
-	public String getFeatureName(Object feature) {
-		throw new UnsupportedOperationException("String does not have feature " + feature);
 	}
 
 	@Override

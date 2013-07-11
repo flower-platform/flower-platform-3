@@ -10,12 +10,5 @@ import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
  */
 public class EnumConstantModelAdapter extends SyncElementModelAdapter {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@Override
-	public List<?> getFeatures(Object element) {
-		List features = super.getFeatures(element);
-		features.add(AstCacheCodePackage.eINSTANCE.getEnumConstant_Arguments());
-		return features;
-	}
 	
 }

@@ -1,11 +1,7 @@
 package com.crispico.flower.mp.codesync.code.adapter;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
-import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
@@ -15,14 +11,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class AnnotationValueModelAdapter extends SyncElementModelAdapter {
 
-	@Override
-	public List<?> getFeatures(Object element) {
-		return Arrays.asList(
-			AstCacheCodePackage.eINSTANCE.getAnnotationValue_Name(),
-			AstCacheCodePackage.eINSTANCE.getAnnotationValue_Value()
-		);
-	}
-	
 	@Override
 	public Object getMatchKey(Object element) {
 		return ((AnnotationValue) element).getName();

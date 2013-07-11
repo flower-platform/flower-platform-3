@@ -1,7 +1,7 @@
 package com.crispico.flower.mp.codesync.base;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 
 
@@ -10,6 +10,6 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
  */
 public interface ICodeSyncAlgorithmRunner {
 
-	void runCodeSyncAlgorithm(IProject project, IFile file, String technology, CommunicationChannel communicationChannel);
+	void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel);
 	
 }

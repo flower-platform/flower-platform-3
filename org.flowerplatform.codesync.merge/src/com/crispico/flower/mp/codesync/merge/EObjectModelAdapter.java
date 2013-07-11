@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
+import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
 
 /**
@@ -18,6 +19,19 @@ import com.crispico.flower.mp.codesync.base.action.ActionResult;
  */
 public class EObjectModelAdapter implements IModelAdapter {
 
+	private ModelAdapterFactorySet modelAdapterFactorySet;
+	
+	@Override
+	public ModelAdapterFactorySet getModelAdapterFactorySet() {
+		return modelAdapterFactorySet;
+	}
+	
+	@Override
+	public IModelAdapter setModelAdapterFactorySet(ModelAdapterFactorySet modelAdapterFactorySet) {
+		this.modelAdapterFactorySet = modelAdapterFactorySet;
+		return this;
+	}
+	
 	@Override
 	public boolean hasChildren(Object modelElement) {
 		return !((EObject) modelElement).eContents().isEmpty();
@@ -85,33 +99,33 @@ public class EObjectModelAdapter implements IModelAdapter {
 		return false;
 	}
 
-	@Override
-	public List<?> getFeatures(Object element) {
-		return ((EObject) element).eClass().getEAllStructuralFeatures();
-	}
-
-	@Override
-	public int getFeatureType(Object feature) {
-		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
-		if (structuralFeature instanceof EReference && ((EReference) structuralFeature).isContainment())
-			return FEATURE_TYPE_CONTAINMENT;
-		else if (structuralFeature.isDerived() || 
-				structuralFeature.isTransient() ||	
-				!structuralFeature.isChangeable() ||
-//				ModelMerge.codeSyncTimeStampFeature.equals(structuralFeature) ||
-//				UMLPackage.eINSTANCE.getNamedElement_ClientDependency().equals(structuralFeature) ||
-//			UMLPackage.eINSTANCE.getAssociation_NavigableOwnedEnd().equals(feature) ||
-				structuralFeature instanceof EReference && structuralFeature.isMany() && ((EReference) structuralFeature).getEOpposite() != null && !((EReference) structuralFeature).getEOpposite().isMany())
-			return FEATURE_TYPE_DONT_PROCESS; // filter out features that don't need to be processed
-		else
-			return FEATURE_TYPE_VALUE;
-
-	}
-	
-	public String getFeatureName(Object feature) {
-		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
-		return structuralFeature.getName();
-	}
+//	@Override
+//	public List<?> getFeatures(Object element) {
+//		return ((EObject) element).eClass().getEAllStructuralFeatures();
+//	}
+//
+//	@Override
+//	public int getFeatureType(Object feature) {
+//		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
+//		if (structuralFeature instanceof EReference && ((EReference) structuralFeature).isContainment())
+//			return FEATURE_TYPE_CONTAINMENT;
+//		else if (structuralFeature.isDerived() || 
+//				structuralFeature.isTransient() ||	
+//				!structuralFeature.isChangeable() ||
+////				ModelMerge.codeSyncTimeStampFeature.equals(structuralFeature) ||
+////				UMLPackage.eINSTANCE.getNamedElement_ClientDependency().equals(structuralFeature) ||
+////			UMLPackage.eINSTANCE.getAssociation_NavigableOwnedEnd().equals(feature) ||
+//				structuralFeature instanceof EReference && structuralFeature.isMany() && ((EReference) structuralFeature).getEOpposite() != null && !((EReference) structuralFeature).getEOpposite().isMany())
+//			return FEATURE_TYPE_DONT_PROCESS; // filter out features that don't need to be processed
+//		else
+//			return FEATURE_TYPE_VALUE;
+//
+//	}
+//	
+//	public String getFeatureName(Object feature) {
+//		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
+//		return structuralFeature.getName();
+//	}
 
 	public Object getMatchKey(Object element) {
 		EObject object = (EObject) element;
@@ -278,8 +292,8 @@ public class EObjectModelAdapter implements IModelAdapter {
 	 */
 	@Override
 	public void allActionsPerformed(Object element, Object correspondingElement) {
-		for (Object feature : getFeatures(element)) {
-			if (getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
+		for (Object feature : getModelAdapterFactorySet().getFeatureProvider(element).getFeatures(element)) {
+			if (getModelAdapterFactorySet().getFeatureProvider(element).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
 				allActionsPerformedForFeature(element, correspondingElement, feature);
 			}
 		}

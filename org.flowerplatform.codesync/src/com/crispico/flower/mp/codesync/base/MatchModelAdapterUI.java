@@ -149,12 +149,13 @@ public class MatchModelAdapterUI implements IModelAdapterUI {
 					IModelAdapter leftModelAdapter = match.getEditableResource().getModelAdapterFactorySet().getLeftFactory().getModelAdapter(match.getLeft());
 					if (match.getAncestor() == null) {
 						string = String.format("%s = %s", 
-								leftModelAdapter.getFeatureName(feature), leftModelAdapter.getValueFeatureValue(match.getLeft(), feature, null));
+								match.getEditableResource().getModelAdapterFactorySet().getFeatureProvider(match.getLeft()).getFeatureName(feature), 
+								leftModelAdapter.getValueFeatureValue(match.getLeft(), feature, null));
 						appendToolTipLine(leftToolTip, string);
 					} else {
 						IModelAdapter ancestorModelAdapter = match.getEditableResource().getModelAdapterFactorySet().getAncestorFactory().getModelAdapter(match.getAncestor());
 						string = String.format("%s = %s (was %s)", 
-								leftModelAdapter.getFeatureName(feature), 
+								match.getEditableResource().getModelAdapterFactorySet().getFeatureProvider(match.getAncestor()).getFeatureName(feature), 
 								leftModelAdapter.getValueFeatureValue(match.getLeft(), feature, null), 
 								ancestorModelAdapter.getValueFeatureValue(match.getAncestor(), feature, null));
 						appendToolTipLine(leftToolTip, string);
@@ -181,12 +182,13 @@ public class MatchModelAdapterUI implements IModelAdapterUI {
 					IModelAdapter rightModelAdapter = match.getEditableResource().getModelAdapterFactorySet().getRightFactory().getModelAdapter(match.getRight());
 					if (match.getAncestor() == null) {
 						string = String.format("%s = %s", 
-								rightModelAdapter.getFeatureName(feature), rightModelAdapter.getValueFeatureValue(match.getRight(), feature, null));
+								match.getEditableResource().getModelAdapterFactorySet().getFeatureProvider(match.getRight()).getFeatureName(feature), 
+								rightModelAdapter.getValueFeatureValue(match.getRight(), feature, null));
 						appendToolTipLine(rightToolTip, string);
 					} else {
 						IModelAdapter ancestorModelAdapter = match.getEditableResource().getModelAdapterFactorySet().getAncestorFactory().getModelAdapter(match.getAncestor());
 						string = String.format("%s = %s (was %s)", 
-								rightModelAdapter.getFeatureName(feature), 
+								match.getEditableResource().getModelAdapterFactorySet().getFeatureProvider(match.getAncestor()).getFeatureName(feature), 
 								rightModelAdapter.getValueFeatureValue(match.getRight(), feature, null), 
 								ancestorModelAdapter.getValueFeatureValue(match.getAncestor(), feature, null));
 						appendToolTipLine(rightToolTip, string);

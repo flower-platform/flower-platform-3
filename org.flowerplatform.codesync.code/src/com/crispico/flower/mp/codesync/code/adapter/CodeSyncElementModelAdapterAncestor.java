@@ -3,7 +3,6 @@ package com.crispico.flower.mp.codesync.code.adapter;
 import java.util.Iterator;
 
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
-import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.FeatureChange;

@@ -1,6 +1,8 @@
-package com.crispico.flower.mp.codesync.wiki;
+package com.crispico.flower.mp.codesync.wiki.adapter;
 
 import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
+import com.crispico.flower.mp.codesync.wiki.WikiDiff;
+import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 import astcache.wiki.Page;

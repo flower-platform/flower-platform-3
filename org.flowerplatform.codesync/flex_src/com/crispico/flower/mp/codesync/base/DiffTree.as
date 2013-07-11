@@ -17,6 +17,7 @@ package com.crispico.flower.mp.codesync.base
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeStatefulClient;
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorStatefulClient;
 	
+	import flash.display.DisplayObjectContainer;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -29,8 +30,6 @@ package com.crispico.flower.mp.codesync.base
 	import mx.events.FlexEvent;
 	import mx.events.ToolTipEvent;
 	
-	import spark.events.ListEvent;
-	
 	import org.flowerplatform.communication.tree.GenericTreeItemRenderer;
 	import org.flowerplatform.communication.tree.GenericTreeList;
 	import org.flowerplatform.communication.tree.TreeNodeHierarchicalModelAdapter;
@@ -38,6 +37,8 @@ package com.crispico.flower.mp.codesync.base
 	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.flexutil.tree.TreeList;
+	
+	import spark.events.ListEvent;
 	
 	use namespace mx_internal;
 	
@@ -55,7 +56,7 @@ package com.crispico.flower.mp.codesync.base
 		
 		public var projectPath:String;
 		
-		public var container:DiffContextMenuContainer;
+		public var contextMenuContainer:FlowerContextMenu;
 		
 		public var codeSyncEditorStatefulClient:CodeSyncEditorStatefulClient;
 		
@@ -117,6 +118,7 @@ package com.crispico.flower.mp.codesync.base
 //			
 //			requestInitialDataAutomatically = true;
 			statefulClient = new GenericTreeStatefulClient();
+			statefulClient.requestDataOnServer = false;
 			statefulClient.treeList = this;
 			
 			codeSyncEditorStatefulClient.diffTreeStatefulClient[treeType] = statefulClient;
@@ -173,7 +175,9 @@ package com.crispico.flower.mp.codesync.base
 //			return false;
 //		}
 		
-		public function fillContextMenu(contextMenu:FlowerContextMenu):void {
+		public function fillContextMenu():void {
+			contextMenuContainer.removeAllChildren();
+			
 			if (selectedItems.length == 0 || selectedItems.length > 1) 
 				return;
 			// Set the title of the context menu according to the selection.
@@ -194,10 +198,12 @@ package com.crispico.flower.mp.codesync.base
 			action.label = "Synchronize";
 			ae = new ActionEntry(action);
 			ae.enabled = diffTreeNode.crossColor == 0xFFFFFF;
-			contextMenu.addChild(ae);
+//			contextMenu.addChild(ae);
+			contextMenuContainer.addChild(ae);
 			
-//			var container:DiffContextMenuContainer = new DiffContextMenuContainer();	
-//			contextMenu.addChild(container);			
+			var container:DiffContextMenuContainer = new DiffContextMenuContainer();	
+//			contextMenu.addChild(container);		
+			contextMenuContainer.addChild(container);
 			for each (var cmEntry:DiffContextMenuEntry in diffTreeNode.contextMenuEntries) {
 				if (cmEntry.actionEntries == null || cmEntry.actionEntries.length == 0) {
 					var dummyAction:BaseAction = new BaseAction();
@@ -210,7 +216,7 @@ package com.crispico.flower.mp.codesync.base
 					else
 						container.rightPanel.addChild(ae);
 				} else {
-					var subMenu:SubMenuEntry = new SubMenuEntry(new SubMenuEntryModel(null, cmEntry.label), contextMenu);
+					var subMenu:SubMenuEntry = new SubMenuEntry(new SubMenuEntryModel(null, cmEntry.label), contextMenuContainer);
 					
 					subMenu.setStyle("color", cmEntry.color);
 					subMenu.setStyle("textRollOverColor", cmEntry.color);
@@ -236,7 +242,7 @@ package com.crispico.flower.mp.codesync.base
 //			ContextMenuManager.INSTANCE.refresh(this);
 //			container = new DiffContextMenuContainer();
 //			container.createComponentsFromDescriptors();
-//			fillContextMenu(new FlowerContextMenu(container));
+//			fillContextMenu(/*new FlowerContextMenu(contextMenuContainer)*/);
 		}		
 		
 		public function getContext():ActionContext {

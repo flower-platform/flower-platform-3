@@ -1,6 +1,5 @@
 package com.crispico.flower.mp.codesync.code.java.adapter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberValuePair;
-import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 
@@ -26,14 +24,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class JavaAnnotationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	@Override
-	public List<?> getFeatures(Object element) {
-		return Arrays.asList(
-			AstCacheCodePackage.eINSTANCE.getAnnotation_Name(),
-			AstCacheCodePackage.eINSTANCE.getAnnotation_Values()
-		);
-	}
-	
 	@Override
 	public Object getMatchKey(Object modelElement) {
 		Annotation annotation = (Annotation) modelElement;

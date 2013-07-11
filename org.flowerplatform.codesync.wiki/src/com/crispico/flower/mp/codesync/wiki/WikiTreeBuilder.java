@@ -24,8 +24,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class WikiTreeBuilder extends RegexProcessingSession {
 
-	public static final String FOLDER_CATEGORY = "Folder";
-	public static final String PAGE_CATEGORY = "Page";
+	public static final String FOLDER_CATEGORY = "folder";
+	public static final String PAGE_CATEGORY = "page";
 	
 	/**
 	 * Used for final levels (e.g. paragraphs).

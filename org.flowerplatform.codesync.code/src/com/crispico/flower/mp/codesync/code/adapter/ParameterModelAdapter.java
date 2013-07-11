@@ -1,10 +1,6 @@
 package com.crispico.flower.mp.codesync.code.adapter;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
-import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.Parameter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
@@ -14,15 +10,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  * @author Mariana
  */
 public class ParameterModelAdapter extends SyncElementModelAdapter {
-
-	@Override
-	public List<?> getFeatures(Object element) {
-		return Arrays.asList(
-			AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers(),
-			AstCacheCodePackage.eINSTANCE.getTypedElement_Type(),
-			AstCacheCodePackage.eINSTANCE.getParameter_Name()
-		);
-	}
 	
 	@Override
 	public Object getMatchKey(Object element) {
