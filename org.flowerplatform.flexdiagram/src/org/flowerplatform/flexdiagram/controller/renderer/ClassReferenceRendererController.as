@@ -14,9 +14,9 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 	 */
 	public class ClassReferenceRendererController extends ControllerBase implements IRendererController {
 		
-		protected var rendererClass:Class;
+		public var rendererClass:Class;
 		
-		public function ClassReferenceRendererController(diagramShell:DiagramShell, rendererClass:Class) {
+		public function ClassReferenceRendererController(diagramShell:DiagramShell, rendererClass:Class = null) {
 			super(diagramShell);
 			this.rendererClass = rendererClass;
 		}

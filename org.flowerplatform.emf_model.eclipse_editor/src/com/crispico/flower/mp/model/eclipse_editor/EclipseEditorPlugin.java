@@ -12,6 +12,9 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EPackage;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 
+import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+
 /**
  * This is the central singleton for the Notation editor plugin.
  * 
@@ -93,8 +96,8 @@ public final class EclipseEditorPlugin extends EMFPlugin {
 	
 	public EPackage[] ePackages = { 
 			NotationPackage.eINSTANCE,
-//			CodeSyncPackage.eINSTANCE,
-//			AstCacheCodePackage.eINSTANCE
+			CodeSyncPackage.eINSTANCE,
+			AstCacheCodePackage.eINSTANCE
 	};
 
 }

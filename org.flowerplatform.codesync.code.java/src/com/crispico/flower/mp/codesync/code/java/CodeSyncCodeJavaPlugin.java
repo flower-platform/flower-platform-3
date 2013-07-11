@@ -7,6 +7,11 @@ import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.java.JavaClassTitleProcessor;
+import org.flowerplatform.editor.model.java.JavaDragOnDiagramHandler;
+import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -36,7 +41,7 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
-		CodeSyncPlugin.getInstance().getDragOnDiagramHandler().addDelegateHandler(new JavaDragOnDiagramHandler());
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classTitle", new JavaClassTitleProcessor());
 		CodeSyncPlugin.getInstance().getFullyQualifiedNameProvider().addDelegateProvider(new JavaFullyQualifiedNameProvider());
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new JavaResourceChangeListener());
 		JavaCore.addElementChangedListener(new JavaElementChangedListener(), ElementChangedEvent.POST_RECONCILE);
@@ -60,6 +65,8 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		
 		CodeSyncCodePlugin.getInstance().getModelAdapterFactoryProvider().getFactories().put(TECHNOLOGY, astModelAdapterFactory);
 		CodeSyncCodePlugin.getInstance().getModelAdapterFactoryProvider().getFeatureProviders().put(TECHNOLOGY, new JavaFeatureProvider());
+		
+		CommunicationPlugin.getInstance().getServiceRegistry().registerService("classDiagramOperationsDispatcher", new JavaClassDiagramOperationsService());
 	}
 
 	public FolderModelAdapter getFolderModelAdapter() {

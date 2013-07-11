@@ -1,7 +1,7 @@
 package org.flowerplatform.editor.model.controller {
 	import mx.core.IVisualElement;
 	
-	import org.flowerplatform.editor.model.renderer.BasicModelRendererWithChildren;
+	import org.flowerplatform.editor.model.renderer.BoxRenderer;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
 	
@@ -11,7 +11,7 @@ package org.flowerplatform.editor.model.controller {
 	public class BasicModelRendererController extends ClassReferenceRendererController {
 		
 		public function BasicModelRendererController(diagramShell:DiagramShell) {
-			super(diagramShell, BasicModelRendererWithChildren);
+			super(diagramShell, BoxRenderer);
 		}
 		
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {

@@ -14,5 +14,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.edit.ui;visibility:=reexport,
  org.eclipse.ui.ide;visibility:=reexport,
  org.eclipse.emf.ecore.change,
- org.flowerplatform.emf_model.notation
+ org.flowerplatform.emf_model.notation,
+ org.flowerplatform.emf_model.astcache.code,
+ org.flowerplatform.emf_model.astcache.wiki,
+ org.flowerplatform.emf_model.codesync
 Bundle-ActivationPolicy: lazy

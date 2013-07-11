@@ -1,5 +1,7 @@
 package org.flowerplatform.editor.model;
 
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
@@ -23,12 +25,18 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected DiagramUpdaterChangeProcessor diagramUpdaterChangeProcessor;
 	
+	protected ComposedDragOnDiagramHandler composedDragOnDiagramHandler;
+	
 	public ComposedChangeProcessor getComposedChangeProcessor() {
 		return composedChangeProcessor;
 	}
 
 	public DiagramUpdaterChangeProcessor getDiagramUpdaterChangeProcessor() {
 		return diagramUpdaterChangeProcessor;
+	}
+
+	public ComposedDragOnDiagramHandler getComposedDragOnDiagramHandler() {
+		return composedDragOnDiagramHandler;
 	}
 
 	public void start(BundleContext bundleContext) throws Exception {
@@ -38,6 +46,13 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		composedChangeProcessor = new ComposedChangeProcessor();
 		diagramUpdaterChangeProcessor = new DiagramUpdaterChangeProcessor();
 		composedChangeProcessor.addChangeDescriptionProcessor(diagramUpdaterChangeProcessor);
+		composedDragOnDiagramHandler = new ComposedDragOnDiagramHandler();
+		
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.editor.model.dragOnDiagramHandler");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			IDragOnDiagramHandler handler = (IDragOnDiagramHandler) configurationElement.createExecutableExtension("dragOnDiagramHandler");
+			composedDragOnDiagramHandler.addDelegateHandler(handler);
+		}
 		
 		CustomSerializationDescriptor viewSD = new CustomSerializationDescriptor(View.class)
 		.addDeclaredProperty("id")

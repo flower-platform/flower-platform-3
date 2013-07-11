@@ -36,7 +36,7 @@ public class JavaResourceChangeListener implements IResourceChangeListener {
 			EditableResource editableResource = service.getEditableResource(path);
 			if (editableResource != null) {
 				for (EditableResourceClient client : editableResource.getClients()) {
-					CodeSyncPlugin.getInstance().getDragOnDiagramHandler().handleDragOnDiagram(Arrays.asList(resource), null, null, null, client.getCommunicationChannel());
+//					CodeSyncPlugin.getInstance().getDragOnDiagramHandler().handleDragOnDiagram(Arrays.asList(resource), null, null, null, client.getCommunicationChannel());
 				}
 			}
 		}

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
+
 public class DiagramUpdaterChangeProcessorContext {
 	
 	public static final String KEY = "DiagramUpdaterChangeProcessorContext";
@@ -21,6 +23,8 @@ public class DiagramUpdaterChangeProcessorContext {
 	private List<Object> objectsToUpdate = new ArrayList<Object>();
 	
 	private List<String> objectIdsToDispose = new ArrayList<String>();
+	
+	private List<ViewDetailsUpdate> viewDetailsUpdates = new ArrayList<ViewDetailsUpdate>();
 
 	public List<Object> getObjectsToUpdate() {
 		return objectsToUpdate;
@@ -28,6 +32,14 @@ public class DiagramUpdaterChangeProcessorContext {
 
 	public List<String> getObjectIdsToDispose() {
 		return objectIdsToDispose;
+	}
+
+	public List<ViewDetailsUpdate> getViewDetailsUpdates() {
+		return viewDetailsUpdates;
+	}
+	
+	public boolean isEmpty() {
+		return objectsToUpdate.isEmpty() && objectIdsToDispose.isEmpty() && viewDetailsUpdates.isEmpty();
 	}
 	
 }

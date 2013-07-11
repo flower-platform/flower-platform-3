@@ -572,7 +572,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * @flowerModelElementId _M-Ec4wcIEeK49485S7r3Vw
 	 */
-	protected abstract void updateEditableResourceContentAndDispatchUpdates(CommunicationChannel originatingCommunicationChannel, String originatingStatefulClientId, EditableResource editableResource, Object updatesToApply);
+	protected abstract void updateEditableResourceContentAndDispatchUpdates(StatefulServiceInvocationContext context, EditableResource editableResource, Object updatesToApply);
 
 	@Override
 	public void communicationChannelCreated(
@@ -1181,7 +1181,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	
 			if (tryLock(editableResource, client)) {
 				// lock acquired or renewed
-				updateEditableResourceContentAndDispatchUpdates(context.getCommunicationChannel(), context.getStatefulClientId(), editableResource, updatesToApply);
+				updateEditableResourceContentAndDispatchUpdates(context, editableResource, updatesToApply);
 				
 				// dispatch ER notification(s)
 				if (editableResource.getMasterEditableResource() == null) {

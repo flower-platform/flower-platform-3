@@ -19,7 +19,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.codesync.merge,
  org.flowerplatform.common,
  org.flowerplatform.editor,
- org.flowerplatform.web
+ org.flowerplatform.web,
+ org.flowerplatform.editor.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Export-Package: com.crispico.flower.mp.codesync.code.java
+Export-Package: com.crispico.flower.mp.codesync.code.java,
+ org.flowerplatform.editor.model.java
 Bundle-ActivationPolicy: lazy

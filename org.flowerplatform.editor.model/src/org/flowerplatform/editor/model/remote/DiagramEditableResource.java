@@ -1,5 +1,6 @@
 package org.flowerplatform.editor.model.remote;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -52,4 +53,7 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 		this.changeRecorder = changeRecorder;
 	}
 
+	public EObject getEObjectById(String id) {
+		return mainResource.getEObject(id);
+	}
 }

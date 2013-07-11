@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.callback.InvokeCallbackClientCommand;
@@ -86,6 +87,8 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 	
 	private long exceptionCallbackId;
 	
+	private Map<String, Object> additionalDataForServiceInvocationContext;
+	
 	/**
 	 * The string service id of the service, as registered in {@link ServiceRegistry}.
 	 * 
@@ -159,6 +162,14 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 		this.exceptionCallbackId = exceptionCallbackId;
 	}
 
+	public Map<String, Object> getAdditionalDataForServiceInvocationContext() {
+		return additionalDataForServiceInvocationContext;
+	}
+
+	public void setAdditionalDataForServiceInvocationContext(Map<String, Object> additionalDataForServiceInvocationContext) {
+		this.additionalDataForServiceInvocationContext = additionalDataForServiceInvocationContext;
+	}
+
 	/**
 	 * @see Class documentation.
 	 * 
@@ -190,6 +201,7 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 					ServiceInvocationContext.class.isAssignableFrom((Class<?>) parameterTypes[0])) {
 				// in this case, we inject a ServiceInvocationContext
 				ServiceInvocationContext context = createServiceInvocationContext(getCommunicationChannel(), this);
+				context.setAdditionalData(getAdditionalDataForServiceInvocationContext());
 				if (getParameters() == null)
 					setParameters(new ArrayList<Object>());
 				if (!(getParameters().size() > 1 && getParameters().get(0) instanceof ServiceInvocationContext)) {

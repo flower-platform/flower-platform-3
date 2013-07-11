@@ -135,7 +135,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 * @flowerModelElementId _M-Z0EwcIEeK49485S7r3Vw
 	 */
 	@Override
-	protected void updateEditableResourceContentAndDispatchUpdates(CommunicationChannel originatingCommunicationChannel, String originatingStatefulClientId, EditableResource editableResource, Object updatesToApply) {
+	protected void updateEditableResourceContentAndDispatchUpdates(StatefulServiceInvocationContext context, EditableResource editableResource, Object updatesToApply) {
 
 		TextEditableResource textEditableResource = (TextEditableResource) editableResource;
 		
@@ -151,7 +151,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 		}
 		
 		for (EditableResourceClient otherClient : textEditableResource.getClients()) {
-			if (!otherClient.getCommunicationChannel().equals(originatingCommunicationChannel)) {
+			if (!otherClient.getCommunicationChannel().equals(context.getCommunicationChannel())) {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Redispatching text updates to client = {}", otherClient.getCommunicationChannel());
 				}
