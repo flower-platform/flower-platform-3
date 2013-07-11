@@ -1,10 +1,15 @@
-package com.crispico.flower.mp.codesync.code;
+package com.crispico.flower.mp.codesync.code.adapter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @flowerModelElementId _j9MV0LLCEeC7r409C3qpqw
@@ -15,25 +20,28 @@ public abstract class AstModelElementAdapter implements IModelAdapter {
 	
 	public static final String FILE = "File";
 	
-	protected CodeSyncElementFeatureProvider common;
-	
-	public void setFeatureProvider(CodeSyncElementFeatureProvider common) {
-		this.common = common;
-	}
-
 	@Override
 	public String getFeatureName(Object feature) {
-		return common.getFeatureName(feature);
+		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
+		return structuralFeature.getName();
 	}
 
 	@Override
 	public List<?> getFeatures(Object element) {
-		return common.getFeatures(element);
+		List<EStructuralFeature> features = new ArrayList<EStructuralFeature>();
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type());
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
+		return features;
 	}
 
 	@Override
 	public int getFeatureType(Object feature) {
-		return common.getFeatureType(feature);
+		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
+		if (structuralFeature.isMany())
+			return IModelAdapter.FEATURE_TYPE_CONTAINMENT;
+		else 
+			return IModelAdapter.FEATURE_TYPE_VALUE;
 	}
 
 	@Override

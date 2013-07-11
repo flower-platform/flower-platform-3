@@ -15,27 +15,33 @@ package com.crispico.flower.mp.codesync.base
 	import com.crispico.flower.mp.codesync.base.action.DiffContextMenuEntry;
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeStatefulClient;
+	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorStatefulClient;
 	
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import mx.collections.ArrayCollection;
+	import mx.collections.ArrayList;
 	import mx.core.ClassFactory;
 	import mx.core.UITextField;
 	import mx.core.mx_internal;
 	import mx.events.FlexEvent;
-	import mx.events.ListEvent;
 	import mx.events.ToolTipEvent;
 	
-	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
-	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import spark.events.ListEvent;
 	
-	import temp.tree.GenericTree;
+	import org.flowerplatform.communication.tree.GenericTreeItemRenderer;
+	import org.flowerplatform.communication.tree.GenericTreeList;
+	import org.flowerplatform.communication.tree.TreeNodeHierarchicalModelAdapter;
+	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+	import org.flowerplatform.communication.tree.remote.PathFragment;
+	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
+	import org.flowerplatform.flexutil.tree.TreeList;
 	
 	use namespace mx_internal;
 	
-	public class DiffTree extends GenericTree implements IContextMenuLogicProvider, IActionProvider2 { 
+	public class DiffTree extends GenericTreeList { 
 	
 		public static const TREE_TYPE_DIFF:int = 0;
 		
@@ -49,25 +55,44 @@ package com.crispico.flower.mp.codesync.base
 		
 		public var projectPath:String;
 		
+		public var container:DiffContextMenuContainer;
+		
+		public var codeSyncEditorStatefulClient:CodeSyncEditorStatefulClient;
+		
+		
 		public function DiffTree() {
-			var clientNotifierData:ClientNotifierData = ContextMenuManager.INSTANCE.registerClient(this, true, this, this, null, null, null, this, 50);
-			clientNotifierData.isOverSpecialSelectedElementFunction = function (x:Number, y:Number):Boolean {
-				return true;
-			};
-			ContextMenuManager.INSTANCE.expandMenuDelay = 0;
-			ContextMenuManager.INSTANCE.accelerateExpandMenuDelay = 0;
+			super();
+//			var clientNotifierData:ClientNotifierData = ContextMenuManager.INSTANCE.registerClient(this, true, this, this, null, null, null, this, 50);
+//			clientNotifierData.isOverSpecialSelectedElementFunction = function (x:Number, y:Number):Boolean {
+//				return true;
+//			};
+//			ContextMenuManager.INSTANCE.expandMenuDelay = 0;
+//			ContextMenuManager.INSTANCE.accelerateExpandMenuDelay = 0;
 			
 			addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
 			
-			showRoot = true;
-			_contextMenuEnabled = true;
+//			showRoot = true;
+//			_contextMenuEnabled = true;
 //			fillContextMenuFunction = _fillContextMenu;
 		
 			itemRenderer = new ClassFactory(DiffTreeNodeItemRenderer);
+			hierarchicalModelAdapter = new TreeNodeHierarchicalModelAdapter();
+
 			addEventListener(ListEvent.ITEM_ROLL_OVER, rollOverHandler);
 			addEventListener(ListEvent.ITEM_ROLL_OUT, rollOutHandler);
 			//addEventListener(ToolTipEvent.TOOL_TIP_CREATE, toolTipCreateHandler);
-			addEventListener(ListEvent.ITEM_CLICK, itemClickHandler);
+			addEventListener(MouseEvent.CLICK, itemClickHandler);
+		}
+		
+		override public function expandCollapseNode(modelWrapper:HierarchicalModelWrapper):void	{
+			if (!modelWrapper.expanded) {
+				// i.e. state = collapsed				
+				codeSyncEditorStatefulClient.openNode(modelWrapper.treeNode, getContext());			
+			} else {
+				// i.e. state = expanded; call server only if dispatch type tree
+//				statefulClient.closeNode(modelWrapper.treeNode);
+			}
+			super.expandCollapseNode(modelWrapper);
 		}
 		
 		/**
@@ -77,18 +102,30 @@ package com.crispico.flower.mp.codesync.base
 		 * @author Mariana
 		 */
 		protected function creationCompleteHandler(event:FlexEvent):void {
-			clientIdPrefix = "Diff Tree";
-			serviceId = "DiffTreeStatefulService";
+			var root:DiffTreeNode = new DiffTreeNode();
+			root.children = new ArrayCollection();
+			var node:DiffTreeNode = new DiffTreeNode();
+			node.label = projectPath;
+			node.pathFragment = new PathFragment(projectPath, String(treeType));
+			node.children = new ArrayCollection();
+			node.hasChildren = true;
+			root.children.addItem(node);
+			rootNode = root;
 			
-			requestInitialDataAutomatically = true;
-			statefulClient = new DiffTreeStatefulClient();
-			statefulClient.genericTree = this;
-			CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
+//			clientIdPrefix = "Diff Tree";
+//			serviceId = "DiffTreeStatefulService";
+//			
+//			requestInitialDataAutomatically = true;
+			statefulClient = new GenericTreeStatefulClient();
+			statefulClient.treeList = this;
+			
+			codeSyncEditorStatefulClient.diffTreeStatefulClient[treeType] = statefulClient;
+//			CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 		}
 		
-		protected override function createRootTreeNode():TreeNode {
-			return new DiffTreeNode();
-		}
+//		protected override function createRootTreeNode():TreeNode {
+//			return new DiffTreeNode();
+//		}
 		
 		private function rollOverHandler(event:ListEvent):void {
 			//event.target.toolTip = event.itemRenderer.data.toolTip;
@@ -102,55 +139,55 @@ package com.crispico.flower.mp.codesync.base
 			//event.toolTip = new DiffTreeToolTip();
 		}
 		
-		override public function get displayAreaOfSelection():Rectangle {			
-			if (selectedItems.length == 0) 
-				return null;		
-			var selectedItemRenderer:DiffTreeNodeItemRenderer = DiffTreeNodeItemRenderer(itemToItemRenderer(selectedItems[0]));
-			if (selectedItemRenderer == null)
-				return null;
-			var itemRendererLabel:UITextField = UITextField(selectedItemRenderer.getLabel());
-			
-			var upperLeft:Point = itemRendererLabel.localToGlobal(new Point(0,0));
-			var downRight:Point = itemRendererLabel.localToGlobal(new Point(itemRendererLabel.measuredWidth, itemRendererLabel.measuredWidth));
-			return new Rectangle(upperLeft.x, upperLeft.y, downRight.x - upperLeft.x, downRight.y - upperLeft.y);  			
-		}
-
-		override public function isOverSelection(event:MouseEvent):Boolean {
-			var point:Point = new Point(event.stageX, event.stageY);
-			if (selectedItems.length == 0) 
-				return false;
-			
-			var selectedItemRenderer:DiffTreeNodeItemRenderer = DiffTreeNodeItemRenderer(itemToItemRenderer(selectedItems[0]));
-			if (selectedItemRenderer == null)
-				return false;
-			var itemRendererLabel:UITextField = UITextField(selectedItemRenderer.getLabel());
-			
-			var upperLeft:Point = itemRendererLabel.localToGlobal(new Point(0,0));
-			var downRight:Point = itemRendererLabel.localToGlobal(new Point(itemRendererLabel.measuredWidth, itemRendererLabel.measuredWidth));
-			if (point.x >= upperLeft.x 
-						&& point.y >= upperLeft.y 
-						&& point.x <= downRight.x
-						&& point.y <= downRight.y) {
-					return true;
-			}
-			return false;
-		}
+//		public function get displayAreaOfSelection():Rectangle {			
+//			if (selectedItems.length == 0) 
+//				return null;		
+//			var selectedItemRenderer:DiffTreeNodeItemRenderer = DiffTreeNodeItemRenderer(itemToItemRenderer(selectedItems[0]));
+//			if (selectedItemRenderer == null)
+//				return null;
+//			var itemRendererLabel:UITextField = UITextField(selectedItemRenderer.getLabel());
+//			
+//			var upperLeft:Point = itemRendererLabel.localToGlobal(new Point(0,0));
+//			var downRight:Point = itemRendererLabel.localToGlobal(new Point(itemRendererLabel.measuredWidth, itemRendererLabel.measuredWidth));
+//			return new Rectangle(upperLeft.x, upperLeft.y, downRight.x - upperLeft.x, downRight.y - upperLeft.y);  			
+//		}
+//
+//		public function isOverSelection(event:MouseEvent):Boolean {
+//			var point:Point = new Point(event.stageX, event.stageY);
+//			if (selectedItems.length == 0) 
+//				return false;
+//			
+//			var selectedItemRenderer:DiffTreeNodeItemRenderer = DiffTreeNodeItemRenderer(itemToItemRenderer(selectedItems[0]));
+//			if (selectedItemRenderer == null)
+//				return false;
+//			var itemRendererLabel:UITextField = UITextField(selectedItemRenderer.getLabel());
+//			
+//			var upperLeft:Point = itemRendererLabel.localToGlobal(new Point(0,0));
+//			var downRight:Point = itemRendererLabel.localToGlobal(new Point(itemRendererLabel.measuredWidth, itemRendererLabel.measuredWidth));
+//			if (point.x >= upperLeft.x 
+//						&& point.y >= upperLeft.y 
+//						&& point.x <= downRight.x
+//						&& point.y <= downRight.y) {
+//					return true;
+//			}
+//			return false;
+//		}
 		
 		public function fillContextMenu(contextMenu:FlowerContextMenu):void {
 			if (selectedItems.length == 0 || selectedItems.length > 1) 
 				return;
 			// Set the title of the context menu according to the selection.
-			if (selectedItems.length == 1) {
-				contextMenu.setTitle(selectedItems[0].label as String);
-			} else { 
-				contextMenu.setTitle("Multiple Selection");
-			}
+//			if (selectedItems.length == 1) {
+//				contextMenu.setTitle(selectedItems[0].label as String);
+//			} else { 
+//				contextMenu.setTitle("Multiple Selection");
+//			}
 		
 //			var entries:DiffContextMenuEntries = new DiffContextMenuEntries(contextMenu);			
 //			contextMenu.addChild(entries);	
 //			entries.fill();
-			var diffTreeNode:DiffTreeNode = DiffTreeNode(selectedItems[0]);
-			if (diffTreeNode.contextMenuEntries.length == 0)
+			var diffTreeNode:DiffTreeNode = DiffTreeNode(HierarchicalModelWrapper(selectedItems[0]).treeNode);
+			if (diffTreeNode.contextMenuEntries == null)
 				return;
 			
 			action = new DiffAction(null, this);
@@ -159,8 +196,8 @@ package com.crispico.flower.mp.codesync.base
 			ae.enabled = diffTreeNode.crossColor == 0xFFFFFF;
 			contextMenu.addChild(ae);
 			
-			var container:DiffContextMenuContainer = new DiffContextMenuContainer();	
-			contextMenu.addChild(container);			
+//			var container:DiffContextMenuContainer = new DiffContextMenuContainer();	
+//			contextMenu.addChild(container);			
 			for each (var cmEntry:DiffContextMenuEntry in diffTreeNode.contextMenuEntries) {
 				if (cmEntry.actionEntries == null || cmEntry.actionEntries.length == 0) {
 					var dummyAction:BaseAction = new BaseAction();
@@ -195,21 +232,18 @@ package com.crispico.flower.mp.codesync.base
 			}
 		}
 		
-		private function itemClickHandler(event:ListEvent):void {
-			ContextMenuManager.INSTANCE.refresh(this);
+		private function itemClickHandler(event:MouseEvent):void {
+//			ContextMenuManager.INSTANCE.refresh(this);
+//			container = new DiffContextMenuContainer();
+//			container.createComponentsFromDescriptors();
+//			fillContextMenu(new FlowerContextMenu(container));
 		}		
 		
-		override public function get context():Object {
-			var context:Object = super.context;
+		public function getContext():ActionContext {
+			var context:ActionContext = new ActionContext();
 			context.treeType = treeType;
 			context.projectPath = projectPath;
 			return context;
-		}
-		
-		public function getContext():ActionContext
-		{
-			// TODO Auto Generated method stub
-			return null;
 		}
 		
 	}

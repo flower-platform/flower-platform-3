@@ -16,10 +16,10 @@
 			}
 			
 			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {
-				diffDialog.diffTree.statefulClient.openNode(null);
-				diffDialog.ancestorTree.statefulClient.openNode(null);
-				diffDialog.leftTree.statefulClient.openNode(null);
-				diffDialog.rightTree.statefulClient.openNode(null);
+//				diffDialog.diffTree.statefulClient.openNode(null);
+//				diffDialog.ancestorTree.statefulClient.openNode(null);
+//				diffDialog.leftTree.statefulClient.openNode(null);
+//				diffDialog.rightTree.statefulClient.openNode(null);
 			}
 		
 			protected function synchronize():void {
@@ -49,7 +49,7 @@
 	
 	<mx:Button id="synchronizeButton" label="Synchronize" click="synchronize()"/>
 	
-	<base:DiffDialog id="diffDialog" projectPath="{editorStatefulClient.editableResourcePath}" width="100%" height="100%" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
+	<base:DiffDialog id="diffDialog" projectPath="{editorStatefulClient.editableResourcePath}" statefulClient="{codeSyncEditorStatefulClient}" width="100%" height="100%" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5"/>
 	
 	<mx:HBox width="100%" horizontalAlign="right" paddingTop="5" paddingLeft="5" paddingRight="5" paddingBottom="5">
 		<mx:Button id="applySelectedActionsButton" label="Apply Selected Actions" click="applySelectedActions()"/>

@@ -1,5 +1,6 @@
 package  org.flowerplatform.blazeds {
 	import flash.events.EventDispatcher;
+	import flash.events.HTTPStatusEvent;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	

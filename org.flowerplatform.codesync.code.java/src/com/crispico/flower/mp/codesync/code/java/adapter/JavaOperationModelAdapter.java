@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.code.java;
+package com.crispico.flower.mp.codesync.code.java.adapter;
 
 import java.util.Collections;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Type;
 
+import com.crispico.flower.mp.codesync.code.CodeSyncElementTypeConstants;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -18,7 +19,16 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavaOperationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
-	public static final String OPERATION = "Operation";
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<?> getFeatures(Object element) {
+		List features = super.getFeatures(element);
+		features.add(AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
+		features.add(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+		features.add(AstCacheCodePackage.eINSTANCE.getTypedElement_Type());
+		features.add(AstCacheCodePackage.eINSTANCE.getOperation_Parameters());
+		return features;
+	}
 	
 	@Override
 	public List<?> getChildren(Object modelElement) {
@@ -39,7 +49,7 @@ public class JavaOperationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 			return getLabel(element);
 		}
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return OPERATION;
+			return CodeSyncElementTypeConstants.OPERATION;
 		}
 		if (AstCacheCodePackage.eINSTANCE.getTypedElement_Type().equals(feature)) {
 			return getStringFromType(getMethodDeclaration(element).getReturnType2());

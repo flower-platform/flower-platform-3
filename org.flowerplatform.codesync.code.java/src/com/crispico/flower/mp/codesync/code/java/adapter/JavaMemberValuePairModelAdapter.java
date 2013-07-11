@@ -1,5 +1,6 @@
-package com.crispico.flower.mp.codesync.code.java;
+package com.crispico.flower.mp.codesync.code.java.adapter;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,6 +17,14 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class JavaMemberValuePairModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
+	@Override
+	public List<?> getFeatures(Object element) {
+		return Arrays.asList(
+			AstCacheCodePackage.eINSTANCE.getAnnotationValue_Name(),
+			AstCacheCodePackage.eINSTANCE.getAnnotationValue_Value()
+		);
+	}
+	
 	@Override
 	public List<?> getChildren(Object modelElement) {
 		return Collections.emptyList();

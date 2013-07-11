@@ -1,11 +1,13 @@
 package com.crispico.flower.mp.codesync.merge;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 
@@ -21,20 +23,36 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
  */
 public class SyncElementModelAdapter extends EObjectModelAdapter {
 
+	protected ModelAdapterFactory modelAdapterFactory;
+	
 	protected ModelAdapterFactory codeSyncElementConverter;
 	
 	protected Resource resource;
 	
-	/**
-	 * The {@link IModelAdapter}s of the {@link #codeSyncElementConverter} are responsible
-	 * with providing a model element that corresponds to the 
-	 */
-	public void setEObjectConverter(ModelAdapterFactory codeSyncElementConverter) {
-		this.codeSyncElementConverter = codeSyncElementConverter;
+	public SyncElementModelAdapter setModelAdapterFactory(ModelAdapterFactory modelAdapterFactory) {
+		this.modelAdapterFactory = modelAdapterFactory;
+		return this;
 	}
 	
-	public void setResource(Resource resource) {
+	public ModelAdapterFactory getModelAdapterFactory() {
+		return modelAdapterFactory;
+	}
+	
+	/**
+	 * @see IModelAdapter#createCorrespondingModelElement(Object)
+	 */
+	public SyncElementModelAdapter setEObjectConverter(ModelAdapterFactory codeSyncElementConverter) {
+		this.codeSyncElementConverter = codeSyncElementConverter;
+		return this;
+	}
+	
+	public ModelAdapterFactory getEObjectConverter() {
+		return codeSyncElementConverter;
+	}
+	
+	public SyncElementModelAdapter setResource(Resource resource) {
 		this.resource = resource;
+		return this;
 	}
 	
 	public void addToResource(AstCacheElement element) {
@@ -43,10 +61,20 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 	
 	@Override
 	public List<?> getFeatures(Object element) {
-		return Arrays.asList(
-				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(),
-				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type(),
-				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
+		List<EStructuralFeature> features = new ArrayList<EStructuralFeature>();
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type());
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
+		return features;
+	}
+	
+	@Override
+	public int getFeatureType(Object feature) {
+		EStructuralFeature structuralFeature = (EStructuralFeature) feature;
+		if (structuralFeature.isMany())
+			return IModelAdapter.FEATURE_TYPE_CONTAINMENT;
+		else 
+			return IModelAdapter.FEATURE_TYPE_VALUE;
 	}
 	
 	@Override
@@ -122,7 +150,7 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 		}
 		if (matchKey != null) {
 			for (Object child : children) {
-				if (matchKey.equals(getMatchKey(child))) {
+				if (matchKey.equals(modelAdapterFactory.getModelAdapter(child).getMatchKey(child))) {
 					return child;
 				}
 			}

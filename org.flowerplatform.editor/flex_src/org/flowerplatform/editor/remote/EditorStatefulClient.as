@@ -19,6 +19,7 @@ package  org.flowerplatform.editor.remote {
 	import org.flowerplatform.editor.EditorFrontend;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	
 	/**
 	 * @flowerModelElementId _Z2ZWYAJ3EeKGLqam5SXwYg
@@ -198,7 +199,7 @@ package  org.flowerplatform.editor.remote {
 		protected function unsubscribeFromStatefulService_removeEditorFrontend(editorFrontend:EditorFrontend, editorFrontendIndex:int):void {
 			editorFrontends.removeItemAt(editorFrontendIndex);
 //			editorFrontend.resourceStatusBar.collaborativeDiagramViewer.setRootModel(null);
-//			SingletonRefsFromPrePluginEra.workbench.closeView(editorFrontend, false);			
+			FlexUtilGlobals.getInstance().workbench.closeView(editorFrontend, false);			
 		}
 		
 		protected function unsubscribeFromStatefulService_beforeUnsubscribeFromStatefulService(dataFromUnregistrator:Object):void {
@@ -227,6 +228,10 @@ package  org.flowerplatform.editor.remote {
 				masterER.slaveEditableResources.removeItemAt(index);
 			}
 			
+		}
+		
+		override protected function removeUIAndRelatedElementsAndStatefulClientBecauseUnsubscribedForcefully():void {
+			unsubscribeFromStatefulService(null);
 		}
 		
 		override public function afterAddInStatefulClientRegistry():void {

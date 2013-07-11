@@ -39,7 +39,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		codeSyncAlgorithmRunner = new ComposedCodeSyncAlgorithmRunner();
 		
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(DiffTreeStatefulService.SERVICE_ID, new DiffTreeStatefulService());
 	}
 	
 	public Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {

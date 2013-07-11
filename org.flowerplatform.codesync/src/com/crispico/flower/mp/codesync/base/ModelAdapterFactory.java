@@ -1,7 +1,7 @@
 package com.crispico.flower.mp.codesync.base;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 
@@ -11,24 +11,30 @@ public class ModelAdapterFactory {
 		public Class<?> clazz;
 		public IModelAdapter modelAdapter;
 		public String extension;
+		
+		public ModelAdapterEntry() {
+		}
+
+		@Override
+		public String toString() {
+			return clazz.getSimpleName() + " " + modelAdapter.getClass().getSimpleName(); 
+		}
 	}
 	
-//	public static ModelAdapterFactory INSTANCE = new ModelAdapterFactory();
-
 	/**
 	 * O vom optimiza probabil cu un hashmap. Asta este modelul pentru care nu
 	 * am pus functia de genul "IModelAdapter.isForType()", care ar fi implicat mereu
 	 * o iteratie.
 	 */
-	protected List<ModelAdapterEntry> modelAdapters = new ArrayList<ModelAdapterEntry>();
+	protected Map<Object, ModelAdapterEntry> modelAdapters = new HashMap<Object, ModelAdapterEntry>();
 	
 	/**
 	 * @author Cristi
 	 * @author Mariana
 	 */
 	public IModelAdapter getModelAdapter(Object modelElement) {
-		for (ModelAdapterEntry e : modelAdapters)
-			if (e.clazz.isAssignableFrom(modelElement.getClass())) {
+		for (ModelAdapterEntry e : modelAdapters.values())
+			if (e.clazz != null && e.clazz.isAssignableFrom(modelElement.getClass())) {
 				if (e.extension == null || e.extension.equals(((IFile) modelElement).getFileExtension())) {
 					return e.modelAdapter;
 				}
@@ -40,7 +46,7 @@ public class ModelAdapterFactory {
 		ModelAdapterEntry e = new ModelAdapterEntry();
 		e.clazz = clazz;
 		e.modelAdapter = modelAdapter;
-		modelAdapters.add(e);
+		modelAdapters.put(clazz, e);
 		return e;
 	}
 	

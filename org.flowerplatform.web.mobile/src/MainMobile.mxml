@@ -121,6 +121,7 @@
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorSpinnerHandlerFactory();
 				FlexUtilGlobals.getInstance().rootUrl = "http://192.168.0.100:8080/org.flowerplatform.web.app/";
 				
+				
 				startPlugins();
 				
 				CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);

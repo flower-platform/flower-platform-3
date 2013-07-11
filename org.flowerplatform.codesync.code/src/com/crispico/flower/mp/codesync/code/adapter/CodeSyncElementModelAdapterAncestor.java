@@ -1,8 +1,10 @@
-package com.crispico.flower.mp.codesync.code;
+package com.crispico.flower.mp.codesync.code.adapter;
 
 import java.util.Iterator;
 
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
+import com.crispico.flower.mp.codesync.base.IModelAdapter;
+import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 
@@ -11,10 +13,19 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
  */
 public class CodeSyncElementModelAdapterAncestor extends CodeSyncElementModelAdapter {
 
+	public CodeSyncElementModelAdapterAncestor() {
+		super();
+	}
+	
+	public CodeSyncElementModelAdapterAncestor(SyncElementModelAdapter modelAdapter) {
+		super(modelAdapter);
+	}
+
 	/**
 	 * Filters out added {@link CodeSyncElement}s. Returns the new containment list from the {@link FeatureChange}s map for
 	 * the <code>feature</code>, if it exists. 
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public Iterable<?> getContainmentFeatureIterable(Object element, Object feature, Iterable<?> correspondingIterable) {
 		// first get the children from the FeatureChange, if it exists
@@ -23,7 +34,9 @@ public class CodeSyncElementModelAdapterAncestor extends CodeSyncElementModelAda
 		if (change != null) {
 			result = (Iterable<?>) change.getOldValue();
 		} else {
-			result = super.getContainmentFeatureIterable(element, feature, correspondingIterable);
+			result = astCacheElementModelAdapter != null 
+					? astCacheElementModelAdapter.getContainmentFeatureIterable(element, feature, correspondingIterable) 
+					: super.getContainmentFeatureIterable(element, feature, correspondingIterable);
 		}
 		return new FilteredIterable<Object, Object>((Iterator<Object>) result.iterator()) {
 			protected boolean isAccepted(Object candidate) {
@@ -45,6 +58,8 @@ public class CodeSyncElementModelAdapterAncestor extends CodeSyncElementModelAda
 		if (change != null) {
 			return change.getOldValue();
 		}
-		return super.getValueFeatureValue(element, feature, correspondingValue);
+		return astCacheElementModelAdapter != null 
+				? astCacheElementModelAdapter.getValueFeatureValue(element, feature, correspondingValue)
+				: super.getValueFeatureValue(element, feature, correspondingValue);
 	}
 }

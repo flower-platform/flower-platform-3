@@ -123,32 +123,32 @@ public class CodeSyncTest {
 		service.cancelSelectedActions(project.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
-		MatchType[] typeList = {
-				MatchType._3MATCH,				// src
-					MatchType._3MATCH,				// Test.java
-						MatchType._3MATCH,				// @Deprecated public class Test
+		Pair[] typeList = {
+				new Pair(MatchType._3MATCH, 0),			// src
+					new Pair(MatchType._3MATCH, 1),				// Test.java
+						new Pair(MatchType._3MATCH, 2),				// @Deprecated public class Test
 						
-							MatchType._3MATCH,				// @OneToMany(mappedBy="test") public int test(String st)
-								MatchType._3MATCH,				// public
-								MatchType._3MATCH,				// @OneToMany
-									MatchType._3MATCH,				// mappedBy = test
-								MatchType._3MATCH,				// String st
+							new Pair(MatchType._3MATCH, 3),				// @OneToMany(mappedBy="test") public int test(String st)
+								new Pair(MatchType._3MATCH, 4),				// public
+								new Pair(MatchType._3MATCH, 4),				// @OneToMany
+									new Pair(MatchType._3MATCH, 5),				// mappedBy = test
+								new Pair(MatchType._3MATCH, 4),				// String st
 							
-							MatchType._3MATCH,				// @OverrideAnnotationOf(mappedBy="test") public static Test getTest()
-								MatchType._3MATCH,				// @OverrideAnnotationOf
-									MatchType._3MATCH,				// x+y
-								MatchType._3MATCH,				// public
-								MatchType._3MATCH,				// static
+							new Pair(MatchType._3MATCH, 3),				// @OverrideAnnotationOf(mappedBy="test") public static Test getTest()
+								new Pair(MatchType._3MATCH, 4),				// public	
+								new Pair(MatchType._3MATCH, 4),				// @OverrideAnnotationOf
+									new Pair(MatchType._3MATCH, 5),				// x+y
+								new Pair(MatchType._3MATCH, 4),				// static
 								
-							MatchType._3MATCH,				// private int y
-								MatchType._3MATCH,				// private
+							new Pair(MatchType._3MATCH, 3),				// private int y
+								new Pair(MatchType._3MATCH, 4),				// private
 								
-							MatchType._3MATCH, 				// private int x
-								MatchType._3MATCH,				// private
+							new Pair(MatchType._3MATCH, 3), 				// private int x
+								new Pair(MatchType._3MATCH, 4),				// private
 								
-							MatchType._3MATCH,				// @Deprecated
-							MatchType._3MATCH,				// public
-							MatchType._3MATCH					// ITest
+							new Pair(MatchType._3MATCH, 3),				// @Deprecated
+							new Pair(MatchType._3MATCH, 3),				// public
+							new Pair(MatchType._3MATCH, 3),					// ITest
 				};
 		testMatchTree(typeList, true);
 	}
@@ -164,32 +164,32 @@ public class CodeSyncTest {
 		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
-		MatchType[] typeList = {
-				MatchType._3MATCH,				// src
-					MatchType._3MATCH,				// Test.java
-						MatchType._3MATCH,				// @Deprecated public class Test
+		Pair[] typeList = {
+				new Pair(MatchType._3MATCH, 0),				// src
+					new Pair(MatchType._3MATCH, 1),				// Test.java
+						new Pair(MatchType._3MATCH, 2),				// @Deprecated public class Test
 						
-							MatchType._3MATCH,				// @OneToMany(mappedBy="test") public int test(String st)
-								MatchType._3MATCH,				// public
-								MatchType._3MATCH,				// @OneToMany
-									MatchType._3MATCH,				// mappedBy = test
-								MatchType._3MATCH,				// String st
+							new Pair(MatchType._3MATCH, 3),				// @OneToMany(mappedBy="test") public int test(String st)
+								new Pair(MatchType._3MATCH, 4),				// public
+								new Pair(MatchType._3MATCH, 4),				// @OneToMany
+									new Pair(MatchType._3MATCH, 5),				// mappedBy = test
+								new Pair(MatchType._3MATCH, 4),				// String st
 							
-							MatchType._3MATCH,				// @OverrideAnnotationOf(mappedBy="test") public static Test getTest()
-								MatchType._3MATCH,				// @OverrideAnnotationOf
-									MatchType._3MATCH,				// x+y
-								MatchType._3MATCH,				// public
-								MatchType._3MATCH,				// static
+							new Pair(MatchType._3MATCH, 3),				// @OverrideAnnotationOf(mappedBy="test") public static Test getTest()
+								new Pair(MatchType._3MATCH, 4),				// public
+								new Pair(MatchType._3MATCH, 4),				// @OverrideAnnotationOf
+									new Pair(MatchType._3MATCH, 5),				// x+y
+								new Pair(MatchType._3MATCH, 4),				// static
 								
-							MatchType._3MATCH,				// private int y
-								MatchType._3MATCH,				// private
+							new Pair(MatchType._3MATCH, 3),				// private int y
+								new Pair(MatchType._3MATCH, 4),				// private
 								
-							MatchType._3MATCH, 				// private int x
-								MatchType._3MATCH,				// private
+							new Pair(MatchType._3MATCH, 3), 				// private int x
+								new Pair(MatchType._3MATCH, 4),				// private
 								
-							MatchType._3MATCH,				// @Deprecated
-							MatchType._3MATCH,				// public
-							MatchType._3MATCH					// ITest
+							new Pair(MatchType._3MATCH, 3),				// @Deprecated
+							new Pair(MatchType._3MATCH, 3),				// public
+							new Pair(MatchType._3MATCH, 3),					// ITest
 				};
 		testMatchTree(typeList, true);
 	}
@@ -352,74 +352,76 @@ public class CodeSyncTest {
 //		service.unsubscribeAllClientsForcefully(project.getFullPath().toString(), false);
 //		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
-		MatchType[] typeList = {
-				MatchType._3MATCH,					// src
-					MatchType._3MATCH,					// Test.java
-						MatchType._3MATCH,					// @Deprecated public class Test
+		Pair[] typeList = {
+				new Pair(MatchType._3MATCH, 0),					// src
+					new Pair(MatchType._3MATCH, 1),					// Test.java
+						new Pair(MatchType._3MATCH, 2),					// @Deprecated public class Test
 						
-							MatchType._3MATCH,					// @OneToMany(mappedBy="test") public int test(String st) {
-								MatchType._2MATCH_ANCESTOR_RIGHT,		// removed public from model
-								MatchType._3MATCH,					// @OneToMany
-									MatchType._3MATCH,					// mappedBy
-									MatchType._1MATCH_LEFT,				// orphanRemoval
-								MatchType._1MATCH_LEFT,				// added private to model
-								MatchType._1MATCH_RIGHT,				// added static to source
-								MatchType._3MATCH,					// String st
-									MatchType._1MATCH_RIGHT,				// final (added to source)
+							new Pair(MatchType._3MATCH, 3),					// @OneToMany(mappedBy="test") public int test(String st) {
+								new Pair(MatchType._2MATCH_ANCESTOR_RIGHT, 4),		// removed public from model
+								new Pair(MatchType._3MATCH, 4),					// @OneToMany
+									new Pair(MatchType._3MATCH, 5),					// mappedBy
+									new Pair(MatchType._1MATCH_LEFT, 5),				// orphanRemoval
+								new Pair(MatchType._1MATCH_LEFT, 4),				// added private to model
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// added static to source
+								new Pair(MatchType._3MATCH, 4),					// String st
+									new Pair(MatchType._1MATCH_RIGHT, 5),				// final (added to source)
 								
-							MatchType._3MATCH,					// @OverrideAnnotationOf(x+y) public static Test getTest() {
-								MatchType._3MATCH,					// public
-								MatchType._2MATCH_ANCESTOR_RIGHT,		// @OverrideAnnotationOf(x+y) (removed from model)
-									MatchType._2MATCH_ANCESTOR_RIGHT,		// x+y
-								MatchType._1MATCH_ANCESTOR,			// removed static from model and source
-								MatchType._1MATCH_LEFT,				// @overrideAnnotationOf(valu1=true, value2=false) (added to model)
-									MatchType._1MATCH_LEFT,				// value1 (added to model)
-									MatchType._1MATCH_LEFT,				// value2 (added to model)
-								MatchType._1MATCH_LEFT,				// added param to model
+							new Pair(MatchType._3MATCH, 3),					// @OverrideAnnotationOf(x+y) public static Test getTest() {
+								new Pair(MatchType._3MATCH, 4),					// public
+								new Pair(MatchType._2MATCH_ANCESTOR_RIGHT, 4),		// @OverrideAnnotationOf(x+y) (removed from model)
+									new Pair(MatchType._2MATCH_ANCESTOR_RIGHT, 5),		// x+y
+								new Pair(MatchType._1MATCH_ANCESTOR, 4),			// removed static from model and source
+								new Pair(MatchType._1MATCH_LEFT, 4),				// @overrideAnnotationOf(valu1=true, value2=false) (added to model)
+									new Pair(MatchType._1MATCH_LEFT, 5),				// value1 (added to model)
+									new Pair(MatchType._1MATCH_LEFT, 5),				// value2 (added to model)
+								new Pair(MatchType._1MATCH_LEFT, 4),				// added param to model
 								
-							MatchType._2MATCH_ANCESTOR_RIGHT,		// private int y (removed from model)
-								MatchType._2MATCH_ANCESTOR_RIGHT,		// private
+							new Pair(MatchType._2MATCH_ANCESTOR_RIGHT, 3),		// private int y (removed from model)
+								new Pair(MatchType._2MATCH_ANCESTOR_RIGHT, 4),		// private
 								
-							MatchType._3MATCH,					// private Test x <> private int x
-								MatchType._3MATCH,					// private
+							new Pair(MatchType._3MATCH, 3),					// private Test x <> private int x
+								new Pair(MatchType._3MATCH, 4),					// private
 								
-							MatchType._1MATCH_LEFT,				// private int t (added to model)
-								MatchType._1MATCH_LEFT,				// private
+							new Pair(MatchType._1MATCH_LEFT, 3),				// private int t (added to model)
+								new Pair(MatchType._1MATCH_LEFT, 4),				// private
 								
-							MatchType._1MATCH_LEFT,				// class InternalClassFromModel
+							new Pair(MatchType._1MATCH_LEFT, 3),				// class InternalClassFromModel
 								
-							MatchType._1MATCH_RIGHT,				// public enum ActionType
-								MatchType._1MATCH_RIGHT,				// public Object diffAction
-									MatchType._1MATCH_RIGHT, 				// public
-								MatchType._1MATCH_RIGHT,				// private ActionType(Object action)
-									MatchType._1MATCH_RIGHT,				// Object action
-									MatchType._1MATCH_RIGHT, 				// private
-								MatchType._1MATCH_RIGHT,				// ACTION_TYPE_COPY_LEFT_RIGHT(new Test())
-									MatchType._1MATCH_RIGHT,				// new Test()
-								MatchType._1MATCH_RIGHT, 				// ACTION_TYPE_COPY_RIGHT_LEFT(new InternalClsFromSource());
-									MatchType._1MATCH_RIGHT,				// new InternalClsFromSource()
-								MatchType._1MATCH_RIGHT,				// public
+							new Pair(MatchType._1MATCH_RIGHT, 3),				// public enum ActionType
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// public Object diffAction
+									new Pair(MatchType._1MATCH_RIGHT, 5), 				// public
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// private ActionType(Object action)
+									new Pair(MatchType._1MATCH_RIGHT, 5),				// Object action
+									new Pair(MatchType._1MATCH_RIGHT, 5), 				// private
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// ACTION_TYPE_COPY_LEFT_RIGHT(new Test())
+									new Pair(MatchType._1MATCH_RIGHT, 5),				// new Test()
+								new Pair(MatchType._1MATCH_RIGHT, 4), 				// ACTION_TYPE_COPY_RIGHT_LEFT(new InternalClsFromSource());
+									new Pair(MatchType._1MATCH_RIGHT, 5),				// new InternalClsFromSource()
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// public
 								
-							MatchType._1MATCH_RIGHT,				// public class InternalClsFromSource
-								MatchType._1MATCH_RIGHT,				// public int x
-									MatchType._1MATCH_RIGHT, 				// public
-								MatchType._1MATCH_RIGHT,				// public
+							new Pair(MatchType._1MATCH_RIGHT, 3),				// public class InternalClsFromSource
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// public int x
+									new Pair(MatchType._1MATCH_RIGHT, 5), 				// public
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// public
 								
-							MatchType._1MATCH_RIGHT,				// public @interface AnnotationTest
-								MatchType._1MATCH_RIGHT, 				// boolean value1() default true
-								MatchType._1MATCH_RIGHT, 				// boolean value2() default false
-								MatchType._1MATCH_RIGHT,				// public
+							new Pair(MatchType._1MATCH_RIGHT, 3),				// public @interface AnnotationTest
+								new Pair(MatchType._1MATCH_RIGHT, 4), 				// boolean value1() default true
+								new Pair(MatchType._1MATCH_RIGHT, 4), 				// boolean value2() default false
+								new Pair(MatchType._1MATCH_RIGHT, 4),				// public
 								
-							MatchType._1MATCH_RIGHT,				// private int z (added to source)
-								MatchType._1MATCH_RIGHT, 				// private
+							new Pair(MatchType._1MATCH_RIGHT, 3),				// private int z (added to source)
+								new Pair(MatchType._1MATCH_RIGHT, 4), 				// private
 								
-							MatchType._2MATCH_ANCESTOR_RIGHT,		// @Deprecated (removed from model)
-							MatchType._3MATCH,					// public
-							MatchType._1MATCH_LEFT,				// @Deprecated(test) (added to model)
-								MatchType._1MATCH_LEFT,				// test
-							MatchType._2MATCH_ANCESTOR_LEFT,		// ITest
-							MatchType._1MATCH_LEFT,				// IFromModel
-							MatchType._1MATCH_RIGHT				// IFromSource
+							new Pair(MatchType._2MATCH_ANCESTOR_RIGHT, 3),		// @Deprecated (removed from model)
+							new Pair(MatchType._3MATCH, 3),					// public
+							new Pair(MatchType._1MATCH_LEFT, 3),				// @Deprecated(test) (added to model)
+								new Pair(MatchType._1MATCH_LEFT, 4),				// test
+							new Pair(MatchType._1MATCH_ANCESTOR, 3),			// Test2
+							new Pair(MatchType._1MATCH_LEFT, 3),				// SuperClassFromModel
+							new Pair(MatchType._2MATCH_ANCESTOR_LEFT, 3),		// ITest
+							new Pair(MatchType._1MATCH_LEFT, 3),				// IFromModel
+							new Pair(MatchType._1MATCH_RIGHT, 3),				// IFromSource
 		};
 		Match match = testMatchTree(typeList, false);
 		assertFalse("Conflicts not expected!", match.isChildrenConflict());
@@ -525,32 +527,34 @@ public class CodeSyncTest {
 //		service.unsubscribeAllClientsForcefully(project.getFullPath().toString(), false);
 //		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 		
-		MatchType[] typeList = {
-				MatchType._3MATCH,				// src
-					MatchType._3MATCH,				// Test.java
-						MatchType._3MATCH,				// @Deprecated public class Test
+		Pair[] typeList = {
+				new Pair(MatchType._3MATCH, 0),				// src
+					new Pair(MatchType._3MATCH, 1),				// Test.java
+						new Pair(MatchType._3MATCH, 2),				// @Deprecated public class Test
 						
-							MatchType._3MATCH,				// @OneToMany(mappedBy="test") public int test(String st)
-								MatchType._3MATCH,				// public
-								MatchType._3MATCH,				// @OneToMany
-									MatchType._3MATCH,				// mappedBy = test
-								MatchType._3MATCH,				// String st
+							new Pair(MatchType._3MATCH, 3),				// @OneToMany(mappedBy="test") public int test(String st)
+								new Pair(MatchType._3MATCH, 4),				// public
+								new Pair(MatchType._3MATCH, 4),				// @OneToMany
+									new Pair(MatchType._3MATCH, 5),				// mappedBy = test
+								new Pair(MatchType._3MATCH, 4),				// String st
 							
-							MatchType._3MATCH,				// @OverrideAnnotationOf(mappedBy="test") public static Test getTest()
-								MatchType._3MATCH,				// @OverrideAnnotationOf
-									MatchType._3MATCH,				// x+y
-								MatchType._3MATCH,				// public
-								MatchType._3MATCH,				// static
+							new Pair(MatchType._3MATCH, 3),				// @OverrideAnnotationOf(mappedBy="test") public static Test getTest()
+								new Pair(MatchType._3MATCH, 4),				// public
+								new Pair(MatchType._3MATCH, 4),				// @OverrideAnnotationOf
+									new Pair(MatchType._3MATCH, 5),				// x+y
+								new Pair(MatchType._3MATCH, 4),				// static
 								
-							MatchType._3MATCH,				// private int y
-								MatchType._3MATCH,				// private
+							new Pair(MatchType._3MATCH, 3),				// private int y
+								new Pair(MatchType._3MATCH, 4),				// private
 								
-							MatchType._3MATCH, 				// private int x
-								MatchType._3MATCH,				// private
+							new Pair(MatchType._3MATCH, 3), 				// private int x
+								new Pair(MatchType._3MATCH, 4),				// private
 								
-							MatchType._3MATCH,				// @Deprecated
-							MatchType._3MATCH,				// public
-							MatchType._3MATCH					// ITest
+							new Pair(MatchType._3MATCH, 3),				// @Deprecated
+							new Pair(MatchType._3MATCH, 3),				// public
+							new Pair(MatchType._1MATCH_ANCESTOR, 3),	// Test2
+							new Pair(MatchType._1MATCH_LEFT, 3),		// SuperClassFromModel
+							new Pair(MatchType._3MATCH, 3)				// ITest
 				};
 		boolean[] conflicts = {
 				false,
@@ -605,7 +609,7 @@ public class CodeSyncTest {
 		return (IFile) resource;
 	}
 	
-	private MatchType[] typeList;
+	private Pair[] typeList;
 	private boolean[] conflicts;
 	private int i;
 	
@@ -624,29 +628,30 @@ public class CodeSyncTest {
 		checkTree_conflict(match);
 	}
 	
-	private Match testMatchTree(MatchType[] typeList, boolean checkNoDiffs) {
+	private Match testMatchTree(Pair[] typeList, boolean checkNoDiffs) {
 		Match match = getMatch();
 		assertNotNull("Match was not created", match);
 		i = 0;
 		this.typeList = typeList;
-		checkTree_type(match, checkNoDiffs);
+		checkTree_type(match, checkNoDiffs, 0);
 		assertEquals(typeList.length, i + 1);
 		return match;
 	}
 	
-	private void checkTree_type(Match parentMatch, boolean checkNoDiffs) {
-		checkMatch_type(parentMatch);
+	private void checkTree_type(Match parentMatch, boolean checkNoDiffs, int level) {
+		checkMatch_type(parentMatch, level);
 		if (checkNoDiffs) {
 			assertEquals("No diffs expected", 0, parentMatch.getDiffs().size());
 		}
 		for (Match subMatch : parentMatch.getSubMatches()) {
 			i++;
-			checkTree_type(subMatch, checkNoDiffs);
+			checkTree_type(subMatch, checkNoDiffs, level + 1);
 		}
 	}
 	
-	private void checkMatch_type(Match match) {
-		assertEquals("Wrong match at index " + i, typeList[i], match.getMatchType());
+	private void checkMatch_type(Match match, int level) {
+		assertEquals("Wrong match at index " + i, typeList[i].type, match.getMatchType());
+		assertEquals("Wrong level at index " + i, typeList[i].level, level);
 	}
 	
 	private void checkTree_conflict(Match parentMatch) {
@@ -659,5 +664,15 @@ public class CodeSyncTest {
 	
 	private void checkMatch_conflict(Match match) {
 		assertEquals("Wrong conflict state at index " + i, conflicts[i], match.isConflict());
+	}
+	
+	class Pair {
+		public MatchType type;
+		public int level;
+		
+		public Pair(MatchType type, int level) {
+			this.type = type;
+			this.level = level;
+		}
 	}
 }

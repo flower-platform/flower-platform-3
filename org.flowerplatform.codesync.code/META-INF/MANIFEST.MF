@@ -17,4 +17,5 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.emf_model.notation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
-Export-Package: com.crispico.flower.mp.codesync.code
+Export-Package: com.crispico.flower.mp.codesync.code,
+ com.crispico.flower.mp.codesync.code.adapter

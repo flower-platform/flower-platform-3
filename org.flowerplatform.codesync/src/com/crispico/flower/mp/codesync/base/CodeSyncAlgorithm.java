@@ -162,11 +162,11 @@ public class CodeSyncAlgorithm {
 			Match childMatch = new Match();
 			childMatch.setLeft(leftChild);
 //			childMatch.setRight(rightMap.remove(leftChildModelAdapter.getMatchKey(leftChild)));
-			if (leftChildModelAdapter == null) {
+//			if (leftChildModelAdapter == null) {
 				// might be null for CodeSync/code, because the leftMap iteration doesn't happen
 				// or if there are no ancestor children
 				leftChildModelAdapter = modelAdapterFactorySet.getLeftFactory().getModelAdapter(leftChild);
-			}
+//			}
 			childMatch.setRight(leftChildModelAdapter.removeFromMap(leftChild, rightMap, true));
 			childMatch.setFeature(feature);
 
