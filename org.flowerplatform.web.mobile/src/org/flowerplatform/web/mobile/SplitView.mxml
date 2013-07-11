@@ -3,7 +3,7 @@
 @author Cristian Spiescu
 -->
 <popup:WrapperViewBase implements="org.flowerplatform.flexutil.popup.IPopupHost, org.flowerplatform.flexutil.layout.IWorkbench" creationComplete="creationCompleteHandler()"
-					   xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:fx="http://ns.adobe.com/mxml/2009" destructionPolicy="never"
 					   xmlns:s="library://ns.adobe.com/flex/spark" title="SplitView" xmlns:mobile="org.flowerplatform.web.mobile.*" xmlns:popup="org.flowerplatform.web.mobile.popup.*">
 	<fx:Declarations>
 		<mobile:MainNavigatorContent id="mainNavigatorContent" navigator="{navigator}"/>

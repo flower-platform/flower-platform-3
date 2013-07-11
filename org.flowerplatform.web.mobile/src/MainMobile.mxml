@@ -119,7 +119,7 @@
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new WrapperViewPopupHandlerFactory();
 				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorSpinnerHandlerFactory();
-				FlexUtilGlobals.getInstance().rootUrl = "http://192.168.0.100:8080/org.flowerplatform.web.app/";
+				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";
 				
 				
 				startPlugins();
