@@ -21,7 +21,8 @@ Require-Bundle: org.flowerplatform.common,
  org.flowerplatform.codesync.wiki,
  org.flowerplatform.emf_model.astcache.code,
  org.flowerplatform.emf_model.astcache.wiki,
- org.flowerplatform.emf_model.codesync
+ org.flowerplatform.emf_model.codesync,
+ org.flowerplatform.editor.model
 Import-Package: javax.persistence,
  javax.servlet,
  javax.servlet.http

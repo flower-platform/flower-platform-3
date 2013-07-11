@@ -1,6 +1,8 @@
 package org.flowerplatform.communication.service;
 
 
+import java.util.Map;
+
 import org.flowerplatform.communication.channel.CommunicationChannel;
 
 /**
@@ -27,6 +29,8 @@ public class ServiceInvocationContext {
 	 */
 	private InvokeServiceMethodServerCommand command;
 	
+	private Map<String, Object> additionalData;
+	
 	/**
 	 * The {@link CommunicationChannel} the
 	 * service invocation arrived from.
@@ -46,6 +50,14 @@ public class ServiceInvocationContext {
 	 */
 	public InvokeServiceMethodServerCommand getCommand() {
 		return command;
+	}
+
+	public Map<String, Object> getAdditionalData() {
+		return additionalData;
+	}
+
+	public void setAdditionalData(Map<String, Object> additionalData) {
+		this.additionalData = additionalData;
 	}
 
 	public ServiceInvocationContext(CommunicationChannel communicationChannel) {

@@ -7,6 +7,8 @@
     <classEntry path="org.flowerplatform.editor.model.controller.ViewModelChildrenController"/>
     <classEntry path="org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient"/>
     <classEntry path="org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController"/>
+    <classEntry path="org.flowerplatform.editor.model.action.DragOnDiagramAction"/>
+    <classEntry path="org.flowerplatform.editor.model.remote.ViewDetailsUpdate"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

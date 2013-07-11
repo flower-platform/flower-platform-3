@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="dragOnDiagramHandler" name="dragOnDiagramHandler" schema="schema/dragOnDiagramHandler.exsd"/>
    <extension
          point="org.flowerplatform.editor.contentType">
       <contentType

@@ -2,6 +2,7 @@ package org.flowerplatform.editor.model.controller {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
+	import org.flowerplatform.communication.transferable_object.TransferableObjectUpdatedEvent;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
@@ -18,9 +19,15 @@ package org.flowerplatform.editor.model.controller {
 		}
 		
 		public function beginListeningForChanges(model:Object):void	{
+			View(model).addEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);
 		}
 		
 		public function endListeningForChanges(model:Object):void {
+			View(model).removeEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);
+		}
+		
+		protected function objectUpdatedHandler(event:TransferableObjectUpdatedEvent):void {
+			diagramShell.shouldRefreshVisualChildren(event.object);
 		}
 	}
 }

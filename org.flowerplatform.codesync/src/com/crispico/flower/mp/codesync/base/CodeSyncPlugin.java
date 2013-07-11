@@ -3,17 +3,18 @@ package com.crispico.flower.mp.codesync.base;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 	public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected static CodeSyncPlugin INSTANCE;
-	
-	protected ComposedDragOnDiagramHandler dragOnDiagramHandler;
 	
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
 	
@@ -21,10 +22,6 @@ import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStateful
 	
 	public static CodeSyncPlugin getInstance() {
 		return INSTANCE;
-	}
-	
-	public ComposedDragOnDiagramHandler getDragOnDiagramHandler() {
-		return dragOnDiagramHandler;
 	}
 	
 	public ComposedFullyQualifiedNameProvider getFullyQualifiedNameProvider() {
@@ -40,7 +37,6 @@ import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStateful
 		super.start(context);
 		INSTANCE = this;
 		
-		dragOnDiagramHandler = new ComposedDragOnDiagramHandler();
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
 		
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
@@ -59,5 +55,18 @@ import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStateful
 		}
 	}
 	
+	public Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
+		if (feature.getEContainingClass().isSuperTypeOf(CodeSyncPackage.eINSTANCE.getAstCacheElement())) {
+			return codeSyncElement.getAstCacheElement().eGet(feature);
+		} else if (feature.getEContainingClass().isSuperTypeOf(CodeSyncPackage.eINSTANCE.getCodeSyncElement())) {
+			return codeSyncElement.eGet(feature);
+		} 
+		
+		return null;
+	}
+	
+	public void setFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object value) {
+		codeSyncElement.setName(value.toString());
+	}
 	
 }

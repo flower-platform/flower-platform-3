@@ -1,4 +1,6 @@
 package org.flowerplatform.editor.model {
+	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Rectangle;
 	
 	import mx.collections.ArrayList;
@@ -9,11 +11,14 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	
+	import spark.components.Button;
 	import spark.components.Label;
+	import spark.components.TextInput;
 	
 	public class DiagramEditorFrontend extends EditorFrontend {
 	
@@ -24,34 +29,26 @@ package org.flowerplatform.editor.model {
 			editor = scroller;
 			
 			var diagramRenderer:DiagramRenderer = new DiagramRenderer();
-//			diagramRenderer.contentRect=new Rectangle(0, 0, 9000, 9000);
 			scroller.viewport = diagramRenderer;
 			diagramRenderer.horizontalScrollPosition = diagramRenderer.verticalScrollPosition = 0;
 			
-//			var label:Label = new Label(); 
-//			label.text = "end";
-//			label.x = 9000;
-//			label.y = 9000;
-			
-//			var bounds:Bounds = new Bounds();
-//			
-//			bounds.x = bounds.y = 20;
-//			bounds.width = bounds.height = 20;
-//			
-//			var node:Node = new Node();
-//			node.layoutConstraint = bounds;
-//			node.viewType = "class";
-//			
-//			var diagram:Diagram = new Diagram();
-//			diagram.viewType = "classDiagram";
-//			diagram.persistentChildren = new ArrayList([node]);
-//			
 			diagramShell = new NotationDiagramShell();
 			diagramShell.diagramRenderer = diagramRenderer;
 			diagramShell.editorStatefulClient = DiagramEditorStatefulClient(editorStatefulClient);
-//			diagramShell.rootModel = diagram;
 
 			super.createChildren();
+			
+			var testButton:Button = new Button();
+			resourceStatusBar.addChild(testButton);
+			testButton.label = "Test/Rename class";
+			
+			var textInput:TextInput = new TextInput();
+			resourceStatusBar.addChild(textInput);
+			textInput.text = "MyTest";
+			
+			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+				DiagramEditorStatefulClient(editorStatefulClient).service_setInplaceEditorText(View(diagramShell.selectedItems.getItemAt(0)).id, textInput.text);
+			});
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {

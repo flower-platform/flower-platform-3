@@ -37,11 +37,11 @@ public class JavaElementChangedListener implements IElementChangedListener {
 			EditableResource editableResource = service.getEditableResource(path);
 			if (editableResource != null) {
 				for (EditableResourceClient client : editableResource.getClients()) {
-					try {
-						CodeSyncPlugin.getInstance().getDragOnDiagramHandler().handleDragOnDiagram(Arrays.asList(deltaToProcess.getElement().getCorrespondingResource()), null, null, null, client.getCommunicationChannel());
-					} catch (JavaModelException e) {
+//					try {
+//						CodeSyncPlugin.getInstance().getDragOnDiagramHandler().handleDragOnDiagram(Arrays.asList(deltaToProcess.getElement().getCorrespondingResource()), null, null, null, client.getCommunicationChannel());
+//					} catch (JavaModelException e) {
 //						e.printStackTrace();
-					}
+//					}
 				}
 			}
 		}

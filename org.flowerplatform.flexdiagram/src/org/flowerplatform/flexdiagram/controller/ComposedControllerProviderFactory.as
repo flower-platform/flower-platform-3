@@ -16,36 +16,6 @@ package org.flowerplatform.flexdiagram.controller {
 	 */
 	public class ComposedControllerProviderFactory {
 		
-//		public var visualChildrenControllerClass:Class;
-//		public var modelExtraInfoControllerClass:Class;
-//		public var modelChildrenControllerClass:Class;
-//		public var absoluteLayoutRectangleControllerClass:Class;
-//		public var rendererControllerClass:Class;
-//		public var selectionControllerClass:Class;
-//		
-//		public var inplaceEditorControllerClass:Class;
-//		public var resizeControllerClass:Class;
-//		public var dragToCreateRelationControllerClass:Class;
-//		public var dragControllerClass:Class;
-//		public var selectOrDragToCreateElementControllerClass:Class;
-//		
-//		public function createComposedControllerProvider(shell:DiagramShell):ComposedControllerProvider {
-//			var result:ComposedControllerProvider = new ComposedControllerProvider();
-//			result.visualChildrenController = new visualChildrenControllerClass(shell);
-//			result.modelExtraInfoController = new modelExtraInfoControllerClass(shell);
-//			result.modelChildrenController = new modelChildrenControllerClass(shell);
-//			result.absoluteLayoutRectangleController = new absoluteLayoutRectangleControllerClass(shell);
-//			result.rendererController = new rendererControllerClass(shell);
-//			result.selectionController = new selectionControllerClass(shell);
-//			
-//			result.inplaceEditorController = new inplaceEditorControllerClass(shell);
-//			result.resizeController = new resizeControllerClass(shell);
-//			result.dragToCreateRelationController = new dragToCreateRelationControllerClass(shell);
-//			result.dragController = new dragControllerClass(shell);
-//			result.selectOrDragToCreateElementController = new selectOrDragToCreateElementControllerClass(shell);
-//			return result;
-//		}
-		
 		public var visualChildrenControllerClass:ControllerFactory;
 		public var modelExtraInfoControllerClass:ControllerFactory;
 		public var modelChildrenControllerClass:ControllerFactory;

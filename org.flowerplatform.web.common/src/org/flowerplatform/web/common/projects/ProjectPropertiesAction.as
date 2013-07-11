@@ -6,10 +6,14 @@ package org.flowerplatform.web.common.projects {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.projects.properties.PropertiesView;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class ProjectPropertiesAction extends ActionBase {
 		
 		public function ProjectPropertiesAction() {
 			label = "Properties";
+			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
 		}
 		
 		override public function get visible():Boolean {
@@ -23,8 +27,8 @@ package org.flowerplatform.web.common.projects {
 			var view:PropertiesView = new PropertiesView();
 			view.node = TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setWidth(450)
-				.setHeight(400)
+				.setWidth(500)
+				.setHeight(450)
 				.setPopupContent(view)
 				.show();
 		}

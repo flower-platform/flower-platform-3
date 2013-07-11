@@ -15,28 +15,20 @@
 			import mx.validators.Validator;
 			
 			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.editor.java.JavaEditorPlugin;
 			import org.flowerplatform.flexutil.FlexUtilAssets;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
-						
-			/**
-			 * @flowerModelElementId _cec0QLX4EeG0VsiZvxFIVQ
-			 */
+					
 			[Bindable]
 			public var currentSource:String;
 			
 			private var _popupHost:IPopupHost;
 			
-			/**
-			 * @flowerModelElementId _cfNpQLX4EeG0VsiZvxFIVQ
-			 */
 			private var resultHandler:IDialogResultHandler;
 			
-			/**
-			 * @flowerModelElementId _cfxC4LX4EeG0VsiZvxFIVQ
-			 */
 			public function setResultHandler(resultHandler:IDialogResultHandler):void {
 				this.resultHandler = resultHandler;
 			}
@@ -47,8 +39,7 @@
 			
 			public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
-				popupHost.setLabel("Add/Edit Source Folder");
-//				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/remote_entry_tbl.gif'));
+				popupHost.setLabel(JavaEditorPlugin.getInstance().getMessage("java.propertypage.addSource"));
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction>{
@@ -79,13 +70,11 @@
 		]]>
 	</fx:Script>
 	
-	<fx:Declarations>
-		
+	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="middle">
 			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
 			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
-		</s:HGroup>
-		
+		</s:HGroup>		
 	</fx:Declarations>
 	
 	<s:layout>
@@ -99,7 +88,7 @@
 	</fx:Declarations>	
 	
 	<s:Form id="form" height="100%" width="100%">			
-		<s:FormItem label="Folder name:" width="100%">
+		<s:FormItem label="{JavaEditorPlugin.getInstance().getMessage('java.propertypage.source.folderName')}" width="100%">
 			<s:TextInput id="sourceFolder" text="{currentSource}" width="100%" creationComplete="{callLater(sourceFolder.setFocus)}"/>				
 		</s:FormItem>		
 	</s:Form>

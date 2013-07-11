@@ -110,7 +110,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	}
 
 	@Override
-	protected void updateEditableResourceContentAndDispatchUpdates(CommunicationChannel originatingCommunicationChannel, String originatingStatefulClientId, EditableResource editableResource, Object updatesToApply) {
+	protected void updateEditableResourceContentAndDispatchUpdates(StatefulServiceInvocationContext context, EditableResource editableResource, Object updatesToApply) {
 		Runnable runnable = (Runnable) updatesToApply;
 		runnable.run();
 		

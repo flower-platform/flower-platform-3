@@ -1,4 +1,4 @@
-package com.crispico.flower.mp.codesync.base;
+package org.flowerplatform.editor.model;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -7,11 +7,14 @@ import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.flowerplatform.emf_model.notation.NotationElement;
+import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +28,10 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 	
 	public void addDiagrammableElementFeatureChangeProcessor(String viewType, IDiagrammableElementFeatureChangesProcessor processor) {
 		diagrammableElementFeatureChangeProcessors.put(viewType, processor);
+	}
+	
+	public IDiagrammableElementFeatureChangesProcessor getDiagrammableElementFeatureChangesProcessor(String viewType) {
+		return diagrammableElementFeatureChangeProcessors.get(viewType);
 	}
 	
 	protected boolean isDiagramOpen(NotationElement diagramChildObject) {
@@ -168,22 +175,21 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 	}
 
 	protected void processFeatureChangesForDiagrammableElement(Map.Entry<EObject, EList<FeatureChange>> entry, Map<String, Object> context) {
-//		if (!(entry.getKey() instanceof IDiagrammableElement)) {
-//			return;
-//		} 
-//		IDiagrammableElement diagrammableElement = (IDiagrammableElement) entry.getKey();
-//
-//		for (View view : diagrammableElement.getViews()) {
+		ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(entry.getKey());
+		EObject diagrammableElement = entry.getKey();
+		for (Setting setting : adapter.getNonNavigableInverseReferences(diagrammableElement)) {
+			if (NotationPackage.eINSTANCE.getView_DiagrammableElement().equals(setting.getEStructuralFeature())) {
+				View view = (View) setting.getEObject();
+				IDiagrammableElementFeatureChangesProcessor processor = getDiagrammableElementFeatureChangesProcessor(view.getViewType());
+				if (processor != null) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("Delegating to IDiagrammableElementFeatureChangesProcessor for view = {}, object = {}", view, diagrammableElement);
+					}
+					processor.processFeatureChanges(diagrammableElement, entry.getValue(), view, context);
+				}
+			}			
+		}
 //			if (isDiagramOpen(view)) {
-//				IDiagrammableElementFeatureChangesProcessor processor = diagrammableElementFeatureChangeProcessors.get(view.getViewType());
-//				if (processor != null) {
-//					if (logger.isDebugEnabled()) {
-//						logger.debug("Delegating to IDiagrammableElementFeatureChangesProcessor for view = {}, object = {}", view, diagrammableElement);
-//					}
-//					processor.processFeatureChanges(diagrammableElement, entry.getValue(), view, context);
-//				}
-//			}
-//		}
 	}
 	
 	private String printFeatureChanges(List<FeatureChange> list) {

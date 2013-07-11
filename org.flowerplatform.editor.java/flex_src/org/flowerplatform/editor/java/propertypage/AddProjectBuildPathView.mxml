@@ -17,6 +17,7 @@
 			import mx.validators.Validator;
 			
 			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.editor.java.JavaEditorPlugin;
 			import org.flowerplatform.flexutil.FlexUtilAssets;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
@@ -39,7 +40,7 @@
 			
 			public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
-				popupHost.setLabel("Add Project");				
+				popupHost.setLabel(JavaEditorPlugin.getInstance().getMessage("java.propertypage.addProject"));				
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction>{
@@ -58,7 +59,7 @@
 				var selection:ArrayList = new ArrayList();
 				for (var i:int=0; i < projects.length; i++) {
 					if (projects.getItemAt(i).selected) {
-						selection.addItem(projects.getItemAt(i));
+						selection.addItem(projects.getItemAt(i).name);
 					}
 				}
 				resultHandler.handleDialogResult(selection);
@@ -72,13 +73,11 @@
 		]]>
 	</fx:Script>
 	
-	<fx:Declarations>
-		
+	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="middle">
 			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
 			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
-		</s:HGroup>
-		
+		</s:HGroup>		
 	</fx:Declarations>
 	
 	<s:layout>

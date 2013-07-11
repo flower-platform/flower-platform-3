@@ -239,7 +239,12 @@ public class ProjectsService {
 		do {
 			currentFile = new File(currentFile, st.nextToken());
 		} while (st.hasMoreTokens());
-		return new File(currentFile, resource.getProjectRelativePath().toFile().getPath());
+		
+		if (resource instanceof IProject) {
+			return currentFile;
+		} else {
+			return new File(currentFile, resource.getFullPath().makeRelativeTo(resource.getProject().getFullPath().append(LINK_TO_PROJECT)).toFile().getPath());
+		}
 	}
 	
 	@RemoteInvocation
@@ -385,7 +390,11 @@ public class ProjectsService {
 			return null;
 		}
 		
-		String pathInProjectWrapper = LINK_TO_PROJECT + "/" + CommonPlugin.getInstance().getPathRelativeToFile(file, currentFile);
+		String relativePath = CommonPlugin.getInstance().getPathRelativeToFile(file, currentFile);
+		if (relativePath.isEmpty()) {
+			return projectWrapper;
+		}
+		String pathInProjectWrapper = LINK_TO_PROJECT + "/" + relativePath;
 		if (file.isDirectory()) {
 			return projectWrapper.getFolder(pathInProjectWrapper);
 		} else {

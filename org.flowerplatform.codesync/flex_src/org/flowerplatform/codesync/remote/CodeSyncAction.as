@@ -5,7 +5,7 @@ package org.flowerplatform.codesync.remote {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	
-	[RemoteClass(alias="com.crispico.flower.mp.codesync.code.java.JavaDragOnDiagramHandler")]
+	[RemoteClass(alias="org.flowerplatform.codesync.remote.CodeSyncAction")]
 	public class CodeSyncAction extends ActionBase {
 		
 		public var pathWithRoot:IList;
