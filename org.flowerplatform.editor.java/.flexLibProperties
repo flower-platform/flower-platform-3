@@ -6,7 +6,6 @@
     <classEntry path="org.flowerplatform.editor.java.propertypage.JavaPropertyPageProvider"/>
     <classEntry path="org.flowerplatform.editor.java.propertypage.AddProjectBuildPathView"/>
     <classEntry path="org.flowerplatform.editor.java.propertypage.AddLibraryBuildPathView"/>
-    <classEntry path="org.flowerplatform.editor.java.propertypage.remote.WorkingDirectoryTreeStatefulClient"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
