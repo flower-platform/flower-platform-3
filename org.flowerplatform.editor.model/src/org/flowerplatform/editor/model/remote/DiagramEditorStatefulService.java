@@ -142,6 +142,10 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		
 		DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, false);
 
+		if (diagramUpdaterChangeDescriptionProcessingContext != null) {
+			list.addAll((Collection<? extends EObject>) diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate());
+		}
+		
 		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
 		String diagramId = diagram.eResource().getURIFragment(diagram);
 		invokeClientMethod(client.getCommunicationChannel(), client.getStatefulClientId(), "openDiagram", new Object[] { diagramId });

@@ -17,6 +17,8 @@ import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.java.JavaAttributeProcessor;
+import org.flowerplatform.editor.model.java.JavaClassProcessor;
 import org.flowerplatform.editor.model.java.JavaClassTitleProcessor;
 import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.osgi.framework.BundleContext;
@@ -56,7 +58,9 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("class", new JavaClassProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classTitle", new JavaClassTitleProcessor());
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classAttribute", new JavaAttributeProcessor());
 		CodeSyncPlugin.getInstance().getFullyQualifiedNameProvider().addDelegateProvider(new JavaFullyQualifiedNameProvider());
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new JavaResourceChangeListener());
 		JavaCore.addElementChangedListener(new JavaElementChangedListener(), ElementChangedEvent.POST_RECONCILE);
