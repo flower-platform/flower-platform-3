@@ -147,14 +147,15 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		
 		public function refreshNodePositions(model:Object):void {
 			var oldExpandedHeight:Number = getExpandedHeight(model);
-			
-			var newExpandedHeight:Number = calculateExpandedHeight(model);
+			var oldExpandedY:Number = getExpandedY(model);
+			calculateExpandedHeight(ParentAwareArrayList(rootModel).getItemAt(0));
+			var newExpandedHeight:Number = getExpandedHeight(model);
 			
 			if (newExpandedHeight != oldExpandedHeight) {
-				changeChildrenCoordinates(model, true);
-				changeSiblingCoordinates(model, model.y - oldExpandedHeight/2, (newExpandedHeight - oldExpandedHeight)/2);
-			}
-			
+				changeChildrenCoordinates(model, true); 
+				setExpandedY(model, model.y - (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2);
+				changeSiblingCoordinates(model,  (newExpandedHeight - oldExpandedHeight)/2,  (newExpandedHeight - oldExpandedHeight)/2);
+			}			
 		}
 		
 		private function calculateExpandedHeight(model:Object):Number {
@@ -175,13 +176,15 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			if (!changeOnlyForChildren) {				
 				model.y = getExpandedY(model) + (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2;
 				model.x = model.parent.x - getMindMapController(model).getWidth(model) - horizontalPadding;				
+			} else {
+				setExpandedY(model, model.y - (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2);		
 			}
 			if (model.expanded) {				
 				var children:ArrayList = getMindMapController(model).getChildren(model);				
 				for (var i:int = 0; i < children.length; i++) {
 					var child:Object = children.getItemAt(i);
 					if (i == 0) {
-						setExpandedY(child, model.y - (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2);						
+						setExpandedY(child, getExpandedY(model));						
 					} else {
 						var previousChild:Object = children.getItemAt(i - 1);
 						setExpandedY(child, getExpandedY(previousChild) + getExpandedHeight(previousChild));
