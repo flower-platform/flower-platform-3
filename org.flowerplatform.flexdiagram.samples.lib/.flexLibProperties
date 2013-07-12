@@ -18,6 +18,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.samples.mindmap.MindMapDiagramShell"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.mindmap.renderer.MindMapModelRenderer"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapModelRendererController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.mindmap.MindMapConnector"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

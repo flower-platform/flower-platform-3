@@ -19,7 +19,7 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:Rect width="100%" height="100%" radiusX="5" radiusY="5" top="3" bottom="3" left="3" right="3">
+	<s:Rect width="100%" height="100%" radiusX="5" radiusY="5">
 		<s:stroke>
 			<s:SolidColorStroke color="#a8a8a8" weight="1"/>
 		</s:stroke>

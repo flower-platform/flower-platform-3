@@ -11,6 +11,20 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			return MindMapModel(model).children;
 		}
 		
+		public function getChildrenBasedOnSide(model:Object, side:int = 0):ArrayList {	
+			if (side == 0) {
+				side = model.side;
+			}
+			var list:ArrayList = new ArrayList();
+			for (var i:int = 0; i < MindMapModel(model).children.length; i++) {
+				var child:Object = MindMapModel(model).children.getItemAt(i);
+				if (side == 0 || side == child.side) {
+					list.addItem(child);
+				}
+			}
+			return list;
+		}
+		
 		public function setChildren(model:Object, value:ArrayList):void {
 			MindMapModel(model).children = value;
 		}
@@ -37,6 +51,10 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		
 		public function setExpanded(model:Object, value:Boolean):void {
 			MindMapModel(model).expanded = value;
+		}
+		
+		public function getSide(model:Object):int {
+			return MindMapModel(model).side;
 		}
 		
 	}

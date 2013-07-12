@@ -120,7 +120,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			return this;
 		}
-				
+	
 		private function getExpandedHeight(model:Object):Number {
 			var expandedHeight:Number = DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedHeight;
 			if (isNaN(expandedHeight)) {
@@ -145,42 +145,84 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedY = value;
 		}
 		
-		public function refreshNodePositions(model:Object):void {
+		public function refreshNodePositions(model:Object):void {			
 			var oldExpandedHeight:Number = getExpandedHeight(model);
-			var oldExpandedY:Number = getExpandedY(model);
-			calculateExpandedHeight(ParentAwareArrayList(rootModel).getItemAt(0));
-			var newExpandedHeight:Number = getExpandedHeight(model);
+			var oldExpandedHeightLeft:Number = DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedHeightLeft;			
+			var oldExpandedHeightRight:Number = DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedHeightRight
 			
-			if (newExpandedHeight != oldExpandedHeight) {
-				changeChildrenCoordinates(model, true); 
-				setExpandedY(model, model.y - (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2);
-				changeSiblingCoordinates(model,  (newExpandedHeight - oldExpandedHeight)/2,  (newExpandedHeight - oldExpandedHeight)/2);
-			}			
+			calculateRootNodeExpandedHeight(model.side);
+						
+			if (model.side == 0 || model.side == MindMapModel.LEFT) { 
+				if (model.side == 0) {
+					setExpandedHeight(model, DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedHeightLeft);
+					oldExpandedHeight = oldExpandedHeightLeft;
+				}
+				changeCoordinates(model, oldExpandedHeight, getExpandedHeight(model), model.side == 0 ? MindMapModel.LEFT : model.side);
+			}
+			if (model.side == 0 || model.side == MindMapModel.RIGHT) { 
+				if (model.side == 0) {
+					setExpandedHeight(model, DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedHeightRight);
+					oldExpandedHeight = oldExpandedHeightRight;
+				}
+				changeCoordinates(model, oldExpandedHeight, getExpandedHeight(model), model.side == 0 ? MindMapModel.RIGHT : model.side);
+			}
 		}
 		
-		private function calculateExpandedHeight(model:Object):Number {
+		private function calculateRootNodeExpandedHeight(side:int):void {
+			var model:Object = ParentAwareArrayList(rootModel).getItemAt(0);
+			if (side == 0 || side == MindMapModel.LEFT) { 
+				calculateExpandedHeight(model, MindMapModel.LEFT);
+				DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedHeightLeft = getExpandedHeight(model);
+			}
+			if (side == 0 || side == MindMapModel.RIGHT) { 
+				calculateExpandedHeight(model, MindMapModel.RIGHT);
+				DynamicModelExtraInfoController(getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).expandedHeightRight = getExpandedHeight(model);
+			}
+		}
+		
+		private function calculateExpandedHeight(model:Object, side:int):Number {			
 			var expandedHeight:Number = 0;
-			var children:ArrayList = getMindMapController(model).getChildren(model);
+			var children:ArrayList = getMindMapController(model).getChildrenBasedOnSide(model, side);
 			if (model.expanded && children.length > 0) {
 				for (var i:int = 0; i < children.length; i++) {
-					expandedHeight += calculateExpandedHeight(children.getItemAt(i));					
+					var child:Object = children.getItemAt(i);
+					expandedHeight += calculateExpandedHeight(child, side);
+					if (i < children.length - 1) {
+						expandedHeight += verticalPadding;
+					}
 				}				
 			} else {
 				expandedHeight = getMindMapController(model).getHeight(model);				
-			}			
+			}
 			setExpandedHeight(model, expandedHeight);
 			return expandedHeight;
+		}
+		
+		private function changeCoordinates(model:Object, oldExpandedHeight:Number, newExpandedHeight:Number, side:int):void {			
+			if (newExpandedHeight != oldExpandedHeight) {
+				setExpandedY(model, model.y - (newExpandedHeight - getMindMapController(model).getHeight(model))/2);
+				changeChildrenCoordinates(model, side, true);				
+				changeSiblingCoordinates(model, (newExpandedHeight - oldExpandedHeight)/2, side);
+			}
 		}		
 		
-		private function changeChildrenCoordinates(model:Object, changeOnlyForChildren:Boolean = false):void {	
+		private function changeChildrenCoordinates(model:Object, side:int, changeOnlyForChildren:Boolean = false):void {	
 			if (!changeOnlyForChildren) {				
-				model.y = getExpandedY(model) + (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2;
-				model.x = model.parent.x - getMindMapController(model).getWidth(model) - horizontalPadding;				
+				var padding:Number = 0;
+				if (model.parent != null && getMindMapController(model).getChildren(model.parent).getItemAt(0) != model) {
+					padding = verticalPadding;
+				}
+				model.y = getExpandedY(model) + (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2 + padding;
+				if (model.side == MindMapModel.LEFT) {
+					model.x = model.parent.x - getMindMapController(model).getWidth(model) - horizontalPadding;	
+				} else {
+					model.x = model.parent.x + getMindMapController(model).getWidth(model) + horizontalPadding;	
+				}
 			} else {
 				setExpandedY(model, model.y - (getExpandedHeight(model) - getMindMapController(model).getHeight(model))/2);		
 			}
 			if (model.expanded) {				
-				var children:ArrayList = getMindMapController(model).getChildren(model);				
+				var children:ArrayList = getMindMapController(model).getChildrenBasedOnSide(model, side);				
 				for (var i:int = 0; i < children.length; i++) {
 					var child:Object = children.getItemAt(i);
 					if (i == 0) {
@@ -189,36 +231,36 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 						var previousChild:Object = children.getItemAt(i - 1);
 						setExpandedY(child, getExpandedY(previousChild) + getExpandedHeight(previousChild));
 					}					
-					changeChildrenCoordinates(child);			
+					changeChildrenCoordinates(child, side);			
 				}				
-			}			
+			}
 		}
 		
-		private function changeSiblingCoordinates(model:Object, diffUp:Number, diffDown:Number):void {
+		private function changeSiblingCoordinates(model:Object, diff:Number, side:int):void {
 			var parent:Object =  MindMapModel(model).parent;
 			if (parent != null) {
-				var children:ArrayList = getMindMapController(parent).getChildren(parent);				
+				var children:ArrayList = getMindMapController(parent).getChildrenBasedOnSide(parent, side);				
 				for (var i:int = 0; i < children.length; i++) {
 					var child:Object = children.getItemAt(i);
 					if (children.getItemIndex(model) > children.getItemIndex(child)) {				
-						child.y -= diffUp;						
-						changeSiblingChildrenCoordinates(child, -diffUp);
+						child.y -= diff;						
+						changeSiblingChildrenCoordinates(child, -diff, side);
 					} else if (children.getItemIndex(model) < children.getItemIndex(child)) {
-						child.y += diffDown;
-						changeSiblingChildrenCoordinates(child, diffDown);
-					}				
-				}	
-				changeSiblingCoordinates(parent, diffUp, diffDown);
-			}			
+						child.y += diff;
+						changeSiblingChildrenCoordinates(child, diff, side);
+					}
+				}
+				changeSiblingCoordinates(parent, diff, side);
+			}
 		}
 		
-		private function changeSiblingChildrenCoordinates(model:Object, diff:Number):void {
-			var children:ArrayList = getMindMapController(model).getChildren(model);				
+		private function changeSiblingChildrenCoordinates(model:Object, diff:Number, side:int):void {
+			var children:ArrayList = getMindMapController(model).getChildrenBasedOnSide(model, side);				
 			for (var i:int = 0; i < children.length; i++) {
 				var child:Object = children.getItemAt(i);
 				child.y += diff;				
-				changeSiblingChildrenCoordinates(child, diff);
-			}		
+				changeSiblingChildrenCoordinates(child, diff, side);
+			}
 		}
 		
 	}

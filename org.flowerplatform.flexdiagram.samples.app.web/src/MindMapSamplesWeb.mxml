@@ -42,22 +42,27 @@
 				model.children.addItem(getMindMapModel(model));
 				rootModel.addItem(model);
 				
-				var child2:MindMapModel = getMindMapModel(model);				
+				var child2:MindMapModel = getMindMapModel(model);	
+				child2.side = MindMapModel.RIGHT;
 				child2.children.addItem(getMindMapModel(child2));
 				child2.children.addItem(getMindMapModel(child2));	
+				
 				model.children.addItem(child2);
 				
-				var child:MindMapModel = getMindMapModel(model);	
+				var child:MindMapModel = getMindMapModel(model);
+				child.side = MindMapModel.RIGHT;
 				child.children.addItem(getMindMapModel(child));
 				child.children.addItem(getMindMapModel(child));
 				child.children.addItem(getMindMapModel(child));
 				child.children.addItem(getMindMapModel(child));
 				child.parent = model;
+				
 				model.children.addItem(child);
 				
-				var child1:MindMapModel = getMindMapModel(model);				
+				var child1:MindMapModel = getMindMapModel(model);	
+				child1.side = MindMapModel.RIGHT;
 				child1.children.addItem(getMindMapModel(child1));
-				child1.parent = model;
+				child1.parent = model;				
 				model.children.addItem(child1);	
 				
 				var child11:MindMapModel = getMindMapModel(child1);				
@@ -77,7 +82,11 @@
 				model.text = "MindMap" + (new Date()).time;
 				model.width = 150;
 				model.height = 40;
-				
+				if (parent != null && parent.side != 0) {
+					model.side = parent.side;
+				} else if (parent != null) {
+					model.side = MindMapModel.LEFT;
+				}
 				model.parent = parent;
 								
 				return model;

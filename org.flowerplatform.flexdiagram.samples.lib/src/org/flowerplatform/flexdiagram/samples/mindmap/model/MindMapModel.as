@@ -1,10 +1,14 @@
 package org.flowerplatform.flexdiagram.samples.mindmap.model {
 	import mx.collections.ArrayList;
+	import mx.core.INavigatorContent;
 	
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
 	[Bindable]
 	public class MindMapModel {
+		
+		public static const LEFT:int = -1;
+		public static const RIGHT:int = 1;
 		
 		public var parent:MindMapModel;
 		public var children:ArrayList = new ArrayList();
@@ -15,17 +19,15 @@ package org.flowerplatform.flexdiagram.samples.mindmap.model {
 		public var height:int;
 		
 		public var text:String;
-		private var _expanded:Boolean;
+		public var side:int;
 		
-		public function MindMapModel() {
-
-		}
+		private var _expanded:Boolean;
 		
 		public function get expanded():Boolean {
 			return _expanded;
 		}
 		
-		public function set expanded(value:Boolean) {
+		public function set expanded(value:Boolean):void {
 			_expanded = value;
 		}
 		

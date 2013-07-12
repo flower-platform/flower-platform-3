@@ -1,6 +1,8 @@
 package org.flowerplatform.flexdiagram.samples.mindmap.controller
 {
 	import flash.events.IEventDispatcher;
+	import flash.sampler.getInvocationCount;
+	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayList;
 	import mx.core.IVisualElement;
@@ -8,7 +10,9 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 	import mx.events.PropertyChangeEvent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
+	import org.flowerplatform.flexdiagram.samples.mindmap.MindMapConnector;
 	import org.flowerplatform.flexdiagram.samples.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.samples.mindmap.MindMapModelController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
@@ -16,19 +20,21 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
 	public class MindMapModelRendererController extends ClassReferenceRendererController {
-				
+			
 		public function MindMapModelRendererController(diagramShell:DiagramShell, rendererClass:Class) {
 			super(diagramShell, MindMapModelRenderer);
 		}
 		
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 			IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+			addConnector(model);
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {
 			if (isModelDisposed) {
 				if (renderer != null) {
-					IVisualElementContainer(renderer.parent).removeElement(renderer);
+					removeConnector(model);
+					IVisualElementContainer(renderer.parent).removeElement(renderer);					
 				}
 				IEventDispatcher(model).removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 			} else {
@@ -46,6 +52,11 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 					MindMapDiagramShell(diagramShell).refreshNodePositions(event.target);
 				}
 				diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
+				if (event.target.parent != null) {
+					var connector:MindMapConnector = DynamicModelExtraInfoController(diagramShell.getControllerProvider(event.target).getModelExtraInfoController(event.target)).getDynamicObject(event.target).connector;
+					connector.invalidateDisplayList();
+				}
+				
 			}
 		}
 		
@@ -64,7 +75,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 				removeModel(children.getItemAt(i));				
 			}
 			if (!removeOnlyChildren) {
-				ParentAwareArrayList(diagramShell.rootModel).removeItem(model);
+				ParentAwareArrayList(diagramShell.rootModel).removeItem(model);				
 			}
 		}
 		
@@ -80,6 +91,24 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 				}
 				
 			}
+		}
+		
+		private function removeConnector(model:Object):void {
+			if (model.parent == null) {
+				return;
+			}
+			var connector:MindMapConnector = DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).connector;
+			diagramShell.diagramRenderer.removeElement(connector);
+			delete DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).connector;
+		}
+		
+		private function addConnector(model:Object):void {
+			if (model.parent == null) {
+				return;
+			}
+			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(model.parent);
+			DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).connector = connector;
+			diagramShell.diagramRenderer.addElement(connector);
 		}
 		
 	}
