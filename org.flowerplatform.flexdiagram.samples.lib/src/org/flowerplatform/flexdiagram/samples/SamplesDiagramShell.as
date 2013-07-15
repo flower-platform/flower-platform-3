@@ -11,9 +11,8 @@ package org.flowerplatform.flexdiagram.samples {
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.LightweightModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
-	import org.flowerplatform.flexdiagram.controller.selection.AnchorsSelectionController;
-	import org.flowerplatform.flexdiagram.controller.selection.AnchorsSelectionDynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
+	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
@@ -54,9 +53,7 @@ package org.flowerplatform.flexdiagram.samples {
 		
 		private var basicSubModelRendererController:ClassReferenceRendererController;
 		
-		private var basicModelSelectionController:AnchorsSelectionController;
-		private var basicModelExtraInfoController:AnchorsSelectionDynamicModelExtraInfoController;
-			
+		private var basicModelSelectionController:SelectionController;		
 		private var basicSubModelSelectionController:BasicSubModelSelectionController;
 		
 		private var basicSubModelInplaceEditorController:BasicSubModelInplaceEditorController;
@@ -79,10 +76,9 @@ package org.flowerplatform.flexdiagram.samples {
 			
 			basicSubModelRendererController = new ClassReferenceRendererController(this, SubModelIconItemRenderer);
 			
-			basicModelSelectionController = new AnchorsSelectionController(this);
-			basicModelExtraInfoController = new AnchorsSelectionDynamicModelExtraInfoController(this, StandardAnchorsSelectionRenderer);
-			
+			basicModelSelectionController = new SelectionController(this, StandardAnchorsSelectionRenderer);		
 			basicSubModelSelectionController = new BasicSubModelSelectionController(this);
+			
 			basicSubModelInplaceEditorController = new BasicSubModelInplaceEditorController(this);
 			basicModelResizeController = new BasicModelResizeController(this);
 			basicModelDragToCreateRelationController = new BasicModelDragToCreateRelationController(this);
@@ -106,12 +102,7 @@ package org.flowerplatform.flexdiagram.samples {
 			return null;
 		}
 		
-		public function getModelExtraInfoController(model:Object):IModelExtraInfoController {
-			if (model is BasicModel) {
-				return basicModelExtraInfoController;
-			} else if (model is BasicSubModel) {
-				return dynamicModelExtraInfoController;
-			}
+		public function getModelExtraInfoController(model:Object):IModelExtraInfoController {			
 			return dynamicModelExtraInfoController;
 		}
 		

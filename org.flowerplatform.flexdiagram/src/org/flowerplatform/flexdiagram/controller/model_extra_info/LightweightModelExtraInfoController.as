@@ -35,13 +35,6 @@ package org.flowerplatform.flexdiagram.controller.model_extra_info {
 		public function createExtraInfo(model:Object):Object {
 			return NO_RENDERER_ASSOCIATED_MARKER;
 		}
-		
-		public function isSelected(model:Object):Boolean {
-			return false;
-		}
-		
-		public function setSelected(model:Object, value:Boolean):void {			
-		}
-				
+						
 	}
 }

@@ -20,10 +20,8 @@ package org.flowerplatform.flexdiagram.samples.controller {
 			var modelExtraInfoController:DynamicModelExtraInfoController = 
 				DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model));
 			
-			var extraInfo:Object = diagramShell.modelToExtraInfoMap[model];
-			
-			if (extraInfo.selected != isSelected) {
-				modelExtraInfoController.setSelected(model, isSelected);
+			if (modelExtraInfoController.getDynamicObject(model).selected != isSelected) {
+				modelExtraInfoController.getDynamicObject(model).selected = isSelected;
 			}
 			
 			if (renderer == null) {
@@ -36,9 +34,12 @@ package org.flowerplatform.flexdiagram.samples.controller {
 			}
 		}
 		
-		public function associatedModelToSelectionRenderer(model:Object, renderer:IVisualElement):void {			
+		public function associatedModelToSelectionRenderer(model:Object, renderer:IVisualElement):void {		
+			var modelExtraInfoController:DynamicModelExtraInfoController = 
+				DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model));
+			
 			setSelectedState(model, renderer, 
-				diagramShell.modelToExtraInfoMap[model].selected, 
+				modelExtraInfoController.getDynamicObject(model).selected, 
 				diagramShell.mainSelectedItem == model);
 		}
 		

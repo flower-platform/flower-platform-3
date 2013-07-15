@@ -35,15 +35,7 @@ package org.flowerplatform.flexdiagram.controller.model_extra_info {
 		public function createExtraInfo(model:Object):Object {
 			return new Object();
 		}	
-		
-		public function isSelected(model:Object):Boolean {
-			return getDynamicObject(model).selected;
-		}
-		
-		public function setSelected(model:Object, value:Boolean):void {		
-			getDynamicObject(model).selected = value;
-		}
-		
+				
 		public function getDynamicObject(model:Object):Object {
 			if (diagramShell.modelToExtraInfoMap[model] == null) {
 				diagramShell.addInModelMapIfNecesssary(model, diagramShell.getControllerProvider(model));
