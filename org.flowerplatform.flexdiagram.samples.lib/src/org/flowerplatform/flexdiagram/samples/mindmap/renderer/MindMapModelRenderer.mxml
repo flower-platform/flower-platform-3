@@ -1,38 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:DataRenderer x="{data.x}" y="{data.y}" width="{data.width}" height="{data.height}" 
+<s:DataRenderer								
 				xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
-				xmlns:mx="library://ns.adobe.com/flex/mx" doubleClick="doubleClickHandler(event)" doubleClickEnabled="true"
-				>
-	<s:layout>
-		<s:BasicLayout />
-	</s:layout>
+				xmlns:mx="library://ns.adobe.com/flex/mx" 			
+				minWidth="10" minHeight="10"
+				creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"	>
 	
 	<fx:Script>
 		<![CDATA[
-			protected function doubleClickHandler(event:MouseEvent):void {
-				data.expanded = !data.expanded;
+			import mx.core.IVisualElementContainer;
+			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+
+			private static const CIRCLE_RADIUS:int = 3;
+								
+			override public function set data(value:Object):void {
+				if (super.data != null) {
+					data.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+				}
+				super.data = value;
+			
+				if (data != null) {
+					x = data.x;
+					y = data.y;
+					measuredWidth = data.width;
+					measuredHeight = data.height;
+					data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+				}
 			}
+			
+			private function modelChangedHandler(event:PropertyChangeEvent):void {
+				switch (event.property) {
+					case "x":
+						x = data.x;
+						break;
+					case "y":
+						y = data.y;
+						break;
+					case "height":
+						measuredHeight = data.height;
+						break;
+					case "width":
+						measuredWidth = data.width;
+						break;
+					case "expanded":
+						invalidateDisplayList();
+						break;
+				}
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {			
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
+				graphics.clear();
+				graphics.lineStyle(1, 0x808080);
+				graphics.beginFill(0xCCCCCC, 0);
+				graphics.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, 10, 10);		
+			
+				if (data.children.length > 0 && data.expanded == false) {
+					if (data.side == MindMapDiagramShell.LEFT) {
+						graphics.drawCircle(-CIRCLE_RADIUS, data.height/2, CIRCLE_RADIUS);
+					} else if (data.side == MindMapDiagramShell.RIGHT) {
+						graphics.drawCircle(data.width + CIRCLE_RADIUS, data.height/2, CIRCLE_RADIUS);
+					}
+				}
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				addEventListener(ResizeEvent.RESIZE, resizeHandler);
+				resizeHandler(null);				
+			}
+					
+			protected function resizeHandler(event:ResizeEvent):void {				
+				data.width = measuredWidth;
+				data.height = measuredHeight;
+			}
+			
 		]]>
 	</fx:Script>
 	
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
-	<s:Rect width="100%" height="100%" radiusX="5" radiusY="5">
-		<s:stroke>
-			<s:SolidColorStroke color="#a8a8a8" weight="1"/>
-		</s:stroke>
-		<s:fill>
-			<s:SolidColor color="white" />
-		</s:fill>
-	</s:Rect>
-	
-	<s:Group width="100%" height="100%" left="5" >
-		<s:layout>
-			<s:VerticalLayout verticalAlign="middle" horizontalAlign="center" gap="0"/>
-		</s:layout>
-		<s:Label text="{data.text}" width="100%" />		
-	</s:Group>
-	
+	<s:layout>				
+		<s:BasicLayout />
+	</s:layout>
+		
+	<s:Label id="modelText" text="{data.text}" 
+			 minHeight="10" minWidth="10" 
+			 paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5" />		
+		
 </s:DataRenderer>

@@ -1,12 +1,10 @@
-package org.flowerplatform.flexdiagram.samples.mindmap {
+package org.flowerplatform.flexdiagram.mindmap {
 	import flash.geom.Point;
 	
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	
-	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
-	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
 	
 	public class MindMapConnector extends UIComponent {
 		
@@ -35,12 +33,12 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			var targetElement:IVisualElement = getDiagramShell().getRendererForModel(target);
 			
 			graphics.clear();
-			graphics.lineStyle(1, 0x000000);
+			graphics.lineStyle(1, 0x808080);
 			
 			var sourcePoint:Point;
 			var targetPoint:Point;
 			
-			if (getDiagramShell().getMindMapController(source).getSide(source) == MindMapModel.LEFT) {
+			if (getDiagramShell().getMindMapController(source).getSide(source) == MindMapDiagramShell.LEFT) {
 				sourcePoint = new Point(sourceElement.x + sourceElement.width, sourceElement.y + sourceElement.height/2);
 				targetPoint = new Point(targetElement.x, targetElement.y + targetElement.height/2);
 				graphics.moveTo(sourcePoint.x, sourcePoint.y);

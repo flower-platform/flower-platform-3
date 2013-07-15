@@ -4,15 +4,19 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   
 			   creationComplete="creationCompleteHandler(event)"
-			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:samples="org.flowerplatform.flexdiagram.samples.*" xmlns:flexdiagram="org.flowerplatform.flexdiagram.*" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*" xmlns:infinitegroup="org.flowerplatform.flexdiagram.util.infinitegroup.*" xmlns:mindmap="org.flowerplatform.flexdiagram.samples.mindmap.*">
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:samples="org.flowerplatform.flexdiagram.samples.*" xmlns:flexdiagram="org.flowerplatform.flexdiagram.*" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*" xmlns:infinitegroup="org.flowerplatform.flexdiagram.util.infinitegroup.*" xmlns:mindmap="org.flowerplatform.flexdiagram.samples.mindmap.*" xmlns:mindmap1="org.flowerplatform.flexdiagram.mindmap.*">
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
-			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.tool.DragTool;
+			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 			import org.flowerplatform.flexdiagram.samples.IModelHolder;
-			import org.flowerplatform.flexdiagram.samples.SamplesDiagramShell;
 			import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
+			import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
+			import org.flowerplatform.flexdiagram.tool.ScrollTool;
+			import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
+			import org.flowerplatform.flexdiagram.tool.ZoomTool;
 			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 			
 			private var _rootModel:ParentAwareArrayList;
@@ -28,6 +32,10 @@
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				populateRootModel();
+				
+				diagramShell.registerTools([
+					ScrollTool, SelectOnClickTool, ZoomTool, DragTool]);
+				
 			}
 			
 			private function populateRootModel():void {
@@ -43,14 +51,14 @@
 				rootModel.addItem(model);
 				
 				var child2:MindMapModel = getMindMapModel(model);	
-				child2.side = MindMapModel.RIGHT;
+				child2.side = MindMapDiagramShell.LEFT;
 				child2.children.addItem(getMindMapModel(child2));
 				child2.children.addItem(getMindMapModel(child2));	
 				
 				model.children.addItem(child2);
 				
 				var child:MindMapModel = getMindMapModel(model);
-				child.side = MindMapModel.RIGHT;
+				child.side = MindMapDiagramShell.RIGHT;
 				child.children.addItem(getMindMapModel(child));
 				child.children.addItem(getMindMapModel(child));
 				child.children.addItem(getMindMapModel(child));
@@ -60,7 +68,7 @@
 				model.children.addItem(child);
 				
 				var child1:MindMapModel = getMindMapModel(model);	
-				child1.side = MindMapModel.RIGHT;
+				child1.side = MindMapDiagramShell.RIGHT;
 				child1.children.addItem(getMindMapModel(child1));
 				child1.parent = model;				
 				model.children.addItem(child1);	
@@ -80,12 +88,12 @@
 				
 				model = new MindMapModel();
 				model.text = "MindMap" + (new Date()).time;
-				model.width = 150;
-				model.height = 40;
+				model.width = 151;
+				model.height = 22;
 				if (parent != null && parent.side != 0) {
 					model.side = parent.side;
 				} else if (parent != null) {
-					model.side = MindMapModel.LEFT;
+					model.side = MindMapDiagramShell.LEFT;
 				}
 				model.parent = parent;
 								
@@ -95,10 +103,17 @@
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<mindmap:MindMapDiagramShell id="diagramShell" diagramRenderer="{diagramRenderer}" rootModel="{rootModel}"/>
+		<mindmap:SampleMindMapDiagramShell id="diagramShell" diagramRenderer="{diagramRenderer}" rootModel="{rootModel}"/>
 		
 	</fx:Declarations>
 	
+	<s:layout>
+		<s:HorizontalLayout />
+	</s:layout>
+	<s:VGroup width="100">
+		<s:Button label="Expand" click="diagramShell.selectedItems.getItemAt(0).expanded = !diagramShell.selectedItems.getItemAt(0).expanded" />
+		
+	</s:VGroup>
 	<infinitegroup:InfiniteScroller id="scroller" width="100%" height="100%" >
 		<renderer:DiagramRenderer id="diagramRenderer" viewPortRectOffsetTowardOutside="0" width="100%" height="100%">
 			

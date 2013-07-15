@@ -6,17 +6,14 @@ package org.flowerplatform.flexdiagram.samples.mindmap.model {
 	
 	[Bindable]
 	public class MindMapModel {
-		
-		public static const LEFT:int = -1;
-		public static const RIGHT:int = 1;
-		
+				
 		public var parent:MindMapModel;
 		public var children:ArrayList = new ArrayList();
 		
-		public var x:int;
-		public var y:int;
-		public var width:int;
-		public var height:int;
+		public var x:Number = 0;
+		public var y:Number = 0;
+		public var width:Number = 0;
+		public var height:Number = 0;
 		
 		public var text:String;
 		public var side:int;
