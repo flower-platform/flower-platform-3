@@ -66,7 +66,6 @@ public class JavaAttributeProcessor implements IDiagrammableElementFeatureChange
 					case 2:
 						visibility = "-";
 						break;
-					case 3: visibility = "~";
 					default:
 						break;
 					}
@@ -77,6 +76,9 @@ public class JavaAttributeProcessor implements IDiagrammableElementFeatureChange
 		String name = (String) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 		String type = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type());
 		viewDetails.put("label", String.format("%s%s:%s", visibility, name, type));
+		
+		// TODO test
+		viewDetails.put("iconUrls", new String[] {"images/obj16/SyncProperty_protected.gif", "images/ovr16/Synchronized_All_Generated.gif"});
 	}
 
 }

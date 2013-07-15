@@ -15,8 +15,6 @@ package org.flowerplatform.editor.model.renderer {
 	public class BoxChildIconItemRenderer extends IconItemRenderer {
 		public function BoxChildIconItemRenderer() {
 			super();
-//			labelField = "name";
-			label = "hy!";
 			iconFunction = getImage;
 			minHeight = 0;
 			setStyle("verticalAlign", "middle");
@@ -24,7 +22,11 @@ package org.flowerplatform.editor.model.renderer {
 		}
 		
 		private function getImage(object:Object):Object {
-			return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getComposedImageUrl(["images/obj16/SyncProperty_protected.gif", "images/ovr16/Synchronized_All_Generated.gif"]));
+			if (View(data).viewDetails) {
+				var iconUrls:Array = View(data).viewDetails.iconUrls;
+				return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getComposedImageUrl(iconUrls));
+			}
+			return null;
 		}
 		
 		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void
@@ -39,15 +41,19 @@ package org.flowerplatform.editor.model.renderer {
 			super.data = value;
 			if (data != null) {
 				View(data).addEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
+				
+				if (View(data).viewDetails != null) {
+					viewDetailsUpdatedHandler(null);
+				}
 			}
-			
-			if (View(data).viewDetails != null) {
-				viewDetailsUpdatedHandler(null);
-			}
+		
 		}
 		
 		protected function viewDetailsUpdatedHandler(event:Event):void {
 			label = View(data).viewDetails.label;
+			if (iconDisplay) {
+				iconDisplay.source = getImage(null);
+			}
 		}
 	}
 }

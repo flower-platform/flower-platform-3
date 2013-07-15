@@ -49,6 +49,13 @@ package org.flowerplatform.editor.model {
 			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
 				DiagramEditorStatefulClient(editorStatefulClient).service_setInplaceEditorText(View(diagramShell.selectedItems.getItemAt(0)).id, textInput.text);
 			});
+			
+			testButton = new Button();
+			resourceStatusBar.addChild(testButton);
+			testButton.label = "Test/Expand attributes";
+			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+				DiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment(View(diagramShell.selectedItems.getItemAt(0)).id);
+			});
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {

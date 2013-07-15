@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:DataRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx"
+				implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware">
+	
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import org.flowerplatform.editor.model.NotationDiagramShell;
+			import org.flowerplatform.emf_model.notation.Node;
+			import org.flowerplatform.flexdiagram.DiagramShell;
+			
+			private var _diagramShell:DiagramShell;
+			
+			public function get diagramShell():DiagramShell {
+				return _diagramShell;
+			}
+			
+			public function set diagramShell(value:DiagramShell):void {
+				_diagramShell = value;
+			}
+			
+			protected function collapse():void {
+				NotationDiagramShell(diagramShell).editorStatefulClient.service_collapseCompartment(Node(data).id);
+			}
+			
+			protected function addNew():void {
+				NotationDiagramShell(diagramShell).editorStatefulClient.service_addNew(Node(data).id, "+attrFromClient:int");
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<s:Button label="Collapse" click="{collapse()}"/>
+	<s:Button label="Filter"/>
+	<s:Button label="New" click="{addNew()}"/>
+	
+</s:DataRenderer>

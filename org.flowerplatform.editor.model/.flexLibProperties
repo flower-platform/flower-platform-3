@@ -9,6 +9,7 @@
     <classEntry path="org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController"/>
     <classEntry path="org.flowerplatform.editor.model.action.DragOnDiagramAction"/>
     <classEntry path="org.flowerplatform.editor.model.remote.ViewDetailsUpdate"/>
+    <classEntry path="org.flowerplatform.editor.model.renderer.SeparatorRenderer"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

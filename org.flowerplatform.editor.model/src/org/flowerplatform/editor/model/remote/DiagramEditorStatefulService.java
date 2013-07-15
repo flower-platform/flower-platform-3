@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -120,37 +121,35 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		
 		Diagram diagram = getDiagram(editableResource);
 		List<EObject> list = new ArrayList<EObject>();
-		// walking the tree this way breaks the convention that ensures sending the children before the parents
-		// BUT it is not a problem because the OpenDiagramCommand's logic executes after all the children
-		// have been received
-		TreeIterator<EObject> iter = diagram.eAllContents();
-		
 		Map<String, Object> processingContext = createProcessingContext(editableResource);
 		
-		while (iter.hasNext()) {
-			EObject next = iter.next();
-			if (next instanceof View) {
-				View view = (View) next;
-				IDiagrammableElementFeatureChangesProcessor processor = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessor(view.getViewType());
-				if (processor != null) {
-					processor.processFeatureChanges(view.getDiagrammableElement(), null, view, processingContext);
-				}
-			}
-			list.add(next);
-		}
 		list.add(diagram);
+		iterateContents(diagram, list, processingContext);
 		
 		DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, false);
 
-		if (diagramUpdaterChangeDescriptionProcessingContext != null) {
-			list.addAll((Collection<? extends EObject>) diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate());
-		}
-		
 		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
 		String diagramId = diagram.eResource().getURIFragment(diagram);
 		invokeClientMethod(client.getCommunicationChannel(), client.getStatefulClientId(), "openDiagram", new Object[] { diagramId });
 		
 //		hbResource.unload();
+	}
+	
+	private void iterateContents(View view, List<EObject> list, Map<String, Object> processingContext) {
+		Iterator<EObject> iter = view.eContents().iterator();
+		
+		while (iter.hasNext()) {
+			EObject next = iter.next();
+			if (next instanceof View) {
+				View child = (View) next;
+				IDiagrammableElementFeatureChangesProcessor processor = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessor(child.getViewType());
+				if (processor != null) {
+					processor.processFeatureChanges(child.getDiagrammableElement(), null, child, processingContext);
+				}
+				iterateContents(child, list, processingContext);
+			}
+			list.add(next);
+		}
 	}
 
 	// TODO CS/CS3 de facut semnatura sa accepte ERC; e absurd, ca eu il calculez prin iteratie din nou aici; si semnatura nu e uniforma cu celelalte
@@ -198,19 +197,19 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			ChangeDescription changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			Map<String, Object> processingContext = createProcessingContext(diagramEditableResource);
 			
-//			diagramEditableResource.changeRecorder.beginRecording(Collections.singleton(diagramEditableResource.mainResource));
-//			// TODO CS/CS3 dubla inregistrare: sa facem prin constructie mai intai procesare elemente si apoi view-uri?...
-//			// oricum, cred ca ar trebui inca un try/finally; sa facem un mecanism multiplu, ca la MDA? dar cum ne dam seama ca nu e infinit?
-//			// sa nu mai facem viewdetails ca camp, si sa facem comanda speciala?
-//			// de asemenea, tr. si un map, pentru a evita adaugarea de 2 ori in timpul celor 2 inregistrari
+			diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource()));
+			// TODO CS/CS3 dubla inregistrare: sa facem prin constructie mai intai procesare elemente si apoi view-uri?...
+			// oricum, cred ca ar trebui inca un try/finally; sa facem un mecanism multiplu, ca la MDA? dar cum ne dam seama ca nu e infinit?
+			// sa nu mai facem viewdetails ca camp, si sa facem comanda speciala?
+			// de asemenea, tr. si un map, pentru a evita adaugarea de 2 ori in timpul celor 2 inregistrari
 			EditorModelPlugin.getInstance().getComposedChangeProcessor().processChangeDescription(changeDescription, processingContext);
-//			changeDescription = diagramEditableResource.changeRecorder.endRecording();
-//			
-//			diagramEditableResource.changeRecorder.dispose();
+			changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
+			
+			diagramEditableResource.getChangeRecorder().dispose();
 //			MyChangeRecorder.threadLocalChangeRecorder.set(null);
 //			diagramEditableResource.changeRecorder = null;
-//			
-//			DiagramPlugin.getInstance().getComposedChangeDescriptionProcessor().processChangeDescription(changeDescription, context);
+			
+			EditorModelPlugin.getInstance().getComposedChangeProcessor().processChangeDescription(changeDescription, processingContext);
 			
 			DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, false);
 			if (diagramUpdaterChangeDescriptionProcessingContext != null && !diagramUpdaterChangeDescriptionProcessingContext.isEmpty()) {

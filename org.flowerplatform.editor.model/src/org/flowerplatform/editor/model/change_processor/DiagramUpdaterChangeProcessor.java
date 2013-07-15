@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.emf_model.notation.NotationElement;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
@@ -58,9 +59,9 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 //		return false;
 	}
 	
-	protected void processAddedOrRemovedObjectRecursive(EObject object, DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext, boolean added, StringBuffer debugStringBuffer) {
+	protected void processAddedOrRemovedObjectRecursive(EObject object, DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext, Map<String, Object> context, boolean added, StringBuffer debugStringBuffer) {
 		for (EObject child : object.eContents()) {
-			processAddedOrRemovedObjectRecursive(child, diagramUpdaterChangeDescriptionProcessingContext, added, debugStringBuffer);
+			processAddedOrRemovedObjectRecursive(child, diagramUpdaterChangeDescriptionProcessingContext, context, added, debugStringBuffer);
 		}
 		if (debugStringBuffer != null) {
 			debugStringBuffer.append(object);
@@ -68,6 +69,13 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		}
 		if (added) {
 			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().add(object);
+			if (object instanceof View) {
+				View view = (View) object;
+				IDiagrammableElementFeatureChangesProcessor processor = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessor(view.getViewType());
+				if (processor != null) {
+					processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);
+				}
+			}
 		} else {
 //			// removed
 //			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());
@@ -75,7 +83,7 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 	}
 	
 	
-	protected void addNewlyAddedObject(EObject object, DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext) {
+	protected void addNewlyAddedObject(EObject object, DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext, Map<String, Object> context) {
 		StringBuffer debugStringBuffer = null;
 		if (logger.isDebugEnabled()) {
 			debugStringBuffer = new StringBuffer();
@@ -85,20 +93,20 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		// children before the parents. This may be convenient during deserialization on Flex: when we deserialize an object,
 		// we can use its child references right away. At the moment of writing, this was not a MUST, but this may be helpful 
 		// in the future.
-		processAddedOrRemovedObjectRecursive(object, diagramUpdaterChangeDescriptionProcessingContext, true, debugStringBuffer);
+		processAddedOrRemovedObjectRecursive(object, diagramUpdaterChangeDescriptionProcessingContext, context, true, debugStringBuffer);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Added newly added objects = [{}]", debugStringBuffer);
 		}
 	}
 	
-	protected void addRemovedObject(EObject object, DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext) {
+	protected void addRemovedObject(EObject object, DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext, Map<String, Object> context) {
 		StringBuffer debugStringBuffer = null;
 		if (logger.isDebugEnabled()) {
 			debugStringBuffer = new StringBuffer();
 		}
 		
-		processAddedOrRemovedObjectRecursive(object, diagramUpdaterChangeDescriptionProcessingContext, false, debugStringBuffer);
+		processAddedOrRemovedObjectRecursive(object, diagramUpdaterChangeDescriptionProcessingContext, context, false, debugStringBuffer);
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("Added objects id to dispose for objects = [{}]", debugStringBuffer);
@@ -128,7 +136,7 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 					throw new UnsupportedOperationException("Containment feature that is not many is not yet supported; feature = " + featureChange.getFeatureName());
 				} else {
 					// containment & many
-					if (featureChange.getListChanges().isEmpty()) {
+//					if (featureChange.getListChanges().isEmpty()) {
 						// special case: the list was empty before adding => we don't have listChanges; this happens because
 						// it's not actually an ADD operation; it's a SET operation, from an empty list. I think the same scenario
 						// happens if the user does a SET instead of an ADD (on a non-empty list)
@@ -141,29 +149,29 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 							if (oldList == null || !oldList.contains(mostProbablyNewlyAddedElement)) {
 								// the .contains(...) is for the case where the current object was both in the old + new list;
 								// I named the variable "probably..." because this case is unlikely to exist, but not impossible
-								addNewlyAddedObject(mostProbablyNewlyAddedElement, diagramUpdaterChangeDescriptionProcessingContext);
+								addNewlyAddedObject(mostProbablyNewlyAddedElement, diagramUpdaterChangeDescriptionProcessingContext, context);
 								// TODO CS/CS3 LOW De testat pentru cazul setList(null), sau setList(ceva): cred ca tot aici picam, si tr sa raportam niste obiecte suplimentare ca sterse;
 								// de asemenea de testat si ca cazul de mai sus, pt. add in care avem o lista noua care contine si elemente care erau in lista veche; eu l-am copiat, insa
 								// nu l-am vazut cu ochii mei.
 							}
 						}
-					} else {
-						// normal case: the list was not empty before adding
-						for (ListChange listChange : featureChange.getListChanges()) {
-							if (listChange.getKind() == ChangeKind.REMOVE_LITERAL) {
-								// an element was added; the recording only indicates the index, so we need to look it up
-								// by ourselves
-								@SuppressWarnings("unchecked")
-								EObject newlyAddedObject = ((List<EObject>) notationElement.eGet(featureChange.getFeature())).get(listChange.getIndex());
-								addNewlyAddedObject(newlyAddedObject, diagramUpdaterChangeDescriptionProcessingContext);
-							} else if (listChange.getKind() == ChangeKind.ADD_LITERAL) {
-								// an element was removed
-								for (EObject removedObject : listChange.getReferenceValues()) {
-									addRemovedObject(removedObject, diagramUpdaterChangeDescriptionProcessingContext);
-								}
-							}
-						}
-					}
+//					} else {
+//						// normal case: the list was not empty before adding
+//						for (ListChange listChange : featureChange.getListChanges()) {
+//							if (listChange.getKind() == ChangeKind.REMOVE_LITERAL) {
+//								// an element was added; the recording only indicates the index, so we need to look it up
+//								// by ourselves
+//								@SuppressWarnings("unchecked")
+//								EObject newlyAddedObject = ((List<EObject>) notationElement.eGet(featureChange.getFeature())).get(listChange.getIndex());
+//								addNewlyAddedObject(newlyAddedObject, diagramUpdaterChangeDescriptionProcessingContext, context);
+//							} else if (listChange.getKind() == ChangeKind.ADD_LITERAL) {
+//								// an element was removed
+//								for (EObject removedObject : listChange.getReferenceValues()) {
+//									addRemovedObject(removedObject, diagramUpdaterChangeDescriptionProcessingContext, context);
+//								}
+//							}
+//						}
+//					}
 				}
 			}
 		}

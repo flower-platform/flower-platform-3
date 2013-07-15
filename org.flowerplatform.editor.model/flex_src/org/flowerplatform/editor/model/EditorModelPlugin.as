@@ -7,10 +7,11 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BasicModelRendererController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
-	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
+	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Location;
@@ -82,6 +83,11 @@ package org.flowerplatform.editor.model {
 //			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(AnchorsSelectionController);
 			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
+			
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: SeparatorRenderer});
+			composedControllerProviderFactories["classAttributeSeparator"] = composedControllerProviderFactory;
 		}
 		
 		override public function start():void {

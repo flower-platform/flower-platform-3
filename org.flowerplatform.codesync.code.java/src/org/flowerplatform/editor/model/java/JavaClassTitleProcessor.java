@@ -43,7 +43,7 @@ public class JavaClassTitleProcessor implements IDiagrammableElementFeatureChang
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		viewDetails.put("label", CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
+		viewDetails.put("iconUrls", new String[] {"images/obj16/SyncClass.gif"});
 	}
-	
 
 }

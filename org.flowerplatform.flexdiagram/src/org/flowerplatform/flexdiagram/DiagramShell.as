@@ -279,6 +279,9 @@ package org.flowerplatform.flexdiagram {
 				return;
 			}
 			var model:Object = event.items[0];
+			if (model is PropertyChangeEvent) {
+				model = PropertyChangeEvent(model).source;
+			}
 			var selectionController:ISelectionController = getControllerProvider(model).getSelectionController(model);
 			
 			if (selectedItems.getItemIndex(mainSelectedItem) == -1) {
