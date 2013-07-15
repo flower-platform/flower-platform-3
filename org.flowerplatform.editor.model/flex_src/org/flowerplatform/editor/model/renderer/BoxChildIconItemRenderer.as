@@ -1,6 +1,7 @@
 package org.flowerplatform.editor.model.renderer {
 	import flash.events.Event;
 	
+	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -23,7 +24,7 @@ package org.flowerplatform.editor.model.renderer {
 		}
 		
 		private function getImage(object:Object):Object {
-			return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(WebCommonPlugin.getInstance().getResourceUrl("images/question.png"));
+			return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getComposedImageUrl(["images/obj16/SyncProperty_protected.gif", "images/ovr16/Synchronized_All_Generated.gif"]));
 		}
 		
 		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void

@@ -1,4 +1,5 @@
 package org.flowerplatform.common.plugin {
+	import mx.collections.ArrayCollection;
 	import mx.resources.ResourceManager;
 	
 	import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
@@ -13,6 +14,8 @@ package org.flowerplatform.common.plugin {
 		public static const MESSAGES_FILE:String = "messages.properties";
 		
 		protected var _resourcesUrl:String;
+		
+		protected var _composedImagesUrl:String;
 
 		public function get resourcesUrl():String {
 			if (_resourcesUrl == null) {
@@ -25,6 +28,16 @@ package org.flowerplatform.common.plugin {
 				_resourcesUrl = groups[1];
 			}
 			return _resourcesUrl;
+		}
+		
+		/**
+		 * @author Mariana
+		 */
+		public function get composedImagesUrl():String {
+			if (_composedImagesUrl == null) {
+				_composedImagesUrl = resourcesUrl.replace("public-resources", "image-composer");				
+			}
+			return _composedImagesUrl;
 		}
 
 		override public function start():void {
@@ -53,5 +66,17 @@ package org.flowerplatform.common.plugin {
 			return resourcesUrl + resource;
 		}
 
+		/**
+		 * @author Mariana
+		 */
+		public function getComposedImageUrl(images:Array):String {
+			var resource:String = "";
+			for each (var image:String in images) {
+				resource += image + "+";
+			}
+			resource = resource.substr(0, resource.length - 1);
+			return composedImagesUrl + resource;
+		}
+		
 	}
 }

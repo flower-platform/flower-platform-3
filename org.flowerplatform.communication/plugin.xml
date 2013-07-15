@@ -21,5 +21,13 @@
             serviceClass="org.flowerplatform.communication.progress_monitor.remote.ProgressMonitorStatefulService">
       </service>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.servlet">
+      <servlet
+            mappingEvaluator="org.flowerplatform.communication.public_resources.ImageComposerMappingEvaluator"
+            priority="0"
+            servlet="org.flowerplatform.communication.public_resources.ImageComposerServlet">
+      </servlet>
+   </extension>
 
 </plugin>
