@@ -2,6 +2,7 @@ package com.crispico.flower.mp.codesync.code;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +30,8 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
@@ -176,7 +179,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 //	public CodeSyncElement getCodeSyncElement(String fullyQualifiedName, String technology, CommunicationChannel communicationChannel) {
-	public CodeSyncElement getCodeSyncElement(IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
+	public CodeSyncElement getCodeSyncElement(IProject project, IResource file, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 //		if (fullyQualifiedName.startsWith("/")) {
 //			fullyQualifiedName = fullyQualifiedName.substring(1);
 //		}
@@ -203,15 +206,19 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncElement srcDir = getSrcDir(cseResource, file.getFullPath().segment(2));
 		
 //		// STEP 3 : find the CSE corresponding to the name
-//		String[] path = Arrays.copyOfRange(pathFragments, 2, pathFragments.length);
-//		CodeSyncElement codeSyncElement = getCodeSyncElement(srcDir, path);
-////		if (codeSyncElement == null) {
-//			// SUBSTEP : run the CodeSync algorithm if the CSE does not exist
+		String[] path = Arrays.copyOfRange(file.getFullPath().segments(), 3, file.getFullPath().segments().length);
+		CodeSyncElement codeSyncElement = getCodeSyncElement(srcDir, path);
+		if (codeSyncElement == null) {
+			// SUBSTEP : run the CodeSync algorithm if the CSE does not exist
 //			runCodeSyncAlgorithm(srcDir, project, pathFragments[1], technology, communicationChannel);
-			runCodeSyncAlgorithm(srcDir, project, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel);
-////		}
-//		return getCodeSyncElement(srcDir, path);
-		return null;
+			runCodeSyncAlgorithm(srcDir, project, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
+		} else {
+			if (showDialog) {
+				runCodeSyncAlgorithm(srcDir, project, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
+			}
+			return codeSyncElement;
+		}
+		return getCodeSyncElement(srcDir, path);
 	}
 	
 	/**
@@ -246,14 +253,17 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel) {
+	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource editableResource = //(CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
-//		if (editableResource == null) {
-//			editableResource = 
-			(CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
-//		}
+		String editableResourcePath = project.getFullPath().toString();
+		CodeSyncEditableResource editableResource; // = (CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
+		if (showDialog) {
+			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, editableResourcePath);
+		} else {
+			service.subscribe(new StatefulServiceInvocationContext(communicationChannel), new EditorStatefulClientLocalState(editableResourcePath));
+			editableResource = (CodeSyncEditableResource) service.getEditableResource(editableResourcePath);
+		}
 //		CodeSyncEditableResource editableResource = new CodeSyncEditableResource();
 	
 		Match match = new Match();
@@ -280,6 +290,12 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		
 //		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
 //		service.attemptUpdateEditableResourceContent(context, project.getFullPath().toString(), null);
+		
+		if (!showDialog) {
+			// we're not showing the dialog => perform sync
+			StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
+			service.synchronize(context, editableResourcePath);
+		}
 		
 		return editableResource;
 //		return null;

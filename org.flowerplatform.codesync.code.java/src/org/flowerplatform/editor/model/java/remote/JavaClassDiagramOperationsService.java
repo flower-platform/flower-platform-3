@@ -22,7 +22,7 @@ public class JavaClassDiagramOperationsService {
 	
 	public static final String SERVICE_ID = "classDiagramOperationsDispatcher";
 	
-	public static final String ATTRIBUTE_SEPARATOR = "classAttributeSeparator";
+	public static final String ATTRIBUTE_SEPARATOR = "classAttributesCompartmentSeparator";
 	
 	public void setInplaceEditorText(ServiceInvocationContext context, String viewId, String text) {
 		View view = getViewById(context, viewId);

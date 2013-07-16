@@ -10,6 +10,6 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
  */
 public interface ICodeSyncAlgorithmRunner {
 
-	void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel);
+	void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel, boolean showDialog);
 	
 }

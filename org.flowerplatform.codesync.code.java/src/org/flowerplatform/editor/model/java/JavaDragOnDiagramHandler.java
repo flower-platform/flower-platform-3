@@ -10,6 +10,7 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.model.IDragOnDiagramHandler;
+import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Node;
@@ -19,6 +20,7 @@ import org.flowerplatform.web.projects.remote.ProjectsService;
 
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.codesync.code.java.CodeSyncCodeJavaPlugin;
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana
@@ -43,15 +45,32 @@ public class JavaDragOnDiagramHandler extends AbstractServerCommand implements I
 //			CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(fqName);
 //			CodeSyncCodePlugin.getInstance().getCodeSyncElement(fqName, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
 //		}
-		Node node = NotationFactory.eINSTANCE.createNode();
-		node.setViewType("class");
 		
-		Bounds bounds = NotationFactory.eINSTANCE.createBounds();
-		bounds.setX(200);
-		bounds.setHeight(100);
-		bounds.setWidth(100);
-		node.setLayoutConstraint(bounds);
-		diagram.getPersistentChildren().add(node);
+		for (Object object : draggedObjects) {
+			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile((List<PathFragment>) object);
+			CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
+			
+			Node node = NotationFactory.eINSTANCE.createNode();
+			node.setViewType("class");
+			node.setDiagrammableElement(cse.getChildren().get(0)); // get the class from the file
+			
+			Node classTitle = NotationFactory.eINSTANCE.createNode();
+			classTitle.setViewType("classTitle");
+			classTitle.setDiagrammableElement(cse.getChildren().get(0));
+			node.getPersistentChildren().add(classTitle);
+			
+			Node classAttrSeparator = NotationFactory.eINSTANCE.createNode();
+			classAttrSeparator.setViewType(JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR);
+			node.getPersistentChildren().add(classAttrSeparator);
+			
+			Bounds bounds = NotationFactory.eINSTANCE.createBounds();
+			bounds.setX(200);
+			bounds.setHeight(100);
+			bounds.setWidth(100);
+			node.setLayoutConstraint(bounds);
+			diagram.getPersistentChildren().add(node);
+		}
+		
 		return true;
 	}
 
@@ -63,6 +82,6 @@ public class JavaDragOnDiagramHandler extends AbstractServerCommand implements I
 	@Override
 	public void executeCommand() {
 		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(pathWithRoot);
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 	}
 }

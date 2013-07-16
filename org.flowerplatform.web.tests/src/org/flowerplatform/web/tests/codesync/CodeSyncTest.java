@@ -112,7 +112,7 @@ public class CodeSyncTest {
 		
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 		
 		Match match = getMatch();
 		
@@ -121,7 +121,7 @@ public class CodeSyncTest {
 		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
 		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
 		service.cancelSelectedActions(project.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 		
 		Pair[] typeList = {
 				new Pair(MatchType._3MATCH, 0),			// src
@@ -162,7 +162,7 @@ public class CodeSyncTest {
 		
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 		
 		Pair[] typeList = {
 				new Pair(MatchType._3MATCH, 0),				// src
@@ -203,7 +203,7 @@ public class CodeSyncTest {
 
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 		
 //		// create FeatureChanges to simulate model modifications
 //		IProject project = getProject(PROJECT);
@@ -438,7 +438,7 @@ public class CodeSyncTest {
 		
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
@@ -471,7 +471,7 @@ public class CodeSyncTest {
 
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 		
 //		// create FeatureChanges to simulate model modifications
 //		IProject project = getProject(PROJECT);

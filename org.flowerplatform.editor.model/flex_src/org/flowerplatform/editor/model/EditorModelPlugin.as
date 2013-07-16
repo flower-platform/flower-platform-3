@@ -87,7 +87,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: SeparatorRenderer});
-			composedControllerProviderFactories["classAttributeSeparator"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classAttributesCompartmentSeparator"] = composedControllerProviderFactory;
 		}
 		
 		override public function start():void {

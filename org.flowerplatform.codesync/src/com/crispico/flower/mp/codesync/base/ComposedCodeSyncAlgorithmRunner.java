@@ -19,9 +19,9 @@ public class ComposedCodeSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner
 	}
 	
 	@Override
-	public void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel) {
+	public void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		for (ICodeSyncAlgorithmRunner runner : runners) {
-			runner.runCodeSyncAlgorithm(project, resource, technology, communicationChannel);
+			runner.runCodeSyncAlgorithm(project, resource, technology, communicationChannel, showDialog);
 		}
 	}
 
