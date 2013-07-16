@@ -80,8 +80,6 @@ public class CodeSyncTest {
 	
 	public static final String DIR = TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" + PROJECT + "/";
 	
-	public static final String LINK = "link-to-project/";
-	
 	public static final String SOURCE_FILE = "Test.java";
 	public static final String MODEL_FILE = "CSE.notation";
 	
@@ -105,14 +103,14 @@ public class CodeSyncTest {
 	public void testMatchWhenSync() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(INITIAL);
 		String fullyQualifiedName = "/" + PROJECT + "/" + INITIAL + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = LINK + INITIAL + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + INITIAL + "/ACE.notation";
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + INITIAL + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + INITIAL + "/ACE.notation";
 		
 		IProject project = getProject();
 		
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		Match match = getMatch();
 		
@@ -121,7 +119,7 @@ public class CodeSyncTest {
 		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
 		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
 		service.cancelSelectedActions(project.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		Pair[] typeList = {
 				new Pair(MatchType._3MATCH, 0),			// src
@@ -157,12 +155,12 @@ public class CodeSyncTest {
 	public void testMatchCacheDeleted() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(CACHE_DELETED);
 		String fullyQualifiedName = "/" + PROJECT + "/" + CACHE_DELETED + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = LINK + CACHE_DELETED + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + CACHE_DELETED + "/ACE.notation";
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + CACHE_DELETED + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + CACHE_DELETED + "/ACE.notation";
 		
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		Pair[] typeList = {
 				new Pair(MatchType._3MATCH, 0),				// src
@@ -198,12 +196,12 @@ public class CodeSyncTest {
 	public void testMatchNoConflicts() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(MODIFIED_NO_CONFLICTS);
 		String fullyQualifiedName = "/" + PROJECT + "/" + MODIFIED_NO_CONFLICTS + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = LINK + MODIFIED_NO_CONFLICTS + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + MODIFIED_NO_CONFLICTS + "/ACE.notation";
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS + "/ACE.notation";
 
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 //		// create FeatureChanges to simulate model modifications
 //		IProject project = getProject(PROJECT);
@@ -429,16 +427,16 @@ public class CodeSyncTest {
 	public void testMatchNoConflictsAndPerformSync() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(MODIFIED_NO_CONFLICTS_PERFORM_SYNC);
 		String fullyQualifiedName = "/" + PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE;
-		String cseLocation = getProject().getFullPath().toString() + "/" + LINK + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation";
-		String aceLocation = getProject().getFullPath().toString() + "/" + LINK + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation";
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = LINK + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation";
+		String cseLocation = getProject().getFullPath().toString() + "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation";
+		String aceLocation = getProject().getFullPath().toString() + "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation";
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation";
 
 		IProject project = getProject();
 		
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
@@ -466,12 +464,12 @@ public class CodeSyncTest {
 	public void testMatchConflicts() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(MODIFIED_CONFLICTS);
 		String fullyQualifiedName = "/" + PROJECT + "/" + MODIFIED_CONFLICTS + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = LINK + MODIFIED_CONFLICTS + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = LINK + MODIFIED_CONFLICTS + "/ACE.notation";
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + MODIFIED_CONFLICTS + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + MODIFIED_CONFLICTS + "/ACE.notation";
 
 		IFile file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 //		// create FeatureChanges to simulate model modifications
 //		IProject project = getProject(PROJECT);
