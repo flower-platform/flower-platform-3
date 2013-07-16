@@ -12,7 +12,6 @@ import org.flowerplatform.emf_model.notation.View;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
-import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.Attribute;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;

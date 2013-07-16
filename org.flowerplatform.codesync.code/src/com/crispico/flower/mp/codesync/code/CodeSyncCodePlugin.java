@@ -1,5 +1,6 @@
 package com.crispico.flower.mp.codesync.code;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -28,6 +30,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
@@ -306,7 +309,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 	public Resource getCodeSyncMapping(IProject project) {
-		IFile codeSyncElementMappingFile = project.getFile(new Path(CSE_MAPPING_FILE_LOCATION));
+		File codeSyncElementMappingFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + CSE_MAPPING_FILE_LOCATION)));
 		Resource cseResource = CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), codeSyncElementMappingFile);
 		if (!codeSyncElementMappingFile.exists()) {
 			// first clear the resource in case the mapping file was deleted 
@@ -333,7 +336,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 	public Resource getAstCache(IProject project) {
-		IFile astCacheElementFile = project.getFile(new Path(ACE_FILE_LOCATION));
+		File astCacheElementFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + ACE_FILE_LOCATION)));
 		return CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), astCacheElementFile);
 	}
 	
