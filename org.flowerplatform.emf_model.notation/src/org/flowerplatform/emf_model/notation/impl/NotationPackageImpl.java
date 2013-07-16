@@ -171,6 +171,15 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getNotationElement_IdBeforeRemoval() {
+		return (EAttribute)notationElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getView() {
 		return viewEClass;
 	}
@@ -358,6 +367,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		// Create classes and their features
 		notationElementEClass = createEClass(NOTATION_ELEMENT);
 		createEAttribute(notationElementEClass, NOTATION_ELEMENT__ID);
+		createEAttribute(notationElementEClass, NOTATION_ELEMENT__ID_BEFORE_REMOVAL);
 
 		viewEClass = createEClass(VIEW);
 		createEAttribute(viewEClass, VIEW__VIEW_TYPE);
@@ -424,6 +434,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		// Initialize classes and features; add operations and parameters
 		initEClass(notationElementEClass, NotationElement.class, "NotationElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNotationElement_Id(), ecorePackage.getELong(), "id", null, 0, 1, NotationElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNotationElement_IdBeforeRemoval(), ecorePackage.getEString(), "idBeforeRemoval", null, 0, 1, NotationElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(viewEClass, View.class, "View", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getView_ViewType(), ecorePackage.getEString(), "viewType", null, 1, 1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

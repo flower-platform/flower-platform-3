@@ -7,7 +7,9 @@
 package org.flowerplatform.emf_model.notation.impl;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
@@ -23,6 +25,7 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.NotationElementImpl#getId <em>Id</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.NotationElementImpl#getIdBeforeRemoval <em>Id Before Removal</em>}</li>
  * </ul>
  * </p>
  *
@@ -49,12 +52,44 @@ public abstract class NotationElementImpl extends EObjectImpl implements Notatio
 	protected long id = ID_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #getIdBeforeRemoval() <em>Id Before Removal</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIdBeforeRemoval()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String ID_BEFORE_REMOVAL_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getIdBeforeRemoval() <em>Id Before Removal</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getIdBeforeRemoval()
+	 * @generated
+	 * @ordered
+	 */
+	protected String idBeforeRemoval = ID_BEFORE_REMOVAL_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	protected NotationElementImpl() {
 		super();
+	}
+
+	/**
+	 * @author Mariana
+	 * @generated NOT
+	 */
+	@Override
+	public NotificationChain eBasicSetContainer(InternalEObject newContainer, int newContainerFeatureID, NotificationChain msgs) {
+		NotificationChain notificationChain = super.eBasicSetContainer(newContainer, newContainerFeatureID, msgs);
+		if (eResource() != null) {
+			setIdBeforeRemoval(eResource().getURIFragment(this));
+		}
+		return notificationChain;
 	}
 
 	/**
@@ -93,11 +128,34 @@ public abstract class NotationElementImpl extends EObjectImpl implements Notatio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getIdBeforeRemoval() {
+		return idBeforeRemoval;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setIdBeforeRemoval(String newIdBeforeRemoval) {
+		String oldIdBeforeRemoval = idBeforeRemoval;
+		idBeforeRemoval = newIdBeforeRemoval;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.NOTATION_ELEMENT__ID_BEFORE_REMOVAL, oldIdBeforeRemoval, idBeforeRemoval));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case NotationPackage.NOTATION_ELEMENT__ID:
 				return getId();
+			case NotationPackage.NOTATION_ELEMENT__ID_BEFORE_REMOVAL:
+				return getIdBeforeRemoval();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -112,6 +170,9 @@ public abstract class NotationElementImpl extends EObjectImpl implements Notatio
 		switch (featureID) {
 			case NotationPackage.NOTATION_ELEMENT__ID:
 				setId((Long)newValue);
+				return;
+			case NotationPackage.NOTATION_ELEMENT__ID_BEFORE_REMOVAL:
+				setIdBeforeRemoval((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -128,6 +189,9 @@ public abstract class NotationElementImpl extends EObjectImpl implements Notatio
 			case NotationPackage.NOTATION_ELEMENT__ID:
 				setId(ID_EDEFAULT);
 				return;
+			case NotationPackage.NOTATION_ELEMENT__ID_BEFORE_REMOVAL:
+				setIdBeforeRemoval(ID_BEFORE_REMOVAL_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -142,6 +206,8 @@ public abstract class NotationElementImpl extends EObjectImpl implements Notatio
 		switch (featureID) {
 			case NotationPackage.NOTATION_ELEMENT__ID:
 				return id != ID_EDEFAULT;
+			case NotationPackage.NOTATION_ELEMENT__ID_BEFORE_REMOVAL:
+				return ID_BEFORE_REMOVAL_EDEFAULT == null ? idBeforeRemoval != null : !ID_BEFORE_REMOVAL_EDEFAULT.equals(idBeforeRemoval);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -158,6 +224,8 @@ public abstract class NotationElementImpl extends EObjectImpl implements Notatio
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (id: ");
 		result.append(id);
+		result.append(", idBeforeRemoval: ");
+		result.append(idBeforeRemoval);
 		result.append(')');
 		return result.toString();
 	}

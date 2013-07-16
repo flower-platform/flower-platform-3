@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.NotationElement#getId <em>Id</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.NotationElement#getIdBeforeRemoval <em>Id Before Removal</em>}</li>
  * </ul>
  * </p>
  *
@@ -51,4 +52,30 @@ public interface NotationElement extends EObject {
 	 * @generated
 	 */
 	void setId(long value);
+
+	/**
+	 * Returns the value of the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Id Before Removal</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Id Before Removal</em>' attribute.
+	 * @see #setIdBeforeRemoval(String)
+	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getNotationElement_IdBeforeRemoval()
+	 * @model transient="true"
+	 * @generated
+	 */
+	String getIdBeforeRemoval();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.emf_model.notation.NotationElement#getIdBeforeRemoval <em>Id Before Removal</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Id Before Removal</em>' attribute.
+	 * @see #getIdBeforeRemoval()
+	 * @generated
+	 */
+	void setIdBeforeRemoval(String value);
 } // NotationElement

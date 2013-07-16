@@ -77,8 +77,8 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 				}
 			}
 		} else {
-//			// removed
-//			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());
+			// removed
+			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());
 		}
 	}
 	
@@ -156,21 +156,23 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 							}
 						}
 //					} else {
-//						// normal case: the list was not empty before adding
-//						for (ListChange listChange : featureChange.getListChanges()) {
-//							if (listChange.getKind() == ChangeKind.REMOVE_LITERAL) {
+						// normal case: the list was not empty before adding
+						for (ListChange listChange : featureChange.getListChanges()) {
+							// TODO pentru cazul in care avem mai multe listChanges datorate la mai multe add-uri in lista, nu gasim corect elementele noi => de vazut
+							// cum interpretam corect cazul acesta.
+							if (listChange.getKind() == ChangeKind.REMOVE_LITERAL) {
 //								// an element was added; the recording only indicates the index, so we need to look it up
 //								// by ourselves
 //								@SuppressWarnings("unchecked")
 //								EObject newlyAddedObject = ((List<EObject>) notationElement.eGet(featureChange.getFeature())).get(listChange.getIndex());
 //								addNewlyAddedObject(newlyAddedObject, diagramUpdaterChangeDescriptionProcessingContext, context);
-//							} else if (listChange.getKind() == ChangeKind.ADD_LITERAL) {
-//								// an element was removed
-//								for (EObject removedObject : listChange.getReferenceValues()) {
-//									addRemovedObject(removedObject, diagramUpdaterChangeDescriptionProcessingContext, context);
-//								}
-//							}
-//						}
+							} else if (listChange.getKind() == ChangeKind.ADD_LITERAL) {
+								// an element was removed
+								for (EObject removedObject : listChange.getReferenceValues()) {
+									addRemovedObject(removedObject, diagramUpdaterChangeDescriptionProcessingContext, context);
+								}
+							}
+						}
 //					}
 				}
 			}

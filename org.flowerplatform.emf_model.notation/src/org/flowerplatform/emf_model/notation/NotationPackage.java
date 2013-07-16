@@ -79,13 +79,22 @@ public interface NotationPackage extends EPackage {
 	int NOTATION_ELEMENT__ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTATION_ELEMENT__ID_BEFORE_REMOVAL = 1;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NOTATION_ELEMENT_FEATURE_COUNT = 1;
+	int NOTATION_ELEMENT_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.ViewImpl <em>View</em>}' class.
@@ -105,6 +114,15 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int VIEW__ID = NOTATION_ELEMENT__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIEW__ID_BEFORE_REMOVAL = NOTATION_ELEMENT__ID_BEFORE_REMOVAL;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -169,6 +187,15 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE__ID = VIEW__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__ID_BEFORE_REMOVAL = VIEW__ID_BEFORE_REMOVAL;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -242,6 +269,15 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIAGRAM__ID = VIEW__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__ID_BEFORE_REMOVAL = VIEW__ID_BEFORE_REMOVAL;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -336,6 +372,15 @@ public interface NotationPackage extends EPackage {
 	int LOCATION__ID = NOTATION_ELEMENT__ID;
 
 	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCATION__ID_BEFORE_REMOVAL = NOTATION_ELEMENT__ID_BEFORE_REMOVAL;
+
+	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -380,6 +425,15 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int BOUNDS__ID = LOCATION__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUNDS__ID_BEFORE_REMOVAL = LOCATION__ID_BEFORE_REMOVAL;
 
 	/**
 	 * The feature id for the '<em><b>X</b></em>' attribute.
@@ -444,6 +498,15 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int NOTE__ID = NODE__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTE__ID_BEFORE_REMOVAL = NODE__ID_BEFORE_REMOVAL;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -529,6 +592,17 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getNotationElement_Id();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.NotationElement#getIdBeforeRemoval <em>Id Before Removal</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Id Before Removal</em>'.
+	 * @see org.flowerplatform.emf_model.notation.NotationElement#getIdBeforeRemoval()
+	 * @see #getNotationElement()
+	 * @generated
+	 */
+	EAttribute getNotationElement_IdBeforeRemoval();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.View <em>View</em>}'.
@@ -760,6 +834,14 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute NOTATION_ELEMENT__ID = eINSTANCE.getNotationElement_Id();
+
+		/**
+		 * The meta object literal for the '<em><b>Id Before Removal</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NOTATION_ELEMENT__ID_BEFORE_REMOVAL = eINSTANCE.getNotationElement_IdBeforeRemoval();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.ViewImpl <em>View</em>}' class.
