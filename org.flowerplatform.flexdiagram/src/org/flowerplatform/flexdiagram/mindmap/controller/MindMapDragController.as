@@ -54,7 +54,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 			placeHolder.y = rect.y;
 			placeHolder.width = rect.width;
 			placeHolder.height = rect.height;		
-			placeHolder.colors = [0x0000FF, 0xFFFFFF];
+			placeHolder.colors = [0x000000, 0xFFFFFF];
 			
 			var side:int = MindMapDiagramShell.NONE;
 			if (dropModel.side == MindMapDiagramShell.LEFT) { 
@@ -69,7 +69,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 				if (new Rectangle(rect.x + rect.width / 2, rect.y, rect.width, rect.height).containsPoint(point)) {	// set styles for right rectangle
 					placeHolder.x = rect.x + rect.width / 2;
 					placeHolder.width = rect.width / 2;
-					placeHolder.colors = [0xFFFFFF, 0x0000FF];
+					placeHolder.colors = [0xFFFFFF, 0x000000];
 					placeHolder.gradientBoxRotation = 0;
 					side =  MindMapDiagramShell.RIGHT;
 				} else {	// set styles for top rectangle			
@@ -84,7 +84,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 				} else { // set styles for right rectangle					
 					placeHolder.x = rect.x + rect.width / 2;
 					placeHolder.width = rect.width / 2;
-					placeHolder.colors = [0xFFFFFF, 0x0000FF];
+					placeHolder.colors = [0xFFFFFF, 0x000000];
 					side =  MindMapDiagramShell.RIGHT;
 				}				
 			}

@@ -90,7 +90,6 @@
 			
 			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void {				
 			}
-			
 		]]>
 	</fx:Script>
 	
