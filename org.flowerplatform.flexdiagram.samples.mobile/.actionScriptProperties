@@ -36,6 +36,9 @@
     <application path="FlexDiagramSamplesMobile.mxml">
       <airExcludes/>
     </application>
+    <application path="MindMapDiagramSampleMobile.mxml">
+      <airExcludes/>
+    </application>
   </applications>
   <modules/>
   <buildCSSFiles/>
