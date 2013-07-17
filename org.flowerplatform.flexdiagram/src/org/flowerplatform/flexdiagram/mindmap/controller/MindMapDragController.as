@@ -42,7 +42,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 			var renderer:IVisualElement = getRendererFromCoordinates(point);			
 			var dropModel:Object = IDataRenderer(renderer).data;
 						
-			if (renderer is DiagramRenderer || dropModel == model) {
+			if (renderer is DiagramRenderer || !dragModelIsParentForDropModel(model, dropModel)) {
 				deletePlaceHolder(model);
 				return;
 			}
@@ -96,7 +96,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 			var renderer:IVisualElement = getRendererFromCoordinates(dropPoint);
 			
 			var dropModel:Object = IDataRenderer(renderer).data;
-			if (renderer is DiagramRenderer || dropModel == model) { // don't drop over diagram or same model
+			if (renderer is DiagramRenderer || !dragModelIsParentForDropModel(model, dropModel)) { // don't drop over diagram or same model
 				return;
 			}
 			
@@ -199,6 +199,16 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 			
 			// no found on the obj's hierarchy
 			return null;
+		}
+		
+		private function dragModelIsParentForDropModel(dragModel:Object, dropModel:Object):Boolean {
+			if (dragModel == dropModel) {
+				return false;
+			}
+			if (getModelController(dropModel).getParent(dropModel) == null) {
+				return true;
+			}
+			return dragModelIsParentForDropModel(dragModel, getModelController(dropModel).getParent(dropModel));
 		}
 	}
 }
