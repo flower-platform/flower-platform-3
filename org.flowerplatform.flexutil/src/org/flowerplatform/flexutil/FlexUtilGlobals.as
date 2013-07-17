@@ -4,6 +4,7 @@ package org.flowerplatform.flexutil {
 	import org.flowerplatform.flexutil.context_menu.ContextMenuManager;
 	import org.flowerplatform.flexutil.layout.ComposedViewProvider;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
+	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IMessageBoxFactory;
 	import org.flowerplatform.flexutil.popup.IPopupHandlerFactory;
 	import org.flowerplatform.flexutil.popup.IProgressMonitorFactory;
@@ -55,6 +56,10 @@ package org.flowerplatform.flexutil {
 				// an URL
 				return createAbsoluteUrl(String(image));
 			}
+		}
+		
+		public function viewsRemoved(event:ViewsRemovedEvent):void {
+			
 		}
 
 	}

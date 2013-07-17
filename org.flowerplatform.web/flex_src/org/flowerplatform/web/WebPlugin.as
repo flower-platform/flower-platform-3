@@ -9,13 +9,12 @@ package org.flowerplatform.web {
 	import mx.core.IVisualElementContainer;
 	import mx.managers.ToolTipManager;
 	
-	import spark.components.Button;
-	
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.web.common.WebCommonPlugin;
@@ -27,6 +26,8 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.security.ui.UserForm;
 	import org.flowerplatform.web.security.ui.UserFormViewProvider;
 	import org.flowerplatform.web.security.ui.UsersScreen;
+	
+	import spark.components.Button;
 	
 	/**
 	 * @author Cristi
@@ -103,6 +104,7 @@ package org.flowerplatform.web {
 			workbench.percentHeight = 100;
 			workbench.percentWidth = 100;
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
+			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, FlexUtilGlobals.getInstance().viewsRemoved);
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 		}

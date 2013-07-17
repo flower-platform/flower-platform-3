@@ -21,8 +21,6 @@ package  com.crispico.flower.util.layout {
 	import com.crispico.flower.util.layout.event.DockHandlerEvent;
 	import com.crispico.flower.util.layout.event.LayoutDataChangedEvent;
 	import com.crispico.flower.util.layout.event.ViewAddedEvent;
-	import com.crispico.flower.util.layout.event.ViewRemovedEvent;
-	import com.crispico.flower.util.layout.event.ViewsRemovedEvent;
 	import com.crispico.flower.util.layout.persistence.ILayoutSerializer;
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
@@ -38,6 +36,7 @@ package  com.crispico.flower.util.layout {
 	import com.crispico.flower.util.shortcuts.Shortcut;
 	
 	import flash.display.DisplayObject;
+	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -68,6 +67,8 @@ package  com.crispico.flower.util.layout {
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.LayoutData;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
+	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
 	
@@ -2094,7 +2095,7 @@ package  com.crispico.flower.util.layout {
 		 * If a view represents the current active view, 
 		 * then it will be removed from <code>activeViewList</code>.
 		 */ 		
-		public function closeView(view:UIComponent, shouldDispatchEvent:Boolean = true):void {
+		public function closeView(view:IEventDispatcher, shouldDispatchEvent:Boolean = true):void {
 			closeViews(new ArrayCollection([view]), shouldDispatchEvent);			
 		}
 

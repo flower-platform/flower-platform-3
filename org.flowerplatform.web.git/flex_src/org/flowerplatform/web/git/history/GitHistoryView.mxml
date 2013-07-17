@@ -15,10 +15,6 @@
 	<mx:Script>
 		<![CDATA[
 			import com.crispico.flower.util.layout.event.ViewAddedEvent;
-			
-			import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
-			
-			import com.crispico.flower.util.layout.event.ViewRemovedEvent;
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
 			import flashx.textLayout.conversion.TextConverter;
@@ -34,7 +30,9 @@
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.Utils;
+			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 			import org.flowerplatform.web.git.history.remote.GitHistoryStatefulClient;
+			import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
 			import org.flowerplatform.web.git.history.remote.dto.HistoryViewInfoDto;
 			import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 			

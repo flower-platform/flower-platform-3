@@ -2,6 +2,7 @@ package org.flowerplatform.editor.text.remote;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
@@ -211,19 +212,11 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 		 * @flowerModelElementId _Yw6WNqXLEeG-cPK59Sm4Wg
 		 */
 		private static void saveFileContent(File file, StringBuffer fileContent) {
-//			ByteArrayInputStream bais = new ByteArrayInputStream(fileContent.toString().getBytes());
-//			try {
-//				logger.trace("Saving text file {}", file.getName());
-//				file.setContents(bais, true, true, null);
-//			} catch (Exception e) {
-//				throw new RuntimeException("Error while saving the file " + file, e);
-//			} finally {
-//				try {
-//					bais.close();
-//				} catch (IOException e) {
-//					throw new RuntimeException("Error while saving the file " + file, e);
-//				}
-//			}
+			try {
+				FileUtils.writeByteArrayToFile(file, fileContent.toString().getBytes());
+			} catch (IOException e) {
+				throw new RuntimeException("Error while saving the file " + file, e);
+			}
 		}		
 	}
 

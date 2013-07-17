@@ -8,9 +8,6 @@ package com.crispico.flower.util.layout.view
 	import com.crispico.flower.util.layout.event.DockHandlerEvent;
 	import com.crispico.flower.util.layout.event.LayoutDataChangedEvent;
 	import com.crispico.flower.util.layout.event.ViewAddedEvent;
-	import com.crispico.flower.util.layout.event.ViewRemovedEvent;
-	import com.crispico.flower.util.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
 	import com.crispico.flower.util.popup.ResizablePopupWindow;
 	
@@ -24,6 +21,10 @@ package com.crispico.flower.util.layout.view
 	import mx.core.UIComponent;
 	import mx.core.mx_internal;
 	import mx.events.FlexEvent;
+	
+	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
+	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 
 	/**
 	 * Popup window used by docking/undocking mechanism.
