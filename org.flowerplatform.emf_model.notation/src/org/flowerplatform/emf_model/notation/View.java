@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject;
  * <p>
  * The following features are supported:
  * <ul>
+ *   <li>{@link org.flowerplatform.emf_model.notation.View#getParentView <em>Parent View</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.View#getViewType <em>View Type</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.View#getPersistentChildren <em>Persistent Children</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.View#getViewDetails <em>View Details</em>}</li>
@@ -30,6 +31,32 @@ import org.eclipse.emf.ecore.EObject;
  * @generated
  */
 public interface View extends NotationElement {
+	/**
+	 * Returns the value of the '<em><b>Parent View</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Parent View</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Parent View</em>' containment reference.
+	 * @see #setParentView(View)
+	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getView_ParentView()
+	 * @model containment="true"
+	 * @generated
+	 */
+	View getParentView();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.emf_model.notation.View#getParentView <em>Parent View</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Parent View</em>' containment reference.
+	 * @see #getParentView()
+	 * @generated
+	 */
+	void setParentView(View value);
+
 	/**
 	 * Returns the value of the '<em><b>View Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->

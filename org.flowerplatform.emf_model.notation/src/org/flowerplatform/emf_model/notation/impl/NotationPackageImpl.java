@@ -10,13 +10,12 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.LayoutConstraint;
 import org.flowerplatform.emf_model.notation.Location;
+import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationElement;
 import org.flowerplatform.emf_model.notation.NotationFactory;
@@ -86,6 +85,13 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	private EClass noteEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mindMapNodeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -189,8 +195,17 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getView_ParentView() {
+		return (EReference)viewEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EAttribute getView_ViewType() {
-		return (EAttribute)viewEClass.getEStructuralFeatures().get(0);
+		return (EAttribute)viewEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -199,7 +214,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	public EReference getView_PersistentChildren() {
-		return (EReference)viewEClass.getEStructuralFeatures().get(1);
+		return (EReference)viewEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -208,7 +223,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	public EAttribute getView_ViewDetails() {
-		return (EAttribute)viewEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)viewEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -217,7 +232,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	public EReference getView_DiagrammableElement() {
-		return (EReference)viewEClass.getEStructuralFeatures().get(3);
+		return (EReference)viewEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -342,6 +357,33 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getMindMapNode() {
+		return mindMapNodeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMindMapNode_Expanded() {
+		return (EAttribute)mindMapNodeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMindMapNode_Side() {
+		return (EAttribute)mindMapNodeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotationFactory getNotationFactory() {
 		return (NotationFactory)getEFactoryInstance();
 	}
@@ -370,6 +412,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		createEAttribute(notationElementEClass, NOTATION_ELEMENT__ID_BEFORE_REMOVAL);
 
 		viewEClass = createEClass(VIEW);
+		createEReference(viewEClass, VIEW__PARENT_VIEW);
 		createEAttribute(viewEClass, VIEW__VIEW_TYPE);
 		createEReference(viewEClass, VIEW__PERSISTENT_CHILDREN);
 		createEAttribute(viewEClass, VIEW__VIEW_DETAILS);
@@ -393,6 +436,10 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 
 		noteEClass = createEClass(NOTE);
 		createEAttribute(noteEClass, NOTE__TEXT);
+
+		mindMapNodeEClass = createEClass(MIND_MAP_NODE);
+		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__EXPANDED);
+		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__SIDE);
 	}
 
 	/**
@@ -430,6 +477,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		locationEClass.getESuperTypes().add(this.getLayoutConstraint());
 		boundsEClass.getESuperTypes().add(this.getLocation());
 		noteEClass.getESuperTypes().add(this.getNode());
+		mindMapNodeEClass.getESuperTypes().add(this.getNode());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(notationElementEClass, NotationElement.class, "NotationElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -437,6 +485,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEAttribute(getNotationElement_IdBeforeRemoval(), ecorePackage.getEString(), "idBeforeRemoval", null, 0, 1, NotationElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(viewEClass, View.class, "View", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getView_ParentView(), this.getView(), null, "parentView", null, 0, 1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getView_ViewType(), ecorePackage.getEString(), "viewType", null, 1, 1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getView_PersistentChildren(), this.getNode(), null, "persistentChildren", null, 0, -1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getView_ViewDetails(), ecorePackage.getEJavaObject(), "viewDetails", null, 0, 1, View.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -462,6 +511,10 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 
 		initEClass(noteEClass, Note.class, "Note", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNote_Text(), ecorePackage.getEString(), "text", null, 0, 1, Note.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(mindMapNodeEClass, MindMapNode.class, "MindMapNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMindMapNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMindMapNode_Side(), ecorePackage.getEInt(), "side", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -9,6 +9,7 @@ import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProc
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Location;
+import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.View;
 import org.osgi.framework.BundleContext;
@@ -58,6 +59,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("id")
 		.addDeclaredProperty("viewType")
 		.addDeclaredProperty("persistentChildren_RH")
+		.addDeclaredProperty("parentView_RH")
 		.register();
 
 		new CustomSerializationDescriptor(Node.class)
@@ -65,6 +67,12 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("layoutConstraint_RH")
 		.register();
 
+		new CustomSerializationDescriptor(MindMapNode.class)
+		.addDeclaredProperties(viewSD.getDeclaredProperties())
+		.addDeclaredProperty("extended")
+		.addDeclaredProperty("side")
+		.register();
+		
 		new CustomSerializationDescriptor(Diagram.class)
 		.addDeclaredProperties(viewSD.getDeclaredProperties())
 		.register();
