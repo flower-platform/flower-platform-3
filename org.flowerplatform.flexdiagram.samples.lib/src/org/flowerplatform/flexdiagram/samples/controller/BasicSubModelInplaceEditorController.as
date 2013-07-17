@@ -18,7 +18,7 @@ package org.flowerplatform.flexdiagram.samples.controller
 		public function BasicSubModelInplaceEditorController(diagramShell:DiagramShell)	{
 			super(diagramShell);
 		}
-		
+				
 		public function activate(model:Object):void {
 			var renderer:DisplayObject = DisplayObject(diagramShell.getRendererForModel(model));
 			var textField:TextInput = new TextInput();
