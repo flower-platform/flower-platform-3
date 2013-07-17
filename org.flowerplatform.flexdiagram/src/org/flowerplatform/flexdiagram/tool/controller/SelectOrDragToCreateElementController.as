@@ -117,10 +117,12 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				selectDragToCreatePlaceHolder.width < _dragToCreateMinWidth || 
 				selectDragToCreatePlaceHolder.height < _dragToCreateMinHeight) { 
 				// SELECT MODE
-				selectDragToCreatePlaceHolder.setColorAndAlpha(_dragToSelectColor, _dragToSelectAlpha);
+				selectDragToCreatePlaceHolder.colors = [_dragToSelectColor];
+				selectDragToCreatePlaceHolder.alphas = [_dragToSelectAlpha];					
 			} else { 
 				// DRAG MODE
-				selectDragToCreatePlaceHolder.setColorAndAlpha(_dragToCreateColor, _dragToCreateAlpha);
+				selectDragToCreatePlaceHolder.colors = [_dragToCreateColor];
+				selectDragToCreatePlaceHolder.alphas = [_dragToCreateAlpha];			
 			}			
 		}
 		

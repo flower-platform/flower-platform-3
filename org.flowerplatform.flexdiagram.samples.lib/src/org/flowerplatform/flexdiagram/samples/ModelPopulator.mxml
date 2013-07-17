@@ -132,4 +132,5 @@
 	</s:Form>
 
 	<s:Button label="Populate with lots of data" click="populateWithLotsOfData()"/>
+	   
 </s:Group>

@@ -44,7 +44,7 @@ package org.flowerplatform.flexdiagram.tool {
 			return DiagramRenderer(diagramShell.diagramRenderer);
 		}
 			
-		protected function getRendererFromDisplayCoordinates():IVisualElement {
+		protected function getRendererFromDisplayCoordinates(ignoreDiagramRenderer:Boolean = false):IVisualElement {
 			var stage:Stage = DisplayObject(diagramShell.diagramRenderer).stage;
 			var arr:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
 						
@@ -52,8 +52,10 @@ package org.flowerplatform.flexdiagram.tool {
 			var i:int;
 			for (i = arr.length - 1; i >= 0;  i--) {
 				renderer = getRendererFromDisplay(arr[i]);
-				if (renderer != null) {					
-					return renderer;
+				if (renderer != null) {
+					if (!(ignoreDiagramRenderer && renderer is DiagramRenderer)) {
+						return renderer;
+					}					
 				}
 			}
 			return null;
@@ -86,7 +88,10 @@ package org.flowerplatform.flexdiagram.tool {
 			var localPoint:Point = diagramRenderer.globalToLocal(new Point(x, y));
 			localPoint = diagramRenderer.localToContent(localPoint);
 			return localPoint;
-		}	
+		}
+		
+		public function reset():void {			
+		}
 	}	
 	
 }

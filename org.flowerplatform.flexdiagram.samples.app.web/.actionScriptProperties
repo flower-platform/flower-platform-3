@@ -16,6 +16,7 @@
   </compiler>
   <applications>
     <application path="FlexDiagramSamplesWeb.mxml"/>
+    <application path="MindMapSamplesWeb.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>

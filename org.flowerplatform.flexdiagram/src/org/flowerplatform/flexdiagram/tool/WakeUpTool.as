@@ -79,14 +79,16 @@ package org.flowerplatform.flexdiagram.tool {
 			if (event.buttonDown) {			
 				myEventType = MOUSE_DRAG;
 				dispatchMyEvent(myEventType, event);
-			}			
+				reset();
+			}					
 		}
 				
 		private function mouseUpHandler(event:MouseEvent):void {
 			if (myEventType != MOUSE_DRAG) {
 				myEventType = MOUSE_UP;
 				dispatchMyEvent(myEventType, event);
-			}	
+				reset();
+			}			
 		}
 			
 		private function dispatchMyEvent(eventType:String, initialEvent:MouseEvent):void {
@@ -110,6 +112,13 @@ package org.flowerplatform.flexdiagram.tool {
 			);			
 			// sort descending by priority
 			return array.sortOn("priority", Array.DESCENDING & Array.NUMERIC);
+		}
+		
+		override public function reset():void {
+			super.reset();
+			for (var i:int = 0; i < listeners.length; i++) {
+				Tool(listeners.getItemAt(i).tool).reset();
+			}
 		}
 	}
 }

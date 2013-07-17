@@ -50,7 +50,7 @@ package org.flowerplatform.flexdiagram {
 		
 		private var _mainTool:Tool;
 		
-		public var tools:Dictionary = new Dictionary();
+		private var _tools:Dictionary = new Dictionary();
 		
 		private var _toolsActivated:Boolean = false;
 		
@@ -83,6 +83,14 @@ package org.flowerplatform.flexdiagram {
 		
 		public function get selectedItems():ParentAwareArrayList {
 			return _selectedItems;
+		}
+		
+		public function get tools():Dictionary {
+			return _tools;
+		}
+		
+		public function set tools(array:Dictionary):void {
+			_tools = array;
 		}
 		
 		public function set mainSelectedItem(value:Object):void {
@@ -133,18 +141,15 @@ package org.flowerplatform.flexdiagram {
 			
 			var wakeUpTool:WakeUpTool = new WakeUpTool(this);
 			_defaultTool = wakeUpTool;
-			
 			tools[WakeUpTool.ID] = wakeUpTool;
-			tools[ScrollTool.ID] = new ScrollTool(this);
-			tools[SelectOnClickTool.ID] = new SelectOnClickTool(this);
-			tools[InplaceEditorTool.ID] = new InplaceEditorTool(this);
-			tools[ResizeTool.ID] = new ResizeTool(this);
-			tools[DragToCreateRelationTool.ID] = new DragToCreateRelationTool(this);
-			tools[DragTool.ID] = new DragTool(this);
-			tools[SelectOrDragToCreateElementTool.ID] = new SelectOrDragToCreateElementTool(this);
-			tools[ZoomTool.ID] = new ZoomTool(this);
-			
+		
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
+		}
+		
+		public function registerTools(toolClasses:Array):void {
+			for (var i:int=0; i < toolClasses.length; i++) {
+				tools[toolClasses[i]] = new toolClasses[i](this);
+			}
 		}
 		
 		public function getControllerProvider(model:Object):IControllerProvider {

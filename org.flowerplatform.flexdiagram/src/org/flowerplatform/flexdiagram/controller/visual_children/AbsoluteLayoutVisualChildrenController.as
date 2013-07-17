@@ -186,7 +186,10 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 			}
 
 			if (children.length == 0) {
-				horizontalScrollPositionMin = horizontalScrollPositionMax = verticalScrollPositionMin = verticalScrollPositionMax = 0;
+				horizontalScrollPositionMin = 0;
+				horizontalScrollPositionMax = 0;
+				verticalScrollPositionMin = 0;
+				verticalScrollPositionMax = 0;
 			}
 			IAbsoluteLayoutRenderer(parentRenderer).setContentRect(new Rectangle(horizontalScrollPositionMin, verticalScrollPositionMin, horizontalScrollPositionMax - horizontalScrollPositionMin, verticalScrollPositionMax - verticalScrollPositionMin));
 			
