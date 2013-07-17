@@ -7,10 +7,6 @@ package org.flowerplatform.flexdiagram.controller.model_extra_info {
 	public interface IModelExtraInfoController {
 		function getRenderer(extraInfo:Object):IVisualElement;
 		function setRenderer(model:Object, extraInfo:Object, renderer:IVisualElement):void;
-		function createExtraInfo(model:Object):Object;
-		
-		function isSelected(model:Object):Boolean;
-		function setSelected(model:Object, value:Boolean):void;
-		
+		function createExtraInfo(model:Object):Object;		
 	}
 }

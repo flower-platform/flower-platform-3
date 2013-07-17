@@ -120,7 +120,14 @@
 			change="changeHandler(event)">
 			<selectiontrianglelist:itemRenderer>
 				<fx:Component>
-					<selectiontrianglelist:SelectionTriangleItemRenderer height="30" />
+					<selectiontrianglelist:SelectionTriangleItemRenderer height="{FlexUtilGlobals.getInstance().isMobile ? 50 : 30}" >
+						<fx:Script>
+							<![CDATA[
+								import org.flowerplatform.flexutil.FlexUtilGlobals;
+							]]>
+						</fx:Script>
+					</selectiontrianglelist:SelectionTriangleItemRenderer>
+
 				</fx:Component>
 			</selectiontrianglelist:itemRenderer>
 		</selectiontrianglelist:GradientBackgroundList>

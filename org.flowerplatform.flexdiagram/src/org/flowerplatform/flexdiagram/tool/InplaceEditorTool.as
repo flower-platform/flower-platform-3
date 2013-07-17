@@ -2,16 +2,21 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.events.SoftKeyboardEvent;
+	import flash.events.SoftKeyboardTrigger;
 	import flash.ui.Keyboard;
 	
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
+	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	
 	import spark.components.RichEditableText;
+	import spark.core.IDisplayText;
+	import spark.core.IEditableText;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -24,26 +29,33 @@ package org.flowerplatform.flexdiagram.tool {
 			super(diagramShell);
 			
 			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN, -1);
+			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_UP);
 		}
 		
 		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
-			var renderer:IVisualElement = getRendererFromDisplayCoordinates();
-			if (renderer is IDataRenderer && !(renderer is DiagramRenderer)) {
-				var model:Object = IDataRenderer(renderer).data;
-				if (diagramShell.getControllerProvider(model).getInplaceEditorController(model) != null) {
-					var selected:Boolean = diagramShell.selectedItems.getItemIndex(model) != -1;
-					if (!selected || (selected && diagramShell.selectedItems.length > 1)) {
-						// if not selected or multiple selection
+			if (eventType == WakeUpTool.MOUSE_DOWN) {
+				context.wakedByMouseDownEvent = false;
+				var renderer:IVisualElement = getRendererFromDisplayCoordinates();
+				if (renderer is IDataRenderer && !(renderer is DiagramRenderer)) {
+					var model:Object = IDataRenderer(renderer).data;
+					if (diagramShell.getControllerProvider(model).getInplaceEditorController(model) != null) {
+						var selected:Boolean = diagramShell.selectedItems.getItemIndex(model) != -1;
+						if (!selected || (selected && diagramShell.selectedItems.length > 1)) {
+							// if not selected or multiple selection
+							return false;
+						}
+						context.wakedByMouseDownEvent = !initialEvent.ctrlKey && !initialEvent.shiftKey;
 						return false;
 					}
-					return !initialEvent.ctrlKey && !initialEvent.shiftKey;
 				}
+			} else if (context.wakedByMouseDownEvent) {
+				return true;
 			}
 			return false;
 		}
 		
 		override public function activateDozingMode():void {
-			diagramRenderer.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
+			diagramRenderer.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);			
 		}
 		
 		override public function deactivateDozingMode():void {
@@ -67,7 +79,7 @@ package org.flowerplatform.flexdiagram.tool {
 				inplaceEditorController.deactivate(context.model);
 			}
 			
-			delete context.model;
+			delete context.model;			
 			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);			
 		}
 		
@@ -76,7 +88,7 @@ package org.flowerplatform.flexdiagram.tool {
 				case Keyboard.F2: // active tool
 					diagramShell.mainTool = this;
 					break;
-				case Keyboard.ENTER: // commit value
+				case Keyboard.ENTER: // commit value			
 					if (this == diagramShell.mainTool) {
 						diagramShell.getControllerProvider(context.model).
 							getInplaceEditorController(context.model).commit(context.model);
@@ -92,10 +104,15 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		private function mouseClickHandler(event:MouseEvent):void {			
-			if (!(event.target is RichEditableText)) { // abort if click somewhere else
+			var renderer:IVisualElement = getRendererFromDisplayCoordinates(true);
+			if (renderer == null || IDataRenderer(renderer).data != context.model) { // abort if click somewhere else
 				diagramShell.getControllerProvider(context.model).
 					getInplaceEditorController(context.model).abort(context.model);
 			}
+		}
+		
+		override public function reset():void {				
+			delete context.wakedByMouseDownEvent;
 		}
 	}
 	

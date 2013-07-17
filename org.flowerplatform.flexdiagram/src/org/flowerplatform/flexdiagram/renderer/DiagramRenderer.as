@@ -1,14 +1,18 @@
 package org.flowerplatform.flexdiagram.renderer {
 	import flash.display.DisplayObject;
 	import flash.events.FocusEvent;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import mx.core.EdgeMetrics;
 	import mx.core.UIComponent;
 	import mx.managers.IFocusManagerComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteDataRenderer;
+	
+	import spark.components.Application;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -84,11 +88,10 @@ package org.flowerplatform.flexdiagram.renderer {
 		override protected function focusOutHandler(event:FocusEvent):void {
 			super.focusOutHandler(event);
 			
-			var parent:DisplayObject;
-			if (!getBounds(stage).contains(stage.mouseX, stage.mouseY)) { // if outside diagram area
+			var point:Point = globalToContent(new Point(stage.mouseX, stage.mouseY));			
+			if (!getViewportRect().containsPoint(point)) { // if outside diagram area
 				diagramShell.deactivateTools();	
 			}							
-		}	
-				
+		}			
 	}
 }

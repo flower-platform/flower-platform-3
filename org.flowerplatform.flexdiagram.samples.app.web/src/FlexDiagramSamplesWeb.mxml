@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:Application implements="org.flowerplatform.flexdiagram.samples.IModelHolder" creationComplete="ModelPopulator.populateRootModel(this)"
+<s:Application implements="org.flowerplatform.flexdiagram.samples.IModelHolder" creationComplete="creationCompleteHandler(event)"
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:samples="org.flowerplatform.flexdiagram.samples.*" xmlns:flexdiagram="org.flowerplatform.flexdiagram.*" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*" xmlns:infinitegroup="org.flowerplatform.flexdiagram.util.infinitegroup.*">
@@ -7,8 +7,16 @@
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
+			import org.flowerplatform.flexdiagram.tool.ZoomTool;
 			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexdiagram.samples.SamplesDiagramShell;
+			import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
+			import org.flowerplatform.flexdiagram.tool.DragTool;
+			import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
+			import org.flowerplatform.flexdiagram.tool.ResizeTool;
+			import org.flowerplatform.flexdiagram.tool.ScrollTool;
+			import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
+			import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 			import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 			
 			private var _rootModel:ParentAwareArrayList;
@@ -21,10 +29,19 @@
 			public function set rootModel(value:ParentAwareArrayList):void {
 				_rootModel = value;				
 			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {				
+				ModelPopulator.populateRootModel(this);
+				diagramShell.registerTools([
+					ScrollTool, SelectOnClickTool, InplaceEditorTool, ResizeTool, 
+					DragToCreateRelationTool, DragTool, SelectOrDragToCreateElementTool, ZoomTool]);
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
-		<samples:SamplesDiagramShell id="diagramShell" diagramRenderer="{diagramRenderer}" rootModel="{rootModel}"/>
+		<samples:SamplesDiagramShell id="diagramShell" diagramRenderer="{diagramRenderer}" rootModel="{rootModel}"
+									/>
 		
 	</fx:Declarations>
 	<mx:HDividedBox width="100%" height="100%">
