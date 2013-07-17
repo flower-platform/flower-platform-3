@@ -57,7 +57,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 			diagramShell.diagramRenderer.removeElement(textField);
 			
 			delete diagramShell.modelToExtraInfoMap[model].inplaceEditor;			
-		}		
+		}
 	}
 	
 }

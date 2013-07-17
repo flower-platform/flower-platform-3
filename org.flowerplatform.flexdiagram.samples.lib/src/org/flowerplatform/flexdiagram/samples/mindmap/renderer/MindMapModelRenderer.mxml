@@ -7,7 +7,7 @@
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 				
 				creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"	
-				verticalAlign="middle" minHeight="22">
+				verticalAlign="middle" minHeight="22" paddingLeft="2">
 	
 	<fx:Script>
 		<![CDATA[
@@ -64,7 +64,7 @@
 				graphics.clear();
 				graphics.lineStyle(1, 0x808080);
 				graphics.beginFill(0xCCCCCC, 0);
-				graphics.drawRoundRect(-1, -1, unscaledWidth + 1, unscaledHeight + 1, 10, 10);		
+				graphics.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, 10, 10);		
 			
 				if (data.children.length > 0 && data.expanded == false) {
 					if (data.side == MindMapDiagramShell.LEFT) {
@@ -75,8 +75,7 @@
 				}
 			}
 			
-			protected function creationCompleteHandler(event:FlexEvent):void {
-				
+			protected function creationCompleteHandler(event:FlexEvent):void {				
 				addEventListener(ResizeEvent.RESIZE, resizeHandler);
 				resizeHandler(null);				
 			}
@@ -86,15 +85,12 @@
 				data.height = measuredHeight;
 			}
 			
-			override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void
-			{
-				//			super.drawBorder(unscaledWidth, unscaledHeight);
+			override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {				
 			}
 			
-			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void
-			{
-				
+			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void {				
 			}
+			
 		]]>
 	</fx:Script>
 	
