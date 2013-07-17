@@ -1,57 +1,166 @@
-package org.flowerplatform.flexdiagram.mindmap.controller
-{
+package org.flowerplatform.flexdiagram.mindmap.controller {
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
+	import mx.collections.ArrayList;
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
+	import org.flowerplatform.flexdiagram.ui.MoveResizePlaceHolder;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class MindMapDragController extends ControllerBase implements IDragController {
 		
 		public function MindMapDragController(diagramShell:DiagramShell) {
 			super(diagramShell);
 		}
 		
-		public function activate(model:Object, initialX:Number, initialY:Number):void {
-			diagramShell.modelToExtraInfoMap[model].initialX = initialX;
-			diagramShell.modelToExtraInfoMap[model].initialY = initialY;
+		public function activate(model:Object, initialX:Number, initialY:Number):void {		
+			if (model.parent == null) { // don't drag the root node
+				return;
+			}
+			getDynamicObject(model).initialX = initialX;
+			getDynamicObject(model).initialY = initialY;
 		}
 		
 		public function drag(model:Object, deltaX:Number, deltaY:Number):void {
-			diagramShell.modelToExtraInfoMap[model].finalX = diagramShell.modelToExtraInfoMap[model].initialX + deltaX;
-			diagramShell.modelToExtraInfoMap[model].finalY = diagramShell.modelToExtraInfoMap[model].initialY + deltaY;
+			getDynamicObject(model).finalX = getDynamicObject(model).initialX + deltaX;
+			getDynamicObject(model).finalY = getDynamicObject(model).initialY + deltaY;
+			
+			var point:Point = new Point(getDynamicObject(model).finalX, getDynamicObject(model).finalY);
+			var renderer:IVisualElement = getRendererFromCoordinates(point);			
+			var dropModel:Object = IDataRenderer(renderer).data;
+						
+			if (renderer is DiagramRenderer || dropModel == model) {
+				deletePlaceHolder(model);
+				return;
+			}
+			
+			var placeHolder:MoveResizePlaceHolder = getPlaceHolder(model);
+			// set default values
+			var rect:Rectangle = diagramShell.getControllerProvider(dropModel).getAbsoluteLayoutRectangleController(dropModel).getBounds(dropModel);
+			placeHolder.x = rect.x;
+			placeHolder.y = rect.y;
+			placeHolder.width = rect.width;
+			placeHolder.height = rect.height;		
+			placeHolder.colors = [0x0000FF, 0xFFFFFF];
+			
+			var side:int = MindMapDiagramShell.NONE;
+			if (dropModel.side == MindMapDiagramShell.LEFT) { 
+				if (new Rectangle(rect.x, rect.y, rect.width / 2, rect.height).containsPoint(point)) {	// set styles for left rectangle			
+					placeHolder.width = rect.width / 2;
+					placeHolder.gradientBoxRotation = 0;
+					side =  MindMapDiagramShell.LEFT;
+				} else { // set styles for top rectangle
+					placeHolder.gradientBoxRotation = Math.PI / 2;
+				}
+			} else if (dropModel.side == MindMapDiagramShell.RIGHT) { 
+				if (new Rectangle(rect.x + rect.width / 2, rect.y, rect.width, rect.height).containsPoint(point)) {	// set styles for right rectangle
+					placeHolder.x = rect.x + rect.width / 2;
+					placeHolder.width = rect.width / 2;
+					placeHolder.colors = [0xFFFFFF, 0x0000FF];
+					placeHolder.gradientBoxRotation = 0;
+					side =  MindMapDiagramShell.RIGHT;
+				} else {	// set styles for top rectangle			
+					placeHolder.gradientBoxRotation = Math.PI / 2;
+				}
+			} else { // root model
+				if (new Rectangle(rect.x, rect.y, rect.width / 2, rect.height).containsPoint(point)) {	 // set styles for left rectangle
+					placeHolder.x = rect.x;
+					placeHolder.width = rect.width / 2;					
+					placeHolder.gradientBoxRotation = 0;
+					side =  MindMapDiagramShell.LEFT;
+				} else { // set styles for right rectangle					
+					placeHolder.x = rect.x + rect.width / 2;
+					placeHolder.width = rect.width / 2;
+					placeHolder.colors = [0xFFFFFF, 0x0000FF];
+					side =  MindMapDiagramShell.RIGHT;
+				}				
+			}
+			getDynamicObject(model).side = side;
 		}
 		
 		public function drop(model:Object):void {
-			var finalPoint:Point = new Point(diagramShell.modelToExtraInfoMap[model].finalX, diagramShell.modelToExtraInfoMap[model].finalY);
-			var renderer:IVisualElement = getRendererFromCoordinates(finalPoint);
+			var dropPoint:Point = new Point(getDynamicObject(model).finalX, getDynamicObject(model).finalY);
+			var renderer:IVisualElement = getRendererFromCoordinates(dropPoint);
 			
-			if (renderer is IDataRenderer) {
-				var dropModel:Object = IDataRenderer(renderer).data;
-				var dragParentModel:Object = MindMapDiagramShell(diagramShell).getMindMapController(model).getParent(model);
-				
-				MindMapDiagramShell(diagramShell).getMindMapController(dragParentModel).removeChild(dragParentModel, model);
-				
-				MindMapDiagramShell(diagramShell).getMindMapController(model).setParent(model, dropModel);	
-				MindMapDiagramShell(diagramShell).getMindMapController(dropModel).addChild(dropModel, model);	
-				
-				UIComponent(renderer).invalidateDisplayList();
+			var dropModel:Object = IDataRenderer(renderer).data;
+			if (renderer is DiagramRenderer || dropModel == model) { // don't drop over diagram or same model
+				return;
+			}
+			
+			deletePlaceHolder(model);
+						
+			var side:int = getDynamicObject(model).side;
+			
+			// remove model from current parent
+			var dragParentModel:Object = getModelController(model).getParent(model);		
+			getModelController(dragParentModel).getChildren(dragParentModel).removeItem(model);		
+			
+			// calculate new parent and position based on side
+			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : getModelController(dropModel).getParent(dropModel);	
+			var children:ArrayList = getModelController(dropParentModel).getChildren(dropParentModel);	
+			var index:Number = (side != MindMapDiagramShell.NONE) ? children.length : children.getItemIndex(dropModel);
+			
+			// add model in new parent
+			getModelController(dropParentModel).getChildren(dropParentModel).addItemAt(model, index);		
+			getModelController(model).setSide(model, (side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel));
+			getModelController(model).setParent(model, dropParentModel);	
+			
+			// select model or parent 
+			diagramShell.selectedItems.removeAll();
+			if (getModelController(dropParentModel).getExpanded(dropParentModel)) {
+				diagramShell.selectedItems.addItem(model);
+			} else {
+				diagramShell.selectedItems.addItem(dropParentModel);
 			}
 		}
 		
 		public function deactivate(model:Object):void {
-//			delete diagramShell.modelToExtraInfoMap[model].initialX;
-//			delete diagramShell.modelToExtraInfoMap[model].initialY;
-//			delete diagramShell.modelToExtraInfoMap[model].finalX;
-//			delete diagramShell.modelToExtraInfoMap[model].finalY;
+			delete getDynamicObject(model).initialX;
+			delete getDynamicObject(model).initialY;
+			delete getDynamicObject(model).finalX;
+			delete getDynamicObject(model).finalY;
+			delete getDynamicObject(model).side;
+		}
+		
+		private function getDynamicObject(model:Object):Object {
+			return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
+		}
+		
+		private function getModelController(model:Object):IMindMapModelController {
+			return MindMapDiagramShell(diagramShell).getModelController(model);
+		}
+		
+		private function deletePlaceHolder(model:Object):void {
+			var placeHolder:MoveResizePlaceHolder = getDynamicObject(model).placeHolder;
+			if (placeHolder != null) {
+				diagramShell.diagramRenderer.removeElement(placeHolder);
+				delete getDynamicObject(model).placeHolder;		
+			}
+		}
+		
+		private function getPlaceHolder(model:Object):MoveResizePlaceHolder {
+			var placeHolder:MoveResizePlaceHolder = getDynamicObject(model).placeHolder;
+			if (placeHolder == null) {
+				placeHolder = new MoveResizePlaceHolder();				
+				placeHolder.alphas = [0.4, 0.4];
+				placeHolder.ratios = [0, 255];				
+				getDynamicObject(model).placeHolder = placeHolder;
+				diagramShell.diagramRenderer.addElement(placeHolder);
+			}
+			return placeHolder;
 		}
 		
 		protected function getRendererFromCoordinates(point:Point):IVisualElement {
@@ -72,7 +181,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller
 		protected function getRendererFromDisplay(obj:Object):IVisualElement {			
 			// in order for us to traverse its hierrarchy
 			// it has to be a DisplayObject
-			if (!(obj is DisplayObject)) {
+			if (!(obj is DisplayObject) || obj is MoveResizePlaceHolder) {
 				return null;
 			}
 			

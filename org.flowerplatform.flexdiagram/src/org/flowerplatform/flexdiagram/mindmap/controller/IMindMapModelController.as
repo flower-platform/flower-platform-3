@@ -1,15 +1,16 @@
 package org.flowerplatform.flexdiagram.mindmap.controller {
 	import mx.collections.ArrayList;
 
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public interface IMindMapModelController {
 		
 		function getParent(model:Object):Object;		
 		function setParent(model:Object, value:Object):void;	
 		
 		function getChildren(model:Object):ArrayList;		
-		function getChildrenBasedOnSide(model:Object, side:int = 0):ArrayList;	
-		function addChild(model:Object, value:Object):void;
-		function removeChild(model:Object, value:Object):void;
+		function getChildrenBasedOnSide(model:Object, side:int = 0):ArrayList;		
 		function setChildren(model:Object, value:ArrayList):void;
 		
 		function getX(model:Object):Number;		

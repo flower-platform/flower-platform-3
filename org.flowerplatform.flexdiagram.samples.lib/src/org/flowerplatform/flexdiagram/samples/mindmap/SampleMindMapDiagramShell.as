@@ -15,9 +15,8 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
+	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapDragController;
-	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
-	import org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapModelAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapModelInplaceEditorController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapModelRendererController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
@@ -28,6 +27,9 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 	import org.flowerplatform.flexdiagram.tool.controller.ISelectOrDragToCreateElementController;
 	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class SampleMindMapDiagramShell extends MindMapDiagramShell implements IMindMapControllerProvider {
 		
 		private var mindMapModelController:MindMapModelController;
@@ -36,7 +38,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		private var absoluteLayoutVisualChildrenController:AbsoluteLayoutVisualChildrenController;
 		private var arrayListModelChildrenController:ParentAwareArrayListModelChildrenController;
 		private var mindMapModelRendererController:MindMapModelRendererController;
-		private var minMapModelAbsoluteLayoutRectangleController:MindMapModelAbsoluteLayoutRectangleController;
+		private var minMapModelAbsoluteLayoutRectangleController:MindMapAbsoluteLayoutRectangleController;
 		
 		private var mindMapModelSelectionController:SelectionController;
 		private var mindMapModelDragController:MindMapDragController;
@@ -50,7 +52,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			absoluteLayoutVisualChildrenController = new AbsoluteLayoutVisualChildrenController(this);
 			arrayListModelChildrenController = new ParentAwareArrayListModelChildrenController(this, true);
 			mindMapModelRendererController = new MindMapModelRendererController(this, null);
-			minMapModelAbsoluteLayoutRectangleController = new MindMapModelAbsoluteLayoutRectangleController(this);
+			minMapModelAbsoluteLayoutRectangleController = new MindMapAbsoluteLayoutRectangleController(this);
 			
 			mindMapModelInplaceEditorController = new MindMapModelInplaceEditorController(this);
 			mindMapModelSelectionController = new SelectionController(this, MindMapSelectionRenderer);

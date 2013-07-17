@@ -13,9 +13,13 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapConnector;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.renderer.MindMapModelRenderer;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class MindMapModelRendererController extends ClassReferenceRendererController {
 			
 		public function MindMapModelRendererController(diagramShell:DiagramShell, rendererClass:Class) {
@@ -28,9 +32,9 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {
+			removeConnector(model);
 			if (isModelDisposed) {
-				if (renderer != null) {
-					removeConnector(model);
+				if (renderer != null) {					
 					IVisualElementContainer(renderer.parent).removeElement(renderer);					
 				}
 				IEventDispatcher(model).removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
@@ -43,75 +47,108 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 		}
 		
 		private function modelChangedHandler(event:PropertyChangeEvent):void {
-			var model:Object = event.target;	
-			var shouldRefreshVisualChildren:Boolean = event.property == "expanded" || event.property == "children";
-			var shouldRefreshNodePositions:Boolean = event.property == "height" || event.property == "width";
+			var model:Object = event.target;				
+			var shouldRefreshNodePositions:Boolean = event.property == "expanded" || event.property == "height" || event.property == "width";
 			var shouldUpdateConnectors:Boolean = event.property == "x" || event.property == "y" || shouldRefreshNodePositions;
-			if (shouldRefreshVisualChildren) {				
-				refreshModelChildren(model);					
+			
+			if (event.property == "parent") { // parent changed (after a drag & drop)
+				// remove old model from display
+				removeModelFromRootChildren(model);		
+				// add new model to display
+				var parent:Object = event.newValue;
+				if (getModelController(parent).getExpanded(parent)) {
+					addModelToRootChildren(model);
+				}
+				// refresh structure
+				MindMapDiagramShell(diagramShell).refreshNodePositions(ParentAwareArrayList(diagramShell.rootModel).getItemAt(0));
 			}
-			if (shouldRefreshVisualChildren || shouldRefreshNodePositions) {					
+			
+			if (event.property == "expanded") {				
+				if (Boolean(event.oldValue) == true) { // was expanded
+					removeModelFromRootChildren(model, true);
+				}
+				addModelToRootChildren(model, true);			
+			}
+			
+			if (shouldRefreshNodePositions) {					
 				MindMapDiagramShell(diagramShell).refreshNodePositions(model);				
-			} 
+			}
+			
 			if (shouldUpdateConnectors) {
-				if (event.oldValue != event.newValue) {					
-					if (model.parent != null) {
-						var connector:MindMapConnector = DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).connector;
-						connector.invalidateDisplayList();
-					}
+				if (event.oldValue != event.newValue) {				
+					updateConnectors(model);
 				}
 			}
 		}
 		
-		private function refreshModelChildren(model:Object):void {			
-			var list:ArrayList = new ArrayList();
-			
-			if (!model.expanded) {
-				removeModel(model, true);
-			}
-			addModel(model, true);
-		}
-		
-		private function removeModel(model:Object, removeOnlyChildren:Boolean = false):void {
-			var children:ArrayList = MindMapDiagramShell(diagramShell).getMindMapController(model).getChildren(model);
+		private function removeModelFromRootChildren(model:Object, removeOnlyChildren:Boolean = false):void {
+			var children:ArrayList = new ArrayList();
+			children.addAll(ParentAwareArrayList(diagramShell.rootModel));
 			for (var i:int = 0; i < children.length; i++) {
-				removeModel(children.getItemAt(i));				
+				var child:Object = children.getItemAt(i);
+				if (model == getModelController(child).getParent(child)) {
+					removeModelFromRootChildren(child);			
+				}
 			}
 			if (!removeOnlyChildren) {
 				ParentAwareArrayList(diagramShell.rootModel).removeItem(model);				
 			}
 		}
 		
-		private function addModel(model:Object, addOnlyChildren:Boolean = false):void {
+		private function addModelToRootChildren(model:Object, addOnlyChildren:Boolean = false):void {
 			if (!addOnlyChildren) {
 				ParentAwareArrayList(diagramShell.rootModel).addItem(model);
-			}
-		
-			if (model.expanded) {
-				var children:ArrayList = MindMapDiagramShell(diagramShell).getMindMapController(model).getChildren(model);
+			}		
+			if (getModelController(model).getExpanded(model)) {
+				var children:ArrayList = MindMapDiagramShell(diagramShell).getModelController(model).getChildren(model);
 				for (var i:int = 0; i < children.length; i++) {
-					addModel(children.getItemAt(i));
+					addModelToRootChildren(children.getItemAt(i));
 				}				
 			}
 		}
 		
-		private function removeConnector(model:Object):void {
-			if (model.parent == null) {
-				return;
+		private function removeConnector(model:Object):void {		
+			var connector:MindMapConnector = getDynamicObject(model).connector;
+			if (connector != null) {
+				diagramShell.diagramRenderer.removeElement(connector);
+				delete getDynamicObject(model).connector;
 			}
-			var connector:MindMapConnector = DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).connector;
-			diagramShell.diagramRenderer.removeElement(connector);
-			delete DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).connector;
 		}
 		
 		private function addConnector(model:Object):void {
-			if (model.parent == null) {
+			if (getModelController(model).getParent(model) == null) { // root node, no connectors
 				return;
 			}
-			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(model.parent);
-			DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model).connector = connector;
+			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(getModelController(model).getParent(model));
+			getDynamicObject(model).connector = connector;
 			diagramShell.diagramRenderer.addElementAt(connector, 0);
+			
+			// update other connectors (especially the ones where model is the target)
+			updateConnectors(model);
 		}
 		
+		private function updateConnectors(model:Object):void {
+			// refresh connector to parent
+			if (getModelController(model).getParent(model) != null) {	
+				if (getDynamicObject(model).connector != null) {
+					getDynamicObject(model).connector.invalidateDisplayList();
+				}
+			}
+			// refresh connectors to children
+			for (var i:int = 0; i < getModelController(model).getChildren(model).length; i++) {
+				var child:Object = getModelController(model).getChildren(model).getItemAt(i);						
+				if (getDynamicObject(child).connector != null) {
+					getDynamicObject(child).connector.invalidateDisplayList();
+				}
+			}
+		}
+		
+		private function getDynamicObject(model:Object):Object {
+			return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
+		}
+		
+		private function getModelController(model:Object):IMindMapModelController {
+			return MindMapDiagramShell(diagramShell).getModelController(model);
+		}
 	}
 }

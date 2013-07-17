@@ -7,22 +7,26 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	
 	import spark.components.TextInput;
 	import spark.components.supportClasses.StyleableTextField;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class MindMapModelInplaceEditorController extends ControllerBase implements IInplaceEditorController {
 		
 		public function MindMapModelInplaceEditorController(diagramShell:DiagramShell)	{
 			super(diagramShell);
 		}
-		
+				
 		public function activate(model:Object):void {
 			var renderer:DisplayObject = DisplayObject(diagramShell.getRendererForModel(model));
 			var textField:TextInput = new TextInput();
-						
+			
 			diagramShell.diagramRenderer.addElement(textField);
 			
 			var bounds:Rectangle = renderer.getBounds(DisplayObject(diagramShell.diagramRenderer));

@@ -6,6 +6,9 @@ package org.flowerplatform.flexdiagram.mindmap {
 	
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class MindMapConnector extends UIComponent {
 		
 		public var source:Object;
@@ -32,13 +35,17 @@ package org.flowerplatform.flexdiagram.mindmap {
 			var sourceElement:IVisualElement = getDiagramShell().getRendererForModel(source);
 			var targetElement:IVisualElement = getDiagramShell().getRendererForModel(target);
 			
+			// verify if source/target renderers are still visible
+			if (sourceElement == null || targetElement == null) {
+				return;
+			}
 			graphics.clear();
 			graphics.lineStyle(1, 0x808080);
 			
 			var sourcePoint:Point;
 			var targetPoint:Point;
 			
-			if (getDiagramShell().getMindMapController(source).getSide(source) == MindMapDiagramShell.LEFT) {
+			if (getDiagramShell().getModelController(source).getSide(source) == MindMapDiagramShell.LEFT) {
 				sourcePoint = new Point(sourceElement.x + sourceElement.width, sourceElement.y + sourceElement.height/2);
 				targetPoint = new Point(targetElement.x, targetElement.y + targetElement.height/2);
 				graphics.moveTo(sourcePoint.x, sourcePoint.y);

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!---
 @author Cristina Constantinescu
-@author Cristian Spiescu
 -->
 <selection:AbstractSelectionRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 									xmlns:s="library://ns.adobe.com/flex/spark" 
@@ -27,7 +26,7 @@
 			[Bindable]
 			public var circleRadius:int = 8;
 			
-			public var padding:int = 3;
+			public var padding:int = 4;
 			
 			override public function activate(diagramShell:DiagramShell, target:IVisualElement):void {
 				super.activate(diagramShell, target);			

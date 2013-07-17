@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<s:DataRenderer								
+<!---
+	@author Cristina Constantinescu
+-->
+<s:IconItemRenderer								
 				xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
-				xmlns:mx="library://ns.adobe.com/flex/mx" 			
-				minWidth="10" minHeight="10"
-				creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"	>
+				xmlns:mx="library://ns.adobe.com/flex/mx" 				
+				creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"	
+				verticalAlign="middle" minHeight="22">
 	
 	<fx:Script>
 		<![CDATA[
@@ -28,6 +31,7 @@
 					y = data.y;
 					measuredWidth = data.width;
 					measuredHeight = data.height;
+					label = data.text;
 					data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 				}
 			}
@@ -49,6 +53,8 @@
 					case "expanded":
 						invalidateDisplayList();
 						break;
+					case "text":
+						label = data.text;
 				}
 			}
 			
@@ -58,18 +64,19 @@
 				graphics.clear();
 				graphics.lineStyle(1, 0x808080);
 				graphics.beginFill(0xCCCCCC, 0);
-				graphics.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, 10, 10);		
+				graphics.drawRoundRect(-1, -1, unscaledWidth + 1, unscaledHeight + 1, 10, 10);		
 			
 				if (data.children.length > 0 && data.expanded == false) {
 					if (data.side == MindMapDiagramShell.LEFT) {
-						graphics.drawCircle(-CIRCLE_RADIUS, data.height/2, CIRCLE_RADIUS);
-					} else if (data.side == MindMapDiagramShell.RIGHT) {
-						graphics.drawCircle(data.width + CIRCLE_RADIUS, data.height/2, CIRCLE_RADIUS);
+						graphics.drawCircle(-CIRCLE_RADIUS, height/2, CIRCLE_RADIUS);
+					} else if (data.side == MindMapDiagramShell.RIGHT) {						
+						graphics.drawCircle(width + CIRCLE_RADIUS, height/2, CIRCLE_RADIUS);
 					}
 				}
 			}
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
+				
 				addEventListener(ResizeEvent.RESIZE, resizeHandler);
 				resizeHandler(null);				
 			}
@@ -79,15 +86,16 @@
 				data.height = measuredHeight;
 			}
 			
+			override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				//			super.drawBorder(unscaledWidth, unscaledHeight);
+			}
+			
+			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void
+			{
+				
+			}
 		]]>
 	</fx:Script>
 	
-	<s:layout>				
-		<s:BasicLayout />
-	</s:layout>
-		
-	<s:Label id="modelText" text="{data.text}" 
-			 minHeight="10" minWidth="10" 
-			 paddingLeft="5" paddingRight="5" paddingBottom="5" paddingTop="5" />		
-		
-</s:DataRenderer>
+</s:IconItemRenderer>

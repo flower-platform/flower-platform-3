@@ -6,9 +6,13 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 	import mx.events.PropertyChangeEvent;
 	import mx.events.PropertyChangeEventKind;
 	
+	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class MindMapModelController implements IMindMapModelController {
 		
 		public function getParent(model:Object):Object {
@@ -16,7 +20,13 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		}
 		
 		public function setParent(model:Object, value:Object):void {
-			MindMapModel(model).parent = MindMapModel(value);
+			var oldParent:Object = model.parent;
+			var newParent:MindMapModel = MindMapModel(value);
+			if (newParent.side != MindMapDiagramShell.NONE && newParent.side != MindMapModel(model).side) {
+				setSide(model, newParent.side);				
+			}
+			MindMapModel(model).parent = newParent;
+			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "parent", oldParent, newParent));
 		}
 		
 		public function getChildren(model:Object):ArrayList {
@@ -40,23 +50,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		public function setChildren(model:Object, value:ArrayList):void {
 			MindMapModel(model).children = value;
 		}
-		
-		public function addChild(model:Object, value:Object):void {
-			var oldValue:ArrayList = MindMapModel(model).children;
-			
-			MindMapModel(model).children.addItem(value);
-			
-			IEventDispatcher(model).dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE, false, false, null, "children", oldValue, MindMapModel(model).children));
-		}
-		
-		public function removeChild(model:Object, value:Object):void {
-			var oldValue:ArrayList = MindMapModel(model).children;
-			
-			MindMapModel(model).children.removeItem(value);
-			
-			IEventDispatcher(model).dispatchEvent(new PropertyChangeEvent(PropertyChangeEvent.PROPERTY_CHANGE, false, false, null, "children", oldValue, MindMapModel(model).children));
-		}
-		
+				
 		public function getX(model:Object):Number {
 			return MindMapModel(model).x;
 		}
@@ -103,6 +97,9 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		
 		public function setSide(model:Object, value:int):void {
 			MindMapModel(model).side = value;
+			for (var i:int = 0; i < getChildren(model).length; i++) {
+				setSide(getChildren(model).getItemAt(i), model.side);
+			}
 		}
 	}
 }
