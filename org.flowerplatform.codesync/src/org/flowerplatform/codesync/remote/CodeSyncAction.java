@@ -16,10 +16,12 @@ public class CodeSyncAction extends AbstractServerCommand {
 
 	public List<PathFragment> pathWithRoot;
 	
+	public String technology;
+	
 	@Override
 	public void executeCommand() {
 		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(pathWithRoot);
-		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(resource.getProject(), resource, "java", communicationChannel, true); // TODO this flag should come from client side
+		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(resource.getProject(), resource, technology, communicationChannel, true);
 	}
 
 }

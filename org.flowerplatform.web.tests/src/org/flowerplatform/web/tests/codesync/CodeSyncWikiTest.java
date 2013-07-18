@@ -113,8 +113,8 @@ public class CodeSyncWikiTest {
 				
 				WikiPlugin wikiPlugin = WikiPlugin.getInstance();
 				IProject project = getProject();
-				CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, wiki, technology);
-				CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, technology);
+				CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, wiki, "proiecte:flower:teste", technology);
+				CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, "proiecte:flower:teste", technology);
 
 				expected = new Pair[] {
 					new Pair(FOLDER_CATEGORY, 0),							// Crispico
@@ -162,8 +162,8 @@ public class CodeSyncWikiTest {
 		WikiPlugin.getInstance().getConfigurationProviders().put(technology, dummyConfigProvider);
 		
 		IProject project = getProject();
-		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, Arrays.asList(page), technology);
-		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, technology);
+		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, Arrays.asList(page), "", technology);
+		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, "", technology);
 		
 		expected = 	new Pair[] {
 			new Pair(FOLDER_CATEGORY, 0), 
@@ -199,7 +199,7 @@ public class CodeSyncWikiTest {
 		
 		// left modifications
 		page = new DokuWikiPage(pageName, left);
-		leftRoot = wikiPlugin.getWikiTree(null, Arrays.asList(page), technology);
+		leftRoot = wikiPlugin.getWikiTree(null, Arrays.asList(page), "", technology);
 		// right modifications
 		CodeSyncElement newRightPage = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
 		newRightPage.setName("page");
@@ -229,8 +229,8 @@ public class CodeSyncWikiTest {
 		File right = new File(TestUtil.getWorkspaceResourceAbsolutePath(MD_FILE_3));
 		
 		IProject project = getProject();
-		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, ancestor, technology);
-		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, technology);
+		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, ancestor, ancestor.getPath(), technology);
+		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, ancestor.getPath(), technology);
 		rightRoot.setName(ancestor.getPath());
 		
 		expected = new Pair[] {
@@ -251,7 +251,7 @@ public class CodeSyncWikiTest {
 		test(leftRoot, rightRoot, technology, expected);
 		
 		// left modifications
-		leftRoot = wikiPlugin.getWikiTree(null, left, technology);
+		leftRoot = wikiPlugin.getWikiTree(null, left, ancestor.getPath(), technology);
 		// right modifications
 		CodeSyncElement newRightPage = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 		newRightPage.setName(ancestor.getName());

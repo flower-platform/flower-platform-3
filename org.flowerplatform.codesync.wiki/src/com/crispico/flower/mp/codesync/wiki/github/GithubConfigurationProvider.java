@@ -2,7 +2,10 @@ package com.crispico.flower.mp.codesync.wiki.github;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -24,9 +27,11 @@ import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
  */
 public class GithubConfigurationProvider implements IConfigurationProvider {
 
-	public static final String TECHNOLOGY = "Github";
+	public static final String TECHNOLOGY = "github";
 	
 	private Map<String, IConfigurationProvider> configurationProviders = new HashMap<String, IConfigurationProvider>();
+	
+	private List<String> skipFiles = Arrays.asList(".git", ".project", "Wiki.notation", "WikiCache.notation");
 	
 	public GithubConfigurationProvider() {
 		configurationProviders.put("md", new MarkdownConfigurationProvider());
@@ -56,13 +61,24 @@ public class GithubConfigurationProvider implements IConfigurationProvider {
 		CodeSyncRoot root = CodeSyncFactory.eINSTANCE.createCodeSyncRoot();
 		root.setType(WikiTreeBuilder.FOLDER_CATEGORY);
 		if (file != null) {
-			root.setName(file.isDirectory() ? file.getPath() : file.getParentFile().getPath());
-			createWikiPage(file, root);
+			if (file.isDirectory()) {
+				root.setName(file.getPath());
+				for (File child : file.listFiles()) {
+					createWikiPage(child, root);
+				}
+			} else {
+				root.setName(file.getParentFile().getPath());
+				createWikiPage(file, root);
+			}
 		}
 		return root;
 	}
 
 	private void createWikiPage(File file, CodeSyncElement root) {
+		if (skipFiles.contains(file.getName())) {
+			return;
+		}
+		
 		CodeSyncElement cse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 		cse.setName(file.getName());
 		if (file.isDirectory()) {

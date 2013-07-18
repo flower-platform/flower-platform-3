@@ -1,5 +1,6 @@
 package com.crispico.flower.mp.codesync.wiki;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
 import astcache.wiki.FlowerBlock;
@@ -34,6 +36,7 @@ import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
 import com.crispico.flower.mp.codesync.wiki.adapter.WikiNodeModelAdapter;
 import com.crispico.flower.mp.codesync.wiki.adapter.WikiNodeModelAdapterRight;
 import com.crispico.flower.mp.codesync.wiki.featureprovider.WikiPageFeatureProvider;
+import com.crispico.flower.mp.codesync.wiki.github.GithubConfigurationProvider;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
@@ -57,6 +60,9 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
+		
+		// TODO this should be done from a new plugin probably
+		getConfigurationProviders().put(GithubConfigurationProvider.TECHNOLOGY, new GithubConfigurationProvider());
 	}
 
 	@Override
@@ -83,6 +89,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		
 		ModelAdapterFactory rightFactory = new ModelAdapterFactory();
 		WikiNodeModelAdapterRight rightAdapter = new WikiNodeModelAdapterRight();
+		rightAdapter.setModelAdapterFactory(rightFactory);
 		rightAdapter.setEObjectConverter(rightFactory);
 		rightAdapter.setResource(getAstCacheResource(project));
 		rightAdapter.setTechnology(technology);
@@ -90,12 +97,14 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		
 		ModelAdapterFactory ancestorFactory = new ModelAdapterFactory();
 		WikiNodeModelAdapter ancestorAdapter = new WikiNodeModelAdapter();
+		ancestorAdapter.setModelAdapterFactory(ancestorFactory);
 		ancestorAdapter.setEObjectConverter(ancestorFactory);
 		ancestorAdapter.setTechnology(technology);
 		ancestorFactory.addModelAdapter(CodeSyncElement.class, ancestorAdapter);
 		
 		ModelAdapterFactory leftFactory = new ModelAdapterFactory();
 		WikiNodeModelAdapter leftAdapter = new WikiNodeModelAdapter();
+		leftAdapter.setModelAdapterFactory(leftFactory);
 		leftAdapter.setEObjectConverter(leftFactory);
 		leftAdapter.setResource(getAstCacheResource(left));
 		leftAdapter.setTechnology(technology);
@@ -123,12 +132,12 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	public Resource getAstCacheResource(IProject project) {
-		IFile astCacheElementFile = project == null ? null : project.getFile(new Path(ACE_FILE_LOCATION));
+		File astCacheElementFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + ACE_FILE_LOCATION)));
 		return CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), astCacheElementFile);
 	}
 	
 	public Resource getCodeSyncMappingResource(IProject project) {
-		IFile codeSyncElementMappingFile = project.getFile(new Path(CSE_FILE_LOCATION));
+		File codeSyncElementMappingFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + CSE_FILE_LOCATION)));
 		return CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), codeSyncElementMappingFile);
 	}
 
@@ -164,13 +173,28 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * Delegates to {@link IConfigurationProvider#getWikiTree(String, Object)}.
 	 */
-	public CodeSyncRoot getWikiTree(IProject project, Object wiki, String technology) {
-		CodeSyncRoot root = configurationProviders.get(technology).getWikiTree(wiki);
+	public CodeSyncRoot getWikiTree(IProject project, Object wiki, String name, String technology) {
 		Resource codeSyncResource = project == null ? getOrCreateEditingDomain(project).createResource("tempCSE") : getCodeSyncMappingResource(project);
-		codeSyncResource.getContents().add(root);
+		CodeSyncRoot root = getRoot(codeSyncResource, name);
+		if (root == null) {
+			root = configurationProviders.get(technology).getWikiTree(wiki);
+			codeSyncResource.getContents().add(root);
+			if (wiki == null) {
+				root.setName(name);
+			}
+		}
 		Resource astCacheResource = project == null ? getOrCreateEditingDomain(project).createResource("tempACE") : getAstCacheResource(project);
 		addToAstCacheResource(root, astCacheResource);
 		return root;
+	}
+	
+	private CodeSyncRoot getRoot(Resource resource, String name) {
+		for (EObject object : resource.getContents()) {
+			if (name.equals(((CodeSyncRoot) object).getName())) {
+				return (CodeSyncRoot) object;
+			}
+		}
+		return null;
 	}
 	
 	public void addToAstCacheResource(CodeSyncElement root, Resource resource) {

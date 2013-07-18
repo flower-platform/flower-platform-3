@@ -14,7 +14,6 @@ public class CodeSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner {
 
 	@Override
 	public void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
-		
 		CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, resource, technology, communicationChannel, showDialog);
 	}
 

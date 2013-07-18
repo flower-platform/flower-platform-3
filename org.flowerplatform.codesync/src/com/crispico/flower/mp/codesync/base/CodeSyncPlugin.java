@@ -49,8 +49,9 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncAlgorithmRunner");
 		for (IConfigurationElement configurationElement : configurationElements) {
 			String id = configurationElement.getAttribute("id");
+			String technology = configurationElement.getAttribute("technology");
 			Object instance = configurationElement.createExecutableExtension("codeSyncAlgorithmRunnerClass");
-			codeSyncAlgorithmRunner.addRunner((ICodeSyncAlgorithmRunner) instance);
+			codeSyncAlgorithmRunner.addRunner(technology, (ICodeSyncAlgorithmRunner) instance);
 			logger.debug("Added CodeSync algorithm runner with id = {} with class = {}", id, instance.getClass());
 		}
 	}

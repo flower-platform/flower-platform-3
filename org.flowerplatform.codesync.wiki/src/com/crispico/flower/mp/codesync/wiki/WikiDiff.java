@@ -129,6 +129,7 @@ public class WikiDiff extends Diff {
 	 * This is to correctly synchronize any existing Flower blocks on the wiki page.
 	 */
 	public String getLeft() {
+		save(true);
 		String wikiText = left.get();
 		CodeSyncElement root = (CodeSyncElement) getParentMatch().getLeft();
 		WikiPlugin.getInstance().getWikiPageTree(wikiText, root, technology, flowerBlocks);
@@ -140,10 +141,11 @@ public class WikiDiff extends Diff {
 	 * {@link CodeSyncElement}.
 	 */
 	public void getRight(CodeSyncElement page) {
+		save(false);
 		WikiPlugin.getInstance().getWikiPageTree(right.get(), page, technology, flowerBlocks);
 	}
 	
-	public boolean applyAll(boolean leftToRight) {
+	public boolean applyAll(CodeSyncElement page, boolean leftToRight) {
 		if (isResolved(leftToRight)) {
 			return true;
 		}
@@ -157,6 +159,10 @@ public class WikiDiff extends Diff {
 			}
 		}
 		markResolved(leftToRight);
+		
+		// trigger the creation of page children
+		this.getRight(page);
+		
 		return rslt;
 	}
 	
@@ -197,19 +203,17 @@ public class WikiDiff extends Diff {
 		return true;
 	}
 	
-	public void save() {
+	private void save(boolean onLeft) {
 		try {
-			leftEdit.apply(left);
-			rightEdit.apply(right);
-			// discard so applying again won't have any effect
-			discard();
+			if (onLeft) {
+				leftEdit.apply(left);
+				leftEdit = new MultiTextEdit();
+			} else {
+				rightEdit.apply(right);
+				rightEdit = new MultiTextEdit();
+			}
 		} catch (Exception e) {
 		}
-	}
-	
-	public void discard() {
-		leftEdit = new MultiTextEdit();
-		rightEdit = new MultiTextEdit();
 	}
 	
 	@Override

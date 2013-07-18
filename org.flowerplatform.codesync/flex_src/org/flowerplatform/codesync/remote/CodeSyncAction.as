@@ -10,12 +10,14 @@ package org.flowerplatform.codesync.remote {
 		
 		public var pathWithRoot:IList;
 		
+		public var technology:String;
 		
-		public function CodeSyncAction() {
+		public function CodeSyncAction(label:String, technology:String) {
 			super();
 			
 			// TODO CS/FP2 msg
-			label = "Code Sync";
+			this.label = label;
+			this.technology = technology;
 		}
 		
 		override public function get visible():Boolean {

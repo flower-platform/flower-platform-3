@@ -89,7 +89,7 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 			if (page != null) {
 				WikiDiff diff = (WikiDiff) page.getDiff();
 				if (diff != null) {
-					diff.applyAll(diff.isLeftModified());
+					diff.applyAll(getWikiNode(element), diff.isLeftModified());
 				}
 			}
 		} else {
@@ -121,7 +121,7 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 		if (page != null) {
 			WikiDiff diff = (WikiDiff) page.getDiff();
 			if (diff != null) {
-				diff.save();
+//				diff.save();
 				doSave(page.getCodeSyncElement(), diff);
 				page.setDiff(null);
 			}

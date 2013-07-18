@@ -34,7 +34,7 @@ package org.flowerplatform.codesync {
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 			
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CodeSyncAction);
+			WebCommonPlugin.getInstance().explorerTreeActionProviders.push(new CodeSyncTreeActionProvider());
 		}
 		
 		override protected function registerClassAliases():void {

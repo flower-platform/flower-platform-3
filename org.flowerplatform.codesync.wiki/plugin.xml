@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncAlgorithmRunner">
+      <codeSyncAlgorithmRunner
+            codeSyncAlgorithmRunnerClass="org.flowerplatform.codesync.wiki.WikiSyncAlgorithmRunner"
+            id="org.flowerplatform.codesync.wiki.WikiSyncAlgorithmRunner"
+            technology="github">
+      </codeSyncAlgorithmRunner>
+   </extension>
+
+</plugin>

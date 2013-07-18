@@ -17,4 +17,13 @@
       </dragOnDiagramHandler>
    </extension>
 
+	<extension
+         point="org.flowerplatform.codesync.codeSyncAlgorithmRunner">
+      <codeSyncAlgorithmRunner
+            codeSyncAlgorithmRunnerClass="com.crispico.flower.mp.codesync.code.CodeSyncAlgorithmRunner"
+            id="org.flowerplatform.codesync.code.CodeSyncAlgorithmRunner"
+            technology="java">
+      </codeSyncAlgorithmRunner>
+   </extension>
+
 </plugin>

@@ -12,7 +12,7 @@ package org.flowerplatform.flexdiagram.controller.selection
 		
 		public var selectionRendererClass:Class;
 		
-		public function SelectionController(diagramShell:DiagramShell, selectionRendererClass:Class) {
+		public function SelectionController(diagramShell:DiagramShell, selectionRendererClass:Class = null) {
 			super(diagramShell);
 			this.selectionRendererClass = selectionRendererClass;
 		}
