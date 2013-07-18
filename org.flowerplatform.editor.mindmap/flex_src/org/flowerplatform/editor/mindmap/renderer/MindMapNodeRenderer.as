@@ -10,6 +10,7 @@ package org.flowerplatform.editor.mindmap.renderer {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Bounds;
+	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
@@ -27,7 +28,8 @@ package org.flowerplatform.editor.mindmap.renderer {
 		public function MindMapNodeRenderer() {
 			super();
 			iconFunction = getImage;
-			minHeight = 0;
+			minHeight = 10;
+			minWidth = 10;
 			setStyle("verticalAlign", "middle");
 			cacheAsBitmap = true;
 		}
@@ -64,7 +66,7 @@ package org.flowerplatform.editor.mindmap.renderer {
 			graphics.beginFill(0xCCCCCC, 0);
 			graphics.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, 10, 10);		
 			
-			if (data.children.length > 0 && data.expanded == false) {
+			if (MindMapNode(data).persistentChildren_RH.length > 0 && data.expanded == false) {
 				if (data.side == MindMapDiagramShell.LEFT) {
 					graphics.drawCircle(-circleRadius, height/2, circleRadius);
 				} else if (data.side == MindMapDiagramShell.RIGHT) {						
@@ -80,8 +82,8 @@ package org.flowerplatform.editor.mindmap.renderer {
 			if (super.data != null) {
 				View(data).removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 				
-				var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-				bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+//				var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+//				bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 				View(data).removeEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
 			}
 			
@@ -90,14 +92,14 @@ package org.flowerplatform.editor.mindmap.renderer {
 			if (data != null) {
 				View(data).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 				
-				bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-				bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+//				bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+//				bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 				View(data).addEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
 				
-				x = bounds.x;
-				y = bounds.y;
-				measuredWidth = bounds.width;
-				measuredHeight = bounds.height;
+//				x = data.x;
+//				y = data.y;
+//				measuredWidth = data.width;
+//				measuredHeight = data.height;
 				
 				if (View(data).viewDetails != null) {
 					viewDetailsUpdatedHandler(null);
@@ -106,36 +108,31 @@ package org.flowerplatform.editor.mindmap.renderer {
 		}
 				
 		protected function viewDetailsUpdatedHandler(event:Event):void {
-			label = View(data).viewDetails.label;
+			label = View(data).viewDetails.text;
 			if (iconDisplay) {
 				iconDisplay.source = getImage(null);
 			}
 			invalidateDisplayList();
 		}
 		
-		private function modelChangedHandler(event:PropertyChangeEvent):void {
-			if (event.target is Bounds) {
-				var bounds:Bounds = Bounds(event.target);
-				switch (event.property) {
-					case "x":
-						x = data.x;
-						break;
-					case "y":
-						y = data.y;
-						break;
-					case "height":
-						measuredHeight = bounds.height;
-						break;
-					case "width":
-						measuredWidth = bounds.width;
-						break;
-					case "expanded":
-						invalidateDisplayList();
-						break;
-				}
-			} else {				
-				invalidateDisplayList();				
-			}			
+		private function modelChangedHandler(event:PropertyChangeEvent):void {			
+			switch (event.property) {
+				case "x":
+					x = data.x;
+					break;
+				case "y":
+					y = data.y;
+					break;
+				case "height":
+					measuredHeight = data.height;
+					break;
+				case "width":
+					measuredWidth = data.width;
+					break;
+				case "expanded":
+					invalidateDisplayList();
+					break;
+			}					
 		}
 		
 	}

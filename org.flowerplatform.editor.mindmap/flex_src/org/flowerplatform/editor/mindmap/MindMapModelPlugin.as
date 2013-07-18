@@ -1,7 +1,9 @@
 package org.flowerplatform.editor.mindmap {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**
@@ -20,7 +22,12 @@ package org.flowerplatform.editor.mindmap {
 			if (INSTANCE != null) {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
-			INSTANCE = this;			
+			INSTANCE = this;
+			
+			var editorDescriptor:MindMapDiagramEditorDescriptor = new MindMapDiagramEditorDescriptor();
+			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
+			
 		}
 		
 		override protected function registerClassAliases():void {

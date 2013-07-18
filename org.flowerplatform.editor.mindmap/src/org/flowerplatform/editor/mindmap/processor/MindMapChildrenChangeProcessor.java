@@ -1,0 +1,35 @@
+package org.flowerplatform.editor.mindmap.processor;
+
+import org.eclipse.emf.ecore.EObject;
+import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
+import org.flowerplatform.emf_model.notation.MindMapNode;
+import org.flowerplatform.emf_model.notation.Node;
+import org.flowerplatform.emf_model.notation.NotationFactory;
+import org.flowerplatform.emf_model.notation.View;
+
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+
+/**
+ * @author Cristina Constantinescu
+ */
+public class MindMapChildrenChangeProcessor extends CodeSyncElementFeatureChangesProcessor {
+
+	@Override
+	protected int getNewViewsIndex(EObject object, View associatedViewOnOpenDiagram) {		
+		return 0;
+	}
+
+	@Override
+	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {
+		MindMapNode node = NotationFactory.eINSTANCE.createMindMapNode();
+		node.setViewType(getCodeSyncElement(child).getType());		
+		return node;
+	}
+
+	@Override
+	protected CodeSyncElement createModelElementChild(EObject object, View child) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

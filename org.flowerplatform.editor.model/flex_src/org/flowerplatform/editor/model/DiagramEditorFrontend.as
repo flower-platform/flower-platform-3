@@ -30,8 +30,12 @@ package org.flowerplatform.editor.model {
 	
 	public class DiagramEditorFrontend extends EditorFrontend {
 	
-		public var diagramShell:NotationDiagramShell;
+		public var diagramShell:DiagramShell;
 		
+		protected function getDiagramShellInstance():DiagramShell {
+			throw new Error("This should be implemented by subclasses!");
+		}
+				
 		override protected function createChildren():void {
 			var scroller:InfiniteScroller = new InfiniteScroller();
 			editor = scroller;
@@ -40,33 +44,10 @@ package org.flowerplatform.editor.model {
 			scroller.viewport = diagramRenderer;
 			diagramRenderer.horizontalScrollPosition = diagramRenderer.verticalScrollPosition = 0;
 			
-			diagramShell = new NotationDiagramShell();
+			diagramShell = getDiagramShellInstance();
 			diagramShell.diagramRenderer = diagramRenderer;
-			diagramShell.editorStatefulClient = DiagramEditorStatefulClient(editorStatefulClient);
-			diagramShell.registerTools([
-				ScrollTool, SelectOnClickTool, InplaceEditorTool, ResizeTool, 
-				DragToCreateRelationTool, DragTool/*, SelectOrDragToCreateElementTool*/, ZoomTool]);
-
-			super.createChildren();
-			
-			var testButton:Button = new Button();
-			resourceStatusBar.addChild(testButton);
-			testButton.label = "Test/Rename class";
-			
-			var textInput:TextInput = new TextInput();
-			resourceStatusBar.addChild(textInput);
-			textInput.text = "MyTest";
-			
-			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-				DiagramEditorStatefulClient(editorStatefulClient).service_setInplaceEditorText(View(diagramShell.selectedItems.getItemAt(0)).id, textInput.text);
-			});
-			
-			testButton = new Button();
-			resourceStatusBar.addChild(testButton);
-			testButton.label = "Test/Expand attributes";
-			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-				DiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment(View(diagramShell.selectedItems.getItemAt(0)).id);
-			});
+						
+			super.createChildren();			
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {

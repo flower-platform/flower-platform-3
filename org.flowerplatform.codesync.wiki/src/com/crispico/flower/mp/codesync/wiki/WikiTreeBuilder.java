@@ -1,8 +1,5 @@
 package com.crispico.flower.mp.codesync.wiki;
 
-import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.PARAGRAPH_CATEGORY;
-import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.FLOWER_BLOCK_CATEGORY;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,9 +21,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class WikiTreeBuilder extends RegexProcessingSession {
 
-	public static final String FOLDER_CATEGORY = "folder";
-	public static final String PAGE_CATEGORY = "page";
-	
 	/**
 	 * Used for final levels (e.g. paragraphs).
 	 */
@@ -59,7 +53,7 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 		this.currentNode = root;
 		for (Iterator it = root.getChildren().iterator(); it.hasNext();) {
 			CodeSyncElement child = (CodeSyncElement) it.next();
-			if (!PAGE_CATEGORY.equals(child.getType()) && !FOLDER_CATEGORY.equals(child.getType())) {
+			if (!WikiPlugin.PAGE_CATEGORY.equals(child.getType()) && !WikiPlugin.FOLDER_CATEGORY.equals(child.getType())) {
 				it.remove();
 			}
 		}
@@ -111,7 +105,7 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 	 * Creates and populates a {@link CodeSyncElement} for the matched <code>category</code>.
 	 */
 	protected CodeSyncElement createWikiNode(String category) {
-		if (FLOWER_BLOCK_CATEGORY.equals(category)) {
+		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(category)) {
 			return createFlowerBlockNode();
 		}
 		CodeSyncElement cse = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
@@ -143,7 +137,7 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 		CodeSyncElement cse = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
 		FlowerBlock flowerBlock = WikiPackage.eINSTANCE.getWikiFactory().createFlowerBlock();
 		cse.setName(name);
-		cse.setType(FLOWER_BLOCK_CATEGORY);
+		cse.setType(WikiPlugin.FLOWER_BLOCK_CATEGORY);
 		flowerBlock.setContent(content);
 		flowerBlock.setLineStart(lineStart);
 		flowerBlock.setLineEnd(lineEnd);
@@ -176,20 +170,20 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 	 * level will contain nodes with higher levels.
 	 */
 	protected int getLevelForCategory(String category) {
-		if (PARAGRAPH_CATEGORY.equals(category)) {
+		if (WikiPlugin.PARAGRAPH_CATEGORY.equals(category)) {
 			return LEAF_LEVEL;
 		}
 		int headlineLevel = WikiPlugin.getInstance().getHeadlineLevel(category);
 		if (headlineLevel > 0) {
 			return headlineLevel;
 		}
-		if (FOLDER_CATEGORY.equals(category)) {
+		if (WikiPlugin.FOLDER_CATEGORY.equals(category)) {
 			return -1;
 		}
-		if (PAGE_CATEGORY.equals(category)) {
+		if (WikiPlugin.PAGE_CATEGORY.equals(category)) {
 			return FILE_LEVEL;	// page can contain anything that is not a folder
 		}
-		if (FLOWER_BLOCK_CATEGORY.equals(category)) {
+		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(category)) {
 			return LEAF_LEVEL;	// cannot have children
 		}
 		return -1;

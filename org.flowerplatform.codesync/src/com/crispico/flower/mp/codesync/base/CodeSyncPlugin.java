@@ -41,7 +41,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
 		
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
+//		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {

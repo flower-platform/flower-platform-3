@@ -1,5 +1,6 @@
 package org.flowerplatform.editor.model.change_processor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,13 +26,17 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(DiagramUpdaterChangeProcessor.class);
 	
 	// TODO CS/CS3 vizib public de test
-	public Map<String, IDiagrammableElementFeatureChangesProcessor> diagrammableElementFeatureChangeProcessors = new HashMap<String, IDiagrammableElementFeatureChangesProcessor>();
+	public Map<String, List<IDiagrammableElementFeatureChangesProcessor>> diagrammableElementFeatureChangeProcessors = new HashMap<String, List<IDiagrammableElementFeatureChangesProcessor>>();
 	
 	public void addDiagrammableElementFeatureChangeProcessor(String viewType, IDiagrammableElementFeatureChangesProcessor processor) {
-		diagrammableElementFeatureChangeProcessors.put(viewType, processor);
+		List<IDiagrammableElementFeatureChangesProcessor> processors = diagrammableElementFeatureChangeProcessors.get(viewType);
+		if (processors == null) {
+			diagrammableElementFeatureChangeProcessors.put(viewType, new ArrayList<IDiagrammableElementFeatureChangesProcessor>());
+		}
+		diagrammableElementFeatureChangeProcessors.get(viewType).add(processor);
 	}
 	
-	public IDiagrammableElementFeatureChangesProcessor getDiagrammableElementFeatureChangesProcessor(String viewType) {
+	public List<IDiagrammableElementFeatureChangesProcessor> getDiagrammableElementFeatureChangesProcessors(String viewType) {
 		return diagrammableElementFeatureChangeProcessors.get(viewType);
 	}
 	
@@ -71,9 +76,11 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().add(object);
 			if (object instanceof View) {
 				View view = (View) object;
-				IDiagrammableElementFeatureChangesProcessor processor = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessor(view.getViewType());
-				if (processor != null) {
-					processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);
+				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+				if (processors != null) {
+					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+						processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);
+					}
 				}
 			}
 		} else {
@@ -190,12 +197,14 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		for (Setting setting : adapter.getNonNavigableInverseReferences(diagrammableElement)) {
 			if (NotationPackage.eINSTANCE.getView_DiagrammableElement().equals(setting.getEStructuralFeature())) {
 				View view = (View) setting.getEObject();
-				IDiagrammableElementFeatureChangesProcessor processor = getDiagrammableElementFeatureChangesProcessor(view.getViewType());
-				if (processor != null) {
+				List<IDiagrammableElementFeatureChangesProcessor> processors = getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+				if (processors != null) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Delegating to IDiagrammableElementFeatureChangesProcessor for view = {}, object = {}", view, diagrammableElement);
 					}
-					processor.processFeatureChanges(diagrammableElement, entry.getValue(), view, context);
+					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+						processor.processFeatureChanges(diagrammableElement, entry.getValue(), view, context);
+					}
 				}
 			}			
 		}

@@ -17,7 +17,10 @@ package org.flowerplatform.editor.mindmap.controller {
 	public class MindMapNodeController implements IMindMapModelController {
 		
 		public function getParent(model:Object):Object {
-			return MindMapNode(model).parentView_RH;
+			if (MindMapNode(model).parentView_RH != null) {
+				return ReferenceHolder(MindMapNode(model).parentView_RH).referencedObject;
+			}
+			return null;
 		}
 		
 		public function setParent(model:Object, value:Object):void {
@@ -53,35 +56,35 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 				
 		public function getX(model:Object):Number {
-			return Bounds(MindMapNode(model).layoutConstraint_RH).x;
+			return MindMapNode(model).x;			
 		}
 		
 		public function setX(model:Object, value:Number):void {
-			Bounds(MindMapNode(model).layoutConstraint_RH).x = value;
+			MindMapNode(model).x = value;
 		}
 		
 		public function getY(model:Object):Number {
-			return Bounds(MindMapNode(model).layoutConstraint_RH).y;
+			return MindMapNode(model).y;			
 		}
 		
 		public function setY(model:Object, value:Number):void {
-			Bounds(MindMapNode(model).layoutConstraint_RH).y = value;
+			MindMapNode(model).y = value;
 		}
 		
 		public function getWidth(model:Object):Number {		
-			return Bounds(MindMapNode(model).layoutConstraint_RH).width;
+			return MindMapNode(model).width;
 		}
 		
 		public function setWidth(model:Object, value:Number):void {			
-			Bounds(MindMapNode(model).layoutConstraint_RH).width = value;
+			MindMapNode(model).width = value;
 		}
 		
 		public function getHeight(model:Object):Number {
-			return Bounds(MindMapNode(model).layoutConstraint_RH).height;
+			return MindMapNode(model).height;			
 		}
 		
 		public function setHeight(model:Object, value:Number):void {
-			Bounds(MindMapNode(model).layoutConstraint_RH).height = value;
+			MindMapNode(model).height = value;
 		}
 		
 		public function getExpanded(model:Object):Boolean {
@@ -89,7 +92,10 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function setExpanded(model:Object, value:Boolean):void {
+			var oldValue:Boolean = MindMapNode(model).expanded;
 			MindMapNode(model).expanded = value;
+			
+			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "expanded", oldValue, value));
 		}
 		
 		public function getSide(model:Object):int {

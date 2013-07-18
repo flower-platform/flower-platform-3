@@ -17,6 +17,7 @@
 			import mx.events.MoveEvent;
 			import mx.events.ResizeEvent;
 			
+			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 			import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
@@ -33,10 +34,9 @@
 					
 				DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);				
 				// update position
-				handleTargetMoveResize(null);
-				
-				if (getTargetModel().children.length > 0 && getTargetModel().parent != null) {	
-					vLine.visible=!getTargetModel().expanded;
+				handleTargetMoveResize(null);				
+				if (MindMapNode(getTargetModel()).persistentChildren_RH.length > 0 && MindMapNode(getTargetModel()).parentView_RH != null) {	
+					vLine.visible = !getTargetModel().expanded;
 					diagramShell.diagramRenderer.addElement(circle);
 				}
 			}
@@ -87,7 +87,7 @@
 				event.stopImmediatePropagation();
 			}
 			
-			protected function circle_mouseDownUpHandler(event:MouseEvent):void 	{
+			protected function circle_mouseDownUpHandler(event:MouseEvent):void {
 				event.preventDefault();
 				event.stopImmediatePropagation();
 			}

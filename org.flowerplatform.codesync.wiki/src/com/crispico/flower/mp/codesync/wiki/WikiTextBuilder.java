@@ -20,7 +20,7 @@ public abstract class WikiTextBuilder {
 		if (tree == null || tree.getAstCacheElement() == null) {
 			return null;
 		}
-		if (WikiTreeBuilder.PAGE_CATEGORY.equals(tree.getType())) {
+		if (WikiPlugin.PAGE_CATEGORY.equals(tree.getType())) {
 			Page page = (Page) tree.getAstCacheElement();
 			lineDelimiter = page.getLineDelimiter();
 			generateWikiText(tree);
@@ -39,14 +39,14 @@ public abstract class WikiTextBuilder {
 	
 	protected String buildText(CodeSyncElement node) {
 		String category = node.getType();
-		if (PARAGRAPH_CATEGORY.equals(category)) {
+		if (WikiPlugin.PARAGRAPH_CATEGORY.equals(category)) {
 			return String.format("%s", node.getName() + lineDelimiter);
 		}
 		int headlineLevel = WikiPlugin.getInstance().getHeadlineLevel(category);
 		if (headlineLevel > 0) {
 			return formatHeadline(node, headlineLevel);
 		}
-		if (FLOWER_BLOCK_CATEGORY.equals(node.getType())) {
+		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(node.getType())) {
 			builder.append(formatFlowerBlock(node));
 		}
 		return "";
