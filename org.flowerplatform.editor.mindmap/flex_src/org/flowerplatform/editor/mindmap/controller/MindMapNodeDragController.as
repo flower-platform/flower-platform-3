@@ -1,4 +1,4 @@
-package org.flowerplatform.flexdiagram.mindmap.controller {
+package org.flowerplatform.editor.mindmap.controller {
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
 	import flash.geom.Point;
@@ -13,6 +13,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
 	import org.flowerplatform.flexdiagram.ui.MoveResizePlaceHolder;
@@ -20,9 +21,9 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class MindMapDragController extends ControllerBase implements IDragController {
+	public class MindMapNodeDragController extends ControllerBase implements IDragController {
 		
-		public function MindMapDragController(diagramShell:DiagramShell) {
+		public function MindMapNodeDragController(diagramShell:DiagramShell) {
 			super(diagramShell);
 		}
 		

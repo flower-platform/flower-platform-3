@@ -16,7 +16,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
-	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapDragController;
+	import org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapDragController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapModelInplaceEditorController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapModelRendererController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;

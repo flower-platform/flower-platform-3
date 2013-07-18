@@ -71,6 +71,15 @@ public interface NotationFactory extends EFactory {
 	Note createNote();
 
 	/**
+	 * Returns a new object of class '<em>Mind Map Node</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mind Map Node</em>'.
+	 * @generated
+	 */
+	MindMapNode createMindMapNode();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
