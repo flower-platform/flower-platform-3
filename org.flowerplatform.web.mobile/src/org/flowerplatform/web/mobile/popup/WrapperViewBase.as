@@ -15,6 +15,7 @@ package org.flowerplatform.web.mobile.popup {
 	import org.flowerplatform.flexutil.popup.IPopupHost;
 	import org.flowerplatform.web.mobile.spinner.MobileSpinner;
 	
+	import spark.components.CalloutButton;
 	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.SkinnableContainer;
@@ -27,6 +28,8 @@ package org.flowerplatform.web.mobile.popup {
 	public class WrapperViewBase extends View implements IPopupHost {
 		
 		protected var openMenuAction:OpenMenuAction;
+		
+		protected var showOpenEditorsCalloutButton:ShowOpenEditorsCalloutButton;
 		
 		protected var iconComponent:BitmapImage;
 		
@@ -41,6 +44,7 @@ package org.flowerplatform.web.mobile.popup {
 		public function WrapperViewBase() {
 			super();
 			openMenuAction = new OpenMenuAction(this);
+			showOpenEditorsCalloutButton = new ShowOpenEditorsCalloutButton();
 			addEventListener(FlexEvent.MENU_KEY_PRESSED, menuKeyPressedEvent);
 		}
 		
@@ -112,6 +116,8 @@ package org.flowerplatform.web.mobile.popup {
 			});
 			
 			openMenuAction.viewMenuItems = newViewMenuItems;
+			
+			newActionContent.push(showOpenEditorsCalloutButton);
 			
 			var menuButton:ActionButton = new ActionButton();
 			populateButtonWithAction(menuButton, openMenuAction);

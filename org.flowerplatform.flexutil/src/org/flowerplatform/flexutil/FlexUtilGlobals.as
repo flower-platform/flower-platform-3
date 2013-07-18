@@ -1,4 +1,5 @@
 package org.flowerplatform.flexutil {
+	import mx.collections.ArrayCollection;
 	import mx.utils.LoaderUtil;
 	
 	import org.flowerplatform.flexutil.context_menu.ContextMenuManager;
@@ -58,9 +59,5 @@ package org.flowerplatform.flexutil {
 			}
 		}
 		
-		public function viewsRemoved(event:ViewsRemovedEvent):void {
-			
-		}
-
 	}
 }

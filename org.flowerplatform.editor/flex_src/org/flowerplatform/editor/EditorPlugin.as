@@ -1,16 +1,22 @@
 package org.flowerplatform.editor {
+	import flash.utils.Dictionary;
+	
+	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.editor.remote.CreateEditorStatefulClientCommand;
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditableResourceClient;
+	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 	import org.flowerplatform.editor.remote.InitializeEditorPluginClientCommand;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	
 	/**
 	 * @author Cristi
@@ -78,5 +84,19 @@ package org.flowerplatform.editor {
 			}
 			return result;
 		}
+		
+		public function viewsRemoved(event:ViewsRemovedEvent):void {
+			var editorStatefulClients:Dictionary = new Dictionary();
+			for each (var view:Object in event.removedViews) {
+				if (view is EditorFrontend) {
+					var editorStatefulClient:EditorStatefulClient = EditorFrontend(view).editorStatefulClient;
+					if (editorStatefulClients[editorStatefulClient.editableResourcePath] == null) {
+						CommunicationPlugin.getInstance().statefulClientRegistry.unregister(editorStatefulClient, null);
+						editorStatefulClients[editorStatefulClient.editableResourcePath] = editorStatefulClient;
+					}
+				}
+			}
+		}
+		
 	}
 }

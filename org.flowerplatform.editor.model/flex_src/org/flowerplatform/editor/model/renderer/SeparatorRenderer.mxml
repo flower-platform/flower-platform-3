@@ -39,8 +39,8 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<s:Button label="Collapse" click="{collapse()}"/>
-	<s:Button label="Filter"/>
-	<s:Button label="New" click="{addNew()}"/>
+	<mx:Button label="Collapse" click="{collapse()}"/>
+	<mx:Button label="Filter"/>
+	<mx:Button label="New" click="{addNew()}"/>
 	
 </s:DataRenderer>

@@ -32,6 +32,12 @@ package org.flowerplatform.editor.model.remote {
 			return false;
 		}
 		
+		override protected function copyLocalDataFromExistingEditorToNewEditor(existingEditor:EditorFrontend, newEditor:EditorFrontend):void {
+			super.copyLocalDataFromExistingEditorToNewEditor(existingEditor, newEditor);
+			DiagramEditorFrontend(newEditor).diagramShell.rootModel = DiagramEditorFrontend(existingEditor).diagramShell.rootModel;
+			
+		}
+		
 		///////////////////////////////////////////////////////////////
 		// Proxies to service methods
 		///////////////////////////////////////////////////////////////

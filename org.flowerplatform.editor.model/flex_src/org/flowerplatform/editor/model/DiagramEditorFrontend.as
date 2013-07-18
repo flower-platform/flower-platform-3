@@ -14,6 +14,14 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
+	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
+	import org.flowerplatform.flexdiagram.tool.DragTool;
+	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
+	import org.flowerplatform.flexdiagram.tool.ResizeTool;
+	import org.flowerplatform.flexdiagram.tool.ScrollTool;
+	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
+	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
+	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	
 	import spark.components.Button;
@@ -35,6 +43,9 @@ package org.flowerplatform.editor.model {
 			diagramShell = new NotationDiagramShell();
 			diagramShell.diagramRenderer = diagramRenderer;
 			diagramShell.editorStatefulClient = DiagramEditorStatefulClient(editorStatefulClient);
+			diagramShell.registerTools([
+				ScrollTool, SelectOnClickTool, InplaceEditorTool, ResizeTool, 
+				DragToCreateRelationTool, DragTool/*, SelectOrDragToCreateElementTool*/, ZoomTool]);
 
 			super.createChildren();
 			

@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -42,6 +43,11 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	
 	private static final Logger logger = LoggerFactory.getLogger(DiagramEditorStatefulService.class);
 
+	public DiagramEditorStatefulService() {
+		super();
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+	}
+	
 	@Override
 	protected boolean areLocalUpdatesAppliedImmediately() {
 		return false;
