@@ -53,6 +53,19 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static final String ACE_FILE_LOCATION = "/WikiCache.notation";
 	
+	public static final String FOLDER_CATEGORY = "folder";
+	public static final String PAGE_CATEGORY = "page";
+		
+	public static final String HEADLINE_LEVEL_1_CATEGORY = "headline 1";
+	public static final String HEADLINE_LEVEL_2_CATEGORY = "headline 2";
+	public static final String HEADLINE_LEVEL_3_CATEGORY = "headline 3";
+	public static final String HEADLINE_LEVEL_4_CATEGORY = "headline 4";
+	public static final String HEADLINE_LEVEL_5_CATEGORY = "headline 5";
+	public static final String HEADLINE_LEVEL_6_CATEGORY = "headline 6";
+	
+	public static final String PARAGRAPH_CATEGORY = "paragraph";
+	public static final String FLOWER_BLOCK_CATEGORY = "flowerBlock";
+	
 	protected Map<IProject, AdapterFactoryEditingDomain> editingDomains = new HashMap<IProject, AdapterFactoryEditingDomain>();
 	
 	protected Map<String, IConfigurationProvider> configurationProviders = new HashMap<String, IConfigurationProvider>();
@@ -112,7 +125,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		
 		ModelAdapterFactorySet factorySet = new ModelAdapterFactorySet(ancestorFactory, leftFactory, rightFactory);
 		factorySet.addFeatureProvider(CodeSyncElement.class, new CodeSyncElementFeatureProvider());
-		factorySet.addFeatureProvider(WikiTreeBuilder.PAGE_CATEGORY, new WikiPageFeatureProvider());
+		factorySet.addFeatureProvider(WikiPlugin.PAGE_CATEGORY, new WikiPageFeatureProvider());
 		
 		match.setEditableResource(editableResource);
 		editableResource.setMatch(match);

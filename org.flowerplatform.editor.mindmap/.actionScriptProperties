@@ -9,11 +9,12 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/core.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.flexdiagram/bin/org.flowerplatform.flexdiagram.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexdiagram/bin/org.flowerplatform.flexdiagram.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexutil/bin/org.flowerplatform.flexutil.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor.model/public-resources/swc/org.flowerplatform.editor.model.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.common/public-resources/swc/org.flowerplatform.common.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.communication/public-resources/swc/org.flowerplatform.communication.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor/public-resources/swc/org.flowerplatform.editor.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

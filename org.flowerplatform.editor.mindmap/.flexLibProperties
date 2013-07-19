@@ -2,6 +2,9 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.editor.mindmap.MindMapModelPlugin"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.MindMapDiagramEditorFrontend"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.MindMapDiagramEditorDescriptor"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

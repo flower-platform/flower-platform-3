@@ -26,12 +26,12 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 	@Override
 	public void buildConfiguration(WikiRegexConfiguration config, CodeSyncElement cse) {
 		config
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_1_CATEGORY, getHeadline(1), HEADLINE_LEVEL_1_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_2_CATEGORY, getHeadline(2), HEADLINE_LEVEL_2_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_3_CATEGORY, getHeadline(3), HEADLINE_LEVEL_3_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_4_CATEGORY, getHeadline(4), HEADLINE_LEVEL_4_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_5_CATEGORY, getHeadline(5), HEADLINE_LEVEL_5_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, PARAGRAPH_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, getHeadline(1), WikiPlugin.HEADLINE_LEVEL_1_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, getHeadline(2), WikiPlugin.HEADLINE_LEVEL_2_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_3_CATEGORY, getHeadline(3), WikiPlugin.HEADLINE_LEVEL_3_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_4_CATEGORY, getHeadline(4), WikiPlugin.HEADLINE_LEVEL_4_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_5_CATEGORY, getHeadline(5), WikiPlugin.HEADLINE_LEVEL_5_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, WikiPlugin.PARAGRAPH_CATEGORY))
 		.setUseUntilFoundThisIgnoreAll(false);
 	}
 	
@@ -62,7 +62,7 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 		List<DokuWikiPage> pages = (List<DokuWikiPage>) wiki;
 		CodeSyncRoot root = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncRoot();
 		root.setName(DokuWikiPlugin.getInstance().getWikiName());
-		root.setType(WikiTreeBuilder.FOLDER_CATEGORY);
+		root.setType(WikiPlugin.FOLDER_CATEGORY);
 		if (pages != null) {
 			for (DokuWikiPage page : pages) {
 				CodeSyncElement crtNode = root;
@@ -73,9 +73,9 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 					if (child == null) {
 						child = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
 						child.setName(fragment);
-						child.setType(WikiTreeBuilder.FOLDER_CATEGORY);
+						child.setType(WikiPlugin.FOLDER_CATEGORY);
 						if (i == fragments.length - 1) {
-							child.setType(WikiTreeBuilder.PAGE_CATEGORY);
+							child.setType(WikiPlugin.PAGE_CATEGORY);
 							Page wikiPage = WikiPackage.eINSTANCE.getWikiFactory().createPage();
 							wikiPage.setInitialContent(page.getContent());
 							wikiPage.setLineDelimiter(WikiPlugin.getInstance().getLineDelimiter(page.getContent()));

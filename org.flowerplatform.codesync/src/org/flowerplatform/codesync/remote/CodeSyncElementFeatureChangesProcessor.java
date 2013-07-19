@@ -22,8 +22,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (object == null) {
 			return;
-		}
-		
+		}		
 		if (featureChanges == null) {
 			// full content
 			processFeatureChange(object, null, associatedViewOnOpenDiagram, context);
@@ -54,6 +53,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 					Node newView = createChildView(associatedViewOnOpenDiagram, child);
 					newView.setDiagrammableElement(child);
 					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
+//					newView.setParentView(associatedViewOnOpenDiagram);
 					newViewsIndex++;
 				}
 			}

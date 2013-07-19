@@ -59,8 +59,8 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 				@Override
 				protected boolean isAccepted(Object candidate) {
 					String candidateType = getWikiNode(candidate).getType();
-					return WikiTreeBuilder.FOLDER_CATEGORY.equals(candidateType) 
-							|| WikiTreeBuilder.PAGE_CATEGORY.equals(candidateType);
+					return WikiPlugin.FOLDER_CATEGORY.equals(candidateType) 
+							|| WikiPlugin.PAGE_CATEGORY.equals(candidateType);
 				}
 			};
 		}

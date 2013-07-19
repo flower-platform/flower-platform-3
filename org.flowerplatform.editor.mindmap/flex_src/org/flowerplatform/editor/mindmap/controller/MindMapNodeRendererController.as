@@ -6,14 +6,13 @@ package org.flowerplatform.editor.mindmap.controller {
 	import mx.core.IVisualElementContainer;
 	import mx.events.PropertyChangeEvent;
 	
-	import org.flowerplatform.editor.mindmap.renderer.MindMapNodeRenderer;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapConnector;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
-	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -27,6 +26,10 @@ package org.flowerplatform.editor.mindmap.controller {
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 			IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 			addConnector(model);
+			
+			if (model.expanded) {
+				getModelController(model).setExpanded(model, true);
+			}
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {
@@ -58,7 +61,7 @@ package org.flowerplatform.editor.mindmap.controller {
 					addModelToRootChildren(model);
 				}
 				// refresh structure
-				MindMapDiagramShell(diagramShell).refreshNodePositions(ParentAwareArrayList(diagramShell.rootModel).getItemAt(0));
+				MindMapDiagramShell(diagramShell).refreshNodePositions(Diagram(diagramShell.rootModel).persistentChildren_RH.getItemAt(0));
 			}
 			
 			if (event.property == "expanded") {				
@@ -81,7 +84,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		private function removeModelFromRootChildren(model:Object, removeOnlyChildren:Boolean = false):void {
 			var children:ArrayList = new ArrayList();
-			children.addAll(ParentAwareArrayList(diagramShell.rootModel));
+			children.addAll(diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel));
 			for (var i:int = 0; i < children.length; i++) {
 				var child:Object = children.getItemAt(i);
 				if (model == getModelController(child).getParent(child)) {
@@ -89,13 +92,13 @@ package org.flowerplatform.editor.mindmap.controller {
 				}
 			}
 			if (!removeOnlyChildren) {
-				ParentAwareArrayList(diagramShell.rootModel).removeItem(model);				
+				ArrayList(Diagram(diagramShell.rootModel).persistentChildren_RH).removeItem(model);				
 			}
 		}
 		
 		private function addModelToRootChildren(model:Object, addOnlyChildren:Boolean = false):void {
 			if (!addOnlyChildren) {
-				ParentAwareArrayList(diagramShell.rootModel).addItem(model);
+				Diagram(diagramShell.rootModel).persistentChildren_RH.addItem(model);
 			}		
 			if (getModelController(model).getExpanded(model)) {
 				var children:ArrayList = MindMapDiagramShell(diagramShell).getModelController(model).getChildren(model);

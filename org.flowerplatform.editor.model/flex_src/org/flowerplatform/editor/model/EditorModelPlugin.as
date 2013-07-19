@@ -53,7 +53,7 @@ package org.flowerplatform.editor.model {
 			}
 			INSTANCE = this;
 			
-			var editorDescriptor:DiagramEditorDescriptor = new DiagramEditorDescriptor();
+			var editorDescriptor:NotationDiagramEditorDescriptor = new NotationDiagramEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 			

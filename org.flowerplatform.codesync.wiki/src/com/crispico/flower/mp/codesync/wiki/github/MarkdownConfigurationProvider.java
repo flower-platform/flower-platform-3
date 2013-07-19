@@ -7,6 +7,7 @@ import org.flowerplatform.common.regex.RegexWithAction;
 import astcache.wiki.Page;
 
 import com.crispico.flower.mp.codesync.wiki.IConfigurationProvider;
+import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
 import com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration;
 import com.crispico.flower.mp.codesync.wiki.WikiTextBuilder;
 import com.crispico.flower.mp.codesync.wiki.WikiTreeBuilder;
@@ -24,15 +25,15 @@ public class MarkdownConfigurationProvider implements IConfigurationProvider {
 	@Override
 	public void buildConfiguration(WikiRegexConfiguration config, CodeSyncElement cse) {
 		config
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_6_CATEGORY, getHeadline(6), HEADLINE_LEVEL_6_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_5_CATEGORY, getHeadline(5), HEADLINE_LEVEL_5_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_4_CATEGORY, getHeadline(4), HEADLINE_LEVEL_4_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_3_CATEGORY, getHeadline(3), HEADLINE_LEVEL_3_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_2_CATEGORY, getHeadline(2), HEADLINE_LEVEL_2_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_1_CATEGORY, getHeadline(1), HEADLINE_LEVEL_1_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_6_CATEGORY, getHeadline(6), WikiPlugin.HEADLINE_LEVEL_6_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_5_CATEGORY, getHeadline(5), WikiPlugin.HEADLINE_LEVEL_5_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_4_CATEGORY, getHeadline(4), WikiPlugin.HEADLINE_LEVEL_4_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_3_CATEGORY, getHeadline(3), WikiPlugin.HEADLINE_LEVEL_3_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, getHeadline(2), WikiPlugin.HEADLINE_LEVEL_2_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, getHeadline(1), WikiPlugin.HEADLINE_LEVEL_1_CATEGORY))
 //		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_1_CATEGORY, HEADLINE_LEVEL_1_UNDERLINE, HEADLINE_LEVEL_1_CATEGORY))
 //		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_2_CATEGORY, HEADLINE_LEVEL_2_UNDERLINE, HEADLINE_LEVEL_2_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, PARAGRAPH_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, WikiPlugin.PARAGRAPH_CATEGORY))
 		.setUseUntilFoundThisIgnoreAll(false);
 	}
 

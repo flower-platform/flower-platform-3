@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.flowerplatform.editor.fileExtensionToContentTypeMapping">
+      <fileExtensionToContentTypeMapping
+            contentType="mindmap"
+            fileExtension="mindmap">
+      </fileExtensionToContentTypeMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.contentType">
+      <contentType
+            contentType="mindmap">
+      </contentType>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.contentTypeToEditorMapping">
+      <contentTypeToEditorMapping
+            compatibleEditor="mindmap"
+            contentType="mindmap"
+            editorStatefulService="org.flowerplatform.editor.model.remote.DiagramEditorStatefulService"
+            serviceId="diagramEditorStatefulService">
+      </contentTypeToEditorMapping>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="mindMapDiagramOperationsService"
+            serviceClass="org.flowerplatform.editor.mindmap.remote.MindMapDiagramOperationsService">
+      </service>
+   </extension>
+
+</plugin>

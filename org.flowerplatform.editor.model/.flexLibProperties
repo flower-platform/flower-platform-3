@@ -10,6 +10,9 @@
     <classEntry path="org.flowerplatform.editor.model.action.DragOnDiagramAction"/>
     <classEntry path="org.flowerplatform.editor.model.remote.ViewDetailsUpdate"/>
     <classEntry path="org.flowerplatform.editor.model.renderer.SeparatorRenderer"/>
+    <classEntry path="org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient"/>
+    <classEntry path="org.flowerplatform.editor.model.NotationDiagramEditorDescriptor"/>
+    <classEntry path="org.flowerplatform.editor.model.NotationDiagramEditorFrontend"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

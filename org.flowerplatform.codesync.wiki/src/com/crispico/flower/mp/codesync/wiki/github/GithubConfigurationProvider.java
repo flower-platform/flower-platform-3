@@ -59,7 +59,7 @@ public class GithubConfigurationProvider implements IConfigurationProvider {
 	public CodeSyncRoot getWikiTree(Object wiki) {
 		File file = (File) wiki;
 		CodeSyncRoot root = CodeSyncFactory.eINSTANCE.createCodeSyncRoot();
-		root.setType(WikiTreeBuilder.FOLDER_CATEGORY);
+		root.setType(WikiPlugin.FOLDER_CATEGORY);
 		if (file != null) {
 			if (file.isDirectory()) {
 				root.setName(file.getPath());
@@ -83,14 +83,14 @@ public class GithubConfigurationProvider implements IConfigurationProvider {
 		cse.setName(file.getName());
 		if (file.isDirectory()) {
 			// create new dir
-			cse.setType(WikiTreeBuilder.FOLDER_CATEGORY);
+			cse.setType(WikiPlugin.FOLDER_CATEGORY);
 			for (File child : file.listFiles()) {
 				// recurse for the files in this dir
 				createWikiPage(child, cse);
 			}
 		} else {
 			// create new page
-			cse.setType(WikiTreeBuilder.PAGE_CATEGORY);
+			cse.setType(WikiPlugin.PAGE_CATEGORY);
 			Page page = WikiFactory.eINSTANCE.createPage();
 			String content;
 			try {

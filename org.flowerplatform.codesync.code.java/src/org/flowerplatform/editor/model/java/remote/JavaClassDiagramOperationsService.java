@@ -1,5 +1,7 @@
 package org.flowerplatform.editor.model.java.remote;
 
+import java.util.List;
+
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
@@ -89,9 +91,11 @@ public class JavaClassDiagramOperationsService {
 	}
 	
 	protected void notifyProcessors(View view) {
-		IDiagrammableElementFeatureChangesProcessor processor = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessor(view.getViewType());
-		if (processor != null) {
-			processor.processFeatureChanges(view.getDiagrammableElement(), null, view, null);
+		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+		if (processors != null) {
+			for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+				processor.processFeatureChanges(view.getDiagrammableElement(), null, view, null);
+			}
 		}
 	}
 }

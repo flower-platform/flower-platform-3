@@ -104,7 +104,7 @@ public class WikiSyncAlgorithm extends CodeSyncAlgorithm {
 	
 	private boolean isPage(Object node) {
 		CodeSyncElement cse = (CodeSyncElement) node;
-		return cse == null || cse.getType().equals(WikiTreeBuilder.PAGE_CATEGORY);
+		return cse == null || cse.getType().equals(WikiPlugin.PAGE_CATEGORY);
 	}
 	
 }

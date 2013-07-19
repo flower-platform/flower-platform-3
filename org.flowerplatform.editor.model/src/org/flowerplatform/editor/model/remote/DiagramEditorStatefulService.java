@@ -146,9 +146,11 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			EObject next = iter.next();
 			if (next instanceof View) {
 				View child = (View) next;
-				IDiagrammableElementFeatureChangesProcessor processor = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessor(child.getViewType());
-				if (processor != null) {
-					processor.processFeatureChanges(child.getDiagrammableElement(), null, child, processingContext);
+				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(child.getViewType());
+				if (processors != null) {
+					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+						processor.processFeatureChanges(child.getDiagrammableElement(), null, child, processingContext);
+					}
 				}
 				iterateContents(child, list, processingContext);
 			}

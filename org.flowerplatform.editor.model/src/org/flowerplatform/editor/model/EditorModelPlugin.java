@@ -69,7 +69,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 
 		new CustomSerializationDescriptor(MindMapNode.class)
 		.addDeclaredProperties(viewSD.getDeclaredProperties())
-		.addDeclaredProperty("extended")
+		.addDeclaredProperty("expanded")
 		.addDeclaredProperty("side")
 		.register();
 		

@@ -4,6 +4,7 @@ package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	
 	public class DragOnDiagramAction extends ActionBase {
@@ -25,7 +26,7 @@ package org.flowerplatform.editor.model.action {
 				var path:ArrayCollection = treeNode.getPathForNode(true);
 				pathsWithRoot.addItem(path);
 			}
-			DiagramEditorStatefulClient.TEMP_INSTANCE.service_handleDragOnDiagram(pathsWithRoot);
+			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_handleDragOnDiagram(pathsWithRoot);
 		}
 		
 	}
