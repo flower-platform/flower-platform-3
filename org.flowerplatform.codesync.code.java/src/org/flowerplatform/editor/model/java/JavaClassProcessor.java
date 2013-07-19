@@ -12,16 +12,20 @@ import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapter;
+import com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
- * @author Mariana
+ * @author Mariana Gheorghe
  */
 public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 
 	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram, List<Node> childViews, Map<String, Object> context) {
 		// attributes
 		super.processChildren(object, filterChildModelElements(childModelElements, JavaAttributeModelAdapter.ATTRIBUTE), associatedViewOnOpenDiagram, filterChildViews(childViews, "classAttribute"), context);
+		
+		// operations
+		super.processChildren(object, filterChildModelElements(childModelElements, JavaOperationModelAdapter.OPERATION), associatedViewOnOpenDiagram, filterChildViews(childViews, "classOperation"), context);
 	}
 	
 	protected List<EObject> filterChildModelElements(List<EObject> list, String filter) {
@@ -45,8 +49,19 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 	}
 	
 	@Override
-	protected int getNewViewsIndex(EObject object, View associatedViewOnOpenDiagram) {
-		int index = getAttributeSeparatorIndex(associatedViewOnOpenDiagram);
+	protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram) {
+		if (childModelElements.size() == 0) {
+			// no children on model => no views to add
+			return -1;
+		}
+		CodeSyncElement child = getCodeSyncElement(childModelElements.get(0));
+		String separatorViewType = child.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE) 
+				? JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR
+				: JavaClassDiagramOperationsService.OPERATIONS_SEPARATOR;
+		String childViewType = child.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE)
+				? "classAttribute"
+				: "classOperation";
+		int index = getSeparatorIndex(associatedViewOnOpenDiagram, separatorViewType, childViewType);
 		if (index == -1) {
 			return index;
 		}
@@ -57,7 +72,8 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {
 		Node node = NotationFactory.eINSTANCE.createNode();
 //		node.setViewType(getCodeSyncElement(child).getType());
-		node.setViewType("classAttribute");
+		CodeSyncElement cse = getCodeSyncElement(child);
+		node.setViewType(cse.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE) ? "classAttribute" : "classOperation");
 		return node;
 	}
 
@@ -67,13 +83,21 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 		return null;
 	}
 	
-	protected int getAttributeSeparatorIndex(View view) {
+	protected int getSeparatorIndex(View view, String separatorViewType, String childViewType) {
+		int childrenCount = 0;
+		int separatorIndex = -1;
 		for (Node node : view.getPersistentChildren()) {
-			if (JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR.equals(node.getViewType())) {
-				return view.getPersistentChildren().indexOf(node);
+			if (separatorViewType.equals(node.getViewType())) {
+				separatorIndex = view.getPersistentChildren().indexOf(node);
+			}
+			if (childViewType.equals(node.getViewType())) {
+				childrenCount++;
 			}
 		}
-		return -1;
+		if (separatorIndex == -1) {
+			return separatorIndex;
+		}
+		return separatorIndex + childrenCount;
 	}
 	
 }

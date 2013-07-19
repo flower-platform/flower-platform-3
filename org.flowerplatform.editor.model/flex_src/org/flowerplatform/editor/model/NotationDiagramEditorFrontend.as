@@ -43,7 +43,14 @@ package org.flowerplatform.editor.model
 			resourceStatusBar.addChild(testButton);
 			testButton.label = "Test/Expand attributes";
 			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment(View(diagramShell.selectedItems.getItemAt(0)).id);
+				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_attributes(View(diagramShell.selectedItems.getItemAt(0)).id);
+			});
+			
+			testButton = new Button();
+			resourceStatusBar.addChild(testButton);
+			testButton.label = "Test/Expand operations";
+			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_operations(View(diagramShell.selectedItems.getItemAt(0)).id);
 			});
 		}
 		

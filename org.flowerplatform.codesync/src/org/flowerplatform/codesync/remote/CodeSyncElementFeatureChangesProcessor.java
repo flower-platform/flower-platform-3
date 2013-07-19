@@ -44,7 +44,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	}
 
 	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram, List<Node> childViews, Map<String, Object> context) {
-		int newViewsIndex = getNewViewsIndex(object, associatedViewOnOpenDiagram);
+		int newViewsIndex = getNewViewsIndex(object, childModelElements, associatedViewOnOpenDiagram);
 		
 		if (newViewsIndex >= 0) {
 			// add a view for each child of the model element (cases: initial, or adding a new child model element)
@@ -92,7 +92,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	// Model elements to views methods
 	//////////////////////////////////////
 	
-	abstract protected int getNewViewsIndex(EObject object, View associatedViewOnOpenDiagram);
+	abstract protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram);
 	
 	abstract protected Node createChildView(View associatedViewOnOpenDiagram, EObject child);
 	

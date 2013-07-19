@@ -51,10 +51,16 @@
 							container.removeElement(this);
 						}
 						
+						protected function getName(editorInput:Object):String {
+							var path:String = String(editorInput);
+							var lastIndexOf:int = path.lastIndexOf("/");
+							return path.substr(lastIndexOf + 1);
+						}
+						
 					]]>
 				</fx:Script>
 				
-				<s:Button id="switchButton" label="{editorFrontend.editorInput}" 
+				<s:Button id="switchButton" label="{getName(editorFrontend.editorInput)}" 
 						  click="switchToEditorFrontend(event)"
 						  width="100%"
 						  skinClass="com.flextras.mobile.shared.skins.ButtonSkinSquare"/>

@@ -82,12 +82,14 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
 //			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(AnchorsSelectionController);
 			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classOperation"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: SeparatorRenderer});
 			composedControllerProviderFactories["classAttributesCompartmentSeparator"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classOperationsCompartmentSeparator"] = composedControllerProviderFactory;
 		}
 		
 		override public function start():void {
