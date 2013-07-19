@@ -34,9 +34,51 @@ package org.flowerplatform.editor.model.remote {
 		
 		override protected function copyLocalDataFromExistingEditorToNewEditor(existingEditor:EditorFrontend, newEditor:EditorFrontend):void {
 			super.copyLocalDataFromExistingEditorToNewEditor(existingEditor, newEditor);
-			DiagramEditorFrontend(newEditor).diagramShell.rootModel = DiagramEditorFrontend(existingEditor).diagramShell.rootModel;
-			
-		}		
+			DiagramEditorFrontend(newEditor).diagramShell.rootModel = DiagramEditorFrontend(existingEditor).diagramShell.rootModel;			
+		}	
+		
+		///////////////////////////////////////////////////////////////
+		// @RemoteInvocation methods
+		///////////////////////////////////////////////////////////////
+		[RemoteInvocation]
+		public function updateTransferableObjects(objectsToUpdate:ArrayCollection, objectsIdsToDispose:ArrayCollection, viewDetailsUpdates:ArrayCollection):void {
+			if (objectsToUpdate != null) {
+				transferableObjectRegistry.updateObjects(objectsToUpdate);
+			}
+			if (objectsIdsToDispose != null) {
+				transferableObjectRegistry.removeAndDisposeObjects(objectsIdsToDispose);
+			}
+			if (viewDetailsUpdates != null) {
+				for each (var update:ViewDetailsUpdate in viewDetailsUpdates) {
+					var o:Object = transferableObjectRegistry.getObjectById(update.viewId);
+					if (o == null || !(o is View)) {
+						throw new Error("For id = " + update.viewId + " cannot find view (or is not a view): " + o);
+					}
+					var view:View = View(o);
+					if (view.viewDetails == null) {
+						view.viewDetails = update.viewDetails;
+					} else {
+						for (var key:String in update.viewDetails) {
+							view.viewDetails[key] = update.viewDetails[key];
+						}
+					}
+					view.dispatchEvent(new Event(VIEW_DETAILS_UPDATED_EVENT));
+				}
+			}
+		}
+		
+		[RemoteInvocation]
+		public function openDiagram(diagramId:Object):void {
+			TEMP_INSTANCE = this;
+			this.diagramId = diagramId;
+			var diagram:Object = transferableObjectRegistry.getObjectById(diagramId);
+			if (diagram == null) {
+				throw new Error("Diagram not found in local registry, with id = ", diagramId);
+			}
+			for each (var ef:DiagramEditorFrontend in editorFrontends) {
+				ef.diagramShell.rootModel = diagram;
+			}
+		}	
 	
 	}
 }
