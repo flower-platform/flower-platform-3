@@ -6,18 +6,29 @@ package org.flowerplatform.editor.mindmap.controller {
 	import mx.events.PropertyChangeEvent;
 	
 	import org.flowerplatform.communication.transferable_object.ReferenceHolder;
+	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
 	import org.flowerplatform.emf_model.notation.Bounds;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
+	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class MindMapNodeController implements IMindMapModelController {
+	public class MindMapNodeController extends ControllerBase implements IMindMapModelController {
 		
-		public function getParent(model:Object):Object {
+		public function MindMapNodeController(diagramShell:DiagramShell) {
+			super(diagramShell);
+		}
+		
+		public function getParent(model:Object):Object {			
 			if (MindMapNode(model).parentView_RH != null) {
+				if (ReferenceHolder(MindMapNode(model).parentView_RH).referencedObject is Diagram) {
+					return null;
+				}
 				return ReferenceHolder(MindMapNode(model).parentView_RH).referencedObject;
 			}
 			return null;
@@ -29,26 +40,8 @@ package org.flowerplatform.editor.mindmap.controller {
 			if (newParent.side != MindMapDiagramShell.NONE && newParent.side != MindMapNode(model).side) {
 				setSide(model, newParent.side);				
 			}
-			MindMapNode(model).parentView_RH = ReferenceHolder(newParent);
+//			MindMapNode(model).parentView_RH = ReferenceHolder(newParent);
 			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "parent", oldParent, newParent));
-		}
-		
-		public function getChildren(model:Object):ArrayList {
-			return ArrayList(MindMapNode(model).persistentChildren_RH);
-		}
-		
-		public function getChildrenBasedOnSide(model:Object, side:int = 0):ArrayList {	
-			if (side == 0) {
-				side = model.side;
-			}
-			var list:ArrayList = new ArrayList();
-			for (var i:int = 0; i < MindMapNode(model).persistentChildren_RH.length; i++) {
-				var child:Object = MindMapNode(model).persistentChildren_RH.getItemAt(i);
-				if (side == 0 || side == child.side) {
-					list.addItem(child);
-				}
-			}
-			return list;
 		}
 		
 		public function setChildren(model:Object, value:ArrayList):void {
@@ -92,10 +85,11 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function setExpanded(model:Object, value:Boolean):void {
-			var oldValue:Boolean = MindMapNode(model).expanded;
-			MindMapNode(model).expanded = value;
-			
-			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "expanded", oldValue, value));
+			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setExpanded(MindMapNode(model).id, value);
+//			var oldValue:Boolean = MindMapNode(model).expanded;
+//			MindMapNode(model).expanded = value;
+//			
+//			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "expanded", oldValue, value));
 		}
 		
 		public function getSide(model:Object):int {
@@ -103,10 +97,11 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function setSide(model:Object, value:int):void {
-			MindMapNode(model).side = value;
-			for (var i:int = 0; i < getChildren(model).length; i++) {
-				setSide(getChildren(model).getItemAt(i), model.side);
-			}
+			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setSide(MindMapNode(model).id, value);
+//			MindMapNode(model).side = value;
+//			for (var i:int = 0; i < getChildren(model).length; i++) {
+//				setSide(getChildren(model).getItemAt(i), model.side);
+//			}
 		}
 	}
 }

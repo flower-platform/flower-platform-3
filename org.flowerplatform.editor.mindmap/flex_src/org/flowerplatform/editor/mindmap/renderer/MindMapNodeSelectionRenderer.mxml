@@ -17,9 +17,11 @@
 			import mx.events.MoveEvent;
 			import mx.events.ResizeEvent;
 			
+			import org.flowerplatform.emf_model.notation.Diagram;
 			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+			import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 			import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 			
 			import spark.primitives.Ellipse;
@@ -35,7 +37,8 @@
 				DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);				
 				// update position
 				handleTargetMoveResize(null);				
-				if (MindMapNode(getTargetModel()).persistentChildren_RH.length > 0 && MindMapNode(getTargetModel()).parentView_RH != null) {	
+				if (MindMapNode(getTargetModel()).hasChildren && 
+					IMindMapControllerProvider(diagramShell.getControllerProvider(getTargetModel())).getMindMapModelController(getTargetModel()).getParent(getTargetModel()) != null) {	
 					vLine.visible = !getTargetModel().expanded;
 					diagramShell.diagramRenderer.addElement(circle);
 				}
@@ -80,8 +83,9 @@
 			}
 			
 			protected function circle_mouseClickHandler(event:MouseEvent):void {
-				getTargetModel().expanded = !getTargetModel().expanded;	
-				vLine.visible = !getTargetModel().expanded;
+				IMindMapControllerProvider(diagramShell.getControllerProvider(getTargetModel())).getMindMapModelController(getTargetModel()).setExpanded(getTargetModel(), !getTargetModel().expanded);
+//				getTargetModel().expanded = !getTargetModel().expanded;	
+				vLine.visible = getTargetModel().expanded;
 				
 				event.preventDefault();
 				event.stopImmediatePropagation();

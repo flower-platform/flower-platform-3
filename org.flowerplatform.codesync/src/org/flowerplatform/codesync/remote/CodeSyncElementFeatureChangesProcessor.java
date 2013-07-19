@@ -49,11 +49,10 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 		if (newViewsIndex >= 0) {
 			// add a view for each child of the model element (cases: initial, or adding a new child model element)
 			for (EObject child : childModelElements) {
-				if (!containsChildViewForModelElement(associatedViewOnOpenDiagram, child)) {
+				if (canAddChildView(associatedViewOnOpenDiagram, child)) {
 					Node newView = createChildView(associatedViewOnOpenDiagram, child);
 					newView.setDiagrammableElement(child);
 					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
-//					newView.setParentView(associatedViewOnOpenDiagram);
 					newViewsIndex++;
 				}
 			}
@@ -96,6 +95,10 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	
 	abstract protected Node createChildView(View associatedViewOnOpenDiagram, EObject child);
 	
+	protected boolean canAddChildView(View view, EObject candidate) {
+		return !containsChildViewForModelElement(view, candidate);
+	}
+	
 	protected boolean containsChildViewForModelElement(View view, EObject candidate) {
 		String candidateFragment = candidate.eResource().getURIFragment(candidate);
 		for (Node node : view.getPersistentChildren()) {
@@ -122,7 +125,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 		if (candidateFragment.equals(object.eResource().getURIFragment(object))) {
 			return true;
 		}
-		List<EObject> children = getChildrenForCodeSyncElement(object);
+		List<EObject> children = getChildrenForCodeSyncElement(object);		
 		for (EObject child : children) {
 			if (candidateFragment.equals(child.eResource().getURIFragment(child))) {
 				return true;

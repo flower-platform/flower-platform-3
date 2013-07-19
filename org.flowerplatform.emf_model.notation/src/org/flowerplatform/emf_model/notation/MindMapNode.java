@@ -16,6 +16,7 @@ package org.flowerplatform.emf_model.notation;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.MindMapNode#isExpanded <em>Expanded</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.MindMapNode#isHasChildren <em>Has Children</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.MindMapNode#getSide <em>Side</em>}</li>
  * </ul>
  * </p>
@@ -50,6 +51,32 @@ public interface MindMapNode extends Node {
 	 * @generated
 	 */
 	void setExpanded(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Has Children</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Has Children</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Has Children</em>' attribute.
+	 * @see #setHasChildren(boolean)
+	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getMindMapNode_HasChildren()
+	 * @model
+	 * @generated
+	 */
+	boolean isHasChildren();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.emf_model.notation.MindMapNode#isHasChildren <em>Has Children</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Has Children</em>' attribute.
+	 * @see #isHasChildren()
+	 * @generated
+	 */
+	void setHasChildren(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Side</b></em>' attribute.

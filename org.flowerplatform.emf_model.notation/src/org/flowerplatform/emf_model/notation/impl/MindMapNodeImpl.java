@@ -23,6 +23,7 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.MindMapNodeImpl#isExpanded <em>Expanded</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.MindMapNodeImpl#isHasChildren <em>Has Children</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.MindMapNodeImpl#getSide <em>Side</em>}</li>
  * </ul>
  * </p>
@@ -49,6 +50,26 @@ public class MindMapNodeImpl extends NodeImpl implements MindMapNode {
 	 * @ordered
 	 */
 	protected boolean expanded = EXPANDED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isHasChildren() <em>Has Children</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasChildren()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean HAS_CHILDREN_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isHasChildren() <em>Has Children</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isHasChildren()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean hasChildren = HAS_CHILDREN_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getSide() <em>Side</em>}' attribute.
@@ -115,6 +136,27 @@ public class MindMapNodeImpl extends NodeImpl implements MindMapNode {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isHasChildren() {
+		return hasChildren;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setHasChildren(boolean newHasChildren) {
+		boolean oldHasChildren = hasChildren;
+		hasChildren = newHasChildren;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.MIND_MAP_NODE__HAS_CHILDREN, oldHasChildren, hasChildren));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public int getSide() {
 		return side;
 	}
@@ -141,6 +183,8 @@ public class MindMapNodeImpl extends NodeImpl implements MindMapNode {
 		switch (featureID) {
 			case NotationPackage.MIND_MAP_NODE__EXPANDED:
 				return isExpanded();
+			case NotationPackage.MIND_MAP_NODE__HAS_CHILDREN:
+				return isHasChildren();
 			case NotationPackage.MIND_MAP_NODE__SIDE:
 				return getSide();
 		}
@@ -157,6 +201,9 @@ public class MindMapNodeImpl extends NodeImpl implements MindMapNode {
 		switch (featureID) {
 			case NotationPackage.MIND_MAP_NODE__EXPANDED:
 				setExpanded((Boolean)newValue);
+				return;
+			case NotationPackage.MIND_MAP_NODE__HAS_CHILDREN:
+				setHasChildren((Boolean)newValue);
 				return;
 			case NotationPackage.MIND_MAP_NODE__SIDE:
 				setSide((Integer)newValue);
@@ -176,6 +223,9 @@ public class MindMapNodeImpl extends NodeImpl implements MindMapNode {
 			case NotationPackage.MIND_MAP_NODE__EXPANDED:
 				setExpanded(EXPANDED_EDEFAULT);
 				return;
+			case NotationPackage.MIND_MAP_NODE__HAS_CHILDREN:
+				setHasChildren(HAS_CHILDREN_EDEFAULT);
+				return;
 			case NotationPackage.MIND_MAP_NODE__SIDE:
 				setSide(SIDE_EDEFAULT);
 				return;
@@ -193,6 +243,8 @@ public class MindMapNodeImpl extends NodeImpl implements MindMapNode {
 		switch (featureID) {
 			case NotationPackage.MIND_MAP_NODE__EXPANDED:
 				return expanded != EXPANDED_EDEFAULT;
+			case NotationPackage.MIND_MAP_NODE__HAS_CHILDREN:
+				return hasChildren != HAS_CHILDREN_EDEFAULT;
 			case NotationPackage.MIND_MAP_NODE__SIDE:
 				return side != SIDE_EDEFAULT;
 		}
@@ -211,6 +263,8 @@ public class MindMapNodeImpl extends NodeImpl implements MindMapNode {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (expanded: ");
 		result.append(expanded);
+		result.append(", hasChildren: ");
+		result.append(hasChildren);
 		result.append(", side: ");
 		result.append(side);
 		result.append(')');
