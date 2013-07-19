@@ -45,6 +45,8 @@ package org.flowerplatform.web.mobile.popup {
 			super();
 			openMenuAction = new OpenMenuAction(this);
 			showOpenEditorsCalloutButton = new ShowOpenEditorsCalloutButton();
+			showOpenEditorsCalloutButton.visible = false;
+			showOpenEditorsCalloutButton.includeInLayout = false;
 			addEventListener(FlexEvent.MENU_KEY_PRESSED, menuKeyPressedEvent);
 		}
 		

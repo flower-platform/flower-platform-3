@@ -1,11 +1,17 @@
 package  org.flowerplatform.editor {
+	import com.crispico.flower.util.layout.Workbench;
+	
+	import mx.collections.ArrayCollection;
 	import mx.core.UIComponent;
+	import mx.core.mx_internal;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.stateful_service.StatefulClient;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
+	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 
 	/**
@@ -58,27 +64,6 @@ package  org.flowerplatform.editor {
 		 * @flowerModelElementId _Fk6KAKseEeGkXYK9TZw9sA
 		 */
 		override public function openEditor(editableResourcePath:String, forceNewEditor:Boolean = false, openForcedByServer:Boolean = false, handleAsClientSubscription:Boolean = false):UIComponent {
-//			if (!forceNewEditor) {
-//				// we want to see if the resource is already open by this type of editor
-//				// if force = true => it doesn't matter
-//				var existingEditorStatefulClients:ArrayCollection = GlobalEditorOperationsManager.INSTANCE.getEditorStatefulClientsForEditableResourcePath(editableResourcePath);
-//				if (existingEditorStatefulClients != null) {
-//					for each (var existingEditorStatefulClient:EditorStatefulClient in existingEditorStatefulClients) {
-//						if (existingEditorStatefulClient.editorDescriptor == this) {
-//							// the resource is already opened by this type of editor
-//							
-//							// bring it to front
-//							var workbench:Workbench = SingletonRefsFromPrePluginEra.workbench;
-//							var editorFrontend:EditorFrontend = EditorFrontend(existingEditorStatefulClient.editorFrontends[0]);
-//							// normally if the ESC exists => it has at least 1 EditorFrontend; if abnormally this is not true => exception here
-//							workbench.activeViewList.setActiveView(editorFrontend);
-//							// and exit
-//							return editorFrontend;
-//						}
-//					}
-//				}
-//			}
-			
 			var viewLayoutData:ViewLayoutData = new ViewLayoutData();
 			viewLayoutData.viewId = getId();
 			viewLayoutData.customData = editableResourcePath;
@@ -88,6 +73,31 @@ package  org.flowerplatform.editor {
 				viewLayoutData.customData += OPEN_FORCED_BY_SERVER_EDITOR_INPUT_MARKER;
 			}
 			viewLayoutData.isEditor = true;
+			
+			if (!forceNewEditor) {
+				// we want to see if the resource is already open by this type of editor
+				// if force = true => it doesn't matter
+//				var existingEditorStatefulClients:ArrayCollection = GlobalEditorOperationsManager.INSTANCE.getEditorStatefulClientsForEditableResourcePath(editableResourcePath);
+				var existingStatefulClients:ArrayCollection = CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList;
+				if (existingStatefulClients != null) {
+					for each (var existingStatefulClient:StatefulClient in existingStatefulClients) {
+						if (existingStatefulClient is EditorStatefulClient) {
+							var existingEditorStatefulClient:EditorStatefulClient = EditorStatefulClient(existingStatefulClient);
+							if (existingEditorStatefulClient.editorDescriptor == this && existingEditorStatefulClient.editableResourcePath == editableResourcePath) {
+								// the resource is already opened by this type of editor
+								
+								// bring it to front
+								var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
+								var editorFrontend:EditorFrontend = EditorFrontend(existingEditorStatefulClient.editorFrontends[0]);
+								// normally if the ESC exists => it has at least 1 EditorFrontend; if abnormally this is not true => exception here
+								workbench.setActiveView(editorFrontend);
+								// and exit
+								return editorFrontend;
+							}
+						}
+					}
+				}
+			}
 			
 			return FlexUtilGlobals.getInstance().workbench.addEditorView(viewLayoutData, true);		
 		}
