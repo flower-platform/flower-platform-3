@@ -7,7 +7,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
-		 xmlns:validators="org.flowerplatform.flexutil.validators.*"
+		 xmlns:validators="org.flowerplatform.flexutil.validators.*"		
 		 currentState="login"
 		 creationComplete="onCreationComplete()">
 	
@@ -16,7 +16,7 @@
 	</s:layout>
 	
 	<fx:Declarations>
-		
+	
 		<s:RemoteObject id="registerUserService" destination="registerUserService">
 			<s:method name="resendActivationCode" result="resendActivationCodeResultHandler(event)"/>
 			<s:method name="register" result="registerResultHandler(event)"/>
