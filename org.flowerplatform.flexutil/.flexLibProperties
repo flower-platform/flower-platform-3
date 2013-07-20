@@ -6,18 +6,17 @@
     <classEntry path="org.flowerplatform.flexutil.layout.IWorkbench"/>
     <classEntry path="org.flowerplatform.flexutil.layout.LayoutData"/>
     <classEntry path="org.flowerplatform.flexutil.layout.ViewLayoutData"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.ActionBase"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.ClassFactoryActionProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IAction"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IActionProvider"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IMessageBox"/>
-    <classEntry path="org.flowerplatform.flexutil.tree.HierarchicalModelWrapper"/>
-    <classEntry path="org.flowerplatform.flexutil.tree.IHierarchicalModelAdapter"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IPopupContent"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandler"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandlerFactory"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHost"/>
-    <classEntry path="org.flowerplatform.flexutil.popup.IPopupContent"/>
-    <classEntry path="org.flowerplatform.flexutil.popup.IAction"/>
-    <classEntry path="org.flowerplatform.flexutil.popup.ActionBase"/>
-    <classEntry path="org.flowerplatform.flexutil.popup.IActionProvider"/>
-    <classEntry path="org.flowerplatform.flexutil.popup.ClassFactoryActionProvider"/>
-    <classEntry path="org.flowerplatform.flexutil.dropdownlist.skin.DropDownListMobileSkin_Default"/>
+    <classEntry path="org.flowerplatform.flexutil.tree.HierarchicalModelWrapper"/>
+    <classEntry path="org.flowerplatform.flexutil.tree.IHierarchicalModelAdapter"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
