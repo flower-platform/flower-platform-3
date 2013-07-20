@@ -2,7 +2,9 @@
 <s:DataRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx"
-				implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware">
+				implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware" 
+				xmlns:renderer="org.flowerplatform.editor.model.renderer.*"
+				width="100%">
 	
 	<s:layout>
 		<s:HorizontalLayout/>
@@ -10,12 +12,21 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import org.flowerplatform.editor.model.EditorModelPlugin;
 			import org.flowerplatform.editor.model.NotationDiagramShell;
 			import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 			import org.flowerplatform.emf_model.notation.Node;
 			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
 			private var _diagramShell:DiagramShell;
+			
+			[Bindable]
+			public var title:String;
+			public var serviceMethod:String;
+			[Bindable]
+			public var newChildIcon:String;
+			public var newChildLabel:String;
 			
 			public function get diagramShell():DiagramShell {
 				return _diagramShell;
@@ -30,7 +41,11 @@
 			}
 			
 			protected function addNew():void {
-				NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_addNew(Node(data).id, "+attrFromClient:int");
+				NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_addNew(serviceMethod, Node(data).id, newChildLabel);
+			}
+			
+			protected function getResourceUrl(resource:String):String {
+				return FlexUtilGlobals.getInstance().createAbsoluteUrl(resource);
 			}
 			
 		]]>
@@ -40,8 +55,26 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:Button label="Collapse" click="{collapse()}"/>
-	<mx:Button label="Filter"/>
-	<mx:Button label="New" click="{addNew()}"/>
+	<s:VGroup width="100%">
+		
+		<s:Line width="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="#000000" weight="1" caps="square"/>
+			</s:stroke>
+		</s:Line>
+		
+		<s:HGroup width="100%" paddingLeft="2" paddingRight="2">
+			
+			<s:Button icon="{getResourceUrl(EditorModelPlugin.getInstance().getResourceUrl('images/obj16/collapseall.gif'))}" 
+					  click="{collapse()}"
+					  width="16" height="16"
+					  styleName="borderlessButton"/>
+			<s:Label text="{title}" width="100%" textAlign="center"/>
+			<s:Button icon="{getResourceUrl(newChildIcon)}" 
+					  click="{addNew()}"
+					  width="16" height="16"
+					  styleName="borderlessButton"/>
+		</s:HGroup>
+	</s:VGroup>
 	
 </s:DataRenderer>

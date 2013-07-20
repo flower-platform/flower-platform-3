@@ -268,7 +268,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	}
 	
 	@RemoteInvocation
-	public void applySelectedActions(StatefulServiceInvocationContext context, final String editableResourcePath) {
+	public void applySelectedActions(StatefulServiceInvocationContext context, final String editableResourcePath, final boolean notifyClient) {
 		final CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
 		if (er != null) {
 			attemptUpdateEditableResourceContent(context, editableResourcePath, new Runnable() {
@@ -277,18 +277,18 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 				public void run() {
 					allActionsPerformed(er.getMatch(), er.getModelAdapterFactorySet());
 					saveModifications(er);
-					unsubscribeAllClientsForcefully(getProjectPath(editableResourcePath), true);
+					unsubscribeAllClientsForcefully(getProjectPath(editableResourcePath), notifyClient);
 				}
 			});
 		}
 	}
 	
 	@RemoteInvocation
-	public void cancelSelectedActions(String editableResourcePath) {
+	public void cancelSelectedActions(String editableResourcePath, final boolean notifyClient) {
 		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(editableResourcePath));
 		if (er != null) {
 			discardModifications(er);
-			unsubscribeAllClientsForcefully(getProjectPath(editableResourcePath), true);
+			unsubscribeAllClientsForcefully(getProjectPath(editableResourcePath), notifyClient);
 		}
 	}
 	

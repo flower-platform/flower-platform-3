@@ -20,7 +20,7 @@
             compatibleEditor="mindmap"
             contentType="mindmap"
             editorStatefulService="org.flowerplatform.editor.model.remote.DiagramEditorStatefulService"
-            serviceId="diagramEditorStatefulService">
+            serviceId="mindmapEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>
    <extension

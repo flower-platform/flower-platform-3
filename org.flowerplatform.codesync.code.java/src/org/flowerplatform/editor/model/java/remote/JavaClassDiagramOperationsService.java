@@ -13,9 +13,13 @@ import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapter;
+import com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
 import com.crispico.flower.mp.model.astcache.code.Attribute;
+import com.crispico.flower.mp.model.astcache.code.ModifiableElement;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
+import com.crispico.flower.mp.model.astcache.code.Operation;
+import com.crispico.flower.mp.model.astcache.code.Parameter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -68,30 +72,77 @@ public class JavaClassDiagramOperationsService {
 		CodeSyncElement attributeCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 		Attribute attribute = AstCacheCodeFactory.eINSTANCE.createAttribute();
 		attribute.setCodeSyncElement(attributeCse);
-		int type = 0;
-		char visibility = label.charAt(0);
-		switch (visibility) {
-		case '+':
-			type = 1;
-			break;
-		case '-':
-			type = 2;
-			break;
-		default:
-			break;
-		}
-		if (type > 0) {
-			label = label.substring(1);
-			Modifier modifier = AstCacheCodeFactory.eINSTANCE.createModifier();
-			modifier.setType(type);
-			attribute.getModifiers().add(modifier);
-		}
+		
+		label = setVisibility(attribute, label);
 		String[] info = label.split(":");
 		attributeCse.setName(info[0]);
 		attributeCse.setType(JavaAttributeModelAdapter.ATTRIBUTE);
 		attribute.setType(info[1]);
 		
 		clsCse.getChildren().add(attributeCse);
+	}
+	
+	public void addNew_operation(ServiceInvocationContext context, String viewId, String label) {
+		View view = getViewById(context, viewId);
+		View cls = (View) view.eContainer();
+		CodeSyncElement clsCse = (CodeSyncElement) cls.getDiagrammableElement();
+		
+		CodeSyncElement operationCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
+		Operation operation = AstCacheCodeFactory.eINSTANCE.createOperation();
+		operation.setCodeSyncElement(operationCse);
+		
+		label = setVisibility(operation, label);
+		int lastIndexOfColon = label.lastIndexOf(":");
+		String name = label.substring(0, lastIndexOfColon);
+		int indexOfBracket = name.indexOf("(");
+		operationCse.setName(name.substring(0, indexOfBracket) + "()");
+		String[] parameters = name.substring(indexOfBracket + 1, name.length() -1)
+				.split(",");
+		for (String parameter : parameters) {
+			Parameter param = AstCacheCodeFactory.eINSTANCE.createParameter();
+			String[] info2 = parameter.split(":");
+			param.setName(info2[0]);
+			param.setType(info2[1]);
+			operation.getParameters().add(param);
+		}
+		operation.setType(label.substring(lastIndexOfColon + 1));
+		operationCse.setType(JavaOperationModelAdapter.OPERATION);
+		
+		clsCse.getChildren().add(operationCse);
+	}
+	
+	protected String setVisibility(ModifiableElement element, String label) {
+		int type = 0;
+		char visibility = label.charAt(0);
+		boolean result = false;
+		switch (visibility) {
+		case '+':
+			type = org.eclipse.jdt.core.dom.Modifier.PUBLIC;
+			result = true;
+			break;
+		case '-':
+			type = org.eclipse.jdt.core.dom.Modifier.PRIVATE;
+			result = true;
+			break;
+		case '#':
+			type = org.eclipse.jdt.core.dom.Modifier.PROTECTED;
+			result = true;
+			break;
+		case '~':
+			type = org.eclipse.jdt.core.dom.Modifier.NONE;
+			result = true;
+			break;
+		default:
+			type = org.eclipse.jdt.core.dom.Modifier.NONE;
+			break;
+		}
+		Modifier modifier = AstCacheCodeFactory.eINSTANCE.createModifier();
+		modifier.setType(type);
+		element.getModifiers().add(modifier);
+		if (result) {
+			return label.substring(1);
+		}
+		return label;
 	}
 	
 	protected DiagramEditableResource getEditableResource(ServiceInvocationContext context) {

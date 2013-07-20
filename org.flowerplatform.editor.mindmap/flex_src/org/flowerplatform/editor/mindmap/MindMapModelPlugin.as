@@ -2,9 +2,11 @@ package org.flowerplatform.editor.mindmap {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -27,11 +29,16 @@ package org.flowerplatform.editor.mindmap {
 			var editorDescriptor:MindMapDiagramEditorDescriptor = new MindMapDiagramEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
-			
+		}
+		
+		override public function start():void {
+			super.start();
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
 		}
 		
 		override protected function registerClassAliases():void {
-			registerClassAliasFromAnnotation(MindMapNode);			
+			registerClassAliasFromAnnotation(MindMapNode);	
+			registerClassAliasFromAnnotation(NewMindMapDiagramAction);
 		}
 		
 		override protected function registerMessageBundle():void {

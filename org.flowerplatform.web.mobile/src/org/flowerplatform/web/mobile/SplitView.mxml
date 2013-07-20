@@ -90,20 +90,12 @@
 							leftActiveComponent.percentHeight = 100;
 							leftActiveComponent.percentWidth = 100;
 						}
-						// remove right
-						if (rightActiveComponent != null) {
-							closeView(rightActiveComponent, true);
-						}
 					} else {
 						// one view / right
 						if (rightActiveComponent != null) {
 							addElement(rightActiveComponent);
 							rightActiveComponent.percentHeight = 100;
 							rightActiveComponent.percentWidth = 100;
-						}
-						// remove left
-						if (leftActiveComponent != null) {
-							closeView(leftActiveComponent, true);
 						}
 					}
 				} else {

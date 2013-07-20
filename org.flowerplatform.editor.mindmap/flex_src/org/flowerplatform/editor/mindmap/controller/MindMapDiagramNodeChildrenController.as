@@ -19,6 +19,10 @@ package org.flowerplatform.editor.mindmap.controller {
 			super(diagramShell);
 		}
 		
+		public function getParent(model:Object):Object {
+			return null;
+		}
+		
 		public function getChildren(model:Object):IList {	
 			if (MindMapDiagramShell(diagramShell).diagramChildren.length == 0) {
 				MindMapDiagramShell(diagramShell).diagramChildren.addItem(View(model).persistentChildren_RH.getItemAt(0).referencedObject);

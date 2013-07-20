@@ -8,10 +8,12 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.BasicModelRendererController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
+	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
-	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
+	import org.flowerplatform.editor.model.renderer.OperationsSeparatorRenderer;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Location;
@@ -28,6 +30,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
+	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
@@ -87,14 +91,19 @@ package org.flowerplatform.editor.model {
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: SeparatorRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: AttributesSeparatorRenderer});
 			composedControllerProviderFactories["classAttributesCompartmentSeparator"] = composedControllerProviderFactory;
+			
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: OperationsSeparatorRenderer});
 			composedControllerProviderFactories["classOperationsCompartmentSeparator"] = composedControllerProviderFactory;
 		}
 		
 		override public function start():void {
 			super.start();
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
 		}
 		
 		override protected function registerClassAliases():void {
@@ -107,6 +116,8 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);
 			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
+			
+			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
 		}
 		
 		override protected function registerMessageBundle():void {
