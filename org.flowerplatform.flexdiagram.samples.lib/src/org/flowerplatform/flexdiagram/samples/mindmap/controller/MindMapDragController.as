@@ -107,15 +107,15 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 			
 			// remove model from current parent
 			var dragParentModel:Object = getModelController(model).getParent(model);		
-			getModelController(dragParentModel).getChildren(dragParentModel).removeItem(model);		
+			ArrayList(diagramShell.getControllerProvider(dragParentModel).getModelChildrenController(dragParentModel).getChildren(dragParentModel)).removeItem(model);		
 			
 			// calculate new parent and position based on side
 			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : getModelController(dropModel).getParent(dropModel);	
-			var children:ArrayList = getModelController(dropParentModel).getChildren(dropParentModel);	
+			var children:ArrayList = ArrayList(diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getChildren(dropParentModel));	
 			var index:Number = (side != MindMapDiagramShell.NONE) ? children.length : children.getItemIndex(dropModel);
 			
 			// add model in new parent
-			getModelController(dropParentModel).getChildren(dropParentModel).addItemAt(model, index);		
+			ArrayList(diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel)).addItemAt(model, index);		
 			getModelController(model).setSide(model, (side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel));
 			getModelController(model).setParent(model, dropParentModel);	
 			

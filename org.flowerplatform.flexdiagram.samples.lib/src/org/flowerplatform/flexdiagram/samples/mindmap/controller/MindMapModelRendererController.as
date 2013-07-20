@@ -100,7 +100,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 				ParentAwareArrayList(diagramShell.rootModel).addItem(model);
 			}		
 			if (getModelController(model).getExpanded(model)) {
-				var children:ArrayList = MindMapDiagramShell(diagramShell).getModelController(model).getChildren(model);
+				var children:ArrayList = ArrayList(diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model));
 				for (var i:int = 0; i < children.length; i++) {
 					addModelToRootChildren(children.getItemAt(i));
 				}				
@@ -135,8 +135,8 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 				}
 			}
 			// refresh connectors to children
-			for (var i:int = 0; i < getModelController(model).getChildren(model).length; i++) {
-				var child:Object = getModelController(model).getChildren(model).getItemAt(i);						
+			for (var i:int = 0; i < diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model).length; i++) {
+				var child:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model).getItemAt(i);						
 				if (getDynamicObject(child).connector != null) {
 					getDynamicObject(child).connector.invalidateDisplayList();
 				}
