@@ -24,9 +24,9 @@ package org.flowerplatform.flexdiagram.tool {
 		public function SelectOnClickTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN);
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DOWN);
 			// active if diagram select or item selected and not single -> deselect behavior
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_UP);	
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_UP);	
 		}
 		
 		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {

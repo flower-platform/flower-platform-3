@@ -18,7 +18,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public function ResizeTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DOWN);
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DOWN);
 		}
 		
 		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {

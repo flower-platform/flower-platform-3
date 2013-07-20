@@ -22,7 +22,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public function DragTool(diagramShell:DiagramShell)	{
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG);
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DRAG);
 		}
 		
 		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {

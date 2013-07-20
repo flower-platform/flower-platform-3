@@ -40,12 +40,12 @@ package org.flowerplatform.flexdiagram.tool {
 		public function deactivateAsMainTool():void {			
 		}
 		
-		public function get diagramRenderer():DiagramRenderer {
+		public function get diagramRenderer():DiagramRenderer {			
 			return DiagramRenderer(diagramShell.diagramRenderer);
 		}
 			
 		protected function getRendererFromDisplayCoordinates(ignoreDiagramRenderer:Boolean = false):IVisualElement {
-			var stage:Stage = DisplayObject(diagramShell.diagramRenderer).stage;
+			var stage:Stage = diagramRenderer.stage;
 			var arr:Array = stage.getObjectsUnderPoint(new Point(stage.mouseX, stage.mouseY));
 						
 			var renderer:IVisualElement;

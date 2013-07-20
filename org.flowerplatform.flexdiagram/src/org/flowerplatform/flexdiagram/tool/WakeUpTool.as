@@ -24,7 +24,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public static const MOUSE_DOWN:String = "mouseDown";
 		public static const MOUSE_UP:String = "mouseUp";
 		
-		private static var listeners:ArrayList = new ArrayList();
+		public var listeners:ArrayList = new ArrayList();
 			
 		public var myEventType:String;
 		
@@ -32,13 +32,13 @@ package org.flowerplatform.flexdiagram.tool {
 			super(diagramShell);
 		}
 		
-		public static function wakeMeUpIfEventOccurs(tool:Tool, event:String, priority:int = 0):void {
+		public static function wakeMeUpIfEventOccurs(diagramShell:DiagramShell, tool:Tool, event:String, priority:int = 0):void {
 			var listener:Object = new Object();
 			listener.tool = tool;
 			listener.event = event;
 			listener.priority = priority;
 			
-			listeners.addItem(listener);
+			diagramShell.tools[WakeUpTool].listeners.addItem(listener);
 		}
 		
 		override public function activateAsMainTool():void {			
@@ -47,7 +47,7 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);			
 		}
 		
-		override public function deactivateAsMainTool():void {			
+		override public function deactivateAsMainTool():void {		
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);			
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);

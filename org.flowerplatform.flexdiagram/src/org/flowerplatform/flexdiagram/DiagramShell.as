@@ -9,6 +9,7 @@ package org.flowerplatform.flexdiagram {
 	import mx.core.IInvalidating;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
+	import mx.core.UIComponent;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.PropertyChangeEvent;
@@ -17,6 +18,7 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
 	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
@@ -63,13 +65,13 @@ package org.flowerplatform.flexdiagram {
 		}
 		
 		public function set rootModel(value:Object):void {
-			if (rootModel != null) {
+			if (rootModel != null) {			
 				unassociateModelFromRenderer(rootModel, IVisualElement(diagramRenderer), true);
 			}
 			_rootModel = value;
 			if (rootModel != null) {
 				addInModelMapIfNecesssary(rootModel);
-				associateModelToRenderer(rootModel, IVisualElement(diagramRenderer), null);
+				associateModelToRenderer(rootModel, IVisualElement(diagramRenderer), null);				
 			}
 		}
 		
@@ -78,7 +80,13 @@ package org.flowerplatform.flexdiagram {
 		}
 		
 		public function set diagramRenderer(value:IVisualElementContainer):void {
+			if (_diagramRenderer != null) {			
+				deactivateTools();
+			}
 			_diagramRenderer = value;
+			if (_diagramRenderer != null) {
+				UIComponent(_diagramRenderer).callLater(activateTools);	
+			}			
 		}
 		
 		public function get selectedItems():ParentAwareArrayList {
@@ -141,7 +149,7 @@ package org.flowerplatform.flexdiagram {
 			
 			var wakeUpTool:WakeUpTool = new WakeUpTool(this);
 			_defaultTool = wakeUpTool;
-			tools[WakeUpTool.ID] = wakeUpTool;
+			tools[WakeUpTool] = wakeUpTool;
 		
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 		}
@@ -316,6 +324,8 @@ package org.flowerplatform.flexdiagram {
 				}	
 				if (mainTool == null) {
 					mainTool = _defaultTool;
+				} else {
+					mainTool.activateAsMainTool();
 				}
 				_toolsActivated = true;
 			}
@@ -325,8 +335,9 @@ package org.flowerplatform.flexdiagram {
 			// deactivate only if they were activated
 			if (_toolsActivated) {
 				if (mainTool is IWakeUpableTool) { // return to default tool in case of a wakeupable tool
-					mainTool = _defaultTool;
+					mainTool = _defaultTool;					
 				}
+				mainTool.deactivateAsMainTool();
 				for (var key:Object in tools) {
 					Tool(tools[key]).deactivateDozingMode();
 				}	

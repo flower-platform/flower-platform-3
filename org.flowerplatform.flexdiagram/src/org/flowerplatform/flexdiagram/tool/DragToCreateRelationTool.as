@@ -19,7 +19,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public function DragToCreateRelationTool(diagramShell:DiagramShell)	{
 			super(diagramShell);
 			
-			WakeUpTool.wakeMeUpIfEventOccurs(this, WakeUpTool.MOUSE_DRAG, 1);
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DRAG, 1);
 		}
 		
 		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
