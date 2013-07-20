@@ -28,8 +28,12 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "collapseCompartment", [viewId]));
 		}
 		
-		public function service_expandCompartment(viewId:Object):void {
+		public function service_expandCompartment_attributes(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_attributes", [viewId]));
+		}
+		
+		public function service_expandCompartment_operations(viewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_operations", [viewId]));
 		}
 		
 		public function service_addNew(viewId:Object, label:String):void {

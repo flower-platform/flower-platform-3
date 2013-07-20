@@ -52,6 +52,9 @@
 			}
 			
 			public function set rightActiveComponent(value:IVisualElement):void {
+				if (value) {
+					oneViewMode = false;
+				}
 				_rightActiveComponent = value;
 				rearrangeLayout();
 			}
@@ -127,6 +130,8 @@
 //				rightActiveComponent = new Button();
 				FlexUtilGlobals.getInstance().workbench = this;
 				this.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
+				
+				showOpenEditorsCalloutButton.splitView = this;
 			}
 			
 			override public function get activePopupContent():IPopupContent {
@@ -136,7 +141,8 @@
 			public function addEditorView(viewLayoutData:ViewLayoutData, setFocusOnView:Boolean=false, existingComponent:UIComponent=null):UIComponent {
 				var comp:UIComponent = FlexUtilGlobals.getInstance().composedViewProvider.createView(viewLayoutData);
 				rightActiveComponent = comp;
-				showOpenEditorsCalloutButton.editorFrontends.addItem(comp);
+				rightComponents.addItem(comp);
+				showOpenEditorsCalloutButton.addEditorFrontend(comp);
 				return comp;
 			}
 			
@@ -164,6 +170,10 @@
 			{
 				// TODO Auto Generated method stub
 				return null;
+			}
+			
+			public function setActiveView(newActiveView:UIComponent, setFocusOnNewView:Boolean = true, dispatchActiveViewChangedEvent:Boolean = true, restoreIfMinimized:Boolean = true):void {
+				rightActiveComponent = newActiveView;
 			}
 			
 			

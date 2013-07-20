@@ -3,22 +3,101 @@
 	@author Mariana Gheorghe
 -->
 <s:CalloutButton xmlns:fx="http://ns.adobe.com/mxml/2009" 
-				 xmlns:s="library://ns.adobe.com/flex/spark">
+				 xmlns:s="library://ns.adobe.com/flex/spark"
+				 xmlns:skins="com.flextras.mobile.shared.skins.*"
+				 label="Show Open Editors"
+				 icon="{FlexUtilGlobals.getInstance().createAbsoluteUrl(EditorPlugin.getInstance().getResourceUrl('images/open_resource.png'))}" 
+				 visible="{splitView.rightComponents.length > 0}" includeInLayout="{splitView.rightComponents.length > 0}">
 	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<fx:Component className="EditorFrontendEntry">
+			<s:HGroup width="100%" gap="0">
+				
+				<fx:Script>
+					<![CDATA[
+						import mx.core.IVisualElement;
+						import mx.core.UIComponent;
+						
+						import org.flowerplatform.editor.EditorFrontend;
+						import org.flowerplatform.flexutil.FlexUtilGlobals;
+						import org.flowerplatform.web.common.WebCommonPlugin;
+						import org.flowerplatform.web.mobile.SplitView;
+						
+						import spark.components.Group;
+						
+						[Bindable]
+						public var editorFrontend:EditorFrontend;
+						
+						public var container:Group;
+						
+						public var splitView:SplitView;
+						
+						protected function switchToEditorFrontend(event:MouseEvent):void {
+							splitView.rightActiveComponent = editorFrontend;
+						}
+						
+						protected function closeEditorFrontend(event:MouseEvent):void {
+							// remove from the list of components
+							splitView.rightComponents.removeItem(editorFrontend);
+							splitView.closeView(editorFrontend);
+							if (splitView.rightActiveComponent == editorFrontend) {
+								// remove it if it was the active component
+								splitView.rightActiveComponent = null;
+								// show the last opened editor
+								var editorsCount:int = splitView.rightComponents.length;
+								if (editorsCount > 0) {
+									splitView.rightActiveComponent = IVisualElement(splitView.rightComponents.getItemAt(editorsCount - 1));
+								}
+							}
+							container.removeElement(this);
+						}
+						
+						protected function getName(editorInput:Object):String {
+							var path:String = String(editorInput);
+							var lastIndexOf:int = path.lastIndexOf("/");
+							return path.substr(lastIndexOf + 1);
+						}
+						
+					]]>
+				</fx:Script>
+				
+				<s:Button id="switchButton" label="{getName(editorFrontend.editorInput)}" 
+						  click="switchToEditorFrontend(event)"
+						  width="100%"
+						  skinClass="com.flextras.mobile.shared.skins.ButtonSkinSquare"/>
+				<s:Button id="closeButton" icon="{FlexUtilGlobals.getInstance().createAbsoluteUrl(WebCommonPlugin.getInstance().getResourceUrl('images/common/cancel_delete.png'))}"
+						  click="closeEditorFrontend(event)" 
+						  skinClass="com.flextras.mobile.shared.skins.ButtonSkinSquare"/>
+				
+			</s:HGroup>
+		</fx:Component>
 	</fx:Declarations>
 	
 	<fx:Script>
 		<![CDATA[
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.editor.EditorPlugin;
+			import org.flowerplatform.web.mobile.SplitView;
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
+			import mx.core.UIComponent;
+			
+			import org.flowerplatform.editor.EditorFrontend;
+			import org.flowerplatform.web.common.WebCommonPlugin;
 			
 			[Bindable]
-			public var editorFrontends:IList = new ArrayList();
+			public var splitView:SplitView;
+			
+			public function addEditorFrontend(editorFrontend:UIComponent):void {
+				var entry:EditorFrontendEntry = new EditorFrontendEntry();
+				entry.editorFrontend = EditorFrontend(editorFrontend);
+				entry.splitView = splitView;
+				entry.container = contents;
+				contents.addElement(entry);
+			}
 			
 		]]>
 	</fx:Script>
 	
-	<s:List id="list" dataProvider="{editorFrontends}" itemRenderer="org.flowerplatform.web.mobile.popup.ShowOpenEditorsListItemRenderer"/>
+	<s:VGroup id="contents" width="100%" height="100%" gap="0"/>
 	
 </s:CalloutButton>

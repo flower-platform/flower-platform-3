@@ -9,5 +9,6 @@ package org.flowerplatform.flexutil.layout {
 		function closeViews(views:ArrayCollection /* of UIComponent */, shouldDispatchEvent:Boolean = true):void;
 		function getComponent(viewId:String, customData:String = null):UIComponent;
 		function closeView(view:IEventDispatcher, shouldDispatchEvent:Boolean = true):void;
+		function setActiveView(newActiveView:UIComponent, setFocusOnNewView:Boolean = true, dispatchActiveViewChangedEvent:Boolean = true, restoreIfMinimized:Boolean = true):void;
 	}
 }

@@ -26,6 +26,8 @@ public class JavaClassDiagramOperationsService {
 	
 	public static final String ATTRIBUTE_SEPARATOR = "classAttributesCompartmentSeparator";
 	
+	public static final String OPERATIONS_SEPARATOR = "classOperationsCompartmentSeparator";
+	
 	public void setInplaceEditorText(ServiceInvocationContext context, String viewId, String text) {
 		View view = getViewById(context, viewId);
 		CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
@@ -44,6 +46,16 @@ public class JavaClassDiagramOperationsService {
 		// TODO test if there's already a separator? normally this shouldn't be available on client side in this case
 		Node separator = NotationFactory.eINSTANCE.createNode();
 		separator.setViewType(ATTRIBUTE_SEPARATOR);
+		// add it after the class title
+		cls.getPersistentChildren().add(1, separator);
+		notifyProcessors(cls);
+	}
+	
+	public void expandCompartment_operations(ServiceInvocationContext context, String viewId) {
+		View cls = getViewById(context, viewId);
+		Node separator = NotationFactory.eINSTANCE.createNode();
+		separator.setViewType(OPERATIONS_SEPARATOR);
+		// add at the end of the list
 		cls.getPersistentChildren().add(separator);
 		notifyProcessors(cls);
 	}

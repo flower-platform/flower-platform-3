@@ -1,5 +1,7 @@
 package org.flowerplatform.editor.mindmap.processor;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.emf_model.notation.MindMapNode;
@@ -15,7 +17,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class MindMapChildrenChangeProcessor extends CodeSyncElementFeatureChangesProcessor {
 
 	@Override
-	protected int getNewViewsIndex(EObject object, View associatedViewOnOpenDiagram) {		
+	protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram) {		
 		return 0;
 	}
 

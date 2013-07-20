@@ -172,7 +172,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //		((DiagramEditableResource) editableResource).setChangeRecorder(hbResource.getChangeRecorder());
 		
 		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) editableResource;
-		diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource()));
+		diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource().getResourceSet()));
 		
 		try {
 			EditableResourceClient client = editableResource.getEditableResourceClientByCommunicationChannel(statefulServiceInvocationContext.getCommunicationChannel());
@@ -203,7 +203,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			ChangeDescription changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			Map<String, Object> processingContext = createProcessingContext(diagramEditableResource);
 			
-			diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource()));
+			diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource().getResourceSet()));
 			// TODO CS/CS3 dubla inregistrare: sa facem prin constructie mai intai procesare elemente si apoi view-uri?...
 			// oricum, cred ca ar trebui inca un try/finally; sa facem un mecanism multiplu, ca la MDA? dar cum ne dam seama ca nu e infinit?
 			// sa nu mai facem viewdetails ca camp, si sa facem comanda speciala?

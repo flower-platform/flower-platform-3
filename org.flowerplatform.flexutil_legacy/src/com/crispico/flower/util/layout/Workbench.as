@@ -2530,6 +2530,13 @@ package  com.crispico.flower.util.layout {
 			}
 		}
 		
+		/**
+		 * @author Mariana Gheorghe
+		 */
+		public function setActiveView(newActiveView:UIComponent, setFocusOnNewView:Boolean = true, dispatchActiveViewChangedEvent:Boolean = true, restoreIfMinimized:Boolean = true):void {
+			activeViewList.setActiveView(newActiveView, setFocusOnNewView, dispatchActiveViewChangedEvent, restoreIfMinimized);
+		}
+		
 	}
 		
 }
