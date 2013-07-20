@@ -23,7 +23,7 @@ public class MindMapChildrenChangeProcessor extends CodeSyncElementFeatureChange
 	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {		
 		MindMapNode node = NotationFactory.eINSTANCE.createMindMapNode();
 		node.setViewType(getCodeSyncElement(child).getType());		
-		node.setSide(1);		
+		node.setSide(((MindMapNode) associatedViewOnOpenDiagram).getSide() == 0 ? 1 : ((MindMapNode) associatedViewOnOpenDiagram).getSide());		
 		node.setExpanded(false);		
 		node.setHasChildren(getChildrenForCodeSyncElement(child).size() > 0);
 		return node;

@@ -13,6 +13,7 @@ package org.flowerplatform.editor.mindmap.controller
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelChildrenController;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	
 	public class MindMapNodeChildrenController extends ControllerBase implements IMindMapModelChildrenController {
 		
@@ -56,13 +57,19 @@ package org.flowerplatform.editor.mindmap.controller
 			
 			MindMapDiagramShell(diagramShell).addModelToRootChildren(model, true);			
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
+			
+			DiagramRenderer(diagramShell.diagramRenderer).callLater(MindMapDiagramShell(diagramShell).refreshNodePositions, [model]);
 		}
 		
 		protected function objectDisposedHandler(event:TransferableObjectDisposedEvent):void {
 			var model:MindMapNode = MindMapNode(event.object);
-			
-			MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model);	
+						
+			MindMapDiagramShell(diagramShell).unassociateModelFromRenderer(model, diagramShell.getRendererForModel(model), true);
+			//MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model);
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
+			
+			var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
+			DiagramRenderer(diagramShell.diagramRenderer).callLater(MindMapDiagramShell(diagramShell).refreshNodePositions, [rootModel]);
 		}
 		
 		

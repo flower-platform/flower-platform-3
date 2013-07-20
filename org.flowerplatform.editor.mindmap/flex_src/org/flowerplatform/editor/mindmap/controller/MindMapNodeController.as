@@ -52,16 +52,16 @@ package org.flowerplatform.editor.mindmap.controller {
 			return MindMapNode(model).x;			
 		}
 		
-		public function setX(model:Object, value:Number):void {
-			MindMapNode(model).x = value;
+		public function setX(model:Object, value:Number):void {			
+			MindMapNode(model).setX(value);
 		}
 		
 		public function getY(model:Object):Number {
 			return MindMapNode(model).y;			
 		}
 		
-		public function setY(model:Object, value:Number):void {
-			MindMapNode(model).y = value;
+		public function setY(model:Object, value:Number):void {		
+			MindMapNode(model).setY(value);
 		}
 		
 		public function getWidth(model:Object):Number {		
@@ -69,7 +69,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function setWidth(model:Object, value:Number):void {			
-			MindMapNode(model).width = value;
+			MindMapNode(model).setWidth(value);
 		}
 		
 		public function getHeight(model:Object):Number {
@@ -77,7 +77,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function setHeight(model:Object, value:Number):void {
-			MindMapNode(model).height = value;
+			MindMapNode(model).setHeight(value);
 		}
 		
 		public function getExpanded(model:Object):Boolean {

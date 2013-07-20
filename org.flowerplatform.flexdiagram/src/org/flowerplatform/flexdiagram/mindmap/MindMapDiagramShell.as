@@ -8,6 +8,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelChildrenController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
 	/**
@@ -36,9 +37,10 @@ package org.flowerplatform.flexdiagram.mindmap {
 			if (rootModel == null) {
 				removeModelFromRootChildren(rootModel, true);
 			} else {
-				var model:Object = getControllerProvider(model).getModelChildrenController(rootModel).getChildren(rootModel).getItemAt(0);
-				addModelToRootChildren(model, true);
+				var model:Object = getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel).getItemAt(0);
+				addModelToRootChildren(model, true);				
 			}			
+			shouldRefreshVisualChildren(rootModel);			
 		}
 		
 		public function removeModelFromRootChildren(model:Object, removeOnlyChildren:Boolean = false):void {
@@ -49,22 +51,24 @@ package org.flowerplatform.flexdiagram.mindmap {
 				if (model == IMindMapControllerProvider(getControllerProvider(child)).getMindMapModelController(child).getParent(child)) {
 					removeModelFromRootChildren(child);			
 				}
-			}
-			if (!removeOnlyChildren) {
+			}			
+			if (!removeOnlyChildren) {				
 				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).removeItem(model);					
-			}
+			}			
 		}
 		
-		public function addModelToRootChildren(model:Object, addOnlyChildren:Boolean = false):void {
-			if (!addOnlyChildren) {
-				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).addItem(model);				
-			}		
-			if (model == rootModel || model.expanded) {
+		public function addModelToRootChildren(model:Object, addOnlyChildren:Boolean = false):void {			
+			if (model.expanded) {
 				var children:IList = getControllerProvider(model).getModelChildrenController(model).getChildren(model);
 				for (var i:int = 0; i < children.length; i++) {
 					addModelToRootChildren(children.getItemAt(i));
 				}				
 			}
+			if (!addOnlyChildren) {
+				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).addItem(model);	
+				shouldRefreshVisualChildren(rootModel);
+			}			
+//			DiagramRenderer(diagramRenderer).callLater(refreshNodePositions, [model]);				
 		}
 		
 		public function getModelController(model:Object):IMindMapModelController {
@@ -103,14 +107,14 @@ package org.flowerplatform.flexdiagram.mindmap {
 				if (side == NONE) {
 					getDynamicObject(model).expandedHeight = getDynamicObject(model).expandedHeightLeft;
 					oldExpandedHeight = oldExpandedHeightLeft;
-				}				
+				}			
 				changeCoordinates(model, oldExpandedHeight, getExpandedHeight(model), side == NONE ? LEFT : side);
 			}
 			if (side == NONE || side == RIGHT) { 
 				if (side == NONE) {
 					getDynamicObject(model).expandedHeight = getDynamicObject(model).expandedHeightRight;
 					oldExpandedHeight = oldExpandedHeightRight;
-				}				
+				}			
 				changeCoordinates(model, oldExpandedHeight, getExpandedHeight(model), side == NONE ? RIGHT : side);
 			}
 		}
@@ -148,7 +152,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		private function changeCoordinates(model:Object, oldExpandedHeight:Number, newExpandedHeight:Number, side:int):void {			
 			getDynamicObject(model).expandedY = getModelController(model).getY(model) - (newExpandedHeight - getModelController(model).getHeight(model))/2;
 			
-			changeChildrenCoordinates(model, side, getModelController(model).getParent(model) == null);				
+			changeChildrenCoordinates(model, side, true);				
 			changeSiblingsCoordinates(model, (newExpandedHeight - oldExpandedHeight)/2, side);
 		}		
 		
@@ -158,8 +162,8 @@ package org.flowerplatform.flexdiagram.mindmap {
 				var parent:Object = getModelController(model).getParent(model);
 				if (getModelController(model).getSide(model) == LEFT) {
 					getModelController(model).setX(model, getModelController(parent).getX(parent) - getModelController(model).getWidth(model) - horizontalPadding);	
-				} else {
-					getModelController(model).setX(model, getModelController(parent).getX(parent) + getModelController(parent).getWidth(parent) + horizontalPadding);	
+				} else {					
+					getModelController(model).setX(model, getModelController(parent).getX(parent) + getModelController(parent).getWidth(parent) + horizontalPadding);				
 				}
 			} else {
 				getDynamicObject(model).expandedY = getModelController(model).getY(model) - (getExpandedHeight(model) - getModelController(model).getHeight(model))/2;		

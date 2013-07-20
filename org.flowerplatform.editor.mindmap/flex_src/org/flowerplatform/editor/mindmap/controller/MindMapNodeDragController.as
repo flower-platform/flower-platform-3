@@ -5,14 +5,17 @@ package org.flowerplatform.editor.mindmap.controller {
 	import flash.geom.Rectangle;
 	
 	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
@@ -28,7 +31,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function activate(model:Object, initialX:Number, initialY:Number):void {		
-			if (model.parent == null) { // don't drag the root node
+			if (getModelController(model).getParent(model) == null) { // don't drag the root node
 				return;
 			}
 			getDynamicObject(model).initialX = initialX;
@@ -93,39 +96,60 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function drop(model:Object):void {
-//			var dropPoint:Point = new Point(getDynamicObject(model).finalX, getDynamicObject(model).finalY);
-//			var renderer:IVisualElement = getRendererFromCoordinates(dropPoint);
-//			
-//			var dropModel:Object = IDataRenderer(renderer).data;
-//			if (renderer is DiagramRenderer || !dragModelIsParentForDropModel(model, dropModel)) { // don't drop over diagram or same model
-//				return;
-//			}
-//			
-//			deletePlaceHolder(model);
-//						
-//			var side:int = getDynamicObject(model).side;
-//			
-//			// remove model from current parent
-//			var dragParentModel:Object = getModelController(model).getParent(model);		
-////			getModelController(dragParentModel).getChildren(dragParentModel).removeItem(model);		
-//			
-//			// calculate new parent and position based on side
-//			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : getModelController(dropModel).getParent(dropModel);	
-////			var children:ArrayList = getModelController(dropParentModel).getChildren(dropParentModel);	
-//			var index:Number = (side != MindMapDiagramShell.NONE) ? children.length : children.getItemIndex(dropModel);
-//			
-//			// add model in new parent
-////			getModelController(dropParentModel).getChildren(dropParentModel).addItemAt(model, index);		
+			var dropPoint:Point = new Point(getDynamicObject(model).finalX, getDynamicObject(model).finalY);
+			var renderer:IVisualElement = getRendererFromCoordinates(dropPoint);
+			
+			var dropModel:Object = IDataRenderer(renderer).data;
+			if (renderer is DiagramRenderer || !dragModelIsParentForDropModel(model, dropModel)) { // don't drop over diagram or same model
+				return;
+			}
+			
+			deletePlaceHolder(model);
+						
+			var side:int = getDynamicObject(model).side;
+			
+			// remove model from current parent
+			var dragParentModel:Object = getModelController(model).getParent(model);		
+//			getModelController(dragParentModel).getChildren(dragParentModel).removeItem(model);		
+			
+			// calculate new parent and position based on side
+			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : getModelController(dropModel).getParent(dropModel);	
+			var children:IList = diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getChildren(dropParentModel);	
+		
+			var index:int = 0;
+			if (side != MindMapDiagramShell.NONE) {
+				index = children.length;
+			} else {
+				for (var i:int = 0; i < children.length; i++) {
+					if (children.getItemAt(i) == dropModel) {
+						index = i;
+						break;
+					}
+				}
+			}
+			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_changeParent(
+				model.id, 
+				dropParentModel.id,
+				index, 
+				(side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel), 
+				this, selectModelAfterDroppingHandler);
+			
+			// add model in new parent
+//			getModelController(dropParentModel).getChildren(dropParentModel).addItemAt(model, index);		
 //			getModelController(model).setSide(model, (side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel));
 //			getModelController(model).setParent(model, dropParentModel);	
-//			
-//			// select model or parent 
-//			diagramShell.selectedItems.removeAll();
+			
+			// select model or parent 
+			diagramShell.selectedItems.removeAll();
 //			if (getModelController(dropParentModel).getExpanded(dropParentModel)) {
 //				diagramShell.selectedItems.addItem(model);
 //			} else {
 //				diagramShell.selectedItems.addItem(dropParentModel);
 //			}
+		}
+		
+		private function selectModelAfterDroppingHandler(viewId:Object):void {
+			trace(viewId);
 		}
 		
 		public function deactivate(model:Object):void {
@@ -203,7 +227,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		private function dragModelIsParentForDropModel(dragModel:Object, dropModel:Object):Boolean {
-			if (dragModel == dropModel) {
+			if (dragModel == dropModel || getModelController(dragModel).getParent(dragModel) == dropModel) {
 				return false;
 			}
 			if (getModelController(dropModel).getParent(dropModel) == null) {

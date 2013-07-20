@@ -49,11 +49,11 @@ package org.flowerplatform.editor.mindmap.renderer {
 		override protected function setElementSize(element:Object, width:Number, height:Number):void {
 			super.setElementSize(element, width, height);
 			if (element == labelDisplay) {
-				if (data.width != width) {
-					data.width = width;
+				if (width != 0 && data.width != width && !isNaN(width)) {
+					MindMapNode(data).setWidth(this.width);
 				}
-				if (data.height != height) {
-					data.height = height;
+				if (height != 0 && data.height != height && !isNaN(height)) {
+					MindMapNode(data).setHeight(this.height);
 				}
 			}
 		}
@@ -130,7 +130,7 @@ package org.flowerplatform.editor.mindmap.renderer {
 //					measuredWidth = data.width;
 					break;				
 			}				
-			invalidateDisplayList();
+			//invalidateDisplayList();
 		}
 		
 	}

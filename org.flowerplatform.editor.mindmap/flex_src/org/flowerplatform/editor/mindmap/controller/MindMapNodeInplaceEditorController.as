@@ -2,9 +2,11 @@ package org.flowerplatform.editor.mindmap.controller {
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
 	
+	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	
 	import spark.components.TextInput;
@@ -37,7 +39,8 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		public function commit(model:Object):void {		
 			var textField:TextInput = diagramShell.modelToExtraInfoMap[model].inplaceEditor;
-			MindMapNode(model).viewDetails.text = textField.text;
+			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setText(MindMapNode(model).id, textField.text);
+//			MindMapNode(model).viewDetails.text = textField.text;
 			
 			diagramShell.mainToolFinishedItsJob();
 		}

@@ -83,7 +83,7 @@ package org.flowerplatform.editor.mindmap {
 			lightWeightModelExtraInfoController = new LightweightModelExtraInfoController(this);
 			
 			registerTools([
-				ScrollTool, SelectOnClickTool, ZoomTool, InplaceEditorTool, DragTool]);
+				ScrollTool, ZoomTool, SelectOnClickTool, InplaceEditorTool, DragTool]);
 		}
 		
 		override public function getControllerProvider(model:Object):IControllerProvider {

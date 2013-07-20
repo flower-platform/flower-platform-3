@@ -27,9 +27,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 			IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-			addConnector(model);
-			
-			DiagramRenderer(diagramShell.diagramRenderer).callLater(MindMapDiagramShell(diagramShell).refreshNodePositions, [model]);
+			addConnector(model);			
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {
@@ -71,8 +69,10 @@ package org.flowerplatform.editor.mindmap.controller {
 //				addModelToRootChildren(model, true);			
 //			}
 			
-			if (shouldRefreshNodePositions) {					
-				MindMapDiagramShell(diagramShell).refreshNodePositions(model);				
+			if (shouldRefreshNodePositions) {	
+				if (event.oldValue != event.newValue) {
+					MindMapDiagramShell(diagramShell).refreshNodePositions(model);		
+				}
 			}
 			
 			if (shouldUpdateConnectors) {
