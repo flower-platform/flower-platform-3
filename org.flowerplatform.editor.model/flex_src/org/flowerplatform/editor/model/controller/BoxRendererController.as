@@ -8,9 +8,9 @@ package org.flowerplatform.editor.model.controller {
 	/**
 	 * @author Cristian Spiescu
 	 */
-	public class BasicModelRendererController extends ClassReferenceRendererController {
+	public class BoxRendererController extends ClassReferenceRendererController {
 		
-		public function BasicModelRendererController(diagramShell:DiagramShell) {
+		public function BoxRendererController(diagramShell:DiagramShell) {
 			super(diagramShell, BoxRenderer);
 		}
 		

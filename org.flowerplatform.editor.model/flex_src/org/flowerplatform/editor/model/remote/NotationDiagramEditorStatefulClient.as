@@ -39,5 +39,11 @@ package org.flowerplatform.editor.model.remote {
 		public function service_addNew(method:String, viewId:Object, label:String):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", method, [viewId, label]));
 		}
+		
+		
+		public function service_addNewConnection(sourceViewId:Object, targetViewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewConnection", [diagramId, sourceViewId, targetViewId]));
+		}
+
 	}
 }

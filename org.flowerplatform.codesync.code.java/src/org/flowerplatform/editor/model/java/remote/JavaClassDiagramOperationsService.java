@@ -7,6 +7,8 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
@@ -109,6 +111,18 @@ public class JavaClassDiagramOperationsService {
 		operationCse.setType(JavaOperationModelAdapter.OPERATION);
 		
 		clsCse.getChildren().add(operationCse);
+	}
+	
+	public void addNewConnection(ServiceInvocationContext context, String diagramId, String sourceViewId, String targetViewId) {
+		View sourceView = getViewById(context, sourceViewId);
+		View targetView = getViewById(context, targetViewId);
+		Diagram diagram = (Diagram) getViewById(context, diagramId);
+		
+		Edge edge = NotationFactory.eINSTANCE.createEdge();
+		edge.setViewType("scenarioInterraction");
+		edge.setSource(sourceView);
+		edge.setTarget(targetView);
+		diagram.getPersistentEdges().add(edge);
 	}
 	
 	protected String setVisibility(ModifiableElement element, String label) {

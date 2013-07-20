@@ -52,6 +52,15 @@ package org.flowerplatform.editor.model
 			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
 				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_operations(View(diagramShell.selectedItems.getItemAt(0)).id);
 			});
+			
+			testButton = new Button();
+			resourceStatusBar.addChild(testButton);
+			testButton.label = "Test/Add Connection";
+			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+				NotationDiagramEditorStatefulClient(editorStatefulClient).service_addNewConnection(
+					View(diagramShell.selectedItems.getItemAt(0)).id,
+					View(diagramShell.selectedItems.getItemAt(1)).id);
+			});
 		}
 		
 		override protected function getDiagramShellInstance():DiagramShell {

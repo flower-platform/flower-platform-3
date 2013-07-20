@@ -35,6 +35,15 @@ public interface NotationFactory extends EFactory {
 	Node createNode();
 
 	/**
+	 * Returns a new object of class '<em>Edge</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Edge</em>'.
+	 * @generated
+	 */
+	Edge createEdge();
+
+	/**
 	 * Returns a new object of class '<em>Diagram</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -13,6 +13,8 @@
     <classEntry path="org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient"/>
     <classEntry path="org.flowerplatform.editor.model.NotationDiagramEditorDescriptor"/>
     <classEntry path="org.flowerplatform.editor.model.NotationDiagramEditorFrontend"/>
+    <classEntry path="org.flowerplatform.editor.model.controller.DiagramModelChildrenController"/>
+    <classEntry path="org.flowerplatform.editor.model.controller.EdgeRendererController"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

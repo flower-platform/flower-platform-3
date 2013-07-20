@@ -91,6 +91,14 @@ public class NotationSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case NotationPackage.EDGE: {
+				Edge edge = (Edge)theEObject;
+				T result = caseEdge(edge);
+				if (result == null) result = caseView(edge);
+				if (result == null) result = caseNotationElement(edge);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case NotationPackage.DIAGRAM: {
 				Diagram diagram = (Diagram)theEObject;
 				T result = caseDiagram(diagram);
@@ -186,6 +194,21 @@ public class NotationSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseNode(Node object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Edge</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Edge</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEdge(Edge object) {
 		return null;
 	}
 

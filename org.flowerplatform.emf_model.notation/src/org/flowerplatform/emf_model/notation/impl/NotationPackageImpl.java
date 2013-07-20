@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.LayoutConstraint;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.MindMapNode;
@@ -50,6 +51,13 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	private EClass nodeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass edgeEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -231,6 +239,24 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getView_SourceEdges() {
+		return (EReference)viewEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getView_TargetEdges() {
+		return (EReference)viewEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getNode() {
 		return nodeEClass;
 	}
@@ -249,6 +275,33 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getEdge() {
+		return edgeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEdge_Source() {
+		return (EReference)edgeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEdge_Target() {
+		return (EReference)edgeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getDiagram() {
 		return diagramEClass;
 	}
@@ -260,6 +313,15 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 */
 	public EAttribute getDiagram_Name() {
 		return (EAttribute)diagramEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getDiagram_PersistentEdges() {
+		return (EReference)diagramEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -416,12 +478,19 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		createEReference(viewEClass, VIEW__PERSISTENT_CHILDREN);
 		createEAttribute(viewEClass, VIEW__VIEW_DETAILS);
 		createEReference(viewEClass, VIEW__DIAGRAMMABLE_ELEMENT);
+		createEReference(viewEClass, VIEW__SOURCE_EDGES);
+		createEReference(viewEClass, VIEW__TARGET_EDGES);
 
 		nodeEClass = createEClass(NODE);
 		createEReference(nodeEClass, NODE__LAYOUT_CONSTRAINT);
 
+		edgeEClass = createEClass(EDGE);
+		createEReference(edgeEClass, EDGE__SOURCE);
+		createEReference(edgeEClass, EDGE__TARGET);
+
 		diagramEClass = createEClass(DIAGRAM);
 		createEAttribute(diagramEClass, DIAGRAM__NAME);
+		createEReference(diagramEClass, DIAGRAM__PERSISTENT_EDGES);
 
 		layoutConstraintEClass = createEClass(LAYOUT_CONSTRAINT);
 
@@ -472,6 +541,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		// Add supertypes to classes
 		viewEClass.getESuperTypes().add(this.getNotationElement());
 		nodeEClass.getESuperTypes().add(this.getView());
+		edgeEClass.getESuperTypes().add(this.getView());
 		diagramEClass.getESuperTypes().add(this.getView());
 		locationEClass.getESuperTypes().add(this.getNotationElement());
 		locationEClass.getESuperTypes().add(this.getLayoutConstraint());
@@ -489,14 +559,21 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEReference(getView_PersistentChildren(), this.getNode(), null, "persistentChildren", null, 0, -1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getView_ViewDetails(), ecorePackage.getEJavaObject(), "viewDetails", null, 0, 1, View.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getView_DiagrammableElement(), ecorePackage.getEObject(), null, "diagrammableElement", null, 0, 1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getView_SourceEdges(), this.getEdge(), this.getEdge_Source(), "sourceEdges", null, 0, -1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getView_TargetEdges(), this.getEdge(), this.getEdge_Target(), "targetEdges", null, 0, -1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		addEOperation(viewEClass, this.getNode(), "getAllChildren", 0, -1, IS_UNIQUE, IS_ORDERED);
 
 		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getNode_LayoutConstraint(), this.getBounds(), null, "layoutConstraint", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(edgeEClass, Edge.class, "Edge", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getEdge_Source(), this.getView(), this.getView_SourceEdges(), "source", null, 0, 1, Edge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getEdge_Target(), this.getView(), this.getView_TargetEdges(), "target", null, 0, 1, Edge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(diagramEClass, Diagram.class, "Diagram", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDiagram_Name(), ecorePackage.getEString(), "name", null, 1, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getDiagram_PersistentEdges(), this.getEdge(), null, "persistentEdges", null, 0, -1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(layoutConstraintEClass, LayoutConstraint.class, "LayoutConstraint", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

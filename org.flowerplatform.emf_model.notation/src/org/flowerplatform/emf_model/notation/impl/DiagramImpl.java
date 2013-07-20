@@ -6,13 +6,20 @@
  */
 package org.flowerplatform.emf_model.notation.impl;
 
+import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 
 /**
@@ -23,6 +30,7 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getPersistentEdges <em>Persistent Edges</em>}</li>
  * </ul>
  * </p>
  *
@@ -48,6 +56,16 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getPersistentEdges() <em>Persistent Edges</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getPersistentEdges()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Edge> persistentEdges;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -94,11 +112,39 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Edge> getPersistentEdges() {
+		if (persistentEdges == null) {
+			persistentEdges = new EObjectContainmentEList<Edge>(Edge.class, this, NotationPackage.DIAGRAM__PERSISTENT_EDGES);
+		}
+		return persistentEdges;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
+				return ((InternalEList<?>)getPersistentEdges()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case NotationPackage.DIAGRAM__NAME:
 				return getName();
+			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
+				return getPersistentEdges();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -108,11 +154,16 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case NotationPackage.DIAGRAM__NAME:
 				setName((String)newValue);
+				return;
+			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
+				getPersistentEdges().clear();
+				getPersistentEdges().addAll((Collection<? extends Edge>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -129,6 +180,9 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 			case NotationPackage.DIAGRAM__NAME:
 				setName(NAME_EDEFAULT);
 				return;
+			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
+				getPersistentEdges().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -143,6 +197,8 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 		switch (featureID) {
 			case NotationPackage.DIAGRAM__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
+				return persistentEdges != null && !persistentEdges.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

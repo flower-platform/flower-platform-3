@@ -22,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.flowerplatform.emf_model.notation.View#getPersistentChildren <em>Persistent Children</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.View#getViewDetails <em>View Details</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.View#getDiagrammableElement <em>Diagrammable Element</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.View#getSourceEdges <em>Source Edges</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.View#getTargetEdges <em>Target Edges</em>}</li>
  * </ul>
  * </p>
  *
@@ -123,6 +125,42 @@ public interface View extends NotationElement {
 	 * @generated
 	 */
 	void setDiagrammableElement(EObject value);
+
+	/**
+	 * Returns the value of the '<em><b>Source Edges</b></em>' reference list.
+	 * The list contents are of type {@link org.flowerplatform.emf_model.notation.Edge}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.emf_model.notation.Edge#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Source Edges</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Source Edges</em>' reference list.
+	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getView_SourceEdges()
+	 * @see org.flowerplatform.emf_model.notation.Edge#getSource
+	 * @model opposite="source"
+	 * @generated
+	 */
+	EList<Edge> getSourceEdges();
+
+	/**
+	 * Returns the value of the '<em><b>Target Edges</b></em>' reference list.
+	 * The list contents are of type {@link org.flowerplatform.emf_model.notation.Edge}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.emf_model.notation.Edge#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Target Edges</em>' reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Target Edges</em>' reference list.
+	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getView_TargetEdges()
+	 * @see org.flowerplatform.emf_model.notation.Edge#getTarget
+	 * @model opposite="target"
+	 * @generated
+	 */
+	EList<Edge> getTargetEdges();
 
 	/**
 	 * <!-- begin-user-doc -->
