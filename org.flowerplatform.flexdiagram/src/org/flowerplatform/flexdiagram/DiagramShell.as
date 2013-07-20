@@ -1,4 +1,6 @@
 package org.flowerplatform.flexdiagram {
+	import flash.events.Event;
+	import flash.events.IEventDispatcher;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import flash.utils.Dictionary;
@@ -12,7 +14,9 @@ package org.flowerplatform.flexdiagram {
 	import mx.core.UIComponent;
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
+	import mx.events.MoveEvent;
 	import mx.events.PropertyChangeEvent;
+	import mx.events.ResizeEvent;
 	
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
@@ -215,6 +219,15 @@ package org.flowerplatform.flexdiagram {
 			if (selectionController != null) {
 				selectionController.associatedModelToSelectionRenderer(model, renderer);
 			}
+			
+			// connection related
+			if (renderer != diagramRenderer) {
+				if (model is IEventDispatcher) {
+					IEventDispatcher(model).dispatchEvent(new UpdateConnectionEndsEvent());
+				}
+				renderer.addEventListener(ResizeEvent.RESIZE, moveResizeHandler);
+				renderer.addEventListener(MoveEvent.MOVE, moveResizeHandler);
+			}
 		}
 		
 		public function unassociateModelFromRenderer(model:Object, renderer:IVisualElement, modelIsDisposed:Boolean, controllerProvider:IControllerProvider = null):void {
@@ -241,6 +254,11 @@ package org.flowerplatform.flexdiagram {
 				if (renderer is IDiagramShellAware) {
 					IDiagramShellAware(renderer).diagramShell = null;
 				}
+				// connection related
+				if (renderer != diagramRenderer) {
+					renderer.removeEventListener(ResizeEvent.RESIZE, moveResizeHandler);
+					renderer.removeEventListener(MoveEvent.MOVE, moveResizeHandler);
+				}
 			}
 
 			var rendererController:IRendererController = controllerProvider.getRendererController(model);
@@ -256,6 +274,26 @@ package org.flowerplatform.flexdiagram {
 			
 			if (modelIsDisposed) {
 				delete modelToExtraInfoMap[model];
+			}
+		}
+		
+		protected function moveResizeHandler(event:Event, model:Object = null):void {
+			if (model == null) {
+				model = IEventDispatcher(event.target.data);
+			}
+			model.dispatchEvent(new UpdateConnectionEndsEvent());
+			
+			var controller:IModelChildrenController = getControllerProvider(model).getModelChildrenController(model);
+			if (controller == null) {
+				return;
+			}
+			// TODO CS/FP2 de vazut daca nu se trimit prea multe evenimente. de controlat cu trace. E.g. la inceput? Sa facem un sistem de flag, ca la updateDispList?
+			// sigur e o problema! vad ca se intra de multe ori pe aici, si in CoReCo.getEstimate....: cam la orice operatiune. De asemenea, la display de diag initial,
+			// linia e un pic decalata
+			// UPDATE: am rezolvat un pic, caci se trimitea de multe ori pentru ca era inregitrat si pentru diagrama
+			var children:IList = controller.getChildren(model);
+			for (var i:int = 0; i < children.length; i++) {
+				moveResizeHandler(null, children.getItemAt(i));
 			}
 		}
 		

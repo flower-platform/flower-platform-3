@@ -6,8 +6,8 @@ package org.flowerplatform.flexdiagram.samples.model {
 	 */
 	public class BasicConnection {
 
-		public var source:BasicModel;
-		public var target:BasicModel;
+		public var source:Object;
+		public var target:Object;
 	
 	}
 }

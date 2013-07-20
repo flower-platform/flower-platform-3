@@ -4,8 +4,9 @@ package org.flowerplatform.flexdiagram.controller.model_children {
 	import mx.events.CollectionEvent;
 	import mx.events.CollectionEventKind;
 	import mx.events.PropertyChangeEvent;
-	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
 	/**
@@ -23,6 +24,10 @@ package org.flowerplatform.flexdiagram.controller.model_children {
 		public function ParentAwareArrayListModelChildrenController(diagramShell:DiagramShell, shouldListenForRemovedElements:Boolean) {
 			super(diagramShell);
 			this.shouldListenForRemovedElements = shouldListenForRemovedElements;
+		}
+		
+		public function getParent(model:Object):Object {
+			return getParentAwareArrayList(model).parent;
 		}
 		
 		public function getChildren(model:Object):IList {

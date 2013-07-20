@@ -40,6 +40,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider"/>
     <classEntry path="org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController"/>
     <classEntry path="org.flowerplatform.flexdiagram.controller.selection.SelectionController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

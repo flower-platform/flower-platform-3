@@ -11,6 +11,7 @@
 	<fx:Script>
 		<![CDATA[
 			import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
+			import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
 			import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 		]]>
 	</fx:Script>
@@ -49,6 +50,13 @@
 			[Bindable]
 			private var mainTool:Tool;
 			
+			private function getSelectedBasicModel(object:Object):BasicModel {
+				if (object is BasicModel) {
+					return BasicModel(object);
+				}
+				return null;
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -60,7 +68,7 @@
 	
 	<fx:Binding source="subModelName.text" destination="selectedSubModel.name"/>
 	
-	<fx:Binding source="list.selectedItem" destination="selectedModel"/>
+	<fx:Binding source="getSelectedBasicModel(list.selectedItem)" destination="selectedModel"/>
 	<fx:Binding source="subModelsList.selectedItem" destination="selectedSubModel"/>
 	<fx:Binding source="diagramShell.mainTool" destination="mainTool"/>
 	<fx:Binding source="diagramShell.selectedItems" destination="selectedItems"/>
@@ -106,12 +114,12 @@
 						<s:Button id="deleteButton" label="Delete" enabled="{list.selectedItem != null}">
 							<s:click>
 								<![CDATA[
-								modelHolder.rootModel.removeItem(selectedModel);
+								modelHolder.rootModel.removeItem(list.selectedItem);
 								]]>
 							</s:click>
 						</s:Button>
 					</s:HGroup>
-					<s:List id="list" dataProvider="{modelHolder.rootModel}" width="100%" height="200"/>			
+					<s:List id="list" allowMultipleSelection="true" dataProvider="{modelHolder.rootModel}" width="100%" height="200"/>			
 				</s:VGroup>
 				<s:VGroup id="vg2" width="50%" height="100%">
 					<s:Label text="SubModels"/>
@@ -119,8 +127,7 @@
 						<s:Button label="Add" enabled="{list.selectedItem != null}">
 							<s:click>
 								<![CDATA[
-								var submodel:BasicSubModel = new BasicSubModel();
-								submodel.name = "new";
+								var submodel:BasicSubModel = new BasicSubModel("new", selectedModel);
 								selectedModel.subModels.addItemAt(submodel, 0);
 								]]>
 							</s:click>
@@ -133,9 +140,23 @@
 							</s:click>
 						</s:Button>				
 					</s:HGroup>
-					<s:List id="subModelsList" dataProvider="{list.selectedItem.subModels}" width="100%" height="200"/>
+					<s:List id="subModelsList" allowMultipleSelection="true" dataProvider="{list.selectedItem.subModels}" width="100%" height="200"/>
 				</s:VGroup>
 			</s:HGroup>
+			<s:Button label="Add Connection" enabled="{selectedItems.length == 2}">
+				<s:click>
+					<![CDATA[
+					var sourceModel:Object;
+					var targetModel:Object;
+					sourceModel = selectedItems.getItemAt(0);
+					targetModel = selectedItems.getItemAt(1);
+					var model:BasicConnection = new BasicConnection();
+					model.source = sourceModel;
+					model.target = targetModel;
+					modelHolder.rootModel.addItem(model);
+					]]>
+				</s:click>
+			</s:Button>
 			<s:HGroup width="100%" height="100%">
 				<s:VGroup id="vg3" width="100%" height="100%">
 					<s:Label text="SelectedItems"/>

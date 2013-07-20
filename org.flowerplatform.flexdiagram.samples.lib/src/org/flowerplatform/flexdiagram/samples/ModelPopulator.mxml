@@ -35,9 +35,9 @@
 				model.y = 220;
 				model.width = 100;
 				model.height = 100;
-				model.subModels.addItem(new BasicSubModel("bsm1"));
-				model.subModels.addItem(new BasicSubModel("bsm2"));
-				model.subModels.addItem(new BasicSubModel("bsm3"));
+				model.subModels.addItem(new BasicSubModel("bsm1", model));
+				model.subModels.addItem(new BasicSubModel("bsm2", model));
+				model.subModels.addItem(new BasicSubModel("bsm3", model));
 				modelHolder.rootModel.addItem(model);
 				
 				model = new BasicModel();
@@ -46,9 +46,9 @@
 				model.y = 800;
 				model.width = 100;
 				model.height = 100;
-				model.subModels.addItem(new BasicSubModel("bsm1"));
-				model.subModels.addItem(new BasicSubModel("bsm2"));
-				model.subModels.addItem(new BasicSubModel("bsm3"));
+				model.subModels.addItem(new BasicSubModel("bsm1", model));
+				model.subModels.addItem(new BasicSubModel("bsm2", model));
+				model.subModels.addItem(new BasicSubModel("bsm3", model));
 				modelHolder.rootModel.addItem(model);
 				
 				var connection:BasicConnection;
@@ -85,7 +85,7 @@
 						model.width = paramWidth;
 						model.height = paramHeight;
 						for (var sm:int = 0; sm < paramNoSubmodels; sm++) {
-							var subModel:BasicSubModel = new BasicSubModel();
+							var subModel:BasicSubModel = new BasicSubModel(null, model);
 							subModel.name = "SubModel" + sm + "(" + currentSubModel++ + ")";
 							model.subModels.addItem(subModel);
 						}
