@@ -18,14 +18,13 @@ public class WikiSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner {
 
 	@Override
 	public void runCodeSyncAlgorithm(IProject project, IResource resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
-		File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(resource);
 		File projectFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project);
 		String name = projectFile.getPath();
 		// this will be a temporary tree, do not send the project
 		CodeSyncRoot leftRoot = WikiPlugin.getInstance().getWikiTree(null, projectFile, name, technology);
-		CodeSyncRoot rightRoot = WikiPlugin.getInstance().getWikiTree(project, null, name, technology); // TODO wiki == null?
+		CodeSyncRoot rightRoot = WikiPlugin.getInstance().getWikiTree(project, null, name, technology);
 		
-		WikiPlugin.getInstance().updateTree(leftRoot, rightRoot, project, technology, communicationChannel);
+		WikiPlugin.getInstance().updateTree(leftRoot, rightRoot, project, technology, communicationChannel, true);
 	}
 
 }

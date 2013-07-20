@@ -84,15 +84,18 @@ package  org.flowerplatform.editor {
 						if (existingStatefulClient is EditorStatefulClient) {
 							var existingEditorStatefulClient:EditorStatefulClient = EditorStatefulClient(existingStatefulClient);
 							if (existingEditorStatefulClient.editorDescriptor == this && existingEditorStatefulClient.editableResourcePath == editableResourcePath) {
-								// the resource is already opened by this type of editor
-								
-								// bring it to front
-								var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
-								var editorFrontend:EditorFrontend = EditorFrontend(existingEditorStatefulClient.editorFrontends[0]);
-								// normally if the ESC exists => it has at least 1 EditorFrontend; if abnormally this is not true => exception here
-								workbench.setActiveView(editorFrontend);
-								// and exit
-								return editorFrontend;
+								if (existingEditorStatefulClient.editorFrontends.length > 0) {
+									// the resource is already opened by this type of editor
+									
+									// bring it to front
+									var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
+									
+									var editorFrontend:EditorFrontend = EditorFrontend(existingEditorStatefulClient.editorFrontends[0]);
+									// normally if the ESC exists => it has at least 1 EditorFrontend; if abnormally this is not true => exception here
+									workbench.setActiveView(editorFrontend);
+									// and exit
+									return editorFrontend;
+								}
 							}
 						}
 					}

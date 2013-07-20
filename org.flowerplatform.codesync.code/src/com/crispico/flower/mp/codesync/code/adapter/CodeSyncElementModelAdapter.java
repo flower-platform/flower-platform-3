@@ -70,7 +70,7 @@ public class CodeSyncElementModelAdapter extends SyncElementModelAdapter {
 		if (astCacheElementModelAdapter != null) {
 			astCacheElementModelAdapter.removeChildrenOnContainmentFeature(parent, feature, child);
 		} else {
-			removeChildrenOnContainmentFeature(parent, feature, child);
+			super.removeChildrenOnContainmentFeature(parent, feature, child);
 		}
 	}
 	

@@ -274,7 +274,7 @@ public class CodeSyncWikiTest {
 	private void test(CodeSyncRoot leftRoot, CodeSyncRoot rightRoot, String technology, Pair[] expected) {
 		IProject project = getProject();
 		WikiPlugin wikiPlugin = WikiPlugin.getInstance();
-		wikiPlugin.updateTree(leftRoot, rightRoot, project, technology, communicationChannel);
+		wikiPlugin.updateTree(leftRoot, rightRoot, project, technology, communicationChannel, true);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
@@ -282,7 +282,7 @@ public class CodeSyncWikiTest {
 		assertNotNull(editableResource);
 		
 		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString(), true);
 		
 		if (expected != null) {
 			testWikiTree(rightRoot, 0);

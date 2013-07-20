@@ -96,7 +96,7 @@ public class CodeSyncTest {
 	public void before() {
 		IProject project = getProject();
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		service.cancelSelectedActions(project.getFullPath().toString());
+		service.cancelSelectedActions(project.getFullPath().toString(), true);
 	}
 	
 	@Test
@@ -117,8 +117,8 @@ public class CodeSyncTest {
 		assertEquals(1, match.getSubMatches().size());
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
-		service.cancelSelectedActions(project.getFullPath().toString());
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString(), true);
+		service.cancelSelectedActions(project.getFullPath().toString(), true);
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		Pair[] typeList = {
@@ -440,7 +440,7 @@ public class CodeSyncTest {
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString(), true);
 		
 		String expected = TestUtil.readFile(DIR + TestUtil.EXPECTED + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE);
 		String actual = TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(file.getFullPath().toString()));

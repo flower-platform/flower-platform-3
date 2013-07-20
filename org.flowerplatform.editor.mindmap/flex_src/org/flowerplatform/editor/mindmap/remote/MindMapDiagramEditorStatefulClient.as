@@ -11,6 +11,10 @@ package org.flowerplatform.editor.mindmap.remote {
 		
 		private static const SERVICE_ID:String = "mindMapDiagramOperationsService";
 		
+		public override function getStatefulServiceId():String {	
+			return "mindmapEditorStatefulService";
+		}
+		
 		public function service_setSide(viewId:Object, side:int):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "setSide", [viewId, side]));
 		}
