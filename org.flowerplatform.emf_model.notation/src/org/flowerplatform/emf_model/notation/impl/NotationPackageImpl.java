@@ -195,17 +195,8 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getView_ParentView() {
-		return (EReference)viewEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getView_ViewType() {
-		return (EAttribute)viewEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)viewEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -214,7 +205,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	public EReference getView_PersistentChildren() {
-		return (EReference)viewEClass.getEStructuralFeatures().get(2);
+		return (EReference)viewEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -223,7 +214,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	public EAttribute getView_ViewDetails() {
-		return (EAttribute)viewEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)viewEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -232,7 +223,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	public EReference getView_DiagrammableElement() {
-		return (EReference)viewEClass.getEStructuralFeatures().get(4);
+		return (EReference)viewEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -375,8 +366,17 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getMindMapNode_Side() {
+	public EAttribute getMindMapNode_HasChildren() {
 		return (EAttribute)mindMapNodeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMindMapNode_Side() {
+		return (EAttribute)mindMapNodeEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -412,7 +412,6 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		createEAttribute(notationElementEClass, NOTATION_ELEMENT__ID_BEFORE_REMOVAL);
 
 		viewEClass = createEClass(VIEW);
-		createEReference(viewEClass, VIEW__PARENT_VIEW);
 		createEAttribute(viewEClass, VIEW__VIEW_TYPE);
 		createEReference(viewEClass, VIEW__PERSISTENT_CHILDREN);
 		createEAttribute(viewEClass, VIEW__VIEW_DETAILS);
@@ -439,6 +438,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 
 		mindMapNodeEClass = createEClass(MIND_MAP_NODE);
 		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__EXPANDED);
+		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__HAS_CHILDREN);
 		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__SIDE);
 	}
 
@@ -485,7 +485,6 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEAttribute(getNotationElement_IdBeforeRemoval(), ecorePackage.getEString(), "idBeforeRemoval", null, 0, 1, NotationElement.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(viewEClass, View.class, "View", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getView_ParentView(), this.getView(), null, "parentView", null, 0, 1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getView_ViewType(), ecorePackage.getEString(), "viewType", null, 1, 1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getView_PersistentChildren(), this.getNode(), null, "persistentChildren", null, 0, -1, View.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getView_ViewDetails(), ecorePackage.getEJavaObject(), "viewDetails", null, 0, 1, View.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -514,6 +513,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 
 		initEClass(mindMapNodeEClass, MindMapNode.class, "MindMapNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getMindMapNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMindMapNode_HasChildren(), ecorePackage.getEBoolean(), "hasChildren", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMindMapNode_Side(), ecorePackage.getEInt(), "side", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource

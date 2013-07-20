@@ -34,7 +34,6 @@ import org.flowerplatform.emf_model.notation.View;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getParentView <em>Parent View</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getViewType <em>View Type</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getPersistentChildren <em>Persistent Children</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getViewDetails <em>View Details</em>}</li>
@@ -45,16 +44,6 @@ import org.flowerplatform.emf_model.notation.View;
  * @generated
  */
 public abstract class ViewImpl extends NotationElementImpl implements View {
-	/**
-	 * The cached value of the '{@link #getParentView() <em>Parent View</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getParentView()
-	 * @generated
-	 * @ordered
-	 */
-	protected View parentView;
-
 	/**
 	 * The default value of the '{@link #getViewType() <em>View Type</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -139,49 +128,6 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public View getParentView() {
-		return parentView;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetParentView(View newParentView, NotificationChain msgs) {
-		View oldParentView = parentView;
-		parentView = newParentView;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, NotationPackage.VIEW__PARENT_VIEW, oldParentView, newParentView);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setParentView(View newParentView) {
-		if (newParentView != parentView) {
-			NotificationChain msgs = null;
-			if (parentView != null)
-				msgs = ((InternalEObject)parentView).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - NotationPackage.VIEW__PARENT_VIEW, null, msgs);
-			if (newParentView != null)
-				msgs = ((InternalEObject)newParentView).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - NotationPackage.VIEW__PARENT_VIEW, null, msgs);
-			msgs = basicSetParentView(newParentView, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.VIEW__PARENT_VIEW, newParentView, newParentView));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getViewType() {
 		return viewType;
 	}
@@ -210,6 +156,15 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 		return persistentChildren;
 	}
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public View getParentView() {
+		return (View) eContainer();
+	}
+	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -288,8 +243,6 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case NotationPackage.VIEW__PARENT_VIEW:
-				return basicSetParentView(null, msgs);
 			case NotationPackage.VIEW__PERSISTENT_CHILDREN:
 				return ((InternalEList<?>)getPersistentChildren()).basicRemove(otherEnd, msgs);
 		}
@@ -304,8 +257,6 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case NotationPackage.VIEW__PARENT_VIEW:
-				return getParentView();
 			case NotationPackage.VIEW__VIEW_TYPE:
 				return getViewType();
 			case NotationPackage.VIEW__PERSISTENT_CHILDREN:
@@ -328,9 +279,6 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case NotationPackage.VIEW__PARENT_VIEW:
-				setParentView((View)newValue);
-				return;
 			case NotationPackage.VIEW__VIEW_TYPE:
 				setViewType((String)newValue);
 				return;
@@ -356,9 +304,6 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case NotationPackage.VIEW__PARENT_VIEW:
-				setParentView((View)null);
-				return;
 			case NotationPackage.VIEW__VIEW_TYPE:
 				setViewType(VIEW_TYPE_EDEFAULT);
 				return;
@@ -383,8 +328,6 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case NotationPackage.VIEW__PARENT_VIEW:
-				return parentView != null;
 			case NotationPackage.VIEW__VIEW_TYPE:
 				return VIEW_TYPE_EDEFAULT == null ? viewType != null : !VIEW_TYPE_EDEFAULT.equals(viewType);
 			case NotationPackage.VIEW__PERSISTENT_CHILDREN:

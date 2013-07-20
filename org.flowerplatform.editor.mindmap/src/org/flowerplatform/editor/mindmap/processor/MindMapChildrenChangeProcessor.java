@@ -22,12 +22,24 @@ public class MindMapChildrenChangeProcessor extends CodeSyncElementFeatureChange
 	}
 
 	@Override
-	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {
+	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {		
 		MindMapNode node = NotationFactory.eINSTANCE.createMindMapNode();
 		node.setViewType(getCodeSyncElement(child).getType());		
+		node.setSide(1);		
+		node.setExpanded(false);		
+		node.setHasChildren(getChildrenForCodeSyncElement(child).size() > 0);
 		return node;
 	}
-
+	
+	@Override
+	protected boolean canAddChildView(View view, EObject candidate) {
+		boolean canAdd = super.canAddChildView(view, candidate);
+		if (canAdd) {
+			return ((MindMapNode) view).isExpanded();
+		}
+		return canAdd;
+	}
+			
 	@Override
 	protected CodeSyncElement createModelElementChild(EObject object, View child) {
 		// TODO Auto-generated method stub

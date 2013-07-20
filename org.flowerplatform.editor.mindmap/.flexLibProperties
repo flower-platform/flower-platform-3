@@ -5,6 +5,8 @@
     <classEntry path="org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient"/>
     <classEntry path="org.flowerplatform.editor.mindmap.MindMapDiagramEditorFrontend"/>
     <classEntry path="org.flowerplatform.editor.mindmap.MindMapDiagramEditorDescriptor"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.controller.MindMapNodeChildrenController"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.controller.MindMapDiagramNodeChildrenController"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

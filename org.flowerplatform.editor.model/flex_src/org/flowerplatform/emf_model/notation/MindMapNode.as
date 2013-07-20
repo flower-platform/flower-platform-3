@@ -8,6 +8,8 @@ package org.flowerplatform.emf_model.notation {
 		
 		public var side:int;
 		
+		public var hasChildren:Boolean;
+		
 		[Transient]
 		public var x:Number = 0;
 		[Transient]

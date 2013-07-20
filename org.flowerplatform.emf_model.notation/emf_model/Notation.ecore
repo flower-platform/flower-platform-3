@@ -9,8 +9,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="idBeforeRemoval" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         transient="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="View" abstract="true" eSuperTypes="#//NotationElement">
-   <eStructuralFeatures xsi:type="ecore:EReference" name="parentView" eType="#//View" containment="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="View" abstract="true" eSuperTypes="#//NotationElement">   
     <eOperations name="getAllChildren" upperBound="-1" eType="#//Node"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewType" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -41,6 +40,7 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MindMapNode" eSuperTypes="#//Node">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="expanded" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="hasChildren" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="side" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -1,10 +1,12 @@
 package org.flowerplatform.flexdiagram.mindmap {
 	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelChildrenController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
@@ -23,10 +25,48 @@ package org.flowerplatform.flexdiagram.mindmap {
 		public var horizontalPadding:int = HORIZONTAL_PADDING_DEFAULT;
 		public var verticalPadding:int = VERTICAL_PADDING_DEFAULT;
 		
+		public var diagramChildren:ArrayList = new ArrayList();
+		
 		public function MindMapDiagramShell() {
 			super();			
 		}
 				
+		override public function set rootModel(value:Object):void {
+			super.rootModel = value;
+			if (rootModel == null) {
+				removeModelFromRootChildren(rootModel, true);
+			} else {
+				var model:Object = getControllerProvider(model).getModelChildrenController(rootModel).getChildren(rootModel).getItemAt(0);
+				addModelToRootChildren(model, true);
+			}			
+		}
+		
+		public function removeModelFromRootChildren(model:Object, removeOnlyChildren:Boolean = false):void {
+			var children:ArrayList = new ArrayList();
+			children.addAll(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel));
+			for (var i:int = 0; i < children.length; i++) {
+				var child:Object = children.getItemAt(i);
+				if (model == IMindMapControllerProvider(getControllerProvider(child)).getMindMapModelController(child).getParent(child)) {
+					removeModelFromRootChildren(child);			
+				}
+			}
+			if (!removeOnlyChildren) {
+				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).removeItem(model);					
+			}
+		}
+		
+		public function addModelToRootChildren(model:Object, addOnlyChildren:Boolean = false):void {
+			if (!addOnlyChildren) {
+				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).addItem(model);				
+			}		
+			if (model == rootModel || model.expanded) {
+				var children:IList = getControllerProvider(model).getModelChildrenController(model).getChildren(model);
+				for (var i:int = 0; i < children.length; i++) {
+					addModelToRootChildren(children.getItemAt(i));
+				}				
+			}
+		}
+		
 		public function getModelController(model:Object):IMindMapModelController {
 			return IMindMapControllerProvider(getControllerProvider(model)).getMindMapModelController(model);
 		}
@@ -76,7 +116,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		}
 		
 		private function calculateRootNodeExpandedHeight(side:int):void {
-			var model:Object = ParentAwareArrayList(rootModel).getItemAt(0);
+			var model:Object = getControllerProvider(model).getModelChildrenController(rootModel).getChildren(rootModel).getItemAt(0);
 			if (side == NONE || side == LEFT) { 
 				calculateExpandedHeight(model, LEFT);
 				getDynamicObject(model).expandedHeightLeft = getExpandedHeight(model);
@@ -89,7 +129,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		
 		private function calculateExpandedHeight(model:Object, side:int):Number {			
 			var expandedHeight:Number = 0;
-			var children:ArrayList = getModelController(model).getChildrenBasedOnSide(model, side);
+			var children:IList = IMindMapModelChildrenController(getControllerProvider(model).getModelChildrenController(model)).getChildrenBasedOnSide(model, side);
 			if (model.expanded && children.length > 0) {
 				for (var i:int = 0; i < children.length; i++) {
 					var child:Object = children.getItemAt(i);
@@ -125,7 +165,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 				getDynamicObject(model).expandedY = getModelController(model).getY(model) - (getExpandedHeight(model) - getModelController(model).getHeight(model))/2;		
 			}
 			if (getModelController(model).getExpanded(model)) {				
-				var children:ArrayList = getModelController(model).getChildrenBasedOnSide(model, side);				
+				var children:IList = IMindMapModelChildrenController(getControllerProvider(model).getModelChildrenController(model)).getChildrenBasedOnSide(model, side);				
 				for (var i:int = 0; i < children.length; i++) {
 					var child:Object = children.getItemAt(i);
 					if (i == 0) {
@@ -142,7 +182,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		private function changeSiblingsCoordinates(model:Object, diff:Number, side:int):void {
 			var parent:Object = getModelController(model).getParent(model);
 			if (parent != null) {
-				var children:ArrayList = getModelController(parent).getChildrenBasedOnSide(parent, side);				
+				var children:IList = IMindMapModelChildrenController(getControllerProvider(parent).getModelChildrenController(parent)).getChildrenBasedOnSide(parent, side);				
 				for (var i:int = 0; i < children.length; i++) {
 					var child:Object = children.getItemAt(i);
 					if (children.getItemIndex(model) > children.getItemIndex(child)) {				
@@ -158,7 +198,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		}
 		
 		private function changeSiblingChildrenCoordinates(model:Object, diff:Number, side:int):void {
-			var children:ArrayList = getModelController(model).getChildrenBasedOnSide(model, side);				
+			var children:IList = IMindMapModelChildrenController(getControllerProvider(model).getModelChildrenController(model)).getChildrenBasedOnSide(model, side);				
 			for (var i:int = 0; i < children.length; i++) {
 				var child:Object = children.getItemAt(i);
 				getModelController(child).setY(child, getModelController(child).getY(child) + diff);					

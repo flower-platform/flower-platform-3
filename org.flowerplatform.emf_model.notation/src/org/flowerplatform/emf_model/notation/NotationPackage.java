@@ -125,22 +125,13 @@ public interface NotationPackage extends EPackage {
 	int VIEW__ID_BEFORE_REMOVAL = NOTATION_ELEMENT__ID_BEFORE_REMOVAL;
 
 	/**
-	 * The feature id for the '<em><b>Parent View</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VIEW__PARENT_VIEW = NOTATION_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__VIEW_TYPE = NOTATION_ELEMENT_FEATURE_COUNT + 1;
+	int VIEW__VIEW_TYPE = NOTATION_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Persistent Children</b></em>' containment reference list.
@@ -149,7 +140,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__PERSISTENT_CHILDREN = NOTATION_ELEMENT_FEATURE_COUNT + 2;
+	int VIEW__PERSISTENT_CHILDREN = NOTATION_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>View Details</b></em>' attribute.
@@ -158,7 +149,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__VIEW_DETAILS = NOTATION_ELEMENT_FEATURE_COUNT + 3;
+	int VIEW__VIEW_DETAILS = NOTATION_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Diagrammable Element</b></em>' reference.
@@ -167,7 +158,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW__DIAGRAMMABLE_ELEMENT = NOTATION_ELEMENT_FEATURE_COUNT + 4;
+	int VIEW__DIAGRAMMABLE_ELEMENT = NOTATION_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>View</em>' class.
@@ -176,7 +167,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 5;
+	int VIEW_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.NodeImpl <em>Node</em>}' class.
@@ -205,15 +196,6 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int NODE__ID_BEFORE_REMOVAL = VIEW__ID_BEFORE_REMOVAL;
-
-	/**
-	 * The feature id for the '<em><b>Parent View</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NODE__PARENT_VIEW = VIEW__PARENT_VIEW;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -296,15 +278,6 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int DIAGRAM__ID_BEFORE_REMOVAL = VIEW__ID_BEFORE_REMOVAL;
-
-	/**
-	 * The feature id for the '<em><b>Parent View</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DIAGRAM__PARENT_VIEW = VIEW__PARENT_VIEW;
 
 	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
@@ -536,15 +509,6 @@ public interface NotationPackage extends EPackage {
 	int NOTE__ID_BEFORE_REMOVAL = NODE__ID_BEFORE_REMOVAL;
 
 	/**
-	 * The feature id for the '<em><b>Parent View</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NOTE__PARENT_VIEW = NODE__PARENT_VIEW;
-
-	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -637,15 +601,6 @@ public interface NotationPackage extends EPackage {
 	int MIND_MAP_NODE__ID_BEFORE_REMOVAL = NODE__ID_BEFORE_REMOVAL;
 
 	/**
-	 * The feature id for the '<em><b>Parent View</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIND_MAP_NODE__PARENT_VIEW = NODE__PARENT_VIEW;
-
-	/**
 	 * The feature id for the '<em><b>View Type</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -700,13 +655,22 @@ public interface NotationPackage extends EPackage {
 	int MIND_MAP_NODE__EXPANDED = NODE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Has Children</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_NODE__HAS_CHILDREN = NODE_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Side</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MIND_MAP_NODE__SIDE = NODE_FEATURE_COUNT + 1;
+	int MIND_MAP_NODE__SIDE = NODE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Mind Map Node</em>' class.
@@ -715,7 +679,7 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MIND_MAP_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 2;
+	int MIND_MAP_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.NotationElement <em>Element</em>}'.
@@ -758,17 +722,6 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getView();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.flowerplatform.emf_model.notation.View#getParentView <em>Parent View</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Parent View</em>'.
-	 * @see org.flowerplatform.emf_model.notation.View#getParentView()
-	 * @see #getView()
-	 * @generated
-	 */
-	EReference getView_ParentView();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.View#getViewType <em>View Type</em>}'.
@@ -973,6 +926,17 @@ public interface NotationPackage extends EPackage {
 	EAttribute getMindMapNode_Expanded();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.MindMapNode#isHasChildren <em>Has Children</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Has Children</em>'.
+	 * @see org.flowerplatform.emf_model.notation.MindMapNode#isHasChildren()
+	 * @see #getMindMapNode()
+	 * @generated
+	 */
+	EAttribute getMindMapNode_HasChildren();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.MindMapNode#getSide <em>Side</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1040,14 +1004,6 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EClass VIEW = eINSTANCE.getView();
-
-		/**
-		 * The meta object literal for the '<em><b>Parent View</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VIEW__PARENT_VIEW = eINSTANCE.getView_ParentView();
 
 		/**
 		 * The meta object literal for the '<em><b>View Type</b></em>' attribute feature.
@@ -1214,6 +1170,14 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MIND_MAP_NODE__EXPANDED = eINSTANCE.getMindMapNode_Expanded();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Children</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MIND_MAP_NODE__HAS_CHILDREN = eINSTANCE.getMindMapNode_HasChildren();
 
 		/**
 		 * The meta object literal for the '<em><b>Side</b></em>' attribute feature.
