@@ -22,6 +22,7 @@ import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
+import org.flowerplatform.emf_model.notation.Note;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -111,6 +112,10 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 							edge.setSource(sourceView);
 							edge.setTarget(targetView);
 							edge.setViewType("scenarioInterraction");
+//							Note note = NotationFactory.eINSTANCE.createNote();
+//							note.setViewType("scenarioInterractionLabel");
+//							note.setText(scenario.getNumber());
+//							edge.getPersistentChildren().add(note);
 							diagram.getPersistentEdges().add(edge);
 						}
 					}
@@ -127,9 +132,6 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 		for (Setting setting : adapter.getNonNavigableInverseReferences(object)) {
 			if (NotationPackage.eINSTANCE.getView_DiagrammableElement().equals(setting.getEStructuralFeature())) {
 				View view = (View) setting.getEObject();
-//				while (!view.getViewType().equals("class")) {
-//					view = (View) view.eContainer();
-//				}
 				return view;
 			}
 		}

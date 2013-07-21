@@ -32,40 +32,40 @@ package org.flowerplatform.editor.model
 		override protected function createChildren():void {			
 			super.createChildren();
 			
-			var testButton:Button = new Button();
-			resourceStatusBar.addChild(testButton);
-			testButton.label = "Test/Rename class";
-			
-			var textInput:TextInput = new TextInput();
-			resourceStatusBar.addChild(textInput);
-			textInput.text = "MyTest";
-			
-			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-				NotationDiagramEditorStatefulClient(editorStatefulClient).service_setInplaceEditorText(View(diagramShell.selectedItems.getItemAt(0)).id, textInput.text);
-			});
-			
-			testButton = new Button();
-			resourceStatusBar.addChild(testButton);
-			testButton.label = "Test/Expand attributes";
-			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_attributes(View(diagramShell.selectedItems.getItemAt(0)).id);
-			});
-			
-			testButton = new Button();
-			resourceStatusBar.addChild(testButton);
-			testButton.label = "Test/Expand operations";
-			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_operations(View(diagramShell.selectedItems.getItemAt(0)).id);
-			});
-			
-			testButton = new Button();
-			resourceStatusBar.addChild(testButton);
-			testButton.label = "Test/Add Connection";
-			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-				NotationDiagramEditorStatefulClient(editorStatefulClient).service_addNewConnection(
-					View(diagramShell.selectedItems.getItemAt(0)).id,
-					View(diagramShell.selectedItems.getItemAt(1)).id);
-			});
+//			var testButton:Button = new Button();
+//			resourceStatusBar.addChild(testButton);
+//			testButton.label = "Test/Rename class";
+//			
+//			var textInput:TextInput = new TextInput();
+//			resourceStatusBar.addChild(textInput);
+//			textInput.text = "MyTest";
+//			
+//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_setInplaceEditorText(View(diagramShell.selectedItems.getItemAt(0)).id, textInput.text);
+//			});
+//			
+//			testButton = new Button();
+//			resourceStatusBar.addChild(testButton);
+//			testButton.label = "Test/Expand attributes";
+//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_attributes(View(diagramShell.selectedItems.getItemAt(0)).id);
+//			});
+//			
+//			testButton = new Button();
+//			resourceStatusBar.addChild(testButton);
+//			testButton.label = "Test/Expand operations";
+//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_operations(View(diagramShell.selectedItems.getItemAt(0)).id);
+//			});
+//			
+//			testButton = new Button();
+//			resourceStatusBar.addChild(testButton);
+//			testButton.label = "Test/Add Connection";
+//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
+//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_addNewConnection(
+//					View(diagramShell.selectedItems.getItemAt(0)).id,
+//					View(diagramShell.selectedItems.getItemAt(1)).id);
+//			});
 			
 			var scenarioTree:GenericTreeList = new GenericTreeList();
 			scenarioTree.percentHeight = 100;
