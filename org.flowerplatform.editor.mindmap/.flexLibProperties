@@ -7,7 +7,13 @@
     <classEntry path="org.flowerplatform.editor.mindmap.MindMapDiagramEditorDescriptor"/>
     <classEntry path="org.flowerplatform.editor.mindmap.controller.MindMapNodeChildrenController"/>
     <classEntry path="org.flowerplatform.editor.mindmap.controller.MindMapDiagramNodeChildrenController"/>
-    <classEntry path="org.flowerplatform.editor.mindmap.TestAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewMindMapNodeAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewFolderAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewPageAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewHeadline1Action"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewHeadline2Action"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewHeadline3Action"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewParagraphAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

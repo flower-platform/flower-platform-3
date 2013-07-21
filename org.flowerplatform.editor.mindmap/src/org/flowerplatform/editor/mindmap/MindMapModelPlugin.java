@@ -32,9 +32,10 @@ public class MindMapModelPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, mmChildrenChangeProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, mmChildrenChangeProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_3_CATEGORY, mmChildrenChangeProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_4_CATEGORY, mmChildrenChangeProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_5_CATEGORY, mmChildrenChangeProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_6_CATEGORY, mmChildrenChangeProcessor);
+//		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_4_CATEGORY, mmChildrenChangeProcessor);
+//		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_5_CATEGORY, mmChildrenChangeProcessor);
+//		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.HEADLINE_LEVEL_6_CATEGORY, mmChildrenChangeProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.PARAGRAPH_CATEGORY, mmChildrenChangeProcessor);
 		
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor(WikiPlugin.FOLDER_CATEGORY, new MindMapFolderProcessor());

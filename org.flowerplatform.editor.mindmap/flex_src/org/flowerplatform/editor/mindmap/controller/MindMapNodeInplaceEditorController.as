@@ -7,6 +7,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	
 	import spark.components.TextInput;
@@ -18,6 +19,10 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		public function MindMapNodeInplaceEditorController(diagramShell:DiagramShell)	{
 			super(diagramShell);
+		}
+		
+		public function canActivate(model:Object):Boolean	{		
+			return getModelController(model).getParent(model) instanceof MindMapNode;
 		}
 				
 		public function activate(model:Object):void {
@@ -54,6 +59,10 @@ package org.flowerplatform.editor.mindmap.controller {
 			diagramShell.diagramRenderer.removeElement(textField);
 			
 			delete diagramShell.modelToExtraInfoMap[model].inplaceEditor;			
+		}
+		
+		private function getModelController(model:Object):IMindMapModelController {
+			return MindMapDiagramShell(diagramShell).getModelController(model);
 		}
 	}
 	

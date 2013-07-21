@@ -11,6 +11,7 @@ package org.flowerplatform.editor.mindmap.controller
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelChildrenController;
@@ -62,7 +63,8 @@ package org.flowerplatform.editor.mindmap.controller
 			MindMapDiagramShell(diagramShell).addModelToRootChildren(model, true);	
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
 
-			MindMapDiagramShell(diagramShell).refreshNodePositions(model);
+			getDynamicObject(model).shouldRefreshPosition = true;
+			DiagramRenderer(diagramShell.diagramRenderer).callLater(MindMapDiagramShell(diagramShell).refreshNodePositions, [model]);
 		}
 		
 		protected function objectDisposedHandler(event:TransferableObjectDisposedEvent):void {
@@ -79,6 +81,8 @@ package org.flowerplatform.editor.mindmap.controller
 			}
 		}
 		
-		
+		private function getDynamicObject(model:Object):Object {
+			return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
+		}
 	}
 }

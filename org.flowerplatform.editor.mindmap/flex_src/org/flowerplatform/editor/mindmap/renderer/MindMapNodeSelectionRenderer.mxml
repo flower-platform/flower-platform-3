@@ -27,7 +27,7 @@
 			import spark.primitives.Ellipse;
 						
 			[Bindable]
-			public var circleRadius:int = 8;
+			public var circleRadius:int = 10;
 			
 			public var padding:int = 3;
 			

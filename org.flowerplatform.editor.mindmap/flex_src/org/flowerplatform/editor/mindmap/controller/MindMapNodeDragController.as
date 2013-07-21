@@ -11,6 +11,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
+	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -46,7 +47,11 @@ package org.flowerplatform.editor.mindmap.controller {
 			var renderer:IVisualElement = getRendererFromCoordinates(point);			
 			var dropModel:Object = IDataRenderer(renderer).data;
 						
-			if (renderer is DiagramRenderer || !dragModelIsParentForDropModel(model, dropModel)) {
+			if (renderer is DiagramRenderer // don't drop over diagram 
+				|| !dragModelIsParentForDropModel(model, dropModel) // or children structure
+				|| (getModelController(dropModel).getParent(dropModel) is MindMapNode && getModelController(model).getParent(model) == dropModel) // or in same parent (except root)
+				|| ArrayList(NotationMindMapDiagramShell(diagramShell).editorStatefulClient.viewTypeToAcceptedViewTypeChildren[MindMapNode(dropModel).viewType]).getItemIndex(MindMapNode(model).viewType) == -1) { 
+				// or not accepted edit part
 				deletePlaceHolder(model);
 				return;
 			}
@@ -100,7 +105,11 @@ package org.flowerplatform.editor.mindmap.controller {
 			var renderer:IVisualElement = getRendererFromCoordinates(dropPoint);
 			
 			var dropModel:Object = IDataRenderer(renderer).data;
-			if (renderer is DiagramRenderer || !dragModelIsParentForDropModel(model, dropModel)) { // don't drop over diagram or same model
+			if (renderer is DiagramRenderer // don't drop over diagram 
+				|| !dragModelIsParentForDropModel(model, dropModel) // or children structure
+				|| (getModelController(dropModel).getParent(dropModel) is MindMapNode && getModelController(model).getParent(model) == dropModel) // or in same parent (except root)
+				|| ArrayList(NotationMindMapDiagramShell(diagramShell).editorStatefulClient.viewTypeToAcceptedViewTypeChildren[MindMapNode(dropModel).viewType]).getItemIndex(MindMapNode(model).viewType) == -1) { 
+				// or not accepted edit part
 				return;
 			}
 			
@@ -110,8 +119,7 @@ package org.flowerplatform.editor.mindmap.controller {
 			
 			// remove model from current parent
 			var dragParentModel:Object = getModelController(model).getParent(model);		
-//			getModelController(dragParentModel).getChildren(dragParentModel).removeItem(model);		
-			
+
 			// calculate new parent and position based on side
 			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : getModelController(dropModel).getParent(dropModel);	
 			var children:IList = diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getChildren(dropParentModel);	
@@ -227,7 +235,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		private function dragModelIsParentForDropModel(dragModel:Object, dropModel:Object):Boolean {
-			if (dragModel == dropModel || getModelController(dragModel).getParent(dragModel) == dropModel) {
+			if (dragModel == dropModel) {
 				return false;
 			}
 			if (getModelController(dropModel).getParent(dropModel) == null) {

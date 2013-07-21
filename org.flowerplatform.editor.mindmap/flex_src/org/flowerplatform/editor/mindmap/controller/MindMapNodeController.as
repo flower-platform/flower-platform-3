@@ -12,6 +12,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	
@@ -26,7 +27,11 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		public function getParent(model:Object):Object {			
 			if (MindMapNode(model).parentView_RH != null) {
-				if (ReferenceHolder(MindMapNode(model).parentView_RH).referencedObject is Diagram) {
+				try {
+					if (MindMapNode(model).parentView_RH.referencedObject is Diagram) {
+						return null;
+					}
+				} catch (e:Error) {
 					return null;
 				}
 				return ReferenceHolder(MindMapNode(model).parentView_RH).referencedObject;
@@ -35,12 +40,6 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function setParent(model:Object, value:Object):void {
-//			var oldParent:Object = model.parent;
-//			var newParent:MindMapNode = MindMapNode(value);
-//			if (newParent.side != MindMapDiagramShell.NONE && newParent.side != MindMapNode(model).side) {
-//				setSide(model, newParent.side);				
-//			}
-//			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "parent", oldParent, newParent));
 		}
 		
 		public function setChildren(model:Object, value:ArrayList):void {
@@ -59,8 +58,8 @@ package org.flowerplatform.editor.mindmap.controller {
 			return MindMapNode(model).y;			
 		}
 		
-		public function setY(model:Object, value:Number):void {		
-			MindMapNode(model).setY(value);
+		public function setY(model:Object, value:Number):void {				
+			MindMapNode(model).setY(value);			
 		}
 		
 		public function getWidth(model:Object):Number {		
@@ -75,7 +74,7 @@ package org.flowerplatform.editor.mindmap.controller {
 			return MindMapNode(model).height;			
 		}
 		
-		public function setHeight(model:Object, value:Number):void {
+		public function setHeight(model:Object, value:Number):void {			
 			MindMapNode(model).setHeight(value);
 		}
 		
@@ -93,6 +92,10 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		public function setSide(model:Object, value:int):void {
 			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setSide(MindMapNode(model).id, value);
+		}
+		
+		private function getDynamicObject(model:Object):Object {
+			return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
 		}
 	}
 }

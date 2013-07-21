@@ -2,13 +2,17 @@ package org.flowerplatform.editor.mindmap {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.mindmap.action.NewFolderAction;
+	import org.flowerplatform.editor.mindmap.action.NewHeadline1Action;
+	import org.flowerplatform.editor.mindmap.action.NewHeadline2Action;
+	import org.flowerplatform.editor.mindmap.action.NewHeadline3Action;
+	import org.flowerplatform.editor.mindmap.action.NewPageAction;
+	import org.flowerplatform.editor.mindmap.action.NewParagraphAction;
 	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-
 	import org.flowerplatform.web.common.WebCommonPlugin;
 
 	
@@ -36,7 +40,13 @@ package org.flowerplatform.editor.mindmap {
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 
-//			mindmapDiagramClassFactoryActionProvider.actionClasses.push(TestAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewFolderAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewPageAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline1Action);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline2Action);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline3Action);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewParagraphAction);
+
 		}
 		
 		override public function start():void {

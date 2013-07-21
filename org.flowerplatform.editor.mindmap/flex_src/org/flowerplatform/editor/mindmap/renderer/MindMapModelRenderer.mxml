@@ -8,7 +8,8 @@
 				xmlns:mx="library://ns.adobe.com/flex/mx" 				
 				 xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"
 				 implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
-				minWidth="10" minHeight="10" updateComplete="updateCompleteHandler(event)">
+				minWidth="10" minHeight="10" updateComplete="updateCompleteHandler(event)" creationComplete="creationCompleteHandler(event)"
+				iconFunction="getImage">
 	
 	<fx:Script>
 		<![CDATA[
@@ -17,18 +18,20 @@
 			import mx.events.PropertyChangeEvent;
 			import mx.events.ResizeEvent;
 			
+			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
+			import org.flowerplatform.editor.mindmap.controller.MindMapNodeRendererController;
 			import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.emf_model.notation.View;
 			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 
 			private static const circleRadius:int = 3;
 								
 			private var _diagramShell:DiagramShell;
-			private var shouldRefreshPosition:Boolean = false;
-			private static var map:Dictionary = new Dictionary();
-			
+	
 			public function get diagramShell():DiagramShell {
 				return _diagramShell;
 			}
@@ -51,6 +54,7 @@
 					y = data.y;
 					minWidth = data.width;
 					minHeight = data.height;
+					
 					if (getNode().viewDetails != null) {
 						viewDetailsUpdatedHandler(null);
 					}				
@@ -59,35 +63,41 @@
 			
 			protected function viewDetailsUpdatedHandler(event:Event):void {
 				label = getNode().viewDetails.text;
-//				if (iconDisplay) {
-//					iconDisplay.source = getImage(null);
-//				}
+				if (iconDisplay) {
+					iconDisplay.source = getImage(null);
+				}
 				invalidateDisplayList();
+			}
+			
+			private function getImage(object:Object):Object {
+				if (View(data).viewDetails) {
+					var icon:String = View(data).viewDetails.icon;
+					return FlexUtilGlobals.getInstance().createAbsoluteUrl(MindMapModelPlugin.getInstance().getResourceUrl(icon));
+				}
+				return null;
 			}
 			
 			private function modelChangedHandler(event:PropertyChangeEvent):void {
 				switch (event.property) {
 					case "x":
-						x = getNode().x;
+						x = getNode().x;						
 						break;
 					case "y":
-						y = getNode().y;
+						y = getNode().y;						
 						break;
 					case "height":
 						minHeight = getNode().height;
-						shouldRefreshPosition = true;
+						getDynamicObject(data).shouldRefreshPosition = true;
 						break;
 					case "width":
 						minWidth = getNode().width;
-						shouldRefreshPosition = true;
+						getDynamicObject(data).shouldRefreshPosition = true;
 						break;
-					case "expanded":						
-//						shouldRefreshPosition = true;
+					case "expanded":	
+					case "hasChildren":	
 						invalidateDisplayList();
 						break;
-				}
-				
-				
+				}				
 			}
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {			
@@ -112,9 +122,11 @@
 				if (element == labelDisplay) {
 					if (width != 0 && data != null && data.width != width && !isNaN(width)) {
 						getNode().setWidth(this.width);
+						getDynamicObject(getNode()).shouldRefreshPosition = true;
 					}
 					if (height != 0 && data != null && data.height != height && !isNaN(height)) {
 						getNode().setHeight(this.height);
+						getDynamicObject(getNode()).shouldRefreshPosition = true;						
 					}
 				}
 			}
@@ -123,14 +135,38 @@
 			}
 			
 			protected function updateCompleteHandler(event:FlexEvent):void {
-				if (data != null && shouldRefreshPosition) {					
-					if (map[data] == null) {
-						map[data] = new Object();
-						MindMapDiagramShell(diagramShell).refreshNodePositions(data);
-						delete map[data] ;
-					}					
+				if (data != null && getDynamicObject(data).shouldRefreshPosition && !parentRefreshesPosition(data)) {		
+					MindMapDiagramShell(diagramShell).refreshNodePositions(data);								
+				}			
+				if (data != null) {
+					MindMapNodeRendererController(MindMapDiagramShell(diagramShell).getControllerProvider(data).getRendererController(data)).updateConnectors(data);
+					getDynamicObject(data).shouldRefreshPosition = false;
 				}
-				shouldRefreshPosition = false;
+			}
+			
+			private function getDynamicObject(model:Object):Object {
+				return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
+			}
+			
+			private function parentRefreshesPosition(model:Object):Boolean {
+				var parent:Object = MindMapDiagramShell(diagramShell).getModelController(model).getParent(model);
+				if (parent != null) {
+					if (getDynamicObject(parent).shouldRefreshPosition) {
+						return true;
+					}
+					return parentRefreshesPosition(parent);
+				}
+				return false;
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				if (data != null) {
+					var parent:Object = MindMapDiagramShell(diagramShell).getModelController(data).getParent(data);
+					if (parent != null) {
+						getDynamicObject(parent).shouldRefreshPosition = true;
+						MindMapDiagramShell(diagramShell).refreshNodePositions(parent);	
+					}
+				}
 			}
 			
 		]]>

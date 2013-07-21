@@ -192,7 +192,7 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
+	 * @generated NOT
 	 */
 	public View getParentView() {
 		return (View) eContainer();
