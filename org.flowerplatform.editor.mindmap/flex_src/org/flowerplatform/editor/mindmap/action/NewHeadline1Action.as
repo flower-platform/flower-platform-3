@@ -1,4 +1,5 @@
 package org.flowerplatform.editor.mindmap.action {
+	import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -7,8 +8,9 @@ package org.flowerplatform.editor.mindmap.action {
 		
 		public function NewHeadline1Action() {
 			super();
-			label = "New Headline 1";
-			viewType = "headline 1";
+			label = "New Heading 1";
+			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/heading_1.png");
+			viewType = "heading 1";
 		}
 	}
 }

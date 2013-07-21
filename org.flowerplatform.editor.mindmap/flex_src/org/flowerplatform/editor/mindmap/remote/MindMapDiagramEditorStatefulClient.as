@@ -19,10 +19,10 @@ package org.flowerplatform.editor.mindmap.remote {
 		
 		public function MindMapDiagramEditorStatefulClient() {
 			viewTypeToAcceptedViewTypeChildren["folder"] = new ArrayList(["folder", "page"]);
-			viewTypeToAcceptedViewTypeChildren["page"] = new ArrayList(["headline 1", "headline 2", "headline 3", "paragraph"]);
-			viewTypeToAcceptedViewTypeChildren["headline 1"] = new ArrayList(["headline 2", "headline 3", "paragraph"]);
-			viewTypeToAcceptedViewTypeChildren["headline 2"] = new ArrayList(["headline 3", "paragraph"]);
-			viewTypeToAcceptedViewTypeChildren["headline 3"] = new ArrayList(["paragraph"]);
+			viewTypeToAcceptedViewTypeChildren["page"] = new ArrayList(["heading 1", "heading 2", "heading 3", "paragraph"]);
+			viewTypeToAcceptedViewTypeChildren["heading 1"] = new ArrayList(["heading 2", "heading 3", "paragraph"]);
+			viewTypeToAcceptedViewTypeChildren["heading 2"] = new ArrayList(["heading 3", "paragraph"]);
+			viewTypeToAcceptedViewTypeChildren["heading 3"] = new ArrayList(["paragraph"]);
 //			viewTypeToAcceptedViewTypeChildren["headline 4"] = new ArrayList(["headline 5", "headline 6", "paragraph"]);
 //			viewTypeToAcceptedViewTypeChildren["headline 5"] = new ArrayList(["headline 6", "paragraph"]);
 //			viewTypeToAcceptedViewTypeChildren["headline 6"] = new ArrayList(["paragraph"]);

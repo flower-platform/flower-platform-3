@@ -58,12 +58,12 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	public static final String FOLDER_CATEGORY = "folder";
 	public static final String PAGE_CATEGORY = "page";
 		
-	public static final String HEADLINE_LEVEL_1_CATEGORY = "headline 1";
-	public static final String HEADLINE_LEVEL_2_CATEGORY = "headline 2";
-	public static final String HEADLINE_LEVEL_3_CATEGORY = "headline 3";
-	public static final String HEADLINE_LEVEL_4_CATEGORY = "headline 4";
-	public static final String HEADLINE_LEVEL_5_CATEGORY = "headline 5";
-	public static final String HEADLINE_LEVEL_6_CATEGORY = "headline 6";
+	public static final String HEADLINE_LEVEL_1_CATEGORY = "heading 1";
+	public static final String HEADLINE_LEVEL_2_CATEGORY = "heading 2";
+	public static final String HEADLINE_LEVEL_3_CATEGORY = "heading 3";
+	public static final String HEADLINE_LEVEL_4_CATEGORY = "heading 4";
+	public static final String HEADLINE_LEVEL_5_CATEGORY = "heading 5";
+	public static final String HEADLINE_LEVEL_6_CATEGORY = "heading 6";
 	
 	public static final String PARAGRAPH_CATEGORY = "paragraph";
 	public static final String FLOWER_BLOCK_CATEGORY = "flowerBlock";
