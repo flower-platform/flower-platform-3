@@ -27,59 +27,45 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 			IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-			addConnector(model);			
+			addConnector(model);
+			
+			if (getModelController(model).getParent(model) != null) {
+				MindMapDiagramShell(diagramShell).refreshNodePositions(model);
+			} 
+//			else {
+//				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
+//				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
+//			}
 		}
 		
-		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {
+		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {		
 			removeConnector(model);
-			if (isModelDisposed) {
+			
+			if (isModelDisposed) {				
 				if (renderer != null) {					
 					IVisualElementContainer(renderer.parent).removeElement(renderer);					
 				}
+				if (getModelController(model).getParent(model) != null) {
+					MindMapDiagramShell(diagramShell).refreshNodePositions(getModelController(model).getParent(model));
+				} else {
+					var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
+					MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
+				}
 				IEventDispatcher(model).removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 			} else {
-				// weak referenced. In theory, this is not needed, but to be sure...
-				// The only case where it would make sense: if the model children controller fails to inform us of a disposal;
-				// but in this case, the stray model may be as well left on the diagram 
-				IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler, false, 0, true);
+					// weak referenced. In theory, this is not needed, but to be sure...
+					// The only case where it would make sense: if the model children controller fails to inform us of a disposal;
+					// but in this case, the stray model may be as well left on the diagram 
+					IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler, false, 0, true);
 			}
 		}
 		
 		private function modelChangedHandler(event:PropertyChangeEvent):void {
 			var model:Object = event.target;				
-			var shouldRefreshNodePositions:Boolean = event.property == "height" || event.property == "width";
-			var shouldUpdateConnectors:Boolean = event.property == "expanded" || event.property == "x" || event.property == "y" || shouldRefreshNodePositions;
 			
-//			if (event.property == "parent") { // parent changed (after a drag & drop)
-//				// remove old model from display
-//				removeModelFromRootChildren(model);		
-//				// add new model to display
-//				var parent:Object = event.newValue;
-//				if (getModelController(parent).getExpanded(parent)) {
-//					addModelToRootChildren(model);
-//				}
-//				// refresh structure
-//				MindMapDiagramShell(diagramShell).refreshNodePositions(diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0));
-//			}
-//			
-//			if (event.property == "expanded") {				
-//				if (Boolean(event.oldValue) == true) { // was expanded
-//					removeModelFromRootChildren(model, true);
-//				}
-//				addModelToRootChildren(model, true);			
-//			}
-			
-			if (shouldRefreshNodePositions) {	
-				if (event.oldValue != event.newValue) {
-					MindMapDiagramShell(diagramShell).refreshNodePositions(model);		
-				}
-			}
-			
-			if (shouldUpdateConnectors) {
-				if (event.oldValue != event.newValue) {				
-					updateConnectors(model);
-				}
-			}
+			if (event.oldValue != event.newValue) {				
+				updateConnectors(model);
+			}			
 		}
 		
 		private function removeConnector(model:Object):void {		

@@ -52,8 +52,9 @@ package org.flowerplatform.flexdiagram.mindmap {
 					removeModelFromRootChildren(child);			
 				}
 			}			
-			if (!removeOnlyChildren) {				
-				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).removeItem(model);					
+			if (!removeOnlyChildren) {						
+				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).removeItem(model);	
+//				shouldRefreshVisualChildren(rootModel);
 			}			
 		}
 		
@@ -66,9 +67,8 @@ package org.flowerplatform.flexdiagram.mindmap {
 			}
 			if (!addOnlyChildren) {
 				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).addItem(model);	
-				shouldRefreshVisualChildren(rootModel);
-			}			
-//			DiagramRenderer(diagramRenderer).callLater(refreshNodePositions, [model]);				
+//				shouldRefreshVisualChildren(rootModel);
+			}		
 		}
 		
 		public function getModelController(model:Object):IMindMapModelController {
@@ -95,7 +95,8 @@ package org.flowerplatform.flexdiagram.mindmap {
 			return expandedY;
 		}
 				
-		public function refreshNodePositions(model:Object):void {			
+		public function refreshNodePositions(model:Object):void {		
+			trace("refresh");
 			var oldExpandedHeight:Number = getExpandedHeight(model);
 			var oldExpandedHeightLeft:Number = getDynamicObject(model).expandedHeightLeft;			
 			var oldExpandedHeightRight:Number = getDynamicObject(model).expandedHeightRight;

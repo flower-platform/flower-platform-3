@@ -6,6 +6,7 @@ package org.flowerplatform.editor.mindmap.controller
 	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
 	import org.flowerplatform.communication.transferable_object.TransferableObjectDisposedEvent;
 	import org.flowerplatform.communication.transferable_object.TransferableObjectUpdatedEvent;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -53,27 +54,29 @@ package org.flowerplatform.editor.mindmap.controller
 			View(model).removeEventListener(TransferableObjectDisposedEvent.OBJECT_DISPOSED, objectDisposedHandler);
 		}
 		
-		protected function objectUpdatedHandler(event:TransferableObjectUpdatedEvent):void {
-			var model:MindMapNode = MindMapNode(event.object);
-		
-			MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model, true);			
-			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
+		protected function objectUpdatedHandler(event:TransferableObjectUpdatedEvent):void {		
+			var model:MindMapNode = MindMapNode(event.object);	
+
+			MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model, true);
 			
-			MindMapDiagramShell(diagramShell).addModelToRootChildren(model, true);			
+			MindMapDiagramShell(diagramShell).addModelToRootChildren(model, true);	
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
-			
-			DiagramRenderer(diagramShell.diagramRenderer).callLater(MindMapDiagramShell(diagramShell).refreshNodePositions, [model]);
+
+			MindMapDiagramShell(diagramShell).refreshNodePositions(model);
 		}
 		
 		protected function objectDisposedHandler(event:TransferableObjectDisposedEvent):void {
 			var model:MindMapNode = MindMapNode(event.object);
 						
-			MindMapDiagramShell(diagramShell).unassociateModelFromRenderer(model, diagramShell.getRendererForModel(model), true);
-			//MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model);
+			diagramShell.unassociateModelFromRenderer(model, diagramShell.getRendererForModel(model), true);
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
 			
-			var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-			DiagramRenderer(diagramShell.diagramRenderer).callLater(MindMapDiagramShell(diagramShell).refreshNodePositions, [rootModel]);
+			if (MindMapDiagramShell(diagramShell).getModelController(model).getParent(model) != null) {
+				MindMapDiagramShell(diagramShell).refreshNodePositions(MindMapDiagramShell(diagramShell).getModelController(model).getParent(model));
+			} else {
+				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
+				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
+			}
 		}
 		
 		

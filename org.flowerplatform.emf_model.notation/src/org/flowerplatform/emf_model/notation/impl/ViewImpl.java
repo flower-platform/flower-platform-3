@@ -194,6 +194,15 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public View getParentView() {
+		return (View) eContainer();
+	}
+	
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public void setViewDetails(Object newViewDetails) {
 		Object oldViewDetails = viewDetails;
 		viewDetails = newViewDetails;

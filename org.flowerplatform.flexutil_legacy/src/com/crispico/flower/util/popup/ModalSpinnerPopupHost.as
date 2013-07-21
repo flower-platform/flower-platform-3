@@ -16,6 +16,9 @@ package com.crispico.flower.util.popup {
 			return IPopupContent(childrenUnderSpinner[0]);
 		}
 		
+		public function set activePopupContent(value:IPopupContent):void {		
+		}
+		
 		public function refreshActions(popupContent:IPopupContent):void {
 			// doesn't support this			
 		}

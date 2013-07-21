@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+	@author Cristina Constantinescu
+-->
+<s:IconItemRenderer								
+				xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 				
+				 xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"
+				 implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
+				minWidth="10" minHeight="10" updateComplete="updateCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.core.IVisualElementContainer;
+			import mx.events.FlexEvent;
+			import mx.events.PropertyChangeEvent;
+			import mx.events.ResizeEvent;
+			
+			import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+			import org.flowerplatform.emf_model.notation.MindMapNode;
+			import org.flowerplatform.emf_model.notation.View;
+			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+
+			private static const circleRadius:int = 3;
+								
+			private var _diagramShell:DiagramShell;
+			private var shouldRefreshPosition:Boolean = false;
+			private static var map:Dictionary = new Dictionary();
+			
+			public function get diagramShell():DiagramShell {
+				return _diagramShell;
+			}
+			
+			public function set diagramShell(value:DiagramShell):void {
+				_diagramShell = value;
+			}
+			
+			override public function set data(value:Object):void {
+				if (super.data != null) {
+					data.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					View(data).removeEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);			
+				}
+				super.data = value;
+			
+				if (data != null) {
+					data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					View(data).addEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
+					x = data.x;
+					y = data.y;
+					minWidth = data.width;
+					minHeight = data.height;
+					if (getNode().viewDetails != null) {
+						viewDetailsUpdatedHandler(null);
+					}				
+				}
+			}
+			
+			protected function viewDetailsUpdatedHandler(event:Event):void {
+				label = getNode().viewDetails.text;
+//				if (iconDisplay) {
+//					iconDisplay.source = getImage(null);
+//				}
+				invalidateDisplayList();
+			}
+			
+			private function modelChangedHandler(event:PropertyChangeEvent):void {
+				switch (event.property) {
+					case "x":
+						x = getNode().x;
+						break;
+					case "y":
+						y = getNode().y;
+						break;
+					case "height":
+						minHeight = getNode().height;
+						shouldRefreshPosition = true;
+						break;
+					case "width":
+						minWidth = getNode().width;
+						shouldRefreshPosition = true;
+						break;
+					case "expanded":						
+//						shouldRefreshPosition = true;
+						invalidateDisplayList();
+						break;
+				}
+				
+				
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {			
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				
+				graphics.clear();
+				graphics.lineStyle(1, 0x808080);
+				graphics.beginFill(0xCCCCCC, 0);
+				graphics.drawRoundRect(0, 0, unscaledWidth, unscaledHeight, 10, 10);		
+				
+				if (getNode() != null && getNode().hasChildren && getNode().expanded == false) {
+					if (getNode().side == MindMapDiagramShell.LEFT) {
+						graphics.drawCircle(-circleRadius, height/2, circleRadius);
+					} else if (data.side == MindMapDiagramShell.RIGHT) {						
+						graphics.drawCircle(width + circleRadius, height/2, circleRadius);
+					}
+				}
+			}
+			
+			override protected function setElementSize(element:Object, width:Number, height:Number):void {
+				super.setElementSize(element, width, height);
+				if (element == labelDisplay) {
+					if (width != 0 && data != null && data.width != width && !isNaN(width)) {
+						getNode().setWidth(this.width);
+					}
+					if (height != 0 && data != null && data.height != height && !isNaN(height)) {
+						getNode().setHeight(this.height);
+					}
+				}
+			}
+			private function getNode():MindMapNode {
+				return MindMapNode(data);
+			}
+			
+			protected function updateCompleteHandler(event:FlexEvent):void {
+				if (data != null && shouldRefreshPosition) {					
+					if (map[data] == null) {
+						map[data] = new Object();
+						MindMapDiagramShell(diagramShell).refreshNodePositions(data);
+						delete map[data] ;
+					}					
+				}
+				shouldRefreshPosition = false;
+			}
+			
+		]]>
+	</fx:Script>
+	
+</s:IconItemRenderer>

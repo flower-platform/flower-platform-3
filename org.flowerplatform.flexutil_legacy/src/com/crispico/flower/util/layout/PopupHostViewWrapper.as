@@ -86,6 +86,9 @@ package com.crispico.flower.util.layout {
 			return popupContent;
 		}
 		
+		public function set activePopupContent(value:IPopupContent):void {		
+		}
+		
 		public function setLabel(value:String):void
 		{
 		}

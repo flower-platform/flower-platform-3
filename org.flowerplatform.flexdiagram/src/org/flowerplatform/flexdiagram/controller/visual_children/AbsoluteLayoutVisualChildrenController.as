@@ -209,7 +209,9 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 				if (renderersToRemove != null && renderersToRemove.length > 0) {
 					// recycle a renderer that is ready for recycling
 					childRenderer = renderersToRemove.pop();
-					diagramShell.unassociateModelFromRenderer(IDataRenderer(childRenderer).data, childRenderer, false);
+					if (IDataRenderer(childRenderer).data != null) {
+						diagramShell.unassociateModelFromRenderer(IDataRenderer(childRenderer).data, childRenderer, false);
+					}
 					logRenderersReused++;
 				} else {
 					// no recycling possible => create a renderer

@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -12,14 +11,12 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
-import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
-import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 
 /**
  * @author Cristina Constantinescu
@@ -33,21 +30,20 @@ public class MindMapDiagramOperationsService {
 	}
 		
 	public void setExpanded(ServiceInvocationContext context, String viewId, boolean expanded) {
-		MindMapNode node = getMindMapNodeById(context, viewId);
-		node.setExpanded(expanded);
-		
-		if (!expanded) {
-			node.getPersistentChildren().clear();
+		MindMapNode node = getMindMapNodeById(context, viewId);		
+		if (!expanded) {			
+			node.getPersistentChildren().clear();				
 		}
+		node.setExpanded(expanded);
 		notifyProcessors(context, node);
 	}
-	
+
 	public void setText(ServiceInvocationContext context, String viewId, String text) {
 		MindMapNode node = getMindMapNodeById(context, viewId);		
 		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();
 		CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		
-		notifyProcessors(context, node);
+//		notifyProcessors(context, node);
 	}
 	
 	public Object changeParent(ServiceInvocationContext context, String viewId, String parentViewId, int index, int side) {
@@ -57,24 +53,12 @@ public class MindMapDiagramOperationsService {
 		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();
 		((MindMapNode) node.eContainer()).getPersistentChildren().remove(node);
 		((CodeSyncElement) cse.eContainer()).getChildren().remove(cse);
+//		notifyProcessors(context, (View) node.eContainer());
 		
 		((CodeSyncElement) newParentNode.getDiagrammableElement()).getChildren().add(index, cse);
-//		
-//		List<EObject> children = (List<EObject>) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) cse.eContainer(), CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
-//		children.remove(cse);
-//		CodeSyncPlugin.getInstance().setFeatureValue((CodeSyncElement) cse.eContainer(), CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children(), children);
-		
-//		children = (List<EObject>) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) newParentNode.getDiagrammableElement(), CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
-//		children.add(cse);
-//		CodeSyncPlugin.getInstance().setFeatureValue((CodeSyncElement) newParentNode.getDiagrammableElement(), CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children(), children);
-		
+//		notifyProcessors(context, newParentNode);
+		newParentNode.setHasChildren(true);
 		node.setSide(side);
-		
-//		View rootNode = node;
-//		while (!(rootNode.eContainer() instanceof Diagram)) {
-//			rootNode = (View) rootNode.eContainer();
-//		}
-		notifyProcessors(context, newParentNode);
 		
 		return node;
 	}
@@ -94,9 +78,9 @@ public class MindMapDiagramOperationsService {
 		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
 		if (processors != null) {
 			for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-//				if (processor instanceof CodeSyncElementFeatureChangesProcessor) {
+				if (processor instanceof CodeSyncElementFeatureChangesProcessor) {
 					processor.processFeatureChanges(view.getDiagrammableElement(), null, view, processingContext);
-//				}
+				}
 			}
 		}
 	}

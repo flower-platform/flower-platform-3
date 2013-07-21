@@ -38,6 +38,9 @@ package com.crispico.flower.util.popup {
 			return popupContent;
 		}
 		
+		public function set activePopupContent(value:IPopupContent):void {		
+		}
+		
 		public function setWidth(value:int):IPopupHandler {
 			width = value;
 			return this;

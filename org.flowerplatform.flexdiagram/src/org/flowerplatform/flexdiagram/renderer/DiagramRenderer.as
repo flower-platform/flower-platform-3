@@ -81,12 +81,17 @@ package org.flowerplatform.flexdiagram.renderer {
 		
 		override protected function focusInHandler(event:FocusEvent):void {
 			super.focusInHandler(event);		
-			diagramShell.activateTools();			
+			if (diagramShell != null) {
+				diagramShell.activateTools();
+			}
 		}
 		
 		override protected function focusOutHandler(event:FocusEvent):void {
 			super.focusOutHandler(event);
 			
+			if (stage == null) {			
+				return;
+			}
 			var point:Point = globalToContent(new Point(stage.mouseX, stage.mouseY));			
 			if (!getViewportRect().containsPoint(point)) { // if outside diagram area
 				diagramShell.deactivateTools();	
