@@ -94,10 +94,7 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 				childrenCount++;
 			}
 		}
-		if (separatorIndex == -1) {
-			return separatorIndex;
-		}
-		return separatorIndex + childrenCount;
+		return separatorIndex;
 	}
 	
 }

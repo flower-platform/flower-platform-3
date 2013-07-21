@@ -103,6 +103,10 @@ public class CodeSyncAdapterFactory extends AdapterFactoryImpl {
 				return createSerializableAdapter();
 			}
 			@Override
+			public Adapter caseScenarioElement(ScenarioElement object) {
+				return createScenarioElementAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -203,6 +207,20 @@ public class CodeSyncAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createSerializableAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.crispico.flower.mp.model.codesync.ScenarioElement <em>Scenario Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.crispico.flower.mp.model.codesync.ScenarioElement
+	 * @generated
+	 */
+	public Adapter createScenarioElementAdapter() {
 		return null;
 	}
 

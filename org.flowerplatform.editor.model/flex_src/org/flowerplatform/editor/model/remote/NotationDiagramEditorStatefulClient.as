@@ -1,15 +1,25 @@
 package org.flowerplatform.editor.model.remote {
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.ServiceInvocationOptions;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulClient;
 
 	/**
 	 * @author Cristian Spiescu
 	 * @author Cristina Constantinescu
 	 */
 	public class NotationDiagramEditorStatefulClient extends DiagramEditorStatefulClient {
+		
+		public var scenarioTreeStatefulClient:ScenarioTreeStatefulClient;
+		
+		[RemoteInvocation]
+		public function updateNode(path:ArrayCollection, newNode:TreeNode, expandNode:Boolean = false, collapseNode:Boolean = false, selectNode:Boolean = false):void {			
+			scenarioTreeStatefulClient.updateNode(path, newNode, expandNode, collapseNode, selectNode);
+		}
 		
 		///////////////////////////////////////////////////////////////
 		// Proxies to service methods
@@ -40,10 +50,12 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", method, [viewId, label]));
 		}
 		
-		
 		public function service_addNewConnection(sourceViewId:Object, targetViewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewConnection", [diagramId, sourceViewId, targetViewId]));
 		}
 
+		public function service_openScenarioNode(path:ArrayCollection, context:Object):void {
+			attemptUpdateContent(null, invokeServiceMethod("openNode", [path, context], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+		}
 	}
 }

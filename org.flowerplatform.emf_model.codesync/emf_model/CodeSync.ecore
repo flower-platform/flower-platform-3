@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="codesync"
-    nsURI="http://www.flower-platform.com/xmi/codesync_1.0.0" nsPrefix="codesync">
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="codesync" nsURI="http://www.flower-platform.com/xmi/codesync_1.0.0"
+    nsPrefix="codesync">
   <eClassifiers xsi:type="ecore:EClass" name="CodeSyncElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="synchronized" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
         volatile="true" transient="true" derived="true"/>
@@ -49,4 +48,9 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Serializable" instanceClassName="java.io.Serializable"
       abstract="true" interface="true"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ScenarioElement" eSuperTypes="#//CodeSyncElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="number" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="interaction" eType="#//CodeSyncElement"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+  </eClassifiers>
 </ecore:EPackage>

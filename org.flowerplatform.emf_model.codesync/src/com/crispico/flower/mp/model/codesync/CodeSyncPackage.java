@@ -436,6 +436,143 @@ public interface CodeSyncPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link com.crispico.flower.mp.model.codesync.impl.ScenarioElementImpl <em>Scenario Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.crispico.flower.mp.model.codesync.impl.ScenarioElementImpl
+	 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getScenarioElement()
+	 * @generated
+	 */
+	int SCENARIO_ELEMENT = 6;
+
+	/**
+	 * The feature id for the '<em><b>Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__SYNCHRONIZED = CODE_SYNC_ELEMENT__SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Children Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__CHILDREN_SYNCHRONIZED = CODE_SYNC_ELEMENT__CHILDREN_SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Added</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__ADDED = CODE_SYNC_ELEMENT__ADDED;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__DELETED = CODE_SYNC_ELEMENT__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Status Flags</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__STATUS_FLAGS = CODE_SYNC_ELEMENT__STATUS_FLAGS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__NAME = CODE_SYNC_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__TYPE = CODE_SYNC_ELEMENT__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Ast Cache Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__AST_CACHE_ELEMENT = CODE_SYNC_ELEMENT__AST_CACHE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__CHILDREN = CODE_SYNC_ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Feature Changes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__FEATURE_CHANGES = CODE_SYNC_ELEMENT__FEATURE_CHANGES;
+
+	/**
+	 * The feature id for the '<em><b>Number</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__NUMBER = CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Interaction</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__INTERACTION = CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Comment</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__COMMENT = CODE_SYNC_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Scenario Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT_FEATURE_COUNT = CODE_SYNC_ELEMENT_FEATURE_COUNT + 3;
+
+
+	/**
 	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.CodeSyncElement <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -708,6 +845,49 @@ public interface CodeSyncPackage extends EPackage {
 	EClass getSerializable();
 
 	/**
+	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.ScenarioElement <em>Scenario Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Scenario Element</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.ScenarioElement
+	 * @generated
+	 */
+	EClass getScenarioElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.crispico.flower.mp.model.codesync.ScenarioElement#getNumber <em>Number</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Number</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.ScenarioElement#getNumber()
+	 * @see #getScenarioElement()
+	 * @generated
+	 */
+	EAttribute getScenarioElement_Number();
+
+	/**
+	 * Returns the meta object for the reference '{@link com.crispico.flower.mp.model.codesync.ScenarioElement#getInteraction <em>Interaction</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Interaction</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.ScenarioElement#getInteraction()
+	 * @see #getScenarioElement()
+	 * @generated
+	 */
+	EReference getScenarioElement_Interaction();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.crispico.flower.mp.model.codesync.ScenarioElement#getComment <em>Comment</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Comment</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.ScenarioElement#getComment()
+	 * @see #getScenarioElement()
+	 * @generated
+	 */
+	EAttribute getScenarioElement_Comment();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -940,6 +1120,40 @@ public interface CodeSyncPackage extends EPackage {
 		 * @generated
 		 */
 		EClass SERIALIZABLE = eINSTANCE.getSerializable();
+
+		/**
+		 * The meta object literal for the '{@link com.crispico.flower.mp.model.codesync.impl.ScenarioElementImpl <em>Scenario Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.crispico.flower.mp.model.codesync.impl.ScenarioElementImpl
+		 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getScenarioElement()
+		 * @generated
+		 */
+		EClass SCENARIO_ELEMENT = eINSTANCE.getScenarioElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Number</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCENARIO_ELEMENT__NUMBER = eINSTANCE.getScenarioElement_Number();
+
+		/**
+		 * The meta object literal for the '<em><b>Interaction</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference SCENARIO_ELEMENT__INTERACTION = eINSTANCE.getScenarioElement_Interaction();
+
+		/**
+		 * The meta object literal for the '<em><b>Comment</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute SCENARIO_ELEMENT__COMMENT = eINSTANCE.getScenarioElement_Comment();
 
 	}
 

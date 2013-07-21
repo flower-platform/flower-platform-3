@@ -60,7 +60,7 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 	@Override
 	public boolean isDirty() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public ChangeRecorder getChangeRecorder() {

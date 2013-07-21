@@ -69,7 +69,11 @@ public class NodeInfoClient {
 	 */
 	public NodeInfoClient(CommunicationChannel communicationChannel, String statefulClientId, GenericTreeStatefulService service) {		
 		this.communicationChannel = communicationChannel;
-		this.treeNumber = Integer.parseInt(statefulClientId.substring(statefulClientId.length() - 1));		
+		try {
+			this.treeNumber = Integer.parseInt(statefulClientId.substring(statefulClientId.length() - 1));		
+		} catch (NumberFormatException e) {
+			//
+		}
 	}
 		
 	@Override

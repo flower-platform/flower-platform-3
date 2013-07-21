@@ -4,7 +4,13 @@ package org.flowerplatform.editor.model {
 	import flash.geom.Rectangle;
 	
 	import mx.collections.ArrayList;
+	import mx.containers.HBox;
+	import mx.containers.HDividedBox;
 	import mx.messaging.errors.NoChannelAvailableError;
+	
+	import spark.components.Button;
+	import spark.components.Label;
+	import spark.components.TextInput;
 	
 	import org.flowerplatform.editor.EditorFrontend;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
@@ -24,10 +30,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	
-	import spark.components.Button;
-	import spark.components.Label;
-	import spark.components.TextInput;
-	
 	public class DiagramEditorFrontend extends EditorFrontend {
 	
 		public var diagramShell:DiagramShell;
@@ -37,8 +39,13 @@ package org.flowerplatform.editor.model {
 		}
 				
 		override protected function createChildren():void {
+			var diagramContainer:HDividedBox = new HDividedBox();
+			
 			var scroller:InfiniteScroller = new InfiniteScroller();
-			editor = scroller;
+			scroller.percentWidth = 100;
+			scroller.percentHeight = 100;
+			diagramContainer.addChild(scroller);
+			editor = diagramContainer;
 			
 			var diagramRenderer:DiagramRenderer = new DiagramRenderer();
 			scroller.viewport = diagramRenderer;
