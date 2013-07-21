@@ -1,19 +1,14 @@
 package org.flowerplatform.editor.model.remote.scenario;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
@@ -30,8 +25,6 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
-import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 import com.crispico.flower.mp.model.codesync.ScenarioElement;
 
 /**
@@ -134,9 +127,9 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 		for (Setting setting : adapter.getNonNavigableInverseReferences(object)) {
 			if (NotationPackage.eINSTANCE.getView_DiagrammableElement().equals(setting.getEStructuralFeature())) {
 				View view = (View) setting.getEObject();
-				while (!view.getViewType().equals("class")) {
-					view = (View) view.eContainer();
-				}
+//				while (!view.getViewType().equals("class")) {
+//					view = (View) view.eContainer();
+//				}
 				return view;
 			}
 		}
