@@ -1,12 +1,9 @@
 package org.flowerplatform.editor.mindmap.remote;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -14,15 +11,12 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
-import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.MindMapNode;
-import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
-import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 
 /**
  * @author Cristina Constantinescu

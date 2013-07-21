@@ -9,7 +9,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="idBeforeRemoval" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
         transient="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="View" abstract="true" eSuperTypes="#//NotationElement">   
+  <eClassifiers xsi:type="ecore:EClass" name="View" abstract="true" eSuperTypes="#//NotationElement">
     <eOperations name="getAllChildren" upperBound="-1" eType="#//Node"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewType" lowerBound="1"
         eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
@@ -18,13 +18,25 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="viewDetails" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EJavaObject"
         transient="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="diagrammableElement" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sourceEdges" upperBound="-1"
+        eType="#//Edge" eOpposite="#//Edge/source"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="targetEdges" upperBound="-1"
+        eType="#//Edge" eOpposite="#//Edge/target"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Node" eSuperTypes="#//View">
     <eStructuralFeatures xsi:type="ecore:EReference" name="layoutConstraint" eType="#//Bounds"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Edge" eSuperTypes="#//View">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//View"
+        eOpposite="#//View/sourceEdges"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//View"
+        eOpposite="#//View/targetEdges"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Diagram" eSuperTypes="#//View">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="persistentEdges" upperBound="-1"
+        eType="#//Edge" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="LayoutConstraint" abstract="true"/>
   <eClassifiers xsi:type="ecore:EClass" name="Location" eSuperTypes="#//NotationElement #//LayoutConstraint">

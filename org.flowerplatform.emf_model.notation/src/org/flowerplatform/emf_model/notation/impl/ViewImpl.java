@@ -21,8 +21,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
@@ -38,6 +40,8 @@ import org.flowerplatform.emf_model.notation.View;
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getPersistentChildren <em>Persistent Children</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getViewDetails <em>View Details</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getDiagrammableElement <em>Diagrammable Element</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getSourceEdges <em>Source Edges</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.ViewImpl#getTargetEdges <em>Target Edges</em>}</li>
  * </ul>
  * </p>
  *
@@ -105,6 +109,26 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	protected EObject diagrammableElement;
 
 	/**
+	 * The cached value of the '{@link #getSourceEdges() <em>Source Edges</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getSourceEdges()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Edge> sourceEdges;
+
+	/**
+	 * The cached value of the '{@link #getTargetEdges() <em>Target Edges</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTargetEdges()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Edge> targetEdges;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -161,19 +185,19 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public View getParentView() {
-		return (View) eContainer();
+	public Object getViewDetails() {
+		return viewDetails;
 	}
-	
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Object getViewDetails() {
-		return viewDetails;
+	public View getParentView() {
+		return (View) eContainer();
 	}
-
+	
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -229,10 +253,51 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Edge> getSourceEdges() {
+		if (sourceEdges == null) {
+			sourceEdges = new EObjectWithInverseResolvingEList<Edge>(Edge.class, this, NotationPackage.VIEW__SOURCE_EDGES, NotationPackage.EDGE__SOURCE);
+		}
+		return sourceEdges;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Edge> getTargetEdges() {
+		if (targetEdges == null) {
+			targetEdges = new EObjectWithInverseResolvingEList<Edge>(Edge.class, this, NotationPackage.VIEW__TARGET_EDGES, NotationPackage.EDGE__TARGET);
+		}
+		return targetEdges;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Node> getAllChildren() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case NotationPackage.VIEW__SOURCE_EDGES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getSourceEdges()).basicAdd(otherEnd, msgs);
+			case NotationPackage.VIEW__TARGET_EDGES:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getTargetEdges()).basicAdd(otherEnd, msgs);
+		}
+		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
 
 	/**
@@ -245,6 +310,10 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 		switch (featureID) {
 			case NotationPackage.VIEW__PERSISTENT_CHILDREN:
 				return ((InternalEList<?>)getPersistentChildren()).basicRemove(otherEnd, msgs);
+			case NotationPackage.VIEW__SOURCE_EDGES:
+				return ((InternalEList<?>)getSourceEdges()).basicRemove(otherEnd, msgs);
+			case NotationPackage.VIEW__TARGET_EDGES:
+				return ((InternalEList<?>)getTargetEdges()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -266,6 +335,10 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 			case NotationPackage.VIEW__DIAGRAMMABLE_ELEMENT:
 				if (resolve) return getDiagrammableElement();
 				return basicGetDiagrammableElement();
+			case NotationPackage.VIEW__SOURCE_EDGES:
+				return getSourceEdges();
+			case NotationPackage.VIEW__TARGET_EDGES:
+				return getTargetEdges();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -292,6 +365,14 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 			case NotationPackage.VIEW__DIAGRAMMABLE_ELEMENT:
 				setDiagrammableElement((EObject)newValue);
 				return;
+			case NotationPackage.VIEW__SOURCE_EDGES:
+				getSourceEdges().clear();
+				getSourceEdges().addAll((Collection<? extends Edge>)newValue);
+				return;
+			case NotationPackage.VIEW__TARGET_EDGES:
+				getTargetEdges().clear();
+				getTargetEdges().addAll((Collection<? extends Edge>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -316,6 +397,12 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 			case NotationPackage.VIEW__DIAGRAMMABLE_ELEMENT:
 				setDiagrammableElement((EObject)null);
 				return;
+			case NotationPackage.VIEW__SOURCE_EDGES:
+				getSourceEdges().clear();
+				return;
+			case NotationPackage.VIEW__TARGET_EDGES:
+				getTargetEdges().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -336,6 +423,10 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 				return VIEW_DETAILS_EDEFAULT == null ? viewDetails != null : !VIEW_DETAILS_EDEFAULT.equals(viewDetails);
 			case NotationPackage.VIEW__DIAGRAMMABLE_ELEMENT:
 				return diagrammableElement != null;
+			case NotationPackage.VIEW__SOURCE_EDGES:
+				return sourceEdges != null && !sourceEdges.isEmpty();
+			case NotationPackage.VIEW__TARGET_EDGES:
+				return targetEdges != null && !targetEdges.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

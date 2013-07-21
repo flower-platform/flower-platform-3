@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -18,6 +18,8 @@ import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
@@ -91,9 +93,29 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		return configurationProviders;
 	}
 
-	public void updateTree(CodeSyncElement left, CodeSyncElement right, IProject project, String technology, CommunicationChannel communicationChannel) {
+	public CodeSyncRoot getWikiRoot(File file, String technology, CommunicationChannel communicationChannel) {
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
+		IProject project = resource.getProject();
+		File projectFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project);
+		String name = projectFile.getPath();
+		// this will be a temporary tree, do not send the project
+		CodeSyncRoot leftRoot = getWikiTree(null, projectFile, name, technology);
+		CodeSyncRoot rightRoot = getWikiTree(project, null, name, technology);
+		
+		updateTree(leftRoot, rightRoot, project, technology, communicationChannel, false);
+		return rightRoot;
+	}
+	
+	public void updateTree(CodeSyncElement left, CodeSyncElement right, IProject project, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+		String editableResourcePath = project.getFullPath().toString();
+		CodeSyncEditableResource editableResource;
+		if (showDialog) {
+			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+		} else {
+			service.subscribe(new StatefulServiceInvocationContext(communicationChannel), new EditorStatefulClientLocalState(editableResourcePath));
+			editableResource = (CodeSyncEditableResource) service.getEditableResource(editableResourcePath);
+		}
 		
 		Match match = new Match();
 		match.setAncestor(right);
@@ -132,6 +154,13 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		editableResource.setModelAdapterFactorySet(factorySet);
 		
 		new WikiSyncAlgorithm(editableResource.getModelAdapterFactorySet(), technology).generateDiff(match);
+		
+		if (!showDialog) {
+			// we're not showing the dialog => perform sync
+			StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
+			service.synchronize(context, editableResourcePath);
+			service.applySelectedActions(context, editableResourcePath, false);
+		}
 	}
 	
 	public Resource getAstCacheResource(CodeSyncElement root) {

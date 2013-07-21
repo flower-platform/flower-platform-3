@@ -17,6 +17,7 @@ package org.flowerplatform.editor.model.renderer {
 			super();
 			iconFunction = getImage;
 			minHeight = 0;
+			percentWidth = 100;
 			setStyle("verticalAlign", "middle");
 			cacheAsBitmap = true;
 		}

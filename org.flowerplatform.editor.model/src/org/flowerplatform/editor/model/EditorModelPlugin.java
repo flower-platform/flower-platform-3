@@ -8,6 +8,7 @@ import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
@@ -67,6 +68,12 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("layoutConstraint_RH")
 		.register();
 
+		new CustomSerializationDescriptor(Edge.class)
+		.addDeclaredProperties(viewSD.getDeclaredProperties())
+		.addDeclaredProperty("source_RH")
+		.addDeclaredProperty("target_RH")
+		.register();
+		
 		new CustomSerializationDescriptor(MindMapNode.class)
 		.addDeclaredProperties(viewSD.getDeclaredProperties())
 		.addDeclaredProperty("expanded")
@@ -76,6 +83,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		
 		new CustomSerializationDescriptor(Diagram.class)
 		.addDeclaredProperties(viewSD.getDeclaredProperties())
+		.addDeclaredProperty("persistentEdges_RH")
 		.register();
 		
 		CustomSerializationDescriptor superClassSD = new CustomSerializationDescriptor(Location.class)

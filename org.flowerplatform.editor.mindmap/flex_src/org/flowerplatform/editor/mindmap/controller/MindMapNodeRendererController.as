@@ -30,11 +30,12 @@ package org.flowerplatform.editor.mindmap.controller {
 			addConnector(model);
 			
 			if (getModelController(model).getParent(model) != null) {
-				MindMapDiagramShell(diagramShell).refreshNodePositions(getModelController(model).getParent(model));
-			} else {
-				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
-			}
+				MindMapDiagramShell(diagramShell).refreshNodePositions(model);
+			} 
+//			else {
+//				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
+//				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
+//			}
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {		

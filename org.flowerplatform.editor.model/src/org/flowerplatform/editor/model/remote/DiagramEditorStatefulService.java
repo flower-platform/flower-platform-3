@@ -19,7 +19,6 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;

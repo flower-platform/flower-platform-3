@@ -6,6 +6,8 @@
  */
 package org.flowerplatform.emf_model.notation;
 
+import org.eclipse.emf.common.util.EList;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -16,6 +18,7 @@ package org.flowerplatform.emf_model.notation;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.Diagram#getName <em>Name</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.Diagram#getPersistentEdges <em>Persistent Edges</em>}</li>
  * </ul>
  * </p>
  *
@@ -49,5 +52,21 @@ public interface Diagram extends View {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Persistent Edges</b></em>' containment reference list.
+	 * The list contents are of type {@link org.flowerplatform.emf_model.notation.Edge}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Persistent Edges</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Persistent Edges</em>' containment reference list.
+	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getDiagram_PersistentEdges()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<Edge> getPersistentEdges();
 
 } // Diagram

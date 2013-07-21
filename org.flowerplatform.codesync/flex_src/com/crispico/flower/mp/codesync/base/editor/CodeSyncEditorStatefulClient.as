@@ -43,11 +43,11 @@ package com.crispico.flower.mp.codesync.base.editor {
 		}
 		
 		public function applySelectedActions():void {
-			invokeServiceMethod("applySelectedActions", [editableResourcePath]);
+			invokeServiceMethod("applySelectedActions", [editableResourcePath, true]);
 		}
 		
 		public function cancelSelectedActions():void {
-			invokeServiceMethod("cancelSelectedActions", [editableResourcePath]);
+			invokeServiceMethod("cancelSelectedActions", [editableResourcePath, true]);
 		}
 		
 	}

@@ -22,6 +22,7 @@ package org.flowerplatform.web.git.common.action {
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {		
 				var node:TreeNode = TreeNode(selection.getItemAt(0));
 				return (node.pathFragment.type == WebCommonPlugin.NODE_TYPE_PROJ_FILE || node.pathFragment.type == WebCommonPlugin.NODE_TYPE_PROJECT)
+					&& node.customData != null 
 					&& Boolean(node.customData[GitCommonPlugin.TREE_NODE_GIT_FILE_TYPE]);
 			}
 			return false;

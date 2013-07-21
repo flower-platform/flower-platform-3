@@ -13,16 +13,17 @@
 		@namespace mobile "org.flowerplatform.web.mobile.*";
 		@namespace texteditor "com.crispico.flower.texteditor.*";
 		
+		.borderlessButton {
+			/* used for the buttons shown on diagrams */
+			skinClass: ClassReference("spark.skins.mobile.supportClasses.ButtonSkinBase");
+		}
+		
 		s|TextInput {
 			skinClass: ClassReference("org.flowerplatform.web.mobile.text.ValidatingTextInputSkin")
 		}
 		
 		texteditor|SyntaxTextEditor {
-			
 			skinClass: ClassReference("org.flowerplatform.web.mobile.text.RichEditableTextAreaSkin");
-			/* /
-			skinClass: ClassReference("spark.skins.mobile.TextAreaSkin");
-			*/
 		}
 		
 		s|FormItem {

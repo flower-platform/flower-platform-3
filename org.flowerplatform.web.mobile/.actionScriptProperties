@@ -39,6 +39,7 @@
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.codesync/public-resources/swc/org.flowerplatform.codesync.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexutil/lib/MobileComponents45.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.editor.mindmap/public-resources/swc/org.flowerplatform.editor.mindmap.swc" useDefaultLinkType="false"/>
+
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

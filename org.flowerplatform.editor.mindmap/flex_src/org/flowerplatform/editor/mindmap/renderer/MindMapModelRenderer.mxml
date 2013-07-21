@@ -123,21 +123,12 @@
 			}
 			
 			protected function updateCompleteHandler(event:FlexEvent):void {
-				if (data != null && shouldRefreshPosition) {
-					if (MindMapDiagramShell(diagramShell).getModelController(data).getParent(data) != null) {
-						if (map[MindMapDiagramShell(diagramShell).getModelController(data).getParent(data)] == null) {
-							map[MindMapDiagramShell(diagramShell).getModelController(data).getParent(data)] = new Object();
-							MindMapDiagramShell(diagramShell).refreshNodePositions(MindMapDiagramShell(diagramShell).getModelController(data).getParent(data));
-							delete map[MindMapDiagramShell(diagramShell).getModelController(data).getParent(data)] ;
-						}
-					} else {
-						var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-						if (map[rootModel] == null) {
-							map[rootModel] == new Object();
-							MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
-							delete map[rootModel];
-						}
-					}
+				if (data != null && shouldRefreshPosition) {					
+					if (map[data] == null) {
+						map[data] = new Object();
+						MindMapDiagramShell(diagramShell).refreshNodePositions(data);
+						delete map[data] ;
+					}					
 				}
 				shouldRefreshPosition = false;
 			}

@@ -31,7 +31,7 @@ public class GithubConfigurationProvider implements IConfigurationProvider {
 	
 	private Map<String, IConfigurationProvider> configurationProviders = new HashMap<String, IConfigurationProvider>();
 	
-	private List<String> skipFiles = Arrays.asList(".git", ".project", "Wiki.notation", "WikiCache.notation");
+	private List<String> skipFilesExtensions = Arrays.asList(".git", ".project", ".notation", ".mindmap");
 	
 	public GithubConfigurationProvider() {
 		configurationProviders.put("md", new MarkdownConfigurationProvider());
@@ -75,8 +75,12 @@ public class GithubConfigurationProvider implements IConfigurationProvider {
 	}
 
 	private void createWikiPage(File file, CodeSyncElement root) {
-		if (skipFiles.contains(file.getName())) {
-			return;
+		int index = file.getName().lastIndexOf(".");
+		if (index >= 0) {
+			String extension = file.getName().substring(index);
+			if (skipFilesExtensions.contains(extension)) {
+				return;
+			}
 		}
 		
 		CodeSyncElement cse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();

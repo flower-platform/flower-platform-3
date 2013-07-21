@@ -8,8 +8,11 @@ package org.flowerplatform.flexdiagram.samples.model {
 
 		public var name:String = "Default Text";
 		
-		public function BasicSubModel(name:String = null) {
+		public var parent:BasicModel;
+		
+		public function BasicSubModel(name:String, parent:BasicModel) {
 			this.name = name;
+			this.parent = parent;
 		}
 		
 		public function toString():String {

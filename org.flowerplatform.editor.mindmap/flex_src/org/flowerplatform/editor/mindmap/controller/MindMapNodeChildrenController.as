@@ -36,6 +36,10 @@ package org.flowerplatform.editor.mindmap.controller
 			return list;
 		}
 		
+		public function getParent(model:Object):Object {
+			return View(model).parentView_RH.referencedObject;
+		}
+		
 		public function getChildren(model:Object):IList	{
 			return new ReferenceHolderList(View(model).persistentChildren_RH);
 		}

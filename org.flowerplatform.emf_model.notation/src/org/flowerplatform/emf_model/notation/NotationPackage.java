@@ -161,13 +161,31 @@ public interface NotationPackage extends EPackage {
 	int VIEW__DIAGRAMMABLE_ELEMENT = NOTATION_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIEW__SOURCE_EDGES = NOTATION_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VIEW__TARGET_EDGES = NOTATION_ELEMENT_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>View</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VIEW_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 4;
+	int VIEW_FEATURE_COUNT = NOTATION_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.NodeImpl <em>Node</em>}' class.
@@ -234,6 +252,24 @@ public interface NotationPackage extends EPackage {
 	int NODE__DIAGRAMMABLE_ELEMENT = VIEW__DIAGRAMMABLE_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__SOURCE_EDGES = VIEW__SOURCE_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__TARGET_EDGES = VIEW__TARGET_EDGES;
+
+	/**
 	 * The feature id for the '<em><b>Layout Constraint</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -252,6 +288,115 @@ public interface NotationPackage extends EPackage {
 	int NODE_FEATURE_COUNT = VIEW_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.EdgeImpl <em>Edge</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.flowerplatform.emf_model.notation.impl.EdgeImpl
+	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getEdge()
+	 * @generated
+	 */
+	int EDGE = 3;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__ID = VIEW__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__ID_BEFORE_REMOVAL = VIEW__ID_BEFORE_REMOVAL;
+
+	/**
+	 * The feature id for the '<em><b>View Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__VIEW_TYPE = VIEW__VIEW_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Persistent Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__PERSISTENT_CHILDREN = VIEW__PERSISTENT_CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>View Details</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__VIEW_DETAILS = VIEW__VIEW_DETAILS;
+
+	/**
+	 * The feature id for the '<em><b>Diagrammable Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__DIAGRAMMABLE_ELEMENT = VIEW__DIAGRAMMABLE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__SOURCE_EDGES = VIEW__SOURCE_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__TARGET_EDGES = VIEW__TARGET_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__SOURCE = VIEW_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE__TARGET = VIEW_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Edge</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EDGE_FEATURE_COUNT = VIEW_FEATURE_COUNT + 2;
+
+	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl <em>Diagram</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -259,7 +404,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getDiagram()
 	 * @generated
 	 */
-	int DIAGRAM = 3;
+	int DIAGRAM = 4;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -316,6 +461,24 @@ public interface NotationPackage extends EPackage {
 	int DIAGRAM__DIAGRAMMABLE_ELEMENT = VIEW__DIAGRAMMABLE_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__SOURCE_EDGES = VIEW__SOURCE_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__TARGET_EDGES = VIEW__TARGET_EDGES;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -325,13 +488,22 @@ public interface NotationPackage extends EPackage {
 	int DIAGRAM__NAME = VIEW_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Persistent Edges</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DIAGRAM__PERSISTENT_EDGES = VIEW_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>Diagram</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM_FEATURE_COUNT = VIEW_FEATURE_COUNT + 1;
+	int DIAGRAM_FEATURE_COUNT = VIEW_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.LayoutConstraintImpl <em>Layout Constraint</em>}' class.
@@ -341,7 +513,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getLayoutConstraint()
 	 * @generated
 	 */
-	int LAYOUT_CONSTRAINT = 4;
+	int LAYOUT_CONSTRAINT = 5;
 
 	/**
 	 * The number of structural features of the '<em>Layout Constraint</em>' class.
@@ -360,7 +532,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getLocation()
 	 * @generated
 	 */
-	int LOCATION = 5;
+	int LOCATION = 6;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -415,7 +587,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getBounds()
 	 * @generated
 	 */
-	int BOUNDS = 6;
+	int BOUNDS = 7;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -488,7 +660,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getNote()
 	 * @generated
 	 */
-	int NOTE = 7;
+	int NOTE = 8;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -545,6 +717,24 @@ public interface NotationPackage extends EPackage {
 	int NOTE__DIAGRAMMABLE_ELEMENT = NODE__DIAGRAMMABLE_ELEMENT;
 
 	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTE__SOURCE_EDGES = NODE__SOURCE_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NOTE__TARGET_EDGES = NODE__TARGET_EDGES;
+
+	/**
 	 * The feature id for the '<em><b>Layout Constraint</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -580,7 +770,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getMindMapNode()
 	 * @generated
 	 */
-	int MIND_MAP_NODE = 8;
+	int MIND_MAP_NODE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -635,6 +825,24 @@ public interface NotationPackage extends EPackage {
 	 * @ordered
 	 */
 	int MIND_MAP_NODE__DIAGRAMMABLE_ELEMENT = NODE__DIAGRAMMABLE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_NODE__SOURCE_EDGES = NODE__SOURCE_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_NODE__TARGET_EDGES = NODE__TARGET_EDGES;
 
 	/**
 	 * The feature id for the '<em><b>Layout Constraint</b></em>' containment reference.
@@ -768,6 +976,28 @@ public interface NotationPackage extends EPackage {
 	EReference getView_DiagrammableElement();
 
 	/**
+	 * Returns the meta object for the reference list '{@link org.flowerplatform.emf_model.notation.View#getSourceEdges <em>Source Edges</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Source Edges</em>'.
+	 * @see org.flowerplatform.emf_model.notation.View#getSourceEdges()
+	 * @see #getView()
+	 * @generated
+	 */
+	EReference getView_SourceEdges();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.flowerplatform.emf_model.notation.View#getTargetEdges <em>Target Edges</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Target Edges</em>'.
+	 * @see org.flowerplatform.emf_model.notation.View#getTargetEdges()
+	 * @see #getView()
+	 * @generated
+	 */
+	EReference getView_TargetEdges();
+
+	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.Node <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -789,6 +1019,38 @@ public interface NotationPackage extends EPackage {
 	EReference getNode_LayoutConstraint();
 
 	/**
+	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.Edge <em>Edge</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Edge</em>'.
+	 * @see org.flowerplatform.emf_model.notation.Edge
+	 * @generated
+	 */
+	EClass getEdge();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.flowerplatform.emf_model.notation.Edge#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Source</em>'.
+	 * @see org.flowerplatform.emf_model.notation.Edge#getSource()
+	 * @see #getEdge()
+	 * @generated
+	 */
+	EReference getEdge_Source();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.flowerplatform.emf_model.notation.Edge#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see org.flowerplatform.emf_model.notation.Edge#getTarget()
+	 * @see #getEdge()
+	 * @generated
+	 */
+	EReference getEdge_Target();
+
+	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.Diagram <em>Diagram</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -808,6 +1070,17 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getDiagram_Name();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.emf_model.notation.Diagram#getPersistentEdges <em>Persistent Edges</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Persistent Edges</em>'.
+	 * @see org.flowerplatform.emf_model.notation.Diagram#getPersistentEdges()
+	 * @see #getDiagram()
+	 * @generated
+	 */
+	EReference getDiagram_PersistentEdges();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.LayoutConstraint <em>Layout Constraint</em>}'.
@@ -1038,6 +1311,22 @@ public interface NotationPackage extends EPackage {
 		EReference VIEW__DIAGRAMMABLE_ELEMENT = eINSTANCE.getView_DiagrammableElement();
 
 		/**
+		 * The meta object literal for the '<em><b>Source Edges</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VIEW__SOURCE_EDGES = eINSTANCE.getView_SourceEdges();
+
+		/**
+		 * The meta object literal for the '<em><b>Target Edges</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VIEW__TARGET_EDGES = eINSTANCE.getView_TargetEdges();
+
+		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.NodeImpl <em>Node</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1056,6 +1345,32 @@ public interface NotationPackage extends EPackage {
 		EReference NODE__LAYOUT_CONSTRAINT = eINSTANCE.getNode_LayoutConstraint();
 
 		/**
+		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.EdgeImpl <em>Edge</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.emf_model.notation.impl.EdgeImpl
+		 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getEdge()
+		 * @generated
+		 */
+		EClass EDGE = eINSTANCE.getEdge();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EDGE__SOURCE = eINSTANCE.getEdge_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EDGE__TARGET = eINSTANCE.getEdge_Target();
+
+		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl <em>Diagram</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1072,6 +1387,14 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute DIAGRAM__NAME = eINSTANCE.getDiagram_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Persistent Edges</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference DIAGRAM__PERSISTENT_EDGES = eINSTANCE.getDiagram_PersistentEdges();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.LayoutConstraintImpl <em>Layout Constraint</em>}' class.

@@ -16,15 +16,19 @@ package org.flowerplatform.flexdiagram.samples {
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
+	import org.flowerplatform.flexdiagram.samples.controller.BasicConnectionRendererController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelDragController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelDragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelModelChildrenController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelRendererController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelResizeController;
+	import org.flowerplatform.flexdiagram.samples.controller.BasicSubModelChildrenProvider;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicSubModelInplaceEditorController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicSubModelSelectionController;
+	import org.flowerplatform.flexdiagram.samples.model.BasicConnection;
 	import org.flowerplatform.flexdiagram.samples.model.BasicModel;
 	import org.flowerplatform.flexdiagram.samples.model.BasicSubModel;
 	import org.flowerplatform.flexdiagram.samples.renderer.SubModelIconItemRenderer;
@@ -52,6 +56,7 @@ package org.flowerplatform.flexdiagram.samples {
 		private var sequentialLayoutVisualChildrenController:IVisualChildrenController;
 		
 		private var basicSubModelRendererController:ClassReferenceRendererController;
+		private var basicSubModelChildrenProvider:IModelChildrenController = new BasicSubModelChildrenProvider();
 		
 		private var basicModelSelectionController:SelectionController;		
 		private var basicSubModelSelectionController:BasicSubModelSelectionController;
@@ -61,6 +66,10 @@ package org.flowerplatform.flexdiagram.samples {
 		private var basicModelDragToCreateRelationController:BasicModelDragToCreateRelationController;
 		private var basicModelDragController:BasicModelDragController;
 		private var selectOrgDragToCreateElementgController:SelectOrDragToCreateElementController;
+		
+		
+		// connections
+		private var connectionModelRendererController:ClassReferenceRendererController;
 		
 		public function SamplesDiagramShell() {
 			lightweightModelExtraInfoController = new LightweightModelExtraInfoController(this);
@@ -84,6 +93,9 @@ package org.flowerplatform.flexdiagram.samples {
 			basicModelDragToCreateRelationController = new BasicModelDragToCreateRelationController(this);
 			basicModelDragController = new BasicModelDragController(this);
 			selectOrgDragToCreateElementgController = new SelectOrDragToCreateElementController(this);
+			
+			// connections
+			connectionModelRendererController = new BasicConnectionRendererController(this, ConnectionFigure);
 		}
 		
 		public function getAbsoluteLayoutRectangleController(model:Object):IAbsoluteLayoutRectangleController {
@@ -98,6 +110,8 @@ package org.flowerplatform.flexdiagram.samples {
 				return arrayListModelChildrenController;
 			} else if (model is BasicModel) {
 				return basicModelModelChildrenController;
+			} else if (model is BasicSubModel) {
+				return basicSubModelChildrenProvider;
 			}
 			return null;
 		}
@@ -111,6 +125,8 @@ package org.flowerplatform.flexdiagram.samples {
 				return basicModelRendererController;
 			} else if (model is BasicSubModel) {
 				return basicSubModelRendererController;
+			} else if (model is BasicConnection) {
+				return connectionModelRendererController;
 			}
 			return null;
 		}
