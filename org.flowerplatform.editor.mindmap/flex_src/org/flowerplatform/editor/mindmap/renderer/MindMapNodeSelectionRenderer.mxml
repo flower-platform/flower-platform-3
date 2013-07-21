@@ -84,9 +84,13 @@
 			
 			protected function circle_mouseClickHandler(event:MouseEvent):void {
 				IMindMapControllerProvider(diagramShell.getControllerProvider(getTargetModel())).getMindMapModelController(getTargetModel()).setExpanded(getTargetModel(), !getTargetModel().expanded);
-//				getTargetModel().expanded = !getTargetModel().expanded;	
-				vLine.visible = getTargetModel().expanded;
+				getTargetModel().expanded = !getTargetModel().expanded;	
+				vLine.visible = !getTargetModel().expanded;
 				
+				if (!getTargetModel().expanded) {
+					MindMapDiagramShell(diagramShell).removeModelFromRootChildren(getTargetModel(), true);
+					diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
+				}
 				event.preventDefault();
 				event.stopImmediatePropagation();
 			}

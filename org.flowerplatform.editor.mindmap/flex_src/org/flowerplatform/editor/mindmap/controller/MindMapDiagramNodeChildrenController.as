@@ -28,22 +28,10 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function beginListeningForChanges(model:Object):void {
-			model.addEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);	
-			MindMapDiagramShell(diagramShell).diagramChildren.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, childrenUpdatedHandler);		
 		}
 		
-		public function endListeningForChanges(model:Object):void {
-			MindMapDiagramShell(diagramShell).diagramChildren.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, childrenUpdatedHandler);	
-			model.removeEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);	
+		public function endListeningForChanges(model:Object):void {	
 		}
 		
-		protected function childrenUpdatedHandler(event:PropertyChangeEvent):void {	
-//			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
-		}
-		
-		protected function objectUpdatedHandler(event:TransferableObjectUpdatedEvent):void {
-//			MindMapDiagramShell(diagramShell).diagramChildren.addItem(View(event.object).persistentChildren_RH.getItemAt(0).referencedObject);		
-//			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
-		}
 	}
 }

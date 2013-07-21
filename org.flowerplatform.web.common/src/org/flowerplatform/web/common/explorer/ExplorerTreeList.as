@@ -1,4 +1,6 @@
 package org.flowerplatform.web.common.explorer {
+	import flash.events.FocusEvent;
+	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.events.IndexChangedEvent;
@@ -54,6 +56,9 @@ package org.flowerplatform.web.common.explorer {
 			_popupHost = value;
 		}
 
-		
+		override protected function focusInHandler(event:FocusEvent):void {
+			super.focusInHandler(event);
+			popupHost.activePopupContent = this;
+		}
 	}
 }

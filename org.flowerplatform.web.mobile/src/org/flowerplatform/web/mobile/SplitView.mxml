@@ -38,6 +38,8 @@
 			
 			private var _rightActiveComponent:IVisualElement;
 			
+			private var _activePopupContent:IPopupContent;
+			
 			public function get leftActiveComponent():IVisualElement {
 				return _leftActiveComponent;
 			}
@@ -124,6 +126,7 @@
 			protected function creationCompleteHandler():void {
 				navigationContent = mainNavigatorContent.navigatorContent.concat(navigationContent);
 				leftActiveComponent = FlexUtilGlobals.getInstance().composedViewProvider.createView(new ViewLayoutData(ExplorerViewProvider.ID));
+				activePopupContent = IPopupContent(leftActiveComponent);
 				IPopupContent(leftActiveComponent).popupHost = this;
 				refreshActions(activePopupContent);
 				
@@ -134,14 +137,22 @@
 				showOpenEditorsCalloutButton.splitView = this;
 			}
 			
-			override public function get activePopupContent():IPopupContent {
-				return IPopupContent(leftActiveComponent);
+			override public function get activePopupContent():IPopupContent {	
+				return _activePopupContent;
+			}
+			
+			override public function set activePopupContent(value:IPopupContent):void {	
+				_activePopupContent = value;
+				refreshActions(_activePopupContent);
 			}
 			
 			public function addEditorView(viewLayoutData:ViewLayoutData, setFocusOnView:Boolean=false, existingComponent:UIComponent=null):UIComponent {
 				var comp:UIComponent = FlexUtilGlobals.getInstance().composedViewProvider.createView(viewLayoutData);
 				rightActiveComponent = comp;
 				rightComponents.addItem(comp);
+				if (comp is IPopupContent) {
+					IPopupContent(comp).popupHost = this;
+				}
 				showOpenEditorsCalloutButton.addEditorFrontend(comp);
 				return comp;
 			}
@@ -176,7 +187,7 @@
 				rightActiveComponent = newActiveView;
 			}
 			
-			
+	
 		]]>
 	</fx:Script>
 	<popup:layout>

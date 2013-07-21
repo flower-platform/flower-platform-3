@@ -70,6 +70,9 @@ package org.flowerplatform.web.mobile.popup {
 			throw new Error("Should be implemented");
 		}
 		
+		public function set activePopupContent(value:IPopupContent):void {		
+		}
+		
 		public function setIcon(value:Object):void {
 			iconComponent.source = FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(value);
 		}

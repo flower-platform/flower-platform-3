@@ -40,8 +40,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		public function commit(model:Object):void {		
 			var textField:TextInput = diagramShell.modelToExtraInfoMap[model].inplaceEditor;
 			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setText(MindMapNode(model).id, textField.text);
-//			MindMapNode(model).viewDetails.text = textField.text;
-			
+
 			diagramShell.mainToolFinishedItsJob();
 		}
 		

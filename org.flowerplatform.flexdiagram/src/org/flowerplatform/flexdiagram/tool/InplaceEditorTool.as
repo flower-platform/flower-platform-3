@@ -107,7 +107,7 @@ package org.flowerplatform.flexdiagram.tool {
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates(true);
 			if (renderer == null || IDataRenderer(renderer).data != context.model) { // abort if click somewhere else
 				diagramShell.getControllerProvider(context.model).
-					getInplaceEditorController(context.model).abort(context.model);
+					getInplaceEditorController(context.model).commit(context.model);
 			}
 		}
 		

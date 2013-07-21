@@ -55,6 +55,7 @@
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
+			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.codesync.CodeSyncPlugin;
 			import org.flowerplatform.common.CommonPlugin;
@@ -64,6 +65,7 @@
 			import org.flowerplatform.editor.model.EditorModelPlugin;
 			import org.flowerplatform.editor.text.EditorTextPlugin;
 			import org.flowerplatform.editor.text.java.EditorTextJavaPlugin;
+			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
@@ -99,7 +101,8 @@
 				setDescriptorWithUrl(new JavaEditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor.java/swc/org.flowerplatform.editor.java.swc|library.swf?pluginClass=JavaEditorPlugin'),
 				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf'),
 				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'),
-				setDescriptorWithUrl(new CodeSyncPlugin(), 'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin')
+				setDescriptorWithUrl(new CodeSyncPlugin(), 'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin'),
+				setDescriptorWithUrl(new MindMapModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.mindmap/swc/org.flowerplatform.editor.mindmap.swc|library.swf?pluginClass=MindMapModelPlugin')
 			];
 			
 			private function startPlugins():void {

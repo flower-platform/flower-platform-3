@@ -89,8 +89,7 @@ package org.flowerplatform.flexdiagram.tool {
 			var newPosY:Number = diagramRenderer.verticalScrollPosition + deltaY;					
 			diagramRenderer.verticalScrollPosition = newPosY;
 					
-			diagramShell.getControllerProvider(diagramShell.rootModel).
-				getVisualChildrenController(diagramShell.rootModel).refreshVisualChildren(diagramShell.rootModel);				
+//			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
 		}
 		
 		private function mouseUpHandler(event:MouseEvent):void {			

@@ -1,7 +1,6 @@
 package org.flowerplatform.editor.mindmap {
 	
-	import mx.collections.ArrayList;
-	
+	import org.flowerplatform.editor.mindmap.controller.AbsoluteLayoutVisualChildrenControllerWithoutRecycling;
 	import org.flowerplatform.editor.mindmap.controller.MindMapDiagramNodeChildrenController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeChildrenController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeController;
@@ -9,22 +8,19 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeInplaceEditorController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeRendererController;
 	import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
-	import org.flowerplatform.editor.mindmap.renderer.MindMapNodeRenderer;
+	import org.flowerplatform.editor.mindmap.renderer.MindMapModelRenderer;
 	import org.flowerplatform.editor.mindmap.renderer.MindMapNodeSelectionRenderer;
-	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
-	import org.flowerplatform.flexdiagram.controller.model_children.ParentAwareArrayListModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.IModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.LightweightModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
-	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
@@ -56,15 +52,14 @@ package org.flowerplatform.editor.mindmap {
 		private var mindMapNodeSelectionController:SelectionController;
 		private var mindMapNodeExtraInfoController:IModelExtraInfoController;
 		
-		private var absoluteLayoutVisualChildrenController:AbsoluteLayoutVisualChildrenController;
+		private var absoluteLayoutVisualChildrenController:AbsoluteLayoutVisualChildrenControllerWithoutRecycling;
 		
 		private var mindMapNodeChildrenController:IModelChildrenController;
 		private var mindMapDiagramChildrenController:IModelChildrenController;
 		
 		private var mindMapNodeRendererController:MindMapNodeRendererController;
 		private var lightWeightModelExtraInfoController:IModelExtraInfoController;
-		
-		
+				
 		public function NotationMindMapDiagramShell() {
 			super();
 			
@@ -74,12 +69,12 @@ package org.flowerplatform.editor.mindmap {
 			mindMapNodeSelectionController = new SelectionController(this, MindMapNodeSelectionRenderer);
 			mindMapNodeExtraInfoController = new DynamicModelExtraInfoController(this);
 			mindMapNodeInplaceEditorController = new MindMapNodeInplaceEditorController(this);
-			absoluteLayoutVisualChildrenController = new AbsoluteLayoutVisualChildrenController(this);
+			absoluteLayoutVisualChildrenController = new AbsoluteLayoutVisualChildrenControllerWithoutRecycling(this);
 			
 			mindMapNodeChildrenController = new MindMapNodeChildrenController(this);
 			mindMapDiagramChildrenController = new MindMapDiagramNodeChildrenController(this);
 			
-			mindMapNodeRendererController = new MindMapNodeRendererController(this, MindMapNodeRenderer);
+			mindMapNodeRendererController = new MindMapNodeRendererController(this, MindMapModelRenderer);
 			lightWeightModelExtraInfoController = new LightweightModelExtraInfoController(this);
 			
 			registerTools([

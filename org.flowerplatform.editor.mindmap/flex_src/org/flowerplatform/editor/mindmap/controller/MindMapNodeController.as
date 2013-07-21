@@ -35,13 +35,12 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function setParent(model:Object, value:Object):void {
-			var oldParent:Object = model.parent;
-			var newParent:MindMapNode = MindMapNode(value);
-			if (newParent.side != MindMapDiagramShell.NONE && newParent.side != MindMapNode(model).side) {
-				setSide(model, newParent.side);				
-			}
-//			MindMapNode(model).parentView_RH = ReferenceHolder(newParent);
-			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "parent", oldParent, newParent));
+//			var oldParent:Object = model.parent;
+//			var newParent:MindMapNode = MindMapNode(value);
+//			if (newParent.side != MindMapDiagramShell.NONE && newParent.side != MindMapNode(model).side) {
+//				setSide(model, newParent.side);				
+//			}
+//			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "parent", oldParent, newParent));
 		}
 		
 		public function setChildren(model:Object, value:ArrayList):void {
@@ -86,10 +85,6 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		public function setExpanded(model:Object, value:Boolean):void {
 			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setExpanded(MindMapNode(model).id, value);
-//			var oldValue:Boolean = MindMapNode(model).expanded;
-//			MindMapNode(model).expanded = value;
-//			
-//			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "expanded", oldValue, value));
 		}
 		
 		public function getSide(model:Object):int {
@@ -98,10 +93,6 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		public function setSide(model:Object, value:int):void {
 			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setSide(MindMapNode(model).id, value);
-//			MindMapNode(model).side = value;
-//			for (var i:int = 0; i < getChildren(model).length; i++) {
-//				setSide(getChildren(model).getItemAt(i), model.side);
-//			}
 		}
 	}
 }
