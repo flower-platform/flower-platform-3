@@ -5,6 +5,8 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	 */ 
 	public interface IInplaceEditorController {
 		
+		function canActivate(model:Object):Boolean;
+		
 		function activate(model:Object):void;
 		
 		function commit(model:Object):void;

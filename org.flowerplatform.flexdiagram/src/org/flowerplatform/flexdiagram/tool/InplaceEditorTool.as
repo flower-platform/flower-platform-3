@@ -69,7 +69,9 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			var inplaceEditorController:IInplaceEditorController = diagramShell.getControllerProvider(context.model).getInplaceEditorController(context.model);
 			if (inplaceEditorController != null) {
-				inplaceEditorController.activate(context.model);
+				if (inplaceEditorController.canActivate(context.model)) {
+					inplaceEditorController.activate(context.model);
+				}
 			}
 		}
 				
@@ -106,8 +108,11 @@ package org.flowerplatform.flexdiagram.tool {
 		private function mouseClickHandler(event:MouseEvent):void {			
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates(true);
 			if (renderer == null || IDataRenderer(renderer).data != context.model) { // abort if click somewhere else
-				diagramShell.getControllerProvider(context.model).
-					getInplaceEditorController(context.model).commit(context.model);
+				if (diagramShell.getControllerProvider(context.model).
+					getInplaceEditorController(context.model).canActivate(context.model)) {
+					diagramShell.getControllerProvider(context.model).
+						getInplaceEditorController(context.model).commit(context.model);
+				}
 			}
 		}
 		

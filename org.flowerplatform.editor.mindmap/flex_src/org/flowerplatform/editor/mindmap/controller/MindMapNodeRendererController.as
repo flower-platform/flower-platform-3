@@ -25,17 +25,8 @@ package org.flowerplatform.editor.mindmap.controller {
 			super(diagramShell, rendererClass);
 		}
 		
-		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
-			IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-			addConnector(model);
-			
-			if (getModelController(model).getParent(model) != null) {
-				MindMapDiagramShell(diagramShell).refreshNodePositions(model);
-			} 
-//			else {
-//				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-//				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
-//			}
+		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {			
+			addConnector(model);			
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {		
@@ -44,30 +35,10 @@ package org.flowerplatform.editor.mindmap.controller {
 			if (isModelDisposed) {				
 				if (renderer != null) {					
 					IVisualElementContainer(renderer.parent).removeElement(renderer);					
-				}
-				if (getModelController(model).getParent(model) != null) {
-					MindMapDiagramShell(diagramShell).refreshNodePositions(getModelController(model).getParent(model));
-				} else {
-					var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-					MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
-				}
-				IEventDispatcher(model).removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-			} else {
-					// weak referenced. In theory, this is not needed, but to be sure...
-					// The only case where it would make sense: if the model children controller fails to inform us of a disposal;
-					// but in this case, the stray model may be as well left on the diagram 
-					IEventDispatcher(model).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler, false, 0, true);
+				}			
 			}
 		}
-		
-		private function modelChangedHandler(event:PropertyChangeEvent):void {
-			var model:Object = event.target;				
-			
-			if (event.oldValue != event.newValue) {				
-				updateConnectors(model);
-			}			
-		}
-		
+				
 		private function removeConnector(model:Object):void {		
 			var connector:MindMapConnector = getDynamicObject(model).connector;
 			if (connector != null) {
@@ -88,7 +59,7 @@ package org.flowerplatform.editor.mindmap.controller {
 			updateConnectors(model);
 		}
 		
-		private function updateConnectors(model:Object):void {
+		public function updateConnectors(model:Object):void {
 			// refresh connector to parent
 			if (getModelController(model).getParent(model) != null) {	
 				if (getDynamicObject(model).connector != null) {

@@ -1,5 +1,9 @@
 package org.flowerplatform.editor.mindmap {
 	
+	import flash.utils.Dictionary;
+	
+	import mx.collections.ArrayList;
+	
 	import org.flowerplatform.editor.mindmap.controller.AbsoluteLayoutVisualChildrenControllerWithoutRecycling;
 	import org.flowerplatform.editor.mindmap.controller.MindMapDiagramNodeChildrenController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeChildrenController;
@@ -59,7 +63,7 @@ package org.flowerplatform.editor.mindmap {
 		
 		private var mindMapNodeRendererController:MindMapNodeRendererController;
 		private var lightWeightModelExtraInfoController:IModelExtraInfoController;
-				
+						
 		public function NotationMindMapDiagramShell() {
 			super();
 			
@@ -77,8 +81,7 @@ package org.flowerplatform.editor.mindmap {
 			mindMapNodeRendererController = new MindMapNodeRendererController(this, MindMapModelRenderer);
 			lightWeightModelExtraInfoController = new LightweightModelExtraInfoController(this);
 			
-			registerTools([
-				ScrollTool, ZoomTool, SelectOnClickTool, InplaceEditorTool, DragTool]);
+			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, InplaceEditorTool, DragTool]);		
 		}
 		
 		override public function getControllerProvider(model:Object):IControllerProvider {

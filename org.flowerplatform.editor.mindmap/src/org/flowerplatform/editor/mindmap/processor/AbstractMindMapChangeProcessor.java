@@ -14,6 +14,7 @@ import org.flowerplatform.emf_model.notation.View;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 
 /**
  * @author Cristina Constantinescu
@@ -45,7 +46,11 @@ public class AbstractMindMapChangeProcessor implements IDiagrammableElementFeatu
 	}
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		viewDetails.put("text", CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
+		if (object instanceof CodeSyncRoot) {
+			viewDetails.put("text", "Root");
+		} else {
+			viewDetails.put("text", CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
+		}
 	}
 
 }

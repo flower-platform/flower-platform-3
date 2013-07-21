@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -16,6 +17,7 @@ import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
@@ -51,16 +53,43 @@ public class MindMapDiagramOperationsService {
 		MindMapNode newParentNode = getMindMapNodeById(context, parentViewId);
 		
 		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();
-		((MindMapNode) node.eContainer()).getPersistentChildren().remove(node);
-		((CodeSyncElement) cse.eContainer()).getChildren().remove(cse);
-//		notifyProcessors(context, (View) node.eContainer());
+		CodeSyncElement oldParentCSE = (CodeSyncElement) cse.eContainer();
+		CodeSyncElement newParentCSE = (CodeSyncElement) newParentNode.getDiagrammableElement();
 		
-		((CodeSyncElement) newParentNode.getDiagrammableElement()).getChildren().add(index, cse);
-//		notifyProcessors(context, newParentNode);
+		((MindMapNode) node.eContainer()).getPersistentChildren().remove(node);
+		oldParentCSE.getChildren().remove(cse);
+		
+		if (oldParentCSE.equals(newParentCSE)) {
+			index--;
+		}
+		newParentCSE.getChildren().add(index, cse);
+
 		newParentNode.setHasChildren(true);
-		node.setSide(side);
+		setSide(node, side);
 		
 		return node;
+	}
+	
+	public Object createNew(ServiceInvocationContext context, String viewId, String viewType) {
+		MindMapNode node = getMindMapNodeById(context, viewId);	
+		
+		CodeSyncElement parentCSE = (CodeSyncElement) node.getDiagrammableElement();	
+		
+		CodeSyncElement mindmapCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();				
+		mindmapCse.setName("New " + viewType);
+		mindmapCse.setType(viewType);
+		
+		parentCSE.getChildren().add(parentCSE.getChildren().size(), mindmapCse);
+		node.setHasChildren(true);
+		
+		return node;
+	}
+	
+	private void setSide(MindMapNode node, int side) {
+		node.setSide(side);
+		for (EObject child : node.getPersistentChildren()) {
+			setSide((MindMapNode) child, side);
+		}
 	}
 	
 	protected DiagramEditableResource getEditableResource(ServiceInvocationContext context) {

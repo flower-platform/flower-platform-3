@@ -19,6 +19,10 @@ package org.flowerplatform.flexdiagram.samples.controller
 			super(diagramShell);
 		}
 				
+		public function canActivate(model:Object):Boolean	{		
+			return true;
+		}
+		
 		public function activate(model:Object):void {
 			var renderer:DisplayObject = DisplayObject(diagramShell.getRendererForModel(model));
 			var textField:TextInput = new TextInput();
