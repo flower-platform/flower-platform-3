@@ -39,13 +39,14 @@ package org.flowerplatform.editor.mindmap {
 			var editorDescriptor:MindMapDiagramEditorDescriptor = new MindMapDiagramEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
-			
+
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewFolderAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewPageAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline1Action);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline2Action);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline3Action);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewParagraphAction);
+
 		}
 		
 		override public function start():void {

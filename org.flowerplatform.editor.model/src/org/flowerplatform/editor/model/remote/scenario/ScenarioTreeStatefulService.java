@@ -1,0 +1,172 @@
+package org.flowerplatform.editor.model.remote.scenario;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.GenericTreeContext;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.editor.model.remote.DiagramEditableResource;
+import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
+import org.flowerplatform.emf_model.notation.NotationFactory;
+import org.flowerplatform.emf_model.notation.NotationPackage;
+import org.flowerplatform.emf_model.notation.View;
+
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.ScenarioElement;
+
+/**
+ * @author Mariana Gheorghe
+ */
+public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
+
+	private DiagramEditorStatefulService diagramService;
+	
+	public void setDiagramService(DiagramEditorStatefulService diagramService) {
+		this.diagramService = diagramService;
+	}
+	
+	@Override
+	public String getInplaceEditorText(
+			StatefulServiceInvocationContext context,
+			List<PathFragment> fullPath) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean setInplaceEditorText(
+			StatefulServiceInvocationContext context, List<PathFragment> path,
+			String text) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getStatefulClientPrefixId() {
+		return "Scenario Tree";
+	}
+
+	@Override
+	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
+		if (node instanceof Class) {
+			String diagramEditableResourcePath = (String) context.getClientContext().get("diagramEditableResourcePath");
+			DiagramEditableResource er = (DiagramEditableResource) diagramService.getEditableResource(diagramEditableResourcePath);
+			String scenariosResourcePath = diagramEditableResourcePath.substring(0, diagramEditableResourcePath.lastIndexOf("/"));
+			scenariosResourcePath += "/Scenarios.notation";
+			File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), scenariosResourcePath);
+			URI resourceURI = URI.createFileURI(file.getAbsolutePath());
+			Resource resource = er.getMainResource().getResourceSet().getResource(resourceURI, true);
+			List<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
+			Diagram diagram = diagramService.getDiagram(er);
+			for (EObject scenario : resource.getContents()) {
+				Pair<Object, String> pair = new Pair<Object, String>(scenario, ((CodeSyncElement) scenario).getType());
+				processScenario(diagram, (ScenarioElement) scenario);
+				result.add(pair);
+			}
+			return result;
+		} else {
+			CodeSyncElement cse = (CodeSyncElement) node;
+			List<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
+			for (CodeSyncElement child : cse.getChildren()) {
+				Pair<Object, String> pair = new Pair<Object, String>(child, cse.getType());
+				result.add(pair);
+			}
+			return result;
+		}
+	}
+	
+	protected void processScenario(Diagram diagram, ScenarioElement scenario) {
+		CodeSyncElement target = scenario.getInteraction();
+		if (target != null) {
+			ScenarioElement parent = (ScenarioElement) scenario.eContainer();
+			if (parent != null) {
+				CodeSyncElement source = parent.getInteraction();
+				if (source != null) {
+					boolean exists = false;
+					for (Edge existingEgde : diagram.getPersistentEdges()) {
+						if (existingEgde.getSource().getDiagrammableElement().equals(source) &&
+								existingEgde.getTarget().getDiagrammableElement().equals(target)) {
+							exists = true;
+						}
+					}
+					if (!exists) {
+						// add an egde
+						Edge edge = NotationFactory.eINSTANCE.createEdge();
+						View sourceView = getViewForElement(diagram, source);
+						View targetView = getViewForElement(diagram, target);
+						if (sourceView != null && targetView != null) {
+							edge.setSource(sourceView);
+							edge.setTarget(targetView);
+							edge.setViewType("scenarioInterraction");
+							diagram.getPersistentEdges().add(edge);
+						}
+					}
+				}
+			}
+		}
+		for (CodeSyncElement child : scenario.getChildren()) {
+			processScenario(diagram, (ScenarioElement) child);
+		}
+	}
+	
+	protected View getViewForElement(Diagram diagram, EObject object) {
+		ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(object);
+		for (Setting setting : adapter.getNonNavigableInverseReferences(object)) {
+			if (NotationPackage.eINSTANCE.getView_DiagrammableElement().equals(setting.getEStructuralFeature())) {
+				View view = (View) setting.getEObject();
+//				while (!view.getViewType().equals("class")) {
+//					view = (View) view.eContainer();
+//				}
+				return view;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Boolean nodeHasChildren(Object node, TreeNode treeNode, GenericTreeContext context) {
+		CodeSyncElement cse = (CodeSyncElement) node;
+		if (cse.getChildren() != null && cse.getChildren().size() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
+		ScenarioElement cse = (ScenarioElement) source;
+		String label = cse.getName();
+		if (cse.getNumber() != null) {
+			label = cse.getNumber() + ". " + label;
+		}
+		destination.setLabel(label);
+		return true;
+	}
+
+	@Override
+	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
+		CodeSyncElement cse = (CodeSyncElement) node;
+		PathFragment fragment = new PathFragment(cse.getName(), cse.getType());
+		return fragment;
+		
+	}
+
+	@Override
+	public String getLabelForLog(Object node, String nodeType) {
+		return node.toString();
+	}
+
+}

@@ -52,7 +52,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 				if (canAddChildView(associatedViewOnOpenDiagram, child)) {
 					Node newView = createChildView(associatedViewOnOpenDiagram, child);
 					newView.setDiagrammableElement(child);
-					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);					
+					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
 				}
 				newViewsIndex++;
 			}

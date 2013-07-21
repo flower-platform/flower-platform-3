@@ -1,6 +1,7 @@
 package org.flowerplatform.editor.model.remote;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,17 +14,22 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.command.AbstractEMFServerCommand;
+import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.FileBasedEditorStatefulService;
@@ -42,9 +48,13 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	
 	private static final Logger logger = LoggerFactory.getLogger(DiagramEditorStatefulService.class);
 
+	private ScenarioTreeStatefulService scenarioTree;
+	
 	public DiagramEditorStatefulService() {
 		super();
 		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+		scenarioTree = new ScenarioTreeStatefulService();
+		scenarioTree.setDiagramService(this);
 	}
 	
 	@Override
@@ -57,7 +67,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		return new DiagramEditableResource();
 	}
 
-	protected Diagram getDiagram(EditableResource editableResource) {
+	public Diagram getDiagram(EditableResource editableResource) {
 		DiagramEditableResource er = (DiagramEditableResource) editableResource;
 		Diagram diagram = null;
 		for (EObject o : er.getMainResource().getContents()) {
@@ -101,8 +111,16 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 
 	@Override
 	protected void doSave(EditableResource editableResource) {
-		// TODO Auto-generated method stub
-		
+		Map<Object, Object> options = new HashMap<Object, Object>();
+		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+		options.put(XMLResource.OPTION_XML_VERSION, "1.1");
+		for (Resource resource : ((DiagramEditableResource) editableResource).getResourceSet().getResources()) {
+			try {
+				resource.save(options);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 	}
 	
 	protected Map<String, Object> createProcessingContext(EditableResource editableResource) {
@@ -231,6 +249,10 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //		hbResource.unload();
 	}
 
+	public GenericTreeStatefulService getScenarioTreeStatefulService() {
+		return scenarioTree;
+	}
+	
 	///////////////////////////////////////////////////////////////
 	// Proxies to client methods
 	///////////////////////////////////////////////////////////////
@@ -242,6 +264,8 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	///////////////////////////////////////////////////////////////
 	// @RemoteInvocation methods
 	///////////////////////////////////////////////////////////////
+	
+	@RemoteInvocation
 	public void handleDragOnDiagram(StatefulServiceInvocationContext context, List<List<PathFragment>> pathsWithRoot, String diagramId) {
 		DiagramEditableResource editableResource = (DiagramEditableResource) context.getAdditionalData().get(ADDITIONAL_DATA_EDITABLE_RESOURCE);
 		Diagram diagram = (Diagram) editableResource.getEObjectById(diagramId);
@@ -251,6 +275,14 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //			objects.add(GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null));
 //		}
 		EditorModelPlugin.getInstance().getComposedDragOnDiagramHandler().handleDragOnDiagram(pathsWithRoot, diagram, null, null, context.getCommunicationChannel());
+	}
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	@RemoteInvocation
+	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {
+		scenarioTree.openNode(context, path, clientContext);
 	}
 
 }

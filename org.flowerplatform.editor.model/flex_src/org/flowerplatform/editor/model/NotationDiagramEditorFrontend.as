@@ -3,8 +3,16 @@ package org.flowerplatform.editor.model
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
+	import mx.collections.ArrayCollection;
+	
+	import spark.components.Button;
+	import spark.components.TextInput;
+	
+	import org.flowerplatform.communication.tree.GenericTreeList;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
@@ -14,9 +22,6 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
-	
-	import spark.components.Button;
-	import spark.components.TextInput;
 
 	/**
 	 * @author Cristian Spiescu
@@ -61,6 +66,22 @@ package org.flowerplatform.editor.model
 					View(diagramShell.selectedItems.getItemAt(0)).id,
 					View(diagramShell.selectedItems.getItemAt(1)).id);
 			});
+			
+			var scenarioTree:GenericTreeList = new GenericTreeList();
+			scenarioTree.percentHeight = 100;
+			scenarioTree.right = 0;
+			var treeClient:ScenarioTreeStatefulClient = new ScenarioTreeStatefulClient();
+			treeClient.diagramStatefulClient = NotationDiagramEditorStatefulClient(editorStatefulClient);
+			treeClient.diagramStatefulClient.scenarioTreeStatefulClient = treeClient;
+			scenarioTree.statefulClient = treeClient;
+			treeClient.treeList = scenarioTree;
+			editor.addChild(scenarioTree);
+			
+			var root:TreeNode = new TreeNode();
+			root.children = new ArrayCollection();
+			root.hasChildren = true;
+			scenarioTree.rootNode = root;
+			scenarioTree.statefulClient.openNode(root);
 		}
 		
 		override protected function getDiagramShellInstance():DiagramShell {

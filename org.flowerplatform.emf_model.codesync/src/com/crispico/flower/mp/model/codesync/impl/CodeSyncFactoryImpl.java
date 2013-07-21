@@ -37,7 +37,7 @@ public class CodeSyncFactoryImpl extends EFactoryImpl implements CodeSyncFactory
 	 */
 	public static CodeSyncFactory init() {
 		try {
-			CodeSyncFactory theCodeSyncFactory = (CodeSyncFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.flower-platform.com/xmi/codesync_1.0.0"); 
+			CodeSyncFactory theCodeSyncFactory = (CodeSyncFactory)EPackage.Registry.INSTANCE.getEFactory(CodeSyncPackage.eNS_URI);
 			if (theCodeSyncFactory != null) {
 				return theCodeSyncFactory;
 			}
@@ -70,6 +70,7 @@ public class CodeSyncFactoryImpl extends EFactoryImpl implements CodeSyncFactory
 			case CodeSyncPackage.ESTRUCTURAL_FEATURE_TO_FEATURE_CHANGE_ENTRY: return (EObject)createEStructuralFeatureToFeatureChangeEntry();
 			case CodeSyncPackage.FEATURE_CHANGE: return createFeatureChange();
 			case CodeSyncPackage.CODE_SYNC_ROOT: return createCodeSyncRoot();
+			case CodeSyncPackage.SCENARIO_ELEMENT: return createScenarioElement();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -113,6 +114,16 @@ public class CodeSyncFactoryImpl extends EFactoryImpl implements CodeSyncFactory
 	public CodeSyncRoot createCodeSyncRoot() {
 		CodeSyncRootImpl codeSyncRoot = new CodeSyncRootImpl();
 		return codeSyncRoot;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ScenarioElement createScenarioElement() {
+		ScenarioElementImpl scenarioElement = new ScenarioElementImpl();
+		return scenarioElement;
 	}
 
 	/**
