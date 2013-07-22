@@ -2,7 +2,9 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	import flash.events.IEventDispatcher;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Label;
 	import mx.core.IDataRenderer;
+	import mx.core.IVisualElementContainer;
 	import mx.core.UIComponent;
 	import mx.events.PropertyChangeEvent;
 	
@@ -144,6 +146,8 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 			return _data;
 		}
 		
+		public var middleConnectionLabel:Label;
+		
 		public function set data(value:Object):void {
 			if (_data != null) {
 				var controller:ConnectionRendererController = ConnectionRendererController(diagramShell.getControllerProvider(data).getRendererController(data));
@@ -154,6 +158,10 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 				}
 				if (targetModel != null) {
 					IEventDispatcher(targetModel).removeEventListener(UpdateConnectionEndsEvent.UPDATE_CONNECTION_ENDS, updateConnectionEndsHandler);
+				}
+
+				if (middleConnectionLabel != null) {
+					IVisualElementContainer(parent).removeElement(middleConnectionLabel);
 				}
 			}
 			_data = value;
@@ -167,6 +175,14 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 				if (targetModel != null) {
 					IEventDispatcher(targetModel).addEventListener(UpdateConnectionEndsEvent.UPDATE_CONNECTION_ENDS, updateConnectionEndsHandler);
 				}		
+
+				if (controller.hasMiddleLabel(_data)) {
+					if (middleConnectionLabel == null) {
+						middleConnectionLabel = new Label();
+						middleConnectionLabel.text = "O eticheta";
+					}
+					IVisualElementContainer(parent).addElement(middleConnectionLabel);
+				}
 			}
 		}
 		

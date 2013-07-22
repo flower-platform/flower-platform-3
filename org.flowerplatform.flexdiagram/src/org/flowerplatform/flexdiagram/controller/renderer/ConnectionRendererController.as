@@ -1,9 +1,11 @@
 package org.flowerplatform.flexdiagram.controller.renderer {
 	import flash.display.DisplayObject;
 	import flash.events.IEventDispatcher;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.utils.getDefinitionByName;
 	
+	import mx.controls.Label;
 	import mx.core.IVisualElement;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -15,6 +17,24 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
 	
 	public class ConnectionRendererController extends ClassReferenceRendererController {
+		protected static const SOURCE_UP:int = 0;
+		
+		protected static const SOURCE_DOWN:int = 1;
+		
+		protected static const TARGET_UP:int = 2;
+		
+		protected static const TARGET_DOWN:int = 3;
+		
+		protected static const MIDDLE_UP:int = 4;
+		
+		protected static const MIDDLE_DOWN:int = 5;
+		
+		protected static const HORIZONTAL_LINE:int = -1;
+		
+		protected static const VERTICAL_LINE:int = 1;
+		
+		protected static const ALMOST_HORIZONTAL_LINE:int = 0;
+
 		public function ConnectionRendererController(diagramShell:DiagramShell, rendererClass:Class=null) {
 			super(diagramShell, rendererClass);
 		}
@@ -39,15 +59,7 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 					// shouldn't normally happen
 					sourceRect = [0, 0, 0, 0];					
 				} else {
-					var sourceRenderer:IVisualElement = diagramShell.getRendererForModel(sourceModel);
-					if (sourceRenderer == null) {
-						// the renderer is not on the screen; => provide estimates
-						sourceRect = getEstimatedRectForElementNotVisible(sourceModel);
-					} else {
-						// renderer on screen => provide real data from renderer
-						var rectRelativeToDiagram:Rectangle = DisplayObject(sourceRenderer).getBounds(DisplayObject(diagramShell.diagramRenderer));
-						sourceRect = [rectRelativeToDiagram.x, rectRelativeToDiagram.y, rectRelativeToDiagram.width, rectRelativeToDiagram.height];
-					}
+					sourceRect = getEndRectForClipCalculation(sourceModel);
 				}
 //			}
 //			if (modifiedEnd == null || modifiedEnd == targetModel) {
@@ -56,15 +68,7 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 					// shouldn't normally happen
 					targetRect = [50, 50, 50, 50];		
 				} else {
-					var targetRenderer:IVisualElement = diagramShell.getRendererForModel(targetModel);
-					if (targetRenderer == null) {
-						// the renderer is not on the screen; => provide estimates
-						targetRect = getEstimatedRectForElementNotVisible(targetModel);	
-					} else {
-						// renderer on screen => provide real data from renderer
-						rectRelativeToDiagram = DisplayObject(targetRenderer).getBounds(DisplayObject(diagramShell.diagramRenderer));
-						targetRect = [rectRelativeToDiagram.x, rectRelativeToDiagram.y, rectRelativeToDiagram.width, rectRelativeToDiagram.height];
-					}
+					targetRect = getEndRectForClipCalculation(targetModel);
 				}
 //			}
 			
@@ -83,6 +87,20 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 			clippedPoint = ClipUtils.computeClipBindablePoint(targetRect, nextPointOfConnection);
 			connectionRenderer._targetPoint.x = clippedPoint[0];
 			connectionRenderer._targetPoint.y = clippedPoint[1];
+			
+			updateLabelPosition(connectionModel, connectionRenderer, connectionRenderer.middleConnectionLabel, MIDDLE_UP);
+		}
+		
+		protected function getEndRectForClipCalculation(endModel:Object):Array {
+			var endRenderer:IVisualElement = diagramShell.getRendererForModel(endModel);
+			if (endRenderer == null) {
+				// the renderer is not on the screen; => provide estimates
+				return getEstimatedRectForElementNotVisible(endModel);
+			} else {
+				// renderer on screen => provide real data from renderer
+				var rectRelativeToDiagram:Rectangle = DisplayObject(endRenderer).getBounds(DisplayObject(diagramShell.diagramRenderer));
+				return [rectRelativeToDiagram.x, rectRelativeToDiagram.y, rectRelativeToDiagram.width, rectRelativeToDiagram.height];
+			}
 		}
 		
 		protected function getEstimatedRectForElementNotVisible(model:Object):Array {
@@ -111,5 +129,150 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 		public function getTargetModel(connectionModel:Object):Object {
 			throw new Error("This method should be implemented");
 		}
+		
+		public function hasMiddleLabel(connectionModel:Object):Boolean {
+			return false;
+		}
+		
+		/**
+		 * 
+		 * <p>If the connection's orientation changes (an <code>UpdateConnectionEndsEvent</code> is 
+		 * sent) the label's position is recomputed. The event is send when the source/target of
+		 * the connection is changed, so we need to make sure that the connection figure is valid
+		 * (has a source and a target editPart) in order to compute the correct values for
+		 * the label.
+		 *  
+		 * <p>The method computes some information about the connection in order
+		 * to provide it to the <code>getLabelPosition()</code> method.
+		 * <ul>
+		 * 	<li> If the connection intersects the vertical/horizontal edge of the
+		 * 	source/target figure, 'isHorizontal' flag will be set to false/true.
+		 * 	There is a special case which concerns the label's whose position is
+		 * 	"MIDDLE". In this case, 'isHorizontal' flag is computed by the slope of
+		 * 	the associated segment.
+		 * 	<li> The 'refPoint' variable represents the reference point for the label.
+		 * 	This could be the sourcePoint/targetPoint/midPoint of the connection.
+		 * 	<li> The 'isTopOrLeft' flag is computed based on the information given 
+		 * 	by the <code>getPositionType()</code> method; this flag is set for the 
+		 * 	labels whose position constant is UP.
+		 * 	<li> The 'alignTopOrLeft' flag is computed by the 
+		 * 	<code>ClipUtils.computeEdgeIntersectionProperty()</code> method.
+		 * </ul>
+		 * @flowerModelElementId _38BMEBCUEd-bY9BcYhuW0g
+		 */
+		protected function updateLabelPosition(connectionModel:Object, connectionRenderer:ConnectionFigure, connectionLabel:Label, posType:int):void {
+			if (connectionLabel == null || getSourceModel(connectionModel) == null || getTargetModel(connectionModel) == null) {
+				return;
+			}
+			// this will be :
+			// ALMOST_HORIZONTAL_LINE when the line is very close to horizontal
+			// HORIZONTAL_LINE when horizontal
+			// VERTICAL_LINE when vertical 
+			var lineType:int; 
+			var isTopOrLeft:Boolean;
+			var refPoint:BindablePoint;
+			var segmId:int;
+			var array:Array;
+			var alignTopOrLeft:Boolean;
+			var slope:Number;
+			
+			switch (posType) {
+				case SOURCE_UP:
+					segmId = 0;
+					isTopOrLeft = true;
+					refPoint = connectionRenderer._sourcePoint;
+					array = ClipUtils.computeEdgeIntersectionProperty(
+						getEndRectForClipCalculation(getSourceModel(connectionModel)), refPoint);
+					break;
+				case SOURCE_DOWN:
+					segmId = 0;
+					isTopOrLeft = false;
+					refPoint = connectionRenderer._sourcePoint;
+					array = ClipUtils.computeEdgeIntersectionProperty(
+						getEndRectForClipCalculation(getSourceModel(connectionModel)), refPoint);
+					break;
+				case TARGET_UP:
+					segmId = connectionRenderer.getNumberOfSegments() - 1;
+					isTopOrLeft = true;
+					refPoint = connectionRenderer._targetPoint;
+					array = ClipUtils.computeEdgeIntersectionProperty(
+						getEndRectForClipCalculation(getTargetModel(connectionModel)), refPoint);
+					break;
+				case TARGET_DOWN:
+					segmId = connectionRenderer.getNumberOfSegments() - 1;
+					isTopOrLeft = false;
+					refPoint = connectionRenderer._targetPoint;
+					array = ClipUtils.computeEdgeIntersectionProperty(
+						getEndRectForClipCalculation(getTargetModel(connectionModel)), refPoint);
+					break;
+				case MIDDLE_UP:
+					var arr:Array = connectionRenderer.getPointFromDistance() as Array;
+					refPoint = arr[0];
+					segmId = arr[1];
+					slope = connectionRenderer.getSegmentAt(segmId).getSegmentSlope();
+					if (Math.abs(slope) <= 0.1) {
+						lineType = ALMOST_HORIZONTAL_LINE; // almost perfectly horizontal
+					} else if (Math.abs(slope) < 1) { 
+						lineType = HORIZONTAL_LINE;
+					} else {
+						lineType = VERTICAL_LINE;
+					}
+					if (lineType != VERTICAL_LINE) {
+						alignTopOrLeft = false;
+						if (slope < 0)
+							isTopOrLeft = false;
+						else
+							isTopOrLeft = true;
+					} else {
+						isTopOrLeft = true;
+						if (slope < 0)
+							alignTopOrLeft = true;
+						else 
+							alignTopOrLeft = false;
+					}
+					break;
+			}
+			connectionLabel.validateProperties();
+			connectionLabel.invalidateSize();
+			if (posType != MIDDLE_UP) {
+				lineType = array[0] == true ? HORIZONTAL_LINE : VERTICAL_LINE;
+				alignTopOrLeft = array[1];
+			} 
+			var p:Point = getLabelPosition(refPoint, connectionLabel.textWidth + 5, connectionLabel.textHeight + 5, lineType, isTopOrLeft, alignTopOrLeft);
+			connectionLabel.x = p.x;
+			connectionLabel.y = p.y;
+			connectionLabel.invalidateDisplayList();
+		}
+		
+		/**
+		 * The method computes the (x,y) coordinated for the label. It is called by
+		 * the <code>computeLabelPosition()</code> method. 
+		 */
+		private function getLabelPosition(referencePoint:BindablePoint, labelWidth:int, labelHeight:int, 
+										  lineType:int, isTopOrIsLeft:Boolean, alignLeftOrTop:Boolean):Point {
+			var resultPoint:Point = new Point();
+			if (lineType != VERTICAL_LINE) {
+				if (!alignLeftOrTop)
+					resultPoint.x = (lineType == ALMOST_HORIZONTAL_LINE) ? referencePoint.x - labelWidth / 2 // center the label on the line when the line is almost horizontal
+						: referencePoint.x + 5; //shadow correction
+				else
+					resultPoint.x = referencePoint.x - labelWidth;
+				if (isTopOrIsLeft) 
+					resultPoint.y = referencePoint.y - labelHeight;
+				else
+					resultPoint.y = referencePoint.y;
+			} else {
+				if (isTopOrIsLeft) 
+					resultPoint.x = referencePoint.x - labelWidth;
+				else 
+					resultPoint.x = referencePoint.x;
+				if (!alignLeftOrTop) 
+					resultPoint.y = referencePoint.y;
+				else 
+					resultPoint.y = referencePoint.y - labelHeight;
+			}
+			return resultPoint;
+		}
+
 	}
 }

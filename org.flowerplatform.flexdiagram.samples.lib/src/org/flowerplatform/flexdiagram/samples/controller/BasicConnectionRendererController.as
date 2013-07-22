@@ -4,13 +4,19 @@ package org.flowerplatform.flexdiagram.samples.controller {
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
 	import org.flowerplatform.flexdiagram.samples.model.BasicConnection;
 	
 	public class BasicConnectionRendererController extends ConnectionRendererController {
 		public function BasicConnectionRendererController(diagramShell:DiagramShell, rendererClass:Class=null) {
 			super(diagramShell, rendererClass);
 		}
-	
+		
+		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
+			super.associatedModelToRenderer(model, renderer);
+			ConnectionFigure(renderer).middleConnectionLabel.text = "Connection Label";
+		}
+		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {
 			super.unassociatedModelFromRenderer(model, renderer, isModelDisposed);
 			if (isModelDisposed && renderer != null) {
@@ -26,6 +32,9 @@ package org.flowerplatform.flexdiagram.samples.controller {
 			return BasicConnection(connectionModel).target;
 		}
 		
+		override public function hasMiddleLabel(connectionModel:Object):Boolean {
+			return true;
+		}
 		
 	}
 }
