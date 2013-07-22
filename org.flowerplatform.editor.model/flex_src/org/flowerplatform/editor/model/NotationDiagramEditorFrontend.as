@@ -4,6 +4,7 @@ package org.flowerplatform.editor.model
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
+	import mx.collections.IList;
 	
 	import spark.components.Button;
 	import spark.components.TextInput;
@@ -22,6 +23,7 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
+	import org.flowerplatform.flexutil.popup.IAction;
 
 	/**
 	 * @author Cristian Spiescu
@@ -93,6 +95,23 @@ package org.flowerplatform.editor.model
 				DragToCreateRelationTool, DragTool/*, SelectOrDragToCreateElementTool*/, ZoomTool]);
 			return diagramShell;
 		}
+		
+		/**
+		 * @author Mariana Gheorghe
+		 */
+		override public function getActions(selection:IList):Vector.<IAction> {
+			var result:Vector.<IAction> = new Vector.<IAction>();
+			
+			var actions:Vector.<IAction> = EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.getActions(selection);
+			if (actions != null) {
+				for each (var action:IAction in actions) {
+					result.push(action);
+				}
+			}		
+			return result;
+		}
+		
+		
 		
 	}
 }

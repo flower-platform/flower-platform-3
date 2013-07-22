@@ -231,6 +231,10 @@ package org.flowerplatform.flexdiagram {
 		}
 		
 		public function unassociateModelFromRenderer(model:Object, renderer:IVisualElement, modelIsDisposed:Boolean, controllerProvider:IControllerProvider = null):void {
+			if (model == null) {
+				return;
+			}
+			
 			if (controllerProvider == null) {
 				controllerProvider = getControllerProvider(model);
 			}

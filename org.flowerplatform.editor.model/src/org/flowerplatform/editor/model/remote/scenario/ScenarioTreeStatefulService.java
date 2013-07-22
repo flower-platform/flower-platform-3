@@ -60,16 +60,32 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 		return "Scenario Tree";
 	}
 
+	public Resource getScenariosResource(DiagramEditableResource er) {
+		String editableResourcePath = er.getEditableResourcePath();
+		int index = editableResourcePath.lastIndexOf("/");
+		String scenariosResourcePath = editableResourcePath.substring(0, index);
+		StringBuilder name = new StringBuilder(editableResourcePath.substring(index));
+		name.insert(name.indexOf("."), "Scenarios");
+		scenariosResourcePath += name;
+		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), scenariosResourcePath);
+		URI scenariosResourceUri = URI.createFileURI(file.getAbsolutePath());
+		Resource resource = er.getMainResource().getResourceSet().getResource(scenariosResourceUri, false);
+		if (resource == null) {
+			if (file.exists()) {
+				resource = er.getMainResource().getResourceSet().getResource(scenariosResourceUri, true);
+			} else {
+				resource = er.getMainResource().getResourceSet().createResource(scenariosResourceUri);
+			}
+		}
+		return resource;
+	}
+	
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context) {
 		if (node instanceof Class) {
 			String diagramEditableResourcePath = (String) context.getClientContext().get("diagramEditableResourcePath");
 			DiagramEditableResource er = (DiagramEditableResource) diagramService.getEditableResource(diagramEditableResourcePath);
-			String scenariosResourcePath = diagramEditableResourcePath.substring(0, diagramEditableResourcePath.lastIndexOf("/"));
-			scenariosResourcePath += "/Scenarios.notation";
-			File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), scenariosResourcePath);
-			URI resourceURI = URI.createFileURI(file.getAbsolutePath());
-			Resource resource = er.getMainResource().getResourceSet().getResource(resourceURI, true);
+			Resource resource = getScenariosResource(er);
 			List<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
 			Diagram diagram = diagramService.getDiagram(er);
 			for (EObject scenario : resource.getContents()) {
