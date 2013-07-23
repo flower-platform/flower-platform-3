@@ -269,7 +269,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 
 	public AdapterFactoryEditingDomain getOrCreateEditingDomain(IProject project) {
 		AdapterFactoryEditingDomain domain = editingDomains.get(project);
-		if (domain == null) {
+//		if (domain == null) { 
 			ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 		
 			adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
@@ -280,7 +280,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 			
 			domain = new AdapterFactoryEditingDomain(adapterFactory, null, new HashMap<Resource, Boolean>());
 			editingDomains.put(project, domain);
-		}
+//		}
 		return domain;
 	}
 	

@@ -41,6 +41,8 @@ package org.flowerplatform.editor.model.action {
 			var messageBox:Object = FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
 				.setTitle(title)
 				.setText(name)
+				.setWidth(200)
+				.setHeight(100)
 				.addButton(button, function(evt:MouseEvent = null):void {
 					if (textArea != null) {
 						name = textArea.text;

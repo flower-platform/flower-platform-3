@@ -74,15 +74,15 @@ public class MindMapDiagramOperationsService {
 		CodeSyncElement oldParentCSE = (CodeSyncElement) cse.eContainer();
 		CodeSyncElement newParentCSE = (CodeSyncElement) newParentNode.getDiagrammableElement();
 		
-		((MindMapNode) node.eContainer()).getPersistentChildren().remove(node);
-		oldParentCSE.getChildren().remove(cse);
-		
 		if (oldParentCSE.equals(newParentCSE)) {
-			index--;
+		} else {			
+			((MindMapNode) node.eContainer()).getPersistentChildren().remove(node);
+			oldParentCSE.getChildren().remove(cse);			
+			newParentCSE.getChildren().add(index, cse);
+	
+			newParentNode.setHasChildren(true);
 		}
-		newParentCSE.getChildren().add(index, cse);
-
-		newParentNode.setHasChildren(true);
+	
 		setSide(node, side);
 		
 		return node;
@@ -100,6 +100,7 @@ public class MindMapDiagramOperationsService {
 		parentCSE.getChildren().add(parentCSE.getChildren().size(), mindmapCse);
 		node.setHasChildren(true);
 		
+		notifyProcessors(context, node);
 		return node;
 	}
 	

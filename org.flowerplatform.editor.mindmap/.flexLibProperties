@@ -14,6 +14,7 @@
     <classEntry path="org.flowerplatform.editor.mindmap.action.NewHeadline2Action"/>
     <classEntry path="org.flowerplatform.editor.mindmap.action.NewHeadline3Action"/>
     <classEntry path="org.flowerplatform.editor.mindmap.action.NewParagraphAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.RenameAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -99,7 +99,7 @@ package org.flowerplatform.editor.mindmap {
 			mindMapNodeRendererController = new MindMapNodeRendererController(this, MindMapModelRenderer);
 			lightWeightModelExtraInfoController = new LightweightModelExtraInfoController(this);
 			
-			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, InplaceEditorTool, DragTool]);		
+			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, DragTool]);		
 		}
 		
 		override public function getControllerProvider(model:Object):IControllerProvider {
