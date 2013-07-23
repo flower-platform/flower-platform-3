@@ -18,8 +18,10 @@
  */
 package org.flowerplatform.codesync.remote;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
@@ -77,7 +79,9 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 		}
 		
 		// add a model element for each view (cases: add a new view on client side)
-		for (View child : childViews) {
+		CopyOnWriteArrayList<Node> copyList = new CopyOnWriteArrayList<Node>(childViews);
+		for (Iterator<Node> it = copyList.iterator(); it.hasNext();) {
+			View child = it.next();
 			if (!containsModelElementForChildView(object, child)) {
 				CodeSyncElement newChild = createModelElementChild(object, child);
 				if (newChild != null) {
