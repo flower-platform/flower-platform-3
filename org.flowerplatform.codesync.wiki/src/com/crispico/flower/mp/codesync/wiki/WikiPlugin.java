@@ -305,7 +305,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		if (category == null) {
 			return -1;
 		}
-		if (category.startsWith("headline")) {
+		if (category.startsWith("heading")) {
 			return Integer.parseInt(category.substring(category.length() - 1)); 
 		}
 		return -1;
