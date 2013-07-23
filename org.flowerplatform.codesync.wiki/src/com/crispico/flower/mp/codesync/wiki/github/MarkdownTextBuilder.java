@@ -32,7 +32,7 @@ public class MarkdownTextBuilder extends WikiTextBuilder {
 		for (int i = 0; i < headlineLevel; i++) {
 			delimiter += "#";
 		}
-		return delimiter + node.getName() + delimiter + lineDelimiter;
+		return delimiter + node.getName() + lineDelimiter;
 	}
 
 }
