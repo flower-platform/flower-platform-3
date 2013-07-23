@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	license-start
+ 
+	Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation version 3.
+	 
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+	
+	Contributors:
+	  Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+ 
+	license-end
+-->
 <mx:HDividedBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:tree="com.crispico.flower.mp.tree.*" xmlns:base="com.crispico.flower.mp.codesync.base.*" xmlns:contextmenu="com.crispico.flower.flexdiagram.contextmenu.*">
 
 	<mx:Script>
