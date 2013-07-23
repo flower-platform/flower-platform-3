@@ -43,6 +43,7 @@ import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -316,6 +317,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		resource.getContents().add(scenario);
 		Map<Object, Object> clientContext = new HashMap<Object, Object>();
 		clientContext.put("diagramEditableResourcePath", editableResourcePath);
+		clientContext.put("selectNode", true);
 		openNode(context, null, clientContext);
 	}
 	
@@ -339,36 +341,56 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			ScenarioElement scenario = (ScenarioElement) resource.getContents().get(0);
 			CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
 			CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
-			if (!addScenarioInteraction(scenario, source, target)) {
-				ScenarioElement elt = createScenarioElement(source);
-				scenario.getChildren().add(elt);
-				ScenarioElement interaction = createScenarioElement(target);
-				elt.getChildren().add(interaction);
+			ScenarioElement interaction = addScenarioInteraction(scenario, source, target);
+			if (interaction == null) {
+				ScenarioElement elt = createScenarioElement(source, scenario);
+				interaction = createScenarioElement(target, elt);
 			} 
+			edge.setDiagrammableElement(interaction);
 			Map<Object, Object> clientContext = new HashMap<Object, Object>();
 			clientContext.put("diagramEditableResourcePath", editableResourcePath);
 			service.getScenarioTreeStatefulService().openNode(context, null, clientContext);
 		}
 	}
 	
-	protected ScenarioElement createScenarioElement(CodeSyncElement cse) {
+	protected ScenarioElement createScenarioElement(CodeSyncElement cse, ScenarioElement parent) {
 		ScenarioElement interaction = CodeSyncFactory.eINSTANCE.createScenarioElement();
 		interaction.setInteraction(cse);
 		interaction.setName(cse.getName());
 		interaction.setType("scenarioElement");
+		parent.getChildren().add(interaction);
+		String number = getNumberLabel(interaction);
+		if (number.startsWith(".")) {
+			number = number.substring(1);
+		}
+		interaction.setNumber(number);
 		return interaction;
 	}
 	
-	protected boolean addScenarioInteraction(ScenarioElement scenario, CodeSyncElement source, CodeSyncElement target) {
+	public String getNumberLabel(ScenarioElement scenario) {
+		ScenarioElement parent = ((ScenarioElement) scenario.eContainer());
+		if (parent.getType().equals("scenarioRoot")) {
+			return "";
+		}
+		int i = 0;
+		for (CodeSyncElement child : parent.getChildren()) {
+			i++;
+			if (child.equals(scenario)) {
+				break;
+			}
+		}
+		return getNumberLabel(parent) + "." + i;
+	}
+	
+	protected ScenarioElement addScenarioInteraction(ScenarioElement scenario, CodeSyncElement source, CodeSyncElement target) {
 		if (source.equals(scenario.getInteraction())) {
-			ScenarioElement interaction = createScenarioElement(target);
-			scenario.getChildren().add(interaction);
-			return true;
+			ScenarioElement interaction = createScenarioElement(target, scenario);
+			return interaction;
 		}
 		for (CodeSyncElement child : scenario.getChildren()) {
 			return addScenarioInteraction((ScenarioElement) child, source, target);
 		}
-		return false;
+		return null;
 	}
 	
 	/**

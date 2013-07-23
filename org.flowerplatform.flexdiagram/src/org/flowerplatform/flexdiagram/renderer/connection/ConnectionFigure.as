@@ -20,11 +20,12 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	import flash.events.IEventDispatcher;
 	
 	import mx.collections.ArrayCollection;
-	import mx.controls.Label;
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElementContainer;
 	import mx.core.UIComponent;
 	import mx.events.PropertyChangeEvent;
+	
+	import spark.components.Label;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.UpdateConnectionEndsEvent;
@@ -194,14 +195,23 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 					IEventDispatcher(targetModel).addEventListener(UpdateConnectionEndsEvent.UPDATE_CONNECTION_ENDS, updateConnectionEndsHandler);
 				}		
 
-				if (controller.hasMiddleLabel(_data)) {
-					if (middleConnectionLabel == null) {
-						middleConnectionLabel = new Label();
-						middleConnectionLabel.text = "O eticheta";
-					}
+				addOrUpdateMiddleLabel(controller);
+			}
+		}
+		
+		protected function addOrUpdateMiddleLabel(controller:ConnectionRendererController):void {
+			if (controller.hasMiddleLabel(_data)) {
+				if (middleConnectionLabel == null) {
+					middleConnectionLabel = new Label();
+					middleConnectionLabel.setStyle("lineBreak", "explicit");
 					IVisualElementContainer(parent).addElement(middleConnectionLabel);
 				}
+				middleConnectionLabel.text = getConnectionLabel();
 			}
+		}
+		
+		protected function getConnectionLabel():String {
+			return "O eticheta";
 		}
 		
 		/**

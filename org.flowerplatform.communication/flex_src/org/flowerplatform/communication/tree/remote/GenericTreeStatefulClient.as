@@ -518,10 +518,9 @@ package org.flowerplatform.communication.tree.remote {
 //				// i.e. if a model file has become corrupt, the children shouldn't show anymore
 //				existingNode.children = new ArrayCollection();
 //			}
-//			if (selectNode) {
-//				genericTree.selectedItem = existingNode;
-//				genericTree.scrollToIndex(genericTree.selectedIndex);
-//			}
+			if (selectNode) {
+				treeList.selectedItem = existingNode;
+			}
 		}
 				
 		/**

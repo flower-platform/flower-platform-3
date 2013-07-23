@@ -24,7 +24,7 @@
 <s:CalloutButton xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				 xmlns:s="library://ns.adobe.com/flex/spark"
 				 xmlns:skins="com.flextras.mobile.shared.skins.*"
-				 label="Show Open Editors"
+				 label="Editors"
 				 icon="{FlexUtilGlobals.getInstance().createAbsoluteUrl(EditorPlugin.getInstance().getResourceUrl('images/open_resource.png'))}" 
 				 visible="{splitView.rightComponents.length > 0}" includeInLayout="{splitView.rightComponents.length > 0}">
 	<fx:Declarations>

@@ -34,14 +34,12 @@ package org.flowerplatform.editor.model.action {
 			
 			label = "Delete";
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/common/cancel_delete.png");
+			preferShowOnActionBar = true;
 		}
 		
 		override public function get visible():Boolean {
 			if (selection != null && selection.length == 1) {
 				var node:Node = Node(selection.getItemAt(0));
-				if (node.viewType == "classTitle") {
-					return false;
-				}
 				return true;
 			}
 			return false;

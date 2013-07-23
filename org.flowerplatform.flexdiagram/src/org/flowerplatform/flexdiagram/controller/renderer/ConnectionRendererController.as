@@ -23,8 +23,9 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 	import flash.geom.Rectangle;
 	import flash.utils.getDefinitionByName;
 	
-	import mx.controls.Label;
 	import mx.core.IVisualElement;
+	
+	import spark.components.Label;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.UpdateConnectionEndsEvent;
@@ -256,7 +257,7 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 				lineType = array[0] == true ? HORIZONTAL_LINE : VERTICAL_LINE;
 				alignTopOrLeft = array[1];
 			} 
-			var p:Point = getLabelPosition(refPoint, connectionLabel.textWidth + 5, connectionLabel.textHeight + 5, lineType, isTopOrLeft, alignTopOrLeft);
+			var p:Point = getLabelPosition(refPoint, connectionLabel.width + 5, connectionLabel.height + 5, lineType, isTopOrLeft, alignTopOrLeft);
 			connectionLabel.x = p.x;
 			connectionLabel.y = p.y;
 			connectionLabel.invalidateDisplayList();

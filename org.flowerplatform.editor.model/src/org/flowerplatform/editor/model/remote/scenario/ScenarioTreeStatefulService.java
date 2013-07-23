@@ -22,6 +22,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
@@ -40,7 +42,6 @@ import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
-import org.flowerplatform.emf_model.notation.Note;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -123,6 +124,38 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 		}
 	}
 	
+	@Override
+	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) { 
+		if (fullPath == null) {
+			return ScenarioTreeStatefulService.class;
+		}
+		String diagramEditableResourcePath = (String) context.getClientContext().get("diagramEditableResourcePath");
+		DiagramEditableResource er = (DiagramEditableResource) diagramService.getEditableResource(diagramEditableResourcePath);
+		Resource resource = getScenariosResource(er);
+		Object object = resource;
+		for (PathFragment pathFragment : fullPath) {
+			Object parent = object;
+			object = null;
+			for (Object elt : getChildren(parent)) {
+				if (((ScenarioElement) elt).getName().equals(pathFragment.getName())) {
+					object = elt;
+				}
+			}
+			if (object == null) {
+				return null;
+			}
+		}
+		return object;
+	}
+	
+	private List getChildren(Object object) {
+		if (object instanceof Resource) {
+			return ((Resource) object).getContents();
+		} else {
+			return ((ScenarioElement) object).getChildren();
+		}
+	}
+	
 	protected void processScenario(Diagram diagram, ScenarioElement scenario) {
 		CodeSyncElement target = scenario.getInteraction();
 		if (target != null) {
@@ -146,10 +179,7 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 							edge.setSource(sourceView);
 							edge.setTarget(targetView);
 							edge.setViewType("scenarioInterraction");
-//							Note note = NotationFactory.eINSTANCE.createNote();
-//							note.setViewType("scenarioInterractionLabel");
-//							note.setText(scenario.getNumber());
-//							edge.getPersistentChildren().add(note);
+							edge.setDiagrammableElement(scenario);
 							diagram.getPersistentEdges().add(edge);
 						}
 					}
@@ -186,12 +216,12 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 		ScenarioElement cse = (ScenarioElement) source;
 		String label = cse.getName();
 		if (cse.getNumber() != null) {
-			label = cse.getNumber() + ". " + label;
+			label = cse.getNumber() + (cse.getNumber().length() > 0 ? ". " : "") + label;
 		}
 		destination.setLabel(label);
 		return true;
 	}
-
+	
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
 		CodeSyncElement cse = (CodeSyncElement) node;

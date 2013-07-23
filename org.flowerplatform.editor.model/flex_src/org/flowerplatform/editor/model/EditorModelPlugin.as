@@ -39,6 +39,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.OperationsSeparatorRenderer;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
@@ -121,6 +122,10 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classOperation"] = composedControllerProviderFactory;
+			
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
 			
 			// class separators

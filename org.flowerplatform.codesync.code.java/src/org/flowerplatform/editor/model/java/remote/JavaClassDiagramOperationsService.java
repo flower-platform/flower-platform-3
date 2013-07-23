@@ -72,7 +72,7 @@ public class JavaClassDiagramOperationsService {
 		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
 			CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		}
-		notifyProcessors(context, view);
+//		notifyProcessors(context, view);
 	}
 
 	public void collapseCompartment(ServiceInvocationContext context, String viewId) {
@@ -226,6 +226,7 @@ public class JavaClassDiagramOperationsService {
 		}
 		Modifier modifier = AstCacheCodeFactory.eINSTANCE.createModifier();
 		modifier.setType(type);
+		element.getModifiers().clear();
 		element.getModifiers().add(modifier);
 		if (result) {
 			return label.substring(1);

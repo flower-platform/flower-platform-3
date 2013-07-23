@@ -32,6 +32,7 @@ package org.flowerplatform.editor.model.action {
 			
 			label = "Add Scenario";
 			icon = EditorModelPlugin.getInstance().getResourceUrl("images/scenario.png");
+			preferShowOnActionBar = true;
 		}
 		
 		override public function get visible():Boolean {

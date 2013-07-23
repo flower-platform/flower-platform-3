@@ -17,14 +17,14 @@
  * license-end
  */
 package org.flowerplatform.editor.model.controller {
+	import org.flowerplatform.editor.model.renderer.ConnectionRenderer;
 	import org.flowerplatform.emf_model.notation.Edge;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController;
-	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
 	
 	public class EdgeRendererController extends ConnectionRendererController {
 		public function EdgeRendererController(diagramShell:DiagramShell) {
-			super(diagramShell, ConnectionFigure);
+			super(diagramShell, ConnectionRenderer);
 		}
 		
 		override public function getSourceModel(connectionModel:Object):Object {
@@ -35,6 +35,9 @@ package org.flowerplatform.editor.model.controller {
 			return Edge(connectionModel).target_RH.referencedObject;
 		}
 		
+		override public function hasMiddleLabel(connectionModel:Object):Boolean {
+			return true;
+		}
 		
 	}
 }

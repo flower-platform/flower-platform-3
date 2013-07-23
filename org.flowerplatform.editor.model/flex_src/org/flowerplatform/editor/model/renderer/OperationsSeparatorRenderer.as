@@ -28,7 +28,7 @@ package org.flowerplatform.editor.model.renderer {
 			title = "operations";
 			serviceMethod = "addNew_operation";
 			newChildIcon = EditorModelPlugin.getInstance().getResourceUrl("images/obj16/SyncOperation.gif");
-			newChildLabel = "+getAttr(x:String,y:String):int";
+			newChildLabel = "+getAttribute():int";
 		}
 	}
 }

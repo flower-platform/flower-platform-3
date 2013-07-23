@@ -67,10 +67,8 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 	}
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		if (featureChange == null) {
-			viewDetails.put("label", getLabel(object));
-			viewDetails.put("iconUrls", getIconUrls(object));
-		}
+		viewDetails.put("label", getLabel(object));
+		viewDetails.put("iconUrls", getIconUrls(object));
 	}
 	
 	/**

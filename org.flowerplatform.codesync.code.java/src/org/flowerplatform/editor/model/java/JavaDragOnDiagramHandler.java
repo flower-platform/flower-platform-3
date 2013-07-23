@@ -81,6 +81,10 @@ public class JavaDragOnDiagramHandler extends AbstractServerCommand implements I
 			classAttrSeparator.setViewType(JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR);
 			node.getPersistentChildren().add(classAttrSeparator);
 			
+			Node classOperationSeparator = NotationFactory.eINSTANCE.createNode();
+			classOperationSeparator.setViewType(JavaClassDiagramOperationsService.OPERATIONS_SEPARATOR);
+			node.getPersistentChildren().add(classOperationSeparator);
+			
 			Bounds bounds = NotationFactory.eINSTANCE.createBounds();
 			bounds.setX(200);
 			bounds.setHeight(100);
