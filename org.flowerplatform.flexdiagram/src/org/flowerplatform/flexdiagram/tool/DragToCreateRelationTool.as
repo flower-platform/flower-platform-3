@@ -7,6 +7,7 @@ package org.flowerplatform.flexdiagram.tool {
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.selection.AnchorsSelectionRenderer;
+	import org.flowerplatform.flexdiagram.tool.controller.IDragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.ui.RelationAnchor;
 	
 	/**
@@ -56,9 +57,13 @@ package org.flowerplatform.flexdiagram.tool {
 			}
 		}
 		
-		private function mouseUpHandler(event:MouseEvent = null):void {			
-			diagramShell.getControllerProvider(context.model).
-				getDragToCreateRelationController(context.model).drop(context.model);
+		private function mouseUpHandler(event:MouseEvent = null):void {	
+			var dropTarget:Object = event.target.parent.data;
+			var controller:IDragToCreateRelationController = diagramShell.getControllerProvider(dropTarget).
+				getDragToCreateRelationController(dropTarget);
+			if (controller) {
+				controller.drop(dropTarget);
+			}
 		}
 		
 		private function getRelationAnchorFromDisplayCoordinates():RelationAnchor  {

@@ -1,4 +1,6 @@
 package org.flowerplatform.editor {
+	import com.crispico.flower.util.layout.PopupHostViewWrapper;
+	
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
@@ -88,8 +90,16 @@ package org.flowerplatform.editor {
 		public function viewsRemoved(event:ViewsRemovedEvent):void {
 			var editorStatefulClients:Dictionary = new Dictionary();
 			for each (var view:Object in event.removedViews) {
+				var editorStatefulClient:EditorStatefulClient = null;
 				if (view is EditorFrontend) {
-					var editorStatefulClient:EditorStatefulClient = EditorFrontend(view).editorStatefulClient;
+					editorStatefulClient = EditorFrontend(view).editorStatefulClient;
+				}
+				if (view is PopupHostViewWrapper) {
+					if (PopupHostViewWrapper(view).activePopupContent is EditorFrontend) {
+						editorStatefulClient = EditorFrontend(PopupHostViewWrapper(view).activePopupContent).editorStatefulClient;
+					}
+				}
+				if (editorStatefulClient != null) {
 					if (editorStatefulClients[editorStatefulClient.editableResourcePath] == null) {
 						CommunicationPlugin.getInstance().statefulClientRegistry.unregister(editorStatefulClient, null);
 						editorStatefulClients[editorStatefulClient.editableResourcePath] = editorStatefulClient;

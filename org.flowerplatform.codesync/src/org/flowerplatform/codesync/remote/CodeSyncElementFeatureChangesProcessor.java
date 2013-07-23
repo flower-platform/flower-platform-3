@@ -64,6 +64,8 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 				CodeSyncElement newChild = createModelElementChild(object, child);
 				if (newChild != null) {
 					getChildrenForCodeSyncElement(object).add(associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child), newChild);
+				} else {
+					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 				}
 			}
 		}
@@ -103,7 +105,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 		String candidateFragment = candidate.eResource().getURIFragment(candidate);
 		for (Node node : view.getPersistentChildren()) {
 			EObject child = node.getDiagrammableElement();
-			if (child != null && child.eResource().getURIFragment(child).equals(candidateFragment)) {
+			if (child != null && child.eResource() != null && child.eResource().getURIFragment(child).equals(candidateFragment)) {
 				return true;
 			}
 		}
@@ -121,7 +123,10 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 		if (diagrammableElement == null) {
 			return false;
 		}
-		String candidateFragment =diagrammableElement.eResource().getURIFragment(diagrammableElement);
+		String candidateFragment = diagrammableElement.eResource() == null ? null : diagrammableElement.eResource().getURIFragment(diagrammableElement);
+		if (candidateFragment == null)
+			return false;
+		
 		if (candidateFragment.equals(object.eResource().getURIFragment(object))) {
 			return true;
 		}

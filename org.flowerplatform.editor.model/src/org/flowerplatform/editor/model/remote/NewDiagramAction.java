@@ -29,7 +29,8 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		if (!file.isDirectory()) {
 			file = file.getParentFile();
 		}
-		File diagram = new File(file, name);
+		
+		File diagram = new File(file, getNextDiagram(file, name));
 		try {
 			diagram.createNewFile();
 		} catch (IOException e) {
@@ -52,6 +53,21 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) 
 				CommunicationPlugin.getInstance().getServiceRegistry().getService(getServiceId());
 		service.subscribeClientForcefully(getCommunicationChannel(), CommonPlugin.getInstance().getWorkspaceRoot().toURI().relativize(diagram.toURI()).toString());
+	}
+	
+	protected String getNextDiagram(File parent, String name) {
+		int i = 0;
+		boolean exists = true;
+		StringBuilder builder = null;
+		while (exists) {
+			i++;
+			builder = new StringBuilder(name);
+			builder.insert(builder.indexOf("."), i);
+			if (!new File(parent, builder.toString()).exists()) {
+				exists = false;
+			}
+		}
+		return builder.toString();
 	}
 
 	abstract protected Diagram createDiagram(File file);

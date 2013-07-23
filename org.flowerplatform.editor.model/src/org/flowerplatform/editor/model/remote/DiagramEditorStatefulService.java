@@ -1,5 +1,6 @@
 package org.flowerplatform.editor.model.remote;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
@@ -34,9 +36,15 @@ import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.FileBasedEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
+import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.ScenarioElement;
 
 public class DiagramEditorStatefulService extends FileBasedEditorStatefulService {
 
@@ -249,7 +257,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //		hbResource.unload();
 	}
 
-	public GenericTreeStatefulService getScenarioTreeStatefulService() {
+	public ScenarioTreeStatefulService getScenarioTreeStatefulService() {
 		return scenarioTree;
 	}
 	
@@ -275,6 +283,74 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //			objects.add(GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null));
 //		}
 		EditorModelPlugin.getInstance().getComposedDragOnDiagramHandler().handleDragOnDiagram(pathsWithRoot, diagram, null, null, context.getCommunicationChannel());
+	}
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	@RemoteInvocation
+	public void addNewScenario(StatefulServiceInvocationContext context, String editableResourcePath, String name) {
+		DiagramEditableResource er = (DiagramEditableResource) getEditableResource(editableResourcePath);
+		Resource resource = scenarioTree.getScenariosResource(er);
+		ScenarioElement scenario = CodeSyncFactory.eINSTANCE.createScenarioElement();
+		scenario.setName(name);
+		scenario.setType("scenarioRoot");
+		resource.getContents().add(scenario);
+		Map<Object, Object> clientContext = new HashMap<Object, Object>();
+		clientContext.put("diagramEditableResourcePath", editableResourcePath);
+		openNode(context, null, clientContext);
+	}
+	
+	@RemoteInvocation
+	public void addNewConnection(StatefulServiceInvocationContext context, String editableResourcePath, 
+			String diagramId, String sourceViewId, String targetViewId) {
+		DiagramEditableResource er = (DiagramEditableResource) getEditableResource(editableResourcePath);
+		View sourceView = (View) er.getEObjectById(sourceViewId);
+		View targetView = (View) er.getEObjectById(targetViewId);
+		Diagram diagram = (Diagram) er.getEObjectById(diagramId);
+		Edge edge = NotationFactory.eINSTANCE.createEdge();
+		edge.setViewType("scenarioInterraction");
+		edge.setSource(sourceView);
+		edge.setTarget(targetView);
+		diagram.getPersistentEdges().add(edge);
+		
+		DiagramEditorStatefulService service = (DiagramEditorStatefulService) CommunicationPlugin.getInstance()
+				.getServiceRegistry().getService("diagramEditorStatefulService");
+		Resource resource = service.getScenarioTreeStatefulService().getScenariosResource(er);
+		if (resource.getContents().size() > 0) {
+			ScenarioElement scenario = (ScenarioElement) resource.getContents().get(0);
+			CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
+			CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
+			if (!addScenarioInteraction(scenario, source, target)) {
+				ScenarioElement elt = createScenarioElement(source);
+				scenario.getChildren().add(elt);
+				ScenarioElement interaction = createScenarioElement(target);
+				elt.getChildren().add(interaction);
+			} 
+			Map<Object, Object> clientContext = new HashMap<Object, Object>();
+			clientContext.put("diagramEditableResourcePath", editableResourcePath);
+			service.getScenarioTreeStatefulService().openNode(context, null, clientContext);
+		}
+	}
+	
+	protected ScenarioElement createScenarioElement(CodeSyncElement cse) {
+		ScenarioElement interaction = CodeSyncFactory.eINSTANCE.createScenarioElement();
+		interaction.setInteraction(cse);
+		interaction.setName(cse.getName());
+		interaction.setType("scenarioElement");
+		return interaction;
+	}
+	
+	protected boolean addScenarioInteraction(ScenarioElement scenario, CodeSyncElement source, CodeSyncElement target) {
+		if (source.equals(scenario.getInteraction())) {
+			ScenarioElement interaction = createScenarioElement(target);
+			scenario.getChildren().add(interaction);
+			return true;
+		}
+		for (CodeSyncElement child : scenario.getChildren()) {
+			return addScenarioInteraction((ScenarioElement) child, source, target);
+		}
+		return false;
 	}
 	
 	/**

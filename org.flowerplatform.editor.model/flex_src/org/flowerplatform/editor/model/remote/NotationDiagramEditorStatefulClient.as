@@ -50,10 +50,18 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", method, [viewId, label]));
 		}
 		
+		public function service_deleteView(viewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
+		}
+		
 		public function service_addNewConnection(sourceViewId:Object, targetViewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewConnection", [diagramId, sourceViewId, targetViewId]));
+			attemptUpdateContent(null, invokeServiceMethod("addNewConnection", [editableResourcePath, diagramId, sourceViewId, targetViewId], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 
+		public function service_addNewScenario(name:String):void {
+			attemptUpdateContent(null, invokeServiceMethod("addNewScenario", [editableResourcePath, name], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+		}
+		
 		public function service_openScenarioNode(path:ArrayCollection, context:Object):void {
 			attemptUpdateContent(null, invokeServiceMethod("openNode", [path, context], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}

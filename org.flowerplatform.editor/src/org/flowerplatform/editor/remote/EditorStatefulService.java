@@ -612,7 +612,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 						iter.remove();
 						return null;
 					}
-				}, true);
+				}, false);
 			}
 		}
 	}
