@@ -43,6 +43,7 @@ import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
@@ -374,7 +375,9 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		}
 		int i = 0;
 		for (CodeSyncElement child : parent.getChildren()) {
-			i++;
+			if (child.getType() != null && child.getType().equals("scenarioElement")) {
+				i++;
+			}
 			if (child.equals(scenario)) {
 				break;
 			}
@@ -398,6 +401,23 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	 */
 	@RemoteInvocation
 	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {
+		scenarioTree.openNode(context, path, clientContext);
+	}
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	@RemoteInvocation
+	public void addNewComment(StatefulServiceInvocationContext context, List<PathFragment> path, String editableResourcePath, String comment, Map<Object, Object> clientContext) {
+		clientContext.put("diagramEditableResourcePath", editableResourcePath);
+		GenericTreeContext treeContext = new GenericTreeContext(scenarioTree);
+		treeContext.setClientContext(clientContext);
+		ScenarioElement parent = (ScenarioElement) scenarioTree.getNodeByPath(path, treeContext);
+		ScenarioElement commentNode = CodeSyncFactory.eINSTANCE.createScenarioElement();
+		commentNode.setComment(comment);
+		commentNode.setName(comment);
+		commentNode.setType("commentNode");
+		parent.getChildren().add(commentNode);
 		scenarioTree.openNode(context, path, clientContext);
 	}
 

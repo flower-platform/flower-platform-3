@@ -22,6 +22,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
+	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
@@ -151,6 +152,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandAttributesCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 		}
 		
 		override public function start():void {
