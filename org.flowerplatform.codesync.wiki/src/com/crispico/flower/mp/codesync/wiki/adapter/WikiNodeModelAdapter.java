@@ -141,7 +141,7 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 			if (diff != null) {
 //				diff.save();
 				doSave(page.getCodeSyncElement(), diff);
-				page.setDiff(null);
+//				page.setDiff(null);
 			}
 		}
 		return true;

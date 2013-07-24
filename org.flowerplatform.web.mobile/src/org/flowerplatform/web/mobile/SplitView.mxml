@@ -41,6 +41,7 @@
 			import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 			import org.flowerplatform.flexutil.popup.IPopupContent;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 			
 			private var _oneViewMode:Boolean = true;
@@ -198,15 +199,27 @@
 				rightActiveComponent = newActiveView;
 			}
 			
+			public function getAbsoluteUrl(resource:String):String {
+				return FlexUtilGlobals.getInstance().createAbsoluteUrl(WebCommonPlugin.getInstance().getResourceUrl(resource));
+			}
 	
+			protected function closeAppButtonClickHandler(event:MouseEvent):void {
+				NativeApplication.nativeApplication.exit();
+			}
+			
 		]]>
 	</fx:Script>
 	<popup:layout>
 		<s:HorizontalLayout/>
 	</popup:layout>
 	<popup:navigationContent>
-		<s:Button id="switchLeftRight" label="Sw LR" visible="{oneViewMode}" includeInLayout="{switchLeftRight.visible}" click="oneViewModeLeftViewActive = !oneViewModeLeftViewActive"/>
-		<s:Button id="switch1" label="Sw 1" visible="{!oneViewMode}" includeInLayout="{switch1.visible}" click="oneViewMode = true"/>
-		<s:Button id="switch2" label="Sw 2" visible="{oneViewMode}" includeInLayout="{switch2.visible}" click="oneViewMode = false"/>
+		<s:Button id="switchLeftRight" icon="{getAbsoluteUrl('images/switch_view.png')}"
+				  visible="{oneViewMode}" includeInLayout="{switchLeftRight.visible}" click="oneViewModeLeftViewActive = !oneViewModeLeftViewActive"/>
+		<s:Button id="switch1" icon="{getAbsoluteUrl('images/switch_view1.png')}"
+				  visible="{!oneViewMode}" includeInLayout="{switch1.visible}" click="oneViewMode = true"/>
+		<s:Button id="switch2" icon="{getAbsoluteUrl('images/switch_view2.png')}"
+				  visible="{oneViewMode}" includeInLayout="{switch2.visible}" click="oneViewMode = false"/>
+		<s:Button id="closeAppButton" icon="{getAbsoluteUrl('images/exit.png')}"
+				  click="closeAppButtonClickHandler(event)"/>
 	</popup:navigationContent>
 </popup:WrapperViewBase>

@@ -124,6 +124,9 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	}
 	
 	protected boolean containsChildViewForModelElement(View view, EObject candidate) {
+		if (candidate.eResource() == null) {
+			return false;
+		}
 		String candidateFragment = candidate.eResource().getURIFragment(candidate);
 		for (Node node : view.getPersistentChildren()) {
 			EObject child = node.getDiagrammableElement();
