@@ -67,7 +67,7 @@ public class MarkdownConfigurationProvider implements IConfigurationProvider {
 
 	private String getHeadline(int level) {
 		String delim = String.format("#{%s}", level);
-		return delim + "(.*?)" + delim + LINE_TERMINATOR;
+		return delim + "(.*?)" + LINE_TERMINATOR;
 	}
 
 	@Override

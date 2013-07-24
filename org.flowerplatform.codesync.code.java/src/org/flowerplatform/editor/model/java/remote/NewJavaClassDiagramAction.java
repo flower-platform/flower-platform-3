@@ -20,6 +20,7 @@ package org.flowerplatform.editor.model.java.remote;
 
 import java.io.File;
 
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.editor.model.remote.NewDiagramAction;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.NotationFactory;
@@ -30,7 +31,7 @@ import org.flowerplatform.emf_model.notation.NotationFactory;
 public class NewJavaClassDiagramAction extends NewDiagramAction {
 
 	@Override
-	protected Diagram createDiagram(File file) {
+	protected Diagram createDiagram(File file, ResourceSet resourceSet) {
 		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
 		diagram.setViewType("classDiagram");
 		return diagram;

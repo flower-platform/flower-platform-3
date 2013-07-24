@@ -20,6 +20,7 @@ package org.flowerplatform.editor.mindmap.remote;
 
 import java.io.File;
 
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.editor.model.remote.NewDiagramAction;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.MindMapNode;
@@ -33,13 +34,13 @@ import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
 public class NewMindMapDiagramAction extends NewDiagramAction {
 
 	@Override
-	protected Diagram createDiagram(File file) {
+	protected Diagram createDiagram(File file, ResourceSet resourceSet) {
 		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
 		MindMapNode root = NotationFactory.eINSTANCE.createMindMapNode();
 		root.setViewType("folder");
 		root.setExpanded(true);
 		root.setHasChildren(true);
-		root.setDiagrammableElement(WikiPlugin.getInstance().getWikiRoot(file, "github", communicationChannel));
+		root.setDiagrammableElement(WikiPlugin.getInstance().getWikiRoot(file, "github", resourceSet, communicationChannel));
 		diagram.getPersistentChildren().add(root);
 		return diagram;
 	}

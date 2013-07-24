@@ -37,8 +37,9 @@ package org.flowerplatform.editor.model.action {
 		
 		override public function get visible():Boolean {
 			if (selection != null && selection.length == 1) {
-				var node:Node = Node(selection.getItemAt(0));
-				return true;
+				if (selection.getItemAt(0) is Node) {
+					return true;
+				}
 			}
 			return false;
 		}

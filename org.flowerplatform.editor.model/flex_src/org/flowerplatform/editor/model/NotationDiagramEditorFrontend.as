@@ -23,6 +23,7 @@ package org.flowerplatform.editor.model
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
+	import mx.events.FlexEvent;
 	
 	import spark.components.Button;
 	import spark.components.TextInput;
@@ -49,45 +50,14 @@ package org.flowerplatform.editor.model
 	 */
 	public class NotationDiagramEditorFrontend extends DiagramEditorFrontend {
 				
+		protected var scenarioTree:GenericTreeList;
+		
+		protected var activeView:Object;
+		
 		override protected function createChildren():void {			
 			super.createChildren();
 			
-//			var testButton:Button = new Button();
-//			resourceStatusBar.addChild(testButton);
-//			testButton.label = "Test/Rename class";
-//			
-//			var textInput:TextInput = new TextInput();
-//			resourceStatusBar.addChild(textInput);
-//			textInput.text = "MyTest";
-//			
-//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_setInplaceEditorText(View(diagramShell.selectedItems.getItemAt(0)).id, textInput.text);
-//			});
-//			
-//			testButton = new Button();
-//			resourceStatusBar.addChild(testButton);
-//			testButton.label = "Test/Expand attributes";
-//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_attributes(View(diagramShell.selectedItems.getItemAt(0)).id);
-//			});
-//			
-//			testButton = new Button();
-//			resourceStatusBar.addChild(testButton);
-//			testButton.label = "Test/Expand operations";
-//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_expandCompartment_operations(View(diagramShell.selectedItems.getItemAt(0)).id);
-//			});
-//			
-//			testButton = new Button();
-//			resourceStatusBar.addChild(testButton);
-//			testButton.label = "Test/Add Connection";
-//			testButton.addEventListener(MouseEvent.CLICK, function (event:Event):void {
-//				NotationDiagramEditorStatefulClient(editorStatefulClient).service_addNewConnection(
-//					View(diagramShell.selectedItems.getItemAt(0)).id,
-//					View(diagramShell.selectedItems.getItemAt(1)).id);
-//			});
-			
-			var scenarioTree:GenericTreeList = new GenericTreeList();
+			scenarioTree = new GenericTreeList();
 			scenarioTree.percentHeight = 100;
 			scenarioTree.right = 0;
 			var treeClient:ScenarioTreeStatefulClient = new ScenarioTreeStatefulClient();
@@ -102,6 +72,7 @@ package org.flowerplatform.editor.model
 			root.hasChildren = true;
 			scenarioTree.rootNode = root;
 			scenarioTree.statefulClient.openNode(root);
+			scenarioTree.addEventListener(Event.CHANGE, selectionChangedHandler);
 		}
 		
 		override protected function getDiagramShellInstance():DiagramShell {
@@ -112,6 +83,29 @@ package org.flowerplatform.editor.model
 				ScrollTool, SelectOnClickTool, InplaceEditorTool, ResizeTool, 
 				DragToCreateRelationTool, DragTool/*, SelectOrDragToCreateElementTool*/, ZoomTool]);
 			return diagramShell;
+		}
+		
+		/**
+		 * @author Mariana Gheorghe
+		 */
+		override protected function selectionChangedHandler(e:Event):void {
+			if (e.target == scenarioTree) {
+				activeView = scenarioTree;
+			} else {
+				activeView = diagramShell;
+				scenarioTree.selectedItems = null;
+			}
+			super.selectionChangedHandler(e);
+		}
+		
+		/**
+		 * @author Mariana Gheorghe
+		 */
+		override public function getSelection():IList {		
+			if (activeView is GenericTreeList) {
+				return GenericTreeList(activeView).getSelection();
+			}
+			return super.getSelection();
 		}
 		
 		/**
@@ -128,8 +122,6 @@ package org.flowerplatform.editor.model
 			}		
 			return result;
 		}
-		
-		
 		
 	}
 }

@@ -18,7 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.wiki.adapter;
 
-import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.wiki.WikiDiff;
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -48,7 +48,7 @@ public class WikiNodeModelAdapterRight extends WikiNodeModelAdapter {
 		diff.getRight(cse);
 		Page page = (Page) cse.getAstCacheElement();
 		page.setInitialContent(diff.getLeft());
-		CodeSyncMergePlugin.getInstance().saveResource(cse.eResource());
+		CodeSyncPlugin.getInstance().saveResource(cse.eResource());
 	}
 	
 }

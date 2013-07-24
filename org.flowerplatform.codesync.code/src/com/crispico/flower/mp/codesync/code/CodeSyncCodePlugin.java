@@ -39,6 +39,8 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
@@ -55,6 +57,7 @@ import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
@@ -199,7 +202,9 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 //			return null;
 //		}
 		
-		Resource cseResource = getCodeSyncMapping(project);
+		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "diagramEditorStatefulService");
+		
+		Resource cseResource = getCodeSyncMapping(project, resourceSet);
 		
 		// STEP 2 : find the SrcDir corresponding to the 2nd path fragment
 //		CodeSyncElement srcDir = getSrcDir(cseResource, pathFragments[1]);
@@ -211,10 +216,10 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		if (codeSyncElement == null) {
 			// SUBSTEP : run the CodeSync algorithm if the CSE does not exist
 //			runCodeSyncAlgorithm(srcDir, project, pathFragments[1], technology, communicationChannel);
-			runCodeSyncAlgorithm(srcDir, project, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
+			runCodeSyncAlgorithm(srcDir, project, resourceSet, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
 		} else {
 			if (showDialog) {
-				runCodeSyncAlgorithm(srcDir, project, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
+				runCodeSyncAlgorithm(srcDir, project, resourceSet, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
 			}
 			return codeSyncElement;
 		}
@@ -253,7 +258,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, String path, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, ResourceSet resourceSet, String path, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		String editableResourcePath = project.getFullPath().toString();
@@ -283,7 +288,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		match.setEditableResource(editableResource);
 		editableResource.setMatch(match);
 		ModelAdapterFactorySet modelAdapterFactorySet = getModelAdapterFactorySetProvider().getFactorieSets().get(technology);
-		modelAdapterFactorySet.initialize(getAstCache(project));
+		modelAdapterFactorySet.initialize(getAstCache(project, resourceSet));
 		editableResource.setModelAdapterFactorySet(modelAdapterFactorySet);
 		
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);
@@ -304,29 +309,9 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public AdapterFactoryEditingDomain getOrCreateEditingDomain(IProject project) {
-		AdapterFactoryEditingDomain domain = editingDomains.get(project);
-		if (domain == null) {
-			ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-
-			adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-			adapterFactory.addAdapterFactory(new CodeSyncAdapterFactory());
-			adapterFactory.addAdapterFactory(new AstCacheCodeAdapterFactory());
-			adapterFactory.addAdapterFactory(new NotationAdapterFactory());
-			adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-			
-			domain = new AdapterFactoryEditingDomain(adapterFactory, null, new HashMap<Resource, Boolean>());
-			editingDomains.put(project, domain);
-		}
-		return domain;
-	}
-	
-	/**
-	 * @author Mariana
-	 */
-	public Resource getCodeSyncMapping(IProject project) {
+	public Resource getCodeSyncMapping(IProject project, ResourceSet resourceSet) {
 		File codeSyncElementMappingFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + CSE_MAPPING_FILE_LOCATION)));
-		Resource cseResource = CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), codeSyncElementMappingFile);
+		Resource cseResource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 		if (!codeSyncElementMappingFile.exists()) {
 			// first clear the resource in case the mapping file was deleted 
 			// after it has been loaded at a previous moment
@@ -343,7 +328,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 				cseResource.getContents().add(cseRoot);
 			}
 			
-			CodeSyncMergePlugin.getInstance().saveResource(cseResource);
+			CodeSyncPlugin.getInstance().saveResource(cseResource);
 		}
 		return cseResource;
 	}
@@ -351,9 +336,9 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public Resource getAstCache(IProject project) {
+	public Resource getAstCache(IProject project, ResourceSet resourceSet) {
 		File astCacheElementFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + ACE_FILE_LOCATION)));
-		return CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), astCacheElementFile);
+		return CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
 	}
 	
 	/**
@@ -448,8 +433,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 			op.getParameters().addAll(params);
 		}
 		
-		public void addToResource(IProject project, AstCacheElement ace) {
-			getAstCache(project).getContents().add(ace);
+		public void addToResource(IProject project, ResourceSet resourceSet, AstCacheElement ace) {
+			getAstCache(project, resourceSet).getContents().add(ace);
 		}
 		
 		public boolean testEquality(Resource expected, Resource actual, String name) {
@@ -478,18 +463,19 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 				project.create(null);
 			}
 			project.open(null);
+			ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "diagramEditorStatefulService");
 			IFile codeSyncElementsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("test/CSE.notation"));
 			Resource resource = null;
 			if (!codeSyncElementsFile.exists()) {
-				resource = CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), codeSyncElementsFile);
+				resource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementsFile);
 				resource.getContents().add(expectedCSE);
-				CodeSyncMergePlugin.getInstance().saveResource(resource);
+				CodeSyncPlugin.getInstance().saveResource(resource);
 			}
 			
-			CodeSyncMergePlugin.getInstance().discardResource(resource);
+			CodeSyncPlugin.getInstance().discardResource(resource);
 			
 			// STEP 3 : get value from resource
-			resource = CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), codeSyncElementsFile);
+			resource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementsFile);
 //					assertEquals(1, resource.getContents().size());
 			CodeSyncElement actualCSE = (CodeSyncElement) resource.getContents().get(0);
 			FeatureChange actualChange = actualCSE.getFeatureChanges().get(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());

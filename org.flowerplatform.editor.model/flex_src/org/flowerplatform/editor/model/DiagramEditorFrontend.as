@@ -23,9 +23,9 @@ package org.flowerplatform.editor.model {
 	import flash.geom.Rectangle;
 	
 	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	import mx.containers.HBox;
 	import mx.containers.HDividedBox;
-	import mx.collections.IList;
 	import mx.events.CollectionEvent;
 	import mx.events.FlexEvent;
 	import mx.managers.IFocusManagerComponent;
@@ -48,7 +48,7 @@ package org.flowerplatform.editor.model {
 			diagramShell.selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangedHandler);
 		}
 		
-		protected function selectionChangedHandler(e:CollectionEvent):void {
+		protected function selectionChangedHandler(e:Event):void {
 			if (popupHost) {
 				popupHost.refreshActions(this);
 			}
