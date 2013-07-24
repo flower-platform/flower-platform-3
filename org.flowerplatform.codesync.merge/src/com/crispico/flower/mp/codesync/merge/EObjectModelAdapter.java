@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
@@ -275,7 +276,7 @@ public class EObjectModelAdapter implements IModelAdapter {
 	@Override
 	public boolean save(Object element) {
 		EObject eObject = (EObject) element;
-		CodeSyncMergePlugin.getInstance().saveResource(eObject.eResource());
+		CodeSyncPlugin.getInstance().saveResource(eObject.eResource());
 		return false;
 	}
 	
@@ -285,7 +286,7 @@ public class EObjectModelAdapter implements IModelAdapter {
 	@Override
 	public boolean discard(Object element) {
 		EObject eObject = (EObject) element;
-		CodeSyncMergePlugin.getInstance().discardResource(eObject.eResource());
+		CodeSyncPlugin.getInstance().discardResource(eObject.eResource());
 		return false;
 	}
 	

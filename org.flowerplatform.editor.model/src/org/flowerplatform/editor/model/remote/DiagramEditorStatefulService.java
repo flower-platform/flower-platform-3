@@ -281,6 +281,20 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		return scenarioTree;
 	}
 	
+	public DiagramEditableResource getDiagramEditableResource(File project) {
+		if (project != null) {
+			String path = project.getAbsolutePath();
+			for (EditableResource er : editableResources.values()) {
+				DiagramEditableResource der = (DiagramEditableResource) er;
+				File diagram = der.getFile();
+				if (diagram.getAbsolutePath().startsWith(path)) {
+					return der;
+				}
+			}
+		}
+		return null;
+	}
+	
 	///////////////////////////////////////////////////////////////
 	// Proxies to client methods
 	///////////////////////////////////////////////////////////////

@@ -27,32 +27,30 @@ import java.util.Map;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.model.remote.DiagramEditableResource;
+import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
-import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
 import astcache.wiki.FlowerBlock;
 import astcache.wiki.Page;
-import astcache.wiki.util.WikiAdapterFactory;
-
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
-import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
 import com.crispico.flower.mp.codesync.wiki.adapter.WikiNodeModelAdapter;
 import com.crispico.flower.mp.codesync.wiki.adapter.WikiNodeModelAdapterRight;
 import com.crispico.flower.mp.codesync.wiki.featureprovider.WikiPageFeatureProvider;
@@ -60,7 +58,6 @@ import com.crispico.flower.mp.codesync.wiki.github.GithubConfigurationProvider;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
-import com.crispico.flower.mp.model.codesync.util.CodeSyncAdapterFactory;
 
 /**
  * @author Mariana
@@ -86,8 +83,6 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	public static final String PARAGRAPH_CATEGORY = "paragraph";
 	public static final String FLOWER_BLOCK_CATEGORY = "flowerBlock";
 	
-	protected Map<IProject, AdapterFactoryEditingDomain> editingDomains = new HashMap<IProject, AdapterFactoryEditingDomain>();
-	
 	protected Map<String, IConfigurationProvider> configurationProviders = new HashMap<String, IConfigurationProvider>();
 	
 	public void start(BundleContext bundleContext) throws Exception {
@@ -96,6 +91,8 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		
 		// TODO this should be done from a new plugin probably
 		getConfigurationProviders().put(GithubConfigurationProvider.TECHNOLOGY, new GithubConfigurationProvider());
+		
+		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
 	}
 
 	@Override
@@ -111,20 +108,20 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		return configurationProviders;
 	}
 
-	public CodeSyncRoot getWikiRoot(File file, String technology, CommunicationChannel communicationChannel) {
+	public CodeSyncRoot getWikiRoot(File file, String technology, ResourceSet resourceSet, CommunicationChannel communicationChannel) {
 		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
 		IProject project = resource.getProject();
 		File projectFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project);
 		String name = projectFile.getPath();
 		// this will be a temporary tree, do not send the project
-		CodeSyncRoot leftRoot = getWikiTree(null, projectFile, name, technology);
-		CodeSyncRoot rightRoot = getWikiTree(project, null, name, technology);
+		CodeSyncRoot leftRoot = getWikiTree(null, resourceSet, projectFile, name, technology);
+		CodeSyncRoot rightRoot = getWikiTree(project, resourceSet, null, name, technology);
 		
-		updateTree(leftRoot, rightRoot, project, technology, communicationChannel, false);
+		updateTree(leftRoot, rightRoot, project, resourceSet, technology, communicationChannel, false);
 		return rightRoot;
 	}
 	
-	public void updateTree(CodeSyncElement left, CodeSyncElement right, IProject project, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public void updateTree(CodeSyncElement left, CodeSyncElement right, IProject project, ResourceSet resourceSet, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		String editableResourcePath = project.getFullPath().toString();
 		CodeSyncEditableResource editableResource;
@@ -144,7 +141,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		WikiNodeModelAdapterRight rightAdapter = new WikiNodeModelAdapterRight();
 		rightAdapter.setModelAdapterFactory(rightFactory);
 		rightAdapter.setEObjectConverter(rightFactory);
-		rightAdapter.setResource(getAstCacheResource(project));
+		rightAdapter.setResource(getAstCacheResource(project, resourceSet));
 		rightAdapter.setTechnology(technology);
 		rightFactory.addModelAdapter(CodeSyncElement.class, rightAdapter);
 		
@@ -191,14 +188,14 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		return null;
 	}
 	
-	public Resource getAstCacheResource(IProject project) {
+	public Resource getAstCacheResource(IProject project, ResourceSet resourceSet) {
 		File astCacheElementFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + ACE_FILE_LOCATION)));
-		return CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), astCacheElementFile);
+		return CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
 	}
 	
-	public Resource getCodeSyncMappingResource(IProject project) {
+	public Resource getCodeSyncMappingResource(IProject project, ResourceSet resourceSet) {
 		File codeSyncElementMappingFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + CSE_FILE_LOCATION)));
-		return CodeSyncMergePlugin.getInstance().getResource(getOrCreateEditingDomain(project), codeSyncElementMappingFile);
+		return CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 	}
 
 	/**
@@ -233,8 +230,8 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * Delegates to {@link IConfigurationProvider#getWikiTree(String, Object)}.
 	 */
-	public CodeSyncRoot getWikiTree(IProject project, Object wiki, String name, String technology) {
-		Resource codeSyncResource = project == null ? getOrCreateEditingDomain(project).createResource("tempCSE") : getCodeSyncMappingResource(project);
+	public CodeSyncRoot getWikiTree(IProject project, ResourceSet resourceSet, Object wiki, String name, String technology) {
+		Resource codeSyncResource = project == null ? resourceSet.createResource(URI.createURI("tempCSE")) : getCodeSyncMappingResource(project, resourceSet);
 		CodeSyncRoot root = getRoot(codeSyncResource, name);
 		if (root == null) {
 			root = configurationProviders.get(technology).getWikiTree(wiki);
@@ -243,7 +240,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 				root.setName(name);
 			}
 		}
-		Resource astCacheResource = project == null ? getOrCreateEditingDomain(project).createResource("tempACE") : getAstCacheResource(project);
+		Resource astCacheResource = project == null ? resourceSet.createResource(URI.createURI("tempACE")) : getAstCacheResource(project, resourceSet);
 		addToAstCacheResource(root, astCacheResource);
 		return root;
 	}
@@ -267,23 +264,6 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 
-	public AdapterFactoryEditingDomain getOrCreateEditingDomain(IProject project) {
-		AdapterFactoryEditingDomain domain = editingDomains.get(project);
-//		if (domain == null) { 
-			ComposedAdapterFactory adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
-		
-			adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-			adapterFactory.addAdapterFactory(new CodeSyncAdapterFactory());
-			adapterFactory.addAdapterFactory(new WikiAdapterFactory());
-			adapterFactory.addAdapterFactory(new NotationAdapterFactory());
-			adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
-			
-			domain = new AdapterFactoryEditingDomain(adapterFactory, null, new HashMap<Resource, Boolean>());
-			editingDomains.put(project, domain);
-//		}
-		return domain;
-	}
-	
 	/**
 	 * Delegates to {@link IConfigurationProvider#savePage(Page)}.
 	 */

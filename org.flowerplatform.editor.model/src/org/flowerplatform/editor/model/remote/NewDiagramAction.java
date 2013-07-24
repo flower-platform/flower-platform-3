@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.common.CommonPlugin;
@@ -56,14 +57,17 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		}
 		
 		URI resourceURI = URI.createFileURI(diagram.getAbsolutePath());
-		Resource resource = new ResourceSetImpl().createResource(resourceURI);
+		ResourceSet resourceSet = new ResourceSetImpl();
+		Resource resource = resourceSet.createResource(resourceURI);
 		resource.getContents().clear();
-		resource.getContents().add(createDiagram(file));
+		resource.getContents().add(createDiagram(file, resourceSet));
 		Map<Object, Object> options = new HashMap<Object, Object>();
 		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
 		options.put(XMLResource.OPTION_XML_VERSION, "1.1");
 		try {
-			resource.save(options);
+			for (Resource r : resourceSet.getResources()) {
+				r.save(options);
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -88,6 +92,6 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		return builder.toString();
 	}
 
-	abstract protected Diagram createDiagram(File file);
+	abstract protected Diagram createDiagram(File file, ResourceSet resourceSet);
 	abstract protected String getServiceId();
 }

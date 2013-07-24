@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.core.resources,
  org.flowerplatform.emf_model.codesync,
  org.flowerplatform.web,
  org.flowerplatform.editor.model,
- org.eclipse.emf.ecore.change
+ org.eclipse.emf.ecore.change,
+ org.eclipse.emf.ecore.xmi
 Export-Package: com.crispico.flower.mp.codesync.base,
  com.crispico.flower.mp.codesync.base.action,
  com.crispico.flower.mp.codesync.base.communication,

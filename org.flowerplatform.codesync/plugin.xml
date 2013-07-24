@@ -2,27 +2,5 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="codeSyncAlgorithmRunner" name="codeSyncAlgorithmRunner" schema="schema/codeSyncAlgorithmRunner.exsd"/>
-   <extension
-         point="org.flowerplatform.editor.contentType">
-      <contentType
-            contentType="codeSync">
-      </contentType>
-   </extension>
-   <extension
-         point="org.flowerplatform.editor.contentTypeToEditorMapping">
-      <contentTypeToEditorMapping
-            compatibleEditor="codeSync"
-            contentType="codeSync"
-            editorStatefulService="com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService"
-            serviceId="codeSyncEditorStatefulService">
-      </contentTypeToEditorMapping>
-   </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
-      <service
-            id="CodeSyncEditorStatefulService"
-            serviceClass="com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService">
-      </service>
-   </extension>
-
+   
 </plugin>

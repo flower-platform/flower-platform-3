@@ -33,6 +33,7 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
@@ -51,8 +52,8 @@ import astcache.wiki.WikiFactory;
 import astcache.wiki.WikiPackage;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
-import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
 import com.crispico.flower.mp.codesync.wiki.dokuwiki.DokuWikiClientConfiguration;
 import com.crispico.flower.mp.codesync.wiki.dokuwiki.DokuWikiConfigurationProvider;
@@ -125,8 +126,9 @@ public class CodeSyncWikiTest {
 				
 				WikiPlugin wikiPlugin = WikiPlugin.getInstance();
 				IProject project = getProject();
-				CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, wiki, "proiecte:flower:teste", technology);
-				CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, "proiecte:flower:teste", technology);
+				ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
+				CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, resourceSet, wiki, "proiecte:flower:teste", technology);
+				CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, resourceSet, null, "proiecte:flower:teste", technology);
 
 				expected = new Pair[] {
 					new Pair(WikiPlugin.FOLDER_CATEGORY, 0),							// Crispico
@@ -153,7 +155,7 @@ public class CodeSyncWikiTest {
 									new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 4)
 									
 				};
-				test(leftRoot, rightRoot, technology, expected);
+				test(leftRoot, rightRoot, resourceSet, technology, expected);
 				
 				return null;
 			}
@@ -174,8 +176,9 @@ public class CodeSyncWikiTest {
 		WikiPlugin.getInstance().getConfigurationProviders().put(technology, dummyConfigProvider);
 		
 		IProject project = getProject();
-		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, Arrays.asList(page), "", technology);
-		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, "", technology);
+		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
+		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, resourceSet, Arrays.asList(page), "", technology);
+		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, resourceSet, null, "", technology);
 		
 		expected = 	new Pair[] {
 			new Pair(WikiPlugin.FOLDER_CATEGORY, 0), 
@@ -207,11 +210,11 @@ public class CodeSyncWikiTest {
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3)
 		};
-		test(leftRoot, rightRoot, technology, expected);
+		test(leftRoot, rightRoot, resourceSet, technology, expected);
 		
 		// left modifications
 		page = new DokuWikiPage(pageName, left);
-		leftRoot = wikiPlugin.getWikiTree(null, Arrays.asList(page), "", technology);
+		leftRoot = wikiPlugin.getWikiTree(null, resourceSet, Arrays.asList(page), "", technology);
 		// right modifications
 		CodeSyncElement newRightPage = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
 		newRightPage.setName("page");
@@ -221,11 +224,11 @@ public class CodeSyncWikiTest {
 		wikiPage.setLineDelimiter("\r\n");
 		newRightPage.setAstCacheElement(wikiPage);
 		WikiPlugin.getInstance().replaceWikiPage(rightRoot, newRightPage);
-		WikiPlugin.getInstance().addToAstCacheResource(rightRoot, WikiPlugin.getInstance().getAstCacheResource(project));
+		WikiPlugin.getInstance().addToAstCacheResource(rightRoot, WikiPlugin.getInstance().getAstCacheResource(project, resourceSet));
 		wikiPlugin.getWikiPageTree(right, newRightPage, technology, null);
-		CodeSyncMergePlugin.getInstance().saveResource(rightRoot.eResource());
+		CodeSyncPlugin.getInstance().saveResource(rightRoot.eResource());
 		
-		test(leftRoot, rightRoot, technology, null);
+		test(leftRoot, rightRoot, resourceSet, technology, null);
 		
 		assertEquals(wikiPlugin.getWikiText(newRightPage, technology), dummyConfigProvider.page.getInitialContent());
 	}
@@ -241,8 +244,9 @@ public class CodeSyncWikiTest {
 		File right = new File(TestUtil.getWorkspaceResourceAbsolutePath(MD_FILE_3));
 		
 		IProject project = getProject();
-		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, ancestor, ancestor.getPath(), technology);
-		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, null, ancestor.getPath(), technology);
+		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
+		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, resourceSet, ancestor, ancestor.getPath(), technology);
+		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, resourceSet, null, ancestor.getPath(), technology);
 		rightRoot.setName(ancestor.getPath());
 		
 		expected = new Pair[] {
@@ -260,10 +264,10 @@ public class CodeSyncWikiTest {
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4)
 		};
 		
-		test(leftRoot, rightRoot, technology, expected);
+		test(leftRoot, rightRoot, resourceSet, technology, expected);
 		
 		// left modifications
-		leftRoot = wikiPlugin.getWikiTree(null, left, ancestor.getPath(), technology);
+		leftRoot = wikiPlugin.getWikiTree(null, resourceSet, left, ancestor.getPath(), technology);
 		// right modifications
 		CodeSyncElement newRightPage = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 		newRightPage.setName(ancestor.getName());
@@ -273,11 +277,11 @@ public class CodeSyncWikiTest {
 		wikiPage.setLineDelimiter(wikiPlugin.getLineDelimiter(FileUtils.readFileToString(ancestor)));
 		newRightPage.setAstCacheElement(wikiPage);
 		wikiPlugin.replaceWikiPage(rightRoot, newRightPage);
-		wikiPlugin.addToAstCacheResource(rightRoot, wikiPlugin.getAstCacheResource(project));
+		wikiPlugin.addToAstCacheResource(rightRoot, wikiPlugin.getAstCacheResource(project, resourceSet));
 		wikiPlugin.getWikiPageTree(FileUtils.readFileToString(right), newRightPage, technology, null);
-		CodeSyncMergePlugin.getInstance().saveResource(rightRoot.eResource());
+		CodeSyncPlugin.getInstance().saveResource(rightRoot.eResource());
 		
-		test(leftRoot, rightRoot, technology, null);
+		test(leftRoot, rightRoot, resourceSet, technology, null);
 		
 		String newContent = FileUtils.readFileToString(new File(TestUtil.getWorkspaceResourceAbsolutePath(MD_FILE_2)));
 		assertEquals(wikiPlugin.getWikiText(newRightPage, technology), newContent);
@@ -289,10 +293,10 @@ public class CodeSyncWikiTest {
 		return resource.getProject();
 	}
 	
-	private void test(CodeSyncRoot leftRoot, CodeSyncRoot rightRoot, String technology, Pair[] expected) {
+	private void test(CodeSyncRoot leftRoot, CodeSyncRoot rightRoot, ResourceSet resourceSet, String technology, Pair[] expected) {
 		IProject project = getProject();
 		WikiPlugin wikiPlugin = WikiPlugin.getInstance();
-		wikiPlugin.updateTree(leftRoot, rightRoot, project, technology, communicationChannel, true);
+		wikiPlugin.updateTree(leftRoot, rightRoot, project, resourceSet, technology, communicationChannel, true);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
