@@ -37,6 +37,7 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 
 /**
  * @author Cristina Constantinescu
@@ -88,6 +89,42 @@ public class MindMapDiagramOperationsService {
 		return node;
 	}
 	
+	public Object moveUp(ServiceInvocationContext context, String viewId) {
+		MindMapNode node = getMindMapNodeById(context, viewId);		
+		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();
+		
+		if (cse instanceof CodeSyncRoot) {
+			return node;
+		}
+		CodeSyncElement parentCSE = (CodeSyncElement) cse.eContainer();
+		MindMapNode parentNode = (MindMapNode) node.eContainer();
+		if (parentNode.getPersistentChildren().indexOf(node) != 0) {
+			parentNode.getPersistentChildren().move(parentNode.getPersistentChildren().indexOf(node), parentNode.getPersistentChildren().indexOf(node) - 1);
+		}
+		if (parentCSE.getChildren().indexOf(cse) != 0) {
+			parentCSE.getChildren().move(parentCSE.getChildren().indexOf(cse), parentCSE.getChildren().indexOf(cse) - 1);
+		}
+		return node;
+	}
+	
+	public Object moveDown(ServiceInvocationContext context, String viewId) {
+		MindMapNode node = getMindMapNodeById(context, viewId);		
+		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();
+		
+		if (cse instanceof CodeSyncRoot) {
+			return node;
+		}
+		CodeSyncElement parentCSE = (CodeSyncElement) cse.eContainer();
+		MindMapNode parentNode = (MindMapNode) node.eContainer();
+		if (parentNode.getPersistentChildren().indexOf(node) != parentNode.getPersistentChildren().size() - 1) {
+			parentNode.getPersistentChildren().move(parentNode.getPersistentChildren().indexOf(node), parentNode.getPersistentChildren().indexOf(node) + 1);
+		}
+		if (parentCSE.getChildren().indexOf(cse) != parentCSE.getChildren().size() - 1) {
+			parentCSE.getChildren().move(parentCSE.getChildren().indexOf(cse), parentCSE.getChildren().indexOf(cse) + 1);
+		}
+		return node;
+	}
+	
 	public Object createNew(ServiceInvocationContext context, String viewId, String viewType) {
 		MindMapNode node = getMindMapNodeById(context, viewId);	
 		
@@ -102,6 +139,20 @@ public class MindMapDiagramOperationsService {
 		
 		notifyProcessors(context, node);
 		return node;
+	}
+	
+	public void delete(ServiceInvocationContext context, String viewId) {
+		MindMapNode node = getMindMapNodeById(context, viewId);		
+		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();	
+		if (cse instanceof CodeSyncRoot) {
+			return;
+		}
+		MindMapNode parentNode = (MindMapNode) node.eContainer();
+		CodeSyncElement parentCSE = (CodeSyncElement) cse.eContainer();	
+		parentCSE.getChildren().remove(cse);	
+		parentNode.setHasChildren(parentCSE.getChildren().size() > 0);	
+		
+		notifyProcessors(context, parentNode);
 	}
 	
 	private void setSide(MindMapNode node, int side) {

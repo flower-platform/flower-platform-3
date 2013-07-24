@@ -31,7 +31,7 @@ public class MindMapParagraphProcessor extends AbstractMindMapChangeProcessor {
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		super.processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
-		viewDetails.put("icon", "images/paragraph.png");
+		viewDetails.put("icon", "images/pencil.png");
 	}
 	
 }

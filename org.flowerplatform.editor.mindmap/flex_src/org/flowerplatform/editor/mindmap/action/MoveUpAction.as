@@ -17,41 +17,50 @@
  * license-end
  */
 package org.flowerplatform.editor.mindmap.action {
-	import mx.collections.ArrayList;
+	import flash.profiler.showRedrawRegions;
 	
+	import mx.collections.ArrayList;
+	import mx.collections.IList;
+	
+	import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
+	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
 	import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
+	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
+	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-	
+
 	/**
 	 * @author Cristina Constantinescu
 	 */ 
-	public class NewMindMapNodeAction extends ActionBase {
+	public class MoveUpAction extends ActionBase {
 		
-		protected var viewType:String;
-		
-		public function NewMindMapNodeAction() {
-			super();
+		public function MoveUpAction() {			
+			label = "Move Up";
+			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/up.png");		
 			preferShowOnActionBar = true;
 		}
-		
-		protected function getAcceptedViewTypes(model:MindMapNode):ArrayList {
-			return ArrayList(MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).viewTypeToAcceptedViewTypeChildren[model.viewType]);
-		}
-		
+			
 		override public function get visible():Boolean {			
 			if (selection != null && selection.length == 1) {
-				var selectedNode:MindMapNode = MindMapNode(selection.getItemAt(0));
-				return getAcceptedViewTypes(selectedNode) != null && getAcceptedViewTypes(selectedNode).getItemIndex(viewType) != -1;
+				return true;	
 			}			
 			return false;
 		}
 		
 		override public function run():void {			
-			var selectedNode:MindMapNode = MindMapNode(selection.getItemAt(0));			
-			MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_createNew(selectedNode.id, viewType);
+			var selectedNode:MindMapNode = MindMapNode(selection.getItemAt(0));
+			MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_moveUp(
+				selectedNode.id, 
+				this, selectModelAfterMovingHandler);			
 		}
-			
+		
+		private function selectModelAfterMovingHandler(value:Object):void {
+//			diagramShell.selectedItems.removeAll();
+//			diagramShell.selectedItems.addItem(value);
+		}
 	}
 }

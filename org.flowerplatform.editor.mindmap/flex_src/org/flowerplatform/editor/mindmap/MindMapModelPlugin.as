@@ -20,6 +20,9 @@ package org.flowerplatform.editor.mindmap {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.mindmap.action.DeleteAction;
+	import org.flowerplatform.editor.mindmap.action.MoveDownAction;
+	import org.flowerplatform.editor.mindmap.action.MoveUpAction;
 	import org.flowerplatform.editor.mindmap.action.NewFolderAction;
 	import org.flowerplatform.editor.mindmap.action.NewHeadline1Action;
 	import org.flowerplatform.editor.mindmap.action.NewHeadline2Action;
@@ -66,6 +69,9 @@ package org.flowerplatform.editor.mindmap {
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline3Action);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewParagraphAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(MoveUpAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(MoveDownAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
 		}
 		
 		override public function start():void {

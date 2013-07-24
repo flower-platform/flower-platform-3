@@ -17,6 +17,8 @@
  * license-end
  */
 package org.flowerplatform.editor.mindmap.action {
+	import flash.profiler.showRedrawRegions;
+	
 	import mx.collections.ArrayList;
 	
 	import org.flowerplatform.editor.mindmap.MindMapModelPlugin;

@@ -32,6 +32,7 @@
 			import mx.core.IVisualElement;
 			import mx.core.IVisualElementContainer;
 			import mx.core.UIComponent;
+			import mx.core.mx_internal;
 			import mx.events.FlexEvent;
 			import mx.events.MoveEvent;
 			import mx.events.ResizeEvent;
@@ -53,14 +54,11 @@
 			override public function activate(diagramShell:DiagramShell, target:IVisualElement):void {
 				super.activate(diagramShell, target);			
 					
-				DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);				
+				DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);	
+				DisplayObject(target).addEventListener(MoveEvent.MOVE, handleTargetMoveResize);			
 				// update position
-				handleTargetMoveResize(null);				
-				if (MindMapNode(getTargetModel()).hasChildren && 
-					IMindMapControllerProvider(diagramShell.getControllerProvider(getTargetModel())).getMindMapModelController(getTargetModel()).getParent(getTargetModel()) != null) {	
-					vLine.visible = !getTargetModel().expanded;
-					diagramShell.diagramRenderer.addElement(circle);
-				}
+				handleTargetMoveResize(null);		
+				
 			}
 			
 			/**
@@ -76,7 +74,8 @@
 				}				
 							
 				// remove resize listeners				
-				DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);					
+				DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);			
+				DisplayObject(target).removeEventListener(MoveEvent.MOVE, handleTargetMoveResize);			
 				super.deactivate();
 			}
 	
@@ -88,9 +87,19 @@
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {			
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 				
+				if (MindMapNode(getTargetModel()).hasChildren && 
+					IMindMapControllerProvider(diagramShell.getControllerProvider(getTargetModel())).getMindMapModelController(getTargetModel()).getParent(getTargetModel()) != null) {	
+					vLine.visible = !getTargetModel().expanded;
+					diagramShell.diagramRenderer.addElement(circle);
+				} else if (!MindMapNode(getTargetModel()).hasChildren) {
+					if (circle.parent != null) {
+						diagramShell.diagramRenderer.removeElement(circle);
+					}					
+				}
+							
 				graphics.clear();
 				graphics.lineStyle(2, 0x3C37FE);		
-				graphics.drawRoundRect(-padding, -padding, target.width + padding * 2, target.height + padding * 2, 10, 10);			
+				graphics.drawRoundRect(-padding, - padding, target.width + padding * 2, target.height + padding * 2, 10, 10);			
 				
 				if (getTargetModel().side == MindMapDiagramShell.LEFT) {
 					circle.x = getTargetModel().x - circleRadius * 2;						
