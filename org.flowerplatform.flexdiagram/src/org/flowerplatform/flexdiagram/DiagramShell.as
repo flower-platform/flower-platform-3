@@ -190,7 +190,7 @@ package org.flowerplatform.flexdiagram {
 			if (controllerProvider == null) {
 				controllerProvider = getControllerProvider(model);
 			}
-			if (modelToExtraInfoMap[model] == null) {
+			if (modelToExtraInfoMap[model] == null && controllerProvider.getModelExtraInfoController(model) != null) {
 				var extraInfo:Object = controllerProvider.getModelExtraInfoController(model).createExtraInfo(model);
 				modelToExtraInfoMap[model] = extraInfo;
 				return true;
@@ -204,7 +204,9 @@ package org.flowerplatform.flexdiagram {
 			}
 			
 			// update the renderer in model map
-			controllerProvider.getModelExtraInfoController(model).setRenderer(model, modelToExtraInfoMap[model], renderer);
+			if (controllerProvider.getModelExtraInfoController(model) != null) {
+				controllerProvider.getModelExtraInfoController(model).setRenderer(model, modelToExtraInfoMap[model], renderer);
+			}
 			
 			if (renderer is IInvalidating) {
 				var invalidating:IInvalidating = IInvalidating(renderer);

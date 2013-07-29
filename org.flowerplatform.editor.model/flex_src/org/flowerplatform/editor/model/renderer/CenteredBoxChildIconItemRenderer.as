@@ -29,5 +29,13 @@ package org.flowerplatform.editor.model.renderer {
 			setStyle("horizontalAlign", "center");
 			setStyle("fontWeight", "bold");
 		}
+		
+		override protected function set down(value:Boolean):void {
+			super.down = false;
+		}
+		
+		override protected function set hovered(value:Boolean):void {
+			super.hovered = false;
+		}
 	}
 }
