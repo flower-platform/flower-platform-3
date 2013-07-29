@@ -40,7 +40,7 @@ public class MoveResizeServerCommand extends AbstractEMFServerCommand {
 				((Bounds) location).setWidth(newWidth);
 			}
 			if (newHeight != -1) {
-				((Bounds) location).setWidth(newHeight);
+				((Bounds) location).setHeight(newHeight);
 			}
 		}
 		
