@@ -29,6 +29,7 @@
 	
 	<s:layout>
 		<s:VerticalLayout
+			horizontalAlign="center" verticalAlign="middle"
 			paddingBottom="1" paddingLeft="1"
 			paddingRight="1" paddingTop="1"/>
 	</s:layout>
