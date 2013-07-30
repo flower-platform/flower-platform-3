@@ -405,7 +405,10 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			return interaction;
 		}
 		for (CodeSyncElement child : scenario.getChildren()) {
-			return addScenarioInteraction((ScenarioElement) child, source, target);
+			ScenarioElement interaction = addScenarioInteraction((ScenarioElement) child, source, target);
+			if (interaction != null) {
+				return interaction;
+			}
 		}
 		return null;
 	}
