@@ -23,6 +23,9 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import mx.core.IDataRenderer;
+	import mx.core.IVisualElement;
+	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.selection.AnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.IDragToCreateRelationController;
@@ -67,20 +70,28 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		private function mouseMoveHandler(event:MouseEvent):void {
-			if (event.buttonDown) {				
+			if (event.buttonDown) {			
+				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));
+				var deltaX:int = mousePoint.x;
+				var deltaY:int = mousePoint.y;
+				
 				diagramShell.getControllerProvider(context.model).
-					getDragToCreateRelationController(context.model).drag(context.model);
+					getDragToCreateRelationController(context.model).drag(context.model, deltaX, deltaY);
 			} else {
 				mouseUpHandler();
 			}
 		}
 		
 		private function mouseUpHandler(event:MouseEvent = null):void {	
-			var dropTarget:Object = event.target.parent.data;
-			var controller:IDragToCreateRelationController = diagramShell.getControllerProvider(dropTarget).
-				getDragToCreateRelationController(dropTarget);
+			var controller:IDragToCreateRelationController = diagramShell.getControllerProvider(context.model).
+				getDragToCreateRelationController(context.model);
 			if (controller) {
-				controller.drop(dropTarget);
+				var renderer:IVisualElement = getRendererFromDisplayCoordinates(true);
+				var model:Object = null;
+				if (renderer is IDataRenderer) {
+					model = IDataRenderer(renderer).data;
+				}
+				controller.drop(model);
 			}
 		}
 		
