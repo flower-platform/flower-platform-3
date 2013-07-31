@@ -271,7 +271,9 @@ package org.flowerplatform.flexdiagram {
 			}
 		
 			// update the renderer in model map
-			controllerProvider.getModelExtraInfoController(model).setRenderer(model, modelToExtraInfoMap[model], null);
+			if (controllerProvider.getModelExtraInfoController(model) != null) {
+				controllerProvider.getModelExtraInfoController(model).setRenderer(model, modelToExtraInfoMap[model], null);
+			}
 			
 			if (renderer != null) {
 				IDataRenderer(renderer).data = null;
