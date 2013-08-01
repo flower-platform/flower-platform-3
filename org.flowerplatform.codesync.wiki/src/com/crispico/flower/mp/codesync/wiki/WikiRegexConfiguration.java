@@ -26,9 +26,27 @@ import org.flowerplatform.common.regex.RegexWithAction;
  */
 public class WikiRegexConfiguration extends RegexConfiguration {
 	
-	public static final String LINE_TERMINATOR = "(?:\r\n|[\r\n]|\\z)";
+
+	///////////////////////////
+	// Helper formats and regex
+	///////////////////////////
 	
-	public static final String PARAGRAPH_REGEX = "(.*?)" + LINE_TERMINATOR;
+	public static final String MULTILINE_MATCH_FORMAT = "(?m)^%s$";
+	
+	public static final String CAPTURE_GROUP_FORMAT = "(%s)";
+	
+	public static final String GREEDY_ZERO_OR_MORE_TIMES_FORMAT = "%s*?";
+	
+	public static final String ANY_CHARACTER = ".";
+	
+	public static final String CAPTURE_ANY = String.format(CAPTURE_GROUP_FORMAT, String.format(GREEDY_ZERO_OR_MORE_TIMES_FORMAT, ANY_CHARACTER));
+	
+	
+	///////////////////////////
+	// Default wiki syntax
+	///////////////////////////
+	
+	public static final String PARAGRAPH_REGEX = String.format(MULTILINE_MATCH_FORMAT, CAPTURE_ANY);
 		
 	public static final String FLOWER_BLOCK_START = "@flower-platform-type";
 	

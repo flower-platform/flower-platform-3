@@ -1,41 +1,25 @@
-/* license-start
- * 
- * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation version 3.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- *   Crispico - Initial API and implementation
- *
- * license-end
- */
 /**
  * <copyright>
  * </copyright>
  *
  * $Id$
  */
-package astcache.wiki.impl;
-
-import astcache.wiki.FlowerBlock;
-import astcache.wiki.Page;
-import astcache.wiki.WikiFactory;
-import astcache.wiki.WikiPackage;
+package org.flowerplatform.model.astcache.wiki.impl;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EcorePackage;
 
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
+import org.flowerplatform.model.astcache.wiki.FlowerBlock;
+import org.flowerplatform.model.astcache.wiki.Heading;
+import org.flowerplatform.model.astcache.wiki.Page;
 
 /**
  * <!-- begin-user-doc -->
@@ -43,7 +27,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
-public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
+public class AstCacheWikiPackageImpl extends EPackageImpl implements AstCacheWikiPackage {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -59,6 +43,13 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 	private EClass flowerBlockEClass = null;
 
 	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass headingEClass = null;
+
+	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
 	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
 	 * package URI value.
@@ -69,12 +60,12 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
-	 * @see astcache.wiki.WikiPackage#eNS_URI
+	 * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#eNS_URI
 	 * @see #init()
 	 * @generated
 	 */
-	private WikiPackageImpl() {
-		super(eNS_URI, WikiFactory.eINSTANCE);
+	private AstCacheWikiPackageImpl() {
+		super(eNS_URI, AstCacheWikiFactory.eINSTANCE);
 	}
 
 	/**
@@ -87,7 +78,7 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 	/**
 	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
 	 * 
-	 * <p>This method is used to initialize {@link WikiPackage#eINSTANCE} when that field is accessed.
+	 * <p>This method is used to initialize {@link AstCacheWikiPackage#eINSTANCE} when that field is accessed.
 	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -96,11 +87,11 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 	 * @see #initializePackageContents()
 	 * @generated
 	 */
-	public static WikiPackage init() {
-		if (isInited) return (WikiPackage)EPackage.Registry.INSTANCE.getEPackage(WikiPackage.eNS_URI);
+	public static AstCacheWikiPackage init() {
+		if (isInited) return (AstCacheWikiPackage)EPackage.Registry.INSTANCE.getEPackage(AstCacheWikiPackage.eNS_URI);
 
 		// Obtain or create and register package
-		WikiPackageImpl theWikiPackage = (WikiPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof WikiPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new WikiPackageImpl());
+		AstCacheWikiPackageImpl theAstCacheWikiPackage = (AstCacheWikiPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof AstCacheWikiPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new AstCacheWikiPackageImpl());
 
 		isInited = true;
 
@@ -108,18 +99,18 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 		CodeSyncPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
-		theWikiPackage.createPackageContents();
+		theAstCacheWikiPackage.createPackageContents();
 
 		// Initialize created meta-data
-		theWikiPackage.initializePackageContents();
+		theAstCacheWikiPackage.initializePackageContents();
 
 		// Mark meta-data to indicate it can't be changed
-		theWikiPackage.freeze();
+		theAstCacheWikiPackage.freeze();
 
   
 		// Update the registry and return the package
-		EPackage.Registry.INSTANCE.put(WikiPackage.eNS_URI, theWikiPackage);
-		return theWikiPackage;
+		EPackage.Registry.INSTANCE.put(AstCacheWikiPackage.eNS_URI, theAstCacheWikiPackage);
+		return theAstCacheWikiPackage;
 	}
 
 	/**
@@ -208,8 +199,26 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public WikiFactory getWikiFactory() {
-		return (WikiFactory)getEFactoryInstance();
+	public EClass getHeading() {
+		return headingEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getHeading_OriginalFormat() {
+		return (EAttribute)headingEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AstCacheWikiFactory getAstCacheWikiFactory() {
+		return (AstCacheWikiFactory)getEFactoryInstance();
 	}
 
 	/**
@@ -241,6 +250,9 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 		createEAttribute(flowerBlockEClass, FLOWER_BLOCK__LINE_START);
 		createEAttribute(flowerBlockEClass, FLOWER_BLOCK__LINE_END);
 		createEAttribute(flowerBlockEClass, FLOWER_BLOCK__CONFLICT);
+
+		headingEClass = createEClass(HEADING);
+		createEAttribute(headingEClass, HEADING__ORIGINAL_FORMAT);
 	}
 
 	/**
@@ -268,10 +280,16 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 
 		// Obtain other dependent packages
 		CodeSyncPackage theCodeSyncPackage = (CodeSyncPackage)EPackage.Registry.INSTANCE.getEPackage(CodeSyncPackage.eNS_URI);
+		EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+
+		// Create type parameters
+
+		// Set bounds for type parameters
 
 		// Add supertypes to classes
 		pageEClass.getESuperTypes().add(theCodeSyncPackage.getAstCacheElement());
 		flowerBlockEClass.getESuperTypes().add(theCodeSyncPackage.getAstCacheElement());
+		headingEClass.getESuperTypes().add(theCodeSyncPackage.getCodeSyncElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(pageEClass, Page.class, "Page", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -285,8 +303,11 @@ public class WikiPackageImpl extends EPackageImpl implements WikiPackage {
 		initEAttribute(getFlowerBlock_LineEnd(), ecorePackage.getEInt(), "lineEnd", null, 0, 1, FlowerBlock.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFlowerBlock_Conflict(), ecorePackage.getEBoolean(), "conflict", null, 0, 1, FlowerBlock.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEClass(headingEClass, Heading.class, "Heading", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getHeading_OriginalFormat(), theEcorePackage.getEString(), "originalFormat", null, 0, 1, Heading.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		// Create resource
 		createResource(eNS_URI);
 	}
 
-} //WikiPackageImpl
+} //AstCacheWikiPackageImpl

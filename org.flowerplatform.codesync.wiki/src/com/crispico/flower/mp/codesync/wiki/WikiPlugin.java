@@ -39,11 +39,11 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
+import org.flowerplatform.model.astcache.wiki.FlowerBlock;
+import org.flowerplatform.model.astcache.wiki.Page;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
-import astcache.wiki.FlowerBlock;
-import astcache.wiki.Page;
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -73,12 +73,12 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	public static final String FOLDER_CATEGORY = "folder";
 	public static final String PAGE_CATEGORY = "page";
 		
-	public static final String HEADLINE_LEVEL_1_CATEGORY = "heading 1";
-	public static final String HEADLINE_LEVEL_2_CATEGORY = "heading 2";
-	public static final String HEADLINE_LEVEL_3_CATEGORY = "heading 3";
-	public static final String HEADLINE_LEVEL_4_CATEGORY = "heading 4";
-	public static final String HEADLINE_LEVEL_5_CATEGORY = "heading 5";
-	public static final String HEADLINE_LEVEL_6_CATEGORY = "heading 6";
+	public static final String HEADING_LEVEL_1_CATEGORY = "heading 1";
+	public static final String HEADING_LEVEL_2_CATEGORY = "heading 2";
+	public static final String HEADING_LEVEL_3_CATEGORY = "heading 3";
+	public static final String HEADING_LEVEL_4_CATEGORY = "heading 4";
+	public static final String HEADING_LEVEL_5_CATEGORY = "heading 5";
+	public static final String HEADING_LEVEL_6_CATEGORY = "heading 6";
 	
 	public static final String PARAGRAPH_CATEGORY = "paragraph";
 	public static final String FLOWER_BLOCK_CATEGORY = "flowerBlock";
@@ -279,7 +279,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		return "\n";
 	}
 	
-	public int getHeadlineLevel(String category) {
+	public int getHeadingLevel(String category) {
 		if (category == null) {
 			return -1;
 		}

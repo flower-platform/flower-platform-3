@@ -18,13 +18,13 @@
  */
 package com.crispico.flower.mp.codesync.wiki.adapter;
 
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
+import org.flowerplatform.model.astcache.wiki.Page;
+
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.wiki.WikiDiff;
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-
-import astcache.wiki.Page;
-import astcache.wiki.WikiPackage;
 
 /**
  * @author Mariana
@@ -33,7 +33,7 @@ public class WikiNodeModelAdapterRight extends WikiNodeModelAdapter {
 
 	@Override
 	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue) {
-		if (WikiPackage.eINSTANCE.getPage_InitialContent().equals(feature)) {
+		if (AstCacheWikiPackage.eINSTANCE.getPage_InitialContent().equals(feature)) {
 			return WikiPlugin.getInstance().getWikiText(getWikiNode(element), technology);
 		}
 		return super.getValueFeatureValue(element, feature, correspondingValue);

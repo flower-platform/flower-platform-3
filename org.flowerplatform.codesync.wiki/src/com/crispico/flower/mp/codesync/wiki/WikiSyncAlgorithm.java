@@ -18,8 +18,8 @@
  */
 package com.crispico.flower.mp.codesync.wiki;
 
-import astcache.wiki.Page;
-import astcache.wiki.WikiPackage;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
+import org.flowerplatform.model.astcache.wiki.Page;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
@@ -41,7 +41,7 @@ public class WikiSyncAlgorithm extends CodeSyncAlgorithm {
 
 	@Override
 	public void processValueFeature(Object feature, Match match) {
-		if (WikiPackage.eINSTANCE.getPage_InitialContent().equals(feature)) {
+		if (AstCacheWikiPackage.eINSTANCE.getPage_InitialContent().equals(feature)) {
 			Object ancestor = match.getAncestor();
 			if (!isPage(ancestor)) {
 				return;

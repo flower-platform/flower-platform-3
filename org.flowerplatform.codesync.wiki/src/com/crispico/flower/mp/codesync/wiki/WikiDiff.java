@@ -34,9 +34,8 @@ import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
-
-import astcache.wiki.FlowerBlock;
-import astcache.wiki.WikiPackage;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
+import org.flowerplatform.model.astcache.wiki.FlowerBlock;
 
 import com.crispico.flower.mp.codesync.base.Diff;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -81,7 +80,7 @@ public class WikiDiff extends Diff {
 				new DocLineComparator(this.left, null, ignoreWhiteSpace),
 				new DocLineComparator(this.right, null, ignoreWhiteSpace));
 		
-		setFeature(WikiPackage.eINSTANCE.getPage_InitialContent());
+		setFeature(AstCacheWikiPackage.eINSTANCE.getPage_InitialContent());
 		
 		this.technology = technology;
 		

@@ -13,7 +13,7 @@
    <extension point="org.eclipse.emf.ecore.generated_package">
       <package
             uri="http://www.flower-platform.com/xmi/astcache_wiki_1.0.0"
-            class="astcache.wiki.WikiPackage"
+            class="org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage"
             genModel="emf_model/AstCacheWiki.genmodel"/>
    </extension>
 

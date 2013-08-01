@@ -27,9 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-
-import astcache.wiki.Page;
-import astcache.wiki.WikiFactory;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
+import org.flowerplatform.model.astcache.wiki.Page;
 
 import com.crispico.flower.mp.codesync.wiki.IConfigurationProvider;
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
@@ -113,7 +112,7 @@ public class GithubConfigurationProvider implements IConfigurationProvider {
 		} else {
 			// create new page
 			cse.setType(WikiPlugin.PAGE_CATEGORY);
-			Page page = WikiFactory.eINSTANCE.createPage();
+			Page page = AstCacheWikiFactory.eINSTANCE.createPage();
 			String content;
 			try {
 				content = FileUtils.readFileToString(file);

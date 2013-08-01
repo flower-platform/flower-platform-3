@@ -17,12 +17,5 @@
             serviceId="codeSyncEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
-      <service
-            id="CodeSyncEditorStatefulService"
-            serviceClass="com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService">
-      </service>
-   </extension>
 
 </plugin>

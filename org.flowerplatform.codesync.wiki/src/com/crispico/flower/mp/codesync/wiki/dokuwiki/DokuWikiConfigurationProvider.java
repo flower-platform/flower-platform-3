@@ -21,9 +21,8 @@ package com.crispico.flower.mp.codesync.wiki.dokuwiki;
 import java.util.List;
 
 import org.flowerplatform.common.regex.RegexWithAction;
-
-import astcache.wiki.Page;
-import astcache.wiki.WikiPackage;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
+import org.flowerplatform.model.astcache.wiki.Page;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -44,11 +43,11 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 	@Override
 	public void buildConfiguration(WikiRegexConfiguration config, CodeSyncElement cse) {
 		config
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, getHeadline(1), WikiPlugin.HEADLINE_LEVEL_1_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, getHeadline(2), WikiPlugin.HEADLINE_LEVEL_2_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_3_CATEGORY, getHeadline(3), WikiPlugin.HEADLINE_LEVEL_3_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_4_CATEGORY, getHeadline(4), WikiPlugin.HEADLINE_LEVEL_4_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_5_CATEGORY, getHeadline(5), WikiPlugin.HEADLINE_LEVEL_5_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_1_CATEGORY, getHeading(1), WikiPlugin.HEADING_LEVEL_1_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_2_CATEGORY, getHeading(2), WikiPlugin.HEADING_LEVEL_2_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_3_CATEGORY, getHeading(3), WikiPlugin.HEADING_LEVEL_3_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_4_CATEGORY, getHeading(4), WikiPlugin.HEADING_LEVEL_4_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_5_CATEGORY, getHeading(5), WikiPlugin.HEADING_LEVEL_5_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, WikiPlugin.PARAGRAPH_CATEGORY))
 		.setUseUntilFoundThisIgnoreAll(false);
 	}
@@ -60,16 +59,18 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 	
 	@Override
 	public WikiTextBuilder getWikiTextBuilder(CodeSyncElement cse) {
-		return new DokuWikiTextBuilder();
+		return new WikiTextBuilder();
 	}
 	
-	private String getHeadline(int level) {
-		return String.format("(={%s}", 7 - level) 
-				+ ".*?" 
-				+ String.format("={%s,}", 2) 		// at least 2 times
-				+ "\\s*?"
-				+ ")"
-				+ LINE_TERMINATOR;
+	// TODO test
+	private String getHeading(int level) {
+		String delim = String.format("={%s}", 7 - level);
+		return String.format(MULTILINE_MATCH_FORMAT, delim + CAPTURE_ANY + delim);
+//		return String.format("^(={%s}", 7 - level) 
+//				+ ".*?" 
+//				+ String.format("={%s,}", 2) 		// at least 2 times
+//				+ "\\s*?"
+//				+ ")$";
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class DokuWikiConfigurationProvider implements IConfigurationProvider {
 						child.setType(WikiPlugin.FOLDER_CATEGORY);
 						if (i == fragments.length - 1) {
 							child.setType(WikiPlugin.PAGE_CATEGORY);
-							Page wikiPage = WikiPackage.eINSTANCE.getWikiFactory().createPage();
+							Page wikiPage = AstCacheWikiFactory.eINSTANCE.createPage();
 							wikiPage.setInitialContent(page.getContent());
 							wikiPage.setLineDelimiter(WikiPlugin.getInstance().getLineDelimiter(page.getContent()));
 							child.setAstCacheElement(wikiPage);

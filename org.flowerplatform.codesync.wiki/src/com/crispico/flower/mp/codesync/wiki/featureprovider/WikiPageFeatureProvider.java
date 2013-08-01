@@ -20,7 +20,7 @@ package com.crispico.flower.mp.codesync.wiki.featureprovider;
 
 import java.util.List;
 
-import astcache.wiki.WikiPackage;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
 
@@ -33,7 +33,7 @@ public class WikiPageFeatureProvider extends CodeSyncElementFeatureProvider {
 	@Override
 	public List<?> getFeatures(Object element) {
 		List features = super.getFeatures(element);
-		features.add(WikiPackage.eINSTANCE.getPage_InitialContent());
+		features.add(AstCacheWikiPackage.eINSTANCE.getPage_InitialContent());
 		return features;
 	}
 	

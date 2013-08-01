@@ -61,7 +61,7 @@ import com.crispico.flower.mp.codesync.base.action.MatchActionRemoveRight;
  */
 public class CodeSyncEditorStatefulService extends EditorStatefulService {
 
-	public static final String SERVICE_ID = "CodeSyncEditorStatefulService";
+	public static final String SERVICE_ID = "codeSyncEditorStatefulService";
 	
 	public static final String CODE_SYNC_EDITOR = "codeSync";
 	

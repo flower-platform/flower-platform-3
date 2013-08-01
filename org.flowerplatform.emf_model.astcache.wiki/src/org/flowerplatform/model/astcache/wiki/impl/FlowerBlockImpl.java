@@ -1,31 +1,10 @@
-/* license-start
- * 
- * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation version 3.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- *   Crispico - Initial API and implementation
- *
- * license-end
- */
 /**
  * <copyright>
  * </copyright>
  *
  * $Id$
  */
-package astcache.wiki.impl;
-
-import astcache.wiki.FlowerBlock;
-import astcache.wiki.WikiPackage;
+package org.flowerplatform.model.astcache.wiki.impl;
 
 import com.crispico.flower.mp.model.codesync.impl.AstCacheElementImpl;
 
@@ -35,6 +14,9 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
+import org.flowerplatform.model.astcache.wiki.FlowerBlock;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Flower Block</b></em>'.
@@ -42,10 +24,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link astcache.wiki.impl.FlowerBlockImpl#getContent <em>Content</em>}</li>
- *   <li>{@link astcache.wiki.impl.FlowerBlockImpl#getLineStart <em>Line Start</em>}</li>
- *   <li>{@link astcache.wiki.impl.FlowerBlockImpl#getLineEnd <em>Line End</em>}</li>
- *   <li>{@link astcache.wiki.impl.FlowerBlockImpl#isConflict <em>Conflict</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.impl.FlowerBlockImpl#getContent <em>Content</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.impl.FlowerBlockImpl#getLineStart <em>Line Start</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.impl.FlowerBlockImpl#getLineEnd <em>Line End</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.impl.FlowerBlockImpl#isConflict <em>Conflict</em>}</li>
  * </ul>
  * </p>
  *
@@ -153,8 +135,9 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	protected EClass eStaticClass() {
-		return WikiPackage.Literals.FLOWER_BLOCK;
+		return AstCacheWikiPackage.Literals.FLOWER_BLOCK;
 	}
 
 	/**
@@ -175,7 +158,7 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 		String oldContent = content;
 		content = newContent;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, WikiPackage.FLOWER_BLOCK__CONTENT, oldContent, content));
+			eNotify(new ENotificationImpl(this, Notification.SET, AstCacheWikiPackage.FLOWER_BLOCK__CONTENT, oldContent, content));
 	}
 
 	/**
@@ -196,7 +179,7 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 		int oldLineStart = lineStart;
 		lineStart = newLineStart;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, WikiPackage.FLOWER_BLOCK__LINE_START, oldLineStart, lineStart));
+			eNotify(new ENotificationImpl(this, Notification.SET, AstCacheWikiPackage.FLOWER_BLOCK__LINE_START, oldLineStart, lineStart));
 	}
 
 	/**
@@ -217,7 +200,7 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 		int oldLineEnd = lineEnd;
 		lineEnd = newLineEnd;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, WikiPackage.FLOWER_BLOCK__LINE_END, oldLineEnd, lineEnd));
+			eNotify(new ENotificationImpl(this, Notification.SET, AstCacheWikiPackage.FLOWER_BLOCK__LINE_END, oldLineEnd, lineEnd));
 	}
 
 	/**
@@ -238,7 +221,7 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 		boolean oldConflict = conflict;
 		conflict = newConflict;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, WikiPackage.FLOWER_BLOCK__CONFLICT, oldConflict, conflict));
+			eNotify(new ENotificationImpl(this, Notification.SET, AstCacheWikiPackage.FLOWER_BLOCK__CONFLICT, oldConflict, conflict));
 	}
 
 	/**
@@ -246,16 +229,17 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case WikiPackage.FLOWER_BLOCK__CONTENT:
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONTENT:
 				return getContent();
-			case WikiPackage.FLOWER_BLOCK__LINE_START:
-				return new Integer(getLineStart());
-			case WikiPackage.FLOWER_BLOCK__LINE_END:
-				return new Integer(getLineEnd());
-			case WikiPackage.FLOWER_BLOCK__CONFLICT:
-				return isConflict() ? Boolean.TRUE : Boolean.FALSE;
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_START:
+				return getLineStart();
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_END:
+				return getLineEnd();
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONFLICT:
+				return isConflict();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -265,19 +249,20 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case WikiPackage.FLOWER_BLOCK__CONTENT:
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONTENT:
 				setContent((String)newValue);
 				return;
-			case WikiPackage.FLOWER_BLOCK__LINE_START:
-				setLineStart(((Integer)newValue).intValue());
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_START:
+				setLineStart((Integer)newValue);
 				return;
-			case WikiPackage.FLOWER_BLOCK__LINE_END:
-				setLineEnd(((Integer)newValue).intValue());
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_END:
+				setLineEnd((Integer)newValue);
 				return;
-			case WikiPackage.FLOWER_BLOCK__CONFLICT:
-				setConflict(((Boolean)newValue).booleanValue());
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONFLICT:
+				setConflict((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -288,18 +273,19 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case WikiPackage.FLOWER_BLOCK__CONTENT:
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONTENT:
 				setContent(CONTENT_EDEFAULT);
 				return;
-			case WikiPackage.FLOWER_BLOCK__LINE_START:
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_START:
 				setLineStart(LINE_START_EDEFAULT);
 				return;
-			case WikiPackage.FLOWER_BLOCK__LINE_END:
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_END:
 				setLineEnd(LINE_END_EDEFAULT);
 				return;
-			case WikiPackage.FLOWER_BLOCK__CONFLICT:
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONFLICT:
 				setConflict(CONFLICT_EDEFAULT);
 				return;
 		}
@@ -311,15 +297,16 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case WikiPackage.FLOWER_BLOCK__CONTENT:
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONTENT:
 				return CONTENT_EDEFAULT == null ? content != null : !CONTENT_EDEFAULT.equals(content);
-			case WikiPackage.FLOWER_BLOCK__LINE_START:
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_START:
 				return lineStart != LINE_START_EDEFAULT;
-			case WikiPackage.FLOWER_BLOCK__LINE_END:
+			case AstCacheWikiPackage.FLOWER_BLOCK__LINE_END:
 				return lineEnd != LINE_END_EDEFAULT;
-			case WikiPackage.FLOWER_BLOCK__CONFLICT:
+			case AstCacheWikiPackage.FLOWER_BLOCK__CONFLICT:
 				return conflict != CONFLICT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
@@ -330,6 +317,7 @@ public class FlowerBlockImpl extends AstCacheElementImpl implements FlowerBlock 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 

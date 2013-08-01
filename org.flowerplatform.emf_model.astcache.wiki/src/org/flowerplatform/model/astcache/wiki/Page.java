@@ -1,28 +1,10 @@
-/* license-start
- * 
- * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation version 3.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- *   Crispico - Initial API and implementation
- *
- * license-end
- */
 /**
  * <copyright>
  * </copyright>
  *
  * $Id$
  */
-package astcache.wiki;
+package org.flowerplatform.model.astcache.wiki;
 
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 
@@ -34,13 +16,13 @@ import com.crispico.flower.mp.model.codesync.AstCacheElement;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link astcache.wiki.Page#getInitialContent <em>Initial Content</em>}</li>
- *   <li>{@link astcache.wiki.Page#getLineDelimiter <em>Line Delimiter</em>}</li>
- *   <li>{@link astcache.wiki.Page#getDiff <em>Diff</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.Page#getInitialContent <em>Initial Content</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.Page#getLineDelimiter <em>Line Delimiter</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.Page#getDiff <em>Diff</em>}</li>
  * </ul>
  * </p>
  *
- * @see astcache.wiki.WikiPackage#getPage()
+ * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getPage()
  * @model
  * @generated
  */
@@ -55,14 +37,14 @@ public interface Page extends AstCacheElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Initial Content</em>' attribute.
 	 * @see #setInitialContent(String)
-	 * @see astcache.wiki.WikiPackage#getPage_InitialContent()
+	 * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getPage_InitialContent()
 	 * @model
 	 * @generated
 	 */
 	String getInitialContent();
 
 	/**
-	 * Sets the value of the '{@link astcache.wiki.Page#getInitialContent <em>Initial Content</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.model.astcache.wiki.Page#getInitialContent <em>Initial Content</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Initial Content</em>' attribute.
@@ -81,14 +63,14 @@ public interface Page extends AstCacheElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Line Delimiter</em>' attribute.
 	 * @see #setLineDelimiter(String)
-	 * @see astcache.wiki.WikiPackage#getPage_LineDelimiter()
+	 * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getPage_LineDelimiter()
 	 * @model
 	 * @generated
 	 */
 	String getLineDelimiter();
 
 	/**
-	 * Sets the value of the '{@link astcache.wiki.Page#getLineDelimiter <em>Line Delimiter</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.model.astcache.wiki.Page#getLineDelimiter <em>Line Delimiter</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Line Delimiter</em>' attribute.
@@ -107,14 +89,14 @@ public interface Page extends AstCacheElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Diff</em>' attribute.
 	 * @see #setDiff(Object)
-	 * @see astcache.wiki.WikiPackage#getPage_Diff()
+	 * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getPage_Diff()
 	 * @model transient="true"
 	 * @generated
 	 */
 	Object getDiff();
 
 	/**
-	 * Sets the value of the '{@link astcache.wiki.Page#getDiff <em>Diff</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.model.astcache.wiki.Page#getDiff <em>Diff</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Diff</em>' attribute.
