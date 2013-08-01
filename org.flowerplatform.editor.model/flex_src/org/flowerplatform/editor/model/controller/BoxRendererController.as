@@ -37,6 +37,7 @@ package org.flowerplatform.editor.model.controller {
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {
+			super.unassociatedModelFromRenderer(model, renderer, isModelDisposed);
 //			if (isModelDisposed) {
 //				if (renderer != null) {
 //					IVisualElementContainer(renderer.parent).removeElement(renderer);

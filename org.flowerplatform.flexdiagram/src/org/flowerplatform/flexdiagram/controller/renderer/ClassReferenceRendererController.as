@@ -21,10 +21,11 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 	
 	import mx.core.IInvalidating;
 	import mx.core.IVisualElement;
+	import mx.core.IVisualElementContainer;
 	import mx.events.PropertyChangeEvent;
 	
-	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	
 	/**
@@ -33,6 +34,8 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 	public class ClassReferenceRendererController extends ControllerBase implements IRendererController {
 		
 		public var rendererClass:Class;
+		
+		public var removeRendererIfModelIsDisposed:Boolean;
 		
 		public function ClassReferenceRendererController(diagramShell:DiagramShell, rendererClass:Class = null) {
 			super(diagramShell);
@@ -50,7 +53,15 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 		public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 		}
 		
+		/**
+		 * @author Mariana Gheorghe
+		 */
 		public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, modelIsDisposed:Boolean):void {
+			if (modelIsDisposed && removeRendererIfModelIsDisposed) {
+				if (renderer != null) {
+					IVisualElementContainer(renderer.parent).removeElement(renderer);
+				}
+			}
 		}
 		
 	}

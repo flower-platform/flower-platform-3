@@ -24,6 +24,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
+	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
@@ -106,7 +107,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new ControllerFactory(NodeAbsoluteLayoutRectangleController);
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(BoxRendererController);
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(BoxRendererController, { removeRendererIfModelIsDisposed: true });
 			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
 			composedControllerProviderFactory.dragControllerClass = new ControllerFactory(AbsoluteNodePlaceHolderDragController);
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
@@ -140,7 +141,7 @@ package org.flowerplatform.editor.model {
 			// scenario interaction
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(EdgeRendererController);
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(EdgeRendererController, { removeRendererIfModelIsDisposed: true });
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactories["scenarioInterraction"] = composedControllerProviderFactory;
 			
@@ -150,6 +151,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 		}
 		
 		override public function start():void {

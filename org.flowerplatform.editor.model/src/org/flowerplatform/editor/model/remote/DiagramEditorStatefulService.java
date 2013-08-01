@@ -31,6 +31,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -58,6 +59,7 @@ import org.flowerplatform.editor.remote.FileBasedEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.NotationFactory;
+import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -382,7 +384,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		return interaction;
 	}
 	
-	public String getNumberLabel(ScenarioElement scenario) {
+	protected String getNumberLabel(ScenarioElement scenario) {
 		ScenarioElement parent = ((ScenarioElement) scenario.eContainer());
 		if (parent.getType().equals("scenarioRoot")) {
 			return "";
@@ -413,6 +415,24 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		return null;
 	}
 	
+	protected void updateLabelsAfterIndex(ScenarioElement scenario, int index) {
+		for (int i = index; i < scenario.getChildren().size(); i++) {
+			ScenarioElement child = (ScenarioElement) scenario.getChildren().get(i);
+			if (child.getType() != null && child.getType().equals("scenarioElement")) {
+				StringBuilder label = new StringBuilder(child.getNumber());
+				int lastIndex = label.lastIndexOf(".");
+				if (lastIndex < 0) {
+					lastIndex = 0;
+				} else {
+					lastIndex++;
+				}
+				int newIndex = Integer.parseInt(label.substring(lastIndex)) - 1;
+				label.replace(lastIndex, label.length(), String.valueOf(newIndex));
+				child.setNumber(label.toString());
+			}
+		}
+	}
+
 	/**
 	 * @author Mariana Gheorghe
 	 */
@@ -438,4 +458,27 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		scenarioTree.openNode(context, path, clientContext);
 	}
 
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	@RemoteInvocation
+	public void deleteScenarioElement(StatefulServiceInvocationContext context, List<PathFragment> path, String editableResourcePath, Map<Object, Object> clientContext) {
+		clientContext.put("diagramEditableResourcePath", editableResourcePath);
+		GenericTreeContext treeContext = new GenericTreeContext(scenarioTree);
+		treeContext.setClientContext(clientContext);
+		ScenarioElement scenarioElement = (ScenarioElement) scenarioTree.getNodeByPath(path, treeContext);
+		ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(scenarioElement);
+		Diagram diagram = getDiagram(getEditableResource(editableResourcePath));
+		for (Setting setting : adapter.getNonNavigableInverseReferences(scenarioElement)) {
+			if (NotationPackage.eINSTANCE.getView_DiagrammableElement().equals(setting.getEStructuralFeature())) {
+				View view = (View) setting.getEObject();
+				diagram.getPersistentEdges().remove(view);
+			}
+		}
+		ScenarioElement parent = (ScenarioElement) scenarioElement.eContainer();
+		int index = parent.getChildren().indexOf(scenarioElement);
+		parent.getChildren().remove(scenarioElement);
+		updateLabelsAfterIndex(parent, index);
+	}
+	
 }

@@ -324,7 +324,10 @@ package org.flowerplatform.flexdiagram {
 		}
 		
 		public function getRendererForModel(model:Object):IVisualElement {
-			return getControllerProvider(model).getModelExtraInfoController(model).getRenderer(modelToExtraInfoMap[model]);
+			if (getControllerProvider(model).getModelExtraInfoController(model) != null) {
+				return getControllerProvider(model).getModelExtraInfoController(model).getRenderer(modelToExtraInfoMap[model]);
+			}
+			return null;
 		}
 		
 		public function shouldRefreshVisualChildren(model:Object):void {
