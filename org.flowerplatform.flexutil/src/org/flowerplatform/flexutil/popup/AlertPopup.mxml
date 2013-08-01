@@ -25,7 +25,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"		
 		 implements="org.flowerplatform.flexutil.popup.IMessageBox, org.flowerplatform.flexutil.popup.IPopupContent"
-		 >
+		 creationComplete="creationCompleteHandler(event)">
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -51,6 +51,7 @@
 			private var _isHTML:Boolean;
 			
 			private var buttons:ArrayList = new ArrayList();
+			private var _selectText:Boolean;
 			
 			private var _popupHost:IPopupHost;
 						
@@ -154,6 +155,14 @@
 			/**
 			 * @author Cristina Constantinescu
 			 */ 
+			public function setSelectText(value:Boolean):IMessageBox {								
+				_selectText = value;
+				return this;
+			}
+			
+			/**
+			 * @author Cristina Constantinescu
+			 */ 
 			override protected function createChildren():void	{
 				super.createChildren();
 				
@@ -179,6 +188,16 @@
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 			}
 						
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				if (_selectText) {
+					callLater(function ():void {
+						textArea.setFocus();
+						textArea.selectAll();
+					});
+					
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	 
@@ -194,7 +213,7 @@
 	</s:Rect>
 		
 	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-		<s:TextArea id="textArea" width="100%" height="100%" editable="true" />	
+		<s:TextArea id="textArea" width="100%" height="100%" editable="true" selectable="true" />	
 		<s:Group id="alertControlBar" left="1" right="2" top="1" bottom="1" width="100%" >
 			<s:layout>
 				<s:HorizontalLayout gap="2" horizontalAlign="center" />

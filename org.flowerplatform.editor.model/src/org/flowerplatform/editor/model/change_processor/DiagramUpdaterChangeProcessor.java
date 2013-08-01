@@ -206,7 +206,20 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Adding object to update = {}", notationElement);
 		}
-		diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().add(notationElement);
+		if (!diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().contains(notationElement)) {			
+			if (notationElement instanceof View) {
+				View view = (View) notationElement;
+				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+				if (processors != null) {
+					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+						processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);
+					}
+				}
+			}			
+		} else {
+			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().remove(notationElement);
+		}			
+		diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().add(notationElement);	
 	}
 
 	protected void processFeatureChangesForDiagrammableElement(Map.Entry<EObject, EList<FeatureChange>> entry, Map<String, Object> context) {

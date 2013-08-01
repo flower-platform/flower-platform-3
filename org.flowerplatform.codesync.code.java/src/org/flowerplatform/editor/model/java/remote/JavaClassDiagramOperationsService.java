@@ -72,14 +72,12 @@ public class JavaClassDiagramOperationsService {
 		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
 			CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		}
-//		notifyProcessors(context, view);
 	}
 
 	public void collapseCompartment(ServiceInvocationContext context, String viewId) {
 		View view = getViewById(context, viewId);
 		View cls = (View) view.eContainer();
 		cls.getPersistentChildren().remove(view);
-		notifyProcessors(context, cls);
 	}
 	
 	public void expandCompartment_attributes(ServiceInvocationContext context, String viewId) {
@@ -89,7 +87,6 @@ public class JavaClassDiagramOperationsService {
 		separator.setViewType(ATTRIBUTE_SEPARATOR);
 		// add it after the class title
 		cls.getPersistentChildren().add(1, separator);
-		notifyProcessors(context, cls);
 	}
 	
 	public void expandCompartment_operations(ServiceInvocationContext context, String viewId) {
@@ -98,7 +95,6 @@ public class JavaClassDiagramOperationsService {
 		separator.setViewType(OPERATIONS_SEPARATOR);
 		// add at the end of the list
 		cls.getPersistentChildren().add(separator);
-		notifyProcessors(context, cls);
 	}
 	
 	public void addNew_attribute(ServiceInvocationContext context, String viewId, String label) {
@@ -242,16 +238,4 @@ public class JavaClassDiagramOperationsService {
 		return (View) getEditableResource(context).getEObjectById(viewId);
 	}
 	
-	protected void notifyProcessors(ServiceInvocationContext context, View view) {
-		Map<String, Object> processingContext = new HashMap<String, Object>();
-		processingContext.put(DiagramEditorStatefulService.PROCESSING_CONTEXT_EDITABLE_RESOURCE, getEditableResource(context));
-		DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, true);
-		
-		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
-		if (processors != null) {
-			for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-				processor.processFeatureChanges(view.getDiagrammableElement(), null, view, processingContext);
-			}
-		}
-	}
 }

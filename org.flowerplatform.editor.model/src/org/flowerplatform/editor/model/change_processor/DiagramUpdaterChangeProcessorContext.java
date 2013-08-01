@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
+import org.flowerplatform.emf_model.notation.View;
 
 public class DiagramUpdaterChangeProcessorContext {
 	
@@ -60,4 +63,16 @@ public class DiagramUpdaterChangeProcessorContext {
 		return objectsToUpdate.isEmpty() && objectIdsToDispose.isEmpty() && viewDetailsUpdates.isEmpty();
 	}
 	
+	public void addObjectToUpdate(EObject object, boolean notifyProcessorsIfView, Map<String, Object> context) {
+		getObjectsToUpdate().add(object);
+		if (notifyProcessorsIfView && object instanceof View) {
+			View view = (View) object;
+			List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+			if (processors != null) {
+				for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+					processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);
+				}
+			}
+		}
+	}
 }

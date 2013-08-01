@@ -28,6 +28,7 @@ package org.flowerplatform.flexutil.popup {
 		 * @author Cristina Constantinescu
 		 */ 
 		function addButton(title:String, handler:Function = null):IMessageBox;
+		function setSelectText(value:Boolean):IMessageBox;
 		
 		function showMessageBox(modal:Boolean = true):void;		
 	}

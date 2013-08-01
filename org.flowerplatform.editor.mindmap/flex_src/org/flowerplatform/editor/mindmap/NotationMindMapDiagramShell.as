@@ -18,11 +18,6 @@
  */
 package org.flowerplatform.editor.mindmap {
 	
-	import flash.utils.Dictionary;
-	
-	import mx.collections.ArrayList;
-	
-	import org.flowerplatform.editor.mindmap.controller.AbsoluteLayoutVisualChildrenControllerWithoutRecycling;
 	import org.flowerplatform.editor.mindmap.controller.MindMapDiagramNodeChildrenController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeChildrenController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeController;
@@ -43,13 +38,13 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
+	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.tool.DragTool;
-	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
@@ -74,7 +69,7 @@ package org.flowerplatform.editor.mindmap {
 		private var mindMapNodeSelectionController:SelectionController;
 		private var mindMapNodeExtraInfoController:IModelExtraInfoController;
 		
-		private var absoluteLayoutVisualChildrenController:AbsoluteLayoutVisualChildrenControllerWithoutRecycling;
+		private var absoluteLayoutVisualChildrenController:AbsoluteLayoutVisualChildrenController;
 		
 		private var mindMapNodeChildrenController:IModelChildrenController;
 		private var mindMapDiagramChildrenController:IModelChildrenController;
@@ -91,7 +86,7 @@ package org.flowerplatform.editor.mindmap {
 			mindMapNodeSelectionController = new SelectionController(this, MindMapNodeSelectionRenderer);
 			mindMapNodeExtraInfoController = new DynamicModelExtraInfoController(this);
 			mindMapNodeInplaceEditorController = new MindMapNodeInplaceEditorController(this);
-			absoluteLayoutVisualChildrenController = new AbsoluteLayoutVisualChildrenControllerWithoutRecycling(this);
+			absoluteLayoutVisualChildrenController = new AbsoluteLayoutVisualChildrenController(this);
 			
 			mindMapNodeChildrenController = new MindMapNodeChildrenController(this);
 			mindMapDiagramChildrenController = new MindMapDiagramNodeChildrenController(this);

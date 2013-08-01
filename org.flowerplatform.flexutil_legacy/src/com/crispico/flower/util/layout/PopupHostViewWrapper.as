@@ -64,13 +64,13 @@ package com.crispico.flower.util.layout {
 			super.createChildren();
 			buttonBar = new HGroup();
 			buttonBar.percentWidth = 100;
-			addChild(buttonBar)
+			addChild(buttonBar);
 			buttonBar.paddingTop = 2;
 			buttonBar.paddingBottom = 2;
 			buttonBar.paddingLeft = 2;
 			buttonBar.paddingRight = 2;
 			buttonBar.horizontalAlign = "right";
-			
+			buttonBar.height = 24;
 			addElement(popupContent);
 		}
 		

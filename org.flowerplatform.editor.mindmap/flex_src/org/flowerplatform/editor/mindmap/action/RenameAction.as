@@ -30,7 +30,8 @@ package org.flowerplatform.editor.mindmap.action {
 			super();
 			
 			label = "Rename";
-			icon = EditorModelPlugin.getInstance().getResourceUrl("images/rename.png");			
+			icon = EditorModelPlugin.getInstance().getResourceUrl("images/rename.png");	
+			preferShowOnActionBar = true;
 		}
 		
 		override public function get visible():Boolean {

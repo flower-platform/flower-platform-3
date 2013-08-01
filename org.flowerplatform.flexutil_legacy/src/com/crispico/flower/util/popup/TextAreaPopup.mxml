@@ -25,7 +25,7 @@
 							xmlns:s="library://ns.adobe.com/flex/spark"
 							xmlns:mx="library://ns.adobe.com/flex/mx"
 							xmlns:popup="com.crispico.flower.util.popup.*"
-							creationComplete="text = text" paddingBottom="0" paddingLeft="0"
+							creationComplete="creationCompleteHandler(event)" paddingBottom="0" paddingLeft="0"
 							paddingRight="0" paddingTop="0" minWidth="200" minHeight="150" implements="org.flowerplatform.flexutil.popup.IMessageBox">
 	<fx:Script>
 		<![CDATA[
@@ -35,6 +35,7 @@
 			import flashx.textLayout.formats.LineBreak;
 			
 			import mx.collections.ArrayList;
+			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.flexutil.popup.IMessageBox;
 			
@@ -45,6 +46,7 @@
 			private var _isHTML:Boolean;
 
 			private var buttons:ArrayList = new ArrayList();
+			private var _selectText:Boolean;
 			
 			public function get text():String {
 				return _text;
@@ -129,6 +131,14 @@
 			/**
 			 * @author Cristina Constantinescu
 			 */ 
+			public function setSelectText(value:Boolean):IMessageBox {								
+				_selectText = value;
+				return this;
+			}
+			
+			/**
+			 * @author Cristina Constantinescu
+			 */ 
 			override protected function createChildren():void	{
 				super.createChildren();
 				
@@ -143,6 +153,17 @@
 			
 			public function showMessageBox(modal:Boolean = true):void {
 				showPopup(NaN, NaN, null, modal);
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				text = text;
+				if (_selectText) {
+					callLater(function ():void {
+						textArea.setFocus();
+						textArea.selectAll();
+					});
+					
+				}
 			}
 			
 		]]>

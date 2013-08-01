@@ -43,6 +43,7 @@ package org.flowerplatform.editor.model.action {
 				.setText(name)
 				.setWidth(200)
 				.setHeight(100)
+				.setSelectText(true)
 				.addButton(button, function(evt:MouseEvent = null):void {
 					if (textArea != null) {
 						name = textArea.text;

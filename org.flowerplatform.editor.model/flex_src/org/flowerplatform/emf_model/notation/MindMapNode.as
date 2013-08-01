@@ -31,20 +31,13 @@ package org.flowerplatform.emf_model.notation {
 		
 		public var hasChildren:Boolean;
 		
-		private var _x:Number;	
-		private var _y:Number;	
+		private var _x:Number = 0;	
+		private var _y:Number = 0;	
 		private var _width:Number = 10;		
-		private var _height:Number = 32;
-		
+		private var _height:Number = 10;
+				
 		[Transient]		
-		public function get x():Number {	
-			if (isNaN(_x)) {
-//				if (ReferenceHolder(parentView_RH).referencedObject is Diagram) {
-					_x = 0;
-//				} else {
-//					_x = MindMapNode(ReferenceHolder(parentView_RH).referencedObject).x +  MindMapNode(ReferenceHolder(parentView_RH).referencedObject).width;
-//				}
-			}
+		public function get x():Number {			
 			return _x;
 		}
 		
@@ -57,13 +50,6 @@ package org.flowerplatform.emf_model.notation {
 		
 		[Transient]
 		public function get y():Number {		
-			if (isNaN(_y)) {
-//				if (ReferenceHolder(parentView_RH).referencedObject is Diagram) {
-					_y = 0;
-//				} else {
-//					_y = MindMapNode(ReferenceHolder(parentView_RH).referencedObject).y;
-//				}
-			}
 			return _y;
 		}
 		

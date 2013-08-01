@@ -27,6 +27,7 @@ import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -56,7 +57,6 @@ public class MindMapDiagramOperationsService {
 			node.getPersistentChildren().clear();				
 		}
 		node.setExpanded(expanded);
-		notifyProcessors(context, node);
 	}
 
 	public void setText(ServiceInvocationContext context, String viewId, String text) {
@@ -64,7 +64,6 @@ public class MindMapDiagramOperationsService {
 		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();
 		CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		
-//		notifyProcessors(context, node);
 	}
 	
 	public Object changeParent(ServiceInvocationContext context, String viewId, String parentViewId, int index, int side) {
@@ -136,8 +135,6 @@ public class MindMapDiagramOperationsService {
 		
 		parentCSE.getChildren().add(parentCSE.getChildren().size(), mindmapCse);
 		node.setHasChildren(true);
-		
-		notifyProcessors(context, node);
 		return node;
 	}
 	
@@ -151,8 +148,6 @@ public class MindMapDiagramOperationsService {
 		CodeSyncElement parentCSE = (CodeSyncElement) cse.eContainer();	
 		parentCSE.getChildren().remove(cse);	
 		parentNode.setHasChildren(parentCSE.getChildren().size() > 0);	
-		
-		notifyProcessors(context, parentNode);
 	}
 	
 	private void setSide(MindMapNode node, int side) {
@@ -168,19 +163,5 @@ public class MindMapDiagramOperationsService {
 	
 	protected MindMapNode getMindMapNodeById(ServiceInvocationContext context, String viewId) {
 		return (MindMapNode) getEditableResource(context).getEObjectById(viewId);
-	}
-	
-	protected void notifyProcessors(ServiceInvocationContext context, View view) {
-		Map<String, Object> processingContext = new HashMap<String, Object>();
-		processingContext.put(DiagramEditorStatefulService.PROCESSING_CONTEXT_EDITABLE_RESOURCE, getEditableResource(context));
-		
-		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
-		if (processors != null) {
-			for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-				if (processor instanceof CodeSyncElementFeatureChangesProcessor) {
-					processor.processFeatureChanges(view.getDiagrammableElement(), null, view, processingContext);
-				}
-			}
-		}
-	}
+	}	
 }

@@ -132,7 +132,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 					oldExpandedHeight = oldExpandedHeightRight;
 				}			
 				changeCoordinates(model, oldExpandedHeight, getExpandedHeight(model), side == NONE ? RIGHT : side);
-			}
+			}			
 		}
 		
 		private function calculateRootNodeExpandedHeight(side:int):void {
