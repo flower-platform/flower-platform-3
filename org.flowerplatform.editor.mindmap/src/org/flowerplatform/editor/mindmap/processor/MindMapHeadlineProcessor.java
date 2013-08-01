@@ -34,11 +34,11 @@ public class MindMapHeadlineProcessor extends AbstractMindMapChangeProcessor {
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		super.processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
-		if (WikiPlugin.HEADLINE_LEVEL_1_CATEGORY.equals(((CodeSyncElement) object).getType())) {
+		if (WikiPlugin.HEADING_LEVEL_1_CATEGORY.equals(((CodeSyncElement) object).getType())) {
 			viewDetails.put("icon", "images/full-1.png");
-		} else if (WikiPlugin.HEADLINE_LEVEL_2_CATEGORY.equals(((CodeSyncElement) object).getType())) {
+		} else if (WikiPlugin.HEADING_LEVEL_2_CATEGORY.equals(((CodeSyncElement) object).getType())) {
 			viewDetails.put("icon", "images/full-2.png");
-		} else if (WikiPlugin.HEADLINE_LEVEL_3_CATEGORY.equals(((CodeSyncElement) object).getType())) {
+		} else if (WikiPlugin.HEADING_LEVEL_3_CATEGORY.equals(((CodeSyncElement) object).getType())) {
 			viewDetails.put("icon", "images/full-3.png");
 		}		
 	}

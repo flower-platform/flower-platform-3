@@ -11,6 +11,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.emf_model.codesync
 Eclipse-LazyStart: true
 Bundle-ActivationPolicy: lazy
-Export-Package: astcache.wiki,
- astcache.wiki.impl,
- astcache.wiki.util
+Export-Package: org.flowerplatform.model.astcache.wiki,
+ org.flowerplatform.model.astcache.wiki.impl,
+ org.flowerplatform.model.astcache.wiki.util

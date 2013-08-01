@@ -18,7 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.wiki;
 
-import astcache.wiki.Page;
+import org.flowerplatform.model.astcache.wiki.Page;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;

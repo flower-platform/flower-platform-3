@@ -18,7 +18,7 @@
  */
 package org.flowerplatform.web.tests.codesync;
 
-import astcache.wiki.Page;
+import org.flowerplatform.model.astcache.wiki.Page;
 
 import com.crispico.flower.mp.codesync.wiki.dokuwiki.DokuWikiConfigurationProvider;
 

@@ -21,8 +21,7 @@ package com.crispico.flower.mp.codesync.wiki.github;
 import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.*;
 
 import org.flowerplatform.common.regex.RegexWithAction;
-
-import astcache.wiki.Page;
+import org.flowerplatform.model.astcache.wiki.Page;
 
 import com.crispico.flower.mp.codesync.wiki.IConfigurationProvider;
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
@@ -37,18 +36,18 @@ import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
  */
 public class MarkdownConfigurationProvider implements IConfigurationProvider {
 
-	private final String HEADLINE_LEVEL_1_UNDERLINE = "(\\S.*?)[\r\n]=+[\r\n]";
-	private final String HEADLINE_LEVEL_2_UNDERLINE = "(\\S.*?)[\r\n]-+[\r\n]";
+	private final String HEADING_LEVEL_1_UNDERLINE = "(\\S.*?)[\r\n]=+[\r\n]";
+	private final String HEADING_LEVEL_2_UNDERLINE = "(\\S.*?)[\r\n]-+[\r\n]";
 	
 	@Override
 	public void buildConfiguration(WikiRegexConfiguration config, CodeSyncElement cse) {
 		config
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_6_CATEGORY, getHeadline(6), WikiPlugin.HEADLINE_LEVEL_6_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_5_CATEGORY, getHeadline(5), WikiPlugin.HEADLINE_LEVEL_5_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_4_CATEGORY, getHeadline(4), WikiPlugin.HEADLINE_LEVEL_4_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_3_CATEGORY, getHeadline(3), WikiPlugin.HEADLINE_LEVEL_3_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, getHeadline(2), WikiPlugin.HEADLINE_LEVEL_2_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, getHeadline(1), WikiPlugin.HEADLINE_LEVEL_1_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_6_CATEGORY, getHeading(6), WikiPlugin.HEADING_LEVEL_6_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_5_CATEGORY, getHeading(5), WikiPlugin.HEADING_LEVEL_5_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_4_CATEGORY, getHeading(4), WikiPlugin.HEADING_LEVEL_4_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_3_CATEGORY, getHeading(3), WikiPlugin.HEADING_LEVEL_3_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_2_CATEGORY, getHeading(2), WikiPlugin.HEADING_LEVEL_2_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.HEADING_LEVEL_1_CATEGORY, getHeading(1), WikiPlugin.HEADING_LEVEL_1_CATEGORY))
 //		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_1_CATEGORY, HEADLINE_LEVEL_1_UNDERLINE, HEADLINE_LEVEL_1_CATEGORY))
 //		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADLINE_LEVEL_2_CATEGORY, HEADLINE_LEVEL_2_UNDERLINE, HEADLINE_LEVEL_2_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(WikiPlugin.PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, WikiPlugin.PARAGRAPH_CATEGORY))
@@ -62,12 +61,12 @@ public class MarkdownConfigurationProvider implements IConfigurationProvider {
 
 	@Override
 	public WikiTextBuilder getWikiTextBuilder(CodeSyncElement cse) {
-		return new MarkdownTextBuilder();
+		return new WikiTextBuilder();
 	}
 
-	private String getHeadline(int level) {
+	private String getHeading(int level) {
 		String delim = String.format("#{%s}", level);
-		return delim + "(.*?)" + LINE_TERMINATOR;
+		return String.format(MULTILINE_MATCH_FORMAT, String.format(CAPTURE_GROUP_FORMAT, delim + CAPTURE_ANY));
 	}
 
 	@Override

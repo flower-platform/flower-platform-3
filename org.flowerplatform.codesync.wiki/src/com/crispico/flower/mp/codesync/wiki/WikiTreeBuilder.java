@@ -27,9 +27,9 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.flowerplatform.common.regex.RegexProcessingSession;
-
-import astcache.wiki.FlowerBlock;
-import astcache.wiki.WikiPackage;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
+import org.flowerplatform.model.astcache.wiki.FlowerBlock;
+import org.flowerplatform.model.astcache.wiki.Heading;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -126,10 +126,25 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(category)) {
 			return createFlowerBlockNode();
 		}
+		
+		if (WikiPlugin.getInstance().getHeadingLevel(category) > 0) {
+			return createHeadingNode(category);
+		}
+		
 		CodeSyncElement cse = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
 		cse.setName(currentSubMatchesForCurrentRegex[0]);
 		cse.setType(category);
 		return cse;
+	}
+	
+	protected CodeSyncElement createHeadingNode(String category) {
+		Heading heading = AstCacheWikiFactory.eINSTANCE.createHeading();
+		String originalFormat = currentSubMatchesForCurrentRegex[0];
+		String name = currentSubMatchesForCurrentRegex[1];
+		heading.setOriginalFormat(originalFormat.replace(name, "%s"));
+		heading.setName(name);
+		heading.setType(category);
+		return heading;
 	}
 	
 	/**
@@ -153,7 +168,7 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 			}
 		}
 		CodeSyncElement cse = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
-		FlowerBlock flowerBlock = WikiPackage.eINSTANCE.getWikiFactory().createFlowerBlock();
+		FlowerBlock flowerBlock = AstCacheWikiFactory.eINSTANCE.createFlowerBlock();
 		cse.setName(name);
 		cse.setType(WikiPlugin.FLOWER_BLOCK_CATEGORY);
 		flowerBlock.setContent(content);
@@ -184,16 +199,16 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 	}
 	
 	/**
-	 * @return the level of indentation for this category (e.g. headline level). Nodes with lower
+	 * @return the level of indentation for this category (e.g. heading level). Nodes with lower
 	 * level will contain nodes with higher levels.
 	 */
 	protected int getLevelForCategory(String category) {
 		if (WikiPlugin.PARAGRAPH_CATEGORY.equals(category)) {
 			return LEAF_LEVEL;
 		}
-		int headlineLevel = WikiPlugin.getInstance().getHeadlineLevel(category);
-		if (headlineLevel > 0) {
-			return headlineLevel;
+		int headingLevel = WikiPlugin.getInstance().getHeadingLevel(category);
+		if (headingLevel > 0) {
+			return headingLevel;
 		}
 		if (WikiPlugin.FOLDER_CATEGORY.equals(category)) {
 			return -1;

@@ -1,30 +1,10 @@
-/* license-start
- * 
- * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
- * 
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation version 3.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
- * 
- * Contributors:
- *   Crispico - Initial API and implementation
- *
- * license-end
- */
 /**
  * <copyright>
  * </copyright>
  *
  * $Id$
  */
-package astcache.wiki.impl;
-
-import astcache.wiki.*;
+package org.flowerplatform.model.astcache.wiki.impl;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -34,30 +14,32 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import org.flowerplatform.model.astcache.wiki.*;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model <b>Factory</b>.
  * <!-- end-user-doc -->
  * @generated
  */
-public class WikiFactoryImpl extends EFactoryImpl implements WikiFactory {
+public class AstCacheWikiFactoryImpl extends EFactoryImpl implements AstCacheWikiFactory {
 	/**
 	 * Creates the default factory implementation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public static WikiFactory init() {
+	public static AstCacheWikiFactory init() {
 		try {
-			WikiFactory theWikiFactory = (WikiFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.flower-platform.com/xmi/astcache_wiki_1.0.0"); 
-			if (theWikiFactory != null) {
-				return theWikiFactory;
+			AstCacheWikiFactory theAstCacheWikiFactory = (AstCacheWikiFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.flower-platform.com/xmi/astcache_wiki_1.0.0"); 
+			if (theAstCacheWikiFactory != null) {
+				return theAstCacheWikiFactory;
 			}
 		}
 		catch (Exception exception) {
 			EcorePlugin.INSTANCE.log(exception);
 		}
-		return new WikiFactoryImpl();
+		return new AstCacheWikiFactoryImpl();
 	}
 
 	/**
@@ -66,7 +48,7 @@ public class WikiFactoryImpl extends EFactoryImpl implements WikiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public WikiFactoryImpl() {
+	public AstCacheWikiFactoryImpl() {
 		super();
 	}
 
@@ -75,10 +57,12 @@ public class WikiFactoryImpl extends EFactoryImpl implements WikiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case WikiPackage.PAGE: return createPage();
-			case WikiPackage.FLOWER_BLOCK: return createFlowerBlock();
+			case AstCacheWikiPackage.PAGE: return createPage();
+			case AstCacheWikiPackage.FLOWER_BLOCK: return createFlowerBlock();
+			case AstCacheWikiPackage.HEADING: return createHeading();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -109,8 +93,18 @@ public class WikiFactoryImpl extends EFactoryImpl implements WikiFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public WikiPackage getWikiPackage() {
-		return (WikiPackage)getEPackage();
+	public Heading createHeading() {
+		HeadingImpl heading = new HeadingImpl();
+		return heading;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AstCacheWikiPackage getAstCacheWikiPackage() {
+		return (AstCacheWikiPackage)getEPackage();
 	}
 
 	/**
@@ -119,8 +113,9 @@ public class WikiFactoryImpl extends EFactoryImpl implements WikiFactory {
 	 * @deprecated
 	 * @generated
 	 */
-	public static WikiPackage getPackage() {
-		return WikiPackage.eINSTANCE;
+	@Deprecated
+	public static AstCacheWikiPackage getPackage() {
+		return AstCacheWikiPackage.eINSTANCE;
 	}
 
-} //WikiFactoryImpl
+} //AstCacheWikiFactoryImpl
