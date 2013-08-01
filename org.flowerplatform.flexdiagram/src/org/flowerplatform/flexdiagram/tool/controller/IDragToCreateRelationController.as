@@ -24,7 +24,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	public interface IDragToCreateRelationController {
 		
 		function activate(model:Object):void;
-		function drag(model:Object):void;
+		function drag(model:Object, deltaX:Number, deltaY:Number):void;
 		function drop(model:Object):void;
 		function deactivate(model:Object):void;
 		

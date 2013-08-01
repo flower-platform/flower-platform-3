@@ -17,6 +17,7 @@
  * license-end
  */
 package org.flowerplatform.editor.model.controller {
+	
 	import org.flowerplatform.editor.model.renderer.ConnectionRenderer;
 	import org.flowerplatform.emf_model.notation.Edge;
 	import org.flowerplatform.flexdiagram.DiagramShell;

@@ -91,8 +91,6 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		
 		// TODO this should be done from a new plugin probably
 		getConfigurationProviders().put(GithubConfigurationProvider.TECHNOLOGY, new GithubConfigurationProvider());
-		
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
 	}
 
 	@Override

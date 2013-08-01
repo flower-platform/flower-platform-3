@@ -26,8 +26,16 @@ package org.flowerplatform.editor.model.renderer {
 		public function CenteredBoxChildIconItemRenderer() {
 			super();
 			
-			setStyle("horizontalAlign", "center");
+			percentWidth = NaN;
 			setStyle("fontWeight", "bold");
+		}
+		
+		override protected function set down(value:Boolean):void {
+			super.down = false;
+		}
+		
+		override protected function set hovered(value:Boolean):void {
+			super.hovered = false;
 		}
 	}
 }

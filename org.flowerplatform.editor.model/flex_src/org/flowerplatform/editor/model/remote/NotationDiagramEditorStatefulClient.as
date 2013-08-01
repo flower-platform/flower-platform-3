@@ -87,5 +87,9 @@ package org.flowerplatform.editor.model.remote {
 		public function service_addNewComment(path:ArrayCollection, comment:String):void {
 			attemptUpdateContent(null, invokeServiceMethod("addNewComment", [path, editableResourcePath, comment, scenarioTreeStatefulClient.context], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
+		
+		public function service_deleteScenarioElement(path:ArrayCollection):void {
+			attemptUpdateContent(null, invokeServiceMethod("deleteScenarioElement", [path, editableResourcePath, scenarioTreeStatefulClient.context], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+		}
 	}
 }

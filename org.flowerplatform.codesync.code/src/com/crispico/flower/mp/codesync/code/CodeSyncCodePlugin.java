@@ -300,6 +300,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 			// we're not showing the dialog => perform sync
 			StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
 			service.synchronize(context, editableResourcePath);
+			// and unsubscribe
+			service.unsubscribeAllClientsForcefully(editableResourcePath, false);
 		}
 		
 		return editableResource;

@@ -20,6 +20,7 @@ package org.flowerplatform.editor.model.controller {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
+	import org.flowerplatform.communication.transferable_object.TransferableObjectDisposedEvent;
 	import org.flowerplatform.communication.transferable_object.TransferableObjectUpdatedEvent;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -42,14 +43,26 @@ package org.flowerplatform.editor.model.controller {
 		
 		public function beginListeningForChanges(model:Object):void	{
 			View(model).addEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);
+			View(model).addEventListener(TransferableObjectDisposedEvent.OBJECT_DISPOSED, objectDisposedHandler);
 		}
 		
 		public function endListeningForChanges(model:Object):void {
 			View(model).removeEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);
+			View(model).removeEventListener(TransferableObjectDisposedEvent.OBJECT_DISPOSED, objectDisposedHandler);
+
 		}
 		
 		protected function objectUpdatedHandler(event:TransferableObjectUpdatedEvent):void {
 			diagramShell.shouldRefreshVisualChildren(event.object);
+		}
+		
+		/**
+		 * @author Mariana Gheorghe
+		 */
+		protected function objectDisposedHandler(event:TransferableObjectDisposedEvent):void {
+			var model:Object = event.object;
+			diagramShell.unassociateModelFromRenderer(model, diagramShell.getRendererForModel(model), true);
+			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
 		}
 	}
 }

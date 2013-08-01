@@ -32,7 +32,7 @@ package org.flowerplatform.flexdiagram.samples.controller {
 			trace("startDragging");
 		}
 		
-		public function drag(model:Object):void {
+		public function drag(model:Object, deltaX:Number, deltaY:Number):void {
 			trace("update");
 		}
 		
