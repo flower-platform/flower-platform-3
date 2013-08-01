@@ -27,7 +27,7 @@ package org.flowerplatform.editor.mindmap.action {
 		public function NewParagraphAction() {
 			super();
 			label = "New Paragraph";
-			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/paragraph.png");
+			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/pencil.png");
 			viewType = "paragraph";
 		}
 		

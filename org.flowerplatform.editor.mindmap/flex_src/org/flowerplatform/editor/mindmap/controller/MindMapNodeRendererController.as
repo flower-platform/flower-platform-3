@@ -22,6 +22,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import mx.collections.ArrayList;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
+	import mx.core.UIComponent;
 	import mx.events.PropertyChangeEvent;
 	
 	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
@@ -29,6 +30,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
+	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapConnector;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;

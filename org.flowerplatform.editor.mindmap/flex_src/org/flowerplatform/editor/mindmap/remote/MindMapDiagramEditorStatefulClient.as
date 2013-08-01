@@ -74,5 +74,17 @@ package org.flowerplatform.editor.mindmap.remote {
 		public function service_createNew(viewId:Object, viewType:String):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "createNew", [viewId, viewType]));
 		}
+		
+		public function service_moveUp(viewId:Object, callbackObject:Object, callbackFunction:Function):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "moveUp", [viewId], callbackObject, callbackFunction));
+		}
+		
+		public function service_moveDown(viewId:Object, callbackObject:Object, callbackFunction:Function):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "moveDown", [viewId], callbackObject, callbackFunction));
+		}
+		
+		public function service_delete(viewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "delete", [viewId]));
+		}
 	}
 }

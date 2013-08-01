@@ -20,6 +20,7 @@ package org.flowerplatform.editor.mindmap.controller
 {
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.core.UIComponent;
 	
 	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
 	import org.flowerplatform.communication.transferable_object.TransferableObjectDisposedEvent;
@@ -76,13 +77,13 @@ package org.flowerplatform.editor.mindmap.controller
 		protected function objectUpdatedHandler(event:TransferableObjectUpdatedEvent):void {		
 			var model:MindMapNode = MindMapNode(event.object);	
 
-			MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model, true);
+			var root:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
 			
+			MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model, true);		
 			MindMapDiagramShell(diagramShell).addModelToRootChildren(model, true);	
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
-
-			getDynamicObject(model).shouldRefreshPosition = true;
-			DiagramRenderer(diagramShell.diagramRenderer).callLater(MindMapDiagramShell(diagramShell).refreshNodePositions, [model]);
+			
+			MindMapDiagramShell(diagramShell).refreshNodePositions(root);
 		}
 		
 		protected function objectDisposedHandler(event:TransferableObjectDisposedEvent):void {
@@ -90,7 +91,7 @@ package org.flowerplatform.editor.mindmap.controller
 						
 			diagramShell.unassociateModelFromRenderer(model, diagramShell.getRendererForModel(model), true);
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
-			
+	
 			if (MindMapDiagramShell(diagramShell).getModelController(model).getParent(model) != null) {
 				MindMapDiagramShell(diagramShell).refreshNodePositions(MindMapDiagramShell(diagramShell).getModelController(model).getParent(model));
 			} else {

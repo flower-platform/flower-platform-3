@@ -27,12 +27,16 @@
 				xmlns:mx="library://ns.adobe.com/flex/mx" 				
 				 xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"
 				 implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
-				minWidth="10" minHeight="10" updateComplete="updateCompleteHandler(event)" creationComplete="creationCompleteHandler(event)"
-				iconFunction="getImage">
+				minWidth="10" minHeight="16" updateComplete="updateCompleteHandler(event)" creationComplete="creationCompleteHandler(event)"
+				iconFunction="getImage" doubleClickEnabled="true" doubleClick="doubleClickHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
 			import mx.core.IVisualElementContainer;
+			
+			import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
+			
+			import mx.core.UIComponent;
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
 			import mx.events.ResizeEvent;
@@ -50,7 +54,8 @@
 			private static const circleRadius:int = 3;
 								
 			private var _diagramShell:DiagramShell;
-	
+			private var creationComplete:Boolean = false;
+			
 			public function get diagramShell():DiagramShell {
 				return _diagramShell;
 			}
@@ -71,8 +76,8 @@
 					View(data).addEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
 					x = data.x;
 					y = data.y;
-					minWidth = data.width;
-					minHeight = data.height;
+//					minWidth = data.width;
+//					minHeight = data.height;
 					
 					if (getNode().viewDetails != null) {
 						viewDetailsUpdatedHandler(null);
@@ -83,7 +88,7 @@
 			protected function viewDetailsUpdatedHandler(event:Event):void {
 				label = getNode().viewDetails.text;
 				if (iconDisplay) {
-					iconDisplay.source = getImage(null);
+					iconDisplay.source = getImage(null);					
 				}
 				invalidateDisplayList();
 			}
@@ -105,18 +110,23 @@
 						y = getNode().y;						
 						break;
 					case "height":
-						minHeight = getNode().height;
-						getDynamicObject(data).shouldRefreshPosition = true;
+						minHeight = getNode().height;					
+						getDynamicObject(data).shouldRefreshPosition = true;						
 						break;
-					case "width":
+					case "width":					
 						minWidth = getNode().width;
-						getDynamicObject(data).shouldRefreshPosition = true;
+						getDynamicObject(data).shouldRefreshPosition = true;					
 						break;
 					case "expanded":	
 					case "hasChildren":	
-						invalidateDisplayList();
+						invalidateDisplayList();			
+						var selectionRenderer:UIComponent = UIComponent(DynamicModelExtraInfoController(diagramShell.getControllerProvider(data).getModelExtraInfoController(data)).getDynamicObject(data).selectionRenderer);
+						if (selectionRenderer != null) {
+							selectionRenderer.invalidateDisplayList();
+						}
 						break;
-				}				
+				}			
+			
 			}
 			
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {			
@@ -138,7 +148,7 @@
 			
 			override protected function setElementSize(element:Object, width:Number, height:Number):void {
 				super.setElementSize(element, width, height);
-				if (element == labelDisplay) {
+				if (element == labelDisplay || element == iconDisplay) {
 					if (width != 0 && data != null && data.width != width && !isNaN(width)) {
 						getNode().setWidth(this.width);
 						getDynamicObject(getNode()).shouldRefreshPosition = true;
@@ -149,6 +159,7 @@
 					}
 				}
 			}
+			
 			private function getNode():MindMapNode {
 				return MindMapNode(data);
 			}
@@ -179,12 +190,23 @@
 			}
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
-				if (data != null) {
+				if (data != null) {					
 					var parent:Object = MindMapDiagramShell(diagramShell).getModelController(data).getParent(data);
 					if (parent != null) {
 						getDynamicObject(parent).shouldRefreshPosition = true;
 						MindMapDiagramShell(diagramShell).refreshNodePositions(parent);	
 					}
+				}	
+
+			}
+			
+			protected function doubleClickHandler(event:MouseEvent):void {
+				IMindMapControllerProvider(diagramShell.getControllerProvider(data)).getMindMapModelController(data).setExpanded(data, !getNode().expanded);
+				getNode().expanded = !getNode().expanded;	
+								
+				if (!getNode().expanded) {
+					MindMapDiagramShell(diagramShell).removeModelFromRootChildren(getNode(), true);
+					diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
 				}
 			}
 			

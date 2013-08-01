@@ -34,7 +34,7 @@ package org.flowerplatform.emf_model.notation {
 		private var _x:Number;	
 		private var _y:Number;	
 		private var _width:Number = 10;		
-		private var _height:Number = 10;
+		private var _height:Number = 32;
 		
 		[Transient]		
 		public function get x():Number {	

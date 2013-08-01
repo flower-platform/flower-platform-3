@@ -26,8 +26,8 @@ package org.flowerplatform.editor.mindmap.action {
 		
 		public function NewHeadline2Action() {
 			super();
-			label = "New Heading 2";
-			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/heading_2.png");
+			label = "New H2";
+			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/full-2.png");
 			viewType = "heading 2";
 		}
 	}
