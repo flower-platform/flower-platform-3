@@ -25,7 +25,7 @@ package  org.flowerplatform.editor.remote {
 	/**
 	 * @see Corresponding Java class for doc, (class and fields). Some special fields contain doc here as well. 
 	 * @author Cristi
-	 * @flowerModelElementId _Bu3bMFr-EeG5zfjR769bxA
+	 * 
 	 */
 	[Bindable] 
 	[RemoteClass]
@@ -39,25 +39,25 @@ package  org.flowerplatform.editor.remote {
 		public var masterEditorStatefulClientId:String;
 		
 		/**
-		 * @flowerModelElementId _E9FDoFr-EeG5zfjR769bxA
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var editorInput:Object;
 		
 		/**
-		 * @flowerModelElementId _458j8GnaEeGf2Ze1btT4ow
+		 * 
 		 */ 
 		[SecureSWF(rename="off")]
 		public var label:String;
 		
 		/**
-		 * @flowerModelElementId _45_nQ2naEeGf2Ze1btT4ow
+		 * 
 		 */ 
 		[SecureSWF(rename="off")]
 		public var iconUrl:String;
 		
 		/**
-		 * @flowerModelElementId _Nsu7YFr-EeG5zfjR769bxA
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var dirty:Boolean;
@@ -70,7 +70,7 @@ package  org.flowerplatform.editor.remote {
 		 * If this <code>EditableResources</code> is a master, then
 		 * this field is not <code>null</code>. Otherwise, it's <code>null</code>.
 		 * 
-		 * @flowerModelElementId _CKcB8LurEeGAt-EVfEFJMA
+		 * 
 		 */
 		[Transient]
 		public var slaveEditableResources:ArrayCollection;
@@ -79,31 +79,31 @@ package  org.flowerplatform.editor.remote {
 		 * This property is Transient, but exists in Java as well. It is
 		 * populated by the <code>EditorStatefulClient</code>.
 		 * 
-		 * @flowerModelElementId _fctSYLV6EeGHQ9UXq6mt1g
+		 * 
 		 */
 		[Transient]
 		public var clients:ArrayCollection = new ArrayCollection();
 		
 		/**
-		 * @flowerModelElementId _1F63EIn3EeGENqKo5G_OSw
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var locked:Boolean;
 		
 		/**
-		 * @flowerModelElementId _Q28G8In4EeGENqKo5G_OSw
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var lockOwner:EditableResourceClient;
 		
 		/**
-		 * @flowerModelElementId _C-Vi8In5EeGENqKo5G_OSw
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var lockExpireTime:Date;
 		
 		/**
-		 * @flowerModelElementId _EnerAIn5EeGENqKo5G_OSw
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var lockUpdateTime:Date;

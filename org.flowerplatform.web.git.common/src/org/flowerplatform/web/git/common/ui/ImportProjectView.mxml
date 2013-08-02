@@ -71,7 +71,7 @@
 			}
 					
 			/**
-			 * @flowerModelElementId _gORZ4DV5EeKsnMbt6YrXWQ
+			 * 
 			 */
 			protected override function finishClickHandler():void {				
 				var selectedProjects:ArrayCollection = new ArrayCollection();

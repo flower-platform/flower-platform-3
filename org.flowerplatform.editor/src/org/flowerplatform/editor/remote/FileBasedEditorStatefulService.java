@@ -33,19 +33,19 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mariana
  * 
- * @flowerModelElementId _DgZ4ECJxEeKovflGC_YAeQ
+ * 
  */
 public abstract class FileBasedEditorStatefulService extends EditorStatefulService
 //	implements IResourceChangeListener 
 	{
 	
 	/**
-	 * @flowerModelElementId _tC8U4Cm1EeKzq6x6tgMJRw
+	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(FileBasedEditorStatefulService.class);
 	
 	/**
-	 * @flowerModelElementId _B5SMcCJ1EeKovflGC_YAeQ
+	 * 
 	 */
 	public FileBasedEditorStatefulService() {
 //		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
@@ -62,7 +62,7 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	}
 
 //	/**
-//	 * @flowerModelElementId _IIt1ECJzEeKovflGC_YAeQ
+//	 * 
 //	 */
 //	@Override
 //	public void resourceChanged(IResourceChangeEvent event) {
@@ -73,7 +73,7 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 //	 * Recursive method that goes through the children of the {@link IResourceDelta} tree and processes the delta 
 //	 * accordingly for each resource.
 //	 * 
-//	 * @flowerModelElementId _11e40CJzEeKovflGC_YAeQ
+//	 * 
 //	 */
 //	private void processDelta(IResourceDelta deltaToProcess) {
 //		// recursively call this method for all the deltas
@@ -102,7 +102,7 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 //	}
 //
 //	/**
-//	 * @flowerModelElementId _co7w0CJzEeKovflGC_YAeQ
+//	 * 
 //	 */
 //	private void processResourceChanged(FileBasedEditableResource editableResource, IResource resource) {
 //		logger.debug("Process resource changed = {} with modification stamp = {}", resource, resource.getModificationStamp());
@@ -111,7 +111,7 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 //	}
 //
 //	/**
-//	 * @flowerModelElementId _oSZHQCJzEeKovflGC_YAeQ
+//	 * 
 //	 */
 //	private void processResourceRemoved(FileBasedEditableResource editableResource, IResource resource) {
 //		logger.debug("Process resource removed = {} with modification stamp = {}", resource, resource.getModificationStamp());
@@ -127,7 +127,7 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 //	 * Note: ignoring notifications during save is important; otherwise, the file would be reloaded while it is already locked by the
 //	 * save logic, which could cause deadlocks, because the reload logic also attempts to lock the file.
 //	 * 
-//	 * @flowerModelElementId _OC5J8CJyEeKovflGC_YAeQ
+//	 * 
 //	 */
 //	@Override
 //	public void save(StatefulServiceInvocationContext context, String editableResourcePath) {

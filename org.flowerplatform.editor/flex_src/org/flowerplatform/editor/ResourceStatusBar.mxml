@@ -24,7 +24,7 @@
  @author Florin
  @author Daniela
  @author Cristi
- @flowerModelElementId _1VbNcIrNEeGuitfORwqcpg
+ 
 -->
 <mx:HBox 
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
@@ -46,72 +46,72 @@
 			import org.flowerplatform.editor.remote.EditableResource;
 			
 			/**
-			 * @flowerModelElementId _SKaRM6WoEeGAT8h2VXeJdg
+			 * 
 			 */
 			public static const LOCKED_BY_ME:int = 0;
 			
 			/**
-			 * @flowerModelElementId _SKgX0aWoEeGAT8h2VXeJdg
+			 * 
 			 */
 			public static const LOCKED_BY_OTHER:int = 1;
 			
 			/**
-			 * @flowerModelElementId _SKgX06WoEeGAT8h2VXeJdg
+			 * 
 			 */
 			public static const EDITABLE:int = 2;
 			
 			/**
-			 * @flowerModelElementId _T_7CcLoOEeGmmdms_o5fxQ
+			 * 
 			 */
 			private static const LOCKED_ICON:String =  EditorPlugin.getInstance().getResourceUrl("images/locks/lock.png");
 			
 			/**
-			 * @flowerModelElementId _T_-FwroOEeGmmdms_o5fxQ
+			 * 
 			 */
 			private static const UNLOCKED_ICON:String = EditorPlugin.getInstance().getResourceUrl("images/locks/unlock.png");
 			
 			/**
-			 * @flowerModelElementId _iQw-sLq6EeGcctunuFRi4Q
+			 * 
 			 */
 			public static const LOCK_ICON_SMALL:String = EditorPlugin.getInstance().getResourceUrl("images/Web/icons/locks/lock_small.png");
 			
 			/**
-			 * @flowerModelElementId _UABwI7oOEeGmmdms_o5fxQ
+			 * 
 			 */
 			private static const LOCKED_BY_ME_COLOR:uint = 0x0000FF;
 			
 			/**
-			 * @flowerModelElementId _UAK6FLoOEeGmmdms_o5fxQ
+			 * 
 			 */
 			private static const LOCKED_BY_OTHER_COLOR:uint = 0xFF0000;
 			
 			/**
-			 * @flowerModelElementId _UAQZoroOEeGmmdms_o5fxQ
+			 * 
 			 */
 			private static const LOCKED_BY_OTHER_DISABLED_COLOR:uint = 0xDE8A8A;
 			
 			/**
-			 * @flowerModelElementId _UAYVcLoOEeGmmdms_o5fxQ
+			 * 
 			 */
 			private static const EDITABLE_COLOR:uint = 0x008000;
 									
 			/**
 			 * The editable resource from the last update;
-			 * @flowerModelElementId _jpmWoo-IEeGlZvO-ph04FQ
+			 * 
 			 */
 			private var editableResource:EditableResource;			
 									
 			/**
 			 * The current lock state. -1 if not yet initialized
 			 * 
-			 * @flowerModelElementId _SKgX1aWoEeGAT8h2VXeJdg
+			 * 
 			 */
 			public var currentLockState:int = -1;
 			
 //			private var _collaborativeDiagramViewer:DiagramViewer;
 			
 			/**
-			 * @flowerModelElementId _SKgX16WoEeGAT8h2VXeJdg
+			 * 
 			 */
 			[Bindable]
 			private var startColor:Number;
@@ -126,7 +126,7 @@
 			/**
 			 * Updates the label of the button, the icon and the color animation.
 			 * 
-			 * @flowerModelElementId _SKgX2aWoEeGAT8h2VXeJdg
+			 * 
 			 */
 			public function updateState(editableResource:EditableResource):void {
 //				return;
@@ -178,7 +178,7 @@
 			} 
 			
 			/**
-			 * @flowerModelElementId _SKmecaWoEeGAT8h2VXeJdg
+			 * 
 			 */
 			private function getState():int {
 				if (editableResource.locked){
@@ -193,7 +193,7 @@
 			}
 
 			/**
-			 * @flowerModelElementId _SKmec6WoEeGAT8h2VXeJdg
+			 * 
 			 */
 			private function getTooltipText(editableResource:EditableResource):String {
 				var owner:String = "";
@@ -230,7 +230,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _SKmeeaWoEeGAT8h2VXeJdg
+			 * 
 			 */
 			private function lockClick():void {
 				if (editorFrontend.editorStatefulClient == null) {

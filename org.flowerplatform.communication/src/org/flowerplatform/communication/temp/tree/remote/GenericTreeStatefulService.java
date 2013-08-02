@@ -98,22 +98,22 @@ import org.flowerplatform.communication.tree.remote.TreeNode;
  * @author Cristi
  * @author Cristina
  * 
- * @flowerModelElementId _qwPpwA7rEeKbvNML8mcTuA
+ * 
  */
 public abstract class GenericTreeStatefulService extends StatefulService {
 	
 	/**
-	 * @flowerModelElementId _G-cP8Kr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	public static final String WHOLE_TREE_KEY = "wholeTree";
 	
 	/**
-	 * @flowerModelElementId _G-eFIar2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	private static final String EXPAND_NODE_KEY = "expandNode";
 	
 	/**
-	 * @flowerModelElementId _G-f6Uar2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	private static final String SELECT_NODE_KEY = "selectNode";
 	
@@ -128,7 +128,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * @see #getPathForNode(Object, Map)
 	 * 
 	 * @author Mariana
-	 * @flowerModelElementId _PlC_0AIeEeKqVJdl4mrwww
+	 * 
 	 */
 	private static final String GO_UP_ON_NODE_INFO_KEY = "goUpOnNodeInfo";
 	
@@ -140,7 +140,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * 
 	 * @see #getNodeByPath(List, Map)
 	 * @see ProjectExplorerTreeService#getNodeByPath(List, Map)
-	 * @flowerModelElementId _yYoOAAh1EeKBk5gFLRykjQ
+	 * 
 	 */
 	public static final String GO_DOWN_ON_PATH_FRAGMENT_KEY = "goDownOnPathFragment";
 	
@@ -155,14 +155,14 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	protected static final String DISPATCH_ONLY_FOR_CLIENT = "dispatchOnlyForClient";
 		
 	/**
-	 * @flowerModelElementId _3pTm4A7rEeKbvNML8mcTuA
+	 * 
 	 */
 	protected Map<Object, NodeInfo> openNodes = new ConcurrentHashMap<Object, NodeInfo>();
 	
 	/**
 	 * Holds the tree structure of all displayed nodes on clients (opened or not).
 	 * 
-	 * @flowerModelElementId _pXDLkKD1EeG5ENNne79MAQ
+	 * 
 	 */
 	private NodeInfo rootNodeInfo;
 	
@@ -183,7 +183,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	protected NamedLockPool namedLockPool = new NamedLockPool();
 	
 	/**
-	 * @flowerModelElementId _SbysYKDXEeG5ENNne79MAQ
+	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(GenericTreeStatefulService.class);
 		
@@ -192,7 +192,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _shOcoBN0EeKR8sYuzDGiDQ
+	 * 
 	 */
 	public String printNodeInfos() {
 		StringBuffer sb = new StringBuffer();
@@ -234,7 +234,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	}
 			
 //	/**
-//	 * @flowerModelElementId _qRVZgBK3EeKz7oFAPW_0ZA
+//	 * 
 //	 */
 //	public String printStatefulDataPerCommunicationChannel(String webCommunicationChannelIdFilter, String linePrefix) {		
 //		// clean parameters
@@ -304,7 +304,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * <p>
 	 * Note: all the above structure of a dispatched node must be in dispatched mode
 	 * (the parents must be seen as dispatched nodes) in order to work properly.
-	 * @flowerModelElementId _NcjBsKTpEeGJQ4vD1xX4gA
+	 * 
 	 */
 	protected boolean isDispatchEnabled(Object node) {
 		return false;
@@ -316,7 +316,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * @see #openNode()
 	 * @see #dispatchContentUpdate()
 	 * @see #dispatchLabelUpdate()
-	 * @flowerModelElementId _i1kT08BrEeG5PP70DrXYIQ
+	 * 
 	 */
 	protected TreeNode createTreeNode() {
 		return new TreeNode();
@@ -329,7 +329,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * <p>
 	 * If path fragment isn't human readable, subclasses must return a suggestive string instead.
 	 *  
-	 * @flowerModelElementId _disIUKDXEeG5ENNne79MAQ
+	 * 
 	 */
 	public abstract String getLabelForLog(Object node);
 	
@@ -339,7 +339,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * 
 	 * @param recurse - if <code>true</code>, creates the whole tree structure for given node.
 	 * 					Otherwise creates only its direct children.
-	 * @flowerModelElementId _G-y1RKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	private void populateChildren(CommunicationChannel channel, String statefulClientId, Object node, TreeNode treeNode, GenericTreeContext context, boolean recurse) {
 		// create and populate the children list
@@ -366,7 +366,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * <p>
 	 * At the end, subscribe the given channel and clientId to node.
 	 * 
-	 * @flowerModelElementId _G-7_NKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	private void addNodeInfo(CommunicationChannel channel, String statefulClientId, Object node, boolean isRoot, boolean addInOpenNodes, GenericTreeContext context) {
 		NodeInfo nodeInfo = openNodes.get(node);
@@ -443,7 +443,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * Verifies if the parent is opened. If <code>true</code>,
 	 * creates and populates a {@link TreeNode} with new data and sends updates to all
 	 * subscribed clients. 	
-	 * @flowerModelElementId _KIZOsJF0EeGZxtPbjaCZxw
+	 * 
 	 */
 	public void dispatchLabelUpdate(Object node) {
 		NodeInfo nodeInfo = openNodes.get(node); // check if opened
@@ -497,7 +497,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * <p>
 	 * Also, creates and populates a new tree node (including object children) and
 	 * sends updates to all subscribed clients. 
-	 * @flowerModelElementId _GlGHEJF0EeGZxtPbjaCZxw
+	 * 
 	 */
 	public void dispatchContentUpdate(Object node, Object clientInvocationOptions) {
 		NodeInfo nodeInfo = openNodes.get(node);
@@ -568,7 +568,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * @param client 
 	 * @param expandNode true to expand the node, false to collapse
 	 * @author Mariana
-	 * @flowerModelElementId _js9gMP0DEeGZPtPdwyatgg
+	 * 
 	 */
 	public void dispatchExpandedUpdate(Object node, CommunicationChannel client, boolean expandNode) {
 		NodeInfo nodeInfo = openNodes.get(node);
@@ -642,7 +642,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * @see #dispatchContentUpdate()
 	 * @see #cleanupChildren()
 	 * 
-	 * @flowerModelElementId _p0v2QJF1EeGZxtPbjaCZxw
+	 * 
 	 */
 	protected void cleanupAfterNodeClosed(Object node, String statefulClientId, CommunicationChannel channel, RunnableWithParam<Void, NodeInfo> removeNodeInfoRunnable) {
 		if (logger.isTraceEnabled()) {
@@ -739,7 +739,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _cB9GAKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	public List<PathFragment> getPathForNode(Object node) {
 		return getPathForNode(node, null);
@@ -756,7 +756,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * 
 	 * <p>
 	 * Also a context can be provided to filter the children list.
-	 * @flowerModelElementId _HA01kKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	public abstract Collection<?> getChildrenForNode(Object node, GenericTreeContext context);
 
@@ -778,7 +778,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * Subclasses that implement this method must provide 
 	 * a parent for given node.	
 	 *  
-	 * @flowerModelElementId _NxVukJ9aEeGYPK0E1LmMXw
+	 * 
 	 */
 	public abstract Object getParent(Object node, GenericTreeContext context);
 
@@ -787,7 +787,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * then delegates to the abstract method {@link #populateChildren()}.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _i1pMUcBrEeG5PP70DrXYIQ
+	 * 
 	 */
 	private void populateTreeNodeInternal(Object source, TreeNode destination, GenericTreeContext context) {
 		destination.setPathFragment(getPathFragmentForNode(source, context));
@@ -808,7 +808,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * <p>
 	 * This method is never invoked for the root node.
 	 * 
-	 * @flowerModelElementId _HA9YcKr2EeG3eZ1Jezjhtw
+	 * 
 	 * @author Cristi
 	 * @return The return result is not taken into account by the platform. By convention, everyone
 	 * should return <code>true</code>. The return value may be used by tree services that have "sub"
@@ -821,7 +821,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * Subclasses that implement this method must provide 
 	 * a node for given {@link PathFragment}.
 	 * 	
-	 * @flowerModelElementId _i-hGwKD2EeG5ENNne79MAQ
+	 * 
 	 */
 	public abstract Object getNodeByPathFragment(Object parent, PathFragment pathFragment, GenericTreeContext context);
 
@@ -829,7 +829,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * Subclasses that implement this method must provide 
 	 * a {@link PathFragment} for given node.
 	 * 	 
-	 * @flowerModelElementId _NxYx4J9aEeGYPK0E1LmMXw
+	 * 
 	 */
 	public abstract PathFragment getPathFragmentForNode(Object node);
 
@@ -853,13 +853,13 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * Note:
 	 * This method must be implemented if other implementation seems to be more effective.
 	 * 	 
-	 * @flowerModelElementId _vBmpcaP8EeGeHqktJlHXmA
+	 * 
 	 */
 	/**
 	 * @param fullPath
 	 * @param context
 	 * @return
-	 * @flowerModelElementId _vBmpcaP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) {		
 		NodeInfo nodeInfo;
@@ -920,7 +920,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * 
 	 * @see #getParent()
 	 * 
-	 * @flowerModelElementId _NxT5Y59aEeGYPK0E1LmMXw
+	 * 
 	 */
 	public List<PathFragment> getPathForNode(Object node, GenericTreeContext context) {		
 		List<PathFragment> path = new ArrayList<PathFragment>();
@@ -953,7 +953,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _cCIFIKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	public Object getNodeByPath(List<PathFragment> fullPath) {
 		return getNodeByPath(fullPath, null);
@@ -964,7 +964,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _sjREARN0EeKR8sYuzDGiDQ
+	 * 
 	 */
 	protected void updateNode(CommunicationChannel channel, String statefulClientId, List<PathFragment> path, TreeNode treeNode, boolean expandNode, boolean colapseNode, boolean selectNode, boolean isContentUpdate, Object clientInvocationOptions) {
 		invokeClientMethod(
@@ -975,7 +975,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _sjdRQRN0EeKR8sYuzDGiDQ
+	 * 
 	 */
 	public void startInplaceEditor(StatefulServiceInvocationContext context, String contributionId, List<PathFragment> nodePath, Boolean autoCreateElementAfterEditing) { 
 		invokeClientMethod(
@@ -994,7 +994,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * 
 	 * @see #populateChildren()
 	 * @see #addNodeInfo()
-	 * @flowerModelElementId _G-suoKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	public TreeNode openNodeInternal(CommunicationChannel channel, String statefulClientId, List<PathFragment> fullPath, Map<Object, Object> context) {
 		GenericTreeContext treeContext = getTreeContext(channel, statefulClientId);
@@ -1061,7 +1061,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _y5V30A7rEeKbvNML8mcTuA
+	 * 
 	 */
 	@RemoteInvocation
 	public void subscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
@@ -1099,7 +1099,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _y5dMkA7rEeKbvNML8mcTuA
+	 * 
 	 */
 	@RemoteInvocation
 	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
@@ -1110,20 +1110,20 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _YYXu4KKgEeGYz6sIcvSzpg
+	 * 
 	 */
 	@RemoteInvocation
 	public abstract String getInplaceEditorText(StatefulServiceInvocationContext context, List<PathFragment> fullPath);
 
 	/**
 	 * 	 
-	 * @flowerModelElementId _gznc4KKgEeGYz6sIcvSzpg
+	 * 
 	 */
 	@RemoteInvocation
 	public abstract boolean setInplaceEditorText(StatefulServiceInvocationContext context, List<PathFragment> path, String text);
 
 	/**
-	 * @flowerModelElementId _CkJxERnzEeKiTvwNCJnHJw
+	 * 
 	 */
 	@RemoteInvocation
 	public boolean performDrop(StatefulServiceInvocationContext context, List<PathFragment> target, List<List<PathFragment>> selectedResources) { 
@@ -1149,7 +1149,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * 
 	 * @see #openNodeInternal()
 	 * 
-	 * @flowerModelElementId _vAAuAKP8EeGeHqktJlHXmA
+	 * 
 	 */
 	@RemoteInvocation
 	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {
@@ -1190,7 +1190,7 @@ public abstract class GenericTreeStatefulService extends StatefulService {
 	 * @param path - path of the node that must be closed. 
 	 * 				If <code>null</code>, the node is considered to be the root.
 	 * 
-	 * @flowerModelElementId _NxNLsJ9aEeGYPK0E1LmMXw
+	 * 
 	 */
 	@RemoteInvocation
 	public void closeNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {

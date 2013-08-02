@@ -19,7 +19,7 @@
 	license-end
 -->
 <!--
- @flowerModelElementId _7QpckHE5EeK0WoOyJtfqdw
+ 
 -->
 <ns:Wizard xmlns:ns="com.crispico.flower.util.popup.*"
 		   titleIconURL="{GitPlugin.getInstance().getResourceUrl('images/full/obj16/fetch.gif')}"
@@ -79,7 +79,7 @@
 			}
 					
 			/**
-			 * @flowerModelElementId _JvFcEHE6EeK0WoOyJtfqdw
+			 * 
 			 */
 			protected override function finishClickHandler():void {				
 				var fetchConfig:RemoteConfig = new RemoteConfig();

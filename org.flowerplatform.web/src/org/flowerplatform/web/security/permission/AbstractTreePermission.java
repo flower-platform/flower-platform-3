@@ -39,24 +39,24 @@ import org.flowerplatform.web.security.sandbox.TreePermissionCollection;
  * 
  * @author Cristi
  * @author Florin
- * @flowerModelElementId _TWzBAGbMEeGOeOE1u9CeQw
+ * 
  */
 public abstract class AbstractTreePermission extends Permission {
 
 	/**
-	 * @flowerModelElementId _jSsrsGxsEeGBsfNm1ipRfw
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @flowerModelElementId _f03dQWnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	public static final String STAR_WILDCARD = "*";
 	
 	/**
 	 * @see Getter.
 	 * 
-	 * @flowerModelElementId _f04EUWnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	protected String actions;
 	
@@ -70,7 +70,7 @@ public abstract class AbstractTreePermission extends Permission {
 	 * recursively. Note that this is different from java.io.FilePermission,
 	 * where - has this meaning. This path is relative as described in {@link TreePermissionCollection}
 	 * 
-	 * @flowerModelElementId _f04rYGnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	public AbstractTreePermission(String path, String actions) {
 		super(path);
@@ -80,7 +80,7 @@ public abstract class AbstractTreePermission extends Permission {
 	/**
 	 * Parameters (or actions) for the current permission. Same meaning as {@link Permission#getActions()}.
 	 * 
-	 * @flowerModelElementId _f055gmnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	public String getActions() {
 		return actions;
@@ -89,7 +89,7 @@ public abstract class AbstractTreePermission extends Permission {
 	/**
 	 * This method is "de-activated", so that it cannot be used as a normal
 	 * <code>java.security.Permission</code>.
-	 * @flowerModelElementId _cLwaAGxzEeGBsfNm1ipRfw
+	 * 
 	 */
 	public final boolean implies(Permission permission) {
 		throw new IllegalAccessError(String.format("AbstractTreePermission.implies() invoked. This kind of permission cannot be" +
@@ -104,7 +104,7 @@ public abstract class AbstractTreePermission extends Permission {
 	 * has already been checked in TreePermissionCollection and it is a match.
 	 * Implementation of this method should only check the actions.
 	 * 
-	 * @flowerModelElementId _TWzoFGbMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public abstract boolean impliesWithoutTreePathCheck(Permission permission);
 }

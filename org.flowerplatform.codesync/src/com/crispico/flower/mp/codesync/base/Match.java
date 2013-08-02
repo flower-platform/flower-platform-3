@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @flowerModelElementId _rpJv0K17EeCJde5_hCYUsw
+ * 
  */
 public class Match {
 	
@@ -44,7 +44,7 @@ public class Match {
 	private CodeSyncEditableResource editableResource;
 	
 	/**
-	 * @flowerModelElementId _VPbHwK4KEeC2ycztxbwS7Q
+	 * 
 	 */
 	private Match parentMatch;
 	
@@ -64,7 +64,7 @@ public class Match {
 	 * This field should be used only in read mode. The add
 	 * should be done using {@link #addSubMatch()}.
 	 * 
-	 * @flowerModelElementId _rS5-ca75EeCDbs_ALiXk1Q
+	 * 
 	 */
 	private boolean diffsConflict;	
 	
@@ -77,7 +77,7 @@ public class Match {
 	private boolean childrenModifiedRight;
 	
 	/**
-	 * @flowerModelElementId _Bl48gLFkEeCDbs_ALiXk1Q
+	 * 
 	 */
 	private boolean childrenConflict;
 
@@ -235,7 +235,7 @@ public class Match {
 	/**
 	 * Calculated.
 	 * 
-	 * @flowerModelElementId _rTcJ8K75EeCDbs_ALiXk1Q
+	 * 
 	 */
 	public boolean isLeftAdd() {
 		return getAncestor() == null && getLeft() != null;
@@ -262,7 +262,7 @@ public class Match {
 	 * 	<li>this is a 1-match-l/r and parent is a 2-match
 	 * </ul>
 	 * 
-	 * @flowerModelElementId _rTvE4K75EeCDbs_ALiXk1Q
+	 * 
 	 */
 	public boolean isConflict() {
 		return isDiffsConflict() ||
@@ -299,7 +299,7 @@ public class Match {
 	 * 
 	 * @param subMatch A fully initialized {@link Match}, without submatches
 	 * 		or diffs.
-	 * @flowerModelElementId _ktT8wLFlEeCDbs_ALiXk1Q
+	 * 
 	 */
 	public void addSubMatch(Match subMatch) {
 		getSubMatches().add(subMatch);
@@ -336,7 +336,7 @@ public class Match {
 	
 	/**
 	 * Iterative propagation in parallel for conflict and modified. 
-	 * @flowerModelElementId _LpIXgLFuEeCDbs_ALiXk1Q
+	 * 
 	 */
 	private void propagateConflictAndModified(Match currentMatch, boolean conflict, boolean modifiedLeft, boolean modifiedRight) {
 		while (currentMatch != null && 
@@ -477,7 +477,7 @@ public class Match {
 	 * </ul>
 	 * 
 	 * @param diff A fully initialized {@link Diff}.
-	 * @flowerModelElementId _mvXUELFlEeCDbs_ALiXk1Q
+	 * 
 	 */
 	public void addDiff(Diff diff) {
 		getDiffs().add(diff);

@@ -24,7 +24,7 @@ import com.crispico.flower.mp.codesync.base.Match;
 
 
 /**
- * @flowerModelElementId _hCxh4LQcEeCPJvLYgj5VDQ
+ * 
  */
 public class DiffActionCopyRightToLeft extends DiffAction {
 

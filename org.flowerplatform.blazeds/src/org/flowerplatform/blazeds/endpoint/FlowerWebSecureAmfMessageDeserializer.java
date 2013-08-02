@@ -33,7 +33,7 @@ import flex.messaging.io.amf.AmfMessageDeserializer;
  * @author Sorin
  * @author Florin
  * 
- * @flowerModelElementId _g8LpUG22EeGQ6LdvAwMt-w
+ * 
  */
 public class FlowerWebSecureAmfMessageDeserializer extends AmfMessageDeserializer {
 	

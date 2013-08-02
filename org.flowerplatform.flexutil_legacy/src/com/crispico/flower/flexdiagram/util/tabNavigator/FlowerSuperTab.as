@@ -36,7 +36,7 @@ package  com.crispico.flower.flexdiagram.util.tabNavigator {
 	 * based on its URL.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _wozM0PDSEd-yKrmCiYZiog
+	 * 
 	 */
 	public class FlowerSuperTab extends SuperTab {		
 		
@@ -48,7 +48,7 @@ package  com.crispico.flower.flexdiagram.util.tabNavigator {
 		}
 		
 		/**
-		 * @flowerModelElementId _6zPAgPDSEd-yKrmCiYZiog
+		 * 
 		 */
 		override mx_internal function viewIconForPhase(tempIconName:String):IFlexDisplayObject {
 			return ButtonUtils.viewIconForPhase(this, tempIconName);

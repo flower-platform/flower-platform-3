@@ -25,7 +25,7 @@ public class HeartbeatProperties {
 	
 	/**
 	 * Period for checking if clients are still alive.
-	 * @flowerModelElementId _dzqnAMm9EeGCnb0rfNyziw
+	 * 
 	 */
 	public static final String SERVER_HEARTBEAT_PERIOD = "server.heartbeat.period"; // milliseconds
 	

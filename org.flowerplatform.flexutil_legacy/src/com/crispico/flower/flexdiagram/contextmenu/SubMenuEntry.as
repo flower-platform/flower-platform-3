@@ -56,12 +56,12 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 	 * @see FlowerContextMenu
 	 * @see #getSubMenu()
  	 * @author Cristina
-	 * @flowerModelElementId _b4HsoMJCEd-CHMGlopD3VQ
+	 * 
 	 */
 	public class SubMenuEntry extends FlowerLinkButton implements IMenuEntrySortable {
 		
 		/**
-		 * @flowerModelElementId _b4ITscJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		[Embed(source='/menuArrow.gif')]
@@ -71,23 +71,23 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		public var smallMenuArrow:Class;
 		
 		/**
-		 * @flowerModelElementId _b4ITtMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		private var arrowIcon:Image;
 		
 		/**
-		 * @flowerModelElementId _b4I6wMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		private static const ARROW_SIZE:int = 13;
 		
 		/**
-		 * @flowerModelElementId _b4I6wsJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		private var parentMenu:FlowerContextMenu;
 		
 		/**
 		 * The sub - menu that is shown on mouseOver .
-		 * @flowerModelElementId _b4Jh0MJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		private var subMenu:FlowerContextMenu;
 
@@ -95,7 +95,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * If this magical flag is not maintained, when passing over multiple sub menu entries, at the last one,
 		 * the showing would appear like a flickering. 
-		 * @flowerModelElementId _b4Jh0sJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		private var subMenuShowed:Boolean;
 					
@@ -111,7 +111,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * @return The wrapped <code>FlowerContextMenu</code> that needs to be filled
 		 * with children (menu entries).
 		 * 
-		 * @flowerModelElementId _b4LXAMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public function getSubMenu():FlowerContextMenu {
 			return this.subMenu;
@@ -140,7 +140,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * @param label The label of the submenu.
 		 * @param parentContextMenu The parent menu (which can be the main context menu or another sub menu).
 		 * @param sortIndex Used for ordering entries.
-		 * @flowerModelElementId _b4LXAsJCEd-CHMGlopD3VQ
+		 * 
 		 */		 
 		public function SubMenuEntry(subMenuEntryModel:SubMenuEntryModel, parentContextMenu:FlowerContextMenu) {
 			
@@ -210,7 +210,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * 
 		 * A timer is set(<code>openTimer</code>) 
 		 * as the user can only over pass the mouse on this subMenuEntry to get to another entry
-		 * @flowerModelElementId _b4MlI8JCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function rollOverHander(event:Event):void {		
@@ -243,7 +243,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * This method is called as a result of a "normal" or "simulated" (by the parent menu) event distpatch.
 		 * It hides the submenu, except if the mouse is "over" the submenu.
-		 * @flowerModelElementId _b4NMMsJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function rollOutHander(event:MouseEvent):void {														
@@ -268,7 +268,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * The parent is set only after the <code>SubMenuEntry</code>
 		 * 
 		 * For flex 4 compatibility see FlowerContextMenu.emptyAddHandler()  
-		 * @flowerModelElementId _b4NzQsJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		private function addedStartHandler(event:Event):void {
 			if (event is FlexEvent) {
@@ -323,7 +323,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * Remove also the parent and its listeners.
 		 * @author Cristina
-		 * @flowerModelElementId _4Ut5EGBDEeCOsYbpEbpl3g
+		 * 
 		 */ 
 		private function removedStartHandler(event:Event):void {
 			parentMenu.removeEventListener(EffectEvent.EFFECT_START, addedStartHandler);			

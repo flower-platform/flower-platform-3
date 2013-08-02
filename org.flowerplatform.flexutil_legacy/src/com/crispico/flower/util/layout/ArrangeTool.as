@@ -55,7 +55,7 @@ package  com.crispico.flower.util.layout {
 	 * (as lazily as possible caching the mouse graphical component target).
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _HXBZkCu2EeG6vrEjfFek0Q
+	 * 
 	 */
 	public class ArrangeTool {
 		
@@ -311,7 +311,7 @@ package  com.crispico.flower.util.layout {
 		 * </ul>
 		 * The tool's state and details are set to their default values at the end.
 		 * 
-		 * @flowerModelElementId _OhjGkCu2EeG6vrEjfFek0Q
+		 * 
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
 			if (arrangeState != DRAGGING) {
@@ -373,7 +373,7 @@ package  com.crispico.flower.util.layout {
 		 * 	layout -> <code>StackLayoutData</code> 
 		 * 	type -> OVER_TAB_BAR
 		 * 
-		 * @flowerModelElementId _8HiTQCu-EeG6vrEjfFek0Q
+		 * 
 		 */ 
 		private function computeDragStartDetails(point:Point):void {			
 			var result:Object = getLayoutDetailsUnderMouse(point);
@@ -419,7 +419,7 @@ package  com.crispico.flower.util.layout {
 		 * index -> tab's index
 		 * side -> LEFT/RIGHT/UP/DOWN/CENTER
 		 * 		
-		 * @flowerModelElementId _--y0QCu-EeG6vrEjfFek0Q
+		 * 
 		 */ 
 		private function computeDropEndDetails(event:MouseEvent):void {	
 			dropEndLayoutData = null;
@@ -491,7 +491,7 @@ package  com.crispico.flower.util.layout {
 		 * 	<li> OVER_TAB_BAR - creates a rectangle at the end of tabs having the height the last tab height and a default width.
 		 * 	<li> OVER_TAB - creates a rectangle over the drop end tab component having its position and dimensions.
 		 * </ul> 
-		 * @flowerModelElementId _HE7VQCu8EeG6vrEjfFek0Q
+		 * 
 		 */
 		private function updateFeedbackRectangleAndCursor():void {
 			var dropEndComponent:UIComponent = workbench.layoutDataToComponent[dropEndLayoutData];
@@ -633,7 +633,7 @@ package  com.crispico.flower.util.layout {
 		 * @see computeDragStartDetails()
 		 * @see computeDropEndDetails()
 		 * 
-		 * @flowerModelElementId _kQipgDhiEeGkQ9Wb8twgXg
+		 * 
 		 */
 		public function getLayoutDetailsUnderMouse(point:Point):Object {			
 			var arr:Array = workbench.root.stage.getObjectsUnderPoint(point);
@@ -746,7 +746,7 @@ package  com.crispico.flower.util.layout {
 		 * 8|	3	|7
 		 * The 0 area means that the point is inside the rectangle. It will not be interpreted because it is not our case.
 		 * 
-		 * @flowerModelElementId _kRH4UThiEeGkQ9Wb8twgXg
+		 * 
 		 */ 
 		private function getDistanceToRectangle(point:Point, rect:Rectangle):Number {			
 			if (rect.containsPoint(point)) {
@@ -787,7 +787,7 @@ package  com.crispico.flower.util.layout {
 		 * <p>
 		 * If the point isn't framed by the line, then an infinite (max int) value is returned.
 		 * 
-		 * @flowerModelElementId _kQ0WUDhiEeGkQ9Wb8twgXg
+		 * 
 		 */ 
 		public function getDistanceToLine(a:Point, b:Point, p:Point):Number {
 			var xDelta:Number = Math.abs(a.x - b.x);
@@ -810,7 +810,7 @@ package  com.crispico.flower.util.layout {
 		 * Calculates the minimum distance from the point to each rectangle edge. If the distance is greater than the SIDE_PADDING, the point is considered to be in CENTER.
 		 * Otherwise, based on the corresponding min distance edge, returns the correct side (LEFT, RIGHT, UP, DOWN).  
 		 * 
-		 * @flowerModelElementId _kRRpUThiEeGkQ9Wb8twgXg
+		 * 
 		 */ 
 		private function getSide(point:Point, rect:Rectangle):Number {				
 			var a:Point = new Point(rect.x, rect.y);
@@ -843,7 +843,7 @@ package  com.crispico.flower.util.layout {
 		 * Clears the drag* drop* details and removes the placeHolder from workbench.
 		 * Used when deactivating the tool or setting the <code>IDLE</code> state to be the current state of the tool. 
 		 * 
-		 * @flowerModelElementId _jBF_MzqkEeG1JZ-iNGEcww
+		 * 
 		 */ 
 		private function clear():void {
 			dragStartLayoutData = null;

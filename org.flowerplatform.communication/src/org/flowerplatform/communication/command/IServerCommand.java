@@ -25,7 +25,7 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
  * <code>CommunicationChannel</code>. 
  * 
  * @author Cristi
- * @flowerModelElementId _njS9JsGjEd6IZ7pEPOW5cA
+ * 
  */
 public interface IServerCommand {
 

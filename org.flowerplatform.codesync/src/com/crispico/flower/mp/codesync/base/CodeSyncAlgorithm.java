@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @flowerModelElementId _81mr8K4DEeC2ycztxbwS7Q
+ * 
  */
 public class CodeSyncAlgorithm {
 	
@@ -103,7 +103,7 @@ public class CodeSyncAlgorithm {
 	 * @author Cristi
 	 * @author Mariana
 	 * 
-	 * @flowerModelElementId _MV0eILINEeC7r409C3qpqw
+	 * 
 	 */
 	public void processContainmentFeature(Object feature, Match match) {
 		// cache the model adapters for children to avoid
@@ -233,7 +233,7 @@ public class CodeSyncAlgorithm {
 	 * @author Cristi
 	 * @author Mariana
 	 * 
-	 * @flowerModelElementId _RTfJoLIbEeC7r409C3qpqw
+	 * 
 	 */
 	public void processValueFeature(Object feature, Match match) {
 		Diff diff = null;

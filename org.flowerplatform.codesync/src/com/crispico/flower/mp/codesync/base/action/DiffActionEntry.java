@@ -20,7 +20,7 @@ package com.crispico.flower.mp.codesync.base.action;
 
 
 /**
- * @flowerModelElementId _a99hMLOXEeCa6MHp-4L_Cw
+ * 
  */
 public class DiffActionEntry {
 	private int actionType = -1;

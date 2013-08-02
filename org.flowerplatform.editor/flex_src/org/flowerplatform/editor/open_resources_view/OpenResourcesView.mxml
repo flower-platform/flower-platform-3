@@ -21,7 +21,7 @@
 <!--
 
 @author Cristi
-@flowerModelElementId _XwsekK5LEeG228WnpVvrPA
+
 -->
 <mx:TabNavigator xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="creationCompleteHandler()" xmlns:openresourcesview="com.crispico.flower.mp.web.editorsupport.openresourcesview.*"
 				 >
@@ -45,7 +45,7 @@
 			/**
 			 * Not null when the view is open; null otherwise.
 			 * 
-			 * @flowerModelElementId _ZacvcLVCEeGHQ9UXq6mt1g
+			 * 
 			 */
 			public static var INSTANCE:OpenResourcesView;
 			
@@ -55,7 +55,7 @@
 //			 * they are held as a dictionary which is not an valid data provider for a graphical
 //			 * component. That's why we duplicate the data here, in a list format.
 //			 * 
-//			 * @flowerModelElementId _Xwu60K5LEeG228WnpVvrPA
+//			 * 
 //			 */
 //			[Bindable]
 //			public var editableResourcesCollection:ArrayCollection = new ArrayCollection();
@@ -65,7 +65,7 @@
 			/**
 			 * Initialize the list with the existing elements, by iterating through all <code>EditorStatefulClients</code>s.
 			 * 
-			 * @flowerModelElementId _Xw1ogK5LEeG228WnpVvrPA
+			 * 
 			 */
 			private function creationCompleteHandler():void	{
 //				INSTANCE = this;
@@ -88,21 +88,21 @@
 //			}
 //			
 //			/**
-//			 * @flowerModelElementId _Zahn8LVCEeGHQ9UXq6mt1g
+//			 * 
 //			 */			
 //			private function viewRemovedHandler(event:ViewRemovedEvent):void {
 //				INSTANCE = null;				
 //			}
 //			
 //			/**
-//			 * @flowerModelElementId _avAMoLkpEeG4yKAWAH18iQ
+//			 * 
 //			 */
 //			private function fillContextMenu(contextMenu:FlowerContextMenu):void {
 //				contextMenu.addActionEntryIfVisible(unsubscribeFromEditableResourceAction);
 //			}
 //			
 //			/**
-//			 * @flowerModelElementId _Spl-8LndEeGTi8MPVfmTnA
+//			 * 
 //			 */
 //			private function getLabel(object:Object):String {
 //				if (object is EditableResource) {

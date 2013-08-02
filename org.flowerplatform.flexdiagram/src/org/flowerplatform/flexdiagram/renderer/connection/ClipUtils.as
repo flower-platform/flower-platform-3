@@ -42,7 +42,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	 * is intersected by a given connection.
 	 * 
 	 * @author Georgi
-	 * @flowerModelElementId _bwvYEL8REd6XgrpwHbbsYQ
+	 * 
 	 */
 	public class ClipUtils {
 		
@@ -202,7 +202,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * @param mid2 - the (x,y) coordinates of one point from the connection
 		 * 		(used to compute the connection line equation needed for computing
 		 * 		which edge of the rectangle intersects the connection) 
-		 * @flowerModelElementId _-BJhAAvjEd-p6bQBEYsbUw
+		 * 
 		 */
 		public static function computeEdgeIntersectionProperty(rect:Array, mid2:BindablePoint):Array {
 			var result:BindablePoint = new BindablePoint(int.MIN_VALUE, int.MIN_VALUE);

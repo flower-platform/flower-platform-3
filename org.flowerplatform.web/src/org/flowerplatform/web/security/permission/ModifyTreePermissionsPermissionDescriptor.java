@@ -33,12 +33,12 @@ import org.flowerplatform.web.entity.PermissionEntity;
  * class for additional info.
  * 
  * @author Florin
- * @flowerModelElementId _Z94U0HgGEeGtTo1wOb4S9A
+ * 
  */
 public class ModifyTreePermissionsPermissionDescriptor extends PermissionDescriptor {
 
 	/**
-	 * @flowerModelElementId _Z94U0ngGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public Class<? extends Permission> getHandledPermissionType() {
@@ -46,7 +46,7 @@ public class ModifyTreePermissionsPermissionDescriptor extends PermissionDescrip
 	}
 
 	/**
-	 * @flowerModelElementId _Z95i8ngGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public Class<? extends Permission> getImplementedPermissionType() {
@@ -73,7 +73,7 @@ public class ModifyTreePermissionsPermissionDescriptor extends PermissionDescrip
 	}
 	
 	/**
-	 * @flowerModelElementId _Z97YIHgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public boolean isTreePermission() {
@@ -81,7 +81,7 @@ public class ModifyTreePermissionsPermissionDescriptor extends PermissionDescrip
 	}
 
 	/**
-	 * @flowerModelElementId _Sc76AIIZEeGPwv1h63g-uQ
+	 * 
 	 */
 	@Override
 	public Map<String, String> validate(Permission permission) {

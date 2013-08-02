@@ -28,7 +28,7 @@ package org.flowerplatform.communication.stateful_service {
 	 * 
 	 * @author Cristi
 	 * @author Sorin
-	 * @flowerModelElementId _Vrk98P2kEeGIGtkQKYU-mw
+	 * 
 	 */
 	public class StatefulClient extends EventDispatcher {
 		
@@ -39,20 +39,20 @@ package org.flowerplatform.communication.stateful_service {
 		protected var hasBeenUnsubscribedForcefully:Boolean = false;
 		
 		/**
-		 * @flowerModelElementId _xo8cAgJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		public function getStatefulClientId():String {
 			throw "Abstract method. Should be implemented!";
 		}
 		
 		/**
-		 * @flowerModelElementId _xo9DEQJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		public function getStatefulServiceId():String {
 			throw "Abstract method. Should be implemented!";
 		}
 		/**
-		 * @flowerModelElementId _xo9qIAJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		public function getCurrentStatefulClientLocalState(dataFromRegistrator:Object = null):IStatefulClientLocalState {
 			throw "Abstract method. Should be implemented!";
@@ -66,7 +66,7 @@ package org.flowerplatform.communication.stateful_service {
 		 * <p>
 		 * If <code>hasBeenUnsubscribedForcefully</code> and someone invokes accidentally this method: it doens't do anything.
 		 * 
-		 * @flowerModelElementId _xo9qIgJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		protected function invokeServiceMethod(methodName:String, parameters:Array, serviceInvocationOptions:ServiceInvocationOptions=null):Object {
 			if (hasBeenUnsubscribedForcefully) {
@@ -121,7 +121,7 @@ package org.flowerplatform.communication.stateful_service {
 		///////////////////////////////////////////////////////////////
 
 		/**
-		 * @flowerModelElementId _xpCiogJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		[RemoteInvocation]
 		public function subscribeToStatefulService(dataFromRegistrator:Object):void {

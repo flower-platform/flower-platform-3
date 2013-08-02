@@ -28,7 +28,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 	 * <p/> Extends ISelectionProvider because when an action corresponding to a menu entry is run it needs
 	 * to know about how to obtain it's selection. 
 	 * @author Sorin 
-	 * @flowerModelElementId _erw3wMSZEd-CHMGlopD3VQ
+	 * 
 	 */
 	public interface IContextMenuLogicProvider extends ISelectionProvider {
 		

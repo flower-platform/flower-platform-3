@@ -175,7 +175,7 @@
 			/**
 			 * Depending on the type of authentication popup (login or switch user), this method
 			 * either, calls the bridge's actions for connecting with some credentials.
-			 * @flowerModelElementId _w4GPcG3iEeGYiLzscjdrpg
+			 * 
 			 */
 			private function authenticateButtonClickHandler():void {
 				// validate form

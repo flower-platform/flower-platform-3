@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * other servlets (+ mappings) may exist.
  * 
  * @author Cristi
- * @flowerModelElementId _TOaI8E4oEeCAKrFO_vL8Gg
+ * 
  */
 @SuppressWarnings("serial")
 public class EclipseDispatcherServlet extends HttpServlet {
@@ -59,7 +59,7 @@ public class EclipseDispatcherServlet extends HttpServlet {
 	
 	/**
 	 * Delegates to the embedded servlet(s) as well.
-	 * @flowerModelElementId _TObXE04oEeCAKrFO_vL8Gg
+	 * 
 	 */
 	@Override
 	public void init(ServletConfig arg0) throws ServletException {
@@ -105,7 +105,7 @@ public class EclipseDispatcherServlet extends HttpServlet {
 	
 	/**
 	 * Delegates to the embedded servlet(s) as well.
-	 * @flowerModelElementId _TOdMQ04oEeCAKrFO_vL8Gg
+	 * 
 	 */
 	@Override
 	public void destroy() { 

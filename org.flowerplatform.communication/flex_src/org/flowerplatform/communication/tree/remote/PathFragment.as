@@ -24,7 +24,7 @@ package org.flowerplatform.communication.tree.remote {
 	 * @author Cristi
 	 * @author Cristina
 	 * 
-	 * @flowerModelElementId _cLb0sKP8EeGeHqktJlHXmA
+	 * 
 	 */
 	[RemoteClass]
 	[Bindable]
@@ -32,13 +32,13 @@ package org.flowerplatform.communication.tree.remote {
 	public class PathFragment {
 		
 		/**
-		 * @flowerModelElementId _cLcbw6P8EeGeHqktJlHXmA
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var name:String;
 		
 		/**
-		 * @flowerModelElementId _cLdC0KP8EeGeHqktJlHXmA
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var type:String;

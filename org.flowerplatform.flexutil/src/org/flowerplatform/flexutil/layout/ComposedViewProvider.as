@@ -33,21 +33,21 @@ package  org.flowerplatform.flexutil.layout {
 	 * 
 	 * @author Cristi
 	 * @author Cristina
-	 * @flowerModelElementId _C1mtIFCzEeGsUPSh9UfXpw
+	 * 
 	 */
 	public class ComposedViewProvider implements IViewProvider {
 		
 		/**
 		 * @see Getter doc.
 		 * 
-		 * @flowerModelElementId _KyV6MFCzEeGsUPSh9UfXpw
+		 * 
 		 */
 		private var _perspectives:ArrayCollection = new ArrayCollection();
 		
 		/**
 		 * @see Getter doc.
 		 * 
-		 * @flowerModelElementId _32mHQFDFEeGMrNbRkxqlAA
+		 * 
 		 */
 		private var _viewProviders:ArrayCollection = new ArrayCollection();
 		
@@ -61,7 +61,7 @@ package  org.flowerplatform.flexutil.layout {
 		 * results. Except editors, that should return <code>null</code>.
 		 * 
 		 * @see #addViewProvider()
-		 * @flowerModelElementId _jnR40FDGEeGMrNbRkxqlAA
+		 * 
 		 */
 		public function get viewProviders():ArrayCollection {
 			return _viewProviders;
@@ -71,7 +71,7 @@ package  org.flowerplatform.flexutil.layout {
 		 * Used by plugins to add new <code>IViewProvide</code>s.
 		 * 
 		 * @see #viewProviders
-		 * @flowerModelElementId _dJQFcFDGEeGMrNbRkxqlAA
+		 * 
 		 */
 		public function addViewProvider(viewProvider:IViewProvider):void {
 			viewProviders.addItem(viewProvider);
@@ -80,7 +80,7 @@ package  org.flowerplatform.flexutil.layout {
 		/**
 		 * Returns null, it isn't used.
 		 * 
-		 * @flowerModelElementId _aVKM8FPWEeG3TZATXzuYYg
+		 * 
 		 */
 		public function getId():String {
 			return null;	
@@ -94,7 +94,7 @@ package  org.flowerplatform.flexutil.layout {
 		 * <p>
 		 * If none exists, returns null.
 		 * 
-		 * @flowerModelElementId _WVhjUFDQEeGMrNbRkxqlAA
+		 * 
 		 */
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {	
 			for each (var viewProvider:IViewProvider in viewProviders) {
@@ -117,7 +117,7 @@ package  org.flowerplatform.flexutil.layout {
 		 * If the component this view provides implements the <code>IDirtyStateProvider</code>
 		 * interface, and it is dirty, then a "*" is appended to the original title
 		 * 
-		 * @flowerModelElementId _WVKW8FDQEeGMrNbRkxqlAA
+		 * 
 		 */
 		public function getTitle(viewLayoutData:ViewLayoutData = null):String {	
 			for each (var viewProvider:IViewProvider in viewProviders) {
@@ -143,7 +143,7 @@ package  org.flowerplatform.flexutil.layout {
 		 * <p>
 		 * If none exists, returns null.
 		 * 
-		 * @flowerModelElementId _WVegAFDQEeGMrNbRkxqlAA
+		 * 
 		 */
 		public function getIcon(viewLayoutData:ViewLayoutData = null):Object {	
 			for each (var viewProvider:IViewProvider in viewProviders) {

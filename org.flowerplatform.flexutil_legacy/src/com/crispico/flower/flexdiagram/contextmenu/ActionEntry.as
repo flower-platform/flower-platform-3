@@ -40,17 +40,17 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 	 * 
 	 * @see FlowerContextMenu
 	 * @see com.crispico.flower.flexdiagram.action.IAction
-	 * @flowerModelElementId _b4C0IMJCEd-CHMGlopD3VQ
+	 * 
 	 */
 	public class ActionEntry extends FlowerLinkButton implements IMenuEntrySortable {
 	
 		/**
-		 * @flowerModelElementId _b4C0IsJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var action:IAction;		
 		
 		/**
-		 * @flowerModelElementId _b4C0I8JCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function ActionEntry(action:IAction) {
@@ -111,7 +111,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		// TODO sorin :  arhitectura e cam imbarligata, ContextMenu tine niste handlere pe care ar trebui sa le execute in anumite momente, referitoare la actiune...
 		
 		/**
-		 * @flowerModelElementId _b4DbMsJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		protected override function mouseUpHandler(event:MouseEvent):void {
@@ -121,7 +121,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 			}
 		}					
 		/**
-		 * @flowerModelElementId _OsNZQEPZEeCUAdpHdq3t8g
+		 * 
 		 * @private
 		 */
 		public function get sortIndex():int {

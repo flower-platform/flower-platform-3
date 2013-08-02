@@ -53,7 +53,7 @@ package org.flowerplatform.communication.transferable_object {
 	 * TransferableObjects.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _lfbA6MGjEd6IZ7pEPOW5cA
+	 * 
 	 */ 
 	[Bindable]
 	public class TransferableObject implements IDisposable {

@@ -28,7 +28,7 @@ package com.crispico.flower.texteditor.partitioning.scanners {
 	/**
 	 * A scanner that uses rules to the detect specific partitions.
 	 * 
-	 * @flowerModelElementId _DHoiAN3YEeCGOND4c9bKyA
+	 * 
 	 */
 	public interface IPartitionScanner {
 		/**
@@ -69,7 +69,7 @@ package com.crispico.flower.texteditor.partitioning.scanners {
 		/**
 		 * Uses the rules to compute and return the next scanned partition.
 		 * 
-		 * @flowerModelElementId _0pqH8e2uEeCF5Ozw-0NJ0A
+		 * 
 		 */
 		function nextPartition():Partition; 
 		

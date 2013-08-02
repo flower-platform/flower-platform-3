@@ -26,7 +26,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 /**
  * Channel Observer Task scheduled to warn the client that it will be disconnected.
  * @author Sorin
- * @flowerModelElementId _aC95kAlYEeK1a-Ic5xjg1Q
+ * 
  */
 public class WarnAboutNoActivityTask extends HeartbeatTask {
 	
@@ -35,7 +35,7 @@ public class WarnAboutNoActivityTask extends HeartbeatTask {
 	}
 
 	/**
-	 * @flowerModelElementId _a2XscAlYEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	@Override
 	public void runWithChannelLocked() {

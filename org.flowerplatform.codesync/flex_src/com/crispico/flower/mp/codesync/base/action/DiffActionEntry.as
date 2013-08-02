@@ -18,7 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.base.action {
 	/**
-	 * @flowerModelElementId _AuBpkLOXEeCa6MHp-4L_Cw
+	 * 
 	 */
 	[Bindable]
 	[RemoteClass(alias="com.crispico.flower.mp.codesync.base.action.DiffActionEntry")]

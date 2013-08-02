@@ -30,7 +30,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	 * line between two given points: sourcePoint and targetPoint. 
 	 * 
 	 * @author Georgi
-	 * @flowerModelElementId _b2_xGr8REd6XgrpwHbbsYQ
+	 * 
 	 */
 	public class ConnectionSegment extends UIComponent {
 			
@@ -51,7 +51,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * <li>lineThickness to determine the thickness of the line
 		 * <li>lineColor to establish other color than black
 		 * 
-		 * @flowerModelElementId _b2_xKL8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		public function ConnectionSegment(sp:BindablePoint, tp:BindablePoint,
 			dashSegementSize:int = 0, lineThickness:Number = 1, lineColor:uint = 0x000000) {
@@ -66,7 +66,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		}
 		
 		/**
-		 * @flowerModelElementId _b2_xMr8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		private function updateDisplay(event:PropertyChangeEvent):void {
 			invalidateDisplayList();
@@ -168,7 +168,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		/**
 		 * The transparent line is thicker than the current line. It is used
 		 * to 'grab' more easily the line.
-		 * @flowerModelElementId _b3JiGL8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		private function drawTransparentLine():void {
 			graphics.lineStyle(5, 0xffffff, 0);
@@ -194,7 +194,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		
 		/**
 		 * The method computes the slope of the segment.
-		 * @flowerModelElementId _4B-qIBCUEd-bY9BcYhuW0g
+		 * 
 		 */
 		public function getSegmentSlope():Number {
 			return (sourcePoint.y - targetPoint.y) / (sourcePoint.x - targetPoint.x);
@@ -202,7 +202,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		
 		/**
 		 * The method computes the length of the segment.
-		 * @flowerModelElementId _4CH0ERCUEd-bY9BcYhuW0g
+		 * 
 		 */
 		public function getSegmentLength():Number {
 			return Math.sqrt(Math.pow(sourcePoint.x - targetPoint.x, 2) + Math.pow(sourcePoint.y - targetPoint.y, 2));
@@ -212,7 +212,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * The method computes the (x, y) coordinates of the point of the
 		 * segment which is at "distance" distance of the left point of the
 		 * segment.
-		 * @flowerModelElementId _4CH0FBCUEd-bY9BcYhuW0g
+		 * 
 		 */
 		public function getSegmentPoint(distance:int):BindablePoint {
 			var referencePoint:BindablePoint = sourcePoint;

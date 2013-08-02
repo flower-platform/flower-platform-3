@@ -31,7 +31,7 @@ import org.flowerplatform.editor.remote.FileBasedEditableResource;
  * @author Cristi
  * @author Mariana
  * @author Sorin
- * @flowerModelElementId _724PIGnaEeGf2Ze1btT4ow
+ * 
  */
 public class TextEditableResource extends FileBasedEditableResource {
 	
@@ -42,11 +42,11 @@ public class TextEditableResource extends FileBasedEditableResource {
 	private boolean dirty;
 	
 	/**
-	 * @flowerModelElementId _725dQmnaEeGf2Ze1btT4ow
+	 * 
 	 */
 	private StringBuffer fileContent;
 	/**
-	 * @flowerModelElementId _NRLrBollEeGGgbhWYb3xSA
+	 * 
 	 */
 	private String replacedEolnDelimiter;
 	

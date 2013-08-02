@@ -32,14 +32,14 @@ package com.crispico.flower.texteditor.providers {
 	 * initialized instead of creating a new partition tokenizer each time 
 	 * it is requested.
 	 * 
-	 * @flowerModelElementId _0og4ce2uEeCF5Ozw-0NJ0A
+	 * 
 	 */
 	public interface IPartitionTokenizerProvider {
 		
 		/**
 		 * Returns the partition tokenizer specific to the content type.
 		 * 
-		 * @flowerModelElementId _0p4xcO2uEeCF5Ozw-0NJ0A
+		 * 
 		 */
 		 function getPartitionTokenizer(partitionContentType:String):RuleBasedScanner;
 	}

@@ -31,7 +31,7 @@ package  com.crispico.flower.flexdiagram.ui {
 	 *
 	 * @author cristi
 	 * @author Georg
-	 * @flowerModelElementId _b3mODb8REd6XgrpwHbbsYQ
+	 * 
 	 */
 	public class MoveResizePlaceHolder extends UIComponent {
 		
@@ -58,7 +58,7 @@ package  com.crispico.flower.flexdiagram.ui {
 		}
 		
 		/**
-		 * @flowerModelElementId _b3mOEr8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth, unscaledHeight);

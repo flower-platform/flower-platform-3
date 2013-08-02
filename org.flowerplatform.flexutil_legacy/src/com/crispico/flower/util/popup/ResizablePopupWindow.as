@@ -62,7 +62,7 @@ package com.crispico.flower.util.popup {
 	 * 
 	 * @author Florin
 	 * @author Cristina
-	 * @flowerModelElementId _ZZl1MFi7EeGbZZLUWiYvBA
+	 * 
 	 */	
 	public class ResizablePopupWindow extends CustomTitlePanel {
        

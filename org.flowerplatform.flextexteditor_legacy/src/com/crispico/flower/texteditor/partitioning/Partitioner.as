@@ -32,14 +32,14 @@ package com.crispico.flower.texteditor.partitioning {
 	 * with the new partitions, and stops when a new partition matches an existing partition (i.e. it has the same 
 	 * offset, length and content type). New partitions are marked for coloring.
 	 * 
-	 * @flowerModelElementId _iXV_8MpIEeCTIbyT6X5eRg
+	 * 
 	 */
 	public class Partitioner {
 		
 		/**
 		 * The scanner used to create partitions.
 		 * 
-		 * @flowerModelElementId _0q-Wku2uEeCF5Ozw-0NJ0A
+		 * 
 		 */
 		private var _partitionScanner:IPartitionScanner;
 		
@@ -51,7 +51,7 @@ package com.crispico.flower.texteditor.partitioning {
 		/**
 		 * The PartitionUpdater used to manage the partitions.
 		 * 
-		 * @flowerModelElementId _0q-WlO2uEeCF5Ozw-0NJ0A
+		 * 
 		 */
 		private var _partitionUpdater:PartitionUpdater;
 		
@@ -88,7 +88,7 @@ package com.crispico.flower.texteditor.partitioning {
 		 * new partitions to the existing ones, deleting those that overlap with the new partitions, and stops when a new partition matches 
 		 * an existing partition (i.e. it has the same offset, length and content type). New partitions are marked for coloring.
 		 * 
-		 * @flowerModelElementId _0q-9o-2uEeCF5Ozw-0NJ0A
+		 * 
 		 */
 		 public function computePartitioning(documentChange:DocumentChange):void {
 		 	if (_partitionScanner != null) {
@@ -158,7 +158,7 @@ package com.crispico.flower.texteditor.partitioning {
 		 * Checks if the new partition has the same content type as before; if it does, then we will only need to color the
 		 * inserted text. Otherwise mark the entire partition as dirty.
 		 * 
-		 * @flowerModelElementId _x-r6QSyKEeGsGrJcrtxw9Q
+		 * 
 		 */ 
 		 private function computeDirtyRange(newPartition:Partition, existingContentType:String, documentChange:DocumentChange):void {
 		  	// check if the new partition has a different content type 

@@ -40,7 +40,7 @@
 			private var lastBtnPressed:Button;
 				
 			/**
-			 * @flowerModelElementId _hRBaMHErEeK0WoOyJtfqdw
+			 * 
 			 */
 			public function getRefMappings():ArrayCollection {
 				if (refMappings == null) { 

@@ -31,7 +31,7 @@ import flex.messaging.security.SecurityException;
 
 /**
  * @author Sorin
- * @flowerModelElementId _dGJ9gG23EeGQ6LdvAwMt-w
+ * 
  */
 public class TomcatLoginCommand implements LoginCommand {
 
@@ -43,7 +43,7 @@ public class TomcatLoginCommand implements LoginCommand {
 	 * @author Sorin
 	 * @author Mariana
 	 * 
-	 * @flowerModelElementId _7zXkcHdJEeGzz9ZUhe52dw
+	 * 
 	 */
 	@Override
 	public Principal doAuthentication(final String username, Object credentials) {
@@ -74,7 +74,7 @@ public class TomcatLoginCommand implements LoginCommand {
 	}
 
 	/**
-	 * @flowerModelElementId _7zYyk3dJEeGzz9ZUhe52dw
+	 * 
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -83,7 +83,7 @@ public class TomcatLoginCommand implements LoginCommand {
 	}
 
 	/**
-	 * @flowerModelElementId _7zanw3dJEeGzz9ZUhe52dw
+	 * 
 	 */
 	@Override
 	public boolean logout(Principal principal) {
@@ -92,7 +92,7 @@ public class TomcatLoginCommand implements LoginCommand {
 	}
 
 	/**
-	 * @flowerModelElementId _7zb14XdJEeGzz9ZUhe52dw
+	 * 
 	 */
 	@Override
 	public void start(ServletConfig servletConfig) {
@@ -101,7 +101,7 @@ public class TomcatLoginCommand implements LoginCommand {
 	}
 
 	/**
-	 * @flowerModelElementId _7zcc83dJEeGzz9ZUhe52dw
+	 * 
 	 */
 	@Override
 	public void stop() {

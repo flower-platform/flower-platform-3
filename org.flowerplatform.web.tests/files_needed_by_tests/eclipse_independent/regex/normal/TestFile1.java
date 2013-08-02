@@ -38,7 +38,7 @@ import com.crispico.flower.mp.web.EclipseDispatcherServlet;
  * Setups the Tomcat->Eclipse bridging, by registering {@link EclipseDispatcherServlet}.
  * 
  * @author Cristi
- * @flowerModelElementId _C1JNQD5KEeCc8-gKxCBTIw
+ * 
  */
 @SuppressWarnings("rawtypes")
 public class Activator<E> extends AbstractList<E> implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
@@ -52,7 +52,7 @@ public class Activator<E> extends AbstractList<E> implements List<E>, RandomAcce
 	
 	/**
 	 * @see Class doc.
-	 * @flowerModelElementId _TOQX8E4oEeCAKrFO_vL8Gg
+	 * 
 	 */
 	private EclipseDispatcherServlet attr1 = new EclipseDispatcherServlet();
 	protected EclipseDispatcherServlet attr2 = new EclipseDispatcherServlet();
@@ -93,7 +93,7 @@ public class Activator<E> extends AbstractList<E> implements List<E>, RandomAcce
 	 * We use reflection because there is no compile time dependency,
 	 * which would generate a circular project dependency (or would imply
 	 * exotic projects setup.
-	 * @flowerModelElementId _TOSNIk4oEeCAKrFO_vL8Gg
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	private void meth1(String methodName, Object parameter) {
@@ -130,7 +130,7 @@ public class Activator<E> extends AbstractList<E> implements List<E>, RandomAcce
 	 * @author Sorin
 	 * 
 	 * @see Class doc.
-	 * @flowerModelElementId _C1KbYD5KEeCc8-gKxCBTIw
+	 * 
 	 */
 	public void meth2(BundleContext context) throws Exception {
 		// As an side effect starts the initialization of the blazeDS in a different thread, along with BootstrapService and etc. 
@@ -143,7 +143,7 @@ public class Activator<E> extends AbstractList<E> implements List<E>, RandomAcce
 
 	/**
 	 * @see Class doc.
-	 * @flowerModelElementId _C1M3oz5KEeCc8-gKxCBTIw
+	 * 
 	 */
 	public void meth3(BundleContext context);
 	

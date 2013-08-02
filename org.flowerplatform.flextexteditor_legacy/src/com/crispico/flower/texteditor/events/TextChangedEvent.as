@@ -22,7 +22,7 @@ package com.crispico.flower.texteditor.events {
 
 	/**
 	 * An event dispatched when text is edited.
-	 * @flowerModelElementId _x-yn8CyKEeGsGrJcrtxw9Q
+	 * 
 	 */ 
 	public class TextChangedEvent extends Event {
 		

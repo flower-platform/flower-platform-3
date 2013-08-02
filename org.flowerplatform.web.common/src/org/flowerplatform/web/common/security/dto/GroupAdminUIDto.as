@@ -25,13 +25,13 @@ package org.flowerplatform.web.common.security.dto
 	 * 
 	 * @author Cristi
 	 * @author Cristina
-	 * @flowerModelElementId _Q9C3UF34EeGwLIVyv_iqEg
+	 * 
 	 */ 
 	[RemoteClass(alias="org.flowerplatform.web.security.dto.GroupAdminUIDto")]
 	public class GroupAdminUIDto extends NamedDto {
 		
 		/**
-		 * @flowerModelElementId _Q9DeZF34EeGwLIVyv_iqEg
+		 * 
 		 */
 		public var organization:NamedDto;
 		

@@ -27,12 +27,12 @@ package com.crispico.flower.util.layout.view {
 	 * </ul>
 	 * 
 	 * @author Cristina	 * 
-	 * @flowerModelElementId _be4soOCVEeGdYcOEhSk3ug
+	 * 
 	 */
 	public interface ITabCustomizer {
 		
 		/**
-		 * @flowerModelElementId _h_mAkOCVEeGdYcOEhSk3ug
+		 * 
 		 */
 		 function fillContextMenu(contextMenu:FlowerContextMenu):void;
 	}

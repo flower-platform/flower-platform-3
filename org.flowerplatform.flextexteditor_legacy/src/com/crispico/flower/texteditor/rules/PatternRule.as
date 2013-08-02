@@ -36,7 +36,7 @@ package com.crispico.flower.texteditor.rules {
 	 * that its start delimiter was already found (useful when scanning in the middle of a partition) and to match
 	 * when it reaches the end of the scanner's range.
 	 * 
-	 * @flowerModelElementId _Mr5AId3QEeCGOND4c9bKyA
+	 * 
 	 */
 	public class PatternRule implements IRule {
 		

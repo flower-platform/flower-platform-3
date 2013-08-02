@@ -25,42 +25,42 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	 * UIComponent that represents the arrow/rhomb/triangle for a 
 	 * connection figure. The class receives the coordinates for a point,
 	 * an angle and the type of figure that needs to be drawn.
-	 * @flowerModelElementId _b2GZML8REd6XgrpwHbbsYQ
+	 * 
 	 */ 
 	public class ConnectionEnd extends UIComponent {
 	
 		/**
-		 * @flowerModelElementId _b2GZNb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		private const ARROW_WIDTH:int = 4;
 		
 		/**
-		 * @flowerModelElementId _b2GZOb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		private const ARROW_HEIGHT:int = 8;
 		
 		/**
-		 * @flowerModelElementId _b2GZPb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		public static const SIMPLE_ARROW:String = "arrow";
 		
 		/**
-		 * @flowerModelElementId _b2GZQb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		public static const CLOSED_ARROW:String = "closed_arrow";
 		
 		/**
-		 * @flowerModelElementId _b2GZRb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		public static const CLOSED_FILLED_IN_ARROW:String = "closed_filled_in_arrow";
 		
 		/**
-		 * @flowerModelElementId _b2GZSb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		public static const RHOMB:String = "shared";
 		
 		/**
-		 * @flowerModelElementId _b2GZTb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		public static const FILLED_IN_RHOMB:String = "composite";
 		

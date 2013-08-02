@@ -37,7 +37,7 @@ import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStateful
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
- * @flowerModelElementId _FzGvEK3bEeC2ycztxbwS7Q
+ * 
  */
 public class CodeSyncMergePlugin extends AbstractFlowerJavaPlugin {
 
@@ -48,7 +48,7 @@ public class CodeSyncMergePlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	/**
-	 * @flowerModelElementId _FzH9Mq3bEeC2ycztxbwS7Q
+	 * 
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
