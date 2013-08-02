@@ -20,7 +20,7 @@
 -->
 <!--
  @author Cristina
- @flowerModelElementId _vcQHUDV2EeKsnMbt6YrXWQ
+ 
 -->
 <ns:Wizard xmlns:ns="com.crispico.flower.util.popup.*"
 		   xmlns:mx="http://www.adobe.com/2006/mxml"
@@ -71,7 +71,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _gORZ4DV5EeKsnMbt6YrXWQ
+			 * 
 			 */
 			protected override function finishClickHandler():void {	
 				ModalSpinner.addModalSpinner(this);

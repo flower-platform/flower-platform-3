@@ -24,12 +24,12 @@ package org.flowerplatform.web.entity.dto;
  * @author Cristi
  * @author Cristina
  * 
- * @flowerModelElementId _b64OgFcAEeGL3vi-zPhopA
+ * 
  */
 public class NamedDto extends Dto {
 
 	/**
-	 * @flowerModelElementId _efaAwFcAEeGL3vi-zPhopA
+	 * 
 	 */
 	private String name;
 

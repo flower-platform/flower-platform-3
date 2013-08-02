@@ -235,7 +235,7 @@ package com.crispico.flower.flexdiagram.contextmenu
 		 * Because we don't need the resize efect of the context menu this function
 		 * inherits only the behavior from flowerContextMenu without inheriting the one from AutoResizeContainer
 		 * @private
-		 * @flowerModelElementId _b38GcsJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public override function rollOutHandler(event:MouseEvent):void {			
 			if (inactive) 
@@ -316,7 +316,7 @@ package com.crispico.flower.flexdiagram.contextmenu
 		 * Because we don't need the resize efect of the context menu this function
 		 * inherits only the behavior from flowerContextMenu without inheriting the one from AutoResizeContainer
 		 * @private
-		 * @flowerModelElementId _b38tgsJCEd-CHMGlopD3VQ
+		 * 
 		 */	
 		 public override function rollOverHandler(event:MouseEvent):void {		 	
 			if (inactive || event == null)

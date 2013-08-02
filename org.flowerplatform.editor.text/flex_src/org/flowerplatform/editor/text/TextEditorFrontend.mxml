@@ -31,7 +31,7 @@
  It is also a <code>IEditorInputProvider</code>, as it displays a dirty sign (*)
  in its label if the editable resource that it displays is dirty.
 
- @flowerModelElementId _Xc7FQFYrEeGgtLw8YArqtQ
+ 
 -->
 
 <editorsupport:EditorFrontend
@@ -106,7 +106,7 @@
 			/**
 			 * Updates the text in the editor. First modifies the text, then dispatches a
 			 * <code>TextChangedEvent</code> to the editor to trigger syntax recoloring.
-			 * @flowerModelElementId _MhSHwVlEEeGRrZ75u0k71A
+			 * 
 			 */ 
 			public function updateTextEditor(updates:ArrayCollection, fullText:Boolean):void {
 				/** FIXME Sorin:*/
@@ -163,7 +163,7 @@
 			 * changes so the server can update other editors that display this file.
 			 * Also updates other editors that display this file.
 			 * 
-			 * @flowerModelElementId _MhT881lEEeGRrZ75u0k71A
+			 * 
 			 */ 
 			private function textEditorChangedHandler(evt:BufferedTextChangesEvent):void {
 //				var er:EditableResource = EditorSupport.INSTANCE.editableResources[editorInput];
@@ -187,7 +187,7 @@
 			/**
 			 * Initializes specific syntax elements to the <code>SyntaxTextEditor</code> 
 			 * and registers event listeners for editing and closing the container.
-			 * @flowerModelElementId _MhYOYVlEEeGRrZ75u0k71A
+			 * 
 			 */
 			private function initializeHandler():void {
 				if (partitionScanner != null && partitionTokenizerProvider != null && partitionTokenFormatProvider != null)
@@ -214,27 +214,27 @@
 				syntaxTextEditor.editable = true;
 			}
 //			/**
-//			 * @flowerModelElementId _WTy3IDLvEeKrMsw303uxEA
+//			 * 
 //			 */
 //			public function get displayAreaOfSelection():Rectangle {
 //			// TODO implement
 //			return null;
 //		}
 //			/**
-//			 * @flowerModelElementId _ZY-fYDLvEeKrMsw303uxEA
+//			 * 
 //			 */
 //			public function isOverSelection(event:MouseEvent):Boolean {
 //			// TODO implement
 //			return null;
 //		}
 //			/**
-//			 * @flowerModelElementId _ad-_oDLvEeKrMsw303uxEA
+//			 * 
 //			 */
 //			public function setFocusOnMainSelectedObject():void {
 //			// TODO implement
 //		}
 //			/**
-//			 * @flowerModelElementId _fvsw4DLvEeKrMsw303uxEA
+//			 * 
 //			 */
 //			public function fillContextMenu(menu:FlowerContextMenu):void {
 //			// TODO implement

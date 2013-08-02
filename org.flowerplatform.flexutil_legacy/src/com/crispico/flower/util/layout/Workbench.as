@@ -112,7 +112,7 @@ package  com.crispico.flower.util.layout {
 	 * In order to work with this class, an <code>IViewProvider</code> must be set.
 	 *  
 	 * @author Cristina 
-	 * @flowerModelElementId _kp2YQCunEeG6vrEjfFek0Q
+	 * 
 	 */
 	[SecureSWF(rename="off")]
 	public class Workbench extends Canvas implements IContextMenuLogicProvider, IActionProvider2, IWorkbench {
@@ -130,7 +130,7 @@ package  com.crispico.flower.util.layout {
 		public static const LAYOUT_CHILD_PERCENT:Number = 50;
 		
 		/**
-		 * @flowerModelElementId _-TcO0DuQEeGJUuPaOmepHA
+		 * 
 		 */
 		public var padding:Number = 3;
 		
@@ -155,64 +155,64 @@ package  com.crispico.flower.util.layout {
 		 * By default, it's set to <code>XMLStringLayoutSerializer</code>. <br>
 		 * It can be modified using the corresponding setter.
 		 * 
-		 * @flowerModelElementId _fheB0CuqEeG6vrEjfFek0Q
+		 * 
 		 */
 		private var _layoutSerializer:ILayoutSerializer = new XMLStringLayoutSerializer();
 		
 		/**
 		 * @see Getter doc.
-		 * @flowerModelElementId _wKrWICuyEeG6vrEjfFek0Q
+		 * 
 		 */
 		private var _viewProvider:IViewProvider;
 		
 		private var _activeViewList:ActiveViewList;
 		
 		/**
-		 * @flowerModelElementId _Z0VqcCurEeG6vrEjfFek0Q
+		 * 
 		 */		
 		private var _rootLayout:WorkbenchLayoutData;
 		
 		/**
 		 * @see Getter doc.
-		 * @flowerModelElementId _HeMGoCu4EeG6vrEjfFek0Q
+		 * 
 		 */
 		private var _layoutDataToComponent:Dictionary;
 		
 		/**
 		 * @seem Getter doc.
-		 * @flowerModelElementId _7M0boCu3EeG6vrEjfFek0Q
+		 * 
 		 */
 		private var _componentToLayoutData:Dictionary;
 		
 		/**
-		 * @flowerModelElementId _EYsLwCusEeG6vrEjfFek0Q
+		 * 
 		 */
 		private var leftToolbarArea:VDividedBox;
 		
 		/**
-		 * @flowerModelElementId _HsjwQCusEeG6vrEjfFek0Q
+		 * 
 		 */
 		private var bottomToolbarArea:HDividedBox;
 		
 		/**
-		 * @flowerModelElementId _Ixdi0CusEeG6vrEjfFek0Q
+		 * 
 		 */
 		private var rightToolbarArea:VDividedBox;
 		
 		/**
 		 * @see Getter doc.
-		 * @flowerModelElementId _KsynECusEeG6vrEjfFek0Q
+		 * 
 		 */
 		private var _layoutArea:Canvas;
 		
 		/**
-		 * @flowerModelElementId _36yfoCu2EeG6vrEjfFek0Q
+		 * 
 		 */
 		private var _arrangeTool:ArrangeTool;
 		
 		/**
 		 * Keeps the selected <code>ViewLayoutData</code> to be used by context menu mechanism.
-		 * @flowerModelElementId _x8QtYOtxEeGb_JdgRgmL9A
+		 * 
 		 */ 
 		public var selectedViewLayoutData:ViewLayoutData;
 		
@@ -220,7 +220,7 @@ package  com.crispico.flower.util.layout {
 						
 		/**		
 		 * Initializes the objects and adds required listeners.	  
-		 * @flowerModelElementId _-oyRgCyOEeGjhtHBfam2Dg
+		 * 
 		 */
 		public function Workbench() {			
 			_componentToLayoutData = new Dictionary();
@@ -265,7 +265,7 @@ package  com.crispico.flower.util.layout {
 		 * the <code>_arrangeTool</code> to determined the exact drop operation. <br>
 		 * Based on the operation, the drop will be made under some layout area component or under the workbench area.
 		 * 
-		 * @flowerModelElementId _E8PcoDwyEeGRi6-tSq6bxw
+		 * 
 		 */ 
 		override protected function createChildren():void {
 			super.createChildren();
@@ -310,7 +310,7 @@ package  com.crispico.flower.util.layout {
 		}
 		
 		/**
-		 * @flowerModelElementId _CMyIUEG6EeGnXZOWCgGGLA
+		 * 
 		 */
 		public function get rootLayout():LayoutData {
 			return this._rootLayout;
@@ -322,7 +322,7 @@ package  com.crispico.flower.util.layout {
 						
 		/**
 		 * @see ILayoutSerializer
-		 * @flowerModelElementId _5g_lQCuyEeG6vrEjfFek0Q
+		 * 
 		 */
 		public function set layoutSerializer(value:ILayoutSerializer):void {
 			this._layoutSerializer = value;
@@ -342,7 +342,7 @@ package  com.crispico.flower.util.layout {
 		}
 		
 		/**
-		 * @flowerModelElementId _5hEdwCuyEeG6vrEjfFek0Q
+		 * 
 		 */
 		public function set viewProvider(value:IViewProvider):void {
 			this._viewProvider = value;
@@ -355,7 +355,7 @@ package  com.crispico.flower.util.layout {
 		 * Intended to be used by the <code>_arrangeTool</code> to know 
 		 * on which graphical component to listen for mouse events.
 		 * 
-		 * @flowerModelElementId _sdLz4Cu2EeG6vrEjfFek0Q
+		 * 
 		 */
 		public function get layoutArea():Container {			
 			return _layoutArea;
@@ -365,7 +365,7 @@ package  com.crispico.flower.util.layout {
 		 * Keeps an association from the graphical component to the layoutData. <br>
 		 * It is updated when adding/removing graphical components from layout area.
 		 * 
-		 * @flowerModelElementId _lRvZgCu5EeG6vrEjfFek0Q
+		 * 
 		 */
 		public function get componentToLayoutData():Dictionary {
 			return _componentToLayoutData;
@@ -375,7 +375,7 @@ package  com.crispico.flower.util.layout {
 		 * Keeps an association from the layoutData to the graphical component.
 		 * It is updated when adding/removing graphical components from layout area.
 		 * 
-		 * @flowerModelElementId _kSKaIDhiEeGkQ9Wb8twgXg
+		 * 
 		 */
 		public function get layoutDataToComponent():Dictionary {
 			return _layoutDataToComponent;
@@ -420,7 +420,7 @@ package  com.crispico.flower.util.layout {
 		 * @see loadVisualWorkbench()
 		 * @see clearVisualWorkbench()
 		 * 
-		 * @flowerModelElementId _cDkfUCvxEeG6vrEjfFek0Q
+		 * 
 		 */
 		public function load(layoutData:Object, reuseExistingViews:Boolean = false, keepNewLayoutEditors:Boolean = false):void {
 			var recycledViews:RecycledViews = new RecycledViews();
@@ -587,7 +587,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see load()
 		 * 
-		 * @flowerModelElementId _3IWpYCvzEeG6vrEjfFek0Q
+		 * 
 		 */
 		private function clearVisualWorkbench():void {
 			_layoutArea.removeAllChildren();
@@ -635,7 +635,7 @@ package  com.crispico.flower.util.layout {
 		 * populating the left/right/botom toolbar areas with minimized stacks and
 		 * openning undock views.
 		 * 
-		 * @flowerModelElementId _3MnBcCuqEeG6vrEjfFek0Q
+		 * 
 		 */
 		private function loadVisualWorkbench(reuseExistingViews:Boolean, recycledViews:RecycledViews):void {
 			loadVisualSash(_rootLayout, _layoutArea, reuseExistingViews, recycledViews);
@@ -656,7 +656,7 @@ package  com.crispico.flower.util.layout {
 		 * Otherwise, for each child found loads its content and
 		 * stores its ratio by setting their percentHeight/percentWidth properties based on the sash direction.
 		 * 
-		 * @flowerModelElementId _u42woCusEeG6vrEjfFek0Q
+		 * 
 		 */
 		private function loadVisualSash(sashLayoutData:SashLayoutData, sashParentComponent:UIComponent, reuseExistingViews:Boolean, recycledViews:RecycledViews):void {
 			// gets the sash's graphical component and adds it to parent
@@ -692,7 +692,7 @@ package  com.crispico.flower.util.layout {
 		 * inserts it into the <code>sashParentComponent</code> and for each of it's children, 
 		 * it will create a view and insert it into the tab navigator.
 		 * 
-		 * @flowerModelElementId _dlx0YCuuEeG6vrEjfFek0Q
+		 * 
 		 */
 		private function loadVisualStack(stackLayoutData:StackLayoutData, sashParentComponent:UIComponent, reuseExistingViews:Boolean, recycledViews:RecycledViews):void {			
 			// gets the stack's graphical component and adds it to parent
@@ -766,7 +766,7 @@ package  com.crispico.flower.util.layout {
 		 * @see addNearStackLayoutData()
 		 * @see addNearWorkbenchLayoutData()
 		 * 
-		 * @flowerModelElementId __pVbgCu9EeG6vrEjfFek0Q
+		 * 
 		 */
 		public function moveLayout(source:LayoutData, target:LayoutData, childIndex:Number, side:Number):void {
 			// view isn't contained in workbench
@@ -818,7 +818,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see updateVisualSashChildrenRatios(...)
 		 * 
-		 * @flowerModelElementId _sUeSEDz0EeGrIJ7m_YMQZQ
+		 * 
 		 */
 		private function removeLayout(layoutData:LayoutData):void {		
 			var index:Number = layoutData.parent.children.getItemIndex(layoutData);
@@ -893,7 +893,7 @@ package  com.crispico.flower.util.layout {
 		 * <p>
 		 * While adding the layout, the graphical component will be updated: a new tab is inserted in tab navigator.
 		 * 
-		 * @flowerModelElementId _xAREEDz6EeGrIJ7m_YMQZQ
+		 * 
 		 */
 		public function addOverStackLayoutData(source:LayoutData, target:StackLayoutData, childIndex:Number):void {
 			if (source is ViewLayoutData) {
@@ -933,7 +933,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see getRatios(...)
 		 * 
-		 * @flowerModelElementId __-syQDz6EeGrIJ7m_YMQZQ
+		 * 
 		 */
 		private function addNearStackLayoutData(source:LayoutData, target:StackLayoutData, side:Number):void {
 			source = createStackFromViews(source);
@@ -1045,7 +1045,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see getRatios(...)
 		 * 
-		 * @flowerModelElementId _LzcysDz7EeGrIJ7m_YMQZQ
+		 * 
 		 */
 		public function addNearWorkbenchLayoutData(source:LayoutData, target:WorkbenchLayoutData, side:Number):void {
 			source = createStackFromViews(source);			
@@ -1137,7 +1137,7 @@ package  com.crispico.flower.util.layout {
 		/**
 		 * Creates a <code>DividedBox</code> based on the <code>SashLayoutData</code> properties and returns it.
 		 * 
-		 * @flowerModelElementId _pnyw4D3aEeGOXsqVUEvOrw
+		 * 
 		 */
 		private function createVisualSash(sashLayoutData:SashLayoutData):LayoutDividedBox {
 			var dividedBox:LayoutDividedBox = new LayoutDividedBox(this, sashLayoutData);						
@@ -1155,7 +1155,7 @@ package  com.crispico.flower.util.layout {
 		/**
 		 * Creates a <code>TabNavigator</code> based on a <code>StackLayoutData</code> properties and returns it.
 		 * 		
-		 * @flowerModelElementId _wHle0D3aEeGOXsqVUEvOrw
+		 * 
 		 */
 		private function createVisualStack(stackLayoutData:StackLayoutData):LayoutTabNavigator {
 			var tabNavigator:LayoutTabNavigator = new LayoutTabNavigator(this, stackLayoutData); 
@@ -1175,7 +1175,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see addNearWorkbenchLayoutData()
 		 * @see addNearStackLayoutData()
-		 * @flowerModelElementId _Yg-_8z3lEeGOXsqVUEvOrw
+		 * 
 		 */ 
 		private function createStackFromViews(layoutData:LayoutData):StackLayoutData {
 			// create list of children
@@ -1206,7 +1206,7 @@ package  com.crispico.flower.util.layout {
 		 * Creates a <code>MinimizedStackBar</code> component for <code>StackLayoutData</code> 
 		 * and adds it in corresponding toolbar area, based on stack layout data <code>mrmSide</code>.
 		 * 
-		 * @flowerModelElementId _WM6isEaEEeGTMfELYOvVnA
+		 * 
 		 */
 		private function addVisualMinimizedStack(stackLayoutData:StackLayoutData):void {
 			if (stackLayoutData.mrmSide == StackLayoutData.NONE) {
@@ -1270,7 +1270,7 @@ package  com.crispico.flower.util.layout {
 		 * Removes <code>MinimizedStackBar</code> component for <code>StackLayoutData</code> 
 		 * from corresponding toolbar area, based on stack layout data <code>mrmSide</code>.
 		 * 
-		 * @flowerModelElementId _Z3XbMEaEEeGTMfELYOvVnA
+		 * 
 		 */
 		private function removeVisualMinimizedStack(stackLayoutData:StackLayoutData):void {
 			var toolbar:UIComponent;
@@ -1335,7 +1335,7 @@ package  com.crispico.flower.util.layout {
 		 * <p>
 		 * At the end, a <code>LayoutDataChangedEvent</code> is dispatched to notify listeneres about changes.
 		 * 
-		 * @flowerModelElementId _Nm2ykCv7EeG30ZBOJxPP8Q
+		 * 
 		 */
 		public function resize(stackLayoutData:StackLayoutData, state:Number):void {	
 			resizeInternal(stackLayoutData, state);
@@ -1440,7 +1440,7 @@ package  com.crispico.flower.util.layout {
 		 * by default either a String containing the serialized structure, or the structure
 		 * directly unserialized of type LayoutData.
 		 * 
-		 * @flowerModelElementId _L9R7wCvyEeG6vrEjfFek0Q
+		 * 
 		 */
 		public function getLayoutData(alreadySerialized:Boolean=true):Object {
 			// this is done to make all validations now, before getting the layout
@@ -1470,7 +1470,7 @@ package  com.crispico.flower.util.layout {
 		 * @see removeLayout(...)
 		 * @see addNearWorkbenchLayoutData()
 		 * @see addNearStackLayoutData()
-		 * @flowerModelElementId _xEkscEN1EeGxeZdmUO_I-g
+		 * 
 		 */ 
 		public function updateVisualSashChildrenRatios(sashComponent:LayoutDividedBox, percentFromParent:Number=100, excludeChild:Object = null):void {		
 			sashComponent.validateNow();
@@ -1500,7 +1500,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see addNearStackLayoutData(...)
 		 * @see addNearWorkbenchLayoutData(...)
-		 * @flowerModelElementId _Na8V00NaEeGY_cItWw2WjQ
+		 * 
 		 */
 		public function getRatios(sashComponent:LayoutDividedBox, percentFromParent:Number=100, excludeChild:Object = null):Array {	
 			var ratios:Array = new Array();
@@ -1556,7 +1556,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see getLayoutData(...) 
 		 * 
-		 * @flowerModelElementId _635SoEKvEeGEwPwnuLPHJQ
+		 * 
 		 */
 		private function updateLayoutDataRatios(layoutData:LayoutData):void {
 			var child:LayoutData;
@@ -1580,7 +1580,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see removeLayout()
 		 * 
-		 * @flowerModelElementId _QPUQ8EaGEeGTMfELYOvVnA
+		 * 
 		 */
 		private function updateMinimizedStackRatios(sashLayoutData:SashLayoutData, ratio:Number):void {
 			for (var i:int = 0; i < sashLayoutData.mrmRatios.length; i++) {
@@ -1598,7 +1598,7 @@ package  com.crispico.flower.util.layout {
 		 * @see resize()
 		 * @see LayoutDividedBox#computeMinimized()
 		 * 
-		 * @flowerModelElementId _ZfZCAEcyEeGliY2o-p45eg
+		 * 
 		 */
 		public function getMinimizedRatio(layoutData:LayoutData):Number {
 			var sum:Number = 0;
@@ -1623,7 +1623,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see LayoutDividedBox#computeMinimized()
 		 * @see resize()
-		 * @flowerModelElementId _TcKkQEjzEeGcnrH_W4NVGQ
+		 * 
 		 */ 
 		public function getNormalRatio(layoutData:LayoutData):Number {
 			var sum:Number = 0;
@@ -1714,7 +1714,7 @@ package  com.crispico.flower.util.layout {
 		 * 
 		 * @see removeLayout()
 		 * @see LayoutDividedBox#computeMinimized()
-		 * @flowerModelElementId _JlbHQEslEeGoH-1QrqBGdw
+		 * 
 		 */ 
 		public function getAllSashEditorLayoutData(root:LayoutData, array:ArrayCollection):void {
 			if (root is ViewLayoutData || root is StackLayoutData) {
@@ -1731,7 +1731,7 @@ package  com.crispico.flower.util.layout {
 		/**
 		 * Gets the tab under mouse when right click.
 		 * If available, sets the context menu selection.
-		 * @flowerModelElementId _x8jBQOtxEeGb_JdgRgmL9A
+		 * 
 		 */ 
 		private function rightClickHandler(event:MouseEvent):void {
 			selectedViewLayoutData = null;
@@ -1766,7 +1766,7 @@ package  com.crispico.flower.util.layout {
 		 * Based on the selection provided, fills the context menu with default actions
 		 * and delegates filling to view's tab customizer to add specific actions.
 		 * 
-		 * @flowerModelElementId _OcFksOCVEeGdYcOEhSk3ug
+		 * 
 		 */
 		public function fillContextMenu(contextMenu:FlowerContextMenu):void {	
 			if (selectedViewLayoutData == null) {
@@ -1811,7 +1811,7 @@ package  com.crispico.flower.util.layout {
 		}
 		
 		/**
-		 * @flowerModelElementId _OcWqdOCVEeGdYcOEhSk3ug
+		 * 
 		 */
 		public function get displayAreaOfSelection():Rectangle {	
 			if (selectedViewLayoutData == null || selectedViewLayoutData.parent == null) {
@@ -1825,14 +1825,14 @@ package  com.crispico.flower.util.layout {
 		}
 		
 		/**
-		 * @flowerModelElementId _Oco-UOCVEeGdYcOEhSk3ug
+		 * 
 		 */		
 		public function getSelection():ArrayCollection {	
 			return new ArrayCollection([selectedViewLayoutData]);
 		}
 		
 		/**
-		 * @flowerModelElementId _Oc-8kOCVEeGdYcOEhSk3ug
+		 * 
 		 */
 		public function isOverSelection(event:MouseEvent):Boolean {	
 			if (selectedViewLayoutData == null || selectedViewLayoutData.parent == null) {
@@ -1854,7 +1854,7 @@ package  com.crispico.flower.util.layout {
 		}
 		
 		/**
-		 * @flowerModelElementId _x8kPYOtxEeGb_JdgRgmL9A
+		 * 
 		 */
 		public function getContext():ActionContext {
 			return null;
@@ -1906,7 +1906,7 @@ package  com.crispico.flower.util.layout {
 		 * @param parentStackLayoutData - if not null, adds the view in this stack layout data.
 		 * @param existingComponent - if not null, it is considered the view's graphical component (no new component will be created)
 		 * 
-		 * @flowerModelElementId _IHw4cJRNEeGt-rlvXRfyYQ
+		 * 
 		 */
 		public function addNormalView(view:Object, setFocusOnView:Boolean = false, workbenchSide:Number = -1, addInFirstNormalStack:Boolean = false, parentStackLayoutData:StackLayoutData = null, existingComponent:UIComponent = null):UIComponent {
 			if (workbenchSide == -1) {
@@ -2046,7 +2046,7 @@ package  com.crispico.flower.util.layout {
 		 * Creates a <code>ViewLayoutData</code> and its corresponding graphical component
 		 * based on the <code>viewId</code> given as parameter.
 		 * 
-		 * @flowerModelElementId _9kGc72EYEeGrW-vIIQ_SdA
+		 * 
 		 */ 
 		public function createView(view:Object, existingComponent:UIComponent = null):UIComponent {
 			// create view layout data
@@ -2081,7 +2081,7 @@ package  com.crispico.flower.util.layout {
 		 * If a view represents the current active view, 
 		 * then it will be removed from <code>activeViewList</code>.
 		 * 		
-		 * @flowerModelElementId _d0DTkOCdEeGwDLuOW8cIGg
+		 * 
 		 */
 		public function closeViews(views:ArrayCollection /* of UIComponent */, shouldDispatchEvent:Boolean = true):void {			
 			var viewsRemovedEvent:ViewsRemovedEvent = new ViewsRemovedEvent(views);			
@@ -2123,7 +2123,7 @@ package  com.crispico.flower.util.layout {
 		 * <p>
 		 * If a stack child is the current  active view, it will be removed from <code>activeViewList</code>.
 		 * 
-		 * @flowerModelElementId _fuwswOCdEeGwDLuOW8cIGg
+		 * 
 		 */
 		public function minimize(stack:StackLayoutData):void {
 			if (stack.children.contains(_componentToLayoutData[activeViewList.getActiveView()])) {
@@ -2135,7 +2135,7 @@ package  com.crispico.flower.util.layout {
 		/**
 		 * Maximize the given <code>StackLayoutData</code>.
 		 * 
-		 * @flowerModelElementId _hseWoOCdEeGwDLuOW8cIGg
+		 * 
 		 */
 		public function maximize(stack:StackLayoutData):void {
 			resize(stack, StackLayoutData.MAXIMIZED);
@@ -2144,7 +2144,7 @@ package  com.crispico.flower.util.layout {
 		/**
 		 * Restores the given <code>StackLayoutData</code> to its normal state.
 		 * 
-		 * @flowerModelElementId _jcqh4OCdEeGwDLuOW8cIGg
+		 * 
 		 */
 		public function restore(stack:StackLayoutData):void {
 			resize(stack, StackLayoutData.NORMAL);
@@ -2159,7 +2159,7 @@ package  com.crispico.flower.util.layout {
 		 * @param view represents the view to remove; it can be the layout data (<code>ViewLayoutData</code>)
 		 * 		or the graphical component (<code>UIComponent</code>)
 		 * 
-		 * @flowerModelElementId _9jD64GEYEeGrW-vIIQ_SdA
+		 * 
 		 */ 		
 		private function removeViewInternal(view:Object):void {
 			var component:UIComponent;
@@ -2214,7 +2214,7 @@ package  com.crispico.flower.util.layout {
 		 * If the active stack is in normal state, it will be maximized,
 		 * otherwise it will be restored to normal state.
 		 *  
-		 * @flowerModelElementId _vewMwOE3EeGM87_2dAj_1Q
+		 * 
 		 */
 		public function maximizeRestoreActiveStackLayoutData():void {
 			var view:UIComponent = activeViewList.getActiveView();
@@ -2234,7 +2234,7 @@ package  com.crispico.flower.util.layout {
 		 * Note:
 		 * This method can be used to set styles on a specific tab.
 		 * 
-		 * @flowerModelElementId _lkBnIOI2EeGF46ujw3kLCA
+		 * 
 		 */
 		public function getTabComponentForViewLayoutData(viewLayoutData:ViewLayoutData):UIComponent {
 			var parentComponent:SuperTabNavigator = SuperTabNavigator(_layoutDataToComponent[viewLayoutData.parent]);
@@ -2481,7 +2481,7 @@ package  com.crispico.flower.util.layout {
 		 * refreshes only its corresponding graphical component label. 
 		 * 
 		 * @author Mariana
-		 * @flowerModelElementId _0wI5IGneEeGf2Ze1btT4ow
+		 * 
 		 */
 		public function refreshLabels(viewLayoutData:ViewLayoutData = null):void {
 			if (viewLayoutData != null) {

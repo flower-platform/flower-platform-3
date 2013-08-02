@@ -77,7 +77,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 	 * @see #addActionEntryIfVisible()
 	 * @author Sorin
 	 * @author Ioana Hagiescu
-	 * @flowerModelElementId _b3bwIMJCEd-CHMGlopD3VQ
+	 * 
 	 */
 	public class FlowerContextMenu extends AutoResizeContainer {
 		
@@ -93,13 +93,13 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		
 		/**
 		 * @private
-		 * @flowerModelElementId _b3jr8MJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		[Embed(source='/closeContextMenu.png')]
 		public var closeIcon:Class;
 				
 		/**
-		 * @flowerModelElementId _b3lhIMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public static const MINIMUM_WIDTH:int = 25;
 		
@@ -109,19 +109,19 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		public var minContextMenuWidth:Number = MINIMUM_WIDTH;
 		
 		/**
-		 * @flowerModelElementId _b3lhIsJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected static const MOVE_EFFECT_DURATION:int = 100; //ms
 				
 		/**
-		 * @flowerModelElementId _b3mIMcJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected static const TIMER_DURATION:int = 300; //ms		
 		
 		/**
 		 * A sub Context Menu when showed it overlaps the parent Context Menu with
 		 * a width given by this constant.
-		 * @flowerModelElementId _b3mvQMJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		protected static const SUBMENU_INSIDE_PADDING:int = 5;
 		
@@ -130,7 +130,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * if the main element selected is not visible, then it is the distance 
 		 * between the top left corner of the screen and the top left corner of the menu.
 		 * @private
-		 * @flowerModelElementId __OYNcMZREd-mVe7KoflvGQ
+		 * 
 		 */
 		public static const MAINMENU_PADDING:int = 10;
 		
@@ -144,48 +144,48 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		protected static const MOUSE_MENU_PADDING:int = 5;
 		
 		/**
-		 * @flowerModelElementId _b3okcMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected static const INACTIVE_TRANSPARENCY:Number = 0.8;
 
 		/**
 		 * The <code>SubMenuEntry</code> that is currently open.
-		 * @flowerModelElementId _b3pLgMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var activeSubMenuEntry:SubMenuEntry;
 		
 		/**
-		 * @flowerModelElementId _b3pLg8JCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var selectionProvider:ISelectionProvider;
 		
 		/**
-		 * @flowerModelElementId _b3rAscJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var _parentContextMenu:FlowerContextMenu;
 		
 		/**
-		 * @flowerModelElementId _b3rAssJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var titleArea:HBox;
 		
 		/**
-		 * @flowerModelElementId _b3rnwMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var closeButton:Button;
 		
 		/**
-		 * @flowerModelElementId _b3rnwcJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var titleLabel:Label;		
 		
 		/**
-		 * @flowerModelElementId _b3sO0MJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var transparencyWhenActive:Number;
 		
 		/**
-		 * @flowerModelElementId _b3sO0cJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected var _inactive:Boolean;
 		
@@ -194,14 +194,14 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		protected var _beforeActionExecutedFunction:Function;
 		
 		/**
-		 * @flowerModelElementId _uDGGMNBiEd-Fg54bCbTJYg
+		 * 
 		 */
 		protected var _afterActionExecutedFunction:Function;
 		
 		protected var _beforeCloseContextMenuFunction:Function;
 		
 		/**
-		 * @flowerModelElementId _DxRJABmEEeCFupVdDa_wDQ
+		 * 
 		 */
 		protected var _closeAfterActionRun:Boolean;
 		
@@ -215,7 +215,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * Timer used for keeping visible a certain time the submenu, even if the mouse is not over it
 		 * (it copy the windows start menu behaviour).
 		 * @private
-		 * @flowerModelElementId _b3s14MJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		internal var timer:Timer;
 		
@@ -223,14 +223,14 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * IMenuEntrySortable that specify as sortIndex DEFAULT_SORT_INDEX will be added at the bottom of the context menu.
 		 * 
 		 * @private
-		 * @flowerModelElementId _m8aGkEQBEeCsyKoIKXvqPA
+		 * 
 		 */
 		public static const DEFAULT_SORT_INDEX:int = int.MAX_VALUE;
 
 		// TODO Sorin : owner direct pare a fi implicat in calcule, de scos in viitor
 		/**
 		 * @private
-		 * @flowerModelElementId _b3tc8MJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public function FlowerContextMenu(parentContainer:DisplayObjectContainer = null, parentContextMenu:FlowerContextMenu=null, owner:SubMenuEntry=null) {
 			if (parentContainer == null)
@@ -277,7 +277,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * MenuEntryWithChildren, and as a result the arrow for the submenu was not added along 
 		 * with a NPE for not finding the parent Context Menu.
 		 * @private
-		 * @flowerModelElementId _peIk0AR5EeCshr5y4iCJSg
+		 * 
 		 */ 
 		protected function emptyAddHandler(event:Event):void {
 		}
@@ -303,7 +303,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * 			<li> <code>MouseEvent</code>
 		 * </ul>
 		 * @private
-		 * @flowerModelElementId _b3urEMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public override function show(isVisible:Boolean, shouldRemoveChildren:Boolean=true):void {	
 			if (isVisible) {
@@ -368,7 +368,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * 
 		 * <p/> The contract with the parent Context Menu is that the parent will always be visible on the parent container.
 		 * @private
-		 * @flowerModelElementId _b3xHUMJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		public function updateLocationAsSubContextMenu():void {
 			if (parentSubMenuEntry == null) {
@@ -475,7 +475,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 *
 		 * <p/> After computing, it will commit the location changes using <code>commitLocationAsMainContextMenu()</code> method. 
 		 * @private
-		 * @flowerModelElementId __O-qYMZREd-mVe7KoflvGQ
+		 * 
 		 */ 
 		public static function updateMainContextMenuLocation(mainContextMenu:FlowerContextMenu, displayArea:Rectangle, containerArea:Rectangle, viewerArea:Rectangle, useWholeScreen:Boolean):void {
 			var throwInCorner:Boolean = false;
@@ -586,7 +586,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * <p> It needs the area of the selection because it will automatically position it near the selection area
 		 * using the parent container of the context menu. 
 		 * @private
-		 * @flowerModelElementId _DxUzYBmEEeCFupVdDa_wDQ
+		 * 
 		 */ 
 		public function setLocation(displayAreaOfSelection:Rectangle, activeViewer:Container):void {
 			var applicationContainerArea:Rectangle = new Rectangle(0, 0, getParentContainer().width, getParentContainer().height);
@@ -601,7 +601,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * Along with moving it's coordinates it will command a moving of coordinates 
 		 * 
 		 * @private
-		 * @flowerModelElementId __PRlUMZREd-mVe7KoflvGQ
+		 * 
 		 */ 
 		public function commitLocationAsMainContextMenu(x:int, y:int, isResizeToLeft:Boolean):void {
 			this.x = x;
@@ -638,7 +638,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * This method recursively climbs the hierarchy until it finds the Main Context Menu 
 		 * and commands it to be hidden.
 		 * @private
-		 * @flowerModelElementId _b3zjkMJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		public function closeMainContextMenu():void {
 			//if (activeSubMenuEntry != null && activeSubMenuEntry.subMenuTimer.running) {				
@@ -655,7 +655,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		}
 		
 		/**
-		 * @flowerModelElementId _b3zjk8JCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function getActiveSubMenuEntry():SubMenuEntry {
@@ -664,14 +664,14 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		
 		/**
 		 * @private
-		 * @flowerModelElementId _b30KocJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public function setActiveSubMenuEntry(activeSubMenuEntry:SubMenuEntry):void {
 			this.activeSubMenuEntry = activeSubMenuEntry;
 		}
 		
 		/**
-		 * @flowerModelElementId _b30xscJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		protected function get parentContextMenu():FlowerContextMenu {
@@ -679,7 +679,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		}
 		
 		/**
-		 * @flowerModelElementId _b30xs8JCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		protected function get parentSubMenuEntry():SubMenuEntry {
@@ -687,7 +687,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		}
 		
 		/**
-		 * @flowerModelElementId _b31YwcJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function isMainContextMenu():Boolean {
@@ -695,7 +695,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		}
 		
 		/**
-		 * @flowerModelElementId _b32m4MJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function setSelectionProvider(value:ISelectionProvider):void {
@@ -705,7 +705,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * Sets the title of the menu. This works only for the main
 		 * context menu; sub context menus don't have a title. 
-		 * @flowerModelElementId _b33N8cJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		public function setTitle(value:String):void {
 			if (isMainContextMenu()) {
@@ -721,7 +721,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * This method is used by the actions when they need to be run.
 		 *
 		 * @private
-		 * @flowerModelElementId _b331AcJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public function getSelection():ArrayCollection {
 			if (isMainContextMenu()) {
@@ -745,7 +745,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * it will be first called, before evaluating the visibility. Usuaslly the previously mentioned function
 		 * has the role of setting some keys in the context of the action.
 		 *    
-		 * @flowerModelElementId _tbwfcGHYEeC8AYNsl1ARtw
+		 * 
 		 */ 
 		public function addActionEntryIfVisible(action:IAction):void { 
 			if (beforeActionVisibilityEvaluatedFunction != null) {
@@ -757,7 +757,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		}
 		
 		/**
-		 * @flowerModelElementId _b34cEcJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function getParentContainer():DisplayObjectContainer {
@@ -767,7 +767,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * This method is intended to be called when it is wished that the
 		 * Context Menu component should be inactive but showed on the screen.
-		 * @flowerModelElementId _b34cE8JCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */ 
 		public function set inactive(value:Boolean):void {
@@ -787,7 +787,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		}
 		
 		/**
-		 * @flowerModelElementId _b35DIcJCEd-CHMGlopD3VQ
+		 * 
 		 * @private
 		 */
 		public function get inactive():Boolean {
@@ -829,7 +829,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * 	<pre> function handler(mainContextMenu:FlowerContextMenu, action:FlowerContextMenu):void </pre>
 		 * 
 		 * @see notifyBeforeActionExecuted() 
-		 * @flowerModelElementId _3t4dEGQpEeC4cPnzBx_QfA
+		 * 
 		 * @private
 		 */ 
 		public function set beforeActionExecutedFunction(value:Function):void {
@@ -847,7 +847,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * 	<pre> function handler(mainContextMenu:FlowerContextMenu):void </pre>
 		 * 
 		 * @see notifyAfterActionExecuted() 
-		 * @flowerModelElementId _uDLlwNBiEd-Fg54bCbTJYg
+		 * 
 		 * @private
 		 */ 
 		public function set afterActionExecutedFunction(value:Function):void {
@@ -876,7 +876,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * knows about envirioment details. 
 		 *  
 		 * <p/>This method is supposed to keep other behaviours added in the future, referring before execution of an action.
-		 * @flowerModelElementId _3t5rMGQpEeC4cPnzBx_QfA
+		 * 
 		 * @private
 		 */ 
 		public function notifyBeforeActionExecuted(action:IAction):void {
@@ -897,7 +897,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * knows about envirioment details. 
 		 *  
 		 * <p/>This method is supposed to keep other behaviours added in the future, referring to after execution of an action.
-		 * @flowerModelElementId _uDMM0tBiEd-Fg54bCbTJYg
+		 * 
 		 * @private
 		 */ 
 		public function notifyAfterActionExecuted():void {
@@ -915,7 +915,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		}
 		
 		/**
-		 * @flowerModelElementId _DxaS8BmEEeCFupVdDa_wDQ
+		 * 
 		 * @private
 		 */
 		public function set closeAfterActionRun(value:Boolean):void {
@@ -945,7 +945,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * @private
 		 * @author Florin
 		 * @author Sorin 
-		 * @flowerModelElementId _b35DI8JCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		public override function addChildAt(child:DisplayObject, index:int):DisplayObject {
 			// The main menu contains a title area which is initialized 
@@ -1015,7 +1015,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * This method initializes and adds the Title Area entry to this Context Menu,
 		 * only if this Context Menu is the Main one. 
 		 * @private
-		 * @flowerModelElementId _b36RQsJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		private function initializeTitleArea():void {
 			// The title area entry
@@ -1062,7 +1062,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 			
 		/**
 		 * @private
-		 * @flowerModelElementId _b364UMJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		protected override function setStyles():void {
 //			{
@@ -1090,7 +1090,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * This listener will be added only if in this is the main context Menu, so no need
 		 * for checking if we are in the main Context Menu state.
 		 * @private
-		 * @flowerModelElementId _b364UsJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		protected function closeButtonMouseUpHandler(event:MouseEvent):void {
 			closeMainContextMenu();
@@ -1099,7 +1099,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * Handler for the <code>MouseEvent.MOUSE_DOWN</code>
 		 * @private
-		 * @flowerModelElementId _b37fYsJCEd-CHMGlopD3VQ
+		 * 
 		 */ 		
 		protected function containerMouseDownHandler(event:MouseEvent):void {
 			// TODO sorin : de stabilit daca atuinci cand se da click in afara defapt se face altceva
@@ -1116,7 +1116,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * Besides the initial logic, submenu logic is implemented: if there 
 		 * is a submenu open, and the mouse is over that submenu, then nothing happens.
 		 * @private
-		 * @flowerModelElementId _b38GcsJCEd-CHMGlopD3VQ
+		 * 
 		 */
 		public override function rollOutHandler(event:MouseEvent):void {			
 			if (inactive) 
@@ -1145,7 +1145,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * rollOutEvent is sent to activeSubMenuEntry (forcing it to close). Otherwise
 		 * nothing is done.
 		 * @private
-		 * @flowerModelElementId _b38tgsJCEd-CHMGlopD3VQ
+		 * 
 		 */	
 		 public override function rollOverHandler(event:MouseEvent):void {		 	
 			if (inactive)
@@ -1184,7 +1184,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * 	<li> after collapsing we do a hideing of the title label.
 		 * </ul>
 		 * @private
-		 * @flowerModelElementId _b397oMJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		protected override function effectEndHandler(event:EffectEvent):void {
 			super.effectEndHandler(event);
@@ -1200,7 +1200,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * Handler for the <code>TimerEvent.TIMER</code>
 		 * @private
-		 * @flowerModelElementId _b3-iscJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		protected function timerHandler(event:TimerEvent):void {	
 			if (timer.currentCount >= 1) {								
@@ -1243,7 +1243,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * this method returned null and the submenu wasn't displayed at <code>rollOverHandler</code>.
 		 * @private
 		 * @author Cristina
-		 * @flowerModelElementId _b3_JwMJCEd-CHMGlopD3VQ
+		 * 
 		 */ 
 		protected static function parentOf(obj:Object, checkContextMenu:Boolean = true):UIComponent {
 			var parent:DisplayObjectContainer = obj.parent;
@@ -1262,7 +1262,7 @@ package com.crispico.flower.flexdiagram.contextmenu {
 		 * @see MenuEntryWithChildren.clickHandler()
 		 * @private
 		 * @author Cristina  
-		 * @flowerModelElementId _diM_kENJEeCTeqiaPze36w
+		 * 
 		 */ 
 		public function changeStateToExpand():void {	
 			removeEventListener(MouseEvent.ROLL_OUT, rollOutHandler);

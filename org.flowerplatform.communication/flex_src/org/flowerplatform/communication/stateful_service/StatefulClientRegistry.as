@@ -28,12 +28,12 @@ package org.flowerplatform.communication.stateful_service {
 	/**
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _Cq33sP2lEeGIGtkQKYU-mw
+	 * 
 	 */
 	public class StatefulClientRegistry {
 		
 		/**
-		 * @flowerModelElementId _xpU2gQJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		protected var statefulClients:Dictionary = new Dictionary();
 		
@@ -46,25 +46,25 @@ package org.flowerplatform.communication.stateful_service {
 		 * to be able to iterate it. However, it shouldn't be modified from outside (because
 		 * it's not write protected).
 		 *   
-		 * @flowerModelElementId _xpVdkQJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		// TODO CS/STFL am impresia ca cei care folosesc asta, legat de ER, pot sa foloseasca structura mai noua introdusa,
 		// ca sa nu mai itereze pe SC
 		/**
-		 * @flowerModelElementId _xpVdkQJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		mx_internal  var statefulClientsList:ArrayCollection = new ArrayCollection();
 		
 		
 		/**
-		 * @flowerModelElementId _xpWrsQJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		public function getStatefulClientById(id:String):StatefulClient {
 			return statefulClients[id];
 		}
 		
 		/**
-		 * @flowerModelElementId _xpXSwQJrEeKxZ4GAUYwMrg
+		 * 
 		 */
 		public function register(statefulClient:StatefulClient, dataFromRegistrator:Object):void {
 			var existingStatefulClient:StatefulClient = statefulClients[statefulClient.getStatefulClientId()]; 
@@ -84,7 +84,7 @@ package org.flowerplatform.communication.stateful_service {
 		
 		
 		/**
-		 * @flowerModelElementId _NJMHwAcIEeK49485S7r3Vw
+		 * 
 		 */
 		public function unregister(statefulClient:StatefulClient, dataFromUnregistrator:Object):void {
 			var existingStatefulClient:StatefulClient = statefulClients[statefulClient.getStatefulClientId()]; 

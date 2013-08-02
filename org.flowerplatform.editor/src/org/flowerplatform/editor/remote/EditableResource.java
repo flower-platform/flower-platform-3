@@ -50,7 +50,7 @@ import org.flowerplatform.editor.collaboration.CollaborativeFigureModel;
  * subclasses). The content is held by <code>EditorFrontend</code>s.
  * 
  * @author Cristi
- * @flowerModelElementId _waFnsJBmEeGZjYcriupTcg
+ * 
  */
 public abstract class EditableResource {
 
@@ -58,7 +58,7 @@ public abstract class EditableResource {
 	
 	/**
 	 * @see Getter
-	 * @flowerModelElementId _8s8D8JBnEeGZjYcriupTcg
+	 * 
 	 */
 	private Object editorInput;
 	
@@ -66,7 +66,7 @@ public abstract class EditableResource {
 	 * This is not synchronized on purpose.
 	 * 
 	 * @see Getter
-	 * @flowerModelElementId _t_8cYFxkEeGgHc6ke3rMAg
+	 * 
 	 */
 	private List<EditableResourceClient> clients = new ArrayList<EditableResourceClient>();
 	
@@ -74,25 +74,25 @@ public abstract class EditableResource {
 	
 	/**
 	 * @see Getter.
-	 * @flowerModelElementId _8tGcAZBnEeGZjYcriupTcg
+	 * 
 	 */
 	private boolean locked;
 	
 	/**
 	 * @see Getter.
-	 * @flowerModelElementId _8tKtcpBnEeGZjYcriupTcg
+	 * 
 	 */
 	private Date lockExpireTime;
 	
 	/**
 	 * @see Getter.
-	 * @flowerModelElementId _8tPl85BnEeGZjYcriupTcg
+	 * 
 	 */
 	private Date lockUpdateTime;
 
 	/**
 	 * @see Getter.
-	 * @flowerModelElementId _8tVFhZBnEeGZjYcriupTcg
+	 * 
 	 */
 	private EditableResourceClient lockOwner;
 	
@@ -137,7 +137,7 @@ public abstract class EditableResource {
 	 * should not have logic related to "what's in" the editorInput". It can be of course used for 
 	 * comparison. 
 	 * 
-	 * @flowerModelElementId _8tcaQZBnEeGZjYcriupTcg
+	 * 
 	 */
 	public Object getEditorInput() {
 		return editorInput;
@@ -149,7 +149,7 @@ public abstract class EditableResource {
 
 	/**
 	 * @see Getter
-	 * @flowerModelElementId _8tdoYZBnEeGZjYcriupTcg
+	 * 
 	 */
 	public void setEditorInput(Object editorInput) {
 		this.editorInput = editorInput;
@@ -171,7 +171,7 @@ public abstract class EditableResource {
 	 * The field is not declared in this class to save some memory (there are a lot of
 	 * {@link EditableResource}s that are not master/slave and they don't need this field).
 	 * 
-	 * @flowerModelElementId _CLSWgLurEeGAt-EVfEFJMA
+	 * 
 	 */
 	public EditableResource getMasterEditableResource() {
 		return null;
@@ -209,7 +209,7 @@ public abstract class EditableResource {
 	 * Should return the label (displayed in the Open Resources View
 	 * and when the Save dialog pops up).
 	 * 
-	 * @flowerModelElementId _X0mHI65LEeG228WnpVvrPA
+	 * 
 	 */
 	public abstract String getLabel();
 	
@@ -219,7 +219,7 @@ public abstract class EditableResource {
 	 * Should return the URL for the icon (displayed in the Open Resources View
 	 * and when the Save dialog pops up).
 	 * 
-	 * @flowerModelElementId _g_1GwLt0EeGAt-EVfEFJMA
+	 * 
 	 */
 	public abstract String getIconUrl();
 
@@ -230,21 +230,21 @@ public abstract class EditableResource {
 	 * (i.e. <code>true</code> if it needs to be saved and <code>false</code>
 	 * if it doesn't have unsaved changes).
 	 * 
-	 * @flowerModelElementId _fZfmULV6EeGHQ9UXq6mt1g
+	 * 
 	 */
 	public abstract boolean isDirty();
 
 	/**
 	 * The lock status of the current resource.
 	 * 
-	 * @flowerModelElementId _8t0Ns5BnEeGZjYcriupTcg
+	 * 
 	 */
 	public boolean isLocked() {
 		return locked;
 	}
 
 	/**
-	 * @flowerModelElementId _8t8wkZBnEeGZjYcriupTcg
+	 * 
 	 */
 	public void setLocked(boolean locked) {
 		this.locked = locked;
@@ -253,14 +253,14 @@ public abstract class EditableResource {
 	/**
 	 * The time when the lock will expire.
 	 * 
-	 * @flowerModelElementId _8uHvspBnEeGZjYcriupTcg
+	 * 
 	 */
 	public Date getLockExpireTime() {
 		return lockExpireTime;
 	}
 
 	/**
-	 * @flowerModelElementId _8uRgsZBnEeGZjYcriupTcg
+	 * 
 	 */
 	public void setLockExpireTime(Date lockExpireTime) {
 		this.lockExpireTime = lockExpireTime;
@@ -269,14 +269,14 @@ public abstract class EditableResource {
 	/**
 	 * The time when the lock info has been updated.
 	 * 
-	 * @flowerModelElementId _8ub4wpBnEeGZjYcriupTcg
+	 * 
 	 */
 	public Date getLockUpdateTime() {
 		return lockUpdateTime;
 	}
 
 	/**
-	 * @flowerModelElementId _8um345BnEeGZjYcriupTcg
+	 * 
 	 */
 	public void setLockUpdateTime(Date lockUpdateTime) {
 		this.lockUpdateTime = lockUpdateTime;
@@ -285,14 +285,14 @@ public abstract class EditableResource {
 	/**
 	 * The owner of the lock.
 	 * 
-	 * @flowerModelElementId _8uzsMJBnEeGZjYcriupTcg
+	 * 
 	 */
 	public EditableResourceClient getLockOwner() {
 		return lockOwner;
 	}
 
 	/**
-	 * @flowerModelElementId _8vAggZBnEeGZjYcriupTcg
+	 * 
 	 */
 	public void setLockOwner(EditableResourceClient lockOwner) {
 		this.lockOwner = lockOwner;
@@ -322,7 +322,7 @@ public abstract class EditableResource {
 	 * Iterates the clients and returns the one having the given
 	 * {@link CommunicationChannel} (or <code>null</code> if none found).
 	 * 
-	 * @flowerModelElementId _sKp9YKjREeG5F5Y4p-wnrg
+	 * 
 	 */
 	public EditableResourceClient getEditableResourceClientByCommunicationChannel(
 			final CommunicationChannel communicationChannel) {
@@ -395,7 +395,7 @@ public abstract class EditableResource {
 	 * So a list removal cannot take place when the former method iterates on the list.
 	 * 
 	 * @see #getEditableResourceClientByCommunicationChannelThreadSafe(CommunicationChannel)
-	 * @flowerModelElementId _aFwFgLVeEeGHQ9UXq6mt1g
+	 * 
 	 */
 	public EditableResourceClient removeEditableResourceClientByCommunicationChannel(
 			CommunicationChannel communicationChannel) {

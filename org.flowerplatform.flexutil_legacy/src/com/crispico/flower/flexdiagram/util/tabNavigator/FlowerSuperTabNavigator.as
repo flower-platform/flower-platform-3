@@ -26,14 +26,14 @@ package com.crispico.flower.flexdiagram.util.tabNavigator {
 	 * If a child has set this style and also the embed icon, the style has bigger priority.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _KP2xffDREd-yKrmCiYZiog
+	 * 
 	 */
 	public class FlowerSuperTabNavigator extends SuperTabNavigator {
 
 	    /**	 
 	     * The tab navigator will work with a <code>CustomSuperTabBar</code> 
 	     * instead of a <code>SuperTabBar</code>
-	     * @flowerModelElementId _KP2xgPDREd-yKrmCiYZiog
+	     * 
 	     */
 	    override protected function createTabBar():SuperTabBar {
 	      return new FlowerSuperTabBar();

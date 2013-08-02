@@ -40,28 +40,28 @@ package  org.flowerplatform.editor.remote {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	
 	/**
-	 * @flowerModelElementId _Z2ZWYAJ3EeKGLqam5SXwYg
+	 * 
 	 */
 	public class EditorStatefulClient extends StatefulClient {
 		
 		/**
-		 * @flowerModelElementId _NJb_YAcIEeK49485S7r3Vw
+		 * 
 		 */
 		public var editorDescriptor:BasicEditorDescriptor;
 		
 		/**
-		 * @flowerModelElementId _94DU0AJ5EeKGLqam5SXwYg
+		 * 
 		 */
 		public var editableResourcePath:String;
 		
 		/**
-		 * @flowerModelElementId _NJcmcAcIEeK49485S7r3Vw
+		 * 
 		 */
 		public var editableResourceStatus:EditableResource;
 		
 		/**
 		 * The associated <code>EditorFrontend</code>s.
-		 * @flowerModelElementId _NJcmcQcIEeK49485S7r3Vw
+		 * 
 		 */
 		public var editorFrontends:ArrayCollection = new ArrayCollection();
 		
@@ -70,7 +70,7 @@ package  org.flowerplatform.editor.remote {
 		public var collaborativeFigureModels:ArrayCollection = new ArrayCollection();
 
 		/**
-		 * @flowerModelElementId _byXMcAJ6EeKGLqam5SXwYg
+		 * 
 		 */
 		public override function getStatefulClientId():String {	
 			return editorDescriptor.calculateStatefulClientId(editableResourcePath);
@@ -91,7 +91,7 @@ package  org.flowerplatform.editor.remote {
 		 * <code>false</code> otherwise (e.g. diagrams).
 		 * 
 		 * @see Method with same name from Java Class <code>EditorBackend</code>.
-		 * @flowerModelElementId _NJdNgQcIEeK49485S7r3Vw
+		 * 
 		 */
 		protected function areLocalUpdatesAppliedImmediately():Boolean {
 			throw new Error("This method should be implemented.");
@@ -104,7 +104,7 @@ package  org.flowerplatform.editor.remote {
 		 * <p>
 		 * This implementation forces the resource status bar to refresh.
 		 * 
-		 * @flowerModelElementId _QiTtIAJ9EeKGLqam5SXwYg
+		 * 
 		 */
 		protected function copyLocalDataFromExistingEditorToNewEditor(existingEditor:EditorFrontend, newEditor:EditorFrontend):void {
 			// if the resource is open in more than one editor when the app is started/refreshed, the resource has not yet arrived from the server
@@ -124,7 +124,7 @@ package  org.flowerplatform.editor.remote {
 		 * Sends the updates to the server (i.e. attempt an update, which may fail if the
 		 * lock is acquired by someone else).
 		 * 
-		 * @flowerModelElementId _NJfCsgcIEeK49485S7r3Vw
+		 * 
 		 */
 		public function attemptUpdateContent(editor:EditorFrontend, content:Object, serviceInvocationOptions:ServiceInvocationOptions = null):Object {
 			if (areLocalUpdatesAppliedImmediately()) {
@@ -153,7 +153,7 @@ package  org.flowerplatform.editor.remote {
 		 * 		when the system reconnects (i.e. after a communication failure). By convention (from this class/system), this method
 		 * 		is only invoked by the <code>EditorDescriptor</code>, when the view (i.e. <code>EditorFrontend</code>) is created.
 		 * 		<code>dataFromRegistrator</code> is a dynamic object { editorFrontend, openForcedByServer }
-		 * @flowerModelElementId _CSYDsAJ9EeKGLqam5SXwYg
+		 * 
 		 */ 
 		override public function subscribeToStatefulService(dataFromRegistrator:Object):void {
 			hasBeenUnsubscribedForcefully = false;
@@ -187,7 +187,7 @@ package  org.flowerplatform.editor.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _NJgQ0QcIEeK49485S7r3Vw
+		 * 
 		 */
 		override public function unsubscribeFromStatefulService(dataFromUnregistrator:Object):Boolean {
 			// we use a for loop even for the "remove only one" use case, because
@@ -272,7 +272,7 @@ package  org.flowerplatform.editor.remote {
 		/**
 		 * Merges fields from new -> existing, except the transient ones.
 		 * TODO CS/STFL de unificat cu celelalte locuri de merge, cf. intrarii mindmap (WP-ME)
-		 * @flowerModelElementId _NJg34QcIEeK49485S7r3Vw
+		 * 
 		 */ 
 		private function mergeEditableResource(existingER:EditableResource, newER:EditableResource):void {
 			var classInfo:XML = DescribeTypeCache.describeType(existingER).typeDescription;
@@ -289,21 +289,21 @@ package  org.flowerplatform.editor.remote {
 		///////////////////////////////////////////////////////////////
 
 		/**
-		 * @flowerModelElementId _NJhe9QcIEeK49485S7r3Vw
+		 * 
 		 */
 		public function tryLockFromButton():void {
 			invokeServiceMethod("tryLockFromButton", [editableResourcePath]);
 		}
 		
 		/**
-		 * @flowerModelElementId _NJiGAQcIEeK49485S7r3Vw
+		 * 
 		 */
 		public function unlockFromButton():void {
 			invokeServiceMethod("unlockFromButton", [editableResourcePath]);
 		}
 		
 		/**
-		 * @flowerModelElementId _NJiGAwcIEeK49485S7r3Vw
+		 * 
 		 */
 		public function save(returnCommandWithoutSending:Boolean=false):Object {
 			var target:EditorStatefulClient;
@@ -349,7 +349,7 @@ package  org.flowerplatform.editor.remote {
 		 * If <code>isFullContent</code> is <code>true</code>, dispatches
 		 * an <code>EditableResourceContentEvent</code> for each editor frontend.
 		 * 
-		 * @flowerModelElementId _NJebogcIEeK49485S7r3Vw
+		 * 
 		 */
 		[RemoteInvocation]
 		public function updateContent(content:Object, isFullContent:Boolean):void {
@@ -366,7 +366,7 @@ package  org.flowerplatform.editor.remote {
 		 * an update is propagated to the client, but for the master. Client (i.e. here): if a dirty state update comes for a master, it
 		 * propagates for all slaves.
 		 * 
-		 * @flowerModelElementId _NJhe8gcIEeK49485S7r3Vw
+		 * 
 		 */
 		[RemoteInvocation]
 		public function updateEditableResourceStatus(newEditableResourceStatus:EditableResource):void {
@@ -529,7 +529,7 @@ package  org.flowerplatform.editor.remote {
 //		 * @author Mariana - check if there are any editors open; this may happen if the open resources 
 //		 * cannot be open in editors (e.g. models)
 //		 * 
-//		 * @flowerModelElementId _aM7-F0hHEeKn-dlTSOkszw
+//		 * 
 //		 */
 //		[RemoteInvocation]
 //		public function revealEditor():void {

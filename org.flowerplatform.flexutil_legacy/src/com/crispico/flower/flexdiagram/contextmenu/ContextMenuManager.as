@@ -52,7 +52,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 	 * 	<li> when going with the mouse out of an registered client viewers it closes it's context menu associated.
 	 * </ul>
 	 * @author Sorin
-	 * @flowerModelElementId _cGI5UMSZEd-CHMGlopD3VQ
+	 * 
 	 */
 	public class ContextMenuManager {
 		
@@ -73,7 +73,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		
 		/**
 		 * Map from a client notifier to a ClientNotifierData.
-		 * @flowerModelElementId _E3Q3UMesEd-nq8-kOf0AJQ
+		 * 
 		 */ 
 		public var notifierToData:Dictionary = new Dictionary();
 		
@@ -187,7 +187,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * <ul>
 		 * 	<li> creating the list of cached context menus
 		 * </ul>
-		 * @flowerModelElementId _ihoYQMSoEd-CHMGlopD3VQ
+		 * 
 		 */
 		public function ContextMenuManager() {
 			if (INSTANCE != null)
@@ -281,7 +281,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * <li> flashHandler - provider for the method that shows the Flower CM when selecting the corresponding menu item from Flash CM;
 		 * <li> minContextMenuWidth - represents the minimum width of CM when it is minimized. By default it is 25 (FlowercontextMenu.MINIMUM_WIDTH).
 		 * <li> initialContextMenuEnabled - indicates whether or not the CM should be enabled at the time when the client is registered.  
-		 * @flowerModelElementId _E3TTkMesEd-nq8-kOf0AJQ
+		 * 
 		 */
 		public function registerClient(viewer:UIComponent, useWholeScreen:Boolean=true, logicProvider:IContextMenuLogicProvider=null, actionProviver:IActionProvider2=null, beforeFillContextMenuFunction:Function = null, beforeShowContextMenuOnFlashFunction:Function=null, contextMenuEntryLabelFunction:Function=null, notifier:Object=null, rightClickEnabled:Boolean = false, minContextMenuWidth:Number=25):ClientNotifierData {
 			
@@ -357,7 +357,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		/**
 		 * Used when a component is not attached on the entire existance of the application.
 		 * At least one of the viewer or the client notifier must be given to unregister.
-		 * @flowerModelElementId _E3ZaMMesEd-nq8-kOf0AJQ
+		 * 
 		 */
 		public function unregisterClient(viewer:UIComponent, notifier:Object):void {
 			if (viewer == null && notifier == null)  {
@@ -412,7 +412,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * and it will call the method reposnsible for adding mouse listeners to the stage.
 		 * 
 		 * <p/> It closes the state, more exactly it removes itself as a listener.
-		 * @flowerModelElementId __QOAgMZREd-mVe7KoflvGQ
+		 * 
 		 */ 
 		private function viewerAddedToStageHandler(event:Event):void {
 			var viewer:UIComponent = UIComponent(event.target);
@@ -646,7 +646,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * </ul>
 		 * @author Cristina
 		 * 
-		 * @flowerModelElementId __QPOoMZREd-mVe7KoflvGQ
+		 * 
 		 */ 
 		private function mouseStageHandler(event:MouseEvent):void {
 			if (authomaticClosingMenuDisabled)
@@ -834,7 +834,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * If the method is called by the client, he doesn't know what type of CM he will have, because
 		 * this it is determined by CMManager.  So this parameter could be used to determine if the refresh
 		 * was called by the CMManager listeners or it was called by the client.  
-		 * @flowerModelElementId _s5k48MSnEd-CHMGlopD3VQ
+		 * 
 		 */
 		public function refresh(notifier:Object, CMType:String = null, refreshCausedByRightClickSelectionChanged:Boolean = false):void {	
 			var clientNotifierData:ClientNotifierData = ClientNotifierData(notifierToData[notifier]);
@@ -909,7 +909,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * the value provider by the client like the display area and the useWholeArea.
 		 * 
 		 * <p/> It will only update the active context menu only if the notifier corresponds to it.
-		 * @flowerModelElementId _H1_jcMSlEd-CHMGlopD3VQ
+		 * 
 		 */
 		public function updatePosition(notifier:Object, CMType:String = null):void {
 			var clientNotifierData:ClientNotifierData = ClientNotifierData(notifierToData[notifier]);
@@ -958,7 +958,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * the client is active. When called, it will store the value and it will call a refreshing. If the client is not visible then
 		 * the refresh method will not process the new value.
 		 * <p/> It should be called when the viewer wishes to disable the Context Menu durring specific behaviour.
-		 * @flowerModelElementId _E3cdgcesEd-nq8-kOf0AJQ
+		 * 
 		 */ 		
 		public function updateContextMenuEnabled(notifier:Object, value:Boolean):void {
 			var clientNotifierData:ClientNotifierData = ClientNotifierData(notifierToData[notifier]);
@@ -1001,7 +1001,7 @@ package  com.crispico.flower.flexdiagram.contextmenu {
 		 * This function will be called by a Context Menu component when it detects that a menu entry with an action was executed.
 		 * After the closing of the Contex Menu component that executed an action, a refreshing for the associated viewer is done.
 		 * The refreshing will be done only if the the viewer of the closed Context Menu is still active.
-		 * @flowerModelElementId _uDcEcNBiEd-Fg54bCbTJYg
+		 * 
 		 */ 		
 		private function afterActionExecutedHandler(closedContextMenu:FlowerContextMenu):void {
 			// Because it may be the case when we can execute an action, the user can move the mouse, so the client viewer is a different one,

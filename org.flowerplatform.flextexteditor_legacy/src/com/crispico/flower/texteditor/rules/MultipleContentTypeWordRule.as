@@ -37,7 +37,7 @@ package com.crispico.flower.texteditor.rules {
 	 * start delimiter or end delimiter. Note: the delimiters may not be strings, only
 	 * characters.
 	 * 
-	 * @flowerModelElementId _DTwNwO3DEeCnnPQD4hUF3Q
+	 * 
 	 */
 	public class MultipleContentTypeWordRule implements IRule {
 		

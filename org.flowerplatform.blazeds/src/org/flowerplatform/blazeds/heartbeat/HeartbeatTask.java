@@ -36,7 +36,7 @@ import flex.messaging.util.TimeoutAbstractObject;
  * Channel Observer task that can run logic on a locked channel.
  * Usefull for not disposing while processing a new object.
  * @author Sorin
- * @flowerModelElementId _1puFEAlWEeK1a-Ic5xjg1Q
+ * 
  */
 public abstract class HeartbeatTask extends TimeoutAbstractObject {
 

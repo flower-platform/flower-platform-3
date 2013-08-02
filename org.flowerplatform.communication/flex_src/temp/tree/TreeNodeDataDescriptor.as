@@ -28,7 +28,7 @@ package temp.tree {
 	 * <code>TreeNode</code>.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _NEPYsDTtEeCWJOrqWwArag
+	 * 
 	 */
 	public class TreeNodeDataDescriptor implements ITreeDataDescriptor {
 		

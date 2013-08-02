@@ -23,7 +23,7 @@ package org.flowerplatform.communication.transferable_object {
 	 * See the Java equivalent class.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _zIr9IMK6Ed6-yKDFMO4rZg
+	 * 
 	 */ 
 	[Bindable]
 	[SecureSWF(rename="off")]

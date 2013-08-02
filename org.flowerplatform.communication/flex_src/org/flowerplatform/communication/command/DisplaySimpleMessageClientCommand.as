@@ -25,7 +25,7 @@ package org.flowerplatform.communication.command {
 	 * @see JavaDoc
 	 * @author Cristina
 	 * @author Sorin
-	 * @flowerModelElementId _gzb_gOXCEd-TPrek0YQo5A
+	 * 
 	 */
 	[RemoteClass]
 	public class DisplaySimpleMessageClientCommand extends AbstractClientCommand  {

@@ -41,7 +41,7 @@ package com.crispico.flower.texteditor.coloring {
 	 * It needs a SyntaxTextArea to color and also providers for coloring scanners specific to each content type
 	 * and formats for each token in a partition.
 	 * 
-	 * @flowerModelElementId _qsR0IMpUEeCTIbyT6X5eRg
+	 * 
 	 */
 	public class PresentationReconciler {
 		
@@ -63,7 +63,7 @@ package com.crispico.flower.texteditor.coloring {
 		/**
 		 * The provider used to get the coloring scanner to use on specific partitions.
 		 * 
-		 * @flowerModelElementId _0qvtEu2uEeCF5Ozw-0NJ0A
+		 * 
 		 */
 		private var _partitionTokenizerProvider:IPartitionTokenizerProvider;
 		
@@ -100,7 +100,7 @@ package com.crispico.flower.texteditor.coloring {
 		 * Computes the coloring for the partitions. For each partition, check if it is marked for coloring, and
 		 * if that is the case, compute the coloring on the dirty range of that partition.
 		 * 
-		 * @flowerModelElementId _kV2rUMpZEeCTIbyT6X5eRg
+		 * 
 		 */
 		public function createAndApplyPresentation(partitions:ArrayCollection):void {
 //			var startedComputing:Date = new Date();
@@ -143,7 +143,7 @@ package com.crispico.flower.texteditor.coloring {
 		/**
 		 * Uses the provided coloring scanner to compute the text formats to be applied to the region. Adds the formatted ranges to the presentation.
 		 * 
-		 * @flowerModelElementId _Mu87Nt3QEeCGOND4c9bKyA
+		 * 
 		 */
 		private function computeFormats(region:Range, partitionTokenizer:RuleBasedScanner):void {
 			// use the specific coloring scanner to find tokens

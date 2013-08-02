@@ -45,7 +45,7 @@ import org.flowerplatform.web.entity.dto.NamedDto;
  * of a {@link ISecurityEntity}.
  * 
  * @author Florin
- * @flowerModelElementId _Z-wekHgGEeGtTo1wOb4S9A
+ * 
  */
 public class SecurityEntityAdaptor {
 
@@ -60,7 +60,7 @@ public class SecurityEntityAdaptor {
 	 * 
 	 * @param assignedTo - a comma separated list of security entity names. 
 	 * @return
-	 * @flowerModelElementId _Z-xFoXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public static List<ISecurityEntity> csvStringToSecurityEntityList(String assignedTo, boolean eager) {
 		List<ISecurityEntity> securityEntities = new ArrayList<ISecurityEntity>();				
@@ -137,7 +137,7 @@ public class SecurityEntityAdaptor {
 	 * @author Florin
 	 * @author Mariana
 	 *  
-	 * @flowerModelElementId _Z-y60XgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public static String toCsvString(List<? extends NamedEntity> entities, Collection<? extends NamedDto> dtos, String prefix) {
 		//TODO: bug - here should be a Collection<GroupAdminDto>. But this collection contains NamedDtos. 
@@ -157,7 +157,7 @@ public class SecurityEntityAdaptor {
 	}
 	
 	/**
-	 * @flowerModelElementId _Z-1-I3gGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public static String toCsvString(Organization org, NamedDto orgDto) {
 		Set<String> organizationNames = new HashSet<String>();
@@ -185,7 +185,7 @@ public class SecurityEntityAdaptor {
 	}	
 	
 	/**
-	 * @flowerModelElementId _Z-5BcHgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public static String getAssignedTo(ISecurityEntity securityEntity) {
 		String assignedTo = "";

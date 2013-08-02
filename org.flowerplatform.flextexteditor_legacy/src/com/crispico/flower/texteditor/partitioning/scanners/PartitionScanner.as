@@ -50,7 +50,7 @@ package com.crispico.flower.texteditor.partitioning.scanners {
 	 * 
 	 * @see SyntaxTextEditor#init
 	 * 
-	 * @flowerModelElementId _MtZcAd3QEeCGOND4c9bKyA
+	 * 
 	 */
 	public class PartitionScanner extends RuleBasedScanner implements IPartitionScanner {
 				

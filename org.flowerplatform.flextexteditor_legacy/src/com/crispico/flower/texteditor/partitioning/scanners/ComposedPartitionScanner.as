@@ -43,7 +43,7 @@ package com.crispico.flower.texteditor.partitioning.scanners {
 	 * 
 	 * @see SyntaxTextEditor#init
 	 * 
-	 * @flowerModelElementId _MtnecN3QEeCGOND4c9bKyA
+	 * 
 	 */
 	public class ComposedPartitionScanner implements IPartitionScanner {
 		
@@ -60,7 +60,7 @@ package com.crispico.flower.texteditor.partitioning.scanners {
 		 * partition scanner is switched to the CSS partition scanner after a <mx:Style>
 		 * tag is found).
 		 * 
-		 * @flowerModelElementId _MttlEN3QEeCGOND4c9bKyA
+		 * 
 		 */
 		private var scanners:Dictionary;
 		

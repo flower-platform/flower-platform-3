@@ -26,17 +26,17 @@ package  com.crispico.flower.util.layout {
 	
 	/**
 	 * @author Cristina
-	 * @flowerModelElementId _S5vYoOI-EeGF46ujw3kLCA
+	 * 
 	 */
 	public class RecycledViews {
 		
 		/**
-		 * @flowerModelElementId _3vMdcOI-EeGF46ujw3kLCA
+		 * 
 		 */
 		public var normalViews:Dictionary = new Dictionary();
 		
 		/**
-		 * @flowerModelElementId _6veXkOI-EeGF46ujw3kLCA
+		 * 
 		 */
 		public var editorViews:ArrayCollection = new ArrayCollection();
 		

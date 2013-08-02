@@ -21,7 +21,7 @@ package com.crispico.flower.texteditor.scanners {
 	import com.crispico.flower.texteditor.Document;
 	
 	/**
-	 * @flowerModelElementId _MtzrsN3QEeCGOND4c9bKyA
+	 * 
 	 */
 	public interface ICharacterScanner {
 		

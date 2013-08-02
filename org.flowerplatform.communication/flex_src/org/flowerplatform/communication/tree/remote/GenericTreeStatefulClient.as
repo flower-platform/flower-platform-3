@@ -38,12 +38,12 @@ package org.flowerplatform.communication.tree.remote {
 		
 	/**
 	 * @author Cristina
-	 * @flowerModelElementId _SLLCYA70EeKbvNML8mcTuA
+	 * 
 	 */
 	public class GenericTreeStatefulClient extends StatefulClient {
 		
 //		/**
-//		 * @flowerModelElementId _OZLrABN0EeKR8sYuzDGiDQ
+//		 * 
 //		 */
 //		public static const EXPAND_NODE_KEY:String = "expandNode";
 //		
@@ -54,13 +54,13 @@ package org.flowerplatform.communication.tree.remote {
 		public static const DONT_UPDATE_MAP_KEY:String = "dontUpdateMap";	
 //
 //		/**
-//		 * @flowerModelElementId _OZRKkBN0EeKR8sYuzDGiDQ
+//		 * 
 //		 */
 //		public static const SELECT_NODE_KEY:String = "selectNode";
 		
 		/**
 		 * @see Getter doc.
-		 * @flowerModelElementId _50n5oBE1EeKNlYFNXVVOOw
+		 * 
 		 */
 		private var _treeNumber:int = -1;
 		
@@ -87,7 +87,7 @@ package org.flowerplatform.communication.tree.remote {
 		 * 
 		 * @return the tree number used to create the structure of stateful client id.
 		 * @see getStatefulClientId()
-		 * @flowerModelElementId _Oa9zsBN0EeKR8sYuzDGiDQ
+		 * 
 		 */ 
 		public function get treeNumber():int {	
 			if (_treeNumber == -1) {
@@ -101,7 +101,7 @@ package org.flowerplatform.communication.tree.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _gJdiMA70EeKbvNML8mcTuA
+		 * 
 		 */
 		public override function getCurrentStatefulClientLocalState(dataFromRegistrator:Object = null):IStatefulClientLocalState {			
 			var openNodes:ArrayCollection = new ArrayCollection();
@@ -120,21 +120,21 @@ package org.flowerplatform.communication.tree.remote {
 		}
 				
 		/**
-		 * @flowerModelElementId _gKyX4A70EeKbvNML8mcTuA
+		 * 
 		 */
 		public override function getStatefulClientId():String {			
 			return clientIdPrefix + " " + treeNumber;
 		}
 		
 		/**
-		 * @flowerModelElementId _gK2CQA70EeKbvNML8mcTuA
+		 * 
 		 */
 		public override function getStatefulServiceId():String {		
 			return statefulServiceId;
 		}		
 		
 		/**
-		 * @flowerModelElementId __opRQBE2EeKNlYFNXVVOOw
+		 * 
 		 */
 		public override function subscribeToStatefulService(dataFromRegistrator:Object):void {		
 			super.subscribeToStatefulService(dataFromRegistrator);
@@ -151,7 +151,7 @@ package org.flowerplatform.communication.tree.remote {
 		}
 		
 //		/**
-//		 * @flowerModelElementId __ov-8BE2EeKNlYFNXVVOOw
+//		 * 
 //		 */
 //		public override function unsubscribeFromStatefulService(dataFromUnregistrator:Object):Boolean {			
 //			// remove listeners added and unregister from managers
@@ -165,7 +165,7 @@ package org.flowerplatform.communication.tree.remote {
 //		}
 //		
 //		/**
-//		 * @flowerModelElementId _dHZ1UBE3EeKNlYFNXVVOOw
+//		 * 
 //		 */
 //		protected override function invokeServiceMethod(methodName:String, parameters:Array, serviceInvocationOptions:ServiceInvocationOptions=null):Object {	
 //			if (genericTree.wrapServiceInvocationCommandWithCompoundCommand) {				
@@ -192,7 +192,7 @@ package org.flowerplatform.communication.tree.remote {
 //		 * a <code>removeUIAndRelatedElementsAndStatefulClientBecauseUnsubscribedForcefullyFunction</code>
 //		 * MUST BE PROVIDED.
 //		 * Otherwise, the exception from super will be thrown.
-//		 * @flowerModelElementId _yb8YgC5YEeKuRNhqLBp7Og
+//		 * 
 //		 */ 
 //		protected override function removeUIAndRelatedElementsAndStatefulClientBecauseUnsubscribedForcefully():void {
 //			if (genericTree.removeUIAndRelatedElementsAndStatefulClientBecauseUnsubscribedForcefullyFunction == null) {
@@ -209,7 +209,7 @@ package org.flowerplatform.communication.tree.remote {
 //		private var rvl_path:ArrayCollection;
 //		
 //		/**
-//		 * @flowerModelElementId _OcKtkBN0EeKR8sYuzDGiDQ
+//		 * 
 //		 */
 //		private function revealNodeInternal(value:Object=null):void {
 //			// increase the index to process the next node
@@ -243,7 +243,7 @@ package org.flowerplatform.communication.tree.remote {
 //		private var ied_autoCreateElementAfterEditing:Boolean;
 //		
 //		/**
-//		 * @flowerModelElementId _OcjvIRN0EeKR8sYuzDGiDQ
+//		 * 
 //		 */
 //		private function ied_openNodeCallback(value:Object):void {
 //			var treeNode:TreeNode = TreeNode.getNodeByPath(ied_path, TreeNode(genericTree.dataProvider[0]));
@@ -257,7 +257,7 @@ package org.flowerplatform.communication.tree.remote {
 //		}
 //		
 //		/**
-//		 * @flowerModelElementId _OcyYoRN0EeKR8sYuzDGiDQ
+//		 * 
 //		 */
 //		private function ied_runCreateAction():void {
 //			var selection:ArrayCollection = new ArrayCollection();
@@ -273,7 +273,7 @@ package org.flowerplatform.communication.tree.remote {
 //		}	
 		
 		/**
-		 * @flowerModelElementId _Ob3LkBN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		private function updateNodeInternal(oldNode:TreeNode, newNode:TreeNode):void {			
 			var classInfo:XML = DescribeTypeCache.describeType(oldNode).typeDescription;
@@ -374,7 +374,7 @@ package org.flowerplatform.communication.tree.remote {
 		 * If <code>node</code> is <code>null</code>, then the root
 		 * content is requested.
 		 * 
-		 * @flowerModelElementId _6HHgUJpvEeGg5ZWNBtAGAA
+		 * 
 		 */
 		public function openNode(node:Object, resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {
 			var path:ArrayCollection;
@@ -394,7 +394,7 @@ package org.flowerplatform.communication.tree.remote {
 		 * Sends command to server to cleanup the data used for old opened node.
 		 *  If <code>node</code> is <code>null</code>, then all data is cleanup.
 		 * 
-		 * @flowerModelElementId _RhY4wJp4EeGg5ZWNBtAGAA
+		 * 
 		 */
 		public function closeNode(node:Object):void {
 			var path:ArrayCollection;
@@ -414,7 +414,7 @@ package org.flowerplatform.communication.tree.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _ObTK4RN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		public function getInplaceEditorText(node:TreeNode, resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {
 			invokeServiceMethod(
@@ -424,7 +424,7 @@ package org.flowerplatform.communication.tree.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _ObYDYhN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		public function setInplaceEditorText(node:TreeNode, text:String, resultCallbackObject:Object=null, resultCallbackFunction:Function=null):void {
 			invokeServiceMethod(
@@ -434,7 +434,7 @@ package org.flowerplatform.communication.tree.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _ObnT8RN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		public function performDrop(dropNode:Object, draggedNodes:Array):void {
 			var draggedNodesPaths:ArrayCollection = new ArrayCollection();
@@ -470,7 +470,7 @@ package org.flowerplatform.communication.tree.remote {
 		 * @author Cristi
 		 * @author Cristina
 		 * 		
-		 * @flowerModelElementId __GlaUA73EeKbvNML8mcTuA
+		 * 
 		 */
 		[RemoteInvocation]
 		public function updateNode(path:ArrayCollection, newNode:TreeNode, expandNode:Boolean = false, collapseNode:Boolean = false, selectNode:Boolean = false):void {			
@@ -524,7 +524,7 @@ package org.flowerplatform.communication.tree.remote {
 		}
 				
 		/**
-		 * @flowerModelElementId _AmkYQBEaEeKYjqFAQECmkA
+		 * 
 		 */
 		[RemoteInvocation]
 		public function revealNode(path:ArrayCollection):void {
@@ -536,7 +536,7 @@ package org.flowerplatform.communication.tree.remote {
 		}	
 			
 		/**
-		 * @flowerModelElementId _OcWTwRN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		[RemoteInvocation]
 		public function startInplaceEditor(contributionId:String, path:ArrayCollection, autoCreateElementAfterEditing:Boolean):void {

@@ -32,38 +32,38 @@ import org.slf4j.LoggerFactory;
  * 
  * @see #executeCommand()
  * @author Cristi
- * @flowerModelElementId _IR0rkM9iEeG9Xt8Mxhv6rg
+ * 
  */
 public class HelloServerCommand extends AbstractServerCommand {
 	
 	/**
-	 * @flowerModelElementId _tIuKg9AVEeG3GYv-He135A
+	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(HelloServerCommand.class);
 	
 	/**
 	 * @see Getter doc.
-	 * @flowerModelElementId _4mx5kM9iEeG9Xt8Mxhv6rg
+	 * 
 	 */
 	private String clientApplicationVersion;
 
 	/**
 	 * @see Getter doc.
-	 * @flowerModelElementId _tIvYoNAVEeG3GYv-He135A
+	 * 
 	 */
 	private boolean firstWelcomeWithInitializationsReceived;
 	
 	/**
 	 * The version of the client (statically linked within the SWF), which
 	 * should match the version from the server.
-	 * @flowerModelElementId _tIv_sNAVEeG3GYv-He135A
+	 * 
 	 */
 	public String getClientApplicationVersion() {
 		return clientApplicationVersion;
 	}
 
 	/**
-	 * @flowerModelElementId _tIwmwNAVEeG3GYv-He135A
+	 * 
 	 */
 	public void setClientApplicationVersion(String clientApplicationVersion) {
 		this.clientApplicationVersion = clientApplicationVersion;
@@ -74,14 +74,14 @@ public class HelloServerCommand extends AbstractServerCommand {
 	 * the first connection => the server should send the initializations. 
 	 * <code>true</code> means it is a reconnection, so no initializations
 	 * need to be sent.
-	 * @flowerModelElementId _tIx04NAVEeG3GYv-He135A
+	 * 
 	 */
 	public boolean isFirstWelcomeWithInitializationsReceived() {
 		return firstWelcomeWithInitializationsReceived;
 	}
 
 	/**
-	 * @flowerModelElementId _tIx049AVEeG3GYv-He135A
+	 * 
 	 */
 	public void setFirstWelcomeWithInitializationsReceived(boolean clientApplicationInitialized) {
 		this.firstWelcomeWithInitializationsReceived = clientApplicationInitialized;
@@ -96,7 +96,7 @@ public class HelloServerCommand extends AbstractServerCommand {
 	 * 	<li>Otherwise, if the client is not initialized, delegates to {@link CommunicationChannel#sendInitializationsForNewClient()}
 	 * </ul>
 	 * 
-	 * @flowerModelElementId _yC7yEM9iEeG9Xt8Mxhv6rg
+	 * 
 	 * 
 	 * @author Cristi
 	 * @author Mariana

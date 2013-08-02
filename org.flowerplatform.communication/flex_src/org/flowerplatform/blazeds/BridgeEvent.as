@@ -28,13 +28,13 @@ package org.flowerplatform.blazeds {
 	 * @see BlazeDSBridge
 	 * 
 	 * @author Sorin
-	 * @flowerModelElementId _KptVQNTOEeGIjv9Q6nWemw
+	 * 
 	 */ 
 	public class BridgeEvent extends Event {
 
 		
 		/**
-		 * @flowerModelElementId _-mJHQtvUEeGkyOdU8tCo8w
+		 * 
 		 */
 		public static const CONNECTED:String = "Connected";
 		
@@ -44,7 +44,7 @@ package org.flowerplatform.blazeds {
 		public static const WELCOME_RECEIVED_FROM_SERVER:String = "WelcomeReceivedFromServer";
 		
 		/**
-		 * @flowerModelElementId _-mJuUdvUEeGkyOdU8tCo8w
+		 * 
 		 */
 		public static const DISCONNECTED:String = "Disconnected";
 		
@@ -59,12 +59,12 @@ package org.flowerplatform.blazeds {
 		public static const AUTHENTICATION_ACCEPTED:String = "AuthenticationAccepted";
 		
 		/**
-		 * @flowerModelElementId _1-zhEAlSEeK1a-Ic5xjg1Q
+		 * 
 		 */
 		public static const OBJECT_SENT:String="ObjectSent";
 		
 		/**
-		 * @flowerModelElementId _-mMxodvUEeGkyOdU8tCo8w
+		 * 
 		 */
 		public static const OBJECT_RECEIVED:String = "ObjectReceived";
 		public static const OBJECT_UNDELIVERED:String = "ObjectUndelivered";

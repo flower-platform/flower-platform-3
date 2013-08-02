@@ -35,7 +35,7 @@ import org.flowerplatform.web.entity.dto.NamedDto;
  * @author Cristi
  * @author Cristina
  * @author Mariana
- * @flowerModelElementId _CaEpUVyIEeGwx-0cTKUc5w
+ * 
  */
 public class DatabaseOperationWrapper {
 
@@ -75,7 +75,7 @@ public class DatabaseOperationWrapper {
 	}
 	
 	/**
-	 * @flowerModelElementId _CaEpWVyIEeGwx-0cTKUc5w
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> findAll(Class<T> entityClass) {
@@ -84,7 +84,7 @@ public class DatabaseOperationWrapper {
 	}
 	
 	/**
-	 * @flowerModelElementId _CaEpXlyIEeGwx-0cTKUc5w
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T find(Class<T> entityClass, Object primaryKey) {
@@ -92,7 +92,7 @@ public class DatabaseOperationWrapper {
 	}
 	
 	/**
-	 * @flowerModelElementId _QOTiAF34EeGwLIVyv_iqEg
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> List<T> findByField(Class<T> entityClass, Object fieldName, Object field) {
@@ -101,7 +101,7 @@ public class DatabaseOperationWrapper {
 	}
 	
 	/**
-	 * @flowerModelElementId _QOUwI134EeGwLIVyv_iqEg
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T merge(T object) {
@@ -109,7 +109,7 @@ public class DatabaseOperationWrapper {
 	}
 	
 	/**
-	 * @flowerModelElementId _4LBAIF5PEeGQXpwILsA5AA
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T mergeDto(Class<T> entityClass, Dto dto) {
@@ -129,7 +129,7 @@ public class DatabaseOperationWrapper {
 	}
 		
 	/**
-	 * @flowerModelElementId _4LCOQF5PEeGQXpwILsA5AA
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T mergeDto(Class<T> entityClass, NamedDto dto) {
@@ -150,7 +150,7 @@ public class DatabaseOperationWrapper {
 	}
 	
 	/**
-	 * @flowerModelElementId _QOVXMV34EeGwLIVyv_iqEg
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> void delete(T object){

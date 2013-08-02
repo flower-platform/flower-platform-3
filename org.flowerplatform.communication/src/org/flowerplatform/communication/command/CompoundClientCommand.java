@@ -25,7 +25,7 @@ import java.util.List;
  * This is a command containing a list of commands sent from Java and on Flex side it iterates
  * through every command and executes them. 
  * @author Sorin
- * @flowerModelElementId _n8t-QPuBEd6xsfFLsx1UvQ
+ * 
  */
 public class CompoundClientCommand extends AbstractClientCommand {
 

@@ -57,13 +57,13 @@ import org.flowerplatform.web.entity.User;
  * @author Cristi
  * @author Florin
  * 
- * @flowerModelElementId _bPAc8GRnEeGyd4yTk74SKw
+ * 
  */
 @SuppressWarnings("restriction")
 public class FlowerWebPolicy extends Policy {
 	
 	/**
-	 * @flowerModelElementId _psld4HJqEeG32IfhnS7SDQ
+	 * 
 	 */
 	private Policy defaultPolicy;
 	
@@ -71,7 +71,7 @@ public class FlowerWebPolicy extends Policy {
 	 * The descriptors of the permissions that this policy enforces.
 	 * 
 	 * @see #addPermissionDescriptor()
-	 * @flowerModelElementId _izbPoGRyEeGyd4yTk74SKw
+	 * 
 	 */
 	private PermissionDescriptorsTable permissionDescriptors = new PermissionDescriptorsTable();
 	
@@ -83,7 +83,7 @@ public class FlowerWebPolicy extends Policy {
 	 * For a given permission (implementation) type, this cache holds the permissions for ALL users, groups, organizations.
 	 * 
 	 * @see #getTreePermissions()
-	 * @flowerModelElementId _qS2ksGRpEeGyd4yTk74SKw
+	 * 
 	 */
 	protected Map<Class<? extends AbstractTreePermission>, TreePermissionCollection> treePermissionsCache = Collections.synchronizedMap(new HashMap<Class<? extends AbstractTreePermission>, TreePermissionCollection>());
 	
@@ -95,7 +95,7 @@ public class FlowerWebPolicy extends Policy {
 	 * @see #getPermissionsForUser()
 	 * @see #clearUserPermissionsCache()
 	 * 
-	 * @flowerModelElementId _WWK-YGRqEeGyd4yTk74SKw
+	 * 
 	 */
 	protected Map<Long, PermissionCollection> normalPermissionsCache = Collections.synchronizedMap(new HashMap<Long, PermissionCollection>());
 
@@ -108,7 +108,7 @@ public class FlowerWebPolicy extends Policy {
 	 * 	<li>{@link FlowerWebFilePermission}
 	 * </ul>
 	 * 
-	 * @flowerModelElementId _f1H78GnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	public FlowerWebPolicy(Policy defaultPolicy) {	
 		this.defaultPolicy = defaultPolicy;
@@ -133,7 +133,7 @@ public class FlowerWebPolicy extends Policy {
 	 * 
 	 * @see #permissionDescriptors
 	 * 
-	 * @flowerModelElementId _tKCyQGR_EeGyd4yTk74SKw
+	 * 
 	 */
 	public void addPermissionDescriptor(PermissionDescriptor descriptor) {
 		permissionDescriptors.put(descriptor);
@@ -143,7 +143,7 @@ public class FlowerWebPolicy extends Policy {
 	 * Returns an empty collection because we "disabled" this method. 
 	 * In theory, only {@link #implies()} of this class is supposed to call this method.
 	 * 
-	 * @flowerModelElementId _OXSuMGRoEeGyd4yTk74SKw
+	 * 
 	 */
 	public PermissionCollection getPermissions(ProtectionDomain domain) {
 		return new Permissions(); 
@@ -167,7 +167,7 @@ public class FlowerWebPolicy extends Policy {
 	 * Permission check main logic. Uses the caches (that are populated from the DB) to see
 	 * if the permission is granted to the current user (or principal).
 	 * 
-	 * @flowerModelElementId _B9OS0GRrEeGyd4yTk74SKw
+	 * 
 	 */
 	public boolean implies(final ProtectionDomain domain, final Permission permission) { 
 
@@ -207,7 +207,7 @@ public class FlowerWebPolicy extends Policy {
 	}
 	
 	/**
-	 * @flowerModelElementId _xK_hgHQdEeGvmLPkt9AQrg
+	 * 
 	 */
 	@SuppressWarnings({ "unchecked" })
 	private boolean privilegedImplies(ProtectionDomain domain, Permission permission) {
@@ -256,7 +256,7 @@ public class FlowerWebPolicy extends Policy {
 	/**
 	 * The path (a.k.a resource, name) of a tree permission is relative to the workspace.
 	 * 
-	 * @flowerModelElementId _psohMXJqEeG32IfhnS7SDQ
+	 * 
 	 */
 	public File getRuntimeWorkspace() {
 		return CommonPlugin.getInstance().getWorkspaceRoot();
@@ -266,7 +266,7 @@ public class FlowerWebPolicy extends Policy {
 	 * Returns the tree permission cache for the specified type.
 	 * If the cache is empty, it populates it from the DB.
 	 * 
-	 * @flowerModelElementId _M3ZE4GRsEeGyd4yTk74SKw
+	 * 
 	 */
 	private TreePermissionCollection getTreePermissions(Class<? extends AbstractTreePermission> treePermissionType) {
 		PermissionService permissionService = PermissionService.getInstance();
@@ -295,7 +295,7 @@ public class FlowerWebPolicy extends Policy {
 	 * @author Florin
 	 * @autor Mariana
 	 * 
-	 * @flowerModelElementId _xLB9wHQdEeGvmLPkt9AQrg
+	 * 
 	 */
 	PermissionCollection getNormalPermissions(final User user) {	
 		if (normalPermissionsCache.get(user.getId()) == null) {
@@ -337,7 +337,7 @@ public class FlowerWebPolicy extends Policy {
 	 * the entry for the implemented permission type (as defined by IPermissionDescriptor) 
 	 * from {@link #treePermissionsCache}. If  <code>permissionEntity</code> is a normal 
 	 * permission, this method will clear {@link #normalPermissionsCache}.
-	 * @flowerModelElementId _xLDL4HQdEeGvmLPkt9AQrg
+	 * 
 	 */
 	public void updateCachesFor(PermissionEntity permissionEntity) {		
 		PermissionDescriptor descriptor = getPermissionDescriptor(permissionEntity.getType());
@@ -351,7 +351,7 @@ public class FlowerWebPolicy extends Policy {
 	
 	/**
 	 * Caches are cleared.
-	 * @flowerModelElementId _xLEaAHQdEeGvmLPkt9AQrg
+	 * 
 	 */
 	public void updateCachesFor(ISecurityEntity securityEntity) {
 		// FlowerWebPolicy.treePermissionsCache must be updated because the entries in the TreePermissionCollection have an ISecurityEntity.		
@@ -366,14 +366,14 @@ public class FlowerWebPolicy extends Policy {
 	}
 	
 	/**
-	 * @flowerModelElementId _SdTGYIIZEeGPwv1h63g-uQ
+	 * 
 	 */
 	public List<PermissionDescriptor> getPermissionDescriptors() {
 		return permissionDescriptors.getPermissionDescriptors();
 	}
 	
 	/**
-	 * @flowerModelElementId _Jm2XsHmVEeG7_fzMWZxiHA
+	 * 
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public PermissionDescriptor getPermissionDescriptor(String permissionEntityType) {

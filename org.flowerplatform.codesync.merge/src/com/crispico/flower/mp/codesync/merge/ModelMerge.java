@@ -50,7 +50,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  * There are activity diagrams that depict this algorithm.
  * 
  * @author Cristi
- * @flowerModelElementId _2Q1p0C3PEeCTtt_qQqqw6A
+ * 
  */
 public class ModelMerge {
 
@@ -94,7 +94,7 @@ public class ModelMerge {
 	 * CodeSyncPackage.eINSTANCE.getTimeStampedSyncElement_SyncTimeStamp()
 	 * This hack is done because ~.mp project cannot depend on ~.mp.codesync,
 	 * and a more general approach, just for this small case, seems to be quite an overkill.
-	 * @flowerModelElementId _pSFJMC4jEeCzKcFA-Du_zw
+	 * 
 	 */
 	public static EStructuralFeature codeSyncTimeStampFeature;
 //	
@@ -109,7 +109,7 @@ public class ModelMerge {
 //	
 //	/**
 //	 * Used by <code>logWithTime()</code>.
-//	 * @flowerModelElementId _d6Ql4C3iEeCTtt_qQqqw6A
+//	 * 
 //	 */
 //	protected long previousTime;
 
@@ -118,7 +118,7 @@ public class ModelMerge {
 //	 * 
 //	 * @see #setFeature()
 //	 * @see #processDeferredOperations()
-//	 * @flowerModelElementId __yFo4C4XEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	protected List<DeferredReferenceToSetEntry> deferredReferenceToSetEntries = new ArrayList<DeferredReferenceToSetEntry>();
 //	
@@ -134,7 +134,7 @@ public class ModelMerge {
 //	 * 
 //	 * @see #mergeStandardFeature()
 //	 * @see #getAncestorResource()
-//	 * @flowerModelElementId _kd63oC4YEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	protected Resource ancestorResource;
 //
@@ -153,7 +153,7 @@ public class ModelMerge {
 //	}
 //	
 //	/**
-//	 * @flowerModelElementId _mWwKgEiQEeC1PbufLsmL9g
+//	 * 
 //	 */
 //	protected ILogProvider logProvider;
 //	
@@ -166,7 +166,7 @@ public class ModelMerge {
 //
 //	/**
 //	 * @param logProvider the logProvider to set
-//	 * @flowerModelElementId _mW57g0iQEeC1PbufLsmL9g
+//	 * 
 //	 */
 //	public void setLogProvider(ILogProvider logProvider) {
 //		this.logProvider = logProvider;
@@ -174,7 +174,7 @@ public class ModelMerge {
 //
 //	/**
 //	 * @return The xmi:id of the element.
-//	 * @flowerModelElementId _N2-YMC3REeCTtt_qQqqw6A
+//	 * 
 //	 */
 //	protected Object getKeyForEObject(EObject object) {
 //		return object.eResource().getURIFragment(object);
@@ -185,7 +185,7 @@ public class ModelMerge {
 //	 * invokes the algorithm and invokes <code>processDeferredSetReferenceEntries</code>.
 //	 * 
 //	 * See <code>merge()</code> for additional doc.
-//	 * @flowerModelElementId _jgTt8C4aEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	public boolean doMerge(EObject ancestor, EObject left, EObject right) {
 //		deferredReferenceToSetEntries.clear();
@@ -212,7 +212,7 @@ public class ModelMerge {
 //	 * 		deleted and we do the processing only to look for modifications (and to generate
 //	 * 		conflicts).
 //	 * @return <code>false</code> if conflicts were detected.
-//	 * @flowerModelElementId _A0JSsC3fEeCTtt_qQqqw6A
+//	 * 
 //	 */
 //	protected boolean merge(EObject ancestor, EObject left, EObject right, boolean leftWasDeleted) {
 //		for (EStructuralFeature feature : left.eClass().getEAllStructuralFeatures()) {
@@ -237,7 +237,7 @@ public class ModelMerge {
 //	 * @param ancestor May be null, meaning that object was newly added in right. 
 //	 * 		A new (corresponding) instance has been created in left, and a full copy is in progress.
 //	 * @return false if conflicts.
-//	 * @flowerModelElementId _jyFk0C32EeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	protected boolean mergeStandardFeature(EStructuralFeature feature, EObject ancestor, EObject left, EObject right, boolean leftWasDeleted) {
 //		Object leftValue = getFeature(left, feature);
@@ -283,7 +283,7 @@ public class ModelMerge {
 //	 * 		are wrapped within a <code>Reference</code>
 //	 * 	<li>if is EReference, many and has several entries => ignored
 //	 * </ul>
-//	 * @flowerModelElementId _2Y1z0C4SEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	@SuppressWarnings("unchecked")
 //	protected Object getFeature(EObject object, EStructuralFeature feature) {
@@ -322,7 +322,7 @@ public class ModelMerge {
 //	 * @param ancestorExists Used together with <code>logNewElementNestedAddAndCopy</code>,
 //	 * 		to control logging.
 //	 * @see #processDeferredOperations()
-//	 * @flowerModelElementId _39ADUC4UEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	@SuppressWarnings("unchecked")
 //	protected boolean setFeature(EObject object, EStructuralFeature feature, Object newValue, boolean ancestorExists) {
@@ -363,7 +363,7 @@ public class ModelMerge {
 //	/**
 //	 * Getter for <code>ancestorResource</code> used within
 //	 * <code>mergeStandardFeature()</code> that might be disabled.
-//	 * @flowerModelElementId _81vk0C4dEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	protected Resource getAncestorResource() {
 //		return ancestorResource;
@@ -376,7 +376,7 @@ public class ModelMerge {
 //	 * 	<li>deletes objects scheduled for delete.
 //	 * </ul>
 //	 * 
-//	 * @flowerModelElementId __yTrUC4XEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	protected void processDeferredOperations() {
 //		log("Processing deferred set references...");
@@ -409,7 +409,7 @@ public class ModelMerge {
 //	 * For parameter description, see <code>merge()</code>.
 //	 * 
 //	 * @param feature May by many (list) or single (object).
-//	 * @flowerModelElementId _A0OLMi3fEeCTtt_qQqqw6A
+//	 * 
 //	 */
 //	@SuppressWarnings("unchecked")
 //	protected boolean mergeContainmentFeature(EStructuralFeature feature, EObject ancestor, EObject left, EObject right, boolean leftWasDeleted) {
@@ -491,7 +491,7 @@ public class ModelMerge {
 //	 * was externalized in order to be able to disable this block (if needed).
 //	 * 
 //	 * @return A map with elements deleted from left. See calling method for details.
-//	 * @flowerModelElementId _E1PTIC3rEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	protected Map<Object, EObject> fillLeftDeletedMap(EObject ancestor, EStructuralFeature feature, Map<Object, EObject> leftChildrenMap) {
 //		Map<Object, EObject> childrenDeletedFromLeftMap = new HashMap<Object, EObject>();
@@ -510,7 +510,7 @@ public class ModelMerge {
 //	 * @return A child of <code>parentAncestor</code> that corresponds to 
 //	 * 		<code>object</code>. This implementation lookups globally
 //	 * 		based on xmi:id.
-//	 * @flowerModelElementId _UJWPAC3uEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	protected EObject getCorrespondingAncestor(EObject parentAncestor, EObject object) {
 //		// TODO santier pentru breakpoint
@@ -533,7 +533,7 @@ public class ModelMerge {
 //	 * 
 //	 * @return result[0] - boolean that indicates the conflict state (according to the
 //	 * 		convention); result[1] the new (or moved) EObject 
-//	 * @flowerModelElementId _We83oC3yEeCzKcFA-Du_zw
+//	 * 
 //	 */
 //	@SuppressWarnings("unchecked")
 //	protected Object[] addNewObject(EObject ancestor, EObject left, EStructuralFeature feature, List<EObject> leftList, EObject rightObject) {
@@ -589,7 +589,7 @@ public class ModelMerge {
 //	 * <p>
 //	 * Processes object that are still left in <code>leftMap</code> that may
 //	 * be deleted on right or newly added on left. 
-//	 * @flowerModelElementId _oHO1kC31EeCzKcFA-Du_zw
+//	 * 
 //	 */ 
 //	protected boolean processRemaingObjectInLeftMap(EObject ancestor, EObject leftObject, boolean leftWasDeleted) {
 //		EObject ancestorObject = getCorrespondingAncestor(ancestor, leftObject); 
@@ -629,7 +629,7 @@ public class ModelMerge {
 //	 * 
 //	 * @return A list with children. If the feature is many, the result is the existing EList.
 //	 * 		If the feature is single, a singleton list is returned.
-//	 * @flowerModelElementId _WgJPoC3gEeCTtt_qQqqw6A
+//	 * 
 //	 */
 //	@SuppressWarnings("unchecked")
 //	protected List<EObject> getListFromContainmentFeature(EObject object, EStructuralFeature feature) {
@@ -644,7 +644,7 @@ public class ModelMerge {
 //	
 	/**
 	 * Uses <code>equals()</code> and works even if parameters are <code>null</code>.
-	 * @flowerModelElementId _S511UC32EeCzKcFA-Du_zw
+	 * 
 	 */
 	public static boolean safeEquals(Object a, Object b) {
 		if (a == null && b == null)
@@ -660,7 +660,7 @@ public class ModelMerge {
 	 * 
 	 * @return The name of the element if it is a <code>NamedElement</code>
 	 * 		or %eClassName% otherwise.
-	 * @flowerModelElementId _CSgNcC3nEeCzKcFA-Du_zw
+	 * 
 	 */
 	public static String getName(EObject object) {
 		String name = null;
@@ -687,7 +687,7 @@ public class ModelMerge {
 	 * 
 	 * @param object Accepts a <code>null</code> object.
 	 * @return The fully qualified name; uses <code>getName()</code>. 
-	 * @flowerModelElementId _CS1koS3nEeCzKcFA-Du_zw
+	 * 
 	 */
 	public static String getFullyQualifiedName(EObject object) {
 		if (object == null)
@@ -705,7 +705,7 @@ public class ModelMerge {
 //	 * Works like <code>String.format()</code>, but if there are parameters
 //	 * that have more than 1 line, they get truncated.
 //	 * 
-//	 * @flowerModelElementId _d6U3UC3iEeCTtt_qQqqw6A
+//	 * 
 //	 */
 //	protected void log(String format, Object ... params) {
 //		for (int i = 0; i < params.length; i++) 
@@ -726,7 +726,7 @@ public class ModelMerge {
 //	}
 //	
 //	/**
-//	 * @flowerModelElementId _d6VeYS3iEeCTtt_qQqqw6A
+//	 * 
 //	 */
 //	protected void logWithTime(String message) {
 //		long currentTime = new Date().getTime();

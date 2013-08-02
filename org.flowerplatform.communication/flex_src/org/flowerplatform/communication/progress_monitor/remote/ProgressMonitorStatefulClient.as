@@ -27,12 +27,12 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 	/**
 	 * @author Sorin
 	 * @author Cristina Constantinescu
-	 * @flowerModelElementId _lW_MUBLsEeKIW4So6X04UQ
+	 * 
 	 */
 	public class ProgressMonitorStatefulClient extends StatefulClient implements IProgressMonitorHandler {
 		
 		/**
-		 * @flowerModelElementId _pEupYBLsEeKIW4So6X04UQ
+		 * 
 		 */
 		private static const SERVICE_ID:String = "ProgressMonitorStatefulService";
 	
@@ -55,7 +55,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		private var progressMonitor:IProgressMonitor;
 	
 		/**
-		 * @flowerModelElementId _bE9ZEBN_EeK1ssFHNoNwQg
+		 * 
 		 */
 		public function ProgressMonitorStatefulClient(title:String, statefulClientId:String, createdByServer:Boolean, allowCancellation:Boolean=true) {
 			this.title = title;
@@ -65,14 +65,14 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _FoR1EBN_EeK1ssFHNoNwQg
+		 * 
 		 */
 		public override function getStatefulServiceId():String {
 			return SERVICE_ID;
 		}
 		
 		/**
-		 * @flowerModelElementId _FoJ5QBN_EeK1ssFHNoNwQg
+		 * 
 		 */
 		public override function getStatefulClientId():String {
 			return statefulClientId;
@@ -85,7 +85,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		 * See CreateProgressMonitorStatefulClient#execute() for register dataRegistrator != null.
 		 * See #createAndShowProgressMonitor() for register dataRegistrator != null. 
 		 * 
-		 * @flowerModelElementId _Lt2sMBN_EeK1ssFHNoNwQg
+		 * 
 		 */
 		public override function getCurrentStatefulClientLocalState(dataFromRegistrator:Object = null):IStatefulClientLocalState {
 			return new ProgressMonitorStatefulLocalClient(title, /* after reconnect */ dataFromRegistrator == null) ;
@@ -93,7 +93,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 
 		/**
 		 * Package visibility because only the monitor dialog can call it.
-		 * @flowerModelElementId _dn0rwBLtEeKIW4So6X04UQ
+		 * 
 		 */
 		public function attemptCancelProgressMonitor():void {
 			invokeServiceMethod("attemptCancelProgressMonitor", null);
@@ -141,7 +141,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		///////////////////////////////////////////////////////////////
 		
 		/**
-		 * @flowerModelElementId _T7yEQBLtEeKIW4So6X04UQ
+		 * 
 		 */
 		[RemoteInvocation]
 		public function beginProgressMonitor(name:String, totalWork:int):void {
@@ -149,7 +149,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _XAsmwBLtEeKIW4So6X04UQ
+		 * 
 		 */
 		[RemoteInvocation]
 		public function updateProgressMonitor(name:String, workUntilNow:int):void {
@@ -158,7 +158,7 @@ package  org.flowerplatform.communication.progress_monitor.remote {
 		
 		/**
 		 * Hides the monitor and unregisters it.
-		 * @flowerModelElementId _ZacsYBLtEeKIW4So6X04UQ
+		 * 
 		 */
 		[RemoteInvocation]
 		public function closeProgressMonitor():void {

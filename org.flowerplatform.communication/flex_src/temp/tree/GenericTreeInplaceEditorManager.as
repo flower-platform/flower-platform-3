@@ -33,7 +33,7 @@ package  temp.tree {
 	 * The class provides ied functionality for <code>GenericTree</code>s.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _D9B6QFYjEeCukY0DWzslHg
+	 * 
 	 */
 	public class GenericTreeInplaceEditorManager {
 		
@@ -44,27 +44,27 @@ package  temp.tree {
 		 public static var activeTrees:Dictionary = new Dictionary(); 
 		 
 		 /**
-		  * @flowerModelElementId _OFjYCFw6EeCMd4YreAKWkA
+		  * 
 		  */
 		 public var tree:GenericTree;
 				 
 		 /**
-		  * @flowerModelElementId _Dk0l4FY0EeCukY0DWzslHg
+		  * 
 		  */
 		 private var currentEditedTreeNode:TreeNode;
 		 		
 		 /**
-		  * @flowerModelElementId _lB3kB1kfEeCu5cp3IGqniw
+		  * 
 		  */
 		 private static const EDITING:int = 1;
 		 		
 		 /**
-		  * @flowerModelElementId _lBtzDlkfEeCu5cp3IGqniw
+		  * 
 		  */
 		 private static const NOT_EDITING:int = 2;
 					 
 		 /**
-		  * @flowerModelElementId _OFjYGFw6EeCMd4YreAKWkA
+		  * 
 		  */
 		 private static const DISABLED:int = 3;
 
@@ -76,22 +76,22 @@ package  temp.tree {
 		  * 	<li> NOT_EDITING - the editor is closing/closed
 		  * 	<li> DISABLED - the editor waits for server response
 		  * </ul>
-		  * @flowerModelElementId _awa3cFawEeCGFegCku6Qjg
+		  * 
 		  */ 
 		 private var editingState:int = NOT_EDITING;
 		 
 		 /**
-		  * @flowerModelElementId _OFtJBFw6EeCMd4YreAKWkA
+		  * 
 		  */
 		 private static const NO_KEY:int = 0;
 		 
 		 /**
-		  * @flowerModelElementId _OFtJBlw6EeCMd4YreAKWkA
+		  * 
 		  */
 		 private static const CTRL_ENTER:int = 1;
 		 
 		 /**
-		  * @flowerModelElementId _OFtJCFw6EeCMd4YreAKWkA
+		  * 
 		  */
 		 private static const ESCAPE:int = 2;
 		 		 		
@@ -103,7 +103,7 @@ package  temp.tree {
 		  * 	<li> CTRL+ENTER - the editor was closed by pressing CTRL + ENTER keys
 		  * 	<li> ESCAPE - the editor was closed by pressing ESCAPE key
 		  * </ul>
-		  * @flowerModelElementId _KlWSEFYjEeCukY0DWzslHg
+		  * 
 		  */
 		 private var lastExitType:int = NO_KEY;		
 	 
@@ -113,7 +113,7 @@ package  temp.tree {
 		  * <blockquote>
 		  * 	<code>itemEditEndFunction():void</code>
 		  * </blockquote>
-		  * @flowerModelElementId _aO_pwFk_EeCUr69IUjNRtg
+		  * 
 		  */
 		 public var itemEditEndFunction:Function;
 		
@@ -139,7 +139,7 @@ package  temp.tree {
 			 
 		 /**
 		  * Initializes this manager to work with the tree given as parameter.
-		  * @flowerModelElementId _HYVjgFYjEeCukY0DWzslHg
+		  * 
 		  */ 
 		 private function activate(tree:GenericTree):void {			
 			this.tree.addEventListener(KeyboardEvent.KEY_DOWN, treeNodeKeyDownHandler);
@@ -155,7 +155,7 @@ package  temp.tree {
 		
 		/**
 		 * If F2 is pressed, starts the editor for the selected tree node.
-		 * @flowerModelElementId _YQi5gFkSEeC5PuYnMMFxJw
+		 * 
 		 */
 		private function treeNodeKeyDownHandler(event:KeyboardEvent):void {					
 			if (event.keyCode == Keyboard.F2) {
@@ -181,7 +181,7 @@ package  temp.tree {
 		/**
 		 * Handles the editor KEY_DOWN event.
 		 * Stores the exit key in order to be used after closing the editor.
-		 * @flowerModelElementId _OFtJFlw6EeCMd4YreAKWkA
+		 * 
 		 */ 		
 		private function editorKeyDownHandler(event:KeyboardEvent):void {
 			lastExitType = NO_KEY;					
@@ -208,7 +208,7 @@ package  temp.tree {
 		 * There is a flex bug when the editor is closed by pressing ESCAPE key :
 		 * the data is saved always.
 		 * So a hack was made : if the user pressed ESCAPE, then consider the editor's text to be the node's label. 
-		 * @flowerModelElementId _vLcOgFk_EeCUr69IUjNRtg
+		 * 
 		 */
 		private function treeNodeEditEndHandler(event:ListEvent):void {			
 			if (editingState == NOT_EDITING) {
@@ -236,7 +236,7 @@ package  temp.tree {
 		 * Starts openning the editor for <code>treeNode</code> by sending a 
 		 * request to server to provide the editor's text to show.
 		 * 
-		 * @flowerModelElementId _WUjEIFYjEeCukY0DWzslHg
+		 * 
 		 */
 		public function startEditing(treeNode:TreeNode):void {
 			currentEditedTreeNode = treeNode;				
@@ -250,7 +250,7 @@ package  temp.tree {
 		/**
 		 * The method has the server response and opens the editor.
 		 * If the response is null, then the editor must not open.
-		 * @flowerModelElementId _vOUKUFY0EeCukY0DWzslHg
+		 * 
 		 */ 
 		private function handleServerTextToEdit(text:String):void {
 			if (text == null) {
@@ -263,7 +263,7 @@ package  temp.tree {
 		
 		/**
 		 * Sets the <code>text</code> to opened editor.
-		 * @flowerModelElementId _OFtJKFw6EeCMd4YreAKWkA
+		 * 
 		 */ 
 		private function canEditHandler(event:ListEvent):void {
 			tree.removeEventListener(ListEvent.ITEM_EDIT_BEGIN, canEditHandler);		
@@ -275,7 +275,7 @@ package  temp.tree {
 		 * The method sends a request to server in order to save and validate the editor's text.
 		 * In this time, the editor is "seen" in DISABLED state and the original ITEM_EDIT_END behavior
 		 * will be stoped from executing.
-		 * @flowerModelElementId _egPTMFYjEeCukY0DWzslHg
+		 * 
 		 */
 		public function endEditing():void {
 			editingState = DISABLED;	
@@ -287,7 +287,7 @@ package  temp.tree {
 		/**
 		 * If the text was saved succesfully, then the editor is closed.
 		 * Otherwise, show the validation error.
-		 * @flowerModelElementId _KNlCkFY0EeCukY0DWzslHg
+		 * 
 		 */
 		private function handleServerResponse(response:Boolean):void {
 			editingState = NOT_EDITING;					
@@ -301,7 +301,7 @@ package  temp.tree {
 		
 		/**
 		 * After closing the validation error dialog, reestablish the editor's state.
-		 * @flowerModelElementId _OFtJNVw6EeCMd4YreAKWkA
+		 * 
 		 */ 
 		private function enableEditing(event:CloseEvent):void {
 			editingState = EDITING;
@@ -313,7 +313,7 @@ package  temp.tree {
 		 * a CTRL+ENTER was pressed to close the editor, then function is executed to 
 		 * create another element.
 		 * It's code is provided by {@link StartTreeNodeIEDCommand#runAction()}.
-		 * @flowerModelElementId _OF2S81w6EeCMd4YreAKWkA
+		 * 
 		 */ 
 		private function afterEndEditing():void {			
 //			if (!SingletonRefsFromPrePluginEra.preferenceStore.autoCreateElementAfterEditing) {

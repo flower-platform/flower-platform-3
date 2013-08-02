@@ -38,7 +38,7 @@ package com.crispico.flower.texteditor.rules {
 	 * Extending classes may implement the getKey() function. The default key is the first word (delimited by whitspace
 	 * characters) after the start delimiter (eg. tag names: key for the <mx:Label text="text" /> is mx:Label).
 	 * 
-	 * @flowerModelElementId _Mr4ZEN3QEeCGOND4c9bKyA
+	 * 
 	 */
 	public class MultipleContentTypePatternRule implements IRule {
 		

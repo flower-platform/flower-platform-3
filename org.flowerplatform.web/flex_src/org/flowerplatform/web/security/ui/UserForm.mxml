@@ -25,7 +25,7 @@
  @author Cristina 
  @author Mariana
 
- @flowerModelElementId _HwKUoJqLEeGyKfvGQd78qg
+ 
 -->
 <ui:BaseForm
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
@@ -68,7 +68,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _CphakFyIEeGwx-0cTKUc5w
+			 * 
 			 */
 			override public function set entityId(_entityId:Number):void {
 				super.entityId = _entityId;
@@ -119,7 +119,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _Cphak1yIEeGwx-0cTKUc5w
+			 * 
 			 */
 			private function dataReceivedCallback(result:UserAdminUIDto):void {
 				ModalSpinner.removeModalSpinner(this);
@@ -163,7 +163,7 @@
 			/**
 			 * Populates the right list of the <code>DualListBox</code> with groups
 			 * that aren't found in the list of user's groups.
-			 * @flowerModelElementId _RB9MgF34EeGwLIVyv_iqEg
+			 * 
 			 */ 
 			private function groupsReceivedCallback(dtos:ArrayCollection):void {
 				groupsDualList.leftList.labelField = "name";
@@ -189,7 +189,7 @@
 			
 			/**
 			 * Casted instance of the Dto.
-			 * @flowerModelElementId _KKlvo1lkEeGRrZ75u0k71A
+			 * 
 			 */
 			[Bindable(event="dtoChangedEvent")] 
 			public function get user():UserAdminUIDto {
@@ -212,7 +212,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _KKmWsVlkEeGRrZ75u0k71A
+			 * 
 			 */
 			protected override function formOkHandler():void {
 				// validate form
@@ -254,7 +254,7 @@
 			
 			/**
 			 * Refreshes <code>UserAndCoScreen</code> panels based on the flags received from server.
-			 * @flowerModelElementId _CphamFyIEeGwx-0cTKUc5w
+			 * 
 			 */ 
 			private function saveOkCallback(errorMessage:String):void {
 				if (errorMessage) {

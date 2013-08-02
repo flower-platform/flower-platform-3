@@ -23,14 +23,14 @@ package org.flowerplatform.editor.text.remote {
 	import org.flowerplatform.editor.text.TextEditorFrontend;
 
 	/**
-	 * @flowerModelElementId _YC7YMAJ4EeKGLqam5SXwYg
+	 * 
 	 */
 	public class TextEditorStatefulClient extends EditorStatefulClient {
 	
 		protected var statefulServiceId:String;
 		
 		/**
-		 * @flowerModelElementId _VMeLoAJ8EeKGLqam5SXwYg
+		 * 
 		 */
 		public override function getStatefulServiceId():String {	
 			return statefulServiceId;
@@ -41,7 +41,7 @@ package org.flowerplatform.editor.text.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _XZRk8AJ9EeKGLqam5SXwYg
+		 * 
 		 */
 		override protected function copyLocalDataFromExistingEditorToNewEditor(existingEditor:EditorFrontend, newEditor:EditorFrontend):void	{
 			super.copyLocalDataFromExistingEditorToNewEditor(existingEditor, newEditor);
@@ -50,7 +50,7 @@ package org.flowerplatform.editor.text.remote {
 		}
 		
 		/**
-		 * @flowerModelElementId _NJ22IgcIEeK49485S7r3Vw
+		 * 
 		 */
 		override protected function areLocalUpdatesAppliedImmediately():Boolean	{
 			return true;
@@ -71,7 +71,7 @@ package org.flowerplatform.editor.text.remote {
 		///////////////////////////////////////////////////////////////
 		
 		/**
-		 * @flowerModelElementId _1PSw4DfPEeKY0qaVeMRK2Q
+		 * 
 		 * @author Daniela
 		 */
 		public function service_selectRangeFor(category:String, searchString:String):void {
@@ -83,7 +83,7 @@ package org.flowerplatform.editor.text.remote {
 		///////////////////////////////////////////////////////////////
 		
 //		/**
-//		 * @flowerModelElementId _aNND0khHEeKn-dlTSOkszw
+//		 * 
 //		 */
 //		[RemoteInvocation]
 //		public function selectRange(offset:int, length:int):void {

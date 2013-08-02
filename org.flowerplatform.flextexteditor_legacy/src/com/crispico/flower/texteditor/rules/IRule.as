@@ -28,7 +28,7 @@ package com.crispico.flower.texteditor.rules {
 	 * Each rule has specific flags that influence the way this rule is evaluated. To set/reset these flags, use the
 	 * setOptimizedMode and resetOptimizedMode functions.
 	 * 
-	 * @flowerModelElementId _OmbEYL8qEeCCBN1yQIvzhA
+	 * 
 	 */
 	public interface IRule {
 		
@@ -47,7 +47,7 @@ package com.crispico.flower.texteditor.rules {
 		/**
 		 * Sets specific flags to run in an optimized mode (eg. skipStartDelimiter and stopOnEof on a PatternRule).
 		 * 
-		 * @flowerModelElementId _Mq0CEN3QEeCGOND4c9bKyA
+		 * 
 		 */
 		function setOptimizedMode():void;
 		

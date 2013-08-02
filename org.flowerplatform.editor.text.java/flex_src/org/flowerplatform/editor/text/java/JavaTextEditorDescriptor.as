@@ -25,7 +25,7 @@ package org.flowerplatform.editor.text.java {
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
 	/**
-	 * @flowerModelElementId _X3OhgMBsEeG5PP70DrXYIQ
+	 * 
 	 */
 	public class JavaTextEditorDescriptor extends TextEditorDescriptor {
 

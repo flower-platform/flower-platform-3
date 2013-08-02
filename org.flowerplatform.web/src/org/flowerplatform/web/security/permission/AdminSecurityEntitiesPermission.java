@@ -41,29 +41,29 @@ import org.flowerplatform.web.entity.User;
  * 
  * @author Florin
  * 
- * @flowerModelElementId _Z9esMHgGEeGtTo1wOb4S9A
+ * 
  */
 public class AdminSecurityEntitiesPermission extends Permission {
 
 	/**
-	 * @flowerModelElementId _Z9fTQXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * @flowerModelElementId _Z9f6UXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	private String actions;
 	
 	/**
-	 * @flowerModelElementId _Z9ghYHgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	private List<ISecurityEntity> assignableSecurityEntities;
 	
 	/**
 	 * @param name - not used
 	 * @param actions
-	 * @flowerModelElementId _Z9iWkXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public AdminSecurityEntitiesPermission(String name, String actions) {
 		super(name);
@@ -71,7 +71,7 @@ public class AdminSecurityEntitiesPermission extends Permission {
 	}
 
 	/**
-	 * @flowerModelElementId _Z9jksngGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public String getActions() {
@@ -79,7 +79,7 @@ public class AdminSecurityEntitiesPermission extends Permission {
 	}
 
 	/**
-	 * @flowerModelElementId _Z9ky0XgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public boolean implies(Permission permission) {
@@ -108,7 +108,7 @@ public class AdminSecurityEntitiesPermission extends Permission {
 	}
 
 	/**
-	 * @flowerModelElementId _Z9mA8ngGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -121,7 +121,7 @@ public class AdminSecurityEntitiesPermission extends Permission {
 	}
 
 	/**
-	 * @flowerModelElementId _Z9n2IHgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public int hashCode() {

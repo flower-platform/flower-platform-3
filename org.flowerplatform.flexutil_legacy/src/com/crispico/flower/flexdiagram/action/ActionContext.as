@@ -27,7 +27,7 @@ package com.crispico.flower.flexdiagram.action
 	 * @see com.crispico.flower.flexdiagram.action.CreateActionContext
 	 * @see com.crispico.flower.flexdiagram.gantt.contextmenu.GanttCreateActionContext
 	 * @author Sorin
-	 * @flowerModelElementId _eui40IhTEeC3D4t2GHNvxQ
+	 * 
 	 */ 	
 	public dynamic class ActionContext {
 

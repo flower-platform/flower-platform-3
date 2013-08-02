@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Cristi
  * 
  * @param <DT>
- * @flowerModelElementId _6MHx4AlZEeKViIirpKcsaw
+ * 
  */
 public abstract class RegularStatefulService<CT extends CommunicationChannel, DT> extends StatefulService {
 	

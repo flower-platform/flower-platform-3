@@ -23,7 +23,7 @@ package org.flowerplatform.communication.command {
 	 * in Flex.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _SVxIY8eWEd6ebePkcCLlJA
+	 * 
 	 */
 	public class AbstractClientCommand {
 		

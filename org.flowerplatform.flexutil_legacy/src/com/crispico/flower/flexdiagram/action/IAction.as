@@ -51,7 +51,7 @@ package com.crispico.flower.flexdiagram.action {
 	 * @see BaseAction
 	 * @see com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu
 	 * @author Cristina
-	 * @flowerModelElementId _WsJnkLDqEd-9uK96tmi0Zg
+	 * 
 	 */
 	public interface IAction extends IMenuEntryModel{
  
@@ -83,7 +83,7 @@ package com.crispico.flower.flexdiagram.action {
 		 * use <code>editPart.getModel()</code> (e.g. <code>selection[i].getModel()</code>). 
 		 * 
 		 * @see com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu#addActionEntryIfVisible()
-		 * @flowerModelElementId _YK7SsLDqEd-9uK96tmi0Zg
+		 * 
 		 */
 		 function isVisible(selectedEditParts:ArrayCollection):Boolean;
 
@@ -102,7 +102,7 @@ package com.crispico.flower.flexdiagram.action {
 		 * original array. This is necessary because when the system detects a removal, the selection
 		 * is reinitialized.
 		 * 
-		 * @flowerModelElementId _YRLrsLDqEd-9uK96tmi0Zg
+		 * 
 		 */
 		 function run(selectedEditParts:ArrayCollection):void;
 	}

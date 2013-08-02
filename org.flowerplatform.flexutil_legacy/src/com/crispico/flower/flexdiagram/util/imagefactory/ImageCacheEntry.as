@@ -41,7 +41,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 	 * @author Marius Arhire
 	 * @author Florin Buzatu
 	 * 
-	 * @flowerModelElementId _qnUoQJ-hEd-Acq1dtkSbHA
+	 * 
 	 */
 	internal class ImageCacheEntry {
 		
@@ -63,7 +63,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		/**
 		 * Clients waiting to receive the image.
 		 * 
-		 * @flowerModelElementId _Hr3OIJ-lEd-Acq1dtkSbHA
+		 * 
 		 */
 		private var waitingList:ArrayCollection;
 		
@@ -72,7 +72,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		/**
 		 * Recives request for a certain icon. If it has no decorators, it also begins
 		 * image load; if it requires several images, it makes a request for each one. 
-		 * @flowerModelElementId _22WpkJ-kEd-Acq1dtkSbHA
+		 * 
 		 */
 		 function ImageCacheEntry(sourceImages:ArrayCollection, initialWaitingListEntry:ImageCacheWaitingListEntry) {
 			this.sourceImages = sourceImages;
@@ -123,7 +123,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		}
 		
 		/**
-		 * @flowerModelElementId _fO6pEN4VEeCfLfatVsLg4g
+		 * 
 		 */
 		private function showSecurityErrorMessage(e:SecurityErrorEvent=null):void {
 			if (ImageFactory.showSecurityWorkaroundMessage) {
@@ -132,14 +132,14 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		}
 				
 		/**
-		 * @flowerModelElementId _noxiZKuoEd-xvsA5HKaIYA
+		 * 
 		 */
 		private function errorHandler(e:IOErrorEvent):void {
 			Alert.show("Error while loading image " + e.text);			
 		}
 		
 		/**
-		 * @flowerModelElementId _eIxMIMmXEeCjU6U15ZjMTA
+		 * 
 		 */
 		private function loadDataLater(event:TimerEvent):void {				
 			var bd:BitmapData = new clazz().bitmapData;
@@ -151,7 +151,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		 * in the waiting list. The icon is stored in the data property, so future
 		 * requests for this icon won't have to reload the images.
 		 * 
-		 * @flowerModelElementId _3i-pkJ-lEd-Acq1dtkSbHA
+		 * 
 		 */
 		internal function set data(data:BitmapData):void {
 			imageLeftToLoad--;
@@ -183,7 +183,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		 * Getter for the bitmapData of the (composed) image.
 		 * 
 		 * @return bitmapData of the image. Null if the image has not yet been loaded/composed.
-		 * @flowerModelElementId _noywgauoEd-xvsA5HKaIYA
+		 * 
 		 */
 		internal function get data():BitmapData {
 			return bitmapData;
@@ -194,7 +194,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		 * to recieve the bitmap data when image loading and composing process is finished.
 		 * 
 		 * @param newWaitingListEntry the client to receive the bitmap data of the image.
-		 * @flowerModelElementId _noywg6uoEd-xvsA5HKaIYA
+		 * 
 		 */
 		internal function addToWaitingList(newWaitingListEntry:ImageCacheWaitingListEntry):void {
 			waitingList.addItem(newWaitingListEntry);
@@ -203,7 +203,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		/**
 		 * When all the images are loaded, this method should be called to give 
 		 * the composed image to all waiting clients.
-		 * @flowerModelElementId _nozXkquoEd-xvsA5HKaIYA
+		 * 
 		 */
 		internal function updateImageToWaitingList():void {
 			for each (var waitingListEntry:ImageCacheWaitingListEntry in waitingList) {

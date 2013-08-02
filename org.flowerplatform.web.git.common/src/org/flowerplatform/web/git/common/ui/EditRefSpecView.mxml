@@ -42,7 +42,7 @@
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 						
 			/**
-			 * @flowerModelElementId _cec0QLX4EeG0VsiZvxFIVQ
+			 * 
 			 */
 			[Bindable]
 			public var currentRef:String;
@@ -50,12 +50,12 @@
 			private var _popupHost:IPopupHost;
 			
 			/**
-			 * @flowerModelElementId _cfNpQLX4EeG0VsiZvxFIVQ
+			 * 
 			 */
 			private var resultHandler:IDialogResultHandler;
 			
 			/**
-			 * @flowerModelElementId _cfxC4LX4EeG0VsiZvxFIVQ
+			 * 
 			 */
 			public function setResultHandler(resultHandler:IDialogResultHandler):void {
 				this.resultHandler = resultHandler;
@@ -84,7 +84,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _cgEk4bX4EeG0VsiZvxFIVQ
+			 * 
 			 */
 			private function okHandler():void {
 				// validate form

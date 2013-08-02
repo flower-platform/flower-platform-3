@@ -31,7 +31,7 @@ package com.crispico.flower.texteditor.providers {
 	 *    specifying the format's color, style (italic) and weight (bold) 
 	 * 
 	 * @see Util#getFormat
-	 * @flowerModelElementId _0oki1e2uEeCF5Ozw-0NJ0A
+	 * 
 	 */
 	public interface IPartitionTokenFormatProvider {
 		

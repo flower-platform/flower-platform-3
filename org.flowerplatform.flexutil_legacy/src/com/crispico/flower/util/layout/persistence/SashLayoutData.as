@@ -32,7 +32,7 @@ package  com.crispico.flower.util.layout.persistence {
 	 * In a workbench, if a single editor layout data exists, then it cannot be deleted or minimized.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _JjqMsEslEeGoH-1QrqBGdw
+	 * 
 	 */ 
 	public class SashLayoutData extends LayoutData {
 		

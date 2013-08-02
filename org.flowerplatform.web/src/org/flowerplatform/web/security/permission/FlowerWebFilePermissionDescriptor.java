@@ -35,12 +35,12 @@ import org.flowerplatform.web.WebPlugin;
  * @author Cristi
  * @author Florin
  * 
- * @flowerModelElementId _f1tOYGR_EeGyd4yTk74SKw
+ * 
  */
 public class FlowerWebFilePermissionDescriptor extends PermissionDescriptor {
 
 	/**
-	 * @flowerModelElementId _f0zL0GnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	@Override
 	public Class<? extends Permission> getHandledPermissionType() {
@@ -48,7 +48,7 @@ public class FlowerWebFilePermissionDescriptor extends PermissionDescriptor {
 	}
 
 	/**
-	 * @flowerModelElementId _GsnvwGzzEeGBsfNm1ipRfw
+	 * 
 	 */
 	@Override
 	public Class<? extends Permission> getImplementedPermissionType() {
@@ -75,7 +75,7 @@ public class FlowerWebFilePermissionDescriptor extends PermissionDescriptor {
 	}
 
 	/**
-	 * @flowerModelElementId _7p8NIWaqEeGOeOE1u9CeQw
+	 * 
 	 */
 	@Override
 	public boolean isTreePermission() {
@@ -83,7 +83,7 @@ public class FlowerWebFilePermissionDescriptor extends PermissionDescriptor {
 	}
 
 	/**
-	 * @flowerModelElementId _Sc1MUIIZEeGPwv1h63g-uQ
+	 * 
 	 */
 	@Override
 	public List<String> getActions() {
@@ -91,7 +91,7 @@ public class FlowerWebFilePermissionDescriptor extends PermissionDescriptor {
 	}
 	
 	/**
-	 * @flowerModelElementId _Sc1MU4IZEeGPwv1h63g-uQ
+	 * 
 	 */
 	@Override
 	public Map<String, String> validate(Permission permission) {

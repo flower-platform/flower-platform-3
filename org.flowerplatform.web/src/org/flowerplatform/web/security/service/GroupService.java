@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * @author Cristina
  * @author Mariana
  * 
- * @flowerModelElementId _QTrxQF34EeGwLIVyv_iqEg
+ * 
  */
 public class GroupService extends ServiceObservable {
 	
@@ -61,7 +61,7 @@ public class GroupService extends ServiceObservable {
 	 * 
 	 * @see #findAllAsAdminUIDto()
 	 * @see #findByIdAsAdminUIDto(long)
-	 * @flowerModelElementId _QTsYUl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	private GroupAdminUIDto convertGroupToGroupAdminUIDto(Group group) {
 		GroupAdminUIDto dto = new GroupAdminUIDto();
@@ -79,7 +79,7 @@ public class GroupService extends ServiceObservable {
 	
 	/**
 	 * Finds the {@link Group group} given by its id and returns a {@link GroupAdminUIDto}. 
-	 * @flowerModelElementId _QTsYVl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public GroupAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find group with id = {}", id);
@@ -103,7 +103,7 @@ public class GroupService extends ServiceObservable {
 	
 	/**
 	 * Finds all {@link Group}s and returns a list of their corresponding {@link GroupAdminUIDto}.
-	 * @flowerModelElementId _QTs_YV34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public List<GroupAdminUIDto> findAllAsAdminUIDto() {
 		logger.debug("Find all groups");
@@ -132,7 +132,7 @@ public class GroupService extends ServiceObservable {
 	 * <p>
 	 * Used for listboxes.
 	 * 
-	 * @flowerModelElementId _QTs_ZF34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public List<NamedDto> findAllAsNamedDto(final List<OrganizationAdminUIDto> filter) {
 		final List<NamedDto> list = new ArrayList<NamedDto>();
@@ -168,7 +168,7 @@ public class GroupService extends ServiceObservable {
 	
 	/**
 	 * Creates/Updates the {@link Group} based on {@link GroupAdminUIDto} stored information.
-	 * @flowerModelElementId _QTtmcl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public String mergeAdminUIDto(ServiceInvocationContext context, final GroupAdminUIDto dto) {
 		logger.debug("Merge group = {}", dto.getName());
@@ -246,7 +246,7 @@ public class GroupService extends ServiceObservable {
 	
 	/**
 	 * Deletes all {@link Group}s based on the list of their ids.
-	 * @flowerModelElementId _QTuNgl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public void delete(final List<Integer> ids) {
 		for (final Integer id : ids) {

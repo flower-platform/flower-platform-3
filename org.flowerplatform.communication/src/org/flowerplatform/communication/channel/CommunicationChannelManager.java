@@ -51,12 +51,12 @@ public class CommunicationChannelManager {
 	 * 
 	 * @author Cristi
 	 * @see #iterateCommunicationChannels(RunnableWithParam)
-	 * @flowerModelElementId _7sYLondJEeGzz9ZUhe52dw
+	 * 
 	 */
 	protected Map<Object, CommunicationChannel> idToCommunicationChannelMap = Collections.synchronizedMap(new HashMap<Object, CommunicationChannel>());
 	
 	/**
-	 * @flowerModelElementId _toMJQG2zEeGQ6LdvAwMt-w
+	 * 
 	 */
 	private List<ICommunicationChannelLifecycleListener> communicationLifecycleListeners = new ArrayList<ICommunicationChannelLifecycleListener>();
 	
@@ -66,7 +66,7 @@ public class CommunicationChannelManager {
 	 * <p>
 	 * Creates a new {@link WebCommunicationChannel}, adds
 	 * it in the map and registers this as a destroy listener.
-	 * @flowerModelElementId _K6Ok0DQUEeCGErbqxW555A
+	 * 
 	 */
 	public void messageClientCreated(Object communicationChannelId, CommunicationChannel communicationChannel) {
 		AuditDetails auditDetails = new AuditDetails(logger, "LOGIN");
@@ -91,7 +91,7 @@ public class CommunicationChannelManager {
 	 * Invoked when a client disconnects (probably due to a time out).
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _K6QaAzQUEeCGErbqxW555A
+	 * 
 	 */
 	public void messageClientDestroyed(Object communicationChannelId) {
 		CommunicationChannel communicationChannel = idToCommunicationChannelMap.remove(communicationChannelId);
@@ -127,7 +127,7 @@ public class CommunicationChannelManager {
 	 * 
 	 * @see WebCommunicationChannel
 	 * @see WebCommunicationChannel#sendStackedObjects()
-	 * @flowerModelElementId _7sfgYHdJEeGzz9ZUhe52dw
+	 * 
 	 */
 	public Object handleReceivedObject(Object messageClientId, IPrincipal principal, final Object object) {
 		final CommunicationChannel communicationChannel = idToCommunicationChannelMap.get(messageClientId);
@@ -168,7 +168,7 @@ public class CommunicationChannelManager {
 	}
 	
 	/**
-	 * @flowerModelElementId _7sk_8XdJEeGzz9ZUhe52dw
+	 * 
 	 */
 	public void removeWebCommunicationLifecycleListener(ICommunicationChannelLifecycleListener listener) {
 		communicationLifecycleListeners.remove(listener);

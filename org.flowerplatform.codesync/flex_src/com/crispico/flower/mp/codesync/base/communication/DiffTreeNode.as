@@ -25,7 +25,7 @@ package com.crispico.flower.mp.codesync.base.communication {
 	 * The "Bindable" annotation is here in order to have the variables transformaed into accessors
 	 * by the Flex compiler (needed by the merge/copy logic <code>UpdateTreeNodeCommand</code>).
 	 * 
-	 * @flowerModelElementId _A62hcLOTEeCa6MHp-4L_Cw
+	 * 
 	 */ 
 	[Bindable]
 	[RemoteClass(alias="com.crispico.flower.mp.codesync.base.communication.DiffTreeNode")]

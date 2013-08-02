@@ -34,7 +34,7 @@ package org.flowerplatform.flexutil.layout {
 	 * 
 	 * @author Sorin
 	 * @author Cristina
-	 * @flowerModelElementId _62RBACuwEeG6vrEjfFek0Q
+	 * 
 	 */
 	public interface IViewProvider {
 		
@@ -42,22 +42,22 @@ package org.flowerplatform.flexutil.layout {
 		function getId():String;
 		
 		/**		  
-		 * @flowerModelElementId _BhLysVDFEeGsUPSh9UfXpw
+		 * 
 		 */		 
 		function createView(viewLayoutData:ViewLayoutData):UIComponent;
 		 
 		/**
-		 * @flowerModelElementId _BhLytVDFEeGsUPSh9UfXpw
+		 * 
 		 */
 		function getTitle(viewLayoutData:ViewLayoutData = null):String;
 		 
 		/**
-		 * @flowerModelElementId _BhMZwlDFEeGsUPSh9UfXpw
+		 * 
 		 */
 		function getIcon(viewLayoutData:ViewLayoutData = null):Object;
 		 
 		 /**
-		  * @flowerModelElementId _GEq74OCXEeGdYcOEhSk3ug
+		  * 
 		  */
 		function getTabCustomizer(viewLayoutData:ViewLayoutData):Object;
 		

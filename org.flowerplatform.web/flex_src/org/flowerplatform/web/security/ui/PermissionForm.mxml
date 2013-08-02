@@ -25,7 +25,7 @@
  @author Cristina
  @author Mariana
 
- @flowerModelElementId _oauckFcPEeGL3vi-zPhopA
+ 
 -->
 <ns:BaseForm 
 	xmlns:ns="org.flowerplatform.web.security.ui.*"
@@ -58,7 +58,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _RBkK8F34EeGwLIVyv_iqEg
+			 * 
 			 */
 			override public function set entityId(_entityId:Number):void {
 				super.entityId = _entityId;
@@ -86,7 +86,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _RBlZEV34EeGwLIVyv_iqEg
+			 * 
 			 */
 			private function dataReceivedCallback(result:PermissionAdminUIDto):void {
 				ModalSpinner.removeModalSpinner(this);
@@ -99,7 +99,7 @@
 			
 			/**
 			 * Casted instance of the Dto. 
-			 * @flowerModelElementId _RBlZFF34EeGwLIVyv_iqEg
+			 * 
 			 */ 
 			[Bindable(event="dtoChangedEvent")] 
 			public function get permission():PermissionAdminUIDto {
@@ -112,7 +112,7 @@
 			
 			var initialPermission:PermissionAdminUIDto;
 			/**
-			 * @flowerModelElementId _RBmAI134EeGwLIVyv_iqEg
+			 * 
 			 */
 			protected override function formOkHandler():void {
 				initialPermission = new PermissionAdminUIDto();
@@ -145,7 +145,7 @@
 			 * We result['resource'] if a validation error occured for that field).
 			 * We can not use this convention for name.
 			 *
-			 * @flowerModelElementId _RBmAJV34EeGwLIVyv_iqEg
+			 * 
 			 */ 
 			private function saveOkCallback(result:Object):void { 
 				var hasErrors:Boolean = false; 

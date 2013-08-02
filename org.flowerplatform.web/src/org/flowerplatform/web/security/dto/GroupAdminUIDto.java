@@ -27,12 +27,12 @@ import org.flowerplatform.web.entity.dto.NamedDto;
  * 
  * @author Cristi
  * @author Cristina
- * @flowerModelElementId _bWxJ8FcCEeGL3vi-zPhopA
+ * 
  */
 public class GroupAdminUIDto extends NamedDto {
 	
 	/**
-	 * @flowerModelElementId _xwN4MFcCEeGL3vi-zPhopA
+	 * 
 	 */
 	private NamedDto organization;
 

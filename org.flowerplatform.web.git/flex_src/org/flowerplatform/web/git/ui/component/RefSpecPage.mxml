@@ -19,7 +19,7 @@
 	license-end
 -->
 <!--
- @flowerModelElementId _LD5QsHErEeK0WoOyJtfqdw
+ 
 -->
 <ns:CustomTitlePanel xmlns:mx="http://www.adobe.com/2006/mxml" 
 					 implements="com.crispico.flower.flexdiagram.dialog.IDialogResultHandler" 
@@ -41,7 +41,7 @@
 			private var lastBtnPressed:Button;
 				
 			/**
-			 * @flowerModelElementId _hRBaMHErEeK0WoOyJtfqdw
+			 * 
 			 */
 			public function getRefMappings():ArrayCollection {
 				if (refMappings == null) { 
