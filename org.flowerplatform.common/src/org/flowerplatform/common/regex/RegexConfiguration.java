@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Cristi
- * @flowerModelElementId _HxF4IDLuEeKrMsw303uxEA
+ * 
  */
 public class RegexConfiguration {
 
@@ -78,7 +78,7 @@ public class RegexConfiguration {
 	}
 	
 	/**
-	 * @flowerModelElementId _vwkuWzPFEeKW9cVm6HkNBw
+	 * 
 	 */
 	public RegexConfiguration compile(int flags) {
 		if (logger.isTraceEnabled()) {
@@ -117,7 +117,7 @@ public class RegexConfiguration {
 	}
 	
 	/**
-	 * @flowerModelElementId _HxKJkzLuEeKrMsw303uxEA
+	 * 
 	 */
 	public RegexProcessingSession startSession(CharSequence input) {
 		RegexProcessingSession session = createSessionInstance();

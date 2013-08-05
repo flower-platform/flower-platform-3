@@ -55,7 +55,7 @@ package com.crispico.flower.texteditor {
 	 * listens for scrolling and dispatches a scrolling event to trigger the coloring of the
 	 * visible lines.
 	 * 
-	 * @flowerModelElementId _x_73cSyKEeGsGrJcrtxw9Q
+	 * 
 	 */ 
 	public class SyntaxTextArea extends TextArea {
 		
@@ -157,7 +157,7 @@ package com.crispico.flower.texteditor {
 		/**
 		 * Adds a listener for scrolling, to trigger recoloring when the visible area changes.
 		 * 
-		 * @flowerModelElementId _yAgfMCyKEeGsGrJcrtxw9Q
+		 * 
 		 */ 
 		private function creationCompleteHandler(evt:FlexEvent):void {
 			textDisplay.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, scrollHandler);
@@ -177,7 +177,7 @@ package com.crispico.flower.texteditor {
 		/**
 		 * Notifies that the visible range changed due to scrolling, to trigger recoloring on the new visible range.
 		 * 
-		 * @flowerModelElementId _yAgfNCyKEeGsGrJcrtxw9Q
+		 * 
 		 */ 
 		private function scrollHandler(evt:PropertyChangeEvent):void {
 			if (evt.property == "verticalScrollPosition") {
@@ -263,7 +263,7 @@ package com.crispico.flower.texteditor {
 		 * Note: this event must be created in the changing handler (NOT in the changed
 		 * handler) because we need the original text as well.
 		 * 
-		 * @flowerModelElementId _yAhGRCyKEeGsGrJcrtxw9Q
+		 * 
 		 */ 
 		private function changingHandler(evt:TextOperationEvent):void {
 //			var startChanging:Date = new Date();

@@ -39,7 +39,7 @@ package org.flowerplatform.web.common.communication.heartbeat {
 	 * @see #signalActivity()
 	 * 
 	 * @author Sorin
-	 * @flowerModelElementId _1PxqIAlNEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	public class HeartbeatStatefulClient extends StatefulClient  {
 		
@@ -68,7 +68,7 @@ package org.flowerplatform.web.common.communication.heartbeat {
 		
 		
 		/**
-		 * @flowerModelElementId _2ct2AAlbEeK1a-Ic5xjg1Q
+		 * 
 		 */
 		public function HeartbeatStatefulClient() {
 			heart = new Timer(HEARTBEAT_PERIOD, 0); // infinite
@@ -103,7 +103,7 @@ package org.flowerplatform.web.common.communication.heartbeat {
 		}
 		
 		/**
-		 * @flowerModelElementId _JMquAAlcEeK1a-Ic5xjg1Q
+		 * 
 		 */
 		private function handleBridgeEvent(event:BridgeEvent):void {
 			if (event.type == BridgeEvent.CONNECTED) { // New connection
@@ -146,7 +146,7 @@ package org.flowerplatform.web.common.communication.heartbeat {
 		///////////////////////////////////////////////////////////////
 		
 		/**
-		 * @flowerModelElementId _dQMRQAldEeK1a-Ic5xjg1Q
+		 * 
 		 */
 		[RemoteInvocation]
 		public function warnAboutNoActivity(secondsUntilDisconnect:Number):void {

@@ -27,7 +27,7 @@ package  org.flowerplatform.editor {
 	 * The methods for name and icon are meant to be compatible to the ones in
 	 * <code>EditorDescriptor</code> which implements <code>IViewProvider</code>.
 	 * 
-	 * @flowerModelElementId _F1yocKWpEeGAT8h2VXeJdg
+	 * 
 	 */
 	public class BasicEditorDescriptor {
 		
@@ -42,7 +42,7 @@ package  org.flowerplatform.editor {
 		 * Abstract method. Called with a <code>null</code> parameter, should
 		 * return the icon of the editor.
 		 * 
-		 * @flowerModelElementId _TRQXsKjNEeG5F5Y4p-wnrg
+		 * 
 		 */
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
 			throw new Error("This method should be implemented.");
@@ -52,7 +52,7 @@ package  org.flowerplatform.editor {
 		 * Abstract method. Called with a <code>null</code> parameter, should
 		 * return the icon of the editor.
 		 * 
-		 * @flowerModelElementId _TRXFYqjNEeG5F5Y4p-wnrg
+		 * 
 		 */
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String	{
 			throw new Error("This method should be implemented.");
@@ -62,7 +62,7 @@ package  org.flowerplatform.editor {
 		 * Should open the corresponding editor, with the
 		 * provided input. 
 		 * 
-		 * @flowerModelElementId _1UHNYE2ZEeGsUPSh9UfXpw
+		 * 
 		 */
 		public function openEditor(editableResourcePath:String, forceNewEditor:Boolean=false, openForcedByServer:Boolean=false, handleAsClientSubscription:Boolean=false):UIComponent {
 			throw new Error("This method should be implemented");
@@ -74,7 +74,7 @@ package  org.flowerplatform.editor {
 		 * <p>
 		 * Should create a new instance of the corresponding
 		 * <code>EditorStatefulClient</code>.
-		 * @flowerModelElementId _NJ-x8AcIEeK49485S7r3Vw
+		 * 
 		 */ 
 		protected function createEditorStatefulClient():EditorStatefulClient {
 			throw new Error("This method should be implemented.");

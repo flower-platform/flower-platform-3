@@ -38,12 +38,12 @@ package com.crispico.flower.util.shortcuts {
 	 * http://stackoverflow.com/questions/9507200/why-keydown-listener-doesnt-work-in-ie
 	 * 
 	 * @author Florin
-	 * @flowerModelElementId _gTQEQIiVEeG7SeaoTFzMGQ
+	 * 
 	 */
 	public class KeyBindings {
 				
 		/**
-		 * @flowerModelElementId _gTQrUoiVEeG7SeaoTFzMGQ
+		 * 
 		 */
 		private var bindings:Dictionary = new Dictionary();
 
@@ -62,7 +62,7 @@ package com.crispico.flower.util.shortcuts {
 				
 		/**
 		 * Action can be an IAction or a Function.
-		 * @flowerModelElementId _gTRSYoiVEeG7SeaoTFzMGQ
+		 * 
 		 */
 		public function registerBinding(shortcut:Shortcut, action:Object): void {
 			if (!(action is IAction) && !(action is Function)) {
@@ -81,7 +81,7 @@ package com.crispico.flower.util.shortcuts {
 		}
 
 		/**
-		 * @flowerModelElementId _gTSghoiVEeG7SeaoTFzMGQ
+		 * 
 		 * @author Cristi
 		 * @author Daniela
 		 */
@@ -111,7 +111,7 @@ package com.crispico.flower.util.shortcuts {
 		}
 		
 		/** 
-		 * @flowerModelElementId _gTTHkoiVEeG7SeaoTFzMGQ
+		 * 
 		 * @author Cristi
 		 * @author Daniela
 		 */

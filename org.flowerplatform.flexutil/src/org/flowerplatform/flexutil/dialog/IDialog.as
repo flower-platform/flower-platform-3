@@ -27,7 +27,7 @@ package org.flowerplatform.flexutil.dialog {
 	 * 
 	 *  
 	 * @author Luiza
-	 * @flowerModelElementId _Qb-bEFlAEeCimMujaloQ8A
+	 * 
 	 */ 
 	public interface IDialog {
 		

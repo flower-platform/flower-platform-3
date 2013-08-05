@@ -26,7 +26,7 @@ import org.flowerplatform.communication.channel.CommunicationChannelManager;
 
 /**
  * @author Cristi
- * @flowerModelElementId _x9QTkAJ1EeKGLqam5SXwYg
+ * 
  */
 abstract public class StatefulService {
 
@@ -54,7 +54,7 @@ abstract public class StatefulService {
 	///////////////////////////////////////////////////////////////
 
 	/**
-	 * @flowerModelElementId _M8aQAAcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected void invokeClientMethod(CommunicationChannel statefulClientCommunicationChannel, String statefulClientId, String methodName, Object[] parameters) {
 		statefulClientCommunicationChannel.appendOrSendCommand(new InvokeStatefulClientMethodClientCommand(statefulClientId, methodName, parameters));
@@ -75,13 +75,13 @@ abstract public class StatefulService {
 	///////////////////////////////////////////////////////////////
 
 	/**
-	 * @flowerModelElementId _1bBa8AJ1EeKGLqam5SXwYg
+	 * 
 	 */
 	@RemoteInvocation
 	abstract public void subscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState);
 	
 	/**
-	 * @flowerModelElementId _M8iy4AcIEeK49485S7r3Vw
+	 * 
 	 */
 	@RemoteInvocation
 	abstract public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState);

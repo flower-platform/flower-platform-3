@@ -78,7 +78,7 @@ import org.slf4j.LoggerFactory;
  * @author Cristina
  * @author Mariana
  * 
- * @flowerModelElementId _Ksgw8FlkEeGRrZ75u0k71A
+ * 
  */
 public class UserService extends ServiceObservable {
 	
@@ -97,7 +97,7 @@ public class UserService extends ServiceObservable {
 	 * 
 	 * @see #findAllAsAdminUIDto()
 	 * @see #findByIdAsAdminUIDto()
-	 * @flowerModelElementId _CbyglFyIEeGwx-0cTKUc5w
+	 * 
 	 */
 	private UserAdminUIDto convertUserToUserAdminUIDto(User user) {
 		UserAdminUIDto dto = new UserAdminUIDto();
@@ -164,7 +164,7 @@ public class UserService extends ServiceObservable {
 	
 	/**
 	 * Finds the user given by its id and returns an {@link UserAdminUIDto}. 
-	 * @flowerModelElementId _QUTcUV34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public UserAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find user with id = {}", id);
@@ -333,7 +333,7 @@ public class UserService extends ServiceObservable {
 	 * Creates/Updates the {@link User} based on {@link UserAdminUIDto} stored information. 
 	 * Returns an error message, or <code>null</code> if there were no errors.
 	 * 
-	 * @flowerModelElementId _QUUDZF34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public String mergeAdminUIDto(final UserAdminUIDto dto) {
 		logger.debug("Merge user = {}", dto.getLogin());
@@ -528,7 +528,7 @@ public class UserService extends ServiceObservable {
 	/**
 	 * Deletes all {@link User}s based on the list of their ids. This operations is allowed iff the user has global permissions.
 	 * 
-	 * @flowerModelElementId _QUUqcl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public String delete(final ServiceInvocationContext context, final List<Integer> ids) {
 		final User[] deletedUser = new User[1];
@@ -593,7 +593,7 @@ public class UserService extends ServiceObservable {
 	 * Removes the association between groupUser and group.
 	 * 
 	 * Note cache: Because of the cache mechanism, this isn't done automatically.
-	 * @flowerModelElementId _QUVRgF34EeGwLIVyv_iqEg
+	 * 
 	 */
 	private void removeGroupUserDependency(final GroupUser groupUser) {
 		logger.debug("Remove {} from {}", groupUser.getUser(), groupUser.getGroup());
@@ -610,7 +610,7 @@ public class UserService extends ServiceObservable {
 	 * This method makes also modifications on target entities (User and Group).
 	 * 
 	 * Note cache: Because of the cache mechanism, this isn't done automatically.
-	 * @flowerModelElementId _QUVRhF34EeGwLIVyv_iqEg
+	 * 
 	 */
 	private void addGroupUserDependency(final User user, final Group group, DatabaseOperationWrapper wrapper) {	
 		logger.debug("Add {} to {}", user, group);

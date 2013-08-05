@@ -46,7 +46,7 @@ import org.flowerplatform.web.entity.PermissionEntity;
  * @author Florin
  * @author Mariana
  * 
- * @flowerModelElementId _OzQF4GRyEeGyd4yTk74SKw
+ * 
  */
 public abstract class PermissionDescriptor {	
 	
@@ -73,7 +73,7 @@ public abstract class PermissionDescriptor {
 	 * <p>
 	 * {@link FlowerWebPolicy} organizes the cache based on the result of this method.
 	 * 
-	 * @flowerModelElementId _f1UwQGnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	public abstract Class<? extends Permission> getHandledPermissionType();
 	
@@ -82,33 +82,33 @@ public abstract class PermissionDescriptor {
 	 * of the "implements" logic. The fully qualified of this type is saved
 	 * in the database {@link PermissionEntity#getType()}. 
 	 * 
-	 * @flowerModelElementId _dfScgGRyEeGyd4yTk74SKw
+	 * 
 	 */
 	public abstract Class<? extends Permission> getImplementedPermissionType();
 
 	/**
 	 * Should return <code>true</code> for tree permissions.
 	 * 
-	 * @flowerModelElementId _uMrm4GRyEeGyd4yTk74SKw
+	 * 
 	 */
 	public abstract boolean isTreePermission();
 	
 	/**
 	 * Validates the name and action fields of a permission. 
-	 * @flowerModelElementId _SdHgMIIZEeGPwv1h63g-uQ
+	 * 
 	 */
 	public abstract Map<String, String> validate(Permission permission);
 	
 	/**
 	 * Return the possible values for actions, in case these values form a finit set.
-	 * @flowerModelElementId _SdIHQYIZEeGPwv1h63g-uQ
+	 * 
 	 */
 	public List<String> getActions() {
 		return Collections.emptyList();
 	}
 	
 	/**
-	 * @flowerModelElementId _SdIHRIIZEeGPwv1h63g-uQ
+	 * 
 	 */
 	public String getName() {
 		return getImplementedPermissionType().getName();
@@ -117,7 +117,7 @@ public abstract class PermissionDescriptor {
 	public void setName(String s) {}
 	
 	/**
-	 * @flowerModelElementId _SdJVYIIZEeGPwv1h63g-uQ
+	 * 
 	 */
 	public String getSimpleName() {
 		return getImplementedPermissionType().getSimpleName();

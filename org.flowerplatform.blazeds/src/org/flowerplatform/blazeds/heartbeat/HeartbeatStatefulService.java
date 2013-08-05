@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
  * The service subscribes and unsubscribes for each channel that is created or destroyed.
  * 
  * @author Sorin
- * @flowerModelElementId _sTw3wAlVEeK1a-Ic5xjg1Q
+ * 
  */
 public class HeartbeatStatefulService extends RegularStatefulService<BlazedsCommunicationChannel, HeartbeatDetails> implements ICommunicationChannelLifecycleListener { 
 	
@@ -61,7 +61,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _Di_FMA0sEeKBbcAV0j7rNw
+	 * 
 	 */
 	@Override
 	protected void printStatefulDataForClient(StringBuffer stringBuffer, String linePrefix, BlazedsCommunicationChannel client, HeartbeatDetails data) {
@@ -122,7 +122,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	 * 	<ul> update last traveling data time stamp
 	 *  <ul> update last client activity time stamp except for heartbeat signal
 	 * </li>
-	 * @flowerModelElementId _YWz4wAljEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	public void notifyObjectReceived(BlazedsCommunicationChannel channel, Object object) {
 		logObject(object, false);
@@ -143,7 +143,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	 *  <ul> update last traveling data time stamp
 	 *  <ul> don't count as activity of client.
 	 * </li>
-	 * @flowerModelElementId _dxCFwAljEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	public void notifyObjectSent(BlazedsCommunicationChannel channel, Object object) {
 		logObject(object, true);
@@ -171,7 +171,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	
 	/**
 	 * Opens a dialog on client side notifying that it will be disconnected in <code>secondsUntilDisconnect</code> seconds.
-	 * @flowerModelElementId _DjATUQ0sEeKBbcAV0j7rNw
+	 * 
 	 */
 	public void warnAboutNoActivity(BlazedsCommunicationChannel channel, long secondsUntilDisconnect) {
 		invokeClientMethod(channel, CLIENT_ID, "warnAboutNoActivity", new Object[] { secondsUntilDisconnect });
@@ -188,7 +188,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	
 	/**
 	 * Subscribes as soon as the channel is created.  
-	 * @flowerModelElementId _OWRT0AlWEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	public void communicationChannelCreated(CommunicationChannel communicationChannel) {
 		subscribe(new StatefulServiceInvocationContext(communicationChannel, null, null), null);
@@ -204,7 +204,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 
 	/**
 	 * Update last traveling data time stamp.
-	 * @flowerModelElementId _C3PY0AljEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	@RemoteInvocation
 	public void signalHeartbeat(StatefulServiceInvocationContext context) {
@@ -215,7 +215,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	/**
 	 * Update last client activity time stamp.
 	 * Also count as updating last traveling data time stamp. 
-	 * @flowerModelElementId _5fm7EAliEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	@RemoteInvocation
 	public void signalActivity(StatefulServiceInvocationContext context) {

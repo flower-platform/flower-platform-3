@@ -55,12 +55,12 @@ import org.flowerplatform.web.entity.PermissionEntity;
  * 
  * @author Florin
  * 
- * @flowerModelElementId _Z990YHgGEeGtTo1wOb4S9A
+ * 
  */
 public class ModifyTreePermissionsPermission extends AbstractTreePermission {
 
 	/**
-	 * @flowerModelElementId _Z9-bcXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
@@ -71,7 +71,7 @@ public class ModifyTreePermissionsPermission extends AbstractTreePermission {
 	 * <li> to appear in PermissionEntities.assignedTo or PermissionEntities.actions when checking for ModifyTreePermissionsPermission </li>
 	 * <li> to appear in PermissionEntities.assignedTo in case for a FlowerWebFilePermission (or others) </li>
 	 * </ul>
-	 * @flowerModelElementId _Z9_CgXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	private List<ISecurityEntity> assignableSecurityEntities;
 
@@ -81,14 +81,14 @@ public class ModifyTreePermissionsPermission extends AbstractTreePermission {
 	 *            path, it will be considered relative to user directory, not to
 	 *            runtime workspace of running eclipse.
 	 * @param actions
-	 * @flowerModelElementId _Z-AQoHgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public ModifyTreePermissionsPermission(String name, String actions) {
 		super(name, actions);		
 	}
 	
 	/**
-	 * @flowerModelElementId _Z-BewngGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public boolean impliesWithoutTreePathCheck(Permission permission) {
@@ -115,7 +115,7 @@ public class ModifyTreePermissionsPermission extends AbstractTreePermission {
 	}
 	
 	/**
-	 * @flowerModelElementId _Z-Cs4ngGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -128,7 +128,7 @@ public class ModifyTreePermissionsPermission extends AbstractTreePermission {
 	}
 
 	/**
-	 * @flowerModelElementId _Z-EiEXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public int hashCode() {

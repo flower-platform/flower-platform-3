@@ -60,7 +60,7 @@ package  org.flowerplatform.blazeds {
 	 * of anomaly. The connections are done delayed so that the server isn't flood by clients.
 	 * 
 	 * @author Sorin
-	 * @flowerModelElementId _IeWzQG3cEeGYiLzscjdrpg
+	 * 
 	 */
 	public class BlazeDSBridge extends EventDispatcher {
 		
@@ -177,7 +177,7 @@ package  org.flowerplatform.blazeds {
 		 * 
 		 * @author Sorin
  		 * @author Mariana
-		 * @flowerModelElementId _QYKoIG3cEeGYiLzscjdrpg
+		 * 
 		 */
 		public function connect(username : String = null, password : String = null) : void {
 			if (password == null || password.length == 0) // Due to a bug in blazeDS, password must not be empty so we consider it same as username.
@@ -230,7 +230,7 @@ package  org.flowerplatform.blazeds {
 		 * 
 		 * @see disconnect()
 		 * 
-		 * @flowerModelElementId _wcFQkG3cEeGYiLzscjdrpg
+		 * 
 		 */
 		public function cancelConnecting():void {
 			if (logger.isLogEnabled())
@@ -250,7 +250,7 @@ package  org.flowerplatform.blazeds {
 		 * dispatces a disconnect event that it happened from the server.
 		 * Called when reinitializing bridge internally which supresses deconnected notifications.
 		 * 
-		 * @flowerModelElementId _SmTToG3cEeGYiLzscjdrpg
+		 * 
 		 */
 		public function disconnect(triggeredByServer:Boolean=false):void {
 			if (logger.isLogEnabled())
@@ -342,7 +342,7 @@ package  org.flowerplatform.blazeds {
 		 * 
 		 * @author Sorin
 		 * @author Cristi
-		 * @flowerModelElementId _X6piIG3cEeGYiLzscjdrpg
+		 * 
 		 */
 		public function sendObject(object:Object):void {
 			if (!connectionEstablished) {
@@ -399,7 +399,7 @@ package  org.flowerplatform.blazeds {
 
 		/**
 		 * When a connection has been established or a reconnection has been succeeded, notifications are dispatched. 
-		 * @flowerModelElementId _0ycM0G3cEeGYiLzscjdrpg
+		 * 
 		 */
 		private function subscribeSuccessHandler(event:PropertyChangeEvent):void {
 			if (event.property == "subscribed" && event.newValue == true) {
@@ -527,7 +527,7 @@ package  org.flowerplatform.blazeds {
 		 * When a message is received from the server a notification with the object is dispatched.
 		 * This also handles http responses from the server.
 		 * @see WebCommunicationChannelManager.java#invoke()
-		 * @flowerModelElementId _0CSNwHdJEeGzz9ZUhe52dw
+		 * 
 		 */
 		private function messageArrivedHandler(event:MessageEvent):void {
 			dispatchEvent(new BridgeEvent(BridgeEvent.OBJECT_RECEIVED, event.message.body));

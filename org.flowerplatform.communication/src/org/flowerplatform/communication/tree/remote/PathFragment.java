@@ -31,56 +31,56 @@ package org.flowerplatform.communication.tree.remote;
  * @author Cristi
  * @author Cristina
  * 
- * @flowerModelElementId _zqqNoKKbEeGYz6sIcvSzpg
+ * 
  */
 public class PathFragment {
 	
 	/**
-	 * @flowerModelElementId _jcBw8KKdEeGYz6sIcvSzpg
+	 * 
 	 */
 	private String name;
 	
 	/**
-	 * @flowerModelElementId _m1DiQKKdEeGYz6sIcvSzpg
+	 * 
 	 */
 	private String type;
 
 	/**
-	 * @flowerModelElementId _vFGCUKP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * @flowerModelElementId _vFJssKP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * @flowerModelElementId _vFTdsqP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * @flowerModelElementId _vFec0aP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
 	/**
-	 * @flowerModelElementId _vFr4MaP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public PathFragment() {		
 	}
 	
 	/**
-	 * @flowerModelElementId _vF4FcKP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public PathFragment(String name, String type) {	
 		this.name = name;
@@ -107,7 +107,7 @@ public class PathFragment {
 	}
 	
 	/**
-	 * @flowerModelElementId _vGHWAKP8EeGeHqktJlHXmA
+	 * 
 	 */
 	@Override
 	public String toString() {		

@@ -34,27 +34,27 @@ package  com.crispico.flower.util.layout.view {
 	/**
 	 * Represents a graphical minimized stack.
 	 * 
-	 * @flowerModelElementId _dU_ScCvGEeG6vrEjfFek0Q
+	 * 
 	 */
 	public class MinimizedStackBar extends Box {
 				
 		/**
-		 * @flowerModelElementId _xzRWcCx0EeG30ZBOJxPP8Q
+		 * 
 		 */
 		private var workbench:Workbench;
 		
 		/**
-		 * @flowerModelElementId _yciV4Cx0EeG30ZBOJxPP8Q
+		 * 
 		 */
 		public var stackLayoutData:StackLayoutData;
 		
 		/**
-		 * @flowerModelElementId _KfW88EZkEeGLHf9i2RlZCg
+		 * 
 		 */
 		private var restoreButton:Button;
 		
 		/**		
-		 * @flowerModelElementId _ou0TYCx0EeG30ZBOJxPP8Q
+		 * 
 		 */
 		public function MinimizedStackBar(orientation:Number, stackLayoutData:StackLayoutData, workbench:Workbench) {
 			this.stackLayoutData = stackLayoutData;
@@ -71,7 +71,7 @@ package  com.crispico.flower.util.layout.view {
 		
 		/**
 		 * For each stack layout data child, adds a button with corresponding icon.
-		 * @flowerModelElementId _xnoNYEZuEeGLHf9i2RlZCg
+		 * 
 		 */
 		protected override function createChildren():void {			
 			super.createChildren();
@@ -104,7 +104,7 @@ package  com.crispico.flower.util.layout.view {
 		 * <p>
 		 * Sets the active view to be the restored component.
 		 * 
-		 * @flowerModelElementId _M_A2QEZkEeGLHf9i2RlZCg
+		 * 
 		 */
 		private function restoreButtonHandler(event:MouseEvent):void {
 			workbench.restore(stackLayoutData);

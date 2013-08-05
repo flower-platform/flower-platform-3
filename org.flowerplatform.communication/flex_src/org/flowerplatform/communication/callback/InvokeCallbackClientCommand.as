@@ -35,7 +35,7 @@ package org.flowerplatform.communication.callback {
 	 * <code>disposeCallbackWithoutInvocation = true</code>.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _vQgpfMbmEd6X47mKLkTdUQ
+	 * 
 	 */ 
 	[RemoteClass]
 	public class InvokeCallbackClientCommand extends AbstractClientCommand {
@@ -47,7 +47,7 @@ package org.flowerplatform.communication.callback {
 		public var disposeCallbackWithoutInvocation:Boolean;
 		
 		/**
-		 * @flowerModelElementId _SVxIa8eWEd6ebePkcCLlJA
+		 * 
 		 */
 		public override function execute():void {
 			var callback:FlexCallback = FlexCallback(CommunicationPlugin.getInstance().pendingCallbacks[callbackId]);

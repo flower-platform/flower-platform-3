@@ -22,7 +22,7 @@
  
  @author Cristina
  @author Sorin
- @flowerModelElementId _NoDcYBLtEeKIW4So6X04UQ
+ 
 -->
 <popUp:ResizablePopupWindow
 		xmlns:mx="http://www.adobe.com/2006/mxml" 
@@ -45,7 +45,7 @@
 			
 			/**
 			 * Needed to know to which progress monitor to call cancel on the server.
-			 * @flowerModelElementId _bVsZMBN-EeK1ssFHNoNwQg
+			 * 
 			 */
 			private var progressMonitorHandler:IProgressMonitorHandler;
 			

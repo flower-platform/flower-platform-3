@@ -23,7 +23,7 @@ package com.crispico.flower.texteditor.model {
 	/**
 	 * A range that has a format applied.
 	 * 
-	 * @flowerModelElementId _0rR4kO2uEeCF5Ozw-0NJ0A
+	 * 
 	 */
 	public class FormattedRange extends Range {
 		

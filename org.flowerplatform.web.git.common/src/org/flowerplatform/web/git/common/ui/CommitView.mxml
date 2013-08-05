@@ -47,12 +47,12 @@
 			public var selectedNodes:ArrayList;
 			
 			/**
-			 * @flowerModelElementId _n-NGAHH-EeK0WoOyJtfqdw
+			 * 
 			 */
 			public var dto:CommitPageDto;
 			
 			/**
-			 * @flowerModelElementId _Di9JkHIBEeK0WoOyJtfqdw
+			 * 
 			 */
 			[Bindable]
 			public var commitResources:ArrayCollection;
@@ -64,7 +64,7 @@
 			}
 		
 			/**
-			 * @flowerModelElementId _QCWJ0HH-EeK0WoOyJtfqdw
+			 * 
 			 */
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
@@ -119,7 +119,7 @@
 			}
 
 			/**
-			 * @flowerModelElementId _r2db4HH8EeK0WoOyJtfqdw
+			 * 
 			 */
 			protected override function finishClickHandler():void {	
 				// validate form

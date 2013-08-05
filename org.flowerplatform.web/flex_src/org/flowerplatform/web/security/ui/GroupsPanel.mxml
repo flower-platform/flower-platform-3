@@ -24,7 +24,7 @@
  	@author Cristi
  	@author Cristina
  	@author Mariana
- @flowerModelElementId _V5t_gFcPEeGL3vi-zPhopA
+ 
 -->
 <ui:BaseListPanel 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
@@ -50,7 +50,7 @@
 			import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
 		
 			/**
-			 * @flowerModelElementId _RBOzwl34EeGwLIVyv_iqEg
+			 * 
 			 */
 			protected function onCreationComplete(event:FlexEvent):void {
 				formClass = GroupForm;
@@ -63,7 +63,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _RBPa0V34EeGwLIVyv_iqEg
+			 * 
 			 */
 			override public function refreshBtnHandler(rslt:Object=null):void {
 				super.refreshBtnHandler();
@@ -78,7 +78,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _RBPa0134EeGwLIVyv_iqEg
+			 * 
 			 */
 			override protected function deleteResultHandler(event:CloseEvent):void {
 				if (event.detail == Alert.YES) {

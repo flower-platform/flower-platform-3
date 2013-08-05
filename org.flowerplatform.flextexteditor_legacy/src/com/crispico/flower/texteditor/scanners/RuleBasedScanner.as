@@ -32,14 +32,14 @@ package com.crispico.flower.texteditor.scanners
 	 * if no specific token was detected. Then use the addRule method to add
 	 * each rule this scanner will use.
 	 * 
-	 * @flowerModelElementId _MtWYsd3QEeCGOND4c9bKyA
+	 * 
 	 */
 	public class RuleBasedScanner extends CharacterScanner implements ITokenScanner {
 		
 		/**
 		 * A list of rules used when scanning.
 		 * 
-		 * @flowerModelElementId _MuF_kt3QEeCGOND4c9bKyA
+		 * 
 		 */
 		protected var rules:ArrayCollection;
 		
@@ -88,7 +88,7 @@ package com.crispico.flower.texteditor.scanners
 		 * Caches the detected token to be returned later if it does not start at the end of the last returned token
 		 * and returns a default token instead; this way any gap is covered.
 		 * 
-		 * @flowerModelElementId _MuIb193QEeCGOND4c9bKyA
+		 * 
 		 */
 		public function nextToken():Token {
 			var resultToken:Token = null;

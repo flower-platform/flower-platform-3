@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
  * @author Cristina
  * @author Mariana
  
- * @flowerModelElementId _fLaqAFczEeG6S8FiFZ8nVA
+ * 
  */
 public class PermissionService {
 	
@@ -89,7 +89,7 @@ public class PermissionService {
 	 * 
 	 * @see #findAllAsAdminUIDto()
 	 * @see #findByIdAsAdminUIDto()
-	 * @flowerModelElementId _QT2JUl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	private PermissionAdminUIDto convertPermissionToPermissionAdminUIDto(PermissionEntity permission) {
 		PermissionAdminUIDto dto = new PermissionAdminUIDto();
@@ -106,7 +106,7 @@ public class PermissionService {
 	
 	/**
 	 * Finds the {@link PermissionEntity permission} given by its id and returns a {@link PermissionAdminUIDto}. 
-	 * @flowerModelElementId _QT2JVl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public PermissionAdminUIDto findByIdAsAdminUIDto(final long id) {
 		logger.debug("Find permission with id = {}", id);
@@ -126,7 +126,7 @@ public class PermissionService {
 	
 	/**
 	 * Finds all {@link PermissionEntity}s and returns a list of their corresponding {@link PermissionAdminUIDto}.
-	 * @flowerModelElementId _QT2wYl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public List<PermissionAdminUIDto> findAllAsAdminUIDto() { 
 		logger.debug("Find all permissions");
@@ -152,7 +152,7 @@ public class PermissionService {
 	/**
 	 * Finds {@link PermissionEntity}s that correspond to given {@link PermissionsByResourceFilter} 
 	 * and returns a list of their corresponding {@link PermissionAdminUIDto}.
-	 * @flowerModelElementId _QT3Xcl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public List<PermissionAdminUIDto> findAsAdminUIDtoFilterByResource(PermissionsByResourceFilter resourceFilter) {
@@ -222,7 +222,7 @@ public class PermissionService {
 	 * permissions (e.g. for root/org1 -> root/org1/*) should be modified as well.
 	 * 
 	 * @see #validDto()
-	 * @flowerModelElementId _QT3-gl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public Map<String, String> mergeAdminUIDto(ServiceInvocationContext context, final PermissionAdminUIDto dto) {
@@ -293,7 +293,7 @@ public class PermissionService {
 	 * is a folder. The client will then ask the user if similar permissions 
 	 * (e.g. for root/org1 -> root/org1/*) should be deleted as well.
 	 * 
-	 * @flowerModelElementId _QUEy0V34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public List<Boolean> delete(final List<Integer> ids) {
 		final List<Boolean> result = new ArrayList<Boolean>();

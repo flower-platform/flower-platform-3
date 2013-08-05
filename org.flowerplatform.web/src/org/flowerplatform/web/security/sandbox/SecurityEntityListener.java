@@ -47,7 +47,7 @@ import org.hibernate.event.spi.PreDeleteEventListener;
  * @author Florin
  * @author Mariana
  * 
- * @flowerModelElementId _o9bbIGRvEeGyd4yTk74SKw
+ * 
  */
 public class SecurityEntityListener implements 
 	PostInsertEventListener, PostDeleteEventListener, PostUpdateEventListener, PreDeleteEventListener {
@@ -55,7 +55,7 @@ public class SecurityEntityListener implements
 	private static final long serialVersionUID = 1377271602960613446L;
 
 	/**
-	 * @flowerModelElementId _Z-8r0HgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	@Override
 	public void onPostInsert(PostInsertEvent evt) {
@@ -76,7 +76,7 @@ public class SecurityEntityListener implements
 	 * 
 	 * @author Florin
 	 * @author Cristi
-	 * @flowerModelElementId _reYU8GRvEeGyd4yTk74SKw
+	 * 
 	 */
 	@Override
 	public void onPostUpdate(PostUpdateEvent evt) {		
@@ -105,7 +105,7 @@ public class SecurityEntityListener implements
 	 * @author Florin
 	 * @author Cristi
 	 * @return 
-	 * @flowerModelElementId _pufnAIMAEeG2LdcUX32kBA
+	 * 
 	 */
 	@Override
 	public boolean onPreDelete(PreDeleteEvent evt) {	
@@ -136,7 +136,7 @@ public class SecurityEntityListener implements
 	}
 	
 	/**
-	 * @flowerModelElementId _YN6VQHl1EeG7_fzMWZxiHA
+	 * 
 	 */
 	@Override
 	public void onPostDelete(PostDeleteEvent evt) {				
@@ -144,7 +144,7 @@ public class SecurityEntityListener implements
 	}
 	
 	/**
-	 * @flowerModelElementId _YN68U3l1EeG7_fzMWZxiHA
+	 * 
 	 */
 	private void entityUpdatedOrDeleted(Object entity) {
 		if (!(Policy.getPolicy() instanceof FlowerWebPolicy)) {

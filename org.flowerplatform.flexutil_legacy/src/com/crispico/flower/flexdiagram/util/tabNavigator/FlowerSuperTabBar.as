@@ -35,7 +35,7 @@ package com.crispico.flower.flexdiagram.util.tabNavigator {
 	 * in order to work also with an URL for the child's icon.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _KP2xcfDREd-yKrmCiYZiog
+	 * 
 	 */
 	public class FlowerSuperTabBar extends SuperTabBar {
 		

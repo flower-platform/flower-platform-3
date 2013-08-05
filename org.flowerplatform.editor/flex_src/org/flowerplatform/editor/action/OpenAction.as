@@ -31,7 +31,7 @@ package  org.flowerplatform.editor.action {
 	 * @author Cristi
 	 * @author Mariana
      * @author Sorin
-	 * @flowerModelElementId _c1aTwE2iEeGsUPSh9UfXpw
+	 * 
 	 */
 	public class OpenAction extends ActionBase {
 		
@@ -43,7 +43,7 @@ package  org.flowerplatform.editor.action {
 		
 		/**
 		 * There will be an editorEntry only when this action is added in the Open With submenu
-		 * @flowerModelElementId _wb413FJdEeGnQ71Q1-0lCg
+		 * 
 		 */ 
 		public function OpenAction(editorDescriptor:BasicEditorDescriptor, forceNewEditor:Boolean):void {
 			if (editorDescriptor == null) {
@@ -62,7 +62,7 @@ package  org.flowerplatform.editor.action {
 		}
 		
 		/**
-		 * @flowerModelElementId _wb414FJdEeGnQ71Q1-0lCg
+		 * 
 		 */
 		override public function run():void {
 			var currentEditorDescriptor:BasicEditorDescriptor = editorDescriptor;

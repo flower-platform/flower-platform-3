@@ -27,18 +27,18 @@ package com.crispico.flower.flexdiagram.action {
 
 	/**
 	 * @author Cristina
-	 * @flowerModelElementId _j2HI0L_PEd-259cbnb9fYw
+	 * 
 	 */
 	[SecureSWF(rename="off")]
 	public class Action2 implements IAction {
 	
 		/**
-		 * @flowerModelElementId _j2HI0r_PEd-259cbnb9fYw
+		 * 
 		 */
 		private var _image:Object;
 		
 		/**
-		 * @flowerModelElementId _j2HI07_PEd-259cbnb9fYw
+		 * 
 		 */
 		private var _label:String;
 		
@@ -47,7 +47,7 @@ package com.crispico.flower.flexdiagram.action {
 		private var _sortIndex:int = FlowerContextMenu.DEFAULT_SORT_INDEX;
 
 		/**
-		 * @flowerModelElementId _j2HI1L_PEd-259cbnb9fYw
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public function get label():String {
@@ -66,7 +66,7 @@ package com.crispico.flower.flexdiagram.action {
 		}
 		
 		/**
-		 * @flowerModelElementId _j2HI1r_PEd-259cbnb9fYw
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public function get image():Object {
@@ -105,7 +105,7 @@ package com.crispico.flower.flexdiagram.action {
 		}
 		
 		/**
-		 * @flowerModelElementId _j2HI2L_PEd-259cbnb9fYw
+		 * 
 		 */
 		public function isVisible(selection:ArrayCollection):Boolean {
 			return true;
@@ -118,7 +118,7 @@ package com.crispico.flower.flexdiagram.action {
 		}
 		
 		/**
-		 * @flowerModelElementId _j2HI3r_PEd-259cbnb9fYw
+		 * 
 		 */
 		public function run(selection:ArrayCollection):void {
 		}

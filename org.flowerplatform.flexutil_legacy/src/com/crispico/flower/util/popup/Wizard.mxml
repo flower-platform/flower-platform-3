@@ -59,7 +59,7 @@
  @author Cristi
  @author Cristina
 
- @flowerModelElementId _XTqPMNo7EeGze9Q5lcKqYg
+ 
 -->
 <popup:ResizablePopupWindow xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:common="com.crispico.flower.flexdiagram.util.common.*" creationComplete="creationCompleteHandler()" paddingLeft="0" paddingRight="0" paddingTop="0" paddingBottom="0" verticalGap="0" xmlns:popup="com.crispico.flower.util.popup.*">
 	<fx:Declarations>

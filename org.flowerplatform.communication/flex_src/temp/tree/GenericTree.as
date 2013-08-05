@@ -67,19 +67,19 @@ package  temp.tree {
 	 * 
 	 * @author Cristi
 	 * @author Cristina
-	 * @flowerModelElementId _4xATADR-EeCGErbqxW555A
+	 * 
 	 */
 	public class GenericTree extends CustomTree 
 //		implements IContextMenuLogicProvider, IActionProvider2 
 	{
 		
 		/**
-		 * @flowerModelElementId _lTttEBN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		public static const DEFAULT_CLIENT_ID_PREFIX:String = "Generic Tree";
 				
 		/**
-		 * @flowerModelElementId _lTuUIRN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		public var wrapServiceInvocationCommandWithCompoundCommand:Boolean;
 		
@@ -87,82 +87,82 @@ package  temp.tree {
 		 * If <code>true</code> initial data will be requested when
 		 * the tree initializes.
 		 * 
-		 * @flowerModelElementId _VZ82Hw71EeKbvNML8mcTuA
+		 * 
 		 */		
 		public var requestInitialDataAutomatically:Boolean;
 		
 		/**
-		 * @flowerModelElementId _X9_Q0MBsEeG5PP70DrXYIQ
+		 * 
 		 */
 		public var requestDataFromServer:Boolean;
 		
 		/**
-		 * @flowerModelElementId _JVcLAJp4EeGg5ZWNBtAGAA
+		 * 
 		 */
 		public var dispatchEnabled:Boolean;
 		
 		/**
 		 * Context used to customize data on tree.
 		 * Used when requesting data from server.
-		 * @flowerModelElementId _GYg-8KiyEeGmuvNuOAQmXg
+		 * 
 		 */
 		private var _context:Object = new Object();
 		
 		/**
 		 * @see Setter doc.
-		 * @flowerModelElementId _hMrOUKD5EeG5ENNne79MAQ
+		 * 
 		 */
 		private var _fillContextMenuFunction:Function;
 		
 		/**
 		 * @see Setter doc.
-		 * @flowerModelElementId _DmRY8KKgEeGYz6sIcvSzpg
+		 * 
 		 */
 		public var _contextMenuEnabled:Boolean;
 		
 		/**
 		 * @see Setter doc.
-		 * @flowerModelElementId _zN4YwKKgEeGYz6sIcvSzpg
+		 * 
 		 */
 		public var _inplaceEditorEnabled:Boolean;
 		
 		/**
 		 * @see setter
-		 * @flowerModelElementId _Vb3IgNvaEeGkyOdU8tCo8w
+		 * 
 		 */
 		private var _dragAndDropEnabled:Boolean;
 		
 		/**
 		 *  the cursor icon if the draggAndDrop operation is not allowed
-		 * @flowerModelElementId _cHDtgOIiEeGBrf6fNB7udA
+		 * 
 		 */
 		protected var rejectCursor:Class;
 		
 		/**
 		 * the cursor icon if the draggAndDrop operation is allowed
-		 * @flowerModelElementId _cHDtguIiEeGBrf6fNB7udA
+		 * 
 		 */
 		protected var copyCursor:Class;
 		
 		/**
 		 * @see itemCloseHandler()
 		 * @see configureScrollBars()
-		 * @flowerModelElementId _kj3IdP0CEeGZPtPdwyatgg
+		 * 
 		 */
 		private var oldVerticalScrollPosition:Number=-1;
 			
 		/**
-		 * @flowerModelElementId _urVI0A73EeKbvNML8mcTuA
+		 * 
 		 */
 		public var statefulClient:GenericTreeStatefulClientOld;
 		
 		/**
-		 * @flowerModelElementId _cZ0XsJp0EeGg5ZWNBtAGAA
+		 * 
 		 */
 		public var serviceId:String;
 		
 		/**
-		 * @flowerModelElementId _lWRR0BN0EeKR8sYuzDGiDQ
+		 * 
 		 */
 		public var clientIdPrefix:String = DEFAULT_CLIENT_ID_PREFIX;
 		
@@ -172,7 +172,7 @@ package  temp.tree {
 		public var removeUIAndRelatedElementsAndStatefulClientBecauseUnsubscribedForcefullyFunction:Function;
 		
 		/**
-		 * @flowerModelElementId _VxbV0DTuEeCWJOrqWwArag
+		 * 
 		 */
 		public function GenericTree() {			
 			dataDescriptor = new TreeNodeDataDescriptor();
@@ -203,7 +203,7 @@ package  temp.tree {
 		/**
 		 * Used only during construction.
 		 * This isn't necessaty to be overriden.		
-		 * @flowerModelElementId _7GXawEznEeGsUPSh9UfXpw
+		 * 
 		 */ 
 		protected function createRootTreeNode():TreeNode {			
 			return new TreeNode();
@@ -227,7 +227,7 @@ package  temp.tree {
 		 * And, because (for example in the ContextMenuManager) we need to know also when 
 		 * we have click on a expand arrow, we manually dispatch the click event.
 		 * 
-		 * @flowerModelElementId _YO5jYDUmEeCWJOrqWwArag
+		 * 
 		 */ 
 		protected function itemOpenHandler(event:TreeEvent):void {
 			if (requestDataFromServer) {
@@ -256,7 +256,7 @@ package  temp.tree {
 		 * @author Cristina
 		 * @author Mariana
 		 * 
-		 * @flowerModelElementId _wCBmAJ9ZEeGYPK0E1LmMXw
+		 * 
 		 */ 
 		protected function itemCloseHandler(event:TreeEvent):void {
 			if (requestDataFromServer && dispatchEnabled) {
@@ -296,7 +296,7 @@ package  temp.tree {
 		 * Enables/Disables the context menu functionality for this tree.	 	
 		 * <br>
 		 * By default, context menu is disabled. 
-		 * @flowerModelElementId _GZBVQKiyEeGmuvNuOAQmXg
+		 * 
 		 */
 		public function set contextMenuEnabled(value:Boolean):void {			
 //			if (_contextMenuEnabled == value) {
@@ -318,7 +318,7 @@ package  temp.tree {
 		 *  <p/> The signature function should be : 
 		 * 	<pre> function handler(contextMenu:FlowerContextMenu):void </pre>
 		 * 
-		 * @flowerModelElementId _GZEYkaiyEeGmuvNuOAQmXg
+		 * 
 		 */ 
 		public function set fillContextMenuFunction(value:Function):void {		
 			_fillContextMenuFunction = value;
@@ -331,7 +331,7 @@ package  temp.tree {
 //		 * Otherwise, subclasses must extends this method 
 //		 * in order to populate the context menu with actions.
 //		 * 
-//		 * @flowerModelElementId _eIwxYKD5EeG5ENNne79MAQ
+//		 * 
 //		 */
 //		public function fillContextMenu(contextMenu:FlowerContextMenu):void {
 //			if (_contextMenuEnabled) {				
@@ -340,7 +340,7 @@ package  temp.tree {
 //		}
 		
 		/**
-		 * @flowerModelElementId _GZJREKiyEeGmuvNuOAQmXg
+		 * 
 		 */
 		public function getSelection():ArrayCollection {
 			return new ArrayCollection(selectedItems);
@@ -357,7 +357,7 @@ package  temp.tree {
 		 * 		on a other item, so this is the case where the context menu should be thrown in the corner
 		 * 	<li> if the selected item has an item renderer, the coordinates of the rectangel of the label is returned. 
 		 * </ul>
-		 * @flowerModelElementId _GZKfMKiyEeGmuvNuOAQmXg
+		 * 
 		 */ 
 		public function get displayAreaOfSelection():Rectangle {
 			if (selectedItems.length == 0) 
@@ -378,7 +378,7 @@ package  temp.tree {
 		}
 		
 		/**
-		 * @flowerModelElementId _GZLtUKiyEeGmuvNuOAQmXg
+		 * 
 		 */
 		public function isOverSelection(event:MouseEvent):Boolean {
 			var point:Point = new Point(event.stageX, event.stageY);
@@ -406,14 +406,14 @@ package  temp.tree {
 		}
 		
 //		/**
-//		 * @flowerModelElementId _GZNigaiyEeGmuvNuOAQmXg
+//		 * 
 //		 */
 //		public function clickHandler(event:ListEvent):void {
 //			ContextMenuManager.INSTANCE.refresh(this);
 //		}
 //		
 //		/**
-//		 * @flowerModelElementId _GZP-wKiyEeGmuvNuOAQmXg
+//		 * 
 //		 */
 //		public function getContext():ActionContext {
 //			return null;
@@ -439,7 +439,7 @@ package  temp.tree {
 		 * Enables/Disables the ied functionality for this tree.
 		 * <br>
 		 * By default, ied is disabled. 
-		 * @flowerModelElementId _GZQl0KiyEeGmuvNuOAQmXg
+		 * 
 		 */ 
 		public function set inplaceEditorEnabled(value:Boolean):void {			
 			if (_inplaceEditorEnabled == value) {
@@ -455,7 +455,7 @@ package  temp.tree {
 		
 		/**
 		 * @return <code>true</code> if given node can be edited.
-		 * @flowerModelElementId _3NwFYM9HEeGM5vCMuHxbuQ
+		 * 
 		 */ 
 		public function canEditNode(node:TreeNode):Boolean {
 			return true;
@@ -463,7 +463,7 @@ package  temp.tree {
 		
 		/**
 		 * Starts editing the given <code>node</code>.
-		 * @flowerModelElementId _3Nwsc89HEeGM5vCMuHxbuQ
+		 * 
 		 */ 
 		public function editNode(node:TreeNode):void {
 			GenericTreeInplaceEditorManager.activeTrees[statefulClient.getStatefulClientId()].startEditing(node);
@@ -473,7 +473,7 @@ package  temp.tree {
 		 * Opens the ied for a given tree node. 
 		 * 
 		 * @see GenericTreeInplaceEditorManager
-		 * @flowerModelElementId _GZTpIKiyEeGmuvNuOAQmXg
+		 * 
 		 */
 		public function openEditor(treeNode:TreeNode):void {
 			selectedItem = treeNode;
@@ -495,7 +495,7 @@ package  temp.tree {
 		 * Closes the ied for selected node. 
 		 * 
 		 * @see GenericTreeInplaceEditorManager
-		 * @flowerModelElementId _GZVeUaiyEeGmuvNuOAQmXg
+		 * 
 		 */
 		public function closeEditor():void {   	
 			editable = false;
@@ -513,7 +513,7 @@ package  temp.tree {
 		 * This property activates/deactivates the dragAndDrop from tree to tree
 		 * and from tree to diagram
 		 * 
-		 * @flowerModelElementId _S02NgNvbEeGkyOdU8tCo8w
+		 * 
 		 */
 		public function set dragAndDropEnabled(dragAndDropEnabled:Boolean):void {
 			this._dragAndDropEnabled = dragAndDropEnabled;
@@ -545,7 +545,7 @@ package  temp.tree {
 		 * 
 		 * Shows accept/rejectCursor by checking if the dragAndDrop operation
 		 * is valid considering the selected nodes and the target one.
-		 * @flowerModelElementId _cHJ0IOIiEeGBrf6fNB7udA
+		 * 
 		 */
 		override public function showDropFeedback(event:DragEvent):void {
 			// make super operations because we need to enable tree scolling when dragging
@@ -606,7 +606,7 @@ package  temp.tree {
 		 * Instead we want to perform some actions on the the server side when the drop happens on the tree
 		 * By default a generic tree doesn't perform any actions. It only computes the target node and 
 		 * the subclasses should take care of handling the drop event having the context from the supercalss.
-		 * @flowerModelElementId _cHJ0JOIiEeGBrf6fNB7udA
+		 * 
 		 */
 		override protected function dragDropHandler(event:DragEvent):void {
 			// this will allow tree scrolling when dragging
@@ -643,7 +643,7 @@ package  temp.tree {
 		 * 
 		 * By default it returns false. Subclasses should implement this method in order to add
 		 * specific logic to the DND opeartion 
-		 * @flowerModelElementId _cHKbMuIiEeGBrf6fNB7udA
+		 * 
 		 */ 
 		protected function isDragAndDropOperationAccepted(dropTarget:Object, draggedItems:Array):Boolean {
 			return false;

@@ -28,7 +28,7 @@ package org.flowerplatform.communication.callback {
 	 * The constructor registers it.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _vQgpZ8bmEd6X47mKLkTdUQ
+	 * 
 	 */ 
 	public class FlexCallback {
 		
@@ -46,7 +46,7 @@ package org.flowerplatform.communication.callback {
 		}
 		
 		/**
-		 * @flowerModelElementId _vQgpd8bmEd6X47mKLkTdUQ
+		 * 
 		 */
 		public function invokeCallback(result:Object):void {
 			callbackFunction.call(callbackObject, result);

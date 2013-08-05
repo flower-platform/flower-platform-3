@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sorin
- * @flowerModelElementId _e3-igBLhEeKIW4So6X04UQ
+ * 
  */
 public class ProgressMonitor implements IProgressMonitor {
 	
@@ -41,42 +41,42 @@ public class ProgressMonitor implements IProgressMonitor {
 	
 	/**
 	 * Public visibility for ProgressMonitorStatefulService to dispose when server stops.
-	 * @flowerModelElementId _KlRaIBLoEeKIW4So6X04UQ
+	 * 
 	 */
 	public static final ScheduledExecutorService scheduler = CommunicationPlugin.getInstance().getScheduledExecutorServiceFactory().createScheduledExecutorService();
 	
 	private static final int UPDATE_CLIENT_PERIOD = 500; // TODO configurabil din properties
 
 	/**
-	 * @flowerModelElementId _CFF7EBLjEeKIW4So6X04UQ
+	 * 
 	 */
 	private static int lastUsedId = 0;
 	
 	private String title;
 	
 	/**
-	 * @flowerModelElementId _Gxc8gBLjEeKIW4So6X04UQ
+	 * 
 	 */
 	private String statefulClientId;
 	
 	/**
 	 * Package visibility for ProgressMonitorStatefulService for client method invocation.
-	 * @flowerModelElementId _ksphgBN-EeK1ssFHNoNwQg
+	 * 
 	 */
 	private CommunicationChannel channel;
 	
 	/**
-	 * @flowerModelElementId _bvo0YBLoEeKIW4So6X04UQ
+	 * 
 	 */
 	private String lastName = "";
 	
 	/**
-	 * @flowerModelElementId _e-dg0BLoEeKIW4So6X04UQ
+	 * 
 	 */
 	private double workUntilNow = 0;
 	
 	/**
-	 * @flowerModelElementId _ztx3QBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	private boolean canceled = false;
 	
@@ -85,7 +85,7 @@ public class ProgressMonitor implements IProgressMonitor {
 	/**
 	 * Represents the repetitive task that updates the client.
 	 * Referenced to stop when the operation is done.
-	 * @flowerModelElementId _zB9EUBLoEeKIW4So6X04UQ
+	 * 
 	 */
 	@SuppressWarnings("rawtypes")
 	private ScheduledFuture updateProgressMonitorTask;
@@ -113,7 +113,7 @@ public class ProgressMonitor implements IProgressMonitor {
 	}
 	
 	/**
-	 * @flowerModelElementId _myeecBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void beginTask(String name, int totalWork) {
 		if (updateProgressMonitorTask != null) {
@@ -140,7 +140,7 @@ public class ProgressMonitor implements IProgressMonitor {
 
 
 	/**
-	 * @flowerModelElementId _oWkHYBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void done() {
 		if (terminated)
@@ -158,21 +158,21 @@ public class ProgressMonitor implements IProgressMonitor {
 	}
 	
 	/**
-	 * @flowerModelElementId _qo7LkBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void setTaskName(String name) {
 		subTask(name);
 	}
 
 	/**
-	 * @flowerModelElementId _tvhwIBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void worked(int work) {
 		internalWorked(work);
 	}
 
 	/**
-	 * @flowerModelElementId _sCQWABLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void subTask(String name) {
 		if (name == null || name.trim().equals(""))
@@ -184,7 +184,7 @@ public class ProgressMonitor implements IProgressMonitor {
 	}
 
 	/**
-	 * @flowerModelElementId _vQU0gBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void internalWorked(double work) {
 		workUntilNow += work;
@@ -194,14 +194,14 @@ public class ProgressMonitor implements IProgressMonitor {
 	}
 
 	/**
-	 * @flowerModelElementId _xSrt0BLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void setCanceled(boolean value) {
 		canceled = value;
 	}
 
 	/**
-	 * @flowerModelElementId _yo89MBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public boolean isCanceled() {
 		return canceled;

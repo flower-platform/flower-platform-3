@@ -25,7 +25,7 @@ package  com.crispico.flower.util.layout.persistence {
 	 * children found in minimized state.
 	 * 
 	 * @autor Cristina
-	 * @flowerModelElementId __hOqYCunEeG6vrEjfFek0Q
+	 * 
 	 */
 	public class WorkbenchLayoutData extends SashLayoutData  {
 		

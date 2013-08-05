@@ -20,48 +20,48 @@ package org.flowerplatform.editor.collaboration;
 
 
 /**
- * @flowerModelElementId _qb8sQKAzEeGkbI53l0cVuQ
+ * 
  */
 public class CollaborativeFigureModel {
 	
 	/**
-	 * @flowerModelElementId _eQZDcKA1EeGkbI53l0cVuQ
+	 * 
 	 */
 	private int id;
 	/**
-	 * @flowerModelElementId _iJRkgKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private int x;
 	/**
-	 * @flowerModelElementId _k_4lQKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private int y;
 	/**
-	 * @flowerModelElementId _m7yRQKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private int width;
 	/**
-	 * @flowerModelElementId _pwChkKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private int height;
 	/**
-	 * @flowerModelElementId _sO2GUKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private int borderThickness;
 	/**
-	 * @flowerModelElementId _E5mlUKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private int borderColor;
 	/**
-	 * @flowerModelElementId _FxIqQKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private float backgroundAlpha;
 	/**
-	 * @flowerModelElementId _HYuTIKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private int backgroundColor;
 	/**
-	 * @flowerModelElementId _JQEPQKmAEeGe-9hyhocCYA
+	 * 
 	 */
 	private String text;
 	

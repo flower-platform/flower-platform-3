@@ -29,7 +29,7 @@ package org.flowerplatform.communication
 	 * 
 	 * The map is filled with browser URL parameters (those after ?p1=v1&p2=v2) and with .swf parameters when embeding in the .jsp   
 	 * @author Sorin
-	 * @flowerModelElementId _7kXFYDPFEeKW9cVm6HkNBw
+	 * 
 	 */ 
 	public class ApplicationParametersProvider {
 		
@@ -76,28 +76,28 @@ package org.flowerplatform.communication
 		}
 		
 		/**
-		 * @flowerModelElementId _-Uye8DoCEeKUOvPBtJonAQ
+		 * 
 		 */
 		public function getOpenResources():String {
 			return parameters[OPEN_RESOURCES];
 		}
 		
 		/**
-		 * @flowerModelElementId _aIXAFUhHEeKn-dlTSOkszw
+		 * 
 		 */
 		public function clearOpenResources():void {
 			delete parameters[OPEN_RESOURCES];
 		}
 		
 		/**
-		 * @flowerModelElementId _aIXAF0hHEeKn-dlTSOkszw
+		 * 
 		 */
 		public function getSelectResourceAtIndex():int {
 			return parameters[SELECT_RESOURCE_AT_INDEX];
 		}
 		
 		/**
-		 * @flowerModelElementId _aIXnIEhHEeKn-dlTSOkszw
+		 * 
 		 */
 		public function clearSelectResourceAtIndex():void {
 			delete parameters[SELECT_RESOURCE_AT_INDEX];

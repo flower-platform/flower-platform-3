@@ -26,12 +26,12 @@ import java.io.File;
  * 
  * @author Mariana
  * 
- * @flowerModelElementId _I7PPwAisEeKf1tSwqjoWGA
+ * 
  */
 public abstract class FileBasedEditableResource extends EditableResource {
 	
 	/**
-	 * @flowerModelElementId _tHePkCm1EeKzq6x6tgMJRw
+	 * 
 	 */
 	private File file;
 	
@@ -41,7 +41,7 @@ public abstract class FileBasedEditableResource extends EditableResource {
 	 * 
 	 * @see IFile#getModificationStamp()
 	 * 
-	 * @flowerModelElementId _I7RsAgisEeKf1tSwqjoWGA
+	 * 
 	 */
 	private long synchronizationStamp = -1;
 	
@@ -51,14 +51,14 @@ public abstract class FileBasedEditableResource extends EditableResource {
 	private boolean ignoreResourceChangedNotification;
 	
 	/**
-	 * @flowerModelElementId _tHpOsSm1EeKzq6x6tgMJRw
+	 * 
 	 */
 	public File getFile() {
 		return file;
 	}
 
 	/**
-	 * @flowerModelElementId _tHuHMCm1EeKzq6x6tgMJRw
+	 * 
 	 */
 	public void setFile(File file) {
 		this.file = file;
@@ -71,14 +71,14 @@ public abstract class FileBasedEditableResource extends EditableResource {
 //	 * file after detecting changes.
 //	 * 
 //	 * @see FileBasedEditorStatefulService#save()
-//	 * @flowerModelElementId _tIAbEim1EeKzq6x6tgMJRw
+//	 * 
 //	 */
 //	public void updateSynchronizationStamp() {
 //		synchronizationStamp = file.getModificationStamp();
 //	}
 //	
 //	/**
-//	 * @flowerModelElementId _tIY1kSm1EeKzq6x6tgMJRw
+//	 * 
 //	 */
 //	public boolean isSynchronized() {
 //		return synchronizationStamp == file.getModificationStamp();

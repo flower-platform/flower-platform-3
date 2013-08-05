@@ -56,7 +56,7 @@ import org.flowerplatform.web.entity.ISecurityEntity;
  * @author Cristi
  * @author Florin
  * 
- * @flowerModelElementId _0lQyMGR1EeGyd4yTk74SKw
+ * 
  */
 public class TreePermissionCollection {
 	
@@ -65,18 +65,18 @@ public class TreePermissionCollection {
 	 * 
 	 * <p>
 	 * Used for sanity check (i.e. ensure that all the permissions are of this type).
-	 * @flowerModelElementId _-k6p0GznEeGBsfNm1ipRfw
+	 * 
 	 */
 	private Class<? extends AbstractTreePermission> treePermissionClass;
 	
 	/**
 	 * Flag indicating if the list is sorted or not.
-	 * @flowerModelElementId _-k738GznEeGBsfNm1ipRfw
+	 * 
 	 */
 	private boolean sorted = false;
 	
 	/**
-	 * @flowerModelElementId _puOcoHJqEeG32IfhnS7SDQ
+	 * 
 	 */
 	private File root;
 
@@ -85,13 +85,13 @@ public class TreePermissionCollection {
 	 * permissions encapsulated by {@link TreePermissionCollectionEntry} are
 	 * relative to {@link #root}.
 	 * 
-	 * @flowerModelElementId _nyCdsGR9EeGyd4yTk74SKw
+	 * 
 	 */
 	public List<TreePermissionCollectionEntry> entries = new ArrayList<TreePermissionCollectionEntry>();
 
 	/**
 	 * @param treePermissionClass - The class of the tree permissions in this {@link TreePermissionCollection}.
-	 * @flowerModelElementId _-lB-kGznEeGBsfNm1ipRfw
+	 * 
 	 */
 	public TreePermissionCollection(Class<? extends AbstractTreePermission> treePermissionClass, File root) {
 		if (treePermissionClass == null) {
@@ -107,7 +107,7 @@ public class TreePermissionCollection {
 	 * Throws an error if the type of <code>permission</code> differs from
 	 * the permission type of this {@link TreePermissionCollection}.
 	 * 
-	 * @flowerModelElementId _66ej8GzdEeGBsfNm1ipRfw
+	 * 
 	 */
 	public void addPermission(ISecurityEntity securityEntity, AbstractTreePermission permission) {
 		if (securityEntity == null || permission == null) {
@@ -131,7 +131,7 @@ public class TreePermissionCollection {
 	 * depending on the permission type of this {@link TreePermissionCollection}. E.g. for a 
 	 * {@link FlowerWebFilePermission} the parameter would be of type {@link java.io.FilePermission}. 
 	 * 
-	 * @flowerModelElementId _TXFU4mbMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public boolean implies(FlowerWebPrincipal principal, Permission permission) {
 		
@@ -185,7 +185,7 @@ public class TreePermissionCollection {
 	 * @param referencePath - The path of AbtractTreePermission (that supports * wildcard).
 	 * @return If <code>path</code> matches <code>referencePath</code>.
 	 * 
-	 * @flowerModelElementId _f1d6MWnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	public boolean pathMatch(String path, String referencePath) {
 		boolean match = false;
@@ -217,7 +217,7 @@ public class TreePermissionCollection {
 	 *            a path to be checked if belongs to root. If it a relative path
 	 *            it will be considered relative to user directory, not to root.
 	 * 
-	 * @flowerModelElementId _puRf8HJqEeG32IfhnS7SDQ
+	 * 
 	 */
 	public boolean belongsToRoot(String path) {
 		String rootPath = root.getAbsolutePath().replace("\\", "/");

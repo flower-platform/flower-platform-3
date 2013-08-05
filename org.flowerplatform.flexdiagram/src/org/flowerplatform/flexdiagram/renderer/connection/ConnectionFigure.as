@@ -49,7 +49,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	 * 			different information used by <code>ConnectionLabelEditPart</code>
 	 * </ul>
 	 * @author Georgi
-	 * @flowerModelElementId _b2jFIL8REd6XgrpwHbbsYQ
+	 * 
 	 */
 	public class ConnectionFigure extends UIComponent implements IDataRenderer, IDiagramShellAware {
 		
@@ -80,21 +80,21 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		
 		/**
 		 * Length of a segment if the line is dashed.
-		 * @flowerModelElementId _b2jFPL8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		private var dashSegment:int = 0; 
 		
 		/**
 		 * ArrayCollection containing <code>BindablePoint</code> elements which 
 		 * represent the bendpoints for the current connection figure.
-		 * @flowerModelElementId _b2jFQb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		protected var _points:ArrayCollection = new ArrayCollection();
 		
 		/**
 		 * ArrayCollection containing <code>ConnectionSegment</code> elements 
 		 * which represent the segments that form the current connection figure.
-		 * @flowerModelElementId _b2jFRr8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		protected var segments:ArrayCollection = new ArrayCollection();
 		
@@ -123,12 +123,12 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * for the middle segment. Otherwise, if the connection has an even
 		 * number of segments, middle1 is the <code>BindablePoint</code> that 
 		 * connects the two middle segments.
-		 * @flowerModelElementId _b2s2O78REd6XgrpwHbbsYQ
+		 * 
 		 */	
 		private var middle1:BindablePoint = _sourcePoint;
 	
 		/**
-		 * @flowerModelElementId _b2s2QL8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		private var middle2:BindablePoint = _targetPoint;
 		
@@ -548,7 +548,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * from its associated EditPart and from <code>checkIfArrowsUpdateIsNeeded()</code>.
 		 * The angle and the point computed by the method are set to the 
 		 * <code>ConnectionEnd</code> which re-displays its shape.
-		 * @flowerModelElementId _b22nZL8REd6XgrpwHbbsYQ
+		 * 
 		 */ 	
 		public function updateFigureHandler():void  {
 			updateSourceFigure();
@@ -593,7 +593,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * method in order to find the middle point of a line (which is the point
 		 * at the half sum of the segments that create the connection);
 		 * 
-		 * @flowerModelElementId _b2_xEb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		public function getMiddlePointRect():Array {
 			var array:Array = getPointFromDistance() as Array;
@@ -606,7 +606,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * side as the other edge of the segment. The method is used to compute
 		 * the position for the central label of a connection (if the connection
 		 * allows labels).
-		 * @flowerModelElementId _-JC4wgvjEd-p6bQBEYsbUw
+		 * 
 		 */
 		public function isConnectionOnLeftOrTopOfTheDisplay(refPoint:BindablePoint, segmId:int, isHorizontal:Boolean):Boolean {
 			var cs:ConnectionSegment = getSegmentAt(segmId);
@@ -628,7 +628,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		/**
 		 * The method returns the number of segments contained
 		 * by a connection.
-		 * @flowerModelElementId _-JC4yAvjEd-p6bQBEYsbUw
+		 * 
 		 */
 		public function getNumberOfSegments():int {
 			return segments.length;
@@ -637,7 +637,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		/**
 		 * The method returns the <code>ConnectionSegment</code>
 		 * at the given index in the segments array.
-		 * @flowerModelElementId _4BrIIBCUEd-bY9BcYhuW0g
+		 * 
 		 */		
 		public function getSegmentAt(segmId:int):ConnectionSegment {
 			return ConnectionSegment(segments.getItemAt(segmId));
@@ -646,7 +646,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		/**
 		 * The method computes the length of the connection by 
 		 * computing the sum of the length of all its segments;
-		 * @flowerModelElementId _4BrIJBCUEd-bY9BcYhuW0g
+		 * 
 		 */
 		public function getConnectionLength():Number {
 			var sum:Number = 0;
@@ -664,7 +664,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * to.
 		 * 
 		 * @see ConnectionSegment.getSegmentPoint()
-		 * @flowerModelElementId _4BrIJxCUEd-bY9BcYhuW0g
+		 * 
 		 */
 		public function getPointFromDistance():Array {
 			var sum:Number = 0;

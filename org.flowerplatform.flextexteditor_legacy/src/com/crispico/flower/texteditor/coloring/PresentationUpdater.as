@@ -31,14 +31,14 @@ package com.crispico.flower.texteditor.coloring {
 	 * Keeps a list of formatted ranges to be applied on the text displayed in the web viewer.
 	 * Applies the formats by coloring each span in the viewer.
 	 * 
-	 * @flowerModelElementId _0qq0kO2uEeCF5Ozw-0NJ0A
+	 * 
 	 */
 	public class PresentationUpdater {
 		
 		/**
 		 * The list of formatted ranges.
 		 * 
-		 * @flowerModelElementId _YsYUgMpeEeCTIbyT6X5eRg
+		 * 
 		 */
 		private var formattedRanges:ArrayCollection;
 		
@@ -70,7 +70,7 @@ package com.crispico.flower.texteditor.coloring {
 		/**
 		 * Colors each range of text in the list.
 		 * 
-		 * @flowerModelElementId _9l2_hMyUEeCg_4m4jRGp8Q
+		 * 
 		 */
 		public function apply():void {  
 //			trace ("Apply", formattedRanges.length, "formats");

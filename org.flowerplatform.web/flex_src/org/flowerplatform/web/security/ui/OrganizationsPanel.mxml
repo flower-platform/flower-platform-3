@@ -19,7 +19,7 @@
 	license-end
 -->
 <!--
- @flowerModelElementId _JENFoFcPEeGL3vi-zPhopA
+ 
 -->
 <ui:BaseListPanel 
 	xmlns:mx="http://www.adobe.com/2006/mxml" 
@@ -65,7 +65,7 @@
 			public var getAll:Boolean = false;
 			
 			/**
-			 * @flowerModelElementId _RBZy4F34EeGwLIVyv_iqEg
+			 * 
 			 */
 			private function onCreationComplete(event:FlexEvent):void {
 				this.formClass = OrganizationForm;
@@ -93,7 +93,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _RBZy4134EeGwLIVyv_iqEg
+			 * 
 			 */
 			override public function refreshBtnHandler(rslt:Object = null):void {
 				super.refreshBtnHandler();
@@ -109,7 +109,7 @@
 			
 			/**
 			 * Sends command to server to delete selected items.
-			 * @flowerModelElementId _RBaZ8V34EeGwLIVyv_iqEg
+			 * 
 			 */
 			override protected function deleteResultHandler(event:CloseEvent):void {
 				if (event.detail == Alert.YES) {

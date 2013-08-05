@@ -39,7 +39,7 @@ package com.crispico.flower.texteditor.rules {
 	 *  - for words that are delimited by specific characters (eg. tag names), provide lists of the delimiters only, 
 	 *    leaving the words list null (eg. new WordRule(type), and then set the lists of delimiters)
 	 * 
-	 * @flowerModelElementId _MtLZkN3QEeCGOND4c9bKyA
+	 * 
 	 */
 	public class WordRule implements IRule {
 		

@@ -20,7 +20,7 @@
 -->
 <!--
  @author Cristina
- @flowerModelElementId _7WCPMGPNEeKQs4bIrZ2hPg
+ 
 -->
 <ns:Wizard xmlns:ns="com.crispico.flower.util.popup.*"
 		   titleIconURL="{GitPlugin.getInstance().getResourceUrl('images/full/obj16/checkout.gif')}"

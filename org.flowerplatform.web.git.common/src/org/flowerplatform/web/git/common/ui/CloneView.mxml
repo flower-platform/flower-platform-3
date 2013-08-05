@@ -68,7 +68,7 @@
 			}	
 			
 			/**
-			 * @flowerModelElementId _gvgoEDVgEeKsnMbt6YrXWQ
+			 * 
 			 */
 			protected override function nextClickHandler():void {
 				if (currentState == "repositoryURIPage") {
@@ -90,7 +90,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _mCRiMDVgEeKsnMbt6YrXWQ
+			 * 
 			 */
 			private function validateRepositoryCallbackHandler(value:int):void {
 				popupHost.hideSpinner();			
@@ -150,7 +150,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _0LbYwDVhEeKsnMbt6YrXWQ
+			 * 
 			 */
 			protected override function finishClickHandler():void {
 				//popupHost.showSpinner(GitCommonPlugin.getInstance().getMessage("git.cloneWizard.cloneRepo.spinner"));

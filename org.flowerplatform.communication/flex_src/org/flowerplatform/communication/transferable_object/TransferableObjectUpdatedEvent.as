@@ -28,7 +28,7 @@ package org.flowerplatform.communication.transferable_object {
 	 * value is different from the old one.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _62iPAEznEeGsUPSh9UfXpw
+	 * 
 	 */
 	public class TransferableObjectUpdatedEvent extends Event {
 		

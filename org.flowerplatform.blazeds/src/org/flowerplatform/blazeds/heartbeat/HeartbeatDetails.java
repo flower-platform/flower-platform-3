@@ -24,7 +24,7 @@ import flex.messaging.util.TimeoutManager;
 
 /**
  * @author Sorin
- * @flowerModelElementId _ZozYAAlWEeK1a-Ic5xjg1Q
+ * 
  */
 public class HeartbeatDetails {
 	
@@ -36,7 +36,7 @@ public class HeartbeatDetails {
 	private BlazedsCommunicationChannel channel;
 
 	/* package */ /**
-	 * @flowerModelElementId _lchy0AlYEeK1a-Ic5xjg1Q
+	 * 
 	 */
 	HeartbeatTask noHearbeatFromClientTask;
 	
@@ -66,7 +66,7 @@ public class HeartbeatDetails {
 
 	/**
 	 * Depending on the flag parameters update channel observer tasks.
-	 * @flowerModelElementId _Di2iVQ0sEeKBbcAV0j7rNw
+	 * 
 	 */
 	public void updateTasks(boolean updateLastTravelingDataTimeStamp, boolean updateLastClientActivityTimeStamp) {
 		// Handle channel processing only after locking it.

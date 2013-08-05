@@ -24,7 +24,7 @@ package com.crispico.flower.util.layout.event {
 	 * 
 	 * @see Workbench
 	 * @author Cristina
-	 * @flowerModelElementId _IGWRMFMoEeG1ioU_PGdg8A
+	 * 
 	 */ 
 	public class LayoutDataChangedEvent extends Event {
 		

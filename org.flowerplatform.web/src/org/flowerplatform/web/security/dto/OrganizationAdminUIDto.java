@@ -30,7 +30,7 @@ import org.flowerplatform.web.entity.dto.NamedDto;
  * 
  * @author Cristi
  * @author Cristina
- * @flowerModelElementId _YSGfEFcCEeGL3vi-zPhopA
+ * 
  */
 public class OrganizationAdminUIDto extends NamedDto {
 	
@@ -65,7 +65,7 @@ public class OrganizationAdminUIDto extends NamedDto {
 	private OrganizationMembershipStatus status;
 	
 	/**
-	 * @flowerModelElementId _rX-jwFcCEeGL3vi-zPhopA
+	 * 
 	 */
 	private List<NamedDto> groups;
 

@@ -69,7 +69,7 @@ import org.slf4j.LoggerFactory;
  * @see ServiceRegistry
  * 
  * @author Cristi
- * @flowerModelElementId _2YoDcFZiEeGL3vi-zPhopA
+ * 
  */
 public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 
@@ -78,28 +78,28 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 	/**
 	 * @see Getter doc.
 	 * 
-	 * @flowerModelElementId _8lJQEFZiEeGL3vi-zPhopA
+	 * 
 	 */
 	private String serviceId;
 
 	/**
 	 * @see Getter doc.
 	 * 
-	 * @flowerModelElementId _uigegFbgEeGL3vi-zPhopA
+	 * 
 	 */
 	private String methodName;
 	
 	/**
 	 * @see Getter doc.
 	 * 
-	 * @flowerModelElementId _-u_RcFZiEeGL3vi-zPhopA
+	 * 
 	 */
 	private List<Object> parameters;
 
 	/**
 	 * @see Getter doc.
 	 * 
-	 * @flowerModelElementId _uikv8FbgEeGL3vi-zPhopA
+	 * 
 	 */
 	private long callbackId;
 	
@@ -110,14 +110,14 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 	/**
 	 * The string service id of the service, as registered in {@link ServiceRegistry}.
 	 * 
-	 * @flowerModelElementId _HAaVEFZjEeGL3vi-zPhopA
+	 * 
 	 */
 	public String getServiceId() {
 		return serviceId;
 	}
 
 	/**
-	 * @flowerModelElementId _HAjfBVZjEeGL3vi-zPhopA
+	 * 
 	 */
 	public void setServiceId(String serviceId) {
 		this.serviceId = serviceId;
@@ -126,14 +126,14 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 	/**
 	 * The name of the method to invoke.
 	 * 
-	 * @flowerModelElementId _uiq2kFbgEeGL3vi-zPhopA
+	 * 
 	 */
 	public String getMethodName() {
 		return methodName;
 	}
 
 	/**
-	 * @flowerModelElementId _uiug8FbgEeGL3vi-zPhopA
+	 * 
 	 */
 	public void setMethodName(String methodName) {
 		this.methodName = methodName;
@@ -142,14 +142,14 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 	/**
 	 * The list of parameters, sent from the Flex client.
 	 * 
-	 * @flowerModelElementId _HAtQCVZjEeGL3vi-zPhopA
+	 * 
 	 */
 	public List<Object> getParameters() {
 		return parameters;
 	}
 
 	/**
-	 * @flowerModelElementId _HBAK91ZjEeGL3vi-zPhopA
+	 * 
 	 */
 	public void setParameters(List<Object> parameters) {
 		this.parameters = parameters;
@@ -159,14 +159,14 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 	 * The id of the callback. May be 0, meaning that 
 	 * the client shouldn't be called back with a result.
 	 * 
-	 * @flowerModelElementId _ui11sFbgEeGL3vi-zPhopA
+	 * 
 	 */
 	public long getCallbackId() {
 		return callbackId;
 	}
 
 	/**
-	 * @flowerModelElementId _ui78UlbgEeGL3vi-zPhopA
+	 * 
 	 */
 	public void setCallbackId(long callbackId) {
 		this.callbackId = callbackId;
@@ -191,7 +191,7 @@ public class InvokeServiceMethodServerCommand extends AbstractServerCommand {
 	/**
 	 * @see Class documentation.
 	 * 
-	 * @flowerModelElementId _VvEh4FZjEeGL3vi-zPhopA
+	 * 
 	 */
 	public void executeCommand() {
 		Object result = null;

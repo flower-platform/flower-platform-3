@@ -20,7 +20,7 @@
 -->
 <!--
  @author Cristina
- @flowerModelElementId _jj2sgHH8EeK0WoOyJtfqdw
+ 
 -->
 <ns:Wizard xmlns:ns="com.crispico.flower.util.popup.*" xmlns:mx="http://www.adobe.com/2006/mxml"
 		   titleIconURL="{GitPlugin.getInstance().getResourceUrl('images/full/obj16/commit.gif')}"
@@ -52,18 +52,18 @@
 			public var selectedNodes:ArrayList;
 			
 			/**
-			 * @flowerModelElementId _n-NGAHH-EeK0WoOyJtfqdw
+			 * 
 			 */
 			public var dto:CommitPageDto;
 			
 			/**
-			 * @flowerModelElementId _Di9JkHIBEeK0WoOyJtfqdw
+			 * 
 			 */
 			[Bindable]
 			public var commitResources:ArrayCollection;
 			
 			/**
-			 * @flowerModelElementId _QCWJ0HH-EeK0WoOyJtfqdw
+			 * 
 			 */
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
@@ -129,7 +129,7 @@
 			}
 
 			/**
-			 * @flowerModelElementId _r2db4HH8EeK0WoOyJtfqdw
+			 * 
 			 */
 			protected override function finishClickHandler():void {	
 				// validate form

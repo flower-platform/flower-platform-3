@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Cristi
- * @flowerModelElementId _HxNM4DLuEeKrMsw303uxEA
+ * 
  */
 public class RegexProcessingSession {
 
@@ -162,7 +162,7 @@ public class RegexProcessingSession {
 	}
 	
 	/**
-	 * @flowerModelElementId _HxQ3QTLuEeKrMsw303uxEA
+	 * 
 	 */
 	public int[] findRangeFor(String category, String searchString) {
 		while (find()) {
@@ -183,7 +183,7 @@ public class RegexProcessingSession {
 	}
 
 	/**
-	 * @flowerModelElementId _ODo3cDLyEeKrMsw303uxEA
+	 * 
 	 */
 	public String findLastMatchBeforeIndex(String category, int index) {
 		// TODO implement

@@ -76,7 +76,7 @@ import org.slf4j.LoggerFactory;
  * @author Cristi
  * @author Cristina
  * 
- * @flowerModelElementId _qwPpwA7rEeKbvNML8mcTuA
+ * 
  */
 public abstract class GenericTreeStatefulService extends AbstractTreeStatefulService implements INodeInfoStatefulServiceMXBean, IChildrenProvider, INodeDataProvider, INodeByPathRetriever {
 	
@@ -94,7 +94,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * @see #getPathForNode(Object, Map)
 	 * 
 	 * @author Mariana
-	 * @flowerModelElementId _PlC_0AIeEeKqVJdl4mrwww
+	 * 
 	 */
 	private static final String GO_UP_ON_NODE_INFO_KEY = "goUpOnNodeInfo";
 	
@@ -109,14 +109,14 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	protected static final String DISPATCH_ONLY_FOR_CLIENT = "dispatchOnlyForClient";
 		
 	/**
-	 * @flowerModelElementId _3pTm4A7rEeKbvNML8mcTuA
+	 * 
 	 */
 	protected Map<Object, NodeInfo> visibleNodes = new ConcurrentHashMap<Object, NodeInfo>();
 	
 	/**
 	 * Holds the tree structure of all displayed nodes on clients (opened or not).
 	 * 
-	 * @flowerModelElementId _pXDLkKD1EeG5ENNne79MAQ
+	 * 
 	 */
 	private NodeInfo rootNodeInfo;
 		
@@ -132,7 +132,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	protected NamedLockPool namedLockPool = new NamedLockPool();
 	
 	/**
-	 * @flowerModelElementId _SbysYKDXEeG5ENNne79MAQ
+	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(GenericTreeStatefulService.class);
 		
@@ -141,7 +141,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _shOcoBN0EeKR8sYuzDGiDQ
+	 * 
 	 */
 	public String printNodeInfos() {
 		StringBuffer sb = new StringBuffer();
@@ -183,7 +183,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	}
 			
 	/**
-	 * @flowerModelElementId _qRVZgBK3EeKz7oFAPW_0ZA
+	 * 
 	 */
 	public String printStatefulDataPerCommunicationChannel(String webCommunicationChannelIdFilter, String linePrefix) {		
 		// clean parameters
@@ -266,13 +266,13 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * Note:
 	 * This method must be implemented if other implementation seems to be more effective.
 	 * 	 
-	 * @flowerModelElementId _vBmpcaP8EeGeHqktJlHXmA
+	 * 
 	 */
 	/**
 	 * @param fullPath
 	 * @param context
 	 * @return
-	 * @flowerModelElementId _vBmpcaP8EeGeHqktJlHXmA
+	 * 
 	 */
 	public Object getNodeByPath(List<PathFragment> fullPath, GenericTreeContext context) {		
 		NodeInfo nodeInfo;
@@ -306,14 +306,14 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	}
 
 	/**
-	 * @flowerModelElementId _YYXu4KKgEeGYz6sIcvSzpg
+	 * 
 	 */
 	@RemoteInvocation
 	public abstract String getInplaceEditorText(StatefulServiceInvocationContext context, List<PathFragment> fullPath);
 
 	/**
 	 * 	 
-	 * @flowerModelElementId _gznc4KKgEeGYz6sIcvSzpg
+	 * 
 	 */
 	@RemoteInvocation
 	public abstract boolean setInplaceEditorText(StatefulServiceInvocationContext context, List<PathFragment> path, String text);
@@ -324,7 +324,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * <p>
 	 * At the end, subscribe the given channel and clientId to node.
 	 * 
-	 * @flowerModelElementId _G-7_NKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	private void addNodeInfo(CommunicationChannel channel, String statefulClientId, Object parent, Object node, String nodeType, GenericTreeContext context) {
 		boolean updateMap = true;
@@ -386,7 +386,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * Verifies if the parent is opened. If <code>true</code>,
 	 * creates and populates a {@link TreeNode} with new data and sends updates to all
 	 * subscribed clients. 	
-	 * @flowerModelElementId _KIZOsJF0EeGZxtPbjaCZxw
+	 * 
 	 */
 	public void dispatchLabelUpdate(Object node, String nodeType) {
 		NodeInfo nodeInfo = visibleNodes.get(node); // check if opened
@@ -432,7 +432,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * <p>
 	 * Also, creates and populates a new tree node (including object children) and
 	 * sends updates to all subscribed clients. 
-	 * @flowerModelElementId _GlGHEJF0EeGZxtPbjaCZxw
+	 * 
 	 */
 	public void dispatchContentUpdate(Object node) {
 		NodeInfo nodeInfo = visibleNodes.get(node);
@@ -505,7 +505,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * @param client 
 	 * @param expandNode true to expand the node, false to collapse
 	 * @author Mariana
-	 * @flowerModelElementId _js9gMP0DEeGZPtPdwyatgg
+	 * 
 	 */
 	public void dispatchExpandedUpdate(Object node, CommunicationChannel client, boolean expandNode) {
 		NodeInfo nodeInfo = visibleNodes.get(node);
@@ -562,7 +562,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * @see #dispatchContentUpdate()
 	 * @see #cleanupChildren()
 	 * 
-	 * @flowerModelElementId _p0v2QJF1EeGZxtPbjaCZxw
+	 * 
 	 */
 	protected void cleanupAfterNodeClosed(Object node, String nodeType, String statefulClientId, CommunicationChannel channel, RunnableWithParam<Void, NodeInfo> removeNodeInfoRunnable, final boolean removeFromMapAndParentAndUnsubscribe) {
 		if (logger.isTraceEnabled()) {
@@ -672,7 +672,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * 
 	 * @param recurse - if <code>true</code>, creates the whole tree structure for given node.
 	 * 					Otherwise creates only its direct children.
-	 * @flowerModelElementId _G-y1RKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	protected void populateChildren(CommunicationChannel channel, String statefulClientId, Object node, TreeNode treeNode, GenericTreeContext context, boolean recurse) {
 		// create and populate the children list
@@ -700,7 +700,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * 
 	 * @see #getParent()
 	 * 
-	 * @flowerModelElementId _NxT5Y59aEeGYPK0E1LmMXw
+	 * 
 	 */
 	public List<PathFragment> getPathForNode(Object node, String nodeType, GenericTreeContext context) {		
 		List<PathFragment> path = new ArrayList<PathFragment>();
@@ -716,7 +716,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	}
 
 	/**
-	 * @flowerModelElementId _sjdRQRN0EeKR8sYuzDGiDQ
+	 * 
 	 */
 	public void startInplaceEditor(StatefulServiceInvocationContext context, String contributionId, List<PathFragment> nodePath, Boolean autoCreateElementAfterEditing) { 
 		invokeClientMethod(
@@ -749,7 +749,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _y5V30A7rEeKbvNML8mcTuA
+	 * 
 	 */
 	@RemoteInvocation
 	public void subscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
@@ -787,7 +787,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	}
 
 	/**
-	 * @flowerModelElementId _y5dMkA7rEeKbvNML8mcTuA
+	 * 
 	 */
 	@RemoteInvocation
 	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
@@ -796,7 +796,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	}
 
 	/**
-	 * @flowerModelElementId _CkJxERnzEeKiTvwNCJnHJw
+	 * 
 	 */
 	@RemoteInvocation
 	public boolean performDrop(StatefulServiceInvocationContext context, List<PathFragment> target, List<List<PathFragment>> selectedResources) { 
@@ -814,7 +814,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * @param path - path of the node that must be closed. 
 	 * 				If <code>null</code>, the node is considered to be the root.
 	 * 
-	 * @flowerModelElementId _NxNLsJ9aEeGYPK0E1LmMXw
+	 * 
 	 */
 	@RemoteInvocation
 	public void closeNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {

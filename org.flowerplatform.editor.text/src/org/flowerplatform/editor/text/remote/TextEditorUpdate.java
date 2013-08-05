@@ -36,28 +36,28 @@ package org.flowerplatform.editor.text.remote;
  * @see UpdateFileContentClientCommand#getTextEditorUpdates()
  * @see UpdateFileContentServerCommand#getTextEditorUpdates()
  * 
- * @flowerModelElementId _4s5zwFlCEeGRrZ75u0k71A
+ * 
  */
 public class TextEditorUpdate {
 	
 	/**
 	 * @see Getter doc.
 	 * 
-	 * @flowerModelElementId _4s5zwVlCEeGRrZ75u0k71A
+	 * 
 	 */
 	private int offset = 0;
 	
 	/**
 	 * @see Getter doc.
 	 * 
-	 * @flowerModelElementId _4s6a0VlCEeGRrZ75u0k71A
+	 * 
 	 */
 	private int oldTextLength = 0;
 	
 	/**
 	 * @see Getter doc.
 	 * 
-	 * @flowerModelElementId _4s6a01lCEeGRrZ75u0k71A
+	 * 
 	 */
 	private String newText = "";
 	

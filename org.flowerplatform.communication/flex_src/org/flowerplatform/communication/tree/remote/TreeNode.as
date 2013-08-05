@@ -32,7 +32,7 @@ package org.flowerplatform.communication.tree.remote {
 	 * @author Cristi
 	 * @author Cristina
 	 * 
-	 * @flowerModelElementId _32g2IDR9EeCGErbqxW555A
+	 * 
 	 */
 	[Bindable]
 	[RemoteClass]
@@ -46,19 +46,19 @@ package org.flowerplatform.communication.tree.remote {
 		private var _hasChildren:Boolean;
 		
 		/**
-		 * @flowerModelElementId _9jJo0DR9EeCGErbqxW555A
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var children:ArrayCollection;
 				
 		/** 
-		 * @flowerModelElementId _HlmtYKAQEeGLneHqP7FuFA
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var parent:TreeNode;
 		
 		/**
-		 * @flowerModelElementId _cLrFQKP8EeGeHqktJlHXmA
+		 * 
 		 */
 		[SecureSWF(rename="off")]
 		public var pathFragment:PathFragment;
@@ -68,7 +68,7 @@ package org.flowerplatform.communication.tree.remote {
 		
 		[SecureSWF(rename="off")]
 		/**
-		 * @flowerModelElementId _5CHGkDR9EeCGErbqxW555A
+		 * 
 		 */
 		public function get label():String {
 			return _label;
@@ -93,7 +93,7 @@ package org.flowerplatform.communication.tree.remote {
 
 		[SecureSWF(rename="off")]
 		/**
-		 * @flowerModelElementId _bWTdoDSAEeCGErbqxW555A
+		 * 
 		 */
 		public function get hasChildren():Boolean {
 			return _hasChildren;
@@ -108,7 +108,7 @@ package org.flowerplatform.communication.tree.remote {
 		}
 
         /**
-         * @flowerModelElementId _ZFk8kJpwEeGg5ZWNBtAGAA
+         * 
          */
         public function getPathForNode(addRootNode:Boolean = false):ArrayCollection {
         	var node:TreeNode = this;
@@ -130,7 +130,7 @@ package org.flowerplatform.communication.tree.remote {
 		 * Based on a given <code>delimiter</code>,
 		 * returns the full path of this node by concatenating
 		 * all path fragments names.
-		 * @flowerModelElementId _mz4XgKr2EeG3eZ1Jezjhtw
+		 * 
 		 */ 
 		public function getPath(delimiter:String="/"):String {
 			var paths:ArrayCollection = getPathForNode();
@@ -149,7 +149,7 @@ package org.flowerplatform.communication.tree.remote {
          * to find the corresponding node for given <code>path</code>.
          * Note: if problems, this can be optimized by using a hash map of paths.
          *  
-         * @flowerModelElementId _WkupEJpzEeGg5ZWNBtAGAA
+         * 
          */
 		 public static function getNodeByPath(path:ArrayCollection, parent:TreeNode = null):TreeNode {							
 			if (path == null) {

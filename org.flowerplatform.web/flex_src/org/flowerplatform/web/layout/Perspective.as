@@ -33,7 +33,7 @@ package org.flowerplatform.web.layout {
 	 * 
 	 * @author Cristi
 	 * @author Cristina
-	 * @flowerModelElementId _VuR4wFCyEeGsUPSh9UfXpw
+	 * 
 	 */
 	public class Perspective {
 		
@@ -44,7 +44,7 @@ package org.flowerplatform.web.layout {
 		/**
 		 * Default name.
 		 * 
-		 * @flowerModelElementId _URGZAFDGEeGMrNbRkxqlAA
+		 * 
 		 */
 		public function get name():String {
 			throw new Error("This method needs to be implemented.");
@@ -53,7 +53,7 @@ package org.flowerplatform.web.layout {
 		/**
 		 * Default icon.
 		 * 
-		 * @flowerModelElementId _WZUpwFDGEeGMrNbRkxqlAA
+		 * 
 		 */
 		public function get iconUrl():String {			
 			throw new Error("This method needs to be implemented.");
@@ -65,7 +65,7 @@ package org.flowerplatform.web.layout {
 		 * <p>
 		 * Should clear the workbench and build the layout for this perspective.
 		 * 
-		 * @flowerModelElementId _mPN7gFCyEeGsUPSh9UfXpw
+		 * 
 		 */
 		public function resetPerspective(workbench:Workbench):void {
 			throw new Error("This method needs to be implemented.");

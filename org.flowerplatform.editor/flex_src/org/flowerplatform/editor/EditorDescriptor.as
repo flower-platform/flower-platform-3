@@ -47,7 +47,7 @@ package  org.flowerplatform.editor {
 	 * 
 	 * @author Cristi
 	 * @author Mariana
-	 * @flowerModelElementId __b0vAQirEeK2eaWSbd_Jmg
+	 * 
 	 */
 	public class EditorDescriptor extends BasicEditorDescriptor implements IViewProvider {
 		
@@ -56,7 +56,7 @@ package  org.flowerplatform.editor {
 		/**
 		 * Abstract method.
 		 * 
-		 * @flowerModelElementId _TRTbAajNEeG5F5Y4p-wnrg
+		 * 
 		 */
 		public function getId():String {
 			throw new Error("This method should be implemented.");
@@ -69,7 +69,7 @@ package  org.flowerplatform.editor {
 		 * Should create a new (unpopulated) instance of the corresponding
 		 * <code>EditorFrontend</code>.
 		 * 
-		 * @flowerModelElementId _ROn7MKgVEeGLHLPNLE28hw
+		 * 
 		 */
 		protected function createViewInstance():EditorFrontend {
 			throw new Error("This method should be implemented.");
@@ -79,7 +79,7 @@ package  org.flowerplatform.editor {
 		 * Adds a new view in the global <code>Workbench</code>, which will then
 		 * trigger the creation of the view (i.e. <code>EditorFrontend</code>).
 		 * 
-		 * @flowerModelElementId _Fk6KAKseEeGkXYK9TZw9sA
+		 * 
 		 */
 		override public function openEditor(editableResourcePath:String, forceNewEditor:Boolean = false, openForcedByServer:Boolean = false, handleAsClientSubscription:Boolean = false):UIComponent {
 			var viewLayoutData:ViewLayoutData = new ViewLayoutData();
@@ -154,7 +154,7 @@ package  org.flowerplatform.editor {
 		 * <code>EditorFrontendController</code> for opening (creates one if none exists for the current
 		 * editorInput).
 		 * 
-		 * @flowerModelElementId _cBMwJqWoEeGAT8h2VXeJdg
+		 * 
 		 */
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {	
 			var editor:EditorFrontend = createViewInstance();

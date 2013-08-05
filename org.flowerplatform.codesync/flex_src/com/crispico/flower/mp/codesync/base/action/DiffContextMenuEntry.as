@@ -20,7 +20,7 @@ package  com.crispico.flower.mp.codesync.base.action {
 	import mx.collections.ArrayCollection;
 	
 	/**
-	 * @flowerModelElementId _XnzagLOTEeCa6MHp-4L_Cw
+	 * 
 	 */
 	[Bindable]
 	[RemoteClass(alias="com.crispico.flower.mp.codesync.base.action.DiffContextMenuEntry")]

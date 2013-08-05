@@ -32,13 +32,13 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
  * communication channel: i.e. dispatch commands, etc.
  * 
  * @author Cristi
- * @flowerModelElementId _lVycQFZcEeGgtLw8YArqtQ
+ * 
  */
 public class ServiceInvocationContext {
 
 	/**
 	 * @see Getter doc.
-	 * @flowerModelElementId _sgiywFZcEeGgtLw8YArqtQ
+	 * 
 	 */
 	private CommunicationChannel communicationChannel;
 
@@ -53,7 +53,7 @@ public class ServiceInvocationContext {
 	 * The {@link CommunicationChannel} the
 	 * service invocation arrived from.
 	 * 
-	 * @flowerModelElementId _z-S9wFZcEeGgtLw8YArqtQ
+	 * 
 	 */
 	public CommunicationChannel getCommunicationChannel() {
 		return communicationChannel;
@@ -87,7 +87,7 @@ public class ServiceInvocationContext {
 	}
 	
 	/**
-	 * @flowerModelElementId _ujG7cFbgEeGL3vi-zPhopA
+	 * 
 	 */
 	public ServiceInvocationContext(CommunicationChannel communicationChannel, InvokeServiceMethodServerCommand command) {	
 		this.communicationChannel = communicationChannel;

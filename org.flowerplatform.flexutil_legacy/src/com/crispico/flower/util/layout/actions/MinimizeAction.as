@@ -26,17 +26,17 @@ package  com.crispico.flower.util.layout.actions {
 	import mx.collections.ArrayCollection;
 
 	/**
-	 * @flowerModelElementId _RhkyIOCZEeGdYcOEhSk3ug
+	 * 
 	 */
 	public class MinimizeAction extends BaseAction  {
 		
 		/**
-		 * @flowerModelElementId _thvC0OtxEeGb_JdgRgmL9A
+		 * 
 		 */
 		private var workbench:Workbench;
 		
 		/**
-		 * @flowerModelElementId _thvp4OtxEeGb_JdgRgmL9A
+		 * 
 		 */
 		public function MinimizeAction(workbench:Workbench) {
 			this.workbench = workbench;
@@ -46,7 +46,7 @@ package  com.crispico.flower.util.layout.actions {
 		}
 			
 		/**
-		 * @flowerModelElementId _UKy3IOCZEeGdYcOEhSk3ug
+		 * 
 		 */
 		public override function run(selectedEditParts:ArrayCollection):void {	
 			var viewLayoutData:ViewLayoutData = selectedEditParts[0];

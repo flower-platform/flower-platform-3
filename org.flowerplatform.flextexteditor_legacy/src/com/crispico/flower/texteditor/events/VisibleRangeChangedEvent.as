@@ -24,7 +24,7 @@ package com.crispico.flower.texteditor.events {
 
 	/**
 	 * An event dispatched when the editor is scrolled.
-	 * @flowerModelElementId _x-wLsCyKEeGsGrJcrtxw9Q
+	 * 
 	 */ 
 	public class VisibleRangeChangedEvent extends Event {
 		

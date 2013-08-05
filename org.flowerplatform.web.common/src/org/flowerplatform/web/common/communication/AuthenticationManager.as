@@ -32,7 +32,7 @@ package  org.flowerplatform.web.common.communication {
 	
 	/**
 	 * @author Sorin
-	 * @flowerModelElementId _N1_7cG3eEeGYiLzscjdrpg
+	 * 
 	 */
 	public class AuthenticationManager {
 		
@@ -85,7 +85,7 @@ package  org.flowerplatform.web.common.communication {
 		private var connectingView:ConnectingView;
 		
 		/**
-		 * @flowerModelElementId _PHn7YG3eEeGYiLzscjdrpg
+		 * 
 		 * 
 		 * @author Sorin
 		 * @author Cristi
@@ -140,7 +140,7 @@ package  org.flowerplatform.web.common.communication {
 		}
 		
 		/**
-		 * @flowerModelElementId _X9AnsG3eEeGYiLzscjdrpg
+		 * 
 		 */
 		public function handleConnected(event:BridgeEvent):void {
 			if (connectingView != null) {
@@ -183,7 +183,7 @@ package  org.flowerplatform.web.common.communication {
 		 * @author Sorin
 		 * @author Mariana
 		 * 
-		 * @flowerModelElementId _kOYSsG3eEeGYiLzscjdrpg
+		 * 
 		 */
 		public function handleAuthenticationNeeded(event:BridgeEvent):void {
 			var failedUsername:String = event.rejectedCredentials ? event.rejectedCredentials.username : null;

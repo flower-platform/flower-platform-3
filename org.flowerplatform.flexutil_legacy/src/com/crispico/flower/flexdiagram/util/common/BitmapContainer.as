@@ -37,7 +37,7 @@ package  com.crispico.flower.flexdiagram.util.common {
 	 * It seems that when the child is instantiated, the parent's measures aren't automatically updated.</p>
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _c7yX8OymEd-OXKbnT5tcWg
+	 * 
 	 */
 	public class BitmapContainer extends UIComponent  {
 		
@@ -47,7 +47,7 @@ package  com.crispico.flower.flexdiagram.util.common {
 		
 		/**
 		 * Initialize the <code>bitmap</code> child and tries to retrieve its icon from a list of URLs.
-		 * @flowerModelElementId _12fiAOymEd-OXKbnT5tcWg
+		 * 
 		 */
 		public function BitmapContainer(value:Object = null):void {
 			_bitmap = new Bitmap();
@@ -59,7 +59,7 @@ package  com.crispico.flower.flexdiagram.util.common {
 		
 		/**
 		 * Sets the bitmapData property to the Bitmap.
-		 * @flowerModelElementId _49iygOymEd-OXKbnT5tcWg
+		 * 
 		 */
 		public function set bitmapData(value:BitmapData):void {
 			if (value == ImageFactory.INSTANCE.unavailableBitmapData && _bitmap.bitmapData != null)
@@ -105,7 +105,7 @@ package  com.crispico.flower.flexdiagram.util.common {
 		
 		/**
 		 * Given an array of URLs, it retrieves the icon for the <code>bitmapData</code> property.
-		 * @flowerModelElementId _On45AO2tEd-pCoS9wZhWPA
+		 * 
 		 */
 		public function retrieveImage(value:Object):void {
 			if (value == null) {

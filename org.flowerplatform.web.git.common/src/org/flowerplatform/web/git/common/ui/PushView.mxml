@@ -80,7 +80,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _JvFcEHE6EeK0WoOyJtfqdw
+			 * 
 			 */
 			protected override function finishClickHandler():void {				
 				var pushConfig:RemoteConfig = new RemoteConfig();
