@@ -15,22 +15,22 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
-import org.flowerplatform.model.astcache.wiki.Heading;
+import org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Heading</b></em>'.
+ * An implementation of the model object '<em><b>Node With Original Format</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.flowerplatform.model.astcache.wiki.impl.HeadingImpl#getOriginalFormat <em>Original Format</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.impl.NodeWithOriginalFormatImpl#getOriginalFormat <em>Original Format</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class HeadingImpl extends CodeSyncElementImpl implements Heading {
+public class NodeWithOriginalFormatImpl extends CodeSyncElementImpl implements NodeWithOriginalFormat {
 	/**
 	 * The default value of the '{@link #getOriginalFormat() <em>Original Format</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -56,7 +56,7 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected HeadingImpl() {
+	protected NodeWithOriginalFormatImpl() {
 		super();
 	}
 
@@ -67,7 +67,7 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return AstCacheWikiPackage.Literals.HEADING;
+		return AstCacheWikiPackage.Literals.NODE_WITH_ORIGINAL_FORMAT;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 		String oldOriginalFormat = originalFormat;
 		originalFormat = newOriginalFormat;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, AstCacheWikiPackage.HEADING__ORIGINAL_FORMAT, oldOriginalFormat, originalFormat));
+			eNotify(new ENotificationImpl(this, Notification.SET, AstCacheWikiPackage.NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT, oldOriginalFormat, originalFormat));
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case AstCacheWikiPackage.HEADING__ORIGINAL_FORMAT:
+			case AstCacheWikiPackage.NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT:
 				return getOriginalFormat();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -113,7 +113,7 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case AstCacheWikiPackage.HEADING__ORIGINAL_FORMAT:
+			case AstCacheWikiPackage.NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT:
 				setOriginalFormat((String)newValue);
 				return;
 		}
@@ -128,7 +128,7 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case AstCacheWikiPackage.HEADING__ORIGINAL_FORMAT:
+			case AstCacheWikiPackage.NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT:
 				setOriginalFormat(ORIGINAL_FORMAT_EDEFAULT);
 				return;
 		}
@@ -143,7 +143,7 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case AstCacheWikiPackage.HEADING__ORIGINAL_FORMAT:
+			case AstCacheWikiPackage.NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT:
 				return ORIGINAL_FORMAT_EDEFAULT == null ? originalFormat != null : !ORIGINAL_FORMAT_EDEFAULT.equals(originalFormat);
 		}
 		return super.eIsSet(featureID);
@@ -165,4 +165,4 @@ public class HeadingImpl extends CodeSyncElementImpl implements Heading {
 		return result.toString();
 	}
 
-} //HeadingImpl
+} //NodeWithOriginalFormatImpl

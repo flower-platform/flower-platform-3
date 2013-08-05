@@ -18,7 +18,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
 import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
 import org.flowerplatform.model.astcache.wiki.FlowerBlock;
-import org.flowerplatform.model.astcache.wiki.Heading;
+import org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat;
 import org.flowerplatform.model.astcache.wiki.Page;
 
 /**
@@ -47,7 +47,7 @@ public class AstCacheWikiPackageImpl extends EPackageImpl implements AstCacheWik
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass headingEClass = null;
+	private EClass nodeWithOriginalFormatEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -199,8 +199,8 @@ public class AstCacheWikiPackageImpl extends EPackageImpl implements AstCacheWik
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getHeading() {
-		return headingEClass;
+	public EClass getNodeWithOriginalFormat() {
+		return nodeWithOriginalFormatEClass;
 	}
 
 	/**
@@ -208,8 +208,8 @@ public class AstCacheWikiPackageImpl extends EPackageImpl implements AstCacheWik
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getHeading_OriginalFormat() {
-		return (EAttribute)headingEClass.getEStructuralFeatures().get(0);
+	public EAttribute getNodeWithOriginalFormat_OriginalFormat() {
+		return (EAttribute)nodeWithOriginalFormatEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -251,8 +251,8 @@ public class AstCacheWikiPackageImpl extends EPackageImpl implements AstCacheWik
 		createEAttribute(flowerBlockEClass, FLOWER_BLOCK__LINE_END);
 		createEAttribute(flowerBlockEClass, FLOWER_BLOCK__CONFLICT);
 
-		headingEClass = createEClass(HEADING);
-		createEAttribute(headingEClass, HEADING__ORIGINAL_FORMAT);
+		nodeWithOriginalFormatEClass = createEClass(NODE_WITH_ORIGINAL_FORMAT);
+		createEAttribute(nodeWithOriginalFormatEClass, NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT);
 	}
 
 	/**
@@ -289,7 +289,7 @@ public class AstCacheWikiPackageImpl extends EPackageImpl implements AstCacheWik
 		// Add supertypes to classes
 		pageEClass.getESuperTypes().add(theCodeSyncPackage.getAstCacheElement());
 		flowerBlockEClass.getESuperTypes().add(theCodeSyncPackage.getAstCacheElement());
-		headingEClass.getESuperTypes().add(theCodeSyncPackage.getCodeSyncElement());
+		nodeWithOriginalFormatEClass.getESuperTypes().add(theCodeSyncPackage.getCodeSyncElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(pageEClass, Page.class, "Page", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -303,8 +303,8 @@ public class AstCacheWikiPackageImpl extends EPackageImpl implements AstCacheWik
 		initEAttribute(getFlowerBlock_LineEnd(), ecorePackage.getEInt(), "lineEnd", null, 0, 1, FlowerBlock.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFlowerBlock_Conflict(), ecorePackage.getEBoolean(), "conflict", null, 0, 1, FlowerBlock.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(headingEClass, Heading.class, "Heading", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getHeading_OriginalFormat(), theEcorePackage.getEString(), "originalFormat", null, 0, 1, Heading.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(nodeWithOriginalFormatEClass, NodeWithOriginalFormat.class, "NodeWithOriginalFormat", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getNodeWithOriginalFormat_OriginalFormat(), theEcorePackage.getEString(), "originalFormat", null, 0, 1, NodeWithOriginalFormat.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

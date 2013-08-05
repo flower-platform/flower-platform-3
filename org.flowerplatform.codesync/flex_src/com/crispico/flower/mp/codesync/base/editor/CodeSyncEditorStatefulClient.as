@@ -36,7 +36,7 @@ package com.crispico.flower.mp.codesync.base.editor {
 		public var diffTreeStatefulClient:Object = new Object();
 		
 		override public function getStatefulServiceId():String {
-			return "CodeSyncEditorStatefulService";
+			return "codeSyncEditorStatefulService";
 		}
 		
 		[RemoteInvocation]

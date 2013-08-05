@@ -180,14 +180,14 @@ public interface AstCacheWikiPackage extends EPackage {
 	int FLOWER_BLOCK_FEATURE_COUNT = CodeSyncPackage.AST_CACHE_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
-	 * The meta object id for the '{@link org.flowerplatform.model.astcache.wiki.impl.HeadingImpl <em>Heading</em>}' class.
+	 * The meta object id for the '{@link org.flowerplatform.model.astcache.wiki.impl.NodeWithOriginalFormatImpl <em>Node With Original Format</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.flowerplatform.model.astcache.wiki.impl.HeadingImpl
-	 * @see org.flowerplatform.model.astcache.wiki.impl.AstCacheWikiPackageImpl#getHeading()
+	 * @see org.flowerplatform.model.astcache.wiki.impl.NodeWithOriginalFormatImpl
+	 * @see org.flowerplatform.model.astcache.wiki.impl.AstCacheWikiPackageImpl#getNodeWithOriginalFormat()
 	 * @generated
 	 */
-	int HEADING = 2;
+	int NODE_WITH_ORIGINAL_FORMAT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Synchronized</b></em>' attribute.
@@ -196,7 +196,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__SYNCHRONIZED = CodeSyncPackage.CODE_SYNC_ELEMENT__SYNCHRONIZED;
+	int NODE_WITH_ORIGINAL_FORMAT__SYNCHRONIZED = CodeSyncPackage.CODE_SYNC_ELEMENT__SYNCHRONIZED;
 
 	/**
 	 * The feature id for the '<em><b>Children Synchronized</b></em>' attribute.
@@ -205,7 +205,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__CHILDREN_SYNCHRONIZED = CodeSyncPackage.CODE_SYNC_ELEMENT__CHILDREN_SYNCHRONIZED;
+	int NODE_WITH_ORIGINAL_FORMAT__CHILDREN_SYNCHRONIZED = CodeSyncPackage.CODE_SYNC_ELEMENT__CHILDREN_SYNCHRONIZED;
 
 	/**
 	 * The feature id for the '<em><b>Added</b></em>' attribute.
@@ -214,7 +214,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__ADDED = CodeSyncPackage.CODE_SYNC_ELEMENT__ADDED;
+	int NODE_WITH_ORIGINAL_FORMAT__ADDED = CodeSyncPackage.CODE_SYNC_ELEMENT__ADDED;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -223,7 +223,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__DELETED = CodeSyncPackage.CODE_SYNC_ELEMENT__DELETED;
+	int NODE_WITH_ORIGINAL_FORMAT__DELETED = CodeSyncPackage.CODE_SYNC_ELEMENT__DELETED;
 
 	/**
 	 * The feature id for the '<em><b>Status Flags</b></em>' attribute.
@@ -232,7 +232,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__STATUS_FLAGS = CodeSyncPackage.CODE_SYNC_ELEMENT__STATUS_FLAGS;
+	int NODE_WITH_ORIGINAL_FORMAT__STATUS_FLAGS = CodeSyncPackage.CODE_SYNC_ELEMENT__STATUS_FLAGS;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -241,7 +241,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__NAME = CodeSyncPackage.CODE_SYNC_ELEMENT__NAME;
+	int NODE_WITH_ORIGINAL_FORMAT__NAME = CodeSyncPackage.CODE_SYNC_ELEMENT__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -250,7 +250,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__TYPE = CodeSyncPackage.CODE_SYNC_ELEMENT__TYPE;
+	int NODE_WITH_ORIGINAL_FORMAT__TYPE = CodeSyncPackage.CODE_SYNC_ELEMENT__TYPE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Cache Element</b></em>' reference.
@@ -259,7 +259,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__AST_CACHE_ELEMENT = CodeSyncPackage.CODE_SYNC_ELEMENT__AST_CACHE_ELEMENT;
+	int NODE_WITH_ORIGINAL_FORMAT__AST_CACHE_ELEMENT = CodeSyncPackage.CODE_SYNC_ELEMENT__AST_CACHE_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -268,7 +268,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__CHILDREN = CodeSyncPackage.CODE_SYNC_ELEMENT__CHILDREN;
+	int NODE_WITH_ORIGINAL_FORMAT__CHILDREN = CodeSyncPackage.CODE_SYNC_ELEMENT__CHILDREN;
 
 	/**
 	 * The feature id for the '<em><b>Feature Changes</b></em>' map.
@@ -277,7 +277,7 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__FEATURE_CHANGES = CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES;
+	int NODE_WITH_ORIGINAL_FORMAT__FEATURE_CHANGES = CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES;
 
 	/**
 	 * The feature id for the '<em><b>Original Format</b></em>' attribute.
@@ -286,17 +286,16 @@ public interface AstCacheWikiPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING__ORIGINAL_FORMAT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
+	int NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Heading</em>' class.
+	 * The number of structural features of the '<em>Node With Original Format</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int HEADING_FEATURE_COUNT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
-
+	int NODE_WITH_ORIGINAL_FORMAT_FEATURE_COUNT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.model.astcache.wiki.Page <em>Page</em>}'.
@@ -396,25 +395,25 @@ public interface AstCacheWikiPackage extends EPackage {
 	EAttribute getFlowerBlock_Conflict();
 
 	/**
-	 * Returns the meta object for class '{@link org.flowerplatform.model.astcache.wiki.Heading <em>Heading</em>}'.
+	 * Returns the meta object for class '{@link org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat <em>Node With Original Format</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Heading</em>'.
-	 * @see org.flowerplatform.model.astcache.wiki.Heading
+	 * @return the meta object for class '<em>Node With Original Format</em>'.
+	 * @see org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat
 	 * @generated
 	 */
-	EClass getHeading();
+	EClass getNodeWithOriginalFormat();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.model.astcache.wiki.Heading#getOriginalFormat <em>Original Format</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat#getOriginalFormat <em>Original Format</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Original Format</em>'.
-	 * @see org.flowerplatform.model.astcache.wiki.Heading#getOriginalFormat()
-	 * @see #getHeading()
+	 * @see org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat#getOriginalFormat()
+	 * @see #getNodeWithOriginalFormat()
 	 * @generated
 	 */
-	EAttribute getHeading_OriginalFormat();
+	EAttribute getNodeWithOriginalFormat_OriginalFormat();
 
 	/**
 	 * Returns the factory that creates the instances of the model.
@@ -515,14 +514,14 @@ public interface AstCacheWikiPackage extends EPackage {
 		EAttribute FLOWER_BLOCK__CONFLICT = eINSTANCE.getFlowerBlock_Conflict();
 
 		/**
-		 * The meta object literal for the '{@link org.flowerplatform.model.astcache.wiki.impl.HeadingImpl <em>Heading</em>}' class.
+		 * The meta object literal for the '{@link org.flowerplatform.model.astcache.wiki.impl.NodeWithOriginalFormatImpl <em>Node With Original Format</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.flowerplatform.model.astcache.wiki.impl.HeadingImpl
-		 * @see org.flowerplatform.model.astcache.wiki.impl.AstCacheWikiPackageImpl#getHeading()
+		 * @see org.flowerplatform.model.astcache.wiki.impl.NodeWithOriginalFormatImpl
+		 * @see org.flowerplatform.model.astcache.wiki.impl.AstCacheWikiPackageImpl#getNodeWithOriginalFormat()
 		 * @generated
 		 */
-		EClass HEADING = eINSTANCE.getHeading();
+		EClass NODE_WITH_ORIGINAL_FORMAT = eINSTANCE.getNodeWithOriginalFormat();
 
 		/**
 		 * The meta object literal for the '<em><b>Original Format</b></em>' attribute feature.
@@ -530,7 +529,7 @@ public interface AstCacheWikiPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute HEADING__ORIGINAL_FORMAT = eINSTANCE.getHeading_OriginalFormat();
+		EAttribute NODE_WITH_ORIGINAL_FORMAT__ORIGINAL_FORMAT = eINSTANCE.getNodeWithOriginalFormat_OriginalFormat();
 
 	}
 

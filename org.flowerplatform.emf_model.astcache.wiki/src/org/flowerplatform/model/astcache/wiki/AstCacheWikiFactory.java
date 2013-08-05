@@ -44,13 +44,13 @@ public interface AstCacheWikiFactory extends EFactory {
 	FlowerBlock createFlowerBlock();
 
 	/**
-	 * Returns a new object of class '<em>Heading</em>'.
+	 * Returns a new object of class '<em>Node With Original Format</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Heading</em>'.
+	 * @return a new object of class '<em>Node With Original Format</em>'.
 	 * @generated
 	 */
-	Heading createHeading();
+	NodeWithOriginalFormat createNodeWithOriginalFormat();
 
 	/**
 	 * Returns the package supported by this factory.

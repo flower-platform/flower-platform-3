@@ -28,6 +28,8 @@ import static org.flowerplatform.common.regex.RegexUtil.XML_MULTI_LINE_COMMENT;
 import static org.flowerplatform.common.regex.JavaRegexConfigurationProvider.ATTRIBUTE_CATEGORY;
 import static org.flowerplatform.common.regex.JavaRegexConfigurationProvider.METHOD_CATEGORY;
 
+import java.util.regex.Pattern;
+
 import org.flowerplatform.common.regex.RegexConfiguration;
 import org.flowerplatform.common.regex.RegexWithAction;
 import org.flowerplatform.common.regex.ActionscriptRegexConfigurationProvider;
@@ -55,6 +57,6 @@ public class MxmlRegexConfigurationProvider extends	ActionscriptRegexConfigurati
 			.add(new RegexWithAction.IfFindThisSkip("XML comment", XML_MULTI_LINE_COMMENT))
 			.add(new RegexWithAction.IfFindThisSkip("Multi-line comment", MULTI_LINE_COMMENT))
 			.add(new RegexWithAction.IfFindThisSkip("Single-line comment", SINGLE_LINE_COMMENT))
-			.compile();
+			.compile(Pattern.DOTALL);
 	}
 }

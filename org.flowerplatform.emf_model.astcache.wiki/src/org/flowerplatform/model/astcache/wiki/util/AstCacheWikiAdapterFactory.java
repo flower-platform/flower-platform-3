@@ -85,8 +85,8 @@ public class AstCacheWikiAdapterFactory extends AdapterFactoryImpl {
 				return createFlowerBlockAdapter();
 			}
 			@Override
-			public Adapter caseHeading(Heading object) {
-				return createHeadingAdapter();
+			public Adapter caseNodeWithOriginalFormat(NodeWithOriginalFormat object) {
+				return createNodeWithOriginalFormatAdapter();
 			}
 			@Override
 			public Adapter caseSerializable(Serializable object) {
@@ -149,16 +149,16 @@ public class AstCacheWikiAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.flowerplatform.model.astcache.wiki.Heading <em>Heading</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat <em>Node With Original Format</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.flowerplatform.model.astcache.wiki.Heading
+	 * @see org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat
 	 * @generated
 	 */
-	public Adapter createHeadingAdapter() {
+	public Adapter createNodeWithOriginalFormatAdapter() {
 		return null;
 	}
 

@@ -21,7 +21,7 @@ package com.crispico.flower.mp.codesync.wiki;
 import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.*;
 
 import org.flowerplatform.model.astcache.wiki.FlowerBlock;
-import org.flowerplatform.model.astcache.wiki.Heading;
+import org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat;
 import org.flowerplatform.model.astcache.wiki.Page;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -62,13 +62,12 @@ public class WikiTextBuilder {
 	
 	protected String buildText(CodeSyncElement node) {
 		String text = "";
+		if (node instanceof NodeWithOriginalFormat) {
+			text = formatNodeWithOriginalFormat((NodeWithOriginalFormat) node) + lineDelimiter;
+		}
 		String category = node.getType();
 		if (WikiPlugin.PARAGRAPH_CATEGORY.equals(category)) {
 			text = node.getName() + lineDelimiter;
-		}
-		int headingLevel = WikiPlugin.getInstance().getHeadingLevel(category);
-		if (headingLevel > 0) {
-			text = formatHeading((Heading) node, headingLevel) + lineDelimiter;
 		}
 		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(node.getType())) {
 			text = formatFlowerBlock(node) + lineDelimiter;
@@ -76,7 +75,7 @@ public class WikiTextBuilder {
 		return text;
 	}
 	
-	protected String formatHeading(Heading node, int headingLevel) {
+	protected String formatNodeWithOriginalFormat(NodeWithOriginalFormat node) {
 		return String.format(node.getOriginalFormat(), node.getName());
 	}
 

@@ -91,10 +91,10 @@ public class AstCacheWikiSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case AstCacheWikiPackage.HEADING: {
-				Heading heading = (Heading)theEObject;
-				T result = caseHeading(heading);
-				if (result == null) result = caseCodeSyncElement(heading);
+			case AstCacheWikiPackage.NODE_WITH_ORIGINAL_FORMAT: {
+				NodeWithOriginalFormat nodeWithOriginalFormat = (NodeWithOriginalFormat)theEObject;
+				T result = caseNodeWithOriginalFormat(nodeWithOriginalFormat);
+				if (result == null) result = caseCodeSyncElement(nodeWithOriginalFormat);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -133,17 +133,17 @@ public class AstCacheWikiSwitch<T> extends Switch<T> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Heading</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Node With Original Format</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Heading</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Node With Original Format</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseHeading(Heading object) {
+	public T caseNodeWithOriginalFormat(NodeWithOriginalFormat object) {
 		return null;
 	}
 

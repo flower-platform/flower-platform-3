@@ -62,7 +62,7 @@ public class AstCacheWikiFactoryImpl extends EFactoryImpl implements AstCacheWik
 		switch (eClass.getClassifierID()) {
 			case AstCacheWikiPackage.PAGE: return createPage();
 			case AstCacheWikiPackage.FLOWER_BLOCK: return createFlowerBlock();
-			case AstCacheWikiPackage.HEADING: return createHeading();
+			case AstCacheWikiPackage.NODE_WITH_ORIGINAL_FORMAT: return createNodeWithOriginalFormat();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -93,9 +93,9 @@ public class AstCacheWikiFactoryImpl extends EFactoryImpl implements AstCacheWik
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Heading createHeading() {
-		HeadingImpl heading = new HeadingImpl();
-		return heading;
+	public NodeWithOriginalFormat createNodeWithOriginalFormat() {
+		NodeWithOriginalFormatImpl nodeWithOriginalFormat = new NodeWithOriginalFormatImpl();
+		return nodeWithOriginalFormat;
 	}
 
 	/**

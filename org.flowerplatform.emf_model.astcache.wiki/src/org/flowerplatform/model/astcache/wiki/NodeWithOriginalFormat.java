@@ -10,21 +10,21 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Heading</b></em>'.
+ * A representation of the model object '<em><b>Node With Original Format</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.flowerplatform.model.astcache.wiki.Heading#getOriginalFormat <em>Original Format</em>}</li>
+ *   <li>{@link org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat#getOriginalFormat <em>Original Format</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getHeading()
+ * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getNodeWithOriginalFormat()
  * @model
  * @generated
  */
-public interface Heading extends CodeSyncElement {
+public interface NodeWithOriginalFormat extends CodeSyncElement {
 	/**
 	 * Returns the value of the '<em><b>Original Format</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -35,14 +35,14 @@ public interface Heading extends CodeSyncElement {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Original Format</em>' attribute.
 	 * @see #setOriginalFormat(String)
-	 * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getHeading_OriginalFormat()
+	 * @see org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage#getNodeWithOriginalFormat_OriginalFormat()
 	 * @model
 	 * @generated
 	 */
 	String getOriginalFormat();
 
 	/**
-	 * Sets the value of the '{@link org.flowerplatform.model.astcache.wiki.Heading#getOriginalFormat <em>Original Format</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat#getOriginalFormat <em>Original Format</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Original Format</em>' attribute.
@@ -51,4 +51,4 @@ public interface Heading extends CodeSyncElement {
 	 */
 	void setOriginalFormat(String value);
 
-} // Heading
+} // NodeWithOriginalFormat

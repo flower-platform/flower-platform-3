@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -31,13 +32,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
-import org.flowerplatform.editor.model.remote.DiagramEditableResource;
-import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.flowerplatform.model.astcache.wiki.FlowerBlock;
 import org.flowerplatform.model.astcache.wiki.Page;
@@ -80,7 +78,19 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	public static final String HEADING_LEVEL_5_CATEGORY = "heading 5";
 	public static final String HEADING_LEVEL_6_CATEGORY = "heading 6";
 	
+	public static final String ORDERED_LIST_CATEGORY = "ordered list";
+	public static final String ORDERED_LIST_ITEM_CATEGORY = "ordered list item";
+	public static final String UNORDERED_LIST_CATEGORY = "unordered list";
+	public static final String UNORDERED_LIST_ITEM_CATEGORY = "unordered list item";
+	
+	public static final String BLOCKQUOTE_CATEGORY = "blockquote";
+	public static final String BLOCKQUOTE_CHILD_CATEGORY = "blockquote child";
+	
+	public static final String CODE_CATEGORY = "code";
+	public static final String CODE_LINE_CATEGORY = "code line";
+	
 	public static final String PARAGRAPH_CATEGORY = "paragraph";
+	
 	public static final String FLOWER_BLOCK_CATEGORY = "flowerBlock";
 	
 	protected Map<String, IConfigurationProvider> configurationProviders = new HashMap<String, IConfigurationProvider>();
@@ -205,7 +215,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		IConfigurationProvider configurationProvider = configurationProviders.get(technology);
 		configurationProvider.buildConfiguration(config, page);
 		config.setSessionClass(configurationProvider.getWikiTreeBuilderClass());
-		config.compile();
+		config.compile(Pattern.MULTILINE);
 		WikiTreeBuilder session = (WikiTreeBuilder) config.startSession(wikiText);
 		session.setRoot(page);
 		session.setFlowerBlocks(flowerBlocks);
