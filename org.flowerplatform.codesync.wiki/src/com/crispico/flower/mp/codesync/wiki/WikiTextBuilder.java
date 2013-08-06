@@ -41,7 +41,9 @@ public class WikiTextBuilder {
 		}
 		if (WikiPlugin.PAGE_CATEGORY.equals(tree.getType())) {
 			Page page = (Page) tree.getAstCacheElement();
-			lineDelimiter = page.getLineDelimiter();
+			if (page.getLineDelimiter() != null) {
+				lineDelimiter = page.getLineDelimiter();
+			}
 			generateWikiText(tree);
 			int index = builder.lastIndexOf(lineDelimiter);
 			if (index >= 0) {
