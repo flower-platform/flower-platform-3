@@ -52,8 +52,8 @@ public class MarkdownConfigurationProvider implements IConfigurationProvider {
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(HEADING_LEVEL_2_CATEGORY, getHeadingSetext(HEADING_LEVEL_2_UNDERLINE), HEADING_LEVEL_2_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(ORDERED_LIST_ITEM_CATEGORY, getListItem(String.format(ONE_OR_MORE_TIMES_FORMAT, "\\d") + "\\."), ORDERED_LIST_ITEM_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(UNORDERED_LIST_ITEM_CATEGORY, getListItem(String.format(CLASS, "\\*\\+-")), UNORDERED_LIST_ITEM_CATEGORY))
-		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(BLOCKQUOTE_CHILD_CATEGORY, getBlockquote(), BLOCKQUOTE_CHILD_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(CODE_LINE_CATEGORY, getCode(), CODE_LINE_CATEGORY))
+		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(BLOCKQUOTE_CHILD_CATEGORY, getBlockquote(), BLOCKQUOTE_CHILD_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(PARAGRAPH_CATEGORY, PARAGRAPH_REGEX, PARAGRAPH_CATEGORY))
 		.setUseUntilFoundThisIgnoreAll(false);
 	}
@@ -90,7 +90,8 @@ public class MarkdownConfigurationProvider implements IConfigurationProvider {
 				CAPTURE_ANY +											// capture heading title
 				NON_CAPTURE_LINE_DELIMITER +							// ignore line delimiters
 				String.format(ONE_OR_MORE_TIMES_FORMAT, sign) +			// underline
-				String.format(ZERO_OR_MORE_TIMES_FORMAT, WHITESPACE)));	// trailing whitespaces
+				String.format(ZERO_OR_MORE_TIMES_FORMAT, WHITESPACE + 	// trailing whitespaces
+						"&&[^\r\n]")));									// except line delimiters
 	}
 	
 	private String getListItem(String marker) {
