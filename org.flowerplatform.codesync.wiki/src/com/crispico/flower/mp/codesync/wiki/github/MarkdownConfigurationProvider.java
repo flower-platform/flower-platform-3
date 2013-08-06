@@ -90,8 +90,9 @@ public class MarkdownConfigurationProvider implements IConfigurationProvider {
 				CAPTURE_ANY +											// capture heading title
 				NON_CAPTURE_LINE_DELIMITER +							// ignore line delimiters
 				String.format(ONE_OR_MORE_TIMES_FORMAT, sign) +			// underline
-				String.format(ZERO_OR_MORE_TIMES_FORMAT, WHITESPACE + 	// trailing whitespaces
-						"&&[^\r\n]")));									// except line delimiters
+				String.format(ZERO_OR_MORE_TIMES_FORMAT, 
+						String.format(CLASS, WHITESPACE + 				// trailing whitespaces
+						"&&[^\r\n]"))));								// except line delimiters
 	}
 	
 	private String getListItem(String marker) {

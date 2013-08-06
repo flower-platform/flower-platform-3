@@ -192,11 +192,10 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 		NodeWithOriginalFormat node = AstCacheWikiFactory.eINSTANCE.createNodeWithOriginalFormat();
 		String originalFormat = currentSubMatchesForCurrentRegex[0];
 		String name = currentSubMatchesForCurrentRegex[1];
-		if (name.length() > 0) {
-			node.setOriginalFormat(originalFormat.replace(name, "%s"));
-		} else {
-			node.setOriginalFormat(originalFormat + "%s");
-		}
+		StringBuilder builder = new StringBuilder(originalFormat);
+		int index = builder.lastIndexOf(name);
+		builder.replace(index, index + name.length(), "%s");
+		node.setOriginalFormat(builder.toString());
 		node.setName(name);
 		node.setType(category);
 		return node;
