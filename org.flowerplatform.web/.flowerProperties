@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<preferences>
+  <models/>
+  <styleActions>
+    <styleAction id="c989dac7-d40a-4a9f-a481-9f93167a3385" name="Class + Members - Black">
+      <style name="classContainer.classLabel.color" value="0" viewType="CodeSyncTitle"/>
+      <style name="compLabel.color" value="#000000" viewType="CodeSyncAttribute"/>
+      <style name="compLabel.color" value="#000000" viewType="CodeSyncOperation"/>
+    </styleAction>
+    <styleAction id="30024d13-53ee-4004-970c-1f2a1136b8f4" name="Class + Members - New Design Diagram, New (N)">
+      <style name="classContainer.classLabel.color" value="16711680" viewType="CodeSyncTitle"/>
+      <style name="compLabel.color" value="16711680" viewType="CodeSyncAttribute"/>
+      <style name="compLabel.color" value="16711680" viewType="CodeSyncOperation"/>
+      <style name="showElement" value="false" viewType="CodeSyncOperation"/>
+      <style name="showElement" value="false" viewType="CodeSyncAttribute"/>
+    </styleAction>
+    <styleAction id="886cf897-7534-49db-aba8-789dc656d40b" name="Class Members - Planned (P)">
+      <style name="compLabel.color" value="16750848" viewType="CodeSyncAttribute"/>
+      <style name="compLabel.color" value="16750848" viewType="CodeSyncOperation"/>
+    </styleAction>
+    <styleAction id="3ebaf826-2460-435b-ab3a-4b12de1a0faf" name="Class Members - Done (D)">
+      <style name="compLabel.color" value="255" viewType="CodeSyncAttribute"/>
+      <style name="compLabel.color" value="255" viewType="CodeSyncOperation"/>
+    </styleAction>
+    <styleAction id="5a1e336f-7f0a-435e-9760-ffdc26ea4313" name="Class Members - Validated (D)">
+      <style name="compLabel.color" value="39168" viewType="CodeSyncAttribute"/>
+      <style name="compLabel.color" value="39168" viewType="CodeSyncOperation"/>
+    </styleAction>
+    <styleAction id="413ff22b-3aef-46f2-b145-07a0cc0ff09f" name="Class Only - Validated (D)">
+      <style name="classContainer.classLabel.color" value="39168" viewType="CodeSyncTitle"/>
+    </styleAction>
+    <styleAction id="ebab4d2e-72b8-414e-b264-fd4af960e21a" name="Note Connection Color Grey">
+      <style name="flowerLineColor" value="10066329" viewType="NoteConnector"/>
+    </styleAction>
+  </styleActions>
+</preferences>
