@@ -70,7 +70,8 @@ package org.flowerplatform.flexdiagram.mindmap {
 					removeModelFromRootChildren(child);			
 				}
 			}			
-			if (!removeOnlyChildren) {						
+			if (!removeOnlyChildren) {		
+				trace("removeItem" + model.id);
 				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).removeItem(model);	
 			}			
 		}
@@ -83,7 +84,8 @@ package org.flowerplatform.flexdiagram.mindmap {
 				}				
 			}
 			if (!addOnlyChildren) {
-				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).addItem(model);	
+				trace("addItem" + model.id);
+				ArrayList(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel)).addItem(model);					
 			}		
 		}
 		

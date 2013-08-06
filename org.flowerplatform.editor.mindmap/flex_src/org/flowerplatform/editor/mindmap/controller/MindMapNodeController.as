@@ -24,10 +24,12 @@ package org.flowerplatform.editor.mindmap.controller {
 	import mx.events.PropertyChangeEvent;
 	
 	import org.flowerplatform.communication.transferable_object.ReferenceHolder;
+	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
 	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -55,6 +57,10 @@ package org.flowerplatform.editor.mindmap.controller {
 				return ReferenceHolder(MindMapNode(model).parentView_RH).referencedObject;
 			}
 			return null;
+		}
+		
+		public function getChildren(model:Object):ArrayList {
+			return new ReferenceHolderList(View(model).persistentChildren_RH);
 		}
 		
 		public function setParent(model:Object, value:Object):void {

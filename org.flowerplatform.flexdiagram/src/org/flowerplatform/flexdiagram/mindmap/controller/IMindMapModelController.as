@@ -27,7 +27,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 		function getParent(model:Object):Object;		
 		function setParent(model:Object, value:Object):void;	
 		
-//		function getChildren(model:Object):ArrayList;		
+		function getChildren(model:Object):ArrayList;		
 //		function getChildrenBasedOnSide(model:Object, side:int = 0):ArrayList;		
 		function setChildren(model:Object, value:ArrayList):void;
 		

@@ -44,6 +44,7 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.tool.DragTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
@@ -135,7 +136,7 @@ package org.flowerplatform.editor.mindmap {
 			if (model is Diagram) {
 				return mindMapDiagramChildrenController;
 			}
-			return mindMapNodeChildrenController;			
+			return null;//mindMapNodeChildrenController;			
 		}
 		
 		public function getModelExtraInfoController(model:Object):IModelExtraInfoController {

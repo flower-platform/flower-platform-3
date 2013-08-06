@@ -78,12 +78,14 @@ package org.flowerplatform.editor.mindmap.controller
 			var model:MindMapNode = MindMapNode(event.object);	
 
 			var root:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-		
-			MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model, true);		
+
+			MindMapDiagramShell(diagramShell).removeModelFromRootChildren(model, true);
+			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
+			
 			MindMapDiagramShell(diagramShell).addModelToRootChildren(model, true);	
 			diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
 			
-			MindMapDiagramShell(diagramShell).refreshNodePositions(root);
+			MindMapDiagramShell(diagramShell).refreshNodePositions(root);			
 		}
 		
 		protected function objectDisposedHandler(event:TransferableObjectDisposedEvent):void {

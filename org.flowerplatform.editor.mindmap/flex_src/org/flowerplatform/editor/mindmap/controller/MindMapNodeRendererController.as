@@ -53,7 +53,8 @@ package org.flowerplatform.editor.mindmap.controller {
 			removeConnector(model);
 			
 			if (isModelDisposed) {				
-				if (renderer != null) {					
+				if (renderer != null) {		
+					trace("remove element");
 					IVisualElementContainer(renderer.parent).removeElement(renderer);					
 				}			
 			}
@@ -87,8 +88,8 @@ package org.flowerplatform.editor.mindmap.controller {
 				}
 			}
 			// refresh connectors to children
-			for (var i:int = 0; i < diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model).length; i++) {
-				var child:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model).getItemAt(i);						
+			for (var i:int = 0; i < getModelController(model).getChildren(model).length; i++) {
+				var child:Object = getModelController(model).getChildren(model).getItemAt(i);						
 				if (getDynamicObject(child).connector != null) {
 					getDynamicObject(child).connector.invalidateDisplayList();
 				}
