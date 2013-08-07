@@ -45,61 +45,82 @@ package org.flowerplatform.editor.mindmap.controller {
 			super(diagramShell);
 		}
 		
-		public function getParent(model:Object):Object {			
-			if (MindMapNode(model).parentView_RH != null) {
-				try {
-					if (MindMapNode(model).parentView_RH.referencedObject is Diagram) {
-						return null;
-					}
-				} catch (e:Error) {
-					return null;
-				}
-				return ReferenceHolder(MindMapNode(model).parentView_RH).referencedObject;
-			}
-			return null;
-		}
-		
-		public function getChildren(model:Object):ArrayList {
+		public function getChildren(model:Object):IList {
 			return new ReferenceHolderList(View(model).persistentChildren_RH);
 		}
 		
-		public function setParent(model:Object, value:Object):void {
+		public function getChildrenBasedOnSide(model:Object, side:int = 0):IList /* of MindMapNode */ {
+			if (side == 0) {
+				side = model.side;
+			}
+			var list:ArrayList = new ArrayList();			
+			for (var i:int = 0; i < getChildren(model).length; i++) {
+				var child:MindMapNode = MindMapNode(getChildren(model).getItemAt(i));
+				if (side == 0 || side == child.side) {
+					list.addItem(child);
+				}
+			}
+			return list;
 		}
-		
-		public function setChildren(model:Object, value:ArrayList):void {
-			MindMapNode(model).persistentChildren_RH = value;
-		}
-				
+						
 		public function getX(model:Object):Number {
-			return MindMapNode(model).x;			
+			if (getDynamicObject(model).x == null) {
+				getDynamicObject(model).x = 0;
+			}
+			return getDynamicObject(model).x;			
 		}
 		
-		public function setX(model:Object, value:Number):void {			
-			MindMapNode(model).setX(value);
+		public function setX(model:Object, value:Number):void {	
+			var oldValue:Number = getDynamicObject(model).x;
+			
+			getDynamicObject(model).x = value;
+			
+			model.dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "x", oldValue, value));
 		}
 		
 		public function getY(model:Object):Number {
-			return MindMapNode(model).y;			
+			if (getDynamicObject(model).y == null) {
+				getDynamicObject(model).y = 0;
+			}
+			return getDynamicObject(model).y;			
 		}
 		
-		public function setY(model:Object, value:Number):void {				
-			MindMapNode(model).setY(value);			
+		public function setY(model:Object, value:Number):void {	
+			var oldValue:Number = getDynamicObject(model).y;
+			
+			getDynamicObject(model).y = value;	
+			
+			model.dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "y", oldValue, value));
 		}
 		
-		public function getWidth(model:Object):Number {		
-			return MindMapNode(model).width;
+		public function getWidth(model:Object):Number {	
+			if (getDynamicObject(model).width == null) {
+				getDynamicObject(model).width = 10;
+			}
+			return getDynamicObject(model).width;
 		}
 		
-		public function setWidth(model:Object, value:Number):void {			
-			MindMapNode(model).setWidth(value);
+		public function setWidth(model:Object, value:Number):void {	
+			var oldValue:Number = getDynamicObject(model).width;
+			
+			getDynamicObject(model).width = value;
+			
+			model.dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "width", oldValue, value));
 		}
 		
 		public function getHeight(model:Object):Number {
-			return MindMapNode(model).height;			
+			if (getDynamicObject(model).height == null) {
+				getDynamicObject(model).height = 10;
+			}
+			return getDynamicObject(model).height;			
 		}
 		
-		public function setHeight(model:Object, value:Number):void {			
-			MindMapNode(model).setHeight(value);
+		public function setHeight(model:Object, value:Number):void {
+			var oldValue:Number = getDynamicObject(model).height;
+			
+			getDynamicObject(model).height = value;
+			
+			model.dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "height", oldValue, value));
 		}
 		
 		public function getExpanded(model:Object):Boolean {

@@ -101,8 +101,7 @@ package org.flowerplatform.editor.mindmap {
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			return this;
 		}		
-		
-		
+				
 		public function getMindMapModelController(model:Object):IMindMapModelController {
 			return mindMapNodeController;
 		}
@@ -136,7 +135,7 @@ package org.flowerplatform.editor.mindmap {
 			if (model is Diagram) {
 				return mindMapDiagramChildrenController;
 			}
-			return null;//mindMapNodeChildrenController;			
+			return mindMapNodeChildrenController;			
 		}
 		
 		public function getModelExtraInfoController(model:Object):IModelExtraInfoController {
@@ -174,8 +173,6 @@ package org.flowerplatform.editor.mindmap {
 			} 
 			return null;
 		}
-		
-		
-		
+			
 	}
 }

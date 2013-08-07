@@ -40,6 +40,7 @@
 			import org.flowerplatform.emf_model.notation.Diagram;
 			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 			import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 			import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
@@ -57,8 +58,7 @@
 				DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);	
 				DisplayObject(target).addEventListener(MoveEvent.MOVE, handleTargetMoveResize);			
 				// update position
-				handleTargetMoveResize(null);		
-				
+				handleTargetMoveResize(null);				
 			}
 			
 			/**
@@ -87,11 +87,11 @@
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {			
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 				
-				if (MindMapNode(getTargetModel()).hasChildren && 
-					IMindMapControllerProvider(diagramShell.getControllerProvider(getTargetModel())).getMindMapModelController(getTargetModel()).getParent(getTargetModel()) != null) {	
-					vLine.visible = !getTargetModel().expanded;
+				if (node.hasChildren && 
+					diagramShell.getControllerProvider(node).getModelChildrenController(node).getParent(node) is MindMapNode) {	
+					vLine.visible = !node.expanded;
 					diagramShell.diagramRenderer.addElement(circle);
-				} else if (!MindMapNode(getTargetModel()).hasChildren) {
+				} else if (!MindMapNode(node).hasChildren) {
 					if (circle.parent != null) {
 						diagramShell.diagramRenderer.removeElement(circle);
 					}					
@@ -101,24 +101,20 @@
 				graphics.lineStyle(2, 0x3C37FE);		
 				graphics.drawRoundRect(-padding, - padding, target.width + padding * 2, target.height + padding * 2, 10, 10);			
 				
-				if (getTargetModel().side == MindMapDiagramShell.LEFT) {
-					circle.x = getTargetModel().x - circleRadius * 2;						
-					circle.y = getTargetModel().y + getTargetModel().height / 2 - circleRadius;
-				} else if (getTargetModel().side == MindMapDiagramShell.RIGHT) {
-					circle.x = getTargetModel().x + getTargetModel().width;
-					circle.y = getTargetModel().y + getTargetModel().height / 2 - circleRadius;							
+				if (node.side == MindMapDiagramShell.LEFT) {
+					circle.x = getDynamicObject(node).x - circleRadius * 2;						
+					circle.y = getDynamicObject(node).y + getDynamicObject(node).height / 2 - circleRadius;
+				} else if (node.side == MindMapDiagramShell.RIGHT) {
+					circle.x = getDynamicObject(node).x + getDynamicObject(node).width;
+					circle.y = getDynamicObject(node).y + getDynamicObject(node).height / 2 - circleRadius;							
 				}
 			}
 			
 			protected function circle_mouseClickHandler(event:MouseEvent):void {
-				IMindMapControllerProvider(diagramShell.getControllerProvider(getTargetModel())).getMindMapModelController(getTargetModel()).setExpanded(getTargetModel(), !getTargetModel().expanded);
-				getTargetModel().expanded = !getTargetModel().expanded;	
-				vLine.visible = !getTargetModel().expanded;
-				
-				if (!getTargetModel().expanded) {
-					MindMapDiagramShell(diagramShell).removeModelFromRootChildren(getTargetModel(), true);
-					diagramShell.shouldRefreshVisualChildren(diagramShell.rootModel);
-				}
+				IMindMapControllerProvider(diagramShell.getControllerProvider(node)).getMindMapModelController(node).setExpanded(node, !node.expanded);
+				node.expanded = !node.expanded;	
+				vLine.visible = !node.expanded;
+	
 				event.preventDefault();
 				event.stopImmediatePropagation();
 			}
@@ -126,6 +122,14 @@
 			protected function circle_mouseDownUpHandler(event:MouseEvent):void {
 				event.preventDefault();
 				event.stopImmediatePropagation();
+			}
+			
+			private function get node():MindMapNode {
+				return MindMapNode(getTargetModel());
+			}
+			
+			private function getDynamicObject(model:Object):Object {
+				return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
 			}
 					
 		]]>

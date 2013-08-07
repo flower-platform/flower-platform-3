@@ -17,11 +17,16 @@
  * license-end
  */
 package org.flowerplatform.flexdiagram.mindmap {
+	import flash.display.DisplayObject;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import mx.core.IVisualElement;
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	
 	/**
@@ -50,13 +55,9 @@ package org.flowerplatform.flexdiagram.mindmap {
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
 			
-			var sourceElement:IVisualElement = getDiagramShell().getRendererForModel(source);
-			var targetElement:IVisualElement = getDiagramShell().getRendererForModel(target);
+			var sourceBounds:Array = getEndBounds(source);
+			var targetBounds:Array = getEndBounds(target);
 			
-			// verify if source/target renderers are still visible
-			if (sourceElement == null || targetElement == null) {
-				return;
-			}
 			graphics.clear();
 			graphics.lineStyle(1, 0x808080);
 			
@@ -64,13 +65,13 @@ package org.flowerplatform.flexdiagram.mindmap {
 			var targetPoint:Point;
 			
 			if (getDiagramShell().getModelController(source).getSide(source) == MindMapDiagramShell.LEFT) {
-				sourcePoint = new Point(sourceElement.x + sourceElement.width, sourceElement.y + sourceElement.height/2);
-				targetPoint = new Point(targetElement.x, targetElement.y + targetElement.height/2);
+				sourcePoint = new Point(sourceBounds[0] + sourceBounds[2], sourceBounds[1] + sourceBounds[3]/2);
+				targetPoint = new Point(targetBounds[0], targetBounds[1] + targetBounds[3]/2);
 				graphics.moveTo(sourcePoint.x, sourcePoint.y);
 				
-				if (sourceElement.y == targetElement.y) {
+				if (sourceBounds[1] == targetBounds[1]) {
 					graphics.lineTo(targetPoint.x, targetPoint.y);
-				} else if (sourceElement.y < targetElement.y) {
+				} else if (sourceBounds[1] < targetBounds[1]) {
 					graphics.cubicCurveTo(					
 						getRightTopControlPoint(sourcePoint.x, sourcePoint.y).x, 
 						getRightTopControlPoint(sourcePoint.x, sourcePoint.y).y,
@@ -78,7 +79,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 						getRightBottomControlPoint(targetPoint.x, targetPoint.y).y,
 						targetPoint.x, 
 						targetPoint.y);
-				} else if (sourceElement.y > targetElement.y) {
+				} else if (sourceBounds[1] > targetBounds[1]) {
 					graphics.cubicCurveTo(					
 						getLeftBottomControlPoint(sourcePoint.x, sourcePoint.y).x, 
 						getLeftBottomControlPoint(sourcePoint.x, sourcePoint.y).y,
@@ -88,12 +89,12 @@ package org.flowerplatform.flexdiagram.mindmap {
 						targetPoint.y);
 				}			
 			} else {
-				sourcePoint = new Point(sourceElement.x, sourceElement.y + sourceElement.height/2);
-				targetPoint = new Point(targetElement.x + targetElement.width, targetElement.y + targetElement.height/2);
+				sourcePoint = new Point(sourceBounds[0], sourceBounds[1] + sourceBounds[3]/2);
+				targetPoint = new Point(targetBounds[0] + targetBounds[2], targetBounds[1] + targetBounds[3]/2);
 				graphics.moveTo(sourcePoint.x, sourcePoint.y);			
-				if (sourceElement.y == targetElement.y) {
+				if (sourceBounds[1] == targetBounds[1]) {
 					graphics.lineTo(targetPoint.x, targetPoint.y);
-				} else if (sourceElement.y < targetElement.y) {
+				} else if (sourceBounds[1] < targetBounds[1]) {
 					graphics.cubicCurveTo(					
 						getLeftTopControlPoint(sourcePoint.x, sourcePoint.y).x, 
 						getLeftTopControlPoint(sourcePoint.x, sourcePoint.y).y,
@@ -101,7 +102,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 						getLeftBottomControlPoint(targetPoint.x, targetPoint.y).y,
 						targetPoint.x, 
 						targetPoint.y);
-				} else if (sourceElement.y > targetElement.y) {
+				} else if (sourceBounds[1] > targetBounds[1]) {
 					graphics.cubicCurveTo(					
 						getRightBottomControlPoint(sourcePoint.x, sourcePoint.y).x, 
 						getRightBottomControlPoint(sourcePoint.x, sourcePoint.y).y,
@@ -127,6 +128,20 @@ package org.flowerplatform.flexdiagram.mindmap {
 		
 		private function getRightBottomControlPoint(x:Number, y:Number):Point {
 			return new Point(x - getDiagramShell().horizontalPadding/2, y);
+		}
+		
+		protected function getEndBounds(model:Object):Array {
+			var endRenderer:IVisualElement = getDiagramShell().getRendererForModel(model);
+			if (endRenderer == null) {
+				// the renderer is not on the screen; => provide estimates
+				var controller:IAbsoluteLayoutRectangleController = getDiagramShell().getControllerProvider(model).getAbsoluteLayoutRectangleController(model);				
+				var rect:Rectangle = controller.getBounds(model);
+				return [rect.x, rect.y, rect.width, rect.height];
+			} else {
+				// renderer on screen => provide real data from renderer
+				var modelController:IMindMapModelController = IMindMapControllerProvider(getDiagramShell().getControllerProvider(model)).getMindMapModelController(model);				
+				return [modelController.getX(model), modelController.getY(model), modelController.getWidth(model), modelController.getHeight(model)];
+			}
 		}
 	}
 }
