@@ -18,8 +18,10 @@
  */
 package org.flowerplatform.editor.mindmap.controller {
 	import flash.events.IEventDispatcher;
+	import flash.net.getClassByAlias;
 	
 	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
 	import mx.core.UIComponent;
@@ -27,6 +29,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	
 	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
 	import org.flowerplatform.emf_model.notation.Diagram;
+	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
@@ -43,20 +46,17 @@ package org.flowerplatform.editor.mindmap.controller {
 			
 		public function MindMapNodeRendererController(diagramShell:DiagramShell, rendererClass:Class) {
 			super(diagramShell, rendererClass);
+			removeRendererIfModelIsDisposed = true;
 		}
 		
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {			
-			addConnector(model);			
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {		
-			removeConnector(model);
-			
-			if (isModelDisposed) {				
-				if (renderer != null) {					
-					IVisualElementContainer(renderer.parent).removeElement(renderer);					
-				}			
+			if (isModelDisposed) {
+				removeConnector(model);
 			}
+			super.unassociatedModelFromRenderer(model, renderer, isModelDisposed);
 		}
 				
 		private function removeConnector(model:Object):void {		
@@ -68,27 +68,30 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		private function addConnector(model:Object):void {
-			if (getModelController(model).getParent(model) == null) { // root node, no connectors
+			var modelParent:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model);
+			if (modelParent is Diagram) { // root node, no connectors
 				return;
 			}
-			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(getModelController(model).getParent(model));
+			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(modelParent);
 			getDynamicObject(model).connector = connector;
-			diagramShell.diagramRenderer.addElementAt(connector, 0);
-			
-			// update other connectors (especially the ones where model is the target)
-			updateConnectors(model);
+			diagramShell.diagramRenderer.addElementAt(connector, 0);			
 		}
 		
-		public function updateConnectors(model:Object):void {
+		public function updateConnectors(model:Object):void {			
+			if (getDynamicObject(model).connector == null) {
+				addConnector(model);				
+			}
+						
 			// refresh connector to parent
-			if (getModelController(model).getParent(model) != null) {	
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) {	
 				if (getDynamicObject(model).connector != null) {
 					getDynamicObject(model).connector.invalidateDisplayList();
 				}
 			}
 			// refresh connectors to children
-			for (var i:int = 0; i < diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model).length; i++) {
-				var child:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getChildren(model).getItemAt(i);						
+			var children:IList = MindMapDiagramShell(diagramShell).getModelController(model).getChildren(model);
+			for (var i:int = 0; i < children.length; i++) {
+				var child:Object = children.getItemAt(i);						
 				if (getDynamicObject(child).connector != null) {
 					getDynamicObject(child).connector.invalidateDisplayList();
 				}
@@ -99,8 +102,5 @@ package org.flowerplatform.editor.mindmap.controller {
 			return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
 		}
 		
-		private function getModelController(model:Object):IMindMapModelController {
-			return MindMapDiagramShell(diagramShell).getModelController(model);
-		}
 	}
 }

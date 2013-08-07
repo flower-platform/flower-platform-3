@@ -124,18 +124,18 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 			var side:int = getDynamicObject(model).side;
 			
 			// remove model from current parent
-			var dragParentModel:Object = getModelController(model).getParent(model);		
+			var dragParentModel:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model);;		
 			ArrayList(diagramShell.getControllerProvider(dragParentModel).getModelChildrenController(dragParentModel).getChildren(dragParentModel)).removeItem(model);		
 			
 			// calculate new parent and position based on side
-			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : getModelController(dropModel).getParent(dropModel);	
+			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel);	
 			var children:ArrayList = ArrayList(diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getChildren(dropParentModel));	
 			var index:Number = (side != MindMapDiagramShell.NONE) ? children.length : children.getItemIndex(dropModel);
 			
 			// add model in new parent
 			ArrayList(diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel)).addItemAt(model, index);		
 			getModelController(model).setSide(model, (side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel));
-			getModelController(model).setParent(model, dropParentModel);	
+//			getModelController(model).setParent(model, dropParentModel);	
 			
 			// select model or parent 
 			diagramShell.selectedItems.removeAll();
@@ -224,10 +224,10 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 			if (dragModel == dropModel) {
 				return false;
 			}
-			if (getModelController(dropModel).getParent(dropModel) == null) {
+			if (diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel) == null) {
 				return true;
 			}
-			return dragModelIsParentForDropModel(dragModel, getModelController(dropModel).getParent(dropModel));
+			return dragModelIsParentForDropModel(dragModel, diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel));
 		}
 	}
 }

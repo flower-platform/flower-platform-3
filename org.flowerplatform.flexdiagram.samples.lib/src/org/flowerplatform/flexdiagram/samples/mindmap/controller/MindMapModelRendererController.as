@@ -16,8 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.flexdiagram.samples.mindmap.controller
-{
+package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 	import flash.events.IEventDispatcher;
 	
 	import mx.collections.ArrayList;
@@ -104,7 +103,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 			children.addAll(ParentAwareArrayList(diagramShell.rootModel));
 			for (var i:int = 0; i < children.length; i++) {
 				var child:Object = children.getItemAt(i);
-				if (model == getModelController(child).getParent(child)) {
+				if (model == diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(child)) {
 					removeModelFromRootChildren(child);			
 				}
 			}
@@ -134,10 +133,10 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 		}
 		
 		private function addConnector(model:Object):void {
-			if (getModelController(model).getParent(model) == null) { // root node, no connectors
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) == null) { // root node, no connectors
 				return;
 			}
-			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(getModelController(model).getParent(model));
+			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model));
 			getDynamicObject(model).connector = connector;
 			diagramShell.diagramRenderer.addElementAt(connector, 0);
 			
@@ -147,7 +146,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 		
 		private function updateConnectors(model:Object):void {
 			// refresh connector to parent
-			if (getModelController(model).getParent(model) != null) {	
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) != null) {	
 				if (getDynamicObject(model).connector != null) {
 					getDynamicObject(model).connector.invalidateDisplayList();
 				}

@@ -31,6 +31,9 @@ package org.flowerplatform.editor.mindmap.controller {
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class MindMapDiagramNodeChildrenController extends ControllerBase implements IModelChildrenController {
 		
 		public function MindMapDiagramNodeChildrenController(diagramShell:DiagramShell) {
@@ -42,7 +45,8 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function getChildren(model:Object):IList {	
-			if (MindMapDiagramShell(diagramShell).diagramChildren.length == 0) {
+			if (MindMapDiagramShell(diagramShell).diagramChildren.length == 0) { 
+				// add root model
 				MindMapDiagramShell(diagramShell).diagramChildren.addItem(View(model).persistentChildren_RH.getItemAt(0).referencedObject);
 				diagramShell.shouldRefreshVisualChildren(model);
 			}

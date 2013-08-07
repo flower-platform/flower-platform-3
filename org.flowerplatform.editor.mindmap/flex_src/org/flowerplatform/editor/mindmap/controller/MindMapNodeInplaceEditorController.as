@@ -35,12 +35,12 @@ package org.flowerplatform.editor.mindmap.controller {
 	 */
 	public class MindMapNodeInplaceEditorController extends ControllerBase implements IInplaceEditorController {
 		
-		public function MindMapNodeInplaceEditorController(diagramShell:DiagramShell)	{
+		public function MindMapNodeInplaceEditorController(diagramShell:DiagramShell) {
 			super(diagramShell);
 		}
 		
-		public function canActivate(model:Object):Boolean	{		
-			return getModelController(model).getParent(model) instanceof MindMapNode;
+		public function canActivate(model:Object):Boolean {		
+			return diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode;
 		}
 				
 		public function activate(model:Object):void {

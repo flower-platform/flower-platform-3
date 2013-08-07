@@ -21,6 +21,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 	import flash.geom.Rectangle;
 	
 	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	import mx.events.PropertyChangeEvent;
 	import mx.events.PropertyChangeEventKind;
 	
@@ -33,25 +34,25 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 	 */
 	public class MindMapModelController implements IMindMapModelController {
 		
-		public function getParent(model:Object):Object {
-			return MindMapModel(model).parent;
-		}
+//		public function getParent(model:Object):Object {
+//			return MindMapModel(model).parent;
+//		}
 		
-		public function setParent(model:Object, value:Object):void {
-			var oldParent:Object = model.parent;
-			var newParent:MindMapModel = MindMapModel(value);
-			if (newParent.side != MindMapDiagramShell.NONE && newParent.side != MindMapModel(model).side) {
-				setSide(model, newParent.side);				
-			}
-			MindMapModel(model).parent = newParent;
-			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "parent", oldParent, newParent));
-		}
+//		public function setParent(model:Object, value:Object):void {
+//			var oldParent:Object = model.parent;
+//			var newParent:MindMapModel = MindMapModel(value);
+//			if (newParent.side != MindMapDiagramShell.NONE && newParent.side != MindMapModel(model).side) {
+//				setSide(model, newParent.side);				
+//			}
+//			MindMapModel(model).parent = newParent;
+//			IEventDispatcher(model).dispatchEvent(PropertyChangeEvent.createUpdateEvent(model, "parent", oldParent, newParent));
+//		}
 		
-		public function getChildren(model:Object):ArrayList {
+		public function getChildren(model:Object):IList {
 			return MindMapModel(model).children;
 		}
 		
-		public function getChildrenBasedOnSide(model:Object, side:int = 0):ArrayList {	
+		public function getChildrenBasedOnSide(model:Object, side:int = 0):IList {	
 			if (side == 0) {
 				side = model.side;
 			}

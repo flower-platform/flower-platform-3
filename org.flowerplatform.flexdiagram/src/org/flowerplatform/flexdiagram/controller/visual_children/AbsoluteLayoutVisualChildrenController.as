@@ -48,7 +48,7 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 		}
 		
 		// TODO the commented code was code that handled the order (i.e. depth), in the previous FD implementation/Flex 3
-		public function refreshVisualChildren(parentModel:Object):void {
+		public function refreshVisualChildren(parentModel:Object):void {			
 			// log related
 			var logTsStart:Number = new Date().time;
 			var logNewModels:int = 0;
@@ -216,7 +216,7 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 //			var currentCorrection:int = 0;
 			// at this step we have renderersToReuse and modelsToDisplay populated => process the additions : 
 			// for each model to add, try to reuse a renderer that is not visible any more if possible, or create a new one
-			for (i = 0; i < modelsToAdd.length; i++) {
+			for (i = 0; i < modelsToAdd.length; i++) {				
 				childModel = modelsToAdd[i];
 				childControllerProvider = diagramShell.getControllerProvider(childModel);
 				childRendererController = childControllerProvider.getRendererController(childModel);
@@ -227,9 +227,7 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 				if (renderersToRemove != null && renderersToRemove.length > 0) {
 					// recycle a renderer that is ready for recycling
 					childRenderer = renderersToRemove.pop();
-					if (IDataRenderer(childRenderer).data != null) {
-						diagramShell.unassociateModelFromRenderer(IDataRenderer(childRenderer).data, childRenderer, false);
-					}
+					diagramShell.unassociateModelFromRenderer(IDataRenderer(childRenderer).data, childRenderer, false);
 					logRenderersReused++;
 				} else {
 					// no recycling possible => create a renderer
