@@ -3,3 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Svn
 Bundle-SymbolicName: org.flowerplatform.web.svn
 Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.flowerplatform.communication;bundle-version="1.0.0",
+ org.flowerplatform.common;bundle-version="1.0.0",
+ org.eclipse.osgi;bundle-version="3.7.2",
+ org.flowerplatform.web;bundle-version="1.0.0"
