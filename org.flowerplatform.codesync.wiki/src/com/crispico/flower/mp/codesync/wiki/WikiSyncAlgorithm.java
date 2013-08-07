@@ -95,6 +95,7 @@ public class WikiSyncAlgorithm extends CodeSyncAlgorithm {
 				if (right == null) {
 					setDiff(left, leftDiff); // will be copied to right when right is created
 				} else {
+					setDiff(left, leftDiff);
 					setDiff(right, leftDiff);
 				}
 			}
@@ -104,6 +105,7 @@ public class WikiSyncAlgorithm extends CodeSyncAlgorithm {
 					setDiff(right, rightDiff); // will be copied to left when left is created
 				} else {
 					setDiff(left, rightDiff);
+					setDiff(right, rightDiff);
 				}
 			}
 		} else {

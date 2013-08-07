@@ -168,6 +168,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 					options.put(XMLResource.OPTION_XML_VERSION, "1.1");
 					resource.save(options);
 				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
 			}
 		}
