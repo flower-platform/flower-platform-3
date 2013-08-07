@@ -104,6 +104,7 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		} else {
 			// removed
 			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());
+			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToDispose().add(object);
 		}
 	}
 	

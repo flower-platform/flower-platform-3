@@ -43,12 +43,25 @@ public class DiagramUpdaterChangeProcessorContext {
 	// TODO CS/CS3: de facut aceste liste lazy; de asemenea, cred ca ID-ul tr. facut generic Object
 	private List<Object> objectsToUpdate = new ArrayList<Object>();
 	
+	private List<Object> objectsToDispose = new ArrayList<Object>();
+	
 	private List<String> objectIdsToDispose = new ArrayList<String>();
 	
 	private List<ViewDetailsUpdate> viewDetailsUpdates = new ArrayList<ViewDetailsUpdate>();
 
 	public List<Object> getObjectsToUpdate() {
 		return objectsToUpdate;
+	}
+	
+	/**
+	 * Not sent on client side. Used to retrieve the objects to dispose
+	 * and clean references towards model elements after the change 
+	 * processing is finished.
+	 * 
+	 * @author Mariana Gheorghe
+	 */
+	public List<Object> getObjectsToDispose() {
+		return objectsToDispose;
 	}
 
 	public List<String> getObjectIdsToDispose() {

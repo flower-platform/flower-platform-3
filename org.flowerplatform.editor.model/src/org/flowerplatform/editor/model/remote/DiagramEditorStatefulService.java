@@ -41,12 +41,9 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
-import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
@@ -179,7 +176,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		
 		DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, false);
 
-		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
+		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, Collections.emptyList(), null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
 		String diagramId = diagram.eResource().getURIFragment(diagram);
 		invokeClientMethod(client.getCommunicationChannel(), client.getStatefulClientId(), "openDiagram", new Object[] { diagramId });
 		
@@ -269,6 +266,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 				for (EditableResourceClient client : diagramEditableResource.getClients()) {
 					client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), 
 							diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate(), 
+							diagramUpdaterChangeDescriptionProcessingContext.getObjectsToDispose(),
 							diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose(),
 							diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates());
 				}
@@ -301,7 +299,20 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	// Proxies to client methods
 	///////////////////////////////////////////////////////////////
 	
-	public void client_updateTransferableObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectsToUpdate, Collection<?> objectsIdsToDispose, Collection<ViewDetailsUpdate> viewDetailsUpdates) {
+	/**
+	 * Before sending the objects to the client, first iterate the <code>objectsToUpdate</code> list and
+	 * clean references towards model elements. This should be done when the objects are removed from the 
+	 * resource; however, we do not want to treat this as a change and process it.
+	 * 
+	 * @author Mariana Gheorghe
+	 */
+	public void client_updateTransferableObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectsToUpdate, Collection<?> objectsToDispose, Collection<?> objectsIdsToDispose, Collection<ViewDetailsUpdate> viewDetailsUpdates) {
+		for (Object object : objectsToDispose) {
+			if (object instanceof View) {
+				((View) object).setDiagrammableElement(null);
+			}
+		}
+		
 		invokeClientMethod(communicationChannel, statefulClientId, "updateTransferableObjects", new Object[] { objectsToUpdate, objectsIdsToDispose, viewDetailsUpdates });
 	}
 	
