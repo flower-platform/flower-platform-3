@@ -30,22 +30,22 @@ import org.flowerplatform.web.entity.dto.NamedDto;
  * 
  * @author Cristi
  * @author Cristina
- * @flowerModelElementId _TUbqMFcNEeGL3vi-zPhopA
+ * 
  */
 public class PermissionAdminUIDto extends NamedDto {
 	
 	/**
-	 * @flowerModelElementId _QRzh8F34EeGwLIVyv_iqEg
+	 * 
 	 */
 	private String type;
 	
 	/**
-	 * @flowerModelElementId _TUcRQ1cNEeGL3vi-zPhopA
+	 * 
 	 */
 	private String actions;
 	
 	/**
-	 * @flowerModelElementId _TUcRRVcNEeGL3vi-zPhopA
+	 * 
 	 */
 	private String assignedTo;
 	

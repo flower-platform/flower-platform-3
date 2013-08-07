@@ -24,7 +24,7 @@
  @author Cristi
  @author Cristina
 
- @flowerModelElementId _mI2gkFcPEeGL3vi-zPhopA
+ 
 -->
 <mx:VBox
 	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
@@ -76,7 +76,7 @@
 			 * update data on table each time the <code>permissionPanel.currentFilter</code> changes.
 			 * 
 			 * @see filterChangedHandler()
-			 * @flowerModelElementId _RBy0cF34EeGwLIVyv_iqEg
+			 * 
 			 */ 			
 			private function onCreationComplete():void {				
 				permissionsPanel.refreshBtnHandler();
@@ -99,7 +99,7 @@
 			 * When a double click is detected on <code>resourceTree</code>,
 			 * filters data in <code>permissionPanel</code> table based on
 			 * selected resource path.
-			 * @flowerModelElementId _RBy0c134EeGwLIVyv_iqEg
+			 * 
 			 */ 
 			private function doubleClickHandler(event:MouseEvent):void {
 				var node:TreeNode = TreeNode(treeList.getSelection().getItemAt(0));				
@@ -110,7 +110,7 @@
 			/**
 			 * Each time the <code>permissionPanel</code> current filter changes,
 			 * updates the filter label and refreshes the <code>permissionPanel</code> table data.
-			 * @flowerModelElementId _RBzbg134EeGwLIVyv_iqEg
+			 * 
 			 */ 			
 			private function filterChangedHandler(event:Event):void {
 				if (permissionsPanel.currentFilter != null) {
@@ -124,7 +124,7 @@
 			
 			/**
 			 * Removes the current filter from <code>permissionPanel</code> table.
-			 * @flowerModelElementId _RB0CkV34EeGwLIVyv_iqEg
+			 * 
 			 */ 
 			private function clearBtnHandler(event:MouseEvent):void {
 				permissionsPanel.currentFilter = null;

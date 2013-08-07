@@ -33,7 +33,7 @@ package com.crispico.flower.util.layout.view {
 	 * DividedBox used by layout mechanism.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _ve-poEDuEeGWFK_UE_6B-w
+	 * 
 	 */
 	 [Bindable]
 	public class LayoutDividedBox extends DividedBox {
@@ -68,7 +68,7 @@ package com.crispico.flower.util.layout.view {
 		 * A <code>LayoutDividedBox</code> is considered to be minimized if all children aren't included in layout.
 		 * 
 		 * @see LayoutTabNavigator#setMinimized() 
-		 * @flowerModelElementId _OIZdMEaFEeGTMfELYOvVnA
+		 * 
 		 */
 		public function computeMinimized(minimized:Boolean):void {
 			if (sashLayoutData is WorkbenchLayoutData) {	

@@ -27,43 +27,43 @@ import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
  * 
  * @author Cristi
  * @author Cristina
- * @flowerModelElementId _NmOiIKTpEeGJQ4vD1xX4gA
+ * 
  */
 public class NodeInfoClient {
 	
 	/**
-	 * @flowerModelElementId _NmOiIqTpEeGJQ4vD1xX4gA
+	 * 
 	 */
 	private CommunicationChannel communicationChannel;
 	
 	/**
-	 * @flowerModelElementId _NmPJMKTpEeGJQ4vD1xX4gA
+	 * 
 	 */
 	private int treeNumber = -1;
 	
 	/**
-	 * @flowerModelElementId _i1v6AsBrEeG5PP70DrXYIQ
+	 * 
 	 */
 	public CommunicationChannel getCommunicationChannel() {
 		return communicationChannel;
 	}
 
 	/**
-	 * @flowerModelElementId _i1v6BMBrEeG5PP70DrXYIQ
+	 * 
 	 */
 	public void setCommunicationChannel(CommunicationChannel communicationChannel) {
 		this.communicationChannel = communicationChannel;		
 	}
 	
 	/**
-	 * @flowerModelElementId _yOo3UBFDEeKNlYFNXVVOOw
+	 * 
 	 */
 	public int getTreeNumber() {
 		return treeNumber;
 	}
 
 	/**
-	 * @flowerModelElementId _yOtIwBFDEeKNlYFNXVVOOw
+	 * 
 	 */
 	public void setTreeNumber(int treeNumber) {
 		this.treeNumber = treeNumber;
@@ -83,7 +83,7 @@ public class NodeInfoClient {
 	}
 	
 	/**
-	 * @flowerModelElementId _i1xIIcBrEeG5PP70DrXYIQ
+	 * 
 	 */
 	public NodeInfoClient(CommunicationChannel communicationChannel, String statefulClientId, GenericTreeStatefulService service) {		
 		this.communicationChannel = communicationChannel;

@@ -38,36 +38,36 @@ package org.flowerplatform.web.security.ui {
 	 * @author Cristi
 	 * @author Cristina
 	 * @author Mariana
-	 * @flowerModelElementId _LA5mkFc1EeG6S8FiFZ8nVA
+	 * 
 	 */
 	public class BaseForm extends VBox implements IPopupContent, ModalSpinnerSupport {
 				
 		/**
-		 * @flowerModelElementId _gJ5hsFfGEeGs_rPsEt9lFQ
+		 * 
 		 */
 		private var _dto:Dto;
 		
 		/**
-		 * @flowerModelElementId _CnbI0FyIEeGwx-0cTKUc5w
+		 * 
 		 */
 		private var _entityId:Number;
 		
 		/**
-		 * @flowerModelElementId _CnbI0VyIEeGwx-0cTKUc5w
+		 * 
 		 */
 		private var _parentListPanel:BaseListPanel;
 		
 		private var _popupHost:IPopupHost;
 				
 		/**
-		 * @flowerModelElementId _KKbXkFlkEeGRrZ75u0k71A
+		 * 
 		 */
 		public function get dto():Dto {
 			return _dto;
 		}   	
 		
 		/**
-		 * @flowerModelElementId _KKbXkllkEeGRrZ75u0k71A
+		 * 
 		 */
 		public function set dto(_dto:Dto):void {
 			this._dto = _dto;
@@ -75,7 +75,7 @@ package org.flowerplatform.web.security.ui {
 		}
 		
 		/**
-		 * @flowerModelElementId _CnbI0lyIEeGwx-0cTKUc5w
+		 * 
 		 */
 		[Bindable]
 		public function get entityId():Number {
@@ -83,21 +83,21 @@ package org.flowerplatform.web.security.ui {
 		}
 		
 		/**
-		 * @flowerModelElementId _CnbI1FyIEeGwx-0cTKUc5w
+		 * 
 		 */
 		public function set entityId(_entityId:Number):void {
 			this._entityId = _entityId;
 		}
             	
 		/**
-		 * @flowerModelElementId _CnbI11yIEeGwx-0cTKUc5w
+		 * 
 		 */
 		public function get parentListPanel():BaseListPanel {
 			return _parentListPanel;
 		}
 		
 		/**
-		 * @flowerModelElementId _CnbI2VyIEeGwx-0cTKUc5w
+		 * 
 		 */
 		public function set parentListPanel(value:BaseListPanel):void {
 			this._parentListPanel = value;
@@ -120,7 +120,7 @@ package org.flowerplatform.web.security.ui {
 		}
 		
 		/**
-		 * @flowerModelElementId _mVQecFfLEeGs_rPsEt9lFQ
+		 * 
 		 */
 		protected function formOkHandler():void {
 			FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);

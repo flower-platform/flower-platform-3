@@ -86,7 +86,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * @see #openNode()
 	 * @see #dispatchContentUpdate()
 	 * @see #dispatchLabelUpdate()
-	 * @flowerModelElementId _i1kT08BrEeG5PP70DrXYIQ
+	 * 
 	 */
 	protected TreeNode createTreeNode() {
 		return new TreeNode();
@@ -98,7 +98,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * then delegates to the abstract method {@link #populateChildren()}.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _i1pMUcBrEeG5PP70DrXYIQ
+	 * 
 	 */
 	protected void populateTreeNodeInternal(Object source, TreeNode destination, GenericTreeContext context) {
 		destination.setPathFragment(getPathFragmentForNode(source, getNodeType(destination), context));
@@ -112,7 +112,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * 
 	 * @param recurse - if <code>true</code>, creates the whole tree structure for given node.
 	 * 					Otherwise creates only its direct children.
-	 * @flowerModelElementId _G-y1RKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	protected void populateChildren(CommunicationChannel channel, String statefulClientId, Object node, TreeNode treeNode, GenericTreeContext context, boolean recurse) {
 		// create and populate the children list
@@ -143,7 +143,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * 
 	 * <p>
 	 * Also a context can be provided to filter the children list.
-	 * @flowerModelElementId _HA01kKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	public abstract Collection<Pair<Object, String>> getChildrenForNode(Object node, TreeNode treeNode, GenericTreeContext context);
 
@@ -172,7 +172,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * <p>
 	 * This method is never invoked for the root node.
 	 * 
-	 * @flowerModelElementId _HA9YcKr2EeG3eZ1Jezjhtw
+	 * 
 	 * @author Cristi
 	 * @return The return result is not taken into account by the platform. By convention, everyone
 	 * should return <code>true</code>. The return value may be used by tree services that have "sub"
@@ -194,7 +194,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * <p>
 	 * If path fragment isn't human readable, subclasses must return a suggestive string instead.
 	 *  
-	 * @flowerModelElementId _disIUKDXEeG5ENNne79MAQ
+	 * 
 	 */
 	public abstract String getLabelForLog(Object node, String nodeType);
 	
@@ -210,7 +210,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * 
 	 * @see #populateChildren()
 	 * @see #addNodeInfo()
-	 * @flowerModelElementId _G-suoKr2EeG3eZ1Jezjhtw
+	 * 
 	 */
 	public TreeNode openNodeInternal(CommunicationChannel channel, String statefulClientId, List<PathFragment> fullPath, Map<Object, Object> context) {
 		GenericTreeContext treeContext = getTreeContext(channel, statefulClientId);
@@ -317,7 +317,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	 * 
 	 * @see #openNodeInternal()
 	 * 
-	 * @flowerModelElementId _vAAuAKP8EeGeHqktJlHXmA
+	 * 
 	 */
 	@RemoteInvocation
 	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {

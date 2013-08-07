@@ -19,7 +19,7 @@
 	license-end
 -->
 <!--
-@flowerModelElementId _OluoIGhgEeGJEKyZrU6LAA
+
 -->
 <mp:BaseFlowerDiagramEditor 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
@@ -283,7 +283,7 @@
 			 * All objects that are send to the server side using BaseFlowerDiagramEditor
 			 * are relayed to the bridge from the AuthenticationManager.
 			 * 
-			 * @flowerModelElementId _Ol0Hs2hgEeGJEKyZrU6LAA
+			 * 
 			 */ 
 			override public function sendObject(object:Object, sendWithCallLater:Boolean=false):void {
 				super.sendObject(object);
@@ -300,7 +300,7 @@
 			/////////////////////////////////////
 			
 			/**
-			 * @flowerModelElementId _OlxrcmhgEeGJEKyZrU6LAA
+			 * 
 			 */
 			private function applicationCompleteHandler():void {
 				workbench.viewProvider = LayoutRegistry.INSTANCE;

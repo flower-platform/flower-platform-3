@@ -29,7 +29,7 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
  * 
  * @see EditableResource#getClients()
  * @author Cristi
- * @flowerModelElementId _UUK4YKW7EeGAT8h2VXeJdg
+ * 
  */
 public class EditableResourceClient {
 	
@@ -40,7 +40,7 @@ public class EditableResourceClient {
 //	private String cachedName;
 	
 	/**
-	 * @flowerModelElementId _SNPLoKW8EeGAT8h2VXeJdg
+	 * 
 	 */
 	private CommunicationChannel communicationChannel;
 	
@@ -68,21 +68,21 @@ public class EditableResourceClient {
 	}
 	
 	/**
-	 * @flowerModelElementId _O0sFULV8EeGL6Md0-RjoBw
+	 * 
 	 */
 	public String getCommunicationChannelId() {
 		return (String) communicationChannel.getId();
 	}
 	
 //	/**
-//	 * @flowerModelElementId _O0sFUrV8EeGL6Md0-RjoBw
+//	 * 
 //	 */
 //	public String getLogin() {
 //		return cachedLogin;
 //	}
 //	
 //	/**
-//	 * @flowerModelElementId _O0ssYbV8EeGL6Md0-RjoBw
+//	 * 
 //	 */
 //	public String getName() {
 //		return cachedName;

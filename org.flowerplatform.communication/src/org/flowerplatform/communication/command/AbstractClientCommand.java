@@ -24,7 +24,7 @@ package org.flowerplatform.communication.command;
  * if they override toString().
  * 
  * @author Cristi
- * @flowerModelElementId _psIneMh-Ed6PXZq6ZItcPA
+ * 
  */
 public abstract class AbstractClientCommand {
 

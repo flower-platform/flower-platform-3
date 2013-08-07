@@ -42,12 +42,12 @@ import sun.security.util.SecurityConstants;
  * 
  * @author Florin
  * 
- * @flowerModelElementId _a8iYsHTVEeGlbboTCbsTMQ
+ * 
  */
 public class SecurityUtils {
 
 	/**
-	 * @flowerModelElementId _a8i_wXTVEeGlbboTCbsTMQ
+	 * 
 	 */
 	public static boolean hasReadPermission(File file) {
 		return hasPermission(new FilePermission(file.getAbsolutePath(), SecurityConstants.FILE_READ_ACTION));
@@ -62,7 +62,7 @@ public class SecurityUtils {
 	}
 	
 	/**
-	 * @flowerModelElementId _a8i_xHTVEeGlbboTCbsTMQ
+	 * 
 	 */
 	public static boolean hasPermission(Permission perm) {
 		SecurityManager sm = System.getSecurityManager();
@@ -83,7 +83,7 @@ public class SecurityUtils {
 	 * 
 	 * @param permissionEntity
 	 * @return
-	 * @flowerModelElementId _Z_AWMHgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public static void checkModifyTreePermission(PermissionEntity permissionEntity) {
 		FlowerWebPolicy policy = (FlowerWebPolicy) Policy.getPolicy();
@@ -115,7 +115,7 @@ public class SecurityUtils {
  	 * @author Florin
 	 * @author Mariana
 	 * 
-	 * @flowerModelElementId _Z_BkUngGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public static void checkAdminSecurityEntitiesPermission(String groupCsvList) {	
 		AdminSecurityEntitiesPermission permission = new AdminSecurityEntitiesPermission("", groupCsvList);
@@ -161,7 +161,7 @@ public class SecurityUtils {
 	}
 	
 	/**
-	 * @flowerModelElementId _Z_DZgXgGEeGtTo1wOb4S9A
+	 * 
 	 */
 	public static boolean securityEntityIsAssignable(List<ISecurityEntity> assignableSecurityEntities, ISecurityEntity securityEntityToCheck) {
 		boolean is = false;

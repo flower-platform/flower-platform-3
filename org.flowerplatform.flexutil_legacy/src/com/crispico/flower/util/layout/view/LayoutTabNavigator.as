@@ -62,44 +62,44 @@ package  com.crispico.flower.util.layout.view {
 	 * </ul>
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _JkaaoEslEeGoH-1QrqBGdw
+	 * 
 	 */ 
 	public class LayoutTabNavigator extends FlowerSuperTabNavigator {
 		
 		/**
 		 * Color used on an active view.
-		 * @flowerModelElementId _GTWq002cEeGLZY-dKiF-cw
+		 * 
 		 */ 
 		private static const ACTIVE_VIEW_COLOR:String = "#99CCFF";
 					
 		/**
-		 * @flowerModelElementId _JkbowUslEeGoH-1QrqBGdw
+		 * 
 		 */
 		private var minimizeButton:Button;
 		
 		/**
-		 * @flowerModelElementId _JkbowkslEeGoH-1QrqBGdw
+		 * 
 		 */
 		private var maximizeRestoreButton:Button;
 		
 		/**
-		 * @flowerModelElementId _Jkbow0slEeGoH-1QrqBGdw
+		 * 
 		 */
 		private var workbench:Workbench;
 		
 		/**
-		 * @flowerModelElementId _JkboxEslEeGoH-1QrqBGdw
+		 * 
 		 */
 		private var stackLayoutData:StackLayoutData;
 		
 		/**
 		 * Stores the user applied styles before changing them.
-		 * @flowerModelElementId _GTf0wE2cEeGLZY-dKiF-cw
+		 * 
 		 */ 		
 		private var cachedStyles:ArrayCollection;	
 							
 		/**
-		 * @flowerModelElementId _JkcP0EslEeGoH-1QrqBGdw
+		 * 
 		 */
 		public function LayoutTabNavigator(workbench:Workbench, stackLayoutData:StackLayoutData) {
 			this.workbench = workbench;
@@ -140,7 +140,7 @@ package  com.crispico.flower.util.layout.view {
 		
 		/**
 		 * Sets event listeners.
-		 * @flowerModelElementId _YmEckEN9EeGxeZdmUO_I-g
+		 * 
 		 */ 
 		private function addedToStageHandler(event:Event):void {
 			BindingUtils.bindSetter(updatePercent, DividedBox(parent), "direction");
@@ -181,7 +181,7 @@ package  com.crispico.flower.util.layout.view {
 		 * For a vertical box direction, all children must have 100 percentWidth. <br>
 		 * For a horizontal box direction, all children must have 100 percentHeight.
 		 * 
-		 * @flowerModelElementId _YmFDoUN9EeGxeZdmUO_I-g
+		 * 
 		 */ 
 		private function updatePercent(value:Object):void {
 			if (value == BoxDirection.HORIZONTAL) {
@@ -200,7 +200,7 @@ package  com.crispico.flower.util.layout.view {
 		 * <p>
 		 * The parent is notificated about changes by calling the LayoutDividedBox#computeMinimized().
 		 * 
-		 * @flowerModelElementId _TadUEEjzEeGcnrH_W4NVGQ
+		 * 
 		 */ 
 		private function updateState(value:Object):void {
 			var minimized:Boolean = (value == StackLayoutData.FORCED_MINIMIZED || value == StackLayoutData.USER_MINIMIZED);
@@ -247,7 +247,7 @@ package  com.crispico.flower.util.layout.view {
 		/**
 		 * Each time a ResizeEvent is dispatched, the minimize/maximize buttons must be repositioned based on canvas width.
 		 * Also the tab navigator <code>minWidth</code> is recalculated so that minimize/maximize buttons and all tabs to be visible.
-		 * @flowerModelElementId _JkeFAEslEeGoH-1QrqBGdw
+		 * 
 		 */ 
 		private function resizeCanvasHandler(event:ResizeEvent):void {
 			minimizeButton.x = canvas.width - minimizeButton.measuredWidth*2;
@@ -263,7 +263,7 @@ package  com.crispico.flower.util.layout.view {
 		 * <p>
 		 * The active view will be considered to be the previous one.
 		 * 
-		 * @flowerModelElementId _GhMCUCv5EeG30ZBOJxPP8Q
+		 * 
 		 */
 		private function minimizeButtonHandler(event:MouseEvent):void {
 			workbench.minimize(stackLayoutData);			
@@ -281,7 +281,7 @@ package  com.crispico.flower.util.layout.view {
 		 * Note : the <code>preventDefault</code> is called because the graphical component is
 		 * deleted along with the layout, so the default event listener doesn't need to delete it anymore.
 		 * 
-		 * @flowerModelElementId _9gvmsGEYEeGrW-vIIQ_SdA
+		 * 
 		 */ 
 		private function closeTabHandler(event:SuperTabEvent):void {			
 			var viewLayoutData:ViewLayoutData = ViewLayoutData(stackLayoutData.children.getItemAt(event.tabIndex));
@@ -296,7 +296,7 @@ package  com.crispico.flower.util.layout.view {
 		 * - MAXIMIZED - it will restore this graphical component
 		 * - NORMAL - it will maximize this graphical component
 		 * 
-		 * @flowerModelElementId _JkesEEslEeGoH-1QrqBGdw
+		 * 
 		 */
 		private function maximizeRestoreButtonHandler(event:MouseEvent):void {
 			if (stackLayoutData.mrmState == StackLayoutData.NORMAL) {
@@ -311,7 +311,7 @@ package  com.crispico.flower.util.layout.view {
 		 * <p>
 		 * In order not to lose the user applied styles, they are saved before any style modification.
 		 * 
-		 * @flowerModelElementId _GTplwE2cEeGLZY-dKiF-cw
+		 * 
 		 */ 
 		protected override function focusInHandler(event:FocusEvent):void {				
 			// verify if mouse is under workbench area
@@ -355,7 +355,7 @@ package  com.crispico.flower.util.layout.view {
   		/**
   		 * When the tab index changes, then the active view styles applied are removed
   		 * and a <code>setFocus</code> is called to update the active view component.
-  		 * @flowerModelElementId _GTplyE2cEeGLZY-dKiF-cw
+  		 * 
   		 */ 
   		protected function changeIndexHandler(event:IndexChangedEvent):void {	
 			workbench.activeViewList.setActiveView(UIComponent(this.getChildAt(event.newIndex)));
@@ -363,7 +363,7 @@ package  com.crispico.flower.util.layout.view {
   		
   		/**
   		 * Sets styles for an active view component by coloring the <code>activeTab</code> and the content border.
-  		 * @flowerModelElementId _GTplzE2cEeGLZY-dKiF-cw
+  		 * 
   		 */  		  		
   		private function setActiveViewStyles(activeTab:UIComponent):void {  			
   			setStyle("borderThickness", 2);
@@ -374,7 +374,7 @@ package  com.crispico.flower.util.layout.view {
   		
   		/**
   		 * Clears the styles applied on the active view.
-  		 * @flowerModelElementId _GTpl0E2cEeGLZY-dKiF-cw
+  		 * 
   		 */ 
   		public function clearActiveViewStyles(activeTab:UIComponent = null):void {			
   			if (cachedStyles == null) {
@@ -405,7 +405,7 @@ package  com.crispico.flower.util.layout.view {
   		
   		/**
   		 * Saves the user applied styles in order to be restored later.
-  		 * @flowerModelElementId _GTpl1E2cEeGLZY-dKiF-cw
+  		 * 
   		 */ 
   		private function saveOriginalStyles(activeTab:UIComponent):void {
   			cachedStyles = new ArrayCollection();

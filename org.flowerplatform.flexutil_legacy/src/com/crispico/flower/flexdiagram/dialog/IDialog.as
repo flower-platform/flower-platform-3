@@ -27,7 +27,7 @@ package com.crispico.flower.flexdiagram.dialog {
 	 * 
 	 *  
 	 * @author Luiza
-	 * @flowerModelElementId _Qb-bEFlAEeCimMujaloQ8A
+	 * 
 	 */ 
 	public interface IDialog {
 		

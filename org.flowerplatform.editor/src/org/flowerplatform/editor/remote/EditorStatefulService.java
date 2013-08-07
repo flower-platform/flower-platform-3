@@ -55,14 +55,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Cristi
- * @flowerModelElementId _M58Y8AJ1EeKGLqam5SXwYg
+ * 
  */
 public abstract class EditorStatefulService extends StatefulService implements IEditorStatefulClientMXBean,  ICommunicationChannelLifecycleListener {
 	
 	private String editorName;
 	
 	/**
-	 * @flowerModelElementId _M9zXIAcIEeK49485S7r3Vw
+	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(EditorStatefulService.class);
 	
@@ -78,7 +78,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * the use of {@link NamedLockPool} overcomes this issue.
 	 * 
 	 * TODO CS/STFL cred ca dupa mutare runnable, putem pune inapoi protected
-	 * @flowerModelElementId _M9zXIgcIEeK49485S7r3Vw
+	 * 
 	 */
 	public Map<String, EditableResource> editableResources = new ConcurrentHashMap<String, EditableResource>();
 	
@@ -91,7 +91,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * @see NamedLockPool
 	 * @see #subscribe()
 	 * TODO CS/STFL cred ca dupa mutare runnable, putem pune inapoi protected
-	 * @flowerModelElementId _M9z-MQcIEeK49485S7r3Vw
+	 * 
 	 */
 	public NamedLockPool namedLockPool = new NamedLockPool();
 	
@@ -99,14 +99,14 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * Number of seconds until a lock expires. This property is transferred
 	 * at startup to the client, by {@link InitializeEditorSupportClientCommand}.
 	 * 
-	 * @flowerModelElementId _M90lQgcIEeK49485S7r3Vw
+	 * 
 	 */
 	public int lockLeaseSeconds = 10;
 
 	/**
 	 * Used to schedule unlock operations to be executed when lock expires.
 	 * 
-	 * @flowerModelElementId _M91MUgcIEeK49485S7r3Vw
+	 * 
 	 */
 	private ScheduledExecutorService scheduler = CommunicationPlugin.getInstance().getScheduledExecutorServiceFactory().createScheduledExecutorService();
 	
@@ -151,7 +151,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _M91zYgcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	public String printStatefulDataPerCommunicationChannel(String webCommunicationChannelIdFilter, String linePrefix) {
@@ -204,7 +204,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _M92acwcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	public String printEditableResources() {
@@ -229,7 +229,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	
 	/**
 	 * @author Mariana
-	 * @flowerModelElementId _ysU4IHmqEeKmQalWJ4Pb_g
+	 * 
 	 */
 	@Override
 	public void reloadEditableResource(String editableResourcePath, boolean displayMessageToClient) { 
@@ -242,7 +242,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _M93BggcIEeK49485S7r3Vw
+	 * 
 	 */
 	public int getNumberOfRegisteredLocksForNamedLockPool() {
 		return namedLockPool.getNumberOfRegisteredLocks();
@@ -251,7 +251,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	
 
 	/**
-	 * @flowerModelElementId _rZxEsCJvEeKovflGC_YAeQ
+	 * 
 	 */
 	@Override
 	public void unsubscribeClientForcefully(String communicationChannelId, String editableResourcePath) {
@@ -275,7 +275,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _rZxrxCJvEeKovflGC_YAeQ
+	 * 
 	 */
 	@Override
 	public void subscribeClientForcefully(String communicationChannelId, String editableResourcePath) {
@@ -292,7 +292,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	///////////////////////////////////////////////////////////////
 	
 	/**
-	 * @flowerModelElementId _rZy54iJvEeKovflGC_YAeQ
+	 * 
 	 */
 	public String getEditorName() {
 		return editorName;
@@ -304,7 +304,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 
 	/**
 	 * Has the same behavior like the similar method from AS <code>BasicEditorDescriptor</code>. 
-	 * @flowerModelElementId _rZzg8iJvEeKovflGC_YAeQ
+	 * 
 	 */
 	public String calculateStatefulClientId(String editableResourcePath) {
 		// only one / because the path already contains a /
@@ -315,7 +315,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 //	 * Should return the ID of this service (as registered
 //	 * in {@link ServiceRegistry}.
 //	 * 
-//	 * @flowerModelElementId _7wmoAGnaEeGf2Ze1btT4ow
+//	 * 
 //	 */
 //	public abstract String getServiceId();
 	
@@ -326,7 +326,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * @see method with same name from AS Class <code>EditorFrontendController</code>.
 	 * 
-	 * @flowerModelElementId _M93okQcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected abstract boolean areLocalUpdatesAppliedImmediately();
 
@@ -334,7 +334,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * Factory method. Should return a new (unpopulated) {@link EditableResource} instance
 	 * handled by this class.
 	 * 
-	 * @flowerModelElementId _M942sQcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected abstract EditableResource createEditableResourceInstance();
 
@@ -347,7 +347,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * @author Cristi
 	 * @author Mariana
-	 * @flowerModelElementId _yuIO8HmqEeKmQalWJ4Pb_g
+	 * 
 	 */
 	private boolean loadEditableResourceSafe(StatefulServiceInvocationContext context, EditableResource editableResource) {
 		logger.debug("Loading Editable Resource = {}", editableResource.getEditableResourcePath());
@@ -393,7 +393,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * Should throw {@link FileNotFoundException} if the resource (file, diagram, etc) is not found. 
 	 * If it encounters issues while loading, it should throw another type of exception.
 	 * 
-	 * @flowerModelElementId _M95dwAcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected abstract void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException;
 	
@@ -402,7 +402,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * it from the master.
 	 * 
 	 * @see #loadEditableResourceSafe()
-	 * @flowerModelElementId _yuI2AnmqEeKmQalWJ4Pb_g
+	 * 
 	 */
 	private void disposeEditableResourceSafe(EditableResource editableResource) {
 		logger.debug("Disposing Editable Resource = {}", editableResource.getEditableResourcePath());
@@ -419,7 +419,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 
 	/**
 	 * Should do cleanup for the resource.
-	 * @flowerModelElementId _M-ALcgcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected abstract void disposeEditableResource(EditableResource editableResource);
 	
@@ -440,7 +440,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * @author Mariana
 	 * @author Cristi
-	 * @flowerModelElementId _oc92MCKMEeKovflGC_YAeQ
+	 * 
 	 */
 	protected void reloadEditableResource(EditableResource editableResource, boolean displayMessageToClient) {
 		namedLockPool.lock(editableResource.getEditableResourcePath());
@@ -454,7 +454,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	
 	/**
 	 * @see #reloadEditableResource()
-	 * @flowerModelElementId _yuKEIXmqEeKmQalWJ4Pb_g
+	 * 
 	 */
 	protected List<EditableResource> reloadEditableResource_disposeWithSlaves(EditableResource editableResource) {
 		List<EditableResource> slaveEditableResources = null;
@@ -479,7 +479,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	
 	/**
 	 * @see #reloadEditableResource()
-	 * @flowerModelElementId _yuKrMnmqEeKmQalWJ4Pb_g
+	 * 
 	 */
 	protected void reloadEditableResource_loadWithSlaves(EditableResource editableResource, List<EditableResource> slaveEditableResources, boolean displayMessageToClient) {
 		if (!loadEditableResourceSafe(null, editableResource)) {
@@ -507,7 +507,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _rZ0IASJvEeKovflGC_YAeQ
+	 * 
 	 */
 	public EditableResource getEditableResource(String editableResourcePath) {
 		return editableResources.get(editableResourcePath);
@@ -522,7 +522,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * If the {@link EditableResource} is slave, a WARNING is logged and we delegate to it's master. This is not
 	 * normal, because the client always takes care to send the master (for optimization purposes).
 	 * 
-	 * @flowerModelElementId _M-AygAcIEeK49485S7r3Vw
+	 * 
 	 */
 	public void save(StatefulServiceInvocationContext context, String editableResourcePath) {
 		AuditDetails auditDetails = new AuditDetails(logger, SAVE_ER_AUDIT_CATEGORY, getFriendlyEditableResourcePath(calculateStatefulClientId(editableResourcePath)));
@@ -558,7 +558,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * the {@link EditableResource}. Slave {@link EditableResource} should throw an
 	 * {@link UnsupportedOperationException}.
 	 * 
-	 * @flowerModelElementId _M-BZkgcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected abstract void doSave(EditableResource editableResource);
 
@@ -567,7 +567,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * When the server logic needs to send content to the client, it should always use this method 
 	 * (and not to send data directly to the client).
 	 * 
-	 * @flowerModelElementId _M-CAoAcIEeK49485S7r3Vw
+	 * 
 	 */
 	public void sendContentUpdateToClient(EditableResource editableResource, EditableResourceClient client, Object content, boolean isFullContent) {
 		if (logger.isTraceEnabled()) {
@@ -580,7 +580,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * Should send the initial content to a client (i.e. when a new client is connected).
 	 * Should use {@link #sendContentUpdateToClient()}. 
 	 * 
-	 * @flowerModelElementId _M-DOwAcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected abstract void sendFullContentToClient(EditableResource editableResource, EditableResourceClient client);
 
@@ -588,7 +588,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * Should apply the updates to the {@link EditableResource}, and dispatch them
 	 * to the existing clients (using {@link #sendContentUpdateToClient()}.
 	 * 
-	 * @flowerModelElementId _M-Ec4wcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected abstract void updateEditableResourceContentAndDispatchUpdates(StatefulServiceInvocationContext context, EditableResource editableResource, Object updatesToApply);
 
@@ -599,7 +599,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _M-G5IAcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	public void communicationChannelDestroyed(
@@ -637,7 +637,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 
 	/**
 	 * This is NOT thread safe.
-	 * @flowerModelElementId _M-IHQwcIEeK49485S7r3Vw
+	 * 
 	 * @param clientInvocationOptions TODO
 	 */
 	public void dispatchEditableResourceStatus(EditableResource editableResource) {
@@ -659,7 +659,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * Sends the full clients list to the <code>client</code> (all clients without itself). Sends <code>client</code> to the other
 	 * existing clients.
 	 * 
-	 * @flowerModelElementId _MuIrgA0_EeKPP_Vhyf4upg
+	 * 
 	 */
 	protected void dispatchClientSubscribedToEditableResource(EditableResource editableResource, EditableResourceClient client) {
 		if (logger.isTraceEnabled()) {
@@ -702,7 +702,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * <p>
 	 * Sends <code>client</code> to the other existing clients.
 	 * 
-	 * @flowerModelElementId _MuJSkw0_EeKPP_Vhyf4upg
+	 * 
 	 */
 	public void dispatchClientUnsubscribedFromEditableResource(EditableResource editableResource, EditableResourceClient client) {
 		if (logger.isTraceEnabled()) {
@@ -737,7 +737,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * If the lock is not successful, returns false and sends to the client a {@link DisplaySimpleMessageClientCommand}
 	 * with a message.
 	 * 
-	 * @flowerModelElementId _M-IuUgcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected boolean tryLock(EditableResource editableResource, EditableResourceClient client) {
 		if (!editableResource.isLocked() || client.equals(editableResource.getLockOwner())) {				
@@ -780,7 +780,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _8fIpIijkEeKboq6xv3ugLg
+	 * 
 	 */
 	public EditableResource subscribeClientForcefully(CommunicationChannel communicationChannel, String editableResourcePath, boolean handleAsClientSubscription) {
 		EditorStatefulClientLocalState state = new EditorStatefulClientLocalState();
@@ -792,7 +792,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _rZ5AgyJvEeKovflGC_YAeQ
+	 * 
 	 */
 	public void unsubscribeClientForcefully(EditableResourceClient client, String editableResourcePath) {
 		logger.debug("Unsubscribing forcefully from Editable Resource = {}, client = {}", editableResourcePath, client.getCommunicationChannel());
@@ -816,7 +816,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * @author Cristi
 	 * @author Mariana
-	 * @flowerModelElementId _yuQKwHmqEeKmQalWJ4Pb_g
+	 * 
 	 */
 	public void unsubscribeAllClientsForcefully(String editableResourcePath, boolean displayMessageToClient) {
 		logger.debug("Unsubscribing all clients forcefully from Editable Resource = {}", editableResourcePath);
@@ -851,7 +851,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _rZ61sCJvEeKovflGC_YAeQ
+	 * 
 	 */
 	protected void doSubscribeForcefully(StatefulServiceInvocationContext context, EditorStatefulClientLocalState state, EditableResourceClient client) {
 		if (context.getStatefulClientId() != null) {
@@ -875,7 +875,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * Unlocks the resource (if <code>client</code> is the lock owner).
 	 * 
 	 * TODO CS/STFL cred ca dupa mutare runnable, putem pune inapoi protected
-	 * @flowerModelElementId _M-JVZAcIEeK49485S7r3Vw
+	 * 
 	 */
 	public boolean unlock(EditableResource editableResource, EditableResourceClient client) {
 		boolean unlockedNow = false;
@@ -902,7 +902,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 
 //	//TODO : Temporary code (see #6777)
 //	/**
-//	 * @flowerModelElementId _rZ8D0CJvEeKovflGC_YAeQ
+//	 * 
 //	 */
 //	protected abstract File getEditableResourceFile(EditableResource editableResource);
 	
@@ -958,7 +958,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * @author Cristi
 	 * @author Mariana
 	 * 
-	 * @flowerModelElementId _M94PoAcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	@RemoteInvocation
@@ -1044,7 +1044,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * <p>
 	 * Invokes <code>updateEditableResourceStatus()</code> and sends full content. 
-	 * @flowerModelElementId _yuR_8XmqEeKmQalWJ4Pb_g
+	 * 
 	 */
 	protected void doOnClientSubscribed(EditableResource editableResource, EditableResourceClient client) {
 		invokeClientMethod(client.getCommunicationChannel(), client.getStatefulClientId(), "updateEditableResourceStatus", new Object[] { editableResource });
@@ -1054,7 +1054,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _M9-9UAcIEeK49485S7r3Vw
+	 * 
 	 */
 	@RemoteInvocation
 	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
@@ -1078,7 +1078,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * <p>
 	 * If subclasses need to add behavior here, they should use {@link #doUnsubscribeFromEditableResourceAdditionalLogic()}.
 	 * 
-	 * @flowerModelElementId _USvyIAcNEeK49485S7r3Vw
+	 * 
 	 * @param saveResourceBeforeDisposing TODO
 	 */
 	protected void unsubscribeInternal(CommunicationChannel communicationChannel, String editableResourcePath, RunnableWithParam<Void, EditableResource> removeEditableResourceRunnable, boolean saveResourceBeforeDisposing) {
@@ -1150,7 +1150,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * May be overridden if logic needs to be executed when a client disconnects from an
 	 * {@link EditableResource}.
 	 * 
-	 * @flowerModelElementId _M9_kYgcIEeK49485S7r3Vw
+	 * 
 	 */
 	protected void doOnClientUnsubscribed(EditableResource editableResource, EditableResourceClient client) {
 		// do nothing by default
@@ -1173,7 +1173,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * If the {@link EditableResource} is slave, and the dirty state changes, the notification is
 	 * dispatched for the master {@link EditableResource}, not for the slave.
 	 * 
-	 * @flowerModelElementId _M-DOxQcIEeK49485S7r3Vw
+	 * 
 	 */
 	@RemoteInvocation
 	public void attemptUpdateEditableResourceContent(StatefulServiceInvocationContext context, String editableResourcePath, Object updatesToApply) {
@@ -1236,7 +1236,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 //	}
 
 	/**
-	 * @flowerModelElementId _M-J8cwcIEeK49485S7r3Vw
+	 * 
 	 */
 	@RemoteInvocation
 	public boolean tryLockFromButton(StatefulServiceInvocationContext context, String editableResourcePath) {
@@ -1264,7 +1264,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _M-KjgwcIEeK49485S7r3Vw
+	 * 
 	 */
 	@RemoteInvocation
 	public boolean unlockFromButton(StatefulServiceInvocationContext context, String editableResourcePath) {
@@ -1292,7 +1292,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _raHqACJvEeKovflGC_YAeQ
+	 * 
 	 */
 	@RemoteInvocation
 	public long addCollaborativeFigureModel(StatefulServiceInvocationContext context, String editableResourcePath, CollaborativeFigureModel model) {
@@ -1309,7 +1309,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _raIREyJvEeKovflGC_YAeQ
+	 * 
 	 */
 	@RemoteInvocation
 	public void updateCollaborativeFigureModels(StatefulServiceInvocationContext context, String editableResourcePath, Collection<CollaborativeFigureModel> models) {
@@ -1345,7 +1345,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _rae2YyJvEeKovflGC_YAeQ
+	 * 
 	 */
 	@RemoteInvocation
 	private void removeCollaborationFigureModelWithId(Collection<CollaborativeFigureModel> models, int id) {
@@ -1359,7 +1359,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 	
 	/**
-	 * @flowerModelElementId _rafdciJvEeKovflGC_YAeQ
+	 * 
 	 */
 	@RemoteInvocation
 	public void removeCollaborativeFigureModels(StatefulServiceInvocationContext context, String editableResourcePath, Collection<Integer> modelIds) {
@@ -1398,7 +1398,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	}
 
 	/**
-	 * @flowerModelElementId _tpBJwGPGEeKQs4bIrZ2hPg
+	 * 
 	 */
 	public void revealEditor(CommunicationChannel channel, String editableResourcePath) {
 		EditableResource editableResource = getEditableResource(editableResourcePath);
@@ -1422,7 +1422,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 *  
 	 * 
 	 * @author Sorin
-	 * @flowerModelElementId _hxc4IDpAEeKUOvPBtJonAQ
+	 * 
 	 */
 	public String getFriendlyEditableResourcePath(String canonicalEditableResourcePath) {
 		return getFriendlyNameEncoded(canonicalEditableResourcePath);
@@ -1435,7 +1435,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * 
 	 * @author Sorin
-	 * @flowerModelElementId _ROWAQDpCEeKUOvPBtJonAQ
+	 * 
 	 */
 	public String getCanonicalEditableResourcePath(String friendlyEditableResourcePath, CommunicationChannel channel, StringBuffer validationProblems) {
 		return getFriendlyNameDecoded(friendlyEditableResourcePath);
@@ -1451,7 +1451,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * 
 	 * 
 	 * @author Sorin
-	 * @flowerModelElementId _E-BiUDo7EeKUOvPBtJonAQ
+	 * 
 	 */
 	public void navigateToFragment(CommunicationChannel channel, String editableResourcePath, String fragment) {
 	}

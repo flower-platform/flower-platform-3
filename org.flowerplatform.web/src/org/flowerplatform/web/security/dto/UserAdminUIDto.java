@@ -34,34 +34,34 @@ import org.flowerplatform.web.entity.dto.NamedDto;
  * @author Cristina
  * @author Mariana
  * 
- * @flowerModelElementId _eBS2gFcCEeGL3vi-zPhopA
+ * 
  */
 public class UserAdminUIDto extends NamedDto {
 
 	/**
-	 * @flowerModelElementId _wV4ywFcDEeGL3vi-zPhopA
+	 * 
 	 */
 	private String login;
 	
 	/**
-	 * @flowerModelElementId _wV5Z0lcDEeGL3vi-zPhopA
+	 * 
 	 */
 	private String password;
 	
 	/**
-	 * @flowerModelElementId _wV6n81cDEeGL3vi-zPhopA
+	 * 
 	 */
 	private String email;
 	
 	private boolean isActivated;
 	
 	/**
-	 * @flowerModelElementId _2-5uIFcDEeGL3vi-zPhopA
+	 * 
 	 */
 	private Collection<GroupAdminUIDto> groups;
 	
 	/**
-	 * @flowerModelElementId _7lWU0FcDEeGL3vi-zPhopA
+	 * 
 	 */
 	private Collection<OrganizationUserAdminUIDto> organizationUsers;
 

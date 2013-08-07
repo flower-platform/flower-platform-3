@@ -177,7 +177,7 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 		 * 	<li> The 'alignTopOrLeft' flag is computed by the 
 		 * 	<code>ClipUtils.computeEdgeIntersectionProperty()</code> method.
 		 * </ul>
-		 * @flowerModelElementId _38BMEBCUEd-bY9BcYhuW0g
+		 * 
 		 */
 		protected function updateLabelPosition(connectionModel:Object, connectionRenderer:ConnectionFigure, connectionLabel:Label, posType:int):void {
 			if (connectionLabel == null || getSourceModel(connectionModel) == null || getTargetModel(connectionModel) == null) {

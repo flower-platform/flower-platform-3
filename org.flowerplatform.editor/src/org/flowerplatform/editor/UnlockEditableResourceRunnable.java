@@ -39,34 +39,34 @@ import org.slf4j.LoggerFactory;
  *  
  * @author Florin
  * @author Cristi
- * @flowerModelElementId _SsvZkLndEeGTi8MPVfmTnA
+ * 
  */
 public class UnlockEditableResourceRunnable implements Runnable {
 
 	/**
-	 * @flowerModelElementId _SswAoLndEeGTi8MPVfmTnA
+	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(UnlockEditableResourceRunnable.class);
 	
 	/**
-	 * @flowerModelElementId _SswAorndEeGTi8MPVfmTnA
+	 * 
 	 */
 	private Object editorInput;
 
 	/**
-	 * @flowerModelElementId _SswnsLndEeGTi8MPVfmTnA
+	 * 
 	 */
 	private EditableResourceClient lockOwner;
 	
 	/**
 	 * Initial security context.
 	 * 
-	 * @flowerModelElementId _SswnsbndEeGTi8MPVfmTnA
+	 * 
 	 */
 	private AccessControlContext context;
 	
 	/**
-	 * @flowerModelElementId _9PpUULooEeGbWKUNv6VenQ
+	 * 
 	 * TODO CS/STFL cred ca atunci cand vom muta runnable-ul in ac. pachet, va avea acces la ac. camp prin serviciu direct
 	 */
 	private ScheduledExecutorService parentScheduler;
@@ -74,7 +74,7 @@ public class UnlockEditableResourceRunnable implements Runnable {
 	private EditorStatefulService editorStatefulService;
 	
 	/**
-	 * @flowerModelElementId _SsxOwLndEeGTi8MPVfmTnA
+	 * 
 	 * @param editorStatefulService TODO
 	 */
 	public UnlockEditableResourceRunnable(EditorStatefulService editorStatefulService, Object editorInput, EditableResourceClient lockOwner, ScheduledExecutorService parentScheduler) {
@@ -86,7 +86,7 @@ public class UnlockEditableResourceRunnable implements Runnable {
 	}
 	
 	/**
-	 * @flowerModelElementId _SsxOw7ndEeGTi8MPVfmTnA
+	 * 
 	 */
 	@Override
 	public void run() {
@@ -101,7 +101,7 @@ public class UnlockEditableResourceRunnable implements Runnable {
 	}
 	
 	/**
-	 * @flowerModelElementId _Ssx10rndEeGTi8MPVfmTnA
+	 * 
 	 */
 	public void runWithInitialSecurityContext() {
 		// the try block is for the lock but for catching & logging exceptions as well

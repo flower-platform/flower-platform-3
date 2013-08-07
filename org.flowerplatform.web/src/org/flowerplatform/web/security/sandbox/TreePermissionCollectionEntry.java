@@ -29,22 +29,22 @@ import org.flowerplatform.web.entity.ISecurityEntity;
  * @author Cristi
  * @author Florin
  * 
- * @flowerModelElementId _bPwo4GR9EeGyd4yTk74SKw
+ * 
  */
 public class TreePermissionCollectionEntry {	
 	
 	/**
-	 * @flowerModelElementId _F26agG0ZEeGBsfNm1ipRfw
+	 * 
 	 */
 	public ISecurityEntity securityEntity;
 	
 	/**
-	 * @flowerModelElementId _dM5rAGR9EeGyd4yTk74SKw
+	 * 
 	 */
 	private AbstractTreePermission permission;	
 	
 	/**
-	 * @flowerModelElementId _TXHKEGbMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public TreePermissionCollectionEntry(ISecurityEntity securityEntity, AbstractTreePermission permission) {
 		this.securityEntity = securityEntity;
@@ -52,21 +52,21 @@ public class TreePermissionCollectionEntry {
 	}
 
 	/**
-	 * @flowerModelElementId _f1gWcmnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	public AbstractTreePermission getPermission() {
 		return permission;
 	}
 	
 	/**
-	 * @flowerModelElementId _puT8MHJqEeG32IfhnS7SDQ
+	 * 
 	 */
 	public ISecurityEntity getSecurityEntity() {
 		return securityEntity;
 	}
 	
 	/**
-	 * @flowerModelElementId _f1gWdGnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	@Override
 	public String toString() {

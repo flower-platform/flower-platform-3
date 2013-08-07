@@ -31,7 +31,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 	 * @author Marius Arhire
 	 * @author Florin Buzatu
 	 * 
-	 * @flowerModelElementId _YfGh0J-lEd-Acq1dtkSbHA
+	 * 
 	 */
 	internal class ImageCacheWaitingListEntry {
 		

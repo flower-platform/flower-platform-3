@@ -30,13 +30,13 @@ package com.crispico.flower.texteditor.partitioning {
 	 * It is necessary to call the update function after each change in the document, 
 	 * to make sure that the partitions are always updated.
 	 * 
-	 * @flowerModelElementId _iXP5UMpIEeCTIbyT6X5eRg
+	 * 
 	 */
 	public class PartitionUpdater {
 		
 		/**
 		 * List of partitions.
-		 * @flowerModelElementId _x-iJQSyKEeGsGrJcrtxw9Q
+		 * 
 		 */ 
 		public var partitions:ArrayCollection;
 		
@@ -63,7 +63,7 @@ package com.crispico.flower.texteditor.partitioning {
 		 * 
 		 * @see Partition#computePartitioning
 		 * 
-		 * @flowerModelElementId _iXSVlspIEeCTIbyT6X5eRg
+		 * 
 		 */
 		public function update(documentChange:DocumentChange):void {
 			hasDeletedPartitions = false;

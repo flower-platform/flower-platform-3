@@ -35,7 +35,7 @@ package com.crispico.flower.util.panel
 	 * meant to be used with images retrieved from <code>ImageFactory</code>.	
 	 * 
 	 * @author Cristina 
-	 * @flowerModelElementId _a4O5kWEjEeGrW-vIIQ_SdA
+	 * 
 	 */  
 	public class CustomTitlePanel extends TitleWindow implements ModalSpinnerSupport {
 		

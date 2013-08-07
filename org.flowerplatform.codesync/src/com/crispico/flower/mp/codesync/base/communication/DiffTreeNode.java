@@ -26,7 +26,7 @@ import org.flowerplatform.communication.tree.remote.TreeNode;
 import com.crispico.flower.mp.codesync.base.action.DiffContextMenuEntry;
 
 /**
- * @flowerModelElementId _YHtzgK1aEeCJde5_hCYUsw
+ * 
  */
 public class DiffTreeNode extends TreeNode {
 

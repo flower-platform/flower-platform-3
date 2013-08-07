@@ -25,7 +25,7 @@ import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
 
 /**
- * @flowerModelElementId _j9MV0LLCEeC7r409C3qpqw
+ * 
  */
 public abstract class AstModelElementAdapter implements IModelAdapter {
 

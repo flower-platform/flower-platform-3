@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sorin
- * @flowerModelElementId _aKTkYBLfEeKIW4So6X04UQ
+ * 
  */
 public class ProgressMonitorStatefulService extends RegularStatefulService<CommunicationChannel, HashMap<String, ProgressMonitor>>
 				implements IStatefulServiceMXBean, ICommunicationChannelLifecycleListener {
@@ -46,7 +46,7 @@ public class ProgressMonitorStatefulService extends RegularStatefulService<Commu
 	public static final Logger logger = LoggerFactory.getLogger(ProgressMonitorStatefulService.class);
 	
 	/**
-	 * @flowerModelElementId _3OUGIBLfEeKIW4So6X04UQ
+	 * 
 	 */
 	public static final String SERVICE_ID = "ProgressMonitorStatefulService";
 	
@@ -61,7 +61,7 @@ public class ProgressMonitorStatefulService extends RegularStatefulService<Commu
 	///////////////////////////////////////////////////////////////
 
 	/**
-	 * @flowerModelElementId _YKcd0BOBEeK1ssFHNoNwQg
+	 * 
 	 */
 	protected void printStatefulDataForClient(StringBuffer stringBuffer, String linePrefix, CommunicationChannel client, HashMap<String, ProgressMonitor> data) {
 		super.printStatefulDataForClient(stringBuffer, linePrefix, client, data);
@@ -84,21 +84,21 @@ public class ProgressMonitorStatefulService extends RegularStatefulService<Commu
 	///////////////////////////////////////////////////////////////
 		
 	/**
-	 * @flowerModelElementId _1RkFkBLfEeKIW4So6X04UQ
+	 * 
 	 */
 	protected String getStatefulServiceId() {
 		return SERVICE_ID;
 	}
 
 	/**
-	 * @flowerModelElementId _Ah6YcBLgEeKIW4So6X04UQ
+	 * 
 	 */
 	public ProgressMonitorStatefulService() {
 		clients = new ConcurrentHashMap<CommunicationChannel, HashMap<String, ProgressMonitor>>();
 	}
 
 	/**
-	 * @flowerModelElementId _E0EKIBLgEeKIW4So6X04UQ
+	 * 
 	 */
 	public void dispose() {
 		ProgressMonitor.scheduler.shutdown();
@@ -107,14 +107,14 @@ public class ProgressMonitorStatefulService extends RegularStatefulService<Commu
 	}
 
 	/**
-	 * @flowerModelElementId _DCyH0BLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void beginProgressMonitor(CommunicationChannel channel, String statefulClientId, String name, int totalWork) {
 		invokeClientMethod(channel, statefulClientId, "beginProgressMonitor", new Object[] {name, totalWork});
 	}
 
 	/**
-	 * @flowerModelElementId _NhneMBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void updateProgressMonitor(CommunicationChannel channel, String statefulClientId, String name, double workUntilNow) {
 		HashMap<String, ProgressMonitor> channelProgressMonitors = clients.get(channel);
@@ -125,7 +125,7 @@ public class ProgressMonitorStatefulService extends RegularStatefulService<Commu
 	/**
 	 * Makes the client to hide it's dialog and unregister it's ProgressMonitorStatefulClient but wont unsubscribe from
 	 * server because it is directly done here.
-	 * @flowerModelElementId _fMyfcBLiEeKIW4So6X04UQ
+	 * 
 	 */
 	public void closeProgressMonitor(CommunicationChannel channel, String statefulClientId) {
 		HashMap<String, ProgressMonitor> channelProgressMonitors = clients.get(channel);
@@ -223,7 +223,7 @@ public class ProgressMonitorStatefulService extends RegularStatefulService<Commu
 	 * Supports the following cases :
 	 * - channel destroyed - which cancels all progress monitors and remembers them as proposed to be canceled;
 	 * - operation done - while a channel is present or not (work done by server while client still present or left)
-	 * @flowerModelElementId _3XRU8BN7EeK1ssFHNoNwQg
+	 * 
 	 */
 	@RemoteInvocation
 	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
@@ -259,7 +259,7 @@ public class ProgressMonitorStatefulService extends RegularStatefulService<Commu
 	/**
 	 * Updates the {@link WebProgressMonitor} so that the operation to know that is should terminate.
 	 * Note: the operation may choose to ignore the #canceled flag.
-	 * @flowerModelElementId _4i9BABLjEeKIW4So6X04UQ
+	 * 
 	 */
 	@RemoteInvocation
 	public void attemptCancelProgressMonitor(StatefulServiceInvocationContext context) {

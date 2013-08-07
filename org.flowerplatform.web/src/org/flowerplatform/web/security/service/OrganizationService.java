@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * @author Cristina
  * @author Mariana
  * 
- * @flowerModelElementId _Yyg9UFcqEeG6S8FiFZ8nVA
+ * 
  */
 public class OrganizationService extends ServiceObservable {
 	
@@ -77,7 +77,7 @@ public class OrganizationService extends ServiceObservable {
 	 * 
 	 * @see #findByIdAsAdminUIDto()
 	 * 
-	 * @flowerModelElementId __rSEEFcyEeG6S8FiFZ8nVA
+	 * 
 	 */
 	public OrganizationAdminUIDto convertOrganizationToOrganizationAdminUIDto(Organization organization, User user) {	
 		OrganizationAdminUIDto orgAdminUIDto = new OrganizationAdminUIDto();
@@ -125,7 +125,7 @@ public class OrganizationService extends ServiceObservable {
 
 	/**
 	 * Finds the {@link Organization} given by its id and returns an {@link OrganizationAdminUIDto}. 
-	 * @flowerModelElementId _QTxQ0134EeGwLIVyv_iqEg
+	 * 
 	 */
 	public OrganizationAdminUIDto findByIdAsAdminUIDto(final ServiceInvocationContext context, final long id) {
 		logger.debug("Find organization with id = {}", id);
@@ -169,7 +169,7 @@ public class OrganizationService extends ServiceObservable {
 	/**
 	 * Finds all {@link Organization}s and returns a list of their corresponding {@link OrganizationAdminUIDto}.
 	 * 	
-	 * @flowerModelElementId _OsC04FcwEeG6S8FiFZ8nVA
+	 * 
 	 */
 	public List<OrganizationAdminUIDto> findAllAsAdminUIDto(final ServiceInvocationContext context, final boolean getAll) {
 		logger.debug("Find all organizations");
@@ -234,7 +234,7 @@ public class OrganizationService extends ServiceObservable {
 	 * <p>
 	 * Used for listboxes.
 	 * 
-	 * @flowerModelElementId _QTye8F34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public List<NamedDto> findAllAsNamedDto() {
 		final List<NamedDto> list = new ArrayList<NamedDto>();
@@ -261,7 +261,7 @@ public class OrganizationService extends ServiceObservable {
 	 * Returns an error message (if there is already an organization with the same name, or <code>null</code>
 	 * if there were no errors.
 	 * 
-	 * @flowerModelElementId _QTye8134EeGwLIVyv_iqEg
+	 * 
 	 */
 	public String mergeAdminUIDto(ServiceInvocationContext context, OrganizationAdminUIDto dto) {
 		return mergeAdminUIDto(context, dto, false);
@@ -318,7 +318,7 @@ public class OrganizationService extends ServiceObservable {
 	
 	/**
 	 * Deletes all {@link Organization}s based on the list of their ids.
-	 * @flowerModelElementId _QTzGAl34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public void delete(final List<Integer> ids) {
 		for (final Integer id : ids) {

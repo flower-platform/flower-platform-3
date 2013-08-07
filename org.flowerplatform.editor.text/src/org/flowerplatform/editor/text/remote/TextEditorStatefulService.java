@@ -41,19 +41,19 @@ import org.slf4j.LoggerFactory;
  * @author Cristi
  * @author Mariana
  * 
- * @flowerModelElementId _M-WJsAcIEeK49485S7r3Vw
+ * 
  */
 public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 
 
 //	/**
 //	 * @see #createRegexConfiguration()
-//	 * @flowerModelElementId _VOxasDfPEeKY0qaVeMRK2Q
+//	 * 
 //	 */
 //	protected RegexConfiguration regexConfiguration;
 	
 	/**
-	 * @flowerModelElementId _M-WwwQcIEeK49485S7r3Vw
+	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(TextEditorStatefulService.class);
 
@@ -69,7 +69,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	}
 	
 	/**
-	 * @flowerModelElementId _M-WwwwcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	protected boolean areLocalUpdatesAppliedImmediately() {
@@ -77,7 +77,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _M-X-4gcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	protected EditableResource createEditableResourceInstance() {
@@ -94,7 +94,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 * 
 	 * @author Mariana
 	 * 
-	 * @flowerModelElementId _M-X-5QcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
@@ -122,7 +122,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	}
 
 	/**
-	 * @flowerModelElementId _M-Yl8wcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	public void sendFullContentToClient(EditableResource editableResource, EditableResourceClient client) {
@@ -137,7 +137,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 * otherwise an exception will be thrown the next time this file is opened.
 	 * 
 	 * <p> NOTE: after saving the file content from the resource still has the delimiters converted. 
-	 * @flowerModelElementId _M-ZNBAcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	public void doSave(EditableResource editableResource) {
@@ -151,7 +151,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	}
 	
 	/**
-	 * @flowerModelElementId _M-Z0EwcIEeK49485S7r3Vw
+	 * 
 	 */
 	@Override
 	protected void updateEditableResourceContentAndDispatchUpdates(StatefulServiceInvocationContext context, EditableResource editableResource, Object updatesToApply) {
@@ -227,7 +227,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 		}
 		
 		/**
-		 * @flowerModelElementId _Yw6WNqXLEeG-cPK59Sm4Wg
+		 * 
 		 */
 		private static void saveFileContent(File file, StringBuffer fileContent) {
 			try {
@@ -265,7 +265,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 
 	
 	/**
-	 * @flowerModelElementId _DHpgcDfTEeKY0qaVeMRK2Q
+	 * 
 	 */
 	public String[] findElementCategoryAndNameForPosition(String editableResourcePath, int position) {
 		// TODO implement
@@ -277,7 +277,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	///////////////////////////////////////////////////////////////
 	
 //	/**
-//	 * @flowerModelElementId _2Mex4DfPEeKY0qaVeMRK2Q
+//	 * 
 //	 */
 //	@RemoteInvocation
 //	public void selectRangeFor(StatefulServiceInvocationContext context, String editableResourcePath, String category, String searchString) {

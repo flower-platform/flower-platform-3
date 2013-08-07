@@ -25,13 +25,13 @@ package  org.flowerplatform.flexutil.layout {
 	 * Stores information like the node's parent and its children if any.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _Jjl7QEslEeGoH-1QrqBGdw
+	 * 
 	 */ 
 	public class LayoutData {
 		
 		/**
 		 * Represents the parent node.
-		 * @flowerModelElementId _JjnJYEslEeGoH-1QrqBGdw
+		 * 
 		 */ 
 		public var parent:LayoutData;
 		

@@ -28,7 +28,7 @@ package com.crispico.flower.flexdiagram.action {
 	 * 
 	 * @copy com.crispico.flower.flexdiagram.action.IAction
 	 * @see com.crispico.flower.flexdiagram.action.BaseMultipleSelectionAction
-	 * @flowerModelElementId _7KIy4OCUEeGdYcOEhSk3ug
+	 * 
 	 */ 
 	
 	[RemoteClass(alias="com.crispico.flower.mp.action.BaseAction")]

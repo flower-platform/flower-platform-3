@@ -25,7 +25,7 @@ import org.flowerplatform.blazeds.channel.BlazedsCommunicationChannel;
 /**
  * Channel Observer Task scheduled to disconnect client because it did not signal it's existance.
  * @author Sorin
- * @flowerModelElementId _qnl-8AlXEeK1a-Ic5xjg1Q
+ * 
  */
 public class NoHeartbeatFromClientTask extends HeartbeatTask {
 

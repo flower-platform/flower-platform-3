@@ -26,7 +26,7 @@ package  com.crispico.flower.util.layout.persistence {
 	 * It can be minimized/maximized.
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _ZCpPICuoEeG6vrEjfFek0Q
+	 * 
 	 */
 	[Bindable] 
 	public class StackLayoutData extends LayoutData {
@@ -49,7 +49,7 @@ package  com.crispico.flower.util.layout.persistence {
 		/**
 		 * Minimized state set to stack layout data by pressing a minimized button.
 		 * 
-		 * @flowerModelElementId _B0DhEEZhEeGLHf9i2RlZCg
+		 * 
 		 */
 		public static const USER_MINIMIZED:Number = 3;
 		
@@ -66,20 +66,20 @@ package  com.crispico.flower.util.layout.persistence {
 		 * Represents the minimized state of the <code>LayoutData</code>.
 		 * Default state is NORMAL.
 		 * 
-		 * @flowerModelElementId _bOPkACuoEeG6vrEjfFek0Q
+		 * 
 		 */ 
 		public var mrmState:Number = NORMAL;
 		
 		/**
 		 * Stores the side where this stack layout data must create a <code>MinimizedStackBar</code> when minimized.
 		 * Can take the following values: LEFT, RIGHT, BOTTOM.
-		 * @flowerModelElementId _69ye8EaDEeGTMfELYOvVnA
+		 * 
 		 * 
 		 */
 		public var mrmSide:Number = NONE;
 		
 		/**
-		 * @flowerModelElementId _1xweUJT4EeGScqO11udePA
+		 * 
 		 */
 		public var closedViews:ArrayCollection = new ArrayCollection();				
 	}

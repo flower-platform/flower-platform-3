@@ -29,37 +29,37 @@ import java.util.Map;
  * 
  * @see Corresponding AS class.
  * 
- * @flowerModelElementId _YcuIwDR9EeCGErbqxW555A
+ * 
  */
 public class TreeNode {
 		
 	/**
-	 * @flowerModelElementId _fUIsgDR9EeCGErbqxW555A
+	 * 
 	 */
 	private String label;
 	
 	/**
-	 * @flowerModelElementId _Ck1J0EiREeCqsckFqpKKFw
+	 * 
 	 */
 	private String icon;
 	
 	/**
-	 * @flowerModelElementId _YM-VMDSAEeCGErbqxW555A
+	 * 
 	 */
 	private boolean hasChildren;
 	
 	/**
-	 * @flowerModelElementId _tXtU8DR9EeCGErbqxW555A
+	 * 
 	 */
 	private List<TreeNode> children;
 	
 	/**
-	 * @flowerModelElementId _WHXtsKAQEeGLneHqP7FuFA
+	 * 
 	 */
 	private TreeNode parent;
 	
 	/**
-	 * @flowerModelElementId _0zGxgKKdEeGYz6sIcvSzpg
+	 * 
 	 */
 	private PathFragment pathFragment;
 	

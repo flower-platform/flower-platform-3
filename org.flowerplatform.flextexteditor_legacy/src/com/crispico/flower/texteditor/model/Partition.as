@@ -24,7 +24,7 @@ package com.crispico.flower.texteditor.model {
 	 * A range in the document with a specific content type. It is detected by a specific partition scanner, and it may be
 	 * delimited by start and end delimiters.
 	 * 
-	 * @flowerModelElementId _0rKj0O2uEeCF5Ozw-0NJ0A
+	 * 
 	 */
 	public class Partition extends Range {
 		
@@ -68,7 +68,7 @@ package com.crispico.flower.texteditor.model {
 		public var dirtyRange:Range;
 		
 		/**
-		 * @flowerModelElementId _x--OIyyKEeGsGrJcrtxw9Q
+		 * 
 		 */
 		public function Partition(offset:int, length:int, contentType:String, scanner:PartitionScanner=null)
 		{
@@ -79,7 +79,7 @@ package com.crispico.flower.texteditor.model {
 		}
 		
 		/**
-		 * @flowerModelElementId _x_AqZSyKEeGsGrJcrtxw9Q
+		 * 
 		 */
 		public function equals(partition:Partition):Boolean {
 			return contentType == partition.contentType &&

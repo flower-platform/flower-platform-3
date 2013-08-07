@@ -19,7 +19,7 @@
 package com.crispico.flower.mp.codesync.base;
 
 /**
- * @flowerModelElementId _rQSIQK75EeCDbs_ALiXk1Q
+ * 
  */
 public class Diff {
 
@@ -32,7 +32,7 @@ public class Diff {
 	private boolean isRightModified;
 	
 	/**
-	 * @flowerModelElementId _rQZdAK75EeCDbs_ALiXk1Q
+	 * 
 	 */
 	private boolean isConflict;
 

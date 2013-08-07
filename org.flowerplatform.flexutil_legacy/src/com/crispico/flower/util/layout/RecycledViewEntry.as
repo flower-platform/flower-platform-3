@@ -23,17 +23,17 @@ package  com.crispico.flower.util.layout {
 	
 	/**
 	 * @author Cristina
-	 * @flowerModelElementId _pp59wOI-EeGF46ujw3kLCA
+	 * 
 	 */
 	public class RecycledViewEntry {
 		
 		/**
-		 * @flowerModelElementId _r5FLEOI-EeGF46ujw3kLCA
+		 * 
 		 */
 		public var oldViewLayoutData:ViewLayoutData;
 		
 		/**
-		 * @flowerModelElementId _uyscgOI-EeGF46ujw3kLCA
+		 * 
 		 */
 		public var existingView:UIComponent;
 				

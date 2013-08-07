@@ -37,33 +37,33 @@ import org.flowerplatform.web.entity.User;
  * 
  * @author Florin
  * 
- * @flowerModelElementId _Qo8c4G0dEeGBsfNm1ipRfw
+ * 
  */
 public class FlowerWebPrincipal implements Principal, IPrincipal {
 	
 	/**
-	 * @flowerModelElementId _SMhvgG0dEeGBsfNm1ipRfw
+	 * 
 	 */
 	private long userId;
 	
 	/**
-	 * @flowerModelElementId _bBoH8G0dEeGBsfNm1ipRfw
+	 * 
 	 */
 	private Subject subject;
 	
 	/**
-	 * @flowerModelElementId _UxyFEG0eEeGBsfNm1ipRfw
+	 * 
 	 */
 	private User cachedUser;
 
 	/**
 	 * @see Getter doc.
-	 * @flowerModelElementId _NOs-xIllEeGGgbhWYb3xSA
+	 * 
 	 */
 	private Map<String, List<String>> userRepositories;
 	
 	/**
-	 * @flowerModelElementId _4l0SIHH2EeK0WoOyJtfqdw
+	 * 
 	 */
 	private Map<String, List<String>> userGitRepositories;
 	
@@ -75,7 +75,7 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	private Map<String, Object> wikiClientConfigurations;
 	
 	/**
-	 * @flowerModelElementId _puDdgHJqEeG32IfhnS7SDQ
+	 * 
 	 */
 	public FlowerWebPrincipal(long userId) {
 		this.userId = userId;
@@ -89,7 +89,7 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	}
 	
 	/**
-	 * @flowerModelElementId _ZQz1IG0eEeGBsfNm1ipRfw
+	 * 
 	 */
 	public synchronized User getUser() {
 		if (cachedUser == null) {
@@ -106,14 +106,14 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	}
 
 	/**
-	 * @flowerModelElementId _puZgYIMAEeG2LdcUX32kBA
+	 * 
 	 */
 	public long getUserId() {
 		return userId;
 	}
 	
 	/**
-	 * @flowerModelElementId _YN3R8Hl1EeG7_fzMWZxiHA
+	 * 
 	 */
 	@Override
 	public Subject getSubject() {
@@ -121,14 +121,14 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	}
 	
 	/**
-	 * @flowerModelElementId _crrZgG0eEeGBsfNm1ipRfw
+	 * 
 	 */
 	public synchronized void clearCachedUser() {
 		cachedUser = null;
 	}
 
 	/**
-	 * @flowerModelElementId _puEEkXJqEeG32IfhnS7SDQ
+	 * 
 	 */
 	@Override
 	public String getName() {
@@ -143,14 +143,14 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	 * 		by default, represents repository's UUID
 	 * 	<li> value: list containing 2 strings -> user name, password
 	 * </ul> 
-	 * @flowerModelElementId _NOzFZYllEeGGgbhWYb3xSA
+	 * 
 	 */
 	public Map<String, List<String>> getUserRepositories() {
 		return userRepositories;
 	}
 
 	/**
-	 * @flowerModelElementId _IKA_0HH3EeK0WoOyJtfqdw
+	 * 
 	 */
 	public Map<String, List<String>> getUserGitRepositories() {
 		return userGitRepositories;

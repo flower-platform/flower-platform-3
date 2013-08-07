@@ -64,7 +64,7 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 		 * 
 		 * Called when we don't need the anchors, 
 		 * and also when we don't want the anchors shown.
-		 * @flowerModelElementId _b1gjZb8REd6XgrpwHbbsYQ
+		 * 
 		 */
 		override public function deactivate():void {
 			// remove move/resize listeners

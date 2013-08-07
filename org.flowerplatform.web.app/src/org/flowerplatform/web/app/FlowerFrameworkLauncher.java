@@ -107,7 +107,7 @@ public class FlowerFrameworkLauncher extends FrameworkLauncher {
 	/**
 	 * Reads the configuration file and generates some properties if in dev. mode.
 	 * @see web.xml file for parameter documentation
-	 * @flowerModelElementId _C034IUszEeGtj8CvIUb-sQ
+	 * 
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override

@@ -56,7 +56,7 @@ package  com.crispico.flower.util.layout.persistence {
 	 * mrmRatios -> ratios for minimized children, format: 20/30/50
 	 * 
 	 * @author Cristina
-	 * @flowerModelElementId _JkLKEEslEeGoH-1QrqBGdw
+	 * 
 	 */
 	public class XMLStringLayoutSerializer implements ILayoutSerializer {
 		
@@ -96,7 +96,7 @@ package  com.crispico.flower.util.layout.persistence {
 		 * 			+ "isEditor"
 		 * 			+ "isUndocked"
 		 * </ul> 
-		 * @flowerModelElementId _JkMYMEslEeGoH-1QrqBGdw
+		 * 
 		 */
 		private function serializeXML(layoutData:LayoutData):XML {
 			var xmlNode:XML;
@@ -206,7 +206,7 @@ package  com.crispico.flower.util.layout.persistence {
 		 * 
 		 * @param xmlNode - xml node used to deserialize
 		 * @param rootLayout - the workbenchLayoutData; it is stored when created and used later to fill its minimized stacks arrays.
-		 * @flowerModelElementId _JkNmUUslEeGoH-1QrqBGdw
+		 * 
 		 */
 		private function deserializeXML(xmlNode:XML, rootLayout:WorkbenchLayoutData):LayoutData {
 			var layoutData:LayoutData;

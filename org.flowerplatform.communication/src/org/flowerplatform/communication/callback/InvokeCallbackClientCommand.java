@@ -24,7 +24,7 @@ import org.flowerplatform.communication.command.AbstractClientCommand;
  * Invokes a callback that has been registered with Flex.
  * 
  * @author Cristi
- * @flowerModelElementId _0X32bMkLEd6ahcn2Khjy2A
+ * 
  */
 public class InvokeCallbackClientCommand extends AbstractClientCommand {
 	

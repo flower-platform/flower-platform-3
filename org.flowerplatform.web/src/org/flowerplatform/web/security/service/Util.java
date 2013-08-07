@@ -37,7 +37,7 @@ import org.flowerplatform.web.entity.dto.Dto;
  * @author Cristi
  * @author Cristina
  *  
- * @flowerModelElementId _HIg8kFcxEeG6S8FiFZ8nVA
+ * 
  */
 public class Util {
 
@@ -48,7 +48,7 @@ public class Util {
 	 * that the corresponding table needs to be updated (or not) after certain operations (modify,
 	 * delete).
 	 *    
-	 * @flowerModelElementId _IT2HQFcxEeG6S8FiFZ8nVA
+	 * 
 	 */
 //	public static final int REQUEST_ORGANIZATIONS_UPDATE = 1;
 	
@@ -59,7 +59,7 @@ public class Util {
 	 * that the corresponding table needs to be updated (or not) after certain operations (modify,
 	 * delete).
 	 *    
-	 * @flowerModelElementId _gyPv0FcxEeG6S8FiFZ8nVA
+	 * 
 	 */
 //	public static final int REQUEST_GROUPS_UPDATE = 2;
 	
@@ -70,7 +70,7 @@ public class Util {
 	 * that the corresponding table needs to be updated (or not) after certain operations (modify,
 	 * delete).
 	 *    
-	 * @flowerModelElementId _jg8KsFcxEeG6S8FiFZ8nVA
+	 * 
 	 */
 //	public static final int REQUEST_USERS_UPDATE = 4;
 
@@ -82,7 +82,7 @@ public class Util {
 	 * 	<li> result[1] - a list with ids found in original list but not in the modified list (removed entities)
 	 * </ul>
 	 * 
-	 * @flowerModelElementId _09SFwFcxEeG6S8FiFZ8nVA
+	 * 
 	 */
 	@SuppressWarnings("unchecked")
 	public static List<Long>[] getAddedRemovedElements(Collection<? extends Entity> originalEntities, Collection<? extends Dto> modifiedDtos) {
@@ -113,7 +113,7 @@ public class Util {
 	
 	/**
 	 * Encrypts the given <code>text</code> using the SHA mechanism.
-	 * @flowerModelElementId _QUZi8V34EeGwLIVyv_iqEg
+	 * 
 	 */
 	public static String encrypt(String text) {
 		MessageDigest md = null;

@@ -34,23 +34,23 @@ package  org.flowerplatform.editor.remote {
 	 * 
 	 * @author Cristi
 	 * @author Mariana
-	 * @flowerModelElementId _C8JfQE1sEeGsUPSh9UfXpw
+	 * 
 	 */
 	[RemoteClass] 
 	public class InitializeEditorPluginClientCommand extends AbstractClientCommand  {
 		
 		/**
-		 * @flowerModelElementId _KcENcE1sEeGsUPSh9UfXpw
+		 * 
 		 */
 		public var contentTypeDescriptors:IList;
 		
 		/**
-		 * @flowerModelElementId _akNHcLoREeGbWKUNv6VenQ
+		 * 
 		 */
 		public var lockLeaseSeconds:int;
 		
 		/**
-		 * @flowerModelElementId _T-AdwE1sEeGsUPSh9UfXpw
+		 * 
 		 */
 		public override function execute():void {	
 			super.execute();

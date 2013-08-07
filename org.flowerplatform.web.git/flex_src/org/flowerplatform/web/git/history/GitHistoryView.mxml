@@ -73,7 +73,7 @@
 			}
 			
 			/**
-			 * @flowerModelElementId _NutKIAh9EeKOJLhiYa8G-w
+			 * 
 			 */
 			public function initHandler(event:FlexEvent):void {
 				// default filter

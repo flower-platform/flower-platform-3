@@ -33,32 +33,32 @@ package  com.crispico.flower.util.layout.actions {
 	import mx.core.UIComponent;
 	
 	/**
-	 * @flowerModelElementId _OvQQ8OCYEeGdYcOEhSk3ug
+	 * 
 	 */
 	public class MoveAction extends BaseAction  {
 		
 		/**
-		 * @flowerModelElementId _gfkQ4OCYEeGdYcOEhSk3ug
+		 * 
 		 */
 		public static const VIEW:int=0;
 		
 		/**
-		 * @flowerModelElementId _l5C3AOCYEeGdYcOEhSk3ug
+		 * 
 		 */
 		public static const GROUP:int=1;
 		
 		/**
-		 * @flowerModelElementId _e_ZeoOCYEeGdYcOEhSk3ug
+		 * 
 		 */
 		private var type:int;
 		
 		/**
-		 * @flowerModelElementId _thzUQOtxEeGb_JdgRgmL9A
+		 * 
 		 */
 		private var workbench:Workbench;
 		
 		/**
-		 * @flowerModelElementId _thz7UOtxEeGb_JdgRgmL9A
+		 * 
 		 */
 		public function MoveAction(workbench:Workbench, type:int) {
 			this.workbench = workbench;
@@ -80,7 +80,7 @@ package  com.crispico.flower.util.layout.actions {
 		}
 		
 		/**
-		 * @flowerModelElementId _dlRC8OCYEeGdYcOEhSk3ug
+		 * 
 		 */
 		public override function run(selectedEditParts:ArrayCollection):void {	
 			var viewLayoutData:ViewLayoutData = selectedEditParts[0];

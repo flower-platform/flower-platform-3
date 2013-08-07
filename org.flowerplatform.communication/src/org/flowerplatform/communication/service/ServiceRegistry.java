@@ -39,21 +39,21 @@ import java.util.Map;
  * @see InvokeServiceMethodServerCommand
  * 
  * @author Cristi
- * @flowerModelElementId _rmkTQFZbEeGgtLw8YArqtQ
+ * 
  */
 public class ServiceRegistry {
 	
 	/**
 	 * Contains the registered services.
 	 * 
-	 * @flowerModelElementId _xBOlIFZbEeGgtLw8YArqtQ
+	 * 
 	 */
 	private Map<String, Object> map = new HashMap<String, Object>();
 
 	/**
 	 * Registers a new service.
 	 * 
-	 * @flowerModelElementId _7KrhYFZbEeGgtLw8YArqtQ
+	 * 
 	 */
 	public void registerService(String id, Object serviceInstance) {
 		map.put(id, serviceInstance);
@@ -63,7 +63,7 @@ public class ServiceRegistry {
 	 * Gets the service by its string id.
 	 * 
 	 * @return The registered service or <code>null</code> if nothing found.
-	 * @flowerModelElementId _-fgvMFZbEeGgtLw8YArqtQ
+	 * 
 	 */
 	public Object getService(String id) {
 		return map.get(id);

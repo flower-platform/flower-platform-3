@@ -21,7 +21,7 @@ package com.crispico.flower.mp.codesync.merge;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * @flowerModelElementId _E6kicC4UEeCzKcFA-Du_zw
+ * 
  */
 public class Reference {
 

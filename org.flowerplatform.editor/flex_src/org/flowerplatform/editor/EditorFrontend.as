@@ -44,24 +44,24 @@ package org.flowerplatform.editor {
 	 * anymore. 
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _6houUIn2EeGENqKo5G_OSw
+	 * 
 	 */
 	public class EditorFrontend extends VBox/* implements IDirtyStateProvider, ModalSpinnerSupport */ {
 	
 		/**
-		 * @flowerModelElementId _8haNsIn2EeGENqKo5G_OSw
+		 * 
 		 */
 		public var resourceStatusBar:ResourceStatusBar = new ResourceStatusBar();
 		
 		/**
 		 * TODO CS/STFL Inutil, pentru ca avem referinta catre StatefulClient.
 		 * 
-		 * @flowerModelElementId _joeVQI-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		public var editorInput:Object;				
 		
 		/**
-		 * @flowerModelElementId _qnkjcKWDEeGRwJCiMM7wFA
+		 * 
 		 */
 		protected var createCollaborativeTools:Array = new Array();
 		
@@ -69,31 +69,31 @@ package org.flowerplatform.editor {
 		 * This is the underlying layer from EditorAndDiagramContainer.
 		 * For example it can be a text editor.
 		 * 
-		 * @flowerModelElementId _CV_cYKWLEeGNp8EWVqus7Q
+		 * 
 		 */
 		private var _editor:UIComponent;
 		
 //		/**
-//		 * @flowerModelElementId _ji2C0KWLEeGNp8EWVqus7Q
+//		 * 
 //		 */
 //		protected var editorAndDiagramContainer:EditorAndDiagramContainer;
 //		
 //		/**
-//		 * @flowerModelElementId _ntYUIKWMEeGNp8EWVqus7Q
+//		 * 
 //		 */
 //		public var collaborativeDiagramViewer:DiagramViewer;
 //		
 //		/**
-//		 * @flowerModelElementId _0JuREKiiEeGHceW7NM6-3w
+//		 * 
 //		 */
 //		protected var _rootFigure:RootFigure;
 //		/**
-//		 * @flowerModelElementId _xSWFIKlvEeGb9qzX-Jv3_w
+//		 * 
 //		 */
 //		protected var _collaborativeExtension:CollaborativeDiagramEditPartExtension;
 
 		/**
-		 * @flowerModelElementId _LuQxAKvmEeGMNMaOJaUJQA
+		 * 
 		 */
 		private var scrollCallback:Function;
 
@@ -107,7 +107,7 @@ package org.flowerplatform.editor {
 		 * Should update the (visual) content, based on the content received
 		 * from the server (which may be full or incremental).
 		 * 
-		 * @flowerModelElementId _nEGnoKXOEeG-cPK59Sm4Wg
+		 * 
 		 */
 		public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {
 			throw new Error("This method should be implemented");
@@ -130,7 +130,7 @@ package org.flowerplatform.editor {
 		 * Set the initial mode: editing enabled/disabled. The notification from
 		 * the server may be quicker than the actual creation of the component, so that's
 		 * why we check the resource status bar, which may already be populated. 
-		 * @flowerModelElementId _9LdL0L3hEeGnuMQrZe-ELA
+		 * 
 		 */
 		protected function creationCompleteHandler(event:FlexEvent):void {
 			removeEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
@@ -146,7 +146,7 @@ package org.flowerplatform.editor {
 		 * Should disable the interraction with the editor/data. Called when the component
 		 * is created and when it becomes locked.
 		 * 
-		 * @flowerModelElementId _jouM44-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		public function disableEditing():void {
 			throw "This method should be implemented";
@@ -156,7 +156,7 @@ package org.flowerplatform.editor {
 		 * Should enable the interraction with the editor/data. Called when the
 		 * resource is unlocked.
 		 * 
-		 * @flowerModelElementId _jo2IsY-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		public function enableEditing():void {
 			throw "This method should be implemented";
@@ -165,7 +165,7 @@ package org.flowerplatform.editor {
 		/**
 		 * The editor must be a DisplayObject that implements IEditor interface.
 		 * 
-		 * @flowerModelElementId _P7PxIKWLEeGNp8EWVqus7Q
+		 * 
 		 */
 		public function set editor(component:UIComponent):void {
 			if (!(component is UIComponent)) {
@@ -194,7 +194,7 @@ package org.flowerplatform.editor {
 //		}
 		
 		/**
-		 * @flowerModelElementId _o57E0KvkEeGMNMaOJaUJQA
+		 * 
 		 */
 		public function get editorContentWidth():Number {
 			// TODO CS/STFL hardcodare; tr. bagat in Text* probabil; idem mai jos. Si in acest caz referinta catre editor cred ca devine inutila
@@ -202,7 +202,7 @@ package org.flowerplatform.editor {
 		}
 		
 		/**
-		 * @flowerModelElementId _q3ioEKvkEeGMNMaOJaUJQA
+		 * 
 		 */
 		public function get editorContentHeight():Number {
 			return RichEditableText(TextArea(editor).textDisplay).contentHeight;
@@ -213,14 +213,14 @@ package org.flowerplatform.editor {
 		}
 				
 //		/**
-//		 * @flowerModelElementId _0JxUYqiiEeGHceW7NM6-3w
+//		 * 
 //		 */
 //		public function get rootFigure():RootFigure {
 //			return _rootFigure;
 //		}
 		
 		/**
-		 * @flowerModelElementId _qnmYpKWDEeGRwJCiMM7wFA
+		 * 
 		 */
 		override protected function createChildren():void {
 			super.createChildren();
@@ -249,7 +249,7 @@ package org.flowerplatform.editor {
 		}
 		
 //		/**
-//		 * @flowerModelElementId _0JxUYKiiEeGHceW7NM6-3w
+//		 * 
 //		 */
 //		protected function createRootFigure():RootFigure {
 //			var rootFigure:RootFigure = new RootFigure(false, false);
@@ -263,7 +263,7 @@ package org.flowerplatform.editor {
 //		 * Can be null if an editor is not used. In this case the diagram (diagramPane) can be added as 
 //		 * a child of this component.
 //		 * 
-//		 * @flowerModelElementId _wb0gYKWLEeGNp8EWVqus7Q
+//		 * 
 //		 */
 //		protected function createEditorAndDiagramContainer():EditorAndDiagramContainer {
 //			var container:EditorAndDiagramContainer = new EditorAndDiagramContainer(this);
@@ -277,7 +277,7 @@ package org.flowerplatform.editor {
 //		 * This method is called after rootFigure has been added to stage.
 //		 * Must create and activate the viewer.
 //		 * 
-//		 * @flowerModelElementId _4c0F4KWMEeGNp8EWVqus7Q
+//		 * 
 //		 */
 //		protected function createCollaborativeDiagramViewer():DiagramViewer { 			
 //			var viewer:CollaborativeDiagramViewer = new CollaborativeDiagramViewer(rootFigure, this);
@@ -292,7 +292,7 @@ package org.flowerplatform.editor {
 //		}
 //		
 //		/**
-//		 * @flowerModelElementId _vxVBgKvkEeGMNMaOJaUJQA
+//		 * 
 //		 */
 //		public function setScrollCallback(callback:Function):void {
 //			this.scrollCallback = callback;
@@ -301,7 +301,7 @@ package org.flowerplatform.editor {
 //		}
 //		
 //		/**
-//		 * @flowerModelElementId _g6naAKvmEeGMNMaOJaUJQA
+//		 * 
 //		 */
 //		private function onScroll(e:PropertyChangeEvent):void { 
 //			if (e.source == e.target) { 
@@ -320,7 +320,7 @@ package org.flowerplatform.editor {
 		 * Returns the dirty state of the <code>EditableResource</code> corresponding
 		 * with the current editorInput.
 		 * 
-		 * @flowerModelElementId _uBxt8LbxEeGlK6b9EKaKdw
+		 * 
 		 */
 		public function isDirty():Boolean {	
 			var editableResource:EditableResource = editorStatefulClient.editableResourceStatus;

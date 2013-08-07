@@ -29,7 +29,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 	 * 
 	 * @author Florin Buzatu
 	 * 
-	 * @flowerModelElementId _qIU_IJ-hEd-Acq1dtkSbHA
+	 * 
 	 */
 	public class ImageFactory {
 		
@@ -48,7 +48,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		private static const UNAVAILABLE_CLASS:Class;
 				
 		/**
-		 * @flowerModelElementId _GFy6IJ-jEd-Acq1dtkSbHA
+		 * 
 		 */
 		private var cache:Dictionary;
 
@@ -61,7 +61,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		 * This controls if to show an warning with the workaround when detecting 
 		 * security problems due to the impossibility of downloading images locally.
 		 * By default it is false and can be altered externally.
-		 * @flowerModelElementId _59u1EN4VEeCfLfatVsLg4g
+		 * 
 		 */
 		 
 		public static var showSecurityWorkaroundMessage:Boolean = false;
@@ -69,12 +69,12 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		 * This keeps the workaround message to be shown to the user when security problems are detected. 
 		 * This will be shown only if #showSecurityWorkaround flag is enabled.
 		 * By default it is initialized by the <code>ImageFactory</code> but may be externally altered.
-		 * @flowerModelElementId _6Q-hMN4VEeCfLfatVsLg4g
+		 * 
 		 */
 		public static var securityWorkaroundMessage:String;
 		
 		/**
-		 * @flowerModelElementId _Vn_HsOdXEd-oE8OjIG8MeQ
+		 * 
 		 */
 		 function ImageFactory() {
 			if (INSTANCE != null) 
@@ -95,7 +95,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		 * @param calledByUser - when called by user, the method sets the bitmap data to a default image, until
 		 * the real bitmap data is loaded
 		 * 
-		 * @flowerModelElementId _CERI8J-kEd-Acq1dtkSbHA
+		 * 
 		 */
 		public function retrieveImage(imageUrls:ArrayCollection, callbackObject:Object, callbackProperty:String, calledByUser:Boolean=true):void {
 			var key:String = getCacheKey(imageUrls);
@@ -156,7 +156,7 @@ package  com.crispico.flower.flexdiagram.util.imagefactory {
 		/**
 		 * By default <code>ImageFactory</code> initializes #showSecurityWorkaround and #securityWorkaroundMessage.
 		 * These 2 are used by <code>ImageCacheEntry</code> when it detect security issues to know if to show and what message to show.
-		 * @flowerModelElementId _uOb8YN4VEeCfLfatVsLg4g
+		 * 
 		 */
 		 internal function initializeSecurityDetails():void {
 		 	showSecurityWorkaroundMessage = false;

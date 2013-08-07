@@ -25,7 +25,7 @@ import com.crispico.flower.mp.codesync.base.action.ActionResult;
 import com.crispico.flower.mp.codesync.base.action.DiffAction;
 
 /**
- * @flowerModelElementId _DNAgsKrUEeCJ5K6O_TzIEg
+ * 
  */
 public interface IModelAdapter extends IModelAdapterUI {
 

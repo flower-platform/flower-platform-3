@@ -48,32 +48,32 @@ import org.flowerplatform.web.security.sandbox.TreePermissionCollection;
  * 
  * @author Florin
  * @author Cristi
- * @flowerModelElementId _TW1dQGbMEeGOeOE1u9CeQw
+ * 
  */
 public class FlowerWebFilePermission extends AbstractTreePermission {
 	
 	/**
-	 * @flowerModelElementId _-TdF0Gx4EeGBsfNm1ipRfw
+	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * @flowerModelElementId _TW1dQ2bMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public static final String NONE = "none";
 	
 	/**
-	 * @flowerModelElementId _TW2EUGbMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public static final String READ = "read";
 	
 	/**
-	 * @flowerModelElementId _TW2EUmbMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public static final String READ_WRITE = "read-write";
 	
 	/**
-	 * @flowerModelElementId _TW2rYGbMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public static final String READ_WRITE_DELETE = "read-write-delete";
 	
@@ -88,7 +88,7 @@ public class FlowerWebFilePermission extends AbstractTreePermission {
 	 * 
 	 * Please see the doc from super for path conventions.
 	 * 
-	 * @flowerModelElementId _TW2rYmbMEeGOeOE1u9CeQw
+	 * 
 	 */
 	public FlowerWebFilePermission(String path, String actions) {
 		super(path, actions);
@@ -99,7 +99,7 @@ public class FlowerWebFilePermission extends AbstractTreePermission {
 	 * is passed. According to the super doc, the tree path compatibility is not checked here
 	 * because it is verified by {@link TreePermissionCollection}. 
 	 * 
-	 * @flowerModelElementId _TW3Sc2bMEeGOeOE1u9CeQw
+	 * 
 	 */
 	@Override
 	public boolean impliesWithoutTreePathCheck(Permission permission) {
@@ -136,28 +136,28 @@ public class FlowerWebFilePermission extends AbstractTreePermission {
 	}
 
 	/**
-	 * @flowerModelElementId _f1AAIGnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	private boolean isReadAllowed() {
 		return getActions().equals(READ) || getActions().equals(READ_WRITE) || getActions().equals(READ_WRITE_DELETE);
 	}
 	
 	/**
-	 * @flowerModelElementId _f1AAImnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	private boolean isWriteAllowed() {
 		return getActions().equals(READ_WRITE) || getActions().equals(READ_WRITE_DELETE);
 	}
 	
 	/**
-	 * @flowerModelElementId _f1AnMWnXEeGiEKNiPvCvPw
+	 * 
 	 */
 	private boolean isDeleteAllowed() {
 		return getActions().equals(READ_WRITE_DELETE);
 	}
 	
 	/**
-	 * @flowerModelElementId _f1AnM2nXEeGiEKNiPvCvPw
+	 * 
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -169,7 +169,7 @@ public class FlowerWebFilePermission extends AbstractTreePermission {
 	}
 
 	/**
-	 * @flowerModelElementId _f1BOQ2nXEeGiEKNiPvCvPw
+	 * 
 	 */
 	@Override
 	public int hashCode() {

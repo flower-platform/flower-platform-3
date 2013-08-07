@@ -21,7 +21,7 @@ package com.crispico.flower.texteditor.model {
 	/**
 	 * A range of text that has a specific type.
 	 * 
-	 * @flowerModelElementId _0rUU0O2uEeCF5Ozw-0NJ0A
+	 * 
 	 */
 	public class Token extends Range {
 		

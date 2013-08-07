@@ -31,12 +31,12 @@ package org.flowerplatform.web.entity.dto;
  * @author Cristi
  * @author Cristina
  * 
- * @flowerModelElementId _jTr6AFb-EeGL3vi-zPhopA
+ * 
  */
 public class Dto {
 
 	/**
-	 * @flowerModelElementId _UaHy0FcAEeGL3vi-zPhopA
+	 * 
 	 */
 	private long id;
 

@@ -29,7 +29,7 @@ import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 
 /**
  * @author Cristina
- * @flowerModelElementId _6vfJ0HH1EeK0WoOyJtfqdw
+ * 
  */
 public class GitUsernamePasswordCredentialsProvider extends CredentialsProvider {
 		
@@ -43,7 +43,7 @@ public class GitUsernamePasswordCredentialsProvider extends CredentialsProvider 
 	 * This method is called each time a GIT operation (clone/fetch/push)
 	 * needs authentication data.
 	 *  
-	 * @flowerModelElementId _GWb-0HH2EeK0WoOyJtfqdw
+	 * 
 	 */
 	@Override
 	public boolean get(URIish uri, CredentialItem... items)	throws UnsupportedCredentialItem {	

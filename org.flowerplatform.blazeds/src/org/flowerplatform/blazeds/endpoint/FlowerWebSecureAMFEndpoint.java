@@ -32,7 +32,7 @@ import flex.messaging.endpoints.AMFEndpoint;
  * @see FlowerWebSecureStreamingAMFEndpoint
  * @see ServerSnapshotClientCommand
  * @author Sorin
- * @flowerModelElementId _ez_00G22EeGQ6LdvAwMt-w
+ * 
  */
 public class FlowerWebSecureAMFEndpoint extends AMFEndpoint {
 	

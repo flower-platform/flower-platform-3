@@ -25,7 +25,7 @@
  @author Cristina
  @author Mariana
 
- @flowerModelElementId _43UVkFc1EeG6S8FiFZ8nVA
+ 
 -->
 <mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
@@ -53,25 +53,25 @@
 			/**
 			 * Holds the form class used by this panel that opens when
 			 * an add/edit command is requested.
-			 * @flowerModelElementId _JBNRgFi7EeGbZZLUWiYvBA
+			 * 
 			 */ 
 			public var formClass:Class;
 			
 			/**
 			 * Might be used during data request.
-			 * @flowerModelElementId _RBBYYF34EeGwLIVyv_iqEg
+			 * 
 			 */ 
 			private var _currentFilter:Object;
 			
 			/**
-			 * @flowerModelElementId _RBB_cF34EeGwLIVyv_iqEg
+			 * 
 			 */
 			public function get currentFilter():Object {
 				return _currentFilter;
 			}   	
 		
 			/**
-			 * @flowerModelElementId _RBB_cl34EeGwLIVyv_iqEg
+			 * 
 			 */
 			public function set currentFilter(_currentFilter:Object):void {
 				this._currentFilter = _currentFilter;
@@ -84,7 +84,7 @@
 			 * 	<li> the Edit button is available only on single selection.
 			 * 	<li> the Delete button is available if selection is !null (i.e. can be single or multiple).
 			 * </ul> 
-			 * @flowerModelElementId _JBOfoFi7EeGbZZLUWiYvBA
+			 * 
 			 */ 		
 			protected function selectionChangeHandler(event:ListEvent):void {
 				editBtn.enabled = (table.selectedItems.length == 1);
@@ -95,7 +95,7 @@
 			 * Should be overridden to send a "get data command", and
 			 * register <code>dataReceivedCallback()</code> as callback.
 			 * <code>super</code> should be called at the begining.
-			 * @flowerModelElementId _KKgQEVlkEeGRrZ75u0k71A
+			 * 
 			 */
 			public function refreshBtnHandler(rslt:Object = null):void {
 				ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.refreshingData"));
@@ -107,7 +107,7 @@
 			
 			/**
 			 * Sets the data provider and refreshes the buttons state.
-			 * @flowerModelElementId _KKg3IllkEeGRrZ75u0k71A
+			 * 
 			 */ 
 			public function dataReceivedCallback(dtos:ArrayCollection):void {
 				ModalSpinner.removeModalSpinner(this);
@@ -117,7 +117,7 @@
 			
 			/**
 			 * Opens form window in "add" mode.
-			 * @flowerModelElementId _JBPtwVi7EeGbZZLUWiYvBA
+			 * 
 			 */ 
 			protected function addBtnHandler():void {	
 				openForm();
@@ -125,7 +125,7 @@
 			
 			/**
 			 * Opens form window in "edit" mode.
-			 * @flowerModelElementId _JBRi8Vi7EeGbZZLUWiYvBA
+			 * 
 			 */ 
 			protected function editBtnHandler():void {
 				if (editBtn.enabled)
@@ -134,7 +134,7 @@
 			
 			/**
 			 * Displayes a yes/no warning message before deleting selected items. 
-			 * @flowerModelElementId _JBUmQVi7EeGbZZLUWiYvBA
+			 * 
 			 */ 		
 			protected function deleteBtnHandler():void {
 //				FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
@@ -148,7 +148,7 @@
 			 * This methos must be implemented by subclasses.
 			 * 
 			 * @see deleteBtnHandler()
-			 * @flowerModelElementId _JBWbcVi7EeGbZZLUWiYvBA
+			 * 
 			 */ 
 			protected function deleteResultHandler(event:CloseEvent):void {
 				throw new Error("This method needs to be implemented.");
@@ -159,7 +159,7 @@
 			 * 
 			 * @see addBtnHandler()
 			 * @see editBtnHandler()
-			 * @flowerModelElementId _JBYQoVi7EeGbZZLUWiYvBA
+			 * 
 			 */ 
 			protected function openForm(editMode:Boolean=false):void {
 				if (editMode && table.selectedItem == null) {

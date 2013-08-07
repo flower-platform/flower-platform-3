@@ -23,33 +23,33 @@ package com.crispico.flower.util.effects
 	
 	/**
 	 * From http://ntt.cc/2008/06/22/fade-from-one-color-to-another-animating-color-transitions-in-flex.html.
-	 * @flowerModelElementId _jhHJAI-IEeGlZvO-ph04FQ
+	 * 
 	 */
 	public class FadeColorInstance extends AnimatePropertyInstance {
 		
 		/**
 		 *  
 		 * The start color values for each of the r, g, and b channels 
-		 * @flowerModelElementId _jhHwEo-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		protected var startValues:Object;;
 		
 		/**
 		 *  
 		 * The change in color value for each of the r, g, and b channels.  
-		 * @flowerModelElementId _jhIXII-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		protected var delta:Object;
 		
 		/**
-		 * @flowerModelElementId _jhIXIo-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		public function FadeColorInstance(target:Object) {
 			super(target);
 		}
 		
 		/**
-		 * @flowerModelElementId _jhI-MY-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		override public function play():void {
 			// We need to call play first so that the fromValue is
@@ -71,7 +71,7 @@ package com.crispico.flower.util.effects
 		}
 		
 		/**
-		 * @flowerModelElementId _jhJlQY-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		override public function onTweenUpdate(value:Object):void
 		{
@@ -104,7 +104,7 @@ package com.crispico.flower.util.effects
 		}
 		
 		/**
-		 * @flowerModelElementId _jhKMUY-IEeGlZvO-ph04FQ
+		 * 
 		 */
 		private function intToRgb(color:int):Object	{
 			var r:int = (color & 0xFF0000) >> 16;

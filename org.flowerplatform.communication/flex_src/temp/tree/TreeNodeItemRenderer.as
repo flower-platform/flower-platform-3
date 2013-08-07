@@ -29,7 +29,7 @@ package temp.tree {
 	 * retrieve an image from the factory.
 	 * 
 	 * @author Cristi
-	 * @flowerModelElementId _3ZzosEv6EeCTEPQXKsfiNg
+	 * 
 	 */ 
 	public class TreeNodeItemRenderer extends CustomIconTreeItemRenderer {
 		

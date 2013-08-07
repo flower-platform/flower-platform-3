@@ -26,7 +26,7 @@ package com.crispico.flower.flexdiagram.contextmenu
 	import mx.core.UIComponent;
 	
 	/**
-	 * @flowerModelElementId _E3F4MMesEd-nq8-kOf0AJQ
+	 * 
 	 */
 	public class ClientNotifierData {
 		

@@ -73,7 +73,7 @@ package  com.crispico.flower.flexdiagram.action {
 	 * 
 	 * @author Ioana
 	 * @author Cristina
-	 * @flowerModelElementId _FMPQgBfeEd-BboMxanLANw
+	 * 
 	 */
 	public class AutoResizeContainer extends VBox {
 		
@@ -132,7 +132,7 @@ package  com.crispico.flower.flexdiagram.action {
 		/**
 		 * The container where the <code>AutoResizeContainer<code> is added to.
 		 * 
-		 * @flowerModelElementId _5wXr8BoTEd-bfdVK2d505Q
+		 * 
 		 */
 		protected var parentContainer:DisplayObjectContainer;
 				
