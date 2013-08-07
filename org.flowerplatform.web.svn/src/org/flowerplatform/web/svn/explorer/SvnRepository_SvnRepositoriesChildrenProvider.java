@@ -1,8 +1,12 @@
 package org.flowerplatform.web.svn.explorer;
 
 
+import java.util.Collection;
+
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
+import org.flowerplatform.communication.tree.remote.TreeNode;
 
 /**
  * @flowerModelElementId _UcYSoP3LEeKrJqcAep-lCg
@@ -16,8 +20,16 @@ public class SvnRepository_SvnRepositoriesChildrenProvider implements
 	 * 
 	 * @flowerModelElementId _kWPuUP3LEeKrJqcAep-lCg
 	 */
-	public Collection<Par<Object, String>> getChildrenForNode(Object node,
-			String treeNode, GenericTreeContext context) {
+//	@Override
+//	public Collection<Pair<Object, String>> getChildrenForNode(Object node,
+//			String treeNode, GenericTreeContext context) {
+//		// TODO implement
+//		return null;
+//	}
+	
+	@Override
+	public Collection<Pair<Object, String>> getChildrenForNode(Object node,
+			TreeNode treeNode, GenericTreeContext context) {
 		// TODO implement
 		return null;
 	}
@@ -25,9 +37,18 @@ public class SvnRepository_SvnRepositoriesChildrenProvider implements
 	/**
 	 * @flowerModelElementId _z6dDEP3LEeKrJqcAep-lCg
 	 */
-	public boolean nodeHasChildren(Object node, String treeNode,
+//	@Override
+//	public Boolean nodeHasChildren(Object node, String treeNode,
+//			GenericTreeContext context) {
+//		// TODO implement
+//		return false;
+//	}
+	
+	@Override
+	public Boolean nodeHasChildren(Object node, TreeNode treeNode,
 			GenericTreeContext context) {
 		// TODO implement
-		return 0;
+		return false;
 	}
+
 }

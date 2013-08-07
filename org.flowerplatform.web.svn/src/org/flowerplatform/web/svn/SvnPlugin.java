@@ -1,7 +1,11 @@
 package org.flowerplatform.web.svn;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -15,7 +19,7 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @flowerModelElementId _sK_EsP3FEeKrJqcAep-lCg
 	 */
-	private List<GenericTreeStatefulService> treeStatefulServicesDisplayingSvnContent;
+	private List<GenericTreeStatefulService> treeStatefulServicesDisplayingSvnContent = new ArrayList<GenericTreeStatefulService>();;
 
 	/**
 	 * @flowerModelElementId _fhKA8P3GEeKrJqcAep-lCg
