@@ -71,8 +71,8 @@ package org.flowerplatform.editor.mindmap.remote {
 				callbackObject, callbackFunction));
 		}
 		
-		public function service_createNew(viewId:Object, viewType:String):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "createNew", [viewId, viewType]));
+		public function service_createNew(viewId:Object, viewType:String, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "createNew", [viewId, viewType], callbackObject, callbackFunction));
 		}
 		
 		public function service_moveUp(viewId:Object, callbackObject:Object, callbackFunction:Function):void {

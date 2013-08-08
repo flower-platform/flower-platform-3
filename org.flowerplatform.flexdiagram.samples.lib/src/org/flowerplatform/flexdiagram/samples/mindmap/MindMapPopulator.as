@@ -19,66 +19,82 @@
 package org.flowerplatform.flexdiagram.samples.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.samples.IModelHolder;
-	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
+	import org.flowerplatform.flexdiagram.samples.mindmap.model.SampleMindMapModel;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	public class MindMapPopulator {
 		
 		public static function populateRootModel(modelHolder:IModelHolder):void {
-			if (modelHolder.rootModel == null) {
-				modelHolder.rootModel = new ParentAwareArrayList(null);
-				modelHolder.rootModel.parent = modelHolder.rootModel;
+			var rootModel:ParentAwareArrayList = modelHolder.rootModel;
+			if (rootModel == null) {
+				rootModel = new ParentAwareArrayList(null);
+				rootModel.parent = rootModel;
 			}
 			
-			var model:MindMapModel = getMindMapModel(null);				
+			var model:SampleMindMapModel = getMindMapModel(rootModel);
+			model.text = "Root";
 			model.children.addItem(getMindMapModel(model));
 			model.children.addItem(getMindMapModel(model));
 			model.children.addItem(getMindMapModel(model));
-			modelHolder.rootModel.addItem(model);
+			model.expanded = true;
+			rootModel.addItem(model);
 			
-			var child2:MindMapModel = getMindMapModel(model);	
+			var child2:SampleMindMapModel = getMindMapModel(model);	
 			child2.side = MindMapDiagramShell.LEFT;
 			child2.children.addItem(getMindMapModel(child2));
 			child2.children.addItem(getMindMapModel(child2));	
+			child2.hasChildren = true;
 			
 			model.children.addItem(child2);
+			model.hasChildren = true;
 			
-			var child:MindMapModel = getMindMapModel(model);
+			var child:SampleMindMapModel = getMindMapModel(model);
 			child.side = MindMapDiagramShell.RIGHT;
 			child.children.addItem(getMindMapModel(child));
 			child.children.addItem(getMindMapModel(child));
 			child.children.addItem(getMindMapModel(child));
 			child.children.addItem(getMindMapModel(child));
+			child.hasChildren = true;
 			child.parent = model;
 			
 			model.children.addItem(child);
 			
-			var child1:MindMapModel = getMindMapModel(model);	
+			var child1:SampleMindMapModel = getMindMapModel(model);	
 			child1.side = MindMapDiagramShell.RIGHT;
 			child1.children.addItem(getMindMapModel(child1));
+			child1.hasChildren = true;
 			child1.parent = model;				
 			model.children.addItem(child1);	
 			
-			var child11:MindMapModel = getMindMapModel(child1);				
+			var child11:SampleMindMapModel = getMindMapModel(child1);				
 			child11.children.addItem(getMindMapModel(child11));
 			child11.children.addItem(getMindMapModel(child11));
-			child1.children.addItem(child11);	
-			var child111:MindMapModel = getMindMapModel(child11);				
+			child11.hasChildren = true;
+			child1.children.addItem(child11);			
+			
+			var child111:SampleMindMapModel = getMindMapModel(child11);				
 			child111.children.addItem(getMindMapModel(child111));
 			child111.children.addItem(getMindMapModel(child111));
-			child11.children.addItem(child111);		
+			child111.hasChildren = true;
+			child11.children.addItem(child111);	
+			
+			modelHolder.rootModel = rootModel;
 		}
 		
-		private static function getMindMapModel(parent:MindMapModel):MindMapModel {
-			var model:MindMapModel;
+		private static function getMindMapModel(parent:Object):SampleMindMapModel {
+			var model:SampleMindMapModel;
 			
-			model = new MindMapModel();
+			model = new SampleMindMapModel();
 			model.text = "MindMap" + (new Date()).time;
-			model.width = 151;
-			model.height = 22;
-			if (parent != null && parent.side != 0) {
+//			model.width = 151;
+//			model.height = 22;
+			model.hasChildren = false;
+			if (parent is SampleMindMapModel && parent != null && parent.side != 0) {
 				model.side = parent.side;
-			} else if (parent != null) {
+			} else if (parent is SampleMindMapModel && parent != null) {
 				model.side = MindMapDiagramShell.LEFT;
 			}
 			model.parent = parent;

@@ -52,6 +52,5 @@ package org.flowerplatform.editor.mindmap.action {
 			var selectedNode:MindMapNode = MindMapNode(selection.getItemAt(0));			
 			MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_createNew(selectedNode.id, viewType);
 		}
-			
 	}
 }

@@ -30,34 +30,29 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.core.IVisualElement;
-			import mx.core.IVisualElementContainer;
-			import mx.core.UIComponent;
-			import mx.events.FlexEvent;
 			import mx.events.MoveEvent;
 			import mx.events.ResizeEvent;
 			
 			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
-			import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
+			import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
+			import org.flowerplatform.flexdiagram.samples.mindmap.model.SampleMindMapModel;
 			
 			import spark.primitives.Ellipse;
 						
 			[Bindable]
-			public var circleRadius:int = 8;
+			public var circleRadius:int = 10;
 			
 			public var padding:int = 3;
 			
 			override public function activate(diagramShell:DiagramShell, target:IVisualElement):void {
 				super.activate(diagramShell, target);			
 					
-				DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);				
+				DisplayObject(target).addEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);	
+				DisplayObject(target).addEventListener(MoveEvent.MOVE, handleTargetMoveResize);			
 				// update position
-				handleTargetMoveResize(null);
-				
-				if (getTargetModel().children.length > 0 && getTargetModel().parent != null) {	
-					vLine.visible=!getTargetModel().expanded;
-					diagramShell.diagramRenderer.addElement(circle);
-				}
+				handleTargetMoveResize(null);				
 			}
 			
 			/**
@@ -73,7 +68,8 @@
 				}				
 							
 				// remove resize listeners				
-				DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);					
+				DisplayObject(target).removeEventListener(ResizeEvent.RESIZE, handleTargetMoveResize);			
+				DisplayObject(target).removeEventListener(MoveEvent.MOVE, handleTargetMoveResize);			
 				super.deactivate();
 			}
 	
@@ -85,30 +81,49 @@
 			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {			
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 				
+				if (node.hasChildren && 
+					diagramShell.getControllerProvider(node).getModelChildrenController(node).getParent(node) is SampleMindMapModel) {	
+					vLine.visible = !node.expanded;
+					diagramShell.diagramRenderer.addElement(circle);
+				} else if (!node.hasChildren) {
+					if (circle.parent != null) {
+						diagramShell.diagramRenderer.removeElement(circle);
+					}					
+				}
+							
 				graphics.clear();
 				graphics.lineStyle(2, 0x3C37FE);		
-				graphics.drawRoundRect(-padding, -padding, target.width + padding * 2, target.height + padding * 2, 10, 10);			
+				graphics.drawRoundRect(-padding, - padding, target.width + padding * 2, target.height + padding * 2, 10, 10);			
 				
-				if (getTargetModel().side == MindMapDiagramShell.LEFT) {
-					circle.x = getTargetModel().x - circleRadius * 2;						
-					circle.y = getTargetModel().y + getTargetModel().height / 2 - circleRadius;
-				} else if (getTargetModel().side == MindMapDiagramShell.RIGHT) {
-					circle.x = getTargetModel().x + getTargetModel().width;
-					circle.y = getTargetModel().y + getTargetModel().height / 2 - circleRadius;							
+				if (node.side == MindMapDiagramShell.LEFT) {
+					circle.x = getDynamicObject(node).x - circleRadius * 2;						
+					circle.y = getDynamicObject(node).y + getDynamicObject(node).height / 2 - circleRadius;
+				} else if (node.side == MindMapDiagramShell.RIGHT) {
+					circle.x = getDynamicObject(node).x + getDynamicObject(node).width;
+					circle.y = getDynamicObject(node).y + getDynamicObject(node).height / 2 - circleRadius;							
 				}
 			}
 			
 			protected function circle_mouseClickHandler(event:MouseEvent):void {
-				getTargetModel().expanded = !getTargetModel().expanded;	
-				vLine.visible = !getTargetModel().expanded;
+				IMindMapControllerProvider(diagramShell.getControllerProvider(node)).getMindMapModelController(node).setExpanded(node, !node.expanded);
 				
+				vLine.visible = !node.expanded;
+	
 				event.preventDefault();
 				event.stopImmediatePropagation();
 			}
 			
-			protected function circle_mouseDownUpHandler(event:MouseEvent):void 	{
+			protected function circle_mouseDownUpHandler(event:MouseEvent):void {
 				event.preventDefault();
 				event.stopImmediatePropagation();
+			}
+			
+			private function get node():SampleMindMapModel {
+				return SampleMindMapModel(getTargetModel());
+			}
+			
+			private function getDynamicObject(model:Object):Object {
+				return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
 			}
 					
 		]]>

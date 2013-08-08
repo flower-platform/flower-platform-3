@@ -29,7 +29,7 @@
 				implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
 				creationComplete="creationCompleteHandler(event)" initialize="initializeHandler(event)"
 				paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2"
-				iconFunction="getImage" doubleClickEnabled="true" doubleClick="doubleClickHandler(event)" verticalAlign="middle">
+				verticalAlign="middle">
 	
 	<fx:Script>
 		<![CDATA[
@@ -38,15 +38,12 @@
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
 			
-			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
-			import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-			import org.flowerplatform.emf_model.notation.MindMapNode;
-			import org.flowerplatform.emf_model.notation.View;
 			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 			import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
-			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexdiagram.samples.mindmap.controller.SampleMindMapModelController;
+			import org.flowerplatform.flexdiagram.samples.mindmap.model.SampleMindMapModel;
 
 			private static const circleRadius:int = 3;
 								
@@ -60,55 +57,28 @@
 				_diagramShell = value;
 			}
 			
-			private function get node():MindMapNode {
-				return MindMapNode(data);
+			private function get node():SampleMindMapModel {
+				return SampleMindMapModel(data);
 			}
 						
 			override public function set data(value:Object):void {
 				if (super.data != null) {
-					data.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-					View(data).removeEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);			
+					data.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);						
 				}
 				super.data = value;
 			
 				if (data != null) {
-					data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-					View(data).addEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
+					data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);					
 					x = getDynamicObject(node).x;
-					y = getDynamicObject(node).y;
-
-					if (node.viewDetails != null) {
-						viewDetailsUpdatedHandler(null);
-					}				
+					y = getDynamicObject(node).y;	
+					label = node.text;
 				}
 			}
 					
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				BindingUtils.bindSetter(resizeHandler, this, "width"); 
 				BindingUtils.bindSetter(resizeHandler, this, "height"); 				
-			}
-			
-			protected function initializeHandler(event:FlexEvent):void {
-				if (!FlexUtilGlobals.getInstance().isMobile) {
-					minHeight = 22;
-				}
-			}
-						
-			protected function viewDetailsUpdatedHandler(event:Event):void {
-				label = node.viewDetails.text;
-				if (iconDisplay) {
-					iconDisplay.source = getImage(null);					
-				}
-				invalidateDisplayList();
-			}
-			
-			private function getImage(object:Object):Object {
-				if (node != null && node.viewDetails) {
-					var icon:String = node.viewDetails.icon;
-					return FlexUtilGlobals.getInstance().createAbsoluteUrl(MindMapModelPlugin.getInstance().getResourceUrl(icon));
-				}
-				return null;
-			}
+			}	
 			
 			private function modelChangedHandler(event:PropertyChangeEvent):void {
 				switch (event.property) {
@@ -118,6 +88,11 @@
 					case "y":
 						y = getDynamicObject(node).y;						
 						break;
+					case "text":
+						label = data.text;
+						SampleMindMapModelController(IMindMapControllerProvider(diagramShell.getControllerProvider(data)).getMindMapModelController(data)).updateModelHandler(data);
+						break;
+					case "parent":						
 					case "expanded":	
 					case "hasChildren":	
 						invalidateDisplayList();			
@@ -155,26 +130,28 @@
 					getDynamicObject(node).width = this.width;
 					getDynamicObject(node).height = this.height;
 					var parent:Object = diagramShell.getControllerProvider(node).getModelChildrenController(node).getParent(node);
-					if (parent is MindMapNode) {						
+					if (parent is SampleMindMapModel) {						
 						MindMapDiagramShell(diagramShell).refreshNodePositions(parent);	
 					}
 				}
 			}
 							
-			protected function doubleClickHandler(event:MouseEvent):void {
-				if (node != null && node.side == MindMapDiagramShell.NONE) {
-					return;
-				}
-				IMindMapControllerProvider(diagramShell.getControllerProvider(data)).getMindMapModelController(data).setExpanded(data, !node.expanded);
-				node.expanded = !node.expanded;		
-			}
+//			protected function doubleClickHandler(event:MouseEvent):void {
+//				if (node != null && node.side == MindMapDiagramShell.NONE) {
+//					return;
+//				}
+//				IMindMapControllerProvider(diagramShell.getControllerProvider(data)).getMindMapModelController(data).setExpanded(data, !node.expanded);
+//			}
 			
 			override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {				
 			}
 			
 			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void {			
-			}	
+			}			
 			
+			protected function initializeHandler(event:FlexEvent):void {
+				minHeight = 22; // only for desktop version
+			}
 			
 		]]>
 	</fx:Script>

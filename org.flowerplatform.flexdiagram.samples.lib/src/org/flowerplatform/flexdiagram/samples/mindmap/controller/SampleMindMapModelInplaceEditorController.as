@@ -21,23 +21,19 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
 	
-	import mx.core.IDataRenderer;
-	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
-	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
-	import org.flowerplatform.flexdiagram.samples.mindmap.model.MindMapModel;
+	import org.flowerplatform.flexdiagram.samples.mindmap.model.SampleMindMapModel;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	
 	import spark.components.TextInput;
-	import spark.components.supportClasses.StyleableTextField;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class MindMapModelInplaceEditorController extends ControllerBase implements IInplaceEditorController {
+	public class SampleMindMapModelInplaceEditorController extends ControllerBase implements IInplaceEditorController {
 		
-		public function MindMapModelInplaceEditorController(diagramShell:DiagramShell)	{
+		public function SampleMindMapModelInplaceEditorController(diagramShell:DiagramShell)	{
 			super(diagramShell);
 		}
 				
@@ -56,7 +52,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 			textField.y = bounds.y;
 			textField.width = bounds.width;
 			textField.height = bounds.height;
-			textField.text = MindMapModel(model).text;
+			textField.text = SampleMindMapModel(model).text;
 			textField.callLater(textField.setFocus);
 			
 			diagramShell.modelToExtraInfoMap[model].inplaceEditor = textField;
@@ -64,7 +60,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller
 		
 		public function commit(model:Object):void {		
 			var textField:TextInput = diagramShell.modelToExtraInfoMap[model].inplaceEditor;
-			MindMapModel(model).text = textField.text;
+			SampleMindMapModel(model).text = textField.text;
 			
 			diagramShell.mainToolFinishedItsJob();
 		}

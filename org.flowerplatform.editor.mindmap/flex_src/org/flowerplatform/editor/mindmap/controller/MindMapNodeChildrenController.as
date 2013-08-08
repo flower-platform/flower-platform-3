@@ -34,6 +34,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapModelRendererController;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -71,7 +72,12 @@ package org.flowerplatform.editor.mindmap.controller {
 			var model:MindMapNode = MindMapNode(event.object);	
 
 			MindMapDiagramShell(diagramShell).refreshDiagramChildren();			
-			MindMapDiagramShell(diagramShell).refreshNodePositions(model);	
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) { // refresh parent position if exists
+				MindMapDiagramShell(diagramShell).refreshNodePositions(diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model));
+			} else { // otherwise refresh root mindmap model
+				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
+				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
+			}
 			MindMapDiagramShell(diagramShell).shouldRefreshVisualChildren(diagramShell.rootModel);
 		}
 		
@@ -82,18 +88,17 @@ package org.flowerplatform.editor.mindmap.controller {
 
 			MindMapDiagramShell(diagramShell).refreshDiagramChildren();
 			
-			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) {
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) { // refresh parent position if exists
 				MindMapDiagramShell(diagramShell).refreshNodePositions(diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model));
-			} else {
-				var rootModel:Object = getChildren(diagramShell.rootModel).getItemAt(0);
+			} else { // otherwise refresh root mindmap model
+				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
 				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
-			}
-			
+			}			
 			MindMapDiagramShell(diagramShell).shouldRefreshVisualChildren(diagramShell.rootModel);
 		}
 		
 		protected function updateConnectionEndsHandler(event:UpdateConnectionEndsEvent):void {
-			MindMapNodeRendererController(MindMapDiagramShell(diagramShell).getControllerProvider(event.target).getRendererController(event.target)).updateConnectors(event.target);
+			MindMapModelRendererController(MindMapDiagramShell(diagramShell).getControllerProvider(event.target).getRendererController(event.target)).updateConnectors(event.target);
 		}
 		
 		private function getDynamicObject(model:Object):Object {

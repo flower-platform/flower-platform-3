@@ -16,35 +16,22 @@
  *
  * license-end
  */
-package org.flowerplatform.editor.mindmap.controller {
-	import flash.events.IEventDispatcher;
-	import flash.net.getClassByAlias;
-	
-	import mx.collections.ArrayList;
+package org.flowerplatform.flexdiagram.mindmap.controller {
 	import mx.collections.IList;
 	import mx.core.IVisualElement;
-	import mx.core.IVisualElementContainer;
-	import mx.core.UIComponent;
-	import mx.events.PropertyChangeEvent;
 	
-	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
-	import org.flowerplatform.emf_model.notation.Diagram;
-	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
-	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapConnector;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
-	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
-	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class MindMapNodeRendererController extends ClassReferenceRendererController {
+	public class MindMapModelRendererController extends ClassReferenceRendererController {
 			
-		public function MindMapNodeRendererController(diagramShell:DiagramShell, rendererClass:Class) {
+		public function MindMapModelRendererController(diagramShell:DiagramShell, rendererClass:Class) {
 			super(diagramShell, rendererClass);
 			removeRendererIfModelIsDisposed = true;
 		}
@@ -69,7 +56,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		private function addConnector(model:Object):void {
 			var modelParent:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model);
-			if (modelParent is Diagram) { // root node, no connectors
+			if (modelParent == diagramShell.rootModel) { // root node, no connectors
 				return;
 			}
 			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(modelParent);
@@ -83,7 +70,7 @@ package org.flowerplatform.editor.mindmap.controller {
 			}
 						
 			// refresh connector to parent
-			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) {	
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) != diagramShell.rootModel) {	
 				if (getDynamicObject(model).connector != null) {
 					getDynamicObject(model).connector.invalidateDisplayList();
 				}

@@ -31,6 +31,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
@@ -39,9 +40,9 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class MindMapDragController extends ControllerBase implements IDragController {
+	public class SampleMindMapModelDragController extends ControllerBase implements IDragController {
 		
-		public function MindMapDragController(diagramShell:DiagramShell) {
+		public function SampleMindMapModelDragController(diagramShell:DiagramShell) {
 			super(diagramShell);
 		}
 		
@@ -125,18 +126,22 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 			
 			// remove model from current parent
 			var dragParentModel:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model);;		
-			ArrayList(diagramShell.getControllerProvider(dragParentModel).getModelChildrenController(dragParentModel).getChildren(dragParentModel)).removeItem(model);		
+			ArrayList(getModelController(dragParentModel).getChildren(dragParentModel)).removeItem(model);	
+			SampleMindMapModelController(IMindMapControllerProvider(diagramShell.getControllerProvider(model)).getMindMapModelController(model)).disposeModelHandlerRecursive(model, true);			
+			SampleMindMapModelController(IMindMapControllerProvider(diagramShell.getControllerProvider(dragParentModel)).getMindMapModelController(dragParentModel)).updateModelHandler(dragParentModel);
 			
 			// calculate new parent and position based on side
 			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel);	
-			var children:ArrayList = ArrayList(diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getChildren(dropParentModel));	
+			var children:ArrayList = ArrayList(getModelController(dropParentModel).getChildren(dropParentModel));	
 			var index:Number = (side != MindMapDiagramShell.NONE) ? children.length : children.getItemIndex(dropModel);
 			
 			// add model in new parent
-			ArrayList(diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel)).addItemAt(model, index);		
+			ArrayList(getModelController(dropParentModel).getChildren(dropParentModel)).addItemAt(model, index);
+			dropParentModel.hasChildren = true;
 			getModelController(model).setSide(model, (side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel));
-//			getModelController(model).setParent(model, dropParentModel);	
-			
+			SampleMindMapModelController(getModelController(model)).setParent(model, dropParentModel);	
+			SampleMindMapModelController(IMindMapControllerProvider(diagramShell.getControllerProvider(dropParentModel)).getMindMapModelController(dropParentModel)).updateModelHandler(dropParentModel);
+						
 			// select model or parent 
 			diagramShell.selectedItems.removeAll();
 			if (getModelController(dropParentModel).getExpanded(dropParentModel)) {
