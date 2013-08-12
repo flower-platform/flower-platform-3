@@ -1,5 +1,9 @@
 package org.flowerplatform.web.svn.remote;
 
+import java.util.List;
+
+import org.flowerplatform.communication.tree.remote.PathFragment;
+
 
 /**
  * @flowerModelElementId _bcYyQAMcEeOrJqcAep-lCg
