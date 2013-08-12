@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog"
+		 creationComplete="creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			
+			[Bindable]
+			public var currentSource:String;
+			
+			[Bindable]
+			public var title:String;
+			
+			[Bindable]
+			public var label:String;
+			
+			[Bindable]
+			public var validatorArray:Array;
+			
+			private var _popupHost:IPopupHost;
+			
+			private var resultHandler:IDialogResultHandler;
+			
+			public function setResultHandler(resultHandler:IDialogResultHandler):void {
+				this.resultHandler = resultHandler;
+			}
+			
+			public function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				popupHost.setLabel(title);
+			}
+			
+			public function getActions(selection:IList):Vector.<IAction>{
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			private function creationCompleteHandler(event:FlexEvent):void {
+				popupHost.addToControlBar(buttonBar);
+			}
+			
+			private function okHandler():void {
+				// validate form
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				resultHandler.handleDialogResult(folderName.text);
+				cancelHandler();
+			}
+			
+			private function cancelHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
+			}
+			
+		]]>
+	</fx:Script>
+			
+	<fx:Declarations>
+		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="middle">
+			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
+			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
+		</s:HGroup>	
+	</fx:Declarations>
+	
+	<fx:Declarations>
+		<fx:Array id="validators">
+			<mx:StringValidator source="{folderName}" property="text" minLength="1"/>					
+		</fx:Array>	
+	</fx:Declarations>	
+	
+	<s:Form id="form" height="100%" width="100%">	
+		<!-- REPLACE-->
+		<s:FormItem label="{label}" width="100%">
+			<s:TextInput id="folderName" text="{currentSource}" width="100%"/>				
+		</s:FormItem>		
+	</s:Form>
+</s:Group>
