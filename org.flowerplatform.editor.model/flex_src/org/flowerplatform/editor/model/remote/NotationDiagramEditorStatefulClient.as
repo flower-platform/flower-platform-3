@@ -29,6 +29,7 @@ package org.flowerplatform.editor.model.remote {
 	/**
 	 * @author Cristian Spiescu
 	 * @author Cristina Constantinescu
+	 * @author Mariana Gheorghe
 	 */
 	public class NotationDiagramEditorStatefulClient extends DiagramEditorStatefulClient {
 		
@@ -70,6 +71,10 @@ package org.flowerplatform.editor.model.remote {
 		
 		public function service_deleteView(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
+		}
+		
+		public function service_contentAssist(viewId:Object, pattern:String):void {
+			attemptUpdateContent(null, invokeServiceMethod("contentAssist", [viewId, pattern], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 		
 		public function service_addNewConnection(sourceViewId:Object, targetViewId:Object):void {

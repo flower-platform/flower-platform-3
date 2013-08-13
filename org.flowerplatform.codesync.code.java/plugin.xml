@@ -25,5 +25,11 @@
             technology="java">
       </codeSyncAlgorithmRunner>
    </extension>
+ <extension
+       point="org.flowerplatform.editor.model.contentAssist">
+    <contentAssist
+          contentAssist="org.flowerplatform.editor.model.java.JavaContentAssist">
+    </contentAssist>
+ </extension>
 
 </plugin>

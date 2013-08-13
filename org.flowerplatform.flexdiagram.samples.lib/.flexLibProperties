@@ -13,6 +13,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelResizeController"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelDragToCreateRelationController"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicModelDragController"/>
+    <classEntry path="org.flowerplatform.flexdiagram.samples.mindmap.controller.MindMapModelRendererController"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.mindmap.MindMapConnector"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicConnectionRendererController"/>
     <classEntry path="org.flowerplatform.flexdiagram.samples.controller.BasicSubModelChildrenProvider"/>
