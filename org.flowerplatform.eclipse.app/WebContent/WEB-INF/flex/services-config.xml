@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+
+    <services>
+        <service-include file-path="messaging-config.xml" />
+        <service-include file-path="register-user-remoting-config.xml" />
+<!--         <service-include file-path="activity-remoting-config.xml" /> -->
+	</services>
+	
+<!--     <security> -->
+    
+<!--     	This object will be responsible for authorization and authentication on server side. -->
+<!-- 		<login-command class="org.flowerplatform.blazeds.TomcatLoginCommand" server="all"> -->
+<!-- 			Based on this property, multiple users can be logged into the system, using the same browser and more tabs. -->
+<!-- 				 If true when opening a new tab, the session is not shared with the other tab. -->
+<!-- 				 More informations can be found at http://livedocs.adobe.com/blazeds/1/blazeds_devguide/help.html?content=services_security_5.html  -->
+<!-- 				 We keep it true because otherwise logging out from a tab made also a logout on a different tab in the same browser. -->
+<!-- 		    <per-client-authentication>true</per-client-authentication>  -->
+<!-- 		</login-command>  -->
+		
+<!-- 		<security-constraint id="tomcatSecurityConstraint"> -->
+<!-- 			The Custom value is used in order to use the Flex's application authentication and not the Browser's authentication.  -->
+<!-- 				 More details in http://livedocs.adobe.com/blazeds/1/blazeds_devguide/help.html?content=services_security_2.html. -->
+<!-- 			<auth-method>Custom</auth-method>  -->
+<!-- 		</security-constraint> -->
+<!--     </security>	 -->
+
+   	<!-- For more details about channel definition configuration check http://livedocs.adobe.com/livecycle/8.2/programLC/programmer/lcds/help.html?content=lcconfig_3.html. -->
+    <channels>
+    	
+    	<!-- We will define a Streaming AMF Channel because it is capable of pulling new messages instantly by keeping an opened connection to the server.
+    		 For more details check "Streaming AMF and HTTP channels" section in http://livedocs.adobe.com/livecycle/8.2/programLC/programmer/lcds/help.html?content=lcconfig_3.html. -->
+		<!-- The actionscript class will probably be changed when implementing cookies. -->
+     	<channel-definition id="blazedsStreamingAMFChannel" 
+     			class="mx.messaging.channels.StreamingAMFChannel"> 
+			<endpoint url="http://{server.name}:{server.port}/flower/messagebroker/streamingamf" 
+				class="org.flowerplatform.blazeds.endpoint.FlowerWebSecureStreamingAMFEndpoint"/>
+			<properties>
+	 			<!--
+					Number of milliseconds to wait to write an empty message to the client.
+					In current context it does not really help us.
+					<server-to-client-heartbeat-millis>10000</server-to-client-heartbeat-millis>
+					
+			 		If nothing is sent to the client, the server will disconnect the client.
+			 		This does not invalidate the flex client on server side.
+			 		In current context it does not really help us.
+					<idle-timeout-minutes>1</idle-timeout-minutes>
+				 -->
+				<serialization>
+					<log-property-errors>true</log-property-errors>
+				</serialization>
+				<!--
+					More about browser max limits.
+					http://help.adobe.com/en_US/LiveCycleDataServicesES/3.1/Developing/WSc3ff6d0ea77859461172e0811f00f6e876-7ff4Update.html#WSc3ff6d0ea77859461172e0811f00f7045b-7fbbUpdate 
+				 -->
+				<user-agent-settings>
+					<!-- MSIE 8 limit is 6. -->
+					<user-agent match-on="MSIE" max-persistent-connections-per-session="0" kickstart-bytes="2048"/> 
+					<!-- Firefox 3 limit is 6. --> 
+					<user-agent match-on="Firefox" max-persistent-connections-per-session="0"/> 
+					<!-- Safari 3, 4 limit is 4. --> 
+					<user-agent match-on="Safari" max-persistent-connections-per-session="0"/> 
+					<!-- Chrome 0, 1, 2 limit is 6. --> 
+					<user-agent match-on="Chrome" max-persistent-connections-per-session="0"/> 
+					
+					<user-agent match-on="*" max-persistent-connections-per-session="0"/>
+				</user-agent-settings>
+			</properties> 
+		</channel-definition>
+		<!-- We will also define a Long Polling AMF Channel because it is capable of pulling new messages from the server by requesting at a given interval of time. 
+			 For more details check "Configuring channels with servlet-based endpoints" section in http://livedocs.adobe.com/livecycle/8.2/programLC/programmer/lcds/help.html?content=lcconfig_3.html. -->
+		<channel-definition id="blazedsLongPollingAMFChannel" 
+				class="mx.messaging.channels.AMFChannel">
+			<endpoint url="http://{server.name}:{server.port}/flower/messagebroker/amflongpolling" 
+				class="org.flowerplatform.blazeds.endpoint.FlowerWebSecureAMFEndpoint" />
+				
+			<!-- The following are properties for configuring the polling.
+				 For more details check table in the "Configuring channels with servlet-based endpoints" section in http://livedocs.adobe.com/livecycle/8.2/programLC/programmer/lcds/help.html?content=lcconfig_3.html. -->
+			<properties>
+				<!-- Enable polling on the amf channel. -->
+				<polling-enabled>true</polling-enabled> 
+
+				<!-- It should poll as soon as possible from the server. -->
+	            <polling-interval-millis>0</polling-interval-millis> 
+	            
+	            <!-- It should give messages to the client only if there are new messages. -->
+                <wait-interval-millis>-1</wait-interval-millis>
+                
+				<!-- Maximum number of waiting threads. When this limit is exceeded a poll request automatically responds immediately . -->
+				<max-waiting-poll-requests>200</max-waiting-poll-requests>
+
+				<!-- If the client gets the chance to send a disconnect message to the server, the session will be invalidated, 
+					 which means that the user must authenticate again next time when it connects. 
+					 We keep it false because it also logs out from a different tab in the same browser.-->
+				<invalidate-session-on-disconnect>false</invalidate-session-on-disconnect>
+				<serialization>
+					<log-property-errors>true</log-property-errors>
+				</serialization>
+			</properties>
+		</channel-definition>
+		
+        <channel-definition id="registerUserServiceAmf" class="mx.messaging.channels.AMFChannel">
+            <endpoint url="http://{server.name}:{server.port}/flower/messagebroker/register-user-amf" class="flex.messaging.endpoints.AMFEndpoint"/>
+            <properties>
+                <polling-enabled>false</polling-enabled>
+            </properties>
+        </channel-definition>
+        
+<!--         <channel-definition id="activityServiceAmf" class="mx.messaging.channels.AMFChannel"> -->
+<!--             <endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/activity-amf" class="flex.messaging.endpoints.AMFEndpoint"/> -->
+<!--             <properties> -->
+<!--                 <polling-enabled>false</polling-enabled> -->
+<!--             </properties> -->
+<!--         </channel-definition> -->
+		
+    </channels>
+
+    <logging>
+        <!-- You may also use flex.messaging.log.ServletLogTarget -->
+        <target class="org.flowerplatform.blazeds.FlowerConsoleTarget" level="Warn"> <!-- Other options : Debug, All, Warn -->
+            <properties>
+                <prefix>[BlazeDS Flower Web] </prefix>
+                <includeDate>false</includeDate>
+                <includeTime>false</includeTime>
+                <includeLevel>false</includeLevel>
+                <includeCategory>true</includeCategory>
+            </properties>
+            <filters>
+				<pattern>*</pattern>
+                <pattern>Endpoint.*</pattern>
+                <pattern>Service.*</pattern>
+                <pattern>Configuration</pattern>
+            </filters>
+        </target>
+    </logging>
+
+<!--     <system> -->
+<!--         <redeploy> -->
+<!--             <enabled>true</enabled> -->
+<!--             <watch-interval>20</watch-interval> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/services-config.xml</watch-file> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/proxy-config.xml</watch-file> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/remoting-config.xml</watch-file> -->
+<!--             <watch-file>{context.root}/WEB-INF/flex/messaging-config.xml</watch-file>             -->
+<!--             <touch-file>{context.root}/WEB-INF/web.xml</touch-file> -->
+<!--         </redeploy> -->
+<!--     </system> -->
+</services-config>

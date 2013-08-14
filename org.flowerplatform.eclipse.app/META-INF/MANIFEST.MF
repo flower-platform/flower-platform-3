@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: App
+Bundle-SymbolicName: org.flowerplatform.eclipse.app
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.flowerplatform.eclipse.app.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.flowerplatform.common;bundle-version="1.0.0",
+ org.flowerplatform.communication;bundle-version="1.0.0",
+ org.flowerplatform.editor;bundle-version="1.0.0",
+ org.flowerplatform.editor.model;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

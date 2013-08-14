@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.flowerplatform.eclipse.part.FlowerDiagramEditor"
+            default="false"
+            extensions="notation"
+            id="org.flowerplatform.eclipse.editor.FlowerDiagramEditor"
+            name="Flower Diagram Editor">
+      </editor>
+   </extension>
+    <extension
+         point="org.eclipse.equinox.http.registry.httpcontexts">
+      <httpcontext
+            id="flower">
+         <resource-mapping
+               bundle="org.flowerplatform.eclipse.app"
+               path="/WebContent">
+         </resource-mapping>
+         <resource-mapping
+               bundle="org.flowerplatform.eclipse.app"
+               path="/flex_bin">
+         </resource-mapping>
+      </httpcontext>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.resources">
+      <resource
+            alias="/"
+            base-name="/"
+            httpcontextId="flower">
+      </resource>
+      <serviceSelector
+            filter="(other.info=org.flowerplatform.eclipse)">
+      </serviceSelector>
+   </extension>
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/WebContent/"
+            httpcontextId="flower">
+      </servlet>
+      <servlet
+            alias="/messagebroker"
+            class="flex.messaging.MessageBrokerServlet"
+            httpcontextId="flower">
+      </servlet>
+      <servlet
+            alias="/servlet/public-resources"
+            class="org.flowerplatform.communication.public_resources.PublicResourcesServlet"
+            httpcontextId="flower"
+            load-on-startup="false">
+      </servlet>
+      <serviceSelector
+            filter="(other.info=org.flowerplatform.eclipse)">
+      </serviceSelector>
+   </extension>
+
+</plugin>
