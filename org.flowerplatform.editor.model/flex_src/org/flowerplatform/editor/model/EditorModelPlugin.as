@@ -23,6 +23,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
+	import org.flowerplatform.editor.model.action.ContentAssistAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
@@ -152,6 +153,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 		}
 		
 		override public function start():void {

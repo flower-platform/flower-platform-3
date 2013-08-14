@@ -17,6 +17,8 @@
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHost"/>
     <classEntry path="org.flowerplatform.flexutil.tree.HierarchicalModelWrapper"/>
     <classEntry path="org.flowerplatform.flexutil.tree.IHierarchicalModelAdapter"/>
+    <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistList"/>
+    <classEntry path="org.flowerplatform.flexutil.content_assist.IContentAssistProvider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

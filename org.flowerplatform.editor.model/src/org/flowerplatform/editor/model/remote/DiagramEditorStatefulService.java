@@ -342,14 +342,13 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	 * @author Mariana Gheorghe
 	 */
 	@RemoteInvocation
-	public void contentAssist(StatefulServiceInvocationContext context, String viewId, String pattern) {
+	public List<String> contentAssist(StatefulServiceInvocationContext context, String viewId, String pattern) {
 		logger.debug("Search types for pattern [{}]", pattern);
 		DiagramEditableResource editableResource = getDiagramEditableResource(context);
 		View view = (View) editableResource.getEObjectById(viewId);
 		CodeSyncElement diagrammableElement = (CodeSyncElement) view.getDiagrammableElement();
 		if (diagrammableElement == null) {
-			logger.error("No diagrammable element for view with id [{}]", viewId);
-			return;
+			throw new RuntimeException("No diagrammable element for view with id " + viewId);
 		}
 		
 		// populate the search context, needed to set the search scope
@@ -360,11 +359,9 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		if (types == null) {
 			logger.debug("No types found for pattern [{}]", pattern);
 		} else {
-			for (String type : types) {
-				logger.debug("Found type [{}] for pattern [{}]", type, pattern);
-			}
 			logger.debug("Found [{}] types for pattern [{}]", types.size(), pattern);
 		}
+		return types;
 	}
 	
 	/**

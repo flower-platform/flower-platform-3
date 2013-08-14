@@ -35,13 +35,14 @@ public class ComposedContentAssist implements IContentAssist {
 	
 	@Override
 	public List<String> findMatches(Map<String, Object> context, String pattern) {
+		List<String> matches = new ArrayList<String>();
 		for (IContentAssist delegate : delegateSearchEngines) {
 			List<String> result = delegate.findMatches(context, pattern);
 			if (result != null) {
-				return result;
+				matches.addAll(result);
 			}
 		}
-		return null;
+		return matches;
 	}
 
 }
