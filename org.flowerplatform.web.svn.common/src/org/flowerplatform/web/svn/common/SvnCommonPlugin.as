@@ -22,16 +22,29 @@ package  org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	
+	
 	/**
 	 * @author Gabriela Murgoci
 	 * 	 
 	 * @flowerModelElementId _5Z5NMAMvEeOrJqcAep-lCg
 	 */
+	
+	
+	
 	public class SvnCommonPlugin extends AbstractFlowerFlexPlugin  {
 		/**
 		 * @flowerModelElementId _fUOOYAM7EeOrJqcAep-lCg
 		 */
 		protected static var INSTANCE:SvnCommonPlugin;
+		
+		public static const NODE_TYPE_SVN_REPOSITORIES:String  = "svnRepositories";
+		
+		public static const  NODE_TYPE_REPOSITORY:String = "svnRepository";
+		
+		public static const  NODE_TYPE_FILE:String = "svnFile";
+		
+		public static const  NODE_TYPE_FOLDER:String = "svnFolder";
+		
 		/**
 		 * @flowerModelElementId _RqGPcAM1EeOrJqcAep-lCg
 		 */

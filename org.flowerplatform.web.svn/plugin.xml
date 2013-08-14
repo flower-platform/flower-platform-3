@@ -58,5 +58,12 @@
          </nodeType>
       </explorerNodeDataProvider>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="svnService"
+            serviceClass="org.flowerplatform.web.svn.remote.SvnService">
+      </service>
+   </extension>
 
 </plugin>

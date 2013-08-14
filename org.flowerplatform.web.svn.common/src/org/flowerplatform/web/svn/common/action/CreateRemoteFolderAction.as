@@ -23,6 +23,7 @@ package  org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView;
 
 	/**
@@ -48,7 +49,7 @@ package  org.flowerplatform.web.svn.common.action {
 		public override function get visible():Boolean {	
 			
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-				return TreeNode(selection.getItemAt(0)).pathFragment.type == WebCommonPlugin.NODE_TYPE_ORGANIZATION;
+				return TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_REPOSITORY;
 			}
 			return false;
 		}
@@ -58,7 +59,7 @@ package  org.flowerplatform.web.svn.common.action {
 		public override function run():void {
 			
 			var view:CreateRemoteFolderView = new CreateRemoteFolderView();
-			
+			view.node=TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
 				.show();
