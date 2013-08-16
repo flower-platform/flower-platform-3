@@ -317,7 +317,7 @@ package org.flowerplatform.flexutil.renderer {
 			
 			_iconContentLoader = value;
 			
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				for (var i:int=0; i < iconDisplays.length; i++) {
 					var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 					iconDisplay.contentLoader = _iconContentLoader;
@@ -439,7 +439,7 @@ package org.flowerplatform.flexutil.renderer {
 			
 			_iconHeight = value;
 			
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				for (var i:int=0; i < iconDisplays.length; i++) {
 					var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 					iconDisplay.explicitHeight = _iconHeight;;
@@ -476,7 +476,7 @@ package org.flowerplatform.flexutil.renderer {
 			invalidateProperties();
 			
 			// clear clearOnLoad if necessary
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				for (var i:int=0; i < iconDisplays.length; i++) {
 					var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 					iconDisplay.clearOnLoad = (iconPlaceholder == null);
@@ -505,7 +505,7 @@ package org.flowerplatform.flexutil.renderer {
 			
 			_iconWidth = value;
 			
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				for (var i:int=0; i < iconDisplays.length; i++) {
 					var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 					iconDisplay.explicitWidth = _iconWidth;
@@ -680,7 +680,7 @@ package org.flowerplatform.flexutil.renderer {
 			// validate properties of the elements
 			if (iconNeedsValidateProperties) {
 				iconNeedsValidateProperties = false;
-				if (iconDisplays)
+				if (iconDisplays && iconDisplays.length > 0) 
 					for (var i:int=0; i < iconDisplays.length; i++) {
 						var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 						iconDisplay.validateProperties();
@@ -724,7 +724,7 @@ package org.flowerplatform.flexutil.renderer {
 			if (iconNeedsValidateSize) {
 				iconNeedsValidateSize = false;
 				
-				if (iconDisplays)
+				if (iconDisplays && iconDisplays.length > 0)
 					for (var i:int=0; i < iconDisplays.length; i++) {
 						var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 						iconDisplay.validateSize();
@@ -754,9 +754,9 @@ package org.flowerplatform.flexutil.renderer {
 			// the icon was the tallest item.
 			var numHorizontalSections:int = 0;
 			var numHorizontalSectionBetweenIcons:int = 0;
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				numHorizontalSections++;
-				numHorizontalSectionBetweenIcons += iconDisplays.length - 1;
+				numHorizontalSectionBetweenIcons += iconDisplays.length;
 			}
 						
 			if (labelDisplay)
@@ -777,7 +777,7 @@ package org.flowerplatform.flexutil.renderer {
 			// Icon is on left
 			var myIconWidth:Number = 0;
 			var myIconHeight:Number = 0;
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				for (var i:int=0; i < iconDisplays.length; i++) {
 					var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 				
@@ -830,7 +830,7 @@ package org.flowerplatform.flexutil.renderer {
 			// validate properties of the elements
 			
 			// see if we have an icon that needs to be validated
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				for (var i:int=0; i < iconDisplays.length; i++) {
 					var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
 					iconDisplay.validateDisplayList();
@@ -872,7 +872,7 @@ package org.flowerplatform.flexutil.renderer {
 			var viewHeight:Number = unscaledHeight - paddingTop  - paddingBottom;
 			
 			// icon is on the left
-			if (iconDisplays) {
+			if (iconDisplays && iconDisplays.length > 0) {
 				var iconX:Number = paddingLeft;
 				for (var i:int=0; i < iconDisplays.length; i++) {
 					var iconDisplay:BitmapImage = BitmapImage(iconDisplays.getItemAt(i));
@@ -895,11 +895,11 @@ package org.flowerplatform.flexutil.renderer {
 			var labelComponentsViewWidth:Number = viewWidth - iconWidth - decoratorWidth;
 			
 			// don't forget the extra gap padding if these elements exist
-			if (iconDisplays)
+			if (iconDisplays && iconDisplays.length > 0) 
 				labelComponentsViewWidth -= horizontalGap;
 			
 			var labelComponentsX:Number = paddingLeft;
-			if (iconDisplays)
+			if (iconDisplays && iconDisplays.length > 0) 
 				labelComponentsX += iconWidth + horizontalGap;
 			
 			// calculte the natural height for the label
