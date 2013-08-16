@@ -18,10 +18,28 @@
  */
 package org.flowerplatform.editor.model.java;
 
+import org.eclipse.emf.ecore.EObject;
+import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
+
+import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+
 /**
  * @author Mariana Gheorghe
  */
 public class JavaClassAttributeProcessor extends JavaClassChildProcessor {
+
+	@Override
+	protected String getLabel(EObject object) {
+		CodeSyncElement cse = getCodeSyncElement(object);
+		return labelParser.createAttributeLabel(
+				new InplaceEditorLabelParseResult()
+					.setName((String) getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()))
+					.setType((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type()))
+					.setVisibility(encodeVisibility(cse))
+					.setDefaultValue((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getAttribute_Initializer())));
+	}
 
 	@Override
 	protected String getImageForVisibility(int type) {

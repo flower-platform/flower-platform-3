@@ -47,7 +47,7 @@ package org.flowerplatform.flexutil.content_assist {
 		public function ContentAssistList() {
 			super();
 			
-			addEventListener(MouseEvent.CLICK, itemClickHandler);
+			addEventListener(IndexChangeEvent.CHANGE, itemClickHandler);
 			
 			visible = false;
 		}
@@ -115,25 +115,26 @@ package org.flowerplatform.flexutil.content_assist {
 			trace ("key up - char ", String.fromCharCode(evt.charCode));
 			
 			if (contentAssistProvider.getTriggerCharacters().contains(evt.charCode)) {
-				getContentAssistItems(evt.charCode);				// trigger character, e.g. :
+				getContentAssistItems();				// trigger character, e.g. :
 			}
 			if (evt.ctrlKey && evt.charCode == Keyboard.SPACE) {	// CTRL + SPACE
 				getContentAssistItems();
 			}
 		}
 		
-		public function itemClickHandler(evt:MouseEvent):void {
+		public function itemClickHandler(evt:IndexChangeEvent):void {
 			selectContentAssistItem();
 		}
 		
 		private function selectContentAssistItem():void {
 			if (selectedIndex > -1) {
 				var text:String = dispatcher.text;
-				var index:int = getTriggerPosition(text);
+				var index:int = getDelimiterIndex();
 				if (index == -1) {
 					throw new Error("Invalid input for content assist");
 				}
-				text = text.substr(0, index);
+				
+				text = text.substr(0, index + 1);
 				text += selectedItem;
 				dispatcher.text = text;
 				
@@ -142,8 +143,8 @@ package org.flowerplatform.flexutil.content_assist {
 			}
 		}
 		
-		public function getContentAssistItems(trigger:int = -1):void {
-			var pattern:String = getTextFromDispatcher(trigger);
+		public function getContentAssistItems():void {
+			var pattern:String = getTextFromDispatcher();
 			trace ("get content assist items -", pattern);
 			if (pattern != null) {
 				contentAssistProvider.getContentAssistItems(pattern, setContentAssistItems);
@@ -157,30 +158,26 @@ package org.flowerplatform.flexutil.content_assist {
 			displayHideContentAssist(true);
 		}
 		
-		private function getTextFromDispatcher(trigger:int = -1):String {
+		/**
+		 * Returns the string from the first delimiter to the left to the end of the text.
+		 */
+		private function getTextFromDispatcher():String {
 			var text:String = dispatcher.text;
-			var index:int = getTriggerPosition(text, trigger);
-			if (index > -1) {
-				return text.substr(index);
-			}
-			return null;
+			var n:int = dispatcher.textDisplay.selectionActivePosition;
+			return text.substring(getDelimiterIndex() + 1, n); 
 		}
 		
-		private function getTriggerPosition(text:String, trigger:int = -1):int {
-			var triggers:ArrayCollection;
-			if (trigger == -1) {
-				triggers = contentAssistProvider.getTriggerCharacters();
-			} else {
-				triggers = new ArrayCollection();
-				triggers.addItem(trigger);
-			} 
-			for each (var t:String in triggers) {
-				var index:int = text.indexOf(String.fromCharCode(t));
-				if (index > -1) {
-					return ++index;
-				}
+		private function getDelimiterIndex():int {
+			var text:String = dispatcher.text;
+			var i:int;
+			var n:int = dispatcher.textDisplay.selectionActivePosition;
+			for(i = n - 1; i >= 0; i--) {
+				var char:String = text.charAt(i);
+				if ((char == ' ') || (char == ':') || (char == ',') 
+					|| (char == '(') || (char == ')'))
+					break;
 			}
-			return -1;
+			return i;
 		}
 		
 		private function displayHideContentAssist(display:Boolean):void {

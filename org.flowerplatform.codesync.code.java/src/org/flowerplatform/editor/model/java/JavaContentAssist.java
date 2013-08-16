@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
@@ -70,6 +71,9 @@ public class JavaContentAssist implements IContentAssist {
 		IJavaElement[] elements = new IJavaElement[1];
 		File file = (File) context.get(RESOURCE);
 		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
+		if (resource == null) {
+			throw new RuntimeException("The resource is not contained in a project!");
+		}
 		IJavaElement javaElement = JavaCore.create(resource.getProject());
 		elements[0] = javaElement;
 
