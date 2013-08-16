@@ -21,20 +21,24 @@
 <!---
 	@author Cristina Constantinescu
 -->
-<s:IconItemRenderer								
+<renderer:MultipleIconItemRenderer							
 				xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 				
 				xmlns:model="org.flowerplatform.flexdiagram.samples.mindmap.model.*"
+				xmlns:renderer="org.flowerplatform.flexutil.renderer.*"
 				implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
 				creationComplete="creationCompleteHandler(event)" initialize="initializeHandler(event)"
 				paddingTop="2" paddingBottom="2" paddingLeft="2" paddingRight="2"
-				iconFunction="getImage" doubleClickEnabled="true" doubleClick="doubleClickHandler(event)" verticalAlign="middle">
+				doubleClickEnabled="true" doubleClick="doubleClickHandler(event)" verticalAlign="middle" >
 	
 	<fx:Script>
 		<![CDATA[
 			import mx.binding.utils.BindingUtils;
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
 			import mx.core.UIComponent;
+			import mx.events.CollectionEvent;
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
 			
@@ -47,6 +51,8 @@
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 			import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.FlowerArrayList;
+			import org.flowerplatform.flexutil.renderer.MultipleIconItemRenderer;
 
 			private static const circleRadius:int = 3;
 								
@@ -67,13 +73,15 @@
 			override public function set data(value:Object):void {
 				if (super.data != null) {
 					data.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-					View(data).removeEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);			
+					View(data).removeEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);					
 				}
+				
 				super.data = value;
 			
 				if (data != null) {
 					data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 					View(data).addEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
+					
 					x = getDynamicObject(node).x;
 					y = getDynamicObject(node).y;
 
@@ -92,24 +100,27 @@
 				if (!FlexUtilGlobals.getInstance().isMobile) {
 					minHeight = 22;
 				}
+				setStyle("verticalGap", 0);
+				setStyle("iconsGap", 1);
 			}
 						
 			protected function viewDetailsUpdatedHandler(event:Event):void {
 				label = node.viewDetails.text;
-				if (iconDisplay) {
-					iconDisplay.source = getImage(null);					
-				}
-				invalidateDisplayList();
-			}
-			
-			private function getImage(object:Object):Object {
+				
 				if (node != null && node.viewDetails) {
-					var icon:String = node.viewDetails.icon;
-					return FlexUtilGlobals.getInstance().createAbsoluteUrl(MindMapModelPlugin.getInstance().getResourceUrl(icon));
+					var nodeIcons:ArrayCollection = node.viewDetails.icons;
+					if (nodeIcons != null) {
+						var iconsURLs:Array = new Array();
+						for (var i:int = 0; i < nodeIcons.length; i++) {
+							iconsURLs.push(FlexUtilGlobals.getInstance().createAbsoluteUrl(MindMapModelPlugin.getInstance().getResourceUrl(String(nodeIcons.getItemAt(i)))));
+						}
+						this.icons = new FlowerArrayList(iconsURLs);
+					}
 				}
-				return null;
+								
+				invalidateDisplayList();				
 			}
-			
+				
 			private function modelChangedHandler(event:PropertyChangeEvent):void {
 				switch (event.property) {
 					case "x":
@@ -165,8 +176,7 @@
 				if (node != null && node.side == MindMapDiagramShell.NONE) {
 					return;
 				}
-				IMindMapControllerProvider(diagramShell.getControllerProvider(data)).getMindMapModelController(data).setExpanded(data, !node.expanded);
-				node.expanded = !node.expanded;		
+				IMindMapControllerProvider(diagramShell.getControllerProvider(data)).getMindMapModelController(data).setExpanded(data, !node.expanded);		
 			}
 			
 			override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {				
@@ -179,4 +189,4 @@
 		]]>
 	</fx:Script>
 	
-</s:IconItemRenderer>
+</renderer:MultipleIconItemRenderer>

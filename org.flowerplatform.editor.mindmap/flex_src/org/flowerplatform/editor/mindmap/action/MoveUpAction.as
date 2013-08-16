@@ -39,7 +39,7 @@ package org.flowerplatform.editor.mindmap.action {
 	public class MoveUpAction extends ActionBase {
 		
 		public function MoveUpAction() {			
-			label = "Move Up";
+			label = MindMapModelPlugin.getInstance().getMessage("moveup.action.label");
 			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/up.png");		
 			preferShowOnActionBar = true;
 		}

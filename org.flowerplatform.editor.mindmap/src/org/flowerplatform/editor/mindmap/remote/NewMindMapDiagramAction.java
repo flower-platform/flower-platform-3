@@ -26,7 +26,8 @@ import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 
-import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.MindMapRoot;
 
 /**
  * @author Mariana Gheorghe
@@ -37,10 +38,15 @@ public class NewMindMapDiagramAction extends NewDiagramAction {
 	protected Diagram createDiagram(File file, ResourceSet resourceSet) {
 		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
 		MindMapNode root = NotationFactory.eINSTANCE.createMindMapNode();
-		root.setViewType("folder");
+		root.setViewType("default");
 		root.setExpanded(true);
-		root.setHasChildren(true);
-		root.setDiagrammableElement(WikiPlugin.getInstance().getWikiRoot(file, "github", resourceSet, communicationChannel));
+		root.setHasChildren(false);
+		
+		MindMapRoot mindmapCse = CodeSyncFactory.eINSTANCE.createMindMapRoot();				
+		mindmapCse.setName("Root");
+		mindmapCse.setType("default");
+		
+		root.setDiagrammableElement(mindmapCse);
 		diagram.getPersistentChildren().add(root);
 		return diagram;
 	}

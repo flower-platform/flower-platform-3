@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.editor.mindmap.processor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
@@ -31,6 +33,9 @@ public class MindMapPageProcessor extends AbstractMindMapChangeProcessor {
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		super.processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
-		viewDetails.put("icon", "images/page.png");
+		
+//		List<String> icons = new ArrayList<String>();
+//		icons.add("images/page.png");
+//		viewDetails.put("icons", icons);
 	}
 }
