@@ -7,10 +7,8 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
-import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
-import org.tigris.subversion.svnclientadapter.utils.SVNUrlUtils;
 
 /**
  * 

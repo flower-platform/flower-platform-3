@@ -144,11 +144,25 @@ license-end
 
 	<s:Form id="form" width="100%" height="100%"> 
 		<!-- REPLACE-->
-		<s:FormItem width="100%" label="Folder name">
-			<s:TextInput id="myFolderName" width="100%" text="{folderName}"/>    
+		<s:FormHeading label="Create a new remote folder"/>
+		
+		<s:FormItem width="100%" label="Enter folder name">
+			
+			
 		</s:FormItem>
-		<s:FormItem width="100%" label="Comment">
-			<s:TextInput id="myUserComment" width="100%" text="{userComment}"/>    
+		
+		<s:FormItem width="100%" >
+			<s:TextInput id="myFolderName" width="100%" text="{folderName}"/> 
+			
+		</s:FormItem>
+		
+		<s:FormItem width="100%" label="Enter commit message">
+			
+			
+		</s:FormItem>
+		<s:FormItem width="100%" >
+			<!--<s:TextInput id="myUserComment" width="100%" text="{userComment}"/> -->
+			<s:TextArea id="myUserComment" width="100%" text="{userComment}" /> 
 		</s:FormItem>
 		
 	</s:Form>
