@@ -21,10 +21,9 @@ public class SvnRepositoryNodeDataProvider implements INodeDataProvider {
 	 */
 	public PathFragment getPathFragmentForNode(Object node, String nodeType,
 			GenericTreeContext context) {
-
-		// TODO hardcodat:
-		return new PathFragment("svn://csp1/flower2/teste/proj1",
-				"svnRepository");
+		
+		return new PathFragment(((SVNRepositoryLocation)node).getLabel(),
+				"svnRepository"); 
 	}
 
 	/**
@@ -54,7 +53,7 @@ public class SvnRepositoryNodeDataProvider implements INodeDataProvider {
 			GenericTreeContext context) {
 		
 		destination.setLabel(((SVNRepositoryLocation) source).getLabel());
-		// TODO va folosi iconul pentru git repository deocamdata 
+		// TODO will use git specific icon for the moment 
 		destination
 				.setIcon("servlet/public-resources/org.flowerplatform.web.svn/images/repository_rep.gif");
 		return true;

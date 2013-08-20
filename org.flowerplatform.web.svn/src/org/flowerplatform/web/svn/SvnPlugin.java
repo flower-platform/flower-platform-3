@@ -19,15 +19,18 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	 * @flowerModelElementId _1w_YoP2kEeKrJqcAep-lCg
 	 */
 	protected static SvnPlugin INSTANCE;
-	/**
-	 * @flowerModelElementId _sK_EsP3FEeKrJqcAep-lCg
-	 */
+	
+	public static final String TREE_NODE_KEY_IS_FOLDER = "isFolder";	
+
 	private List<GenericTreeStatefulService> treeStatefulServicesDisplayingSvnContent = new ArrayList<GenericTreeStatefulService>();;
 	
 	public List<GenericTreeStatefulService> getTreeStatefulServicesDisplayingSvnContent() {
 		return treeStatefulServicesDisplayingSvnContent;
-	}
-	
+	}	
+		
+	/**
+	 * @flowerModelElementId _sK_EsP3FEeKrJqcAep-lCg
+	 */
 	public static SvnPlugin getInstance() {		
 		return INSTANCE;		
 	}
@@ -37,8 +40,7 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		
+		super.start(context);		
 		INSTANCE = this;		
 	}
 	
@@ -46,8 +48,7 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	 * @flowerModelElementId _wPIaIP3GEeKrJqcAep-lCg
 	 */
 	public void stop(BundleContext context) throws Exception{
-		super.stop(context);
-		
+		super.stop(context);		
 		INSTANCE = null;	
 	}
 }

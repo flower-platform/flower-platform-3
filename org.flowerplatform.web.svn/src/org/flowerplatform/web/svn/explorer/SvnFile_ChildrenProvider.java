@@ -2,16 +2,18 @@ package org.flowerplatform.web.svn.explorer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
-import org.eclipse.team.core.TeamException;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.web.svn.SvnPlugin;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
+import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 
 /**
@@ -30,9 +32,9 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 		
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
 
-		// we might want to consider getting rid of ISVNRepositoryLocation class and using only RemoteFolder
 		if (node instanceof ISVNRepositoryLocation){
 			try {
+				
 				ISVNRemoteResource[] children = ((SVNRepositoryLocation) node)
 						.members(null);				
 				for (ISVNRemoteResource child : children) {
@@ -57,12 +59,10 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
+			}			
 		}
-
 		System.out.println("*** Problem while getting children: unknown node type ***");
-		return null;	
+		return null;
 
 	}
 
@@ -73,27 +73,13 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 	@Override
 	public Boolean nodeHasChildren(Object node, TreeNode treeNode,
 			GenericTreeContext context) {		
-		if (node instanceof SVNRepositoryLocation)
-			try {
-				if (((SVNRepositoryLocation) node).members(null) != null) // not sure if null in case of empty
-					return true;
-				else
-					return false;
-			} catch (SVNException e) {
-				e.printStackTrace();
-				return false;
-			}
-		
-		else if (node instanceof RemoteFolder) try {
-				if (((RemoteFolder) node).members(null) != null) // not sure if null in case of empty
-					return true; 
-				else
-					return false;
-			} catch (TeamException e) {
-				e.printStackTrace();
-			}		
-			
-		return false;
+		if(node instanceof RemoteFile) {			
+			treeNode.getOrCreateCustomData().put(SvnPlugin.TREE_NODE_KEY_IS_FOLDER, false);
+			return false;
+		}
+		if(node instanceof RemoteFolder)
+			treeNode.getOrCreateCustomData().put(SvnPlugin.TREE_NODE_KEY_IS_FOLDER, true);
+		return true;				
 	}
 
 }

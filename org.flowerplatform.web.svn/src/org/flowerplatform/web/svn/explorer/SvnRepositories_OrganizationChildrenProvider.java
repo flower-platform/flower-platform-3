@@ -51,6 +51,9 @@ public class SvnRepositories_OrganizationChildrenProvider extends
 	 * 
 	 * @flowerModelElementId _RAmGAP6AEeKrJqcAep-lCg
 	 */
+	
+	// TODO following code was commented because for the moment a 'virtual' SVNRepositories node is created
+	
 	// public Collection<Pair<Object, String>> getChildrenForNode(Object node,
 	// TreeNode treeNode,
 	// GenericTreeContext context) {

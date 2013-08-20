@@ -13,8 +13,6 @@ public class SvnNodeType {
 	
 	public static final String NODE_TYPE_REPOSITORY = "svnRepository";
 	
-	public static final String NODE_TYPE_FILE = "svnFile";
-	
-	public static final String NODE_TYPE_FOLDER = "svnFolder";
+	public static final String NODE_TYPE_FILE = "svnFile";	
 	
 }

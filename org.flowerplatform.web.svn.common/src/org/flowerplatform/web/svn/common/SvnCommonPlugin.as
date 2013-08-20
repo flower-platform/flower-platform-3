@@ -21,6 +21,7 @@ package  org.flowerplatform.web.svn.common {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
+	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	
 	
 	/**
@@ -37,13 +38,13 @@ package  org.flowerplatform.web.svn.common {
 		 */
 		protected static var INSTANCE:SvnCommonPlugin;
 		
+		public static const NODE_TYPE_ORGANIZATION:String = "organization";
+		
 		public static const NODE_TYPE_SVN_REPOSITORIES:String  = "svnRepositories";
 		
 		public static const  NODE_TYPE_REPOSITORY:String = "svnRepository";
 		
 		public static const  NODE_TYPE_FILE:String = "svnFile";
-		
-		public static const  NODE_TYPE_FOLDER:String = "svnFolder";
 		
 		/**
 		 * @flowerModelElementId _RqGPcAM1EeOrJqcAep-lCg
@@ -51,9 +52,8 @@ package  org.flowerplatform.web.svn.common {
 		public override function preStart():void {	
 		
 			super.preStart();			
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction);
-			
-			
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction);
+						
 		}
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
