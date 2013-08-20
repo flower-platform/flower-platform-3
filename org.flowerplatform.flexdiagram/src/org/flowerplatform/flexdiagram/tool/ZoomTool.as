@@ -104,6 +104,8 @@ package org.flowerplatform.flexdiagram.tool
 				// instead to perform a zooming.
 				event.preventDefault();
 				
+				// this will trigger a refresh for renderers to display truncated label if too long
+				diagramRenderer.shouldRefreshVisualChildren = true; 
 				diagramShell.mainToolFinishedItsJob();
 			}
 		}
@@ -116,7 +118,9 @@ package org.flowerplatform.flexdiagram.tool
 			diagramRenderer.scaleX *= getScaleFactor((event.scaleX + event.scaleY)/2, true);
 			diagramRenderer.scaleY *= getScaleFactor((event.scaleX + event.scaleY)/2, false);
 			
-			if (event.phase == GesturePhase.END) {				
+			if (event.phase == GesturePhase.END) {	
+				// this will trigger a refresh for renderers to display truncated label if too long
+				diagramRenderer.shouldRefreshVisualChildren = true; 
 				diagramShell.mainToolFinishedItsJob();
 			}			
 		}

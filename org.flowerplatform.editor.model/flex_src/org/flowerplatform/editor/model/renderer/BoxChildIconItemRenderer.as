@@ -19,13 +19,17 @@
 package org.flowerplatform.editor.model.renderer {
 	import flash.events.Event;
 	
+	import flashx.textLayout.factory.TruncationOptions;
+	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
+	import org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	import spark.components.IconItemRenderer;
+	import spark.components.supportClasses.StyleableTextField;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -34,10 +38,14 @@ package org.flowerplatform.editor.model.renderer {
 		public function BoxChildIconItemRenderer() {
 			super();
 			iconFunction = getImage;
+			
 			minHeight = 0;
 			percentWidth = 100;
-			setStyle("verticalAlign", "middle");
+			
+			setStyle("verticalAlign", "middle");			
 			cacheAsBitmap = true;
+			
+			addEventListener(ZoomPerformedEvent.ZOOM_PERFORMED, zoomPerformedHandler);
 		}
 		
 		private function getImage(object:Object):Object {
@@ -48,9 +56,7 @@ package org.flowerplatform.editor.model.renderer {
 			return null;
 		}
 		
-		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void
-		{
-//			super.drawBorder(unscaledWidth, unscaledHeight);
+		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {
 		}
 		
 		override public function set data(value:Object):void {
@@ -64,8 +70,7 @@ package org.flowerplatform.editor.model.renderer {
 				if (View(data).viewDetails != null) {
 					viewDetailsUpdatedHandler(null);
 				}
-			}
-		
+			}		
 		}
 		
 		protected function viewDetailsUpdatedHandler(event:Event):void {
@@ -74,5 +79,17 @@ package org.flowerplatform.editor.model.renderer {
 				iconDisplay.source = getImage(null);
 			}
 		}
+		
+		protected function zoomPerformedHandler(event:ZoomPerformedEvent):void {
+			invalidateSize();
+			// use calllater because the updateList must be done after recalculating size
+			callLater(invalidateDisplayList);
+		}
+		
+		override protected function createLabelDisplay():void	{
+			super.createLabelDisplay();
+			labelDisplay.multiline = true;
+		}
+		
 	}
 }
