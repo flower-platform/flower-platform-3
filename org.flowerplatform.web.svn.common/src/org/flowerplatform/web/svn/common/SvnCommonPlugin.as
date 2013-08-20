@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package  org.flowerplatform.web.svn.common {
+package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;

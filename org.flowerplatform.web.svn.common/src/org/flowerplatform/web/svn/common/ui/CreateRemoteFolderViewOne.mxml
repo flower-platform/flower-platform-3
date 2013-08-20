@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+@author Gabriela Murgoci
+-->
+
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 creationComplete="creationCompleteHandler(event)"
+		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.IList;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.ActionBase;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+		//	import org.flowerplatform.web.svn.SvnPlugin;
+			
+		
+			
+	
+			protected var _popupHost:IPopupHost;
+			
+			public var node:TreeNode;
+			
+			[Bindable]
+			public var folderName:String;
+			
+			[Bindable]
+			public var userComment:String;
+			
+			[Bindable]
+			private var check:Boolean;
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				_popupHost.addToControlBar(buttonBar);
+				
+			}
+			
+			private function getProjectsCallbackHandler(result:Boolean):void {
+				_popupHost.hideSpinner();
+				if (result != true) {
+					check = result;
+				} else {
+					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+				}
+			}
+			
+			public function cancelHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+				
+			}
+			
+			public function okHandler():void {
+				
+				 if (Validator.validateAll(validators).length > 0) {
+					return;
+				} 
+				 
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, myUserComment.text], this,getProjectsCallbackHandler ));
+				
+					_popupHost.showSpinner("Please wait");
+					
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				_popupHost.setLabel("Create Remote Folder");
+				_popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/project.gif"));
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
+			
+			public function setResultHandler(resultHandler:IDialogResultHandler):void {
+			
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="bottom">
+			<s:Button id="ok" width="80" label="{CommonPlugin.getInstance().getMessage('ok')}"
+					  click="okHandler()"/>
+			<s:Button id="cancel" width="80"
+					  label="{CommonPlugin.getInstance().getMessage('cancel')}"
+					  click="cancelHandler()"/>			
+		</s:HGroup>	
+		
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" verticalAlign="middle"/>
+	</s:layout>
+	
+	<fx:Declarations>
+		<fx:Array id="validators">
+			<mx:StringValidator minLength="1" property="text" source="{myFolderName}"/>		
+			<!--<mx:RegExpValidator source="{myFolderName}" property="text" expression="^[a-z|A-Z|0-9]" 
+								noMatchError="{SvnPlugin
+								.getInstance()
+								.getMessage(
+								'explorer.createRemoteFolder.error.nameValidation')}"/>-->
+		</fx:Array>	
+	</fx:Declarations>	
+
+	<s:Form id="form" width="100%" height="100%"> 
+		<!-- REPLACE-->
+		<s:FormHeading label="Create a new remote folder"/>
+		
+		<s:FormItem width="100%" label="Enter folder name">
+			
+			
+		</s:FormItem>
+		
+		<s:FormItem width="100%" >
+			<s:TextInput id="myFolderName" width="100%" text="{folderName}"/> 
+			
+		</s:FormItem>
+		
+		<s:FormItem width="100%" label="Enter commit message">
+			
+			
+		</s:FormItem>
+		<s:FormItem width="100%" >
+			<!--<s:TextInput id="myUserComment" width="100%" text="{userComment}"/> -->
+			<s:TextArea id="myUserComment" width="100%" text="{userComment}" /> 
+		</s:FormItem>
+		
+	</s:Form>
+	
+
+
+</s:Group>

@@ -22,14 +22,17 @@ license-end
 @author Gabriela Murgoci
 -->
 
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
-		 xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 creationComplete="creationCompleteHandler(event)"
-		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog">
+
+<popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
+			  xmlns:component="org.flowerplatform.web.git.common.ui.component.*">
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
@@ -46,13 +49,11 @@ license-end
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-		//	import org.flowerplatform.web.svn.SvnPlugin;
-			
-		
-			
 	
-			protected var _popupHost:IPopupHost;
+			public var nodesToOpen:ArrayCollection;
 			
+			public var selectedNodes:ArrayList;
+	
 			public var node:TreeNode;
 			
 			[Bindable]
@@ -64,107 +65,102 @@ license-end
 			[Bindable]
 			private var check:Boolean;
 			
-			protected function creationCompleteHandler(event:FlexEvent):void {
-				_popupHost.addToControlBar(buttonBar);
-				
-			}
-			
-			private function getProjectsCallbackHandler(result:Boolean):void {
-				_popupHost.hideSpinner();
+			 private function getProjectsCallbackHandler(result:Boolean):void {
+				popupHost.hideSpinner();
 				if (result != true) {
 					check = result;
 				} else {
 					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 				}
-			}
+			} 
 			
-			public function cancelHandler():void {
+			 protected override function cancelClickHandler():void {
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 				
-			}
+			} 
 			
-			public function okHandler():void {
+			 protected override function finishClickHandler():void {
 				
 				 if (Validator.validateAll(validators).length > 0) {
 					return;
 				} 
 				 
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, myUserComment.text], this,getProjectsCallbackHandler ));
+					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, commitMessage.text], this,getProjectsCallbackHandler ));
 				
-					_popupHost.showSpinner("Please wait");
+					popupHost.showSpinner("Please wait");
 					
-			}
+			} 
 			
-			public function set popupHost(value:IPopupHost):void {
+			  override public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
 				_popupHost.setLabel("Create Remote Folder");
 				_popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/project.gif"));
-			}
+			}   
 			
-			public function getSelection():IList {
-				return null;
-			}
-			
-			public function getActions(selection:IList):Vector.<IAction> {
-				return null;
-			}
-			
-			public function setResultHandler(resultHandler:IDialogResultHandler):void {
-			
+			protected override function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				
+				
+				 wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/file.gif");
+				
 			}
 		]]>
 	</fx:Script>
 	
-	<fx:Declarations>
-		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="bottom">
-			<s:Button id="ok" width="80" label="{CommonPlugin.getInstance().getMessage('ok')}"
-					  click="okHandler()"/>
-			<s:Button id="cancel" width="80"
-					  label="{CommonPlugin.getInstance().getMessage('cancel')}"
-					  click="cancelHandler()"/>			
-		</s:HGroup>	
-		
-	</fx:Declarations>
 	
-	<s:layout>
-		<s:VerticalLayout horizontalAlign="center" verticalAlign="middle"/>
-	</s:layout>
-	
-	<fx:Declarations>
-		<fx:Array id="validators">
-			<mx:StringValidator minLength="1" property="text" source="{myFolderName}"/>		
-			<!--<mx:RegExpValidator source="{myFolderName}" property="text" expression="^[a-z|A-Z|0-9]" 
-								noMatchError="{SvnPlugin
-								.getInstance()
-								.getMessage(
-								'explorer.createRemoteFolder.error.nameValidation')}"/>-->
-		</fx:Array>	
-	</fx:Declarations>	
 
-	<s:Form id="form" width="100%" height="100%"> 
-		<!-- REPLACE-->
-		<s:FormHeading label="Create a new remote folder"/>
+	<fx:Array id="validators">
+		<mx:StringValidator minLength="1" property="text" source="{myFolderName}"/>
 		
-		<s:FormItem width="100%" label="Enter folder name">
-			
-			
-		</s:FormItem>
+	</fx:Array>
 		
-		<s:FormItem width="100%" >
-			<s:TextInput id="myFolderName" width="100%" text="{folderName}"/> 
+	<popup:states>
+		<mx:State name="0">			
 			
-		</s:FormItem>
+			<mx:SetProperty name="wizardTitle" value="Create a new remote folder"/>			
+			
+			<mx:AddChild relativeTo="{contentArea}">									
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label width="100%" text="Folder name"/>							
+						
+					</s:HGroup>						
+					<s:TextInput id="myFolderName" width="100%" text="{folderName}"/> 
+					
+					<s:HGroup width="100%" verticalAlign="middle">
+						
+					</s:HGroup>								
+					
+				</s:VGroup>		 
+				
+			</mx:AddChild>
+		</mx:State>	
 		
-		<s:FormItem width="100%" label="Enter commit message">
+		<mx:State name="1">			
+			<mx:SetProperty name="wizardTitle" value="Commit"/>			
 			
+			<mx:AddChild relativeTo="{contentArea}">									
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label width="100%" text="Enter commit message"/>							
+													
+					</s:HGroup>						
+					<s:TextArea id="commitMessage" width="100%" heightInLines="3"/>
+					
+					<s:HGroup width="100%" verticalAlign="middle">
+						
+						
+					</s:HGroup>						
+					
+				</s:VGroup>		 
+				
+			</mx:AddChild>
+		</mx:State>		
 			
-		</s:FormItem>
-		<s:FormItem width="100%" >
-			<!--<s:TextInput id="myUserComment" width="100%" text="{userComment}"/> -->
-			<s:TextArea id="myUserComment" width="100%" text="{userComment}" /> 
-		</s:FormItem>
-		
-	</s:Form>
+	</popup:states>
 
-</s:Group>
+</popup:Wizard>
+
+
+

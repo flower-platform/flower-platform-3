@@ -48,8 +48,14 @@ package  org.flowerplatform.web.svn.common.action {
 		 */
 		public override function get visible():Boolean {	
 			
+			var node_type:String;
+			
+			node_type = TreeNode(selection.getItemAt(0)).pathFragment.type;
+			
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-				return TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_REPOSITORY;
+				//return (TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_REPOSITORY) || TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE)) ;
+				//return TreeNode(selection.getItemAt(0)).pathFragment.type;
+				return (node_type == SvnCommonPlugin.NODE_TYPE_REPOSITORY || node_type == SvnCommonPlugin.NODE_TYPE_FILE);
 			}
 			return false;
 		}
@@ -61,8 +67,8 @@ package  org.flowerplatform.web.svn.common.action {
 			var view:CreateRemoteFolderView = new CreateRemoteFolderView();
 			view.node=TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				//.setHeight(350)
-				//.setWidth(350)
+				.setHeight(350)
+				.setWidth(350)
 				.setPopupContent(view)
 				.show();
 			
