@@ -37,6 +37,8 @@ package  org.flowerplatform.web.svn {
 		
 		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();
 		
+		public static const TREE_NODE_KEY_IS_FOLDER:String = "isFolder";
+				
 		/**
 		 * @flowerModelElementId _DxJioAM1EeOrJqcAep-lCg
 		 */
