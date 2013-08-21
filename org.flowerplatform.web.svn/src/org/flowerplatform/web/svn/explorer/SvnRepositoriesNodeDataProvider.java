@@ -1,6 +1,5 @@
 package org.flowerplatform.web.svn.explorer;
 
-
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.explorer.AbstractVirtualItemInOrganizationNodeDataProvider;
@@ -18,18 +17,16 @@ public class SvnRepositoriesNodeDataProvider extends AbstractVirtualItemInOrgani
 	 * @flowerModelElementId _YS4fkP3KEeKrJqcAep-lCg
 	 */
 	public SvnRepositoriesNodeDataProvider() {
-		
+
 		super();
-		nodeInfo.put(SvnNodeType.NODE_TYPE_SVN_REPOSITORIES, 
-				new String[] {
-				SvnPlugin.getInstance().getMessage("svn.repositories"), 
-				SvnPlugin.getInstance().getResourceUrl("images/repo_rep.gif")});
+		nodeInfo.put(SvnNodeType.NODE_TYPE_SVN_REPOSITORIES,
+				new String[] { SvnPlugin.getInstance().getMessage("svn.repositories"), SvnPlugin.getInstance().getResourceUrl("images/repo_rep.gif") });
 	}
 
 	/**
 	 * @flowerModelElementId _krrBMP3KEeKrJqcAep-lCg
 	 */
-	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {		
-		return new PathFragment(".svn-repositories", "svnRepositories");		
+	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
+		return new PathFragment(".svn-repositories", SvnNodeType.NODE_TYPE_SVN_REPOSITORIES);
 	}
 }

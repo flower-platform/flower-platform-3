@@ -34,7 +34,6 @@ license-end
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.validators.Validator;
-			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -46,11 +45,7 @@ license-end
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-			//	import org.flowerplatform.web.svn.SvnPlugin;
-			
-			
-			
-			
+						
 			protected var _popupHost:IPopupHost;
 			
 			public var node:TreeNode;
@@ -62,8 +57,7 @@ license-end
 			private var check:Boolean;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
-				_popupHost.addToControlBar(buttonBar);
-				
+				_popupHost.addToControlBar(buttonBar);				
 			}
 			
 			private function getProjectsCallbackHandler(result:Boolean):void {
@@ -82,12 +76,9 @@ license-end
 			public function okHandler():void {				
 				if (Validator.validateAll(validators).length > 0) {
 					return;
-				}
-				
+				}				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [mySvnLocation.text, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
-				// createSvnRepository function argument no 2 must be changed
-				
 				_popupHost.showSpinner("Please wait");
 				
 			}

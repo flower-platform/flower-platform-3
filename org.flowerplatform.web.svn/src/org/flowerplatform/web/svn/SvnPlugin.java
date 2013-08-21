@@ -50,5 +50,5 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	public void stop(BundleContext context) throws Exception{
 		super.stop(context);		
 		INSTANCE = null;	
-	}
+	}	
 }

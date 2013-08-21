@@ -32,37 +32,35 @@ package  org.flowerplatform.web.svn.common.action {
 	 * @flowerModelElementId _bq0SIAQUEeOrJqcAep-lCg
 	 */
 	public class CreateSvnRepositoryAction extends ActionBase  {
+		
 		/**
 		 * @flowerModelElementId _F_Su8AQWEeOrJqcAep-lCg
 		 */
-		public function CreateSvnRepositoryAction() {
-			
-			label = "Add Svn Repository";
+		public function CreateSvnRepositoryAction() {			
+			//label = "Add Svn Repository";
+			label = SvnCommonPlugin.getInstance().getMessage("svn.action.createRepositoryAction.label");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
-			// TODO momentan foloseste project.gif
-			
+			// TODO momentan foloseste project.gif			
 		}
+		
 		/**
 		 * @flowerModelElementId _L-KhIAQWEeOrJqcAep-lCg
 		 */
-		public override function get visible():Boolean {	
-			
+		public override function get visible():Boolean {			
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
 				return ((TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_SVN_REPOSITORIES) ||
 					(TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_ORGANIZATION));
 			}
 			return false;
 		}
+		
 		/**
 		 * @flowerModelElementId _OPLhgAQWEeOrJqcAep-lCg
 		 */
-		public override function run():void {
-			
+		public override function run():void {			
 			var view:CreateSvnRepositoryView = new CreateSvnRepositoryView();
 			view.node=TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				//.setHeight(350)
-				//.setWidth(350)
 				.setPopupContent(view)
 				.show();			
 		}

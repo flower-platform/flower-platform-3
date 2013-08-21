@@ -2,13 +2,17 @@ package org.flowerplatform.web.svn.explorer;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
 
+import org.eclipse.team.core.TeamException;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.web.svn.SvnNodeType;
 import org.flowerplatform.web.svn.SvnPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.SVNException;
@@ -25,45 +29,32 @@ import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
  * @flowerModelElementId _UcYSoP3LEeKrJqcAep-lCg
  */
 public class SvnFile_ChildrenProvider implements IChildrenProvider {
+	
+	private static Logger logger = LoggerFactory.getLogger(SvnFile_ChildrenProvider.class);
 
 	@Override
-	public Collection<Pair<Object, String>> getChildrenForNode(Object node,
-			TreeNode treeNode, GenericTreeContext context) {
-		
+	public Collection<Pair<Object, String>> getChildrenForNode(Object node,	TreeNode treeNode, GenericTreeContext context) {		
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
-
-		if (node instanceof ISVNRepositoryLocation){
-			try {
-				
-				ISVNRemoteResource[] children = ((SVNRepositoryLocation) node)
-						.members(null);				
+		if (node instanceof ISVNRepositoryLocation || node instanceof RemoteFolder){
+			try {		
+				ISVNRemoteResource[] children;
+				if (node instanceof ISVNRepositoryLocation) {
+					children = ((SVNRepositoryLocation) node).members(null);
+				} else {
+					children = ((RemoteFolder) node).members(null);
+				}
 				for (ISVNRemoteResource child : children) {
-					String nodeType = "svnFile";
+					String nodeType = SvnNodeType.NODE_TYPE_FILE;
 					result.add(new Pair<Object, String>(child, nodeType));
 				}	
 				return result;	
-			} catch (SVNException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (SVNException e) {				
+				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);				
+			} catch (TeamException e) {
+				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			}
 		}
-		
-		else if (node instanceof RemoteFolder){
-			try {
-				ISVNRemoteResource[] children = ((RemoteFolder) node).members(null);				
-				for (ISVNRemoteResource child : children) {
-					String nodeType = "svnFile";
-					result.add(new Pair<Object, String>(child, nodeType));
-				}	
-				return result;	
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-		}
-		System.out.println("*** Problem while getting children: unknown node type ***");
 		return null;
-
 	}
 
 	/**
