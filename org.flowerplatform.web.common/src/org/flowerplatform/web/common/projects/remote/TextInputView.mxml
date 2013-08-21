@@ -80,6 +80,10 @@
 		</s:HGroup>	
 	</fx:Declarations>
 	
+	<s:layout>
+		<s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
+	</s:layout>
+	
 	<fx:Declarations>
 		<fx:Array id="validators">
 			<mx:StringValidator source="{folderName}" property="text" minLength="1"/>					
