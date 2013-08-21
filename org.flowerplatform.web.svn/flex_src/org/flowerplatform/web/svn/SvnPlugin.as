@@ -28,14 +28,7 @@ package  org.flowerplatform.web.svn {
 	 * @author Gabriela Murgoci
 	 */
 
-	/**
-	 * @flowerModelElementId _FijBEAMwEeOrJqcAep-lCg
-	 */
-	public class SvnPlugin extends AbstractFlowerFlexPlugin  {
-		/**
-		 * @flowerModelElementId _syXvMAMzEeOrJqcAep-lCg
-		 */
-		
+	public class SvnPlugin extends AbstractFlowerFlexPlugin {
 	
 		/**
 		 * @flowerModelElementId _YDrY8AM7EeOrJqcAep-lCg
@@ -43,39 +36,38 @@ package  org.flowerplatform.web.svn {
 		protected static var INSTANCE:SvnPlugin;
 		
 		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();
+		
 		/**
 		 * @flowerModelElementId _DxJioAM1EeOrJqcAep-lCg
 		 */
-		public override function preStart():void {	
-		
+		public override function preStart():void {			
 			svnCommonPlugin.preStart();
 			if (INSTANCE != null) {
 				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
 			}
 			INSTANCE = this;	
-		
 		}
+		
 		/**
 		 * @flowerModelElementId _DxQ3YAM1EeOrJqcAep-lCg
 		 */
-		protected override function registerClassAliases():void {	
-			
+		protected override function registerClassAliases():void {				
 			super.registerClassAliases();
 		}
+		
 		/**
 		 * @flowerModelElementId _DxUhxAM1EeOrJqcAep-lCg
 		 */
-		public override function start():void { 	
-		
+		public override function start():void { 		
 			super.start();
 			svnCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
 			svnCommonPlugin.start();
 		}
+		
 		/**
 		 * @flowerModelElementId _tv-tUAM7EeOrJqcAep-lCg
 		 */
-		public static function getInstance():SvnPlugin {
-			
+		public static function getInstance():SvnPlugin {			
 			return INSTANCE;
 		}
 	}

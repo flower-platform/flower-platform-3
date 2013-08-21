@@ -92,6 +92,7 @@
 			import org.flowerplatform.flexutil.popup.AlertPopupMessageBoxFactory;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.mobile.RecentActivityView;
 			import org.flowerplatform.web.mobile.SplitView;
 			import org.flowerplatform.web.mobile.popup.ProgressMonitorSpinnerHandlerFactory;
@@ -122,7 +123,8 @@
 				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf'),
 				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'),
 				setDescriptorWithUrl(new CodeSyncPlugin(), 'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin'),
-				setDescriptorWithUrl(new MindMapModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.mindmap/swc/org.flowerplatform.editor.mindmap.swc|library.swf?pluginClass=MindMapModelPlugin')
+				setDescriptorWithUrl(new MindMapModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.mindmap/swc/org.flowerplatform.editor.mindmap.swc|library.swf?pluginClass=MindMapModelPlugin'),
+				setDescriptorWithUrl(new SvnCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.svn/swc/org.flowerplatform.web.svn.swc|library.swf')
 			];
 			
 			private function startPlugins():void {

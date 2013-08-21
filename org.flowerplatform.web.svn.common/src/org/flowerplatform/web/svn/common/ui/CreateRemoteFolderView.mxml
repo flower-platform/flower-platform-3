@@ -22,7 +22,6 @@ license-end
 @author Gabriela Murgoci
 -->
 
-
 <popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
 			  xmlns:s="library://ns.adobe.com/flex/spark"
 			  xmlns:mx="library://ns.adobe.com/flex/mx"
@@ -80,86 +79,60 @@ license-end
 			} 
 			
 			 protected override function finishClickHandler():void {
-				
 				 if (Validator.validateAll(validators).length > 0) {
 					return;
 				} 
-				 
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, commitMessage.text], this,getProjectsCallbackHandler ));
-				
-					popupHost.showSpinner("Please wait");
-					
+					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.view.spinner"));
 			} 
 			
-			  override public function set popupHost(value:IPopupHost):void {
+			override public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
-				_popupHost.setLabel("Create Remote Folder");
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.view.label"));
 				_popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/project.gif"));
 			}   
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
-				
-				
-				 wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/file.gif");
-				
+				 wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
 			}
 		]]>
 	</fx:Script>
-	
-	
 
 	<fx:Array id="validators">
 		<mx:StringValidator minLength="1" property="text" source="{myFolderName}"/>
-		
 	</fx:Array>
 		
 	<popup:states>
 		<mx:State name="0">			
-			
 			<mx:SetProperty name="wizardTitle" value="Create a new remote folder"/>			
-			
 			<mx:AddChild relativeTo="{contentArea}">									
 				<s:VGroup width="100%" height="100%">
 					<s:HGroup width="100%" verticalAlign="middle">
-						<s:Label width="100%" text="Folder name"/>							
-						
+						<s:Label width="100%" text="Folder name"/>													
 					</s:HGroup>						
-					<s:TextInput id="myFolderName" width="100%" text="{folderName}"/> 
-					
-					<s:HGroup width="100%" verticalAlign="middle">
-						
-					</s:HGroup>								
-					
+					<s:TextInput id="myFolderName" width="100%" text="{folderName}"/> 				
+					<s:HGroup width="100%" verticalAlign="middle">					
+					</s:HGroup>												
 				</s:VGroup>		 
-				
 			</mx:AddChild>
 		</mx:State>	
-		
+
 		<mx:State name="1">			
-			<mx:SetProperty name="wizardTitle" value="Commit"/>			
-			
+			<mx:SetProperty name="wizardTitle" value="Commit"/>					
 			<mx:AddChild relativeTo="{contentArea}">									
 				<s:VGroup width="100%" height="100%">
 					<s:HGroup width="100%" verticalAlign="middle">
 						<s:Label width="100%" text="Enter commit message"/>							
-													
-					</s:HGroup>						
-					<s:TextArea id="commitMessage" width="100%" heightInLines="3"/>
-					
+					</s:HGroup>					
+					<s:TextArea id="commitMessage" width="100%" heightInLines="3"/>					
 					<s:HGroup width="100%" verticalAlign="middle">
-						
-						
-					</s:HGroup>						
-					
-				</s:VGroup>		 
-				
+					</s:HGroup>										
+				</s:VGroup>		 			
 			</mx:AddChild>
-		</mx:State>		
-			
+		</mx:State>				
 	</popup:states>
-
 </popup:Wizard>
 
 
