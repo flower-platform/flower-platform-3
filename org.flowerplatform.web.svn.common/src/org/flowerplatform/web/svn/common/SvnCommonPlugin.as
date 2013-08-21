@@ -22,6 +22,7 @@ package  org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
+	import org.flowerplatform.web.svn.common.action.CopyUrlToClipboardAction;
 	
 	
 	/**
@@ -52,7 +53,8 @@ package  org.flowerplatform.web.svn.common {
 		public override function preStart():void {	
 		
 			super.preStart();			
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction);
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction,
+			CopyUrlToClipboardAction);
 						
 		}
 		/**
