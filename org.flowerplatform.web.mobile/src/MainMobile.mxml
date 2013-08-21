@@ -75,13 +75,14 @@
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
-			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
+			import org.flowerplatform.editor.javascript.JavaScriptEditorPlugin;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.codesync.CodeSyncPlugin;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.EditorPlugin;
 			import org.flowerplatform.editor.java.JavaEditorPlugin;
+			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
 			import org.flowerplatform.editor.model.EditorModelPlugin;
 			import org.flowerplatform.editor.text.EditorTextPlugin;
 			import org.flowerplatform.editor.text.java.EditorTextJavaPlugin;
@@ -119,6 +120,7 @@
 				setDescriptorWithUrl(new EditorTextJavaPlugin(), 'servlet/public-resources/org.flowerplatform.editor.text.java/swc/org.flowerplatform.editor.text.java.swc|library.swf?pluginClass=EditorTextJavaPlugin'),
 				setDescriptorWithUrl(new EditorModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.model/swc/org.flowerplatform.editor.model.swc|library.swf?pluginClass=EditorModelPlugin'),
 				setDescriptorWithUrl(new JavaEditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor.java/swc/org.flowerplatform.editor.java.swc|library.swf?pluginClass=JavaEditorPlugin'),
+				setDescriptorWithUrl(new JavaScriptEditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor.javascript/swc/org.flowerplatform.editor.javascript.swc|library.swf?pluginClass=JavaScriptEditorPlugin'),
 				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf'),
 				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'),
 				setDescriptorWithUrl(new CodeSyncPlugin(), 'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin'),
