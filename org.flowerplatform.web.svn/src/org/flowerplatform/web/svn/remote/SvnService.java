@@ -80,8 +80,10 @@ public class SvnService {
 	}
 
 	public boolean createSvnRepository(final ServiceInvocationContext context, final String url, final List<PathFragment> parentPath) {
+		//had to use List due to limitations of altering final variables inside runnable
+		final List<String> operationSuccessful = new ArrayList<String>();
+		
 		new DatabaseOperationWrapper(new DatabaseOperation() {
-			@SuppressWarnings({ "unchecked" })
 			@Override
 			public void run() {
 				String organizationName = parentPath.get(1).getName();
@@ -93,28 +95,39 @@ public class SvnService {
 						// creates entry in database and links it to specified
 						// organization
 						Query q = wrapper.getSession().createQuery(String.format("SELECT e from %s e where e.name ='%s'", Organization.class.getSimpleName(), organizationName));
-						Object organization = q.list().get(0);
+						ArrayList<Object> querryResult = (ArrayList<Object>) q.list();
+						if(querryResult.isEmpty()) {
+							CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+							channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage(
+									"svn.remote.svnService.createSvnRepository.error.inexistentOrganizationError"), DisplaySimpleMessageClientCommand.ICON_ERROR));
+							return;
+						}
+						Object organization = querryResult.get(0);						
 						SVNRepositoryURLEntity urlEntity = EntityFactory.eINSTANCE.createSVNRepositoryURLEntity();
 						urlEntity.setName(url);
 						urlEntity.setOrganization((Organization) organization);
-						// wrapper.merge(urlEntity);
+						operationSuccessful.add("success");
 					} else {
 						CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 						channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage(
 								"svn.remote.svnService.createSvnRepository.error.invalidUrlError"), DisplaySimpleMessageClientCommand.ICON_ERROR));
 					}
 				} catch (SVNException e) {
-					logger.debug(SvnPlugin.getInstance().getMessage("error", e));
+					logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 					CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage(
 							"svn.remote.svnService.createSvnRepository.error.svnExceptionError2"), DisplaySimpleMessageClientCommand.ICON_ERROR));
 				}
 			}
 		});
+		
 		// tree refresh
-		Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
-		GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);
-		return true;
+		if (operationSuccessful.contains("success")) {
+			Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
+			GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);
+			return true;
+		}		
+		return false;
 	}
 
 	@SuppressWarnings("unchecked")
