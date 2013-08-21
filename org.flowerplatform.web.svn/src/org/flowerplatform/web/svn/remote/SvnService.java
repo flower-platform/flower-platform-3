@@ -5,12 +5,17 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
+
 import org.flowerplatform.common.util.Pair;
+
+import org.flowerplatform.common.CommonPlugin;
+
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
@@ -20,6 +25,7 @@ import org.flowerplatform.web.svn.SvnPlugin;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
@@ -63,17 +69,14 @@ public class SvnService {
 			// create remote folder
 
 			parentFolder.createRemoteFolder(folderName, comment, new NullProgressMonitor());
-
-		} catch (SVNException e) {
-
+		} catch (SVNException e) { // something wrong happened
 			CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(CommonPlugin.getInstance().getMessage("error"), e.getMessage(),
+					DisplaySimpleMessageClientCommand.ICON_ERROR));
 
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage("svn.remote.svnService.createSvnRepository.error.invalidUrlError1"), DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
 		}
-
 		return true;
-
 	}
 
 	public boolean createSvnRepository(final ServiceInvocationContext context, final String url, final List<PathFragment> parentPath) {
@@ -83,35 +86,37 @@ public class SvnService {
 			public void run() {
 				String organizationName = parentPath.get(1).getName();
 				try {
-					// check to see if repository with specified url address exists following 2 lines might be merged
+					// check to see if repository with specified url address
+					// exists following 2 lines might be merged
 					SVNRepositoryLocation repository = SVNRepositoryLocation.fromString(url);
 					if (repository.pathExists()) {
-						// creates entry in database and links it to specified  organization
+						// creates entry in database and links it to specified
+						// organization
 						Query q = wrapper.getSession().createQuery(String.format("SELECT e from %s e where e.name ='%s'", Organization.class.getSimpleName(), organizationName));
 						Object organization = q.list().get(0);
 						SVNRepositoryURLEntity urlEntity = EntityFactory.eINSTANCE.createSVNRepositoryURLEntity();
 						urlEntity.setName(url);
 						urlEntity.setOrganization((Organization) organization);
-						//wrapper.merge(urlEntity);																				
+						// wrapper.merge(urlEntity);
 					} else {
 						CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-						channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage("svn.remote.svnService.createSvnRepository.error.invalidUrlError"),
-								DisplaySimpleMessageClientCommand.ICON_ERROR));
+						channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage(
+								"svn.remote.svnService.createSvnRepository.error.invalidUrlError"), DisplaySimpleMessageClientCommand.ICON_ERROR));
 					}
 				} catch (SVNException e) {
 					logger.debug(SvnPlugin.getInstance().getMessage("error", e));
 					CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage("svn.remote.svnService.createSvnRepository.error.svnExceptionError2"), DisplaySimpleMessageClientCommand.ICON_ERROR));
-				}				
+					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage(
+							"svn.remote.svnService.createSvnRepository.error.svnExceptionError2"), DisplaySimpleMessageClientCommand.ICON_ERROR));
+				}
 			}
 		});
-		// tree refresh	
+		// tree refresh
 		Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
 		GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);
 		return true;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getRepositoriesForOrganization(final String organizationName) {
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(new DatabaseOperation() {

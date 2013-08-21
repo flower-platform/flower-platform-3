@@ -18,54 +18,48 @@
 */
 
 package  org.flowerplatform.web.svn.common.action {
-	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView;
-
-	/**
-	 * @author Gabriela Murgoci
-	 */
 	
 	/**
-	 * @flowerModelElementId _DhlmAAMcEeOrJqcAep-lCg
+	 * @author Gabriela Murgoci
 	 */
 	public class CreateRemoteFolderAction extends ActionBase  {
 		/**
 		 * @flowerModelElementId _-0ZzQAMdEeOrJqcAep-lCg
 		 */
-		public function CreateRemoteFolderAction() {
-			
-			label = "Create Remote Folder";
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
-			
+		public function CreateRemoteFolderAction() {	
+			label = SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.label");
+			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");			
 		}
+		
 		/**
 		 * @flowerModelElementId _GWBDMAMhEeOrJqcAep-lCg
 		 */
-		public override function get visible():Boolean {	
-			
+		public override function get visible():Boolean {				
+			var node_type:String;	
+			if (selection.length == 0)
+				return false;
+			node_type = TreeNode(selection.getItemAt(0)).pathFragment.type;	
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-				return TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_REPOSITORY;
+				return (node_type == SvnCommonPlugin.NODE_TYPE_REPOSITORY || node_type == SvnCommonPlugin.NODE_TYPE_FILE);
 			}
 			return false;
 		}
+		
 		/**
 		 * @flowerModelElementId _TnF_EAMeEeOrJqcAep-lCg
 		 */
-		public override function run():void {
-			
+		public override function run():void {			
 			var view:CreateRemoteFolderView = new CreateRemoteFolderView();
 			view.node=TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				//.setHeight(350)
-				//.setWidth(350)
 				.setPopupContent(view)
-				.show();
-			
+				.show();			
 		}
 	}
 }

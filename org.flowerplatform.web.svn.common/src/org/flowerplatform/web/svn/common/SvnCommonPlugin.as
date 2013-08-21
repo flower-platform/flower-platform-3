@@ -16,21 +16,19 @@
 *
 * license-end
 */
-package  org.flowerplatform.web.svn.common {
+package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
-	
+
 	
 	/**
 	 * @author Gabriela Murgoci
 	 * 	 
 	 * @flowerModelElementId _5Z5NMAMvEeOrJqcAep-lCg
 	 */
-	
-	
 	
 	public class SvnCommonPlugin extends AbstractFlowerFlexPlugin  {
 		/**
@@ -50,35 +48,32 @@ package  org.flowerplatform.web.svn.common {
 		 * @flowerModelElementId _RqGPcAM1EeOrJqcAep-lCg
 		 */
 		public override function preStart():void {	
-		
 			super.preStart();			
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction);
-						
 		}
+		
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
 		 */
-		protected override function registerClassAliases():void {	
-			
+		protected override function registerClassAliases():void {				
 			super.registerClassAliases();
 		}
+		
 		/**
 		 * @flowerModelElementId _RqOLQAM1EeOrJqcAep-lCg
 		 */
-		public override function start():void {	
-			
+		public override function start():void {				
 			super.start();
 			if (INSTANCE != null) {
 				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
 			}
-			INSTANCE = this;	
-			
+			INSTANCE = this;			
 		}
+		
 		/**
 		 * @flowerModelElementId _v7-q0AM7EeOrJqcAep-lCg
 		 */
 		public static function getInstance():SvnCommonPlugin {
-			
 			return INSTANCE;
 		}
 	}
