@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	license-start
+ 
+	Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+	
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation version 3.
+	 
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+	
+	Contributors:
+	  Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+ 
+	license-end
+-->
+<!--
+@author Cristina Constantinescu
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog"
+		 creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.editor.javascript.JavaScriptEditorPlugin;
+			import org.flowerplatform.flexutil.FlexUtilAssets;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+					
+			[Bindable]
+			public var currentSource:String;
+			
+			private var _popupHost:IPopupHost;
+			
+			private var resultHandler:IDialogResultHandler;
+			
+			public function setResultHandler(resultHandler:IDialogResultHandler):void {
+				this.resultHandler = resultHandler;
+			}
+						
+			public function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				popupHost.setLabel(JavaScriptEditorPlugin.getInstance().getMessage("javaScript.propertypage.addSource"));
+			}
+			
+			public function getActions(selection:IList):Vector.<IAction>{
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			private function creationCompleteHandler(event:FlexEvent):void {
+				popupHost.addToControlBar(buttonBar);
+			}
+			
+			private function okHandler():void {
+				// validate form
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				resultHandler.handleDialogResult(sourceFolder.text);
+				cancelHandler();
+			}
+			
+			private function cancelHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>		
+		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="middle">
+			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
+			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
+		</s:HGroup>		
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout verticalAlign="middle" horizontalAlign="center"/>
+	</s:layout>
+	
+	<fx:Declarations>
+		<fx:Array id="validators">
+			<mx:StringValidator source="{sourceFolder}" property="text" minLength="1"/>					
+		</fx:Array>	
+	</fx:Declarations>	
+	
+	<s:Form id="form" height="100%" width="100%">			
+		<s:FormItem label="{JavaScriptEditorPlugin.getInstance().getMessage('javaScript.propertypage.source.folderName')}" width="100%">
+			<s:TextInput id="sourceFolder" text="{currentSource}" width="100%" creationComplete="{callLater(sourceFolder.setFocus)}"/>				
+		</s:FormItem>		
+	</s:Form>
+		
+</s:Group>
