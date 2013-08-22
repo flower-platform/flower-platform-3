@@ -17,9 +17,6 @@
 * license-end
 */
 
-/**
- * @author Tache Razvan
- **/
 package org.flowerplatform.web.common.projects.remote
 {	
 	import org.flowerplatform.communication.CommunicationPlugin;
@@ -30,59 +27,51 @@ package org.flowerplatform.web.common.projects.remote
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-
-	
-	 
-	public class CreateDirectoryAction extends ActionBase implements IDialogResultHandler
-	{
+	/**
+	 * @author Tache Razvan
+	 **/
+	public class CreateDirectoryAction extends ActionBase implements IDialogResultHandler {
+		
 		public var selectedTreeNode:TreeNode;
+		
 		public function CreateDirectoryAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.action");
-			//TODO add icon
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/workset.gif");
+			icon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
 		}
-		// TODO rename?
-		public function isFilesActionVisible(nodeType:String,treeNode:TreeNode) : Boolean{
+
+		public function isFilesActionVisible(nodeType:String,treeNode:TreeNode) :Boolean {
 			if( !(treeNode.customData == null || treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) ||
 				!WebCommonPlugin.getInstance().nodeTypeBelongsToNodeTypeCategory(nodeType, WebCommonPlugin.NODE_TYPE_CATEGORY_DECORATABLE_FILE)
-				){
+				) {
 				return false;
-			}else{
+			} else {
 				return true;	
 			}
-					
-		
 		}
+		
 		override public function get visible():Boolean {
 			if (selection == null || selection.length != 1) {
 				return false;
 			}
-			var obj:Object = selection.getItemAt(0);
-			
+			var obj:Object = selection.getItemAt(0);		
 			return isFilesActionVisible(TreeNode(obj).pathFragment.type,TreeNode(obj));
 		}
 		
 		override public function run():void	{
 			selectedTreeNode = TreeNode(selection.getItemAt(0));
 			var view:TextInputView = new TextInputView();
-			view.label = "Folder name";
-			view.title = "Create a new directory";
+			view.label = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.input.label");
+			view.title = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.input.title");
 			view.setResultHandler(this);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
 				.show();		
 		}
 		
-		public function TextInputViewHandler()
-		{
-		}
-		
-		public function handleDialogResult(result:Object):void
-		{
+		public function handleDialogResult(result:Object):void {
 			CommunicationPlugin.getInstance().bridge.sendObject(
 			new InvokeServiceMethodServerCommand("fileManagerService", "createDirectory", [selectedTreeNode.getPathForNode(true),result]));
 		}
-	
-		
 	}
+	
 }

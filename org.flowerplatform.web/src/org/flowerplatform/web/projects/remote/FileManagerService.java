@@ -16,8 +16,6 @@
  *
  * license-end
  */
-
-
 package org.flowerplatform.web.projects.remote;
 
 import java.io.File;
@@ -33,33 +31,37 @@ import org.flowerplatform.web.WebPlugin;
 /**
  * @author Tache Razvan Mihai
  */
-
 public class FileManagerService {
-	
-	@SuppressWarnings("unchecked")
-	public void createDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot, String name){
-		//String path = "workspace/";
-		Object object = GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
-//		String theD = (String)GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
 
-	
-		String path = ((Pair<File, Object>)object).a.getPath() + "\\" + name;
-		if(true){
-			
+	public void createDirectory(ServiceInvocationContext context,
+			List<PathFragment> pathWithRoot, String name) {
+
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath() + "\\" + name;
+
+		File theDir = new File(path);
+		if (!theDir.exists()) {
+			boolean result = theDir.mkdir();
+			if (!result) {
+				// TODO handle this
+			}
+		} else {
+			context.getCommunicationChannel()
+					.appendCommandToCurrentHttpResponse(
+							new DisplaySimpleMessageClientCommand(
+									WebPlugin
+											.getInstance()
+											.getMessage(
+													"explorer.createDirectory.error.title"),
+									WebPlugin
+											.getInstance()
+											.getMessage(
+													"explorer.createDirectory.error.alreadyExists"),
+									DisplaySimpleMessageClientCommand.ICON_ERROR));
 		}
-		//   if the directory does not exist, create it
-		  File theDir = new File(path);
-		  if (!theDir.exists()) {
-			  boolean result = theDir.mkdir();  
-			  if(!result) {    
-				  
-		     }
-		  }else {
-			  context.getCommunicationChannel().appendCommandToCurrentHttpResponse(
-						new DisplaySimpleMessageClientCommand(WebPlugin.getInstance().getMessage("explorer.createDirectory.error.title"), WebPlugin.getInstance().getMessage(
-								"explorer.createDirectory.error.alreadyExists"),
-								DisplaySimpleMessageClientCommand.ICON_ERROR));
-		  }
 	}
 	
 }
