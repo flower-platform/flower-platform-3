@@ -37,10 +37,8 @@ package  org.flowerplatform.web.svn.common.action {
 		 * @flowerModelElementId _F_Su8AQWEeOrJqcAep-lCg
 		 */
 		public function CreateSvnRepositoryAction() {			
-			//label = "Add Svn Repository";
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.createRepositoryAction.label");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
-			// TODO momentan foloseste project.gif			
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/repository_rep.gif");					
 		}
 		
 		/**

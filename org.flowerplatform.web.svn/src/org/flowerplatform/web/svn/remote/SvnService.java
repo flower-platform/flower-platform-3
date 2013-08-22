@@ -5,17 +5,12 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
-
-import org.flowerplatform.common.util.Pair;
-
 import org.flowerplatform.common.CommonPlugin;
-
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
@@ -25,10 +20,10 @@ import org.flowerplatform.web.svn.SvnPlugin;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
+import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 
 /**
  * 
@@ -49,7 +44,10 @@ public class SvnService {
 	public static SvnService getInstance() {
 		return INSTANCE;
 	}
-
+	
+	/**
+	 * @author Gabriela Murgoci
+	 */
 	public boolean createRemoteFolder(ServiceInvocationContext context, List<PathFragment> parentPath, String folderName, String comment) {
 
 		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
@@ -84,6 +82,7 @@ public class SvnService {
 		final List<String> operationSuccessful = new ArrayList<String>();
 		
 		new DatabaseOperationWrapper(new DatabaseOperation() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				String organizationName = parentPath.get(1).getName();
@@ -119,7 +118,7 @@ public class SvnService {
 							"svn.remote.svnService.createSvnRepository.error.svnExceptionError2"), DisplaySimpleMessageClientCommand.ICON_ERROR));
 				}
 			}
-		});
+		});		
 		
 		// tree refresh
 		if (operationSuccessful.contains("success")) {
@@ -145,6 +144,15 @@ public class SvnService {
 			}
 		});
 		return (ArrayList<String>) wrapper.getOperationResult();
+	}
+	
+	public void refresh(ServiceInvocationContext context, List<PathFragment> parentPath){
+		Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
+		if (node instanceof RemoteFolder)
+			((RemoteFolder) node).refresh();
+		else ((SVNRepositoryLocation) node).refreshRootFolder();
+		GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);
+		
 	}
 
 }
