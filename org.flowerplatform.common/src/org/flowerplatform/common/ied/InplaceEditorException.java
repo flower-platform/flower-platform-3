@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.common.ied;
 
+import org.flowerplatform.common.CommonPlugin;
+
 /**
  * @author Mariana Gheorghe
  */
@@ -25,8 +27,8 @@ public class InplaceEditorException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public InplaceEditorException(String message) {
-		super(message);
+	public InplaceEditorException(String messageKey) {
+		super(CommonPlugin.getInstance().getMessage(messageKey));
 	}
 
 }

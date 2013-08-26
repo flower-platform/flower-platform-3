@@ -69,7 +69,7 @@ public class InplaceEditorLabelParser {
 	
 		// remove white spaces from the beginning and the end of the name
 		propertyName = propertyName.trim();
-		if (propertyName.length() > 1 && provider.isVisibilityCharacter(propertyName.charAt(0))) {
+		if (propertyName.length() >= 1 && provider.isVisibilityCharacter(propertyName.charAt(0))) {
 			visibility = propertyName.charAt(0)+"";
 			propertyName = propertyName.substring(1).trim();
 		}
@@ -78,8 +78,8 @@ public class InplaceEditorLabelParser {
 			throw new InplaceEditorException("_UI_Metamodel_Edit_Name_Null");
 		}
 		
-		if ((splitedText.length == 1 || splitedText[1].trim().length() == 0) && pos >= 0) {
-			// the property type is null and ":" character is present
+		if (splitedText.length == 1 || splitedText[1].trim().length() == 0) {
+			// the property type is null
 			throw new InplaceEditorException("_UI_Metamodel_Edit_Type_Null");
 		} else if (splitedText.length > 1)
 			propertyStringType = splitedText[1].trim();
