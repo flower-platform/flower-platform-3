@@ -54,4 +54,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="interaction" eType="#//CodeSyncElement"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="comment" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MindMapElement" eSuperTypes="#//CodeSyncElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="icons" unique="false" upperBound="-1"
+        eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MindMapRoot" eSuperTypes="#//CodeSyncRoot #//MindMapElement"/>
 </ecore:EPackage>

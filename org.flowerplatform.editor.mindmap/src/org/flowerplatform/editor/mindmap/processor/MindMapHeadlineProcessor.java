@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.editor.mindmap.processor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
@@ -34,13 +36,16 @@ public class MindMapHeadlineProcessor extends AbstractMindMapChangeProcessor {
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		super.processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
-		if (WikiPlugin.HEADING_LEVEL_1_CATEGORY.equals(((CodeSyncElement) object).getType())) {
-			viewDetails.put("icon", "images/full-1.png");
-		} else if (WikiPlugin.HEADING_LEVEL_2_CATEGORY.equals(((CodeSyncElement) object).getType())) {
-			viewDetails.put("icon", "images/full-2.png");
-		} else if (WikiPlugin.HEADING_LEVEL_3_CATEGORY.equals(((CodeSyncElement) object).getType())) {
-			viewDetails.put("icon", "images/full-3.png");
-		}		
+		
+//		List<String> icons = new ArrayList<String>();		
+//		if (WikiPlugin.HEADING_LEVEL_1_CATEGORY.equals(((CodeSyncElement) object).getType())) {
+//			icons.add("images/full-1.png");
+//		} else if (WikiPlugin.HEADING_LEVEL_2_CATEGORY.equals(((CodeSyncElement) object).getType())) {
+//			icons.add("images/full-2.png");
+//		} else if (WikiPlugin.HEADING_LEVEL_3_CATEGORY.equals(((CodeSyncElement) object).getType())) {
+//			icons.add("images/full-3.png");
+//		}	
+//		viewDetails.put("icons", icons);
 	}
 	
 }

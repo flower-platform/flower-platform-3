@@ -16,18 +16,18 @@
  *
  * license-end
  */
-package org.flowerplatform.editor.mindmap.action
-{
+package org.flowerplatform.editor.mindmap.action {
+	
 	import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
 	import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	
-	public class DeleteAction extends ActionBase
-	{
+	public class DeleteAction extends ActionBase {
+		
 		public function DeleteAction() {			
-			label = "Delete";
+			label = MindMapModelPlugin.getInstance().getMessage("delete.action.label");
 			icon = MindMapModelPlugin.getInstance().getResourceUrl("images/delete.gif");		
 			preferShowOnActionBar = true;
 		}

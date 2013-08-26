@@ -44,7 +44,9 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			
 			var child2:SampleMindMapModel = getMindMapModel(model);	
 			child2.side = MindMapDiagramShell.LEFT;
-			child2.children.addItem(getMindMapModel(child2));
+			for (var i:int = 0; i < 10; i++) {
+				child2.children.addItem(getMindMapModel(child2));
+			}
 			child2.children.addItem(getMindMapModel(child2));	
 			child2.hasChildren = true;
 			
@@ -53,7 +55,9 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			
 			var child:SampleMindMapModel = getMindMapModel(model);
 			child.side = MindMapDiagramShell.RIGHT;
-			child.children.addItem(getMindMapModel(child));
+			for (var i:int = 0; i < 10; i++) {
+				child.children.addItem(getMindMapModel(child));
+			}
 			child.children.addItem(getMindMapModel(child));
 			child.children.addItem(getMindMapModel(child));
 			child.children.addItem(getMindMapModel(child));
@@ -69,8 +73,10 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			child1.parent = model;				
 			model.children.addItem(child1);	
 			
-			var child11:SampleMindMapModel = getMindMapModel(child1);				
-			child11.children.addItem(getMindMapModel(child11));
+			var child11:SampleMindMapModel = getMindMapModel(child1);
+			for (var i:int = 0; i < 10; i++) {
+				child11.children.addItem(getMindMapModel(child11));
+			}
 			child11.children.addItem(getMindMapModel(child11));
 			child11.hasChildren = true;
 			child1.children.addItem(child11);			

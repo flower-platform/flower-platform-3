@@ -80,6 +80,24 @@ public interface CodeSyncFactory extends EFactory {
 	ScenarioElement createScenarioElement();
 
 	/**
+	 * Returns a new object of class '<em>Mind Map Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mind Map Element</em>'.
+	 * @generated
+	 */
+	MindMapElement createMindMapElement();
+
+	/**
+	 * Returns a new object of class '<em>Mind Map Root</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mind Map Root</em>'.
+	 * @generated
+	 */
+	MindMapRoot createMindMapRoot();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

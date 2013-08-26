@@ -112,7 +112,6 @@
 			
 			protected function circle_mouseClickHandler(event:MouseEvent):void {
 				IMindMapControllerProvider(diagramShell.getControllerProvider(node)).getMindMapModelController(node).setExpanded(node, !node.expanded);
-				node.expanded = !node.expanded;	
 				vLine.visible = !node.expanded;
 	
 				event.preventDefault();

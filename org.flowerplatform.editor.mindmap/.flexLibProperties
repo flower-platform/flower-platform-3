@@ -16,6 +16,9 @@
     <classEntry path="org.flowerplatform.editor.mindmap.action.NewParagraphAction"/>
     <classEntry path="org.flowerplatform.editor.mindmap.action.RenameAction"/>
     <classEntry path="org.flowerplatform.editor.mindmap.action.DeleteAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.ManageIconsAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.ui.ManageIconsView"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.action.NewDefaultNodeAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -150,7 +150,7 @@
 			}			
 			
 			protected function initializeHandler(event:FlexEvent):void {
-				minHeight = 22; // only for desktop version
+//				minHeight = 22; // only for desktop version
 			}
 			
 		]]>

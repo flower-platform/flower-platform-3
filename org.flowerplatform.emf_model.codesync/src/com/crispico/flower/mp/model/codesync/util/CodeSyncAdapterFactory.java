@@ -125,6 +125,14 @@ public class CodeSyncAdapterFactory extends AdapterFactoryImpl {
 				return createScenarioElementAdapter();
 			}
 			@Override
+			public Adapter caseMindMapElement(MindMapElement object) {
+				return createMindMapElementAdapter();
+			}
+			@Override
+			public Adapter caseMindMapRoot(MindMapRoot object) {
+				return createMindMapRootAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -239,6 +247,34 @@ public class CodeSyncAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createScenarioElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.crispico.flower.mp.model.codesync.MindMapElement <em>Mind Map Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.crispico.flower.mp.model.codesync.MindMapElement
+	 * @generated
+	 */
+	public Adapter createMindMapElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.crispico.flower.mp.model.codesync.MindMapRoot <em>Mind Map Root</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.crispico.flower.mp.model.codesync.MindMapRoot
+	 * @generated
+	 */
+	public Adapter createMindMapRootAdapter() {
 		return null;
 	}
 
