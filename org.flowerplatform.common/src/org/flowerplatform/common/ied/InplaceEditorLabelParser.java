@@ -43,7 +43,6 @@ public class InplaceEditorLabelParser {
 		String propertyStringType = null;
 		String visibility = null;
 		String defaultValue = null;
-//		String errorTitle = ClassMetamodelAssets.INSTANCE.getMessage("_UI_Metamodel_Edit_Error");
 		
 		if (text == null || text.trim().length() == 0) {
 			// the new text is null
@@ -114,7 +113,6 @@ public class InplaceEditorLabelParser {
 		LinkedHashMap<String, InplaceEditorLabelParseResult> operationParameters = new LinkedHashMap<String, InplaceEditorLabelParseResult>();
 		String aux = null;
 		char visibility = 0;
-//		String errorTitle = ClassMetamodelAssets.INSTANCE.getMessage("_UI_ClassEdit_Operation_Error");
 		String paranthesisContent = null;
 		HashMap<String, String> addedTypes = new HashMap<String, String>();
 
@@ -198,6 +196,10 @@ public class InplaceEditorLabelParser {
 
 				operationReturnTypeValue = aux;
 			}
+		}
+		
+		if (operationReturnTypeValue == null) {
+			throw new InplaceEditorException("_UI_ClassEdit_Operation_Type_Missing");
 		}
 
 		aux = "";

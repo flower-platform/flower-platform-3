@@ -269,23 +269,28 @@ public class JavaClassDiagramOperationsService {
 			type = org.eclipse.jdt.core.dom.Modifier.NONE;
 			break;
 		}
-		Modifier oldModifier = getVisibility(modifiableElement);
+		
+		Collection<ExtendedModifier> modifiers = EcoreUtil.copyAll(getModifiers(element));
+		Modifier modifier = getVisibility(modifiers);
+		Modifier newModifier = AstCacheCodeFactory.eINSTANCE.createModifier();
+		newModifier.setType(type);
+		if (modifier == null || modifier.getType() != type) {
+			if (modifier != null) {
+				modifiers.remove(modifier);
+			}
+			modifiers.add(newModifier);
+		}
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers();
-		Collection<ExtendedModifier> oldModifiers = EcoreUtil.copyAll((Collection) getValue(element, feature));
-		if (oldModifier == null || oldModifier.getType() != type) {
-			Modifier modifier = AstCacheCodeFactory.eINSTANCE.createModifier();
-			modifier.setType(type);
-			modifiableElement.getModifiers().remove(oldModifier);
-			modifiableElement.getModifiers().add(modifier);
-		}
-		if (!element.isAdded()) {
-			Collection<ExtendedModifier> newModifiers = EcoreUtil.copyAll(modifiableElement.getModifiers());
-			CodeSyncPlugin.getInstance().createAndAddFeatureChange(element, feature, oldModifiers, newModifiers);
-		}
+		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, modifiers);
 	}
 	
-	protected Modifier getVisibility(ModifiableElement modifiableElement) {
-		for (ExtendedModifier modifier : modifiableElement.getModifiers()) {
+	protected List<ExtendedModifier> getModifiers(CodeSyncElement codeSyncElement) {
+		return (List<ExtendedModifier>) CodeSyncPlugin.getInstance().getFeatureValue(codeSyncElement,
+				AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+	}
+	
+	protected Modifier getVisibility(Collection<ExtendedModifier> modifiers) {
+		for (ExtendedModifier modifier : modifiers) {
 			if (modifier instanceof Modifier) {
 				switch (((Modifier) modifier).getType()) {
 				case org.eclipse.jdt.core.dom.Modifier.PUBLIC:
@@ -311,20 +316,12 @@ public class JavaClassDiagramOperationsService {
 		
 		// compare the new parameters with the current list
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getOperation_Parameters();
-		List<Parameter> currentParameters = (List<Parameter>) getValue(element, feature);
-		if (!element.isAdded()) {
-			CodeSyncPlugin.getInstance().createAndAddFeatureChange(element, feature, 
-					EcoreUtil.copyAll(currentParameters), EcoreUtil.copyAll(parameters));
-		}
+		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, parameters);
 	}
 	
 	///////////////////////
 	// Utils
 	///////////////////////
-	
-	protected Object getValue(CodeSyncElement element, EStructuralFeature feature) {
-		return CodeSyncPlugin.getInstance().getFeatureValue(element, feature);
-	}
 	
 	protected DiagramEditableResource getEditableResource(ServiceInvocationContext context) {
 		return (DiagramEditableResource) context.getAdditionalData().get(DiagramEditorStatefulService.ADDITIONAL_DATA_EDITABLE_RESOURCE);

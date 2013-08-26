@@ -194,6 +194,10 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 		}
 	}
 	
+	/**
+	 * Returns the value of <code>feature</code> on the <code>codeSyncElement</code>, first from the
+	 * list of {@link org.eclipse.emf.ecore.change.FeatureChange}s, if it exists.
+	 */
 	public Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
 		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
 		if (featureChange != null) {
@@ -223,20 +227,10 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	
 	public void setFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
 		Object oldValue = getOldFeatureValue(codeSyncElement, feature);
-		setFeatureValueDirectly(codeSyncElement, feature, newValue);
 		if (!codeSyncElement.isAdded()) {
 			createAndAddFeatureChange(codeSyncElement, feature, oldValue, newValue);
-		}
-	}
-	
-	protected void setFeatureValueDirectly(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
-		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
-			codeSyncElement.eSet(feature, newValue);
 		} else {
-			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
-			if (astElement != null) {
-				astElement.eSet(feature, newValue);
-			}
+			setFeatureValueDirectly(codeSyncElement, feature, newValue);
 		}
 	}
 	
@@ -248,11 +242,22 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	 */
 	public void createAndAddFeatureChange(CodeSyncElement element, EStructuralFeature feature, Object oldValue, Object newValue) {
 		element.getFeatureChanges().removeKey(feature);
-		if (!equal(oldValue, newValue)) {
+		if (!equal(newValue, oldValue)) {
 			FeatureChange featureChange = CodeSyncFactory.eINSTANCE.createFeatureChange();
 			featureChange.setOldValue(oldValue);
 			featureChange.setNewValue(newValue);
 			element.getFeatureChanges().put(feature, featureChange);
+		}
+	}
+	
+	protected void setFeatureValueDirectly(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
+		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
+			codeSyncElement.eSet(feature, newValue);
+		} else {
+			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
+			if (astElement != null) {
+				astElement.eSet(feature, newValue);
+			}
 		}
 	}
 	
