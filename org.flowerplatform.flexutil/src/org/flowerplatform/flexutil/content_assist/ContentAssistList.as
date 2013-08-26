@@ -111,6 +111,8 @@ package org.flowerplatform.flexutil.content_assist {
 					selectedIndex = length - selectedIndex;
 				}
 				ensureIndexIsVisible(selectedIndex);
+				trace ("navigate through list");
+				evt.stopImmediatePropagation();
 			}
 		}
 		
@@ -122,7 +124,13 @@ package org.flowerplatform.flexutil.content_assist {
 		 * @see displayHideContentAssist()
 		 */
 		protected function updateContentAssistListItems(evt:KeyboardEvent):void {
-			getContentAssistItems();
+			if (visible) {
+			trace ("update content assist items");
+				if (evt.charCode > 0 || evt.keyCode == Keyboard.LEFT || evt.keyCode == Keyboard.RIGHT
+					|| evt.keyCode == Keyboard.BACKSPACE || evt.keyCode == Keyboard.DELETE) {
+					getContentAssistItems();
+				}
+			}
 		}
 		
 		/**
@@ -151,9 +159,13 @@ package org.flowerplatform.flexutil.content_assist {
 					throw new Error("Invalid input for content assist");
 				}
 				
-				text = text.substr(0, index + 1);
-				text += selectedItem;
-				dispatcher.text = text;
+				index++;
+				dispatcher.text = 
+					text.substr(0, index) +
+					selectedItem +
+					text.substr(dispatcher.textDisplay.selectionActivePosition);
+				index += selectedItem.length;
+				dispatcher.selectRange(index, index);
 				
 				// hide
 				displayHideContentAssist(false);
@@ -205,8 +217,8 @@ package org.flowerplatform.flexutil.content_assist {
 		private function displayHideContentAssist(display:Boolean):void {
 			visible = display;
 			if (display) {
-				dispatcher.addEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler);
-				dispatcher.addEventListener(KeyboardEvent.KEY_UP, updateContentAssistListItems);
+				dispatcher.addEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler, true);
+				dispatcher.addEventListener(KeyboardEvent.KEY_UP, updateContentAssistListItems, true);
 			} else {
 				dataProvider = null;
 				previousPattern = null;

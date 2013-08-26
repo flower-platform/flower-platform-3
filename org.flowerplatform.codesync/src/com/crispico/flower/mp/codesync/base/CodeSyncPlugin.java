@@ -200,7 +200,7 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 			return featureChange.getNewValue();
 		}
 		
-		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
+		if (codeSyncElement.eClass().isSuperTypeOf(feature.getEContainingClass())) {
 			return codeSyncElement.eGet(feature);
 		} else {
 			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
