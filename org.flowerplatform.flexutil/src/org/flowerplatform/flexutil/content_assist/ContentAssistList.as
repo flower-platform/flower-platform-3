@@ -44,6 +44,8 @@ package org.flowerplatform.flexutil.content_assist {
 		
 		private var contentAssistProvider:IContentAssistProvider;
 		
+		private var previousPattern:String;
+		
 		public function ContentAssistList() {
 			super();
 			
@@ -63,6 +65,10 @@ package org.flowerplatform.flexutil.content_assist {
 		
 		/**
 		 * Listens for arrow keys to navigate through the content assist items.
+		 * 
+		 * <p>
+		 * Should only be registered when the list is visible.
+		 * @see displayHideContentAssist()
 		 */
 		protected function manageContentAssistHandler(evt:KeyboardEvent):void {
 			trace ("key down - key ", evt.keyCode);
@@ -87,11 +93,11 @@ package org.flowerplatform.flexutil.content_assist {
 				}
 				case Keyboard.ENTER: {
 					selectContentAssistItem();
-					break;
+					return;
 				}
 				case Keyboard.ESCAPE: {
 					displayHideContentAssist(false);
-					break;
+					return;
 				}
 			}
 			
@@ -106,6 +112,17 @@ package org.flowerplatform.flexutil.content_assist {
 				}
 				ensureIndexIsVisible(selectedIndex);
 			}
+		}
+		
+		/**
+		 * Listens for user input to update the content assist list litems.
+		 * 
+		 * <p>
+		 * Should only be registered when the list is visible.
+		 * @see displayHideContentAssist()
+		 */
+		protected function updateContentAssistListItems(evt:KeyboardEvent):void {
+			getContentAssistItems();
 		}
 		
 		/**
@@ -143,10 +160,15 @@ package org.flowerplatform.flexutil.content_assist {
 			}
 		}
 		
+		/**
+		 * Gets the content assist items from the <code>contentAssistProvider</code> if
+		 * the new <code>pattern</code> is different from the <code>previousPattern</code>.
+		 */
 		public function getContentAssistItems():void {
 			var pattern:String = getTextFromDispatcher();
 			trace ("get content assist items -", pattern);
-			if (pattern != null) {
+			if (pattern != null && pattern != previousPattern) {
+				previousPattern = pattern;
 				contentAssistProvider.getContentAssistItems(pattern, setContentAssistItems);
 			}
 		}
@@ -184,9 +206,12 @@ package org.flowerplatform.flexutil.content_assist {
 			visible = display;
 			if (display) {
 				dispatcher.addEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler);
+				dispatcher.addEventListener(KeyboardEvent.KEY_UP, updateContentAssistListItems);
 			} else {
 				dataProvider = null;
+				previousPattern = null;
 				dispatcher.removeEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler);
+				dispatcher.removeEventListener(KeyboardEvent.KEY_UP, updateContentAssistListItems);
 			}
 		}
 	}
