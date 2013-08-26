@@ -27,8 +27,7 @@
 			
 			protected function btn2_clickHandler(event:MouseEvent):void {
 				var note:NoteRenderer = new NoteRenderer();
-				note.label = textToDisplay.text;
-				note.maxWidth = 1000;
+				note.label = textToDisplay.text;				
 				notesArea.addElement(note);
 				notes.addItem(note);							
 			}
@@ -52,7 +51,7 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<s:Group>
+	<s:Group width="100%" height="100%">
 		<s:layout>
 			<s:HorizontalLayout paddingTop="10" paddingBottom="10" paddingLeft="10" paddingRight="10" />
 		</s:layout>
@@ -64,21 +63,15 @@
 			<s:Button label="New Width" click="btn3_clickHandler(event)" />
 			<s:Spacer width="50" />
 			<s:TextInput id="noteMaxWidth" width="100%" text="100" />
-			<s:Button label="Max Width" click="btn4_clickHandler(event)" />			
-			
-			<s:Label lineBreak="toFit" text="{textToDisplay.text}" maxWidth="{Number(noteMaxWidth.text)}"/>
-			
-			<s:Spacer width="50" />
-							
+			<s:Button label="Max Width" click="btn4_clickHandler(event)" />										
 		</s:VGroup>
 		
 		<s:Spacer width="50" />
 				
-		<s:Group id="notesArea" width="100%" height="100%">
-			<s:layout>
-				<s:HorizontalLayout />
-			</s:layout>
-		</s:Group>
+		<s:Scroller width="100%" height="100%" >
+			<s:HGroup id="notesArea" width="100%" height="100%" />
+		</s:Scroller>
+			
 	</s:Group>
 	
 </s:Application>
