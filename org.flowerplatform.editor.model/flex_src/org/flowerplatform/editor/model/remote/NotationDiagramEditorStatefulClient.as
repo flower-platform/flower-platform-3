@@ -53,6 +53,10 @@ package org.flowerplatform.editor.model.remote {
 			//			attemptUpdateContent(null, invokeServiceMethod("setInplaceEditorText", [viewId, text], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 		
+		public function service_getInplaceEditorText(viewId:Object, callbackFunction:Function):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "getInplaceEditorText", [viewId], null, callbackFunction));
+		}
+		
 		public function service_collapseCompartment(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "collapseCompartment", [viewId]));
 		}

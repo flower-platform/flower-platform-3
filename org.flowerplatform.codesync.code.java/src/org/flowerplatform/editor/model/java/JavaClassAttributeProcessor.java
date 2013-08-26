@@ -31,14 +31,15 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavaClassAttributeProcessor extends JavaClassChildProcessor {
 
 	@Override
-	protected String getLabel(EObject object) {
+	public String getLabel(EObject object, boolean forEditing) {
 		CodeSyncElement cse = getCodeSyncElement(object);
 		return labelParser.createAttributeLabel(
 				new InplaceEditorLabelParseResult()
 					.setName((String) getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()))
 					.setType((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type()))
 					.setVisibility(encodeVisibility(cse))
-					.setDefaultValue((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getAttribute_Initializer())));
+					.setDefaultValue((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getAttribute_Initializer())),
+				forEditing);
 	}
 
 	@Override

@@ -37,7 +37,6 @@ import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @author Mariana Gheorghe
@@ -71,11 +70,11 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 	}
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		viewDetails.put("label", getLabel(object));
+		viewDetails.put("label", getLabel(object, false));
 		viewDetails.put("iconUrls", getIconUrls(object));
 	}
 	
-	abstract protected String getLabel(EObject object);
+	abstract public String getLabel(EObject object, boolean forEditing);
 	
 	protected String[] getIconUrls(EObject object) {
 		return composeImage(getCodeSyncElement(object));

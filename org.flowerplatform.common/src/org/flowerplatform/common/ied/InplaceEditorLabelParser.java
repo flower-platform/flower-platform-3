@@ -245,21 +245,21 @@ public class InplaceEditorLabelParser {
 	// Model -> Label
 	/////////////////////////////////
 	
-	public String createAttributeLabel(InplaceEditorLabelParseResult model) {
+	public String createAttributeLabel(InplaceEditorLabelParseResult model, boolean forEditing) {
 		String label = String.format("%s%s : %s", 
 				model.getVisibility() == null ? "" : model.getVisibility(), 
 				model.getName(),
-				model.getType());
+				forEditing ? model.getType() : getSimpleName(model.getType()));
 		if (model.getDefaultValue() != null) {
 			label += String.format(" = %s", model.getDefaultValue());
 		}
 		return label;
 	}
 	
-	public String createOperationLabel(InplaceEditorLabelParseResult model) {
+	public String createOperationLabel(InplaceEditorLabelParseResult model, boolean forEditing) {
 		String parameters = new String();
 		for (InplaceEditorLabelParseResult parameter : model.getParameters()) {
-			parameters += createParameterLabel(parameter) + ", ";
+			parameters += createParameterLabel(parameter, forEditing) + ", ";
 		}
 		if (parameters.length() > 0) {
 			parameters = parameters.substring(0, parameters.length() - 2);
@@ -268,12 +268,12 @@ public class InplaceEditorLabelParser {
 				model.getVisibility(),
 				model.getName(),
 				parameters,
-				model.getType());
+				forEditing ? model.getType() : getSimpleName(model.getType()));
 		return label;
 	}
 	
-	public String createParameterLabel(InplaceEditorLabelParseResult model) {
-		return createAttributeLabel(model);
+	public String createParameterLabel(InplaceEditorLabelParseResult model, boolean forEditing) {
+		return createAttributeLabel(model, forEditing);
 	}
 	
 	/////////////////////////////////
@@ -440,4 +440,12 @@ public class InplaceEditorLabelParser {
 		return null;
 	}
 	
+	
+	protected String getSimpleName(String fullyQualifiedName) {
+		int index = fullyQualifiedName.lastIndexOf(".");
+		if (index >= 0) {
+			return fullyQualifiedName.substring(++index);
+		}
+		return fullyQualifiedName;
+	}
 }

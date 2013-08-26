@@ -35,7 +35,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavaClassOperationProcessor extends JavaClassChildProcessor {
 
 	@Override
-	protected String getLabel(EObject object) {
+	public String getLabel(EObject object, boolean forEditing) {
 		CodeSyncElement cse = getCodeSyncElement(object);
 		Collection<InplaceEditorLabelParseResult> parameters = new ArrayList<InplaceEditorLabelParseResult>();
 		Collection<Parameter> modelParameters = (Collection<Parameter>) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getOperation_Parameters());
@@ -51,10 +51,11 @@ public class JavaClassOperationProcessor extends JavaClassChildProcessor {
 		}
 		return labelParser.createOperationLabel(
 				new InplaceEditorLabelParseResult()
-				.setName(name)
-				.setType((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type()))
-				.setVisibility(encodeVisibility(cse))
-				.setParameters(parameters));
+					.setName(name)
+					.setType((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type()))
+					.setVisibility(encodeVisibility(cse))
+					.setParameters(parameters),
+				forEditing);
 	}
 	
 	@Override

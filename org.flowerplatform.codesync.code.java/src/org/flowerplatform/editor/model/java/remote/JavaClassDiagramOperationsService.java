@@ -27,6 +27,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
+import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
+import org.flowerplatform.editor.model.java.JavaClassChildProcessor;
 import org.flowerplatform.editor.model.java.JavaInplaceEditorProvider;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -77,6 +80,18 @@ public class JavaClassDiagramOperationsService {
 		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
 			CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		}
+	}
+	
+	public String getInplaceEditorText(ServiceInvocationContext context, String viewId) {
+		View view = getViewById(context, viewId);
+		CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
+		for (IDiagrammableElementFeatureChangesProcessor processor : EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor()
+				.getDiagrammableElementFeatureChangesProcessors(view.getViewType())) {
+			if (processor instanceof JavaClassChildProcessor) {
+				return ((JavaClassChildProcessor) processor).getLabel(cse, true);
+			}
+		}
+		throw new RuntimeException("Cannot edit this element!");
 	}
 
 	public void collapseCompartment(ServiceInvocationContext context, String viewId) {
