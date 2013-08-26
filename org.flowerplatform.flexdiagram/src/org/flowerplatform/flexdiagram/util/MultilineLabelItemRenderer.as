@@ -1,4 +1,24 @@
+/* license-start
+* 
+* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation version 3.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+* 
+* Contributors:
+*   Crispico - Initial API and implementation
+*
+* license-end
+*/
 package org.flowerplatform.flexdiagram.util {
+	import flash.text.TextFieldAutoSize;
+	
 	import mx.core.DPIClassification;
 	import mx.core.mx_internal;
 	
@@ -22,12 +42,13 @@ package org.flowerplatform.flexdiagram.util {
 		 *  will be as accurate as possible since labelDisplay is multiline and 
 		 *  the labelDisplay height is dependent on the width.
 		 */
-		private var oldUnscaledWidth:Number;
+		private var oldUnscaledWidth:Number = 0;
 		
 		/**
 		 * Constructor
 		 */
 		public function MultilineLabelItemRenderer() {
+			super();
 			// provide an initial guess at the estimated component width based on DPI class
 			if (applicationDPI == DPIClassification.DPI_320) {
 				oldUnscaledWidth = 640;
@@ -35,7 +56,7 @@ package org.flowerplatform.flexdiagram.util {
 				oldUnscaledWidth = 480;
 			} else { // 160 dpi
 				oldUnscaledWidth = 320;
-			}
+			}			
 		}
 		
 		/**
@@ -45,6 +66,8 @@ package org.flowerplatform.flexdiagram.util {
 			super.createLabelDisplay();
 			labelDisplay.multiline = true;
 			labelDisplay.wordWrap = true;
+					
+			invalidateSize();
 		}
 		
 		/**
@@ -61,10 +84,11 @@ package org.flowerplatform.flexdiagram.util {
 			// estimate for the new one.  If this estimate is wrong then there is code in 
 			// updateDisplayList() that will trigger a new measure pass to correct it.
 			var labelDisplayEstimatedWidth:Number = oldUnscaledWidth - horizontalPadding;
+	
 			setElementSize(labelDisplay, labelDisplayEstimatedWidth, NaN);
 			
 			measuredWidth = getElementPreferredWidth(labelDisplay) + horizontalPadding;
-			measuredHeight = getElementPreferredHeight(labelDisplay) + verticalPadding; 
+			measuredHeight = getElementPreferredHeight(labelDisplay) + verticalPadding;
 		}
 		
 		/**
@@ -139,8 +163,15 @@ package org.flowerplatform.flexdiagram.util {
 			// Position the labelDisplay
 			
 			var labelY:Number = Math.round(vAlign * (viewHeight - oldPreferredLabelHeight))  + paddingTop;
-			setElementPosition(labelDisplay, paddingLeft, labelY);
+			setElementPosition(labelDisplay, paddingLeft, labelY);			
 		}
 		
-	}
+		override public function set maxWidth(value:Number):void {
+			super.maxWidth = value;
+			
+			if (labelDisplay) {
+				oldUnscaledWidth = value;;
+			}
+		}
+	}	
 }

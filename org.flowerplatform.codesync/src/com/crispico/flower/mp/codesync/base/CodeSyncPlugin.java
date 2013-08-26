@@ -195,7 +195,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 	public Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
 		if (codeSyncElement.getAstCacheElement() != null && feature.getEContainingClass().isSuperTypeOf(codeSyncElement.getAstCacheElement().eClass())) {
 			return codeSyncElement.getAstCacheElement().eGet(feature);
-		} else if (feature.getEContainingClass().isSuperTypeOf(CodeSyncPackage.eINSTANCE.getCodeSyncElement())) {
+		} else if (CodeSyncPackage.eINSTANCE.getCodeSyncElement().isSuperTypeOf(feature.getEContainingClass())) {
 			return codeSyncElement.eGet(feature);
 		} 
 		

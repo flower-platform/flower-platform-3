@@ -57,6 +57,10 @@
   <eClassifiers xsi:type="ecore:EClass" name="MindMapElement" eSuperTypes="#//CodeSyncElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="icons" unique="false" upperBound="-1"
         eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="minWidth" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELongObject"
+        defaultValueLiteral="1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxWidth" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//ELongObject"
+        defaultValueLiteral="600"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MindMapRoot" eSuperTypes="#//CodeSyncRoot #//MindMapElement"/>
 </ecore:EPackage>

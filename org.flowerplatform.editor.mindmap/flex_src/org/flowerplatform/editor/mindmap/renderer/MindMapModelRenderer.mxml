@@ -21,7 +21,7 @@
 <!---
 	@author Cristina Constantinescu
 -->
-<renderer:MultipleIconItemRenderer							
+<renderer:MultilineMultipleIconItemRenderer							
 				xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx" 				
@@ -106,17 +106,17 @@
 						
 			protected function viewDetailsUpdatedHandler(event:Event):void {
 				label = node.viewDetails.text;
+				minWidth = node.viewDetails.minWidth;
+				maxWidth = node.viewDetails.maxWidth;
 				
-				if (node != null && node.viewDetails) {
-					var nodeIcons:ArrayCollection = node.viewDetails.icons;
-					if (nodeIcons != null) {
-						var iconsURLs:Array = new Array();
-						for (var i:int = 0; i < nodeIcons.length; i++) {
-							iconsURLs.push(FlexUtilGlobals.getInstance().createAbsoluteUrl(MindMapModelPlugin.getInstance().getResourceUrl(String(nodeIcons.getItemAt(i)))));
-						}
-						this.icons = new FlowerArrayList(iconsURLs);
+				var nodeIcons:ArrayCollection = node.viewDetails.icons;
+				if (nodeIcons != null) {
+					var iconsURLs:Array = new Array();
+					for (var i:int = 0; i < nodeIcons.length; i++) {
+						iconsURLs.push(FlexUtilGlobals.getInstance().createAbsoluteUrl(MindMapModelPlugin.getInstance().getResourceUrl(String(nodeIcons.getItemAt(i)))));
 					}
-				}
+					this.icons = new FlowerArrayList(iconsURLs);
+				}				
 								
 				invalidateDisplayList();				
 			}
@@ -168,6 +168,9 @@
 					var parent:Object = diagramShell.getControllerProvider(node).getModelChildrenController(node).getParent(node);
 					if (parent is MindMapNode) {						
 						MindMapDiagramShell(diagramShell).refreshNodePositions(parent);	
+					} else { // refresh root node
+						var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
+						MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
 					}
 				}
 			}
@@ -183,10 +186,10 @@
 			}
 			
 			override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void {			
-			}	
+			}
 			
 			
 		]]>
 	</fx:Script>
 	
-</renderer:MultipleIconItemRenderer>
+</renderer:MultilineMultipleIconItemRenderer>

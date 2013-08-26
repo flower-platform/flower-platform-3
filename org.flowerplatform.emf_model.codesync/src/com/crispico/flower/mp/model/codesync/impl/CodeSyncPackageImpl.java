@@ -462,6 +462,24 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getMindMapElement_MinWidth() {
+		return (EAttribute)mindMapElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMindMapElement_MaxWidth() {
+		return (EAttribute)mindMapElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getMindMapRoot() {
 		return mindMapRootEClass;
 	}
@@ -532,6 +550,8 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 
 		mindMapElementEClass = createEClass(MIND_MAP_ELEMENT);
 		createEAttribute(mindMapElementEClass, MIND_MAP_ELEMENT__ICONS);
+		createEAttribute(mindMapElementEClass, MIND_MAP_ELEMENT__MIN_WIDTH);
+		createEAttribute(mindMapElementEClass, MIND_MAP_ELEMENT__MAX_WIDTH);
 
 		mindMapRootEClass = createEClass(MIND_MAP_ROOT);
 	}
@@ -613,6 +633,8 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 
 		initEClass(mindMapElementEClass, MindMapElement.class, "MindMapElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getMindMapElement_Icons(), theEcorePackage.getEString(), "icons", null, 0, -1, MindMapElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMindMapElement_MinWidth(), ecorePackage.getELongObject(), "minWidth", "1", 0, 1, MindMapElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMindMapElement_MaxWidth(), theEcorePackage.getELongObject(), "maxWidth", "600", 0, 1, MindMapElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mindMapRootEClass, MindMapRoot.class, "MindMapRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

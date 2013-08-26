@@ -11,8 +11,10 @@ import com.crispico.flower.mp.model.codesync.MindMapElement;
 import com.crispico.flower.mp.model.codesync.MindMapRoot;
 
 import java.util.Collection;
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
 
@@ -24,6 +26,8 @@ import org.eclipse.emf.ecore.util.EDataTypeUniqueEList;
  * The following features are implemented:
  * <ul>
  *   <li>{@link com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl#getIcons <em>Icons</em>}</li>
+ *   <li>{@link com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl#getMinWidth <em>Min Width</em>}</li>
+ *   <li>{@link com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl#getMaxWidth <em>Max Width</em>}</li>
  * </ul>
  * </p>
  *
@@ -39,6 +43,43 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 	 * @ordered
 	 */
 	protected EList<String> icons;
+
+	/**
+	 * The default value of the '{@link #getMinWidth() <em>Min Width</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMinWidth()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Long MIN_WIDTH_EDEFAULT = new Long(1L);
+	/**
+	 * The cached value of the '{@link #getMinWidth() <em>Min Width</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMinWidth()
+	 * @generated
+	 * @ordered
+	 */
+	protected Long minWidth = MIN_WIDTH_EDEFAULT;
+	/**
+	 * The default value of the '{@link #getMaxWidth() <em>Max Width</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaxWidth()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final Long MAX_WIDTH_EDEFAULT = new Long(600L);
+	/**
+	 * The cached value of the '{@link #getMaxWidth() <em>Max Width</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getMaxWidth()
+	 * @generated
+	 * @ordered
+	 */
+	protected Long maxWidth = MAX_WIDTH_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -76,11 +117,57 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Long getMinWidth() {
+		return minWidth;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMinWidth(Long newMinWidth) {
+		Long oldMinWidth = minWidth;
+		minWidth = newMinWidth;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CodeSyncPackage.MIND_MAP_ROOT__MIN_WIDTH, oldMinWidth, minWidth));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Long getMaxWidth() {
+		return maxWidth;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setMaxWidth(Long newMaxWidth) {
+		Long oldMaxWidth = maxWidth;
+		maxWidth = newMaxWidth;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CodeSyncPackage.MIND_MAP_ROOT__MAX_WIDTH, oldMaxWidth, maxWidth));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case CodeSyncPackage.MIND_MAP_ROOT__ICONS:
 				return getIcons();
+			case CodeSyncPackage.MIND_MAP_ROOT__MIN_WIDTH:
+				return getMinWidth();
+			case CodeSyncPackage.MIND_MAP_ROOT__MAX_WIDTH:
+				return getMaxWidth();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -98,6 +185,12 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 				getIcons().clear();
 				getIcons().addAll((Collection<? extends String>)newValue);
 				return;
+			case CodeSyncPackage.MIND_MAP_ROOT__MIN_WIDTH:
+				setMinWidth((Long)newValue);
+				return;
+			case CodeSyncPackage.MIND_MAP_ROOT__MAX_WIDTH:
+				setMaxWidth((Long)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -113,6 +206,12 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 			case CodeSyncPackage.MIND_MAP_ROOT__ICONS:
 				getIcons().clear();
 				return;
+			case CodeSyncPackage.MIND_MAP_ROOT__MIN_WIDTH:
+				setMinWidth(MIN_WIDTH_EDEFAULT);
+				return;
+			case CodeSyncPackage.MIND_MAP_ROOT__MAX_WIDTH:
+				setMaxWidth(MAX_WIDTH_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -127,6 +226,10 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 		switch (featureID) {
 			case CodeSyncPackage.MIND_MAP_ROOT__ICONS:
 				return icons != null && !icons.isEmpty();
+			case CodeSyncPackage.MIND_MAP_ROOT__MIN_WIDTH:
+				return MIN_WIDTH_EDEFAULT == null ? minWidth != null : !MIN_WIDTH_EDEFAULT.equals(minWidth);
+			case CodeSyncPackage.MIND_MAP_ROOT__MAX_WIDTH:
+				return MAX_WIDTH_EDEFAULT == null ? maxWidth != null : !MAX_WIDTH_EDEFAULT.equals(maxWidth);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -141,6 +244,8 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 		if (baseClass == MindMapElement.class) {
 			switch (derivedFeatureID) {
 				case CodeSyncPackage.MIND_MAP_ROOT__ICONS: return CodeSyncPackage.MIND_MAP_ELEMENT__ICONS;
+				case CodeSyncPackage.MIND_MAP_ROOT__MIN_WIDTH: return CodeSyncPackage.MIND_MAP_ELEMENT__MIN_WIDTH;
+				case CodeSyncPackage.MIND_MAP_ROOT__MAX_WIDTH: return CodeSyncPackage.MIND_MAP_ELEMENT__MAX_WIDTH;
 				default: return -1;
 			}
 		}
@@ -157,6 +262,8 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 		if (baseClass == MindMapElement.class) {
 			switch (baseFeatureID) {
 				case CodeSyncPackage.MIND_MAP_ELEMENT__ICONS: return CodeSyncPackage.MIND_MAP_ROOT__ICONS;
+				case CodeSyncPackage.MIND_MAP_ELEMENT__MIN_WIDTH: return CodeSyncPackage.MIND_MAP_ROOT__MIN_WIDTH;
+				case CodeSyncPackage.MIND_MAP_ELEMENT__MAX_WIDTH: return CodeSyncPackage.MIND_MAP_ROOT__MAX_WIDTH;
 				default: return -1;
 			}
 		}
@@ -175,6 +282,10 @@ public class MindMapRootImpl extends CodeSyncRootImpl implements MindMapRoot {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (icons: ");
 		result.append(icons);
+		result.append(", minWidth: ");
+		result.append(minWidth);
+		result.append(", maxWidth: ");
+		result.append(maxWidth);
 		result.append(')');
 		return result.toString();
 	}

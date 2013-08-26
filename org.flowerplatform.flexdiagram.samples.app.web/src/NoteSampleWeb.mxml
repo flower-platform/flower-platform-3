@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:renderer="org.flowerplatform.flexdiagram.renderer.*" xmlns:local="*"
 			   >
 	<s:layout>
 		<s:VerticalLayout gap="10"/>
@@ -9,7 +9,17 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import spark.components.supportClasses.StyleableTextField;
+			
+			private var textDisplay:StyleableTextField;
+						
+		]]>
+	</fx:Script>
+		
+	<fx:Script>
+		<![CDATA[
 			import mx.collections.ArrayList;
+			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.flexdiagram.renderer.NoteRenderer;
 						
@@ -18,8 +28,9 @@
 			protected function btn2_clickHandler(event:MouseEvent):void {
 				var note:NoteRenderer = new NoteRenderer();
 				note.label = textToDisplay.text;
+				note.maxWidth = 1000;
 				notesArea.addElement(note);
-				notes.addItem(note);
+				notes.addItem(note);							
 			}
 			
 			protected function btn3_clickHandler(event:MouseEvent):void {
@@ -28,6 +39,12 @@
 				}
 			}
 			
+			protected function btn4_clickHandler(event:MouseEvent):void {
+				for (var i:int = 0; i < notes.length; i++) {
+					NoteRenderer(notes.getItemAt(i)).maxWidth = Number(noteMaxWidth.text);
+				}	
+			}
+						
 		]]>
 	</fx:Script>
 	
@@ -45,10 +62,18 @@
 			<s:Spacer width="50" />
 			<s:TextInput id="noteWidth" width="100%" text="100" />
 			<s:Button label="New Width" click="btn3_clickHandler(event)" />
+			<s:Spacer width="50" />
+			<s:TextInput id="noteMaxWidth" width="100%" text="100" />
+			<s:Button label="Max Width" click="btn4_clickHandler(event)" />			
+			
+			<s:Label lineBreak="toFit" text="{textToDisplay.text}" maxWidth="{Number(noteMaxWidth.text)}"/>
+			
+			<s:Spacer width="50" />
+							
 		</s:VGroup>
 		
 		<s:Spacer width="50" />
-		
+				
 		<s:Group id="notesArea" width="100%" height="100%">
 			<s:layout>
 				<s:HorizontalLayout />

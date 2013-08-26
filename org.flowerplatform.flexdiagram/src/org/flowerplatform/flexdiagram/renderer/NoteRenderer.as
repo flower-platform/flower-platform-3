@@ -17,8 +17,12 @@
  * license-end
  */
 package org.flowerplatform.flexdiagram.renderer {
+	import flash.display.GradientType;
 	import flash.display.Graphics;
+	import flash.display.InterpolationMethod;
+	import flash.display.SpreadMethod;
 	import flash.events.Event;
+	import flash.geom.Matrix;
 	import flash.text.TextFieldAutoSize;
 	
 	import org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent;
@@ -34,12 +38,22 @@ package org.flowerplatform.flexdiagram.renderer {
 	 */
 	public class NoteRenderer extends MultilineLabelItemRenderer {
 				
-		private static const MIN_WIDTH_DEFAULT:Number = 100;
-		private static const MIN_HEIGHT_DEFAULT:Number = 15;
+		public var gradientTx:Number = 0;
+		public var gradientTy:Number = 0;
+		public var gradientType:String = GradientType.LINEAR;
 		
-		private static const BACKGROUND_COLOR_DEFAULT:uint = 0xFFFFFF;
+		public var gradientStartColor:String = "0xFFFF99";
+		public var gradientEndColor:String = "0xFFFFFF";
 		
-		public var color:uint = BACKGROUND_COLOR_DEFAULT;
+		public var alphas:Array = [0.9, 0.5];
+		public var ratios:Array = [0, 255];
+		
+		public var spreadMethod:String = SpreadMethod.PAD;
+		public var interp:String = InterpolationMethod.LINEAR_RGB;
+		public var focalPointRatio:Number = 0;
+		
+		public var lineThickness:Number = 1;
+		public var lineColor:uint = 0x00000;
 		
 		public function NoteRenderer() {
 			super();
@@ -51,8 +65,9 @@ package org.flowerplatform.flexdiagram.renderer {
 			setStyle("paddingLeft", "5");
 			setStyle("paddingRight", "5");
 			
-			minWidth = MIN_WIDTH_DEFAULT;
-			minHeight = MIN_HEIGHT_DEFAULT;
+			// default values
+			minWidth = 100;
+			minHeight = 15;
 			
 			addEventListener(ZoomPerformedEvent.ZOOM_PERFORMED, zoomPerformedHandler);
 		}
@@ -80,8 +95,12 @@ package org.flowerplatform.flexdiagram.renderer {
 			var midY:int = 15;
 			
 			graphics.clear();
-			graphics.beginFill(color, 1);
-			graphics.lineStyle(1);
+			graphics.lineStyle(lineThickness, lineColor);	
+			
+			var matrix:Matrix = new Matrix();
+			matrix.createGradientBox(unscaledWidth, unscaledHeight, rotation, gradientTx, gradientTy);
+			graphics.beginGradientFill(gradientType, [gradientStartColor, gradientEndColor], alphas, ratios, matrix, spreadMethod, interp, focalPointRatio);
+						
 			graphics.moveTo(0, 0);
 			graphics.lineTo(midX, 0);
 			graphics.lineTo(width, midY);
@@ -90,7 +109,7 @@ package org.flowerplatform.flexdiagram.renderer {
 			graphics.lineTo(0, 0);
 			graphics.endFill();
 			
-			graphics.beginFill(color, 1);
+			graphics.beginFill(0, 0);
 			graphics.moveTo(midX, 0);
 			graphics.lineTo(midX, midY);
 			graphics.lineTo(width, midY);
