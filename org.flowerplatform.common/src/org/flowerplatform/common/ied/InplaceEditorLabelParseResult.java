@@ -18,7 +18,7 @@
  */
 package org.flowerplatform.common.ied;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Mariana Gheorghe
@@ -29,7 +29,7 @@ public class InplaceEditorLabelParseResult {
 	private String type;
 	private String visibility;
 	private String defaultValue;
-	private List<InplaceEditorLabelParseResult> parameters;
+	private Collection<InplaceEditorLabelParseResult> parameters;
 	
 	public String getName() {
 		return name;
@@ -71,11 +71,11 @@ public class InplaceEditorLabelParseResult {
 		return this;
 	}
 
-	public List<InplaceEditorLabelParseResult> getParameters() {
+	public Collection<InplaceEditorLabelParseResult> getParameters() {
 		return parameters;
 	}
 
-	public InplaceEditorLabelParseResult setParameters(List<InplaceEditorLabelParseResult> parameters) {
+	public InplaceEditorLabelParseResult setParameters(Collection<InplaceEditorLabelParseResult> parameters) {
 		this.parameters = parameters;
 		return this;
 	}

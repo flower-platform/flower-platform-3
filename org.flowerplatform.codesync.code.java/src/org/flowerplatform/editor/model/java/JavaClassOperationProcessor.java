@@ -18,11 +18,45 @@
  */
 package org.flowerplatform.editor.model.java;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.eclipse.emf.ecore.EObject;
+import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
+
+import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
+import com.crispico.flower.mp.model.astcache.code.Parameter;
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+
 /**
  * @author Mariana Gheorghe
  */
 public class JavaClassOperationProcessor extends JavaClassChildProcessor {
 
+	@Override
+	protected String getLabel(EObject object) {
+		CodeSyncElement cse = getCodeSyncElement(object);
+		Collection<InplaceEditorLabelParseResult> parameters = new ArrayList<InplaceEditorLabelParseResult>();
+		Collection<Parameter> modelParameters = (Collection<Parameter>) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getOperation_Parameters());
+		for (Parameter parameter : modelParameters) {
+			parameters.add(new InplaceEditorLabelParseResult()
+					.setName(parameter.getName())
+					.setType(parameter.getType()));
+		}
+		String name = (String) getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		int index = name.indexOf("(");
+		if (index >= 0) {
+			name = name.substring(0, index);
+		}
+		return labelParser.createOperationLabel(
+				new InplaceEditorLabelParseResult()
+				.setName(name)
+				.setType((String) getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type()))
+				.setVisibility(encodeVisibility(cse))
+				.setParameters(parameters));
+	}
+	
 	@Override
 	protected String getImageForVisibility(int type) {
 		switch (type) {
@@ -32,6 +66,5 @@ public class JavaClassOperationProcessor extends JavaClassChildProcessor {
 		default: 											return "images/obj16/SyncOperation_package.gif";
 		}
 	}
-
 
 }

@@ -19,6 +19,9 @@
 package org.flowerplatform.editor.model.java.remote;
 
 import java.util.Collection;
+import java.util.List;
+
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
@@ -101,9 +104,6 @@ public class JavaClassDiagramOperationsService {
 	
 	/**
 	 * Creates a new {@link CodeSyncElement} with an associated {@link Attribute}.
-	 * @param context
-	 * @param viewId
-	 * @param label
 	 */
 	public void addNew_attribute(ServiceInvocationContext context, String viewId, String label) {
 		View view = getViewById(context, viewId);
@@ -143,54 +143,65 @@ public class JavaClassDiagramOperationsService {
 		setVisibility(attributeCse, attribute, result.getVisibilityCharacter());
 	}
 	
+	/**
+	 * Creates a new {@link CodeSyncElement} with an associated {@link Operation}.
+	 */
 	public void addNew_operation(ServiceInvocationContext context, String viewId, String label) {
 		View view = getViewById(context, viewId);
 		View cls = (View) view.eContainer();
 		CodeSyncElement clsCse = (CodeSyncElement) cls.getDiagrammableElement();
 		
 		CodeSyncElement operationCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
+		operationCse.setType(JavaOperationModelAdapter.OPERATION);
+		// this is a new element => set added flag
+		operationCse.setAdded(true);
 		Operation operation = AstCacheCodeFactory.eINSTANCE.createOperation();
 		operation.setCodeSyncElement(operationCse);
 		
 		processOperation(operationCse, operation, label);
 		
-		int i = 0;
-		boolean exists = true;
-		while (exists) {
-			i++;
-			exists = false;
-			StringBuilder builder = new StringBuilder(operationCse.getName());
-			builder.insert(builder.indexOf("("), i);
-			for (CodeSyncElement child : clsCse.getChildren()) {
-				if (child.getName().equals(builder.toString())) {
-					exists = true;
-					break;
-				}
-			}
-		}
-		StringBuilder builder = new StringBuilder(operationCse.getName());
-		builder.insert(builder.indexOf("("), i);
-		operationCse.setName(builder.toString());
+//		int i = 0;
+//		boolean exists = true;
+//		while (exists) {
+//			i++;
+//			exists = false;
+//			StringBuilder builder = new StringBuilder(operationCse.getName());
+//			builder.insert(builder.indexOf("("), i);
+//			for (CodeSyncElement child : clsCse.getChildren()) {
+//				if (child.getName().equals(builder.toString())) {
+//					exists = true;
+//					break;
+//				}
+//			}
+//		}
+//		StringBuilder builder = new StringBuilder(operationCse.getName());
+//		builder.insert(builder.indexOf("("), i);
+//		operationCse.setName(builder.toString());
 		clsCse.getChildren().add(operationCse);
 	}
 	
 	protected void processOperation(CodeSyncElement operationCse, Operation operation, String label) {
-		setVisibility(operationCse, operation, label.charAt(0));
-		label = label.substring(1);
-		int lastIndexOfColon = label.lastIndexOf(":");
-		String name = label.substring(0, lastIndexOfColon);
-		int indexOfBracket = name.indexOf("(");
-		operationCse.setName(name.substring(0, indexOfBracket) + "()");
-		String[] parameters = name.substring(indexOfBracket + 1, name.length() -1)
-				.split(",");
-		operation.getParameters().clear();
-		for (String parameter : parameters) {
-			Parameter param = AstCacheCodeFactory.eINSTANCE.createParameter();
-			param.setType(parameter);
-			operation.getParameters().add(param);
-		}
-		operation.setType(label.substring(lastIndexOfColon + 1));
-		operationCse.setType(JavaOperationModelAdapter.OPERATION);
+//		setVisibility(operationCse, operation, label.charAt(0));
+//		label = label.substring(1);
+//		int lastIndexOfColon = label.lastIndexOf(":");
+//		String name = label.substring(0, lastIndexOfColon);
+//		int indexOfBracket = name.indexOf("(");
+//		operationCse.setName(name.substring(0, indexOfBracket) + "()");
+//		String[] parameters = name.substring(indexOfBracket + 1, name.length() -1)
+//				.split(",");
+//		operation.getParameters().clear();
+//		for (String parameter : parameters) {
+//			Parameter param = AstCacheCodeFactory.eINSTANCE.createParameter();
+//			param.setType(parameter);
+//			operation.getParameters().add(param);
+//		}
+//		operation.setType(label.substring(lastIndexOfColon + 1));
+//		operationCse.setType(JavaOperationModelAdapter.OPERATION);
+		InplaceEditorLabelParseResult result = labelParser.parseOperationLabel(label);
+		setName(operationCse, result.getName());
+		setType(operationCse, operation, result.getType());
+		setVisibility(operationCse, operation, result.getVisibilityCharacter());
+		setParameters(operationCse, operation, result.getParameters());
 	}
 	
 	public void deleteView(ServiceInvocationContext context, String viewId) {
@@ -271,6 +282,25 @@ public class JavaClassDiagramOperationsService {
 			}
 		}
 		return null;
+	}
+	
+	protected void setParameters(CodeSyncElement element, Operation operation, Collection<InplaceEditorLabelParseResult> newParameters) {
+		// first create the list of parameters corresponding to newParameters
+		List<Parameter> parameters = new BasicEList<>();
+		for (InplaceEditorLabelParseResult newParameter : newParameters) {
+			Parameter parameter = AstCacheCodeFactory.eINSTANCE.createParameter();
+			parameter.setName(newParameter.getName());
+			parameter.setType(newParameter.getType());
+			parameters.add(parameter);
+		}
+		
+		// compare the new parameters with the current list
+		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getOperation_Parameters();
+		List<Parameter> currentParameters = (List<Parameter>) getValue(element, feature);
+		if (!element.isAdded()) {
+			CodeSyncPlugin.getInstance().createAndAddFeatureChange(element, feature, 
+					EcoreUtil.copyAll(currentParameters), EcoreUtil.copyAll(parameters));
+		}
 	}
 	
 	///////////////////////

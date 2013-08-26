@@ -195,6 +195,11 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	}
 	
 	public Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
+		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
+		if (featureChange != null) {
+			return featureChange.getNewValue();
+		}
+		
 		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
 			return codeSyncElement.eGet(feature);
 		} else {

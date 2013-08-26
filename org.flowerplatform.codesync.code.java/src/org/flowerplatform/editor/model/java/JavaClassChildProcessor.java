@@ -75,20 +75,7 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 		viewDetails.put("iconUrls", getIconUrls(object));
 	}
 	
-	/**
-	 * Default: {visibility} {name} : {type}
-	 * 
-	 * <p>
-	 * 
-	 * E.g. +attribute:int
-	 * 		~getAttribute():int
-	 */
-	protected String getLabel(EObject object) {
-		CodeSyncElement cse = getCodeSyncElement(object);
-		String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		String type = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type());
-		return String.format("%s%s:%s", encodeVisibility(cse), name, type);
-	}
+	abstract protected String getLabel(EObject object);
 	
 	protected String[] getIconUrls(EObject object) {
 		return composeImage(getCodeSyncElement(object));
@@ -141,11 +128,14 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 					case org.eclipse.jdt.core.dom.Modifier.PUBLIC:		
 					case org.eclipse.jdt.core.dom.Modifier.PROTECTED:	
 					case org.eclipse.jdt.core.dom.Modifier.PRIVATE:	
-						visibility = (Modifier) modifier; break;
+						visibility = (Modifier) modifier; 
+						break;
 					case org.eclipse.jdt.core.dom.Modifier.STATIC:
-						result.add("images/ovr16/Static.gif");  break;
+						result.add("images/ovr16/Static.gif"); 
+						break;
 					case org.eclipse.jdt.core.dom.Modifier.FINAL:
-						result.add("images/ovr16/Final.gif"); break;
+						result.add("images/ovr16/Final.gif");
+						break;
 					}
 				}
 			}
