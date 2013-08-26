@@ -21,12 +21,14 @@ package org.flowerplatform.web.common.projects.remote
 {	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+
 	/**
 	 * @author Tache Razvan
 	 **/
@@ -38,23 +40,13 @@ package org.flowerplatform.web.common.projects.remote
 			label = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
 		}
-
-		public function isFilesActionVisible(nodeType:String,treeNode:TreeNode) :Boolean {
-			if( !(treeNode.customData == null || treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) ||
-				!WebCommonPlugin.getInstance().nodeTypeBelongsToNodeTypeCategory(nodeType, WebCommonPlugin.NODE_TYPE_CATEGORY_DECORATABLE_FILE)
-				) {
-				return false;
-			} else {
-				return true;	
-			}
-		}
 		
 		override public function get visible():Boolean {
 			if (selection == null || selection.length != 1) {
 				return false;
 			}
 			var obj:Object = selection.getItemAt(0);		
-			return isFilesActionVisible(TreeNode(obj).pathFragment.type,TreeNode(obj));
+			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY]);
 		}
 		
 		override public function run():void	{

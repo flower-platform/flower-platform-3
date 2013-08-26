@@ -64,6 +64,8 @@ package org.flowerplatform.web.common {
 			return INSTANCE;
 		}
 		
+		public static const TREE_NODE_FILE_SYSTEM_IS_DIRECTORY:String = "isDirectory"; 
+		
 		public static const NODE_TYPE_ORGANIZATION:String = "organization";
 		
 		public static const NODE_TYPE_PROJECT:String = "project";

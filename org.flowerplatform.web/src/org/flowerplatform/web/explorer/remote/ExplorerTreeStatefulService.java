@@ -18,7 +18,9 @@
  */
 package org.flowerplatform.web.explorer.remote;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,22 +28,31 @@ import java.util.Map;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.file_event.FileEvent;
+import org.flowerplatform.file_event.IFileEventListener;
 import org.flowerplatform.web.WebPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulService {
+public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulService implements IFileEventListener {
 
 	private static Logger logger = LoggerFactory.getLogger(ExplorerTreeStatefulService.class);
 
 	public ExplorerTreeStatefulService() throws CoreException {
 		setStatefulClientPrefixId("Explorer");
-		
+		CommonPlugin.getInstance().getFileEventDispatcher().addFileEventListener(this);
 		{
 			// explorerChildrenProvider
 			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.explorerChildrenProvider");
@@ -135,4 +146,17 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 		populators.add(populator);
 	}
 
+	@Override
+	public void notify(FileEvent event) {
+		File parent = event.getFile().getParentFile();
+		String parentPath = event.getFile().getParent();
+		
+		// Update for ws_trunk subtree
+		Object node = new Pair<File, String>(parent, "fsFile") ;
+		dispatchContentUpdate(node);
+		
+		// Update for project subtree
+		node = new Pair<File, String>(parent, "projFile") ;
+		dispatchContentUpdate(node);
+	}
 }
