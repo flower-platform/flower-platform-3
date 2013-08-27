@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jdt.core.search.TypeNameRequestor;
+import org.flowerplatform.editor.model.ContentAssistItem;
 
 /**
  * Collects the fully qualified names of the matched types into the {@link #matches} list.
@@ -30,9 +31,9 @@ import org.eclipse.jdt.core.search.TypeNameRequestor;
  */
 public class JavaTypeNameRequestor extends TypeNameRequestor {
 
-	private List<String> matches = null;
+	private List<ContentAssistItem> matches = null;
 
-	public List<String> getMatches() {
+	public List<ContentAssistItem> getMatches() {
 		return matches;
 	}
 
@@ -47,9 +48,10 @@ public class JavaTypeNameRequestor extends TypeNameRequestor {
 				parentTypes + (parentTypes.length() == 0 	? "" : ".") +
 				type;
 		if (matches == null) {
-			matches = new ArrayList<String>();
+			matches = new ArrayList<ContentAssistItem>();
 		}
-		matches.add(fullyQualifiedName);
+		ContentAssistItem item = new ContentAssistItem(fullyQualifiedName, type, pck, null);
+		matches.add(item);
 	}
 
 }

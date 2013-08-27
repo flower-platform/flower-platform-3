@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
+import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.IContentAssist;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
@@ -45,7 +46,7 @@ public class JavaContentAssist implements IContentAssist {
 	 * Delegates to {@link SearchEngine} to search for Java types that match the prefix <code>pattern</code>.
 	 */
 	@Override
-	public List<String> findMatches(Map<String, Object> context, String pattern) {
+	public List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern) {
 		if (!context.get(TYPE).toString().startsWith(CodeSyncCodeJavaPlugin.TECHNOLOGY)) {
 			// not a java element
 			return null;
