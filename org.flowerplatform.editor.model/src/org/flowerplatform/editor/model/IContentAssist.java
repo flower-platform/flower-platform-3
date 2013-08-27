@@ -35,6 +35,6 @@ public interface IContentAssist {
 	 * @param pattern used as a prefix for the search
 	 * @return list of matches as fully qualified names
 	 */
-	List<String> findMatches(Map<String, Object> context, String pattern);
+	List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern);
 	
 }

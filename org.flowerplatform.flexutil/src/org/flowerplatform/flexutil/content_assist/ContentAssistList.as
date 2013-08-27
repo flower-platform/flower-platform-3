@@ -27,6 +27,7 @@ package org.flowerplatform.flexutil.content_assist {
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.core.ClassFactory;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
 	
@@ -48,6 +49,7 @@ package org.flowerplatform.flexutil.content_assist {
 		
 		public function ContentAssistList() {
 			super();
+			itemRenderer = new ClassFactory(ContentAssistItemRenderer);
 			
 			addEventListener(IndexChangeEvent.CHANGE, itemClickHandler);
 			
@@ -162,9 +164,9 @@ package org.flowerplatform.flexutil.content_assist {
 				index++;
 				dispatcher.text = 
 					text.substr(0, index) +
-					selectedItem +
+					selectedItem.item +
 					text.substr(dispatcher.textDisplay.selectionActivePosition);
-				index += selectedItem.length;
+				index += selectedItem.item.length;
 				dispatcher.selectRange(index, index);
 				
 				// hide

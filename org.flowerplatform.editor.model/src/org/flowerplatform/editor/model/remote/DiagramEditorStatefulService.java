@@ -46,6 +46,7 @@ import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.IContentAssist;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
@@ -342,7 +343,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	 * @author Mariana Gheorghe
 	 */
 	@RemoteInvocation
-	public List<String> contentAssist(StatefulServiceInvocationContext context, String viewId, String pattern) {
+	public List<ContentAssistItem> contentAssist(StatefulServiceInvocationContext context, String viewId, String pattern) {
 		logger.debug("Search types for pattern [{}]", pattern);
 		DiagramEditableResource editableResource = getDiagramEditableResource(context);
 		View view = (View) editableResource.getEObjectById(viewId);
@@ -355,7 +356,8 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		Map<String, Object> searchContext = new HashMap<String, Object>();
 		searchContext.put(IContentAssist.TYPE, diagrammableElement.getType());
 		searchContext.put(IContentAssist.RESOURCE, editableResource.getFile());
-		List<String> types = EditorModelPlugin.getInstance().getComposedContentAssist().findMatches(searchContext, pattern);
+		List<ContentAssistItem> types = EditorModelPlugin.getInstance()
+				.getComposedContentAssist().findMatches(searchContext, pattern);
 		if (types == null) {
 			logger.debug("No types found for pattern [{}]", pattern);
 		} else {

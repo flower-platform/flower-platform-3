@@ -62,6 +62,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.web.common.WebCommonPlugin;
@@ -175,6 +176,8 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
 			
 			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
+			
+			registerClassAliasFromAnnotation(ContentAssistItem);
 		}
 		
 		override protected function registerMessageBundle():void {
