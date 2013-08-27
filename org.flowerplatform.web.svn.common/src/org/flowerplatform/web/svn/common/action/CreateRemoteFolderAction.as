@@ -58,8 +58,11 @@ package  org.flowerplatform.web.svn.common.action {
 			var view:CreateRemoteFolderView = new CreateRemoteFolderView();
 			view.node=TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+				.setWidth(400)
+				.setHeight(450)
 				.setPopupContent(view)
 				.show();			
 		}
 	}
+	
 }

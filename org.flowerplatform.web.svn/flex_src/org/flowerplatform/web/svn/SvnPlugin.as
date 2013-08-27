@@ -16,6 +16,7 @@
 *
 * license-end
 */
+
 package  org.flowerplatform.web.svn {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -73,4 +74,5 @@ package  org.flowerplatform.web.svn {
 			return INSTANCE;
 		}
 	}
+	
 }

@@ -66,26 +66,26 @@ license-end
 			
 			 private function getProjectsCallbackHandler(result:Boolean):void {
 				popupHost.hideSpinner();
-				if (result != true) {
-					check = result;
-				} else {
+				if (result) 
 					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
-				}
 			} 
 			
 			 protected override function cancelClickHandler():void {
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
-				
 			} 
 			
 			 protected override function finishClickHandler():void {
-				 if (Validator.validateAll(validators).length > 0) {
-					return;
-				} 
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, commitMessage.text], this,getProjectsCallbackHandler ));
 					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.view.spinner"));
 			} 
+			
+			protected override function nextClickHandler():void {
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				} 
+				super.nextClickHandler();
+			}
 			
 			override public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
@@ -131,7 +131,8 @@ license-end
 					</s:HGroup>										
 				</s:VGroup>		 			
 			</mx:AddChild>
-		</mx:State>				
+		</mx:State>	
+		
 	</popup:states>
 </popup:Wizard>
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+   <extension-point id="svnRepositoryNodeDataProvider" name="svnRepositoryNodeDataProvider" schema="schema/svnRepositoryNodeDataProvider.exsd"/>
+   <extension-point id="svnRepositoryChildrenProvider" name="svnRepositoryChildrenProvider" schema="schema/svnRepositoryChildrenProvider.exsd"/>
    <extension
          point="org.flowerplatform.web.explorerChildrenProvider">
       <explorerChildrenProvider
@@ -73,6 +75,52 @@
                nodeType="svnFile">
          </nodeType>
       </explorerAdditionalNodePopulator>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="svnRepositoryTreeStatefulService"
+            serviceClass="org.flowerplatform.web.svn.remote.SvnRepositoryTreeStatefulService">
+      </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.svn.svnRepositoryChildrenProvider">
+      <svnRepositoryChildrenProvider
+            provider="org.flowerplatform.web.svn.explorer.SvnFile_ChildrenProvider">
+         <nodeType
+               nodeType="svnFile">
+         </nodeType>
+         <nodeType
+               nodeType="svnRepository">
+         </nodeType>
+      </svnRepositoryChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.svn.svnRepositoryNodeDataProvider">
+      <svnRepositoryNodeDataProvider
+            provider="org.flowerplatform.web.svn.explorer.SvnFileNodeDataProvider">
+         <nodeType
+               nodeType="svnFile">
+         </nodeType>
+      </svnRepositoryNodeDataProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.svn.svnRepositoryChildrenProvider">
+      <svnRepositoryChildrenProvider
+            provider="org.flowerplatform.web.svn.explorer.SvnRepository_SvnRepositoriesChildrenProvider">
+         <nodeType
+               nodeType="svnRepositories">
+         </nodeType>
+      </svnRepositoryChildrenProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.web.svn.svnRepositoryNodeDataProvider">
+      <svnRepositoryNodeDataProvider
+            provider="org.flowerplatform.web.svn.explorer.SvnRepositoryNodeDataProvider">
+         <nodeType
+               nodeType="svnRepository">
+         </nodeType>
+      </svnRepositoryNodeDataProvider>
    </extension>
 
 </plugin>
