@@ -17,7 +17,7 @@
 * license-end
 */
 
-package org.flowerplatform.web.common.projects.remote
+package org.flowerplatform.web.common.explorer.action
 {	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -27,6 +27,8 @@ package org.flowerplatform.web.common.projects.remote
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.common.explorer.ui.TextInputView;
+
 	/**
 	 * @author Tache Razvan
 	 **/
