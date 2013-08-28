@@ -19,6 +19,7 @@
 package org.flowerplatform.web.projects.remote;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +47,14 @@ public class FileManagerService {
 						new DisplaySimpleMessageClientCommand(WebPlugin
 								.getInstance().getMessage(title), WebPlugin
 								.getInstance().getMessage(message),
+								DisplaySimpleMessageClientCommand.ICON_ERROR));
+	}
+	
+	public void printSimpleMessageToUser(ServiceInvocationContext context,
+			String title, String message) {
+		context.getCommunicationChannel()
+				.appendCommandToCurrentHttpResponse(
+						new DisplaySimpleMessageClientCommand(title, message,
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 	}
 
@@ -86,9 +95,70 @@ public class FileManagerService {
 						"explorer.createDirectory.error.title",
 						"explorer.createDirectory.error.couldNotCreate");
 			}
-		} else {
-			printMessageToUser(context, "explorer.createDirectory.error.title",
-					"explorer.createDirectory.error.alreadyExists");
+		} else 
+			if(theDir.isFile()) {
+				printMessageToUser(context, 
+						"explorer.createDirectory.error.title",
+						"explorer.createDirectory.error.alreadyExistsAsFile");
+			} else {
+				printMessageToUser(context, 
+						"explorer.createDirectory.error.title",
+						"explorer.createDirectory.error.alreadyExists");
+			}
+	}
+	
+	public void createFile(ServiceInvocationContext context,
+			List<PathFragment> pathWithRoot, String name) {
+		
+		GenericTreeStatefulService service = GenericTreeStatefulService
+				.getServiceFromPathWithRoot(pathWithRoot);
+		String clientID = GenericTreeStatefulService.getClientIDFromPathWithRoot(pathWithRoot);
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath() + "\\" + name;
+		
+		File file = new File(path);
+		
+		try {		
+			if(!file.exists()) {
+				file.getParentFile().mkdirs();
+				boolean result = file.createNewFile();
+				if(result) {
+					Map<Object, Object> clientContext = new HashMap<Object,Object>();
+					clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
+					List<PathFragment> pathOfNode = service.getPathForNode(object,
+							"fsFile", null);
+					service.openNode(
+							new StatefulServiceInvocationContext(context
+									.getCommunicationChannel(),clientID), pathOfNode, clientContext);
+					
+					FileEvent event = new FileEvent(file, FileEvent.FILE_CREATED);
+					CommonPlugin.getInstance().getFileEventDispatcher()
+							.dispatch(event);
+				} else {
+					printMessageToUser(context,
+							"explorer.createFile.error.title",
+							"explorer.createFile.error.couldNotCreate");
+				}
+			} else 
+				if(file.isDirectory()) {
+					printMessageToUser(context, 
+							"explorer.createFile.error.title",
+							"explorer.createFile.error.alreadyExistsAsDirectory");
+				}
+				else {
+					printMessageToUser(context, 
+							"explorer.createFile.error.title",
+							"explorer.createFile.error.alreadyExists");
+				}
+			
+		} catch (IOException e) {
+			printSimpleMessageToUser(context,
+					"Error",
+					e.getMessage() + " Check the console for more informations");
+			e.printStackTrace();
 		}
 	}
 
