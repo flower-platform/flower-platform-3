@@ -20,8 +20,10 @@ package org.flowerplatform.editor.model.content_assist {
 	
 	import mx.collections.ArrayCollection;
 	
+	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.content_assist.IContentAssistProvider;
 	
 	/**
@@ -43,6 +45,10 @@ package org.flowerplatform.editor.model.content_assist {
 		
 		public function getTriggerCharacters():ArrayCollection {
 			return triggerCharacters;
+		}
+		
+		public function getResource(resource:String):Object {
+			return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getResourceUrl(resource));
 		}
 	}
 }

@@ -18,10 +18,18 @@
  */
 package org.flowerplatform.editor.model.java;
 
+import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.ANNOTATION_ICON;
+import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.CLASS_ICON;
+import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.ENUM_ICON;
+import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.INTERFACE_ICON;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.core.search.TypeNameRequestor;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.search.TypeNameMatch;
+import org.eclipse.jdt.core.search.TypeNameMatchRequestor;
 import org.flowerplatform.editor.model.ContentAssistItem;
 
 /**
@@ -29,7 +37,7 @@ import org.flowerplatform.editor.model.ContentAssistItem;
  * 
  * @author Mariana Gheorghe
  */
-public class JavaTypeNameRequestor extends TypeNameRequestor {
+public class JavaTypeNameRequestor extends TypeNameMatchRequestor {
 
 	private List<ContentAssistItem> matches = null;
 
@@ -38,20 +46,40 @@ public class JavaTypeNameRequestor extends TypeNameRequestor {
 	}
 
 	@Override
-	public void acceptType(int modifiers, char[] packageName,
-			char[] simpleTypeName, char[][] enclosingTypeNames, String path) {
-		String pck = String.copyValueOf(packageName);
-		String type = String.copyValueOf(simpleTypeName);
-		String parentTypes = new String(); // TODO support nested types
-		String fullyQualifiedName = 
-				pck 		+ (pck.length() == 0 			? "" : ".") + 
-				parentTypes + (parentTypes.length() == 0 	? "" : ".") +
-				type;
-		if (matches == null) {
-			matches = new ArrayList<ContentAssistItem>();
+	public void acceptTypeNameMatch(TypeNameMatch match) {
+		String fullyQualifiedName = match.getFullyQualifiedName();
+		String simpleName = match.getSimpleTypeName();
+		String pck = match.getPackageName();
+		String containerType = match.getTypeContainerName();
+		if (containerType.length() > 0) {
+			pck = containerType;
 		}
-		ContentAssistItem item = new ContentAssistItem(fullyQualifiedName, type, pck, null);
+		String iconUrl = getIconUrl(match.getType());
+		if (matches == null) {
+		matches = new ArrayList<ContentAssistItem>();
+	}
+		ContentAssistItem item = new ContentAssistItem(fullyQualifiedName, simpleName, pck, iconUrl);
 		matches.add(item);
+	}
+	
+	protected String getIconUrl(IType type) {
+		try {
+			if (type.isEnum()) {
+				return ENUM_ICON;
+			}
+			if (type.isAnnotation()) {
+				return ANNOTATION_ICON;
+			}
+			if (type.isClass()) {
+				return CLASS_ICON;
+			}
+			if (type.isInterface()) {
+				return INTERFACE_ICON;
+			}
+		} catch (JavaModelException e) {
+			throw new RuntimeException(e);
+		}
+		return null;
 	}
 
 }

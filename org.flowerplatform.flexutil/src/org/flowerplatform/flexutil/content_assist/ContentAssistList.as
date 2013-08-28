@@ -63,6 +63,9 @@ package org.flowerplatform.flexutil.content_assist {
 		
 		public function setContentAssistProvider(provider:IContentAssistProvider):void {
 			this.contentAssistProvider = provider;
+			var properties:Object = new Object();
+			properties['contentAssistProvider'] = provider;
+			ClassFactory(itemRenderer).properties = properties;
 		}
 		
 		/**

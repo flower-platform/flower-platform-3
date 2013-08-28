@@ -30,35 +30,50 @@ package org.flowerplatform.flexutil.content_assist {
 		
 		protected var extraLabel:Label;
 		
+		public var contentAssistProvider:IContentAssistProvider;
+		
 		public function ContentAssistItemRenderer() {
 			super();
 			
 			labelField = "mainString";
-			iconField = "iconUrl";
+			iconFunction = function(value:Object):Object {
+				return contentAssistProvider.getResource(value.iconUrl);
+			};
 			
-			extraLabel = new Label();
-			extraLabel.setStyle("color", "#808080");
-			addChild(extraLabel);
-		
+			// set explicitely to avoid a bug where width & height are NaN after measure()
+			iconWidth = 16;
+			iconHeight = 16;
+			
 			if (!FlexUtilGlobals.getInstance().isMobile) {
 				minHeight = 22;
 			}
+			setStyle("verticalAlign", "middle");
+			setStyle("paddingLeft", 1);
+			cacheAsBitmap = true;
+		}
+		
+		override protected function createChildren():void {
+			super.createChildren();
+			extraLabel = new Label();
+			extraLabel.setStyle("color", "#808080");
+			extraLabel.setStyle("verticalAlign", "middle");
+			extraLabel.percentWidth = 100;
+			addChild(extraLabel);
 		}
 		
 		override protected function layoutContents(unscaledWidth:Number, unscaledHeight:Number):void {
-			var offset:int = measureAndPositionElement(labelDisplay, 0);
-			offset = measureAndPositionElement(extraLabel, offset);
+			super.layoutContents(unscaledWidth, unscaledHeight);
+			var elementWidth:int = getElementPreferredWidth(extraLabel);
+			var elementHeight:int = labelDisplay ? labelDisplay.height : getElementPreferredHeight(extraLabel);
+			setElementSize(extraLabel, elementWidth, elementHeight);
+			var elementX:int = labelDisplay ? labelDisplay.x + labelDisplay.textWidth + 5 : iconWidth;
+			var elementY:int = labelDisplay ? labelDisplay.y : unscaledHeight / 2 - extraLabel.height / 2;
+			setElementPosition(extraLabel, elementX, elementY);
 		}
 		
-		private function measureAndPositionElement(element:Object, offset:int):int {
-			if (element == null) {
-				return offset;
-			}
-			var elementWidth:int = getElementPreferredWidth(element);
-			var elementHeight:int = getElementPreferredHeight(element);
-			setElementSize(element, elementWidth, elementHeight);
-			setElementPosition(element, offset, height / 2 - elementHeight / 2);
-			return elementWidth;
+		override protected function measure():void {
+			super.measure();
+			measuredWidth += extraLabel.width;
 		}
 		
 		override public function set data(value:Object):void {

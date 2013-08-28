@@ -20,7 +20,6 @@ package com.crispico.flower.mp.codesync.base;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -51,18 +50,25 @@ public abstract class CodeSyncElementContentAssist implements IContentAssist {
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(file, "diagramEditorStatefulService");
 		Resource codeSyncMapping = getCodeSyncElementsResource(resource.getProject(), resourceSet); 
 		List<ContentAssistItem> matches = new ArrayList<ContentAssistItem>();
-		Iterator<EObject> it = codeSyncMapping.getAllContents();
-		while (it.hasNext()) {
-			CodeSyncElement element = (CodeSyncElement) it.next();
-			if (element.isAdded() && getAllowedTypes().contains(element.getType())) {
-				String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(element, 
-						CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-				if (name.toLowerCase().startsWith(pattern.toLowerCase())) {
-					matches.add(createContentAssistItem(element));
-				}
+		for (EObject object : codeSyncMapping.getContents()) {
+			if (object instanceof CodeSyncElement) {
+				iterateContents((CodeSyncElement) object, pattern, matches);
 			}
 		}
 		return matches;
+	}
+	
+	protected void iterateContents(CodeSyncElement element, String pattern, List<ContentAssistItem> matches) {
+		if (element.isAdded() && getAllowedTypes().contains(element.getType())) {
+			String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(element, 
+					CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+			if (name.toLowerCase().startsWith(pattern.toLowerCase())) {
+				matches.add(createContentAssistItem(element));
+			}
+		}
+		for (CodeSyncElement child : element.getChildren()) {
+			iterateContents(child, pattern, matches);
+		}
 	}
 
 	abstract protected List<String> getAllowedTypes();

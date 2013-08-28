@@ -28,5 +28,7 @@ package org.flowerplatform.flexutil.content_assist {
 	
 		function getTriggerCharacters():ArrayCollection;
 		
+		function getResource(resource:String):Object;
+		
 	}
 }
