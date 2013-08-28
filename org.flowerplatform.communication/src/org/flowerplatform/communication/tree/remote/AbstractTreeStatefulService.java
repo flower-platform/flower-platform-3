@@ -43,9 +43,9 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	
 	public static final String WHOLE_TREE_KEY = "wholeTree";
 	
-	private static final String EXPAND_NODE_KEY = "expandNode";
+	public static final String EXPAND_NODE_KEY = "expandNode";
 	
-	private static final String SELECT_NODE_KEY = "selectNode";
+	public static final String SELECT_NODE_KEY = "selectNode";
 	
 	/**
 	 * Useful, for trees that want to display a subset of a bigger tree, with data
@@ -331,11 +331,11 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 				context.getStatefulClientId(), 
 				path, 
 				treeNode, 
-				clientContext != null && clientContext.get(EXPAND_NODE_KEY) != null, 
+				clientContext != null && clientContext.get(EXPAND_NODE_KEY) != null,
 				false, 
 				clientContext != null && clientContext.get(SELECT_NODE_KEY) != null, 
 				true);	
-		
+		 
 		LogUtil.audit(auditDetails);
 	}
 	

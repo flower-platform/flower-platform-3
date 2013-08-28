@@ -19,13 +19,16 @@
 package org.flowerplatform.web.projects.remote;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.file_event.FileEvent;
@@ -51,22 +54,30 @@ public class FileManagerService {
 
 		GenericTreeStatefulService service = GenericTreeStatefulService
 				.getServiceFromPathWithRoot(pathWithRoot);
+		String clientID = GenericTreeStatefulService.getClientIDFromPathWithRoot(pathWithRoot);
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 
 		@SuppressWarnings("unchecked")
 		String path = ((Pair<File, Object>) object).a.getPath() + "\\" + name;
-
+		
 		File theDir = new File(path);
 		if (!theDir.exists()) {
 			boolean result = theDir.mkdirs();
 			if (result) {
-				// ToBeImplemented next commit
-//				List<PathFragment> pathOfNode = service.getPathForNode(object,
-//						"fsFile", null);
-//				service.openNode(
-//						new StatefulServiceInvocationContext(context
-//								.getCommunicationChannel()), pathOfNode, null);
+				Map<Object, Object> clientContext = new HashMap<Object,Object>();
+				clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
+				List<PathFragment> pathOfNode = service.getPathForNode(object,
+						"fsFile", null);
+				service.openNode(
+						new StatefulServiceInvocationContext(context
+								.getCommunicationChannel(),clientID), pathOfNode, clientContext);	
+				// TODO uncomment this, after talk with Cristi
+				/*String[] dirs = name.split("/");
+				pathOfNode.add(new PathFragment(dirs[0], "fsFile"));
+				service.openNode(
+						new StatefulServiceInvocationContext(context
+								.getCommunicationChannel(),clientID), pathOfNode, clientContext);*/
 				FileEvent event = new FileEvent(theDir, FileEvent.FILE_CREATED);
 				CommonPlugin.getInstance().getFileEventDispatcher()
 						.dispatch(event);

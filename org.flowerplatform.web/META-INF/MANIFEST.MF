@@ -18,7 +18,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.flowerplatform.editor,
  org.flowerplatform.emf_model.notation,
- org.flowerplatform.file_event;bundle-version="1.0.0"
+ org.flowerplatform.file_event
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.persistence,

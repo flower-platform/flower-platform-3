@@ -139,7 +139,7 @@ package org.flowerplatform.communication.tree.remote {
 		public override function subscribeToStatefulService(dataFromRegistrator:Object):void {		
 			super.subscribeToStatefulService(dataFromRegistrator);
 			
-			TreeNode(treeList.rootNode).pathFragment = new PathFragment(statefulServiceId, "r");
+			TreeNode(treeList.rootNode).pathFragment = new PathFragment(statefulServiceId + "|" + getStatefulClientId(), "r");
 			
 			// request data from server and expand root node
 			if (requestDataOnSubscribe) {
@@ -504,9 +504,19 @@ package org.flowerplatform.communication.tree.remote {
 //				genericTree.selectedItems = newSelection;
 //			}
 //			
-//			if (expandNode) {					
-//				genericTree.expandItem(existingNode, true);
-//			}
+			if (expandNode) {					
+				//treeList.expandItem(existingNode, true);
+				for (var i:int = 0; i<treeList.dataProvider.length; i++) {
+					var wrapper:HierarchicalModelWrapper = HierarchicalModelWrapper(treeList.dataProvider.getItemAt(i));
+						if (wrapper.treeNode == existingNode) {
+							if (!wrapper.expanded) {
+								wrapper.expanded = !wrapper.expanded;
+								treeList.requestRefreshLinearizedDataProvider();
+							}
+							break;
+						}
+				}		
+			}
 //			
 //			if (genericTree.context[EXPAND_ALL_NODES_KEY] == true) {
 //				genericTree.expandChildrenOf(existingNode, true /* open */);
