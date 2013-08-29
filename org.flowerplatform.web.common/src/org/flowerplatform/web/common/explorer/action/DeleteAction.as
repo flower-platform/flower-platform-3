@@ -36,7 +36,7 @@ package org.flowerplatform.web.common.explorer.action
 		
 		public function DeleteAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.delete.action");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
+			icon = WebCommonPlugin.getInstance().getResourceUrl("images/delete.gif");
 		}
 		
 		override public function get visible():Boolean {

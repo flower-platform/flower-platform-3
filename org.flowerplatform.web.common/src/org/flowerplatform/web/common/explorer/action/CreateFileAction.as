@@ -36,7 +36,7 @@ package org.flowerplatform.web.common.explorer.action
 		
 		public function CreateFileAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.createFile.action");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
+			icon = WebCommonPlugin.getInstance().getResourceUrl("images/new_untitled_text_file.gif");
 		}
 		
 		override public function get visible():Boolean {
@@ -53,8 +53,8 @@ package org.flowerplatform.web.common.explorer.action
 			view.node=TreeNode(selection.getItemAt(0));
 			view.label = WebCommonPlugin.getInstance().getMessage("explorer.createFile.input.label");
 			view.title = WebCommonPlugin.getInstance().getMessage("explorer.createFile.input.title");
-			view.wizardIcon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
-			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
+			view.wizardIcon = WebCommonPlugin.getInstance().getResourceUrl("images/new_untitled_text_file.gif");
+			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/new_untitled_text_file.gif");
 			view.setResultHandler(this);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
