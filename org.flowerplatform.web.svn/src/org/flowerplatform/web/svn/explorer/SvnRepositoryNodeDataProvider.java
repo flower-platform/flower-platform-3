@@ -21,7 +21,6 @@ public class SvnRepositoryNodeDataProvider implements INodeDataProvider {
 	 * @flowerModelElementId _iQKIIP5mEeKrJqcAep-lCg
 	 */
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
-
 		return new PathFragment(((SVNRepositoryLocation) node).getLabel(), "svnRepository");
 	}
 

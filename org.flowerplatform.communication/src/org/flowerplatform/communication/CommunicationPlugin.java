@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.common.util.RunnableWithParam;
+import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.CommunicationChannelManager;
 import org.flowerplatform.communication.service.ServiceRegistry;
 import org.osgi.framework.BundleContext;
@@ -95,7 +96,11 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 		return scheduledExecutorServiceFactory;
 	}
 	
-	public static final ThreadLocal<IPrincipal> tlCurrentPrincipal = new ThreadLocal<IPrincipal>();
+	/**
+	 * @author Victor Badila
+	 */
+	//public static final ThreadLocal<IPrincipal> tlCurrentPrincipal = new ThreadLocal<IPrincipal>();
+	public static final ThreadLocal<CommunicationChannel> tlCurrentChannel = new ThreadLocal<CommunicationChannel>();
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {

@@ -11,6 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.tigris.subversion.clientadapter,
  org.tigris.subversion.clientadapter.javahl,
  org.tigris.subversion.subclipse.core,
- org.eclipse.team.core;bundle-version="3.6.0"
+ org.eclipse.team.core;bundle-version="3.6.0",
+ org.eclipse.core.resources;bundle-version="3.7.101"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.flowerplatform.web.svn.SvnPlugin

@@ -57,10 +57,11 @@ package  org.flowerplatform.web.svn.common.action {
 		 */
 		public override function run():void {			
 			var view:CreateSvnRepositoryView = new CreateSvnRepositoryView();
-			view.node=TreeNode(selection.getItemAt(0));
+			view.node = TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
 				.show();			
 		}
 	}
+	
 }

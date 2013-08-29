@@ -1,29 +1,46 @@
 package org.flowerplatform.web.svn.remote;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
+import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
+import org.flowerplatform.web.entity.WorkingDirectory;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.svn.SvnPlugin;
+import org.flowerplatform.web.svn.operation.SVNOperationNotifyListener;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tigris.subversion.subclipse.core.ISVNCoreConstants;
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.SVNException;
+import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
+import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
+import org.tigris.subversion.svnclientadapter.SVNClientException;
+import org.tigris.subversion.svnclientadapter.SVNRevision;
+import org.tigris.subversion.svnclientadapter.SVNUrl;
 
 /**
  * 
@@ -118,8 +135,7 @@ public class SvnService {
 							"svn.remote.svnService.createSvnRepository.error.svnExceptionError2"), DisplaySimpleMessageClientCommand.ICON_ERROR));
 				}
 			}
-		});		
-		
+		});			
 		// tree refresh
 		if (operationSuccessful.contains("success")) {
 			Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
@@ -146,13 +162,123 @@ public class SvnService {
 		return (ArrayList<String>) wrapper.getOperationResult();
 	}
 	
-	public void refresh(ServiceInvocationContext context, List<PathFragment> parentPath){
+	public void refresh(ServiceInvocationContext context, List<PathFragment> parentPath) {
 		Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
 		if (node instanceof RemoteFolder)
 			((RemoteFolder) node).refresh();
 		else ((SVNRepositoryLocation) node).refreshRootFolder();
-		GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);
+		GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);		
+	}
+	
+	public boolean checkout(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath, 
+							String workingDirectoryDestination, String revisionNumberAsString, 
+							int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals) {		
+		workingDirectoryDestination = getWorkingDirectoryFullPath(workingDirectoryPartialPath) + workingDirectoryDestination;		
+		SVNRevision revision = SVNRevision.HEAD;
+		RemoteFolder[] remoteFolders = new RemoteFolder[folders.size()];			
+		for(int i = 0; i < folders.size(); i++) {
+			RemoteFolder correspondingRemoteFolder;
+			Object treeNode = GenericTreeStatefulService.getNodeByPathFor(folders.get(i), null);
+			if (treeNode instanceof SVNRepositoryLocation)
+				correspondingRemoteFolder = (RemoteFolder) ((SVNRepositoryLocation)treeNode).getRootFolder();
+			else correspondingRemoteFolder = (RemoteFolder) treeNode;
+			remoteFolders[i] = correspondingRemoteFolder;			
+		}		
 		
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		final ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
+		if (pm != null) {
+			pm.beginTask(null, 1000);
+		}
+		final ISVNClientAdapter myClient;
+		SVNOperationNotifyListener opMng = new SVNOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
+		try {
+			myClient = SVNProviderPlugin.getPlugin().getSVNClient();			
+			myClient.setProgressListener(opMng);
+			opMng.beginOperation(pm, myClient, true);					
+			for(int i = 0; i < folders.size(); i++) {
+				File fileArgumentForCheckout = new File(workingDirectoryDestination + "/" + remoteFolders[i].getName());
+				String fullPath = remoteFolders[i].getRepository().getLabel() + "/" + remoteFolders[i].getProjectRelativePath();				
+				myClient.checkout(new SVNUrl(fullPath), fileArgumentForCheckout, 
+						revision, getDepthValue(depthIndex), ignoreExternals, force);				
+				opMng.endOperation();
+				try {
+					ProjectsService.getInstance().createOrImportProjectFromFile(context, fileArgumentForCheckout);
+				} catch (URISyntaxException e) {
+					logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+				} catch (CoreException e) {
+					logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+				}
+			}
+		} catch (SVNException | MalformedURLException | SVNClientException e) {
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		} finally {
+			pm.done();
+		}		
+		return true;
+	}
+	
+	public ArrayList<String> getWorkingDirectoriesForOrganization(ServiceInvocationContext context, String organizationName) {
+		ArrayList<String> result = new ArrayList<String>();
+		try {
+			ProjectsService pj = new ProjectsService();
+			List<WorkingDirectory> workingDirectoryList = pj.getWorkingDirectoriesForOrganizationName(organizationName);
+			for (WorkingDirectory wd : workingDirectoryList) {
+				result.add(wd.getPathFromOrganization());				
+			}
+		} catch (CoreException | URISyntaxException e) {			
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+			CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", SvnPlugin.getInstance().getMessage(
+					"svn.service.checkout.error.problemsAtBrowseWorkDirs"), DisplaySimpleMessageClientCommand.ICON_ERROR));
+		}	
+		return result;		
+	}
+	
+	public boolean workingDirectoryExists(ServiceInvocationContext context, String wdName, String organizationName) {
+		ArrayList<String> existingWDs = getWorkingDirectoriesForOrganization(context, organizationName);
+		for (String wd : existingWDs) {
+			if(wd.equals(wdName))
+				return true;
+		}
+		return false;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getWorkingDirectoryFullPath(List<PathFragment> pathWithRoot) {		
+		Object workingDirectory  = GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
+		if (workingDirectory instanceof WorkingDirectory) {
+			return "" + ProjectsService.getInstance().getOrganizationDir(((WorkingDirectory) workingDirectory).getOrganization().getLabel()) + "/"+ ((WorkingDirectory) workingDirectory).getPathFromOrganization();
+		}
+		else return ((Pair<File, String>) workingDirectory).a.getAbsolutePath();			
+	}
+	
+	public Boolean createFolderAndMarkAsWorkingDirectory (ServiceInvocationContext context, String path, TreeNode organization) {
+		File targetFile = new File(ProjectsService.getInstance().getOrganizationDir(organization.getLabel()).getAbsolutePath() + "\\" +path);		
+			if(targetFile.mkdirs()) {
+				ProjectsService.getInstance().markAsWorkingDirectoryForFile(context, targetFile);
+				return true;
+			} else { 
+				return false;
+			}				
+	}
+	
+	public int getDepthValue(int depth){
+		switch (depth) {
+			case 0: 
+				return ISVNCoreConstants.DEPTH_INFINITY;
+			case 1: 
+				return ISVNCoreConstants.DEPTH_IMMEDIATES;
+			case 2:
+				return ISVNCoreConstants.DEPTH_FILES;
+			case 3:
+				return ISVNCoreConstants.DEPTH_EMPTY;			
+		}
+		return ISVNCoreConstants.DEPTH_UNKNOWN;
 	}
 
 }

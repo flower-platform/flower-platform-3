@@ -1,12 +1,21 @@
 package org.flowerplatform.web.svn;
 
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.common.util.ReflectionUtils;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.web.svn.operation.SVNOperationManager;
 import org.osgi.framework.BundleContext;
+import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
+import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
+import org.tigris.subversion.svnclientadapter.SVNNotificationHandler;
+import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapterFactory;
 
 /**
  * 
@@ -41,7 +50,7 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	
 	public void start(BundleContext context) throws Exception {
 		super.start(context);		
-		INSTANCE = this;		
+		INSTANCE = this;			
 	}
 	
 	/**

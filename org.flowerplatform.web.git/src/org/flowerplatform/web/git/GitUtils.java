@@ -568,7 +568,7 @@ public class GitUtils {
 		try {
 			StoredConfig c = repo.getConfig();
 			c.load();			
-			User user = (User) CommunicationPlugin.tlCurrentPrincipal.get().getUser();
+			User user = (User) CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUser();
 			
 			c.setString(ConfigConstants.CONFIG_USER_SECTION, null, ConfigConstants.CONFIG_KEY_NAME, user.getName());
 			c.setString(ConfigConstants.CONFIG_USER_SECTION, null, ConfigConstants.CONFIG_KEY_EMAIL, user.getEmail());

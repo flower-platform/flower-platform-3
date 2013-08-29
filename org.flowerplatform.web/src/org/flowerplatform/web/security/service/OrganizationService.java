@@ -214,8 +214,8 @@ public class OrganizationService extends ServiceObservable {
 					logger.debug("Find organizations where {} belongs", user);
 					
 					for (OrganizationUser ou : user.getOrganizationUsers()) {
-						try {
-							if (user.getId() != CommunicationPlugin.tlCurrentPrincipal.get().getUserId())
+						try {							
+							if (user.getId() != CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId())
 								SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(ou.getOrganization(), null));
 							list.add(convertOrganizationToOrganizationAdminUIDto(ou.getOrganization(), user));
 						} catch (Exception e) {
@@ -371,7 +371,7 @@ public class OrganizationService extends ServiceObservable {
 	 * @author Mariana
 	 */
 	public String getOrganizationDefaultPath(List<String> organizationsFilter) {
-		List<OrganizationAdminUIDto> organizations = findMyOrganizationsAsADminUIDto(CommunicationPlugin.tlCurrentPrincipal.get().getUserId());
+		List<OrganizationAdminUIDto> organizations = findMyOrganizationsAsADminUIDto(CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId());
 		for (OrganizationAdminUIDto organization : organizations) {
 			if (organizationsFilter.contains(organization.getName()) || organizationsFilter.size() == 0) {
 				String organizationDir = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*")[0];

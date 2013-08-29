@@ -2,6 +2,8 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.CheckoutAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

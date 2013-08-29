@@ -112,7 +112,7 @@ public class UserService extends ServiceObservable {
 		if (user.getGroupUsers() != null) {
 			for (GroupUser groupUser : user.getGroupUsers()) {
 				try {
-					if (user.getId() != CommunicationPlugin.tlCurrentPrincipal.get().getUserId())
+					if (user.getId() != CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId())
 						SecurityUtils.checkAdminSecurityEntitiesPermission(PermissionEntity.GROUP_PREFIX + groupUser.getGroup().getName());
 					Group group = groupUser.getGroup();
 					NamedDto orgDto = null;
@@ -130,8 +130,8 @@ public class UserService extends ServiceObservable {
 		HashSet<OrganizationUserAdminUIDto> organizations = new HashSet<OrganizationUserAdminUIDto>();
 		if (user.getOrganizationUsers() != null) {
 			for (OrganizationUser organizationUser : user.getOrganizationUsers()) {
-				try {
-					if (user.getId() != CommunicationPlugin.tlCurrentPrincipal.get().getUserId()) 
+				try {					
+					if (user.getId() != CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId()) 
 						SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(organizationUser.getOrganization(), null));
 					OrganizationUserAdminUIDto ouDto = new OrganizationUserAdminUIDto();
 					ouDto.setId(organizationUser.getId());
@@ -179,8 +179,8 @@ public class UserService extends ServiceObservable {
 				String groupOwners = SecurityEntityAdaptor.toCsvString(getUserGroups(user), Collections.<GroupAdminUIDto>emptyList(), PermissionEntity.GROUP_PREFIX);
 				String orgOwners = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, true), null, PermissionEntity.ORGANIZATION_PREFIX);
 				String owners = groupOwners + (groupOwners.length() > 0 && orgOwners.length() > 0 ? "," : "") + orgOwners;
-				try {
-					if (id != CommunicationPlugin.tlCurrentPrincipal.get().getUserId()) {
+				try {					
+					if (id != CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId()) {
 						SecurityUtils.checkAdminSecurityEntitiesPermission(owners);
 					}
 				} catch (SecurityException e) {
@@ -358,12 +358,12 @@ public class UserService extends ServiceObservable {
 				}
 				
 				if (dto.getLogin().startsWith(ANONYMOUS)) {
-					if (CommunicationPlugin.tlCurrentPrincipal.get() != null) {
-						if (dto.getId() == 0 && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUser().isAdmin()) {
+					if (CommunicationPlugin.tlCurrentChannel.get().getPrincipal() != null) {
+						if (dto.getId() == 0 && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal()).getUser().isAdmin()) {
 							wrapper.setOperationResult("You cannot create an anonymous user!");
 							return;
 						} else {
-							if (dto.getId() == CommunicationPlugin.tlCurrentPrincipal.get().getUserId()) {
+							if (dto.getId() == CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId()) {
 								wrapper.setOperationResult("You cannot edit an anonymous user!"); // don't allow an anonymous user to edit its own details
 								// note: the permissions logic will take care of the case when another user tries to edit anonymous
 								// i.e. org1 admin will be allowed to edit anonymous.org1, but not anonymous.org2; FDC admin can edit any user by default
@@ -378,8 +378,8 @@ public class UserService extends ServiceObservable {
 				
 				// check permissions
 				List<Group> originalGroups = getUserGroups(user);
-				if (CommunicationPlugin.tlCurrentPrincipal.get() != null &&
-						CommunicationPlugin.tlCurrentPrincipal.get().getUserId() != user.getId()) {
+				if (CommunicationPlugin.tlCurrentChannel.get().getPrincipal() != null &&
+						CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId() != user.getId()) {
 					String groupsCsvList = SecurityEntityAdaptor.toCsvString(originalGroups, dto.getGroups(), PermissionEntity.GROUP_PREFIX);
 					String orgsCsvList = SecurityEntityAdaptor.toCsvString(getOrganizationsWhereUserBelongs(user, false), dto.getOrganizations(false), PermissionEntity.ORGANIZATION_PREFIX);
 					String csvList = groupsCsvList + (groupsCsvList.length() > 0 && orgsCsvList.length() > 0 ? "," : "") + orgsCsvList;
@@ -444,8 +444,8 @@ public class UserService extends ServiceObservable {
 						OrganizationUser organizationUser = it.next();
 						try {
 							// check if the current user has permissions, unless the current user is leaving the organization
-							if (CommunicationPlugin.tlCurrentPrincipal.get() != null &&
-									CommunicationPlugin.tlCurrentPrincipal.get().getUserId() != user.getId()) {
+							if (CommunicationPlugin.tlCurrentChannel.get().getPrincipal() != null &&
+									CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId() != user.getId()) {
 								SecurityUtils.checkAdminSecurityEntitiesPermission(SecurityEntityAdaptor.toCsvString(Collections.singletonList(organizationUser.getOrganization()), null, PermissionEntity.ORGANIZATION_PREFIX));
 							}
 							if (organizationUser.getOrganization().getId() == id) {
@@ -956,7 +956,7 @@ public class UserService extends ServiceObservable {
 					return;
 				}
 				
-				long userId = CommunicationPlugin.tlCurrentPrincipal.get().getUserId();
+				long userId = CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUserId();
 				User currentUser = wrapper.find(User.class, userId);
 				if (currentUser.isAdmin()) {
 					// activate org automatically if this user is FDC admin
@@ -1194,7 +1194,7 @@ public class UserService extends ServiceObservable {
 			public void run() {
 				User user = wrapper.find(User.class, userId);
 				
-				if (user.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUser().isAdmin()) {
+				if (user.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal()).getUser().isAdmin()) {
 					wrapper.setOperationResult("Anonymous user cannot join organizations!");
 					return;
 				}
@@ -1412,7 +1412,7 @@ public class UserService extends ServiceObservable {
 	 * @param organizationDtos the organizations that the user is leaving
 	 */
 	public String leaveOrganizations(final ServiceInvocationContext context, final UserAdminUIDto userDto, final List<OrganizationAdminUIDto> organizationDtos, final String commentForAdmin) {
-		if (userDto.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUser().isAdmin()) {
+		if (userDto.getLogin().startsWith(ANONYMOUS) && !((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal()).getUser().isAdmin()) {
 			return "Anonymous user cannot be removed from organizations!";
 		}
 		
@@ -1529,7 +1529,7 @@ public class UserService extends ServiceObservable {
 							
 						} catch (Exception e) {
 							logger.debug("{} is not allowed to upgrade/downgrade members of {}",
-									CommunicationPlugin.tlCurrentPrincipal.get().getUser(),
+									CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUser(),
 									ou.getOrganization());
 						}
 					}

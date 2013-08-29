@@ -165,7 +165,7 @@ public class CommitOperation {
 				isCherryPickResolved = true;				
 			}
 					
-			User user = (User) CommunicationPlugin.tlCurrentPrincipal.get().getUser();
+			User user = (User) CommunicationPlugin.tlCurrentChannel.get().getPrincipal().getUser();
 													
 			String committer = user.getName() + " <" + user.getEmail() + ">";
 			String author = user.getName() + " <" + user.getEmail() + ">";	

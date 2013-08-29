@@ -68,4 +68,5 @@ package org.flowerplatform.web.svn.common.action {
 				new InvokeServiceMethodServerCommand("svnService", "refresh", [selection.getItemAt(0).getPathForNode(true)], this));			
 		}
 	}
+	
 }
