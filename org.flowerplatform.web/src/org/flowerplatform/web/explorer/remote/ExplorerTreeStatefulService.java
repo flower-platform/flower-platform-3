@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -43,6 +44,7 @@ import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.file_event.IFileEventListener;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,18 +147,29 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 		}
 		populators.add(populator);
 	}
-
+	
+	/**
+	 * @author Tache Razvan Mihai
+	 */
 	@Override
 	public void notify(FileEvent event) {
 		File parent = event.getFile().getParentFile();
-		String parentPath = event.getFile().getParent();
 		
 		// Update for ws_trunk subtree
-		Object node = new Pair<File, String>(parent, "fsFile") ;
+		Object node = new Pair<File, String>(parent, "fsFile");
 		dispatchContentUpdate(node);
 		
 		// Update for project subtree
-		node = new Pair<File, String>(parent, "projFile") ;
-		dispatchContentUpdate(node);
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(parent);
+		// Update only if a project exists
+		if(resource != null) {
+			if(resource.getType() == IResource.FOLDER ) {
+				node = new Pair<File, String>(parent, "projFile");
+				dispatchContentUpdate(node);	
+			} else {
+				node = new Pair<File, String>(parent, "project");
+				dispatchContentUpdate(node);
+			}
+		}
 	}
 }

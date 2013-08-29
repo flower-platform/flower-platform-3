@@ -213,7 +213,7 @@
 	</s:Rect>
 		
 	<s:VGroup width="100%" height="100%" horizontalAlign="center" verticalAlign="middle">
-		<s:TextArea id="textArea" width="100%" height="100%" editable="true" selectable="true" />	
+		<s:TextArea id="textArea" width="100%" height="100%" editable="false" selectable="true" />	
 		<s:Group id="alertControlBar" left="1" right="2" top="1" bottom="1" width="100%" >
 			<s:layout>
 				<s:HorizontalLayout gap="2" horizontalAlign="center" />

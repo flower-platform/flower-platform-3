@@ -44,9 +44,9 @@ public class FileManagerService {
 			String title, String message) {
 		context.getCommunicationChannel()
 				.appendCommandToCurrentHttpResponse(
-						new DisplaySimpleMessageClientCommand(WebPlugin
-								.getInstance().getMessage(title), WebPlugin
-								.getInstance().getMessage(message),
+						new DisplaySimpleMessageClientCommand(
+								WebPlugin.getInstance().getMessage(title), 
+								WebPlugin.getInstance().getMessage(message),
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 	}
 	
@@ -57,7 +57,22 @@ public class FileManagerService {
 						new DisplaySimpleMessageClientCommand(title, message,
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 	}
+	
+	private boolean deleteFolder(final File folder) {
 
+		File[] files = folder.listFiles();
+		if (files != null) { // some JVMs return null for empty dirs
+			for (File f : files) {
+				if (f.isDirectory()) {
+					deleteFolder(f);
+				} else {
+					f.delete();
+				}
+			}
+		}
+		return folder.delete();
+	}
+	
 	public void createDirectory(ServiceInvocationContext context,
 			List<PathFragment> pathWithRoot, String name) {
 
@@ -159,6 +174,46 @@ public class FileManagerService {
 					"Error",
 					e.getMessage() + " Check the console for more informations");
 			e.printStackTrace();
+		}
+	}
+	
+	public void deleteFile(ServiceInvocationContext context,
+			List<PathFragment> pathWithRoot) {
+		
+		GenericTreeStatefulService service = GenericTreeStatefulService
+				.getServiceFromPathWithRoot(pathWithRoot);
+		String clientID = GenericTreeStatefulService.getClientIDFromPathWithRoot(pathWithRoot);
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath();
+		
+		File file = new File(path);
+		
+		if(file.exists()) {
+			boolean result = deleteFolder(file);	
+			if(result) {
+				Map<Object, Object> clientContext = new HashMap<Object,Object>();
+				clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
+				List<PathFragment> pathOfNode = service.getPathForNode(object,
+						"fsFile", null);
+				service.openNode(
+						new StatefulServiceInvocationContext(context
+								.getCommunicationChannel(),clientID), pathOfNode, clientContext);
+				
+				FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
+				CommonPlugin.getInstance().getFileEventDispatcher()
+						.dispatch(event);
+			} else {
+				printMessageToUser(context,
+						"explorer.delete.error.title",
+						"explorer.delete.error.couldNotDelete");
+			} 
+		} else {
+			printMessageToUser(context,
+					"explorer.delete.error.title",
+					"explorer.delete.error.fileAlreadyDeleted");
 		}
 	}
 

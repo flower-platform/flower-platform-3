@@ -18,24 +18,24 @@
 */
 package org.flowerplatform.web.common.explorer.action
 {
+	import flash.events.MouseEvent;
+	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-	import org.flowerplatform.web.common.explorer.ui.TextInputView;
-
+	
 	/**
 	 * @author Tache Razvan Mihai
 	 */
-	public class CreateFileAction extends ActionBase implements IDialogResultHandler {
+	public class DeleteAction extends ActionBase {
 		
 		public var selectedTreeNode:TreeNode;
 		
-		public function CreateFileAction() {
-			label = WebCommonPlugin.getInstance().getMessage("explorer.createFile.action");
+		public function DeleteAction() {
+			label = WebCommonPlugin.getInstance().getMessage("explorer.delete.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
 		}
 		
@@ -44,27 +44,25 @@ package org.flowerplatform.web.common.explorer.action
 				return false;
 			}
 			var obj:Object = selection.getItemAt(0);		
-			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY]);
+			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY] != null) && (TreeNode(obj).pathFragment.type != "project");
 		}
 		
 		override public function run():void	{
 			selectedTreeNode = TreeNode(selection.getItemAt(0));
-			var view:TextInputView = new TextInputView();
-			view.node=TreeNode(selection.getItemAt(0));
-			view.label = WebCommonPlugin.getInstance().getMessage("explorer.createFile.input.label");
-			view.title = WebCommonPlugin.getInstance().getMessage("explorer.createFile.input.title");
-			view.wizardIcon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
-			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
-			view.setResultHandler(this);
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(view)
-				.show();
+			FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
+				.setTitle(WebCommonPlugin.getInstance().getMessage("explorer.delete.confirmDelete.title"))
+				.setText(WebCommonPlugin.getInstance().getMessage("explorer.delete.confirmDelete.message"))
+				.addButton("Yes", confirmDeleteHandler)
+				.addButton("No")
+				.setHeight(100)
+				.setWidth(300)
+				.showMessageBox();
 		}
 		
-		public function handleDialogResult(result:Object):void {
+		private function confirmDeleteHandler(event:MouseEvent):void {
 			CommunicationPlugin.getInstance().bridge.sendObject(
-				new InvokeServiceMethodServerCommand("fileManagerService", "createFile", [selectedTreeNode.getPathForNode(true),result]));
+				new InvokeServiceMethodServerCommand("fileManagerService", "deleteFile", [selectedTreeNode.getPathForNode(true)]));
 		}
-	
+
 	}
 }
