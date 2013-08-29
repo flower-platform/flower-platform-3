@@ -22,6 +22,7 @@ package org.flowerplatform.flexutil.content_assist {
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TouchEvent;
 	import flash.ui.Keyboard;
 	
 	import mx.collections.ArrayCollection;
@@ -30,11 +31,13 @@ package org.flowerplatform.flexutil.content_assist {
 	import mx.core.ClassFactory;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
+	import mx.events.FlexEvent;
 	
 	import spark.components.List;
 	import spark.components.TextArea;
 	import spark.components.TextInput;
 	import spark.events.IndexChangeEvent;
+	import spark.events.TextOperationEvent;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -70,6 +73,7 @@ package org.flowerplatform.flexutil.content_assist {
 		
 		/**
 		 * Listens for arrow keys to navigate through the content assist items.
+		 * Works for physical keyboards, and only for ENTER for soft keyboards.
 		 * 
 		 * <p>
 		 * Should only be registered when the list is visible.
@@ -128,13 +132,20 @@ package org.flowerplatform.flexutil.content_assist {
 		 * Should only be registered when the list is visible.
 		 * @see displayHideContentAssist()
 		 */
-		protected function updateContentAssistListItems(evt:KeyboardEvent):void {
+//		protected function updateContentAssistListItems(evt:KeyboardEvent):void {
+//			if (visible) {
+//				trace ("update content assist items");
+//				if (evt.charCode > 0 || evt.keyCode == Keyboard.LEFT || evt.keyCode == Keyboard.RIGHT
+//					|| evt.keyCode == Keyboard.BACKSPACE || evt.keyCode == Keyboard.DELETE) {
+//					getContentAssistItems();
+//				}
+//			}
+//		}
+		
+		protected function updateContentAssistListItems(evt:Event):void {
 			if (visible) {
-			trace ("update content assist items");
-				if (evt.charCode > 0 || evt.keyCode == Keyboard.LEFT || evt.keyCode == Keyboard.RIGHT
-					|| evt.keyCode == Keyboard.BACKSPACE || evt.keyCode == Keyboard.DELETE) {
-					getContentAssistItems();
-				}
+				trace ("update content asssist items");
+				getContentAssistItems();
 			}
 		}
 		
@@ -183,8 +194,8 @@ package org.flowerplatform.flexutil.content_assist {
 		 */
 		public function getContentAssistItems():void {
 			var pattern:String = getTextFromDispatcher();
-			trace ("get content assist items -", pattern);
 			if (pattern != null && pattern != previousPattern) {
+				trace ("get content assist items -", pattern);
 				previousPattern = pattern;
 				contentAssistProvider.getContentAssistItems(pattern, setContentAssistItems);
 			}
@@ -220,15 +231,30 @@ package org.flowerplatform.flexutil.content_assist {
 		}
 		
 		private function displayHideContentAssist(display:Boolean):void {
+			if (visible == display) {
+				return;
+			}
 			visible = display;
 			if (display) {
+				dispatcher.removeEventListener(KeyboardEvent.KEY_UP, displayContentAssistHandler);
+				
 				dispatcher.addEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler, true);
-				dispatcher.addEventListener(KeyboardEvent.KEY_UP, updateContentAssistListItems, true);
+				// handle text changes for both desktop and mobile
+				dispatcher.addEventListener(TextOperationEvent.CHANGE, updateContentAssistListItems);
+				// handle selection changes for desktop (using arrow keys or the mouse)
+				dispatcher.addEventListener(FlexEvent.SELECTION_CHANGE, updateContentAssistListItems);
+				// handle selection changes for mobile (by tapping)
+				dispatcher.addEventListener(MouseEvent.CLICK, updateContentAssistListItems);
+				
 			} else {
 				dataProvider = null;
 				previousPattern = null;
 				dispatcher.removeEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler);
-				dispatcher.removeEventListener(KeyboardEvent.KEY_UP, updateContentAssistListItems);
+				dispatcher.removeEventListener(TextOperationEvent.CHANGE, updateContentAssistListItems);
+				dispatcher.removeEventListener(FlexEvent.SELECTION_CHANGE, updateContentAssistListItems);
+				dispatcher.removeEventListener(MouseEvent.CLICK, updateContentAssistListItems);
+				
+				dispatcher.addEventListener(KeyboardEvent.KEY_UP, displayContentAssistHandler);
 			}
 		}
 	}
