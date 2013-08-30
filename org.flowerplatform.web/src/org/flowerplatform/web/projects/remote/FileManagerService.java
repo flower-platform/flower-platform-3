@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IResource;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
@@ -234,6 +235,35 @@ public class FileManagerService {
 			printMessageToUser(context,
 					"explorer.rename.error.title",
 					"explorer.rename.error.newFileAlreadyExists");
+		}
+		
+	}
+	
+	public void refreshDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
+		
+		GenericTreeStatefulService service = GenericTreeStatefulService
+				.getServiceFromPathWithRoot(pathWithRoot);
+		
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath();		
+		File folder = new File(path);
+		Object node;
+		
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(folder);
+		if (resource != null) {
+			if(resource.getType() == IResource.FOLDER ) {
+				node = new Pair<File, String>(folder, "projFile");
+				service.dispatchContentUpdate(node);	
+			} else {
+				node = new Pair<File, String>(folder, "project");
+				service.dispatchContentUpdate(node);
+			}
+		} else {
+			node = new Pair<File, String>(folder, "fsFile");
+			service.dispatchContentUpdate(node);
 		}
 		
 	}
