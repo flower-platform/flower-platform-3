@@ -42,6 +42,7 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.web.common.explorer.action.CreateDirectoryAction;
 	import org.flowerplatform.web.common.explorer.action.CreateFileAction;
 	import org.flowerplatform.web.common.explorer.action.DeleteAction;
+	import org.flowerplatform.web.common.explorer.action.RenameAction;
 	import org.flowerplatform.web.common.projects.ProjectPropertiesAction;
 	import org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction;
 	import org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction;
@@ -126,6 +127,7 @@ package org.flowerplatform.web.common {
 			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateDirectoryAction);			
 			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateFileAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(DeleteAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(RenameAction);
 		}
 		
 		/**

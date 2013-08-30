@@ -180,9 +180,6 @@ public class FileManagerService {
 	public void deleteFile(ServiceInvocationContext context,
 			List<PathFragment> pathWithRoot) {
 		
-		GenericTreeStatefulService service = GenericTreeStatefulService
-				.getServiceFromPathWithRoot(pathWithRoot);
-		String clientID = GenericTreeStatefulService.getClientIDFromPathWithRoot(pathWithRoot);
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 
@@ -193,15 +190,7 @@ public class FileManagerService {
 		
 		if(file.exists()) {
 			boolean result = deleteFolder(file);	
-			if(result) {
-				Map<Object, Object> clientContext = new HashMap<Object,Object>();
-				clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
-				List<PathFragment> pathOfNode = service.getPathForNode(object,
-						"fsFile", null);
-				service.openNode(
-						new StatefulServiceInvocationContext(context
-								.getCommunicationChannel(),clientID), pathOfNode, clientContext);
-				
+			if(result) {				
 				FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
 				CommonPlugin.getInstance().getFileEventDispatcher()
 						.dispatch(event);
@@ -215,6 +204,38 @@ public class FileManagerService {
 					"explorer.delete.error.title",
 					"explorer.delete.error.fileAlreadyDeleted");
 		}
+	}
+	
+	public void rename(ServiceInvocationContext context,
+			List<PathFragment> pathWithRoot, String newName) {
+		
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath();
+		
+		File fileToBeRenamed = new File(path);
+		String newPath = fileToBeRenamed.getParent() + "\\" + newName;
+		File newFile = new File(newPath);
+		
+		if(!newFile.exists()) {
+			boolean result = fileToBeRenamed.renameTo(newFile);
+			if(result) {
+				FileEvent event = new FileEvent(newFile, FileEvent.FILE_MODIFIED);
+				CommonPlugin.getInstance().getFileEventDispatcher()
+						.dispatch(event);
+			} else {
+				printMessageToUser(context,
+						"explorer.rename.error.title",
+						"explorer.rename.error.couldNotRename");
+			}
+		} else {
+			printMessageToUser(context,
+					"explorer.rename.error.title",
+					"explorer.rename.error.newFileAlreadyExists");
+		}
+		
 	}
 
 }
