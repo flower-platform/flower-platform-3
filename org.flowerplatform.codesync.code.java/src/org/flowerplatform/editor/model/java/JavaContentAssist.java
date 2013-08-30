@@ -37,6 +37,7 @@ import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.IContentAssist;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.java.CodeSyncCodeJavaPlugin;
 
 /**
@@ -113,7 +114,7 @@ public class JavaContentAssist implements IContentAssist {
 		File file = (File) context.get(RESOURCE);
 		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
 		if (resource == null) {
-			throw new RuntimeException("The resource is not contained in a project!");
+			throw new RuntimeException(CodeSyncPlugin.getInstance().getMessage("contentAssist.resourceIsNotInProject"));
 		}
 		IJavaElement javaElement = JavaCore.create(resource.getProject());
 		elements[0] = javaElement;

@@ -45,7 +45,7 @@ public abstract class CodeSyncElementContentAssist implements IContentAssist {
 		File file = (File) context.get(RESOURCE);
 		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
 		if (resource == null) {
-			throw new RuntimeException("The resource is not contained in a project!");
+			throw new RuntimeException(CodeSyncPlugin.getInstance().getMessage("contentAssist.resourceIsNotInProject"));
 		}
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(file, "diagramEditorStatefulService");
 		Resource codeSyncMapping = getCodeSyncElementsResource(resource.getProject(), resourceSet); 
