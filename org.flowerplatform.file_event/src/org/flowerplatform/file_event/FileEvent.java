@@ -18,28 +18,34 @@ public class FileEvent {
 
 	public static final int FILE_OPENED = 5;
 	
+	public static final int FILE_RENAMED = 6;
+	
 	private int event;
 	
 	private File file;
 	
-	/*
-	 * event can be:
-	 * FILE_CLOSED
-	 * FILE_CREATED
-	 * FILE_DELETED
-	 * FILE_MODIFIED
-	 * FILE_OPENED
-	 */
+	private File oldFile = null;
+
 	public FileEvent(File file,int event) {
 		this.file = file;
 		this.event = event;
 	}
 
+	public FileEvent(File file,int event, File oldFile) {
+		this.file = file;
+		this.event = event;
+		this.oldFile = oldFile;
+	}
+	
 	public int getEvent() {
 		return event;
 	}
 	
 	public File getFile() {
 		return file;
+	}
+	
+	public File getOldFile() {
+		return oldFile;
 	}
 }

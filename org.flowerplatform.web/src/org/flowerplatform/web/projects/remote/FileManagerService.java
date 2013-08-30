@@ -222,7 +222,7 @@ public class FileManagerService {
 		if(!newFile.exists()) {
 			boolean result = fileToBeRenamed.renameTo(newFile);
 			if(result) {
-				FileEvent event = new FileEvent(newFile, FileEvent.FILE_MODIFIED);
+				FileEvent event = new FileEvent(newFile, FileEvent.FILE_RENAMED, fileToBeRenamed);
 				CommonPlugin.getInstance().getFileEventDispatcher()
 						.dispatch(event);
 			} else {
