@@ -26,12 +26,12 @@ public class FileEvent {
 	
 	private File oldFile = null;
 
-	public FileEvent(File file,int event) {
+	public FileEvent(File file, int event) {
 		this.file = file;
 		this.event = event;
 	}
 
-	public FileEvent(File file,int event, File oldFile) {
+	public FileEvent(File file, int event, File oldFile) {
 		this.file = file;
 		this.event = event;
 		this.oldFile = oldFile;
