@@ -19,10 +19,10 @@
 package org.flowerplatform.editor.model.java;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
@@ -31,6 +31,8 @@ import org.eclipse.jdt.core.search.IJavaSearchConstants;
 import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
+import org.eclipse.jdt.internal.compiler.lookup.BaseTypeBinding;
+import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.IContentAssist;
 import org.flowerplatform.web.projects.remote.ProjectsService;
@@ -40,18 +42,56 @@ import com.crispico.flower.mp.codesync.code.java.CodeSyncCodeJavaPlugin;
 /**
  * @author Mariana Gheorghe
  */
+@SuppressWarnings("restriction")
 public class JavaContentAssist implements IContentAssist {
 
+	/*
+	 * Copied from CompletionEngine.
+	 */
+	static final BaseTypeBinding[] BASE_TYPES = {
+		TypeBinding.BOOLEAN,
+		TypeBinding.BYTE,
+		TypeBinding.CHAR,
+		TypeBinding.DOUBLE,
+		TypeBinding.FLOAT,
+		TypeBinding.INT,
+		TypeBinding.LONG,
+		TypeBinding.SHORT,
+		TypeBinding.VOID
+	};
+	
 	/**
 	 * Delegates to {@link SearchEngine} to search for Java types that match the prefix <code>pattern</code>.
 	 */
 	@Override
 	public List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern) {
-		if (!context.get(TYPE).toString().startsWith(CodeSyncCodeJavaPlugin.TECHNOLOGY)) {
+		String elementType = context.get(TYPE).toString();
+		if (elementType == null || !elementType.startsWith(CodeSyncCodeJavaPlugin.TECHNOLOGY)) {
 			// not a java element
 			return null;
 		}
 		
+		List<ContentAssistItem> result = new ArrayList<ContentAssistItem>();
+		
+		////////////////////////////////////////////////////
+		// STEP 1. Primitive types (int, long etc)
+		////////////////////////////////////////////////////
+		
+		pattern = pattern.toLowerCase();
+		for (BaseTypeBinding binding : BASE_TYPES) {
+			String name = String.copyValueOf(binding.simpleName);
+			if (name.toLowerCase().startsWith(pattern)) {
+				ContentAssistItem item = new ContentAssistItem(name, name, null, null);
+				result.add(item);
+			}
+		}
+		
+		////////////////////////////////////////////////////
+		// STEP 2. Types from this project's scope
+		// (i.e. source dirs, referenced projects and libs)
+		////////////////////////////////////////////////////
+		
+//		// debug
 //		BasicSearchEngine.VERBOSE = true;
 //		JobManager.VERBOSE = true;
 		
@@ -98,7 +138,9 @@ public class JavaContentAssist implements IContentAssist {
 		}
 		
 		// return matches
-		return nameRequestor.getMatches();
+		result.addAll(nameRequestor.getMatches());
+		
+		return result;
 	}
 
 }

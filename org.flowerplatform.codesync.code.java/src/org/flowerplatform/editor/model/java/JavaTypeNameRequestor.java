@@ -39,7 +39,7 @@ import org.flowerplatform.editor.model.ContentAssistItem;
  */
 public class JavaTypeNameRequestor extends TypeNameMatchRequestor {
 
-	private List<ContentAssistItem> matches = null;
+	private List<ContentAssistItem> matches = new ArrayList<ContentAssistItem>();
 
 	public List<ContentAssistItem> getMatches() {
 		return matches;
@@ -55,9 +55,6 @@ public class JavaTypeNameRequestor extends TypeNameMatchRequestor {
 			pck = containerType;
 		}
 		String iconUrl = getIconUrl(match.getType());
-		if (matches == null) {
-		matches = new ArrayList<ContentAssistItem>();
-	}
 		ContentAssistItem item = new ContentAssistItem(fullyQualifiedName, simpleName, pck, iconUrl);
 		matches.add(item);
 	}
