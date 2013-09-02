@@ -74,5 +74,17 @@
          </nodeType>
       </explorerAdditionalNodePopulator>
    </extension>
+   <extension
+         point="org.flowerplatform.web.explorerAdditionalNodePopulator">
+      <explorerAdditionalNodePopulator
+            populator="org.flowerplatform.web.svn.explorer.FSFile_SvnNodePopulator">
+         <nodeType
+               nodeType="project">
+         </nodeType>
+         <nodeType
+               nodeType="projFile">
+         </nodeType>
+      </explorerAdditionalNodePopulator>
+   </extension>
 
 </plugin>

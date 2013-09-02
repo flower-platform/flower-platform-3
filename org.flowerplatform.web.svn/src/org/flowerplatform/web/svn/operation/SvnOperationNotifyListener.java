@@ -37,28 +37,28 @@ import org.tigris.subversion.svnclientadapter.SVNProgressEvent;
  * 
  * @author Victor Badila
  */
-public class SVNOperationNotifyListener implements ISVNNotifyListener, ISVNProgressListener {
+public class SvnOperationNotifyListener implements ISVNNotifyListener, ISVNProgressListener {
 	
 	protected CommunicationChannel channel;
 
 	private Set<IResource> changedResources = new LinkedHashSet<IResource>();
 
-	private SVNOperationProgressNotifyListener operationProgressListener = null;
+	private SvnOperationProgressNotifyListener operationProgressListener = null;
 		
 	public CommunicationChannel getChannel() {
 		return channel;
 	}
 	
-	public SVNOperationNotifyListener(CommunicationChannel channel) {
+	public SvnOperationNotifyListener(CommunicationChannel channel) {
 		this.channel = channel;		
 	}
 	
 	public void beginOperation(IProgressMonitor monitor, ISVNClientAdapter svnClient, boolean addProgressListener) {
 		if (addProgressListener) {			
-			this.operationProgressListener = new SVNOperationProgressNotifyListener(monitor, svnClient, channel);
-			SVNOperationManager.INSTANCE.add(operationProgressListener);						
+			this.operationProgressListener = new SvnOperationProgressNotifyListener(monitor, svnClient, channel);
+			SvnOperationManager.INSTANCE.add(operationProgressListener);						
 		}
-		SVNOperationManager.INSTANCE.add(this);	
+		SvnOperationManager.INSTANCE.add(this);	
 	}
 
 	public void endOperation() throws SVNException {
@@ -71,9 +71,9 @@ public class SVNOperationNotifyListener implements ISVNNotifyListener, ISVNProgr
 	 */
 	public void endOperation(boolean refresh) throws SVNException {
 		if (operationProgressListener != null) {
-			SVNOperationManager.INSTANCE.remove(operationProgressListener);
+			SvnOperationManager.INSTANCE.remove(operationProgressListener);
 		}
-		SVNOperationManager.INSTANCE.remove(this);
+		SvnOperationManager.INSTANCE.remove(this);
 		
 		for (Iterator<IResource> it = changedResources.iterator(); it.hasNext();) {
 			IResource resource = (IResource) it.next();

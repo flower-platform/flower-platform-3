@@ -4,6 +4,9 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CheckoutAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

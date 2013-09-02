@@ -25,26 +25,26 @@ import org.tigris.subversion.svnclientadapter.SVNProgressEvent;
  *  
  * @author Victor Badila
  */
-public class SVNOperationManager implements ISVNNotifyListener, ISVNProgressListener, ICommunicationChannelLifecycleListener {
+public class SvnOperationManager implements ISVNNotifyListener, ISVNProgressListener, ICommunicationChannelLifecycleListener {
 	
-	protected Set<SVNOperationNotifyListener> notifyListeners = new CopyOnWriteArraySet<SVNOperationNotifyListener>();
+	protected Set<SvnOperationNotifyListener> notifyListeners = new CopyOnWriteArraySet<SvnOperationNotifyListener>();
 			
 	protected Set<ISVNProgressListener> progressListeners = new CopyOnWriteArraySet<ISVNProgressListener>();
 	
-	public static SVNOperationManager INSTANCE = new SVNOperationManager();
+	public static SvnOperationManager INSTANCE = new SvnOperationManager();
 		
-	private SVNOperationManager() {
+	private SvnOperationManager() {
 		try {
 			SVNProviderPlugin.getPlugin().getSVNClient().addNotifyListener(this);
 		} catch (SVNException e) {		
 		}
 	}
 
-	public void add(SVNOperationNotifyListener listener) {
+	public void add(SvnOperationNotifyListener listener) {
 		notifyListeners.add(listener);
 	}
 
-	public void remove(SVNOperationNotifyListener listener) {
+	public void remove(SvnOperationNotifyListener listener) {
 		notifyListeners.remove(listener);
 	}
 	
@@ -57,21 +57,21 @@ public class SVNOperationManager implements ISVNNotifyListener, ISVNProgressList
 	}
 	
 	public void onNotify(File path, SVNNodeKind kind) {
-		for (Iterator<SVNOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
+		for (Iterator<SvnOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
 			ISVNNotifyListener listener = (ISVNNotifyListener) it.next();
 			listener.onNotify(path, kind);
 		}
 	}	
 
 	public void logCompleted(String message) {
-		for (Iterator<SVNOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
+		for (Iterator<SvnOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
 			ISVNNotifyListener listener = (ISVNNotifyListener) it.next();
 			listener.logCompleted(message);
 		}
 	}
 
 	public void logMessage(String message) {
-		for (Iterator<SVNOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
+		for (Iterator<SvnOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
 			ISVNNotifyListener listener = (ISVNNotifyListener) it.next();
 			listener.logMessage(message);
 		}				
@@ -79,8 +79,8 @@ public class SVNOperationManager implements ISVNNotifyListener, ISVNProgressList
 
 	@Override
 	public void communicationChannelDestroyed(CommunicationChannel webCommunicationChannel) {
-		for (Iterator<SVNOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
-			SVNOperationNotifyListener listener = (SVNOperationNotifyListener) it.next();
+		for (Iterator<SvnOperationNotifyListener> it = notifyListeners.iterator(); it.hasNext();) {
+			SvnOperationNotifyListener listener = (SvnOperationNotifyListener) it.next();
 			if (listener.getChannel().equals(webCommunicationChannel)) {
 				it.remove();
 			}

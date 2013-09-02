@@ -15,11 +15,11 @@ import org.tigris.subversion.svnclientadapter.SVNProgressEvent;
  * 
  * @author Victor Badila
  */
-public class SVNOperationProgressNotifyListener extends OperationProgressNotifyListener {
+public class SvnOperationProgressNotifyListener extends OperationProgressNotifyListener {
 
 	private CommunicationChannel channel;
 	
-	public SVNOperationProgressNotifyListener(IProgressMonitor monitor,	ISVNClientAdapter svnClient, CommunicationChannel channel) {
+	public SvnOperationProgressNotifyListener(IProgressMonitor monitor,	ISVNClientAdapter svnClient, CommunicationChannel channel) {
 		super(monitor, svnClient);
 		this.channel = channel;
 	}

@@ -100,7 +100,10 @@ license-end
 					if (headRevisionCheckbox.selected)
 						headRev = true;
 					CommunicationPlugin.getInstance().bridge.sendObject(
-						new InvokeServiceMethodServerCommand("svnService", "checkout", [selectionPaths, wdNode.getPathForNode(true), "/" + workingDirectoryTextInput.text, revisionValue, depthDropdown.selectedIndex, headRev, forceCheck.selected, ignoreCheck.selected], this, getProjectsCallbackHandler ));
+						new InvokeServiceMethodServerCommand("svnService", "checkout", 
+							[selectionPaths, wdNode.getPathForNode(true), "/" + workingDirectoryTextInput.text, 
+							revisionValue, depthDropdown.selectedIndex, headRev, forceCheck.selected, ignoreCheck.selected], 
+							this, getProjectsCallbackHandler ));
 					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));		
 				} else {
 					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()

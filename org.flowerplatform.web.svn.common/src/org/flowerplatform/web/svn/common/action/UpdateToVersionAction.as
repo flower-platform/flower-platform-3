@@ -19,7 +19,6 @@
 
 package org.flowerplatform.web.svn.common.action {
 	
-	import mx.collections.*;
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	
@@ -28,49 +27,47 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-	import org.flowerplatform.web.svn.common.ui.CheckoutView;
+	import org.flowerplatform.web.svn.common.ui.UpdateToVersionView;
 	
 	/**
 	 * @author Victor Badila
 	 */
-	public class CheckoutAction extends ActionBase {
+	public class UpdateToVersionAction extends ActionBase {
 		
-		public function CheckoutAction() {
-			label = SvnCommonPlugin.getInstance().getMessage("svn.action.checkout.label");
+		public function UpdateToVersionAction() {
+			label = SvnCommonPlugin.getInstance().getMessage("svn.action.updateToVersion.label");
 			icon = null;
-		}	
+		}
 		
-		public override function get visible():Boolean {				
-			if (selection.length == 0)
-				return false;
-			if (!selection.getItemAt(0) is TreeNode)
-				return false;
-			var node_type:String = TreeNode(selection.getItemAt(0)).pathFragment.type;
-			if(node_type != SvnCommonPlugin.NODE_TYPE_REPOSITORY && node_type != SvnCommonPlugin.NODE_TYPE_FILE)
-				return false;
-			for (var i:int = 0; i<selection.length; i++) {
-				var currentNode:TreeNode = TreeNode(selection.getItemAt(i)); 
-				if (currentNode.pathFragment.type != node_type || (currentNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE && currentNode.customData.isFolder == false)) {
-					return false;
-				}			
-			}
-			var organizationName:String = PathFragment(TreeNode(selection.getItemAt(0)).getPathForNode(false).getItemAt(0)).name;
+		public override function get visible():Boolean {
 			for (var i:int=0; i<selection.length; i++) {
-				var treeNode:TreeNode = TreeNode(selection.getItemAt(i));
-				if (organizationName != PathFragment(treeNode.getPathForNode(false).getItemAt(0)).name) {
+				var currentSelection:Object = selection.getItemAt(i);
+				if (!(currentSelection is TreeNode)) {
 					return false;
 				}
-			}
+				if (currentSelection.customData == null ||
+					currentSelection.customData.svnFileType == null ||
+					currentSelection.customData.svnFileType == false) {
+					return false;
+				}
+			}			
 			return true;
 		}
 		
-		public override function run():void {			
-			var view:CheckoutView = new CheckoutView();
+		public override function run():void {
+			
+			var selectionPaths:ArrayList = new ArrayList;
+			for(var i:int=0; i<selection.length; i++) {
+				var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
+				selectionPaths.addItem(path);
+			}
+			
+			var view:UpdateToVersionView = new UpdateToVersionView();
 			view.selection = ArrayList(selection);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
 				.show();
-		}		
+		}
+		
 	}
-	
 }
