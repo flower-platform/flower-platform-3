@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+@author Victor Badila
+-->
+
+<popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
+			  xmlns:component="org.flowerplatform.web.git.common.ui.component.*"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  creationComplete="init()">
+		
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.controls.Tree;
+			
+			import org.flowerplatform.communication.tree.remote.PathFragment;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			
+			public var selection:ArrayList;
+			
+			public function init():void {
+			}
+			
+			public function commitPath():String {
+				if (selection.length>1) {
+					return "multiple target selected";
+				}
+				return "<path>";
+			}
+
+			
+		]]>		
+	</fx:Script>
+	
+	<popup:states>
+		<mx:State name="0">				
+			<mx:SetProperty name="wizardTitle"
+							value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.commit.wizardName')}"/>										
+			<mx:AddChild relativeTo="{contentArea}">						
+				<s:VGroup width="100%">
+					<s:Label text="Commit to " + "{commitPath()}">
+					
+				</s:VGroup>		 
+			</mx:AddChild>
+			<mx:SetProperty target="finish" name="enabled" value="{headRevisionCheckbox.selected || revisionTextBox.text!=''}"/>			
+		</mx:State>	
+	</popup:states>	
+	
+</popup:Wizard>

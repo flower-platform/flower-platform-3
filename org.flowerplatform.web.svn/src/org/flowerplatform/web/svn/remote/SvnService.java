@@ -294,13 +294,34 @@ public class SvnService {
 			}				
 	}
 	
-	public Boolean updateToHEAD(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList) {
-		return updateToVersion(context, selectionList, "head", Depth.infinity, false, false, true);
+	// TODO part of method that gets files is the same as the one from updateToVersion(). Could be used only one instance of block
+	public Boolean commit(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList, String message, Boolean recurse) {
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.update.updateToHeadMonitor"), channel);
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
+		File[] files = getFilesForSelectionList(selectionList);
+		try {
+			ISVNClientAdapter myClient = SVNProviderPlugin.getPlugin().getSVNClient();
+			myClient.setProgressListener(opMng);
+			try {
+				myClient.commit(files, message, recurse);
+			} catch (SVNClientException e) {
+				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+				return false;			
+			}							
+		} catch (SVNException e) {
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		} finally {
+			pm.done();
+		}		
+		return true;
 	}
 	
-	public Boolean updateToVersion(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList, String revision,
-								   int depth, Boolean changeWorkingCopyToSpecifiedDepth, Boolean ignoreExternals, Boolean allowUnversionedObstructions) {
-		File[] fileMethodArgument = new File[selectionList.size()];		
+	public File[] getFilesForSelectionList(ArrayList<ArrayList<PathFragment>> selectionList) {
+		File[] result = new File[selectionList.size()];		
 		for (int i=0; i<selectionList.size(); i++) {
 			ArrayList<PathFragment> currentPathSelection = selectionList.get(i);
 			String path = currentPathSelection.get(1).getName();			 
@@ -308,8 +329,18 @@ public class SvnService {
 			for (int j=3; j<currentPathSelection.size();j++) {
 				path = path.concat("\\" + currentPathSelection.get(j).getName());
 			}
-			fileMethodArgument[i] = new File(path);			
-		}				
+			result[i] = new File(path);			
+		}
+		return result;		
+	}
+	
+	public Boolean updateToHEAD(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList) {
+		return updateToVersion(context, selectionList, "head", Depth.infinity, false, false, true);
+	}
+	
+	public Boolean updateToVersion(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList, String revision,
+								   int depth, Boolean changeWorkingCopyToSpecifiedDepth, Boolean ignoreExternals, Boolean allowUnversionedObstructions) {
+		File[] fileMethodArgument = getFilesForSelectionList(selectionList);		
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.update.updateToHeadMonitor"), channel);
 		if (pm != null) {
@@ -340,8 +371,7 @@ public class SvnService {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
-		}
-		finally {
+		} finally {
 			try {
 				opMng.endOperation();
 			} catch (SVNException e) {
