@@ -26,11 +26,14 @@ import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.INTERF
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.search.TypeNameMatch;
 import org.eclipse.jdt.core.search.TypeNameMatchRequestor;
 import org.flowerplatform.editor.model.ContentAssistItem;
+import org.flowerplatform.editor.model.IContentAssist;
 
 /**
  * Collects the fully qualified names of the matched types into the {@link #matches} list.
@@ -39,12 +42,18 @@ import org.flowerplatform.editor.model.ContentAssistItem;
  */
 public class JavaTypeNameRequestor extends TypeNameMatchRequestor {
 
+	private IProgressMonitor progressMonitor = new NullProgressMonitor();
+	
 	private List<ContentAssistItem> matches = new ArrayList<ContentAssistItem>();
 
 	public List<ContentAssistItem> getMatches() {
 		return matches;
 	}
-
+	
+	public IProgressMonitor getProgressMonitor() {
+		return progressMonitor;
+	}
+	
 	@Override
 	public void acceptTypeNameMatch(TypeNameMatch match) {
 		String fullyQualifiedName = match.getFullyQualifiedName();
@@ -57,6 +66,10 @@ public class JavaTypeNameRequestor extends TypeNameMatchRequestor {
 		String iconUrl = getIconUrl(match.getType());
 		ContentAssistItem item = new ContentAssistItem(fullyQualifiedName, simpleName, pck, iconUrl);
 		matches.add(item);
+		
+		if (matches.size() == IContentAssist.MAX_TYPES_COUNT) {
+			progressMonitor.setCanceled(true);
+		}
 	}
 	
 	protected String getIconUrl(IType type) {

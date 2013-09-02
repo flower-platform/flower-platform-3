@@ -26,6 +26,9 @@ import java.util.Map;
  */
 public interface IContentAssist {
 	
+	
+	public static int MAX_TYPES_COUNT = 50;
+	
 	public static String TYPE = "type";
 	
 	public static String RESOURCE = "project";

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -133,9 +134,12 @@ public class JavaContentAssist implements IContentAssist {
 					typeName, typeMatchRule, 
 					searchFor, scope, 
 					nameRequestor, 
-					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+					IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, 
+					nameRequestor.getProgressMonitor());
 		} catch (JavaModelException e) {
 			throw new RuntimeException(e);
+		} catch (OperationCanceledException e1) {
+			// MAX_TYPES_COUNT was reached
 		}
 		
 		// return matches
