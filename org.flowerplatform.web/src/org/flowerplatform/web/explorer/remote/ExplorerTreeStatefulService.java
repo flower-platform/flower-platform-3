@@ -153,22 +153,24 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 	 */
 	@Override
 	public void notify(FileEvent event) {
-		File parent = event.getFile().getParentFile();
-		
-		// Update for ws_trunk subtree
-		Object node = new Pair<File, String>(parent, "fsFile");
-		dispatchContentUpdate(node);
-		
-		// Update for project subtree
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(parent);
-		// Update only if a project exists
-		if(resource != null) {
-			if(resource.getType() == IResource.FOLDER ) {
-				node = new Pair<File, String>(parent, "projFile");
-				dispatchContentUpdate(node);	
-			} else {
-				node = new Pair<File, String>(parent, "project");
-				dispatchContentUpdate(node);
+		if(event.getEvent() == FileEvent.FILE_CREATED || event.getEvent() == FileEvent.FILE_DELETED) {
+			File parent = event.getFile().getParentFile();
+			
+			// Update for ws_trunk subtree
+			Object node = new Pair<File, String>(parent, "fsFile");
+			dispatchContentUpdate(node);
+			
+			// Update for project subtree
+			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(parent);
+			// Update only if a project exists
+			if(resource != null) {
+				if(resource.getType() == IResource.FOLDER ) {
+					node = new Pair<File, String>(parent, "projFile");
+					dispatchContentUpdate(node);	
+				} else {
+					node = new Pair<File, String>(parent, "project");
+					dispatchContentUpdate(node);
+				}
 			}
 		}
 	}

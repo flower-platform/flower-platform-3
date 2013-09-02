@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IResource;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
@@ -57,7 +58,7 @@ public class FileManagerService {
 						new DisplaySimpleMessageClientCommand(title, message,
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 	}
-	
+
 	private boolean deleteFolder(final File folder) {
 
 		File[] files = folder.listFiles();
@@ -73,6 +74,46 @@ public class FileManagerService {
 		return folder.delete();
 	}
 	
+	private void expandNodesAfterCreate(ServiceInvocationContext context, GenericTreeStatefulService service, String clientID, Object object, File file, String fileName) {
+		Map<Object, Object> clientContext = new HashMap<Object,Object>();
+		clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
+		@SuppressWarnings("unchecked")
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(((Pair<File, Object>) object).a);
+		List<PathFragment> pathOfNode = null;
+		if(resource != null) {
+			if(resource.getType() == IResource.FOLDER ) {
+				pathOfNode = service.getPathForNode(object,
+						"projFile", null);	
+			} else {
+				pathOfNode = service.getPathForNode(object,
+						"project", null);
+			}
+		} else {
+			pathOfNode = service.getPathForNode(object,
+					"fsFile", null);
+		}
+		
+		service.openNode(
+				new StatefulServiceInvocationContext(context
+						.getCommunicationChannel(),clientID), pathOfNode, clientContext);	
+		
+		String[] dirs = fileName.split("/");
+		resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
+		for (int i = 0; i < dirs.length - 1; i++) {
+			if(resource != null) {
+				if(resource.getType() == IResource.FOLDER ) {
+					pathOfNode.add(new PathFragment(dirs[i], "projFile"));	
+				} else {
+					pathOfNode.add(new PathFragment(dirs[i], "project"));
+				}
+			} else {
+				pathOfNode.add(new PathFragment(dirs[i], "fsFile"));
+			}
+			service.openNode(
+					new StatefulServiceInvocationContext(context
+							.getCommunicationChannel(),clientID), pathOfNode, clientContext);
+		}
+	}
 	public void createDirectory(ServiceInvocationContext context,
 			List<PathFragment> pathWithRoot, String name) {
 
@@ -89,19 +130,8 @@ public class FileManagerService {
 		if (!theDir.exists()) {
 			boolean result = theDir.mkdirs();
 			if (result) {
-				Map<Object, Object> clientContext = new HashMap<Object,Object>();
-				clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
-				List<PathFragment> pathOfNode = service.getPathForNode(object,
-						"fsFile", null);
-				service.openNode(
-						new StatefulServiceInvocationContext(context
-								.getCommunicationChannel(),clientID), pathOfNode, clientContext);	
-				// TODO uncomment this, after talk with Cristi
-				/*String[] dirs = name.split("/");
-				pathOfNode.add(new PathFragment(dirs[0], "fsFile"));
-				service.openNode(
-						new StatefulServiceInvocationContext(context
-								.getCommunicationChannel(),clientID), pathOfNode, clientContext);*/
+				expandNodesAfterCreate(context, service, clientID, object, theDir, name);
+				
 				FileEvent event = new FileEvent(theDir, FileEvent.FILE_CREATED);
 				CommonPlugin.getInstance().getFileEventDispatcher()
 						.dispatch(event);
@@ -141,13 +171,7 @@ public class FileManagerService {
 				file.getParentFile().mkdirs();
 				boolean result = file.createNewFile();
 				if(result) {
-					Map<Object, Object> clientContext = new HashMap<Object,Object>();
-					clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
-					List<PathFragment> pathOfNode = service.getPathForNode(object,
-							"fsFile", null);
-					service.openNode(
-							new StatefulServiceInvocationContext(context
-									.getCommunicationChannel(),clientID), pathOfNode, clientContext);
+					expandNodesAfterCreate(context, service, clientID, object, file, name);
 					
 					FileEvent event = new FileEvent(file, FileEvent.FILE_CREATED);
 					CommonPlugin.getInstance().getFileEventDispatcher()
@@ -180,36 +204,30 @@ public class FileManagerService {
 	public void deleteFile(ServiceInvocationContext context,
 			List<PathFragment> pathWithRoot) {
 		
-		GenericTreeStatefulService service = GenericTreeStatefulService
-				.getServiceFromPathWithRoot(pathWithRoot);
-		String clientID = GenericTreeStatefulService.getClientIDFromPathWithRoot(pathWithRoot);
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
-
+		
 		@SuppressWarnings("unchecked")
 		String path = ((Pair<File, Object>) object).a.getPath();
 		
 		File file = new File(path);
 		
 		if(file.exists()) {
-			boolean result = deleteFolder(file);	
-			if(result) {
-				Map<Object, Object> clientContext = new HashMap<Object,Object>();
-				clientContext.put(AbstractTreeStatefulService.EXPAND_NODE_KEY, true);
-				List<PathFragment> pathOfNode = service.getPathForNode(object,
-						"fsFile", null);
-				service.openNode(
-						new StatefulServiceInvocationContext(context
-								.getCommunicationChannel(),clientID), pathOfNode, clientContext);
-				
-				FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
-				CommonPlugin.getInstance().getFileEventDispatcher()
-						.dispatch(event);
-			} else {
-				printMessageToUser(context,
-						"explorer.delete.error.title",
-						"explorer.delete.error.couldNotDelete");
-			} 
+			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
+			if( resource != null && resource.getType() == IResource.PROJECT ) {
+				printSimpleMessageToUser(context, "error", "The selected folder is a project, please delete it from the project menu");
+			} else {	
+				boolean result = deleteFolder(file);
+				if(result) {
+					FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
+					CommonPlugin.getInstance().getFileEventDispatcher()
+							.dispatch(event);
+				} else {
+					printMessageToUser(context,
+							"explorer.delete.error.title",
+							"explorer.delete.error.couldNotDelete");
+				} 
+			}
 		} else {
 			printMessageToUser(context,
 					"explorer.delete.error.title",

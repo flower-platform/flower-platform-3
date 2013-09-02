@@ -513,6 +513,7 @@ package org.flowerplatform.communication.tree.remote {
 								wrapper.expanded = !wrapper.expanded;
 								treeList.requestRefreshLinearizedDataProvider();
 							}
+							treeList.refreshLinearizedDataProvider();
 							break;
 						}
 				}		
