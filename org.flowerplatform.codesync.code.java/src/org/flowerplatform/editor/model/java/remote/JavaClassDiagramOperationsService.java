@@ -134,19 +134,6 @@ public class JavaClassDiagramOperationsService {
 		
 		processAttribute(attributeCse, attribute, label);
 		
-//		int i = 0;
-//		boolean exists = true;
-//		while (exists) {
-//			i++;
-//			exists = false;
-//			for (CodeSyncElement child : clsCse.getChildren()) {
-//				if (child.getName().equals(attributeCse.getName() + i)) {
-//					exists = true;
-//					break;
-//				}
-//			}
-//		}
-//		attributeCse.setName(attributeCse.getName() + i);
 		clsCse.getChildren().add(attributeCse);
 	}
 	
@@ -175,43 +162,10 @@ public class JavaClassDiagramOperationsService {
 		
 		processOperation(operationCse, operation, label);
 		
-//		int i = 0;
-//		boolean exists = true;
-//		while (exists) {
-//			i++;
-//			exists = false;
-//			StringBuilder builder = new StringBuilder(operationCse.getName());
-//			builder.insert(builder.indexOf("("), i);
-//			for (CodeSyncElement child : clsCse.getChildren()) {
-//				if (child.getName().equals(builder.toString())) {
-//					exists = true;
-//					break;
-//				}
-//			}
-//		}
-//		StringBuilder builder = new StringBuilder(operationCse.getName());
-//		builder.insert(builder.indexOf("("), i);
-//		operationCse.setName(builder.toString());
 		clsCse.getChildren().add(operationCse);
 	}
 	
 	protected void processOperation(CodeSyncElement operationCse, Operation operation, String label) {
-//		setVisibility(operationCse, operation, label.charAt(0));
-//		label = label.substring(1);
-//		int lastIndexOfColon = label.lastIndexOf(":");
-//		String name = label.substring(0, lastIndexOfColon);
-//		int indexOfBracket = name.indexOf("(");
-//		operationCse.setName(name.substring(0, indexOfBracket) + "()");
-//		String[] parameters = name.substring(indexOfBracket + 1, name.length() -1)
-//				.split(",");
-//		operation.getParameters().clear();
-//		for (String parameter : parameters) {
-//			Parameter param = AstCacheCodeFactory.eINSTANCE.createParameter();
-//			param.setType(parameter);
-//			operation.getParameters().add(param);
-//		}
-//		operation.setType(label.substring(lastIndexOfColon + 1));
-//		operationCse.setType(JavaOperationModelAdapter.OPERATION);
 		InplaceEditorLabelParseResult result = labelParser.parseOperationLabel(label);
 		setName(operationCse, result.getName());
 		setType(operationCse, operation, result.getType());
