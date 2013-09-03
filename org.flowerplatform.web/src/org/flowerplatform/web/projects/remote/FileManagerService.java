@@ -35,6 +35,9 @@ import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.explorer.FsFile_FileSystemChildrenProvider;
+import org.flowerplatform.web.projects.ProjFile_ProjectChildrenProvider;
+import org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider;
 
 /**
  * @author Tache Razvan Mihai
@@ -83,14 +86,14 @@ public class FileManagerService {
 		if(resource != null) {
 			if(resource.getType() == IResource.FOLDER ) {
 				pathOfNode = service.getPathForNode(object,
-						"projFile", null);	
+						ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE, null);	
 			} else {
 				pathOfNode = service.getPathForNode(object,
-						"project", null);
+						Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT, null);
 			}
 		} else {
 			pathOfNode = service.getPathForNode(object,
-					"fsFile", null);
+					FsFile_FileSystemChildrenProvider.NODE_TYPE_FS_FILE, null);
 		}
 		
 		service.openNode(
@@ -101,13 +104,13 @@ public class FileManagerService {
 		resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
 		for (int i = 0; i < dirs.length - 1; i++) {
 			if(resource != null) {
-				if(resource.getType() == IResource.FOLDER ) {
-					pathOfNode.add(new PathFragment(dirs[i], "projFile"));	
+				if(resource.getType() == IResource.FOLDER || resource.getType() == IResource.FILE) {
+					pathOfNode.add(new PathFragment(dirs[i], ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE));	
 				} else {
-					pathOfNode.add(new PathFragment(dirs[i], "project"));
+					pathOfNode.add(new PathFragment(dirs[i], Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT));
 				}
 			} else {
-				pathOfNode.add(new PathFragment(dirs[i], "fsFile"));
+				pathOfNode.add(new PathFragment(dirs[i], FsFile_FileSystemChildrenProvider.NODE_TYPE_FS_FILE));
 			}
 			service.openNode(
 					new StatefulServiceInvocationContext(context

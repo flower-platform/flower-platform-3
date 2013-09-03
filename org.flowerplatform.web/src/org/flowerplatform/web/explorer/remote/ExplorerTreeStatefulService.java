@@ -44,6 +44,9 @@ import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.file_event.IFileEventListener;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.explorer.FsFile_FileSystemChildrenProvider;
+import org.flowerplatform.web.projects.ProjFile_ProjectChildrenProvider;
+import org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,7 +160,7 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 			File parent = event.getFile().getParentFile();
 			
 			// Update for ws_trunk subtree
-			Object node = new Pair<File, String>(parent, "fsFile");
+			Object node = new Pair<File, String>(parent, FsFile_FileSystemChildrenProvider.NODE_TYPE_FS_FILE);
 			dispatchContentUpdate(node);
 			
 			// Update for project subtree
@@ -165,10 +168,10 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 			// Update only if a project exists
 			if(resource != null) {
 				if(resource.getType() == IResource.FOLDER ) {
-					node = new Pair<File, String>(parent, "projFile");
+					node = new Pair<File, String>(parent, ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE);
 					dispatchContentUpdate(node);	
 				} else {
-					node = new Pair<File, String>(parent, "project");
+					node = new Pair<File, String>(parent, Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT);
 					dispatchContentUpdate(node);
 				}
 			}
