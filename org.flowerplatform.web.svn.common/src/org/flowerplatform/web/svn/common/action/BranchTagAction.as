@@ -1,4 +1,3 @@
-
 /* license-start
 * 
 * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
@@ -19,28 +18,40 @@
 */
 
 package  org.flowerplatform.web.svn.common.action {
+	import mx.collections.ArrayList;
+	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-	import org.flowerplatform.web.svn.common.ui.RenameMoveView;
+	import org.flowerplatform.web.svn.common.ui.BranchTagView;
 	
 	/**
 	 * @author Gabriela Murgoci
 	 */
-	public class RenameMoveAction extends ActionBase  {
+	public class BranchTagAction extends ActionBase  {
 		/**
 		 * @flowerModelElementId _-0ZzQAMdEeOrJqcAep-lCg
 		 */
-		public function RenameMoveAction() {	
-			label = SvnCommonPlugin.getInstance().getMessage("svn.action.renameMove.label");
+		public function BranchTagAction() {	
+			label = SvnCommonPlugin.getInstance().getMessage("svn.action.branchTag.label");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
 		}
 		
 		/**
 		 * @flowerModelElementId _GWBDMAMhEeOrJqcAep-lCg
 		 */
+		
+		public function isTreeNode():Boolean {
+			var i:int;
+			for (i = 0; i < selection.length; i++)
+				if (!(selection.getItemAt(i) is TreeNode))
+					return false;
+			
+			return true;
+			
+		}
 		public override function get visible():Boolean {				
 			var node_type:String;	
 			if (selection.length == 0)
@@ -49,6 +60,8 @@ package  org.flowerplatform.web.svn.common.action {
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
 				return (node_type == SvnCommonPlugin.NODE_TYPE_REPOSITORY || node_type == SvnCommonPlugin.NODE_TYPE_FILE);
 			}
+			if (selection.length > 1 && isTreeNode())
+				return true;
 			return false;
 		}
 		
@@ -56,8 +69,9 @@ package  org.flowerplatform.web.svn.common.action {
 		 * @flowerModelElementId _TnF_EAMeEeOrJqcAep-lCg
 		 */
 		public override function run():void {			
-			var view:RenameMoveView = new RenameMoveView();
+			var view:BranchTagView = new BranchTagView();
 			view.node=TreeNode(selection.getItemAt(0));
+			view.selection = selection;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setWidth(400)
 				.setHeight(450)

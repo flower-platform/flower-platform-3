@@ -3,6 +3,9 @@
   <includeClasses>
     <classEntry path="org.flowerplatform.web.svn.common.ui.RenameMoveView"/>
     <classEntry path="org.flowerplatform.web.svn.common.projects.remote.SvnRepositoryTreeStatefulClient"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.BranchTagAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.BranchTagView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -43,7 +43,8 @@ package org.flowerplatform.web.common.explorer {
 		
 		public function ExplorerTreeList() {
 			super();
-			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
+			allowMultipleSelection = true;
+			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);			
 		}
 		
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {

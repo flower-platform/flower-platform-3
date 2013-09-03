@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Window used to select a revision number for a given remote resource.
+
+<p>
+An <code>IDialogResultHandler</code> must be set in order to handle the window result.
+The result can be:
+<ul>
+<li> selected revision -> ok pressed
+<li> null -> cancel pressed
+</ul>
+
+@author Cristi
+@author Cristina
+
+@flowerModelElementId _v2V2QGwbEeGN3LpFXIiaDw
+-->
+<pnl:ResizablePopupWindow 
+
+	xmlns:pnl="com.crispico.flower.util.popup.*" 
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+	
+	width="550" height="550" minWidth="550" minHeight="550" showCloseButton="true"
+	paddingTop="5" paddingBottom="10" paddingLeft="5" paddingRight="5" 
+	title="Select Revision">
+
+	
+	<mx:Script>
+		<![CDATA[
+			
+			
+			
+			import flash.events.Event;	
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.utils.ObjectUtil;
+			
+			/**
+			 * @flowerModelElementId _zGrTsGwdEeGN3LpFXIiaDw
+			 */
+			public var remoteResourcePath:Object;
+			
+			public var isResourceObject:Boolean;
+			
+			/**
+			 * @flowerModelElementId __Z3IAHJ9EeGZAqbcNpPqCg
+			 */
+			public var remoteResourceName:String;
+			
+			/**
+			 * @flowerModelElementId _4pJL0GwfEeGN3LpFXIiaDw
+		
+			
+			/**
+			 * @flowerModelElementId __Z5kQXJ9EeGZAqbcNpPqCg
+			 */
+		
+		]]>
+	</mx:Script>
+	
+	
+	
+</pnl:ResizablePopupWindow>

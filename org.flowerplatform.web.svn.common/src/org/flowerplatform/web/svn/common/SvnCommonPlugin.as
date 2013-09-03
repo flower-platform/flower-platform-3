@@ -17,12 +17,16 @@
 * license-end
 */
 package org.flowerplatform.web.svn.common {
+	import flash.net.registerClassAlias;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.svn.common.action.BranchTagAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
-	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
+	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
+	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -50,14 +54,16 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public override function preStart():void {	
 			super.preStart();			
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction, RenameMoveAction);
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction, RenameMoveAction, BranchTagAction);
 		}
 		
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
 		 */
-		protected override function registerClassAliases():void {				
-			super.registerClassAliases();
+		override protected function registerClassAliases():void {				
+		
+			registerClassAlias("org.flowerplatform.web.svn.remote.BranchResource", BranchResource);			
+			
 		}
 		
 		/**
