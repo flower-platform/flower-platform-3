@@ -6,6 +6,7 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.BranchTagAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.BranchTagView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.CopyToAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

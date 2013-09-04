@@ -60,7 +60,7 @@ public class SvnService {
 
 		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(
 				parentPath, null);
-		
+
 		GenericTreeStatefulService explorerService = (GenericTreeStatefulService) GenericTreeStatefulService
 				.getServiceFromPathWithRoot(parentPath);
 
@@ -74,7 +74,7 @@ public class SvnService {
 			Object adapter = a.getAdapter(ISVNRemoteFolder.class);
 			parentFolder = (ISVNRemoteFolder) adapter;
 		}
-		
+
 		try {
 			// create remote folder
 			parentFolder.createRemoteFolder(folderName, comment,
@@ -89,7 +89,7 @@ public class SvnService {
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
 		}
-		
+
 		// tree refresh
 		parentFolder.refresh();
 		explorerService.dispatchContentUpdate(parentFolder);
@@ -107,14 +107,14 @@ public class SvnService {
 
 		CommunicationChannel chan = (CommunicationChannel) context
 				.getCommunicationChannel();
-		
+
 		GenericTreeContext treeContext = GenericTreeStatefulService
 				.getServiceFromPathWithRoot(destinationPath).getTreeContext(
 						chan, remoteResourceName);
 
 		GenericTreeStatefulService explorerService = (GenericTreeStatefulService) GenericTreeStatefulService
 				.getServiceFromPathWithRoot(remoteResourcePath);
-		
+
 		ISVNRemoteResource remoteResource = (ISVNRemoteResource) GenericTreeStatefulService
 				.getNodeByPathFor(remoteResourcePath, null);
 
@@ -158,7 +158,7 @@ public class SvnService {
 
 		Object selection1 = GenericTreeStatefulService.getNodeByPathFor(
 				sourcePath, null);
-		
+
 		ISVNRemoteFolder sourceNode = null;
 
 		if (selection1 instanceof ISVNRemoteFolder) {
@@ -171,7 +171,7 @@ public class SvnService {
 		}
 
 		sourceNode.refresh();
-		
+
 		explorerService.dispatchContentUpdate(sourceNode);
 
 		Object selection2 = GenericTreeStatefulService
@@ -206,131 +206,143 @@ public class SvnService {
 			boolean resourceSelected, List<BranchResource> branchResources,
 			String destinationURL, String comment, Number revision,
 			boolean createMissingFolders, boolean preserveFolderStructure) {
-		
+
 		boolean createOnServer = true;
 		boolean makeParents = true;
-	
-		try {			
+
+		try {
 			List<Object> remoteResources = new ArrayList<Object>();
-			
+
 			for (BranchResource item : branchResources) {
-					remoteResources.add(GenericTreeStatefulService.getNodeByPathFor((List<PathFragment>)item.getPath(), null));
+				remoteResources.add(GenericTreeStatefulService
+						.getNodeByPathFor((List<PathFragment>) item.getPath(),
+								null));
 			}
-			
+
 			SVNUrl[] sourceUrls = null;
-			
+
 			if (remoteResources.size() > 1) {
 				ArrayList<SVNUrl> urlArray = new ArrayList<SVNUrl>();
-				
-					for (int i = 0; i < remoteResources.size(); i++) {
-						urlArray.add(((ISVNRemoteResource) remoteResources.get(i)).getUrl());
-					}
-				
+
+				for (int i = 0; i < remoteResources.size(); i++) {
+					urlArray.add(((ISVNRemoteResource) remoteResources.get(i))
+							.getUrl());
+				}
+
 				sourceUrls = new SVNUrl[urlArray.size()];
 				urlArray.toArray(sourceUrls);
 			} else {
-					sourceUrls = new SVNUrl[1];
-					sourceUrls[0] = ((ISVNRemoteResource) remoteResources.get(0)).getUrl();
-			}				
-							
+				sourceUrls = new SVNUrl[1];
+				sourceUrls[0] = ((ISVNRemoteResource) remoteResources.get(0))
+						.getUrl();
+			}
+
 			ISVNClientAdapter client = null;
-			ISVNRepositoryLocation repository = SVNProviderPlugin.getPlugin().getRepository(sourceUrls[0].toString());
+			ISVNRepositoryLocation repository = SVNProviderPlugin.getPlugin()
+					.getRepository(sourceUrls[0].toString());
 			if (repository != null)
 				client = repository.getSVNClient();
 			if (client == null)
-				client = SVNProviderPlugin.getPlugin().getSVNClientManager().getSVNClient();
+				client = SVNProviderPlugin.getPlugin().getSVNClientManager()
+						.getSVNClient();
 
 			try {
-	          
-	            if (createOnServer) {
-	            	boolean copyAsChild = sourceUrls.length > 1;
-	            	String commonRoot = null;
-	            	if (copyAsChild) {
-	            		commonRoot = getCommonRoot(sourceUrls);
-	            	}
-	            	if (!copyAsChild || destinationURL.toString().startsWith(commonRoot)) {
-	            		System.out.println(sourceUrls.toString());
-	            		client.copy(sourceUrls, new SVNUrl(destinationURL), comment, SVNRevision.HEAD, copyAsChild, makeParents);
-	            		
-	            	} else {
-	            		for (int i = 0; i < sourceUrls.length; i++) {
-	            			String fromUrl = sourceUrls[i].toString();
-	            			String uncommonPortion = fromUrl.substring(commonRoot.length());
-	            			String toUrl = destinationURL.toString() + uncommonPortion;
-	            			SVNUrl destination = new SVNUrl(toUrl);
-	            			SVNUrl[] source = { sourceUrls[i] };
-	            			client.copy(source, destination, comment, SVNRevision.HEAD, copyAsChild, makeParents);
-	            		}
-	            	}
-	            } 
-	        } catch (Exception e) {
-	        	logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-				if (e instanceof SVNException) {
-					CommunicationChannel channel = (CommunicationChannel) context
-							.getCommunicationChannel();
-					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
-							CommonPlugin.getInstance().getMessage("error"), e
-									.getMessage(),
-							DisplaySimpleMessageClientCommand.ICON_ERROR));
+
+				if (createOnServer) {
+					boolean copyAsChild = sourceUrls.length > 1;
+					String commonRoot = null;
+
+					if (copyAsChild) {
+						commonRoot = getCommonRoot(sourceUrls);
+					}
+
+					if (!copyAsChild
+							|| destinationURL.toString().startsWith(commonRoot)) {
+						System.out.println(sourceUrls.toString());
+						client.copy(sourceUrls, new SVNUrl(destinationURL),
+								comment, SVNRevision.HEAD, copyAsChild,
+								makeParents);
+
+					} else {
+						for (int i = 0; i < sourceUrls.length; i++) {
+							String fromUrl = sourceUrls[i].toString();
+							String uncommonPortion = fromUrl
+									.substring(commonRoot.length());
+							String toUrl = destinationURL.toString()
+									+ uncommonPortion;
+							SVNUrl destination = new SVNUrl(toUrl);
+							SVNUrl[] source = { sourceUrls[i] };
+							client.copy(source, destination, comment,
+									SVNRevision.HEAD, copyAsChild, makeParents);
+						}
+					}
 				}
-	        	return false;
-	        }              
-			
-		}	catch (Exception e) {
-			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			if (e instanceof SVNException) {
+			} catch (Exception e) {
+				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 				CommunicationChannel channel = (CommunicationChannel) context
 						.getCommunicationChannel();
 				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 						CommonPlugin.getInstance().getMessage("error"), e
 								.getMessage(),
 						DisplaySimpleMessageClientCommand.ICON_ERROR));
+				return false;
 			}
+
+		} catch (Exception e) {
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+			CommunicationChannel channel = (CommunicationChannel) context
+					.getCommunicationChannel();
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+					CommonPlugin.getInstance().getMessage("error"), e
+							.getMessage(),
+					DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
 		}
 		// tree refresh
-		 
-		 List<PathFragment> partialPath = (List<PathFragment>)branchResources.get(0).getPath();
-		 partialPath.remove(partialPath.size() - 1);
-		
-		 Object selection = GenericTreeStatefulService.getNodeByPathFor(partialPath, null);
-		 
-		 ISVNRemoteFolder node = null;
 
-			if (selection instanceof ISVNRemoteFolder) {
-				node = (ISVNRemoteFolder) selection;
-			} else if (selection instanceof IAdaptable) {
-				// ISVNRepositoryLocation is adaptable to ISVNRemoteFolder
-				IAdaptable a = (IAdaptable) selection;
-				Object adapter = a.getAdapter(ISVNRemoteFolder.class);
-				node = (ISVNRemoteFolder) adapter;
-			}
+		List<PathFragment> partialPath = (List<PathFragment>) branchResources
+				.get(0).getPath();
+		partialPath.remove(partialPath.size() - 1);
 
-			node.refresh();
-			
-			((GenericTreeStatefulService) GenericTreeStatefulService
-					.getServiceFromPathWithRoot(partialPath))
-					.dispatchContentUpdate(selection);
+		Object selection = GenericTreeStatefulService.getNodeByPathFor(
+				partialPath, null);
 
-			return true;
+		ISVNRemoteFolder node = null;
+
+		if (selection instanceof ISVNRemoteFolder) {
+			node = (ISVNRemoteFolder) selection;
+		} else if (selection instanceof IAdaptable) {
+			// ISVNRepositoryLocation is adaptable to ISVNRemoteFolder
+			IAdaptable a = (IAdaptable) selection;
+			Object adapter = a.getAdapter(ISVNRemoteFolder.class);
+			node = (ISVNRemoteFolder) adapter;
+		}
+
+		node.refresh();
+
+		((GenericTreeStatefulService) GenericTreeStatefulService
+				.getServiceFromPathWithRoot(partialPath))
+				.dispatchContentUpdate(selection);
+
+		return true;
 	}
-	
+
 	private String getCommonRoot(SVNUrl[] sourceUrls) {
 		String commonRoot = null;
 		String urlString = sourceUrls[0].toString();
-    	tag1:
-        	for (int i = 0; i < urlString.length(); i++) {
-        		String partialPath = urlString.substring(0, i+1);
-        		if (partialPath.endsWith("/")) {
-    	    		for (int j = 1; j < sourceUrls.length; j++) {
-    	    			if (!sourceUrls[j].toString().startsWith(partialPath)) break tag1;
-    	    		}
-    	    		commonRoot = partialPath.substring(0, i);
-        		}
-        	}
+		tag1: for (int i = 0; i < urlString.length(); i++) {
+			String partialPath = urlString.substring(0, i + 1);
+			if (partialPath.endsWith("/")) {
+				for (int j = 1; j < sourceUrls.length; j++) {
+					if (!sourceUrls[j].toString().startsWith(partialPath))
+						break tag1;
+				}
+				commonRoot = partialPath.substring(0, i);
+			}
+		}
 		return commonRoot;
 	}
-	
+
 	/**
 	 * 
 	 * @author Gabriela Murgoci
@@ -339,7 +351,7 @@ public class SvnService {
 		int index = 0;
 		boolean sem = true;
 		int size = selection.get(0).size();
-		
+
 		for (int i = 0; i < size && sem; i++) {
 			index = i;
 			PathFragment element = selection.get(0).get(i);
@@ -353,42 +365,45 @@ public class SvnService {
 		}
 		return selection.get(0).subList(0, index + 1);
 	}
-	
+
 	/**
 	 * 
 	 * @author Gabriela Murgoci
 	 */
-	public ArrayList<Object> populateBranchResourcesList (ServiceInvocationContext context, List<List<PathFragment>> selected) {
+	public ArrayList<Object> populateBranchResourcesList(
+			ServiceInvocationContext context, List<List<PathFragment>> selected) {
 
 		ArrayList<Object> branchResources = new ArrayList<Object>();
-		
+
 		List<PathFragment> commonParent = selected.get(0);
-		
+
 		commonParent = getCommonParent(selected);
-		
+
 		for (List<PathFragment> selectedResource : selected) {
 			BranchResource item = new BranchResource();
 			String partialPath = "";
-			List<PathFragment> partialPathList = selectedResource.subList(commonParent.size(), selectedResource.size());
-			
+			List<PathFragment> partialPathList = selectedResource.subList(
+					commonParent.size(), selectedResource.size());
+
 			for (int i = 0; i < partialPathList.size(); i++) {
 				partialPath += partialPathList.get(i).getName();
 				if (i < partialPathList.size())
 					partialPath += "/";
 			}
-			
+
 			item.setPath(selectedResource);
-			item.setName(selectedResource.get(selectedResource.size() - 1).getName());
+			item.setName(selectedResource.get(selectedResource.size() - 1)
+					.getName());
 			item.setPartialPath(partialPath);
-			item.setImage("images/svn_persp.gif");
-			
+			item.setImage("images/folder_pending.gif");
+
 			branchResources.add(item);
 		}
-		
+
 		branchResources.add(0, commonParent);
 		return branchResources;
 	}
-	
+
 	public boolean createSvnRepository(final ServiceInvocationContext context,
 			final String url, final List<PathFragment> parentPath) {
 		new DatabaseOperationWrapper(new DatabaseOperation() {

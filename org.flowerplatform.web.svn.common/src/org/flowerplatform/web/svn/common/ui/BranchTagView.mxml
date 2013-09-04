@@ -28,8 +28,7 @@ license-end
 			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
 			  xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
 			  implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler">
-			  
-			 
+
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
@@ -82,6 +81,10 @@ license-end
 			public var commonParentName:String;
 			
 			public var secondSelection:TreeNode;
+			
+			public var viewLabel:String;
+			
+			public var viewIcon:String;
 			
 			/**
 			 * @flowerModelElementId _qvAjsGxVEeGmX-bWmnlzew
@@ -190,10 +193,9 @@ license-end
 			
 			override public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;	
-				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/svn_persp.gif"));
-				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.branchTag.view.label"));
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl(viewIcon));
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage(viewLabel));
 			} 
-			
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
@@ -263,7 +265,7 @@ license-end
 				<s:Label text="Create copy in the repository from:"/>			
 				<s:RadioButton id="headRevision" width="100%" label="HEAD revision in the repository"
 							   groupName="revisionGroup" selected="true"/>
-				<s:HGroup verticalAlign="bottom">
+				<s:HGroup verticalAlign="middle">
 					<s:RadioButton id="specificRevision" width="100%"
 								   label="Specific revision in the repository"
 								   groupName="revisionGroup"/>
@@ -275,8 +277,8 @@ license-end
 								  enabled="{specificRevision.selected}"/>
 					</s:HGroup>
 				</s:HGroup>
-				<s:RadioButton id="workingCopyRevision" width="100%"
-							   label="Working copy" groupName="revisionGroup"/>
+				<!--<s:RadioButton id="workingCopyRevision" width="100%"
+							   label="Working copy" groupName="revisionGroup"/>-->
 			</s:VGroup>       
 			</mx:AddChild>
 		</s:State>	
