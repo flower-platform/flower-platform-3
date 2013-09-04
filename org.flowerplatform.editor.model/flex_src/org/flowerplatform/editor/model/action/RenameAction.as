@@ -64,28 +64,6 @@ package org.flowerplatform.editor.model.action {
 						function(name:String):void {
 							NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_setInplaceEditorText(node.id, name);
 						});
-					
-					// TODO this will be moved when we have an ied skin that includes the content assist list
-					var parent:IVisualElementContainer = IVisualElementContainer(IVisualElementContainer(messageBox).getElementAt(1));
-					var textInput:IVisualElement = parent.getElementAt(0);
-					var contentAssist:ContentAssistList = new ContentAssistList();
-					contentAssist.setDispatcher(textInput);
-					contentAssist.setContentAssistProvider(new NotationDiagramContentAssistProvider(node.id));
-					var index:int = parent.getElementIndex(textInput);
-					parent.addElementAt(contentAssist, ++index);
-					contentAssist.percentWidth = 100;
-					contentAssist.height = 200;
-					contentAssist.y = textInput.height;
-//					contentAssist.includeInLayout = false;
-					
-					var action:ContentAssistAction = new ContentAssistAction();
-					action.contentAssist = contentAssist;
-					var button:Button = new Button();
-					button.label = "Content Assist";
-					button.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-						action.run();
-					});
-					parent.addElement(button);
 				});
 		}
 	}

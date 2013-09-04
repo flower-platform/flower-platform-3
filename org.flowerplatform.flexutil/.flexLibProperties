@@ -23,6 +23,8 @@
     <classEntry path="org.flowerplatform.flexutil.FlowerArrayList"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItemRenderer"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItem"/>
+    <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

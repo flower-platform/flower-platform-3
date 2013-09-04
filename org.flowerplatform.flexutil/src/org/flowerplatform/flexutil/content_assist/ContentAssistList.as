@@ -22,8 +22,11 @@ package org.flowerplatform.flexutil.content_assist {
 	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
 	import flash.events.TouchEvent;
+	import flash.geom.Point;
 	import flash.ui.Keyboard;
+	import flash.utils.Timer;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
@@ -33,33 +36,55 @@ package org.flowerplatform.flexutil.content_assist {
 	import mx.core.IVisualElementContainer;
 	import mx.events.FlexEvent;
 	
+	import org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup;
+	
 	import spark.components.List;
 	import spark.components.TextArea;
 	import spark.components.TextInput;
+	import spark.components.supportClasses.SkinnableTextBase;
 	import spark.events.IndexChangeEvent;
 	import spark.events.TextOperationEvent;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class ContentAssistList extends List {
+	public class ContentAssistList extends ScreenSizeAwarePopup {
 		
-		private var dispatcher:Object;
+		private var list:List;
+		
+		/**
+		 * TextArea or TextInput.
+		 */
+		private var dispatcher:SkinnableTextBase;
 		
 		private var contentAssistProvider:IContentAssistProvider;
 		
 		private var previousPattern:String;
 		
+		public var contentAssistItemsDelay:Number = 500;
+		
+		private var getContentAssistItemsTimer:Timer;
+		
 		public function ContentAssistList() {
 			super();
-			itemRenderer = new ClassFactory(ContentAssistItemRenderer);
 			
-			addEventListener(IndexChangeEvent.CHANGE, itemClickHandler);
+			list = new List();
+			list.itemRenderer = new ClassFactory(ContentAssistItemRenderer);
+			list.percentWidth = 100;
+			list.percentHeight = 100;
+			addElement(list);
+			list.addEventListener(MouseEvent.CLICK, itemClickHandler);
 			
+			getContentAssistItemsTimer = new Timer(contentAssistItemsDelay);
+			getContentAssistItemsTimer.addEventListener(TimerEvent.TIMER, getContentAssistItems);
+			
+			width = 200;
+			height = 200;
 			visible = false;
+			includeInLayout = false;
 		}
 		
-		public function setDispatcher(dispatcher:IVisualElement):void {
+		public function setDispatcher(dispatcher:SkinnableTextBase):void {
 			this.dispatcher = dispatcher;
 			dispatcher.addEventListener(KeyboardEvent.KEY_UP, displayContentAssistHandler);
 		}
@@ -68,8 +93,13 @@ package org.flowerplatform.flexutil.content_assist {
 			this.contentAssistProvider = provider;
 			var properties:Object = new Object();
 			properties['contentAssistProvider'] = provider;
-			ClassFactory(itemRenderer).properties = properties;
+			ClassFactory(list.itemRenderer).properties = properties;
 		}
+		
+		override protected function get verticalOffset():Number	{
+			return dispatcher.height;
+		}
+		
 		
 		/**
 		 * Listens for arrow keys to navigate through the content assist items.
@@ -102,50 +132,44 @@ package org.flowerplatform.flexutil.content_assist {
 				}
 				case Keyboard.ENTER: {
 					selectContentAssistItem();
+					// don't exit the text input
+					evt.stopImmediatePropagation();
 					return;
 				}
 				case Keyboard.ESCAPE: {
 					displayHideContentAssist(false);
+					// don't exit the text input
+					evt.stopImmediatePropagation();
 					return;
 				}
 			}
 			
 			if (offset != 0) {
-				selectedIndex += offset;
-				var length:int = dataProvider.length;
-				if (selectedIndex < 0) {
-					selectedIndex = length + offset;
+				list.selectedIndex += offset;
+				var length:int = list.dataProvider.length;
+				if (list.selectedIndex < 0) {
+					list.selectedIndex = length + offset;
 				}
-				if (selectedIndex >= length) {
-					selectedIndex = length - selectedIndex;
+				if (list.selectedIndex >= length) {
+					list.selectedIndex = length - list.selectedIndex;
 				}
-				ensureIndexIsVisible(selectedIndex);
+				list.ensureIndexIsVisible(list.selectedIndex);
 				trace ("navigate through list");
 				evt.stopImmediatePropagation();
 			}
 		}
 		
 		/**
-		 * Listens for user input to update the content assist list litems.
+		 * Listens for user input or selection change to update the content assist list litems.
 		 * 
 		 * <p>
 		 * Should only be registered when the list is visible.
 		 * @see displayHideContentAssist()
 		 */
-//		protected function updateContentAssistListItems(evt:KeyboardEvent):void {
-//			if (visible) {
-//				trace ("update content assist items");
-//				if (evt.charCode > 0 || evt.keyCode == Keyboard.LEFT || evt.keyCode == Keyboard.RIGHT
-//					|| evt.keyCode == Keyboard.BACKSPACE || evt.keyCode == Keyboard.DELETE) {
-//					getContentAssistItems();
-//				}
-//			}
-//		}
-		
 		protected function updateContentAssistListItems(evt:Event):void {
 			if (visible) {
 				trace ("update content asssist items");
-				getContentAssistItems();
+				getContentAssistItemsTimer.start();
 			}
 		}
 		
@@ -163,12 +187,27 @@ package org.flowerplatform.flexutil.content_assist {
 			}
 		}
 		
-		public function itemClickHandler(evt:IndexChangeEvent):void {
-			selectContentAssistItem();
+		public function itemClickHandler(evt:MouseEvent):void {
+			trace (evt.target, evt.currentTarget);
+			// stop event propagation so it doesn't interfere with diagram logic
+			evt.stopImmediatePropagation();
+			var crt:Object = evt.target;
+			while (crt != this) {
+				if (crt == list.dataGroup) {
+					// only if an item was selected
+					selectContentAssistItem();
+					return;
+				}
+				crt = crt.parent;
+			}
 		}
 		
 		private function selectContentAssistItem():void {
-			if (selectedIndex > -1) {
+			if (list.selectedIndex > -1) {
+				var selectedItem:ContentAssistItem = ContentAssistItem(list.selectedItem);
+				// hide
+				displayHideContentAssist(false);
+				
 				var text:String = dispatcher.text;
 				var index:int = getDelimiterIndex();
 				if (index == -1) {
@@ -179,12 +218,9 @@ package org.flowerplatform.flexutil.content_assist {
 				dispatcher.text = 
 					text.substr(0, index) +
 					selectedItem.item +
-					text.substr(dispatcher.textDisplay.selectionActivePosition);
+					text.substr(dispatcher.selectionActivePosition);
 				index += selectedItem.item.length;
 				dispatcher.selectRange(index, index);
-				
-				// hide
-				displayHideContentAssist(false);
 			}
 		}
 		
@@ -192,10 +228,11 @@ package org.flowerplatform.flexutil.content_assist {
 		 * Gets the content assist items from the <code>contentAssistProvider</code> if
 		 * the new <code>pattern</code> is different from the <code>previousPattern</code>.
 		 */
-		public function getContentAssistItems():void {
+		public function getContentAssistItems(evt:TimerEvent = null):void {
+			getContentAssistItemsTimer.stop();
 			var pattern:String = getTextFromDispatcher();
 			if (pattern != null && pattern != previousPattern) {
-				trace ("get content assist items -", pattern);
+				trace ("get content assist items -", pattern, evt); 
 				previousPattern = pattern;
 				contentAssistProvider.getContentAssistItems(pattern, setContentAssistItems);
 			}
@@ -203,8 +240,8 @@ package org.flowerplatform.flexutil.content_assist {
 		
 		public function setContentAssistItems(items:IList):void {
 			trace ("set content assist items -", items.length);
-			dataProvider = items;
-			selectedIndex = 0;
+			list.dataProvider = items;
+			list.selectedIndex = 0;
 			displayHideContentAssist(true);
 		}
 		
@@ -213,14 +250,14 @@ package org.flowerplatform.flexutil.content_assist {
 		 */
 		private function getTextFromDispatcher():String {
 			var text:String = dispatcher.text;
-			var n:int = dispatcher.textDisplay.selectionActivePosition;
+			var n:int = dispatcher.selectionActivePosition;
 			return text.substring(getDelimiterIndex() + 1, n); 
 		}
 		
 		private function getDelimiterIndex():int {
 			var text:String = dispatcher.text;
 			var i:int;
-			var n:int = dispatcher.textDisplay.selectionActivePosition;
+			var n:int = dispatcher.selectionActivePosition;
 			for(i = n - 1; i >= 0; i--) {
 				var char:String = text.charAt(i);
 				if ((char == ' ') || (char == ':') || (char == ',') 
@@ -234,6 +271,9 @@ package org.flowerplatform.flexutil.content_assist {
 			if (visible == display) {
 				return;
 			}
+			
+			trace (display ? "show content assist" : "hide content assist");
+			
 			visible = display;
 			if (display) {
 				dispatcher.removeEventListener(KeyboardEvent.KEY_UP, displayContentAssistHandler);
@@ -243,16 +283,13 @@ package org.flowerplatform.flexutil.content_assist {
 				dispatcher.addEventListener(TextOperationEvent.CHANGE, updateContentAssistListItems);
 				// handle selection changes for desktop (using arrow keys or the mouse)
 				dispatcher.addEventListener(FlexEvent.SELECTION_CHANGE, updateContentAssistListItems);
-				// handle selection changes for mobile (by tapping)
-				dispatcher.addEventListener(MouseEvent.CLICK, updateContentAssistListItems);
 				
 			} else {
-				dataProvider = null;
+				list.dataProvider = null;
 				previousPattern = null;
-				dispatcher.removeEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler);
+				dispatcher.removeEventListener(KeyboardEvent.KEY_DOWN, manageContentAssistHandler, true);
 				dispatcher.removeEventListener(TextOperationEvent.CHANGE, updateContentAssistListItems);
 				dispatcher.removeEventListener(FlexEvent.SELECTION_CHANGE, updateContentAssistListItems);
-				dispatcher.removeEventListener(MouseEvent.CLICK, updateContentAssistListItems);
 				
 				dispatcher.addEventListener(KeyboardEvent.KEY_UP, displayContentAssistHandler);
 			}

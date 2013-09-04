@@ -35,6 +35,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
 	import org.flowerplatform.editor.model.controller.DragToCreateRelationController;
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
+	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
@@ -124,6 +125,9 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+			if (!FlexUtilGlobals.getInstance().isMobile) {
+				composedControllerProviderFactory.inplaceEditorControllerClass = new ControllerFactory(InplaceEditorController);
+			}
 			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classOperation"] = composedControllerProviderFactory;
 			
