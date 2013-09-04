@@ -1220,7 +1220,7 @@ public class GitService {
 			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), remoteNode.getRemote());
 						
 			URIish uri = repoConfig.getURIs().get(0);		
-			List<String> credentials = ((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUserGitRepositories().get(uri.toString());
+			List<String> credentials = ((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal()).getUserGitRepositories().get(uri.toString());
 			
 			context.getCommunicationChannel().appendOrSendCommand(
 					new OpenGitCredentialsWindowClientCommand(uri.toString(), credentials != null ? credentials.get(0) : ""));
@@ -1254,7 +1254,7 @@ public class GitService {
 			org.eclipse.jgit.transport.RemoteConfig repoConfig = new org.eclipse.jgit.transport.RemoteConfig(repository.getConfig(), remoteNode.getRemote());
 			
 			URIish uri = repoConfig.getURIs().get(0);			
-			((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUserGitRepositories().remove(uri.toString());
+			((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getCurrentPrincipal()).getUserGitRepositories().remove(uri.toString());
 	
 			return true;
 		} catch (Exception e) {		
@@ -1285,7 +1285,7 @@ public class GitService {
 		List<String> info = new ArrayList<String>();
 		info.add(username);
 		info.add(password);
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
+		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal();		
 		principal.getUserGitRepositories().put(uri, info);
 	}
 	

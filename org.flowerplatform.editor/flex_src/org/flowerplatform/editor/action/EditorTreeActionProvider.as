@@ -35,6 +35,10 @@ package org.flowerplatform.editor.action {
 		public function EditorTreeActionProvider() {
 		}
 		
+		/**
+		 * @author ?? (original author)
+		 * @author Victor Badila
+		 */
 		public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			

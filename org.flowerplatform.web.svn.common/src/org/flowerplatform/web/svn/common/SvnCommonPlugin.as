@@ -20,11 +20,14 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.svn.common.action.CheckoutAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
+	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
-
 
 	/**
 	 * @author Gabriela Murgoci
@@ -51,8 +54,15 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public override function preStart():void {	
 			super.preStart();			
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction, 
-			DeleteAction, SvnChangeCredentialsAction);
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.
+				actionClasses.push(CreateRemoteFolderAction,
+					               CreateSvnRepositoryAction, 
+								   DeleteAction,
+								   SvnChangeCredentialsAction,
+								   RefreshRemoteResourceAction, 
+								   CheckoutAction,
+								   UpdateToHeadAction,
+								   UpdateToVersionAction);
 		}
 		
 		/**

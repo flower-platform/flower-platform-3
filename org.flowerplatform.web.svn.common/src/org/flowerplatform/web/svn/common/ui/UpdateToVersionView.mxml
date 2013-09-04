@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+@author Victor Badila
+-->
+
+<popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
+			  xmlns:component="org.flowerplatform.web.git.common.ui.component.*"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"			  
+			  minWidth="300" minHeight="200"
+			  creationComplete="init()">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.controls.Tree;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.communication.tree.remote.PathFragment;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.ui.WorkingDirectorySelectionPopupView;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			
+			public var selection:ArrayList;			
+			
+			[Bindable]
+			public var depthDropdownDataProvider:ArrayList;
+			
+			public override function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.updateToVersion.view.label"));				
+			}
+			
+			protected override function cancelClickHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);		
+			}
+			
+			protected override function finishClickHandler():void {
+				
+				var selectionPaths:ArrayList = new ArrayList;
+				for(var i:int=0; i<selection.length; i++) {
+					var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
+					selectionPaths.addItem(path);
+				}
+				
+				var revision:String;
+				if (headRevisionCheckbox.selected) {
+					revision = "revision";
+				} else {
+					revision = revisionTextBox.text;
+				}
+				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "updateToVersion", 
+						[selectionPaths, revision, depthDropdown.selectedIndex, changeWorkingCopyToSpecifiedDepth.selected, 
+						ignoreExternals.selected,  allowUnversionedObstructions.selected], this, updateToVersionCallbackHandler ));
+				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));				
+			}
+			
+			protected function handleDialogResult():IDialogResultHandler {
+				return null;
+			}
+			
+			public function populateDropdown():void {
+				depthDropdownDataProvider = new ArrayList();
+				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.updateToVersion.depthDropdownValues.workingCopy"));
+				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.updateToVersion.depthDropdownValues.fullyRecursive"));
+				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.updateToVersion.depthDropdownValues.immediateChildren"));
+				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.updateToVersion.depthDropdownValues.onlyFileChildren"));
+				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.updateToVersion.depthDropdownValues.onlyThisItem"));
+				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.updateToVersion.depthDropdownValues.exclude"));
+			}
+			
+			public function init():void {
+				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
+				populateDropdown();
+			}
+			
+			public function updateToVersionCallbackHandler(response:Boolean):void {
+				popupHost.hideSpinner();
+				if(!response) {
+					Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.updateToVersion.operationUnsuccesful"));
+					return;
+				}
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+			}
+			
+			public function selectionLength():int {
+				return selection.length;
+			}
+			
+		]]>		
+	</fx:Script>
+	
+	<popup:states>
+		<mx:State name="0">				
+			<mx:SetProperty name="wizardTitle"
+							value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.update.wizardName')}"/>										
+			<mx:AddChild relativeTo="{contentArea}">						
+				<s:VGroup width="100%">					
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.headRevisionCheckbox')}" id="headRevisionCheckbox" 
+								selected="true" enabled="{selectionLength() == 1}"/>
+					<s:Rect width="1" height="10"/>
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionLabel')}"/>
+						<s:TextInput id="revisionTextBox" 
+									 enabled="{!headRevisionCheckbox.selected &amp;&amp; selectionLength() == 1}" width="100%"/>
+						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionButton')}" enabled="{!headRevisionCheckbox.selected}"/>
+					</s:HGroup>
+					<s:Rect width="1" height="10"/>
+					<s:HGroup width="100%">
+						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.depthLabel')}"/>
+						<s:DropDownList id="depthDropdown" width="100%" dataProvider="{depthDropdownDataProvider}">
+						</s:DropDownList>						
+					</s:HGroup>
+					<s:CheckBox label="Change working copy to specified depth" id="changeWorkingCopyToSpecifiedDepth"/>
+					<s:CheckBox label="Ignore externals" id="ignoreExternals"/>
+					<s:CheckBox label="Allow unversioned obstructions" id="allowUnversionedObstructions" selected="true"/>					
+					<s:Rect width="1" height="20"/>	
+					
+					<!-- following code was commented because it might be used it in the future-->
+					
+					<!--<s:Label text="Conflict handling:"/>
+					<s:RadioButton groupName="conflictHandling" 
+								   id="op1"
+								   label="Prompt me for each conflict and let me decide"/>
+					<s:RadioButton groupName="conflictHandling"
+								   selected="true"
+								   id="op2"
+								   label="Mark conflicts, let me resolve them later"/>
+					<s:Rect width="1" height="5"/>
+					<s:Label text="Binary files:"/>
+					<s:RadioButton groupName="binaryFiles" 
+								   id="op3"
+								   label="Prompt me for each conflict and let me decide"/>
+					<s:RadioButton groupName="binaryFiles"
+								   id="op4"
+								   label="Mark conflicts, let me resolve them later"/>
+					<s:RadioButton groupName="binaryFiles"
+								   id="op5"
+								   label="Resolve the conflicts by using my version of the file"/>
+					<s:RadioButton groupName="binaryFiles"
+								   id="op6"
+								   label="Resolve the conflicts by using the incoming version of the file"
+								   selected="true"/>
+					<s:Rect width="1" height="5"/>
+					<s:Label text="Property conflicts:"/>
+					<s:RadioButton groupName="propertyFiles" 
+								   id="op7"
+								   label="Prompt me for each conflict and let me decide"/>
+					<s:RadioButton groupName="propertyFiles"
+								   selected="true"
+								   id="op8"
+								   label="Mark conflicts, let me resolve them later"/>
+					<s:Rect width="1" height="5"/>
+					<s:Label text="Tree conflicts:"/>
+					<s:RadioButton groupName="treeConflicts" 
+								   id="op9"
+								   label="Prompt me for each conflict and let me decide"/>
+					<s:RadioButton groupName="treeConflicts"
+								   id="op10"
+								   label="Mark conflicts, let me resolve them later"/>
+					<s:RadioButton groupName="treeConflicts"
+								   id="op11"
+								   label="Resolve the conflicts by using my side of the conflict (keep local moves)"/>
+					<s:RadioButton groupName="treeConflicts"
+								   id="op12"
+								   label="Mark resolved (local moves will become copies)"
+								   selected="true"/>	-->								
+				</s:VGroup>		 
+			</mx:AddChild>
+			<mx:SetProperty target="finish" name="enabled" value="{headRevisionCheckbox.selected || revisionTextBox.text!=''}"/>			
+		</mx:State>	
+	</popup:states>	
+</popup:Wizard>

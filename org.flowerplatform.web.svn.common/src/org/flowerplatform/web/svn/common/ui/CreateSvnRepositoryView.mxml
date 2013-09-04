@@ -45,7 +45,8 @@ license-end
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;			
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-			
+			import org.flowerplatform.web.common.WebCommonPlugin;
+						
 			public var node:TreeNode;
 			
 			[Bindable]
@@ -73,8 +74,7 @@ license-end
 				}				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [mySvnLocation.text, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
-				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));
-				
+				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));				
 			}
 			
 			public override function set popupHost(value:IPopupHost):void {
@@ -85,7 +85,7 @@ license-end
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
-				wizardImage.source = SvnCommonPlugin.getInstance().getResourceUrl("images/repository_rep.gif");
+				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
 			}						
 			
 			
@@ -98,11 +98,11 @@ license-end
 	
 	<popup:states>
 		<mx:State name="0">			
-			<mx:SetProperty name="wizardTitle" value="Add new svn repository"/>			
+			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.WizardTitle')}"/>			
 			<mx:AddChild relativeTo="{contentArea}">									
 				<s:VGroup width="100%" height="100%">
 					<s:HGroup width="100%" verticalAlign="middle">
-						<s:Label width="100%" text="Svn url"/>													
+						<s:Label width="100%" text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.SvnUrlLabel')}"/>													
 					</s:HGroup>						
 					<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/> 				
 					<s:HGroup width="100%" verticalAlign="middle">					

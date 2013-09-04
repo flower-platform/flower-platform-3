@@ -35,6 +35,10 @@ package org.flowerplatform.web.common.explorer {
 	
 	import spark.events.IndexChangeEvent;
 	
+	/**
+	 * @author Cristian Spiescu
+	 * 
+	 */	
 	public class ExplorerTreeList extends GenericTreeList implements IPopupContent {
 		
 		protected var _popupHost:IPopupHost;

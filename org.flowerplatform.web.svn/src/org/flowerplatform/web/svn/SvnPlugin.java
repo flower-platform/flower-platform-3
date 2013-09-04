@@ -23,6 +23,8 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	protected static SvnPlugin INSTANCE;
 	
+	private SvnUtils utils = new SvnUtils();
+	
 	public static final String TREE_NODE_KEY_IS_FOLDER = "isFolder";	
 
 	private List<GenericTreeStatefulService> treeStatefulServicesDisplayingSvnContent = new ArrayList<GenericTreeStatefulService>();;
@@ -45,7 +47,7 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);	
 		SVNProviderPlugin.getPlugin().setSvnPromptUserPassword(new SVNRepositoryPromptUserPassword());
-		INSTANCE = this;		
+		INSTANCE = this;
 	}
 	
 	/**
@@ -54,5 +56,9 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	public void stop(BundleContext context) throws Exception{
 		super.stop(context);		
 		INSTANCE = null;	
-	}	
+	}
+	
+	public SvnUtils getUtils() {
+		return utils;
+	}
 }

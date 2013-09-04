@@ -31,7 +31,7 @@ public class InitializeCurrentUserLoggedInClientCommand extends AbstractClientCo
 	
 	public InitializeCurrentUserLoggedInClientCommand() {
 		user = UserService.getInstance().convertUserToUser_LoggedInDto(
-				((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).getUser());
+				((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal()).getUser());
 	}
 
 	public User_CurrentUserLoggedInDto getUser() {

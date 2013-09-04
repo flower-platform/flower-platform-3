@@ -97,7 +97,7 @@ public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	protected DokuWikiClientConfiguration getClientConfiguration() {
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
+		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal();
 		DokuWikiClientConfiguration clientConfig = (DokuWikiClientConfiguration) principal.getWikiClientConfigurations().get(TECHNOLOGY);
 		return clientConfig;
 	}
