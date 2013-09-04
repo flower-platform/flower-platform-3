@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
-  <includeClasses/>
+  <includeClasses>
+    <classEntry path="org.flowerplatform.web.svn.common.SvnCommonPlugin"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.DeleteAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CommentComponent"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CommentView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CreateSvnRepositoryView"/>
+  </includeClasses>
   <includeResources/>
   <namespaceManifests/>
 </flexLibProperties>

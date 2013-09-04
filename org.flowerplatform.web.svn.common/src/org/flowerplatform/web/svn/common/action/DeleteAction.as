@@ -19,12 +19,7 @@
 package org.flowerplatform.web.svn.common.action {
 	
 	import flash.events.MouseEvent;
-	import flash.utils.flash_proxy;
-	
 	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
-	import mx.core.mx_internal;
-	import mx.utils.object_proxy;
 	
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;

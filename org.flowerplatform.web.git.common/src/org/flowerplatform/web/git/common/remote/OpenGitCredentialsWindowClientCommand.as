@@ -17,17 +17,21 @@
  * license-end
  */
 package org.flowerplatform.web.git.common.remote {
+	import mx.collections.ArrayCollection;
+	
 	import org.flowerplatform.communication.command.AbstractClientCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
-	import org.flowerplatform.web.git.common.ui.LoginView;
+	import org.flowerplatform.web.common.ui.LoginView;
 	
+
 	/**
 	 * @author Cristina Constantinescu
 	 */ 
 	[RemoteClass]
-	public class OpenGitCredentialsWindowClientCommand extends AbstractClientCommand {
+	public class OpenGitCredentialsWindowClientCommand extends AbstractClientCommand implements IDialogResultHandler{
 
 		private static const LOGIN_STATE:int = 0;
 		
@@ -44,7 +48,8 @@ package org.flowerplatform.web.git.common.remote {
 		public var user:String;
 		
 		public override function execute():void {
-			var loginView:LoginView = new LoginView();			
+			var loginView:LoginView = new LoginView();		
+			loginView.setResultHandler(this);
 			loginView.repositoryURI = repositoryURI;
 			loginView.user = user;
 			loginView.command = command;
@@ -53,7 +58,34 @@ package org.flowerplatform.web.git.common.remote {
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(loginView)
 				.show();
-		}		
+			
+		}	
+		
+		public function handleDialogResult(result:Object):void {
+			
+			var resultInfo:ArrayCollection = new ArrayCollection();
+			resultInfo.addAll(result as ArrayCollection);
+			var logging:Boolean = resultInfo.getItemAt(0) as Boolean;
+			
+			if (logging)
+				GitCommonPlugin.getInstance().service.login(
+					//repositoryURI
+					resultInfo.getItemAt(1) as String,
+					//username
+					resultInfo.getItemAt(2) as String, 
+					//password
+					resultInfo.getItemAt(3) as String, 
+					//command
+					resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand);
+			else
+				GitCommonPlugin.getInstance().service.changeCredentials(
+					//repositoryURI
+					resultInfo.getItemAt(1) as String,
+					//username
+					resultInfo.getItemAt(2) as String, 
+					//password
+					resultInfo.getItemAt(3) as String);
+		}
 	}
 	
 }

@@ -6,12 +6,17 @@ import java.util.List;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.command.AbstractClientCommand;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
+import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
+import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
@@ -19,7 +24,7 @@ import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.security.service.OrganizationService;
+import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.flowerplatform.web.security.service.UserService;
 import org.flowerplatform.web.svn.SvnPlugin;
 import org.hibernate.Query;
@@ -27,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
-import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
@@ -46,6 +50,10 @@ public class SvnService {
 	private static Logger logger = LoggerFactory.getLogger(SvnService.class);
 
 	protected static SvnService INSTANCE = new SvnService();
+	
+	public static final ThreadLocal<InvokeServiceMethodServerCommand> tlCommand = new ThreadLocal<InvokeServiceMethodServerCommand>();
+	
+	public static final ThreadLocal<String> tlURI = new ThreadLocal<String>();
 
 	/**
 	 * @flowerModelElementId _yaKVkAMcEeOrJqcAep-lCg
@@ -54,7 +62,8 @@ public class SvnService {
 	public static SvnService getInstance() {
 		return INSTANCE;
 	}
-
+	
+	
 	public boolean createRemoteFolder(ServiceInvocationContext context,
 			List<PathFragment> parentPath, String folderName, String comment) {
 
@@ -372,4 +381,85 @@ public class SvnService {
 		}
 		return true;
 	}
+	
+
+	public void openLoginWindow(ServiceInvocationContext context, String credentials) {
+		
+//		InvokeServiceMethodServerCommand cmd = tlCommand.get();	
+//		cmd.getParameters().remove(0);
+		
+		new OpenSvnCredentialsWindowClientCommand(credentials, context.getCommand());
+	}
+	
+	@RemoteInvocation
+	public List<String> getCredentials(ServiceInvocationContext context, List<PathFragment> path) {
+		
+			SVNRepositoryLocation remoteNode = (SVNRepositoryLocation) GenericTreeStatefulService.getNodeByPathFor(path, null);			
+			String repository = remoteNode.getLocation();
+			if (repository == null) {
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								"Cannot find repository for node " + remoteNode, 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));	
+				return null;
+			}			
+			if (((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).
+					getUserSvnRepositories() == null){
+				return null;
+			}
+			else {
+				List<String> credentials = ((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).
+						getUserSvnRepositories().get(repository);
+//				context.getCommunicationChannel().appendOrSendCommand(
+//						(AbstractClientCommand)new OpenSvnCredentialsWindowClientCommand(remoteNode.getUrl().toString(),
+//								credentials != null ? credentials.get(0) : ""));
+				if(credentials != null){
+					credentials.add(0, repository);
+					return credentials;
+				}
+				else
+					return null;
+			}
+	}
+	
+	@RemoteInvocation
+	public void login(ServiceInvocationContext context, String uri, String username, String password) {				
+		
+		try {
+			changeCredentials(context, uri, username, password);
+			InvokeServiceMethodServerCommand command = context.getCommand();
+			command.setCommunicationChannel(context.getCommunicationChannel());
+			command.executeCommand();
+			
+		} catch (Exception e) {
+			logger.error("Exception thrown while logging user!", e);
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							"Error while logging user!", 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));	
+		}		
+	}
+	
+	@RemoteInvocation
+	public void changeCredentials(ServiceInvocationContext context, String uri, String username, String password) {				
+		List<String> info = new ArrayList<String>();
+		info.add(username);
+		info.add(password);
+		
+		try {
+			FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
+			principal.getUserSvnRepositories().put(uri, info);
+			
+		} catch (Exception e) {
+			logger.error("Exception thrown while changing credentials!", e);
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							"Error while changing credentials!", 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
+		}
+	}
+
 }
