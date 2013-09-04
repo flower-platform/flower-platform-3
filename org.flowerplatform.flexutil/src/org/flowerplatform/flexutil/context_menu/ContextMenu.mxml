@@ -18,9 +18,10 @@
  
 	license-end
 -->
-<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+<popup:ScreenSizeAwarePopup xmlns:fx="http://ns.adobe.com/mxml/2009"
 				   xmlns:s="library://ns.adobe.com/flex/spark"
 				   xmlns:mx="library://ns.adobe.com/flex/mx"
+				   xmlns:popup="org.flowerplatform.flexutil.popup.*"
 				   backgroundAlpha="0.9" backgroundColor="#DDEEEE"
 				   borderVisible="true" dropShadowVisible="true">
 	<fx:Script>
@@ -50,7 +51,6 @@
 				this.contextMenuManager = contextMenuManager;
 				this.x = x;
 				this.y = y;
-				addEventListener(FlexEvent.UPDATE_COMPLETE, adjustPositionIfNeededHandler);
 				
 				contextMenuManager.contextMenuStack.push(this);
 				indexInStack = contextMenuManager.contextMenuStack.length - 1;
@@ -72,30 +72,14 @@
 				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
 			}
 			
-			protected function adjustPositionIfNeededHandler(event:FlexEvent):void {
-				removeEventListener(FlexEvent.UPDATE_COMPLETE, adjustPositionIfNeededHandler);
-				var appWidth:Number = FlexGlobals.topLevelApplication.width;
-				var appHeight:Number = FlexGlobals.topLevelApplication.height;
-				if (x + width > appWidth) {
-					// exits the visible area / horizontal axis
-					if (indexInStack == 0) {
-						// for the first menu, just keep it in the screen 
-						x = Math.max(0, appWidth - width);
-					} else {
-						// for the next menus, try to display to the left
-						var parentMenu:org.flowerplatform.flexutil.context_menu.ContextMenu = contextMenuManager.contextMenuStack[indexInStack - 1];
-						x = Math.max(0, parentMenu.x - width - GAP_BETWEEN_MENUS);
-					}
-				}
-				if (y + height > appHeight) {
-					// exits the visible area / vertical axis
-					if (y - height > 0) {
-						// if the whole menu can be translated before the cursor, do it!
-						y -= height;
-					} else {
-						// try at least to make it not exit the screen
-						y = Math.max(0, appHeight - height);
-					}
+			override protected function adjustHorizontalPosition(appWidth:Number):void {
+				if (indexInStack == 0) {
+					// for the first menu, just keep it in the screen 
+					super.adjustHorizontalPosition(appWidth);
+				} else {
+					// for the next menus, try to display to the left
+					var parentMenu:org.flowerplatform.flexutil.context_menu.ContextMenu = contextMenuManager.contextMenuStack[indexInStack - 1];
+					x = Math.max(0, parentMenu.x - width - GAP_BETWEEN_MENUS);
 				}
 			}
 			
@@ -145,12 +129,12 @@
 			
 		]]>
 	</fx:Script>
-	<s:layout>
+	<popup:layout>
 		<s:VerticalLayout id="verticalLayout" paddingTop="3" paddingBottom="3"/>
-	</s:layout>
-	<s:addedEffect>
+	</popup:layout>
+	<popup:addedEffect>
 		<s:Fade alphaFrom="0" alphaTo="1" duration="150"/>
-	</s:addedEffect>
+	</popup:addedEffect>
 <!--	<s:removedEffect>
 		<s:Fade alphaFrom="1" alphaTo="0" duration="300"/>
 	</s:removedEffect>-->
@@ -165,4 +149,4 @@
 			<s:VerticalLayout requestedMinRowCount="1" horizontalAlign="contentJustify" gap="0"/>
 		</s:layout>	
 	</s:List>
-</s:BorderContainer>
+</popup:ScreenSizeAwarePopup>

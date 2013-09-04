@@ -279,7 +279,7 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 		if (eDataTypeOfFeature != null && !isMany()) {
 			setOldValueAsString(EcoreUtil.convertToString(eDataTypeOfFeature, oldValue));
 		} else {
-			if (newOldValue instanceof Collection && eDataTypeOfFeature == null) {
+			if (newOldValue instanceof Collection) {
 				Collection<EObject> collection = (Collection<EObject>) newOldValue;
 				getOldValueAsContainmentList().clear();
 				for (EObject value : collection) {
@@ -290,9 +290,7 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 				try {
 					ByteArrayOutputStream output = new ByteArrayOutputStream();
 					ObjectOutputStream oos = new ObjectOutputStream(output);
-					Collection collection = new ArrayList<>();
-					collection.addAll((Collection) newOldValue);
-					oos.writeObject(collection);
+					oos.writeObject(newOldValue);
 					oos.close();
 					setOldValueAsString(encode(output.toByteArray()));
 				} catch (Exception e) {
@@ -385,7 +383,7 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 		if (eDataTypeOfFeature != null && !isMany()) {
 			setNewValueAsString(EcoreUtil.convertToString(eDataTypeOfFeature, newValue));
 		} else {
-			if (newNewValue instanceof Collection && eDataTypeOfFeature == null) {
+			if (newNewValue instanceof Collection) {
 				Collection<EObject> collection = (Collection<EObject>) newNewValue;
 				getNewValueAsContainmentList().clear();
 				for (EObject value : collection) {
@@ -396,9 +394,7 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 				try {
 					ByteArrayOutputStream output = new ByteArrayOutputStream();
 					ObjectOutputStream oos = new ObjectOutputStream(output);
-					Collection collection = new ArrayList<>();
-					collection.addAll((Collection) newNewValue);
-					oos.writeObject(collection);
+					oos.writeObject(newNewValue);
 					oos.close();
 					setNewValueAsString(encode(output.toByteArray()));
 				} catch (Exception e) {

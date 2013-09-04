@@ -18,25 +18,14 @@
  */
 package org.flowerplatform.editor.model.java;
 
-import org.eclipse.emf.ecore.EObject;
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
-
 /**
  * @author Mariana Gheorghe
  */
-public class JavaClassTitleProcessor extends JavaClassChildProcessor {
+public interface JavaTypeIconsConstants {
 
-	@Override
-	public String getLabel(EObject object, boolean forEditing) {
-		return (String) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, 
-				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-	}
-
-	@Override
-	protected String getImageForVisibility(int type) {
-		return "images/obj16/SyncClass.gif";
-	}
-
+	public static String CLASS_ICON = "images/obj16/SyncClass.gif";
+	public static String INTERFACE_ICON = "images/obj16/SyncInterface.gif";
+	public static String ENUM_ICON = "images/obj16/SyncEnum.gif";
+	public static String ANNOTATION_ICON = "images/obj16/SyncAnnotation.gif";
+	
 }
