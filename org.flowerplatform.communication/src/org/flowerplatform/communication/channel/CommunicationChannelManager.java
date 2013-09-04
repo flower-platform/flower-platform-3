@@ -132,7 +132,8 @@ public class CommunicationChannelManager {
 	public Object handleReceivedObject(Object messageClientId, IPrincipal principal, final Object object) {
 		final CommunicationChannel communicationChannel = idToCommunicationChannelMap.get(messageClientId);
 		try {
-			CommunicationPlugin.tlCurrentPrincipal.set(principal);
+			//CommunicationPlugin.tlCurrentPrincipal.set(principal);
+			CommunicationPlugin.tlCurrentChannel.set(communicationChannel);	
 		
 			// Message arrived too late, a channel for corresponding client does not exist anymore.
 			if (communicationChannel == null) 
@@ -159,7 +160,8 @@ public class CommunicationChannelManager {
 			}
 			return response;
 		} finally {
-			CommunicationPlugin.tlCurrentPrincipal.set(null);
+			//CommunicationPlugin.tlCurrentPrincipal.set(null);
+			CommunicationPlugin.tlCurrentChannel.set(null);
 		}
 	}
 	

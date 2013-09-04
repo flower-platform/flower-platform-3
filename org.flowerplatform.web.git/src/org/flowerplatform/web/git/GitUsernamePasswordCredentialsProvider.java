@@ -53,7 +53,7 @@ public class GitUsernamePasswordCredentialsProvider extends CredentialsProvider 
 		// stores the URI in order to be used when updating the authentication data
 		GitService.tlURI.set(uri.toString());
 		
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
+		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal();
 		
 		if (principal.getUserGitRepositories().containsKey(uri.toString())) {
 			CredentialItem.Username userItem = null;
@@ -103,7 +103,7 @@ public class GitUsernamePasswordCredentialsProvider extends CredentialsProvider 
 	
 	@Override
 	public void reset(URIish uri) {
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
+		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal();
 		if (principal.getUserGitRepositories().containsKey(uri.toString())) {
 			principal.getUserGitRepositories().remove(uri.toString());
 		}		

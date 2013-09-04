@@ -35,6 +35,10 @@ package org.flowerplatform.editor.action {
 		public function EditorTreeActionProvider() {
 		}
 		
+		/**
+		 * @author ?? (original author)
+		 * @author Victor Badila
+		 */
 		public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
@@ -67,8 +71,8 @@ package org.flowerplatform.editor.action {
 					}
 				}
 			} else {
-				for (var i:int = 0; i < selection.length; i++) {
-					if (TreeNode(selection.getItemAt(i)).customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
+				for (var i:int = 0; i < selection.length; i++) {					
+					if (TreeNode(selection.getItemAt(i)).customData == null || TreeNode(selection.getItemAt(i)).customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
 						// found at least one node not openable
 						return null;
 					}

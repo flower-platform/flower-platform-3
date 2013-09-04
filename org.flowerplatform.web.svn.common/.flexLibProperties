@@ -7,6 +7,12 @@
     <classEntry path="org.flowerplatform.web.svn.common.ui.BranchTagView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CopyToAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.CheckoutAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

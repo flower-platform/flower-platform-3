@@ -22,11 +22,12 @@ license-end
 @author Victor Badila
 -->
 
-<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
-		 xmlns:s="library://ns.adobe.com/flex/spark"
-		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 creationComplete="creationCompleteHandler(event)"
-		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog">
+<popup:Wizard 
+	xmlns:fx="http://www.adobe.com/2006/mxml"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:popup="org.flowerplatform.flexutil.popup.*"
+	xmlns:component="org.flowerplatform.web.git.common.ui.component.*"
+	xmlns:mx="library://ns.adobe.com/flex/mx">
 	
 	<fx:Script>
 		<![CDATA[
@@ -42,23 +43,17 @@ license-end
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.ActionBase;
 			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
-			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.flexutil.popup.IPopupHost;   
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-						
-			protected var _popupHost:IPopupHost;
+			import org.flowerplatform.web.common.WebCommonPlugin;
 			
 			public var node:TreeNode;
 			
 			[Bindable]
-			public var svnLocation:String;			
+			public var svnLocation:String;   
 			
 			[Bindable]
 			private var check:Boolean;
-			
-			protected function creationCompleteHandler(event:FlexEvent):void {
-				_popupHost.addToControlBar(buttonBar);				
-			}
 			
 			private function getProjectsCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
@@ -70,78 +65,50 @@ license-end
 			}
 			
 			public function cancelHandler():void {
-				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);				
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);    
 			}
 			
-			public function okHandler():void {				
+			protected override function finishClickHandler():void {    
 				if (Validator.validateAll(validators).length > 0) {
 					return;
-				}				
+				}    
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [mySvnLocation.text, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
-				_popupHost.showSpinner("Please wait");
-				
+				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));    
 			}
 			
-			public function set popupHost(value:IPopupHost):void {
-				_popupHost = value;				
-				_popupHost.setLabel("Add a new Svn Repository");
-				_popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/project.gif"));
+			public override function set popupHost(value:IPopupHost):void {
+				_popupHost = value;    
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepiository.view.label"));
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/repository_rep.gif"));
 			}
 			
-			public function getSelection():IList {
-				return null;
-			}
+			protected override function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
+			}      
 			
-			public function getActions(selection:IList):Vector.<IAction> {
-				return null;
-			}
 			
-			public function setResultHandler(resultHandler:IDialogResultHandler):void {
-				
-			}
 		]]>
 	</fx:Script>
 	
-	<fx:Declarations>
-		<s:HGroup id="buttonBar" width="100%" horizontalAlign="center" verticalAlign="bottom">
-			<s:Button id="ok" width="80" label="{CommonPlugin.getInstance().getMessage('ok')}"
-					  click="okHandler()"/>
-			<s:Button id="cancel" width="80"
-					  label="{CommonPlugin.getInstance().getMessage('cancel')}"
-					  click="cancelHandler()"/>			
-		</s:HGroup>	
-		
-	</fx:Declarations>
+	<fx:Array id="validators">
+		<mx:StringValidator minLength="1" property="text" source="{mySvnLocation}"/>
+	</fx:Array> 
 	
-	<s:layout>
-		<s:VerticalLayout horizontalAlign="center" verticalAlign="middle"/>
-	</s:layout>
-	
-	<fx:Declarations>
-		<fx:Array id="validators">
-			<mx:StringValidator minLength="1" property="text" source="{mySvnLocation}"/>		
-			<!--<mx:RegExpValidator source="{mySvnLocation}" property="text" expression="^[a-z|A-Z|0-9]" 
-			noMatchError="{SvnPlugin
-			.getInstance()
-			.getMessage(
-			'explorer.createRemoteFolder.error.nameValidation')}"/>-->
-		</fx:Array>	
-	</fx:Declarations>	
-	
-	<s:Form id="form" width="100%" height="100%"> 
-		<!-- REPLACE (???)-->
-		<s:FormHeading label="Add a new Svn Repository"/>
-		
-		<s:FormItem width="100%" label="Enter Svn Location">
-			
-		</s:FormItem>
-		
-		<s:FormItem width="100%">
-			<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/> 			
-		</s:FormItem>		
-		
-		
-	</s:Form>
-	
-</s:Group>
+	<popup:states>
+		<mx:State name="0">   
+			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.WizardTitle')}"/>   
+			<mx:AddChild relativeTo="{contentArea}">         
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label width="100%" text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.SvnUrlLabel')}"/>             
+					</s:HGroup>      
+					<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/>     
+					<s:HGroup width="100%" verticalAlign="middle">     
+					</s:HGroup>            
+				</s:VGroup>   
+			</mx:AddChild>
+		</mx:State>     
+	</popup:states> 
+</popup:Wizard>

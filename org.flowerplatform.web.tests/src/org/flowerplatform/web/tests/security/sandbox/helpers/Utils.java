@@ -112,7 +112,7 @@ public class Utils {
 				FlexContext.setUserPrincipal(principal);
 				RecordingTestWebCommunicationChannel cc = new RecordingTestWebCommunicationChannel();
 				cc.setPrincipal((FlowerWebPrincipal) principal);
-				CommunicationPlugin.tlCurrentPrincipal.set((IPrincipal) principal);
+				CommunicationPlugin.tlCurrentChannel.set((RecordingTestWebCommunicationChannel) cc);
 				ServiceInvocationContext context = new ServiceInvocationContext(cc);
 				
 				runnable.run(context);

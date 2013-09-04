@@ -151,7 +151,7 @@ public class FlowerWebFilePermissionsTest {
 				FlexContext.setUserPrincipal(principal);
 				RecordingTestWebCommunicationChannel cc = new RecordingTestWebCommunicationChannel();
 				cc.setPrincipal((FlowerWebPrincipal) principal);
-				CommunicationPlugin.tlCurrentPrincipal.set((IPrincipal) principal);
+				CommunicationPlugin.tlCurrentChannel.set((RecordingTestWebCommunicationChannel) cc);
 				
 				return SecurityUtils.hasReadPermission(testFile);
 			}
