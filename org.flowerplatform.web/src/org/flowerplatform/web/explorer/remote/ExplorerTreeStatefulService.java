@@ -44,9 +44,13 @@ import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.file_event.IFileEventListener;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.entity.WorkingDirectory;
+import org.flowerplatform.web.entity.impl.WorkingDirectoryImpl;
 import org.flowerplatform.web.explorer.FsFile_FileSystemChildrenProvider;
 import org.flowerplatform.web.projects.ProjFile_ProjectChildrenProvider;
 import org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider;
+import org.flowerplatform.web.projects.WorkingDirectories_OrganizationChildrenProvider;
+import org.flowerplatform.web.projects.WorkingDirectory_WorkingDirectoriesChildrenProvider;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,6 +177,16 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 				} else {
 					node = new Pair<File, String>(parent, Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT);
 					dispatchContentUpdate(node);
+				}
+			} else if(event.getEvent() == FileEvent.FILE_DELETED) {
+				String org = ProjectsService.getInstance().getOrganizationNameFromFile(parent);
+				List<WorkingDirectory> workingDirectories = ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName(org);
+				for( WorkingDirectory workingDirectory : workingDirectories) {
+					String name = workingDirectory.getOrganization().getName();
+					if(name.equals(org)) {				
+						node = new Pair<WorkingDirectory, String>(workingDirectory, WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY);
+						dispatchContentUpdate(workingDirectory);
+					}
 				}
 			}
 		}

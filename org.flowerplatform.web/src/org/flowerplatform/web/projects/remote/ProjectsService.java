@@ -46,6 +46,7 @@ import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.database.DatabaseOperation;
@@ -383,6 +384,45 @@ public class ProjectsService {
 			logger.debug("In Working Directory = {}, added a new Project = {}", workingDirectoryDir.a, file);
 		}
 	}
+	/**
+	 * @author Tache Razvan Mihai
+	 * 
+	 * @param context
+	 * @param file
+	 */
+	public void deleteProject(ServiceInvocationContext context, final File file) {
+		
+		IWorkspace workspace = ResourcesPlugin.getWorkspace();
+		IWorkspaceRoot wsRoot = workspace.getRoot();
+				
+		String projectPath = CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
+		String projectWrapperName = projectPath.replace("/", ProjectsService.PROJECT_WRAPPER_NAME_SEPARATOR);
+		IProject projectWrapper = wsRoot.getProject(projectWrapperName);
+		
+		if (projectWrapper.exists()) {
+			
+			IFolder linkToProjectFolder = projectWrapper.getFolder(ProjectsService.LINK_TO_PROJECT);
+			
+			try {
+				// TODO Decide if needed
+//				IStatus status = workspace.validateLinkLocationURI(linkToProjectFolder, linkToProjectURI);
+//				if (!status.isOK()) {
+//					throw new RuntimeException(String.format("The linkToProjectURI = %s is not valid; we have the following validation error message = %s", linkToProjectURI, status.getMessage()));
+//				}	
+				projectWrapper.delete(true, null);
+				linkToProjectFolder.delete(true,null);
+			} catch (CoreException e) {
+				FileManagerService.printSimpleMessageToUser(context,
+						"Error",
+						e.getMessage() + " Check the console for more informations");
+				e.printStackTrace();
+			}		
+			workingDirectoryToProjectsMap.get(projectToWorkingDirectoryAndIProjectMap.get(file).a).remove(file);	
+			projectToWorkingDirectoryAndIProjectMap.remove(file);
+		} else {
+			FileManagerService.printSimpleMessageToUser(context, "error", "Project doesn't exist");
+		}
+	}
 	
 	public IResource getProjectWrapperResourceFromFile(List<PathFragment> pathWithRoot) {
 		@SuppressWarnings("unchecked")
@@ -419,6 +459,12 @@ public class ProjectsService {
 			return projectWrapper.getFile(pathInProjectWrapper);
 		}
 		
+	}
+	
+	public String getOrganizationNameFromFile(File file) {
+		String relativePathToWorkspace = CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
+		String[] folders = relativePathToWorkspace.split("/");
+		return folders[0];
 	}
 	
 }

@@ -30,7 +30,7 @@ import org.flowerplatform.web.explorer.AbstractVirtualItemChildrenProvider;
  */
 public class WorkingDirectories_OrganizationChildrenProvider extends AbstractVirtualItemChildrenProvider {
 
-	protected static final String NODE_TYPE_WORKING_DIRECTORIES = "workingDirectories";
+	public static final String NODE_TYPE_WORKING_DIRECTORIES = "workingDirectories";
 
 	public WorkingDirectories_OrganizationChildrenProvider() {
 		super();

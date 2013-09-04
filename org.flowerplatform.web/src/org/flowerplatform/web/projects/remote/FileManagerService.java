@@ -20,11 +20,20 @@ package org.flowerplatform.web.projects.remote;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
@@ -53,16 +62,16 @@ public class FileManagerService {
 								WebPlugin.getInstance().getMessage(message),
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 	}
-	
-	public void printSimpleMessageToUser(ServiceInvocationContext context,
+	// TODO remove static after testing
+	public static void printSimpleMessageToUser(ServiceInvocationContext context,
 			String title, String message) {
 		context.getCommunicationChannel()
 				.appendCommandToCurrentHttpResponse(
 						new DisplaySimpleMessageClientCommand(title, message,
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 	}
-
-	private boolean deleteFolder(final File folder) {
+	// TODO change back to private after testing
+	public static boolean deleteFolder(final File folder) {
 
 		File[] files = folder.listFiles();
 		if (files != null) { // some JVMs return null for empty dirs
@@ -214,23 +223,25 @@ public class FileManagerService {
 		String path = ((Pair<File, Object>) object).a.getPath();
 		
 		File file = new File(path);
-		
+		int sendEvent = -1;
 		if(file.exists()) {
 			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
 			if( resource != null && resource.getType() == IResource.PROJECT ) {
-				printSimpleMessageToUser(context, "error", "The selected folder is a project, please delete it from the project menu");
-			} else {	
-				boolean result = deleteFolder(file);
-				if(result) {
-					FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
-					CommonPlugin.getInstance().getFileEventDispatcher()
-							.dispatch(event);
-				} else {
-					printMessageToUser(context,
-							"explorer.delete.error.title",
-							"explorer.delete.error.couldNotDelete");
-				} 
-			}
+				ProjectsService.getInstance().deleteProject(context, file);
+				sendEvent = FileEvent.FILE_DELETED;
+			}	
+			boolean result = deleteFolder(file);
+			if(result) {
+				if(sendEvent == -1 )
+					sendEvent = FileEvent.FILE_DELETED;
+				FileEvent event = new FileEvent(file, sendEvent);
+				CommonPlugin.getInstance().getFileEventDispatcher()
+						.dispatch(event);
+			} else {
+				printMessageToUser(context,
+						"explorer.delete.error.title",
+						"explorer.delete.error.couldNotDelete");
+			} 		
 		} else {
 			printMessageToUser(context,
 					"explorer.delete.error.title",
