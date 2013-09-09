@@ -72,7 +72,7 @@ public /* abstract */ class ModelAdapterFactorySet {
 		return this;
 	}
 	
-	/* abstract */ public void initialize(Resource cache) {
+	/* abstract */ public void initialize(Resource cache, String limitedPath) {
 		throw new UnsupportedOperationException("Must be implemented!");
 	}
 	
