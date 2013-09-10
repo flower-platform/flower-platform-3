@@ -16,12 +16,10 @@
 *
 * license-end
 */
-package org.flowerplatform.web.common.explorer.action
-{	
+package org.flowerplatform.web.common.explorer.action {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.popup.ActionBase;
@@ -31,13 +29,12 @@ package org.flowerplatform.web.common.explorer.action
 	/**
 	 * @author Tache Razvan
 	 **/
-	public class CreateDirectoryAction extends ActionBase implements IDialogResultHandler {
-		
+	public class RenameAction extends ActionBase implements IDialogResultHandler {
 		public var selectedTreeNode:TreeNode;
 		
-		public function CreateDirectoryAction() {
-			label = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.action");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
+		public function RenameAction() {
+			label = WebCommonPlugin.getInstance().getMessage("explorer.rename.action");
+			icon = WebCommonPlugin.getInstance().getResourceUrl("images/edit.png");
 		}
 		
 		override public function get visible():Boolean {
@@ -45,17 +42,16 @@ package org.flowerplatform.web.common.explorer.action
 				return false;
 			}
 			var obj:Object = selection.getItemAt(0);		
-			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY]);
+			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY] != null) && (TreeNode(obj).pathFragment.type != "project");
 		}
 		
 		override public function run():void	{
 			selectedTreeNode = TreeNode(selection.getItemAt(0));
 			var view:TextInputView = new TextInputView();
 			view.node=TreeNode(selection.getItemAt(0));
-			view.label = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.input.label");
-			view.title = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.input.title");
-			view.wizardIcon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
-			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
+			view.label = WebCommonPlugin.getInstance().getMessage("explorer.rename.input.label");
+			view.title = WebCommonPlugin.getInstance().getMessage("explorer.rename.input.title");
+			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/icon_flower.gif");
 			view.setResultHandler(this);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
@@ -64,8 +60,7 @@ package org.flowerplatform.web.common.explorer.action
 		
 		public function handleDialogResult(result:Object):void {
 			CommunicationPlugin.getInstance().bridge.sendObject(
-			new InvokeServiceMethodServerCommand("fileManagerService", "createDirectory", [selectedTreeNode.getPathForNode(true),result]));
+				new InvokeServiceMethodServerCommand("fileManagerService", "rename", [selectedTreeNode.getPathForNode(true),result]));
 		}
 	}
-	
 }

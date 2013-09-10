@@ -235,6 +235,7 @@ public class FileManagerService {
 				if(sendEvent == -1 )
 					sendEvent = FileEvent.FILE_DELETED;
 				FileEvent event = new FileEvent(file, sendEvent);
+			
 				CommonPlugin.getInstance().getFileEventDispatcher()
 						.dispatch(event);
 			} else {
@@ -247,6 +248,38 @@ public class FileManagerService {
 					"explorer.delete.error.title",
 					"explorer.delete.error.fileAlreadyDeleted");
 		}
+	}
+	
+	public void rename(ServiceInvocationContext context,
+			List<PathFragment> pathWithRoot, String newName) {
+		
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath();
+		
+		File fileToBeRenamed = new File(path);
+		String newPath = fileToBeRenamed.getParent() + "\\" + newName;
+		File newFile = new File(newPath);
+		
+		if(!newFile.exists()) {
+			boolean result = fileToBeRenamed.renameTo(newFile);
+			if(result) {
+				FileEvent event = new FileEvent(newFile, FileEvent.FILE_RENAMED, fileToBeRenamed);
+				CommonPlugin.getInstance().getFileEventDispatcher()
+						.dispatch(event);
+			} else {
+				printMessageToUser(context,
+						"explorer.rename.error.title",
+						"explorer.rename.error.couldNotRename");
+			}
+		} else {
+			printMessageToUser(context,
+					"explorer.rename.error.title",
+					"explorer.rename.error.newFileAlreadyExists");
+		}
+		
 	}
 
 }
