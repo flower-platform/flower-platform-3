@@ -39,9 +39,7 @@ public class NewMindMapDiagramAction extends NewDiagramAction {
 		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
 		MindMapNode root = NotationFactory.eINSTANCE.createMindMapNode();
 		root.setViewType("default");
-		root.setExpanded(true);
-		root.setHasChildren(false);
-		
+				
 		MindMapRoot mindmapCse = CodeSyncFactory.eINSTANCE.createMindMapRoot();				
 		mindmapCse.setName("Root");
 		mindmapCse.setType("default");

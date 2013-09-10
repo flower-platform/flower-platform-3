@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -55,6 +56,7 @@ import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.FileBasedEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
+import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
@@ -176,7 +178,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		
 		DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, false);
 
-		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, Collections.emptyList(), null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
+		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
 		String diagramId = diagram.eResource().getURIFragment(diagram);
 		invokeClientMethod(client.getCommunicationChannel(), client.getStatefulClientId(), "openDiagram", new Object[] { diagramId });
 		
@@ -265,8 +267,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			if (diagramUpdaterChangeDescriptionProcessingContext != null && !diagramUpdaterChangeDescriptionProcessingContext.isEmpty()) {
 				for (EditableResourceClient client : diagramEditableResource.getClients()) {
 					client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), 
-							diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate(), 
-							diagramUpdaterChangeDescriptionProcessingContext.getObjectsToDispose(),
+							diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate(),							
 							diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose(),
 							diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates());
 				}
@@ -306,13 +307,17 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	 * 
 	 * @author Mariana Gheorghe
 	 */
-	public void client_updateTransferableObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectsToUpdate, Collection<?> objectsToDispose, Collection<?> objectsIdsToDispose, Collection<ViewDetailsUpdate> viewDetailsUpdates) {
-		for (Object object : objectsToDispose) {
-			if (object instanceof View) {
-				((View) object).setDiagrammableElement(null);
+	public void client_updateTransferableObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectsToUpdate, Collection<?> objectsIdsToDispose, Collection<ViewDetailsUpdate> viewDetailsUpdates) {	
+		if (viewDetailsUpdates != null) {
+			CopyOnWriteArrayList<ViewDetailsUpdate> updates = new CopyOnWriteArrayList<ViewDetailsUpdate>(viewDetailsUpdates);
+			if (objectsIdsToDispose != null && objectsIdsToDispose.size() > 0) {
+				for (ViewDetailsUpdate update : updates) {
+					if (objectsIdsToDispose.contains(update.getViewId())) {
+						viewDetailsUpdates.remove(update);
+					}
+				}
 			}
 		}
-		
 		invokeClientMethod(communicationChannel, statefulClientId, "updateTransferableObjects", new Object[] { objectsToUpdate, objectsIdsToDispose, viewDetailsUpdates });
 	}
 	

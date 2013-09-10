@@ -408,7 +408,9 @@
 			}
 			
 			public function resourceUpdated(evt:Event):void {
-				popupHost.setLabel(getMessage('authentication.login'));
+				if (popupHost != null) {
+					popupHost.setLabel(getMessage('authentication.login'));
+				}
 			}
 			
 		]]>

@@ -34,10 +34,14 @@ import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.emf_model.notation.NotationElement;
+import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 
@@ -101,10 +105,9 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 					}
 				}
 			}
-		} else {
+		} else {			
 			// removed
-			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());
-			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToDispose().add(object);
+			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());			
 		}
 	}
 	
@@ -151,11 +154,15 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		
 		DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(context, true);
 		
+		boolean diagrammableElementWasSetToNull = false;
 		for (FeatureChange featureChange : entry.getValue()) {
 //			if (FlowerDiagramNotationPackage.eINSTANCE.getDiagramNotationElement_IdBeforeRemoval().equals(featureChange.getFeature())) {
 //				// TODO CS/CS3 idBeforeRemoval: de hotarat; deocamdata pot spune ca daca modific aici, sigur pot sa ignor si celelalte
 //				return;
 //			}
+			if (featureChange.getFeature().equals(NotationPackage.eINSTANCE.getView_DiagrammableElement()) && notationElement.eGet(featureChange.getFeature()) == null) {
+				diagrammableElementWasSetToNull = true;				
+			}
 			if (featureChange.getFeature() instanceof EReference && ((EReference) featureChange.getFeature()).isContainment()) {
 				if (!featureChange.getFeature().isMany()) {
 					// TODO CS/CS3 LOW de prelucrat si cazul in care avem containment pe feature care nu e many
@@ -207,13 +214,18 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Adding object to update = {}", notationElement);
 		}
+		if (diagrammableElementWasSetToNull) {		
+			return;
+		}
 		if (!diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().contains(notationElement)) {			
 			if (notationElement instanceof View) {
 				View view = (View) notationElement;
 				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
 				if (processors != null) {
 					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-						processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);
+						if (view.getDiagrammableElement() != null) {
+							processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);	
+						}
 					}
 				}
 			}			
@@ -226,6 +238,7 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 	protected void processFeatureChangesForDiagrammableElement(Map.Entry<EObject, EList<FeatureChange>> entry, Map<String, Object> context) {
 		ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(entry.getKey());
 		EObject diagrammableElement = entry.getKey();
+				
 		for (Setting setting : adapter.getNonNavigableInverseReferences(diagrammableElement)) {
 			if (NotationPackage.eINSTANCE.getView_DiagrammableElement().equals(setting.getEStructuralFeature())) {
 				View view = (View) setting.getEObject();
@@ -234,8 +247,8 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 					if (logger.isDebugEnabled()) {
 						logger.debug("Delegating to IDiagrammableElementFeatureChangesProcessor for view = {}, object = {}", view, diagrammableElement);
 					}
-					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-						processor.processFeatureChanges(diagrammableElement, entry.getValue(), view, context);
+					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {					
+						processor.processFeatureChanges(diagrammableElement, entry.getValue(), view, context);						
 					}
 				}
 			}			

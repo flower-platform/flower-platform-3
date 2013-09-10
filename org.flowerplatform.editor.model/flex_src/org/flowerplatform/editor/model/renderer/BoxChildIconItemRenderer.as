@@ -82,8 +82,7 @@ package org.flowerplatform.editor.model.renderer {
 		
 		protected function zoomPerformedHandler(event:ZoomPerformedEvent):void {
 			invalidateSize();
-			// use calllater because the updateList must be done after recalculating size
-			callLater(invalidateDisplayList);
+			invalidateDisplayList();
 		}
 		
 		override protected function createLabelDisplay():void	{

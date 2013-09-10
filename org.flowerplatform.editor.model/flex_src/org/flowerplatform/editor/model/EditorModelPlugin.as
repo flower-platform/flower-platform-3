@@ -62,7 +62,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
@@ -151,7 +150,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);			
 		}
 		
 		override public function start():void {

@@ -32,6 +32,7 @@ package org.flowerplatform.editor.mindmap.action {
 		public function SetMinMaxWidthAction() {
 			super();
 			label = MindMapModelPlugin.getInstance().getMessage('setWidthLimits.action.label');
+			preferShowOnActionBar = true;
 		}		
 		
 		override public function get visible():Boolean {			
