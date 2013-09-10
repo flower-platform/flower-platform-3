@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
@@ -25,28 +27,34 @@ import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.Organization;
+import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
+import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
+import org.flowerplatform.web.security.service.UserService;
 import org.flowerplatform.web.svn.SvnPlugin;
 import org.flowerplatform.web.svn.operation.SvnOperationNotifyListener;
+import org.flowerplatform.web.svn.remote.dto.FileDto;
+import org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tigris.subversion.subclipse.core.ISVNCoreConstants;
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
+import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
-import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
+import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
-import org.tigris.subversion.svnclientadapter.javahl.JhlConverter;
+import org.tigris.subversion.svnclientadapter.javahl.JhlStatus;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
 
 
@@ -57,6 +65,8 @@ import org.tigris.subversion.svnclientadapter.utils.Depth;
  * @flowerModelElementId _bcYyQAMcEeOrJqcAep-lCg
  */
 public class SvnService {
+
+	public static final int MAX_SVN_COMMENTS = 10;
 
 	private static Logger logger = LoggerFactory.getLogger(SvnService.class);
 
@@ -110,13 +120,10 @@ public class SvnService {
 			@Override
 			public void run() {
 				String organizationName = parentPath.get(1).getName();
-				try {
-					// check to see if repository with specified url address
-					// exists following 2 lines might be merged
+				try {					
 					SVNRepositoryLocation repository = SVNRepositoryLocation.fromString(url);
 					if (repository.pathExists()) {
-						// creates entry in database and links it to specified
-						// organization
+						// creates entry in database and links it to specified organization
 						Query q = wrapper.getSession().createQuery(String.format("SELECT e from %s e where e.name ='%s'", Organization.class.getSimpleName(), organizationName));
 						ArrayList<Object> querryResult = (ArrayList<Object>) q.list();
 						if(querryResult.isEmpty()) {
@@ -151,6 +158,11 @@ public class SvnService {
 		}		
 		return false;
 	}
+	
+	public String getCommitUrlPathForSingleSelection(ArrayList<PathFragment> path) {
+		String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
+		return getSvnUrlForPath(workingDirectoryPath);		
+	}
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getRepositoriesForOrganization(final String organizationName) {
@@ -181,9 +193,8 @@ public class SvnService {
 							String workingDirectoryDestination, String revisionNumberAsString, 
 							int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals) {		
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
-		
-		workingDirectoryDestination = getWorkingDirectoryFullPath(workingDirectoryPartialPath) + workingDirectoryDestination;
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);		
+		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
 		SVNRevision revision;
 		if (headRevision) {
 			revision = SVNRevision.HEAD;
@@ -207,8 +218,7 @@ public class SvnService {
 				correspondingRemoteResource = (RemoteResource)treeNode;
 			}
 			remoteFolders[i] = correspondingRemoteResource;			
-		}	
-		
+		}			
 		pm.beginTask(null, 1000);
 		ISVNClientAdapter myClient;
 		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
@@ -218,10 +228,9 @@ public class SvnService {
 			opMng.beginOperation(pm, myClient, true);					
 			for(int i = 0; i < folders.size(); i++) {
 				File fileArgumentForCheckout = new File(workingDirectoryDestination + "/" + remoteFolders[i].getName());
-				String fullPath = remoteFolders[i].getRepository().getLabel() + "/" + remoteFolders[i].getProjectRelativePath();				
+				String fullPath = remoteFolders[i].getUrl().toString();				
 				myClient.checkout(new SVNUrl(fullPath), fileArgumentForCheckout, 
 						revision, getDepthValue(depthIndex), ignoreExternals, force);				
-				
 				try {
 					ProjectsService.getInstance().createOrImportProjectFromFile(context, fileArgumentForCheckout);
 				} catch (URISyntaxException e) {
@@ -237,8 +246,7 @@ public class SvnService {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
-		} finally {
-			
+		} finally {			
 			pm.done();
 		}		
 		return true;
@@ -271,7 +279,7 @@ public class SvnService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public String getWorkingDirectoryFullPath(List<PathFragment> pathWithRoot) {		
+	public String getDirectoryFullPathFromPathFragments(List<PathFragment> pathWithRoot) {		
 		Object workingDirectory  = GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
 		if (workingDirectory instanceof WorkingDirectory) {
 			return "" + ProjectsService.getInstance().getOrganizationDir(((WorkingDirectory) workingDirectory).getOrganization().getLabel()) + "\\"+ ((WorkingDirectory) workingDirectory).getPathFromOrganization();
@@ -294,17 +302,163 @@ public class SvnService {
 			}				
 	}
 	
-	// TODO part of method that gets files is the same as the one from updateToVersion(). Could be used only one instance of block
-	public Boolean commit(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList, String message, Boolean recurse) {
-		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.update.updateToHeadMonitor"), channel);
-		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
-		File[] files = getFilesForSelectionList(selectionList);
+	public String getSvnUrlForPath(String filePath) {
+		ISVNClientAdapter myClientAdapter;
 		try {
-			ISVNClientAdapter myClient = SVNProviderPlugin.getPlugin().getSVNClient();
-			myClient.setProgressListener(opMng);
+			myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
+			ISVNInfo info = myClientAdapter.getInfo(new File(filePath));
+			return info.getUrl().toString();
+		} catch (SVNException | SVNClientException e) {
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);	
+			return null;
+		}		
+	}	
+	
+	public List<PathFragment> getCommonParent(ArrayList<ArrayList<PathFragment>> selectionList) {
+		int index = 0;
+		boolean sem = true;
+		int size = selectionList.get(0).size();
+
+		for (int i = 0; i < size && sem; i++) {
+			index = i;
+			PathFragment element = selectionList.get(0).get(i);
+			for (int j = 0; j < selectionList.size(); j++) {
+				if (!(selectionList.get(j).get(i).equals(element))) {
+					sem = false;
+					index--;
+					break;
+				}
+			}
+		}
+		return selectionList.get(0).subList(0, index + 1);
+	}
+	
+	public ArrayList<String> setImageUrlForExtensionType(String fileType, String status) {
+		ArrayList<String> result = new ArrayList<>();
+		if (fileType.equals("dir")) {
+			result.add("images/folder_pending.gif");
+		} else {
+			result.add("images/file.gif");
+		}
+		
+		if (status.equals("unversioned")) {
+			result.add("images/added_ov.gif");
+		} else if (status.equals("missing")) {
+			result.add("images/deleted_ov.gif");
+		} else {
+			result.add("images/question_ov.gif");
+		}		
+		return result;
+	}
+	
+	
+	public GetModifiedFilesDto getDifferences(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList) {
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		JhlClientAdapter myClientAdapter = new JhlClientAdapter();
+		ArrayList<FileDto> fileList = new ArrayList<FileDto>();		
+		List<PathFragment> list = getCommonParent(selectionList);				
+		String workingDirectoryFullPath = getDirectoryFullPathFromPathFragments(list);
+		int workingDirectoryFullPathLength;
+		if (workingDirectoryFullPath.contains("/")) {
+			workingDirectoryFullPathLength = workingDirectoryFullPath.substring(0, workingDirectoryFullPath.lastIndexOf("/")).length();
+		} else {
+			 workingDirectoryFullPathLength = workingDirectoryFullPath.substring(0, workingDirectoryFullPath.lastIndexOf("\\")).length();			
+		}		
+		File[] filesToBeCompared = getFilesForSelectionList(selectionList);		
+		for (File f : filesToBeCompared) {			
 			try {
-				myClient.commit(files, message, recurse);
+				JhlStatus[] jhlStatusArray = (JhlStatus[])myClientAdapter.getStatus(f, true, true);
+				for (int i=0; i<jhlStatusArray.length; i++) {
+					if (!jhlStatusArray[i].getTextStatus().toString().equals("normal")) {
+						FileDto modifiedFileDto = new FileDto();
+						JhlStatus currentTarget = jhlStatusArray[i];						
+						modifiedFileDto.setPath(currentTarget.getFile().getAbsolutePath());
+						modifiedFileDto.setLabel(currentTarget.getFile().getAbsolutePath().substring(workingDirectoryFullPathLength + 1));
+						String status = currentTarget.getTextStatus().toString();
+						modifiedFileDto.setStatus(status);						
+						modifiedFileDto.setImageUrls(setImageUrlForExtensionType(currentTarget.getNodeKind().toString(), status));
+												
+						fileList.add(modifiedFileDto);
+					}
+				}
+			} catch (SVNClientException e) {
+				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+			}			
+		}		
+		// sort needs to be implemented manually:
+		Collections.sort(fileList, new Comparator<FileDto>(){
+			@Override
+			public int compare(FileDto dto1, FileDto dto2) {
+				return dto1.getPath().compareTo(dto2.getPath());
+			}});		
+		// duplicates are removed
+		int currentIndex = 0;		
+		int resultSize = fileList.size();
+		while (currentIndex < resultSize-1) {
+			if (fileList.get(currentIndex).getPath().equals(fileList.get(currentIndex+1).getPath())) {
+				fileList.remove(currentIndex+1);
+				resultSize--;
+			} else {
+				currentIndex++;
+			}			
+		}		
+		GetModifiedFilesDto dto = new GetModifiedFilesDto();
+		dto.setFiles(fileList);
+		return dto;
+	}
+	
+	public Boolean commit(ServiceInvocationContext context, ArrayList<FileDto> selectionList, String message, Boolean keepLocks) {
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.commit.commitMonitor"), channel);
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
+		
+		// following 40 rows could be rewritten:		
+		ArrayList<File> markedForAddition = new ArrayList<File>();
+		ArrayList<File> markedForDeletion = new ArrayList<File>();
+		ArrayList<File> normalCommitFiles = new ArrayList<File>();	
+		
+		for (FileDto dto : selectionList) {
+			File file = new File(dto.getPath());
+			switch (dto.getStatus()) {
+			case "missing": // will be added to a queue ready to be marked for deletion, after which it would be safe to have it inside commit file list argument
+				markedForDeletion.add(file);
+				normalCommitFiles.add(file);
+				break;
+			case "modified": 
+				normalCommitFiles.add(file);
+				break;
+			case "unversioned": // same as for "missing"
+				markedForAddition.add(file);
+				normalCommitFiles.add(file);
+				break;
+			case "added":
+				normalCommitFiles.add(file);			
+			}		
+		}		
+		// set File vectors for different types of operations:		
+		File[] markedForDeletionFiles = new File[markedForDeletion.size()];
+		for (int i=0; i<markedForDeletion.size(); i++) {
+			markedForDeletionFiles[i] = markedForDeletion.get(i);
+		}		
+		File[] markedForAdditionFiles = new File[markedForAddition.size()];
+		for (int i=0; i<markedForAddition.size(); i++) {
+			markedForAdditionFiles[i] = markedForAddition.get(i);
+		}
+		File[] files = new File[normalCommitFiles.size()];
+		for (int i=0; i<normalCommitFiles.size(); i++) {
+			files[i] = normalCommitFiles.get(i);
+		}		
+		Boolean recurse = true;
+		try {
+			ISVNClientAdapter myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
+			myClientAdapter.setProgressListener(opMng);			
+			try {				
+				for (int i=0; i<markedForAdditionFiles.length; i++) {
+					myClientAdapter.addFile(markedForAdditionFiles[i]);
+				}			
+				myClientAdapter.remove(markedForDeletionFiles, true);
+				myClientAdapter.commit(files, message, recurse, keepLocks);
 			} catch (SVNClientException e) {
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -331,7 +485,7 @@ public class SvnService {
 			}
 			result[i] = new File(path);			
 		}
-		return result;		
+		return result;
 	}
 	
 	public Boolean updateToHEAD(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList) {
@@ -384,6 +538,193 @@ public class SvnService {
 				return false;				
 			}
 			pm.done();
+		}
+		return true;
+	}
+	
+	/**
+	 * 
+	 * @author Cristina Necula
+	 * 
+	 */
+
+	public List<String> getPreviousComments(ServiceInvocationContext context) {
+		CommunicationChannel cc = context.getCommunicationChannel();
+		User user = (User) cc.getPrincipal().getUser();
+		List<String> comments = new ArrayList<String>();
+		for (SVNCommentEntity comment : UserService.getInstance()
+				.getSVNCommentsOrderedByTimestamp(user, false)) {
+			comments.add(comment.getBody());
+		}
+		return comments;
+	}
+	
+	/**
+	 * 
+	 * @author Cristina Necula
+	 * 
+	 */
+	private void addComment(final String iuser, final String comment) {
+		
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(
+				new DatabaseOperation() {
+					
+					@Override
+					public void run() {
+
+						User user = wrapper.findByField(User.class, "login", iuser).get(0);
+						
+						if (comment != null && comment.trim().length() > 0) {
+							List<SVNCommentEntity> previousComments = UserService
+									.getInstance()
+									.getSVNCommentsOrderedByTimestamp(user,
+											true);
+
+							// verifies if the comment is already in the list
+							int index = -1;
+							for (int i = 0; i < previousComments.size(); i++) {
+								if (previousComments.get(i).getBody()
+										.equals(comment)) {
+									index = i;
+									break;
+								}
+							}
+							if (index != -1) { // exists, remove it
+								user.getSvnComments().remove(previousComments.get(index));
+								wrapper.merge(user);
+								wrapper.delete(previousComments.get(index));
+								previousComments.remove(index);
+							}
+
+							// add it again so that it will be seen as the last
+							// used comment
+							
+							SVNCommentEntity newComment = EntityFactory.eINSTANCE
+									.createSVNCommentEntity();
+							
+							newComment = (SVNCommentEntity)wrapper.merge(newComment);
+							
+							newComment.setUser(user);
+							newComment.setBody(comment);
+							newComment.setTimestamp(System.currentTimeMillis());
+							previousComments.add(newComment);
+							
+							newComment= (SVNCommentEntity)wrapper.merge(newComment);
+							wrapper.setOperationResult(newComment);
+
+							// delete old comments
+							if (previousComments.size() > MAX_SVN_COMMENTS) {
+								for (int i = 0; i < previousComments.size()
+										- MAX_SVN_COMMENTS; i++) {
+									wrapper.delete(previousComments.remove(i));
+								}
+							}
+
+							// set new list of comments to user
+
+							user.getSvnComments().add(newComment);
+							for (int i = 0; i < previousComments.size(); i++) {
+								user.getSvnComments().add(
+										previousComments.get(i));
+							}
+							user = (User) wrapper.merge(user);
+
+						}
+					}
+
+				});
+	}
+	
+	/**
+	 * 
+	 * @author Cristina Necula
+	 * 
+	 */
+	public boolean deleteSvnAction(ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment){
+		
+		final CommunicationChannel cc = context.getCommunicationChannel();
+		
+		//list of remote resources
+		List<ISVNRemoteResource> remoteObject = new ArrayList<ISVNRemoteResource>();
+		
+		//list of repository location
+		final List<SVNRepositoryURLEntity> repositoryObject = new ArrayList<SVNRepositoryURLEntity>();
+		
+		for(List<PathFragment> fullPath : objectFullPaths){
+			
+			Object node = GenericTreeStatefulService.getNodeByPathFor(fullPath, null);
+			
+			//add in the list of repos
+			if (node.getClass().equals(SVNRepositoryLocation.class)){
+				
+				SVNRepositoryLocation repo = (SVNRepositoryLocation) node;
+				String organizationName = fullPath.get(1).getName();
+				Organization org = EntityFactory.eINSTANCE.createOrganization();
+				org.setName(organizationName);
+				
+				SVNRepositoryURLEntity urlEntity = EntityFactory.eINSTANCE
+						.createSVNRepositoryURLEntity();
+				urlEntity.setName(repo.getLocation());
+				urlEntity.setOrganization(org);
+				
+				repositoryObject.add(urlEntity);
+				
+			}
+			
+			//add in the list of remote resources
+			if (node.getClass().equals(RemoteFolder.class)){
+				remoteObject.add((ISVNRemoteResource)node);
+			}
+		}
+		
+		ProgressMonitor monitor = ProgressMonitor.create(
+				SvnPlugin.getInstance().getMessage("svn.deleteSvnAction.monitor.title"), cc);
+		try {
+			//save comment
+			addComment(cc.getPrincipal().getUser().getLogin(), comment);
+
+			//delete remote resource
+			if(remoteObject.size() >= 1){
+				SVNProviderPlugin.getPlugin().getRepositoryResourcesManager().
+				deleteRemoteResources(remoteObject.toArray(
+						new ISVNRemoteResource[remoteObject.size()]), comment, monitor);
+			}
+			
+			//delete repository action
+			if(repositoryObject.size() >= 1){
+				
+				//final List<SVNRepositoryURLEntity> repos;
+				
+				DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(
+						new DatabaseOperation() {
+					
+					@Override
+					public void run() {
+						for(SVNRepositoryURLEntity url : repositoryObject){
+							SVNRepositoryURLEntity toDelete = 
+									wrapper.findByField(SVNRepositoryURLEntity.class, "name", url.getName()).get(0);
+							if (toDelete != null){
+								Organization org = toDelete.getOrganization();
+								org.getSvnRepositoryURLs().remove(toDelete);
+								wrapper.merge(org);
+								wrapper.delete(toDelete);
+							}
+						}
+					}
+				});
+			}
+			
+		} catch (SVNException e) {
+			e.printStackTrace();
+			logger.error("Exception thrown while deleting remote folders!", e);
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							SvnPlugin.getInstance().getMessage("svn.deleteSvnAction.error"), 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		} finally {
+			monitor.done();
 		}
 		return true;
 	}

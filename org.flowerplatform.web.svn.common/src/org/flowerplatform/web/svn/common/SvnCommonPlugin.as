@@ -17,16 +17,21 @@
 * license-end
 */
 package org.flowerplatform.web.svn.common {
+	import flash.net.registerClassAlias;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
+	import org.flowerplatform.web.svn.common.action.CommitAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
+	import org.flowerplatform.web.svn.common.action.DeleteAction;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
-
+	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -59,14 +64,18 @@ package org.flowerplatform.web.svn.common {
 								   RefreshRemoteResourceAction, 
 								   CheckoutAction,
 								   UpdateToHeadAction,
-								   UpdateToVersionAction);
+								   UpdateToVersionAction,
+								   DeleteAction,
+								   CommitAction);
 		}
 		
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
 		 */
-		protected override function registerClassAliases():void {				
+		protected override function registerClassAliases():void {	
 			super.registerClassAliases();
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);
 		}
 		
 		/**

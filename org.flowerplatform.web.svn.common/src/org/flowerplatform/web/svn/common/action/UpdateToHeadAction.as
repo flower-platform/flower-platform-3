@@ -17,10 +17,8 @@
 * license-end
 */
 
-package org.flowerplatform.web.svn.common.action
-	
-{
-	
+package org.flowerplatform.web.svn.common.action {
+		
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.controls.Alert;
@@ -29,8 +27,7 @@ package org.flowerplatform.web.svn.common.action
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-	
+	import org.flowerplatform.web.svn.common.SvnCommonPlugin;	
 
 	/**
 	 * @author Victor Badila
@@ -39,7 +36,7 @@ package org.flowerplatform.web.svn.common.action
 		
 		public function UpdateToHeadAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.updateToHead.label");
-			icon = null;
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/update.gif");
 		}
 		
 		public override function get visible():Boolean {
@@ -70,7 +67,7 @@ package org.flowerplatform.web.svn.common.action
 		
 		public function getProjectsCallbackHandler(response:Boolean):void {
 			if(!response) {
-				Alert.show("Update operation was not succesful");
+				Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.action.updateToHead.operationNotSuccessful"));
 			}
 		}
 	}

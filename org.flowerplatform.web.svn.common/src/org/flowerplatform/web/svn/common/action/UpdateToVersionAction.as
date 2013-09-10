@@ -36,7 +36,7 @@ package org.flowerplatform.web.svn.common.action {
 		
 		public function UpdateToVersionAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.updateToVersion.label");
-			icon = null;
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/update.gif");;
 		}
 		
 		public override function get visible():Boolean {
@@ -54,14 +54,12 @@ package org.flowerplatform.web.svn.common.action {
 			return true;
 		}
 		
-		public override function run():void {
-			
+		public override function run():void {			
 			var selectionPaths:ArrayList = new ArrayList;
 			for(var i:int=0; i<selection.length; i++) {
 				var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
 				selectionPaths.addItem(path);
-			}
-			
+			}			
 			var view:UpdateToVersionView = new UpdateToVersionView();
 			view.selection = ArrayList(selection);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()

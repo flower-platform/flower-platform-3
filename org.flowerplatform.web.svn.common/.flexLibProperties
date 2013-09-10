@@ -2,11 +2,13 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
-    <classEntry path="org.flowerplatform.web.svn.common.action.CheckoutAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CommitView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.remote.dto.FileDto"/>
+    <classEntry path="org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

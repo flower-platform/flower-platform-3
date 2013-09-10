@@ -87,6 +87,11 @@ public class GeneralService {
 		}
 		user.setActivationCode("12345");
 		user.setActivated(true);
+		SVNCommentEntity comment;
+		comment = EntityFactory.eINSTANCE.createSVNCommentEntity();
+		comment.setBody("default commit comment");
+		comment.setTimestamp(System.currentTimeMillis());
+		user.getSvnComments().add(comment);
 		return wrapper.merge(user);
 	}
 	

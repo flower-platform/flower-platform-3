@@ -30,6 +30,9 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.common.ui.CommitView;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	
 	/**
 	 * @author Victor Badila
 	 */	
@@ -37,35 +40,26 @@ package org.flowerplatform.web.svn.common.action {
 		
 		public function CommitAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.commit.label");
-			icon = null;
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/commit.gif");
 		}
 		
 		//get visible may be the same for commit, update and possibly other actions	
-		public override function get visible():Boolean {				
-			if (selection.length == 0)
-				return false;
-			if (!selection.getItemAt(0) is TreeNode)
-				return false;
-			var node_type:String = TreeNode(selection.getItemAt(0)).pathFragment.type;
-			if(node_type != SvnCommonPlugin.NODE_TYPE_REPOSITORY && node_type != SvnCommonPlugin.NODE_TYPE_FILE)
-				return false;
-			for (var i:int = 0; i<selection.length; i++) {
-				var currentNode:TreeNode = TreeNode(selection.getItemAt(i)); 
-				if (currentNode.pathFragment.type != node_type || (currentNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE && currentNode.customData.isFolder == false)) {
-					return false;
-				}			
-			}			
-			var organizationName:String = PathFragment(TreeNode(selection.getItemAt(0)).getPathForNode(false).getItemAt(0)).name;
+		public override function get visible():Boolean {
 			for (var i:int=0; i<selection.length; i++) {
-				var treeNode:TreeNode = TreeNode(selection.getItemAt(i));
-				if (organizationName != PathFragment(treeNode.getPathForNode(false).getItemAt(0)).name) {
+				var currentSelection:Object = selection.getItemAt(i);
+				if (!(currentSelection is TreeNode)) {
 					return false;
 				}
-			}
+				if (currentSelection.customData == null ||
+					currentSelection.customData.svnFileType == null ||
+					currentSelection.customData.svnFileType == false) {
+					return false;
+				}
+			}			
 			return true;
 		}
 			
-		public override function run():void {			
+		public override function run():void {
 			var view:CommitView = new CommitView();
 			view.selection = ArrayList(selection);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
