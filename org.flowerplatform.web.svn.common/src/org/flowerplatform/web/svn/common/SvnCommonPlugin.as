@@ -17,6 +17,8 @@
 * license-end
 */
 package org.flowerplatform.web.svn.common {
+	import flash.net.registerClassAlias;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
@@ -24,6 +26,7 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
+	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
@@ -68,7 +71,9 @@ package org.flowerplatform.web.svn.common {
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
 		 */
-		protected override function registerClassAliases():void {				
+		protected override function registerClassAliases():void {		
+			registerClassAlias("org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand",
+				OpenSvnCredentialsWindowClientCommand);
 			super.registerClassAliases();
 		}
 		

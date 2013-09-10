@@ -27,7 +27,7 @@ package org.flowerplatform.communication.stateful_service {
 		
 		public var statefulClientId:String;
 		
-		public function InvokeStatefulServiceMethodServerCommand(statefulClientId:String, serviceId:String, methodName:String, parameters:Array, resultCallbackObject:Object=null, resultCallbackFunction:Function=null, exceptionCallbackFunction:Function=null) {
+		public function InvokeStatefulServiceMethodServerCommand(statefulClientId:String = null, serviceId:String = null, methodName:String = null, parameters:Array = null, resultCallbackObject:Object=null, resultCallbackFunction:Function=null, exceptionCallbackFunction:Function=null) {
 			super(serviceId, methodName, parameters, resultCallbackObject, resultCallbackFunction, exceptionCallbackFunction);
 			this.statefulClientId = statefulClientId;
 		}

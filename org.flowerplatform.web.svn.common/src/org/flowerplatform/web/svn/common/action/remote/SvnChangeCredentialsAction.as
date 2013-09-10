@@ -10,12 +10,13 @@ package org.flowerplatform.web.svn.common.action.remote {
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
+	import org.flowerplatform.flexutil.popup.IPopupHost;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.ui.LoginView;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
 
+	[RemoteClass]
 	public class SvnChangeCredentialsAction extends ActionBase implements IDialogResultHandler{
 		
 		public var repo:String; 
@@ -35,6 +36,7 @@ package org.flowerplatform.web.svn.common.action.remote {
 		public var user:String;
 		
 		public var selectedNode:TreeNode = new TreeNode();
+		
 		
 		public function SvnChangeCredentialsAction() {
 			label = WebCommonPlugin.getInstance().getMessage("git.action.changeCredentials.label");
@@ -61,8 +63,10 @@ package org.flowerplatform.web.svn.common.action.remote {
 		public function resultClallbackFunction(result:ArrayCollection):void{
 			
 			var loginView:LoginView = new LoginView();		
+//			loginView.popupHost.setLabel("Change Credentials");
 			loginView.setResultHandler(this);
 			loginView.command = command;
+			loginView.logging = false;
 			if(result == null){
 				loginView.repositoryURI = repo;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
@@ -70,7 +74,6 @@ package org.flowerplatform.web.svn.common.action.remote {
 					.show();
 			}
 			else {
-				
 				loginView.repositoryURI = result.getItemAt(0) as String;
 				loginView.user = result.getItemAt(1) as String;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
@@ -90,10 +93,10 @@ package org.flowerplatform.web.svn.common.action.remote {
 			
 			if(logging){
 //				var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand();
-//				command.serviceId = this.id;// = resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand;
+				command = resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand;
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", 
-						"login", [repoURI, userName, password], this, null));
+						"login", [repoURI, userName, password, command], this, null));
 			}
 			else
 				CommunicationPlugin.getInstance().bridge.sendObject(

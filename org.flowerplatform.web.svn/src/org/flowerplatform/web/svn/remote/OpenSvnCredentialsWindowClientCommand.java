@@ -20,6 +20,7 @@ package org.flowerplatform.web.svn.remote;
 
 import org.flowerplatform.communication.command.AbstractClientCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 
 /**
  * @author Cristina Necula
@@ -75,10 +76,10 @@ private boolean logging;
 		this.user = user;
 	}
 
-	public OpenSvnCredentialsWindowClientCommand(String repositoryURI, InvokeServiceMethodServerCommand command) {
+	public OpenSvnCredentialsWindowClientCommand(String repositoryURI, String user, InvokeServiceMethodServerCommand command) {
 		this.logging = true;
 		this.repositoryURI = repositoryURI;
+		this.user = user;
 		this.command = command;
 	}
-	
 }

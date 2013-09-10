@@ -7,69 +7,53 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
-
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.command.AbstractClientCommand;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
-
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-
 import org.flowerplatform.communication.service.ServiceInvocationContext;
+import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-
-import org.flowerplatform.web.WebPlugin;
-
 import org.flowerplatform.communication.tree.remote.TreeNode;
-
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
-
 import org.flowerplatform.web.entity.User;
-import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
-import org.flowerplatform.web.security.service.UserService;
-
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
-
+import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
+import org.flowerplatform.web.security.service.UserService;
 import org.flowerplatform.web.svn.SvnPlugin;
+import org.flowerplatform.web.svn.SvnUtils;
 import org.flowerplatform.web.svn.operation.SvnOperationNotifyListener;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tigris.subversion.subclipse.core.ISVNCoreConstants;
-
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
-
-import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
-
-import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
-import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
-import org.tigris.subversion.svnclientadapter.javahl.JhlConverter;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
 
 /**
@@ -102,10 +86,9 @@ public class SvnService {
 	 * @author Gabriela Murgoci
 	 */
 	public boolean createRemoteFolder(ServiceInvocationContext context, List<PathFragment> parentPath, String folderName, String comment) {
-
+		
+		
 		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
-
-
 		ISVNRemoteFolder parentFolder = null;
 		if (selectedParent instanceof ISVNRemoteFolder) {
 			parentFolder = (ISVNRemoteFolder) selectedParent;
@@ -119,10 +102,14 @@ public class SvnService {
 		try {
 
 			// create remote folder
-
+			context.getCommand().getParameters().remove(0);
+			tlCommand.set(context.getCommand());
 			parentFolder.createRemoteFolder(folderName, comment,
 					new NullProgressMonitor());
+
 		} catch (SVNException e) { // something wrong happened
+			if (isAuthentificationException(e))
+				return true;
 			CommunicationChannel channel = (CommunicationChannel) context
 					.getCommunicationChannel();
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
@@ -531,7 +518,7 @@ public class SvnService {
 				});
 	}
 	
-	public boolean deleteSvnAction(ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment){
+	public boolean deleteSvnAction(final ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment){
 		
 		final CommunicationChannel cc = context.getCommunicationChannel();
 		
@@ -540,11 +527,10 @@ public class SvnService {
 		
 		//list of repository location
 		final List<SVNRepositoryURLEntity> repositoryObject = new ArrayList<SVNRepositoryURLEntity>();
-		
+		context.getCommand().getParameters().remove(0);
+		tlCommand.set(context.getCommand());
 		for(List<PathFragment> fullPath : objectFullPaths){
-			
 			Object node = GenericTreeStatefulService.getNodeByPathFor(fullPath, null);
-			
 			//add in the list of repos
 			if (node.getClass().equals(SVNRepositoryLocation.class)){
 				
@@ -559,7 +545,6 @@ public class SvnService {
 				urlEntity.setOrganization(org);
 				
 				repositoryObject.add(urlEntity);
-				
 			}
 			
 			//add in the list of remote resources
@@ -579,6 +564,7 @@ public class SvnService {
 				SVNProviderPlugin.getPlugin().getRepositoryResourcesManager().
 				deleteRemoteResources(remoteObject.toArray(
 						new ISVNRemoteResource[remoteObject.size()]), comment, monitor);
+				
 			}
 			
 			//delete repository action
@@ -606,6 +592,8 @@ public class SvnService {
 			}
 			
 		} catch (SVNException e) {
+			if (isAuthentificationException(e))
+				return true;
 			e.printStackTrace();
 			logger.error("Exception thrown while deleting remote folders!", e);
 			context.getCommunicationChannel().appendOrSendCommand(
@@ -621,37 +609,36 @@ public class SvnService {
 	}
 	
 
-	public void openLoginWindow(ServiceInvocationContext context, String credentials) {
-		
+//	public void openLoginWindow(ServiceInvocationContext context, String credentials) {
+//		
 //		InvokeServiceMethodServerCommand cmd = tlCommand.get();	
 //		cmd.getParameters().remove(0);
-		
-		new OpenSvnCredentialsWindowClientCommand(credentials, context.getCommand());
-	}
+//		new OpenSvnCredentialsWindowClientCommand(credentials, context.getCommand());
+//	}
 	
 	@RemoteInvocation
 	public List<String> getCredentials(ServiceInvocationContext context, List<PathFragment> path) {
 		
 			SVNRepositoryLocation remoteNode = (SVNRepositoryLocation) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			String repository = remoteNode.getLocation();
-			if (repository == null) {
+			if (remoteNode.getUrl() == null) {
 				context.getCommunicationChannel().appendOrSendCommand(
 						new DisplaySimpleMessageClientCommand(
 								CommonPlugin.getInstance().getMessage("error"), 
 								"Cannot find repository for node " + remoteNode, 
 								DisplaySimpleMessageClientCommand.ICON_ERROR));	
 				return null;
-			}			
-			if (((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).
+			}
+			
+			String repository = "<" + remoteNode.getUrl().getProtocol() + "://" + 
+									remoteNode.getUrl().getHost() + ":" + remoteNode.getUrl().getPort() +
+									"> " + remoteNode.getUrl().getLastPathSegment();			
+			if (((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal()).
 					getUserSvnRepositories() == null){
 				return null;
 			}
 			else {
-				List<String> credentials = ((FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get()).
+				List<String> credentials = ((FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal()).
 						getUserSvnRepositories().get(repository);
-//				context.getCommunicationChannel().appendOrSendCommand(
-//						(AbstractClientCommand)new OpenSvnCredentialsWindowClientCommand(remoteNode.getUrl().toString(),
-//								credentials != null ? credentials.get(0) : ""));
 				if(credentials != null){
 					credentials.add(0, repository);
 					return credentials;
@@ -662,14 +649,15 @@ public class SvnService {
 	}
 	
 	@RemoteInvocation
-	public void login(ServiceInvocationContext context, String uri, String username, String password) {				
+	public void login(ServiceInvocationContext context, String uri, String username, String password, InvokeServiceMethodServerCommand command) {				
 		
+//		InvokeServiceMethodServerCommand command = tlCommand.get();
+		tlCommand.remove();
 		try {
 			changeCredentials(context, uri, username, password);
-			InvokeServiceMethodServerCommand command = context.getCommand();
 			command.setCommunicationChannel(context.getCommunicationChannel());
 			command.executeCommand();
-			
+		
 		} catch (Exception e) {
 			logger.error("Exception thrown while logging user!", e);
 			context.getCommunicationChannel().appendOrSendCommand(
@@ -677,7 +665,7 @@ public class SvnService {
 							CommonPlugin.getInstance().getMessage("error"), 
 							"Error while logging user!", 
 							DisplaySimpleMessageClientCommand.ICON_ERROR));	
-		}		
+		}
 	}
 	
 	@RemoteInvocation
@@ -685,9 +673,16 @@ public class SvnService {
 		List<String> info = new ArrayList<String>();
 		info.add(username);
 		info.add(password);
-		
+		List<String> copyUri = new ArrayList<String>();
+		StringTokenizer st = new StringTokenizer(uri, ":/<>"); 
+		while(st.hasMoreTokens()) {
+			copyUri.add(st.nextToken());
+		}
+		if (copyUri.size() == 3) {
+			uri = "<" + copyUri.get(0) + "://" + copyUri.get(1) + ":3690> " + copyUri.get(2);
+		}
 		try {
-			FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
+			FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentChannel.get().getPrincipal();
 			principal.getUserSvnRepositories().put(uri, info);
 			
 		} catch (Exception e) {
@@ -698,6 +693,14 @@ public class SvnService {
 							"Error while changing credentials!", 
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
 		}
+	}
+	
+	public boolean isAuthentificationException(Throwable exception) {
+		
+		if (exception == null) {
+			return false;
+		}
+		return SvnPlugin.getInstance().getUtils().isAuthenticationClientException(exception);
 	}
 
 }

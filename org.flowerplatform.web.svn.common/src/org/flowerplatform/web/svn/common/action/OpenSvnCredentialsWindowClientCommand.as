@@ -20,12 +20,12 @@ package org.flowerplatform.web.svn.common.action {
 	
 	import mx.collections.ArrayCollection;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.AbstractClientCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.web.common.ui.LoginView;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
 	 * @author Cristina Necula
@@ -48,13 +48,12 @@ package org.flowerplatform.web.svn.common.action {
 		public var user:String;
 		
 		public override function execute():void {
-			var loginView:LoginView = new LoginView();		
+			
+			var loginView:LoginView = new LoginView();	
 			loginView.setResultHandler(this);
 			loginView.repositoryURI = repositoryURI;
 			loginView.user = user;
 			loginView.command = command;
-			loginView.logging = logging;
-			
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(loginView)
 				.show();
@@ -65,9 +64,22 @@ package org.flowerplatform.web.svn.common.action {
 			
 			var resultInfo:ArrayCollection = new ArrayCollection();
 			resultInfo.addAll(result as ArrayCollection);
-			var logging:Boolean = resultInfo.getItemAt(0) as Boolean;
+			var logging:Boolean = true;
+			var repoURI:String = resultInfo.getItemAt(1) as String;
+			var userName:String = resultInfo.getItemAt(2) as String;
+			var password:String = resultInfo.getItemAt(3) as String;
 			
-			//send info to server
+			if(logging){
+			var	command:InvokeServiceMethodServerCommand = resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand;
+			CommunicationPlugin.getInstance().bridge.sendObject(
+				new InvokeServiceMethodServerCommand("svnService", 
+					"login", [repoURI, userName, password, command], this, null));
+			}
+			else
+				CommunicationPlugin.getInstance().bridge.sendObject(	
+					new InvokeServiceMethodServerCommand("svnService", 
+						"changeCredentials", [repoURI, userName, password], this, null));
+			
 		}
 	}
 }

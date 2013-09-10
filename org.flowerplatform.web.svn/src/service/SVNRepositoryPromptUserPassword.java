@@ -3,11 +3,11 @@ package service;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.IPrincipal;
 import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.channel.CommunicationChannelManager;
-import org.flowerplatform.communication.command.AbstractClientCommand;
+import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand;
+import org.flowerplatform.web.svn.remote.SvnService;
 import org.tigris.subversion.svnclientadapter.ISVNPromptUserPassword;
 
 public class SVNRepositoryPromptUserPassword implements ISVNPromptUserPassword{
@@ -73,22 +73,19 @@ public class SVNRepositoryPromptUserPassword implements ISVNPromptUserPassword{
 		allowedSave = false;
 		rtnCode = false;	
 		
-//		CommunicationChannel cc = (CommunicationChannel)CommunicationPlugin.tlCurrentPrincipal.getCurrentPrincipal();
+		CommunicationChannel cc = (CommunicationChannel)CommunicationPlugin.tlCurrentChannel.get();
 		ServiceInvocationContext context = new ServiceInvocationContext(cc);
+		InvokeServiceMethodServerCommand command = SvnService.tlCommand.get();
 		
-		IPrincipal channel = CommunicationPlugin.tlCurrentPrincipal.get();
-		if (channel == null) {
+		FlowerWebPrincipal principal = (FlowerWebPrincipal) cc.getPrincipal();
+		if (principal == null) {
 			return rtnCode;
 		}
-		
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
-		
 		if (principal.getUserSvnRepositories().get(promptRealm) == null || 
 			principal.getUserSvnRepositories().get(promptRealm).get(0) == null ||  // user
 			promptUsername == null) {
-			
-//			context.getCommunicationChannel().appendOrSendCommand((AbstractClientCommand)
-//					new OpenSvnCredentialsWindowClientCommand(promptRealm, promptUsername));
+			context.getCommunicationChannel().appendOrSendCommand(
+					new OpenSvnCredentialsWindowClientCommand(promptRealm, promptUsername, command));
 			
 		} else {
 			username = principal.getUserSvnRepositories().get(promptRealm).get(0);
