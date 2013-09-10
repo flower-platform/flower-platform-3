@@ -20,6 +20,9 @@ package org.flowerplatform.web.projects;
 
 import java.util.Collections;
 
+import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.explorer.AbstractVirtualItemChildrenProvider;
 
 /**
@@ -28,13 +31,19 @@ import org.flowerplatform.web.explorer.AbstractVirtualItemChildrenProvider;
  * 
  * @author Cristian Spiescu
  */
-public class WorkingDirectories_OrganizationChildrenProvider extends AbstractVirtualItemChildrenProvider {
+public class WorkingDirectories_OrganizationChildrenProvider extends AbstractVirtualItemChildrenProvider implements IGenericTreeStatefulServiceAware {
 
 	public static final String NODE_TYPE_WORKING_DIRECTORIES = "workingDirectories";
 
 	public WorkingDirectories_OrganizationChildrenProvider() {
 		super();
 		childNodeTypes = Collections.singletonList(NODE_TYPE_WORKING_DIRECTORIES);
+	}
+
+	@Override
+	public void setGenericTreeStatefulService(
+			GenericTreeStatefulService genericTreeStatefulService) {
+		WebPlugin.getInstance().getTreeStatefulServicesDisplayingWorkingDirectoryContent().add(genericTreeStatefulService);
 	}
 
 }
