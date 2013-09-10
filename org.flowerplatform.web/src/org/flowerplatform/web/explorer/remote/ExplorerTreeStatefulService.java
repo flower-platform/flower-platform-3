@@ -160,7 +160,8 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 	 */
 	@Override
 	public void notify(FileEvent event) {
-		if(event.getEvent() == FileEvent.FILE_CREATED || event.getEvent() == FileEvent.FILE_DELETED) {
+		if(event.getEvent() == FileEvent.FILE_CREATED || event.getEvent() == FileEvent.FILE_DELETED ||
+				event.getEvent() == FileEvent.FILE_RENAMED) {
 			File parent = event.getFile().getParentFile();
 			
 			// Update for ws_trunk subtree
@@ -178,7 +179,9 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 					node = new Pair<File, String>(parent, Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT);
 					dispatchContentUpdate(node);
 				}
-			} else if(event.getEvent() == FileEvent.FILE_DELETED) {
+			} 
+			// TODO Make the refresh for special node types
+			/* else if(event.getEvent() == FileEvent.FILE_DELETED) {
 				String org = ProjectsService.getInstance().getOrganizationNameFromFile(parent);
 				List<WorkingDirectory> workingDirectories = ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName(org);
 				for( WorkingDirectory workingDirectory : workingDirectories) {
@@ -186,9 +189,9 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 					if(name.equals(org)) {				
 						node = new Pair<WorkingDirectory, String>(workingDirectory, WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY);
 						dispatchContentUpdate(workingDirectory);
-					}
-				}
-			}
+					} 
+				} 
+			} */
 		}
 	}
 }
