@@ -149,8 +149,8 @@ license-end
 					data.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 					View(data).addEventListener(DiagramEditorStatefulClient.VIEW_DETAILS_UPDATED_EVENT, viewDetailsUpdatedHandler);
 					
-					x = dynamicObject(node).x;
-					y = dynamicObject(node).y;
+					x = dynamicObject.x;
+					y = dynamicObject.y;
 					
 					if (node.viewDetails != null) {
 						viewDetailsUpdatedHandler(null);
@@ -193,8 +193,8 @@ license-end
 			}
 					
 			private function resizeHandler(event:ResizeEvent):void {
-				dynamicObject().width = width;
-				dynamicObject().height = height;
+				dynamicObject.width = width;
+				dynamicObject.height = height;
 														
 				var parent:Object = diagramShell.getControllerProvider(node).getModelChildrenController(node).getParent(node);
 				if (parent is MindMapNode) {						
@@ -233,10 +233,10 @@ license-end
 			private function modelChangedHandler(event:PropertyChangeEvent):void {
 				switch (event.property) {
 					case "x":
-						x = dynamicObject().x;						
+						x = dynamicObject.x;						
 						break;
 					case "y":
-						y = dynamicObject().y;						
+						y = dynamicObject.y;						
 						break;
 				}
 			}
