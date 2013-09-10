@@ -219,5 +219,10 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	public void featuresProcessed(Object element) {
 		// nothing to do
 	}
+
+	@Override
+	protected void updateUID(Object element, Object correspondingElement) {
+		// nothing to do
+	}
 	
 }

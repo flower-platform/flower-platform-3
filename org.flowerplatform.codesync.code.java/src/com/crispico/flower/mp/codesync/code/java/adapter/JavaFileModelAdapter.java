@@ -216,12 +216,12 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 					// commit changes to underlying file
 					textFileBuffer.commit(null, true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 				try {
 					bufferManager.disconnect(path, LocationKind.IFILE, null);
 				} catch (CoreException e) {
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -245,6 +245,11 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	
 	private IFile getFile(Object modelElement) {
 		return (IFile) modelElement;
+	}
+
+	@Override
+	protected void updateUID(Object element, Object correspondingElement) {
+		// nothing to do
 	}
 	
 }

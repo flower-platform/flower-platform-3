@@ -91,7 +91,9 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 
 	@Override
-	public void initialize(Resource astCache, String limitedPath) {
+	public void initialize(Resource astCache, String limitedPath, boolean useUIDs) {
+		super.initialize(astCache, limitedPath, useUIDs);
+		
 		// right - AST
 		rightFactory = new ModelAdapterFactory();
 		

@@ -277,7 +277,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		match.setEditableResource(editableResource);
 		editableResource.setMatch(match);
 		ModelAdapterFactorySet modelAdapterFactorySet = getModelAdapterFactorySetProvider().getFactorieSets().get(technology);
-		modelAdapterFactorySet.initialize(getAstCache(project, resourceSet), limitedPath);
+		modelAdapterFactorySet.initialize(getAstCache(project, resourceSet), limitedPath, CodeSyncPlugin.getInstance().useUIDs());
 		editableResource.setModelAdapterFactorySet(modelAdapterFactorySet);
 		
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);

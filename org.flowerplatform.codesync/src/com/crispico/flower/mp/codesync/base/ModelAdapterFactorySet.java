@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
-public /* abstract */ class ModelAdapterFactorySet {
+public class ModelAdapterFactorySet {
 
 	protected ModelAdapterFactory ancestorFactory;
 
@@ -34,6 +34,8 @@ public /* abstract */ class ModelAdapterFactorySet {
 	protected ModelAdapterFactory rightFactory;
 
 	protected Map<Object, IFeatureProvider> featureProviders = new HashMap<Object, IFeatureProvider>();
+	
+	protected boolean useUIDs = false;
 	
 	public ModelAdapterFactory getAncestorFactory() {
 		return ancestorFactory;
@@ -72,10 +74,13 @@ public /* abstract */ class ModelAdapterFactorySet {
 		return this;
 	}
 	
-	/* abstract */ public void initialize(Resource cache, String limitedPath) {
-		throw new UnsupportedOperationException("Must be implemented!");
+	public void initialize(Resource cache, String limitedPath, boolean useUIDs) {
+		this.useUIDs = useUIDs;
 	}
 	
+	public boolean useUIDs() {
+		return useUIDs;
+	}
 	
 	public ModelAdapterFactorySet() {
 		
