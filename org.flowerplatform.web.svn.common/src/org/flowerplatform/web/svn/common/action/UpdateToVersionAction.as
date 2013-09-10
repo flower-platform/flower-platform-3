@@ -32,26 +32,11 @@ package org.flowerplatform.web.svn.common.action {
 	/**
 	 * @author Victor Badila
 	 */
-	public class UpdateToVersionAction extends ActionBase {
+	public class UpdateToVersionAction extends SvnProjectFileAction {
 		
 		public function UpdateToVersionAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.updateToVersion.label");
 			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/update.gif");;
-		}
-		
-		public override function get visible():Boolean {
-			for (var i:int=0; i<selection.length; i++) {
-				var currentSelection:Object = selection.getItemAt(i);
-				if (!(currentSelection is TreeNode)) {
-					return false;
-				}
-				if (currentSelection.customData == null ||
-					currentSelection.customData.svnFileType == null ||
-					currentSelection.customData.svnFileType == false) {
-					return false;
-				}
-			}			
-			return true;
 		}
 		
 		public override function run():void {			

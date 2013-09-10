@@ -9,6 +9,9 @@
     <classEntry path="org.flowerplatform.web.svn.common.ui.CommitView"/>
     <classEntry path="org.flowerplatform.web.svn.common.remote.dto.FileDto"/>
     <classEntry path="org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.RevertView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.RevertAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.SvnProjectFileAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

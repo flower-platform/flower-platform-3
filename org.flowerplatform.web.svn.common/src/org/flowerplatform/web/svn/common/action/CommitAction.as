@@ -36,27 +36,11 @@ package org.flowerplatform.web.svn.common.action {
 	/**
 	 * @author Victor Badila
 	 */	
-	public class CommitAction extends ActionBase {
+	public class CommitAction extends SvnProjectFileAction {
 		
 		public function CommitAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.commit.label");
 			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/commit.gif");
-		}
-		
-		//get visible may be the same for commit, update and possibly other actions	
-		public override function get visible():Boolean {
-			for (var i:int=0; i<selection.length; i++) {
-				var currentSelection:Object = selection.getItemAt(i);
-				if (!(currentSelection is TreeNode)) {
-					return false;
-				}
-				if (currentSelection.customData == null ||
-					currentSelection.customData.svnFileType == null ||
-					currentSelection.customData.svnFileType == false) {
-					return false;
-				}
-			}			
-			return true;
 		}
 			
 		public override function run():void {

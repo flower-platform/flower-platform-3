@@ -188,6 +188,33 @@ public class SvnService {
 		else ((SVNRepositoryLocation) node).refreshRootFolder();
 		GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);		
 	}	
+	
+	public boolean revert(ServiceInvocationContext context, ArrayList<FileDto> fileDtos) {
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.revert.revertMonitor"), channel);
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
+		Boolean recurse = true;
+		try {
+			ISVNClientAdapter myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
+			myClientAdapter.setProgressListener(opMng);
+			for (int i=0; i<fileDtos.size(); i++) {
+				FileDto currentDto = fileDtos.get(i);
+				if (currentDto.getStatus().equals("unversioned")) {
+					File f = new File(currentDto.getPath());
+					f.delete();
+				} else {
+					myClientAdapter.revert(new File(currentDto.getPath()), recurse);
+				}
+			}
+		} catch (SVNException | SVNClientException e) {
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		} finally {
+			pm.done();
+		}
+		return true;
+	}
 		
 	public boolean checkout(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath, 
 							String workingDirectoryDestination, String revisionNumberAsString, 
@@ -413,7 +440,7 @@ public class SvnService {
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.commit.commitMonitor"), channel);
 		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
 		
-		// following 40 rows could be rewritten:		
+		// following 40 lines could be rewritten:		
 		ArrayList<File> markedForAddition = new ArrayList<File>();
 		ArrayList<File> markedForDeletion = new ArrayList<File>();
 		ArrayList<File> normalCommitFiles = new ArrayList<File>();	

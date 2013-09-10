@@ -30,6 +30,7 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
+	import org.flowerplatform.web.svn.common.action.RevertAction;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
 	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	
@@ -66,7 +67,8 @@ package org.flowerplatform.web.svn.common {
 								   UpdateToHeadAction,
 								   UpdateToVersionAction,
 								   DeleteAction,
-								   CommitAction);
+								   CommitAction,
+								   RevertAction);
 		}
 		
 		/**
