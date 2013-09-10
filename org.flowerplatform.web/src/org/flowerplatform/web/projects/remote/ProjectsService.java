@@ -24,6 +24,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -47,6 +48,7 @@ import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.file_event.FileEvent;
+import org.flowerplatform.file_event.IFileEventListener;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.database.DatabaseOperation;
@@ -64,7 +66,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Cristian Spiescu
  */
-public class ProjectsService {
+public class ProjectsService implements IFileEventListener{
 
 	private static Logger logger = LoggerFactory.getLogger(ProjectsService.class);
 
@@ -104,6 +106,7 @@ public class ProjectsService {
 
 	public ProjectsService() throws CoreException, URISyntaxException {
 		super();
+		CommonPlugin.getInstance().getFileEventDispatcher().addFileEventListener(this);
 		{
 			// workspace configuration: this should be done only once, because these settings are persistent.
 			// However, I don't see how we could see that "this == first time" in a reliable manner. That's
@@ -184,6 +187,19 @@ public class ProjectsService {
 		}).getOperationResult();
 	}
 
+	public WorkingDirectory getWorkingDirectory(final String organizationName, final String pathFromOrganization) {
+		return (WorkingDirectory) new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				Query q = wrapper.createQuery(
+						String.format("SELECT e from WorkingDirectory e where e.organization.name = '%s' and e.pathFromOrganization = '%s' ",
+						organizationName,
+						pathFromOrganization));
+				wrapper.setOperationResult(q.uniqueResult());
+			}
+		}).getOperationResult();
+	}
 	/**
 	 * It's ugly because the method behaves differently/takes other params
 	 * (based on <code>parameterIsWorkingDirectory</code>). But I do this
@@ -390,7 +406,7 @@ public class ProjectsService {
 	 * @param context
 	 * @param file
 	 */
-	public void deleteProject(ServiceInvocationContext context, final File file) {
+	public void deleteProject(final File file) {
 		
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
 		IWorkspaceRoot wsRoot = workspace.getRoot();
@@ -412,15 +428,16 @@ public class ProjectsService {
 				projectWrapper.delete(true, null);
 				linkToProjectFolder.delete(true,null);
 			} catch (CoreException e) {
-				FileManagerService.printSimpleMessageToUser(context,
-						"Error",
-						e.getMessage() + " Check the console for more informations");
+				// TODO the component I need to display messages, is waiting to be merged within flower/main
+//				FileManagerService.printSimpleMessageToUser(context,
+//						"Error",
+//						e.getMessage() + " Check the console for more informations");
 				e.printStackTrace();
 			}		
 			workingDirectoryToProjectsMap.get(projectToWorkingDirectoryAndIProjectMap.get(file).a).remove(file);	
 			projectToWorkingDirectoryAndIProjectMap.remove(file);
 		} else {
-			FileManagerService.printSimpleMessageToUser(context, "error", "Project doesn't exist");
+//			FileManagerService.printSimpleMessageToUser(context, "error", "Project doesn't exist");
 		}
 	}
 	
@@ -465,6 +482,88 @@ public class ProjectsService {
 		String relativePathToWorkspace = CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
 		String[] folders = relativePathToWorkspace.split("/");
 		return folders[0];
+	}
+
+	@Override
+	public void notify(FileEvent event) {
+
+		File file = event.getFile();
+		String org = ProjectsService.getInstance().getOrganizationNameFromFile(event.getFile());
+		File orgDir = getOrganizationDir(org);
+		
+		if(workingDirectoryToProjectsMap.get(file) != null) {
+			// it's an working directory
+			String pathFromOrgForFile = getRelativePathFromOrganization(file);
+			WorkingDirectory workingDirectory = getWorkingDirectory(org, pathFromOrgForFile);
+			deleteWorkingDirectory(event.getFile(), workingDirectory);			
+		} else if(projectToWorkingDirectoryAndIProjectMap.get(file) != null) {
+			// it's an project
+			deleteProject(event.getFile());
+		} else {
+			File fileIterator = file.getParentFile();
+			while(!fileIterator.equals(orgDir)) {
+				if(workingDirectoryToProjectsMap.get(fileIterator) != null) {
+					// has found an working directory to the left
+					List<File> projectFiles = workingDirectoryToProjectsMap.get(fileIterator);
+					ListIterator<File> iter = projectFiles.listIterator();
+					while(iter.hasNext()) {
+						File projectFile = (File) iter.next();
+						if(projectFile.getPath().contains(file.getPath())) {
+							iter.remove();
+							deleteProject(projectFile);
+						}
+					}
+					break;
+				}
+				fileIterator = fileIterator.getParentFile();
+			}
+			
+			if(fileIterator.equals(orgDir)) {
+				List<WorkingDirectory> workingDirectories = ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName(org);
+				ListIterator<WorkingDirectory> iter = workingDirectories.listIterator();
+				while(iter.hasNext()) {
+					WorkingDirectory workingDirectory = (WorkingDirectory) iter.next();
+					if(workingDirectory.getPathFromOrganization().contains(getRelativePathFromOrganization(file))) {
+						deleteWorkingDirectory(new File(orgDir,workingDirectory.getPathFromOrganization()), workingDirectory);
+					}
+				}
+			}
+		}
+	}
+	
+	private void deleteWorkingDirectory(final File file, final WorkingDirectory workingDirectory) {
+		String org = ProjectsService.getInstance().getOrganizationNameFromFile(file);
+		final File orgDir = getOrganizationDir(org);
+		
+		List<File> projectFiles = workingDirectoryToProjectsMap.get(file);
+		ListIterator<File> iter = projectFiles.listIterator();
+		while(iter.hasNext()) {
+			File projectFile = (File) iter.next();
+			iter.remove();
+			deleteProject(projectFile);	   
+		}
+		workingDirectoryToProjectsMap.remove(file);
+		
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			@Override
+			public void run() {
+				List<Organization> orgs = (List<Organization>) wrapper.findByField(Organization.class, "name", getOrganizationName(orgDir));
+				if (orgs.isEmpty()) {
+					throw new IllegalArgumentException("Cannot find organization with name = " + getOrganizationName(orgDir));
+				}
+				wrapper.getSession().delete(workingDirectory);
+			}
+		});	
+	}
+	
+	public String getRelativePathFromOrganization(File file) {	
+		String org = ProjectsService.getInstance().getOrganizationNameFromFile(file);
+		File orgDir = getOrganizationDir(org);
+		String path = file.getPath();
+		String base = orgDir.getPath();
+		String pathFromOrgForFile = new File(base).toURI().relativize(new File(path).toURI()).getPath();
+	
+		return pathFromOrgForFile;
 	}
 	
 }

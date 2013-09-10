@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
@@ -52,6 +53,12 @@ import org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider;
  * @author Tache Razvan Mihai
  */
 public class FileManagerService {
+	
+	public static FileManagerService getInstance() {
+		return (FileManagerService) CommunicationPlugin.getInstance().getServiceRegistry().getService(SERVICE_ID);
+	}
+
+	public static final String SERVICE_ID = "fileManagerService";
 
 	public void printMessageToUser(ServiceInvocationContext context,
 			String title, String message) {
@@ -223,19 +230,33 @@ public class FileManagerService {
 		String path = ((Pair<File, Object>) object).a.getPath();
 		
 		File file = new File(path);
-		int sendEvent = -1;
-		if(file.exists()) {
-			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
-			if( resource != null && resource.getType() == IResource.PROJECT ) {
-				ProjectsService.getInstance().deleteProject(context, file);
-				sendEvent = FileEvent.FILE_DELETED;
-			}	
+		if(file.exists()) {	
 			boolean result = deleteFolder(file);
 			if(result) {
-				if(sendEvent == -1 )
-					sendEvent = FileEvent.FILE_DELETED;
-				FileEvent event = new FileEvent(file, sendEvent);
-			
+				FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
+				CommonPlugin.getInstance().getFileEventDispatcher()
+						.dispatch(event);
+			} else {
+				printMessageToUser(context,
+						"explorer.delete.error.title",
+						"explorer.delete.error.couldNotDelete");
+			} 		
+		} else {
+			printMessageToUser(context,
+					"explorer.delete.error.title",
+					"explorer.delete.error.fileAlreadyDeleted");
+		}
+	}
+	
+	public void testDeleteFile(ServiceInvocationContext context, File fileToBeDeleted) {
+		
+		String path = fileToBeDeleted.getPath();
+		
+		File file = new File(path);
+		if(file.exists()) {	
+			boolean result = deleteFolder(file);
+			if(result) {
+				FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
 				CommonPlugin.getInstance().getFileEventDispatcher()
 						.dispatch(event);
 			} else {
