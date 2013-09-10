@@ -18,14 +18,7 @@
  */
 package org.flowerplatform.editor.model.java.remote;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.flowerplatform.communication.service.ServiceInvocationContext;
-import org.flowerplatform.editor.model.EditorModelPlugin;
-import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
-import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Node;

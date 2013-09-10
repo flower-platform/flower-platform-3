@@ -216,6 +216,14 @@ public abstract class ViewImpl extends NotationElementImpl implements View {
 		return (View) eContainer();
 	}
 	
+	
+	@Override
+	public NotificationChain eBasicSetContainer(InternalEObject newContainer,
+			int newContainerFeatureID, NotificationChain msgs) {
+		// TODO Auto-generated method stub
+		return super.eBasicSetContainer(newContainer, newContainerFeatureID, msgs);
+	}
+
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

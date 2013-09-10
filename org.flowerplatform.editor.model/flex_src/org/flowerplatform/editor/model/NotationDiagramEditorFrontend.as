@@ -25,9 +25,6 @@ package org.flowerplatform.editor.model
 	import mx.collections.IList;
 	import mx.events.FlexEvent;
 	
-	import spark.components.Button;
-	import spark.components.TextInput;
-	
 	import org.flowerplatform.communication.tree.GenericTreeList;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
@@ -35,6 +32,7 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
 	import org.flowerplatform.flexdiagram.tool.DragTool;
 	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
@@ -43,6 +41,9 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexutil.popup.IAction;
+	
+	import spark.components.Button;
+	import spark.components.TextInput;
 
 	/**
 	 * @author Cristian Spiescu
@@ -117,6 +118,9 @@ package org.flowerplatform.editor.model
 			var actions:Vector.<IAction> = EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.getActions(selection);
 			if (actions != null) {
 				for each (var action:IAction in actions) {
+					if (action is IDiagramShellAware) {
+						IDiagramShellAware(action).diagramShell = diagramShell;
+					}
 					result.push(action);
 				}
 			}		

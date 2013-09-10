@@ -24,6 +24,7 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.model.DiagramEditorFrontend;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexutil.popup.IAction;
 	
 	/**
@@ -43,6 +44,9 @@ package org.flowerplatform.editor.mindmap {
 			var actions:Vector.<IAction> = MindMapModelPlugin.getInstance().mindmapDiagramClassFactoryActionProvider.getActions(selection);
 			if (actions != null) {
 				for each (var action:IAction in actions) {
+					if (action is IDiagramShellAware) {
+						IDiagramShellAware(action).diagramShell = diagramShell;
+					}
 					result.push(action);
 				}
 			}		

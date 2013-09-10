@@ -18,9 +18,13 @@
  */
 package org.flowerplatform.editor.mindmap.processor;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
@@ -28,6 +32,8 @@ import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import com.crispico.flower.mp.model.codesync.MindMapElement;
 
 /**
  * @author Cristina Constantinescu
@@ -35,36 +41,60 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class MindMapChildrenChangeProcessor extends CodeSyncElementFeatureChangesProcessor {
 
 	@Override
+	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> context) {
+		super.processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, context);
+		if (featureChange != null && CodeSyncPackage.eINSTANCE.getMindMapElement_Expanded().equals(featureChange.getFeature())) {
+			processChildren(object, getChildrenForCodeSyncElement(object), associatedViewOnOpenDiagram, getChildrenForView(associatedViewOnOpenDiagram), context);
+		}
+	}
+	
+	@Override
 	protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram) {	
-		if (!((MindMapNode) associatedViewOnOpenDiagram).isExpanded()) {
+		if (!((MindMapElement) object).isExpanded()) {
 			return -1;
 		}
 		return 0;
 	}
 
 	@Override
-	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {		
-		MindMapNode node = NotationFactory.eINSTANCE.createMindMapNode();
-		node.setViewType(getCodeSyncElement(child).getType());		
-		node.setSide(((MindMapNode) associatedViewOnOpenDiagram).getSide() == 0 ? 1 : ((MindMapNode) associatedViewOnOpenDiagram).getSide());		
-		node.setExpanded(false);		
-		node.setHasChildren(getChildrenForCodeSyncElement(child).size() > 0);
-		return node;
-	}
-	
-	@Override
 	protected boolean canAddChildView(View view, EObject candidate) {
 		boolean canAdd = super.canAddChildView(view, candidate);
 		if (canAdd) {
-			return ((MindMapNode) view).isExpanded();
+			return ((MindMapElement) view.getDiagrammableElement()).isExpanded();
 		}
 		return canAdd;
 	}
-			
+	
 	@Override
-	protected CodeSyncElement createModelElementChild(EObject object, View child) {
-		// TODO Auto-generated method stub
-		return null;
+	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {		
+		MindMapNode node = NotationFactory.eINSTANCE.createMindMapNode();
+		node.setViewType(getCodeSyncElement(child).getType());
+		
+		return node;
+	}	
+	
+	@Override
+	protected Node addChildView(View associatedViewOnOpenDiagram, EObject child, int newViewsIndex, Map<String, Object> context) {		
+		Node node = super.addChildView(associatedViewOnOpenDiagram, child, newViewsIndex, context);
+		if (((MindMapElement) child).isExpanded()) { // process children recursive if expanded
+			processChildren(child, getChildrenForCodeSyncElement(child), node, new ArrayList<Node>(), context);			
+		}
+		return node;
 	}
 
+	@Override
+	protected void removeChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {		
+		super.removeChildView(associatedViewOnOpenDiagram, child, context);
+		 // remove children recursive
+		for (Iterator<Node> it = getChildrenForView(associatedViewOnOpenDiagram).iterator(); it.hasNext();) {
+			View view = it.next();
+			removeChildView(view, view.getDiagrammableElement(), context);			
+		}	
+	}
+
+	@Override
+	protected CodeSyncElement createModelElementChild(EObject object, View child) {		
+		return null;
+	}
+	
 }

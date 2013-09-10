@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.editor.mindmap {
 	
+	import flash.events.Event;
+	
 	import org.flowerplatform.editor.mindmap.controller.MindMapDiagramNodeChildrenController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeChildrenController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeController;
@@ -26,6 +28,7 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
 	import org.flowerplatform.editor.mindmap.renderer.MindMapModelRenderer;
 	import org.flowerplatform.editor.mindmap.renderer.MindMapNodeSelectionRenderer;
+	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
@@ -40,11 +43,11 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.MindMapDragTool;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapModelRendererController;
-	import org.flowerplatform.flexdiagram.tool.DragTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
@@ -94,7 +97,15 @@ package org.flowerplatform.editor.mindmap {
 			mindMapNodeRendererController = new MindMapModelRendererController(this, MindMapModelRenderer);
 			lightWeightModelExtraInfoController = new LightweightModelExtraInfoController(this);
 			
-			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, DragTool]);		
+			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, MindMapDragTool]);		
+			addEventListener(DiagramEditorStatefulClient.TRANSFERABLE_OBJECTS_UPDATED_EVENT, transferableObjectsUpdateCompleHandler);
+		}
+			
+		protected function transferableObjectsUpdateCompleHandler(event:Event):void {
+			if (rootModel) {
+				refreshDiagramChildren();				
+				refreshNodePositions(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel).getItemAt(0));
+			}
 		}
 		
 		override public function getControllerProvider(model:Object):IControllerProvider {

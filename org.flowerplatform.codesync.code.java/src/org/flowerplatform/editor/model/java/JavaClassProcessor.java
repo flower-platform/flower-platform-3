@@ -127,14 +127,14 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 	}
 
 	@Override
-	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {
+	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {
 		Node node = NotationFactory.eINSTANCE.createNode();
 //		node.setViewType(getCodeSyncElement(child).getType());
 		CodeSyncElement cse = getCodeSyncElement(child);
 		node.setViewType(cse.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE) ? "classAttribute" : "classOperation");
 		return node;
 	}
-
+	
 	@Override
 	protected CodeSyncElement createModelElementChild(EObject object, View child) {
 		// TODO Auto-generated method stub

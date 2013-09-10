@@ -718,13 +718,31 @@ public interface CodeSyncPackage extends EPackage {
 	int MIND_MAP_ELEMENT__MAX_WIDTH = CODE_SYNC_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Side</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__SIDE = CODE_SYNC_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Expanded</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__EXPANDED = CODE_SYNC_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Mind Map Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MIND_MAP_ELEMENT_FEATURE_COUNT = CODE_SYNC_ELEMENT_FEATURE_COUNT + 3;
+	int MIND_MAP_ELEMENT_FEATURE_COUNT = CODE_SYNC_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl <em>Mind Map Root</em>}' class.
@@ -854,13 +872,31 @@ public interface CodeSyncPackage extends EPackage {
 	int MIND_MAP_ROOT__MAX_WIDTH = CODE_SYNC_ROOT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Side</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__SIDE = CODE_SYNC_ROOT_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Expanded</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__EXPANDED = CODE_SYNC_ROOT_FEATURE_COUNT + 4;
+
+	/**
 	 * The number of structural features of the '<em>Mind Map Root</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MIND_MAP_ROOT_FEATURE_COUNT = CODE_SYNC_ROOT_FEATURE_COUNT + 3;
+	int MIND_MAP_ROOT_FEATURE_COUNT = CODE_SYNC_ROOT_FEATURE_COUNT + 5;
 
 
 	/**
@@ -1222,6 +1258,28 @@ public interface CodeSyncPackage extends EPackage {
 	EAttribute getMindMapElement_MaxWidth();
 
 	/**
+	 * Returns the meta object for the attribute '{@link com.crispico.flower.mp.model.codesync.MindMapElement#getSide <em>Side</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Side</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.MindMapElement#getSide()
+	 * @see #getMindMapElement()
+	 * @generated
+	 */
+	EAttribute getMindMapElement_Side();
+
+	/**
+	 * Returns the meta object for the attribute '{@link com.crispico.flower.mp.model.codesync.MindMapElement#isExpanded <em>Expanded</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Expanded</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.MindMapElement#isExpanded()
+	 * @see #getMindMapElement()
+	 * @generated
+	 */
+	EAttribute getMindMapElement_Expanded();
+
+	/**
 	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.MindMapRoot <em>Mind Map Root</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1532,6 +1590,22 @@ public interface CodeSyncPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MIND_MAP_ELEMENT__MAX_WIDTH = eINSTANCE.getMindMapElement_MaxWidth();
+
+		/**
+		 * The meta object literal for the '<em><b>Side</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MIND_MAP_ELEMENT__SIDE = eINSTANCE.getMindMapElement_Side();
+
+		/**
+		 * The meta object literal for the '<em><b>Expanded</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MIND_MAP_ELEMENT__EXPANDED = eINSTANCE.getMindMapElement_Expanded();
 
 		/**
 		 * The meta object literal for the '{@link com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl <em>Mind Map Root</em>}' class.
