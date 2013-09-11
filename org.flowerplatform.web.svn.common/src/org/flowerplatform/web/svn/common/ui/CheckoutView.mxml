@@ -25,7 +25,6 @@ license-end
 <popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
 			  xmlns:s="library://ns.adobe.com/flex/spark"
   			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
-			  xmlns:component="org.flowerplatform.web.git.common.ui.component.*"
 			  xmlns:mx="library://ns.adobe.com/flex/mx"
 			  creationComplete="init()"
 			  implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler"
@@ -54,7 +53,7 @@ license-end
 			public var depthDropdownDataProvider:ArrayList;
 		
 			
-			private function getProjectsCallbackHandler(result:Boolean):void {
+			private function finishCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result == true) {					
 					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
@@ -64,7 +63,7 @@ license-end
 			public override function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepiository.view.label"));
-				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/repository_rep.gif"));
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/checkout.gif"));
 			}
 			
 			protected override function cancelClickHandler():void {
@@ -103,7 +102,7 @@ license-end
 						new InvokeServiceMethodServerCommand("svnService", "checkout", 
 							[selectionPaths, wdNode.getPathForNode(true), "/" + workingDirectoryTextInput.text, 
 							revisionValue, depthDropdown.selectedIndex, headRev, forceCheck.selected, ignoreCheck.selected], 
-							this, getProjectsCallbackHandler ));
+							this, finishCallbackHandler ));
 					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));		
 				} else {
 					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
@@ -205,7 +204,7 @@ license-end
 						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.browseWorkspaceButton')}" click="{openWorkingDirectoryBrowseWindow()}"/>
 					</s:HGroup>
 					<s:Rect width="1" height="10"/>
-					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.headRevisionCheckbox')}" id="headRevisionCheckbox"/>					
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.headRevisionCheckbox')}" id="headRevisionCheckbox" selected="true"/>					
 					<s:HGroup width="100%" verticalAlign="middle">
 						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionLabel')}"/>
 						<s:TextInput id="revision" enabled="{!headRevisionCheckbox.selected}" width="100%"/>
@@ -214,7 +213,7 @@ license-end
 					<s:Rect width="1" height="10"/>
 					<s:HGroup width="100%" verticalAlign="middle">
 						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.depthLabel')}"/>
-						<s:DropDownList labelField="depthSelectorDropdown" id="depthDropdown" width="100%" dataProvider="{depthDropdownDataProvider}">
+						<s:DropDownList labelField="depthSelectorDropdown" id="depthDropdown" width="100%" dataProvider="{depthDropdownDataProvider}" selectedIndex="0">
 						</s:DropDownList>
 					</s:HGroup>						
 					<s:CheckBox id="ignoreCheck" label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.ignoreExternalsCheckbox')}"/>					

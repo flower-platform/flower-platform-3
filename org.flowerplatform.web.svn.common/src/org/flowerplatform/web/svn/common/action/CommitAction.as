@@ -19,6 +19,7 @@
 
 package org.flowerplatform.web.svn.common.action {
 	
+	import mx.collections.*;
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	
@@ -27,30 +28,28 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-	import org.flowerplatform.web.svn.common.ui.UpdateToVersionView;
+	import org.flowerplatform.web.svn.common.ui.CommitView;
+	
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	
 	/**
 	 * @author Victor Badila
-	 */
-	public class UpdateToVersionAction extends SvnProjectFileAction {
+	 */	
+	public class CommitAction extends SvnProjectFileAction {
 		
-		public function UpdateToVersionAction() {
-			label = SvnCommonPlugin.getInstance().getMessage("svn.action.updateToVersion.label");
-			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/update.gif");;
+		public function CommitAction() {
+			label = SvnCommonPlugin.getInstance().getMessage("svn.action.commit.label");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/commit.gif");
 		}
-		
-		public override function run():void {			
-			var selectionPaths:ArrayList = new ArrayList;
-			for(var i:int=0; i<selection.length; i++) {
-				var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
-				selectionPaths.addItem(path);
-			}			
-			var view:UpdateToVersionView = new UpdateToVersionView();
+			
+		public override function run():void {
+			var view:CommitView = new CommitView();
 			view.selection = ArrayList(selection);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
 				.show();
-		}
+		}		
 		
 	}
 }

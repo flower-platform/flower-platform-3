@@ -81,7 +81,7 @@ license-end
 		<s:HGroup width="100%" 
 				  verticalAlign="middle" />
 		<s:DropDownList id = "previousComments" 
-						prompt = "Choose a previously entered comment" 
+						prompt = "{SvnCommonPlugin.getInstance().getMessage('svn.ui.choosePreviouslyEnteredComment')}" 
 						width="100%"
 						labelField="commitMessage" 
 						change="myDD_changeHandler(event)"/>

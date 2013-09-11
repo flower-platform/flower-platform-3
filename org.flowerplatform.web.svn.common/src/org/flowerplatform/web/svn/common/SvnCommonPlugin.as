@@ -23,15 +23,26 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
+	import org.flowerplatform.web.svn.common.action.CommitAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
+<<<<<<< HEAD
 	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
 
+=======
+	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
+	import org.flowerplatform.web.svn.common.action.RevertAction;
+	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
+	
+>>>>>>> origin/GH93-Revert
 	/**
 	 * @author Gabriela Murgoci
 	 * 	 
@@ -65,16 +76,29 @@ package org.flowerplatform.web.svn.common {
 								   RefreshRemoteResourceAction, 
 								   CheckoutAction,
 								   UpdateToHeadAction,
+<<<<<<< HEAD
 								   UpdateToVersionAction);
+=======
+								   UpdateToVersionAction,
+								   DeleteAction,
+								   CommitAction,
+								   RevertAction);
+>>>>>>> origin/GH93-Revert
 		}
 		
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
 		 */
+<<<<<<< HEAD
 		protected override function registerClassAliases():void {		
 			registerClassAlias("org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand",
 				OpenSvnCredentialsWindowClientCommand);
+=======
+		protected override function registerClassAliases():void {	
+>>>>>>> origin/GH93-Revert
 			super.registerClassAliases();
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);
 		}
 		
 		/**

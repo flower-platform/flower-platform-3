@@ -18,42 +18,36 @@
 */
 
 package org.flowerplatform.web.svn.common.action {
-		
+	
+	import mx.collections.*;
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
-	import mx.controls.Alert;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.web.svn.common.SvnCommonPlugin;	
-
+	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+	import org.flowerplatform.web.svn.common.ui.RevertView;
+	
 	/**
 	 * @author Victor Badila
-	 */
-	public class UpdateToHeadAction extends SvnProjectFileAction {
+	 */	
+	public class RevertAction extends SvnProjectFileAction{
 		
-		public function UpdateToHeadAction() {
-			label = SvnCommonPlugin.getInstance().getMessage("svn.action.updateToHead.label");
-			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/update.gif");
+		public function RevertAction() {
+			label = SvnCommonPlugin.getInstance().getMessage("svn.action.revert.label");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/revert.gif");			
 		}		
 		
-		public override function run():void {			
-			var selectionPaths:ArrayList = new ArrayList;
-			for(var i:int=0; i<selection.length; i++) {
-				var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
-				selectionPaths.addItem(path);
-			}			
-			CommunicationPlugin.getInstance().bridge.sendObject(
-				new InvokeServiceMethodServerCommand("svnService", "updateToHEAD", 
-					[selectionPaths], this, getProjectsCallbackHandler));
-		}	
-		
-		public function getProjectsCallbackHandler(response:Boolean):void {
-			if(!response) {
-				Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.action.updateToHead.operationNotSuccessful"));
-			}
+		public override function run():void {
+			var view:RevertView = new RevertView();
+			view.selection = ArrayList(selection);
+			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+				.setPopupContent(view)
+				.show();
 		}
 	}
 }
