@@ -36,7 +36,7 @@ package org.flowerplatform.flexutil.text {
 				
 		public function AutoGrowTextArea()	{
 			super();	
-			setStyle("skinClass", TextAreaNoScrollsSkin);
+			setStyle("skinClass", AutoGrowSkinnableTextBaseSkin);
 		}
 		
 		protected function kewDownHandler1(event:KeyboardEvent):void {

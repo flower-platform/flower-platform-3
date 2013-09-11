@@ -30,7 +30,7 @@ license-end
 	</s:layout>
 		
 	<s:Label text="Auto grow TextInput:" />
-	<text:AutoGrowTextInput minWidth="100" maxWidth="300" />	
+	<s:TextInput minWidth="100" maxWidth="400" skinClass="org.flowerplatform.flexutil.text.AutoGrowSkinnableTextBaseSkin" />	
 	
 	<s:Label text="Auto grow TextArea (CTRL + ENTER for newline):" />
 	<text:AutoGrowTextArea maxWidth="300" />
