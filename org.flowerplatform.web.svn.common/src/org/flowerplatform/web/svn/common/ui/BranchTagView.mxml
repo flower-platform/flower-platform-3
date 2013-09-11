@@ -86,10 +86,13 @@ license-end
 			
 			public var viewIcon:String;
 			
+			public var actionType:Boolean;
 			/**
 			 * @flowerModelElementId _qvAjsGxVEeGmX-bWmnlzew
 			 */
 			public var commonParentUrl:String;
+			
+			public var destinationSelectedNode:ArrayCollection;
 			
 			[Bindable]
 			public var folderName:String;
@@ -132,9 +135,9 @@ license-end
 			
 			public function getBranchResourceCallBackHandler(result:ArrayCollection):void {
 				var parentName:String;
+				var i:int;
 				branchResources = result;
-				commonParent = branchResources.removeItemAt(0);
-			 	parentName = PathFragment(commonParent.getItemAt(3)).name;
+				parentName = String(branchResources.removeItemAt(0));
 				locationURL = parentName;
 				pathChangedHandler();
 			}
@@ -160,6 +163,7 @@ license-end
 				var view:BranchTagSelectionPageView = new BranchTagSelectionPageView(); 
 				view.setResultHandler(this);
 				view.node = node;
+				view.treeType = actionType;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setWidth(400)
 					.setHeight(450)
@@ -173,7 +177,6 @@ license-end
 				popUp.remoteResourceName = commonParentName;
 				popUp.isResourceObject = resourcesSelected;
 				popUp.showPopup();
-			
 			}
 			
 			protected override function cancelClickHandler():void {
@@ -184,11 +187,11 @@ license-end
 				
 				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
 				
-				CommunicationPlugin.getInstance().bridge.sendObject(
+				  CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService",
 						"branchTagResources",
-						[resourcesSelected, branchResources, locationTxt.text, commitMessage.text, revision, createMissingFolders.selected, preserveFolderStructure.selected],
-						this, getProjectsCallbackHandler ));
+						[actionType, branchResources, locationTxt.text, commitMessage.text, revision, createMissingFolders.selected, preserveFolderStructure.selected],
+						this, getProjectsCallbackHandler ));  
 			} 
 			
 			override public function set popupHost(value:IPopupHost):void {
@@ -204,8 +207,8 @@ license-end
 				for (var i:int=0; i < selection.length; i++) {
 					array.addItem(TreeNode(selection.getItemAt(i)).getPathForNode(true));
 				}
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "populateBranchResourcesList", [array], this, getBranchResourceCallBackHandler ));
+				 CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "populateBranchResourcesList", [array, actionType], this, getBranchResourceCallBackHandler )); 
 			}
 		]]>
 	</fx:Script>
@@ -277,8 +280,8 @@ license-end
 								  enabled="{specificRevision.selected}"/>
 					</s:HGroup>
 				</s:HGroup>
-				<!--<s:RadioButton id="workingCopyRevision" width="100%"
-							   label="Working copy" groupName="revisionGroup"/>-->
+				<s:RadioButton id="workingCopyRevision" visible="{actionType}" width="100%"
+							   label="Working copy" groupName="revisionGroup"/>
 			</s:VGroup>       
 			</mx:AddChild>
 		</s:State>	
@@ -293,12 +296,15 @@ license-end
 					</s:HGroup>					
 					<s:TextArea id="commitMessage" width="100%" height="100%" heightInLines="3"/>					
 					<s:HGroup width="100%" verticalAlign="middle">
-					</s:HGroup>										
+					</s:HGroup>	
+					<s:CheckBox id="switchBranch" visible="{actionType}"
+								label="Switch working copy to new branch/tag">
+					</s:CheckBox>
 				</s:VGroup>		 			
 			</mx:AddChild>
 		</mx:State>	
-		
 	</popup:states>
+	
 </popup:Wizard>
 
 

@@ -66,6 +66,8 @@ license-end
 		protected var _popupHost:IPopupHost;
 			
 		private var resultHandler:IDialogResultHandler;
+			
+		public var treeType:Boolean;
 		
 		[Bindable]
 		public var folderName:String;
@@ -115,10 +117,9 @@ license-end
 		} 
 			
 		protected function creationCompleteHandler():void {
-				
 			_popupHost.addToControlBar(buttonBar);
-			var statefulClient:GenericTreeStatefulClient = new SvnRepositoryTreeStatefulClient();
-				
+			var statefulClient:GenericTreeStatefulClient;
+			statefulClient = new SvnRepositoryTreeStatefulClient();
 			tree.statefulClient = statefulClient;				
 			statefulClient.treeList = tree;
 				
@@ -126,8 +127,8 @@ license-end
 				
 			var fullPath:ArrayCollection = node.getPathForNode();
 			var firstSegmentName:String = PathFragment(fullPath.getItemAt(0)).name;
-				
 			var lastSegmentName:String = PathFragment(fullPath.getItemAt(fullPath.length - 1)).name;
+			
 			tree.statefulClient.context[SvnRepositoryTreeStatefulClient.ORGANIZATION_KEY] = firstSegmentName;
 			tree.statefulClient.openNode(null, this, getProjectsCallbackHandler);	
 			folderName = PathFragment(fullPath.getItemAt(fullPath.length - 1)).name;

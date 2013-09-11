@@ -2,6 +2,8 @@ package org.flowerplatform.web.svn;
 
 import java.io.File;
 
+import org.tigris.subversion.subclipse.core.SVNException;
+import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
 
@@ -11,12 +13,11 @@ import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
  */
 public class SvnUtils {
 	
-	public Boolean isRepository(File f) {
-		JhlClientAdapter clientAdapter = new JhlClientAdapter();		 
+	public Boolean isRepository(File f) {				 
 		try {
-			clientAdapter.getInfo(f);
+			SVNProviderPlugin.getPlugin().getSVNClient().getInfo(f);
 			return true;
-		} catch (SVNClientException e) {
+		} catch (SVNClientException | SVNException e) {
 			return false;
 		}			
 	}

@@ -13,6 +13,7 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.BranchTagProjectAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

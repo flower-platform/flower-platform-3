@@ -22,23 +22,17 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-
 	import org.flowerplatform.web.svn.common.action.BranchTagAction;
-	import org.flowerplatform.web.svn.common.action.CopyToAction;
-
+	import org.flowerplatform.web.svn.common.action.BranchTagProjectAction;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
-
+	import org.flowerplatform.web.svn.common.action.CopyToAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
-
-	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
-	import org.flowerplatform.web.svn.common.remote.BranchResource;
-
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
+	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
-
-
+	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -70,7 +64,8 @@ package org.flowerplatform.web.svn.common {
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.
 				actionClasses.push(CreateRemoteFolderAction,
 								   RenameMoveAction, 
-								   BranchTagAction, 
+								   BranchTagAction,
+								   BranchTagProjectAction,
 								   CopyToAction,
 					               CreateSvnRepositoryAction, 
 								   RefreshRemoteResourceAction, 
