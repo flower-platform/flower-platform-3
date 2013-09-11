@@ -44,8 +44,10 @@ import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
+import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.FeatureChange;
 
 	public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
@@ -192,18 +194,77 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		}
 	}
 	
+	/**
+	 * Returns the value of <code>feature</code> on the <code>codeSyncElement</code>, first from the
+	 * list of {@link org.eclipse.emf.ecore.change.FeatureChange}s, if it exists.
+	 */
 	public Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
-		if (codeSyncElement.getAstCacheElement() != null && feature.getEContainingClass().isSuperTypeOf(codeSyncElement.getAstCacheElement().eClass())) {
-			return codeSyncElement.getAstCacheElement().eGet(feature);
-		} else if (CodeSyncPackage.eINSTANCE.getCodeSyncElement().isSuperTypeOf(feature.getEContainingClass())) {
+		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
+		if (featureChange != null) {
+			return featureChange.getNewValue();
+		}	
+		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
 			return codeSyncElement.eGet(feature);
-		} 
-		
+		} else {
+			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
+			if (astElement != null) {
+				return astElement.eGet(feature);
+			}
+		}
+	
 		return null;
 	}
 	
-	public void setFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object value) {
-		codeSyncElement.setName(value.toString());
+	protected Object getOldFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
+		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
+		if (featureChange != null) {
+			return featureChange.getOldValue();
+		} else {
+			return getFeatureValue(codeSyncElement, feature);
+		}
 	}
 	
+	public void setFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
+		Object oldValue = getOldFeatureValue(codeSyncElement, feature);
+		if (!codeSyncElement.isAdded()) {
+			createAndAddFeatureChange(codeSyncElement, feature, oldValue, newValue);
+		} else {
+			setFeatureValueDirectly(codeSyncElement, feature, newValue);
+		}
+	}
+	
+	/**
+	 * Creates and adds a {@link FeatureChange} if the <code>oldValue</code> and <code>newValue</code> are different. 
+	 * 
+	 * Important: we first remove, and then add a new feature change to trigger a change description on the {@link CodeSyncElement},
+	 * so the processors can update the views.
+	 */
+	public void createAndAddFeatureChange(CodeSyncElement element, EStructuralFeature feature, Object oldValue, Object newValue) {
+		element.getFeatureChanges().removeKey(feature);
+		if (!equal(newValue, oldValue)) {
+			FeatureChange featureChange = CodeSyncFactory.eINSTANCE.createFeatureChange();
+			featureChange.setOldValue(oldValue);
+			featureChange.setNewValue(newValue);
+			element.getFeatureChanges().put(feature, featureChange);
+		}
+	}
+	
+	protected void setFeatureValueDirectly(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
+		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
+			codeSyncElement.eSet(feature, newValue);
+		} else {
+			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
+			if (astElement != null) {
+				astElement.eSet(feature, newValue);
+			}
+		}
+	}
+	
+	protected boolean equal(Object a, Object b) {
+		if (a == null) {
+			return b == null;
+		} else {
+			return a.equals(b);
+		}
+	}
 }

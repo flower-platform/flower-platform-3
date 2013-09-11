@@ -24,7 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
@@ -35,13 +37,14 @@ import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @author Mariana Gheorghe
  */
 public abstract class JavaClassChildProcessor implements IDiagrammableElementFeatureChangesProcessor {
 
+	protected InplaceEditorLabelParser labelParser = new InplaceEditorLabelParser(new JavaInplaceEditorProvider());
+	
 	@Override
 	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		Map<String, Object> viewDetails = new HashMap<String, Object>();
@@ -67,24 +70,11 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 	}
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		viewDetails.put("label", getLabel(object));
+		viewDetails.put("label", getLabel(object, false));
 		viewDetails.put("iconUrls", getIconUrls(object));
 	}
 	
-	/**
-	 * Default: {visibility} {name} : {type}
-	 * 
-	 * <p>
-	 * 
-	 * E.g. +attribute:int
-	 * 		~getAttribute():int
-	 */
-	protected String getLabel(EObject object) {
-		CodeSyncElement cse = getCodeSyncElement(object);
-		String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		String type = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, AstCacheCodePackage.eINSTANCE.getTypedElement_Type());
-		return String.format("%s%s:%s", encodeVisibility(cse), name, type);
-	}
+	abstract public String getLabel(EObject object, boolean forEditing);
 	
 	protected String[] getIconUrls(EObject object) {
 		return composeImage(getCodeSyncElement(object));
@@ -96,13 +86,17 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 	// Utility methods
 	//////////////////////////////////
 		
-	public CodeSyncElement getCodeSyncElement(EObject object) {
+	protected CodeSyncElement getCodeSyncElement(EObject object) {
 		return (CodeSyncElement) object;
 	}
 	
-	public String encodeVisibility(CodeSyncElement object) {
+	protected Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
+		return CodeSyncPlugin.getInstance().getFeatureValue(codeSyncElement, feature);
+	}
+	
+	protected String encodeVisibility(CodeSyncElement object) {
 		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) 
-				CodeSyncPlugin.getInstance().getFeatureValue(object, AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+				getFeatureValue(object, AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
 		if (modifiers != null) {
 			for (ExtendedModifier modifier : modifiers) {
 				if (modifier instanceof Modifier) {
@@ -119,7 +113,7 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 		return "";
 	}
 	
-	public String[] composeImage(CodeSyncElement object) {
+	protected String[] composeImage(CodeSyncElement object) {
 		List<String> result = new ArrayList<String>();
 		
 		// decorate for visibility
@@ -133,11 +127,14 @@ public abstract class JavaClassChildProcessor implements IDiagrammableElementFea
 					case org.eclipse.jdt.core.dom.Modifier.PUBLIC:		
 					case org.eclipse.jdt.core.dom.Modifier.PROTECTED:	
 					case org.eclipse.jdt.core.dom.Modifier.PRIVATE:	
-						visibility = (Modifier) modifier; break;
+						visibility = (Modifier) modifier; 
+						break;
 					case org.eclipse.jdt.core.dom.Modifier.STATIC:
-						result.add("images/ovr16/Static.gif");  break;
+						result.add("images/ovr16/Static.gif"); 
+						break;
 					case org.eclipse.jdt.core.dom.Modifier.FINAL:
-						result.add("images/ovr16/Final.gif"); break;
+						result.add("images/ovr16/Final.gif");
+						break;
 					}
 				}
 			}

@@ -186,4 +186,19 @@ public class ModifierImpl extends ExtendedModifierImpl implements Modifier {
 		return result.toString();
 	}
 
+	/**
+	 * @author Mariana Gheorghe
+	 * @generated NOT
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof Modifier) {
+			return this.getType() == ((Modifier) obj).getType();
+		}
+		return false;
+	}
+
 } //ModifierImpl

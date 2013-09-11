@@ -16,27 +16,28 @@
  *
  * license-end
  */
-package org.flowerplatform.editor.model.java;
+package org.flowerplatform.editor.model;
 
-import org.eclipse.emf.ecore.EObject;
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavaClassTitleProcessor extends JavaClassChildProcessor {
+public interface IContentAssist {
+	
+	
+	public static int MAX_TYPES_COUNT = 50;
+	
+	public static String TYPE = "type";
+	
+	public static String RESOURCE = "project";
 
-	@Override
-	public String getLabel(EObject object, boolean forEditing) {
-		return (String) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, 
-				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-	}
-
-	@Override
-	protected String getImageForVisibility(int type) {
-		return "images/obj16/SyncClass.gif";
-	}
-
+	/**
+	 * @param context used to set the search scope
+	 * @param pattern used as a prefix for the search
+	 * @return list of matches as fully qualified names
+	 */
+	List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern);
+	
 }

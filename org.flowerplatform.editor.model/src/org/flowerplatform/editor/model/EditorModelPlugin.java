@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.editor.model;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
@@ -47,6 +48,8 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected ComposedDragOnDiagramHandler composedDragOnDiagramHandler;
 	
+	protected ComposedContentAssist composedContentAssist;
+	
 	public ComposedChangeProcessor getComposedChangeProcessor() {
 		return composedChangeProcessor;
 	}
@@ -58,6 +61,10 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	public ComposedDragOnDiagramHandler getComposedDragOnDiagramHandler() {
 		return composedDragOnDiagramHandler;
 	}
+	
+	public ComposedContentAssist getComposedContentAssist() {
+		return composedContentAssist;
+	}
 
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
@@ -66,13 +73,9 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		composedChangeProcessor = new ComposedChangeProcessor();
 		diagramUpdaterChangeProcessor = new DiagramUpdaterChangeProcessor();
 		composedChangeProcessor.addChangeDescriptionProcessor(diagramUpdaterChangeProcessor);
-		composedDragOnDiagramHandler = new ComposedDragOnDiagramHandler();
 		
-		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.editor.model.dragOnDiagramHandler");
-		for (IConfigurationElement configurationElement : configurationElements) {
-			IDragOnDiagramHandler handler = (IDragOnDiagramHandler) configurationElement.createExecutableExtension("dragOnDiagramHandler");
-			composedDragOnDiagramHandler.addDelegateHandler(handler);
-		}
+		initExtensionPoint_dragOnDiagramHandler();
+		initExtensionPoint_contentAssist();
 		
 		CustomSerializationDescriptor viewSD = new CustomSerializationDescriptor(View.class)
 		.addDeclaredProperty("id")
@@ -114,6 +117,24 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.register();
 	}
 
+	protected void initExtensionPoint_dragOnDiagramHandler() throws CoreException {
+		composedDragOnDiagramHandler = new ComposedDragOnDiagramHandler();
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.editor.model.dragOnDiagramHandler");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			IDragOnDiagramHandler handler = (IDragOnDiagramHandler) configurationElement.createExecutableExtension("dragOnDiagramHandler");
+			composedDragOnDiagramHandler.addDelegateHandler(handler);
+		}
+	}
+	
+	protected void initExtensionPoint_contentAssist() throws CoreException {
+		composedContentAssist = new ComposedContentAssist();
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.editor.model.contentAssist");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			IContentAssist contentAssist = (IContentAssist) configurationElement.createExecutableExtension("contentAssist");
+			composedContentAssist.addDelegateSearchEngine(contentAssist);
+		}
+	}
+	
 	public void stop(BundleContext bundleContext) throws Exception {
 		super.stop(bundleContext);
 		INSTANCE = null;

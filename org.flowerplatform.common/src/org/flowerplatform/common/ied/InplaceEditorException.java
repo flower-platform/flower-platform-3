@@ -16,27 +16,19 @@
  *
  * license-end
  */
-package org.flowerplatform.editor.model.java;
+package org.flowerplatform.common.ied;
 
-import org.eclipse.emf.ecore.EObject;
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import org.flowerplatform.common.CommonPlugin;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavaClassTitleProcessor extends JavaClassChildProcessor {
+public class InplaceEditorException extends RuntimeException {
 
-	@Override
-	public String getLabel(EObject object, boolean forEditing) {
-		return (String) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, 
-				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-	}
+	private static final long serialVersionUID = 1L;
 
-	@Override
-	protected String getImageForVisibility(int type) {
-		return "images/obj16/SyncClass.gif";
+	public InplaceEditorException(String messageKey) {
+		super(CommonPlugin.getInstance().getMessage(messageKey));
 	}
 
 }
