@@ -36,10 +36,7 @@ import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
-<<<<<<< HEAD
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
-=======
->>>>>>> origin/GH93-Revert
 import org.flowerplatform.web.security.service.UserService;
 import org.flowerplatform.web.svn.SvnPlugin;
 import org.flowerplatform.web.svn.SvnUtils;
@@ -62,16 +59,12 @@ import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
-<<<<<<< HEAD
 import org.tigris.subversion.svnclientadapter.utils.Depth;
-
-=======
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
 import org.tigris.subversion.svnclientadapter.javahl.JhlStatus;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
+import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 
-
->>>>>>> origin/GH93-Revert
 /**
  * 
  * @author Victor Badila
@@ -97,25 +90,15 @@ public class SvnService {
 	public static SvnService getInstance() {
 		return INSTANCE;
 	}
-<<<<<<< HEAD
 
-=======
-	
->>>>>>> origin/GH93-Revert
 	/**
 	 * @author Gabriela Murgoci
 	 */
 	public boolean createRemoteFolder(ServiceInvocationContext context, List<PathFragment> parentPath, String folderName, String comment) {
-<<<<<<< HEAD
-		
 		
 		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
-=======
-
-		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
-
->>>>>>> origin/GH93-Revert
 		ISVNRemoteFolder parentFolder = null;
+		
 		if (selectedParent instanceof ISVNRemoteFolder) {
 			parentFolder = (ISVNRemoteFolder) selectedParent;
 		} else if (selectedParent instanceof IAdaptable) {
@@ -128,7 +111,7 @@ public class SvnService {
 		try {
 
 			// create remote folder
-<<<<<<< HEAD
+
 			context.getCommand().getParameters().remove(0);
 			tlCommand.set(context.getCommand());
 			parentFolder.createRemoteFolder(folderName, comment,
@@ -141,15 +124,7 @@ public class SvnService {
 					.getCommunicationChannel();
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
-							.getMessage(),
-=======
-
-			parentFolder.createRemoteFolder(folderName, comment, new NullProgressMonitor());
-		} catch (SVNException e) { // something wrong happened
-			CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(CommonPlugin.getInstance().getMessage("error"), e.getMessage(),
->>>>>>> origin/GH93-Revert
-					DisplaySimpleMessageClientCommand.ICON_ERROR));
+							.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
 
 			return false;
 		}
@@ -159,10 +134,7 @@ public class SvnService {
 	public boolean createSvnRepository(final ServiceInvocationContext context, final String url, final List<PathFragment> parentPath) {
 		//had to use List due to limitations of altering final variables inside runnable
 		final List<String> operationSuccessful = new ArrayList<String>();		
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/GH93-Revert
 		new DatabaseOperationWrapper(new DatabaseOperation() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -198,10 +170,7 @@ public class SvnService {
 				}
 			}
 		});			
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/GH93-Revert
 		// tree refresh
 		if (operationSuccessful.contains("success")) {
 			Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
@@ -714,17 +683,13 @@ public class SvnService {
 				});
 	}
 	
-<<<<<<< HEAD
-	public boolean deleteSvnAction(final ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment){
-=======
 	/**
 	 * 
 	 * @author Cristina Necula
 	 * 
 	 */
 	public boolean deleteSvnAction(ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment){
->>>>>>> origin/GH93-Revert
-		
+
 		final CommunicationChannel cc = context.getCommunicationChannel();
 		
 		//list of remote resources
@@ -732,6 +697,10 @@ public class SvnService {
 		
 		//list of repository location
 		final List<SVNRepositoryURLEntity> repositoryObject = new ArrayList<SVNRepositoryURLEntity>();
+		
+		//list of remote files
+		final List<RemoteFile> remoteFile = new ArrayList<RemoteFile>();
+		
 		context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
 		for(List<PathFragment> fullPath : objectFullPaths){
@@ -756,6 +725,11 @@ public class SvnService {
 			if (node.getClass().equals(RemoteFolder.class)){
 				remoteObject.add((ISVNRemoteResource)node);
 			}
+			
+			//add in the list of remote files
+			if (node.getClass().equals(RemoteFile.class)){
+				remoteFile.add((RemoteFile)node);
+			}
 		}
 		
 		ProgressMonitor monitor = ProgressMonitor.create(
@@ -774,8 +748,6 @@ public class SvnService {
 			
 			//delete repository action
 			if(repositoryObject.size() >= 1){
-				
-				//final List<SVNRepositoryURLEntity> repos;
 				
 				DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(
 						new DatabaseOperation() {
@@ -796,6 +768,14 @@ public class SvnService {
 				});
 			}
 			
+			//delete remote file
+			if(remoteFile.size() >= 1){
+				remoteObject.addAll(remoteFile);
+				SVNProviderPlugin.getPlugin().getRepositoryResourcesManager().
+				deleteRemoteResources(remoteObject.toArray(
+						new ISVNRemoteResource[remoteObject.size()]), comment, monitor);
+			}
+			
 		} catch (SVNException e) {
 			if (isAuthentificationException(e))
 				return true;
@@ -812,8 +792,6 @@ public class SvnService {
 		}
 		return true;
 	}
-	
-<<<<<<< HEAD
 
 //	public void openLoginWindow(ServiceInvocationContext context, String credentials) {
 //		
@@ -907,7 +885,8 @@ public class SvnService {
 			return false;
 		}
 		return SvnPlugin.getInstance().getUtils().isAuthenticationClientException(exception);
-=======
+	}
+
 	public int getDepthValue(int depth){
 		switch (depth) {
 			case 0: 
@@ -920,7 +899,6 @@ public class SvnService {
 				return ISVNCoreConstants.DEPTH_EMPTY;			
 		}
 		return ISVNCoreConstants.DEPTH_UNKNOWN;
->>>>>>> origin/GH93-Revert
 	}
 
 }
