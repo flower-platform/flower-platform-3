@@ -117,7 +117,7 @@ license-end
 			
 			private function finishCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
-				if (result == true) {					
+				if (result) {					
 					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 				}
 			}			

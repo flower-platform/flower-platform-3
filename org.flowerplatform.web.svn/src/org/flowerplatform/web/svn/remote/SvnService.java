@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -49,6 +50,7 @@ import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
+import org.tigris.subversion.svnclientadapter.ISVNConflictResolver;
 import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
@@ -189,6 +191,35 @@ public class SvnService {
 		GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath).dispatchContentUpdate(node);		
 	}	
 	
+	public Boolean resolve(ServiceInvocationContext context, ArrayList<String> filePaths, int choice) {
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.resolve.markResolvedMonitor"), channel);
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());		
+		try {
+			ISVNClientAdapter myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
+			myClientAdapter.setProgressListener(opMng);			
+			if (choice == 1) {
+				choice = ISVNConflictResolver.Choice.chooseMine;
+			} else if (choice == 2) {
+				choice = ISVNConflictResolver.Choice.chooseTheirs;
+			} else {
+				choice = ISVNConflictResolver.Choice.chooseBase;
+			}			
+			for (int i=0; i<filePaths.size(); i++) {
+				myClientAdapter.resolve(new File(filePaths.get(i)), choice);
+			}
+			
+			
+		} catch (SVNException | SVNClientException e) {
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		} finally {
+			pm.done();
+		}		
+		return true;
+	}
+	
 	public boolean revert(ServiceInvocationContext context, ArrayList<FileDto> fileDtos) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.revert.revertMonitor"), channel);
@@ -305,6 +336,8 @@ public class SvnService {
 		return false;
 	}
 	
+	
+	
 	@SuppressWarnings("unchecked")
 	public String getDirectoryFullPathFromPathFragments(List<PathFragment> pathWithRoot) {		
 		Object workingDirectory  = GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
@@ -372,9 +405,32 @@ public class SvnService {
 			result.add("images/added_ov.gif");
 		} else if (status.equals("missing")) {
 			result.add("images/deleted_ov.gif");
+		} else if (status.equals("conflicted")) {
+			result.add("images/conflicted_ov.gif");
 		} else {
 			result.add("images/question_ov.gif");
 		}		
+		return result;
+	}
+	
+	public ArrayList<String> getConflicted(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList) {
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		JhlClientAdapter myClientAdapter = new JhlClientAdapter();
+		ArrayList<String> result = new ArrayList<String>();		
+		File[] filesToBeCompared = getFilesForSelectionList(selectionList);		
+		for (File f : filesToBeCompared) {			
+			try {
+				JhlStatus[] jhlStatusArray = (JhlStatus[])myClientAdapter.getStatus(f, true, true);
+				for (int i=0; i<jhlStatusArray.length; i++) {
+					if (jhlStatusArray[i].getTextStatus().toString().equals("conflicted")) {						
+						result.add(jhlStatusArray[i].getPath());
+					}
+				}
+			} catch (SVNClientException e) {
+				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+			}			
+		}	
 		return result;
 	}
 	
@@ -394,9 +450,32 @@ public class SvnService {
 		File[] filesToBeCompared = getFilesForSelectionList(selectionList);		
 		for (File f : filesToBeCompared) {			
 			try {
+				ArrayList<String> conflictSpecificFiles = new ArrayList<String>();				
+				
+				
 				JhlStatus[] jhlStatusArray = (JhlStatus[])myClientAdapter.getStatus(f, true, true);
 				for (int i=0; i<jhlStatusArray.length; i++) {
 					if (!jhlStatusArray[i].getTextStatus().toString().equals("normal")) {
+						
+						if (jhlStatusArray[i].getTextStatus().toString().equals("conflicted")) {
+							conflictSpecificFiles.add(jhlStatusArray[i].getConflictNew().getAbsolutePath().replaceAll("\\\\", "/"));
+							conflictSpecificFiles.add(jhlStatusArray[i].getConflictOld().getAbsolutePath().replaceAll("\\\\", "/"));
+							conflictSpecificFiles.add(jhlStatusArray[i].getConflictWorking().getAbsolutePath().replaceAll("\\\\", "/"));							
+						}
+						
+						Boolean continueSetter = false;
+						if (jhlStatusArray[i].getTextStatus().toString().equals("unversioned")) {
+							for (String s : conflictSpecificFiles) {
+								if (s.equals(jhlStatusArray[i].getPath())) {
+									continueSetter = true;
+									break;
+								}
+							}
+						}
+						if (continueSetter) {
+							continue;
+						}						
+						
 						FileDto modifiedFileDto = new FileDto();
 						JhlStatus currentTarget = jhlStatusArray[i];						
 						modifiedFileDto.setPath(currentTarget.getFile().getAbsolutePath());
@@ -434,7 +513,7 @@ public class SvnService {
 		dto.setFiles(fileList);
 		return dto;
 	}
-	
+		
 	public Boolean commit(ServiceInvocationContext context, ArrayList<FileDto> selectionList, String message, Boolean keepLocks) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.commit.commitMonitor"), channel);
@@ -482,7 +561,7 @@ public class SvnService {
 			myClientAdapter.setProgressListener(opMng);			
 			try {				
 				for (int i=0; i<markedForAdditionFiles.length; i++) {
-					myClientAdapter.addFile(markedForAdditionFiles[i]);
+					myClientAdapter.addFile(markedForAdditionFiles[i]);					
 				}			
 				myClientAdapter.remove(markedForDeletionFiles, true);
 				myClientAdapter.commit(files, message, recurse, keepLocks);
@@ -499,7 +578,7 @@ public class SvnService {
 			pm.done();
 		}		
 		return true;
-	}
+	}	
 	
 	public File[] getFilesForSelectionList(ArrayList<ArrayList<PathFragment>> selectionList) {
 		File[] result = new File[selectionList.size()];		

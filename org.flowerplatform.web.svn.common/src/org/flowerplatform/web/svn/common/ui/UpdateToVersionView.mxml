@@ -137,9 +137,9 @@ license-end
 						<s:DropDownList id="depthDropdown" width="100%" dataProvider="{depthDropdownDataProvider}">
 						</s:DropDownList>						
 					</s:HGroup>
-					<s:CheckBox label="Change working copy to specified depth" id="changeWorkingCopyToSpecifiedDepth"/>
-					<s:CheckBox label="Ignore externals" id="ignoreExternals"/>
-					<s:CheckBox label="Allow unversioned obstructions" id="allowUnversionedObstructions" selected="true"/>					
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.updateToVersion.changeWorkingCopySpecifiedDepth')}" id="changeWorkingCopyToSpecifiedDepth"/>
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.updateToVersion.ignoreExternals')}" id="ignoreExternals"/>
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.updateToVersion.allowUnversionedObstructions')}" id="allowUnversionedObstructions" selected="true"/>					
 					<s:Rect width="1" height="20"/>	
 					
 					<!-- following code was commented because it might be used it in the future-->

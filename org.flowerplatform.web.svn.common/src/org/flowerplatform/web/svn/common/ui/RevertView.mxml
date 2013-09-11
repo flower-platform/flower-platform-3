@@ -65,7 +65,7 @@ license-end
 					new InvokeServiceMethodServerCommand("svnService", "revert", 
 						[selectedFiles], 
 						this, finishCallbackHandler));
-				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.revertSvnRepository.view.spinner"));				
+				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.ui.revert.spinner"));				
 			}
 			
 			private function finishCallbackHandler(result:Boolean):void {
@@ -116,7 +116,7 @@ license-end
 		<mx:State name="0">			
 			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.revert.WizardTitle')}"/>			
 			<mx:AddChild relativeTo="{contentArea}">
-				<s:VGroup width="100%" height="100%">
+				<s:VGroup width="100%">
 					<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.revert.localChangesWillBeRemoved')}"/>
 					<s:Rect height="5"/>
 					<s:HGroup>
