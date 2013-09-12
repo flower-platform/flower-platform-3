@@ -30,6 +30,7 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
+	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
@@ -67,6 +68,7 @@ package org.flowerplatform.web.svn.common {
 								   BranchTagAction,
 								   BranchTagProjectAction,
 								   CopyToAction,
+								   SwitchAction,
 					               CreateSvnRepositoryAction, 
 								   RefreshRemoteResourceAction, 
 								   CheckoutAction,

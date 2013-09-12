@@ -6,8 +6,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -40,6 +42,7 @@ import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
+import org.tigris.subversion.subclipse.core.SVNTeamProvider;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
@@ -220,7 +223,6 @@ public class SvnService {
 	 * @throws MalformedURLException
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	
 	public boolean branchTagResources(ServiceInvocationContext context,
 			boolean resourceSelected, List<BranchResource> branchResources,
 			String destinationURL, String comment, Number revision,
@@ -250,7 +252,7 @@ public class SvnService {
 								.get(i)).getUrl());
 					}
 				}
-				
+
 				else {
 					for (int i = 0; i < remoteResources.size(); i++) {
 						try {
@@ -261,7 +263,8 @@ public class SvnService {
 									.getPlugin().getSVNClient()
 									.getStatus(listOfFiles);
 							urlArray.add(listOfStatuses[0].getUrl());
-						} catch (Exception e) {}
+						} catch (Exception e) {
+						}
 					}
 				}
 				sourceUrls = new SVNUrl[urlArray.size()];
@@ -280,13 +283,14 @@ public class SvnService {
 								.getPlugin().getSVNClient()
 								.getStatus(listOfFiles);
 						sourceUrls[0] = listOfStatuses[0].getUrl();
-					} catch (Exception e1) {}
+					} catch (Exception e1) {
+					}
 				}
 			}
 
 			ISVNClientAdapter client = null;
-			repository = SVNProviderPlugin.getPlugin()
-					.getRepository(sourceUrls[0].toString());
+			repository = SVNProviderPlugin.getPlugin().getRepository(
+					sourceUrls[0].toString());
 			destinationFolder = repository.getRemoteFolder(destinationURL
 					.substring(
 							destinationURL.lastIndexOf(repository
@@ -352,7 +356,7 @@ public class SvnService {
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
 		}
-		
+
 		// tree refresh
 		if (!resourceSelected) {
 			List<PathFragment> partialPath = (List<PathFragment>) branchResources
@@ -381,8 +385,7 @@ public class SvnService {
 					.getServiceFromPathWithRoot(partialPath))
 					.dispatchContentUpdate(selection);
 
-		}
-		else {
+		} else {
 			List<PathFragment> partialPath = (List<PathFragment>) branchResources
 					.get(0).getPath();
 			partialPath.remove(partialPath.size() - 1);
@@ -390,17 +393,16 @@ public class SvnService {
 			if (repository.getRootFolder().equals(destinationFolder)) {
 				repository.refreshRootFolder();
 				((GenericTreeStatefulService) GenericTreeStatefulService
-					.getServiceFromPathWithRoot(partialPath))
-					.dispatchContentUpdate(repository);
-			}
-			else {
+						.getServiceFromPathWithRoot(partialPath))
+						.dispatchContentUpdate(repository);
+			} else {
 				destinationFolder.refresh();
 				((GenericTreeStatefulService) GenericTreeStatefulService
-					.getServiceFromPathWithRoot(partialPath))
-					.dispatchContentUpdate(destinationFolder);
+						.getServiceFromPathWithRoot(partialPath))
+						.dispatchContentUpdate(destinationFolder);
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -446,10 +448,12 @@ public class SvnService {
 	/**
 	 * 
 	 * @author Gabriela Murgoci
-	 * @throws SVNException 
+	 * @throws SVNException
 	 */
 	public ArrayList<Object> populateBranchResourcesList(
-			ServiceInvocationContext context, List<List<PathFragment>> selected, boolean actionType) throws SVNException {
+			ServiceInvocationContext context,
+			List<List<PathFragment>> selected, boolean actionType)
+			throws SVNException {
 
 		ArrayList<Object> branchResources = new ArrayList<Object>();
 		List<PathFragment> commonParent = selected.get(0);
@@ -459,7 +463,7 @@ public class SvnService {
 		SVNUrl aux;
 		String commonParentPath = "";
 		commonParent = getCommonParent(selected);
-		
+
 		for (List<PathFragment> selectedResource : selected) {
 			BranchResource item = new BranchResource();
 			String partialPath = "";
@@ -480,33 +484,121 @@ public class SvnService {
 
 			branchResources.add(item);
 		}
-		
+
 		if (actionType) {
 			try {
 				remoteResource = GenericTreeStatefulService.getNodeByPathFor(
-					(List<PathFragment>) selected.get(0), null);
-				listOfFiles = new File[] {(File) ((Pair<?, ?>) remoteResource).a};
-				ISVNStatus[] listOfStatuses = SVNProviderPlugin
-					.getPlugin().getSVNClient()
-					.getStatus(listOfFiles);
+						(List<PathFragment>) selected.get(0), null);
+				listOfFiles = new File[] { (File) ((Pair<?, ?>) remoteResource).a };
+				ISVNStatus[] listOfStatuses = SVNProviderPlugin.getPlugin()
+						.getSVNClient().getStatus(listOfFiles);
 				aux = listOfStatuses[0].getUrl();
-				repository = SVNProviderPlugin.getPlugin()
-					.getRepository(aux.toString());
-			} catch (Exception e1) {}
+				repository = SVNProviderPlugin.getPlugin().getRepository(
+						aux.toString());
+			} catch (Exception e1) {
+			}
 		}
-		
+
 		for (int i = 3; i < commonParent.size(); i++) {
 			commonParentPath += commonParent.get(i).getName();
 			if (i < commonParent.size() - 1)
 				commonParentPath += "/";
 		}
-		
+
 		if (actionType)
-			branchResources.add(0, (repository.getRootFolder().getUrl().toString() + "/" + commonParentPath));
+			branchResources.add(0, (repository.getRootFolder().getUrl()
+					.toString()
+					+ "/" + commonParentPath));
 		else
 			branchResources.add(0, commonParentPath);
-		
+
 		return branchResources;
+	}
+
+	/**
+	 * 
+	 * @author Gabriela Murgoci
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public boolean switchTo(ServiceInvocationContext context,
+			List<BranchResource> branchResources, String location,
+			long revision, int depth, boolean setDepth,
+			boolean ignoreExternals, boolean force) {
+
+		SVNUrl[] urls;
+
+		try {
+			List<Object> resources = new ArrayList<Object>();
+			for (BranchResource item : branchResources) {
+				resources.add(GenericTreeStatefulService.getNodeByPathFor(
+						(List<PathFragment>) item.getPath(), null));
+			}
+
+			// computes the new URLs for selected resources
+			if (branchResources.size() == 1) {
+				urls = new SVNUrl[1];
+				urls[0] = new SVNUrl(location);
+
+			} else {
+				urls = new SVNUrl[branchResources.size()];
+				for (int i = 0; i < resources.size(); i++) {
+					try {
+						File[] listOfFiles = new File[1];
+						listOfFiles[0] = (File) ((Pair) resources.get(i)).a;
+						ISVNStatus[] listOfStatuses = SVNProviderPlugin
+								.getPlugin().getSVNClient()
+								.getStatus(listOfFiles);
+
+						if (location.endsWith("/")) {
+							urls[i] = new SVNUrl(location
+									+ listOfStatuses[0].getUrl());
+						} else {
+							urls[i] = new SVNUrl(location + "/"
+									+ listOfStatuses[0].getUrl());
+						}
+					} catch (Exception e) {
+					}
+				}
+			}
+
+			try {
+				for (int i = 0; i < resources.size(); i++) {
+					SVNUrl svnUrl = urls[i];
+					ISVNRepositoryLocation repository = SVNProviderPlugin
+							.getPlugin().getRepository(urls[0].toString());
+					try {
+						ISVNClientAdapter svnClient = null;
+						if (repository != null)
+							svnClient = repository.getSVNClient();
+						if (svnClient == null)
+							svnClient = SVNProviderPlugin.getPlugin()
+									.getSVNClientManager().getSVNClient();
+						File file = (File) ((Pair) resources.get(i)).a;
+						svnClient.switchToUrl(file, svnUrl,
+								revision == -1 ? SVNRevision.HEAD
+										: new SVNRevision.Number(revision),
+								SVNRevision.HEAD, depth, setDepth,
+								ignoreExternals, force);
+					} catch (SVNClientException e) {
+						throw SVNException.wrapException(e);
+					} finally {
+					}
+				}
+			} finally {
+			}
+
+		} catch (Exception e) {
+			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+			CommunicationChannel channel = (CommunicationChannel) context
+					.getCommunicationChannel();
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+					CommonPlugin.getInstance().getMessage("error"), e
+							.getMessage(),
+					DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		}
+
+		return true;
 	}
 
 	public boolean createSvnRepository(final ServiceInvocationContext context,
