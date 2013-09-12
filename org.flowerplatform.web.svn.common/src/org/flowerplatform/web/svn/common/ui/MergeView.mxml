@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+@author Cristina Necula
+-->
+<popup:Wizard implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler"
+			  xmlns:fx="http://www.adobe.com/2006/mxml"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  width = "500" height = "500"
+			  minWidth="500" minHeight="500">
+	
+	<fx:Script>
+		<![CDATA[
+			import org.flowerplatform.flexutil.dialog.IDialog;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			import org.flowerplatform.flexutil.Utils;
+			
+			import flash.events.MouseEvent;
+			import mx.collections.ArrayCollection;
+			
+			public var resourcePath:String;
+			
+			[Bindable]
+			public var resourceUrl:String;
+			
+			[Bindable]
+			public var remoteResourceUrl:String;
+			
+			/* public var repositoryFilter:RepositoryFilter; */
+			
+			/* private var lastBtnPressedId:Button; */
+			
+			override protected function creationCompleteHandler():void {
+				  super.creationCompleteHandler();
+				  wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
+			} 
+			
+			public override function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.mergeAction.label"));
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/merge.gif"));
+			}
+			
+			private function browseBtnHandler(event:MouseEvent):void {
+				/* lastBtnPressedId = Button(event.target);
+				var popup:RepositoryBrowserWindow = new RepositoryBrowserWindow();
+				popup.repositoryFilter = repositoryFilter;				
+				popup.setResultHandler(this);
+				popup.showpopup(); */
+			}
+			
+			public function handleDialogResult(result:Object):void {
+				/* if (result == null) {
+					return;
+				}
+				if (lastBtnPressedId == selectFromUrlBtn) {
+					fromUrlTxt.text = String(result);
+				} else if (lastBtnPressedId == selectToUrlBtn) {
+					toUrlTxt.text = String(result);
+				} else if (lastBtnPressedId == selectFromRevBtn) {
+					fromHeadCb.selected = false;
+					fromRevTxt.text = String(result);					
+				} else {
+					toHeadCb.selected = false;
+					toRevTxt.text = String(result);					
+				}
+				setOkBtnState(); */
+			}
+			
+			public function selectRevisionBtnHandler(event:MouseEvent):void {
+				/* lastBtnPressedId = Button(event.target);
+				var url:String;
+				if (lastBtnPressedId == selectFromRevBtn) {
+					url = fromUrlTxt.text;
+				} else {
+					url = toUrlTxt.text;
+				}
+				BaseFlowerDiagramEditor.instance.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "getRemoteResourceInfo", [resourcePath, url], this, remoteResourceInfoCallback)); */
+			}
+			
+			public function remoteResourceInfoCallback(value:Object):void {
+				/* if (value != null) {
+					var popup:SelectRevisionWindow = new SelectRevisionWindow();
+					popup.remoteResourcePath = value.path;
+					popup.remoteResourceName = value.name;				 	
+					popup.setResultHandler(this);
+					popup.showpopup();
+				} */
+			}
+			
+			private function setOkBtnState():void {
+				/* if (fromUrlTxt.text == "" || 
+					(!useFromUrlCb.selected && toUrlTxt.text == "") || 
+					(!fromHeadCb.selected && fromRevTxt.text == "") || 
+					(!toHeadCb.selected && toRevTxt.text == "")) {
+					finish.enabled = false;
+				} else {
+					finish.enabled = true;
+				}	 */			 	
+			}
+			
+			protected override function finishClickHandler():void {
+				/* ModalSpinner.addModalSpinner(this, "Merging data...");
+				BaseFlowerDiagramEditor.instance.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"svnService", "merge", 
+						[resourcePath, 
+							fromUrlTxt.text, 
+							fromHeadCb.selected ? -1 : Number(fromRevTxt.text),
+							toUrlTxt.text,
+							toHeadCb.selected ? -1 : Number(toRevTxt.text),
+							allowUnversionedCb.selected,
+							ignoreAncestryCb.selected], this, serverResponseHandler));	 */			
+			}
+			
+			private function serverResponseHandler(value:Boolean):void {
+				/*  ModalSpinner.removeModalSpinner(this);
+				if (value) {
+					super.finishClickHandler(); 
+				}	 */			
+			}			
+		]]>
+	</fx:Script>
+	
+	<popup:states>				
+		<mx:State name="0">	
+			<mx:SetProperty name = "wizardTitle" value = "Merge"/>	
+			<mx:SetProperty target="{back}" name="visible" value="false"/>
+			<mx:SetProperty target="{next}" name="visible" value="false"/>
+			<mx:SetProperty target="{finish}" name="label" value="Merge"/>
+			<mx:AddChild relativeTo="{contentArea}">
+				<s:VGroup width="100%" height="100%">
+					<s:Label text = "Specify the revision range which you want to merge:" />
+					
+					<s:VGroup width = "100%" height="100%">
+						<s:Label text = "From: (start URL and revision of the range to merge)" />
+						<s:HGroup width = "100%">
+							<s:TextInput id="fromUrlTxt" text="{remoteResourceUrl}" width="100%" change="setOkBtnState()" />
+							<s:Button id="selectFromUrlBtn" label="Select..." click="browseBtnHandler(event)"/>
+						</s:HGroup>
+					</s:VGroup>
+					
+					<mx:CheckBox id="fromHeadCb" label="Merge from HEAD revision" change="setOkBtnState()" />
+					<s:HGroup verticalAlign="middle">
+						<s:Label text="Revision:" />
+						<s:TextInput id="fromRevTxt" width="50" enabled="{!fromHeadCb.selected}" change="setOkBtnState()" />
+					</s:HGroup>
+					
+					<s:Spacer height="10%" />
+					
+					<s:VGroup width="100%" height="100%">
+						<s:Label width="100%" text="To: (end URL and revision of the range to merge)" />
+						<s:CheckBox width="100%" id="useFromUrlCb" label="Use 'From:' URL" selected="true" click="{toUrlArea.visible = !useFromUrlCb.selected}" />
+						<s:HGroup width="100%" id="toUrlArea" visible="false">
+							<s:TextInput id="toUrlTxt" text="{remoteResourceUrl}" width="100%" change="setOkBtnState()" />	
+							<s:Button id="selectToUrlBtn" label="Select..." click="browseBtnHandler(event)"/>
+						</s:HGroup>		
+					</s:VGroup>
+					
+					<s:Spacer height="10%" />
+					
+					<s:CheckBox id="toHeadCb" label="Merge to HEAD revision" change="setOkBtnState()" />
+					<s:HGroup verticalAlign="middle" >
+						<s:Label text="Revision:" />
+						<s:TextInput id="toRevTxt" width="50" enabled="{!toHeadCb.selected}" change="setOkBtnState()" />
+					</s:HGroup>
+					
+					<s:Spacer height="10%" />
+					<s:CheckBox id="ignoreAncestryCb" label="Ignore externals" />
+					<s:CheckBox id="allowUnversionedCb" label="Allow unversioned obstructions" />
+					
+					<s:VGroup width="100%" height="100%">
+						<s:Label text="The result of the merge is stored in the working copy at:" />
+						<s:TextInput id="resourceUrlTxt" width="100%"  text="{resourceUrl}" initialize="{Utils.makePseudoDisabled(resourceUrlTxt)}"/>
+						<s:Label text="which points to the repository at URL:" />
+						<s:TextInput id="remoteResourceUrlTxt" width="100%" text="{remoteResourceUrl}" initialize="{Utils.makePseudoDisabled(remoteResourceUrlTxt)}"/>		
+					</s:VGroup>
+					
+				</s:VGroup>
+			</mx:AddChild>
+		</mx:State>		
+	</popup:states>	
+	
+</popup:Wizard>

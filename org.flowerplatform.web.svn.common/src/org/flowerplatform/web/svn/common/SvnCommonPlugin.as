@@ -27,17 +27,18 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
-	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
+	import org.flowerplatform.web.svn.common.action.remote.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
-	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
+	import org.flowerplatform.web.svn.common.action.SvnChangeCredentialsAction;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.RevertAction;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
 	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
+	import org.flowerplatform.web.svn.common.action.MergeAction;
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -72,7 +73,8 @@ package org.flowerplatform.web.svn.common {
 								   RefreshRemoteResourceAction, 
 								   CheckoutAction,
 								   UpdateToHeadAction,
-								   UpdateToVersionAction);
+								   UpdateToVersionAction, 
+								   MergeAction);
 
 		}
 		

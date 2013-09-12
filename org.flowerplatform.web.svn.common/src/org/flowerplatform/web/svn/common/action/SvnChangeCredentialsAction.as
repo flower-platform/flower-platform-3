@@ -1,4 +1,4 @@
-package org.flowerplatform.web.svn.common.action.remote {
+package org.flowerplatform.web.svn.common.action {
 	
 	import mx.collections.ArrayCollection;
 	
@@ -63,7 +63,6 @@ package org.flowerplatform.web.svn.common.action.remote {
 		public function resultClallbackFunction(result:ArrayCollection):void{
 			
 			var loginView:LoginView = new LoginView();		
-//			loginView.popupHost.setLabel("Change Credentials");
 			loginView.setResultHandler(this);
 			loginView.command = command;
 			loginView.logging = false;
@@ -92,7 +91,6 @@ package org.flowerplatform.web.svn.common.action.remote {
 			var password:String = resultInfo.getItemAt(3) as String;
 			
 			if(logging){
-//				var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand();
 				command = resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand;
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", 

@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package org.flowerplatform.web.svn.common.action {
+package org.flowerplatform.web.svn.common.action.remote {
 	
 	import mx.collections.ArrayCollection;
 	
