@@ -7,6 +7,9 @@ import java.util.List;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.osgi.framework.BundleContext;
+import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
+
+import service.SVNRepositoryPromptUserPassword;
 
 /**
  * 
@@ -42,8 +45,9 @@ public class SvnPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	
 	public void start(BundleContext context) throws Exception {
-		super.start(context);		
-		INSTANCE = this;	
+		super.start(context);	
+		SVNProviderPlugin.getPlugin().setSvnPromptUserPassword(new SVNRepositoryPromptUserPassword());
+		INSTANCE = this;
 	}
 	
 	/**

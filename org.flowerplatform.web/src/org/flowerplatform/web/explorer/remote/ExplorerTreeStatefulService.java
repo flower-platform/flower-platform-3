@@ -19,18 +19,19 @@
 package org.flowerplatform.web.explorer.remote;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
+import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.WebPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,8 @@ import org.slf4j.LoggerFactory;
 public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulService {
 
 	private static Logger logger = LoggerFactory.getLogger(ExplorerTreeStatefulService.class);
+	
+	private static final String CLIENT_COMMAND_KEY = "clientCommandKey";
 
 	public ExplorerTreeStatefulService() throws CoreException {
 		setStatefulClientPrefixId("Explorer");
@@ -133,6 +136,12 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 			((IGenericTreeStatefulServiceAware) populator).setGenericTreeStatefulService(this);
 		}
 		populators.add(populator);
+	}
+	
+	@Override
+	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext){
+		clientContext.put(CLIENT_COMMAND_KEY, context.getCommand());
+		super.openNode(context, path, clientContext);
 	}
 
 }

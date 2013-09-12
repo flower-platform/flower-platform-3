@@ -67,6 +67,8 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	 */
 	private Map<String, List<String>> userGitRepositories;
 	
+	private Map<String, List<String>> userSvnRepositories;
+	
 	/**
 	 * @see #getWikiClientConfigurations()
 	 * 
@@ -85,6 +87,7 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 		
 		userRepositories = new HashMap<String, List<String>>();
 		userGitRepositories = new HashMap<String, List<String>>();
+		userSvnRepositories = new HashMap<String, List<String>>();
 		wikiClientConfigurations = new HashMap<String, Object>();
 	}
 	
@@ -155,6 +158,10 @@ public class FlowerWebPrincipal implements Principal, IPrincipal {
 	public Map<String, List<String>> getUserGitRepositories() {
 		return userGitRepositories;
 	}	
+	
+	public Map<String, List<String>> getUserSvnRepositories(){
+		return userSvnRepositories;
+	}
 	
 	/**
 	 * Holds information about client configurations (i.e. username, password) for wiki. Mapped by

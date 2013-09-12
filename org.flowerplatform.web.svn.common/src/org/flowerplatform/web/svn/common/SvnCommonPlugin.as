@@ -28,13 +28,23 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.CopyToAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
+<<<<<<< HEAD
+=======
+	import org.flowerplatform.web.svn.common.action.DeleteAction;
+	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
+>>>>>>> origin/GH78-Login
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
+<<<<<<< HEAD
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	
+=======
+	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
+
+>>>>>>> origin/GH78-Login
 	/**
 	 * @author Gabriela Murgoci
 	 * 	 
@@ -61,7 +71,10 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public override function preStart():void {	
 			super.preStart();			
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/GH78-Login
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.
 				actionClasses.push(CreateRemoteFolderAction,
 								   RenameMoveAction, 
@@ -70,20 +83,32 @@ package org.flowerplatform.web.svn.common {
 								   CopyToAction,
 								   SwitchAction,
 					               CreateSvnRepositoryAction, 
+								   DeleteAction,
+								   SvnChangeCredentialsAction,
 								   RefreshRemoteResourceAction, 
 								   CheckoutAction,
 								   UpdateToHeadAction,
 								   UpdateToVersionAction);
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/GH78-Login
 		}
 		
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
 		 */
+<<<<<<< HEAD
 		override protected function registerClassAliases():void {				
 		
 			registerClassAlias("org.flowerplatform.web.svn.remote.BranchResource", BranchResource);			
 			
+=======
+		protected override function registerClassAliases():void {		
+			registerClassAlias("org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand",
+				OpenSvnCredentialsWindowClientCommand);
+			super.registerClassAliases();
+>>>>>>> origin/GH78-Login
 		}
 		
 		/**
