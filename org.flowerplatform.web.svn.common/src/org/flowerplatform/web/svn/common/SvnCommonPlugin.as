@@ -25,25 +25,19 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.BranchTagAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagProjectAction;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
+	import org.flowerplatform.web.svn.common.action.CleanupAction;
 	import org.flowerplatform.web.svn.common.action.CopyToAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
-
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
 	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
-
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
-
-	import org.flowerplatform.web.svn.common.remote.BranchResource;
-
-	import org.flowerplatform.web.svn.common.action.DeleteAction;
-
-
 	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
+	import org.flowerplatform.web.svn.common.remote.BranchResource;
 
 
 	/**
@@ -82,6 +76,7 @@ package org.flowerplatform.web.svn.common {
 								   BranchTagProjectAction,
 								   CopyToAction,
 								   SwitchAction,
+								   CleanupAction,
 					               CreateSvnRepositoryAction, 
 								   DeleteAction,
 								   SvnChangeCredentialsAction,

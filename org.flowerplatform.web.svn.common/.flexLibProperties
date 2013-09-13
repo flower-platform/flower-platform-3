@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
-
     <classEntry path="org.flowerplatform.web.svn.common.ui.RenameMoveView"/>
     <classEntry path="org.flowerplatform.web.svn.common.projects.remote.SvnRepositoryTreeStatefulClient"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.BranchTagAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.BranchTagView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CopyToAction"/>
-
     <classEntry path="org.flowerplatform.web.svn.common.SvnCommonPlugin"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction"/>
@@ -18,7 +16,6 @@
     <classEntry path="org.flowerplatform.web.svn.common.ui.CommentView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateSvnRepositoryView"/>
-
     <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CheckoutAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
@@ -28,6 +25,7 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.BranchTagProjectAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.SwitchAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.SwitchView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.CleanupAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

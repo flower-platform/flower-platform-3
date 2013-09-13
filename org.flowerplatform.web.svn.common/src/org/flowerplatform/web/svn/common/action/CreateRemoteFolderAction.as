@@ -34,7 +34,7 @@ package  org.flowerplatform.web.svn.common.action {
 		 */
 		public function CreateRemoteFolderAction() {	
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.label");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");			
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");			
 		}
 		
 		/**

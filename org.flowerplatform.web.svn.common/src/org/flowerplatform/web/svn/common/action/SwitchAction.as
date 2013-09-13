@@ -36,7 +36,7 @@ package  org.flowerplatform.web.svn.common.action {
 		 */
 		public function SwitchAction() {	
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.switchTo.label");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/switch.gif");
 		}
 		
 		/**

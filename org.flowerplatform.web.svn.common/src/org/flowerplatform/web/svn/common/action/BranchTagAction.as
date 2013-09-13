@@ -37,7 +37,7 @@ package  org.flowerplatform.web.svn.common.action {
 		 */
 		public function BranchTagAction() {	
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.branchTag.label");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/branch.gif");
 		}
 		
 		/**

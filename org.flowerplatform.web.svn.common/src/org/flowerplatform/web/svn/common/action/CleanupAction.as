@@ -18,8 +18,11 @@
 */
 
 package  org.flowerplatform.web.svn.common.action {
+	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
@@ -30,25 +33,13 @@ package  org.flowerplatform.web.svn.common.action {
 	/**
 	 * @author Gabriela Murgoci
 	 */
-	public class BranchTagProjectAction extends ActionBase  {
+	public class CleanupAction extends ActionBase {
 		/**
 		 * @flowerModelElementId _-0ZzQAMdEeOrJqcAep-lCg
 		 */
-		public function BranchTagProjectAction() {	
-			label = SvnCommonPlugin.getInstance().getMessage("svn.action.branchTag.label");
-			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/branch.gif");
-		}
-		
-		/**
-		 * @flowerModelElementId _GWBDMAMhEeOrJqcAep-lCg
-		 */
-		
-		public function isTreeNode():Boolean {
-			var i:int;
-			for (i = 0; i < selection.length; i++)
-				if (!(selection.getItemAt(i) is TreeNode))
-					return false;
-			return true;
+		public function CleanupAction() {	
+			label = SvnCommonPlugin.getInstance().getMessage("svn.action.cleanup.label");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/cleanup.gif");
 		}
 		
 		public override function get visible():Boolean {				
@@ -70,17 +61,12 @@ package  org.flowerplatform.web.svn.common.action {
 		 * @flowerModelElementId _TnF_EAMeEeOrJqcAep-lCg
 		 */
 		public override function run():void {			
-			var view:BranchTagView = new BranchTagView();
-			view.node = TreeNode(selection.getItemAt(0));
-			view.selection = selection;
-			view.viewLabel = "svn.action.branchTag.label";
-			view.viewIcon = "images/svn_persp.gif";
-			view.actionType = true;
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setWidth(400)
-				.setHeight(450)
-				.setPopupContent(view)
-				.show();			
+			var array:ArrayCollection = new ArrayCollection();
+			for (var i:int=0; i < selection.length; i++) {
+				array.addItem(TreeNode(selection.getItemAt(i)).getPathForNode(true));
+			}
+			CommunicationPlugin.getInstance().bridge.sendObject(
+				new InvokeServiceMethodServerCommand("svnService", "cleanUp", [array], this));
 		}
 	}
 	

@@ -34,7 +34,7 @@ package org.flowerplatform.web.svn.common.action
 		public function CopyToAction() {
 			super();
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.copyTo.label");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/copy.gif");
 		}
 		
 		public override function run():void {			
