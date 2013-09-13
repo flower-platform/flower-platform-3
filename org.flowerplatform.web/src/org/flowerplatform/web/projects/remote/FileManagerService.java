@@ -299,8 +299,31 @@ public class FileManagerService {
 			printMessageToUser(context,
 					"explorer.rename.error.title",
 					"explorer.rename.error.newFileAlreadyExists");
-		}
+		}		
+	}
+	
+	public void testRename(ServiceInvocationContext context,
+			File fileToBeRenamed, String newName) {
 		
+		String newPath = fileToBeRenamed.getParent() + "\\" + newName;
+		File newFile = new File(newPath);
+		
+		if(!newFile.exists()) {
+			boolean result = fileToBeRenamed.renameTo(newFile);
+			if(result) {
+				FileEvent event = new FileEvent(newFile, FileEvent.FILE_RENAMED, fileToBeRenamed);
+				CommonPlugin.getInstance().getFileEventDispatcher()
+						.dispatch(event);
+			} else {
+				printMessageToUser(context,
+						"explorer.rename.error.title",
+						"explorer.rename.error.couldNotRename");
+			}
+		} else {
+			printMessageToUser(context,
+					"explorer.rename.error.title",
+					"explorer.rename.error.newFileAlreadyExists");
+		}		
 	}
 
 }
