@@ -18,11 +18,16 @@ public class SetUpTestEnviroment {
 	
 	final static String RESOURCE_FOLDER_NAME = "listener";
 	
-	static final String FOLDER_TO_BE_COPIED = "ListenerOrg";
+	static final String FOLDER_TO_BE_COPIED_FOR_DELETE = "ListenerOrg";
+	
+	static final String FOLDER_TO_BE_COPIED_FOR_RENAME = "ListenerOrg2";
 	
 	private static final String WORKING_DIRECTORY_PREFIX = "WorkingDirectory";
 	
 	private static final String PROJECT_PREFIX = "Project";
+	
+	public static final int EVENT_DELETE = 1;
+	public static final int EVENT_RENAME = 2;
 	
 	private static void markSpecialFolders (ServiceInvocationContext context, File folder) {
 		
@@ -50,16 +55,28 @@ public class SetUpTestEnviroment {
 		
 	}
 	
-	public static void populateWorkspace (ServiceInvocationContext context) {
+	public static void populateWorkspace (ServiceInvocationContext context,final int event) {
 		//getPathRelativeToWorkspaceRoot
 		File workspaceRoot = CommonPlugin.getInstance().getWorkspaceRoot();
 		String pathOfWorkspaceRoot = workspaceRoot.getPath();
-		File sourceDir = new File(
-				TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" 
-				+ RESOURCE_FOLDER_NAME + "/" 
-				+ TestUtil.INITIAL_TO_BE_COPIED + "/" 
-				+ FOLDER_TO_BE_COPIED);
-		File destDir = new File(pathOfWorkspaceRoot + "/" + FOLDER_TO_BE_COPIED);
+		File sourceDir = null;
+		File destDir = null;
+		if(event == EVENT_DELETE) {
+			sourceDir = new File(
+					TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" 
+					+ RESOURCE_FOLDER_NAME + "/" 
+					+ TestUtil.INITIAL_TO_BE_COPIED + "/" 
+					+ FOLDER_TO_BE_COPIED_FOR_DELETE);
+			destDir = new File(pathOfWorkspaceRoot + "/" + FOLDER_TO_BE_COPIED_FOR_DELETE);
+		} else {
+			sourceDir = new File(
+					TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" 
+					+ RESOURCE_FOLDER_NAME + "/" 
+					+ TestUtil.INITIAL_TO_BE_COPIED + "/" 
+					+ FOLDER_TO_BE_COPIED_FOR_DELETE);
+			destDir = new File(pathOfWorkspaceRoot + "/" + FOLDER_TO_BE_COPIED_FOR_RENAME);
+		}
+		
 		try {
 			FileUtils.copyDirectory(sourceDir, destDir);
 			System.out.println("Coppied " + sourceDir.getPath() + " in " + destDir.getPath());
@@ -72,7 +89,11 @@ public class SetUpTestEnviroment {
 			
 			@Override
 			public void run() {
-				new GeneralService().createOrganization(FOLDER_TO_BE_COPIED, wrapper);
+				if(event == EVENT_DELETE) {
+					new GeneralService().createOrganization(FOLDER_TO_BE_COPIED_FOR_DELETE, wrapper);
+				} else {
+					new GeneralService().createOrganization(FOLDER_TO_BE_COPIED_FOR_RENAME, wrapper);
+				}
 			}
 		});
 		
