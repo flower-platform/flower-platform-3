@@ -15,66 +15,85 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.flowerplatform.common.CommonPlugin;
+
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
+
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
+
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+
 import org.flowerplatform.communication.service.ServiceInvocationContext;
-<<<<<<< HEAD
+
 import org.flowerplatform.communication.tree.GenericTreeContext;
-=======
+
 import org.flowerplatform.communication.stateful_service.InvokeStatefulServiceMethodServerCommand;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
->>>>>>> origin/GH78-Login
+
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+
 import org.flowerplatform.communication.tree.remote.TreeNode;
+
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.Organization;
+import org.flowerplatform.web.entity.SVNCommentEntity;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
-<<<<<<< HEAD
+
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
-=======
+
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.flowerplatform.web.security.service.UserService;
->>>>>>> origin/GH78-Login
+
+
+import org.flowerplatform.web.entity.User;
+import org.flowerplatform.web.security.service.OrganizationService;
+import org.flowerplatform.web.security.service.UserService;
+
 import org.flowerplatform.web.svn.SvnPlugin;
 import org.flowerplatform.web.svn.SvnUtils;
 import org.flowerplatform.web.svn.operation.SvnOperationNotifyListener;
 import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.tigris.subversion.subclipse.core.ISVNCoreConstants;
+
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
+
+import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
+
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
+
 import org.tigris.subversion.subclipse.core.SVNTeamProvider;
+
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
-<<<<<<< HEAD
-=======
+
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
->>>>>>> origin/GH78-Login
+
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
-<<<<<<< HEAD
+
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
 import org.tigris.subversion.svnclientadapter.ISVNStatus;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
-=======
->>>>>>> origin/GH78-Login
+
 import org.tigris.subversion.svnclientadapter.utils.Depth;
+
+import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 
 /**
  * 
@@ -83,6 +102,8 @@ import org.tigris.subversion.svnclientadapter.utils.Depth;
  * @flowerModelElementId _bcYyQAMcEeOrJqcAep-lCg
  */
 public class SvnService {
+
+	public static final int MAX_SVN_COMMENTS = 10;
 
 	private static Logger logger = LoggerFactory.getLogger(SvnService.class);
 
@@ -100,10 +121,10 @@ public class SvnService {
 		return INSTANCE;
 	}
 
+
 	/**
 	 * @author Gabriela Murgoci
 	 */
-<<<<<<< HEAD
 	public boolean createRemoteFolder(ServiceInvocationContext context,
 			List<PathFragment> parentPath, String folderName, String comment) {
 
@@ -113,12 +134,6 @@ public class SvnService {
 		GenericTreeStatefulService explorerService = (GenericTreeStatefulService) GenericTreeStatefulService
 				.getServiceFromPathWithRoot(parentPath);
 
-=======
-	public boolean createRemoteFolder(ServiceInvocationContext context, List<PathFragment> parentPath, String folderName, String comment) {
-		
-		
-		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
->>>>>>> origin/GH78-Login
 		ISVNRemoteFolder parentFolder = null;
 
 		if (selectedParent instanceof ISVNRemoteFolder) {
@@ -132,21 +147,10 @@ public class SvnService {
 
 		try {
 			// create remote folder
-<<<<<<< HEAD
-=======
-			context.getCommand().getParameters().remove(0);
-			tlCommand.set(context.getCommand());
->>>>>>> origin/GH78-Login
 			parentFolder.createRemoteFolder(folderName, comment,
 					new NullProgressMonitor());
-
 		} catch (SVNException e) { // something wrong happened
-<<<<<<< HEAD
 			logger.debug(SvnPlugin.getInstance().getMessage("error", e));
-=======
-			if (isAuthentificationException(e))
-				return true;
->>>>>>> origin/GH78-Login
 			CommunicationChannel channel = (CommunicationChannel) context
 					.getCommunicationChannel();
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
@@ -161,6 +165,7 @@ public class SvnService {
 		explorerService.dispatchContentUpdate(parentFolder);
 		return true;
 	}
+
 
 	/**
 	 * 
@@ -530,18 +535,19 @@ public class SvnService {
 			branchResources.add(item);
 		}
 
+
 		if (actionType) {
 			try {
 				remoteResource = GenericTreeStatefulService.getNodeByPathFor(
-						(List<PathFragment>) selected.get(0), null);
-				listOfFiles = new File[] { (File) ((Pair<?, ?>) remoteResource).a };
-				ISVNStatus[] listOfStatuses = SVNProviderPlugin.getPlugin()
-						.getSVNClient().getStatus(listOfFiles);
+					(List<PathFragment>) selected.get(0), null);
+				listOfFiles = new File[] {(File) ((Pair<?, ?>) remoteResource).a};
+				ISVNStatus[] listOfStatuses = SVNProviderPlugin
+					.getPlugin().getSVNClient()
+					.getStatus(listOfFiles);
 				aux = listOfStatuses[0].getUrl();
-				repository = SVNProviderPlugin.getPlugin().getRepository(
-						aux.toString());
-			} catch (Exception e1) {
-			}
+				repository = SVNProviderPlugin.getPlugin()
+					.getRepository(aux.toString());
+			} catch (Exception e1) {}
 		}
 
 		for (int i = 3; i < commonParent.size(); i++) {
@@ -646,17 +652,11 @@ public class SvnService {
 		return true;
 	}
 
-<<<<<<< HEAD
 	public boolean createSvnRepository(final ServiceInvocationContext context,
 			final String url, final List<PathFragment> parentPath) {
 		// had to use List due to limitations of altering final variables inside
 		// runnable
 		final List<String> operationSuccessful = new ArrayList<String>();
-=======
-	public boolean createSvnRepository(final ServiceInvocationContext context, final String url, final List<PathFragment> parentPath) {
-		//had to use List due to limitations of altering final variables inside runnable
-		final List<String> operationSuccessful = new ArrayList<String>();		
->>>>>>> origin/GH78-Login
 
 		new DatabaseOperationWrapper(new DatabaseOperation() {
 
@@ -710,12 +710,8 @@ public class SvnService {
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
 				}
 			}
-<<<<<<< HEAD
 
 		});
-=======
-		});			
->>>>>>> origin/GH78-Login
 
 		// tree refresh
 		Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath,
@@ -725,31 +721,12 @@ public class SvnService {
 				.dispatchContentUpdate(node);
 
 		return true;
-	}
+	}		
 
-	@SuppressWarnings("unchecked")
-	public ArrayList<String> getRepositoriesForOrganization(
-			final String organizationName) {
-		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(
-				new DatabaseOperation() {
-					@Override
-					public void run() {
-						ArrayList<String> result = new ArrayList<String>();
-						String myQuerry = String
-								.format("SELECT e from %s e where e.organization.name ='%s'",
-										SVNRepositoryURLEntity.class
-												.getSimpleName(),
-										organizationName);
-						Query q = wrapper.getSession().createQuery(myQuerry);
-						List<SVNRepositoryURLEntity> urlEntityList = q.list();
-						for (SVNRepositoryURLEntity urlEntity : urlEntityList)
-							result.add(urlEntity.getName());
-						wrapper.setOperationResult(result);
-					}
-				});
-		return (ArrayList<String>) wrapper.getOperationResult();
-	}
 
+
+
+	
 	public void refresh(ServiceInvocationContext context,
 			List<PathFragment> parentPath) {
 		Object node = GenericTreeStatefulService.getNodeByPathFor(parentPath,
@@ -905,6 +882,28 @@ public class SvnService {
 		} else
 			return ((Pair<File, String>) workingDirectory).a.getAbsolutePath();
 	}
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getRepositoriesForOrganization(
+			final String organizationName) {
+		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(
+				new DatabaseOperation() {
+					@Override
+					public void run() {
+						ArrayList<String> result = new ArrayList<String>();
+						String myQuerry = String
+								.format("SELECT e from %s e where e.organization.name ='%s'",
+										SVNRepositoryURLEntity.class
+												.getSimpleName(),
+										organizationName);
+						Query q = wrapper.getSession().createQuery(myQuerry);
+						List<SVNRepositoryURLEntity> urlEntityList = q.list();
+						for (SVNRepositoryURLEntity urlEntity : urlEntityList)
+							result.add(urlEntity.getName());
+						wrapper.setOperationResult(result);
+					}
+				});
+		return (ArrayList<String>) wrapper.getOperationResult();
+	}
 
 	public Boolean createFolderAndMarkAsWorkingDirectory(
 			ServiceInvocationContext context, String path, TreeNode organization) {
@@ -1021,8 +1020,7 @@ public class SvnService {
 		return ISVNCoreConstants.DEPTH_UNKNOWN;
 	}
 
-<<<<<<< HEAD
-=======
+
 	/**
 	 * 
 	 * @author Cristina Necula
@@ -1296,5 +1294,8 @@ public class SvnService {
 		return SvnPlugin.getInstance().getUtils().isAuthenticationClientException(exception);
 	}
 
->>>>>>> origin/GH78-Login
+
+
+	
+
 }

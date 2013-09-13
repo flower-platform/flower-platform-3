@@ -76,6 +76,7 @@ public class SVNRepositoryPromptUserPassword implements ISVNPromptUserPassword{
 		CommunicationChannel cc = (CommunicationChannel)CommunicationPlugin.tlCurrentChannel.get();
 		ServiceInvocationContext context = new ServiceInvocationContext(cc);
 		InvokeServiceMethodServerCommand command = SvnService.tlCommand.get();
+		command.getParameters().remove(0);
 		
 		FlowerWebPrincipal principal = (FlowerWebPrincipal) cc.getPrincipal();
 		if (principal == null) {

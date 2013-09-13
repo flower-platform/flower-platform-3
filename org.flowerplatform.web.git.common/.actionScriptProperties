@@ -11,9 +11,9 @@
       </libraryPathEntry>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.common/public-resources/swc/org.flowerplatform.common.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.communication/public-resources/swc/org.flowerplatform.communication.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.web.common/bin/org.flowerplatform.web.common.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.flexutil/bin/org.flowerplatform.flexutil.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.flexutil/lib/MobileComponents45.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.web.common/bin/org.flowerplatform.web.common.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

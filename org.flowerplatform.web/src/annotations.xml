@@ -51,6 +51,14 @@
 					<cascade>REMOVE</cascade>
 				</one-to-many>
 			</property>
+			<property name="svnComments">
+				<one-to-many>
+					<cascade>MERGE</cascade>
+					<cascade>PERSIST</cascade>
+					<cascade>REFRESH</cascade>
+					<cascade>REMOVE</cascade>
+				</one-to-many>
+			</property>
 			<property name="organizationUsers">
 				<one-to-many>
 					<cascade>MERGE</cascade>

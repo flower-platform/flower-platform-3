@@ -26,6 +26,7 @@ license-end
 			  xmlns:s="library://ns.adobe.com/flex/spark"
 			  xmlns:mx="library://ns.adobe.com/flex/mx"
 			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
+			  xmlns:ui="org.flowerplatform.web.svn.common.ui.*"
 			  xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
 			  implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler">
 
@@ -190,7 +191,7 @@ license-end
 				  CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService",
 						"branchTagResources",
-						[actionType, branchResources, locationTxt.text, commitMessage.text, revision, createMissingFolders.selected, preserveFolderStructure.selected],
+						[actionType, branchResources, locationTxt.text, commComponent.commitMessage.text, revision, createMissingFolders.selected, preserveFolderStructure.selected],
 						this, getProjectsCallbackHandler ));  
 			} 
 			
@@ -290,17 +291,12 @@ license-end
 			<mx:SetProperty name="wizardTitle" value="Commit"/>				
 			<mx:SetProperty name="wizardDescription" value="Enter commit message"/>				
 			<mx:AddChild relativeTo="{contentArea}">									
-				<s:VGroup width="100%" height="100%">
-					<s:HGroup width="100%" verticalAlign="middle">
-						<!--<s:Label width="100%" text="Enter commit message"/>			-->				
-					</s:HGroup>					
-					<s:TextArea id="commitMessage" width="100%" height="100%" heightInLines="3"/>					
-					<s:HGroup width="100%" verticalAlign="middle">
-					</s:HGroup>	
-					<s:CheckBox id="switchBranch" visible="{actionType}"
-								label="Switch working copy to new branch/tag">
-					</s:CheckBox>
-				</s:VGroup>		 			
+				<ui:CommentComponent id = "commComponent" 
+									 width="100%"
+									 height="100%" />
+				<!--<s:CheckBox id="switchBranch" visible="{actionType}"
+							label="Switch working copy to new branch/tag">
+				</s:CheckBox>-->
 			</mx:AddChild>
 		</mx:State>	
 	</popup:states>

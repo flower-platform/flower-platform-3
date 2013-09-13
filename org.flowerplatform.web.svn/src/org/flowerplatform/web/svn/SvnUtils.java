@@ -2,13 +2,13 @@ package org.flowerplatform.web.svn;
 
 import java.io.File;
 
-<<<<<<< HEAD
+
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
-=======
+
 import org.apache.subversion.javahl.ClientException;
 import org.tigris.subversion.subclipse.core.SVNException;
->>>>>>> origin/GH78-Login
+
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
 
