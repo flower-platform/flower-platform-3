@@ -81,7 +81,7 @@ license-end
 			public function finishClickHandler2(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result) {
-					var wdNode:TreeNode = getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0)));
+					var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));
 					var childrenArray:ArrayCollection = wdNode.children;
 					for (var i:int=0; i<childrenArray.length; i++) {
 						if (TreeNode(childrenArray.getItemAt(i)).label == workingDirectoryTextInput.text) {
@@ -163,7 +163,7 @@ license-end
 			
 			public function getWorkingDirectoriesForNode(treeNode:TreeNode):ArrayList {
 				var result:ArrayList = new ArrayList;
-				treeNode = getWorkingDirectoryTreeNode(treeNode);
+				treeNode = getWorkingDirectoriesTreeNode(treeNode);
 				for (var i:int=0; i<treeNode.children.length;i++) {	
 					var value:String = treeNode.children.getItemAt(i).label;
 					result.addItem(value);
@@ -171,7 +171,7 @@ license-end
 				return result;				
 			}			
 			
-			public function getWorkingDirectoryTreeNode(treeNode:TreeNode):TreeNode {				
+			public function getWorkingDirectoriesTreeNode(treeNode:TreeNode):TreeNode {				
 				treeNode = getSvnRepositoriesTreeNode(treeNode);
 				var children:ArrayCollection = treeNode.parent.children;
 				var i:int = 0;

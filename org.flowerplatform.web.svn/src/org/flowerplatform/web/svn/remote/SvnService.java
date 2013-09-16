@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -161,9 +160,34 @@ public class SvnService {
 		return false;
 	}
 	
-	public String getCommitUrlPathForSingleSelection(ArrayList<PathFragment> path) {
+	public String getRepositoryNameAndWorkingDirectory(ArrayList<PathFragment> pathFragments) {
+		// if selected item is svn repository tree node, the "working directory" will be the path from node.		
+		String result;		
+		Object workingDirectory  = GenericTreeStatefulService.getNodeByPathFor(pathFragments, null);
+		if (workingDirectory instanceof WorkingDirectory) {
+			String pathFromOrganization = ((WorkingDirectory) workingDirectory).getPathFromOrganization();
+			String partialResult = "" + ProjectsService.getInstance().getOrganizationDir(
+					((WorkingDirectory) workingDirectory).getOrganization().getLabel()) + "\\"+ pathFromOrganization;
+			result = pathFromOrganization + " in " + getSvnUrlForPath(partialResult, true);
+		} else if (workingDirectory instanceof RemoteFolder) {
+			result = ((RemoteFolder) workingDirectory).getProjectRelativePath() + " in " +  
+					((RemoteFolder) workingDirectory).getRepository().getUrl().toString();
+		} else if (workingDirectory instanceof SVNRepositoryLocation) {
+			result = "in " + ((SVNRepositoryLocation) workingDirectory).getUrl().toString();
+		} else {
+			// "?" will be replaced on the server. I have chosen to use "?" as identifier since no windows folder/file path may contain the character
+			result = "?" + ((Pair<File, String>) workingDirectory).a.getAbsolutePath() + " in " + getUrlPathForSingleSelection(pathFragments, true);			
+		}		
+		
+		return result;
+	}
+	
+	public String getUrlPathForSingleSelection(ArrayList<PathFragment> path, Boolean wantUrlForRepository) {
 		String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
-		return getSvnUrlForPath(workingDirectoryPath);		
+		if (wantUrlForRepository) {
+			return getSvnUrlForPath(workingDirectoryPath, true);
+		}
+		return getSvnUrlForPath(workingDirectoryPath, false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -336,6 +360,12 @@ public class SvnService {
 		return false;
 	}
 	
+	public ArrayList<String> getRestOfInformation (ArrayList<PathFragment> fullPath, String argumentToBePreserved) {
+		ArrayList<String> result  = new ArrayList<String>();
+		result.add(getDirectoryFullPathFromPathFragments(fullPath));
+		result.add(argumentToBePreserved);		
+		return result;		
+	}
 	
 	
 	@SuppressWarnings("unchecked")
@@ -343,8 +373,14 @@ public class SvnService {
 		Object workingDirectory  = GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
 		if (workingDirectory instanceof WorkingDirectory) {
 			return "" + ProjectsService.getInstance().getOrganizationDir(((WorkingDirectory) workingDirectory).getOrganization().getLabel()) + "\\"+ ((WorkingDirectory) workingDirectory).getPathFromOrganization();
+		} else if (workingDirectory instanceof RemoteFolder) {
+			return ((RemoteFolder) workingDirectory).getUrl().toString();
+		} else if (workingDirectory instanceof SVNRepositoryLocation) {
+			return ((SVNRepositoryLocation) workingDirectory).getUrl().toString();
+		} 
+		else {
+			return ((Pair<File, String>) workingDirectory).a.getAbsolutePath();			
 		}
-		else return ((Pair<File, String>) workingDirectory).a.getAbsolutePath();			
 	}
 	
 	public Boolean createFolderAndMarkAsWorkingDirectory (ServiceInvocationContext context, String path, TreeNode organization) {
@@ -362,12 +398,15 @@ public class SvnService {
 			}				
 	}
 	
-	public String getSvnUrlForPath(String filePath) {
+	public String getSvnUrlForPath(String filePath, Boolean wantUrlForRepository) {
 		ISVNClientAdapter myClientAdapter;
 		try {
 			myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
 			ISVNInfo info = myClientAdapter.getInfo(new File(filePath));
-			return info.getUrl().toString();
+			if(wantUrlForRepository) {
+				return info.getRepository().toString();
+			}
+			return info.getUrlString();
 		} catch (SVNException | SVNClientException e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);	
 			return null;

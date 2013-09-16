@@ -90,7 +90,7 @@ license-end
 					var fullpath:ArrayCollection = TreeNode(selection.getItemAt(0)).getPathForNode(true);
 					var svnUrl:String = null;
 					CommunicationPlugin.getInstance().bridge.sendObject(
-						new InvokeServiceMethodServerCommand("svnService", "getCommitUrlPathForSingleSelection", [fullpath], this, commitPathCallback));
+						new InvokeServiceMethodServerCommand("svnService", "getUrlPathForSingleSelection", [fullpath, false], this, commitPathCallback));
 					result.concat(' ', svnUrl);					
 				}				
 			}		

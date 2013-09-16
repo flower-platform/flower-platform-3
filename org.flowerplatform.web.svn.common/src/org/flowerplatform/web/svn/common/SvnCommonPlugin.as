@@ -21,6 +21,7 @@ package org.flowerplatform.web.svn.common {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
 	import org.flowerplatform.web.svn.common.action.CommitAction;
@@ -33,7 +34,7 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.MarkResolvedAction;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
-	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;	
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -79,7 +80,7 @@ package org.flowerplatform.web.svn.common {
 		protected override function registerClassAliases():void {	
 			super.registerClassAliases();
 			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
-			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);			
 		}
 		
 		/**
@@ -98,6 +99,13 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public static function getInstance():SvnCommonPlugin {
 			return INSTANCE;
+		}
+		
+		public static function getWorkingDirectoryTreeNode(treeNode:TreeNode):TreeNode {
+			var treeNode2:TreeNode = treeNode;
+			while (treeNode2.pathFragment.type != "workingDirectory")
+				treeNode2 = treeNode2.parent;
+			return treeNode2;
 		}
 	}
 }

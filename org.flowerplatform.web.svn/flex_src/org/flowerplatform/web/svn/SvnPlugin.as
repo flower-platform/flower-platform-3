@@ -17,12 +17,21 @@
 * license-end
 */
 package  org.flowerplatform.web.svn {
+	
+	import flash.net.registerClassAlias;
+	
+	import mx.collections.IList;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.svn.actions.ShowHistoryAction;
+	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+	import org.flowerplatform.web.svn.history.HistoryEntry;
+	import org.flowerplatform.web.svn.history.SvnHistoryViewProvider;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -35,8 +44,7 @@ package  org.flowerplatform.web.svn {
 		 */
 		protected static var INSTANCE:SvnPlugin;
 		
-		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();
-		
+		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();		
 
 		public static const TREE_NODE_KEY_IS_FOLDER:String = "isFolder";
 				
@@ -50,6 +58,9 @@ package  org.flowerplatform.web.svn {
 				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
 			}
 			INSTANCE = this;	
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new SvnHistoryViewProvider());
+			//WebPlugin.getInstance().perspectives.push(new GitPerspective());	
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(ShowHistoryAction);
 		}
 		
 		/**
@@ -57,6 +68,7 @@ package  org.flowerplatform.web.svn {
 		 */
 		protected override function registerClassAliases():void {				
 			super.registerClassAliases();
+			registerClassAlias("org.flowerplatform.web.svn.remote.history.HistoryEntry", HistoryEntry);
 		}
 		
 		/**
@@ -73,6 +85,29 @@ package  org.flowerplatform.web.svn {
 		 */
 		public static function getInstance():SvnPlugin {			
 			return INSTANCE;
-		}
+		}	
+		
+		public function showHistoryIsPossible(selection:IList):Boolean {
+			if (selection.length != 1)
+				return false;			
+			if (!(selection.getItemAt(0) is TreeNode)) {
+				return false;
+			}
+			var isSvnProjectFile:Boolean = true;
+			var isSvnRepositoryFile:Boolean = true;			
+			var element:TreeNode = TreeNode(selection.getItemAt(0));			
+			if (element.customData == null ||
+				element.customData.svnFileType == null ||
+				element.customData.svnFileType == false) {
+				isSvnProjectFile = false;
+			}						
+			var node_type:String = element.pathFragment.type;			
+			if(node_type != SvnCommonPlugin.NODE_TYPE_REPOSITORY && 
+				node_type != SvnCommonPlugin.NODE_TYPE_FILE) {
+				isSvnRepositoryFile = false;
+			}			
+			return isSvnProjectFile || isSvnRepositoryFile;
+			
+		} 
 	}
 }

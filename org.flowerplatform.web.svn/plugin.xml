@@ -66,6 +66,13 @@
       </service>
    </extension>
    <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="svnHistoryService"
+            serviceClass="org.flowerplatform.web.svn.remote.SvnHistoryService">
+      </service>
+   </extension>
+   <extension
          point="org.flowerplatform.web.explorerAdditionalNodePopulator">
       <explorerAdditionalNodePopulator
             populator="org.flowerplatform.web.svn.explorer.SvnFile_NodePopulator">

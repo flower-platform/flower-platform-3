@@ -43,7 +43,7 @@ license-end
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.svn.common.remote.dto.FileDto;
-			import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;				
+			import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;			
 			
 			[Bindable]
 			public var resolveSelection:String;
@@ -92,9 +92,7 @@ license-end
 					return;
 				}
 				
-				
-				
-				var fullpath:ArrayCollection = getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0))).getPathForNode(true);
+				var fullpath:ArrayCollection = SvnCommonPlugin.getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0))).getPathForNode(true);
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "getDirectoryFullPathFromPathFragments", [fullpath], 
 														 this, setSelectionPathCallback));
@@ -106,12 +104,7 @@ license-end
 				resolveSelection = "File: " + s.substring(start+1, s.length);
 			}
 			
-			public function getWorkingDirectoryTreeNode(treeNode:TreeNode):TreeNode {
-				var treeNode2:TreeNode = treeNode;
-				while (treeNode2.pathFragment.type != "workingDirectory")
-					treeNode2 = treeNode2.parent;
-				return treeNode2;
-			}
+			
 			
 			
 		]]>
