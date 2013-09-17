@@ -20,20 +20,11 @@ package org.flowerplatform.web.projects.remote;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -324,6 +315,35 @@ public class FileManagerService {
 					"explorer.rename.error.title",
 					"explorer.rename.error.newFileAlreadyExists");
 		}		
+	}
+	
+	public void refreshDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
+		
+		GenericTreeStatefulService service = GenericTreeStatefulService
+				.getServiceFromPathWithRoot(pathWithRoot);
+		
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath();		
+		File folder = new File(path);
+		Object node;
+		
+		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(folder);
+		if (resource != null) {
+			if(resource.getType() == IResource.FOLDER ) {
+				node = new Pair<File, String>(folder, "projFile");
+				service.dispatchContentUpdate(node);	
+			} else {
+				node = new Pair<File, String>(folder, "project");
+				service.dispatchContentUpdate(node);
+			}
+		} else {
+			node = new Pair<File, String>(folder, "fsFile");
+			service.dispatchContentUpdate(node);
+		}
+		
 	}
 
 }

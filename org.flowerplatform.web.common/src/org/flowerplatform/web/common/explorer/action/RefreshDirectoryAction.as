@@ -20,22 +20,19 @@ package org.flowerplatform.web.common.explorer.action {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-	import org.flowerplatform.web.common.explorer.ui.TextInputView;
 
 	/**
 	 * @author Tache Razvan
 	 **/
-	public class RenameAction extends ActionBase implements IDialogResultHandler {
+	public class RefreshDirectoryAction extends ActionBase {
 		
 		public var selectedTreeNode:TreeNode;
 		
-		public function RenameAction() {
-			label = WebCommonPlugin.getInstance().getMessage("explorer.rename.action");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/edit.png");
+		public function RefreshDirectoryAction() {
+			label = WebCommonPlugin.getInstance().getMessage("explorer.refresh.action");
+			icon = WebCommonPlugin.getInstance().getResourceUrl("images/refresh.gif");
 		}
 		
 		override public function get visible():Boolean {
@@ -43,25 +40,14 @@ package org.flowerplatform.web.common.explorer.action {
 				return false;
 			}
 			var obj:Object = selection.getItemAt(0);		
-			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY] != null) && (TreeNode(obj).pathFragment.type != "project");
+			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY]);
 		}
 		
 		override public function run():void	{
 			selectedTreeNode = TreeNode(selection.getItemAt(0));
-			var view:TextInputView = new TextInputView();
-			view.node=TreeNode(selection.getItemAt(0));
-			view.label = WebCommonPlugin.getInstance().getMessage("explorer.rename.input.label");
-			view.title = WebCommonPlugin.getInstance().getMessage("explorer.rename.input.title");
-			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/icon_flower.gif");
-			view.setResultHandler(this);
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(view)
-				.show();
-		}
-		
-		public function handleDialogResult(result:Object):void {
+			
 			CommunicationPlugin.getInstance().bridge.sendObject(
-				new InvokeServiceMethodServerCommand("fileManagerService", "rename", [selectedTreeNode.getPathForNode(true),result]));
+				new InvokeServiceMethodServerCommand("fileManagerService", "refreshDirectory", [selectedTreeNode.getPathForNode(true)]));
 		}
 	}
 }
