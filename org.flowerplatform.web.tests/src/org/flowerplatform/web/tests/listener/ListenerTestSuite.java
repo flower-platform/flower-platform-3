@@ -13,7 +13,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	DeleteListenerTest.class,
-	RenameListenerTest.class})
+	RenameListenerTest.class,
+	FileChangeListenerTest.class})
 
 public class ListenerTestSuite extends EclipseDependentTestSuiteBase {
 

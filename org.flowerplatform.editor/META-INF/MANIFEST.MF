@@ -7,7 +7,8 @@ Bundle-Activator: org.flowerplatform.editor.EditorPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.common,
  org.flowerplatform.communication,
- org.flowerplatform.blazeds
+ org.flowerplatform.blazeds,
+ org.flowerplatform.file_event
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.flowerplatform.editor,

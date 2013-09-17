@@ -22,6 +22,8 @@ public class SetUpTestEnviroment {
 	
 	static final String FOLDER_TO_BE_COPIED_FOR_RENAME = "ListenerOrg2";
 	
+	static final String FOLDER_TO_BE_COPIED_FOR_FILE_CHANGED = "FileChangedListenerOrg";
+	
 	private static final String WORKING_DIRECTORY_PREFIX = "WorkingDirectory";
 	
 	private static final String PROJECT_PREFIX = "Project";
@@ -56,7 +58,7 @@ public class SetUpTestEnviroment {
 	}
 	
 	public static void populateWorkspace (ServiceInvocationContext context,final int event) {
-		//getPathRelativeToWorkspaceRoot
+		// getPathRelativeToWorkspaceRoot
 		File workspaceRoot = CommonPlugin.getInstance().getWorkspaceRoot();
 		String pathOfWorkspaceRoot = workspaceRoot.getPath();
 		File sourceDir = null;
@@ -98,5 +100,32 @@ public class SetUpTestEnviroment {
 		});
 		
 		markSpecialFolders(context, destDir);		
-	}	
+	}
+	
+	public static void populateWorkspaceForFileChanged(ServiceInvocationContext context) {
+		File workspaceRoot = CommonPlugin.getInstance().getWorkspaceRoot();
+		String pathOfWorkspaceRoot = workspaceRoot.getPath();
+		File sourceDir = new File(
+				TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" 
+				+ RESOURCE_FOLDER_NAME + "/" 
+				+ TestUtil.INITIAL_TO_BE_COPIED + "/" 
+				+ FOLDER_TO_BE_COPIED_FOR_FILE_CHANGED);
+		File destDir = new File(pathOfWorkspaceRoot + "/" + FOLDER_TO_BE_COPIED_FOR_FILE_CHANGED);
+	
+		try {
+			FileUtils.copyDirectory(sourceDir, destDir);
+			System.out.println("Coppied " + sourceDir.getPath() + " in " + destDir.getPath());
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+				
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			
+			@Override
+			public void run() {
+				new GeneralService().createOrganization(FOLDER_TO_BE_COPIED_FOR_FILE_CHANGED, wrapper);
+			}
+		});
+	}
 }

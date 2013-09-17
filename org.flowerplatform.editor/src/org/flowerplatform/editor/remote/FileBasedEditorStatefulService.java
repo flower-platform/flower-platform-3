@@ -24,6 +24,8 @@ import java.io.FileNotFoundException;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.file_event.FileEvent;
+import org.flowerplatform.file_event.IFileEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * 
  * 
  */
-public abstract class FileBasedEditorStatefulService extends EditorStatefulService
+public abstract class FileBasedEditorStatefulService extends EditorStatefulService implements IFileEventListener
 //	implements IResourceChangeListener 
 	{
 	
@@ -45,10 +47,10 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	private static final Logger logger = LoggerFactory.getLogger(FileBasedEditorStatefulService.class);
 	
 	/**
-	 * 
+	 * Registers the listener
 	 */
 	public FileBasedEditorStatefulService() {
-//		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
+		CommonPlugin.getInstance().getFileEventDispatcher().addFileEventListener(this);
 	}
 
 	@Override
@@ -61,6 +63,35 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 		}
 	}
 
+	@Override
+	public void notify(FileEvent event) {
+		File file = (event.getEvent() == FileEvent.FILE_RENAMED) ? event.getOldFile() : event.getFile();
+		EditableResource editableResource = getEditableResource("/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file));
+		if(editableResource != null) {
+			if(event.getEvent() == FileEvent.FILE_MODIFIED) {	
+				// TODO handle modify event
+				processResourceChanged(editableResource);
+			} else if(event.getEvent() ==  FileEvent.FILE_DELETED) {
+				processResourceRemoved(editableResource);
+			} else if(event.getEvent() == FileEvent.FILE_RENAMED) {
+				// for now just remove the file from editor
+				processResourceRemoved(editableResource);
+			}
+		}
+	}
+	
+	private void processResourceChanged(EditableResource editableResource) {
+		//logger.debug("Process resource changed = {} with modification stamp = {}", resource, resource.getModificationStamp());
+		reloadEditableResource(editableResource, true);
+		// TODO check if refresh handles this
+		//SingletonRefsInEditorPluginFromWebPlugin.INSTANCE_PROJECT_EXPLORER_TREE_STATEFUL_SERVICE.dispatchContentUpdate(resource);
+	}
+	
+	private void processResourceRemoved(EditableResource editableResource) {
+		//logger.debug("Process resource removed = {} with modification stamp = {}", resource, resource.getModificationStamp());
+		unsubscribeAllClientsForcefully(editableResource.getEditableResourcePath(), true);
+	}
+	
 //	/**
 //	 * 
 //	 */
