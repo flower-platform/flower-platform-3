@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:codesync="http://www.flower-platform.com/xmi/codesync_1.0.0" xmlns:notation="http://www.flower-platform.com/xmi/notation_1.0.0">
+  <notation:Diagram xmi:id="_Kn0YEBn1EeOhZIwGt-yCqA">
+    <persistentChildren xsi:type="notation:MindMapNode" xmi:id="_Kn0YERn1EeOhZIwGt-yCqA" viewType="default" diagrammableElement="_Kn0YEhn1EeOhZIwGt-yCqA">
+      <persistentChildren xsi:type="notation:MindMapNode" xmi:id="_LxU90Rn1EeOhZIwGt-yCqA" viewType="default" diagrammableElement="_LxU90Bn1EeOhZIwGt-yCqA">
+        <persistentChildren xsi:type="notation:MindMapNode" xmi:id="_N6C90Bn1EeOhZIwGt-yCqA" viewType="default" diagrammableElement="_NZa9ABn1EeOhZIwGt-yCqA"/>
+      </persistentChildren>
+      <persistentChildren xsi:type="notation:MindMapNode" xmi:id="_rXBwsRorEeOhZIwGt-yCqA" viewType="default" diagrammableElement="_rXBwsBorEeOhZIwGt-yCqA"/>
+    </persistentChildren>
+  </notation:Diagram>
+  <codesync:MindMapRoot xmi:id="_Kn0YEhn1EeOhZIwGt-yCqA" name="Root" type="default" expanded="true">
+    <children xsi:type="codesync:MindMapElement" xmi:id="_LxU90Bn1EeOhZIwGt-yCqA" name="Child 1" type="default" expanded="true">
+      <children xsi:type="codesync:MindMapElement" xmi:id="_NZa9ABn1EeOhZIwGt-yCqA" name="Child 1.1" type="default"/>
+    </children>
+    <children xsi:type="codesync:MindMapElement" xmi:id="_rXBwsBorEeOhZIwGt-yCqA" name="Child 2" type="default">
+      <children xsi:type="codesync:MindMapElement" xmi:id="_s-D_8BorEeOhZIwGt-yCqA" name="Child 2.1" type="default"/>
+    </children>
+  </codesync:MindMapRoot>
+</xmi:XMI>
