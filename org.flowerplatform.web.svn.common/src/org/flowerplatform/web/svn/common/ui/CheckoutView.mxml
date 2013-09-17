@@ -73,22 +73,15 @@ license-end
 			protected override function finishClickHandler():void {				
 				var organizationName:String = getSvnRepositoriesTreeNode(TreeNode(selection.getItemAt(0))).parent.label;				
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "workingDirectoryExists", [workingDirectoryTextInput.text, organizationName], 
+					new InvokeServiceMethodServerCommand("svnService", "workingDirectoryExists", [locationTextInput.text, organizationName], 
 						this, finishClickHandler2 ));		
 				_popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));
-			}			
+			}
 				
 			public function finishClickHandler2(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result) {
-					var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));
-					var childrenArray:ArrayCollection = wdNode.children;
-					for (var i:int=0; i<childrenArray.length; i++) {
-						if (TreeNode(childrenArray.getItemAt(i)).label == workingDirectoryTextInput.text) {
-							wdNode = TreeNode(childrenArray.getItemAt(i));
-							break;
-						}
-					}					
+					var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));					
 					var selectionPaths:ArrayList = new ArrayList;
 					for(var i:int=0; i<selection.length; i++) {
 						var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));
@@ -100,7 +93,7 @@ license-end
 						headRev = true;
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnService", "checkout", 
-							[selectionPaths, wdNode.getPathForNode(true), "/" + workingDirectoryTextInput.text, 
+							[selectionPaths, wdNode.getPathForNode(true), "/" + locationTextInput.text, 
 							revisionValue, depthDropdown.selectedIndex, headRev, forceCheck.selected, ignoreCheck.selected], 
 							this, finishCallbackHandler ));
 					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));		
@@ -117,7 +110,7 @@ license-end
 			}	
 			
 			public function createWorkingDirectory(event:MouseEvent):void {
-				var path:String = workingDirectoryTextInput.text
+				var path:String = locationTextInput.text
 				var organizationTreeNode:TreeNode = getSvnRepositoriesTreeNode(TreeNode(selection.getItemAt(0))).parent;
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createFolderAndMarkAsWorkingDirectory", [path, organizationTreeNode], this, createWorkingDirectoryCallbackHandler ));
@@ -134,7 +127,7 @@ license-end
 			}
 			
 			public function handleDialogResult(result:Object):void {
-				workingDirectoryTextInput.text = String(result);
+				locationTextInput.text = String(result);
 			}
 			
 			public function init():void {
@@ -189,18 +182,25 @@ license-end
 				return treeNode;
 			}
 			
+			public function cancelAllHandler() {
+				Alert.show("Not implemented yet");
+			}
+			
 		]]>		
 	</fx:Script>
 	
 	<popup:states>
 		<mx:State name="0">			
 			<mx:SetProperty name="wizardTitle" 
-							value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.wizardName')}"/>										
+							value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.wizardName')}"/>
+			<mx:AddChild relativeTo="{buttonBar}">
+				<s:Button id="cancelAll" label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.cancelAll')}" width="80" click="cancelAllHandler"/>
+			</mx:AddChild>
 			<mx:AddChild relativeTo="{contentArea}">						
 				<s:VGroup width="100%">					
 					<s:HGroup width="100%">
-						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.workingDirectoryIndicator')}"/>
-						<s:TextInput width="100%" id="workingDirectoryTextInput"/>
+						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.locationIndicator')}"/>
+						<s:TextInput width="100%" id="locationTextInput"/>
 						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.browseWorkspaceButton')}" click="{openWorkingDirectoryBrowseWindow()}"/>
 					</s:HGroup>
 					<s:Rect width="1" height="10"/>
