@@ -83,13 +83,13 @@ license-end
 				_popupHost.hideSpinner();
 				if (result) {
 					var wdNode:TreeNode = getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0)));
-					var childrenArray:ArrayCollection = wdNode.children;
+					/* var childrenArray:ArrayCollection = wdNode.children;
 					for (var i:int=0; i<childrenArray.length; i++) {
 						if (TreeNode(childrenArray.getItemAt(i)).label == workingDirectoryTextInput.text) {
 							wdNode = TreeNode(childrenArray.getItemAt(i));
 							break;
 						}
-					}					
+					}				 */	
 					var selectionPaths:ArrayList = new ArrayList;
 					for(var i:int=0; i<selection.length; i++) {
 						var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));

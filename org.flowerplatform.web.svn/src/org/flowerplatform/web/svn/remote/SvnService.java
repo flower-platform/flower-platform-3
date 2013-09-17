@@ -7,11 +7,18 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.internal.resources.Project;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.team.core.RepositoryProvider;
+import org.eclipse.team.core.TeamException;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
@@ -23,6 +30,7 @@ import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
+import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
@@ -49,11 +57,13 @@ import org.tigris.subversion.subclipse.core.ISVNCoreConstants;
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
+import org.tigris.subversion.subclipse.core.ISVNRunnable;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
+import org.tigris.subversion.subclipse.core.resources.SVNWorkspaceRoot;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
@@ -666,6 +676,168 @@ public class SvnService {
 			}
 		}
 
+		return true;
+	}
+	
+	public boolean canExecute(List<List<PathFragment>> selection) {
+		for (int i = 0; i < selection.size(); i++) {
+			IResource res = ProjectsService.getInstance().getProjectWrapperResourceFromFile(selection.get(i));
+			IProject project = res.getProject();
+			if (!project.isAccessible()) {
+				return false;
+			}
+			if (RepositoryProvider.isShared(project)) {
+				return false;	
+			}
+		}
+		return selection.size() > 0;
+	}
+	
+	/**
+	 * @author Gabriela Murgoci
+	 */
+	public ArrayList<Object> populateRepositoriesInfo (ServiceInvocationContext context,
+			List<List<PathFragment>> selection) {
+		
+		if (!canExecute(selection)) {
+			return null;
+		}
+		
+		ArrayList<Object> repositoriesInfo = new ArrayList<Object>();
+		ArrayList<String> repositoriesUrls = getRepositoriesForOrganization(selection.get(0).get(1).getName());
+		
+		for (String repositoryUrl : repositoriesUrls) {
+			ISVNRepositoryLocation repository;
+			try {
+				repository = SVNProviderPlugin.getPlugin().getRepository(repositoryUrl);
+			} catch (SVNException e) {
+				continue;
+			}
+			BranchResource item = new BranchResource();
+			item.setPath(repository.getUrl().toString());
+			item.setName(repositoryUrl);
+			item.setImage("images/share.png");
+			repositoriesInfo.add(item);							
+		}
+		return repositoriesInfo;
+	}
+	
+	/**
+	 * @author Gabriela Murgoci
+	 */
+	public boolean shareProject(ServiceInvocationContext context,
+			List<PathFragment> projectPath, String repositoryUrl, String directoryName,
+			boolean create, String comment) {
+		SVNUrl url;
+
+		try {
+			ISVNRepositoryLocation repository;
+			if (create) {
+				Properties properties = new Properties();
+				properties.setProperty("url", repositoryUrl);
+
+				repository = SVNProviderPlugin.getPlugin().getRepositories()
+						.createRepository(properties);
+			} else {
+				repository = SVNProviderPlugin.getPlugin().getRepositories()
+						.getRepository(repositoryUrl);
+			}
+			if (!SVNProviderPlugin.getPlugin().getRepositories()
+					.isKnownRepository(repository.getLocation(), false)) {
+				SVNProviderPlugin.getPlugin().getRepositories()
+						.addOrUpdateRepository(repository);
+			}
+
+			IResource res = ProjectsService.getInstance().getProjectWrapperResourceFromFile(projectPath);
+			IProject project = res.getProject();
+
+			// Purge any SVN folders that may exists in sub folders
+			SVNWorkspaceRoot.getSVNFolderFor(project).unmanage(null);
+
+			boolean alreadyExists = SVNProviderPlugin.getPlugin()
+					.getRepositories()
+					.isKnownRepository(repository.getLocation(), false);
+ 
+			try {
+				final ISVNClientAdapter svnClient = repository.getSVNClient();
+
+				try {
+					// create the remote dir
+					if (directoryName != null)
+						url = repository.getUrl().appendPath(directoryName);
+					else
+						url = repository.getUrl();
+					boolean createDirectory = !repository.getRemoteFolder(
+							directoryName).exists(null);
+					if (createDirectory)
+						svnClient.mkdir(url, true, comment);
+					try {
+						// checkout it so that we have .svn
+						// If directory already existed in repository, do
+						// recursive checkout.
+						svnClient.checkout(url, project.getLocation().toFile(),
+								SVNRevision.HEAD, !createDirectory);
+					} finally {}
+				} catch (SVNClientException e) {
+					
+					logger.error("Exception thrown while creating module!", e);
+					
+					CommunicationChannel channel = (CommunicationChannel) context
+							.getCommunicationChannel();
+					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), e
+									.getMessage(),
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
+				}
+
+				// SharingWizard.doesSVNDirectoryExist calls
+				// getStatus on the folder which populates the
+				// status cache
+				// Need to clear the cache so we can get the new
+				// hasRemote value
+				SVNProviderPlugin.getPlugin().getStatusCacheManager()
+						.refreshStatus(project, true);
+				try {
+					// Register it with Team.
+					RepositoryProvider.map(project,
+							SVNProviderPlugin.getTypeId());
+				} catch (TeamException e) {
+					throw new SVNException(
+							"Cannot register project with svn provider", e);
+				}
+
+			} catch (SVNException e) {
+				// The checkout may have triggered password caching
+				// Therefore, if this is a newly created location, we want to
+				// clear
+				// its cache
+				if (!alreadyExists)
+					SVNProviderPlugin.getPlugin().getRepositories()
+							.disposeRepository(repository);
+				throw e;
+			}
+			// Add the repository if it didn't exist already
+			if (!alreadyExists)
+				SVNProviderPlugin.getPlugin().getRepositories()
+						.addOrUpdateRepository(repository);
+
+		} catch (Exception e) {
+			 if (isAuthentificationException(e) ||
+			 (e instanceof SVNException && ((SVNException) e).getStatus() !=
+			 null && ((SVNException) e).getStatus().getCode() ==
+			 TeamException.UNABLE)) {
+			 return true;
+			 }
+			logger.error("Exception thrown while sharing project!", e);
+			
+			CommunicationChannel channel = (CommunicationChannel) context
+					.getCommunicationChannel();
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+					CommonPlugin.getInstance().getMessage("error"), e
+							.getMessage(),
+					DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
+		}
 		return true;
 	}
 

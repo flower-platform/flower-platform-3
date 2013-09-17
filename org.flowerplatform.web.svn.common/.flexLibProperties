@@ -26,6 +26,8 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.SwitchAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.SwitchView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CleanupAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.ShareProjectAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.ShareProjectView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

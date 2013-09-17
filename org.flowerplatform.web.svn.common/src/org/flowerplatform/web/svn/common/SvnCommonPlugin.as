@@ -33,6 +33,7 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
+	import org.flowerplatform.web.svn.common.action.ShareProjectAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
@@ -77,6 +78,7 @@ package org.flowerplatform.web.svn.common {
 								   CopyToAction,
 								   SwitchAction,
 								   CleanupAction,
+								   ShareProjectAction,
 					               CreateSvnRepositoryAction, 
 								   DeleteAction,
 								   SvnChangeCredentialsAction,
@@ -84,10 +86,7 @@ package org.flowerplatform.web.svn.common {
 								   CheckoutAction,
 								   UpdateToHeadAction,
 								   UpdateToVersionAction);
-
-
-
-		}
+	}
 		
 		/**
 		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
