@@ -20,6 +20,8 @@
 package org.flowerplatform.web.svn.common.action {
 	
 	import mx.collections.ArrayCollection;
+	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
@@ -35,39 +37,58 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.web.svn.common.ui.MergeView;
 	
 	[RemoteClass]
-	public class MergeAction extends ActionBase implements IDialogResultHandler{
+	public class MergeAction extends SvnProjectFileAction implements IDialogResultHandler{
+		
+		public var resourcePath:String;
+		
+		public var resourceUrl:String;
+		
+		public var remoteResourceUrl:String;
+		
+		public var node:TreeNode;
+		
+		public var selectionPaths:ArrayList = new ArrayList;
 		
 		public function MergeAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.mergeAction.label");
-			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/merge.gif");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/merge.gif");	
+		}
+		
+		public function resultClallbackFunction(result:ArrayCollection):void{
+			
+			remoteResourceUrl = result.getItemAt(0) as String;
+			resourceUrl = result.getItemAt(1) as String;
+			resourcePath = resourceUrl;
+			
+			var view:MergeView = new MergeView();
+			view.setResultHandler(this);
+			
+			view.node = node;
+			view.resourcePath = resourcePath;
+			view.resourceUrl = resourceUrl;
+			view.remoteResourceUrl = remoteResourceUrl;
+			view.selection.addAll(selectionPaths);
+			
+			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler().
+				setPopupContent(view).
+				setWidth(600).
+				setHeight(600).
+				show();
 		}
 		
 		public function handleDialogResult(result:Object):void {
 			
 		}
 		
-		override public function get visible():Boolean {
-			if (selection.length >= 1 && selection.getItemAt(0) is TreeNode){
-				for(var i:int = 0; i < selection.length; i++){
-					var selectedNode:TreeNode = selection.getItemAt(i) as TreeNode;
-					if (!((selectedNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_REPOSITORY) ||
-						(selectedNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE)))
-						return false;
-				}
-				return true;
-			}
-			return true;
-			
-		}
-		
 		override public function run():void {
-			
-			var view:MergeView = new MergeView();
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler().
-				setPopupContent(view).
-				setWidth(600).
-				setHeight(600).
-				show();
+			for(var i:int=0; i<selection.length; i++) {
+				var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
+				selectionPaths.addItem(path);
+			}
+			node = selection.getItemAt(0) as TreeNode;
+			CommunicationPlugin.getInstance().bridge.sendObject(
+				new InvokeServiceMethodServerCommand("svnService", 
+					"getMergeSpecs", [selectionPaths, node.getPathForNode(true)] , this, resultClallbackFunction));
 		}
 	}
 }

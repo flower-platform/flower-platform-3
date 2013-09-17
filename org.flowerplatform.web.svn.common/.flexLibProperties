@@ -5,7 +5,6 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.DeleteAction"/>
-    <classEntry path="org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CommentComponent"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CommentView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView"/>
@@ -21,6 +20,9 @@
     <classEntry path="org.flowerplatform.web.svn.common.ui.RevertView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.RevertAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.SvnProjectFileAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.MergeAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.remote.OpenSvnMergeWindowClientCommand"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.MergeView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
