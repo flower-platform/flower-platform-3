@@ -2,7 +2,6 @@
 <flexLibProperties includeAllClasses="false" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.web.svn.common.SvnCommonPlugin"/>
-<<<<<<< HEAD
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.DeleteAction"/>
@@ -22,15 +21,12 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.RevertAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.SvnProjectFileAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.MergeAction"/>
-    <classEntry path="org.flowerplatform.web.svn.common.action.remote.OpenSvnMergeWindowClientCommand"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.MergeView"/>
-=======
     <classEntry path="org.flowerplatform.web.svn.common.action.CopyUrlToClipboardAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateSvnRepositoryView"/>
->>>>>>> origin/GH71-CopyURLtoClipboard
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

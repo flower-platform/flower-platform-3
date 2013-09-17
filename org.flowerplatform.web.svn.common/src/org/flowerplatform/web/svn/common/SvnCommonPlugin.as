@@ -26,7 +26,6 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.CommitAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
-<<<<<<< HEAD
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
 	import org.flowerplatform.web.svn.common.action.remote.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
@@ -40,10 +39,8 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
 	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	import org.flowerplatform.web.svn.common.action.MergeAction;
-=======
 	import org.flowerplatform.web.svn.common.action.CopyUrlToClipboardAction;
-	
->>>>>>> origin/GH71-CopyURLtoClipboard
+
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -70,9 +67,9 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public override function preStart():void {	
 			super.preStart();			
-<<<<<<< HEAD
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.
-				actionClasses.push(CreateRemoteFolderAction,
+				actionClasses.push(CreateRemoteFolderAction, 
+								   CopyUrlToClipboardAction,
 					               CreateSvnRepositoryAction, 
 								   DeleteAction,
 								   SvnChangeCredentialsAction,
@@ -82,11 +79,6 @@ package org.flowerplatform.web.svn.common {
 								   UpdateToVersionAction, 
 								   MergeAction);
 
-=======
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(CreateRemoteFolderAction, CreateSvnRepositoryAction,
-			CopyUrlToClipboardAction);
-						
->>>>>>> origin/GH71-CopyURLtoClipboard
 		}
 		
 		/**
