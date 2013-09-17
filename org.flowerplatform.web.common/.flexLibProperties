@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
+    <classEntry path="org.flowerplatform.web.common.WebCommonPlugin"/>
+    <classEntry path="org.flowerplatform.web.common.communication.AuthenticationManager"/>
     <classEntry path="org.flowerplatform.web.common.communication.AuthenticationView"/>
+    <classEntry path="org.flowerplatform.web.common.communication.AuthenticationViewProvider"/>
     <classEntry path="org.flowerplatform.web.common.communication.ConnectingView"/>
+    <classEntry path="org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient"/>
+    <classEntry path="org.flowerplatform.web.common.communication.heartbeat.WarnAboutNoActivityDialog"/>
+    <classEntry path="org.flowerplatform.web.common.entity.dto.Dto"/>
+    <classEntry path="org.flowerplatform.web.common.entity.dto.NamedDto"/>
     <classEntry path="org.flowerplatform.web.common.explorer.ExplorerTreeList"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.ExplorerViewProvider"/>
     <classEntry path="org.flowerplatform.web.common.projects.ProjectPropertiesAction"/>
     <classEntry path="org.flowerplatform.web.common.projects.properties.IPropertyPage"/>
     <classEntry path="org.flowerplatform.web.common.projects.properties.IPropertyPageProvider"/>
     <classEntry path="org.flowerplatform.web.common.projects.properties.PropertiesView"/>
+    <classEntry path="org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction"/>
     <classEntry path="org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction"/>
+    <classEntry path="org.flowerplatform.web.common.projects.remote.WorkingDirectoryTreeStatefulClient"/>
     <classEntry path="org.flowerplatform.web.common.remote.InitializeNodeTypeCategoryToNodeTypesMapClientCommand"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.GroupAdminUIDto"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.InitializeCurrentUserLoggedInClientCommand"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.OrganizationUserAdminUIDto"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.PermissionAdminUIDto"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.PermissionsByResourceFilter"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.UserAdminUIDto"/>
+    <classEntry path="org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto"/>
+    <classEntry path="org.flowerplatform.web.common.security.ui.UserFormViewProvider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
