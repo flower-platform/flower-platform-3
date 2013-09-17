@@ -28,7 +28,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
-	import org.flowerplatform.editor.model.action.MoveAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
@@ -63,7 +62,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
@@ -152,8 +150,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(MoveAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);			
 		}
 		
 		override public function start():void {

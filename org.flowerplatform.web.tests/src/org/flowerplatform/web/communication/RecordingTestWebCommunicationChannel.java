@@ -53,6 +53,8 @@ public class RecordingTestWebCommunicationChannel extends BlazedsCommunicationCh
 		if (command instanceof ServerSnapshotClientCommand) {
 			ServerSnapshotClientCommand cmd = (ServerSnapshotClientCommand) command;
 			recordedCommands.add(cmd.getWrappedCommand());
+		} else {
+			recordedCommands.add(command);
 		}
 	}
 
