@@ -25,7 +25,6 @@ license-end
 <popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
 			  xmlns:s="library://ns.adobe.com/flex/spark"
 			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
-			  xmlns:component="org.flowerplatform.web.git.common.ui.component.*"
 			  xmlns:mx="library://ns.adobe.com/flex/mx"			  
 			  minWidth="300" minHeight="200"
 			  creationComplete="init()">
@@ -55,28 +54,26 @@ license-end
 			
 			public override function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
-				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.updateToVersion.view.label"));				
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.updateToVersion.view.label"));
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/update.gif"));
 			}
 			
 			protected override function cancelClickHandler():void {
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);		
 			}
 			
-			protected override function finishClickHandler():void {
-				
+			protected override function finishClickHandler():void {				
 				var selectionPaths:ArrayList = new ArrayList;
 				for(var i:int=0; i<selection.length; i++) {
 					var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
 					selectionPaths.addItem(path);
-				}
-				
+				}				
 				var revision:String;
 				if (headRevisionCheckbox.selected) {
 					revision = "revision";
 				} else {
 					revision = revisionTextBox.text;
-				}
-				
+				}				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "updateToVersion", 
 						[selectionPaths, revision, depthDropdown.selectedIndex, changeWorkingCopyToSpecifiedDepth.selected, 
@@ -140,9 +137,9 @@ license-end
 						<s:DropDownList id="depthDropdown" width="100%" dataProvider="{depthDropdownDataProvider}">
 						</s:DropDownList>						
 					</s:HGroup>
-					<s:CheckBox label="Change working copy to specified depth" id="changeWorkingCopyToSpecifiedDepth"/>
-					<s:CheckBox label="Ignore externals" id="ignoreExternals"/>
-					<s:CheckBox label="Allow unversioned obstructions" id="allowUnversionedObstructions" selected="true"/>					
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.updateToVersion.changeWorkingCopySpecifiedDepth')}" id="changeWorkingCopyToSpecifiedDepth"/>
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.updateToVersion.ignoreExternals')}" id="ignoreExternals"/>
+					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.updateToVersion.allowUnversionedObstructions')}" id="allowUnversionedObstructions" selected="true"/>					
 					<s:Rect width="1" height="20"/>	
 					
 					<!-- following code was commented because it might be used it in the future-->

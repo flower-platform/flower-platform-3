@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+@author Victor Badila
+-->
+
+<popup:Wizard 
+	xmlns:fx="http://www.adobe.com/2006/mxml"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:popup="org.flowerplatform.flexutil.popup.*"
+	xmlns:mx="library://ns.adobe.com/flex/mx">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.messaging.channels.StreamingAMFChannel;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			import org.flowerplatform.web.svn.common.remote.dto.FileDto;
+			import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;			
+			
+			[Bindable]
+			public var resolveSelection:String;
+			
+			public var selection:IList;
+			
+			public var conflictingResources:ArrayCollection;
+				
+			public override function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.markResolved.view.label"));
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/resolve.gif"));
+			}
+			
+			protected override function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif")
+				setSelectionPath();			
+			}
+			
+			protected override function finishClickHandler():void {
+				var choice:int;
+				if (op1.selected) {
+					choice = 1;
+				} else if (op2.selected) {
+					choice = 2;
+				} else {
+					choice = 3;
+				}
+				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.ui.markResolved.spinner"));
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "resolve", [conflictingResources, choice], this, resolveOperationCallback));
+			}
+			
+			public function resolveOperationCallback(operationSuccessful:Boolean):void {
+				popupHost.hideSpinner();
+				if (operationSuccessful) {					
+					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+				}
+			}
+			
+			
+			public function setSelectionPath():void {
+				if (conflictingResources.length > 1) {
+					resolveSelection = SvnCommonPlugin.getInstance().getMessage("svn.ui.markResolved.multipleSelection");
+					return;
+				}
+				
+				var fullpath:ArrayCollection = SvnCommonPlugin.getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0))).getPathForNode(true);
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "getDirectoryFullPathFromPathFragments", [fullpath], 
+														 this, setSelectionPathCallback));
+			}
+			
+			public function setSelectionPathCallback(result:String):void {
+				var start:int = result.length;
+				var s:String = String(conflictingResources.getItemAt(0));
+				resolveSelection = "File: " + s.substring(start+1, s.length);
+			}
+			
+			
+			
+			
+		]]>
+	</fx:Script>	
+	
+	<popup:states>
+		<mx:State name="0">			
+			<mx:SetProperty target="{back}" name="visible" value="false"/>
+			<mx:SetProperty target="{next}" name="visible" value="false"/>
+			<mx:SetProperty target="{finish}" name="label" value="Ok"/>
+			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.markResolved.WizardTitle')}"/>			
+			<mx:AddChild relativeTo="{contentArea}">
+				<s:VGroup width="100%">
+					<s:Label text = "{resolveSelection}" maxWidth="500"/>
+					<s:Rect height="5"/>
+					<s:Label text = "{SvnCommonPlugin.getInstance().getMessage('svn.ui.markResolved.solveConflictsUsing')}" maxWidth="500"/>
+					<s:Rect height="5"/>
+					<s:RadioButton groupName="conflictHandling" 
+								   id="op1"
+								   label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.markResolved.solveConflictsChoiceOne')}"/>
+					<s:RadioButton groupName="conflictHandling"
+								   selected="true"
+								   id="op2"
+								   label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.markResolved.solveConflictsChoiceTwo')}"/>
+					<s:RadioButton groupName="conflictHandling"
+								   selected="true"
+								   id="op3"
+								   label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.markResolved.solveConflictsChoiceThree')}"/>
+				</s:VGroup>
+			</mx:AddChild>
+		</mx:State>					
+	</popup:states>	
+	
+</popup:Wizard>

@@ -10,6 +10,7 @@ import org.apache.subversion.javahl.ClientException;
 import org.tigris.subversion.subclipse.core.SVNException;
 
 import org.tigris.subversion.svnclientadapter.SVNClientException;
+import org.tigris.subversion.svnclientadapter.SVNInfoUnversioned;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
 
 /**
@@ -20,7 +21,9 @@ public class SvnUtils implements ISvnVersionHandler{
 	
 	public Boolean isRepository(File f) {				 
 		try {
-			SVNProviderPlugin.getPlugin().getSVNClient().getInfo(f);
+			if (SVNProviderPlugin.getPlugin().getSVNClient().getInfo(f) instanceof SVNInfoUnversioned) {
+				return false;
+			}
 			return true;
 		} catch (SVNClientException | SVNException e) {
 			return false;

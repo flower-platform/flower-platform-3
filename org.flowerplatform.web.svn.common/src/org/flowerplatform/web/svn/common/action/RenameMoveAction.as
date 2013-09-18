@@ -43,13 +43,12 @@ package  org.flowerplatform.web.svn.common.action {
 		 */
 		public override function get visible():Boolean {				
 			var node_type:String;	
-			if (selection.length == 0)
+			if (selection.length == 0 || selection.length > 1)
 				return false;
 			node_type = TreeNode(selection.getItemAt(0)).pathFragment.type;	
-			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-				return (node_type == SvnCommonPlugin.NODE_TYPE_REPOSITORY || node_type == SvnCommonPlugin.NODE_TYPE_FILE);
-			}
-			return false;
+			if (node_type != SvnCommonPlugin.NODE_TYPE_FILE)
+				return false;
+			return true;
 		}
 		
 		/**

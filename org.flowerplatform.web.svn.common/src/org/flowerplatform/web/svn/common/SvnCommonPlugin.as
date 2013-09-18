@@ -20,26 +20,32 @@ package org.flowerplatform.web.svn.common {
 	import flash.net.registerClassAlias;
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.action.BranchTagAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagProjectAction;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
 	import org.flowerplatform.web.svn.common.action.CleanupAction;
+	import org.flowerplatform.web.svn.common.action.CommitAction;
 	import org.flowerplatform.web.svn.common.action.CopyToAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
+	import org.flowerplatform.web.svn.common.action.MarkResolvedAction;
 	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
+	import org.flowerplatform.web.svn.common.action.RevertAction;
 	import org.flowerplatform.web.svn.common.action.ShareProjectAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
-
+	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;	
+	
 
 	/**
 	 * @author Gabriela Murgoci
@@ -70,6 +76,8 @@ package org.flowerplatform.web.svn.common {
 
 
 
+
+
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.
 				actionClasses.push(CreateRemoteFolderAction,
 								   RenameMoveAction, 
@@ -85,20 +93,24 @@ package org.flowerplatform.web.svn.common {
 								   RefreshRemoteResourceAction, 
 								   CheckoutAction,
 								   UpdateToHeadAction,
+								   CommitAction,
+								   RevertAction,
+								   MarkResolvedAction,
+
 								   UpdateToVersionAction);
 	}
-		
-		/**
-		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
-		 */
 
-		override protected function registerClassAliases():void {				
+	
+
 		
-			registerClassAlias("org.flowerplatform.web.svn.remote.BranchResource", BranchResource);		
-			registerClassAlias("org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand",
-				OpenSvnCredentialsWindowClientCommand);
+
+		protected override function registerClassAliases():void {	
 			super.registerClassAliases();
-			
+			registerClassAlias("org.flowerplatform.web.svn.remote.BranchResource", BranchResource);		
+			registerClassAlias("org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand", OpenSvnCredentialsWindowClientCommand);
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);			
+
 		}
 			
 		/**
@@ -117,6 +129,13 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public static function getInstance():SvnCommonPlugin {
 			return INSTANCE;
+		}
+		
+		public static function getWorkingDirectoryTreeNode(treeNode:TreeNode):TreeNode {
+			var treeNode2:TreeNode = treeNode;
+			while (treeNode2.pathFragment.type != "workingDirectory")
+				treeNode2 = treeNode2.parent;
+			return treeNode2;
 		}
 	}
 	

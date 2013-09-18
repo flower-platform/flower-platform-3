@@ -26,7 +26,6 @@ license-end
 	xmlns:fx="http://www.adobe.com/2006/mxml"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:popup="org.flowerplatform.flexutil.popup.*"
-	xmlns:component="org.flowerplatform.web.git.common.ui.component.*"
 	xmlns:mx="library://ns.adobe.com/flex/mx">
 	
 	<fx:Script>
@@ -109,6 +108,11 @@ license-end
 					</s:HGroup>            
 				</s:VGroup>   
 			</mx:AddChild>
+
 		</mx:State>     
 	</popup:states> 
+
+	
+	
+
 </popup:Wizard>
