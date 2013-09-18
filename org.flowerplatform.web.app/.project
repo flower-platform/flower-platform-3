@@ -40,4 +40,16 @@
 		<nature>com.adobe.flexbuilder.project.flexnature</nature>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>flex_host_app_bin</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/org.flowerplatform.flex_host_app/bin</locationURI>
+		</link>
+		<link>
+			<name>flex_host_app_public-resources</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/org.flowerplatform.flex_host_app/public-resources</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
