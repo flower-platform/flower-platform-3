@@ -20,6 +20,8 @@ public class FileEvent {
 	
 	public static final int FILE_RENAMED = 6;
 	
+	public static final int FILE_REFRESHED = 7;
+	
 	private int event;
 	
 	private File file;

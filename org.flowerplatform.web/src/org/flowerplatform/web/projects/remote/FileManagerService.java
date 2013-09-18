@@ -31,6 +31,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.NodeInfo;
 import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
@@ -322,28 +323,21 @@ public class FileManagerService {
 		GenericTreeStatefulService service = GenericTreeStatefulService
 				.getServiceFromPathWithRoot(pathWithRoot);
 		
-		Object object = GenericTreeStatefulService.getNodeByPathFor(
+		@SuppressWarnings("unchecked")
+		Pair<File, Object> object = (Pair<File, Object>) GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 
-		@SuppressWarnings("unchecked")
-		String path = ((Pair<File, Object>) object).a.getPath();		
-		File folder = new File(path);
-		Object node;
-		
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(folder);
-		if (resource != null) {
-			if(resource.getType() == IResource.FOLDER ) {
-				node = new Pair<File, String>(folder, "projFile");
-				service.dispatchContentUpdate(node);	
-			} else {
-				node = new Pair<File, String>(folder, "project");
-				service.dispatchContentUpdate(node);
-			}
+		// TODO check for changes 
+		if(!object.a.exists()) {
+			// the file coresponding to node, doesn't exist anymore
+			FileEvent event = new FileEvent(object.a, FileEvent.FILE_DELETED);
+			CommonPlugin.getInstance().getFileEventDispatcher()
+					.dispatch(event);
 		} else {
-			node = new Pair<File, String>(folder, "fsFile");
-			service.dispatchContentUpdate(node);
+			// the file changed
+			FileEvent event = new FileEvent(object.a, FileEvent.FILE_REFRESHED);
+			CommonPlugin.getInstance().getFileEventDispatcher()
+				.dispatch(event);
 		}
-		
 	}
-
 }

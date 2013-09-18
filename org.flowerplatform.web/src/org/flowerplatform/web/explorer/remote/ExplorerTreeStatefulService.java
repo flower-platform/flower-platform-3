@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -37,6 +38,7 @@ import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.INodePopulator;
+import org.flowerplatform.communication.tree.NodeInfo;
 import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
@@ -162,36 +164,86 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 	public void notify(FileEvent event) {
 		if(event.getEvent() == FileEvent.FILE_CREATED || event.getEvent() == FileEvent.FILE_DELETED ||
 				event.getEvent() == FileEvent.FILE_RENAMED) {
-			File parent = event.getFile().getParentFile();
+			File file = event.getFile();
+			File parent = file.getParentFile();
 			
-			// Update for ws_trunk subtree
+			// Update for file system subtree
 			Object node = new Pair<File, String>(parent, FsFile_FileSystemChildrenProvider.NODE_TYPE_FS_FILE);
 			dispatchContentUpdate(node);
 			
-			// Update for project subtree
-			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(parent);
-			// Update only if a project exists
-			if(resource != null) {
-				if(resource.getType() == IResource.FOLDER ) {
-					node = new Pair<File, String>(parent, ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE);
-					dispatchContentUpdate(node);	
-				} else {
-					node = new Pair<File, String>(parent, Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT);
-					dispatchContentUpdate(node);
+			// update for Special nodes
+			Map<File, Pair<File, IProject>> projectToWorkingDirectoryAndIProjectMap = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap();
+			Map<File, List<File>> workingDirectoryToProjectsMap = ProjectsService.getInstance().getWorkingDirectoryToProjectsMap();
+			if(workingDirectoryToProjectsMap.containsKey(file)) {
+				// it's an working directory -> parent is workingDirectories
+			} else if(workingDirectoryToProjectsMap.containsKey(parent)) {
+				// it's an project -> parent is working directory
+				String organizationName = ProjectsService.getInstance().getOrganizationNameFromFile(parent);
+				String pathFromOrganization = ProjectsService.getInstance().getRelativePathFromOrganization(parent);
+				WorkingDirectory workingDirectory = ProjectsService.getInstance().getWorkingDirectory(organizationName, pathFromOrganization.substring(0, pathFromOrganization.length() - 1));
+				dispatchContentUpdate(workingDirectory);
+			} else if(projectToWorkingDirectoryAndIProjectMap.containsKey(parent)) {
+				// it's a projFile with project parent
+				node = new Pair<File, String>(parent, Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT);
+				dispatchContentUpdate(node);			
+			} else {
+				// it may be an indirect projFile -> parent is projFile 
+				for(File project : projectToWorkingDirectoryAndIProjectMap.keySet()) {
+					if( parent.getPath().contains(project.getPath())) {
+						node = new Pair<File, String>(parent, ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE);
+						dispatchContentUpdate(node);
+					}
 				}
-			} 
-			// TODO Make the refresh for special node types
-			/* else if(event.getEvent() == FileEvent.FILE_DELETED) {
-				String org = ProjectsService.getInstance().getOrganizationNameFromFile(parent);
-				List<WorkingDirectory> workingDirectories = ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName(org);
-				for( WorkingDirectory workingDirectory : workingDirectories) {
-					String name = workingDirectory.getOrganization().getName();
-					if(name.equals(org)) {				
-						node = new Pair<WorkingDirectory, String>(workingDirectory, WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY);
-						dispatchContentUpdate(workingDirectory);
-					} 
-				} 
-			} */
+			}
+		} else if(event.getEvent() == FileEvent.FILE_REFRESHED) {
+			// refresh the tree recursively
+			File file = event.getFile();
+			Object node = findNode(file);
+			refreshTree(node);
+		}
+	}
+	
+	private Object findNode(File file) {
+		File parent = file.getParentFile();
+		Object node = null;
+		
+		Map<File, Pair<File, IProject>> projectToWorkingDirectoryAndIProjectMap = ProjectsService.getInstance().getProjectToWorkingDirectoryAndIProjectMap();
+		Map<File, List<File>> workingDirectoryToProjectsMap = ProjectsService.getInstance().getWorkingDirectoryToProjectsMap();
+		if(workingDirectoryToProjectsMap.containsKey(file)) {
+			// it's an working directory -> parent is workingDirectories
+			String organizationName = ProjectsService.getInstance().getOrganizationNameFromFile(file);
+			String pathFromOrganization = ProjectsService.getInstance().getRelativePathFromOrganization(file);
+			WorkingDirectory workingDirectory = ProjectsService.getInstance().getWorkingDirectory(organizationName, pathFromOrganization.substring(0, pathFromOrganization.length() - 1));
+			node = workingDirectory;
+		} else if(workingDirectoryToProjectsMap.containsKey(parent) && projectToWorkingDirectoryAndIProjectMap.containsKey(file)) {
+			// it's an project -> parent is working directory
+			node = new Pair<File, String>(file, Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT);
+		} else if(projectToWorkingDirectoryAndIProjectMap.containsKey(parent)) {
+			node = new Pair<File, String>(file, ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE);
+		} else {
+			// it may be an indirect projFile -> parent is projFile 
+			for(File project : projectToWorkingDirectoryAndIProjectMap.keySet()) {
+				if( file.getPath().contains(project.getPath())) {
+					node = new Pair<File, String>(file, ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE);
+				}
+			}
+		}
+		
+		if(node == null) {
+			node = new Pair<File, String>(file, FsFile_FileSystemChildrenProvider.NODE_TYPE_FS_FILE);
+		}
+		
+		return node;
+	}
+	
+	public void refreshTree(Object node) {
+		dispatchContentUpdate(node);
+		NodeInfo nodeInfo = visibleNodes.get(node);
+		if (nodeInfo == null) { // not opened, return
+			return;
+		}
+		for(NodeInfo nodeInfoIter : nodeInfo.getChildren()) {
+			refreshTree(nodeInfoIter.getNode());
 		}
 	}
 }

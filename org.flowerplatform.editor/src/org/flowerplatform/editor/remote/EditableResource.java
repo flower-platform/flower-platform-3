@@ -94,10 +94,30 @@ public abstract class EditableResource {
 	 * @see Getter.
 	 * 
 	 */
+	private long editableResourceLastModifiedStamp;
 	private EditableResourceClient lockOwner;
 	
 	private Collection<CollaborativeFigureModel> collaborativeFigureModels;
 	
+	/**
+	 * @author Tache Razvan Mihai
+	 * @return
+	 */
+	public long getEditableResourceLastModifiedStamp() {
+		return editableResourceLastModifiedStamp;
+	}
+	
+	/**
+	 * @author Tache Razvan Mihai
+	 * @return
+	 */
+	public void setEditableResourceLastModifiedStamp(long editableResourceLastModifiedStamp) {
+		this.editableResourceLastModifiedStamp = editableResourceLastModifiedStamp;
+	}
+
+	public boolean isSynchronized() {
+		return (editableResourceLastModifiedStamp == ((FileBasedEditableResource) this).getFile().lastModified());
+	}
 	public EditorStatefulService getEditorStatefulService() {
 		return editorStatefulService;
 	}

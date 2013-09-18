@@ -66,29 +66,71 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	@Override
 	public void notify(FileEvent event) {
 		File file = (event.getEvent() == FileEvent.FILE_RENAMED) ? event.getOldFile() : event.getFile();
-		EditableResource editableResource = getEditableResource("/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file));
+		String filePathRelativeToWorkspace = "/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
+		EditableResource editableResource = getEditableResource(filePathRelativeToWorkspace);
 		if(editableResource != null) {
-			if(event.getEvent() == FileEvent.FILE_MODIFIED) {	
-				// TODO handle modify event
-				processResourceChanged(editableResource);
-			} else if(event.getEvent() ==  FileEvent.FILE_DELETED) {
-				processResourceRemoved(editableResource);
-			} else if(event.getEvent() == FileEvent.FILE_RENAMED) {
-				// for now just remove the file from editor
-				processResourceRemoved(editableResource);
+			switch (event.getEvent()) {
+				case FileEvent.FILE_MODIFIED : {
+					processResourceChanged(editableResource);
+					break;
+				}	
+				case FileEvent.FILE_DELETED : {
+					processResourceRemoved(editableResource);
+					break;
+				}	
+				case FileEvent.FILE_RENAMED : {
+					// for now just remove the file from editor
+					processResourceRemoved(editableResource);
+					break;
+				}	
+				default:
+					break;
+				}
+		} else {
+			switch (event.getEvent()) {
+				case FileEvent.FILE_REFRESHED : {
+					processResourcesRefreshed(editableResource);
+					break;
+				}	
+				case FileEvent.FILE_DELETED : {
+					for(EditableResource edRed : editableResources.values()) {
+						if(edRed.getEditableResourcePath().contains(filePathRelativeToWorkspace)) {
+							processResourceRemoved(edRed);
+						}
+					}
+					break;
+				}	
+				case FileEvent.FILE_RENAMED : {
+					for(EditableResource edRed : editableResources.values()) {
+						if(edRed.getEditableResourcePath().contains(filePathRelativeToWorkspace)) {
+							processResourceRemoved(edRed);
+						}
+					}
+					break;
+				}	
+				default:
+					break;
 			}
 		}
 	}
-	
+
+	private void processResourcesRefreshed(EditableResource editableResource) {
+		for(EditableResource edRes : editableResources.values()) {
+			if(!edRes.isSynchronized()) {
+				processResourceChanged(edRes);
+			}
+		}
+	}
+
 	private void processResourceChanged(EditableResource editableResource) {
-		//logger.debug("Process resource changed = {} with modification stamp = {}", resource, resource.getModificationStamp());
+		logger.debug("Process resource changed = {} with modification stamp = {}", editableResource.getEditableResourcePath(), ((FileBasedEditableResource) editableResource).getFile().lastModified());
 		reloadEditableResource(editableResource, true);
 		// TODO check if refresh handles this
 		//SingletonRefsInEditorPluginFromWebPlugin.INSTANCE_PROJECT_EXPLORER_TREE_STATEFUL_SERVICE.dispatchContentUpdate(resource);
 	}
 	
 	private void processResourceRemoved(EditableResource editableResource) {
-		//logger.debug("Process resource removed = {} with modification stamp = {}", resource, resource.getModificationStamp());
+		logger.debug("Process resource removed = {} with modification stamp = {}", editableResource.getEditableResourcePath(), ((FileBasedEditableResource) editableResource).getFile().lastModified());
 		unsubscribeAllClientsForcefully(editableResource.getEditableResourcePath(), true);
 	}
 	
