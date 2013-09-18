@@ -643,14 +643,14 @@ public class ProjectsService implements IFileEventListener {
 			WorkingDirectory workingDirectory = getWorkingDirectory(org, pathFromOrgForFile);
 			if (event.getEvent() == FileEvent.FILE_DELETED) {
 				deleteWorkingDirectory(event.getFile(), workingDirectory);
-			} else {
+			} else if(event.getEvent() == FileEvent.FILE_RENAMED) {
 				renameWorkingDirectory(file, event.getFile());
 			}
 		} else if (projectToWorkingDirectoryAndIProjectMap.get(file) != null) {
 			// it's an project
 			if (event.getEvent() == FileEvent.FILE_DELETED) {
 				deleteProject(event.getFile());
-			} else {
+			} else if(event.getEvent() == FileEvent.FILE_RENAMED) {
 				renameProject(file, event.getFile());
 			}
 		} else {
@@ -667,7 +667,7 @@ public class ProjectsService implements IFileEventListener {
 							if (event.getEvent() == FileEvent.FILE_DELETED) {
 								iter.remove();
 								deleteProject(projectFile);
-							} else {
+							} else if(event.getEvent() == FileEvent.FILE_RENAMED) {
 								String projectPath = projectFile.getPath();
 								String newProjectPath = projectPath.replace(event.getOldFile().getPath(), event
 										.getFile().getPath());
@@ -690,7 +690,7 @@ public class ProjectsService implements IFileEventListener {
 						if (event.getEvent() == FileEvent.FILE_DELETED) {
 							deleteWorkingDirectory(new File(orgDir, workingDirectory.getPathFromOrganization()),
 									workingDirectory);
-						} else {
+						} else if(event.getEvent() == FileEvent.FILE_RENAMED) {
 							File oldWD = new File(orgDir, workingDirectory.getPathFromOrganization());
 							String oldWDpath = oldWD.getPath();
 							String newWDpath = oldWDpath.replace(event.getOldFile().getPath(), event.getFile()
@@ -771,7 +771,12 @@ public class ProjectsService implements IFileEventListener {
 			}
 		});
 	}
-
+	/**
+	 * @author Tache Razvan Mihai
+	 * @param file
+	 * @return the path to the file from organiztion without "\" in the end if it's a simple file or with "\" in the end if it's a parent file : like in file.getParent();
+	 *
+	 */
 	public String getRelativePathFromOrganization(File file) {
 		String org = ProjectsService.getInstance().getOrganizationNameFromFile(file);
 		File orgDir = getOrganizationDir(org);
