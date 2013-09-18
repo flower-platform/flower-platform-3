@@ -83,7 +83,7 @@ package org.flowerplatform.flexutil.tree {
 			super.commitProperties();
 		}
 		
-		protected function refreshLinearizedDataProvider():void {
+		public function refreshLinearizedDataProvider():void {
 			var newLinearizedArray:Array = new Array();
 			var expandedNodesMap:Dictionary = calculateMapWithInterestingNodes();
 			var newSelectedIndices:Vector.<int> = new Vector.<int>(); 

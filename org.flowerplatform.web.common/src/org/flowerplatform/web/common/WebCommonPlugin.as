@@ -39,6 +39,11 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient;
 	import org.flowerplatform.web.common.entity.dto.NamedDto;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
+	import org.flowerplatform.web.common.explorer.action.CreateDirectoryAction;
+	import org.flowerplatform.web.common.explorer.action.CreateFileAction;
+	import org.flowerplatform.web.common.explorer.action.DeleteAction;
+	import org.flowerplatform.web.common.explorer.action.RefreshDirectoryAction;
+	import org.flowerplatform.web.common.explorer.action.RenameAction;
 	import org.flowerplatform.web.common.projects.ProjectPropertiesAction;
 	import org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction;
 	import org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction;
@@ -62,6 +67,8 @@ package org.flowerplatform.web.common {
 		public static function getInstance():WebCommonPlugin {
 			return INSTANCE;
 		}
+		
+		public static const TREE_NODE_FILE_SYSTEM_IS_DIRECTORY:String = "isDirectory"; 
 		
 		public static const NODE_TYPE_ORGANIZATION:String = "organization";
 		
@@ -117,7 +124,12 @@ package org.flowerplatform.web.common {
 			// actions
 			explorerTreeClassFactoryActionProvider.actionClasses.push(MarkAsWorkingDirectoryAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateOrImportProjectAction);
-			explorerTreeClassFactoryActionProvider.actionClasses.push(ProjectPropertiesAction);			
+			explorerTreeClassFactoryActionProvider.actionClasses.push(ProjectPropertiesAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateDirectoryAction);			
+			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateFileAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(DeleteAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(RenameAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(RefreshDirectoryAction);
 		}
 		
 		/**

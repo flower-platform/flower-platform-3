@@ -43,7 +43,7 @@ public class Project_WorkingDirectoryChildrenProvider implements IChildrenProvid
 
 	private static final Logger logger = LoggerFactory.getLogger(Project_WorkingDirectoryChildrenProvider.class);
 	
-	protected static final String NODE_TYPE_PROJECT = "project";
+	public static final String NODE_TYPE_PROJECT = "project";
 	
 	protected File getFile(Object node) {
 		WorkingDirectory wd = (WorkingDirectory) node;
