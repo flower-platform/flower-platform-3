@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -114,6 +115,13 @@ public class SvnService {
 		return true;
 	}
 
+	/**
+	 * Return a preferences node that contains suitabel defaults for a
+	 * repository location.
+	 * 
+	 * @return  true if action succeded, false otherwise
+	 * 
+	 */
 	public boolean createSvnRepository(final ServiceInvocationContext context, final String url, final List<PathFragment> parentPath) {
 		//had to use List due to limitations of altering final variables inside runnable
 		final List<String> operationSuccessful = new ArrayList<String>();		
@@ -163,6 +171,7 @@ public class SvnService {
 	
 	
 	
+	@SuppressWarnings("unchecked")
 	public String getRepositoryNameAndWorkingDirectory(ArrayList<PathFragment> pathFragments) {
 		// if selected item is svn repository tree node, the "working directory" will be the path from node.		
 		String result;		
@@ -178,19 +187,11 @@ public class SvnService {
 		} else if (workingDirectory instanceof SVNRepositoryLocation) {
 			result = "in " + ((SVNRepositoryLocation) workingDirectory).getUrl().toString();
 		} else {
-			// "?" will be replaced on the server. I have chosen to use "?" as identifier since no windows folder/file path may contain the character
-			result = "?" + ((Pair<File, String>) workingDirectory).a.getAbsolutePath() + " in " + getUrlPathForSingleSelection(pathFragments, true);			
-		}		
-		
+			String workingDirectoryPath = getDirectoryFullPathFromPathFragments(pathFragments);			
+			File f = ((Pair<File, String>) workingDirectory).a;
+			result = (f.getAbsolutePath()).substring(f.getAbsolutePath().lastIndexOf("\\")) + " in " + getSvnUrlForPath(workingDirectoryPath, true);			
+		}				
 		return result;
-	}
-	
-	public String getUrlPathForSingleSelection(ArrayList<PathFragment> path, Boolean wantUrlForRepository) {
-		String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
-		if (wantUrlForRepository) {
-			return getSvnUrlForPath(workingDirectoryPath, true);
-		}
-		return getSvnUrlForPath(workingDirectoryPath, false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -234,9 +235,7 @@ public class SvnService {
 			}			
 			for (int i=0; i<filePaths.size(); i++) {
 				myClientAdapter.resolve(new File(filePaths.get(i)), choice);
-			}
-			
-			
+			}			
 		} catch (SVNException | SVNClientException e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -276,7 +275,7 @@ public class SvnService {
 		
 	public boolean checkout(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath, 
 							String workingDirectoryDestination, String revisionNumberAsString, 
-							int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals) {		
+							int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals, String newProjectName) {		
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);		
 		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
@@ -312,7 +311,12 @@ public class SvnService {
 			myClient.setProgressListener(opMng);
 			opMng.beginOperation(pm, myClient, true);					
 			for(int i = 0; i < folders.size(); i++) {
-				File fileArgumentForCheckout = new File(workingDirectoryDestination + "/" + remoteFolders[i].getName());
+				File fileArgumentForCheckout;
+				if (newProjectName != null) {
+					fileArgumentForCheckout = new File(workingDirectoryDestination + "\\" + newProjectName);
+				} else {
+					fileArgumentForCheckout = new File(workingDirectoryDestination + "\\" + remoteFolders[i].getName());					
+				}								
 				String fullPath = remoteFolders[i].getUrl().toString();				
 				myClient.checkout(new SVNUrl(fullPath), fileArgumentForCheckout, 
 						revision, getDepthValue(depthIndex), ignoreExternals, force);				
@@ -335,7 +339,7 @@ public class SvnService {
 			pm.done();
 		}		
 		return true;
-	}
+	}	
 	
 	public ArrayList<String> getWorkingDirectoriesForOrganization(ServiceInvocationContext context, String organizationName) {
 		ArrayList<String> result = new ArrayList<String>();
@@ -354,13 +358,22 @@ public class SvnService {
 		return result;		
 	}
 	
-	public boolean workingDirectoryExists(ServiceInvocationContext context, String wdName, String organizationName) {
-		ArrayList<String> existingWDs = getWorkingDirectoriesForOrganization(context, organizationName);
+	public String workingDirectoryExistsAndProjectLocationIsValid(ServiceInvocationContext context, String wdName, String organizationName, String restOfThePath, ArrayList<PathFragment> workingDirectoryPartialPath) {
+		Boolean wdExists = false;		
+		String partialPath = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath);		
+		ArrayList<String> existingWDs = getWorkingDirectoriesForOrganization(context, organizationName);		
 		for (String wd : existingWDs) {
-			if(wd.equals(wdName))
-				return true;
+			if(wd.equals(wdName)) {
+				wdExists = true;
+			}				
 		}
-		return false;
+		if (!wdExists) {
+			return "wdDoesNotExist";			
+		}		
+		if (new File (partialPath + "\\" + wdName + "\\" + restOfThePath).exists()) {
+			return "destinationPathAlreadyPresentOnHard";
+		}
+		return "wdExistsAndIsValid";		
 	}
 	
 	public ArrayList<String> getRestOfInformation (ArrayList<PathFragment> fullPath, String argumentToBePreserved) {
@@ -368,9 +381,13 @@ public class SvnService {
 		result.add(getDirectoryFullPathFromPathFragments(fullPath));
 		result.add(argumentToBePreserved);		
 		return result;		
-	}
+	}	
 	
 	
+	/**
+	 * 
+	 * @return url if parameter points to repository location or the path from organization if parameter points to a working directory tree node 
+	 */
 	@SuppressWarnings("unchecked")
 	public String getDirectoryFullPathFromPathFragments(List<PathFragment> pathWithRoot) {		
 		Object workingDirectory  = GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
@@ -416,6 +433,10 @@ public class SvnService {
 		}		
 	}	
 	
+	/**
+	 * 
+	 * @author Gabriela Murgoci
+	 */
 	public List<PathFragment> getCommonParent(ArrayList<ArrayList<PathFragment>> selectionList) {
 		int index = 0;
 		boolean sem = true;
@@ -441,8 +462,7 @@ public class SvnService {
 			result.add("images/folder_pending.gif");
 		} else {
 			result.add("images/file.gif");
-		}
-		
+		}		
 		if (status.equals("unversioned")) {
 			result.add("images/added_ov.gif");
 		} else if (status.equals("missing")) {
@@ -474,14 +494,12 @@ public class SvnService {
 			}			
 		}	
 		return result;
-	}
-		
+	}		
 	
 	public Boolean checkForUnversionedAndIgnoredFilesInSelection(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selection) {
 		ArrayList<File> files = new ArrayList<File>();
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		JhlClientAdapter myClientAdapter = new JhlClientAdapter();		
-		
 		for (ArrayList<PathFragment> path : selection) {			
 			File currentFile = ((Pair<File, String>)GenericTreeStatefulService.getNodeByPathFor(path, null)).a;
 			JhlStatus[] jhlStatusArray = null;
@@ -501,9 +519,9 @@ public class SvnService {
 			files.add(currentFile);			
 		}		
 		return true;
-	}
+	}	
 	
-	
+	@SuppressWarnings("unchecked")
 	public Boolean addToSvnIgnore(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> paths, String pattern) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		JhlClientAdapter myClientAdapter = new JhlClientAdapter();
@@ -523,6 +541,7 @@ public class SvnService {
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public Boolean addToVersion(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selection) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		JhlClientAdapter myClientAdapter = new JhlClientAdapter();
@@ -564,8 +583,7 @@ public class SvnService {
 			}	
 		}
 		return true;
-}
-	
+	}
 	
 	public GetModifiedFilesDto getDifferences(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> selectionList) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
@@ -604,15 +622,13 @@ public class SvnService {
 						if (continueSetter) {
 							continue;
 						}						
-						
 						FileDto modifiedFileDto = new FileDto();
 						JhlStatus currentTarget = jhlStatusArray[i];						
 						modifiedFileDto.setPath(currentTarget.getFile().getAbsolutePath());
 						modifiedFileDto.setLabel(currentTarget.getFile().getAbsolutePath().substring(workingDirectoryFullPathLength + 1));
 						String status = currentTarget.getTextStatus().toString();
 						modifiedFileDto.setStatus(status);						
-						modifiedFileDto.setImageUrls(setImageUrlForExtensionType(currentTarget.getNodeKind().toString(), status));
-												
+						modifiedFileDto.setImageUrls(setImageUrlForExtensionType(currentTarget.getNodeKind().toString(), status));												
 						fileList.add(modifiedFileDto);
 					}
 				}
@@ -663,7 +679,7 @@ public class SvnService {
 			case "modified": 
 				normalCommitFiles.add(file);
 				break;
-			case "unversioned": // same as for "missing"
+			case "unversioned":
 				markedForAddition.add(file);
 				normalCommitFiles.add(file);
 				break;

@@ -80,7 +80,7 @@ license-end
 			}
 			
 			public function closePanel(arg:Boolean):void {
-				if(arg) {					
+				if (arg) {					
 					resultHandler.handleDialogResult(myList.selectedItem)
 				}
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);

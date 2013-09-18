@@ -49,20 +49,12 @@ license-end
 			[Bindable]
 			public var defaultPattern:String = "";
 			
-			/* public function setPatternLabel():void {
-				if (selection.length>1) {					
-					defaultPattern = "*";
-				} else {
-					defaultPattern = TreeNode(selection.getItemAt(0)).label;
-				}		
-			} */
-			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
 				if (selection.length>1) {					
 					defaultPattern = "*";
 				} else {
-					var element:ArrayCollection = ArrayCollection(selection.getItemAt(0)) 
+					var element:ArrayCollection = ArrayCollection(selection.getItemAt(0));
 					defaultPattern = PathFragment(ArrayCollection(element).getItemAt(element.length-1)).name;
 				}
 			}

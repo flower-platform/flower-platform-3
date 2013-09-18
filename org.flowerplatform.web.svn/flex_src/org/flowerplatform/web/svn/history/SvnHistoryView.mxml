@@ -245,31 +245,12 @@ license-end
 							"getRepositoryNameAndWorkingDirectory", 
 							[selectedObject.getPathForNode(true)], 
 							this, 
-							getRepositoryNameAndWorkingDirectoryCallback));		
-				}				
+							getRepositoryNameAndWorkingDirectoryCallback));
+			}							
 			
 			public function getRepositoryNameAndWorkingDirectoryCallback(result:String):void {
-				if (result.charAt(0) == "?") {
-					result = result.replace("?", "");
-					var fullpath:ArrayCollection = SvnCommonPlugin.getWorkingDirectoryTreeNode(selectedObject).getPathForNode(true);					
-					CommunicationPlugin.getInstance().bridge.sendObject(
-						new InvokeServiceMethodServerCommand(
-							"svnService", 
-							"getRestOfInformation",					 
-							[fullpath, result], 
-							this, 
-							getRepositoryNameAndWorkingDirectoryCallback2));	
-				}			
-				else {
-					repositoryInfoLabel = result;
-				}
-			}			
-			
-			public function getRepositoryNameAndWorkingDirectoryCallback2(result:ArrayCollection):void {
-				var callbackResultIndex:int = String(result.getItemAt(0)).length;
-				var preservedArgument:String = String(result.getItemAt(1));				
-				repositoryInfoLabel = preservedArgument.substring(callbackResultIndex);				
-			}
+				repositoryInfoLabel = result;				
+			}	
 			
 		]]>
 	</mx:Script>
@@ -323,8 +304,7 @@ license-end
 		
 		<mx:HDividedBox id="detailArea" width="100%" height="50%" horizontalGap="3" >		
 			<s:DataGrid id="affectedPathEntriesTable" width="50%" height="100%"
-						dataProvider="{volatileAffectedPathsEntry}">
-				<!--dataProvider="{selectedHistoryEntryFromView.affectedPathEntries}"-->
+						dataProvider="{volatileAffectedPathsEntry}">				
 				 <s:columns>
 					<s:ArrayList>
 						<s:GridColumn headerText="Action" dataField="action"/>
