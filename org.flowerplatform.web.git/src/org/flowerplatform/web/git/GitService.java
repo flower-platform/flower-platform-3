@@ -363,7 +363,7 @@ public class GitService {
 	
 	public void deleteRepository(ServiceInvocationContext context, List<PathFragment> selectedNode) {
 		Repository repository = (Repository) GenericTreeStatefulService.getNodeByPathFor(selectedNode, null);			
-		GenericTreeStatefulService service = (GenericTreeStatefulService)GenericTreeStatefulService.getServiceFromPathWithRoot(selectedNode);
+		GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(selectedNode);
 		NodeInfo repositoryNodeInfo = service.getVisibleNodes().get(repository);
 		
 		ProgressMonitor monitor = ProgressMonitor.create(
@@ -408,7 +408,7 @@ public class GitService {
 	public GitActionDto getNodeAdditionalData(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
 			RefNode refNode = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			GenericTreeStatefulService service = (GenericTreeStatefulService)GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 			NodeInfo refNodeInfo = service.getVisibleNodes().get(refNode);
 			Repository repository = getRepository(refNodeInfo);
 			if (repository == null) {
@@ -532,7 +532,7 @@ public class GitService {
 			RemoteConfig remoteConfig) {
 		try {
 			Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);		
-			GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 			Repository repository = getRepository(nodeInfo);
 										
@@ -619,7 +619,7 @@ public class GitService {
 		try {
 			RemoteNode remoteNode = (RemoteNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
 			Repository repository = remoteNode.getRepository();	
-			GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 			NodeInfo remoteNodeInfo = service.getVisibleNodes().get(remoteNode);
 			
 			if (repository == null) {
@@ -700,7 +700,7 @@ public class GitService {
 		
 		try {
 			Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);
-			GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 			Repository repository = getRepository(nodeInfo);
 			if (repository == null) {
@@ -818,7 +818,7 @@ public class GitService {
 		tlCommand.set((InvokeServiceMethodServerCommand) context.getCommand());
 		
 		Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);
-		GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+		GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 		NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 		Repository repository = getRepository(nodeInfo);
 									
@@ -873,7 +873,7 @@ public class GitService {
 			String name, GitRef upstreamBranch, RemoteConfig remote, boolean rebase) {
 		
 		Object node =GenericTreeStatefulService.getNodeByPathFor(path, null);			
-		GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+		GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 		NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 		Repository repository = getRepository(nodeInfo);
 		
@@ -956,7 +956,7 @@ public class GitService {
 			
 		try {			
 			RefNode refNode = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);			
-			GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 			NodeInfo refNodeInfo = service.getVisibleNodes().get(refNode);
 			Repository repository = getRepository(refNodeInfo);
 			if (repository == null) {
@@ -1006,7 +1006,7 @@ public class GitService {
 	public List<RemoteConfig> getAllRemotes(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
 			Object node = GenericTreeStatefulService.getNodeByPathFor(path, null);		
-			GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 			Repository repository = getRepository(nodeInfo);
 			
@@ -1171,7 +1171,7 @@ public class GitService {
 	public boolean deleteBranch(ServiceInvocationContext context, List<PathFragment> path) {
 		try {
 			RefNode node = (RefNode) GenericTreeStatefulService.getNodeByPathFor(path, null);		
-			GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(path);
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot(path);
 			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 			Repository repository = node.getRepository();
 			

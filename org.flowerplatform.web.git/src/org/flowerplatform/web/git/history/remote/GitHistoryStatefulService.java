@@ -67,7 +67,6 @@ import org.flowerplatform.communication.stateful_service.RegularStatefulService;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.NodeInfo;
-import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.git.GitNodeType;
@@ -496,7 +495,7 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 //			info.setRepository1(GitPlugin.getInstance().getGitUtils().getRepository(mapping));	
 		} else {
 			Object node = GenericTreeStatefulService.getNodeByPathFor((List<PathFragment>) info.getSelectedObject(), null);
-			GenericTreeStatefulService service = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot((List<PathFragment>) info.getSelectedObject());
+			GenericTreeStatefulService service = GenericTreeStatefulService.getServiceFromPathWithRoot((List<PathFragment>) info.getSelectedObject());
 			NodeInfo nodeInfo = service.getVisibleNodes().get(node);
 			Repository repository = GitService.getInstance().getRepository(nodeInfo);
 			

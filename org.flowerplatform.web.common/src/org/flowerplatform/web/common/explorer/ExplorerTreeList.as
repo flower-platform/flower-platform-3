@@ -49,7 +49,6 @@ package org.flowerplatform.web.common.explorer {
 			super();
 			allowMultipleSelection = true;
 			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
-
 		}
 		
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {

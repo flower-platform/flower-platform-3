@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 
 license-start
@@ -305,3 +306,316 @@ license-end
 
 
 
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+@author Gabriela Murgoci
+-->
+
+<popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
+			  xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+			  implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+			import org.flowerplatform.communication.tree.remote.PathFragment;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.ActionBase;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.common.projects.remote.WorkingDirectoryTreeStatefulClient;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			import org.flowerplatform.web.svn.common.projects.remote.SvnRepositoryTreeStatefulClient;
+			import org.flowerplatform.web.svn.common.remote.BranchResource;
+			import org.flowerplatform.web.svn.common.ui.component.BranchTagSelectionPageView;
+			import org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView;
+			
+			import spark.primitives.supportClasses.StrokedElement;
+			
+			public var nodesToOpen:ArrayCollection;
+			
+			public var selectedNodes:ArrayList;
+			
+			public var node:TreeNode;
+			
+			public var selection:IList;
+			
+			public var resourcesSelected:Boolean;
+			
+			public var sameParents:Boolean;
+			
+			public var revision:Number;
+			
+			/**
+			 * @flowerModelElementId _2hWecGxXEeGmX-bWmnlzew
+			 */
+			public var commonParentPath:Object;
+			
+			public var commonParentName:String;
+			
+			public var secondSelection:TreeNode;
+			
+			public var viewLabel:String;
+			
+			public var viewIcon:String;
+			
+			public var actionType:Boolean;
+			/**
+			 * @flowerModelElementId _qvAjsGxVEeGmX-bWmnlzew
+			 */
+			public var commonParentUrl:String;
+			
+			public var destinationSelectedNode:ArrayCollection;
+			
+			[Bindable]
+			public var folderName:String;
+			
+			[Bindable]
+			public var destinationURL:String;
+			
+			[Bindable]
+			public var destinationFolderName:String;
+			
+			[Bindable]
+			public var userComment:String;
+			
+			[Bindable]
+			private var check:Boolean;
+			
+			/**
+			 * @flowerModelElementId _LdAgYGxVEeGmX-bWmnlzew
+			 */
+			[Bindable]
+			public var branchResources:ArrayCollection;
+			
+			[Bindable]
+			public var commonParent:Object;
+			
+			[Bindable]
+			public var locationURL:String;
+			
+			public function handleDialogResult(result:Object):void {
+				locationURL = String (result);
+				pathChangedHandler();
+			} 
+			
+			private function getProjectsCallbackHandler(result:Boolean):void {
+				popupHost.hideSpinner();
+				if (result) {					
+					cancelClickHandler();
+				}
+			} 
+			
+			public function getBranchResourceCallBackHandler(result:ArrayCollection):void {
+				var parentName:String;
+				var i:int;
+				branchResources = result;
+				parentName = String(branchResources.removeItemAt(0));
+				locationURL = parentName;
+				pathChangedHandler();
+			}
+			
+			protected function pathChangedHandler():void {
+				if (branchResources == null)
+					return;
+				if (branchResources.length == 1) {
+					branchResources.getItemAt(0).customizedPath = "[" + locationTxt.text + "]";
+				} else {
+					for each (var item:BranchResource in branchResources) {
+						if (preserveFolderStructure.selected) {
+							item.customizedPath = "[" + locationTxt.text + "/" + item.partialPath + "]";
+						} else {
+							item.customizedPath = "[" + locationTxt.text + "/" + item.name + "]";
+						}
+					}
+				}
+				branchResources.refresh();
+			}
+			
+			public function browseBtnHandler():void {
+				var view:BranchTagSelectionPageView = new BranchTagSelectionPageView(); 
+				view.setResultHandler(this);
+				view.node = node;
+				view.treeType = actionType;
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setWidth(400)
+					.setHeight(450)
+					.setPopupContent(view)
+					.show();
+			}
+			
+			private function selectRevisionBtnHandler():void {
+				var popUp:SelectRevisionWindowView = new SelectRevisionWindowView();
+				popUp.remoteResourcePath = commonParentPath;
+				popUp.remoteResourceName = commonParentName;
+				popUp.isResourceObject = resourcesSelected;
+				popUp.showPopup();
+			}
+			
+			protected override function cancelClickHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+			} 
+			
+			protected override function finishClickHandler():void {
+				
+				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+				
+				  CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService",
+						"branchTagResources",
+						[actionType, branchResources, locationTxt.text, commitMessage.text, revision, createMissingFolders.selected, preserveFolderStructure.selected],
+						this, getProjectsCallbackHandler ));  
+			} 
+			
+			override public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;	
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl(viewIcon));
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage(viewLabel));
+			} 
+			
+			protected override function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				wizardImage.source = SvnCommonPlugin.getInstance().getResourceUrl("images/newlocation_wizban.gif");
+				var array:ArrayCollection = new ArrayCollection();
+				for (var i:int=0; i < selection.length; i++) {
+					array.addItem(TreeNode(selection.getItemAt(i)).getPathForNode(true));
+				}
+				 CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "populateBranchResourcesList", [array, actionType], this, getBranchResourceCallBackHandler )); 
+			}
+		]]>
+	</fx:Script>
+	
+	<popup:states>
+		<s:State name="0">			
+			<mx:SetProperty name="wizardTitle" value="Repository Location"/>			
+			<mx:SetProperty name="wizardDescription" value="Enter or select the target URL for copy"/>			
+			<mx:AddChild relativeTo="{contentArea}">	
+				<s:VGroup width="100%" height="100%">
+					<s:VGroup width="100%" height="110">
+						<s:Label text="Copy To URL:"/>
+						<s:HGroup width="100%"> 
+							<s:TextInput id="locationTxt" width="100%" change="pathChangedHandler()"
+										 text="{locationURL}"/>
+							<s:Button label="Select..." click="browseBtnHandler()"/>					
+						</s:HGroup>			
+						<s:CheckBox id="createMissingFolders"
+									label="Create any intermediate folders that are missing"/>	
+						<s:CheckBox id="preserveFolderStructure"
+									visible="{branchResources.length &gt; 1}"
+									label="Preserve folder structure (may require multiple commits)"
+									click="pathChangedHandler()" selected="true"/>	
+					</s:VGroup>
+					<s:List width="100%" height="100%" dataProvider="{branchResources}"
+							horizontalScrollPolicy="auto">			
+						<s:itemRenderer>
+							<fx:Component>
+								<s:ItemRenderer>
+									<s:layout>
+										<s:HorizontalLayout verticalAlign="middle"/>
+									</s:layout>
+									<fx:Script>
+										<![CDATA[
+											import org.flowerplatform.flexutil.FlexUtilGlobals;
+											import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+										]]>
+									</fx:Script>
+									<common:BitmapContainer id="image"
+															source="{FlexUtilGlobals.getInstance().createAbsoluteUrl(SvnCommonPlugin.getInstance().getResourceUrl(data.image))}"/>		
+									<s:Label id="nameTxt" text="{data.name}"/>
+									<s:Label id="pathTxt" text="{data.customizedPath}"/>
+								</s:ItemRenderer>
+							</fx:Component>
+						</s:itemRenderer>
+					</s:List>
+				</s:VGroup>
+			</mx:AddChild>
+		</s:State>	
+		
+		<s:State name="1">			
+			<mx:SetProperty name="wizardTitle" value="Copy Revision"/>	
+			<mx:SetProperty name="wizardDescription"
+							value="Enter or select the revision to be copied."/>	
+			<mx:AddChild relativeTo="{contentArea}">	
+			<s:VGroup width="100%" height="100%">			
+				<s:Label text="Create copy in the repository from:"/>			
+				<s:RadioButton id="headRevision" width="100%" label="HEAD revision in the repository"
+							   groupName="revisionGroup" selected="true"/>
+				<s:HGroup verticalAlign="middle">
+					<s:RadioButton id="specificRevision" width="100%"
+								   label="Specific revision in the repository"
+								   groupName="revisionGroup"/>
+					<s:HGroup verticalAlign="middle">				
+						<s:TextInput id="revisionTxt" width="50"
+									 enabled="{specificRevision.selected}"/>
+						<s:Button id="selectRevisionBtn" label="Select..."
+								  click="selectRevisionBtnHandler()"
+								  enabled="{specificRevision.selected}"/>
+					</s:HGroup>
+				</s:HGroup>
+				<s:RadioButton id="workingCopyRevision" visible="{actionType}" width="100%"
+							   label="Working copy" groupName="revisionGroup"/>
+			</s:VGroup>       
+			</mx:AddChild>
+		</s:State>	
+		
+		<mx:State name="2">			
+			<mx:SetProperty name="wizardTitle" value="Commit"/>				
+			<mx:SetProperty name="wizardDescription" value="Enter commit message"/>				
+			<mx:AddChild relativeTo="{contentArea}">									
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<!--<s:Label width="100%" text="Enter commit message"/>			-->				
+					</s:HGroup>					
+					<s:TextArea id="commitMessage" width="100%" height="100%" heightInLines="3"/>					
+					<s:HGroup width="100%" verticalAlign="middle">
+					</s:HGroup>	
+					<s:CheckBox id="switchBranch" visible="{actionType}"
+								label="Switch working copy to new branch/tag">
+					</s:CheckBox>
+				</s:VGroup>		 			
+			</mx:AddChild>
+		</mx:State>	
+	</popup:states>
+	
+</popup:Wizard>
+
+
+
+>>>>>>> origin/GH94-Merge

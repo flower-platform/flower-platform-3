@@ -1,7 +1,6 @@
 package org.flowerplatform.web.svn.explorer;
 
 import org.flowerplatform.communication.tree.GenericTreeContext;
-import org.flowerplatform.communication.tree.INodeByPathRetriever;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.explorer.AbstractVirtualItemInOrganizationNodeDataProvider;
 import org.flowerplatform.web.svn.SvnNodeType;

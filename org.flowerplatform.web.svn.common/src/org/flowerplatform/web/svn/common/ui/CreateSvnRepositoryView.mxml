@@ -43,18 +43,25 @@ license-end
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.ActionBase;
 			import org.flowerplatform.flexutil.popup.IAction;
+<<<<<<< HEAD
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			
+=======
+			import org.flowerplatform.flexutil.popup.IPopupHost;			
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+						
+>>>>>>> origin/GH94-Merge
 			public var node:TreeNode;
 			
 			[Bindable]
-			public var svnLocation:String;   
+			public var svnLocation:String;			
 			
 			[Bindable]
 			private var check:Boolean;
-			
+				
 			private function getProjectsCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result != true) {
@@ -65,9 +72,10 @@ license-end
 			}
 			
 			public function cancelHandler():void {
-				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);    
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);				
 			}
 			
+<<<<<<< HEAD
 			protected override function finishClickHandler():void {
 				var location:String = mySvnLocation.text;
 				for (var i:int; i<node.children.length; i++) {
@@ -79,10 +87,19 @@ license-end
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [location, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
 				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));    
+=======
+			protected override function finishClickHandler():void {				
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [mySvnLocation.text, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
+				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));				
+>>>>>>> origin/GH94-Merge
 			}
 			
 			public override function set popupHost(value:IPopupHost):void {
-				_popupHost = value;    
+				_popupHost = value;				
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepiository.view.label"));
 				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/repository_rep.gif"));
 			}
@@ -90,25 +107,33 @@ license-end
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
 				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
-			}      
+			}						
 			
 			
 		]]>
 	</fx:Script>
 	
+<<<<<<< HEAD
+=======
+	<fx:Array id="validators">
+		<mx:StringValidator minLength="1" property="text" source="{mySvnLocation}"/>
+	</fx:Array>	
+	
+>>>>>>> origin/GH94-Merge
 	<popup:states>
-		<mx:State name="0">   
-			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.WizardTitle')}"/>   
-			<mx:AddChild relativeTo="{contentArea}">         
+		<mx:State name="0">			
+			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.WizardTitle')}"/>			
+			<mx:AddChild relativeTo="{contentArea}">									
 				<s:VGroup width="100%" height="100%">
 					<s:HGroup width="100%" verticalAlign="middle">
-						<s:Label width="100%" text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.SvnUrlLabel')}"/>             
-					</s:HGroup>      
-					<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/>     
-					<s:HGroup width="100%" verticalAlign="middle">     
-					</s:HGroup>            
-				</s:VGroup>   
+						<s:Label width="100%" text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.SvnUrlLabel')}"/>													
+					</s:HGroup>						
+					<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/> 				
+					<s:HGroup width="100%" verticalAlign="middle">					
+					</s:HGroup>												
+				</s:VGroup>		 
 			</mx:AddChild>
+<<<<<<< HEAD
 
 		</mx:State>     
 	</popup:states> 
@@ -116,4 +141,9 @@ license-end
 	
 	
 
+=======
+		</mx:State>					
+	</popup:states>	
+	
+>>>>>>> origin/GH94-Merge
 </popup:Wizard>

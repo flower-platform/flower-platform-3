@@ -15,4 +15,3 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.101"
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.flowerplatform.web.svn.SvnPlugin
-Import-Package: org.eclipse.core.resources

@@ -12,12 +12,15 @@
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.communication/public-resources/swc/org.flowerplatform.communication.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.web.svn.common/bin/org.flowerplatform.web.svn.common.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.web/public-resources/swc/org.flowerplatform.web.swc" useDefaultLinkType="false"/>
+<<<<<<< HEAD
 
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.flexutil/bin/org.flowerplatform.flexutil.swc" useDefaultLinkType="false"/>
 
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexutil/bin/org.flowerplatform.flexutil.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexutil_legacy/bin/org.flowerplatform.flexutil_legacy.swc" useDefaultLinkType="false"/>
 
+=======
+>>>>>>> origin/GH94-Merge
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

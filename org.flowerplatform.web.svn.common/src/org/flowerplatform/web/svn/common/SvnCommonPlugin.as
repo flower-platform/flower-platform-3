@@ -23,21 +23,36 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+<<<<<<< HEAD
 	import org.flowerplatform.web.svn.common.action.AddToSvnIgnoreAction;
 	import org.flowerplatform.web.svn.common.action.AddToVersionControlAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagProjectAction;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
 	import org.flowerplatform.web.svn.common.action.CleanupAction;
+=======
+	import org.flowerplatform.web.svn.common.action.CheckoutAction;
+>>>>>>> origin/GH94-Merge
 	import org.flowerplatform.web.svn.common.action.CommitAction;
 	import org.flowerplatform.web.svn.common.action.CopyToAction;
 	import org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction;
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
+<<<<<<< HEAD
 	import org.flowerplatform.web.svn.common.action.MarkResolvedAction;
 	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
+=======
+	import org.flowerplatform.web.svn.common.action.remote.OpenSvnCredentialsWindowClientCommand;
+	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
+	import org.flowerplatform.web.svn.common.action.SvnChangeCredentialsAction;
+	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
+	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
+>>>>>>> origin/GH94-Merge
 	import org.flowerplatform.web.svn.common.action.RevertAction;
 	import org.flowerplatform.web.svn.common.action.ShareProjectAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
@@ -45,9 +60,17 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
+<<<<<<< HEAD
 	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	
 
+=======
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
+	import org.flowerplatform.web.svn.common.action.MergeAction;
+	import org.flowerplatform.web.svn.common.action.CopyUrlToClipboardAction;
+
+	
+>>>>>>> origin/GH94-Merge
 	/**
 	 * @author Gabriela Murgoci
 	 * 	 
@@ -55,7 +78,6 @@ package org.flowerplatform.web.svn.common {
 	 */
 	
 	public class SvnCommonPlugin extends AbstractFlowerFlexPlugin  {
-		
 		/**
 		 * @flowerModelElementId _fUOOYAM7EeOrJqcAep-lCg
 		 */
@@ -74,6 +96,7 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public override function preStart():void {	
 			super.preStart();			
+<<<<<<< HEAD
 
 
 
@@ -88,20 +111,32 @@ package org.flowerplatform.web.svn.common {
 								   SwitchAction,
 								   CleanupAction,
 								   ShareProjectAction,
+=======
+			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.
+				actionClasses.push(CreateRemoteFolderAction, 
+								   CopyUrlToClipboardAction,
+>>>>>>> origin/GH94-Merge
 					               CreateSvnRepositoryAction, 
 								   DeleteAction,
 								   SvnChangeCredentialsAction,
 								   RefreshRemoteResourceAction, 
 								   CheckoutAction,
 								   UpdateToHeadAction,
+<<<<<<< HEAD
 								   CommitAction,
 								   RevertAction,
 								   MarkResolvedAction,
 								   AddToVersionControlAction,
 								   AddToSvnIgnoreAction);
+=======
+								   UpdateToVersionAction, 
+								   MergeAction);
+
+>>>>>>> origin/GH94-Merge
 		}
 
 		
+<<<<<<< HEAD
 
 		protected override function registerClassAliases():void {	
 			super.registerClassAliases();
@@ -110,6 +145,18 @@ package org.flowerplatform.web.svn.common {
 			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
 			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);			
 
+=======
+		/**
+		 * @flowerModelElementId _RqKg4AM1EeOrJqcAep-lCg
+		 */
+
+		protected override function registerClassAliases():void {		
+			registerClassAlias("org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand",
+				OpenSvnCredentialsWindowClientCommand);
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);
+			super.registerClassAliases();
+>>>>>>> origin/GH94-Merge
 		}
 			
 		/**
@@ -137,5 +184,4 @@ package org.flowerplatform.web.svn.common {
 			return treeNode2;
 		}
 	}
-	
 }

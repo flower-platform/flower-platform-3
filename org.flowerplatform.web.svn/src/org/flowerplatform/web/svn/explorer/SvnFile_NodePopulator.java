@@ -17,21 +17,10 @@
  * license-end
  */
 package org.flowerplatform.web.svn.explorer;
-import java.io.File;
-import java.util.List;
-
-import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
-import org.flowerplatform.communication.tree.INodeByPathRetriever;
 import org.flowerplatform.communication.tree.INodePopulator;
-import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
-import org.flowerplatform.web.projects.remote.ProjectsService;
-import org.flowerplatform.web.svn.SvnNodeType;
 import org.flowerplatform.web.svn.SvnPlugin;
-import org.tigris.subversion.subclipse.core.SVNException;
-import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 
@@ -50,5 +39,4 @@ public class SvnFile_NodePopulator implements INodePopulator {
 		}		
 		return false;
 	}
-
 }
