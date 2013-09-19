@@ -1,8 +1,13 @@
 package org.flowerplatform.web.tests.listener;
 
-import java.io.File;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 
-import static org.junit.Assert.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -66,7 +71,37 @@ public class FileChangeListenerTest {
 	}
 	
 	@Test
-	public void testSimpleDeleteAndRename() {
+	public void testSimpleModifyText() {
+		String fileToBeModifiedName = "file1";
+		searchFileInDir(organization, fileToBeModifiedName);
+		File fileToBeModified = getFileSearched();
+		
+		String editableResourcePath = "/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(fileToBeModified);
+		TextEditorStatefulService textEditorStatefulService = (TextEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(TEXT_EDITOR_SERVICE_ID);
+		textEditorStatefulService.subscribe(contextForFirstClient, new EditorStatefulClientLocalState(editableResourcePath));
+		textEditorStatefulService.subscribe(contextForSecondClient, new EditorStatefulClientLocalState(editableResourcePath));
+		EditableResource editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);	
+		assertNotNull(editableResource);
+		long oldTimeStamp = editableResource.getEditableResourceLastModifiedStamp();
+		
+		PrintWriter writer;
+		try {
+			writer = new PrintWriter(fileToBeModified);
+			writer.println("The first line");
+			writer.println("The second line");
+			writer.close();
+			FileManagerService.getInstance().refreshDirectoryByFile(context, fileToBeModified);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);
+		assertNotNull(editableResource);
+		assertNotSame(oldTimeStamp, editableResource.getEditableResourceLastModifiedStamp());
+	}
+	
+	@Test
+	public void testSimpleDeleteAndRenameText() {
 		// delete
 		String fileToBeDeletedName = "file2";
 		searchFileInDir(organization, fileToBeDeletedName);
@@ -100,5 +135,60 @@ public class FileChangeListenerTest {
 	}
 	
 	
+	@Test
+	public void deleteProject() {
+		String fileToBeDeletedName = "Project3";
+		searchFileInDir(organization, fileToBeDeletedName);
+		File fileToBeDeleted = getFileSearched();
+		
+		TextEditorStatefulService textEditorStatefulService = (TextEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(TEXT_EDITOR_SERVICE_ID);
+		EditableResource editableResource;
+		
+		String[] filesToBeOpenedNames = {"file6", "file4"};
+		String[] filesToBeOpenedNotDeletedNames = {"file8"};
+		ArrayList<File> filesToBeOpened = new ArrayList<File>();
+		ArrayList<File> filesToBeOpenedNotDeleted = new ArrayList<File>();
 
+		for(String name : filesToBeOpenedNames) {
+			searchFileInDir(organization, name);
+			File file = getFileSearched();
+			filesToBeOpened.add(file);
+			
+			String editableResourcePath = "/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
+			textEditorStatefulService.subscribe(contextForFirstClient, new EditorStatefulClientLocalState(editableResourcePath));
+			textEditorStatefulService.subscribe(contextForSecondClient, new EditorStatefulClientLocalState(editableResourcePath));
+			editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);	
+			
+			assertNotNull(editableResource);
+		}		
+		
+		for(String name : filesToBeOpenedNotDeletedNames) {
+			searchFileInDir(organization, name);
+			File file = getFileSearched();
+			filesToBeOpenedNotDeleted.add(file);
+			
+			String editableResourcePath = "/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
+			textEditorStatefulService.subscribe(contextForFirstClient, new EditorStatefulClientLocalState(editableResourcePath));
+			textEditorStatefulService.subscribe(contextForSecondClient, new EditorStatefulClientLocalState(editableResourcePath));
+			editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);	
+			
+			assertNotNull(editableResource);
+		}
+		
+		FileManagerService.getInstance().testDeleteFile(context, fileToBeDeleted);
+		
+		for(File fileClosed : filesToBeOpened) {
+			String editableResourcePath = "/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(fileClosed);
+			editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);
+			
+			assertEquals(null, editableResource);
+		}
+		
+		for(File fileClosed : filesToBeOpenedNotDeleted) {
+			String editableResourcePath = "/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(fileClosed);
+			editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);
+			
+			assertNotNull(editableResource);
+		}
+	}
 }

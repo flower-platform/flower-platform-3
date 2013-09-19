@@ -338,7 +338,6 @@ public class FileManagerService {
 		Pair<File, Object> object = (Pair<File, Object>) GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 
-		// TODO check for changes 
 		if(!object.a.exists()) {
 			// the file coresponding to node, doesn't exist anymore
 			FileEvent event = new FileEvent(object.a, FileEvent.FILE_DELETED);
@@ -347,6 +346,21 @@ public class FileManagerService {
 		} else {
 			// the file changed
 			FileEvent event = new FileEvent(object.a, FileEvent.FILE_REFRESHED);
+			CommonPlugin.getInstance().getFileEventDispatcher()
+				.dispatch(event);
+		}
+	}
+	
+	public void refreshDirectoryByFile(ServiceInvocationContext context, File file) {
+		
+		if(!file.exists()) {
+			// the file coresponding to node, doesn't exist anymore
+			FileEvent event = new FileEvent(file, FileEvent.FILE_DELETED);
+			CommonPlugin.getInstance().getFileEventDispatcher()
+					.dispatch(event);
+		} else {
+			// the file changed
+			FileEvent event = new FileEvent(file, FileEvent.FILE_REFRESHED);
 			CommonPlugin.getInstance().getFileEventDispatcher()
 				.dispatch(event);
 		}

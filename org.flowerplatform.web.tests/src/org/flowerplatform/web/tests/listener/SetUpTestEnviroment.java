@@ -127,5 +127,8 @@ public class SetUpTestEnviroment {
 				new GeneralService().createOrganization(FOLDER_TO_BE_COPIED_FOR_FILE_CHANGED, wrapper);
 			}
 		});
+		
+		markSpecialFolders(context, destDir);		
+
 	}
 }
