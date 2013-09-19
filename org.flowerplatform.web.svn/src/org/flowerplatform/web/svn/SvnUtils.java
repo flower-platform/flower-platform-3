@@ -5,17 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-<<<<<<< HEAD
-
-import org.tigris.subversion.subclipse.core.SVNException;
-import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
-
-import org.apache.subversion.javahl.ClientException;
-import org.tigris.subversion.subclipse.core.SVNException;
-
-import org.tigris.subversion.svnclientadapter.SVNClientException;
-import org.tigris.subversion.svnclientadapter.SVNInfoUnversioned;
-=======
 import org.apache.subversion.javahl.ClientException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.flowerplatform.communication.progress_monitor.ProgressMonitor;
@@ -23,32 +12,23 @@ import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.Policy;
 import org.tigris.subversion.subclipse.core.SVNException;
+import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.subclipse.core.repo.ISVNListener;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
 import org.tigris.subversion.svnclientadapter.SVNInfoUnversioned;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
->>>>>>> origin/GH94-Merge
-import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
 
 /**
  * 
  * @author Victor Badila 
  */
 public class SvnUtils implements ISvnVersionHandler{
-	
-<<<<<<< HEAD
-	public Boolean isRepository(File f) {				 
+	private List<ISVNListener> repositoryListeners = new ArrayList<ISVNListener>();
+
+	public Boolean isRepository(File f) throws SVNException {				 
 		try {
 			if (SVNProviderPlugin.getPlugin().getSVNClient().getInfo(f) instanceof SVNInfoUnversioned) {
-=======
-	private List<ISVNListener> repositoryListeners = new ArrayList<ISVNListener>();
-	
-	public Boolean isRepository(File f) {
-		JhlClientAdapter clientAdapter = new JhlClientAdapter();		 
-		try {
-			if (clientAdapter.getInfo(f) instanceof SVNInfoUnversioned) {
->>>>>>> origin/GH94-Merge
 				return false;
 			}
 			return true;
@@ -69,8 +49,6 @@ public class SvnUtils implements ISvnVersionHandler{
 				return true;
 			}
 		}
-<<<<<<< HEAD
-=======
 		
 //	this code may be used later
 		
@@ -86,7 +64,6 @@ public class SvnUtils implements ISvnVersionHandler{
 //			}			
 //		} catch (Exception e) {	// swallow it -> consider not authentication exception			
 //		}
->>>>>>> origin/GH94-Merge
 		return false;
 	}
 	/**

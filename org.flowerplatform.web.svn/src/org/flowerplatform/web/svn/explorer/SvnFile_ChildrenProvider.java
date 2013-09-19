@@ -41,16 +41,11 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 
 	@Override
 	public Collection<Pair<Object, String>> getChildrenForNode(Object node,	TreeNode treeNode, GenericTreeContext context) {		
-<<<<<<< HEAD
-		InvokeServiceMethodServerCommand command = (InvokeServiceMethodServerCommand)context.get("clientCommandKey");		
-		SvnService.tlCommand.set(command);
-=======
 		InvokeServiceMethodServerCommand command = (InvokeServiceMethodServerCommand)context.get("clientCommandKey");
 		if (command != null && command.getParameters().size() >= 1){
 			command.getParameters().remove(0);
 			SvnService.tlCommand.set(command);
 		}
->>>>>>> origin/GH94-Merge
 		Collection<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
 		if (node instanceof ISVNRepositoryLocation || node instanceof RemoteFolder){
 			try {		

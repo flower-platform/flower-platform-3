@@ -7,6 +7,7 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.svn.SvnPlugin;
+import org.tigris.subversion.subclipse.core.SVNException;
 
 
 /**
@@ -24,10 +25,17 @@ public class FSFile_SvnNodePopulator implements INodePopulator{
 		}
 		@SuppressWarnings("unchecked")
 		File file = ((Pair<File, String>) source).a;
-		boolean isFileFromSvnRepository = SvnPlugin.getInstance().getUtils().isRepository(file);
-		if(isFileFromSvnRepository) {
-			destination.getOrCreateCustomData().put(TREE_NODE_SVN_FILE_TYPE, true);
+		boolean isFileFromSvnRepository;
+		try {
+			isFileFromSvnRepository = SvnPlugin.getInstance().getUtils().isRepository(file);
+			if(isFileFromSvnRepository) {
+				destination.getOrCreateCustomData().put(TREE_NODE_SVN_FILE_TYPE, true);
+			}
+		} catch (SVNException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		return false;		
 	}
 

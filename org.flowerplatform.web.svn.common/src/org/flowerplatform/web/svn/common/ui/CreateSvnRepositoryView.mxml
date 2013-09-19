@@ -43,17 +43,12 @@ license-end
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.ActionBase;
 			import org.flowerplatform.flexutil.popup.IAction;
-<<<<<<< HEAD
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
-			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-			
-=======
-			import org.flowerplatform.flexutil.popup.IPopupHost;			
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;		
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
-						
->>>>>>> origin/GH94-Merge
+
 			public var node:TreeNode;
 			
 			[Bindable]
@@ -75,7 +70,6 @@ license-end
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);				
 			}
 			
-<<<<<<< HEAD
 			protected override function finishClickHandler():void {
 				var location:String = mySvnLocation.text;
 				for (var i:int; i<node.children.length; i++) {
@@ -87,15 +81,7 @@ license-end
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [location, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
 				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));    
-=======
-			protected override function finishClickHandler():void {				
-				if (Validator.validateAll(validators).length > 0) {
-					return;
-				}				
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [mySvnLocation.text, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
-				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));				
->>>>>>> origin/GH94-Merge
+
 			}
 			
 			public override function set popupHost(value:IPopupHost):void {
@@ -112,14 +98,10 @@ license-end
 			
 		]]>
 	</fx:Script>
-	
-<<<<<<< HEAD
-=======
 	<fx:Array id="validators">
 		<mx:StringValidator minLength="1" property="text" source="{mySvnLocation}"/>
 	</fx:Array>	
-	
->>>>>>> origin/GH94-Merge
+
 	<popup:states>
 		<mx:State name="0">			
 			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.WizardTitle')}"/>			
@@ -133,17 +115,7 @@ license-end
 					</s:HGroup>												
 				</s:VGroup>		 
 			</mx:AddChild>
-<<<<<<< HEAD
-
 		</mx:State>     
 	</popup:states> 
 
-	
-	
-
-=======
-		</mx:State>					
-	</popup:states>	
-	
->>>>>>> origin/GH94-Merge
 </popup:Wizard>

@@ -17,7 +17,6 @@
 * license-end
 */
 package  org.flowerplatform.web.svn {
-<<<<<<< HEAD
 
 	import flash.geom.Utils3D;
 
@@ -26,17 +25,12 @@ package  org.flowerplatform.web.svn {
 	
 	import mx.collections.IList;
 
-	
-=======
->>>>>>> origin/GH94-Merge
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-<<<<<<< HEAD
-
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 
 	import org.flowerplatform.web.svn.actions.ShowHistoryAction;
@@ -45,8 +39,6 @@ package  org.flowerplatform.web.svn {
 	import org.flowerplatform.web.svn.history.SvnHistoryViewProvider;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 
-=======
->>>>>>> origin/GH94-Merge
 	
 	/**
 	 * @author Gabriela Murgoci
@@ -61,14 +53,7 @@ package  org.flowerplatform.web.svn {
 		
 
 		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();
-		
 
-<<<<<<< HEAD
-		
-
-
-=======
->>>>>>> origin/GH94-Merge
 		public static const TREE_NODE_KEY_IS_FOLDER:String = "isFolder";
 				
 

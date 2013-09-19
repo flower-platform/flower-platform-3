@@ -126,7 +126,6 @@ license-end
 				
 			public function finishClickHandler2(result:String):void {
 				_popupHost.hideSpinner();
-<<<<<<< HEAD
 				if (result == "wdExistsAndIsValid") {
 					var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));					
 					var selectionPaths:ArrayList = new ArrayList;	
@@ -140,26 +139,6 @@ license-end
 					} else {						
 						selectionPaths.addItem(ArrayCollection(TreeNode(selection.getItemAt(selectionIndex)).getPathForNode(true)));						
 					}										
-=======
-				if (result) {
-					var wdNode:TreeNode = getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0)));
-					/* var childrenArray:ArrayCollection = wdNode.children;
-					for (var i:int=0; i<childrenArray.length; i++) {
-						if (TreeNode(childrenArray.getItemAt(i)).label == workingDirectoryTextInput.text) {
-							wdNode = TreeNode(childrenArray.getItemAt(i));
-							break;
-						}
-					}		 */			
-					var selectionPaths:ArrayList = new ArrayList;
-					for(var i:int=0; i<selection.length; i++) {
-						var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));
-						selectionPaths.addItem(path);
-					}					
-					var revisionValue:String = revision.text;
-					var headRev:Boolean = false;
-					if (headRevisionCheckbox.selected)
-						headRev = true;
->>>>>>> origin/GH94-Merge
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnService", "checkout", 
 							[selectionPaths, wdNode.getPathForNode(true), "/" + workingDirectoryName, 
