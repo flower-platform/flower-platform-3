@@ -80,6 +80,8 @@ package org.flowerplatform.web.common {
 		
 		public static const NODE_TYPE_CATEGORY_DECORATABLE_FILE:String = "decoratableFile";
 		
+		public static const NODE_TYPE_WORKING_DIRECTORY:String = "workingDirectory";
+		
 		public var authenticationManager:AuthenticationManager;
 		
 		/**

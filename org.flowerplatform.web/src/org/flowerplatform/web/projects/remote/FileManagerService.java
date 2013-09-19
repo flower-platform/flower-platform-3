@@ -37,6 +37,7 @@ import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.explorer.FsFile_FileSystemChildrenProvider;
 import org.flowerplatform.web.projects.ProjFile_ProjectChildrenProvider;
 import org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider;
@@ -171,9 +172,8 @@ public class FileManagerService {
 		String clientID = GenericTreeStatefulService.getClientIDFromPathWithRoot(pathWithRoot);
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
-
-		@SuppressWarnings("unchecked")
-		String path = ((Pair<File, Object>) object).a.getPath() + "\\" + name;
+		
+		String path = null;
 		
 		File file = new File(path);
 		
@@ -218,9 +218,14 @@ public class FileManagerService {
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 		
-		@SuppressWarnings("unchecked")
-		String path = ((Pair<File, Object>) object).a.getPath();
-		
+		String path = null;
+		if(object instanceof WorkingDirectory) {
+			String orgName = ((WorkingDirectory) object).getOrganization().getName();
+			File orgDir = ProjectsService.getInstance().getOrganizationDir(orgName);
+			path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
+		} else {
+			path = ((Pair<File, Object>) object).a.getPath();
+		}
 		File file = new File(path);
 		if(file.exists()) {	
 			boolean result = deleteFolder(file);
@@ -269,8 +274,14 @@ public class FileManagerService {
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 
-		@SuppressWarnings("unchecked")
-		String path = ((Pair<File, Object>) object).a.getPath();
+		String path = null;
+		if(object instanceof WorkingDirectory) {
+			String orgName = ((WorkingDirectory) object).getOrganization().getName();
+			File orgDir = ProjectsService.getInstance().getOrganizationDir(orgName);
+			path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
+		} else {
+			path = ((Pair<File, Object>) object).a.getPath();
+		}
 		
 		File fileToBeRenamed = new File(path);
 		String newPath = fileToBeRenamed.getParent() + "\\" + newName;

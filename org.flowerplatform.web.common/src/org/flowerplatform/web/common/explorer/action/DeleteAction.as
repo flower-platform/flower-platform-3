@@ -44,7 +44,8 @@ package org.flowerplatform.web.common.explorer.action
 				return false;
 			}
 			var obj:Object = selection.getItemAt(0);		
-			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY] != null);
+			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY] != null)
+					|| TreeNode(obj).pathFragment.type == WebCommonPlugin.NODE_TYPE_WORKING_DIRECTORY;
 		}
 		
 		override public function run():void	{
