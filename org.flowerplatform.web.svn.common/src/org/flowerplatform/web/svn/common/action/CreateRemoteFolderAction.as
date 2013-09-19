@@ -1,4 +1,4 @@
- /* license-start
+/* license-start
 	* 
 * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
 * 
@@ -58,11 +58,8 @@ package  org.flowerplatform.web.svn.common.action {
 			var view:CreateRemoteFolderView = new CreateRemoteFolderView();
 			view.node=TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setWidth(400)
-				.setHeight(450)
 				.setPopupContent(view)
 				.show();			
 		}
 	}
-	
 }

@@ -16,7 +16,7 @@ The result can be:
 
 @flowerModelElementId _v2V2QGwbEeGN3LpFXIiaDw
 -->
-<pnl:ResizablePopupWindow 
+<pnl:ResizablePopupWindow
 	
 	xmlns:pnl="com.crispico.flower.util.popup.*" 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
@@ -231,4 +231,4 @@ The result can be:
 	</mx:ControlBar>
 	
 	
-</pnl:ResizablePopupWindow>
+</pnl:ResizablePopupWindow> 

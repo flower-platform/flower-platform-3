@@ -25,6 +25,8 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.svn.common.action.AddToSvnIgnoreAction;
+	import org.flowerplatform.web.svn.common.action.AddToVersionControlAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagProjectAction;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
@@ -35,21 +37,31 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction;
 	import org.flowerplatform.web.svn.common.action.DeleteAction;
 	import org.flowerplatform.web.svn.common.action.MarkResolvedAction;
-	import org.flowerplatform.web.svn.common.action.OpenSvnCredentialsWindowClientCommand;
+	import org.flowerplatform.web.svn.common.action.remote.OpenSvnCredentialsWindowClientCommand;
 	import org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction;
 	import org.flowerplatform.web.svn.common.action.RenameMoveAction;
 	import org.flowerplatform.web.svn.common.action.RevertAction;
 	import org.flowerplatform.web.svn.common.action.ShareProjectAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
+
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
-	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
+	//import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
 	import org.flowerplatform.web.svn.common.history.HistoryEntry;
+
+	import org.flowerplatform.web.svn.common.action.SvnChangeCredentialsAction;
+
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
+
 	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	
 
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
+	import org.flowerplatform.web.svn.common.action.CopyUrlToClipboardAction;
+
+
+	
 	/**
 	 * @author Gabriela Murgoci
 	 * 	 
@@ -57,7 +69,6 @@ package org.flowerplatform.web.svn.common {
 	 */
 	
 	public class SvnCommonPlugin extends AbstractFlowerFlexPlugin  {
-		
 		/**
 		 * @flowerModelElementId _fUOOYAM7EeOrJqcAep-lCg
 		 */
@@ -78,36 +89,28 @@ package org.flowerplatform.web.svn.common {
 		 */
 		public override function preStart():void {	
 			super.preStart();			
-
-
-
-
-
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.
 				actionClasses.push(CreateRemoteFolderAction,
-								   RenameMoveAction, 
-								   BranchTagAction,
-								   BranchTagProjectAction,
-								   CopyToAction,
-								   SwitchAction,
-								   CleanupAction,
-								   ShareProjectAction,
-					               CreateSvnRepositoryAction, 
-								   DeleteAction,
-								   SvnChangeCredentialsAction,
-								   RefreshRemoteResourceAction, 
-								   CheckoutAction,
-								   UpdateToHeadAction,
-								   CommitAction,
-								   RevertAction,
-								   MarkResolvedAction,
-
-								   UpdateToVersionAction);
-	}
-
-	
-
-		
+					RenameMoveAction,
+					BranchTagAction,
+					BranchTagProjectAction,
+					CopyToAction,
+					CopyUrlToClipboardAction,
+					SwitchAction,
+					CleanupAction,
+					ShareProjectAction,
+					CreateSvnRepositoryAction,
+					DeleteAction,
+					SvnChangeCredentialsAction,
+					RefreshRemoteResourceAction,
+					CheckoutAction,
+					UpdateToHeadAction,
+					CommitAction,
+					RevertAction,
+					MarkResolvedAction,
+					AddToVersionControlAction,
+					AddToSvnIgnoreAction);
+		}
 
 		protected override function registerClassAliases():void {	
 			super.registerClassAliases();
@@ -167,5 +170,4 @@ package org.flowerplatform.web.svn.common {
 			
 		} 
 	}
-	
 }

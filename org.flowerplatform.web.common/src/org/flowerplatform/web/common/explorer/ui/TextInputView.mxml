@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--@author Razvan Tache-->
+<popup:Wizard xmlns:fx="http://www.adobe.com/2006/mxml"
+			  xmlns:s="library://ns.adobe.com/flex/spark"
+			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
+			  xmlns:component="org.flowerplatform.web.git.common.ui.component.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			import mx.validators.Validator;
+			
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			
+			public var nodesToOpen:ArrayCollection;
+			
+			public var selectedNodes:ArrayList;
+			
+			public var node:TreeNode;
+			
+			[Bindable]
+			public var currentSource:String;
+			
+			[Bindable]
+			public var title:String; 
+			
+			[Bindable]
+			public var wizardIcon:String; 
+			
+			[Bindable]
+			public var popupIcon:String; 
+			
+			[Bindable]
+			public var label:String;
+			
+			[Bindable]
+			public var validatorArray:Array;			
+			
+			private var resultHandler:IDialogResultHandler;
+			
+			public function setResultHandler(resultHandler:IDialogResultHandler):void {
+				this.resultHandler = resultHandler;
+			}
+			
+			public override function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public override function set popupHost(value:IPopupHost):void {
+				_popupHost = value;	
+				_popupHost.setLabel(title);
+				_popupHost.setIcon(popupIcon);
+			}
+						
+			protected override function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				wizardImage.source = wizardIcon;
+			}
+			
+			protected override function finishClickHandler():void {
+				// validate form
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				resultHandler.handleDialogResult(folderName.text);
+				cancelHandler();
+			}
+			
+			private function cancelHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
+			}
+			
+		]]>
+	</fx:Script>
+
+	<fx:Array id="validators">
+			<mx:StringValidator minLength="1" property="text" source="{folderName}"/>					
+	</fx:Array>	
+
+	<popup:states>
+		<mx:State name = "0">
+			<mx:SetProperty name="wizardTitle" value="{title}"/>	
+			<mx:AddChild relativeTo="{contentArea}">
+				<s:VGroup width="100%" height="100%">
+					<s:HGroup width="100%" verticalAlign="middle">
+						<s:Label width="100%" text="{label}"/>													
+					</s:HGroup>						
+					<s:TextInput id="folderName" width="100%" text="{currentSource}"/> 				
+					<s:HGroup width="100%" verticalAlign="middle">					
+					</s:HGroup>												
+				</s:VGroup>	
+			</mx:AddChild>
+		</mx:State>
+	</popup:states>
+</popup:Wizard>

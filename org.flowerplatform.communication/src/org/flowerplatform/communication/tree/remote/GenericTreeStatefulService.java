@@ -728,7 +728,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	}
 
 	public static Object getNodeByPathFor(List<PathFragment> path, GenericTreeContext context) {
-		AbstractTreeStatefulService service = getServiceFromPathWithRoot(path);		
+		GenericTreeStatefulService service = getServiceFromPathWithRoot(path);		
 		if (service != null) {			
 			List<PathFragment> pathWithoutRootFragment = path.subList(1, path.size());			
 			return service.getNodeByPath(pathWithoutRootFragment, context);
@@ -736,10 +736,21 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 		return null;
 	}
 	
-	public static AbstractTreeStatefulService getServiceFromPathWithRoot(List<PathFragment> path) {
-		PathFragment firstNodePath = path.get(0);		
-		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {			
-			return (AbstractTreeStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(firstNodePath.getName());			
+
+	public static GenericTreeStatefulService getServiceFromPathWithRoot(List<PathFragment> path) {
+		PathFragment firstNodePath = path.get(0);
+		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {
+			String[] informations = firstNodePath.getName().split("\\|");
+			return (GenericTreeStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(informations[0]);			
+		}
+		return null;
+	}
+	
+	public static String getClientIDFromPathWithRoot(List<PathFragment> path) {
+		PathFragment firstNodePath = path.get(0);
+		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {
+			String[] informations = firstNodePath.getName().split("\\|");
+			return informations[1];
 		}
 		return null;
 	}

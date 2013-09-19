@@ -85,6 +85,10 @@ license-end
 				}
 			}
 			
+			protected override function cancelClickHandler():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);		
+			}
+			
 			
 			public function setSelectionPath():void {
 				if (conflictingResources.length > 1) {

@@ -11,7 +11,6 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateRemoteFolderAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.CreateSvnRepositoryAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.DeleteAction"/>
-    <classEntry path="org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CommentComponent"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CommentView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView"/>

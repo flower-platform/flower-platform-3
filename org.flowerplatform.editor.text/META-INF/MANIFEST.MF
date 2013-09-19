@@ -7,7 +7,8 @@ Bundle-Activator: org.flowerplatform.editor.text.EditorTextPlugin
 Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.common,
  org.flowerplatform.editor,
- org.flowerplatform.communication
+ org.flowerplatform.communication,
+ org.flowerplatform.file_event
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.flowerplatform.editor.text,

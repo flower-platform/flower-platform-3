@@ -16,7 +16,6 @@
 *
 * license-end
 */
-
 package  org.flowerplatform.web.svn {
 
 	import flash.geom.Utils3D;
@@ -26,13 +25,12 @@ package  org.flowerplatform.web.svn {
 	
 	import mx.collections.IList;
 
-	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 
 	//import org.flowerplatform.web.svn.actions.ShowHistoryAction;
@@ -55,13 +53,10 @@ package  org.flowerplatform.web.svn {
 		
 
 		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();
-		
-
-		
-
 
 		public static const TREE_NODE_KEY_IS_FOLDER:String = "isFolder";
 				
+
 		/**
 		 * @flowerModelElementId _DxJioAM1EeOrJqcAep-lCg
 		 */
@@ -123,5 +118,4 @@ package  org.flowerplatform.web.svn {
 			
 		} 
 	}
-	
 }

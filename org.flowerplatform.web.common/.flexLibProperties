@@ -30,6 +30,9 @@
     <classEntry path="org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto"/>
     <classEntry path="org.flowerplatform.web.common.security.ui.UserFormViewProvider"/>
     <classEntry path="org.flowerplatform.web.common.ui.LoginView"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.action.CreateFileAction"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.action.DeleteAction"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.action.RenameAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

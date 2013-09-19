@@ -67,13 +67,13 @@ license-end
 			public var selectedObject:TreeNode;			
 									
 			[Bindable]
+			public var comment:String;
+			
+			[Bindable]
 			public var volatileAffectedPathsEntry:ArrayCollection;
 			
 			[Bindable]
 			public var repositoryInfoLabel:String = "";
-			
-			[Bindable]
-			public var selectedHistoryEntryFromView:Object;		
 			
 			[Bindable]
 			public var dateTimeFormatter:DateTimeFormatter = new DateTimeFormatter();
@@ -221,6 +221,9 @@ license-end
 			}
 			
 			private function getAffectedPaths():void {
+				var obj:Object = ArrayCollection(historyEntriesTable.dataProvider).getItemAt(commentField.grid.selectedIndex);
+				comment = obj.comment
+				
 				if(historyEntriesTable.selectedItem == null) {
 					return;
 				}
@@ -245,31 +248,12 @@ license-end
 							"getRepositoryNameAndWorkingDirectory", 
 							[selectedObject.getPathForNode(true)], 
 							this, 
-							getRepositoryNameAndWorkingDirectoryCallback));		
-				}				
+							getRepositoryNameAndWorkingDirectoryCallback));
+			}							
 			
 			public function getRepositoryNameAndWorkingDirectoryCallback(result:String):void {
-				if (result.charAt(0) == "?") {
-					result = result.replace("?", "");
-					var fullpath:ArrayCollection = SvnCommonPlugin.getWorkingDirectoryTreeNode(selectedObject).getPathForNode(true);					
-					CommunicationPlugin.getInstance().bridge.sendObject(
-						new InvokeServiceMethodServerCommand(
-							"svnService", 
-							"getRestOfInformation",					 
-							[fullpath, result], 
-							this, 
-							getRepositoryNameAndWorkingDirectoryCallback2));	
-				}			
-				else {
-					repositoryInfoLabel = result;
-				}
-			}			
-			
-			public function getRepositoryNameAndWorkingDirectoryCallback2(result:ArrayCollection):void {
-				var callbackResultIndex:int = String(result.getItemAt(0)).length;
-				var preservedArgument:String = String(result.getItemAt(1));				
-				repositoryInfoLabel = preservedArgument.substring(callbackResultIndex);				
-			}
+				repositoryInfoLabel = result;				
+			}	
 			
 		]]>
 	</mx:Script>
@@ -316,15 +300,14 @@ license-end
 					<s:GridColumn id="revisionList" headerText="Revision" dataField="revision" sortCompareFunction="revision_sortCompareFunc" />
 					<s:GridColumn headerText="Date" sortCompareFunction="date_sortCompareFunc" dataTipFormatter="{dateTimeFormatter}" dataField="date"/>     					
 					<s:GridColumn headerText="Author" dataField="author"/>
-					<s:GridColumn headerText="Comment" dataField="comment"/>
+					<s:GridColumn headerText="Comment" dataField="comment" id="commentField"/>
 				</s:ArrayList>
 			</s:columns>
 		</s:DataGrid>
 		
 		<mx:HDividedBox id="detailArea" width="100%" height="50%" horizontalGap="3" >		
 			<s:DataGrid id="affectedPathEntriesTable" width="50%" height="100%"
-						dataProvider="{volatileAffectedPathsEntry}">
-				<!--dataProvider="{selectedHistoryEntryFromView.affectedPathEntries}"-->
+						dataProvider="{volatileAffectedPathsEntry}">				
 				 <s:columns>
 					<s:ArrayList>
 						<s:GridColumn headerText="Action" dataField="action"/>
@@ -334,7 +317,7 @@ license-end
 				</s:columns>
 			</s:DataGrid>			
 			<s:TextArea id="commentArea" width="50%" height="100%" editable="false"
-						text="{selectedHistoryEntryFromView.comment}" />
+						text="{comment}" />
 		</mx:HDividedBox>
 		
 	</mx:VDividedBox>

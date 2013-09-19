@@ -97,6 +97,7 @@
 			import org.flowerplatform.web.mobile.SplitView;
 			import org.flowerplatform.web.mobile.popup.ProgressMonitorSpinnerHandlerFactory;
 			import org.flowerplatform.web.mobile.popup.WrapperViewPopupHandlerFactory;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			
 			public static function get mainApp():MainMobile {
 				return MainMobile(FlexGlobals.topLevelApplication);

@@ -32,6 +32,7 @@ import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService;
 
@@ -73,8 +74,10 @@ public class AbstractFileWrapperNodeDataProvider implements INodeDataProvider, I
 		File file = getFile(source);
 		destination.setLabel(file.getName());
 		if (file.isDirectory()) {
+			destination.getOrCreateCustomData().put(WebPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY, true);
 			destination.setIcon(WebPlugin.getInstance().getResourceUrl("images/folder.gif"));
 		} else {
+			destination.getOrCreateCustomData().put(WebPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY, false);
 			destination.setIcon(WebPlugin.getInstance().getResourceUrl("images/file.gif"));
 		}
 		return true;
