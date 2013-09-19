@@ -80,22 +80,20 @@ public class SvnFileNodeDataProvider implements INodeDataProvider,
 		// IllegalArgumentException("We were expecting a path with 1 item, but we got: "
 		// + fullPath);
 		// }
-
+		
 		String remoteFilePath = new String();
 		String repositoryURL = fullPath.get(2).getName();
-
+		
 		// String remoteFilePath = fullPath.subList(3, fullPath.size());
 		try {
 			SVNRepositoryLocation repository = SVNRepositoryLocation
 					.fromString(repositoryURL);
-
 			for (int i = 3; i < fullPath.size(); i++) {
 				remoteFilePath += fullPath.get(i).getName();
 				if (i < fullPath.size() - 1) {
 					remoteFilePath += "/";
 				}
 			}
-
 			// remoteFilePath.concat(fullPath.get(num).getName());
 
 			// remoteFilePath = fullPath.subList(3, fullPath.size());
@@ -106,6 +104,7 @@ public class SvnFileNodeDataProvider implements INodeDataProvider,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		return null;
 	}
 }

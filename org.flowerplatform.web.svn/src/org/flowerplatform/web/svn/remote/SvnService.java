@@ -8,11 +8,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -47,17 +46,14 @@ import org.hibernate.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tigris.subversion.subclipse.core.ISVNCoreConstants;
-import org.tigris.subversion.subclipse.core.ISVNLocalResource;
 import org.tigris.subversion.subclipse.core.ISVNRemoteFolder;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
-import org.tigris.subversion.subclipse.core.SVNTeamProvider;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
 import org.tigris.subversion.subclipse.core.resources.RemoteResource;
-import org.tigris.subversion.subclipse.core.resources.SVNWorkspaceRoot;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
@@ -147,7 +143,9 @@ public class SvnService {
 		// had to use List due to limitations of altering final variables inside
 		// runnable
 		final List<String> operationSuccessful = new ArrayList<String>();
-
+		
+		context.getCommand().getParameters().remove(0);
+		tlCommand.set(context.getCommand());
 		new DatabaseOperationWrapper(new DatabaseOperation() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -865,16 +863,28 @@ public class SvnService {
 
 		// list of remote files
 		final List<RemoteFile> remoteFile = new ArrayList<RemoteFile>();
-
+		
+		//map used for refresh in the end
+		HashMap<Object, List<PathFragment>> refreshMap = new HashMap<Object, List<PathFragment>>();
 		context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
+		
 		for (List<PathFragment> fullPath : objectFullPaths) {
+			
 			Object node = GenericTreeStatefulService.getNodeByPathFor(fullPath,
 					null);
+			
 			// add in the list of repos
 			if (node.getClass().equals(SVNRepositoryLocation.class)) {
 
 				SVNRepositoryLocation repo = (SVNRepositoryLocation) node;
+				
+				List<PathFragment> parent = new ArrayList<PathFragment>();
+				parent.addAll(fullPath);
+				parent.remove(parent.size() - 1);
+				Object remote = GenericTreeStatefulService.getNodeByPathFor(parent, null);
+				refreshMap.put(remote, parent);
+				
 				String organizationName = fullPath.get(1).getName();
 				Organization org = EntityFactory.eINSTANCE.createOrganization();
 				org.setName(organizationName);
@@ -890,12 +900,23 @@ public class SvnService {
 			// add in the list of remote resources
 			if (node.getClass().equals(RemoteFolder.class)) {
 				remoteObject.add((ISVNRemoteResource) node);
+				
+				List<PathFragment> parent = new ArrayList<PathFragment>();
+				parent.addAll(fullPath);
+				parent.remove(parent.size() - 1);
+				Object remote = GenericTreeStatefulService.getNodeByPathFor(parent, null);
+				refreshMap.put(remote, parent);
 			}
 
 			// add in the list of remote files
 			if (node.getClass().equals(RemoteFile.class)) {
-
 				remoteFile.add((RemoteFile) node);
+				
+				List<PathFragment> parent = new ArrayList<PathFragment>();
+				parent.addAll(fullPath);
+				parent.remove(parent.size() - 1);
+				Object remote = GenericTreeStatefulService.getNodeByPathFor(parent, null);
+				refreshMap.put(remote, parent);
 			}
 		}
 
@@ -908,12 +929,9 @@ public class SvnService {
 
 			// delete remote resource
 			if (remoteObject.size() >= 1) {
-				SVNProviderPlugin
-						.getPlugin()
-						.getRepositoryResourcesManager()
-						.deleteRemoteResources(
-								remoteObject.toArray(new ISVNRemoteResource[remoteObject
-										.size()]), comment, monitor);
+				SvnPlugin.getInstance().getUtils()
+						.deleteRemoteResources(remoteObject.toArray(new ISVNRemoteResource[remoteObject.size()]), 
+								comment, monitor);
 
 			}
 
@@ -926,8 +944,7 @@ public class SvnService {
 							@Override
 							public void run() {
 								for (SVNRepositoryURLEntity url : repositoryObject) {
-									SVNRepositoryURLEntity toDelete = wrapper
-											.findByField(
+									SVNRepositoryURLEntity toDelete = wrapper.findByField(
 													SVNRepositoryURLEntity.class,
 													"name", url.getName()).get(
 													0);
@@ -947,12 +964,14 @@ public class SvnService {
 			// delete remote file
 			if (remoteFile.size() >= 1) {
 				remoteObject.addAll(remoteFile);
-				SVNProviderPlugin
-						.getPlugin()
-						.getRepositoryResourcesManager()
-						.deleteRemoteResources(
-								remoteObject.toArray(new ISVNRemoteResource[remoteObject
-										.size()]), comment, monitor);
+				SvnPlugin.getInstance().getUtils()
+						.deleteRemoteResources(remoteObject.toArray(new ISVNRemoteResource[remoteObject.size()]), 
+								comment, monitor);
+			}
+			for(Object root : refreshMap.keySet()){
+				((GenericTreeStatefulService) GenericTreeStatefulService
+						.getServiceFromPathWithRoot(refreshMap.get(root)))
+						.dispatchContentUpdate(root);
 			}
 
 		} catch (SVNException e) {
@@ -963,8 +982,7 @@ public class SvnService {
 			context.getCommunicationChannel().appendOrSendCommand(
 					new DisplaySimpleMessageClientCommand(CommonPlugin
 							.getInstance().getMessage("error"), SvnPlugin
-							.getInstance().getMessage(
-									"svn.deleteSvnAction.error"),
+							.getInstance().getMessage("svn.deleteSvnAction.error"),
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
 		} finally {
@@ -972,15 +990,6 @@ public class SvnService {
 		}
 		return true;
 	}
-
-	// public void openLoginWindow(ServiceInvocationContext context, String
-	// credentials) {
-	//
-	// InvokeServiceMethodServerCommand cmd = tlCommand.get();
-	// cmd.getParameters().remove(0);
-	// new OpenSvnCredentialsWindowClientCommand(credentials,
-	// context.getCommand());
-	// }
 
 	/**
 	 * 
