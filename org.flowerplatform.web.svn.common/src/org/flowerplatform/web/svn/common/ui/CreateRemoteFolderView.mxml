@@ -50,22 +50,12 @@ license-end
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	
-			public var nodesToOpen:ArrayCollection;
-			
-			public var selectedNodes:ArrayList;
-	
 			public var node:TreeNode;
 			
 			[Bindable]
 			public var folderName:String;
 			
-			[Bindable]
-			public var userComment:String;
-			
-			[Bindable]
-			private var check:Boolean;
-			
-			 private function getProjectsCallbackHandler(result:Boolean):void {
+			private function getProjectsCallbackHandler(result:Boolean):void {
 				popupHost.hideSpinner();
 				if (result) 
 					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
@@ -123,9 +113,7 @@ license-end
 		<mx:State name="1">			
 			<mx:SetProperty name="wizardTitle" value="Commit"/>					
 			<mx:AddChild relativeTo="{contentArea}">									
-				<ui:CommentComponent id = "commComponent" 
-									 width="100%"
-									 height="100%" />
+				<ui:CommentComponent id="commComponent" width="100%" height="100%"/>
 			</mx:AddChild>
 		</mx:State>	
 		

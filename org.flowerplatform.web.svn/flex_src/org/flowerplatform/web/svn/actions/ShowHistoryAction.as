@@ -28,7 +28,6 @@ package org.flowerplatform.web.svn.actions {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.web.svn.SvnPlugin;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.history.SvnHistoryView;
 	import org.flowerplatform.web.svn.history.SvnHistoryViewProvider;
@@ -47,7 +46,7 @@ package org.flowerplatform.web.svn.actions {
 		}	
 		
 		public override function get visible():Boolean {
-			return SvnPlugin.getInstance().showHistoryIsPossible(selection);			
+			return SvnCommonPlugin.getInstance().showHistoryIsPossible(selection);			
 		}
 		
 		public override function run():void {

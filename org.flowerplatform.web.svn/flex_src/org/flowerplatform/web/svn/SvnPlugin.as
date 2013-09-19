@@ -35,13 +35,13 @@ package  org.flowerplatform.web.svn {
 
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 
-	import org.flowerplatform.web.svn.actions.ShowHistoryAction;
+	//import org.flowerplatform.web.svn.actions.ShowHistoryAction;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-	import org.flowerplatform.web.svn.history.HistoryEntry;
-	import org.flowerplatform.web.svn.history.SvnHistoryViewProvider;
+	//import org.flowerplatform.web.svn.history.HistoryEntry;
+	//import org.flowerplatform.web.svn.history.SvnHistoryViewProvider;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-
 	
+
 	/**
 	 * @author Gabriela Murgoci
 	 */
@@ -71,9 +71,9 @@ package  org.flowerplatform.web.svn {
 				throw new Error("Plugin " + Utils.getClassNameForObject(this, true) + " has already been started");
 			}
 			INSTANCE = this;	
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new SvnHistoryViewProvider());
+			//FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new SvnHistoryViewProvider());
 			//WebPlugin.getInstance().perspectives.push(new GitPerspective());	
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(ShowHistoryAction);
+			//WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(ShowHistoryAction);
 		}
 		
 		/**
@@ -81,7 +81,7 @@ package  org.flowerplatform.web.svn {
 		 */
 		protected override function registerClassAliases():void {				
 			super.registerClassAliases();
-			registerClassAlias("org.flowerplatform.web.svn.remote.history.HistoryEntry", HistoryEntry);
+			//registerClassAlias("org.flowerplatform.web.svn.remote.history.HistoryEntry", HistoryEntry);
 		}
 		
 		/**

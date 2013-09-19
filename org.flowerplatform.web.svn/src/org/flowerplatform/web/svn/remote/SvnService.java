@@ -581,6 +581,8 @@ public class SvnService {
 					+ "/" + commonParentPath));
 		else
 			branchResources.add(0, commonParentPath);
+		
+		branchResources.add(0, commonParent);
 
 		return branchResources;
 	}

@@ -19,6 +19,8 @@
 package org.flowerplatform.web.svn.common {
 	import flash.net.registerClassAlias;
 	
+	import mx.collections.IList;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.Utils;
@@ -42,9 +44,10 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
+	import org.flowerplatform.web.svn.common.history.HistoryEntry;
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
-	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;	
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	
 
 	/**
@@ -67,6 +70,8 @@ package org.flowerplatform.web.svn.common {
 		public static const  NODE_TYPE_REPOSITORY:String = "svnRepository";
 		
 		public static const  NODE_TYPE_FILE:String = "svnFile";
+		
+		public static const NUMBER_LOG_ENTRIES:Number = 25;
 		
 		/**
 		 * @flowerModelElementId _RqGPcAM1EeOrJqcAep-lCg
@@ -109,7 +114,8 @@ package org.flowerplatform.web.svn.common {
 			registerClassAlias("org.flowerplatform.web.svn.remote.BranchResource", BranchResource);		
 			registerClassAlias("org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand", OpenSvnCredentialsWindowClientCommand);
 			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
-			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);			
+			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);	
+			registerClassAlias("org.flowerplatform.web.svn.history.HistoryEntry", HistoryEntry);
 
 		}
 			
@@ -137,6 +143,29 @@ package org.flowerplatform.web.svn.common {
 				treeNode2 = treeNode2.parent;
 			return treeNode2;
 		}
+		
+		public function showHistoryIsPossible(selection:IList):Boolean {
+			if (selection.length != 1)
+				return false;			
+			if (!(selection.getItemAt(0) is TreeNode)) {
+				return false;
+			}
+			var isSvnProjectFile:Boolean = true;
+			var isSvnRepositoryFile:Boolean = true;			
+			var element:TreeNode = TreeNode(selection.getItemAt(0));			
+			if (element.customData == null ||
+				element.customData.svnFileType == null ||
+				element.customData.svnFileType == false) {
+				isSvnProjectFile = false;
+			}						
+			var node_type:String = element.pathFragment.type;			
+			if(node_type != SvnCommonPlugin.NODE_TYPE_REPOSITORY && 
+				node_type != SvnCommonPlugin.NODE_TYPE_FILE) {
+				isSvnRepositoryFile = false;
+			}			
+			return isSvnProjectFile || isSvnRepositoryFile;
+			
+		} 
 	}
 	
 }
