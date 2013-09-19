@@ -70,6 +70,10 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 		EditableResource editableResource = getEditableResource(filePathRelativeToWorkspace);
 		if(editableResource != null) {
 			switch (event.getEvent()) {
+				case FileEvent.FILE_REFRESHED : {
+					processResourceChanged(editableResource);
+					break;
+				}
 				case FileEvent.FILE_MODIFIED : {
 					processResourceChanged(editableResource);
 					break;
@@ -126,7 +130,6 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 		logger.debug("Process resource changed = {} with modification stamp = {}", editableResource.getEditableResourcePath(), ((FileBasedEditableResource) editableResource).getFile().lastModified());
 		reloadEditableResource(editableResource, true);
 		// TODO check if refresh handles this
-		//SingletonRefsInEditorPluginFromWebPlugin.INSTANCE_PROJECT_EXPLORER_TREE_STATEFUL_SERVICE.dispatchContentUpdate(resource);
 	}
 	
 	private void processResourceRemoved(EditableResource editableResource) {
