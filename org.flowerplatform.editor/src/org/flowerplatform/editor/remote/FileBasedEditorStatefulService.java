@@ -71,7 +71,9 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 		if(editableResource != null) {
 			switch (event.getEvent()) {
 				case FileEvent.FILE_REFRESHED : {
-					processResourceChanged(editableResource);
+					if(!editableResource.isSynchronized()) {
+						processResourceChanged(editableResource);
+					}
 					break;
 				}
 				case FileEvent.FILE_MODIFIED : {

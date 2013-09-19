@@ -173,7 +173,8 @@ public class FileManagerService {
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 		
-		String path = null;
+		@SuppressWarnings("unchecked")
+		String path = ((Pair<File, Object>) object).a.getPath() + "\\" + name;
 		
 		File file = new File(path);
 		
@@ -331,24 +332,30 @@ public class FileManagerService {
 	
 	public void refreshDirectory(ServiceInvocationContext context, List<PathFragment> pathWithRoot) {
 		
-		GenericTreeStatefulService service = GenericTreeStatefulService
-				.getServiceFromPathWithRoot(pathWithRoot);
-		
-		@SuppressWarnings("unchecked")
-		Pair<File, Object> object = (Pair<File, Object>) GenericTreeStatefulService.getNodeByPathFor(
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
-
-		if(!object.a.exists()) {
-			// the file coresponding to node, doesn't exist anymore
-			FileEvent event = new FileEvent(object.a, FileEvent.FILE_DELETED);
-			CommonPlugin.getInstance().getFileEventDispatcher()
-					.dispatch(event);
+		
+		String path = null;
+		if(object instanceof WorkingDirectory) {
+			String orgName = ((WorkingDirectory) object).getOrganization().getName();
+			File orgDir = ProjectsService.getInstance().getOrganizationDir(orgName);
+			path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
 		} else {
-			// the file changed
-			FileEvent event = new FileEvent(object.a, FileEvent.FILE_REFRESHED);
-			CommonPlugin.getInstance().getFileEventDispatcher()
-				.dispatch(event);
+			path = ((Pair<File, Object>) object).a.getPath();
 		}
+		File file = new File(path);
+		refreshDirectoryByFile(context, file);
+//		if(!object.a.exists()) {
+//			// the file coresponding to node, doesn't exist anymore
+//			FileEvent event = new FileEvent(object.a, FileEvent.FILE_DELETED);
+//			CommonPlugin.getInstance().getFileEventDispatcher()
+//					.dispatch(event);
+//		} else {
+//			// the file changed
+//			FileEvent event = new FileEvent(object.a, FileEvent.FILE_REFRESHED);
+//			CommonPlugin.getInstance().getFileEventDispatcher()
+//				.dispatch(event);
+//		}
 	}
 	
 	public void refreshDirectoryByFile(ServiceInvocationContext context, File file) {
