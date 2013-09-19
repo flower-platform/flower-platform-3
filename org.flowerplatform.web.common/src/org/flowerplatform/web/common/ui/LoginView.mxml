@@ -20,6 +20,7 @@
 -->
 <!--
 @author Cristina Constantinescu
+@author Cristina Necula
 -->
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
@@ -49,7 +50,8 @@
 			public var repositoryURI:String;		
 			public var command:InvokeServiceMethodServerCommand;	
 			public var resultHandl:IDialogResultHandler;
-			
+			[Bindable]
+			public var message:String;
 			private var _popupHost:IPopupHost;
 			
 			public function getActions(selection:IList):Vector.<IAction>{
@@ -119,7 +121,7 @@
 			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
 		</s:HGroup>
 		
-		<s:Label id="comment" text="{WebCommonPlugin.getInstance().getMessage('svn.login.message')}" width="100%" />		
+		<s:Label id="comment" text="{message}" width="100%" />		
 	</fx:Declarations>
 	
 	<s:layout>

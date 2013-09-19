@@ -64,6 +64,7 @@ package org.flowerplatform.web.svn.common.action {
 			
 			var loginView:LoginView = new LoginView();		
 			loginView.setResultHandler(this);
+			loginView.message = SvnCommonPlugin.getInstance().getMessage("svn.login.message");
 			loginView.command = command;
 			loginView.logging = false;
 			if(result == null){

@@ -26,6 +26,7 @@ package org.flowerplatform.web.svn.common.action.remote {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.web.common.ui.LoginView;
+	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	
 	/**
 	 * @author Cristina Necula
@@ -51,6 +52,7 @@ package org.flowerplatform.web.svn.common.action.remote {
 			
 			var loginView:LoginView = new LoginView();	
 			loginView.setResultHandler(this);
+			loginView.message = SvnCommonPlugin.getInstance().getMessage("svn.login.message");
 			loginView.repositoryURI = repositoryURI;
 			loginView.user = user;
 			loginView.command = command;

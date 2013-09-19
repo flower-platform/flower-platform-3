@@ -146,28 +146,47 @@ public class SvnService {
 		
 		context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
-		new DatabaseOperationWrapper(new DatabaseOperation() {
-			@SuppressWarnings("unchecked")
-			@Override
-			public void run() {
-				String organizationName = parentPath.get(1).getName();
-				try {
-					SVNRepositoryLocation repository = SVNRepositoryLocation
-							.fromString(url);
-					if (repository.pathExists()) {
-						// creates entry in database and links it to specified
-						// organization
-						Query q = wrapper
-								.getSession()
-								.createQuery(
-										String.format(
-												"SELECT e from %s e where e.name ='%s'",
-												Organization.class
-														.getSimpleName(),
-												organizationName));
-						ArrayList<Object> querryResult = (ArrayList<Object>) q
-								.list();
-						if (querryResult.isEmpty()) {
+		try {
+			new DatabaseOperationWrapper(new DatabaseOperation() {
+				@SuppressWarnings("unchecked")
+				@Override
+				public void run() {
+					String organizationName = parentPath.get(1).getName();
+					try {
+						SVNRepositoryLocation repository = SVNRepositoryLocation
+								.fromString(url);
+						if (repository.pathExists()) {
+							// creates entry in database and links it to specified
+							// organization
+							Query q = wrapper
+									.getSession()
+									.createQuery(
+											String.format(
+													"SELECT e from %s e where e.name ='%s'",
+													Organization.class
+															.getSimpleName(),
+													organizationName));
+							ArrayList<Object> querryResult = (ArrayList<Object>) q
+									.list();
+							if (querryResult.isEmpty()) {
+								CommunicationChannel channel = (CommunicationChannel) context
+										.getCommunicationChannel();
+								channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+										"Error",
+										SvnPlugin
+												.getInstance()
+												.getMessage(
+														"svn.remote.svnService.createSvnRepository.error.inexistentOrganizationError"),
+										DisplaySimpleMessageClientCommand.ICON_ERROR));
+								return;
+							}
+							Object organization = querryResult.get(0);
+							SVNRepositoryURLEntity urlEntity = EntityFactory.eINSTANCE
+									.createSVNRepositoryURLEntity();
+							urlEntity.setName(url);
+							urlEntity.setOrganization((Organization) organization);
+							operationSuccessful.add("success");
+						} else {
 							CommunicationChannel channel = (CommunicationChannel) context
 									.getCommunicationChannel();
 							channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
@@ -175,17 +194,12 @@ public class SvnService {
 									SvnPlugin
 											.getInstance()
 											.getMessage(
-													"svn.remote.svnService.createSvnRepository.error.inexistentOrganizationError"),
+													"svn.remote.svnService.createSvnRepository.error.invalidUrlError"),
 									DisplaySimpleMessageClientCommand.ICON_ERROR));
-							return;
 						}
-						Object organization = querryResult.get(0);
-						SVNRepositoryURLEntity urlEntity = EntityFactory.eINSTANCE
-								.createSVNRepositoryURLEntity();
-						urlEntity.setName(url);
-						urlEntity.setOrganization((Organization) organization);
-						operationSuccessful.add("success");
-					} else {
+					} catch (SVNException e) {
+						logger.debug(
+								CommonPlugin.getInstance().getMessage("error"), e);
 						CommunicationChannel channel = (CommunicationChannel) context
 								.getCommunicationChannel();
 						channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
@@ -193,24 +207,16 @@ public class SvnService {
 								SvnPlugin
 										.getInstance()
 										.getMessage(
-												"svn.remote.svnService.createSvnRepository.error.invalidUrlError"),
+												"svn.remote.svnService.createSvnRepository.error.svnExceptionError2"),
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 					}
-				} catch (SVNException e) {
-					logger.debug(
-							CommonPlugin.getInstance().getMessage("error"), e);
-					CommunicationChannel channel = (CommunicationChannel) context
-							.getCommunicationChannel();
-					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
-							"Error",
-							SvnPlugin
-									.getInstance()
-									.getMessage(
-											"svn.remote.svnService.createSvnRepository.error.svnExceptionError2"),
-							DisplaySimpleMessageClientCommand.ICON_ERROR));
 				}
-			}
-		});
+			});
+		} catch (Exception e) {
+			if (isAuthentificationException(e))
+				return true;
+			e.printStackTrace();
+		}
 
 		// tree refresh
 		if (operationSuccessful.contains("success")) {
@@ -1040,7 +1046,6 @@ public class SvnService {
 			String username, String password,
 			InvokeServiceMethodServerCommand command) {
 
-		// InvokeServiceMethodServerCommand command = tlCommand.get();
 		tlCommand.remove();
 		try {
 			changeCredentials(context, uri, username, password);
