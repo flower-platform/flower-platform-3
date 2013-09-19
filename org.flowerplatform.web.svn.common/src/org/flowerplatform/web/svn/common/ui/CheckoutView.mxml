@@ -26,39 +26,48 @@ license-end
 			  xmlns:s="library://ns.adobe.com/flex/spark"
   			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
 			  xmlns:mx="library://ns.adobe.com/flex/mx"
+			  xmlns:utils="com.crispico.flower.util.*"
 			  creationComplete="init()"
-			  implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler"
-			  minWidth="300" minHeight="200">
+			  implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler">
 	
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
 			import mx.controls.Alert;
-			import mx.controls.Tree;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-			import org.flowerplatform.communication.tree.remote.PathFragment;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.ui.WorkingDirectorySelectionPopupView;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-			import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
 						
-			public var selection:ArrayList;			
+			public var selection:ArrayList;
+			
+			public var selectionIndex:int = 0;
+			
+			public var applyForAll:Boolean = false;
+			
+			[Bindable]
+			public var currentSelectedItemName:String;
 			
 			[Bindable]
 			public var depthDropdownDataProvider:ArrayList;
-		
 			
-			private function finishCallbackHandler(result:Boolean):void {
-				_popupHost.hideSpinner();
-				if (result == true) {					
-					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
-				}
+			public var workingDirectoryName:String;
+			
+			public var newProjectName:String;
+					
+			private function resetView():void {
+				currentSelectedItemName = TreeNode(selection.getItemAt(0)).label;
+				locationTextInput.text="";
+				headRevisionCheckbox.selected=true;
+				ignoreCheck.selected=false;
+				forceCheck.selected=false;
+				// set name of new item
 			}
 						
 			public override function set popupHost(value:IPopupHost):void {
@@ -68,49 +77,77 @@ license-end
 			}
 			
 			protected override function cancelClickHandler():void {
-				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);		
+				selectionIndex++;
+				if (selectionIndex == selection.length) {
+					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+				} else {
+					resetView();
+					callLater(locationTextInput.setFocus);										
+				}						
 			}
 			
-			protected override function finishClickHandler():void {				
+			protected override function finishClickHandler():void {
+				setWorkingDirectoryNameAndProjectName();
+				var projectDestinationAdditionalPath:String;
+				if (newProjectName!=null) {
+					projectDestinationAdditionalPath = newProjectName;
+				} else {
+					projectDestinationAdditionalPath = TreeNode(selection.getItemAt(selectionIndex)).label;
+				}
+				var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));
 				var organizationName:String = getSvnRepositoriesTreeNode(TreeNode(selection.getItemAt(0))).parent.label;				
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "workingDirectoryExists", [workingDirectoryTextInput.text, organizationName], 
+					new InvokeServiceMethodServerCommand("svnService", "workingDirectoryExistsAndProjectLocationIsValid", 
+						[workingDirectoryName, organizationName, projectDestinationAdditionalPath, wdNode.getPathForNode(true)], 
 						this, finishClickHandler2 ));		
 				_popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));
-			}			
+			}
+						
+			private function setWorkingDirectoryNameAndProjectName():void {
+				var textArea:String = locationTextInput.text;
+				while (textArea.charAt(0) == "/" || textArea.charAt(0) == "\\") {
+					textArea.substr(1);
+				}
+				var indexOfFirstBar:int;
+				if (textArea.indexOf("/") > textArea.indexOf('\\')) {
+					indexOfFirstBar = textArea.indexOf("/");
+				} else {
+					indexOfFirstBar = textArea.indexOf("\\");
+				}
+				if (indexOfFirstBar != -1) {
+					workingDirectoryName = textArea.substr(0, indexOfFirstBar);
+				    newProjectName = textArea.substr(indexOfFirstBar+1);
+				} else {
+					workingDirectoryName = textArea;
+					newProjectName = null;
+				}
+					
+			}
 				
-			public function finishClickHandler2(result:Boolean):void {
+			public function finishClickHandler2(result:String):void {
 				_popupHost.hideSpinner();
-				if (result) {
-
-					var wdNode:TreeNode = SvnCommonPlugin.getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0)));
-					/* var childrenArray:ArrayCollection = wdNode.children;
-=======
-					var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));
-					var childrenArray:ArrayCollection = wdNode.children;
->>>>>>> GH98-ShowHistory
-					for (var i:int=0; i<childrenArray.length; i++) {
-						if (TreeNode(childrenArray.getItemAt(i)).label == workingDirectoryTextInput.text) {
-							wdNode = TreeNode(childrenArray.getItemAt(i));
-							break;
-						}
-					}				 */	
-					var selectionPaths:ArrayList = new ArrayList;
-					for(var i:int=0; i<selection.length; i++) {
-						var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));
-						selectionPaths.addItem(path);
-					}					
-					var revisionValue:String = revision.text;
-					var headRev:Boolean = false;
-					if (headRevisionCheckbox.selected)
-						headRev = true;
+				if (result == "wdExistsAndIsValid") {
+					var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));					
+					var selectionPaths:ArrayList = new ArrayList;	
+					if (applyDefaultForAll.selected) {
+						workingDirectoryName = locationTextInput.text;
+						newProjectName = null;
+						applyForAll = true; // and thus CheckoutView will be closed after checkout, if all goes well
+						for(var i:int=0; i<selection.length; i++) {							
+							selectionPaths.addItem(ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true)));
+						}					
+					} else {						
+						selectionPaths.addItem(ArrayCollection(TreeNode(selection.getItemAt(selectionIndex)).getPathForNode(true)));						
+					}										
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnService", "checkout", 
-							[selectionPaths, wdNode.getPathForNode(true), "/" + workingDirectoryTextInput.text, 
-							revisionValue, depthDropdown.selectedIndex, headRev, forceCheck.selected, ignoreCheck.selected], 
+							[selectionPaths, wdNode.getPathForNode(true), "/" + workingDirectoryName, 
+							 revision.text, depthDropdown.selectedIndex, headRevisionCheckbox.selected, 
+							 forceCheck.selected, ignoreCheck.selected, newProjectName], 
 							this, finishCallbackHandler ));
-					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));		
-				} else {
+					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));
+					
+				} else if (result =="wdDoesNotExist"){
 					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
 						.setTitle(SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.interogationNewWorkingDirectory.title'))
 						.setText(SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.interogationNewWorkingDirectory.content'))
@@ -119,37 +156,55 @@ license-end
 						.setWidth(300)
 						.setHeight(300)
 						.showMessageBox();					
+				} else {
+					Alert.show("Project path already exists on the hard and belongs to another folder");
 				}
-			}	
+			}
+				
+
+
 			
-			public function createWorkingDirectory(event:MouseEvent):void {
-				var path:String = workingDirectoryTextInput.text
+			private function finishCallbackHandler(result:Boolean):void {
+				_popupHost.hideSpinner();
+				if ((result == true && ++selectionIndex == selection.length) || applyForAll) {					
+					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+				} else {
+					resetView();					
+					callLater(locationTextInput.setFocus);
+				}
+			}
+			
+			public function createWorkingDirectory(event:MouseEvent):void {				
 				var organizationTreeNode:TreeNode = getSvnRepositoriesTreeNode(TreeNode(selection.getItemAt(0))).parent;
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "createFolderAndMarkAsWorkingDirectory", [path, organizationTreeNode], this, createWorkingDirectoryCallbackHandler ));
+					new InvokeServiceMethodServerCommand("svnService", "createFolderAndMarkAsWorkingDirectory", 
+						[workingDirectoryName, organizationTreeNode], this, createWorkingDirectoryCallbackHandler ));
 				_popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));
 			} 
 			
 			public function createWorkingDirectoryCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result) {
-					finishClickHandler2(true);
+					finishClickHandler2("wdExistsAndIsValid");
 				} else {
 					Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.createWorkingDirectory.invalidArgument"));					
 				}
 			}
 			
 			public function handleDialogResult(result:Object):void {
-				workingDirectoryTextInput.text = String(result);
+				locationTextInput.text = String(result) + "/" + wizardTitle;
 			}
 			
 			public function init():void {
+				currentSelectedItemName = TreeNode(selection.getItemAt(0)).label;
 				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
 				depthDropdownDataProvider = new ArrayList();
 				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.depthDropdownValues.fullyRecursive"));
 				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.depthDropdownValues.immediateChildren"));
 				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.depthDropdownValues.onlyChildren"));
 				depthDropdownDataProvider.addItem(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.depthDropdownValues.onlyThis"));
+				callLater(locationTextInput.setFocus);
+								
 			}
 			
 			public function openWorkingDirectoryBrowseWindow():void {
@@ -161,12 +216,7 @@ license-end
 					.setPopupContent(view)
 					.show();
 			}
-			
-			// Had to give parameter to following method. Otherwise error message and does not compile
-			public function alertNotImpl(whatever:Object):void {
-				Alert.show("Feature not implemented yet");
-			}			
-			
+						
 			public function getWorkingDirectoriesForNode(treeNode:TreeNode):ArrayList {
 				var result:ArrayList = new ArrayList;
 				treeNode = getWorkingDirectoriesTreeNode(treeNode);
@@ -195,26 +245,40 @@ license-end
 				return treeNode;
 			}
 			
+			public function cancelAllHandler(event:Event):void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+			}
+			
+			protected override function creationCompleteHandler():void {
+				super.creationCompleteHandler();
+				var button:spark.components.Button = new spark.components.Button();
+				button.label = SvnCommonPlugin.getInstance().getMessage("svn.actions.checkout.CancelAllButtonLabel");
+				button.label = "Renounce";
+				button.addEventListener(MouseEvent.CLICK, cancelAllHandler);
+				buttonBar.addElement(button);
+			}
+			
 		]]>		
 	</fx:Script>
 	
 	<popup:states>
 		<mx:State name="0">			
 			<mx:SetProperty name="wizardTitle" 
-							value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.wizardName')}"/>										
-			<mx:AddChild relativeTo="{contentArea}">						
-				<s:VGroup width="100%">					
+							value="{currentSelectedItemName}"/>			
+			<mx:AddChild relativeTo="{contentArea}">
+				<s:VGroup width="100%" height="100%">					
 					<s:HGroup width="100%">
-						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.workingDirectoryIndicator')}"/>
-						<s:TextInput width="100%" id="workingDirectoryTextInput"/>
+						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.locationIndicator')}"/>
+						<s:TextInput width="100%" id="locationTextInput"/>
 						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.browseWorkspaceButton')}" click="{openWorkingDirectoryBrowseWindow()}"/>
+						<utils:HintButton toolTip="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.locationFormHint')}"/>
 					</s:HGroup>
 					<s:Rect width="1" height="10"/>
 					<s:CheckBox label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.headRevisionCheckbox')}" id="headRevisionCheckbox" selected="true"/>					
 					<s:HGroup width="100%" verticalAlign="middle">
 						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionLabel')}"/>
 						<s:TextInput id="revision" enabled="{!headRevisionCheckbox.selected}" width="100%"/>
-						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionButton')}" click="{alertNotImpl(null)}"/>
+						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionButton')}"/>						
 					</s:HGroup>
 					<s:Rect width="1" height="10"/>
 					<s:HGroup width="100%" verticalAlign="middle">
@@ -224,9 +288,10 @@ license-end
 					</s:HGroup>						
 					<s:CheckBox id="ignoreCheck" label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.ignoreExternalsCheckbox')}"/>					
 					<s:CheckBox id="forceCheck" label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.allowUnrevisionedObstructionsCheckbox')}"/>
+					<s:CheckBox id="applyDefaultForAll" label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.applyDefaultSettingsForAll')}"/>
 				</s:VGroup>		 
 			</mx:AddChild>
-			<mx:SetProperty target="finish" name="enabled" value="{headRevisionCheckbox.selected || revision.text!=''}"/>			
+			<mx:SetProperty target="finish" name="enabled" value="{(headRevisionCheckbox.selected || revision.text!='') &amp;&amp; locationTextInput.text!=''}"/>			
 		</mx:State>	
 	</popup:states>
 	

@@ -23,6 +23,8 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.svn.common.action.AddToSvnIgnoreAction;
+	import org.flowerplatform.web.svn.common.action.AddToVersionControlAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagAction;
 	import org.flowerplatform.web.svn.common.action.BranchTagProjectAction;
 	import org.flowerplatform.web.svn.common.action.CheckoutAction;
@@ -40,11 +42,10 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.ShareProjectAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
-	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
-	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;	
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	
 
 	/**
@@ -96,11 +97,9 @@ package org.flowerplatform.web.svn.common {
 								   CommitAction,
 								   RevertAction,
 								   MarkResolvedAction,
-
-								   UpdateToVersionAction);
-	}
-
-	
+								   AddToVersionControlAction,
+								   AddToSvnIgnoreAction);
+		}
 
 		
 

@@ -34,6 +34,7 @@ license-end
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
 			import mx.validators.Validator;
+			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -42,9 +43,9 @@ license-end
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 			import org.flowerplatform.flexutil.popup.ActionBase;
 			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;   
-			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			
 			public var node:TreeNode;
 			
@@ -67,12 +68,16 @@ license-end
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);    
 			}
 			
-			protected override function finishClickHandler():void {    
-				if (Validator.validateAll(validators).length > 0) {
-					return;
-				}    
+			protected override function finishClickHandler():void {
+				var location:String = mySvnLocation.text;
+				for (var i:int; i<node.children.length; i++) {
+					if (node.children.getItemAt(i).getLabel == location) {
+						Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.errorRepositoryAlreadyExists"));
+						return;
+					}
+				}
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [mySvnLocation.text, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
+					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [location, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
 				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));    
 			}
 			
@@ -90,10 +95,6 @@ license-end
 			
 		]]>
 	</fx:Script>
-	
-	<fx:Array id="validators">
-		<mx:StringValidator minLength="1" property="text" source="{mySvnLocation}"/>
-	</fx:Array> 
 	
 	<popup:states>
 		<mx:State name="0">   
