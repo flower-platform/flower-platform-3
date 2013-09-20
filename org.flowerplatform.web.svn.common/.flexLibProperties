@@ -21,6 +21,11 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.BranchTagProjectAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.SwitchAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.SwitchView"/>
