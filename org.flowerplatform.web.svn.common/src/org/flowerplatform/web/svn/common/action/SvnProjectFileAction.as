@@ -18,8 +18,8 @@
 */
 package org.flowerplatform.web.svn.common.action {
 	
-	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.flexutil.popup.ActionBase;
 	
 	/**
 	 * @author Victor Badila
@@ -42,6 +42,29 @@ package org.flowerplatform.web.svn.common.action {
 					return false;
 				}
 			}			
+			return true;
+		}
+		
+		public function getVisibleForAddToVersionOrAddToIgnore():Boolean {
+			if (!selection.getItemAt(0) is TreeNode) {
+				return false;
+			}
+			for (var i:int=0; i<selection.length; i++) {
+				var ok:Boolean = false;
+				var tnPos:TreeNode = TreeNode(selection.getItemAt(0));
+				while (tnPos.parent!=null) {
+					if (tnPos.customData != null &&
+						tnPos.customData.svnFileType != null &&
+						tnPos.customData.svnFileType != false) {
+						ok = true;
+						break;
+					}
+					tnPos = tnPos.parent;
+				}
+				if(!ok) {
+					return false;
+				}									
+			}	
 			return true;
 		}
 	}

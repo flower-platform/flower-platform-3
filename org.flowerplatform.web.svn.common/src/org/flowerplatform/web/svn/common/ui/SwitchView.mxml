@@ -82,8 +82,6 @@ license-end
 			/**
 			 * @flowerModelElementId _BBhKoHM0EeGqFZPifgWPGQ
 			 */
-			public var depthComboValues:ArrayCollection;
-			
 			public var node:TreeNode;
 			
 			public var selection:IList;
@@ -107,8 +105,10 @@ license-end
 				var parentName:String;
 				var i:int;
 				branchResources = result;
-				parentName = String(branchResources.removeItemAt(0));
-				locationTxt.text = parentName;
+				commonParentName = String(branchResources.removeItemAt(1));
+				commonParentUrl = commonParentName;
+				locationTxt.text = commonParentName;
+				commonParentPath = branchResources.removeItemAt(0);
 				pathChangedHandler();
 			}
 			
@@ -169,8 +169,8 @@ license-end
 					locationTxt.text = String(result);
 					pathChangedHandler();
 				 } else if (lastSelectedBtn == selectRevisionBtn) {
-					checkoutHeadCb.selected = false;
-					revisionTxt.text = String(result);
+					 checkoutHeadCb.selected = false;
+					 revisionTxt.text = String(result);
 				} 
 			}
 			
@@ -183,8 +183,8 @@ license-end
 				popUp.remoteResourcePath = commonParentPath;
 				popUp.remoteResourceName = commonParentName;
 				popUp.isResourceObject = true;
-				//popUp.setResultHandler(this);
-				popUp.showPopup(); 
+				popUp.setResultHandler(this);
+				popUp.showPopup();
 			}
 			
 			/**

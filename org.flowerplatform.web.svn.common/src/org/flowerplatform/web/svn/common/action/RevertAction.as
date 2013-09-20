@@ -49,5 +49,9 @@ package org.flowerplatform.web.svn.common.action {
 				.setPopupContent(view)
 				.show();
 		}
+		
+		public override function get visible():Boolean {
+			return getVisibleForAddToVersionOrAddToIgnore();
+		}
 	}
 }

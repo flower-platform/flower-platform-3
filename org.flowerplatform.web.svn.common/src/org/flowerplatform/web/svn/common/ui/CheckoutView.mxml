@@ -253,7 +253,6 @@ license-end
 				super.creationCompleteHandler();
 				var button:spark.components.Button = new spark.components.Button();
 				button.label = SvnCommonPlugin.getInstance().getMessage("svn.actions.checkout.CancelAllButtonLabel");
-				button.label = "Renounce";
 				button.addEventListener(MouseEvent.CLICK, cancelAllHandler);
 				buttonBar.addElement(button);
 			}

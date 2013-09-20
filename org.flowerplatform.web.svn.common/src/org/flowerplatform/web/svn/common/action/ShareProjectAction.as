@@ -49,12 +49,15 @@ package  org.flowerplatform.web.svn.common.action {
 				if (!(currentSelection is TreeNode)) {
 					return false;
 				}
-				if (currentSelection.customData == null ||
-					currentSelection.customData.svnFileType == null ||
-					currentSelection.customData.svnFileType == false) {
+				
+				if (!(TreeNode(currentSelection).pathFragment.type == WebCommonPlugin.NODE_TYPE_PROJECT))
+					return false;
+				if (currentSelection.customData.svnFileType == true || currentSelection.customData.svnFileType == false)
+					return false;
+				if (currentSelection.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE) {
 					return false;
 				}
-			}			
+			}
 			return true;
 		}
 		
@@ -67,7 +70,6 @@ package  org.flowerplatform.web.svn.common.action {
 			view.selection = selection;
 			view.viewLabel = "svn.ui.shareProject.label";
 			view.viewIcon = "images/svn_persp.gif";
-			//view.actionType = true;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setWidth(400)
 				.setHeight(450)

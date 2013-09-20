@@ -57,10 +57,6 @@ license-end
 		
 		import spark.primitives.supportClasses.StrokedElement;
 		
-		public var nodesToOpen:ArrayCollection;
-		
-		public var selectedNodes:ArrayList;
-		
 		public var node:TreeNode;
 			
 		protected var _popupHost:IPopupHost;
@@ -118,6 +114,7 @@ license-end
 			
 		protected function creationCompleteHandler():void {
 			_popupHost.addToControlBar(buttonBar);
+			
 			var statefulClient:GenericTreeStatefulClient;
 			statefulClient = new SvnRepositoryTreeStatefulClient();
 			tree.statefulClient = statefulClient;				

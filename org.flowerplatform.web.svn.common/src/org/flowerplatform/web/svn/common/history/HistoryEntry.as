@@ -17,7 +17,7 @@
 * license-end
 */
 
-package  org.flowerplatform.web.svn.history {
+package  org.flowerplatform.web.svn.common.history {
 	
 	import mx.collections.ArrayCollection;
 	
