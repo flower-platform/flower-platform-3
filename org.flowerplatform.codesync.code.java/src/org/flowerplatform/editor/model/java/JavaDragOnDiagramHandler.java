@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.editor.model.java;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -66,6 +67,10 @@ public class JavaDragOnDiagramHandler extends AbstractServerCommand implements I
 		
 		for (Object object : draggedObjects) {
 			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile((List<PathFragment>) object);
+			if (!acceptDraggedObject(resource)) {
+				return false;
+			}
+
 			CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 			
 			Node node = NotationFactory.eINSTANCE.createNode();

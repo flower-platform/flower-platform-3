@@ -16,22 +16,26 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync {
+package org.flowerplatform.codesync.code.javascript.parser;
+
+import org.flowerplatform.codesync.code.javascript.regex_ast.Node;
+
+/**
+ * @author Mariana Gheorghe
+ */
+public class RegexEngineState {
 	
-	import mx.collections.IList;
+	public String category;
+	public Node node;
 	
-	import org.flowerplatform.codesync.remote.CodeSyncAction;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
-	
-	public class CodeSyncTreeActionProvider implements IActionProvider {
-		
-		public function getActions(selection:IList):Vector.<IAction> {
-			var result:Vector.<IAction> = new Vector.<IAction>();
-			result.push(new CodeSyncAction("Code Sync - java", "java"));
-			result.push(new CodeSyncAction("Code Sync - js", "js"));
-			result.push(new CodeSyncAction("Wiki Sync", "github"));
-			return result;
-		}
+	public RegexEngineState(String category, Node node) {
+		super();
+		this.category = category;
+		this.node = node;
+	}
+
+	@Override
+	public String toString() {
+		return category + " " + node;
 	}
 }

@@ -16,22 +16,25 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync {
-	
-	import mx.collections.IList;
-	
-	import org.flowerplatform.codesync.remote.CodeSyncAction;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
-	
-	public class CodeSyncTreeActionProvider implements IActionProvider {
+package org.flowerplatform.codesync.code.javascript;
+
+import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.osgi.framework.BundleContext;
+
+import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
+
+/**
+ * @author Mariana Gheorghe
+ */
+public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
+
+	public static String TECHNOLOGY = "js";
+
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
 		
-		public function getActions(selection:IList):Vector.<IAction> {
-			var result:Vector.<IAction> = new Vector.<IAction>();
-			result.push(new CodeSyncAction("Code Sync - java", "java"));
-			result.push(new CodeSyncAction("Code Sync - js", "js"));
-			result.push(new CodeSyncAction("Wiki Sync", "github"));
-			return result;
-		}
+		CodeSyncCodePlugin.getInstance().addSrcDir("js");
 	}
+	
 }
