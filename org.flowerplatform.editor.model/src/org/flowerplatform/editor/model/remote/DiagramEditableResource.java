@@ -64,9 +64,11 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 	}
 
 	@Override
+	/**
+	 * @author Sebastian Solomon
+	 */
 	public String getLabel() {
-		// TODO Auto-generated method stub
-		return "hey, I'm a diagram!";
+		return getFile().getName();
 	}
 
 	@Override

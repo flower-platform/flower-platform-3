@@ -26,6 +26,7 @@ package org.flowerplatform.editor {
 	
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
+	import org.flowerplatform.flexutil.layout.IDirtyStateProvider;
 	
 	import spark.components.RichEditableText;
 	import spark.components.Scroller;
@@ -46,7 +47,7 @@ package org.flowerplatform.editor {
 	 * @author Cristi
 	 * 
 	 */
-	public class EditorFrontend extends VBox/* implements IDirtyStateProvider, ModalSpinnerSupport */ {
+	public class EditorFrontend extends VBox implements IDirtyStateProvider/*, ModalSpinnerSupport */ {
 	
 		/**
 		 * 
@@ -99,7 +100,7 @@ package org.flowerplatform.editor {
 
 		public var editorStatefulClient:EditorStatefulClient;
 		
-		public function getEditorStatefulClientForSelectedElement():EditorStatefulClient {
+		public function getEditorStatefulClientForSelectedElement():Object {
 			return editorStatefulClient;
 		}
 		
@@ -322,6 +323,7 @@ package org.flowerplatform.editor {
 		 * 
 		 * 
 		 */
+		
 		public function isDirty():Boolean {	
 			var editableResource:EditableResource = editorStatefulClient.editableResourceStatus;
 			if (editableResource != null) {

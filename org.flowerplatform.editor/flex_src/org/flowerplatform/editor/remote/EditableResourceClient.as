@@ -23,6 +23,7 @@ package org.flowerplatform.editor.remote {
 	 * @author Cristi
 	 * 
 	 */
+	[Bindable]
 	[RemoteClass]
 	[SecureSWF(rename="off")]
 	public class EditableResourceClient {

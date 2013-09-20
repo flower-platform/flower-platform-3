@@ -23,11 +23,26 @@
 @author Cristi
 
 -->
-<mx:TabNavigator xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="creationCompleteHandler()" xmlns:openresourcesview="com.crispico.flower.mp.web.editorsupport.openresourcesview.*"
-				 >
+<mx:TabNavigator 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:openresourcesview="com.crispico.flower.mp.web.editorsupport.openresourcesview.*" 
+	xmlns:tree="org.flowerplatform.communication.tree.*"
+	creationComplete="creationCompleteHandler()" 
+	implements="org.flowerplatform.flexutil.layout.IDirtyStateProvider" >
+	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.IDataRenderer;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.stateful_service.StatefulClient;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.editor.remote.EditableResource;
+			import org.flowerplatform.editor.remote.EditorStatefulClient;
+			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 //			implements="com.crispico.flower.mp.web.editorsupport.IDirtyStateProvider"
 			
 //			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
@@ -68,31 +83,31 @@
 			 * 
 			 */
 			private function creationCompleteHandler():void	{
-//				INSTANCE = this;
-//				addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
-//	
-//				for each (var sc:StatefulClient in StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList) {
-//					if (sc is EditorStatefulClient && EditorStatefulClient(sc).editableResourceStatus != null) {
-//						editableResourcesCollection.addItem(EditorStatefulClient(sc).editableResourceStatus);
-//					}
-//				}
-//				tree.addEventListener(Event.CHANGE, selectionChangedHandler);
+				INSTANCE = this;
+				addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
+	
+				for each (var sc:StatefulClient in CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList) {
+					if (sc is EditorStatefulClient && EditorStatefulClient(sc).editableResourceStatus != null) {
+						TreeNode(tree.rootNode).children.addItem(EditorStatefulClient(sc).editableResourceStatus);
+					}
+				}
+				tree.addEventListener(Event.CHANGE, selectionChangedHandler);
 			}
 			
-//			/**
-//			 * @author Daniela
-//			 */ 
-//			private function selectionChangedHandler(event:Event):void {
-//				// update the target of the Save action
+			/**
+			 * @author Daniela
+			 */ 
+			private function selectionChangedHandler(event:Event):void {
+				// update the target of the Save action
 //				GlobalEditorOperationsManager.INSTANCE.editorInputChangedForComponent(this);
-//			}
+			}
 //			
-//			/**
-//			 * 
-//			 */			
-//			private function viewRemovedHandler(event:ViewRemovedEvent):void {
-//				INSTANCE = null;				
-//			}
+			/**
+			 * 
+			 */			
+			private function viewRemovedHandler(event:ViewRemovedEvent):void {
+				INSTANCE = null;				
+			}
 //			
 //			/**
 //			 * 
@@ -122,43 +137,52 @@
 //			* @author Daniela
 //			* @author Mariana 
 //			*/ 
-//			public function isDirty():Boolean {
+			public function isDirty():Boolean {
 //				for each (var editableResource:EditableResource in editableResourcesCollection) {
 //					if (editableResource.dirty)
 //						return true;
 //				}
-//				return false;
-//			}
-//			
-//			public function getEditorStatefulClientForSelectedElement():EditorStatefulClient {
-//				if (!(tree.selectedItem is EditableResource)) {
-//					return null;
-//				}
-//				// TODO CS/STFL de scos castul la string
-//				var editableResourcePath:String = String(EditableResource(tree.selectedItem).editorInput);
-//				return GlobalEditorOperationsManager.INSTANCE.getInterestingEditorStatefulClientForEditableResourcePath(editableResourcePath);
-//			}
-			
-			public function editableResourceStatusAdded(editableResourceStatus:EditableResource):void {
-//				editableResourcesCollection.addItem(editableResourceStatus);
+				return false;
+			}
+//TODO			
+			public function getEditorStatefulClientForSelectedElement():Object {
+				if (!(tree.selectedItem is EditableResource)) {
+					return null;
+				}
+				//TODO CS/STFL de scos castul la string
+				//var editableResourcePath:String = String(EditableResource(tree.selectedItem).editorInput);
+				//return GlobalEditorOperationsManager.INSTANCE.getInterestingEditorStatefulClientForEditableResourcePath(editableResourcePath);
+				return null;
 			}
 			
+			/**
+			 * @author Sebastian Solomon
+			 */
+			public function editableResourceStatusAdded(editableResourceStatus:EditableResource):void {
+				TreeNode(tree.rootNode).children.addItem(editableResourceStatus);
+			}
+			
+			/**
+			 * @author Sebastian Solomon
+			 */
 			public function editableResourceStatusRemoved(editableResourceStatus:EditableResource):void {
-//				if (editableResourceStatus == null) {
-//					return;
-//					// I haven't actually seen this case (i.e. == null), but in theory could happen,
-//					// if the editor is closed really quickly, before the data arrives
-//				}
+				if (editableResourceStatus == null) {
+					return;
+					// I haven't actually seen this case (i.e. == null), but in theory could happen,
+					// if the editor is closed really quickly, before the data arrives
+				}
 //				
 //				var itemIndex:int = editableResourcesCollection.getItemIndex(editableResourceStatus);
-//				
-//				if (itemIndex < 0) {
-//					// However I seen this case: something went wrong when first registering
-//					// and the element is not in the list
-//					return;
-//				}
-//				
-//				editableResourcesCollection.removeItemAt(itemIndex);
+				var itemIndex:int = TreeNode(tree.rootNode).children.getItemIndex(editableResourceStatus);
+				
+				if (itemIndex < 0) {
+					// However I seen this case: something went wrong when first registering
+					// and the element is not in the list
+					return;
+				}
+				
+				//editableResourcesCollection.removeItemAt(itemIndex);
+				TreeNode(tree.rootNode).children.removeItemAt(itemIndex);
 			}
 			
 			public function editableResourceClientAddedOrRemoved():void {
@@ -172,10 +196,11 @@
 		
 	</fx:Script>
 	<mx:VBox label="All Resources" width="100%" height="100%">
-<!--		<openresourcesview:OpenResourcesTree id="tree"
-				width="100%" height="100%" dataProvider="{editableResourcesCollection}" 
-				contextMenuEnabled="true" fillContextMenuFunction="fillContextMenu"
-				allowMultipleSelection="true" labelFunction="getLabel"/>
--->	</mx:VBox>
+		<tree:GenericTreeList id="tree"
+				width="100%" height="100%"
+				hierarchicalModelAdapter="{new EditableResourceHierachicalModelAdapter()}"
+				itemRenderer="org.flowerplatform.editor.open_resources_view.OpenResourcesTreeItemRenderer"
+				allowMultipleSelection="true"/>
+	</mx:VBox>
 		
 </mx:TabNavigator>

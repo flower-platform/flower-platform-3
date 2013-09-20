@@ -405,7 +405,7 @@ package  org.flowerplatform.editor.remote {
 				// notify the OpenResView				
 				if (OpenResourcesView.INSTANCE != null) {
 					OpenResourcesView.INSTANCE.editableResourceStatusAdded(editableResourceStatus);
-					Application(FlexGlobals.topLevelApplication).dispatchEvent(new Event("resourceOpened"));
+					IEventDispatcher(FlexGlobals.topLevelApplication).dispatchEvent(new Event("resourceOpened"));
 				}
 			} else {
 				// resource updated; update use case
@@ -437,9 +437,9 @@ package  org.flowerplatform.editor.remote {
 			}
 			
 			// will update actions, etc
-//			if (dirtyStateChanged) {
-//				GlobalEditorOperationsManager.INSTANCE.dirtyStateUpdated(this);
-//			}
+			if (dirtyStateChanged) {
+				EditorPlugin.getInstance().globalEditorOperationsManager.dirtyStateUpdated(this);
+			}
 		}
 		
 		[RemoteInvocation]

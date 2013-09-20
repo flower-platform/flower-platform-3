@@ -134,6 +134,7 @@
 				// dirty info
 				saveButton.enabled = editableResource.dirty;
 				
+				
 				// lock info
 				var state:int = getState();
 				

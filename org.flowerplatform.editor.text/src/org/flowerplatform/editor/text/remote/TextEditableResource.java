@@ -19,6 +19,7 @@
 package org.flowerplatform.editor.text.remote;
 
 import org.flowerplatform.editor.remote.FileBasedEditableResource;
+import org.flowerplatform.editor.text.EditorTextPlugin;
 
 
 /**
@@ -52,7 +53,7 @@ public class TextEditableResource extends FileBasedEditableResource {
 	
 	@Override
 	public String getIconUrl() {
-		return "icons/Web/icons/file.gif";
+		return EditorTextPlugin.getInstance().getResourceUrl("images/file.gif");
 	}
 
 	/**

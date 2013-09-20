@@ -26,7 +26,7 @@ package org.flowerplatform.web.layout {
 	
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
-	
+	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	/**
 	 * Flower Modeling Perspective.
 	 * Contains : 
@@ -95,11 +95,11 @@ package org.flowerplatform.web.layout {
 			stack.parent = sash;
 			sash.children.addItem(stack);
 			
-//			view = new ViewLayoutData();
-//			view.viewId = OpenResourcesViewProvider.ID;
-//			stack.children.addItem(view);
-//			view.parent = stack;
-//			
+			view = new ViewLayoutData();			
+			view.viewId = OpenResourcesViewProvider.ID;
+			stack.children.addItem(view);
+			view.parent = stack;
+			
 //			view = new ViewLayoutData();
 //			view.viewId = WebDocumentationViewProvider.ID;
 //			stack.children.addItem(view);
