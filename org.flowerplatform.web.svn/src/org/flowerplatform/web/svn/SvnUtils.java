@@ -1,6 +1,7 @@
 package org.flowerplatform.web.svn;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,20 +51,18 @@ public class SvnUtils implements ISvnVersionHandler{
 			}
 		}
 		
-//	this code may be used later
-		
-//		try {
-//			Class<?> clazz = Class.forName("org.tigris.subversion.svnclientadapter.SVNClientException");
-//			if (exception.getCause() instanceof SVNClientException){
-//				Method getAprErrorMethod = clazz.getMethod("getAprError");
-//				getAprErrorMethod.setAccessible(true);
-//				Object result = getAprErrorMethod.invoke(exception.getCause());
-//				if (Integer.valueOf(String.valueOf(result)).intValue() == -1) {
-//					return true;
-//				}
-//			}			
-//		} catch (Exception e) {	// swallow it -> consider not authentication exception			
-//		}
+		try {
+			Class<?> clazz = Class.forName("org.tigris.subversion.svnclientadapter.SVNClientException");
+			if (exception.getCause() instanceof SVNClientException){
+				Method getAprErrorMethod = clazz.getMethod("getAprError");
+				getAprErrorMethod.setAccessible(true);
+				Object result = getAprErrorMethod.invoke(exception.getCause());
+				if (Integer.valueOf(String.valueOf(result)).intValue() == 170001) {
+					return true;
+				}
+			}			
+		} catch (Exception e) {	// swallow it -> consider not authentication exception			
+		}
 		return false;
 	}
 	/**

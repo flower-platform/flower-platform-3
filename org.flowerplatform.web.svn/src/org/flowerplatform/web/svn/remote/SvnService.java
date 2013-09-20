@@ -133,12 +133,15 @@ public class SvnService {
 		}
 
 		try {
-			context.getCommand().getParameters().remove(0);
+			if(context.getCommand().getParameters().size() >=1)
+				context.getCommand().getParameters().remove(0);
 			tlCommand.set(context.getCommand());
 			// create remote folder
 			parentFolder.createRemoteFolder(folderName, comment,
 					new NullProgressMonitor());
 		} catch (SVNException e) { // something wrong happened
+			if (isAuthentificationException(e))
+				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			CommunicationChannel channel = (CommunicationChannel) context
 					.getCommunicationChannel();
@@ -923,7 +926,8 @@ public class SvnService {
 		// runnable
 		final List<String> operationSuccessful = new ArrayList<String>();
 
-		context.getCommand().getParameters().remove(0);
+		if(context.getCommand().getParameters().size() >=1)
+			context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
 		try {
 			new DatabaseOperationWrapper(new DatabaseOperation() {
@@ -997,7 +1001,6 @@ public class SvnService {
 		} catch (Exception e) {
 			if (isAuthentificationException(e))
 				return true;
-			e.printStackTrace();
 		}
 
 		// tree refresh
@@ -1921,7 +1924,9 @@ public class SvnService {
 
 		// map used for refresh in the end
 		HashMap<Object, List<PathFragment>> refreshMap = new HashMap<Object, List<PathFragment>>();
-		context.getCommand().getParameters().remove(0);
+		
+		if(context.getCommand().getParameters().size() >=1)
+			context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
 
 		for (List<PathFragment> fullPath : objectFullPaths) {

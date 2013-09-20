@@ -47,6 +47,8 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	
 	public static final String SELECT_NODE_KEY = "selectNode";
 	
+	private static final String CLIENT_COMMAND_KEY = "clientCommandKey";
+	
 	/**
 	 * Useful, for trees that want to display a subset of a bigger tree, with data
 	 * taken in "one-shot". E.g. some GIT tree that displays only a part of what
@@ -322,7 +324,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	@RemoteInvocation
 	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {
 		AuditDetails auditDetails = new AuditDetails(logger, "OPEN_NODE", path, context.getStatefulClientId());
-		
+		clientContext.put(CLIENT_COMMAND_KEY, context.getCommand());
 		// create structure
 		TreeNode treeNode = openNodeInternal(context.getCommunicationChannel(), context.getStatefulClientId(), path, clientContext);		
 		
