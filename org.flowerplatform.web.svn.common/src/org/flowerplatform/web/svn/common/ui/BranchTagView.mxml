@@ -60,17 +60,11 @@ license-end
 			
 			import spark.primitives.supportClasses.StrokedElement;
 			
-			public var nodesToOpen:ArrayCollection;
-			
-			public var selectedNodes:ArrayList;
-			
 			public var node:TreeNode;
 			
 			public var selection:IList;
 			
 			public var resourcesSelected:Boolean;
-			
-			public var sameParents:Boolean;
 			
 			public var revision:Number;
 			
@@ -81,34 +75,16 @@ license-end
 			
 			public var commonParentName:String;
 			
-			public var secondSelection:TreeNode;
-			
 			public var viewLabel:String;
 			
 			public var viewIcon:String;
 			
 			public var actionType:Boolean;
+			
 			/**
 			 * @flowerModelElementId _qvAjsGxVEeGmX-bWmnlzew
 			 */
-			public var commonParentUrl:String;
-			
-			public var destinationSelectedNode:ArrayCollection;
-			
-			[Bindable]
-			public var folderName:String;
-			
-			[Bindable]
-			public var destinationURL:String;
-			
-			[Bindable]
-			public var destinationFolderName:String;
-			
-			[Bindable]
-			public var userComment:String;
-			
-			[Bindable]
-			private var check:Boolean;
+			private var lastBtnPressed:Button;
 			
 			/**
 			 * @flowerModelElementId _LdAgYGxVEeGmX-bWmnlzew
@@ -117,14 +93,18 @@ license-end
 			public var branchResources:ArrayCollection;
 			
 			[Bindable]
-			public var commonParent:Object;
-			
-			[Bindable]
 			public var locationURL:String;
 			
 			public function handleDialogResult(result:Object):void {
-				locationURL = String (result);
-				pathChangedHandler();
+				if (lastBtnPressed == treeSelBtn) {
+					locationURL = String (result);
+					pathChangedHandler();
+				}
+				if (lastBtnPressed == selectRevisionBtn) {
+					if (result != null) {					
+						revisionTxt.text = String(result);
+					}	
+				}
 			} 
 			
 			private function getProjectsCallbackHandler(result:Boolean):void {
@@ -138,8 +118,9 @@ license-end
 				var parentName:String;
 				var i:int;
 				branchResources = result;
-				parentName = String(branchResources.removeItemAt(0));
-				locationURL = parentName;
+				commonParentName = String(branchResources.removeItemAt(1));
+				locationURL = commonParentName;
+				commonParentPath = branchResources.removeItemAt(0);
 				pathChangedHandler();
 			}
 			
@@ -161,6 +142,7 @@ license-end
 			}
 			
 			public function browseBtnHandler():void {
+				lastBtnPressed = treeSelBtn;
 				var view:BranchTagSelectionPageView = new BranchTagSelectionPageView(); 
 				view.setResultHandler(this);
 				view.node = node;
@@ -173,11 +155,13 @@ license-end
 			}
 			
 			private function selectRevisionBtnHandler():void {
-				var popUp:SelectRevisionWindowView = new SelectRevisionWindowView();
-				popUp.remoteResourcePath = commonParentPath;
-				popUp.remoteResourceName = commonParentName;
-				popUp.isResourceObject = resourcesSelected;
-				popUp.showPopup();
+				lastBtnPressed = selectRevisionBtn;
+				var view:SelectRevisionWindowView = new SelectRevisionWindowView();
+				view.remoteResourcePath = commonParentPath;
+				view.remoteResourceName = commonParentName;
+				view.isResourceObject = resourcesSelected;
+				view.setResultHandler(this);
+				view.showPopup();
 			}
 			
 			protected override function cancelClickHandler():void {
@@ -185,10 +169,8 @@ license-end
 			} 
 			
 			protected override function finishClickHandler():void {
-				
 				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
-				
-				  CommunicationPlugin.getInstance().bridge.sendObject(
+				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService",
 						"branchTagResources",
 						[actionType, branchResources, locationTxt.text, commComponent.commitMessage.text, revision, createMissingFolders.selected, preserveFolderStructure.selected],
@@ -225,7 +207,7 @@ license-end
 						<s:HGroup width="100%"> 
 							<s:TextInput id="locationTxt" width="100%" change="pathChangedHandler()"
 										 text="{locationURL}"/>
-							<s:Button label="Select..." click="browseBtnHandler()"/>					
+							<s:Button id="treeSelBtn" label="Select..." click="browseBtnHandler()"/>					
 						</s:HGroup>			
 						<s:CheckBox id="createMissingFolders"
 									label="Create any intermediate folders that are missing"/>	
@@ -291,9 +273,7 @@ license-end
 			<mx:SetProperty name="wizardTitle" value="Commit"/>				
 			<mx:SetProperty name="wizardDescription" value="Enter commit message"/>				
 			<mx:AddChild relativeTo="{contentArea}">									
-				<ui:CommentComponent id = "commComponent" 
-									 width="100%"
-									 height="100%" />
+				<ui:CommentComponent id="commComponent" width="100%" height="100%"/>
 				<!--<s:CheckBox id="switchBranch" visible="{actionType}"
 							label="Switch working copy to new branch/tag">
 				</s:CheckBox>-->
@@ -302,6 +282,3 @@ license-end
 	</popup:states>
 	
 </popup:Wizard>
-
-
-

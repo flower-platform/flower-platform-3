@@ -50,6 +50,7 @@ package org.flowerplatform.web.git.common.remote {
 		public override function execute():void {
 			var loginView:LoginView = new LoginView();		
 			loginView.setResultHandler(this);
+			loginView.message = GitCommonPlugin.getInstance().getMessage("git.login.message");
 			loginView.repositoryURI = repositoryURI;
 			loginView.user = user;
 			loginView.command = command;

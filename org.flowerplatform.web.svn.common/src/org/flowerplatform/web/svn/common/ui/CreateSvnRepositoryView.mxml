@@ -45,16 +45,18 @@ license-end
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
+			import org.flowerplatform.web.svn.common.SvnCommonPlugin;		
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-			
+			import org.flowerplatform.web.common.WebCommonPlugin;
+
 			public var node:TreeNode;
 			
 			[Bindable]
-			public var svnLocation:String;   
+			public var svnLocation:String;			
 			
 			[Bindable]
 			private var check:Boolean;
-			
+				
 			private function getProjectsCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result != true) {
@@ -65,7 +67,7 @@ license-end
 			}
 			
 			public function cancelHandler():void {
-				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);    
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);				
 			}
 			
 			protected override function finishClickHandler():void {
@@ -79,10 +81,11 @@ license-end
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [location, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
 				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));    
+
 			}
 			
 			public override function set popupHost(value:IPopupHost):void {
-				_popupHost = value;    
+				_popupHost = value;				
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepiository.view.label"));
 				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/repository_rep.gif"));
 			}
@@ -90,30 +93,29 @@ license-end
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
 				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
-			}      
+			}						
 			
 			
 		]]>
 	</fx:Script>
-	
+	<fx:Array id="validators">
+		<mx:StringValidator minLength="1" property="text" source="{mySvnLocation}"/>
+	</fx:Array>	
+
 	<popup:states>
-		<mx:State name="0">   
-			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.WizardTitle')}"/>   
-			<mx:AddChild relativeTo="{contentArea}">         
+		<mx:State name="0">			
+			<mx:SetProperty name="wizardTitle" value="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.WizardTitle')}"/>			
+			<mx:AddChild relativeTo="{contentArea}">									
 				<s:VGroup width="100%" height="100%">
 					<s:HGroup width="100%" verticalAlign="middle">
-						<s:Label width="100%" text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.SvnUrlLabel')}"/>             
-					</s:HGroup>      
-					<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/>     
-					<s:HGroup width="100%" verticalAlign="middle">     
-					</s:HGroup>            
-				</s:VGroup>   
+						<s:Label width="100%" text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.SvnUrlLabel')}"/>													
+					</s:HGroup>						
+					<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/> 				
+					<s:HGroup width="100%" verticalAlign="middle">					
+					</s:HGroup>												
+				</s:VGroup>		 
 			</mx:AddChild>
-
 		</mx:State>     
 	</popup:states> 
-
-	
-	
 
 </popup:Wizard>

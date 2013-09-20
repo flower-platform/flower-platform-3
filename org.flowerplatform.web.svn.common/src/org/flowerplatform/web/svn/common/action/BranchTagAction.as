@@ -43,37 +43,26 @@ package  org.flowerplatform.web.svn.common.action {
 		/**
 		 * @flowerModelElementId _GWBDMAMhEeOrJqcAep-lCg
 		 */
-		
 		public override function get visible():Boolean {
-			
 			// check if there are selected resources
 			if (selection.length == 0)
 				return false;
-			
 			var organizationName:String = PathFragment(TreeNode(selection.getItemAt(0)).getPathForNode(false).getItemAt(0)).name;
-			
 			for (var i:int = 0; i < selection.length; i++) {
-				
 				var currentSelection:Object = selection.getItemAt(i);
-				// check if it's a TreeNode
 				if (!(currentSelection is TreeNode))
 					return false;
-				
 				var selectedNode:TreeNode = TreeNode(currentSelection); 
-				
 				if (organizationName != PathFragment(selectedNode.getPathForNode(false).getItemAt(0)).name) {
 					return false;
 				}
-				
 				if (selectedNode.pathFragment.type != SvnCommonPlugin.NODE_TYPE_FILE) {
 					return false;
 				}
-				
 				if ((selectedNode.customData.isFolder == false)) {
 					return false;
 				}	
 			}
-			
 			return true;
 		}
 		
@@ -94,5 +83,4 @@ package  org.flowerplatform.web.svn.common.action {
 				.show();			
 		}
 	}
-	
 }

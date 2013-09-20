@@ -728,7 +728,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	}
 
 	public static Object getNodeByPathFor(List<PathFragment> path, GenericTreeContext context) {
-		AbstractTreeStatefulService service = getServiceFromPathWithRoot(path);		
+		GenericTreeStatefulService service = getServiceFromPathWithRoot(path);		
 		if (service != null) {			
 			List<PathFragment> pathWithoutRootFragment = path.subList(1, path.size());			
 			return service.getNodeByPath(pathWithoutRootFragment, context);

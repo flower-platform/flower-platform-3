@@ -1,4 +1,3 @@
-
 /* license-start
 * 
 * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
@@ -64,5 +63,4 @@ package  org.flowerplatform.web.svn.common.action {
 				.show();			
 		}
 	}
-	
 }

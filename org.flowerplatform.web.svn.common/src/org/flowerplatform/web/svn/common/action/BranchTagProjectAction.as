@@ -42,7 +42,6 @@ package  org.flowerplatform.web.svn.common.action {
 		/**
 		 * @flowerModelElementId _GWBDMAMhEeOrJqcAep-lCg
 		 */
-		
 		public function isTreeNode():Boolean {
 			var i:int;
 			for (i = 0; i < selection.length; i++)
@@ -57,27 +56,10 @@ package  org.flowerplatform.web.svn.common.action {
 				if (!(currentSelection is TreeNode)) {
 					return false;
 				}
-				
-				/*if (currentSelection.customData == null ||
-					currentSelection.customData.svnFileType == null ||
-					currentSelection.customData.svnFileType == false) {
-					return false;
-				}*/
-				
 				if (currentSelection.customData == null ||
-					currentSelection.customData.svnFileType == null){
+					currentSelection.customData.svnFileType == null) {
 					return false;
 				}
-				
-				/*if (currentSelection.pathFragment.type != WebCommonPlugin.NODE_TYPE_PROJECT)
-					return false;
-			
-				if (currentSelection.customData == null)
-					return false;
-				if (currentSelection.customData.svnFileType == null)
-					return false;
-				if (currentSelection.customData.svnFile == true || currentSelection.customData.svnFile == false)
-					return false;*/
 			}			
 			return true;
 		}
@@ -99,5 +81,4 @@ package  org.flowerplatform.web.svn.common.action {
 				.show();			
 		}
 	}
-	
 }
