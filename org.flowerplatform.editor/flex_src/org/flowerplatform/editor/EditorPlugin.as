@@ -29,6 +29,7 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
+	import org.flowerplatform.editor.action.SaveAction;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.editor.remote.CreateEditorStatefulClientCommand;
 	import org.flowerplatform.editor.remote.EditableResource;
@@ -40,6 +41,8 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
+	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
+	import org.flowerplatform.flexutil.shortcuts.Shortcut;
 	
 	/**
 	 * @author Cristi
@@ -84,8 +87,9 @@ package org.flowerplatform.editor {
 		{
 			// TODO Auto Generated method stub
 			super.start();
-			globalEditorOperationsManager  = new GlobalEditorOperationsManager(/*Workbench(FlexUtilGlobals.getInstance().workbench)*/);
-			
+			globalEditorOperationsManager  = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));	
+			globalEditorOperationsManager.saveAction = new SaveAction();
+			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "s"), globalEditorOperationsManager.saveAction);
 		}
 		
 		

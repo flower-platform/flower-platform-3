@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package com.crispico.flower.util.shortcuts {
+package org.flowerplatform.flexutil.shortcuts {
 	
 	import mx.controls.Alert;
 

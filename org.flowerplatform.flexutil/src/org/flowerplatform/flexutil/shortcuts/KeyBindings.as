@@ -16,9 +16,7 @@
  *
  * license-end
  */
-package com.crispico.flower.util.shortcuts {
-	
-	import com.crispico.flower.flexdiagram.action.IAction;
+package org.flowerplatform.flexutil.shortcuts {
 	
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -27,6 +25,8 @@ package com.crispico.flower.util.shortcuts {
 	
 	import mx.core.FlexGlobals;
 	import mx.core.UIComponent;
+	
+	import org.flowerplatform.flexutil.popup.IAction;
 	
 	/**
 	 * This class binds shortcuts to actions (or functions).
@@ -97,7 +97,7 @@ package com.crispico.flower.util.shortcuts {
 					if (bindings[shortcut] is IAction) {
 						var action:IAction = bindings[shortcut];
 						if (canRun(action)) {
-							action.run(null); 
+							action.run(); 
 						}
 					} else {
 						var funct:Function = bindings[shortcut];

@@ -38,6 +38,7 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
+	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
@@ -79,6 +80,18 @@ package org.flowerplatform.web {
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
+			
+			FlexUtilGlobals.getInstance().keyBindings = new KeyBindings();
+			
+			// is needed from other plugins
+			var workbench:Workbench = new Workbench();
+			FlexUtilGlobals.getInstance().workbench = workbench;
+			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
+			workbench.percentHeight = 100;
+			workbench.percentWidth = 100;
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
+			
+			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 		}
 		
 		override public function start():void {
@@ -119,14 +132,6 @@ package org.flowerplatform.web {
 			hBox.addChild(btn);
 			
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
-			
-			var workbench:Workbench = new Workbench();
-			FlexUtilGlobals.getInstance().workbench = workbench;
-			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
-			workbench.percentHeight = 100;
-			workbench.percentWidth = 100;
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 		}

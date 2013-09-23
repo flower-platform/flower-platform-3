@@ -30,6 +30,7 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
 	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
 	import org.flowerplatform.editor.EditorFrontend;
+	import org.flowerplatform.editor.action.SaveAction;
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -44,9 +45,9 @@ package org.flowerplatform.editor {
 		
 		public static var INSTANCE:GlobalEditorOperationsManager;
 
-//		private var workbench:Workbench;
+		private var workbench:Workbench;
 		
-//		public var saveAction:SaveActionNew;
+		public var saveAction:SaveAction;
 //		
 //		public var saveAllAction:SaveAllActionNew;
 		
@@ -121,12 +122,12 @@ package org.flowerplatform.editor {
 		}
 		
 		
-//		public function GlobalEditorOperationsManager(workbench:Workbench) {
-//			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, viewsRemovedHandler);
-//			workbench.addEventListener(ActiveViewChangedEvent.ACTIVE_VIEW_CHANGED, activeViewChangedHandler);
-//
-//			this.workbench = workbench;
-//		}
+		public function GlobalEditorOperationsManager(workbench:Workbench) {
+			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, viewsRemovedHandler);
+			workbench.addEventListener(ActiveViewChangedEvent.ACTIVE_VIEW_CHANGED, activeViewChangedHandler);
+
+			this.workbench = workbench;
+		}
 		
 		
 		private function viewsRemovedHandler(e:ViewsRemovedEvent):void {
@@ -176,7 +177,7 @@ package org.flowerplatform.editor {
 //					if (editorStatefulClient.editableResourceStatus.masterResourceEditorInput != null) {
 //						saveAction.currentEditorInput = editableResource.masterResourceEditorInput;
 //					} else {
-						/*saveAction.currentEditorStatefulClient = editorStatefulClient;*/
+						saveAction.currentEditorStatefulClient = editorStatefulClient;
 //					}
 					// when the editor is just opening, the ER status is not yet on the client; that's why we check for null
 					/*saveAction.enabled = editorStatefulClient.editableResourceStatus != null && editorStatefulClient.editableResourceStatus.dirty;*/

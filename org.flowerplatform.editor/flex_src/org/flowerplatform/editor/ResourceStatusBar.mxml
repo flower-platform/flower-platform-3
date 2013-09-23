@@ -34,7 +34,8 @@
 	xmlns:collaboration="com.crispico.flower.mp.web.editorsupport.collaboration.*" 
 	xmlns:util="com.crispico.flower.util.*" 
 	xmlns:tool="com.crispico.flower.mp.web.editorsupport.collaboration.tool.*" 
-	xmlns:figure="com.crispico.flower.mp.web.editorsupport.collaboration.figure.*" xmlns:effects="com.crispico.flower.util.effects.*">
+	xmlns:figure="com.crispico.flower.mp.web.editorsupport.collaboration.figure.*" 
+	xmlns:effects="com.crispico.flower.util.effects.*">
 
 	<mx:Script>
 		<![CDATA[
