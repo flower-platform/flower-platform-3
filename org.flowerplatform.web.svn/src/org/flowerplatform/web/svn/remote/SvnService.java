@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.subversion.javahl.ISVNClient;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -68,12 +67,10 @@ import org.tigris.subversion.svnclientadapter.ISVNConflictResolver;
 import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.ISVNStatus;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
-import org.tigris.subversion.svnclientadapter.SVNKeywords;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNStatusKind;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
-import org.tigris.subversion.svnclientadapter.javahl.JhlStatus;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
 
 /**
@@ -1189,7 +1186,7 @@ public class SvnService {
 			opMng.beginOperation(pm, myClient, true);
 			for (int i = 0; i < folders.size(); i++) {
 				File fileArgumentForCheckout;
-				if (newProjectName != null) {
+				if (newProjectName != "") {
 					fileArgumentForCheckout = new File(
 							workingDirectoryDestination + "\\" + newProjectName);
 				} else {
@@ -1243,7 +1240,7 @@ public class SvnService {
 		return result;
 	}
 
-	public String workingDirectoryExistsAndProjectLocationIsValid(
+	public int workingDirectoryExistsAndProjectLocationIsValid(
 			ServiceInvocationContext context, String wdName,
 			String organizationName, String restOfThePath,
 			ArrayList<PathFragment> workingDirectoryPartialPath) {
@@ -1256,14 +1253,20 @@ public class SvnService {
 				wdExists = true;
 			}
 		}
+		/* values for return and significance: 
+		 * 0 - working directory exists and project location is valid
+		 * 1 - working directory does not exist
+		 * 2 - a file with specified location (working directory path + project location path) already exists
+		 *  
+		 */
 		if (!wdExists) {
-			return "wdDoesNotExist";
+			return 1;
 		}
 		if (new File(partialPath + "\\" + wdName + "\\" + restOfThePath)
 				.exists()) {
-			return "destinationPathAlreadyPresentOnHard";
+			return 2;
 		}
-		return "wdExistsAndIsValid";
+		return 0;
 	}
 
 	@SuppressWarnings("unchecked")

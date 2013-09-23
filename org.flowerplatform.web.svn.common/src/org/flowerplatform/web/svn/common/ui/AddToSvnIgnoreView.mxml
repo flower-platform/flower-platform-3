@@ -31,10 +31,9 @@ license-end
 	<fx:Script>	
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
 			
 			import org.flowerplatform.communication.tree.remote.PathFragment;
-			
-			import mx.collections.IList;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -43,13 +42,13 @@ license-end
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			
-			//[Bindable]
 			public var selection:ArrayCollection;
 			
 			[Bindable]
 			public var defaultPattern:String = "";
 			
 			protected override function creationCompleteHandler():void {
+				callLater(patternTxt.setFocus);
 				super.creationCompleteHandler();
 				if (selection.length>1) {					
 					defaultPattern = "*";

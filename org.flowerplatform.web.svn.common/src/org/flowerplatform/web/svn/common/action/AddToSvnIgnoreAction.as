@@ -32,6 +32,9 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.common.ui.AddToSvnIgnoreView;
 	
+	/**
+	 * @author Victor Badila
+	 */ 	
 	public class AddToSvnIgnoreAction extends SvnProjectFileAction {
 		
 		private var pathFragmentsStorage:ArrayCollection;
@@ -65,8 +68,8 @@ package org.flowerplatform.web.svn.common.action {
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setPopupContent(view)
 					.show();
-			} 
-			
+			} 			
 		}
+		
 	}
 }

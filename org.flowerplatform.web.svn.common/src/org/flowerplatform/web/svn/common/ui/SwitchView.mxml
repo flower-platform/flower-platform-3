@@ -182,7 +182,6 @@ license-end
 				var popUp:SelectRevisionWindowView = new SelectRevisionWindowView();
 				popUp.remoteResourcePath = commonParentPath;
 				popUp.remoteResourceName = commonParentName;
-				popUp.isResourceObject = true;
 				popUp.setResultHandler(this);
 				popUp.showPopup();
 			}

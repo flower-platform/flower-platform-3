@@ -159,7 +159,6 @@ license-end
 				var view:SelectRevisionWindowView = new SelectRevisionWindowView();
 				view.remoteResourcePath = commonParentPath;
 				view.remoteResourceName = commonParentName;
-				view.isResourceObject = resourcesSelected;
 				view.setResultHandler(this);
 				view.showPopup();
 			}

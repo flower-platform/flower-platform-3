@@ -13,6 +13,7 @@ The result can be:
 @author Cristi
 @author Cristina
 @author Gabriela Murgoci
+@author Victor Badila
 
 @flowerModelElementId _v2V2QGwbEeGN3LpFXIiaDw
 -->
@@ -43,13 +44,19 @@ The result can be:
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.svn.common.history.HistoryEntry;
 			
+			import spark.formatters.DateTimeFormatter;
+			
 			public static const NUMBER_LOG_ENTRIES:Number = 25;
 			/**
 			 * @flowerModelElementId _zGrTsGwdEeGN3LpFXIiaDw
 			 */
 			public var remoteResourcePath:Object;
 			
-			public var isResourceObject:Boolean;
+			[Bindable]
+			public var dateTimeFormatter:DateTimeFormatter = new DateTimeFormatter();
+			
+			[Bindable]
+			public var volatileAffectedPathsEntry:ArrayCollection;
 			
 			/**
 			 * @flowerModelElementId __Z3IAHJ9EeGZAqbcNpPqCg
@@ -72,12 +79,13 @@ The result can be:
 			 * @flowerModelElementId __Z5kQXJ9EeGZAqbcNpPqCg
 			 */
 			private function init():void {		
+				dateTimeFormatter.dateTimePattern = "MM/DD/YYYY HH:NN";	
 				title += " - " + remoteResourceName; 	
 				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnHistoryService",
 						"getEntries",
-						[remoteResourcePath, -1, SvnCommonPlugin.NUMBER_LOG_ENTRIES, isResourceObject], 
+						[remoteResourcePath, -1, SvnCommonPlugin.NUMBER_LOG_ENTRIES, false], 
 						this, 
 						appendToHistoryEntriesTableCallback));
 			
@@ -98,7 +106,7 @@ The result can be:
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnHistoryService",
 							"getEntries",
-							[remoteResourcePath, Number(revisionStart), SvnCommonPlugin.NUMBER_LOG_ENTRIES, isResourceObject], 
+							[remoteResourcePath, Number(revisionStart), SvnCommonPlugin.NUMBER_LOG_ENTRIES, false], 
 							this, 
 							appendToHistoryEntriesTableCallback));		
 				}
@@ -119,7 +127,7 @@ The result can be:
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnHistoryService",
 							"getEntries",
-							[remoteResourcePath, Number(revisionStart), -1, isResourceObject], 
+							[remoteResourcePath, Number(revisionStart), -1, false], 
 							this, 
 							appendToHistoryEntriesTableCallback));		
 				}
@@ -182,45 +190,59 @@ The result can be:
 				return ObjectUtil.compare(revA, revB);
 			}
 			
+			
+			/**
+			 * @author Victor Badila
+			 */
+			private function getAffectedPaths():void {
+				if(historyEntriesTable.selectedItem == null) {
+					return;
+				}
+				var rev:int = historyEntriesTable.selectedItem.revision;
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"svnHistoryService", 
+						"getEntries", 
+						[remoteResourcePath, rev, 1, true], 
+						this, 
+						getAffectedPathsCallback));							
+			}	
+			
+			/**
+			 * @author Victor Badila
+			 */
+			private function getAffectedPathsCallback(result:ArrayCollection):void {
+				volatileAffectedPathsEntry = result.getItemAt(0).affectedPathEntries;				
+			}
+			
 		]]>
 	</mx:Script>
 
 	
 	<mx:VDividedBox id="dataArea" verticalGap="3" width="100%" height="100%" >	
-		<mx:DataGrid id="historyEntriesTable" width="100%" height="50%" >		
-			<mx:columns>
-				<mx:DataGridColumn headerText="Revision" dataField="revision" width=".20" sortCompareFunction="revision_sortCompareFunc"/>
-				<mx:DataGridColumn headerText="Date" width=".20" sortCompareFunction="date_sortCompareFunc">			
-					<mx:itemRenderer>
-						<mx:Component>
-							<mx:VBox horizontalScrollPolicy="off">
-								<mx:Script>
-									<![CDATA[
-										import org.flowerplatform.web.svn.*;
-										import org.flowerplatform.web.svn.common.history.HistoryEntry;
-									]]>
-								</mx:Script>
-								<mx:DateFormatter id="formatDateTime" formatString="MM/DD/YYYY HH:NN" />
-								<mx:Label text="{formatDateTime.format(HistoryEntry(data).date)}"/>
-							</mx:VBox>
-						</mx:Component>
-					</mx:itemRenderer>
-				</mx:DataGridColumn>
-				<mx:DataGridColumn headerText="Author" dataField="author" width=".20" />
-				<mx:DataGridColumn headerText="Comment" dataField="comment" width=".40" />
-			</mx:columns>
-		</mx:DataGrid> 
+		<s:DataGrid id="historyEntriesTable" width="100%" height="50%" click="{getAffectedPaths()}">		
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn headerText="Revision" dataField="revision" sortCompareFunction="revision_sortCompareFunc"/>
+					<s:GridColumn headerText="Date" sortCompareFunction="date_sortCompareFunc" dataTipFormatter="{dateTimeFormatter}" dataField="date"/>
+					<s:GridColumn headerText="Author" dataField="author" />
+					<s:GridColumn headerText="Comment" dataField="comment" id="commentField"/>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid> 
 		
-		<mx:TextArea id="commentArea" width="100%" height="10%" editable="false" 
+		<s:TextArea id="commentArea" width="100%" height="10%" editable="false" 
 					 text="{HistoryEntry(historyEntriesTable.selectedItem).comment}" />	
-		<mx:DataGrid id="affectedPathEntriesTable" width="100%" height="25%" 
-					 dataProvider="{HistoryEntry(historyEntriesTable.selectedItem).affectedPathEntries}" >
-			<mx:columns>
-				<mx:DataGridColumn headerText="Action" dataField="action" width=".15" />
-				<mx:DataGridColumn headerText="Affected paths" dataField="affectedPath" width=".50" dataTipField="affectedPath" showDataTips="true"/>
-				<mx:DataGridColumn headerText="Description" dataField="description" width=".35" dataTipField="description" showDataTips="true"/>
-			</mx:columns>
-		</mx:DataGrid>			
+		<s:DataGrid id="affectedPathEntriesTable" width="100%" height="25%" 
+					 dataProvider="{volatileAffectedPathsEntry}" >
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn headerText="Action" dataField="action"/>
+					<s:GridColumn headerText="Affected paths" dataField="affectedPath" dataTipField="affectedPath" showDataTips="true"/>
+					<s:GridColumn headerText="Description" dataField="description" dataTipField="description" showDataTips="true"/>
+				</s:ArrayList>
+			</s:columns>
+		</s:DataGrid>			
 	</mx:VDividedBox>
 	
 	<mx:ControlBar horizontalAlign="right">

@@ -47,10 +47,10 @@ license-end
 			import org.flowerplatform.web.common.ui.WorkingDirectorySelectionPopupView;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			
-			public var selection:ArrayList;			
-			
 			[Bindable]
 			public var depthDropdownDataProvider:ArrayList;
+			
+			public var selection:ArrayList;			
 			
 			public override function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				

@@ -22,6 +22,9 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	
 	/**
+	 * 
+	 * Provides custom getVisible() methods for different categories of actions
+	 * 
 	 * @author Victor Badila
 	 */ 
 	public class SvnProjectFileAction extends ActionBase {
