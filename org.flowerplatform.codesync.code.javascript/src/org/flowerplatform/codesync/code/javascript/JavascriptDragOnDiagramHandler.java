@@ -26,7 +26,10 @@ import org.eclipse.core.resources.IResource;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.model.IDragOnDiagramHandler;
+import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Node;
+import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
@@ -48,9 +51,19 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 			
 			CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(resource.getProject(), resource, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, communicationChannel, false);
 			
-			System.out.println(cse);
+			Node node = NotationFactory.eINSTANCE.createNode();
+			node.setViewType("file");
+			node.setDiagrammableElement(cse);
+			
+			Bounds bounds = NotationFactory.eINSTANCE.createBounds();
+			bounds.setX(200);
+			bounds.setHeight(100);
+			bounds.setWidth(100);
+			node.setLayoutConstraint(bounds);
+			diagram.getPersistentChildren().add(node);
+			
 		}
-		return false;
+		return true;
 	}
 	
 	private boolean acceptDraggedObject(Object object) {

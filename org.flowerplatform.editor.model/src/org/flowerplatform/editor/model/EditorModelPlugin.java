@@ -27,6 +27,7 @@ import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProc
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
+import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
@@ -90,6 +91,12 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperties(viewSD.getDeclaredProperties())
 		.addDeclaredProperty("source_RH")
 		.addDeclaredProperty("target_RH")
+		.register();
+		
+		new CustomSerializationDescriptor(ExpandableNode.class)
+		.addDeclaredProperties(viewSD.getDeclaredProperties())
+		.addDeclaredProperty("expanded")
+		.addDeclaredProperty("hasChildren")
 		.register();
 		
 		new CustomSerializationDescriptor(MindMapNode.class)

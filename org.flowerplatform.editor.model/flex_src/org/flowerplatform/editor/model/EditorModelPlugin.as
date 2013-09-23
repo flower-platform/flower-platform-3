@@ -46,6 +46,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Edge;
+	import org.flowerplatform.emf_model.notation.ExpandableNode;
 	import org.flowerplatform.emf_model.notation.Location;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
@@ -167,6 +168,7 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
 			registerClassAliasFromAnnotation(Bounds);
+			registerClassAliasFromAnnotation(ExpandableNode);
 			
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);
 			

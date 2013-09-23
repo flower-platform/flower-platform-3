@@ -71,8 +71,10 @@
 					return;
 				}
 				if (super.data != null) {
-					var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-					bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					if (Node(data).layoutConstraint_RH != null) {
+						var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+						bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					}
 				}
 				
 				super.data = value;
@@ -83,12 +85,14 @@
 					visualChildrenController = diagramShell.getControllerProvider(data).getVisualChildrenController(data);
 				}
 				if (data != null) {
-					bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-					bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-					x = bounds.x;
-					y = bounds.y;
-//					minWidth = bounds.width;
-//					minHeight = bounds.height;
+					if (Node(data).layoutConstraint_RH != null) {
+						bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+						bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+						x = bounds.x;
+						y = bounds.y;
+//						minWidth = bounds.width;
+//						minHeight = bounds.height;
+					}
 				}
 			}
 			
@@ -128,14 +132,16 @@
 			 */
 			protected function resizeEventHandler():void {
 				if (super.data != null) {
-					var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-					var command:MoveResizeServerCommand = new MoveResizeServerCommand();
-					command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
-					command.newWidth = width;
-					command.newHeight = height;
-					command.newX = bounds.x;
-					command.newY = bounds.y;
-					NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
+					if (Node(data).layoutConstraint_RH != null) {
+						var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+						var command:MoveResizeServerCommand = new MoveResizeServerCommand();
+						command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
+						command.newWidth = width;
+						command.newHeight = height;
+						command.newX = bounds.x;
+						command.newY = bounds.y;
+						NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
+					}
 				}
 			}
 			

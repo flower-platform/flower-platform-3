@@ -108,7 +108,7 @@ public class Parser {
 			throw new RuntimeException(e);
 		}
 		
-		print("", root);
+//		print("", root);
 		
 		// adding to resource to avoid UNDEFINED values during sync
 		// see EObjectModelAdapter.getValueFeatureValue()
@@ -170,6 +170,7 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				Node cls = createNode(JS_MAIN_CLASS_CATEGORY, NAME, true, session.getMatcher().start(), 0);
 				currentState.node.getChildren().add(cls);
+				addParameter(cls, NAME, JS_MAIN_CLASS_CATEGORY, 0, 0);
 				addParameter(cls, "superClass", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 				
 				enterState(session, JS_CLASS, cls, 1);

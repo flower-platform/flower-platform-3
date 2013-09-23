@@ -16,6 +16,7 @@
     <classEntry path="org.flowerplatform.editor.model.controller.DiagramModelChildrenController"/>
     <classEntry path="org.flowerplatform.editor.model.controller.EdgeRendererController"/>
     <classEntry path="org.flowerplatform.editor.model.action.DeleteScenarioElementAction"/>
+    <classEntry path="org.flowerplatform.emf_model.notation.ExpandableNode"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

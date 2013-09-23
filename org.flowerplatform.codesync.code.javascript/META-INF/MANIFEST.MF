@@ -17,6 +17,8 @@ Require-Bundle: org.eclipse.osgi,
  org.flowerplatform.communication,
  org.flowerplatform.editor.model,
  org.flowerplatform.emf_model.notation,
- org.flowerplatform.emf_model.codesync
+ org.flowerplatform.emf_model.codesync,
+ org.flowerplatform.codesync.code.java,
+ org.flowerplatform.editor
 Bundle-Activator: org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin
 Bundle-ActivationPolicy: lazy

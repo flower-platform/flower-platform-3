@@ -18,7 +18,12 @@
  */
 package org.flowerplatform.codesync.code.javascript;
 
+import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
+import org.flowerplatform.codesync.code.javascript.processor.JavascriptFileElementProcessor;
+import org.flowerplatform.codesync.code.javascript.remote.JavascriptClassDiagramOperationsService;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
@@ -35,6 +40,12 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		super.start(context);
 		
 		CodeSyncCodePlugin.getInstance().addSrcDir("js");
+		
+		CommunicationPlugin.getInstance().getServiceRegistry().registerService(JavascriptClassDiagramOperationsService.SERVICE_ID, new JavascriptClassDiagramOperationsService());
+		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("file", new JavascriptElementProcessor());
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("fileElementContainer", new JavascriptFileElementProcessor());
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("fileElementContainer", new JavascriptElementProcessor());
 	}
 	
 }

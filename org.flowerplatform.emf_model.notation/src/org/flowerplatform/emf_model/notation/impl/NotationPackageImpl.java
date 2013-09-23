@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
+import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.LayoutConstraint;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.MindMapNode;
@@ -118,6 +119,13 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	private EClass mindMapNodeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass expandableNodeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -464,6 +472,33 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getExpandableNode() {
+		return expandableNodeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExpandableNode_Expanded() {
+		return (EAttribute)expandableNodeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExpandableNode_HasChildren() {
+		return (EAttribute)expandableNodeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotationFactory getNotationFactory() {
 		return (NotationFactory)getEFactoryInstance();
 	}
@@ -527,6 +562,10 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__EXPANDED);
 		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__HAS_CHILDREN);
 		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__SIDE);
+
+		expandableNodeEClass = createEClass(EXPANDABLE_NODE);
+		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__EXPANDED);
+		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__HAS_CHILDREN);
 	}
 
 	/**
@@ -566,6 +605,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		boundsEClass.getESuperTypes().add(this.getLocation());
 		noteEClass.getESuperTypes().add(this.getNode());
 		mindMapNodeEClass.getESuperTypes().add(this.getNode());
+		expandableNodeEClass.getESuperTypes().add(this.getNode());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(notationElementEClass, NotationElement.class, "NotationElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -610,6 +650,10 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEAttribute(getMindMapNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMindMapNode_HasChildren(), ecorePackage.getEBoolean(), "hasChildren", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getMindMapNode_Side(), ecorePackage.getEInt(), "side", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(expandableNodeEClass, ExpandableNode.class, "ExpandableNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExpandableNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExpandableNode_HasChildren(), ecorePackage.getEBoolean(), "hasChildren", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
