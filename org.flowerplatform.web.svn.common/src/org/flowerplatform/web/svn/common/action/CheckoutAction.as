@@ -47,13 +47,15 @@ package org.flowerplatform.web.svn.common.action {
 				return false;
 			var node:TreeNode  = TreeNode(selection.getItemAt(0));
 			var node_type:String = node.pathFragment.type;
-			if(node_type != SvnCommonPlugin.NODE_TYPE_REPOSITORY && node_type != SvnCommonPlugin.NODE_TYPE_FILE)
+			if(node_type != SvnCommonPlugin.NODE_TYPE_REPOSITORY && node_type != SvnCommonPlugin.NODE_TYPE_FOLDER)
 				return false;
 			for (var i:int = 0; i<selection.length; i++) {
 				var currentNode:TreeNode = TreeNode(selection.getItemAt(i)); 
-				if (currentNode.pathFragment.type != node_type || (currentNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE && currentNode.customData.isFolder == false)) {
+				/*if (currentNode.pathFragment.type != node_type || (currentNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE && currentNode.customData.isFolder == false)) {
+					return false;*/
+				var pathFragmentsOfSelection:ArrayCollection = currentNode.getPathForNode(true);
+				if (PathFragment(pathFragmentsOfSelection.getItemAt(pathFragmentsOfSelection.length - 1)).type != SvnCommonPlugin.NODE_TYPE_FOLDER)
 					return false;
-				}			
 			}
 			var organizationName:String = PathFragment(TreeNode(selection.getItemAt(0)).getPathForNode(false).getItemAt(0)).name;
 			for (var i:int=0; i<selection.length; i++) {

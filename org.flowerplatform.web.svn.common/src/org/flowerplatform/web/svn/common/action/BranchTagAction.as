@@ -56,12 +56,12 @@ package  org.flowerplatform.web.svn.common.action {
 				if (organizationName != PathFragment(selectedNode.getPathForNode(false).getItemAt(0)).name) {
 					return false;
 				}
-				if (selectedNode.pathFragment.type != SvnCommonPlugin.NODE_TYPE_FILE) {
+				if (selectedNode.pathFragment.type != SvnCommonPlugin.NODE_TYPE_FOLDER && selectedNode.pathFragment.type != SvnCommonPlugin.NODE_TYPE_FILE) {
 					return false;
 				}
-				if ((selectedNode.customData.isFolder == false)) {
+				/*if ((selectedNode.customData.isFolder == false)) {
 					return false;
-				}	
+				}	*/
 			}
 			return true;
 		}
@@ -73,7 +73,7 @@ package  org.flowerplatform.web.svn.common.action {
 			var view:BranchTagView = new BranchTagView();
 			view.node = TreeNode(selection.getItemAt(0));
 			view.selection = selection;
-			view.viewLabel = "svn.action.branchTag.label";
+			view.viewLabel = "svn.action.branchTag.view.label";
 			view.viewIcon = "images/svn_persp.gif";
 			view.actionType = false;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()

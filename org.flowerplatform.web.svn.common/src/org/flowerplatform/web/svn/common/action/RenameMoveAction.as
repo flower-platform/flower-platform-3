@@ -34,7 +34,7 @@ package  org.flowerplatform.web.svn.common.action {
 		 */
 		public function RenameMoveAction() {	
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.renameMove.label");
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/rename.gif");
 		}
 		
 		/**
@@ -45,7 +45,7 @@ package  org.flowerplatform.web.svn.common.action {
 			if (selection.length == 0 || selection.length > 1)
 				return false;
 			node_type = TreeNode(selection.getItemAt(0)).pathFragment.type;	
-			if (node_type != SvnCommonPlugin.NODE_TYPE_FILE)
+			if (node_type != SvnCommonPlugin.NODE_TYPE_FOLDER && node_type != SvnCommonPlugin.NODE_TYPE_FILE)
 				return false;
 			return true;
 		}

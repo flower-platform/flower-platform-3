@@ -73,7 +73,7 @@ license-end
 			protected override function finishClickHandler():void {
 				var location:String = mySvnLocation.text;
 				for (var i:int; i<node.children.length; i++) {
-					if (node.children.getItemAt(i).getLabel == location) {
+					if (node.children.getItemAt(i).label == location) {
 						Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.errorRepositoryAlreadyExists"));
 						return;
 					}

@@ -28,7 +28,7 @@ package  org.flowerplatform.web.svn.common.action {
 	/**
 	 * @author Gabriela Murgoci
 	 */
-	public class CreateRemoteFolderAction extends ActionBase  {
+	public class CreateRemoteFolderAction extends ActionBase {
 		/**
 		 * @flowerModelElementId _-0ZzQAMdEeOrJqcAep-lCg
 		 */
@@ -46,7 +46,7 @@ package  org.flowerplatform.web.svn.common.action {
 				return false;
 			node_type = TreeNode(selection.getItemAt(0)).pathFragment.type;	
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-				return (node_type == SvnCommonPlugin.NODE_TYPE_REPOSITORY || node_type == SvnCommonPlugin.NODE_TYPE_FILE);
+				return (node_type == SvnCommonPlugin.NODE_TYPE_REPOSITORY || node_type == SvnCommonPlugin.NODE_TYPE_FOLDER);
 			}
 			return false;
 		}
@@ -58,6 +58,8 @@ package  org.flowerplatform.web.svn.common.action {
 			var view:CreateRemoteFolderView = new CreateRemoteFolderView();
 			view.node=TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+				.setWidth(400)
+				.setHeight(450)
 				.setPopupContent(view)
 				.show();			
 		}

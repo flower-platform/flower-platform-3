@@ -49,6 +49,9 @@
          <nodeType
                nodeType="svnFile">
          </nodeType>
+         <nodeType
+               nodeType="svnFolder">
+         </nodeType>
       </explorerChildrenProvider>
    </extension>
    <extension
@@ -57,6 +60,9 @@
             provider="org.flowerplatform.web.svn.explorer.SvnFileNodeDataProvider">
          <nodeType
                nodeType="svnFile">
+         </nodeType>
+         <nodeType
+               nodeType="svnFolder">
          </nodeType>
       </explorerNodeDataProvider>
    </extension>
@@ -80,6 +86,9 @@
             populator="org.flowerplatform.web.svn.explorer.SvnFile_NodePopulator">
          <nodeType
                nodeType="svnFile">
+         </nodeType>
+         <nodeType
+               nodeType="svnFolder">
          </nodeType>
       </explorerAdditionalNodePopulator>
    </extension>
@@ -112,6 +121,9 @@
          <nodeType
                nodeType="svnRepository">
          </nodeType>
+         <nodeType
+               nodeType="svnFolder">
+         </nodeType>
       </svnRepositoryChildrenProvider>
    </extension>
    <extension
@@ -120,6 +132,9 @@
             provider="org.flowerplatform.web.svn.explorer.SvnFileNodeDataProvider">
          <nodeType
                nodeType="svnFile">
+         </nodeType>
+         <nodeType
+               nodeType="svnFolder">
          </nodeType>
       </svnRepositoryNodeDataProvider>
    </extension>

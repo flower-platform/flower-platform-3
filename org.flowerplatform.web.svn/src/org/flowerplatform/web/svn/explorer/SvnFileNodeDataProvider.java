@@ -44,7 +44,10 @@ public class SvnFileNodeDataProvider implements INodeDataProvider,
 	public PathFragment getPathFragmentForNode(Object node, String nodeType,
 			GenericTreeContext context) {
 		String nodeSpecificPath = ((RemoteResource) node).getName();
-		return new PathFragment(nodeSpecificPath, SvnNodeType.NODE_TYPE_FILE);
+		if (node instanceof RemoteFolder)
+			return new PathFragment(nodeSpecificPath, SvnNodeType.NODE_TYPE_FOLDER);
+		else
+			return new PathFragment(nodeSpecificPath, SvnNodeType.NODE_TYPE_FILE);
 	}
 
 	/**

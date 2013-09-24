@@ -56,7 +56,12 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 					children = ((RemoteFolder) node).members(null);
 				}
 				for (ISVNRemoteResource child : children) {
-					String nodeType = SvnNodeType.NODE_TYPE_FILE;
+					String nodeType = null;
+					if (child instanceof RemoteFolder)
+						nodeType = SvnNodeType.NODE_TYPE_FOLDER;
+					if (child instanceof RemoteFile)
+						nodeType = SvnNodeType.NODE_TYPE_FILE;
+					//String nodeType = SvnNodeType.NODE_TYPE_FILE;
 					result.add(new Pair<Object, String>(child, nodeType));
 				}				
 			} catch (TeamException e) {	

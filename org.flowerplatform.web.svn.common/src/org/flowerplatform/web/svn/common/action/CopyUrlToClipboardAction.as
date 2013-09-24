@@ -46,7 +46,8 @@ package org.flowerplatform.web.svn.common.action {
 		public override function get visible():Boolean {	
 			
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-				return (TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE) ||
+				return (TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_FOLDER) ||
+					(TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE) ||
 					(TreeNode(selection.getItemAt(0)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_REPOSITORY)
 			}
 			return false;
