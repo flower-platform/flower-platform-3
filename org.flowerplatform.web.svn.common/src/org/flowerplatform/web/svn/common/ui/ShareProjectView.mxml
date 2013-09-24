@@ -169,7 +169,7 @@ license-end
 	
 	<popup:states>
 		<s:State name="0">			
-			<mx:SetProperty name="wizardTitle" value="Share project with SVN Repository"/>			
+			<mx:SetProperty name="wizardTitle" value="Share Project with SVN Repository"/>			
 			<mx:SetProperty name="wizardDescription"
 							value="Select an existing repository location or create a new location."/>			
 			<mx:AddChild relativeTo="{contentArea}">
@@ -266,10 +266,17 @@ license-end
 		<mx:State name="3">			
 			<mx:SetProperty name="wizardTitle" value="Ready to Share Project"/>				
 			<mx:SetProperty name="wizardDescription"
-							value="Select Finish to import the project into the SVN repository."/>				
+							value="Select Finish to import the project into the SVN repository."/>	
+			
 			<mx:AddChild relativeTo="{contentArea}">
+				<s:VGroup>
+					
+				
 				<!-- Comment panel -->
-				<ui:CommentComponent id="commentArea" width="100%" height="100%"/>
+				<s:Label text="The wizard has all the information necessary to share your project {'\n'}with the SVN repository. When you click 'Finish', the wizard will import your project {'\n'}into the repository and open the Synchronize view to allow you to commit {'\n'}your resources.{'\n'}{'\n'}">
+				</s:Label>
+				<ui:CommentComponent id="commentArea" width="100%" height="100%" />
+				</s:VGroup>
 			</mx:AddChild>
 		</mx:State>
 		

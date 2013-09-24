@@ -67,23 +67,30 @@ license-end
 			} 
 			
 			 protected override function finishClickHandler():void {
-				 if (Validator.validateAll(validators).length > 0) {
+				 /*  if (Validator.validateAll(validators).length > 0) {
 					return;
-				} 
+				}   */
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, commComponent.commitMessage.text], this,getProjectsCallbackHandler ));
 					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.view.spinner"));
 			} 
 			
+			protected override function nextClickHandler():void {
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				super.nextClickHandler();
+				
+			}
 			override public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.view.label"));
-				_popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/project.gif"));
+				_popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif"));
 			}   
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
-				 wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+				 wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
 			}
 		]]>
 	</fx:Script>
@@ -98,7 +105,7 @@ license-end
 			<mx:AddChild relativeTo="{contentArea}">									
 				<s:VGroup width="100%" height="100%">
 					<s:HGroup width="100%" verticalAlign="middle">
-						<s:Label width="100%" text="Folder name"/>													
+						<s:Label width="100%" text="Folder name:"/>													
 					</s:HGroup>						
 					<s:TextInput id="myFolderName" width="100%" text="{folderName}"/> 				
 					<s:HGroup width="100%" verticalAlign="middle">					

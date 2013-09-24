@@ -10,7 +10,8 @@ import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.svn.SvnPlugin;
 import org.flowerplatform.web.svn.remote.SvnService;
-import org.tigris.subversion.subclipse.core.SVNException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -18,6 +19,8 @@ import org.tigris.subversion.subclipse.core.SVNException;
  * @author Victor Badila 
  */
 public class FSFile_SvnNodePopulator implements INodePopulator{
+	
+	private static Logger logger = LoggerFactory.getLogger(SvnService.class);
 	
 	private final String TREE_NODE_SVN_FILE_TYPE = "svnFileType";
 
@@ -44,6 +47,7 @@ public class FSFile_SvnNodePopulator implements INodePopulator{
 			if(SvnService.getInstance().isAuthentificationException(e))
 				return false;
 			e.printStackTrace();
+
 		}
 		return false;		
 	}

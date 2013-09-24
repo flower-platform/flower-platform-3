@@ -109,16 +109,12 @@ public class SvnService {
 	 * @author Gabriela Murgoci
 	 * @throws SVNException
 	 */
-
 	public boolean createRemoteFolder(ServiceInvocationContext context,
 			List<PathFragment> parentPath, String folderName, String comment)
 			throws SVNException {
 
 		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(
 				parentPath, null);
-
-		GenericTreeStatefulService explorerService = (GenericTreeStatefulService) GenericTreeStatefulService
-				.getServiceFromPathWithRoot(parentPath);
 
 		ISVNRemoteFolder parentFolder = null;
 
@@ -218,14 +214,14 @@ public class SvnService {
 					SVNRevision.HEAD);
 		} catch (Exception e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			if (e instanceof SVNException) {
+			//if (e instanceof SVNException) {
 				CommunicationChannel channel = (CommunicationChannel) context
 						.getCommunicationChannel();
 				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 						CommonPlugin.getInstance().getMessage("error"), e
 								.getMessage(),
 						DisplaySimpleMessageClientCommand.ICON_ERROR));
-			}
+			//}
 			return false;
 		}
 
@@ -250,24 +246,35 @@ public class SvnService {
 
 		explorerService.dispatchContentUpdate(sourceNode);
 
-		Object selection2 = GenericTreeStatefulService
-				.getNodeByPathFor(
-						destinationPath.subList(0, destinationPath.size()),
-						treeContext);
+		ISVNRepositoryLocation repository = null;
 
-		ISVNRemoteFolder destinationNode = null;
-
-		if (selection2 instanceof ISVNRemoteFolder) {
-			destinationNode = (ISVNRemoteFolder) selection2;
-		} else if (selection2 instanceof IAdaptable) {
-			// ISVNRepositoryLocation is adaptable to ISVNRemoteFolder
-			IAdaptable a = (IAdaptable) selection2;
-			Object adapter = a.getAdapter(ISVNRemoteFolder.class);
-			destinationNode = (ISVNRemoteFolder) adapter;
+		// refresh for source
+		repository = sourceNode.getRepository();
+		if (repository.getRootFolder().equals(sourceNode)) {
+			repository.refreshRootFolder();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(sourcePath))
+					.dispatchContentUpdate(repository);
+		} else {
+			parentFolder.refresh();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(sourcePath))
+					.dispatchContentUpdate(sourceNode);
 		}
 
-		destinationNode.refresh();
-		explorerService.dispatchContentUpdate(destinationNode);
+		// refresh for destination
+		repository = parentFolder.getRepository();
+		if (repository.getRootFolder().equals(parentFolder)) {
+			repository.refreshRootFolder();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(destinationPath))
+					.dispatchContentUpdate(repository);
+		} else {
+			parentFolder.refresh();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(destinationPath))
+					.dispatchContentUpdate(parentFolder);
+		}
 
 		return true;
 	}
@@ -533,12 +540,22 @@ public class SvnService {
 					partialPath += "/";
 			}
 
+			remoteResource = GenericTreeStatefulService.getNodeByPathFor(selectedResource, null);
+			//File file = (File) GenericTreeStatefulService.getNodeByPathFor(selectedResource, null);
+			
+			//RemoteResource res = (RemoteResource) GenericTreeStatefulService.getNodeByPathFor(selectedResource, null);
+			
 			item.setPath(selectedResource);
 			item.setName(selectedResource.get(selectedResource.size() - 1)
 					.getName());
 			item.setPartialPath(partialPath);
+			
+			
+			//if (remoteResource instanceof RemoteFolder)
+			
 			item.setImage("images/folder_pending.gif");
-
+			if (remoteResource instanceof RemoteFile)
+				item.setImage("images/file.gif");
 			branchResources.add(item);
 		}
 
@@ -927,14 +944,6 @@ public class SvnService {
 		return result;
 	}
 	
-	public String getUrlPathForSingleSelection(ArrayList<PathFragment> path, Boolean wantUrlForRepository) {
-		String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
-		if (wantUrlForRepository) {
-			return getSvnUrlForPath(workingDirectoryPath, true);
-		}
-		return getSvnUrlForPath(workingDirectoryPath, false);
-	}
-
 	public boolean createSvnRepository(final ServiceInvocationContext context,
 			final String url, final List<PathFragment> parentPath) {
 		// had to use List due to limitations of altering final variables inside
@@ -1194,7 +1203,7 @@ public class SvnService {
 			opMng.beginOperation(pm, myClient, true);
 			for (int i = 0; i < folders.size(); i++) {
 				File fileArgumentForCheckout;
-				if (newProjectName != null) {
+				if (newProjectName != "") {
 					fileArgumentForCheckout = new File(
 							workingDirectoryDestination + "\\" + newProjectName);
 				} else {
@@ -1249,7 +1258,7 @@ public class SvnService {
 		return result;
 	}
 
-	public String workingDirectoryExistsAndProjectLocationIsValid(
+	public int workingDirectoryExistsAndProjectLocationIsValid(
 			ServiceInvocationContext context, String wdName,
 			String organizationName, String restOfThePath,
 			ArrayList<PathFragment> workingDirectoryPartialPath) {
@@ -1262,14 +1271,20 @@ public class SvnService {
 				wdExists = true;
 			}
 		}
+		/* values for return and significance: 
+		 * 0 - working directory exists and project location is valid
+		 * 1 - working directory does not exist
+		 * 2 - a file with specified location (working directory path + project location path) already exists
+		 *  
+		 */
 		if (!wdExists) {
-			return "wdDoesNotExist";
+			return 1;
 		}
 		if (new File(partialPath + "\\" + wdName + "\\" + restOfThePath)
 				.exists()) {
-			return "destinationPathAlreadyPresentOnHard";
+			return 2;
 		}
-		return "wdExistsAndIsValid";
+		return 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -1764,6 +1779,19 @@ public class SvnService {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @author Victor Badila
+	 * 
+	 */
+	public String getUrlPathForSingleSelection(ArrayList<PathFragment> path, Boolean wantUrlForRepository) {
+		  String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
+		  if (wantUrlForRepository) {
+		   return getSvnUrlForPath(workingDirectoryPath, true);
+		  }
+		  return getSvnUrlForPath(workingDirectoryPath, false);
+	}
+	
 	public File[] getFilesForSelectionList(
 			ArrayList<ArrayList<PathFragment>> selectionList) {
 

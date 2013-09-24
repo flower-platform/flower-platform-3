@@ -43,10 +43,10 @@ license-end
 			import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
 			
-			public var selection:ArrayList;
-			
 			[Bindable]
 			public var modifiedResources:GetModifiedFilesDto = null;
+			
+			public var selection:ArrayList;
 			
 			public function cancelHandler():void {
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);				

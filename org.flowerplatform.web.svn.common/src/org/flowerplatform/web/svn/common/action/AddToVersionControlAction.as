@@ -29,6 +29,9 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	
+	/**
+	 * @author Victor Badila
+	 */ 	
 	public class AddToVersionControlAction extends SvnProjectFileAction {
 		
 		public function AddToVersionControlAction() {

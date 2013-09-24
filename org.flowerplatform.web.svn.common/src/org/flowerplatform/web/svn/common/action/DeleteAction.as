@@ -52,8 +52,9 @@ package org.flowerplatform.web.svn.common.action {
 				for(var i:int = 0; i < selection.length; i++){
 					var selectedNode:TreeNode = selection.getItemAt(i) as TreeNode;
 					if (!((selectedNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_REPOSITORY) ||
+						(selectedNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FOLDER) ||
 						(selectedNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE)))
-						return false;
+							return false;
 				}
 				return true;
 			}

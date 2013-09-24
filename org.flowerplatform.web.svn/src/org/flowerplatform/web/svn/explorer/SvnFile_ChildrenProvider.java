@@ -19,11 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
-import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
-import org.tigris.subversion.svnclientadapter.SVNClientException;
 
 
 
@@ -56,7 +54,12 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 					children = ((RemoteFolder) node).members(null);
 				}
 				for (ISVNRemoteResource child : children) {
-					String nodeType = SvnNodeType.NODE_TYPE_FILE;
+					String nodeType = null;
+					if (child instanceof RemoteFolder)
+						nodeType = SvnNodeType.NODE_TYPE_FOLDER;
+					if (child instanceof RemoteFile)
+						nodeType = SvnNodeType.NODE_TYPE_FILE;
+					//String nodeType = SvnNodeType.NODE_TYPE_FILE;
 					result.add(new Pair<Object, String>(child, nodeType));
 				}				
 			} catch (TeamException e) {	

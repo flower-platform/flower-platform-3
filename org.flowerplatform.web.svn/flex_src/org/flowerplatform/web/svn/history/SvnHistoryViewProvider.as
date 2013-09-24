@@ -26,7 +26,6 @@ package  org.flowerplatform.web.svn.history {
 	
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
-	//import org.flowerplatform.web.svn.SvnPlugin;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.history.SvnHistoryView;
 		
@@ -39,7 +38,7 @@ package  org.flowerplatform.web.svn.history {
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {	
 			var history:SvnHistoryView = new SvnHistoryView();
-		 	history.label = getTitle(viewLayoutData);				
+		 	//history.label = getTitle(viewLayoutData);				
 			return history;
 		}	
 		

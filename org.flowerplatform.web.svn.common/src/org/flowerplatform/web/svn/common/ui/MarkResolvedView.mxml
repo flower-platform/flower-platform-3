@@ -47,10 +47,10 @@ license-end
 			
 			[Bindable]
 			public var resolveSelection:String;
-			
-			public var selection:IList;
-			
+						
 			public var conflictingResources:ArrayCollection;
+			
+			public var selection:IList;			
 				
 			public override function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
@@ -94,8 +94,7 @@ license-end
 				if (conflictingResources.length > 1) {
 					resolveSelection = SvnCommonPlugin.getInstance().getMessage("svn.ui.markResolved.multipleSelection");
 					return;
-				}
-				
+				}				
 				var fullpath:ArrayCollection = SvnCommonPlugin.getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0))).getPathForNode(true);
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "getDirectoryFullPathFromPathFragments", [fullpath], 
@@ -106,10 +105,7 @@ license-end
 				var start:int = result.length;
 				var s:String = String(conflictingResources.getItemAt(0));
 				resolveSelection = "File: " + s.substring(start+1, s.length);
-			}
-			
-			
-			
+			}		
 			
 		]]>
 	</fx:Script>	
