@@ -49,7 +49,7 @@
 		 -->
 		<init-param>
 			<param-name>developmentLaunchConfigurationWindows</param-name>
-			<param-value>Flower Platform - Web</param-value>
+			<param-value>Flower Platform - Web (write plugin config to file)</param-value>
 		</init-param>
 		<init-param>
 			<param-name>developmentLaunchConfigurationLinux</param-name>

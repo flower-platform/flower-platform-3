@@ -11,7 +11,7 @@
     Learn more about Flex at http://flex.org 
     // -->
     <head>
-        <title>${title}</title>
+        <title></title>
         <meta name="google" value="notranslate" />         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <!-- Include CSS to eliminate any default margins/padding and set the height of the html element and 
@@ -23,36 +23,41 @@
         <style type="text/css" media="screen"> 
             html, body  { height:100%; }
             body { margin:0; padding:0; overflow:auto; text-align:center; 
-                   background-color: ${bgcolor}; }   
+                   background-color: #ffffff; }   
             object:focus { outline:none; }
             #flashContent { display:none; }
         </style>
         
         <!-- Enable Browser History by replacing useBrowserHistory tokens with two hyphens -->
-        <!-- BEGIN Browser History required section ${useBrowserHistory}>
+        <!-- BEGIN Browser History required section >
         <link rel="stylesheet" type="text/css" href="history/history.css" />
         <script type="text/javascript" src="history/history.js"></script>
-        <!${useBrowserHistory} END Browser History required section -->  
+        <! END Browser History required section -->  
+        
+        <script type="text/javascript">
+            var flashvars = {};
+        </script>
+        
+        <script type="text/javascript" src="flexHostAppConfig.js"></script> 
             
         <script type="text/javascript" src="swfobject.js"></script>
         <script type="text/javascript">
             // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
-            var swfVersionStr = "${version_major}.${version_minor}.${version_revision}";
+            var swfVersionStr = "11.2.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
-            var xiSwfUrlStr = "${expressInstallSwf}";
-            var flashvars = {};
+            var xiSwfUrlStr = "playerProductInstall.swf";
             var params = {};
             params.quality = "high";
-            params.bgcolor = "${bgcolor}";
+            params.bgcolor = "#ffffff";
             params.allowscriptaccess = "sameDomain";
             params.allowfullscreen = "true";
             var attributes = {};
-            attributes.id = "${application}";
-            attributes.name = "${application}";
+            attributes.id = "FlexHostApp";
+            attributes.name = "FlexHostApp";
             attributes.align = "middle";
             swfobject.embedSWF(
-                "${swf}.swf", "flashContent", 
-                "${width}", "${height}", 
+                "FlexHostApp.swf", "flashContent", 
+                "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
@@ -67,7 +72,7 @@
         <div id="flashContent">
             <p>
                 To view this page ensure that Adobe Flash Player version 
-                ${version_major}.${version_minor}.${version_revision} or greater is installed. 
+                11.2.0 or greater is installed. 
             </p>
             <script type="text/javascript"> 
                 var pageHost = ((document.location.protocol == "https:") ? "https://" : "http://"); 
@@ -77,32 +82,7 @@
         </div>
         
         <noscript>
-            <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="${width}" height="${height}" id="${application}">
-                <param name="movie" value="${swf}.swf" />
-                <param name="quality" value="high" />
-                <param name="bgcolor" value="${bgcolor}" />
-                <param name="allowScriptAccess" value="sameDomain" />
-                <param name="allowFullScreen" value="true" />
-                <!--[if !IE]>-->
-                <object type="application/x-shockwave-flash" data="${swf}.swf" width="${width}" height="${height}">
-                    <param name="quality" value="high" />
-                    <param name="bgcolor" value="${bgcolor}" />
-                    <param name="allowScriptAccess" value="sameDomain" />
-                    <param name="allowFullScreen" value="true" />
-                <!--<![endif]-->
-                <!--[if gte IE 6]>-->
-                    <p> 
-                        Either scripts and active content are not permitted to run or Adobe Flash Player version
-                        ${version_major}.${version_minor}.${version_revision} or greater is not installed.
-                    </p>
-                <!--<![endif]-->
-                    <a href="http://www.adobe.com/go/getflashplayer">
-                        <img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash Player" />
-                    </a>
-                <!--[if !IE]>-->
-                </object>
-                <!--<![endif]-->
-            </object>
+			JavaScript needs to be enabled! Please enable it and refresh this page.
         </noscript>     
    </body>
 </html>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="com.adobe.flexbuilder.debug.launchConfigurationType.flash">
-<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_APPLICATION" value="flex_src/MainWeb.mxml"/>
-<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_PROJECT" value="org.flowerplatform.eclipse.app"/>
-<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_RUN_URL" value="http://www.google.com"/>
+<stringAttribute key="bad_container_name" value="\org.flowerplatform.flex_host_app\launch_config"/>
+<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_APPLICATION" value="src/FlexHostApp.mxml"/>
+<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_PROJECT" value="org.flowerplatform.flex_host_app"/>
+<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_RUN_URL" value="http://localhost:8080/org.flowerplatform.web.app/main.jsp"/>
 <booleanAttribute key="com.adobe.flexbuilder.debug.ATTR_USE_DEFAULT_URLS" value="false"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/org.flowerplatform.eclipse.app"/>
-<listEntry value="/org.flowerplatform.eclipse.app/flex_src/MainWeb.mxml"/>
+<listEntry value="/org.flowerplatform.flex_host_app"/>
+<listEntry value="/org.flowerplatform.flex_host_app/src/FlexHostApp.mxml"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="4"/>

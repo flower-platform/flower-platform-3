@@ -14,10 +14,10 @@
     <extension
          point="org.eclipse.equinox.http.registry.httpcontexts">
       <httpcontext
-            id="flower">
+            id="flower-platform">
          <resource-mapping
                bundle="org.flowerplatform.flex_host_app"
-               path="/public-resources">
+               path="/WebContent">
          </resource-mapping>
          <resource-mapping
                bundle="org.flowerplatform.flex_host_app"
@@ -34,7 +34,7 @@
       <resource
             alias="/"
             base-name="/"
-            httpcontextId="flower">
+            httpcontextId="flower-platform">
       </resource>
       <serviceSelector
             filter="(other.info=org.flowerplatform.eclipse)">
@@ -45,17 +45,17 @@
       <servlet
             alias="/*.jsp"
             class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/WebContent/"
-            httpcontextId="flower">
+            httpcontextId="flower-platform">
       </servlet>
       <servlet
             alias="/messagebroker"
             class="flex.messaging.MessageBrokerServlet"
-            httpcontextId="flower">
+            httpcontextId="flower-platform">
       </servlet>
       <servlet
             alias="/servlet/public-resources"
             class="org.flowerplatform.communication.public_resources.PublicResourcesServlet"
-            httpcontextId="flower"
+            httpcontextId="flower-platform"
             load-on-startup="false">
       </servlet>
       <serviceSelector

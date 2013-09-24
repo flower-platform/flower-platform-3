@@ -17,16 +17,15 @@ import org.osgi.framework.BundleContext;
 public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 
 	protected static EclipsePlugin INSTANCE;
+	
+	public static EclipsePlugin getInstance() {
+		return INSTANCE;
+	}
 
 	private FlowerJettyServer server;
 		
 	private CopyOnWriteArrayList<IEclipseChannelListener> listeners =
 			new CopyOnWriteArrayList<IEclipseChannelListener>();
-	
-	public static EclipsePlugin getInstance() {
-		return INSTANCE;
-	}
-	
 	
 	public CopyOnWriteArrayList<IEclipseChannelListener> getListeners(){
 		return this.listeners;

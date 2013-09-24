@@ -19,7 +19,7 @@ private static final Logger logger = LoggerFactory.getLogger(FlowerJettyServer.c
 	
 	private final String webappName = "org.flowerplatform.eclipse";
 	
-	private final String context = "/flower";
+	private final String context = "/flower-platform";
 	
 	private final String host = "localhost";
 	
