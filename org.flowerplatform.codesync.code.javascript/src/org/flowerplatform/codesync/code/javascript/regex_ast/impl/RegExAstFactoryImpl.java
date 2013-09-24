@@ -31,7 +31,7 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 	 */
 	public static RegExAstFactory init() {
 		try {
-			RegExAstFactory theRegExAstFactory = (RegExAstFactory)EPackage.Registry.INSTANCE.getEFactory("regex_ast"); 
+			RegExAstFactory theRegExAstFactory = (RegExAstFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.flower-platform.com/xmi/regex_ast_1.0.0"); 
 			if (theRegExAstFactory != null) {
 				return theRegExAstFactory;
 			}
@@ -62,6 +62,7 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 		switch (eClass.getClassifierID()) {
 			case RegExAstPackage.NODE: return createNode();
 			case RegExAstPackage.PARAMETER: return createParameter();
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT: return createRegExAstCodeSyncElement();
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT: return createRegExAstCacheElement();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -86,6 +87,16 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 	public Parameter createParameter() {
 		ParameterImpl parameter = new ParameterImpl();
 		return parameter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public RegExAstCodeSyncElement createRegExAstCodeSyncElement() {
+		RegExAstCodeSyncElementImpl regExAstCodeSyncElement = new RegExAstCodeSyncElementImpl();
+		return regExAstCodeSyncElement;
 	}
 
 	/**

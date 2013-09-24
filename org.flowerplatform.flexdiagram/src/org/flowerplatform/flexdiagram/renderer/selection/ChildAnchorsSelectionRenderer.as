@@ -18,7 +18,11 @@
  */
 package org.flowerplatform.flexdiagram.renderer.selection {
 	
+	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import flash.geom.Point;
+	
+	import mx.core.UIComponent;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -26,7 +30,9 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 	public class ChildAnchorsSelectionRenderer extends StandardAnchorsSelectionRenderer {
 		
 		override protected function handleTargetMoveResize(event:Event):void {
-			setLayoutBoundsPosition(target.parent.x + target.x, target.parent.y + target.y);
+			var targetGlobalPos:Point = UIComponent(target).contentToGlobal(new Point(target.x, target.y));
+			var parentGlobalPos:Point = UIComponent(parent).contentToGlobal(new Point(parent.x, parent.y));
+			setLayoutBoundsPosition(targetGlobalPos.x - parentGlobalPos.x, targetGlobalPos.y - parentGlobalPos.y);
 			setLayoutBoundsSize(target.width, target.height);
 		}
 		

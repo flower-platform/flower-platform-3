@@ -18,6 +18,7 @@
 */
 package org.flowerplatform.codesync.code.javascript {
 	
+	import org.flowerplatform.codesync.code.javascript.model.action.AddElementAction;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
@@ -65,11 +66,13 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: ExpandableBoxRenderer, removeRendererIfModelIsDisposed: true });
-//			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
+			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(ExpandableBoxVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["fileElementContainer"] = composedControllerProviderFactory;
+		
+			EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
 		}
 		
 		override protected function registerMessageBundle():void {

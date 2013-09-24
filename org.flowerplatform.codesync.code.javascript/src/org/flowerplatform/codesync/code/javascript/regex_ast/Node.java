@@ -25,6 +25,10 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isCategoryNode <em>Category Node</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getLength <em>Length</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isAdded <em>Added</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate <em>Template</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildrenInsertPoint <em>Children Insert Point</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
  * </ul>
  * </p>
  *
@@ -194,5 +198,109 @@ public interface Node extends EObject {
 	 * @generated
 	 */
 	void setLength(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Added</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Added</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Added</em>' attribute.
+	 * @see #setAdded(boolean)
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getNode_Added()
+	 * @model
+	 * @generated
+	 */
+	boolean isAdded();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isAdded <em>Added</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Added</em>' attribute.
+	 * @see #isAdded()
+	 * @generated
+	 */
+	void setAdded(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Template</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Template</em>' attribute.
+	 * @see #setTemplate(String)
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getNode_Template()
+	 * @model
+	 * @generated
+	 */
+	String getTemplate();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate <em>Template</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Template</em>' attribute.
+	 * @see #getTemplate()
+	 * @generated
+	 */
+	void setTemplate(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Children Insert Point</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Children Insert Point</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Children Insert Point</em>' attribute.
+	 * @see #setChildrenInsertPoint(int)
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getNode_ChildrenInsertPoint()
+	 * @model
+	 * @generated
+	 */
+	int getChildrenInsertPoint();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildrenInsertPoint <em>Children Insert Point</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Children Insert Point</em>' attribute.
+	 * @see #getChildrenInsertPoint()
+	 * @generated
+	 */
+	void setChildrenInsertPoint(int value);
+
+	/**
+	 * Returns the value of the '<em><b>Next Sibling Insert Point</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Next Sibling Insert Point</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Next Sibling Insert Point</em>' attribute.
+	 * @see #setNextSiblingInsertPoint(int)
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getNode_NextSiblingInsertPoint()
+	 * @model
+	 * @generated
+	 */
+	int getNextSiblingInsertPoint();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Next Sibling Insert Point</em>' attribute.
+	 * @see #getNextSiblingInsertPoint()
+	 * @generated
+	 */
+	void setNextSiblingInsertPoint(int value);
 
 } // Node

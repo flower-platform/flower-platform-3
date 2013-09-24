@@ -33,11 +33,18 @@ import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
  */
 public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 
+	protected static CodeSyncCodeJavascriptPlugin INSTANCE;
+	
 	public static String TECHNOLOGY = "js";
+	
+	public static CodeSyncCodeJavascriptPlugin getInstance() {
+		return INSTANCE;
+	}
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		INSTANCE = this;
 		
 		CodeSyncCodePlugin.getInstance().addSrcDir("js");
 		

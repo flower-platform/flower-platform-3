@@ -21,5 +21,13 @@
             technology="js">
       </codeSyncAlgorithmRunner>
    </extension>
+   <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            class="org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage"
+            genModel="emf_model/RegExAst.genmodel"
+            uri="http://www.flower-platform.com/xmi/regex_ast_1.0.0">
+      </package>
+   </extension>
 
 </plugin>

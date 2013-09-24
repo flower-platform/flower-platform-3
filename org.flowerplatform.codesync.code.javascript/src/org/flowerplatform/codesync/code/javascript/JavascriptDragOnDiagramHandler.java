@@ -57,6 +57,7 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 			
 			Bounds bounds = NotationFactory.eINSTANCE.createBounds();
 			bounds.setX(200);
+			bounds.setY(200);
 			bounds.setHeight(100);
 			bounds.setWidth(100);
 			node.setLayoutConstraint(bounds);

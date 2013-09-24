@@ -40,6 +40,10 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#isCategoryNode <em>Category Node</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getLength <em>Length</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#isAdded <em>Added</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getTemplate <em>Template</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getChildrenInsertPoint <em>Children Insert Point</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
  * </ul>
  * </p>
  *
@@ -165,6 +169,86 @@ public class NodeImpl extends EObjectImpl implements Node {
 	 * @ordered
 	 */
 	protected int length = LENGTH_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isAdded() <em>Added</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isAdded()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean ADDED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isAdded() <em>Added</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isAdded()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean added = ADDED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getTemplate() <em>Template</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTemplate()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TEMPLATE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTemplate() <em>Template</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTemplate()
+	 * @generated
+	 * @ordered
+	 */
+	protected String template = TEMPLATE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getChildrenInsertPoint() <em>Children Insert Point</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildrenInsertPoint()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int CHILDREN_INSERT_POINT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getChildrenInsertPoint() <em>Children Insert Point</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildrenInsertPoint()
+	 * @generated
+	 * @ordered
+	 */
+	protected int childrenInsertPoint = CHILDREN_INSERT_POINT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getNextSiblingInsertPoint() <em>Next Sibling Insert Point</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNextSiblingInsertPoint()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final int NEXT_SIBLING_INSERT_POINT_EDEFAULT = 0;
+
+	/**
+	 * The cached value of the '{@link #getNextSiblingInsertPoint() <em>Next Sibling Insert Point</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNextSiblingInsertPoint()
+	 * @generated
+	 * @ordered
+	 */
+	protected int nextSiblingInsertPoint = NEXT_SIBLING_INSERT_POINT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -319,6 +403,90 @@ public class NodeImpl extends EObjectImpl implements Node {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isAdded() {
+		return added;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setAdded(boolean newAdded) {
+		boolean oldAdded = added;
+		added = newAdded;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.NODE__ADDED, oldAdded, added));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getTemplate() {
+		return template;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTemplate(String newTemplate) {
+		String oldTemplate = template;
+		template = newTemplate;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.NODE__TEMPLATE, oldTemplate, template));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getChildrenInsertPoint() {
+		return childrenInsertPoint;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setChildrenInsertPoint(int newChildrenInsertPoint) {
+		int oldChildrenInsertPoint = childrenInsertPoint;
+		childrenInsertPoint = newChildrenInsertPoint;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.NODE__CHILDREN_INSERT_POINT, oldChildrenInsertPoint, childrenInsertPoint));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public int getNextSiblingInsertPoint() {
+		return nextSiblingInsertPoint;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setNextSiblingInsertPoint(int newNextSiblingInsertPoint) {
+		int oldNextSiblingInsertPoint = nextSiblingInsertPoint;
+		nextSiblingInsertPoint = newNextSiblingInsertPoint;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.NODE__NEXT_SIBLING_INSERT_POINT, oldNextSiblingInsertPoint, nextSiblingInsertPoint));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -352,6 +520,14 @@ public class NodeImpl extends EObjectImpl implements Node {
 				return getOffset();
 			case RegExAstPackage.NODE__LENGTH:
 				return getLength();
+			case RegExAstPackage.NODE__ADDED:
+				return isAdded();
+			case RegExAstPackage.NODE__TEMPLATE:
+				return getTemplate();
+			case RegExAstPackage.NODE__CHILDREN_INSERT_POINT:
+				return getChildrenInsertPoint();
+			case RegExAstPackage.NODE__NEXT_SIBLING_INSERT_POINT:
+				return getNextSiblingInsertPoint();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -388,6 +564,18 @@ public class NodeImpl extends EObjectImpl implements Node {
 			case RegExAstPackage.NODE__LENGTH:
 				setLength((Integer)newValue);
 				return;
+			case RegExAstPackage.NODE__ADDED:
+				setAdded((Boolean)newValue);
+				return;
+			case RegExAstPackage.NODE__TEMPLATE:
+				setTemplate((String)newValue);
+				return;
+			case RegExAstPackage.NODE__CHILDREN_INSERT_POINT:
+				setChildrenInsertPoint((Integer)newValue);
+				return;
+			case RegExAstPackage.NODE__NEXT_SIBLING_INSERT_POINT:
+				setNextSiblingInsertPoint((Integer)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -421,6 +609,18 @@ public class NodeImpl extends EObjectImpl implements Node {
 			case RegExAstPackage.NODE__LENGTH:
 				setLength(LENGTH_EDEFAULT);
 				return;
+			case RegExAstPackage.NODE__ADDED:
+				setAdded(ADDED_EDEFAULT);
+				return;
+			case RegExAstPackage.NODE__TEMPLATE:
+				setTemplate(TEMPLATE_EDEFAULT);
+				return;
+			case RegExAstPackage.NODE__CHILDREN_INSERT_POINT:
+				setChildrenInsertPoint(CHILDREN_INSERT_POINT_EDEFAULT);
+				return;
+			case RegExAstPackage.NODE__NEXT_SIBLING_INSERT_POINT:
+				setNextSiblingInsertPoint(NEXT_SIBLING_INSERT_POINT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -447,6 +647,14 @@ public class NodeImpl extends EObjectImpl implements Node {
 				return offset != OFFSET_EDEFAULT;
 			case RegExAstPackage.NODE__LENGTH:
 				return length != LENGTH_EDEFAULT;
+			case RegExAstPackage.NODE__ADDED:
+				return added != ADDED_EDEFAULT;
+			case RegExAstPackage.NODE__TEMPLATE:
+				return TEMPLATE_EDEFAULT == null ? template != null : !TEMPLATE_EDEFAULT.equals(template);
+			case RegExAstPackage.NODE__CHILDREN_INSERT_POINT:
+				return childrenInsertPoint != CHILDREN_INSERT_POINT_EDEFAULT;
+			case RegExAstPackage.NODE__NEXT_SIBLING_INSERT_POINT:
+				return nextSiblingInsertPoint != NEXT_SIBLING_INSERT_POINT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -471,6 +679,14 @@ public class NodeImpl extends EObjectImpl implements Node {
 		result.append(offset);
 		result.append(", length: ");
 		result.append(length);
+		result.append(", added: ");
+		result.append(added);
+		result.append(", template: ");
+		result.append(template);
+		result.append(", childrenInsertPoint: ");
+		result.append(childrenInsertPoint);
+		result.append(", nextSiblingInsertPoint: ");
+		result.append(nextSiblingInsertPoint);
 		result.append(')');
 		return result.toString();
 	}

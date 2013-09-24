@@ -74,13 +74,29 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter().equals(feature)) {
 			return getNode(element).getKeyParameter();
 		}
+		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template().equals(feature)) {
+			return getNode(element).getTemplate();
+		}
 		return super.getValueFeatureValue(element, feature, correspondingValue);
 	}
 	
 	@Override
 	public void setValueFeatureValue(Object element, Object feature, Object value) {
-		// TODO Auto-generated method stub
-
+		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name().equals(feature)) {
+			// nothing to do
+		}
+		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
+			getNode(element).setType((String) value);
+		}
+		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode().equals(feature)) {
+			getNode(element).setCategoryNode((boolean) value);
+		}
+		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter().equals(feature)) {
+			getNode(element).setKeyParameter((String) value);
+		}
+		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template().equals(feature)) {
+			getNode(element).setTemplate((String) value);
+		}
 	}
 
 	@Override
@@ -96,7 +112,18 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 
 	@Override
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
-		// TODO Auto-generated method stub
+		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
+			Node parent = getNode(element);
+			Node node = RegExAstFactory.eINSTANCE.createNode();
+			node.setAdded(true);
+			parent.getChildren().add(node);
+			return node;
+		}
+		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters().equals(feature)) {
+			Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
+			((Node) element).getParameters().add(parameter);
+			return parameter;
+		}
 		return null;
 	}
 

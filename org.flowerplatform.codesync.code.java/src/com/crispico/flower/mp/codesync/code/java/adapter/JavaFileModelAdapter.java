@@ -81,7 +81,7 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 				IMarker marker = file.createMarker(IMarker.MARKER);
 				marker.setAttribute(RENAMED, value);
 			} catch (CoreException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -165,9 +165,8 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 			IDocument document = textFileBuffer.getDocument();
 			return document.get().toCharArray();
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		return new char[0];
 	}
 
 	@Override
@@ -186,7 +185,7 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 			try {
 				file.create(is, true, null);
 			} catch (CoreException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		
@@ -199,6 +198,7 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 				}
 			}
 		} catch (CoreException e1) {
+			throw new RuntimeException(e1);
 		}
 		
 		IPath path = file.getFullPath();

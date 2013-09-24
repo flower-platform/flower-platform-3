@@ -41,6 +41,7 @@ public class RegExNodeFeatureProvider extends CodeSyncElementFeatureProvider {
 		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
 		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode());
 		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter());
+		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template());
 		return features;
 	}
 

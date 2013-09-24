@@ -7,6 +7,7 @@
 package org.flowerplatform.codesync.code.javascript.regex_ast.util;
 
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import java.io.Serializable;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
@@ -82,8 +83,16 @@ public class RegExAstAdapterFactory extends AdapterFactoryImpl {
 				return createParameterAdapter();
 			}
 			@Override
+			public Adapter caseRegExAstCodeSyncElement(RegExAstCodeSyncElement object) {
+				return createRegExAstCodeSyncElementAdapter();
+			}
+			@Override
 			public Adapter caseRegExAstCacheElement(RegExAstCacheElement object) {
 				return createRegExAstCacheElementAdapter();
+			}
+			@Override
+			public Adapter caseCodeSyncElement(CodeSyncElement object) {
+				return createCodeSyncElementAdapter();
 			}
 			@Override
 			public Adapter caseSerializable(Serializable object) {
@@ -142,6 +151,20 @@ public class RegExAstAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement <em>Code Sync Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement
+	 * @generated
+	 */
+	public Adapter createRegExAstCodeSyncElementAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement <em>Cache Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -152,6 +175,20 @@ public class RegExAstAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createRegExAstCacheElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.crispico.flower.mp.model.codesync.CodeSyncElement <em>Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.crispico.flower.mp.model.codesync.CodeSyncElement
+	 * @generated
+	 */
+	public Adapter createCodeSyncElementAdapter() {
 		return null;
 	}
 

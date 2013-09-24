@@ -42,7 +42,7 @@ public interface RegExAstPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "regex_ast";
+	String eNS_URI = "http://www.flower-platform.com/xmi/regex_ast_1.0.0";
 
 	/**
 	 * The package namespace name.
@@ -134,13 +134,49 @@ public interface RegExAstPackage extends EPackage {
 	int NODE__LENGTH = 6;
 
 	/**
+	 * The feature id for the '<em><b>Added</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__ADDED = 7;
+
+	/**
+	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__TEMPLATE = 8;
+
+	/**
+	 * The feature id for the '<em><b>Children Insert Point</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__CHILDREN_INSERT_POINT = 9;
+
+	/**
+	 * The feature id for the '<em><b>Next Sibling Insert Point</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__NEXT_SIBLING_INSERT_POINT = 10;
+
+	/**
 	 * The number of structural features of the '<em>Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE_FEATURE_COUNT = 7;
+	int NODE_FEATURE_COUNT = 11;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl <em>Parameter</em>}' class.
@@ -199,6 +235,124 @@ public interface RegExAstPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl <em>Code Sync Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getRegExAstCodeSyncElement()
+	 * @generated
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT = 2;
+
+	/**
+	 * The feature id for the '<em><b>Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__SYNCHRONIZED = CodeSyncPackage.CODE_SYNC_ELEMENT__SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Children Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__CHILDREN_SYNCHRONIZED = CodeSyncPackage.CODE_SYNC_ELEMENT__CHILDREN_SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Added</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__ADDED = CodeSyncPackage.CODE_SYNC_ELEMENT__ADDED;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__DELETED = CodeSyncPackage.CODE_SYNC_ELEMENT__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Status Flags</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__STATUS_FLAGS = CodeSyncPackage.CODE_SYNC_ELEMENT__STATUS_FLAGS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__NAME = CodeSyncPackage.CODE_SYNC_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__TYPE = CodeSyncPackage.CODE_SYNC_ELEMENT__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Ast Cache Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__AST_CACHE_ELEMENT = CodeSyncPackage.CODE_SYNC_ELEMENT__AST_CACHE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__CHILDREN = CodeSyncPackage.CODE_SYNC_ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Feature Changes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__FEATURE_CHANGES = CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES;
+
+	/**
+	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Code Sync Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT_FEATURE_COUNT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl <em>Cache Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -206,7 +360,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getRegExAstCacheElement()
 	 * @generated
 	 */
-	int REG_EX_AST_CACHE_ELEMENT = 2;
+	int REG_EX_AST_CACHE_ELEMENT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Code Sync Element</b></em>' reference.
@@ -342,6 +496,50 @@ public interface RegExAstPackage extends EPackage {
 	EAttribute getNode_Length();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isAdded <em>Added</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Added</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#isAdded()
+	 * @see #getNode()
+	 * @generated
+	 */
+	EAttribute getNode_Added();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate <em>Template</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Template</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate()
+	 * @see #getNode()
+	 * @generated
+	 */
+	EAttribute getNode_Template();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildrenInsertPoint <em>Children Insert Point</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Children Insert Point</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildrenInsertPoint()
+	 * @see #getNode()
+	 * @generated
+	 */
+	EAttribute getNode_ChildrenInsertPoint();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Next Sibling Insert Point</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getNextSiblingInsertPoint()
+	 * @see #getNode()
+	 * @generated
+	 */
+	EAttribute getNode_NextSiblingInsertPoint();
+
+	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter <em>Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -394,6 +592,27 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getParameter_Length();
+
+	/**
+	 * Returns the meta object for class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement <em>Code Sync Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Code Sync Element</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement
+	 * @generated
+	 */
+	EClass getRegExAstCodeSyncElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getTemplate <em>Template</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Template</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getTemplate()
+	 * @see #getRegExAstCodeSyncElement()
+	 * @generated
+	 */
+	EAttribute getRegExAstCodeSyncElement_Template();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement <em>Cache Element</em>}'.
@@ -527,6 +746,38 @@ public interface RegExAstPackage extends EPackage {
 		EAttribute NODE__LENGTH = eINSTANCE.getNode_Length();
 
 		/**
+		 * The meta object literal for the '<em><b>Added</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE__ADDED = eINSTANCE.getNode_Added();
+
+		/**
+		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE__TEMPLATE = eINSTANCE.getNode_Template();
+
+		/**
+		 * The meta object literal for the '<em><b>Children Insert Point</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE__CHILDREN_INSERT_POINT = eINSTANCE.getNode_ChildrenInsertPoint();
+
+		/**
+		 * The meta object literal for the '<em><b>Next Sibling Insert Point</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE__NEXT_SIBLING_INSERT_POINT = eINSTANCE.getNode_NextSiblingInsertPoint();
+
+		/**
 		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl <em>Parameter</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -567,6 +818,24 @@ public interface RegExAstPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PARAMETER__LENGTH = eINSTANCE.getParameter_Length();
+
+		/**
+		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl <em>Code Sync Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl
+		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getRegExAstCodeSyncElement()
+		 * @generated
+		 */
+		EClass REG_EX_AST_CODE_SYNC_ELEMENT = eINSTANCE.getRegExAstCodeSyncElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE = eINSTANCE.getRegExAstCodeSyncElement_Template();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl <em>Cache Element</em>}' class.
