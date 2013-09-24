@@ -59,6 +59,7 @@ package org.flowerplatform.web.svn.common {
 
 	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	import org.flowerplatform.web.svn.common.action.CopyUrlToClipboardAction;
+	import org.flowerplatform.web.svn.common.action.MergeAction;
 
 
 	
@@ -105,6 +106,7 @@ package org.flowerplatform.web.svn.common {
 					RefreshRemoteResourceAction,
 					CheckoutAction,
 					UpdateToHeadAction,
+					MergeAction,
 					CommitAction,
 					RevertAction,
 					MarkResolvedAction,

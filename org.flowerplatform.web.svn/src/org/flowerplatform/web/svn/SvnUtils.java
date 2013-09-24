@@ -34,6 +34,8 @@ public class SvnUtils implements ISvnVersionHandler{
 			}
 			return true;
 		} catch (SVNClientException e) {
+			if (isAuthenticationClientException(e))
+				throw SVNException.wrapException(e);
 			return false;
 		}			
 	}
@@ -53,14 +55,17 @@ public class SvnUtils implements ISvnVersionHandler{
 		
 		try {
 			Class<?> clazz = Class.forName("org.tigris.subversion.svnclientadapter.SVNClientException");
-			if (exception.getCause() instanceof SVNClientException){
+			if (exception.getCause() instanceof SVNClientException ||
+					exception.getCause() instanceof ClientException){
+				if (((ClientException)exception.getCause()).getAprError() == 170001)
+					return true;
 				Method getAprErrorMethod = clazz.getMethod("getAprError");
 				getAprErrorMethod.setAccessible(true);
 				Object result = getAprErrorMethod.invoke(exception.getCause());
 				if (Integer.valueOf(String.valueOf(result)).intValue() == 170001) {
 					return true;
 				}
-			}			
+			}
 		} catch (Exception e) {	// swallow it -> consider not authentication exception			
 		}
 		return false;

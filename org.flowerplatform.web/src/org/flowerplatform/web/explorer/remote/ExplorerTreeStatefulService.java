@@ -151,11 +151,11 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 	}
 	
 
-//	@Override
-//	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext){
-//		clientContext.put(CLIENT_COMMAND_KEY, context.getCommand());
-//		super.openNode(context, path, clientContext);
-//	}
+	@Override
+	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext){
+		clientContext.put(CLIENT_COMMAND_KEY, context.getCommand());
+		super.openNode(context, path, clientContext);
+	}
 
 	/**
 	 * @author Tache Razvan Mihai

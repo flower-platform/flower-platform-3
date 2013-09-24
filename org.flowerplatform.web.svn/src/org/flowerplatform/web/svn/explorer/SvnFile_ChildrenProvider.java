@@ -69,6 +69,9 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 //				if (e.getCause() == null)
 //					return result;
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);				
+			} finally {
+				if (command != null)
+					SvnService.tlCommand.remove();
 			}
 		}
 		return result;

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
-import org.apache.subversion.javahl.ISVNClient;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -68,12 +67,10 @@ import org.tigris.subversion.svnclientadapter.ISVNConflictResolver;
 import org.tigris.subversion.svnclientadapter.ISVNInfo;
 import org.tigris.subversion.svnclientadapter.ISVNStatus;
 import org.tigris.subversion.svnclientadapter.SVNClientException;
-import org.tigris.subversion.svnclientadapter.SVNKeywords;
 import org.tigris.subversion.svnclientadapter.SVNRevision;
 import org.tigris.subversion.svnclientadapter.SVNStatusKind;
 import org.tigris.subversion.svnclientadapter.SVNUrl;
 import org.tigris.subversion.svnclientadapter.javahl.JhlClientAdapter;
-import org.tigris.subversion.svnclientadapter.javahl.JhlStatus;
 import org.tigris.subversion.svnclientadapter.utils.Depth;
 
 /**
@@ -135,6 +132,8 @@ public class SvnService {
 		}
 
 		try {
+			// save comment
+			addComment(context.getCommunicationChannel().getPrincipal().getUser().getLogin(), comment);
 			if(context.getCommand().getParameters().size() >=1)
 				context.getCommand().getParameters().remove(0);
 			tlCommand.set(context.getCommand());
@@ -1153,6 +1152,9 @@ public class SvnService {
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance()
 				.getMessage("svn.service.checkout.checkoutProgressMonitor"),
 				channel);
+		if(context.getCommand().getParameters().size() >=1)
+			context.getCommand().getParameters().remove(0);
+		tlCommand.set(context.getCommand());
 		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath)
 				+ workingDirectoryDestination;
 		SVNRevision revision;
@@ -1209,7 +1211,8 @@ public class SvnService {
 			}
 			opMng.endOperation();
 		} catch (MalformedURLException | SVNClientException | URISyntaxException | CoreException e) {
-
+			if (isAuthentificationException(e))
+				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 					"Error", e.getMessage(),
@@ -1896,10 +1899,6 @@ public class SvnService {
 
 		// map used for refresh in the end
 		HashMap<Object, List<PathFragment>> refreshMap = new HashMap<Object, List<PathFragment>>();
-		
-		if(context.getCommand().getParameters().size() >=1)
-			context.getCommand().getParameters().remove(0);
-		tlCommand.set(context.getCommand());
 
 		for (List<PathFragment> fullPath : objectFullPaths) {
 
@@ -1958,6 +1957,9 @@ public class SvnService {
 		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin
 				.getInstance().getMessage("svn.deleteSvnAction.monitor.title"),
 				cc);
+		if(context.getCommand().getParameters().size() >=1)
+			context.getCommand().getParameters().remove(0);
+		tlCommand.set(context.getCommand());
 		try {
 			// save comment
 			addComment(cc.getPrincipal().getUser().getLogin(), comment);
@@ -2010,7 +2012,8 @@ public class SvnService {
 										.size()]), comment, monitor);
 			}
 			for (Object root : refreshMap.keySet()) {
-				((GenericTreeStatefulService) GenericTreeStatefulService
+				if (root != null && refreshMap.get(root) != null)
+					((GenericTreeStatefulService) GenericTreeStatefulService
 						.getServiceFromPathWithRoot(refreshMap.get(root)))
 						.dispatchContentUpdate(root);
 			}
@@ -2084,8 +2087,8 @@ public class SvnService {
 		try {
 			changeCredentials(context, uri, username, password);
 			command.setCommunicationChannel(context.getCommunicationChannel());
+			
 			command.executeCommand();
-
 		} catch (Exception e) {
 			logger.error("Exception thrown while logging user!", e);
 			context.getCommunicationChannel().appendOrSendCommand(
@@ -2093,6 +2096,10 @@ public class SvnService {
 							.getInstance().getMessage("error"),
 							"Error while logging user!",
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
+		} finally {
+			if (tlCommand != null){
+				tlCommand.remove();
+			}
 		}
 	}
 
@@ -2156,11 +2163,11 @@ public class SvnService {
 			ArrayList<ArrayList<PathFragment>> selectionList, String url1,
 			long revision1, String url2, long revision2, boolean force,
 			boolean ignoreAncestry) throws SVNException {
-
+		
 		boolean checkForConflict = false;
 		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(
 				context.getCommunicationChannel());
-
+		
 		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin
 				.getInstance().getMessage("svn.action.mergeAction.label"),
 				context.getCommunicationChannel());
@@ -2184,14 +2191,10 @@ public class SvnService {
 
 			client.merge(svnUrl1, svnRevision1, svnUrl2, svnRevision2,
 					files[0], force, recurse, false, ignoreAncestry);
-			// try {
-			// // Refresh the resource after merge
-			// resources[0].refreshLocal(IResource.DEPTH_INFINITE,
-			// new NullProgressMonitor());
-			// } catch (CoreException e1) {
-			// }
 			monitor.worked(100);
 		} catch (SVNClientException e) {
+			if (isAuthentificationException(e))
+				return true;
 			checkForConflict = true;
 			throw SVNException.wrapException(e);
 		} catch (MalformedURLException e) {
@@ -2211,16 +2214,28 @@ public class SvnService {
 	 * @author Cristina Necula
 	 * 
 	 */
-	public List<String> getMergeSpecs(
+	public List<String> getMergeSpecs(ServiceInvocationContext context,
 			ArrayList<ArrayList<PathFragment>> selectionList,
-			ArrayList<PathFragment> path) throws SVNException {
-
+			ArrayList<PathFragment> path){
+		
+		if(context.getCommand().getParameters().size() >=1)
+			context.getCommand().getParameters().remove(0);
+		tlCommand.set(context.getCommand());
+		
 		List<String> specs = new ArrayList<String>();
 		File[] files = getFilesForSelectionList(selectionList);
-
-		specs.add(getCommitUrlPathForSingleSelection(path));
-		specs.add(files[0].getAbsolutePath());
-
+		String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
+		try {
+			ISVNClientAdapter myClientAdapter;
+			myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
+			ISVNInfo info = myClientAdapter.getInfo(new File(workingDirectoryPath));
+			specs.add(info.getUrlString());
+			specs.add(files[0].getAbsolutePath());
+		} catch (Exception e) {
+			if (isAuthentificationException(e)){
+				specs.add("loginmessage");
+			}
+		}
 		return specs;
 	}
 

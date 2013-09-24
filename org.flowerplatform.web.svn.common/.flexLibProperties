@@ -39,6 +39,7 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.RevertAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.SvnProjectFileAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.MarkResolvedView"/>
+  	<classEntry path="org.flowerplatform.web.svn.common.action.MergeAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

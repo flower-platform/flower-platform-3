@@ -324,7 +324,7 @@ public abstract class AbstractTreeStatefulService extends StatefulService {
 	@RemoteInvocation
 	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {
 		AuditDetails auditDetails = new AuditDetails(logger, "OPEN_NODE", path, context.getStatefulClientId());
-		clientContext.put(CLIENT_COMMAND_KEY, context.getCommand());
+//		clientContext.put(CLIENT_COMMAND_KEY, context.getCommand());
 		// create structure
 		TreeNode treeNode = openNodeInternal(context.getCommunicationChannel(), context.getStatefulClientId(), path, clientContext);		
 		

@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.remote.TreeNode;
