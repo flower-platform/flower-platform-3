@@ -33,6 +33,12 @@
         <link rel="stylesheet" type="text/css" href="history/history.css" />
         <script type="text/javascript" src="history/history.js"></script>
         <! END Browser History required section -->  
+        
+        <script type="text/javascript">
+            var flashvars = {};
+        </script>
+        
+        <script type="text/javascript" src="flexHostAppConfig.js"></script> 
             
         <script type="text/javascript" src="swfobject.js"></script>
         <script type="text/javascript">
@@ -40,7 +46,6 @@
             var swfVersionStr = "11.2.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
             var xiSwfUrlStr = "playerProductInstall.swf";
-            var flashvars = {};
             var params = {};
             params.quality = "high";
             params.bgcolor = "#ffffff";
