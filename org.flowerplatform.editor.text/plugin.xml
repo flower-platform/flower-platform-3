@@ -17,6 +17,15 @@
       </contentTypeToEditorMapping>
    </extension>
    <extension
+         point="org.flowerplatform.editor.contentTypeToEditorMapping">
+      <contentTypeToEditorMapping
+            compatibleEditor="orionEditor"
+            contentType="text"
+            editorStatefulService="org.flowerplatform.editor.text.remote.TextEditorStatefulService"
+            serviceId="textEditorStatefulService">
+      </contentTypeToEditorMapping>
+   </extension>
+   <extension
          point="org.flowerplatform.editor.fileExtensionToContentTypeMapping">
       <fileExtensionToContentTypeMapping
             contentType="text"

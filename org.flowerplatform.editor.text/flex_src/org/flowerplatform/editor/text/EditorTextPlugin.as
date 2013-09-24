@@ -45,6 +45,10 @@ package org.flowerplatform.editor.text {
 			var editorDescriptor:TextEditorDescriptor = new TextEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
+			
+			var orionEditorDescriptor:OrionEditorDescriptor = new OrionEditorDescriptor();
+			EditorPlugin.getInstance().editorDescriptors.push(orionEditorDescriptor);
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(orionEditorDescriptor);
 		}
 		
 		override protected function registerClassAliases():void	{
