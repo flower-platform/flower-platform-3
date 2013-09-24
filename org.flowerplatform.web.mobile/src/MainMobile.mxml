@@ -75,13 +75,14 @@
 		<![CDATA[
 			import mx.core.FlexGlobals;
 			
-			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
+			import org.flowerplatform.blazeds.BlazeDSBridge;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.codesync.CodeSyncPlugin;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.EditorPlugin;
 			import org.flowerplatform.editor.java.JavaEditorPlugin;
+			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
 			import org.flowerplatform.editor.model.EditorModelPlugin;
 			import org.flowerplatform.editor.text.EditorTextPlugin;
 			import org.flowerplatform.editor.text.java.EditorTextJavaPlugin;
@@ -146,8 +147,11 @@
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorSpinnerHandlerFactory();
 				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";
 				
-				
 				startPlugins();
+				
+				// unfortunately, for unknown reasons despite investigations and discussions on forum, the streaming
+				// channel doesn't work properly. It disconnects and reconnects after about 40 sec. See mindmap.
+				CommunicationPlugin.getInstance().bridge.initializeChannelSet(BlazeDSBridge.BLAZEDS_POLLING_CHANNEL);
 				
 				CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 			}
