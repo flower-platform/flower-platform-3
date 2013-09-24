@@ -16,12 +16,16 @@
       <httpcontext
             id="flower">
          <resource-mapping
-               bundle="org.flowerplatform.eclipse.app"
-               path="/WebContent">
+               bundle="org.flowerplatform.flex_host_app"
+               path="/public-resources">
          </resource-mapping>
          <resource-mapping
-               bundle="org.flowerplatform.eclipse.app"
-               path="/flex_bin">
+               bundle="org.flowerplatform.flex_host_app"
+               path="/bin">
+         </resource-mapping>
+         <resource-mapping
+               bundle="org.flowerplatform.eclipse"
+               path="/WebContent">
          </resource-mapping>
       </httpcontext>
    </extension>

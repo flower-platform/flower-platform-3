@@ -136,6 +136,9 @@ license-end
 				FlexUtilGlobals.getInstance().contextMenuManager = new ContextMenuManager();
 				
 				var pluginUrlsAsString:String = FlexGlobals.topLevelApplication.parameters.pluginUrls;
+				if (pluginUrlsAsString == null) {
+					throw new Error("No pluginUrls have been specified. Flower Platform cannot start.");
+				}
 				var pluginUrls:Array = pluginUrlsAsString.split(",");
 				FlexPluginManager.getInstance().loadPlugins(new ArrayCollection(pluginUrls));
 			}

@@ -84,7 +84,7 @@ private static final Logger logger = LoggerFactory.getLogger(FlowerJettyServer.c
 	}
 	
 	public String getUrl() {
-		return "http://" + host + ":" + port + context + "/MainWeb.html";
+		return "http://" + host + ":" + port + context + "/main.jsp";
 		
 	}
 	

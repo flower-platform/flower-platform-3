@@ -22,7 +22,6 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -33,7 +32,7 @@ package org.flowerplatform.editor.model.action {
 			super();
 			
 			label = "Delete";
-			icon = WebCommonPlugin.getInstance().getResourceUrl("images/common/cancel_delete.png");
+//			icon = WebCommonPlugin.getInstance().getResourceUrl("images/common/cancel_delete.png");
 			preferShowOnActionBar = true;
 		}
 		
