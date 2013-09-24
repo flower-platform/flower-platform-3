@@ -151,7 +151,7 @@ The result can be:
 						ArrayCollection(historyEntriesTable.dataProvider).addAll(value);
 					}
 					
-				//	ModalSpinner.removeModalSpinner(this);
+					//	ModalSpinner.removeModalSpinner(this);
 				}
 			}
 			
@@ -245,7 +245,7 @@ The result can be:
 				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/svn_persp.gif"));
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.branchTag.view.page.label"));			
 			}	
-						
+			
 		]]>
 	</fx:Script>
 	
@@ -287,5 +287,5 @@ The result can be:
 			</s:columns>
 		</s:DataGrid>			
 	</s:VGroup>
-		
+	
 </s:Group> 

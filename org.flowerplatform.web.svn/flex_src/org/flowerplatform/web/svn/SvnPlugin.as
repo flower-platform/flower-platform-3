@@ -32,13 +32,12 @@ package  org.flowerplatform.web.svn {
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.actions.ShowHistoryAction;
 	import org.flowerplatform.web.svn.history.SvnHistoryViewProvider;
-
-	
+	import org.flowerplatform.web.svn.common.history.HistoryEntry	
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 
 	/**
 	 * @author Gabriela Murgoci
 	 */
-
 	public class SvnPlugin extends AbstractFlowerFlexPlugin {
 	
 		/**
@@ -46,12 +45,10 @@ package  org.flowerplatform.web.svn {
 		 */
 		protected static var INSTANCE:SvnPlugin;
 		
-
 		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();
 
 		public static const TREE_NODE_KEY_IS_FOLDER:String = "isFolder";
 				
-
 		/**
 		 * @flowerModelElementId _DxJioAM1EeOrJqcAep-lCg
 		 */
@@ -71,7 +68,7 @@ package  org.flowerplatform.web.svn {
 		 */
 		protected override function registerClassAliases():void {				
 			super.registerClassAliases();
-			//registerClassAlias("org.flowerplatform.web.svn.remote.history.HistoryEntry", HistoryEntry);
+			registerClassAlias("org.flowerplatform.web.svn.remote.history.HistoryEntry", HistoryEntry);
 		}
 		
 		/**

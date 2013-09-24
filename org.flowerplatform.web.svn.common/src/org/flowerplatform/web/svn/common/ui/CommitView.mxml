@@ -68,11 +68,12 @@ license-end
 			
 			public function getModifiedData():void {				
 				// following block appears in 3 different classes (this, CheckoutView, UpdateToVersionView)
+				// not sure if should make separate method
 				var selectionPaths:ArrayList = new ArrayList;
 				for(var i:int=0; i<selection.length; i++) {
 					var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
 					selectionPaths.addItem(path);
-				}				
+				}
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "getDifferences", [selectionPaths], this, getModifiedDataCallback));				
 			}

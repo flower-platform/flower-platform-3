@@ -29,12 +29,19 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	
-	public class AddToVersionControlAction extends SvnProjectFileAction{
+	/**
+	 * @author Victor Badila
+	 */ 	
+	public class AddToVersionControlAction extends SvnProjectFileAction {
 		
 		public function AddToVersionControlAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.addToVersionControl.label");
 			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/added_ov.gif");
 		}
+		
+		public override function get visible():Boolean {
+			return getVisibleForAddToVersionOrAddToIgnore();
+		} 
 	
 		public override function run():void {
 			var pathFragmentsForFiles:ArrayCollection = new ArrayCollection;

@@ -25,22 +25,16 @@ package  org.flowerplatform.web.svn.common.history {
 	 * @author Victor Badila
 	 */
 	[RemoteClass]
-	[SecureSWF(rename="off")]
 	public class HistoryEntry {
 		
-		[SecureSWF(rename="off")]
 		public var revision:String;
 		
-		[SecureSWF(rename="off")]
 		public var date:Date;
 		
-		[SecureSWF(rename="off")]
 		public var author:String;
 		
-		[SecureSWF(rename="off")]
 		public var comment:String;
 		
-		[SecureSWF(rename="off")]
 		public var affectedPathEntries:ArrayCollection;		
 		
 	}

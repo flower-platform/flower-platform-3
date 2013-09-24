@@ -45,23 +45,6 @@ public class SvnHistoryService {
 	private static Logger logger = LoggerFactory.getLogger(SvnHistoryService.class);
 	
 	/**
-	 * @return Information about the {@link ISVNRemoteResource remote resource} corresponding to <code>objectPath</code>
-	 * 			given as parameter. <br> 
-	 * 		   If no remote resource found, returns <code>null</code>.
-	 * 
-	 * @see #getRemoteResourceFromPath()
-	 * 
-	 * @flowerModelElementId _iQu3IGg0EeG44_H1Ez3m6A
-	 */
-	public String getObjectInfo(ServiceInvocationContext context, Object objectPath) {
-		ISVNRemoteResource remoteResource = getRemoteResourceFromPath(context, objectPath);
-		if (remoteResource != null) {
-			return remoteResource.getRepositoryRelativePath() + " in " + remoteResource.getRepository();
-		}
-		return null;
-	}
-
-	/**
 	 * Gets a list of history entries for corresponding {@link ISVNRemoteResource remote resource}
 	 * starting from <code>revisionStart</code> and ending when the number of entries (<code>nbEntries</code>) is achieved. <br>
 	 * If no remote resource is found, returns <code>null</code>
@@ -75,11 +58,7 @@ public class SvnHistoryService {
 	 * 						if <code>-1</code> then the head revision is taken in consideration. 
 	 * @param nbEntries - the number of entries to return
 	 * 					if <code>-1</code> then all remaining entries are returned.
-	 * 	
-	 * @see #getRemoteResourceFromId()
-	 * @see #convertToHistoryEntry()
 	 * 
-	 * @flowerModelElementId _LOW9YGeUEeGwRJzyHm9bBA
 	 */
 	public List<HistoryEntry> getEntries(ServiceInvocationContext context, Object path, long revisionStart, long nbEntries, Boolean appendAffectedPathsInfo) {	
 		// get remote resource		
@@ -97,12 +76,9 @@ public class SvnHistoryService {
 		}
 		// convert to client data
 		List<HistoryEntry> historyEntries = new ArrayList<HistoryEntry>();
-		System.out.println("conversion starts: "+ (System.currentTimeMillis()/1000)%10000);
 		for (ILogEntry entry : logCmd.getLogEntries()) {
 			historyEntries.add(convertToHistoryEntry(remoteResource, entry, appendAffectedPathsInfo));
-		}
-		System.out.println("conversion ends: "+ (System.currentTimeMillis()/1000)%10000);
-		
+		}		
 		return historyEntries;
 		
 	}	
@@ -111,12 +87,10 @@ public class SvnHistoryService {
 	 * Gets the corresponding {@link ISVNRemoteResource remote resource} starting from an object path.
 	 * The object path can correspond to:
 	 * <ul>
-	 * 	<li> an {@link ISVNRemoteResource}
+	 * 	<li> an {@link Pair}, when accessed tree node is of svn project file type , the member {@link File} will be returned}
 	 * 	<li> an {@link ISVNRepositoryLocation}, the corresponding {@link ISVNRemoteFolder} will be returned
-	 * 	<li> an {@link IResource}, finds its remote resource (if it exists) and returns it.
 	 * </ul>
 	 * If no remote resource found, returns <code>null</code>.
-	 * @flowerModelElementId _qm0GgWkfEeG06_IXsTB-9g
 	 */
 	private ISVNRemoteResource getRemoteResourceFromPath(ServiceInvocationContext context, Object path) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
@@ -151,35 +125,22 @@ public class SvnHistoryService {
 		return null;
 	}
 	
-
-	
-	/**
-	 * Returns an {@link HistoryEntry} filled with data provided by an {@link ILogEntry}.
-	 * 
-	 * @see #getEntries()
-	 */
 	private HistoryEntry convertToHistoryEntry(ISVNRemoteResource remoteResource, ILogEntry logEntry, Boolean appendAffectedPathsInfo) {
 		HistoryEntry historyEntry = new HistoryEntry();
-		String revision = logEntry.getRevision().toString();
-		if (remoteResource != null && logEntry.getRevision().equals(remoteResource.getLastChangedRevision())) {
-			//revision = SvnPlugin.getInstance().getMessage("svnHistory.returnedData.currentRevision") + revision;
-		}		
+		String revision = logEntry.getRevision().toString();		
 		historyEntry.setRevision(revision);		
-		historyEntry.setDate(logEntry.getDate());
-				
+		historyEntry.setDate(logEntry.getDate());				
 		if(logEntry.getAuthor() == null) {
 			historyEntry.setAuthor(SvnPlugin.getInstance().getMessage("svnHistory.returnedData.noauthor"));
 		} else {
 			historyEntry.setAuthor(logEntry.getAuthor());
-		}
-		
+		}		
 		String comment = logEntry.getComment();
 		if (comment == null) {
 			historyEntry.setComment("");
 		} else {
 			historyEntry.setComment(comment.replaceAll("\r", " ").replaceAll("\n", " "));
 		}		
-		System.out.println("problem block start: "+ (System.currentTimeMillis()/1000)%10000);
 		if (appendAffectedPathsInfo) {
 			List<AffectedPathEntry> affectedPaths = new ArrayList<AffectedPathEntry>();
 			for (LogEntryChangePath affectedPath : logEntry.getLogEntryChangePaths()) {
@@ -187,7 +148,6 @@ public class SvnHistoryService {
 			}
 			historyEntry.setAffectedPathEntries(affectedPaths);			
 		}		
-		System.out.println("problem block end: "+ (System.currentTimeMillis()/1000)%10000);
 		return historyEntry;
 	}	
 

@@ -58,8 +58,8 @@ package org.flowerplatform.web.svn.common.action {
 					return false;
 			}
 			var organizationName:String = PathFragment(TreeNode(selection.getItemAt(0)).getPathForNode(false).getItemAt(0)).name;
-			for (var i:int=0; i<selection.length; i++) {
-				var treeNode:TreeNode = TreeNode(selection.getItemAt(i));
+			for (var j:int=0; j<selection.length; j++) {
+				var treeNode:TreeNode = TreeNode(selection.getItemAt(j));
 				if (organizationName != PathFragment(treeNode.getPathForNode(false).getItemAt(0)).name) {
 					return false;
 				}

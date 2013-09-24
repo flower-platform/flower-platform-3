@@ -40,9 +40,7 @@ package org.flowerplatform.web.svn.actions {
 		
 		public function ShowHistoryAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.showHistory.label");
-			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/history_view.gif");
-			/*orderIndex = int(GitPlugin.getInstance().getMessage("git.action.showHistory.sortIndex"));*/
-			
+			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/history_view.gif");			
 		}	
 		
 		public override function get visible():Boolean {

@@ -45,16 +45,13 @@ package org.flowerplatform.web.svn.common {
 	import org.flowerplatform.web.svn.common.action.SvnChangeCredentialsAction;
 	import org.flowerplatform.web.svn.common.action.SwitchAction;
 	import org.flowerplatform.web.svn.common.action.UpdateToHeadAction;
-	import org.flowerplatform.web.svn.common.action.UpdateToVersionAction;
 	import org.flowerplatform.web.svn.common.action.remote.OpenSvnCredentialsWindowClientCommand;
-	import org.flowerplatform.web.svn.common.history.HistoryEntry;
 	import org.flowerplatform.web.svn.common.remote.BranchResource;
 	import org.flowerplatform.web.svn.common.remote.dto.FileDto;
-	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;	
+	import org.flowerplatform.web.svn.common.history.HistoryEntry;
 
-
-
-	
+	//import org.flowerplatform.web.svn.common.action.remote.SvnChangeCredentialsAction;
 	/**
 	 * @author Gabriela Murgoci
 	 * 	 

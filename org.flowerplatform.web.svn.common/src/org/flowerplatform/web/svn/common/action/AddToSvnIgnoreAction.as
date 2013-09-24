@@ -32,6 +32,9 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.common.ui.AddToSvnIgnoreView;
 	
+	/**
+	 * @author Victor Badila
+	 */ 	
 	public class AddToSvnIgnoreAction extends SvnProjectFileAction {
 		
 		private var pathFragmentsStorage:ArrayCollection;
@@ -40,6 +43,10 @@ package org.flowerplatform.web.svn.common.action {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.addToSvnIgnore.label");
 			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/ignore.gif");
 		}
+		
+		public override function get visible():Boolean {
+			return getVisibleForAddToVersionOrAddToIgnore();
+		} 
 		
 		public override function run():void {
 			var pathFragmentsForFiles:ArrayCollection = new ArrayCollection;
@@ -58,12 +65,11 @@ package org.flowerplatform.web.svn.common.action {
 			if (result) {
 				var view:AddToSvnIgnoreView = new AddToSvnIgnoreView();
 				view.selection = pathFragmentsStorage;
-				//view.setPatternLabel();
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setPopupContent(view)
 					.show();
-			} 
-			
+			} 			
 		}
+		
 	}
 }

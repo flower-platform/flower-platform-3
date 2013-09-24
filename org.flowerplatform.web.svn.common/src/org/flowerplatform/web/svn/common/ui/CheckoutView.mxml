@@ -44,36 +44,55 @@ license-end
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.ui.WorkingDirectorySelectionPopupView;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			import org.flowerplatform.web.svn.common.action.SvnProjectFileAction;
+			import org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView;
 						
-			public var selection:ArrayList;
-			
-			public var selectionIndex:int = 0;
-			
-			public var applyForAll:Boolean = false;
-			
 			[Bindable]
 			public var currentSelectedItemName:String;
 			
 			[Bindable]
 			public var depthDropdownDataProvider:ArrayList;
 			
-			public var workingDirectoryName:String;
+			private var lastBtnPressed:Button;
 			
-			public var newProjectName:String;
+			public var applyForAll:Boolean = false;
+			
+			public var newProjectName:String = "";
+			
+			public var selection:ArrayList;
+			
+			public var selectionIndex:int = 0;			
+			
+			public var workingDirectoryName:String = "";
 					
 			private function resetView():void {
 				currentSelectedItemName = TreeNode(selection.getItemAt(0)).label;
-				locationTextInput.text="";
-				headRevisionCheckbox.selected=true;
-				ignoreCheck.selected=false;
-				forceCheck.selected=false;
-				// set name of new item
+				locationTextInput.text = workingDirectoryName + '/';
+				callLater(locationTextInput.setFocus);	
+				headRevisionCheckbox.selected = true;
+				ignoreCheck.selected = false;
+				forceCheck.selected = false;
 			}
 						
 			public override function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepiository.view.label"));
 				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/checkout.gif"));
+			}
+			
+			private function selectRevisionBtnHandler():void {
+				lastBtnPressed = selectRevisionButton;
+				var view:SelectRevisionWindowView = new SelectRevisionWindowView();
+				var tn:TreeNode = TreeNode(selection.getItemAt(selectionIndex));
+				view.remoteResourcePath = tn.getPathForNode(true);
+				view.remoteResourceName = tn.label;
+				view.setResultHandler(this);
+				//view.showPopup();
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setWidth(400)
+					.setHeight(450)
+					.setPopupContent(view)
+					.show();
 			}
 			
 			protected override function cancelClickHandler():void {
@@ -89,7 +108,7 @@ license-end
 			protected override function finishClickHandler():void {
 				setWorkingDirectoryNameAndProjectName();
 				var projectDestinationAdditionalPath:String;
-				if (newProjectName!=null) {
+				if (newProjectName!="") {
 					projectDestinationAdditionalPath = newProjectName;
 				} else {
 					projectDestinationAdditionalPath = TreeNode(selection.getItemAt(selectionIndex)).label;
@@ -124,14 +143,14 @@ license-end
 					
 			}
 				
-			public function finishClickHandler2(result:String):void {
+			public function finishClickHandler2(result:int):void {
 				_popupHost.hideSpinner();
-				if (result == "wdExistsAndIsValid") {
+				if (result == 0) {
 					var wdNode:TreeNode = getWorkingDirectoriesTreeNode(TreeNode(selection.getItemAt(0)));					
 					var selectionPaths:ArrayList = new ArrayList;	
 					if (applyDefaultForAll.selected) {
 						workingDirectoryName = locationTextInput.text;
-						newProjectName = null;
+						newProjectName = "";
 						applyForAll = true; // and thus CheckoutView will be closed after checkout, if all goes well
 						for(var i:int=0; i<selection.length; i++) {							
 							selectionPaths.addItem(ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true)));
@@ -147,7 +166,7 @@ license-end
 							this, finishCallbackHandler ));
 					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));
 					
-				} else if (result =="wdDoesNotExist"){
+				} else if (result == 1){
 					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
 						.setTitle(SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.interogationNewWorkingDirectory.title'))
 						.setText(SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.interogationNewWorkingDirectory.content'))
@@ -157,12 +176,9 @@ license-end
 						.setHeight(300)
 						.showMessageBox();					
 				} else {
-					Alert.show("Project path already exists on the hard and belongs to another folder");
+					Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.errorMsg.aFileWithGivenPathAlreadyExists"));
 				}
 			}
-				
-
-
 			
 			private function finishCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
@@ -185,14 +201,20 @@ license-end
 			public function createWorkingDirectoryCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result) {
-					finishClickHandler2("wdExistsAndIsValid");
+					finishClickHandler2(0);
 				} else {
 					Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.createWorkingDirectory.invalidArgument"));					
 				}
 			}
 			
 			public function handleDialogResult(result:Object):void {
-				locationTextInput.text = String(result) + "/" + wizardTitle;
+				if (lastBtnPressed == browseWorkingDirectoriesButton) {
+					locationTextInput.text = String(result) + "/" + wizardTitle;
+				} else if (lastBtnPressed == selectRevisionButton) {
+					if (result != null) {					
+						revision.text = String(result);
+					}	
+				}
 			}
 			
 			public function init():void {
@@ -208,6 +230,7 @@ license-end
 			}
 			
 			public function openWorkingDirectoryBrowseWindow():void {
+				lastBtnPressed = browseWorkingDirectoriesButton;
 				var organizationName:String = TreeNode(getSvnRepositoriesTreeNode(TreeNode(selection.getItemAt(0)))).parent.label;				
 				var view:WorkingDirectorySelectionPopupView = new WorkingDirectorySelectionPopupView();
 				view.init(organizationName);				
@@ -253,7 +276,6 @@ license-end
 				super.creationCompleteHandler();
 				var button:spark.components.Button = new spark.components.Button();
 				button.label = SvnCommonPlugin.getInstance().getMessage("svn.actions.checkout.CancelAllButtonLabel");
-				button.label = "Renounce";
 				button.addEventListener(MouseEvent.CLICK, cancelAllHandler);
 				buttonBar.addElement(button);
 			}
@@ -270,7 +292,7 @@ license-end
 					<s:HGroup width="100%">
 						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.locationIndicator')}"/>
 						<s:TextInput width="100%" id="locationTextInput"/>
-						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.browseWorkspaceButton')}" click="{openWorkingDirectoryBrowseWindow()}"/>
+						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.browseWorkspaceButton')}" click="{openWorkingDirectoryBrowseWindow()}" id="browseWorkingDirectoriesButton"/>
 						<utils:HintButton toolTip="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.locationFormHint')}"/>
 					</s:HGroup>
 					<s:Rect width="1" height="10"/>
@@ -278,7 +300,7 @@ license-end
 					<s:HGroup width="100%" verticalAlign="middle">
 						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionLabel')}"/>
 						<s:TextInput id="revision" enabled="{!headRevisionCheckbox.selected}" width="100%"/>
-						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionButton')}"/>						
+						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionButton')}" id="selectRevisionButton" click="{selectRevisionBtnHandler()}"/>						
 					</s:HGroup>
 					<s:Rect width="1" height="10"/>
 					<s:HGroup width="100%" verticalAlign="middle">

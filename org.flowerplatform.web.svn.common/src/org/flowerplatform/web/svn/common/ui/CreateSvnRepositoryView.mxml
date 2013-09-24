@@ -49,14 +49,14 @@ license-end
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 
-			public var node:TreeNode;
-			
 			[Bindable]
 			public var svnLocation:String;			
 			
 			[Bindable]
 			private var check:Boolean;
-				
+			
+			public var node:TreeNode;
+			
 			private function getProjectsCallbackHandler(result:Boolean):void {
 				_popupHost.hideSpinner();
 				if (result != true) {
@@ -71,7 +71,7 @@ license-end
 			}
 			
 			protected override function finishClickHandler():void {
-				var location:String = mySvnLocation.text;
+				var location:String = svnLocationBox.text;
 				for (var i:int; i<node.children.length; i++) {
 					if (node.children.getItemAt(i).label == location) {
 						Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.errorRepositoryAlreadyExists"));
@@ -80,8 +80,7 @@ license-end
 				}
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [location, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
-				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));    
-
+				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));   
 			}
 			
 			public override function set popupHost(value:IPopupHost):void {
@@ -92,15 +91,12 @@ license-end
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
+				callLater(svnLocationBox.setFocus);
 				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
-			}						
-			
+			}		
 			
 		]]>
 	</fx:Script>
-	<fx:Array id="validators">
-		<mx:StringValidator minLength="1" property="text" source="{mySvnLocation}"/>
-	</fx:Array>	
 
 	<popup:states>
 		<mx:State name="0">			
@@ -110,7 +106,7 @@ license-end
 					<s:HGroup width="100%" verticalAlign="middle">
 						<s:Label width="100%" text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.createSvnRepository.SvnUrlLabel')}"/>													
 					</s:HGroup>						
-					<s:TextInput id="mySvnLocation" width="100%" text="{svnLocation}"/> 				
+					<s:TextInput id="svnLocationBox" width="100%" text="{svnLocation}"/> 				
 					<s:HGroup width="100%" verticalAlign="middle">					
 					</s:HGroup>												
 				</s:VGroup>		 

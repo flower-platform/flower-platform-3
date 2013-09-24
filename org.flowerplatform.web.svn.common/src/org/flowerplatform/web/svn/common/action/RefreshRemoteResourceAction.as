@@ -38,17 +38,7 @@ package org.flowerplatform.web.svn.common.action {
 	 *	 
 	 */
 	public class RefreshRemoteResourceAction extends ActionBase {
-		
-		private var _explorerTreeList:ExplorerTreeList;
-		
-		public function get explorerTreeList():ExplorerTreeList {
-			return _explorerTreeList;
-		}
-		
-		public function set explorerTreeList(value:ExplorerTreeList):void {
-			_explorerTreeList = value;
-		}
-				
+						
 		public function RefreshRemoteResourceAction() {
 			label = SvnCommonPlugin.getInstance().getMessage("svn.action.refreshAction.label");
 			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/refresh.gif");			
