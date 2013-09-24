@@ -20,11 +20,14 @@ package org.flowerplatform.editor.mindmap.remote {
 	
 	import flash.utils.Dictionary;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.ServiceInvocationOptions;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.MindMapNode;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -36,18 +39,28 @@ package org.flowerplatform.editor.mindmap.remote {
 		public var viewTypeToAcceptedViewTypeChildren:Dictionary = new Dictionary();
 		
 		public function MindMapDiagramEditorStatefulClient() {
-			viewTypeToAcceptedViewTypeChildren["folder"] = new ArrayList(["folder", "page"]);
-			viewTypeToAcceptedViewTypeChildren["page"] = new ArrayList(["heading 1", "heading 2", "heading 3", "paragraph"]);
-			viewTypeToAcceptedViewTypeChildren["heading 1"] = new ArrayList(["heading 2", "heading 3", "paragraph"]);
-			viewTypeToAcceptedViewTypeChildren["heading 2"] = new ArrayList(["heading 3", "paragraph"]);
-			viewTypeToAcceptedViewTypeChildren["heading 3"] = new ArrayList(["paragraph"]);
+			viewTypeToAcceptedViewTypeChildren["default"] = new ArrayList(["default"]);
+//			viewTypeToAcceptedViewTypeChildren["folder"] = new ArrayList(["folder", "page"]);
+//			viewTypeToAcceptedViewTypeChildren["page"] = new ArrayList(["heading 1", "heading 2", "heading 3", "paragraph"]);
+//			viewTypeToAcceptedViewTypeChildren["heading 1"] = new ArrayList(["heading 2", "heading 3", "paragraph"]);
+//			viewTypeToAcceptedViewTypeChildren["heading 2"] = new ArrayList(["heading 3", "paragraph"]);
+//			viewTypeToAcceptedViewTypeChildren["heading 3"] = new ArrayList(["paragraph"]);
 //			viewTypeToAcceptedViewTypeChildren["headline 4"] = new ArrayList(["headline 5", "headline 6", "paragraph"]);
 //			viewTypeToAcceptedViewTypeChildren["headline 5"] = new ArrayList(["headline 6", "paragraph"]);
 //			viewTypeToAcceptedViewTypeChildren["headline 6"] = new ArrayList(["paragraph"]);
-			viewTypeToAcceptedViewTypeChildren["paragraph"] = new ArrayList([]);
+//			viewTypeToAcceptedViewTypeChildren["paragraph"] = new ArrayList([]);
 		}
+		
 		public override function getStatefulServiceId():String {	
 			return "mindmapEditorStatefulService";
+		}
+				
+		private function convertSelection(selection:IList):ArrayCollection {
+			var array:ArrayCollection = new ArrayCollection();
+			for (var i:int=0; i <selection.length; i++) {
+				array.addItem(MindMapNode(selection.getItemAt(i)).id);
+			}
+			return array;
 		}
 		
 		public function service_setSide(viewId:Object, side:int):void {
@@ -71,8 +84,8 @@ package org.flowerplatform.editor.mindmap.remote {
 				callbackObject, callbackFunction));
 		}
 		
-		public function service_createNew(viewId:Object, viewType:String, callbackObject:Object = null, callbackFunction:Function = null):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "createNew", [viewId, viewType], callbackObject, callbackFunction));
+		public function service_createNode(viewId:Object, viewType:String, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "createNode", [viewId, viewType], callbackObject, callbackFunction));
 		}
 		
 		public function service_moveUp(viewId:Object, callbackObject:Object, callbackFunction:Function):void {
@@ -85,6 +98,22 @@ package org.flowerplatform.editor.mindmap.remote {
 		
 		public function service_delete(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "delete", [viewId]));
+		}
+		
+		public function service_removeAllIcons(selection:IList, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "removeAllIcons", [convertSelection(selection)], callbackObject, callbackFunction));
+		}
+		
+		public function service_removeFirstIcon(selection:IList, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "removeFirstIcon", [convertSelection(selection)], callbackObject, callbackFunction));
+		}
+		
+		public function service_removeLastIcon(selection:IList, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "removeLastIcon", [convertSelection(selection)], callbackObject, callbackFunction));
+		}
+		
+		public function service_addIcon(selection:IList, icon:String, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "addIcon", [convertSelection(selection), icon], callbackObject, callbackFunction));
 		}
 	}
 }

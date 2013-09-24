@@ -128,16 +128,26 @@ public class CodeSyncSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case CodeSyncPackage.SERIALIZABLE: {
-				Serializable serializable = (Serializable)theEObject;
-				T result = caseSerializable(serializable);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case CodeSyncPackage.SCENARIO_ELEMENT: {
 				ScenarioElement scenarioElement = (ScenarioElement)theEObject;
 				T result = caseScenarioElement(scenarioElement);
 				if (result == null) result = caseCodeSyncElement(scenarioElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case CodeSyncPackage.MIND_MAP_ELEMENT: {
+				MindMapElement mindMapElement = (MindMapElement)theEObject;
+				T result = caseMindMapElement(mindMapElement);
+				if (result == null) result = caseCodeSyncElement(mindMapElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case CodeSyncPackage.MIND_MAP_ROOT: {
+				MindMapRoot mindMapRoot = (MindMapRoot)theEObject;
+				T result = caseMindMapRoot(mindMapRoot);
+				if (result == null) result = caseCodeSyncRoot(mindMapRoot);
+				if (result == null) result = caseMindMapElement(mindMapRoot);
+				if (result == null) result = caseCodeSyncElement(mindMapRoot);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -247,6 +257,36 @@ public class CodeSyncSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseScenarioElement(ScenarioElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Mind Map Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Mind Map Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMindMapElement(MindMapElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Mind Map Root</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Mind Map Root</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMindMapRoot(MindMapRoot object) {
 		return null;
 	}
 

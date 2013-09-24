@@ -39,6 +39,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
+import com.crispico.flower.mp.model.codesync.MindMapElement;
+import com.crispico.flower.mp.model.codesync.MindMapRoot;
 import com.crispico.flower.mp.model.codesync.ScenarioElement;
 import java.io.Serializable;
 
@@ -97,6 +99,20 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 	 * @generated
 	 */
 	private EClass scenarioElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mindMapElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mindMapRootEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -428,6 +444,33 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getMindMapElement() {
+		return mindMapElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getMindMapElement_Icons() {
+		return (EAttribute)mindMapElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getMindMapRoot() {
+		return mindMapRootEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CodeSyncFactory getCodeSyncFactory() {
 		return (CodeSyncFactory)getEFactoryInstance();
 	}
@@ -486,6 +529,11 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		createEAttribute(scenarioElementEClass, SCENARIO_ELEMENT__NUMBER);
 		createEReference(scenarioElementEClass, SCENARIO_ELEMENT__INTERACTION);
 		createEAttribute(scenarioElementEClass, SCENARIO_ELEMENT__COMMENT);
+
+		mindMapElementEClass = createEClass(MIND_MAP_ELEMENT);
+		createEAttribute(mindMapElementEClass, MIND_MAP_ELEMENT__ICONS);
+
+		mindMapRootEClass = createEClass(MIND_MAP_ROOT);
 	}
 
 	/**
@@ -522,6 +570,9 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		codeSyncRootEClass.getESuperTypes().add(this.getCodeSyncElement());
 		astCacheElementEClass.getESuperTypes().add(this.getSerializable());
 		scenarioElementEClass.getESuperTypes().add(this.getCodeSyncElement());
+		mindMapElementEClass.getESuperTypes().add(this.getCodeSyncElement());
+		mindMapRootEClass.getESuperTypes().add(this.getCodeSyncRoot());
+		mindMapRootEClass.getESuperTypes().add(this.getMindMapElement());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(codeSyncElementEClass, CodeSyncElement.class, "CodeSyncElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -559,6 +610,11 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		initEAttribute(getScenarioElement_Number(), theEcorePackage.getEString(), "number", null, 0, 1, ScenarioElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getScenarioElement_Interaction(), this.getCodeSyncElement(), null, "interaction", null, 0, 1, ScenarioElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getScenarioElement_Comment(), theEcorePackage.getEString(), "comment", null, 0, 1, ScenarioElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(mindMapElementEClass, MindMapElement.class, "MindMapElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMindMapElement_Icons(), theEcorePackage.getEString(), "icons", null, 0, -1, MindMapElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(mindMapRootEClass, MindMapRoot.class, "MindMapRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

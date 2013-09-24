@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+@author Cristina Constantinescu
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 xmlns:local="org.flowerplatform.editor.mindmap.ui.*"
+		 implements="org.flowerplatform.flexutil.popup.IPopupContent"
+		 >
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
+			import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
+			import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+			import org.flowerplatform.emf_model.notation.MindMapNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			
+			private var _popupHost:IPopupHost;
+			
+			public var selection:IList;
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public function set popupHost(popupHost:IPopupHost):void {
+				_popupHost = popupHost;
+				_popupHost.setLabel(MindMapModelPlugin.getInstance().getMessage('manageIcons.action.label'));
+				_popupHost.setIcon(MindMapModelPlugin.getInstance().getResourceUrl('images/images.png'));
+			}
+			
+			override protected function createChildren():void {
+				super.createChildren();
+								
+				removeGroup.addElement(btnRemoveAll);				
+				removeGroup.addElement(btnRemoveFirst);				
+				removeGroup.addElement(btnRemoveLast);
+				
+				var icons:Array = MindMapModelPlugin.getInstance().getMessage('icons.list').split(';');
+				for (var i:int=0; i < icons.length; i++) {
+					var btnImage:MindMapButtonWithIcon = new MindMapButtonWithIcon();
+					btnImage.iconUrl = "/images/icons/" + icons[i] + ".png";
+					btnImage.addEventListener(MouseEvent.CLICK, btnImage_clickHandler);
+					
+					imageGroup.addElement(btnImage);
+				}
+			}
+					
+			protected function btnRemoveAll_clickHandler(event:MouseEvent):void {
+				MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_removeAllIcons(selection);
+				closeView();
+			}
+			
+			protected function btnRemoveFirst_clickHandler(event:MouseEvent):void {
+				MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_removeFirstIcon(selection);
+				closeView();
+			}
+			
+			protected function btnRemoveLast_clickHandler(event:MouseEvent):void {
+				MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_removeLastIcon(selection);
+				closeView();
+			}
+			
+			protected function btnImage_clickHandler(event:MouseEvent):void {
+				MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_addIcon(selection, MindMapButtonWithIcon(event.target).iconUrl);
+				closeView();
+			}
+			
+			private function closeView():void {
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<fx:Component className="MindMapButtonWithIcon" >			
+			<s:Button initialize="initializeHandler(event)" click="clickHandler(event)" >
+				 <fx:Script>
+					 <![CDATA[
+						 import mx.events.FlexEvent;
+						 
+						 import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
+						 import org.flowerplatform.emf_model.notation.MindMapNode;
+						 import org.flowerplatform.flexutil.FlexUtilGlobals;
+						 
+						 public var iconUrl:String;
+						 
+						 protected function initializeHandler(event:FlexEvent):void {
+							 if (!FlexUtilGlobals.getInstance().isMobile) {
+								 width = 22;
+								 height = 22;
+							 }
+							 setStyle("icon", FlexUtilGlobals.getInstance().createAbsoluteUrl(MindMapModelPlugin.getInstance().getResourceUrl(iconUrl)));	 
+						 }
+												 
+					 ]]>
+				 </fx:Script>				 
+			 </s:Button>
+		</fx:Component>
+		
+		<local:MindMapButtonWithIcon id="btnRemoveAll" 
+								  iconUrl="/images/icon_trash.png" 
+								  toolTip="{MindMapModelPlugin.getInstance().getMessage('manageIcons.remove.all.label')}"
+								  click="btnRemoveAll_clickHandler(event)" />
+		<local:MindMapButtonWithIcon id="btnRemoveFirst" 
+								  iconUrl="/images/remove_first_icon.png" 
+								  toolTip="{MindMapModelPlugin.getInstance().getMessage('manageIcons.remove.first.label')}"
+								  click="btnRemoveFirst_clickHandler(event)" />
+		<local:MindMapButtonWithIcon id="btnRemoveLast" 
+								  iconUrl="/images/remove_last_icon.png" 
+								  toolTip="{MindMapModelPlugin.getInstance().getMessage('manageIcons.remove.last.label')}"
+								  click="btnRemoveLast_clickHandler(event)" />
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout gap="3"/>
+	</s:layout>
+	
+	<s:HGroup id="removeGroup" width="100%" gap="2">		
+	</s:HGroup>
+	
+	<s:Line width="100%" >
+		<s:stroke>
+			<s:SolidColorStroke color="gray" weight="1"/>
+		</s:stroke>
+	</s:Line>
+	
+	<s:Group id="imageGroup" width="100%" height="100%" >
+		<s:layout>
+			<s:TileLayout horizontalGap="2" verticalGap="2"/>
+		</s:layout>		
+	</s:Group>
+	
+</s:Group>

@@ -50,7 +50,7 @@ package org.flowerplatform.editor.mindmap.action {
 		
 		override public function run():void {			
 			var selectedNode:MindMapNode = MindMapNode(selection.getItemAt(0));			
-			MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_createNew(selectedNode.id, viewType);
+			MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_createNode(selectedNode.id, viewType);
 		}
 	}
 }

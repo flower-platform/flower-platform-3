@@ -17,6 +17,8 @@
 * license-end
 */
 package org.flowerplatform.editor.mindmap.action {
+	
+	import org.flowerplatform.editor.mindmap.MindMapModelPlugin;
 	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
 	import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -26,10 +28,11 @@ package org.flowerplatform.editor.mindmap.action {
 	import org.flowerplatform.emf_model.notation.Node;
 	
 	public class RenameAction extends TextInputAction {
+		
 		public function RenameAction() {
 			super();
 			
-			label = "Rename";
+			label = MindMapModelPlugin.getInstance().getMessage("rename.action.label");
 			icon = EditorModelPlugin.getInstance().getResourceUrl("images/rename.png");	
 			preferShowOnActionBar = true;
 		}
