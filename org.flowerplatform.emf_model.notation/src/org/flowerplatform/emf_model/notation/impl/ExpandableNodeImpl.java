@@ -24,6 +24,7 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl#isExpanded <em>Expanded</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl#isHasChildren <em>Has Children</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl#getTemplate <em>Template</em>}</li>
  * </ul>
  * </p>
  *
@@ -69,6 +70,26 @@ public class ExpandableNodeImpl extends NodeImpl implements ExpandableNode {
 	 * @ordered
 	 */
 	protected boolean hasChildren = HAS_CHILDREN_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getTemplate() <em>Template</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTemplate()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TEMPLATE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getTemplate() <em>Template</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTemplate()
+	 * @generated
+	 * @ordered
+	 */
+	protected String template = TEMPLATE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -136,6 +157,27 @@ public class ExpandableNodeImpl extends NodeImpl implements ExpandableNode {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getTemplate() {
+		return template;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setTemplate(String newTemplate) {
+		String oldTemplate = template;
+		template = newTemplate;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.EXPANDABLE_NODE__TEMPLATE, oldTemplate, template));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
@@ -143,6 +185,8 @@ public class ExpandableNodeImpl extends NodeImpl implements ExpandableNode {
 				return isExpanded();
 			case NotationPackage.EXPANDABLE_NODE__HAS_CHILDREN:
 				return isHasChildren();
+			case NotationPackage.EXPANDABLE_NODE__TEMPLATE:
+				return getTemplate();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -160,6 +204,9 @@ public class ExpandableNodeImpl extends NodeImpl implements ExpandableNode {
 				return;
 			case NotationPackage.EXPANDABLE_NODE__HAS_CHILDREN:
 				setHasChildren((Boolean)newValue);
+				return;
+			case NotationPackage.EXPANDABLE_NODE__TEMPLATE:
+				setTemplate((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -179,6 +226,9 @@ public class ExpandableNodeImpl extends NodeImpl implements ExpandableNode {
 			case NotationPackage.EXPANDABLE_NODE__HAS_CHILDREN:
 				setHasChildren(HAS_CHILDREN_EDEFAULT);
 				return;
+			case NotationPackage.EXPANDABLE_NODE__TEMPLATE:
+				setTemplate(TEMPLATE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -195,6 +245,8 @@ public class ExpandableNodeImpl extends NodeImpl implements ExpandableNode {
 				return expanded != EXPANDED_EDEFAULT;
 			case NotationPackage.EXPANDABLE_NODE__HAS_CHILDREN:
 				return hasChildren != HAS_CHILDREN_EDEFAULT;
+			case NotationPackage.EXPANDABLE_NODE__TEMPLATE:
+				return TEMPLATE_EDEFAULT == null ? template != null : !TEMPLATE_EDEFAULT.equals(template);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -213,6 +265,8 @@ public class ExpandableNodeImpl extends NodeImpl implements ExpandableNode {
 		result.append(expanded);
 		result.append(", hasChildren: ");
 		result.append(hasChildren);
+		result.append(", template: ");
+		result.append(template);
 		result.append(')');
 		return result.toString();
 	}

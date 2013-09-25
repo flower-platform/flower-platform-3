@@ -17,6 +17,7 @@ package org.flowerplatform.emf_model.notation;
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.ExpandableNode#isExpanded <em>Expanded</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.ExpandableNode#isHasChildren <em>Has Children</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.ExpandableNode#getTemplate <em>Template</em>}</li>
  * </ul>
  * </p>
  *
@@ -76,5 +77,31 @@ public interface ExpandableNode extends Node {
 	 * @generated
 	 */
 	void setHasChildren(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Template</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Template</em>' attribute.
+	 * @see #setTemplate(String)
+	 * @see org.flowerplatform.emf_model.notation.NotationPackage#getExpandableNode_Template()
+	 * @model
+	 * @generated
+	 */
+	String getTemplate();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.emf_model.notation.ExpandableNode#getTemplate <em>Template</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Template</em>' attribute.
+	 * @see #getTemplate()
+	 * @generated
+	 */
+	void setTemplate(String value);
 
 } // ExpandableNode

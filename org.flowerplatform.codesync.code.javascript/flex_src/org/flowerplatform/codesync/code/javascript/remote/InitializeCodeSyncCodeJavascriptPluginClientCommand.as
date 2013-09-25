@@ -16,17 +16,23 @@
 *
 * license-end
 */
-package org.flowerplatform.emf_model.notation {
+package org.flowerplatform.codesync.code.javascript.remote {
 	
+	import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
+	import org.flowerplatform.communication.command.AbstractClientCommand;
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
 	[RemoteClass]
-	[Bindable]
-	public class ExpandableNode extends Node {
+	public class InitializeCodeSyncCodeJavascriptPluginClientCommand extends AbstractClientCommand {
 		
-		public var expanded:Boolean;
+		public var availableTemplates:Object;
 		
-		public var hasChildren:Boolean;
-		
-		public var template:String;
+		override public function execute():void {
+			super.execute();
+			CodeSyncCodeJavascriptPlugin.getInstance().availableTemplates = availableTemplates;
+		}
 		
 	}
 }

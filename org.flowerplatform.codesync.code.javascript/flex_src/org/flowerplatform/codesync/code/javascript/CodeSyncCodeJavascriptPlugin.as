@@ -19,8 +19,10 @@
 package org.flowerplatform.codesync.code.javascript {
 	
 	import org.flowerplatform.codesync.code.javascript.model.action.AddElementAction;
+	import org.flowerplatform.codesync.code.javascript.model.action.AddElementActionProvider;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController;
+	import org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
@@ -39,14 +41,29 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
+	import org.flowerplatform.flexutil.Utils;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
 	public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerFlexPlugin {
 		
+		protected static var INSTANCE:CodeSyncCodeJavascriptPlugin;
+		
+		public static function getInstance():CodeSyncCodeJavascriptPlugin {
+			return INSTANCE;
+		}
+		
+		public var availableTemplates:Object = new Object();
+		
 		override public function start():void {
 			super.start();
+			if (INSTANCE != null) {
+				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
+			}
+			INSTANCE = this;
+			
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddElementActionProvider());
 			
 			var composedControllerProviderFactory:ComposedControllerProviderFactory;
 			
@@ -71,12 +88,10 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["fileElementContainer"] = composedControllerProviderFactory;
-		
-			EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
 		}
 		
-		override protected function registerMessageBundle():void {
-			// no messages
+		override protected function registerClassAliases():void {
+			registerClassAliasFromAnnotation(InitializeCodeSyncCodeJavascriptPluginClientCommand);
 		}
 		
 	}

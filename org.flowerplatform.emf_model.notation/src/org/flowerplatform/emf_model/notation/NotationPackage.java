@@ -1017,13 +1017,22 @@ public interface NotationPackage extends EPackage {
 	int EXPANDABLE_NODE__HAS_CHILDREN = NODE_FEATURE_COUNT + 1;
 
 	/**
+	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__TEMPLATE = NODE_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Expandable Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPANDABLE_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 2;
+	int EXPANDABLE_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.NotationElement <em>Element</em>}'.
@@ -1389,6 +1398,17 @@ public interface NotationPackage extends EPackage {
 	EAttribute getExpandableNode_HasChildren();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.ExpandableNode#getTemplate <em>Template</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Template</em>'.
+	 * @see org.flowerplatform.emf_model.notation.ExpandableNode#getTemplate()
+	 * @see #getExpandableNode()
+	 * @generated
+	 */
+	EAttribute getExpandableNode_Template();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1703,6 +1723,14 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EXPANDABLE_NODE__HAS_CHILDREN = eINSTANCE.getExpandableNode_HasChildren();
+
+		/**
+		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXPANDABLE_NODE__TEMPLATE = eINSTANCE.getExpandableNode_Template();
 
 	}
 

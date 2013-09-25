@@ -73,6 +73,8 @@ package org.flowerplatform.editor.model {
 		
 		protected static var INSTANCE:EditorModelPlugin;
 		
+		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
+		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
 		
 		public static function getInstance():EditorModelPlugin {
@@ -90,6 +92,8 @@ package org.flowerplatform.editor.model {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
+			
+			notationDiagramActionProviders.push(notationDiagramClassFactoryActionProvider);
 			
 			var editorDescriptor:NotationDiagramEditorDescriptor = new NotationDiagramEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);

@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.code.javascript.parser.Parser;
 import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
-import org.flowerplatform.editor.model.java.JavaClassChildProcessor;
+import org.flowerplatform.editor.model.change_processor.IconDiagrammableElementFeatureChangesProcessor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -33,13 +33,13 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 /**
  * @author Mariana Gheorghe
  */
-public class JavascriptFileElementProcessor extends JavaClassChildProcessor {
+public class JavascriptFileElementProcessor extends IconDiagrammableElementFeatureChangesProcessor {
 
 	@Override
 	protected String getLabel(EObject object) {
-		CodeSyncElement cse = getCodeSyncElement(object);
+		CodeSyncElement cse = (CodeSyncElement) object;
 		String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		if (cse.getType().equals(Parser.JS_FUNCTION)) {
+		if (Parser.JS_FUNCTION.equals(cse.getType())) {
 			List<Parameter> parameters = (List<Parameter>) CodeSyncPlugin.getInstance().getFeatureValue(cse, 
 					RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
 			if (parameters != null) {
@@ -56,11 +56,6 @@ public class JavascriptFileElementProcessor extends JavaClassChildProcessor {
 
 	@Override
 	protected String[] getIconUrls(EObject object) {
-		return null;
-	}
-
-	@Override
-	protected String getImageForVisibility(int type) {
 		return null;
 	}
 

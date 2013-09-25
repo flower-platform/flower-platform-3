@@ -499,6 +499,15 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getExpandableNode_Template() {
+		return (EAttribute)expandableNodeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public NotationFactory getNotationFactory() {
 		return (NotationFactory)getEFactoryInstance();
 	}
@@ -566,6 +575,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		expandableNodeEClass = createEClass(EXPANDABLE_NODE);
 		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__EXPANDED);
 		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__HAS_CHILDREN);
+		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__TEMPLATE);
 	}
 
 	/**
@@ -654,6 +664,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEClass(expandableNodeEClass, ExpandableNode.class, "ExpandableNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getExpandableNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExpandableNode_HasChildren(), ecorePackage.getEBoolean(), "hasChildren", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExpandableNode_Template(), ecorePackage.getEString(), "template", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -18,6 +18,11 @@
  */
 package org.flowerplatform.codesync.code.javascript;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
 import org.flowerplatform.codesync.code.javascript.processor.JavascriptFileElementProcessor;
 import org.flowerplatform.codesync.code.javascript.remote.JavascriptClassDiagramOperationsService;
@@ -41,6 +46,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 
+	private Map<String, List<String>> availableTemplates = new HashMap<String, List<String>>();
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -53,6 +60,14 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("file", new JavascriptElementProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("fileElementContainer", new JavascriptFileElementProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("fileElementContainer", new JavascriptElementProcessor());
+	
+		// TODO this should be initialized from rules
+		availableTemplates.put("", Arrays.asList("Table"));
+		availableTemplates.put("Table", Arrays.asList("TableHeaderEntry"));
+	}
+	
+	public Map<String, List<String>> getAvailableTemplates() {
+		return availableTemplates;
 	}
 	
 }

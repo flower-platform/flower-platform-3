@@ -2,6 +2,14 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
+         point="org.eclipse.emf.ecore.generated_package">
+      <package
+            class="org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage"
+            genModel="emf_model/RegExAst.genmodel"
+            uri="http://www.flower-platform.com/xmi/regex_ast_1.0.0">
+      </package>
+   </extension>
+   <extension
          point="org.flowerplatform.codesync.code.modelAdapterFactorySet">
       <modelAdapterFactorySet
             modelAdapterFactorySetClass="org.flowerplatform.codesync.code.javascript.adapter.JavascriptModelAdapterFactorySet"
@@ -22,12 +30,10 @@
       </codeSyncAlgorithmRunner>
    </extension>
    <extension
-         point="org.eclipse.emf.ecore.generated_package">
-      <package
-            class="org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage"
-            genModel="emf_model/RegExAst.genmodel"
-            uri="http://www.flower-platform.com/xmi/regex_ast_1.0.0">
-      </package>
+         point="org.flowerplatform.communication.welcomeInitializationsContributor">
+      <welcomeInitializationsContributor
+            commandToAppendToWelcomeClientCommand="org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand">
+      </welcomeInitializationsContributor>
    </extension>
 
 </plugin>

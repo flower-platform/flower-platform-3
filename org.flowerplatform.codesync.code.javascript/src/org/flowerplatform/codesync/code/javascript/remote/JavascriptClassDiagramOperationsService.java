@@ -66,11 +66,13 @@ public class JavascriptClassDiagramOperationsService {
 		RegExAstCacheElement ast = RegExAstFactory.eINSTANCE.createRegExAstCacheElement();
 		ast.setCategoryNode(isCategory);
 		ast.setKeyParameter(keyParameter);
-		for (Entry<String, String> entry : parameters.entrySet()) {
-			Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
-			parameter.setName(entry.getKey());
-			parameter.setValue(entry.getValue());
-			ast.getParameters().add(parameter);
+		if (parameters != null) {
+			for (Entry<String, String> entry : parameters.entrySet()) {
+				Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
+				parameter.setName(entry.getKey());
+				parameter.setValue(entry.getValue());
+				ast.getParameters().add(parameter);
+			}
 		}
 		cse.setName(getParameterValue(ast, keyParameter));
 		cse.setAstCacheElement(ast);

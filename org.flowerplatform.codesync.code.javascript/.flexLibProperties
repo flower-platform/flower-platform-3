@@ -5,6 +5,8 @@
     <classEntry path="org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer"/>
     <classEntry path="org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController"/>
     <classEntry path="org.flowerplatform.codesync.code.javascript.model.action.AddElementAction"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.model.action.AddElementActionProvider"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
