@@ -103,6 +103,7 @@ package org.flowerplatform.web.svn.common {
 					RefreshRemoteResourceAction,
 					CheckoutAction,
 					UpdateToHeadAction,
+					UpdateToVersionAction,
 					CommitAction,
 					RevertAction,
 					MarkResolvedAction,
