@@ -43,34 +43,25 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 			
 			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object;
 			
+			// test
+			if (template == "Table") {
+				type = "htmlFile";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "Companies.html",
+					"tableId" : "companies-list",
+					"headerRowId" : "companies-list-header"
+				};
+			} else if (template == "TableHeaderEntry") {
+				type = "tableHeaderEntry";
+				keyParameter = "title";
+				isCategory = false;
+				parameters = { "title" : "Logo" };
+			}
+			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
 					.service_addElement(type, keyParameter, isCategory, parameters, template, parentViewId);
-			
-//			if (selection.length == 0) {
-//				var parameters:Object = {
-//					"name" : "Companies.html",
-//					"tableId" : "companies-list",
-//					"headerRowId" : "companies-list-header"
-//				};
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("htmlFile", "name", false, parameters, "Table", null);
-//			} else {
-//				var id:Object = ExpandableNode(selection.getItemAt(0)).id;
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("tableHeaderEntry", "title", false, { "title" : "#" }, "TableHeaderEntry", id); 
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("tableHeaderEntry", "title", false, { "title" : "Logo" }, "TableHeaderEntry", id); 
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("tableHeaderEntry", "title", false, { "title" : "Name" }, "TableHeaderEntry", id); 
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("tableHeaderEntry", "title", false, { "title" : "Industry" }, "TableHeaderEntry", id); 
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("tableHeaderEntry", "title", false, { "title" : "Revenue" }, "TableHeaderEntry", id); 
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("tableHeaderEntry", "title", false, { "title" : "Employees" }, "TableHeaderEntry", id); 
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement("tableHeaderEntry", "title", false, { "title" : "Action" }, "TableHeaderEntry", id); 
-//			}
 		}
 		
 	}
