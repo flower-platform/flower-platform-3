@@ -31,6 +31,7 @@ package org.flowerplatform.web {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.GlobalEditorOperationsManager;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -134,6 +135,9 @@ package org.flowerplatform.web {
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
+			
+			// Init for EditorSupport
+			//GlobalEditorOperationsManager.INSTANCE = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));
 		}
 		
 		/**

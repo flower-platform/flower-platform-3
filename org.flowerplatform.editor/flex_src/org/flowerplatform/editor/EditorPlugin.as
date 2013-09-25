@@ -30,6 +30,7 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
 	import org.flowerplatform.editor.action.SaveAction;
+	import org.flowerplatform.editor.action.SaveAllAction;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.editor.remote.CreateEditorStatefulClientCommand;
 	import org.flowerplatform.editor.remote.EditableResource;
@@ -89,7 +90,10 @@ package org.flowerplatform.editor {
 			super.start();
 			globalEditorOperationsManager  = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));	
 			globalEditorOperationsManager.saveAction = new SaveAction();
-			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "s"), globalEditorOperationsManager.saveAction);
+			globalEditorOperationsManager.saveAllAction = new SaveAllAction();
+			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "s"), globalEditorOperationsManager.saveAction); // Ctrl + S
+			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, true, "s"), globalEditorOperationsManager.saveAllAction); // Ctrl + Shift + S
+			
 		}
 		
 		

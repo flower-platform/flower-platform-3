@@ -27,19 +27,20 @@ package org.flowerplatform.editor {
 	import mx.collections.ArrayCollection;
 	import mx.core.mx_internal;
 	
+	import org.flowerplatform.common.CommonPlugin;
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.command.flextojava.FlexToJavaCompoundCommand;
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
 	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
 	import org.flowerplatform.editor.EditorFrontend;
 	import org.flowerplatform.editor.action.SaveAction;
+	import org.flowerplatform.editor.action.SaveAllAction;
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IDirtyStateProvider;
 	import org.flowerplatform.flexutil.layout.event.*;
 
-	/**
-	 * @flowerModelElementId _NKST8AcIEeK49485S7r3Vw
-	 */
 	public class GlobalEditorOperationsManager extends EventDispatcher {
 		
 		
@@ -48,8 +49,8 @@ package org.flowerplatform.editor {
 		private var workbench:Workbench;
 		
 		public var saveAction:SaveAction;
-//		
-//		public var saveAllAction:SaveAllActionNew;
+		
+		public var saveAllAction:SaveAllAction;
 		
 		/**
 		 * Maintained in order to quickly retrieve, for a given path, the list of EditorStatefulClients (which will have 1 element in general).
@@ -171,8 +172,8 @@ package org.flowerplatform.editor {
 				// we are only interested in the active view (i.e. who's "linked" to the save action)
 				var editorStatefulClient:EditorStatefulClient = EditorStatefulClient(component.getEditorStatefulClientForSelectedElement());
 				if (editorStatefulClient == null) {
-					/*saveAction.currentEditorStatefulClient = null;
-					saveAction.enabled = false;*/
+					saveAction.currentEditorStatefulClient = null;
+					saveAction.enabled = false;
 				} else {
 //					if (editorStatefulClient.editableResourceStatus.masterResourceEditorInput != null) {
 //						saveAction.currentEditorInput = editableResource.masterResourceEditorInput;
@@ -190,7 +191,8 @@ package org.flowerplatform.editor {
 		 * labels of the Workbench.
 		 */ 
 		public function dirtyStateUpdated(editorStatefulClient:EditorStatefulClient):void {
-			/*if (editorStatefulClient == null) {
+			
+//		if (editorStatefulClient == null) {
 //				// i.e. freshly unsubscribed from an ER
 //				if (saveAction.enabled) {
 //					if (editableResources[saveAction.currentEditorInput] == null) {
@@ -199,17 +201,17 @@ package org.flowerplatform.editor {
 //						saveAction.enabled = false;
 //					}
 //				}
-			} else {
-				// ER not null
-				if (saveAction.currentEditorStatefulClient == editorStatefulClient) {
-					saveAction.enabled = editorStatefulClient.editableResourceStatus.dirty;
-				}
+//			} else {
+//				// ER not null
+//				if (saveAction.currentEditorStatefulClient == editorStatefulClient) {
+//					saveAction.enabled = editorStatefulClient.editableResourceStatus.dirty;
+//				}
 //				var editorFrontendController:EditorFrontendController = EditorSupport.INSTANCE.editorFrontendControllers[editableResource.editorInput];
 //				if (editorFrontendController is TextEditorFrontendController)
 //					(editorFrontendController as TextEditorFrontendController).updateDirtyState(editableResource.editorInput, editableResource.dirty);
-			}*/
+//			}
 			
-			/*if (saveAllAction.enabled) {
+			if (saveAllAction.enabled) {
 				// at least one dirty resource
 				if (editorStatefulClient == null || !editorStatefulClient.editableResourceStatus.dirty) {
 					// either an ER has dissapeared or an ER has been saved
@@ -217,8 +219,9 @@ package org.flowerplatform.editor {
 					
 					var dirtyERFound:Boolean = false;
 					var count:int = 0;
-
-					for each (var sc:StatefulClient in StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList) {
+					var statefulClientsList:ArrayCollection= CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList;
+				  //for each (var sc:StatefulClient in StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList) {
+					for each (var sc:StatefulClient in statefulClientsList) {
 						if (!(sc is EditorStatefulClient)) {
 							continue;
 						}
@@ -229,7 +232,7 @@ package org.flowerplatform.editor {
 							break;
 						}
 					}
-					
+//					
 					if (count == 0 || !dirtyERFound) {
 						saveAllAction.enabled = false;
 					}
@@ -239,21 +242,19 @@ package org.flowerplatform.editor {
 					// everything is saved
 					saveAllAction.enabled = editorStatefulClient.editableResourceStatus.dirty; // the value of this variable should always be true
 				} // otherwise we are not interested; i.e. global dirty = false and an ER has left (which was non dirty for sure)
-			}*/
+			}
 			Workbench(FlexUtilGlobals.getInstance().workbench).refreshLabels();
-			//workbench.refreshLabels();		
-			/*
+			//workbench.refreshLabels();	
 			dispatchEvent(new DirtyStateUpdatedEvent(editorStatefulClient));
-			*/
+			
 		}
 
 		/**
 		 * Returns a list of dynamic objects {editorStatefulClient, selected}.
 		 * Slave editor clients are replaced with their master. Duplicates are removed.
 		 * 
-		 * @flowerModelElementId _NOyZcwcIEeK49485S7r3Vw
 		 */ 
-		/*public function createEntriesToSave(editorsOrStatefulClientsToSave:ArrayCollection, ignoreDirtyFlag:Boolean = false, useMasterFlag:Boolean = true):ArrayCollection {
+	public function createEntriesToSave(editorsOrStatefulClientsToSave:ArrayCollection, ignoreDirtyFlag:Boolean = false, useMasterFlag:Boolean = true):ArrayCollection {
 			// used to eliminate duplicates; key = editableResourcePath; value = editorStatefulClient, but not used
 			var map:Dictionary = new Dictionary();
 			var result:ArrayCollection = new ArrayCollection();
@@ -279,10 +280,10 @@ package org.flowerplatform.editor {
 				if (ignoreDirtyFlag || editorStatefulClient.editableResourceStatus.dirty) {
 					// process this item only if dirty
 					
-					if (useMasterFlag && editorStatefulClient.editableResourceStatus.masterEditorStatefulClientId != null) {
+					/*if (useMasterFlag && editorStatefulClient.editableResourceStatus.masterEditorStatefulClientId != null) {
 						// a slave => we use the master
 						editorStatefulClient = EditorStatefulClient(StatefulClientRegistry.INSTANCE.getStatefulClientById(editorStatefulClient.editableResourceStatus.masterEditorStatefulClientId));
-					}
+					}*/
 					
 					if (map[editorStatefulClient.editableResourcePath] == null) {
 						// element not yet seen
@@ -296,18 +297,18 @@ package org.flowerplatform.editor {
 			}
 			
 			return result;
-		}*/
+		}
 		
-//		public function getSaveCommandForSelectedEntries(entriesToSave:ArrayCollection):FlexToJavaCompoundCommand {
-//			var commandToSend:FlexToJavaCompoundCommand = new FlexToJavaCompoundCommand(false, true);
-//			for each (var entry:Object in entriesToSave) {
-//				if (entry.selected) {
-//					commandToSend.append(EditorStatefulClient(entry.editorStatefulClient).save(true));
-//				}
-//			}
-//
-//			return commandToSend;
-//		}
+		public function getSaveCommandForSelectedEntries(entriesToSave:ArrayCollection):FlexToJavaCompoundCommand {
+			var commandToSend:FlexToJavaCompoundCommand = new FlexToJavaCompoundCommand(false, true);
+			for each (var entry:Object in entriesToSave) {
+				if (entry.selected) {
+					commandToSend.append(EditorStatefulClient(entry.editorStatefulClient).save(true));
+				}
+			}
+
+			return commandToSend;
+		}
 //
 //		/**
 //		 * Shows the label for an <code>EditableResource</code>, including the dirty sign, its

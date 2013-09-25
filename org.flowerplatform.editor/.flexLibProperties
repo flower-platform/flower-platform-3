@@ -4,6 +4,7 @@
     <classEntry path="org.flowerplatform.editor.action.EditorTreeActionProvider"/>
     <classEntry path="org.flowerplatform.editor.open_resources_view.EditableResourceHierachicalModelAdapter"/>
     <classEntry path="org.flowerplatform.editor.action.SaveAction"/>
+    <classEntry path="org.flowerplatform.editor.action.SaveAllAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
