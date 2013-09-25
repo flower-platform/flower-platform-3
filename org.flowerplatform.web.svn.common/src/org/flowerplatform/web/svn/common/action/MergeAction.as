@@ -21,18 +21,12 @@ package org.flowerplatform.web.svn.common.action {
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
-	import mx.collections.IList;
 	
-	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHost;
-	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.svn.common.ui.MergeView;
 	
@@ -55,25 +49,27 @@ package org.flowerplatform.web.svn.common.action {
 		}
 		
 		public function resultClallbackFunction(result:ArrayCollection):void{
-			
-			remoteResourceUrl = result.getItemAt(0) as String;
-			resourceUrl = result.getItemAt(1) as String;
-			resourcePath = resourceUrl;
-			
-			var view:MergeView = new MergeView();
-			view.setResultHandler(this);
-			
-			view.node = node;
-			view.resourcePath = resourcePath;
-			view.resourceUrl = resourceUrl;
-			view.remoteResourceUrl = remoteResourceUrl;
-			view.selection.addAll(selectionPaths);
-			
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler().
-				setPopupContent(view).
-				setWidth(600).
-				setHeight(600).
-				show();
+			if(result.getItemAt(0) != "loginmessage"){
+				
+				remoteResourceUrl = result.getItemAt(0) as String;
+				resourceUrl = result.getItemAt(1) as String;
+				resourcePath = resourceUrl;
+				
+				var view:MergeView = new MergeView();
+				view.setResultHandler(this);
+				
+				view.node = node;
+				view.resourcePath = resourcePath;
+				view.resourceUrl = resourceUrl;
+				view.remoteResourceUrl = remoteResourceUrl;
+				view.selection.addAll(selectionPaths);
+				
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler().
+					setPopupContent(view).
+					setWidth(600).
+					setHeight(600).
+					show();
+			}
 		}
 		
 		public function handleDialogResult(result:Object):void {

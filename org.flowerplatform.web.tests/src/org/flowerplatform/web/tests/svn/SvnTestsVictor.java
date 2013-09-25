@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.tree.remote.PathFragment;
@@ -44,9 +45,11 @@ import org.junit.Test;
  */
 public class SvnTestsVictor {
 	
-	// TODO In order for the tests to work, several lines in SvnService (some of them progress monitor related, others log-in related
+	// TODO In order for the tests to work, several lines in SvnService (few of them progress monitor related, others log-in related
 	// must be commented
 
+	private static String workspacePath;
+	
 	private static final CommunicationChannel communicationChannel = new RecordingTestWebCommunicationChannel();
 
 	public static ServiceInvocationContext context;
@@ -103,12 +106,14 @@ public class SvnTestsVictor {
 	}
 	
 	@BeforeClass
-	public static void beforeClassMethods() {		
+	public static void beforeClassMethods() {
 		context = new ServiceInvocationContext(communicationChannel);
 		workingDirectoryPartialPath 
 		= getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
 												"hibernate", "organization",
 												"workingDirectories", "workingDirectories");
+		File workspaceRoot = CommonPlugin.getInstance().getWorkspaceRoot();
+		workspacePath = workspaceRoot.getPath() + "\\";
 		checkoutProjectsInPreparationForTests();
 	}
 
@@ -124,7 +129,7 @@ public class SvnTestsVictor {
 				"commonWD", "workingDirectory",
 				"commonProject", "project"));			
 		// delete a file from repository:		
-		File f = new File("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD\\commonProject\\nuSterge2");
+		File f = new File(workspacePath + "hibernate\\commonWD\\commonProject\\nuSterge2");
 		assertEquals(true, f.delete());		
 		// update repository
 		Boolean result = SvnService.getInstance().updateToHEAD(context, selectionForUpdate);
@@ -134,7 +139,7 @@ public class SvnTestsVictor {
 	}
 
 	@Test
-	public void checkout() {
+	public void checkout() {		
 		ArrayList<ArrayList<PathFragment>> selectionList = new ArrayList<ArrayList<PathFragment>>();
 		selectionList.add(getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
 																"hibernate", "organization",
@@ -142,10 +147,7 @@ public class SvnTestsVictor {
 																"svn://csp1/flower2", "svnRepository",
 																"nuSterge", "svnFile"));			
 		Boolean finalResult = true;
-		String wd = "/checkoutWD";
-		String newName = "checkedOutProject";			
-		finalResult &= SvnService.getInstance().checkout(context, selectionList, workingDirectoryPartialPath, wd, "7000", 0, true, false, false, newName);
-		
+		finalResult &= SvnService.getInstance().checkout(context, selectionList, workingDirectoryPartialPath, "/checkoutWD", "7000", 0, true, false, false, "checkedOutProject");
 		assertEquals(true, finalResult); // see if normal checkout works
 	}
 
@@ -166,9 +168,9 @@ public class SvnTestsVictor {
 	
 	@Test
 	public void commit() {		
-		String filename = "3";
+		String filename = "9"; // after test is successful, increment by 1. from time to time clear remote folder of files
 		// add a new file:
-		File f = createFile("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD\\commonProject\\" + filename);
+		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + filename);
 		// commit:
 		ArrayList<FileDto> selectionForCommit = new ArrayList<>();
 		FileDto dto = new FileDto();
@@ -185,7 +187,7 @@ public class SvnTestsVictor {
 	public void addToSvnIgnore() {	
 		String fileName = "qqxyz";
 		// add a new file
-		File f = createFile("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD\\commonProject\\" + fileName);
+		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + fileName);
 		// add to svn ignore
 		ArrayList<ArrayList<PathFragment>> selectionForIgnore = new ArrayList<>();
 		selectionForIgnore.add(getArrayOfPathFragmentsFromStringArgs(
@@ -210,7 +212,7 @@ public class SvnTestsVictor {
 	public void revert() {
 		String filename = "ergh";
 		// add a new file
-		File f = createFile("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD\\commonProject\\" + filename);
+		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + filename);
 		// revert
 		FileDto fd = new FileDto();
 		fd.setPath(f.getAbsolutePath());
@@ -235,7 +237,7 @@ public class SvnTestsVictor {
 	public void addToVersionControl() {
 		String filename = "blablaasd";
 		// add a new file
-		File f = createFile("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD\\commonProject\\" + filename);
+		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + filename);
 		// add file to version control
 		ArrayList<ArrayList<PathFragment>> selectionForAddToVersion = new ArrayList<>();
 		selectionForAddToVersion.add(getArrayOfPathFragmentsFromStringArgs(
@@ -257,8 +259,8 @@ public class SvnTestsVictor {
 	public void markResolved() {
 		// get two files from two identical versions of a file from repository
 		String filename = "giej";
-		File f1 = new File("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\markResolvedWD\\markResolvedProject1\\66zWzz33XzYz");
-		File f2 = new File("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\markResolvedWD\\markResolvedProject2\\66zWzz33XzYz");
+		File f1 = new File(workspacePath + "hibernate\\markResolvedWD\\markResolvedProject1\\66zWzz33XzYz");
+		File f2 = new File(workspacePath + "hibernate\\markResolvedWD\\markResolvedProject2\\66zWzz33XzYz");
 		// write different stuff into both files:
 		try {
 			writeFile(f1.getAbsolutePath(), "a");
@@ -270,7 +272,7 @@ public class SvnTestsVictor {
 		ArrayList<FileDto> selectionForCommit = new ArrayList<>();
 		FileDto dto = new FileDto();
 		dto.setLabel(filename);
-		dto.setPath("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\markResolvedWD\\markResolvedProject1\\66zWzz33XzYz");
+		dto.setPath(workspacePath + "hibernate\\markResolvedWD\\markResolvedProject1\\66zWzz33XzYz");
 		dto.setStatus("modified");
 		selectionForCommit.add(dto);
 		Boolean res = SvnService.getInstance().commit(context, selectionForCommit, "new message", false);
@@ -297,12 +299,11 @@ public class SvnTestsVictor {
 	@AfterClass
 	public static void undoChanges() {
 		// delete checked out working directory along with content
-		File f = new File("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD");
-		f = new File("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\checkoutWD");
+		File f = new File(workspacePath + "hibernate\\commonWD");
+		f = new File(workspacePath + "hibernate\\checkoutWD");
 		f.delete();		
-		f = new File("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\markResolvedWD");
+		f = new File(workspacePath + "hibernate\\markResolvedWD");
 		f.delete();
-		System.out.println("");
 	}
 
 }

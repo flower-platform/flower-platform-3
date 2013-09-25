@@ -87,7 +87,11 @@ license-end
 				view.remoteResourcePath = tn.getPathForNode(true);
 				view.remoteResourceName = tn.label;
 				view.setResultHandler(this);
-				view.showPopup();
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setWidth(400)
+					.setHeight(450)
+					.setPopupContent(view)
+					.show();
 			}
 			
 			protected override function cancelClickHandler():void {

@@ -59,6 +59,8 @@ license-end
 			
 			public var node:TreeNode;
 			
+			public var destinationSelected:Boolean;
+			
 			[Bindable]
 			public var folderName:String;
 			
@@ -76,6 +78,8 @@ license-end
 				if (Validator.validateAll(validators).length > 0) {
 					return;
 				} 
+				if (!destinationSelected)
+					return;
 				super.nextClickHandler();
 			}
 			
@@ -100,11 +104,12 @@ license-end
 			
 			override public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;	
-				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/svn_persp.gif"));
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/rename.gif"));
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.renameMove.view.label"));
 			} 
 			
 			public function getDestinationFolder():void {
+				destinationSelected = true;
 				var size:int = tree.getSelection().length;
 				var fullPath:ArrayCollection = node.children; 
 				destinationURL = TreeNode(tree.getSelection().getItemAt(size - 1)).getPath();
@@ -112,7 +117,7 @@ license-end
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
-				wizardImage.source = SvnCommonPlugin.getInstance().getResourceUrl("images/newlocation_wizban.gif");
+				wizardImage.source = SvnCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
 				
 				var statefulClient:GenericTreeStatefulClient = new SvnRepositoryTreeStatefulClient();
 				
@@ -129,6 +134,7 @@ license-end
 				tree.statefulClient.openNode(null, this, getProjectsCallbackHandler);	
 				folderName = PathFragment(fullPath.getItemAt(fullPath.length - 1)).name;
 				destinationURL = PathFragment(fullPath.getItemAt(2)).name;
+				destinationSelected = false;
 			}
 		]]>
 	</fx:Script>

@@ -122,8 +122,12 @@ license-end
 				var tn:TreeNode = TreeNode(selection.getItemAt(0));
 				view.remoteResourcePath = tn.getPathForNode(true);
 				view.remoteResourceName = tn.label;
-				view.setResultHandler(this);
-				view.showPopup();
+				view.setResultHandler(this);				
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setWidth(400)
+					.setHeight(450)
+					.setPopupContent(view)
+					.show();
 			}
 			
 		]]>		

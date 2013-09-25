@@ -183,7 +183,12 @@ license-end
 				popUp.remoteResourcePath = commonParentPath;
 				popUp.remoteResourceName = commonParentName;
 				popUp.setResultHandler(this);
-				popUp.showPopup();
+				//popUp.showPopup();
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setWidth(400)
+					.setHeight(450)
+					.setPopupContent(popUp)
+					.show();
 			}
 			
 			/**

@@ -22,10 +22,10 @@ package org.flowerplatform.web.svn.common.action {
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	
-	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
-	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.explorer.ExplorerTreeList;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
@@ -48,7 +48,8 @@ package org.flowerplatform.web.svn.common.action {
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {
 				var nodeType:String = String(TreeNode(selection.getItemAt(0)).pathFragment.type);
 				return ((nodeType == SvnCommonPlugin.NODE_TYPE_REPOSITORY) ||
-						(nodeType == SvnCommonPlugin.NODE_TYPE_FILE));				
+						(nodeType == SvnCommonPlugin.NODE_TYPE_FOLDER) ||
+						(nodeType == SvnCommonPlugin.NODE_TYPE_FILE));
 			}
 			return false;
 		}

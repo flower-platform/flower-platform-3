@@ -57,7 +57,7 @@ package org.flowerplatform.communication.callback {
 						callback.invokeCallback(result);
 					}
 				} finally {
-					delete CommunicationPlugin.getInstance().pendingCallbacks[callbackId];
+//					delete CommunicationPlugin.getInstance().pendingCallbacks[callbackId];
 				}
 			}
 		}

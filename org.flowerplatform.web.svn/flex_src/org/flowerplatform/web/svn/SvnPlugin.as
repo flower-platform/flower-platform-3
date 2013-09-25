@@ -19,31 +19,25 @@
 package  org.flowerplatform.web.svn {
 
 	import flash.geom.Utils3D;
-
-	
 	import flash.net.registerClassAlias;
 	
 	import mx.collections.IList;
-
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-
 	import org.flowerplatform.web.svn.actions.ShowHistoryAction;
-	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-	import org.flowerplatform.web.svn.common.history.HistoryEntry	
 	import org.flowerplatform.web.svn.history.SvnHistoryViewProvider;
+	import org.flowerplatform.web.svn.common.history.HistoryEntry	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	
 
 	/**
 	 * @author Gabriela Murgoci
 	 */
-
 	public class SvnPlugin extends AbstractFlowerFlexPlugin {
 	
 		/**
@@ -51,12 +45,10 @@ package  org.flowerplatform.web.svn {
 		 */
 		protected static var INSTANCE:SvnPlugin;
 		
-
 		protected var svnCommonPlugin:SvnCommonPlugin = new SvnCommonPlugin();
 
 		public static const TREE_NODE_KEY_IS_FOLDER:String = "isFolder";
 				
-
 		/**
 		 * @flowerModelElementId _DxJioAM1EeOrJqcAep-lCg
 		 */
@@ -111,7 +103,7 @@ package  org.flowerplatform.web.svn {
 			}						
 			var node_type:String = element.pathFragment.type;			
 			if(node_type != SvnCommonPlugin.NODE_TYPE_REPOSITORY && 
-				node_type != SvnCommonPlugin.NODE_TYPE_FILE) {
+				node_type != SvnCommonPlugin.NODE_TYPE_FILE && node_type != SvnCommonPlugin.NODE_TYPE_FOLDER) {
 				isSvnRepositoryFile = false;
 			}			
 			return isSvnProjectFile || isSvnRepositoryFile;

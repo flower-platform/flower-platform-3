@@ -111,12 +111,11 @@ public class SvnService {
 	 * @author Gabriela Murgoci
 	 * @throws SVNException
 	 */
-
 	public boolean createRemoteFolder(ServiceInvocationContext context, List<PathFragment> parentPath, String folderName, String comment) throws SVNException {
 
-		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(parentPath, null);
 
-		GenericTreeStatefulService explorerService = (GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(parentPath);
+		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(
+				parentPath, null);
 
 		ISVNRemoteFolder parentFolder = null;
 
@@ -130,11 +129,16 @@ public class SvnService {
 		}
 
 		try {
-			context.getCommand().getParameters().remove(0);
+			// save comment
+			addComment(context.getCommunicationChannel().getPrincipal().getUser().getLogin(), comment);
+			if(context.getCommand().getParameters().size() >=1)
+				context.getCommand().getParameters().remove(0);
 			tlCommand.set(context.getCommand());
 			// create remote folder
 			parentFolder.createRemoteFolder(folderName, comment, new NullProgressMonitor());
 		} catch (SVNException e) { // something wrong happened
+			if (isAuthentificationException(e))
+				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(CommonPlugin.getInstance().getMessage("error"), e.getMessage(),
@@ -191,11 +195,15 @@ public class SvnService {
 			svnClient.move(remoteResource.getUrl(), destUrl, comment, SVNRevision.HEAD);
 		} catch (Exception e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			if (e instanceof SVNException) {
-				CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(CommonPlugin.getInstance().getMessage("error"), e.getMessage(),
+
+			//if (e instanceof SVNException) {
+				CommunicationChannel channel = (CommunicationChannel) context
+						.getCommunicationChannel();
+				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+						CommonPlugin.getInstance().getMessage("error"), e
+								.getMessage(),
 						DisplaySimpleMessageClientCommand.ICON_ERROR));
-			}
+			//}
 			return false;
 		}
 
@@ -218,21 +226,35 @@ public class SvnService {
 
 		explorerService.dispatchContentUpdate(sourceNode);
 
-		Object selection2 = GenericTreeStatefulService.getNodeByPathFor(destinationPath.subList(0, destinationPath.size()), treeContext);
+		ISVNRepositoryLocation repository = null;
 
-		ISVNRemoteFolder destinationNode = null;
-
-		if (selection2 instanceof ISVNRemoteFolder) {
-			destinationNode = (ISVNRemoteFolder) selection2;
-		} else if (selection2 instanceof IAdaptable) {
-			// ISVNRepositoryLocation is adaptable to ISVNRemoteFolder
-			IAdaptable a = (IAdaptable) selection2;
-			Object adapter = a.getAdapter(ISVNRemoteFolder.class);
-			destinationNode = (ISVNRemoteFolder) adapter;
+		// refresh for source
+		repository = sourceNode.getRepository();
+		if (repository.getRootFolder().equals(sourceNode)) {
+			repository.refreshRootFolder();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(sourcePath))
+					.dispatchContentUpdate(repository);
+		} else {
+			parentFolder.refresh();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(sourcePath))
+					.dispatchContentUpdate(sourceNode);
 		}
 
-		destinationNode.refresh();
-		explorerService.dispatchContentUpdate(destinationNode);
+		// refresh for destination
+		repository = parentFolder.getRepository();
+		if (repository.getRootFolder().equals(parentFolder)) {
+			repository.refreshRootFolder();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(destinationPath))
+					.dispatchContentUpdate(repository);
+		} else {
+			parentFolder.refresh();
+			((GenericTreeStatefulService) GenericTreeStatefulService
+					.getServiceFromPathWithRoot(destinationPath))
+					.dispatchContentUpdate(parentFolder);
+		}
 
 		return true;
 	}
@@ -452,11 +474,21 @@ public class SvnService {
 					partialPath += "/";
 			}
 
+			remoteResource = GenericTreeStatefulService.getNodeByPathFor(selectedResource, null);
+			//File file = (File) GenericTreeStatefulService.getNodeByPathFor(selectedResource, null);
+			
+			//RemoteResource res = (RemoteResource) GenericTreeStatefulService.getNodeByPathFor(selectedResource, null);
+			
 			item.setPath(selectedResource);
 			item.setName(selectedResource.get(selectedResource.size() - 1).getName());
 			item.setPartialPath(partialPath);
+			
+			
+			//if (remoteResource instanceof RemoteFolder)
+			
 			item.setImage("images/folder_pending.gif");
-
+			if (remoteResource instanceof RemoteFile)
+				item.setImage("images/file.gif");
 			branchResources.add(item);
 		}
 
@@ -776,21 +808,26 @@ public class SvnService {
 		}
 		return result;
 	}
-
+	
+	/**
+	 * 
+	 * @author Victor Badila
+	 * 
+	 */
 	public String getUrlPathForSingleSelection(ArrayList<PathFragment> path, Boolean wantUrlForRepository) {
-		String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
-		if (wantUrlForRepository) {
-			return getSvnUrlForPath(workingDirectoryPath, true);
-		}
-		return getSvnUrlForPath(workingDirectoryPath, false);
+		  String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
+		  if (wantUrlForRepository) {
+		   return getSvnUrlForPath(workingDirectoryPath, true);
+		  }
+		  return getSvnUrlForPath(workingDirectoryPath, false);
 	}
 
 	public boolean createSvnRepository(final ServiceInvocationContext context, final String url, final List<PathFragment> parentPath) {
 		// had to use List due to limitations of altering final variables inside
 		// runnable
 		final List<String> operationSuccessful = new ArrayList<String>();
-
-//		context.getCommand().getParameters().remove(0);
+//		if(context.getCommand().getParameters().size() >=1)
+//			context.getCommand().getParameters().remove(0);
 //		tlCommand.set(context.getCommand());
 		try {
 			new DatabaseOperationWrapper(new DatabaseOperation() {
@@ -830,9 +867,8 @@ public class SvnService {
 				}
 			});
 		} catch (Exception e) {
-//			if (isAuthentificationException(e))
-//				return true;
-			e.printStackTrace();
+			if (isAuthentificationException(e))
+				return true;
 		}
 		// tree refresh
 		if (operationSuccessful.contains("success")) {
@@ -937,6 +973,7 @@ public class SvnService {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		//ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
 		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
+
 		SVNRevision revision;
 		if (headRevision) {
 			revision = SVNRevision.HEAD;
@@ -980,6 +1017,8 @@ public class SvnService {
 			}
 			//opMng.endOperation();
 		} catch (Exception e) {
+			if (isAuthentificationException(e))
+				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
@@ -1459,9 +1498,7 @@ public class SvnService {
 		}
 		return true;
 	}
-
 	public File[] getFilesForSelectionList(ArrayList<ArrayList<PathFragment>> selectionList) {
-
 		File[] result = new File[selectionList.size()];
 		for (int i = 0; i < selectionList.size(); i++) {
 			ArrayList<PathFragment> currentPathSelection = selectionList.get(i);
@@ -1578,8 +1615,6 @@ public class SvnService {
 
 		// map used for refresh in the end
 		HashMap<Object, List<PathFragment>> refreshMap = new HashMap<Object, List<PathFragment>>();
-		context.getCommand().getParameters().remove(0);
-		tlCommand.set(context.getCommand());
 
 		for (List<PathFragment> fullPath : objectFullPaths) {
 
@@ -1629,8 +1664,14 @@ public class SvnService {
 				refreshMap.put(remote, parent);
 			}
 		}
-
-		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.deleteSvnAction.monitor.title"), cc);
+		
+		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin
+				.getInstance().getMessage("svn.deleteSvnAction.monitor.title"),
+				cc);
+		if(context.getCommand().getParameters().size() >=1)
+			context.getCommand().getParameters().remove(0);
+		tlCommand.set(context.getCommand());
+		
 		try {
 			// save comment
 			addComment(cc.getPrincipal().getUser().getLogin(), comment);
@@ -1666,7 +1707,10 @@ public class SvnService {
 				SvnPlugin.getInstance().getUtils().deleteRemoteResources(remoteObject.toArray(new ISVNRemoteResource[remoteObject.size()]), comment, monitor);
 			}
 			for (Object root : refreshMap.keySet()) {
-				((GenericTreeStatefulService) GenericTreeStatefulService.getServiceFromPathWithRoot(refreshMap.get(root))).dispatchContentUpdate(root);
+				if (root != null && refreshMap.get(root) != null)
+					((GenericTreeStatefulService) GenericTreeStatefulService
+						.getServiceFromPathWithRoot(refreshMap.get(root)))
+						.dispatchContentUpdate(root);
 			}
 
 		} catch (SVNException e) {
@@ -1724,14 +1768,19 @@ public class SvnService {
 		try {
 			changeCredentials(context, uri, username, password);
 			command.setCommunicationChannel(context.getCommunicationChannel());
+			
 			command.executeCommand();
-
 		} catch (Exception e) {
 			logger.error("Exception thrown while logging user!", e);
-			context.getCommunicationChannel()
-					.appendOrSendCommand(
-							new DisplaySimpleMessageClientCommand(CommonPlugin.getInstance().getMessage("error"), "Error while logging user!",
-									DisplaySimpleMessageClientCommand.ICON_ERROR));
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(CommonPlugin
+							.getInstance().getMessage("error"),
+							"Error while logging user!",
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
+		} finally {
+			if (tlCommand != null){
+				tlCommand.remove();
+			}
 		}
 	}
 
@@ -1785,13 +1834,19 @@ public class SvnService {
 	 * @author Cristina Necula
 	 * 
 	 */
-	public boolean merge(ServiceInvocationContext context, String resourcePath, ArrayList<ArrayList<PathFragment>> selectionList, String url1, long revision1, String url2,
-			long revision2, boolean force, boolean ignoreAncestry) throws SVNException {
-
+	public boolean merge(ServiceInvocationContext context, String resourcePath,
+			ArrayList<ArrayList<PathFragment>> selectionList, String url1,
+			long revision1, String url2, long revision2, boolean force,
+			boolean ignoreAncestry) throws SVNException {
+		
 		boolean checkForConflict = false;
-		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(context.getCommunicationChannel());
 
-		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.action.mergeAction.label"), context.getCommunicationChannel());
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(
+				context.getCommunicationChannel());
+		
+		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin
+				.getInstance().getMessage("svn.action.mergeAction.label"),
+				context.getCommunicationChannel());
 		try {
 			monitor.beginTask(null, 100);
 
@@ -1807,15 +1862,12 @@ public class SvnService {
 			SVNRevision svnRevision1 = revision1 == -1 ? SVNRevision.HEAD : new SVNRevision.Number(revision1);
 			SVNRevision svnRevision2 = revision2 == -1 ? SVNRevision.HEAD : new SVNRevision.Number(revision2);
 
-			client.merge(svnUrl1, svnRevision1, svnUrl2, svnRevision2, files[0], force, recurse, false, ignoreAncestry);
-			// try {
-			// // Refresh the resource after merge
-			// resources[0].refreshLocal(IResource.DEPTH_INFINITE,
-			// new NullProgressMonitor());
-			// } catch (CoreException e1) {
-			// }
+			client.merge(svnUrl1, svnRevision1, svnUrl2, svnRevision2,
+					files[0], force, recurse, false, ignoreAncestry);
 			monitor.worked(100);
 		} catch (SVNClientException e) {
+			if (isAuthentificationException(e))
+				return true;
 			checkForConflict = true;
 			throw SVNException.wrapException(e);
 		} catch (MalformedURLException e) {
@@ -1835,14 +1887,28 @@ public class SvnService {
 	 * @author Cristina Necula
 	 * 
 	 */
-	public List<String> getMergeSpecs(ArrayList<ArrayList<PathFragment>> selectionList, ArrayList<PathFragment> path) throws SVNException {
-
+	public List<String> getMergeSpecs(ServiceInvocationContext context,
+			ArrayList<ArrayList<PathFragment>> selectionList,
+			ArrayList<PathFragment> path){
+		
+		if(context.getCommand().getParameters().size() >=1)
+			context.getCommand().getParameters().remove(0);
+		tlCommand.set(context.getCommand());
+		
 		List<String> specs = new ArrayList<String>();
 		File[] files = getFilesForSelectionList(selectionList);
-
-		specs.add(getCommitUrlPathForSingleSelection(path));
-		specs.add(files[0].getAbsolutePath());
-
+		String workingDirectoryPath = getDirectoryFullPathFromPathFragments(path);
+		try {
+			ISVNClientAdapter myClientAdapter;
+			myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
+			ISVNInfo info = myClientAdapter.getInfo(new File(workingDirectoryPath));
+			specs.add(info.getUrlString());
+			specs.add(files[0].getAbsolutePath());
+		} catch (Exception e) {
+			if (isAuthentificationException(e)){
+				specs.add("loginmessage");
+			}
+		}
 		return specs;
 	}
 

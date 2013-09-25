@@ -17,29 +17,36 @@ The result can be:
 
 @flowerModelElementId _v2V2QGwbEeGN3LpFXIiaDw
 -->
-<pnl:ResizablePopupWindow
+<s:Group
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:mx="library://ns.adobe.com/flex/mx"
 	
-	xmlns:pnl="com.crispico.flower.util.popup.*" 
-	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:pnl="com.crispico.flower.util.popup.*" 	
 	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
-	width="550" height="550" minWidth="550" minHeight="550" showCloseButton="true"
-	paddingTop="5" paddingBottom="10" paddingLeft="5" paddingRight="5" 
-	title="Select Revision"
-	creationComplete="init()" xmlns:s="library://ns.adobe.com/flex/spark" >
 	
-	<mx:Script>
+	creationComplete="creationCompleteHandler(event)"
+	implements="org.flowerplatform.flexutil.popup.IPopupContent">
+	
+	<fx:Script>
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.events.FlexEvent;
 			
 			import flash.events.Event;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.utils.ObjectUtil;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.svn.*;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.svn.common.history.HistoryEntry;
@@ -51,6 +58,8 @@ The result can be:
 			 * @flowerModelElementId _zGrTsGwdEeGN3LpFXIiaDw
 			 */
 			public var remoteResourcePath:Object;
+			
+			protected var _popupHost:IPopupHost;
 			
 			[Bindable]
 			public var dateTimeFormatter:DateTimeFormatter = new DateTimeFormatter();
@@ -78,17 +87,15 @@ The result can be:
 			/**
 			 * @flowerModelElementId __Z5kQXJ9EeGZAqbcNpPqCg
 			 */
-			private function init():void {		
-				dateTimeFormatter.dateTimePattern = "MM/DD/YYYY HH:NN";	
-				title += " - " + remoteResourceName; 	
-				
+			protected function creationCompleteHandler(event:FlexEvent):void {	
+				dateTimeFormatter.dateTimePattern = "MM/DD/YYYY HH:NN";				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnHistoryService",
 						"getEntries",
 						[remoteResourcePath, -1, SvnCommonPlugin.NUMBER_LOG_ENTRIES, false], 
 						this, 
-						appendToHistoryEntriesTableCallback));
-			
+						appendToHistoryEntriesTableCallback));  
+				popupHost.addToControlBar(buttonBar);
 			}
 			
 			/**
@@ -102,7 +109,7 @@ The result can be:
 						revisionStart = revisionStart.substr(1);
 					}
 					
-				ModalSpinner.addModalSpinner(this, "Loading data...");			
+					//ModalSpinner.addModalSpinner(this, "Loading data...");			
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnHistoryService",
 							"getEntries",
@@ -123,7 +130,7 @@ The result can be:
 						revisionStart = revisionStart.substr(1);
 					}
 					
-					ModalSpinner.addModalSpinner(this, "Loading data...");			
+					//ModalSpinner.addModalSpinner(this, "Loading data...");			
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnHistoryService",
 							"getEntries",
@@ -136,15 +143,15 @@ The result can be:
 			/**
 			 * @flowerModelElementId _6bc-UGwcEeGN3LpFXIiaDw
 			 */
-			public function appendToHistoryEntriesTableCallback(value:ArrayCollection):void {
+			public function appendToHistoryEntriesTableCallback(value:ArrayCollection):void {			
 				if (value != null) {
-					if (historyEntriesTable.dataProvider == null) {
+					if (historyEntriesTable ==  null || historyEntriesTable.dataProvider == null) {
 						historyEntriesTable.dataProvider = value;
 					} else {
 						ArrayCollection(historyEntriesTable.dataProvider).addAll(value);
 					}
 					
-					ModalSpinner.removeModalSpinner(this);
+					//	ModalSpinner.removeModalSpinner(this);
 				}
 			}
 			
@@ -161,15 +168,17 @@ The result can be:
 					revisionStart = revisionStart.substr(1);
 				}
 				resultHandler.handleDialogResult(revisionStart);
-				closeForm();
+				//closeForm();
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 			}
 			
 			/**
 			 * @flowerModelElementId _Fru4YGwgEeGN3LpFXIiaDw
 			 */
-			protected override function formCancelHandler(event:Event=null):void {	
+			protected function formCancelHandler(event:Event=null):void {	
 				resultHandler.handleDialogResult(null);
-				super.formCancelHandler(event);
+				//super.formCancelHandler(event);
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 			}
 			
 			private function date_sortCompareFunc(itemA:Object, itemB:Object):int {				
@@ -195,6 +204,9 @@ The result can be:
 			 * @author Victor Badila
 			 */
 			private function getAffectedPaths():void {
+				if (historyEntriesTable == null)
+					return;
+				var obj:Object = ArrayCollection(historyEntriesTable.dataProvider).getItemAt(commentField.grid.selectedIndex);
 				if(historyEntriesTable.selectedItem == null) {
 					return;
 				}
@@ -215,11 +227,42 @@ The result can be:
 				volatileAffectedPathsEntry = result.getItemAt(0).affectedPathEntries;				
 			}
 			
+			public function getActions(selection:IList):Vector.<IAction>{
+				return null;
+			}
+			
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function get popupHost():IPopupHost {
+				return _popupHost;				
+			}	
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;	
+				_popupHost.setIcon(SvnCommonPlugin.getInstance().getResourceUrl("images/svn_persp.gif"));
+				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.branchTag.view.page.label"));			
+			}	
+			
 		]]>
-	</mx:Script>
-
+	</fx:Script>
 	
-	<mx:VDividedBox id="dataArea" verticalGap="3" width="100%" height="100%" >	
+	<fx:Declarations>
+		<s:HGroup horizontalAlign="right" id="buttonBar">
+			<s:Button id="getAllBtn" click="getAllBtnHandler()" label="Get All"/>
+			<s:Button id="getNextBtn" click="getNextBtnHandler()" label="{'Next ' + SvnCommonPlugin.NUMBER_LOG_ENTRIES}"/>					
+			<s:Button id="okBtn" width="80" label="Ok" click="{formOkHandler(event)}" />
+			<s:Button id="cancelBtn" width="80" label="Cancel" click="{formCancelHandler(event)}" /> 	
+		</s:HGroup>
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout />
+	</s:layout>
+	
+	<s:VGroup gap="3" width="100%" height="100%" >	
 		<s:DataGrid id="historyEntriesTable" width="100%" height="50%" click="{getAffectedPaths()}">		
 			<s:columns>
 				<s:ArrayList>
@@ -232,9 +275,9 @@ The result can be:
 		</s:DataGrid> 
 		
 		<s:TextArea id="commentArea" width="100%" height="10%" editable="false" 
-					 text="{HistoryEntry(historyEntriesTable.selectedItem).comment}" />	
+					text="{HistoryEntry(historyEntriesTable.selectedItem).comment}" />	
 		<s:DataGrid id="affectedPathEntriesTable" width="100%" height="25%" 
-					 dataProvider="{volatileAffectedPathsEntry}" >
+					dataProvider="{volatileAffectedPathsEntry}" >
 			<s:columns>
 				<s:ArrayList>
 					<s:GridColumn headerText="Action" dataField="action"/>
@@ -243,14 +286,6 @@ The result can be:
 				</s:ArrayList>
 			</s:columns>
 		</s:DataGrid>			
-	</mx:VDividedBox>
+	</s:VGroup>
 	
-	<mx:ControlBar horizontalAlign="right">
-		<mx:Button id="getAllBtn" click="getAllBtnHandler()" label="Get All"/>
-		<mx:Button id="getNextBtn" click="getNextBtnHandler()" label="{'Next ' + SvnCommonPlugin.NUMBER_LOG_ENTRIES}"/>					
-		<mx:Button id="okBtn" width="80" label="Ok" click="{formOkHandler(event)}" />
-		<mx:Button id="cancelBtn" width="80" label="Cancel" click="{formCancelHandler(event)}" /> 	
-	</mx:ControlBar>
-	
-	
-</pnl:ResizablePopupWindow> 
+</s:Group> 

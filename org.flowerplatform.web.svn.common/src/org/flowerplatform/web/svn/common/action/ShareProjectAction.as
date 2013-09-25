@@ -19,6 +19,7 @@
 
 package  org.flowerplatform.web.svn.common.action {
 	import mx.collections.ArrayList;
+	import mx.controls.Tree;
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -50,13 +51,22 @@ package  org.flowerplatform.web.svn.common.action {
 					return false;
 				}
 				
-				if (!(TreeNode(currentSelection).pathFragment.type == WebCommonPlugin.NODE_TYPE_PROJECT))
+				var node:TreeNode = TreeNode(currentSelection);
+				
+				/*if (!(TreeNode(currentSelection).pathFragment.type == WebCommonPlugin.NODE_TYPE_PROJECT))
 					return false;
+				if ((TreeNode(currentSelection).pathFragment.type
 				if (currentSelection.customData.svnFileType == true || currentSelection.customData.svnFileType == false)
 					return false;
 				if (currentSelection.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE) {
 					return false;
-				}
+				}*/
+				if (node.pathFragment.type != WebCommonPlugin.NODE_TYPE_PROJECT)
+					return false;
+				if (node.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FOLDER || node.pathFragment.type == SvnCommonPlugin.NODE_TYPE_FILE)
+					return false;
+				if (currentSelection.customData.svnFileType == true)
+					return false;
 			}
 			return true;
 		}
