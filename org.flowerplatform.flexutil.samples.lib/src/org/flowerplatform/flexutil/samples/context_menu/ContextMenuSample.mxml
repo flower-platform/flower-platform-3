@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" implements="org.flowerplatform.flexutil.popup.IPopupContent"
+		 creationComplete="creationCompleteHandler()">
+	<s:layout>
+		<s:VerticalLayout/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IActionProvider;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			
+			import spark.events.IndexChangeEvent;
+
+			protected var _popupHost:IPopupHost;
+			
+			protected var actionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
+			
+			public function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;
+			}
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				return actionProvider.getActions(selection);
+			}
+			
+			/**
+			 * This method is inspired from <code>get selectedItems()</code>. We convert
+			 * the selection like this (and not by converting selectedItems), because
+			 * <code>get selectedItems()</code> does an iteration as well; so that would
+			 * mean 2 iterations. This way, we iterate only once.
+			 */
+			public function getSelection():IList {
+				var result:Array = new Array();
+				
+				if (list.selectedIndices) {
+					var count:int = list.selectedIndices.length;
+					
+					for (var i:int = 0; i < count; i++)
+						result.push(list.dataProvider.getItemAt(list.selectedIndices[i]));  
+				}
+				
+				return new ArrayList(result);
+			}
+			
+			protected function creationCompleteHandler():void {
+				actionProvider.actionClasses.push(SampleAction1);
+				actionProvider.actionClasses.push(SampleAction2);
+				actionProvider.actionClasses.push(SampleAction3);
+			}
+			
+			protected function selectionChangeHandler(event:IndexChangeEvent):void {
+				if (popupHost) {
+					popupHost.refreshActions(this);
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:List id="list" change="selectionChangeHandler(event)" width="100%" height="100%" maxWidth="500" maxHeight="500">
+		<s:dataProvider>
+			<mx:ArrayCollection>
+				<fx:String>Flash</fx:String> 
+				<fx:String>Director</fx:String> 
+				<fx:String>Dreamweaver</fx:String> 
+				<fx:String>ColdFusion</fx:String> 
+			</mx:ArrayCollection>
+		</s:dataProvider>
+	</s:List>
+</s:Group>

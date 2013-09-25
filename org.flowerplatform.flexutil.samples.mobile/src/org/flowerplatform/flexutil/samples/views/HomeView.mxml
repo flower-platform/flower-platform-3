@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="HomeView">
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center"/>
+	</s:layout>
+	<fx:Script>
+		<![CDATA[
+			import org.flowerplatform.flexutil.mobile.popup.WrapperView;
+			import org.flowerplatform.flexutil.samples.context_menu.ContextMenuSample;
+		]]>
+	</fx:Script>
+	<s:Button label="TreeList" click="navigator.pushView(TreeListSampleView)"/>
+	<s:Button label="Context Menu" click="navigator.pushView(WrapperView, { popupContent: new ContextMenuSample() })"/>
+</s:View>
