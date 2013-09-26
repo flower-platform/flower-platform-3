@@ -26,12 +26,12 @@ package org.flowerplatform.flexutil.mobile.popup {
 	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
 	import org.flowerplatform.flexutil.popup.ActionUtil;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IComposedAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
-	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
 	
 	import spark.components.CalloutButton;
 	import spark.components.Group;
@@ -115,6 +115,17 @@ package org.flowerplatform.flexutil.mobile.popup {
 			elt.includeInLayout = true;
 			Group(activePopupContent).addElement(elt);
 		}
+
+		/**
+		 * Called by <code>refreshActions()</code>. This may be overridden, if the WrapperView
+		 * wants to add some actions.
+		 */
+		protected function getActionsFromPopupContent(popupContent:IPopupContent, selection:IList):Vector.<IAction> {
+			// for SplitViewWrapper, popupContent may be null if the current active view (left or right) is
+			// not a IPopupContent. However, we want the action logic to execute, so that SplitViewWrapper can
+			// add its switch* actions
+			return popupContent != null ? popupContent.getActions(selection) : new Vector.<IAction>();
+		}
 		
 		/**
 		 * Populates the View Navigator and the OpenMenuAction, with the first level of actions.
@@ -123,8 +134,11 @@ package org.flowerplatform.flexutil.mobile.popup {
 			if (activePopupContent != popupContent) {
 				return;
 			}
-			selectionForActivePopupContent = popupContent.getSelection();
-			allActionsForActivePopupContent = popupContent.getActions(selectionForActivePopupContent);
+			// for SplitViewWrapper, popupContent may be null if the current active view (left or right) is
+			// not a IPopupContent. However, we want the action logic to execute, so that SplitViewWrapper can
+			// add its switch* actions
+			selectionForActivePopupContent = popupContent != null ? popupContent.getSelection() : null;
+			allActionsForActivePopupContent = getActionsFromPopupContent(popupContent, selectionForActivePopupContent);
 
 			var newActionContent:Array = new Array();
 			var newViewMenuItems:Vector.<ViewMenuItem> = new Vector.<ViewMenuItem>();

@@ -4,6 +4,29 @@
 	<s:layout>
 		<s:VerticalLayout horizontalAlign="center"/>
 	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.core.IVisualElement;
+			
+			import org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.SplitWrapperView;
+			private function splitViewWrapperClickHandler(event:MouseEvent):void {
+				var leftActiveComponent:Button = new Button();
+				leftActiveComponent.label = "Left";
+				
+				var rightActiveComponent:Button = new Button();
+				rightActiveComponent.label = "Right";
+				
+				var data:Object = {
+					leftActiveComponent: new ContextMenuSample(),
+					rightActiveComponent: rightActiveComponent
+				};
+				
+				navigator.pushView(SplitWrapperView, data);
+			}
+		]]>
+	</fx:Script>
+	
 	<fx:Script>
 		<![CDATA[
 			import org.flowerplatform.flexutil.mobile.popup.WrapperView;
@@ -12,4 +35,5 @@
 	</fx:Script>
 	<s:Button label="TreeList" click="navigator.pushView(TreeListSampleView)"/>
 	<s:Button label="Context Menu" click="navigator.pushView(WrapperView, { popupContent: new ContextMenuSample() })"/>
+	<s:Button label="Split View Wrapper" click="splitViewWrapperClickHandler(event)"/>
 </s:View>
