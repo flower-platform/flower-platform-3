@@ -29,8 +29,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	SecurityPermissionsTests.class,
-	CodeSyncTestSuite.class,
-	ListenerTestSuite.class,
+	//CodeSyncTestSuite.class,
+	//ListenerTestSuite.class,
 	SvnTestsSuite.class	
 })
 public class EclipseDependentTestSuite extends EclipseDependentTestSuiteBase {
