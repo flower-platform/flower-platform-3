@@ -27,9 +27,9 @@ package org.flowerplatform.editor.action {
 			var statefulClientsList:ArrayCollection = CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList;
 			
 			var entriesToSave:ArrayCollection = EditorPlugin.getInstance().globalEditorOperationsManager.createEntriesToSave(statefulClientsList);
-			for(var i:Number=0; i < entriesToSave.length; i++){
-				if (entriesToSave[i].hasOwnProperty("editorStatefulClient")){
-					EditorStatefulClient(entriesToSave[i].editorStatefulClient).save();
+			for each (var entry:Object in entriesToSave) {
+				if (entry.hasOwnProperty("editorStatefulClient")){
+					EditorStatefulClient(entry.editorStatefulClient).save();
 				}
 			}
 //			var entriesToSave:ArrayCollection = GlobalEditorOperationsManager.INSTANCE.createEntriesToSave(StatefulClientRegistry.mx_internal::statefulClientsList);

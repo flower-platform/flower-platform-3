@@ -142,12 +142,6 @@ package org.flowerplatform.editor {
 						editorStatefulClient = EditorFrontend(PopupHostViewWrapper(view).activePopupContent).editorStatefulClient;
 					}
 				}
-				if (editorStatefulClient != null) {
-					if (editorStatefulClients[editorStatefulClient.editableResourcePath] == null) {
-						CommunicationPlugin.getInstance().statefulClientRegistry.unregister(editorStatefulClient, null);
-						editorStatefulClients[editorStatefulClient.editableResourcePath] = editorStatefulClient;
-					}
-				}
 			}
 		}
 		

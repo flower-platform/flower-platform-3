@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+ 	Popup window that display a checkbox list of dirty resources that may be saved before
+ 	closing editors or the application.
+ 	
+ 	@author Cristi
+ @flowerModelElementId _NOuvEAcIEeK49485S7r3Vw
+-->
+<ResizablePopupWindow xmlns:mx="http://www.adobe.com/2006/mxml" xmlns="com.crispico.flower.util.popup.*">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.spinner.ModalSpinner;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.utils.ArrayUtil;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.command.flextojava.FlexToJavaCompoundCommand;
+			import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
+			import org.flowerplatform.editor.remote.EditableResource;
+			import org.flowerplatform.editor.remote.EditorStatefulClient;
+
+			private var editorsToClose:ArrayCollection;
+			
+			private var entriesToClose:ArrayCollection;
+			
+			/**
+			 * Dynamic object with fields: editorStatefulClient, selected.
+			 */ 
+			[Bindable]
+			private var entriesToSave:ArrayCollection;
+			
+			private var callbackObject:Object;
+			
+			private var callbackFunction:Function;
+			
+			private var callbackArguments:Array;
+			
+			public function show(editorsOrEditorStatefulClientsToSave:ArrayCollection, editorsToClose:ArrayCollection, editorStatefulClientsToClose:ArrayCollection,
+					callbackObject:Object = null, callbackFunction:Function = null, callbackArguments:Array = null):void {
+				
+				this.callbackObject = callbackObject;
+				this.callbackFunction = callbackFunction;
+				this.callbackArguments = callbackArguments;
+				this.entriesToSave = EditorPlugin.getInstance().globalEditorOperationsManager.createEntriesToSave(editorsOrEditorStatefulClientsToSave);
+				this.editorsToClose = editorsToClose;
+				this.entriesToClose = EditorPlugin.getInstance().globalEditorOperationsManager.createEntriesToSave(editorStatefulClientsToClose, true, false);
+				if (entriesToClose.length == 0) {
+					entriesToClose = null;
+				}
+
+				if (entriesToSave.length == 0) {
+					// no need for the popup; close directly
+					closeEditorsOrEditorStatefulClients(null);
+				} else {
+					var width:int;
+					var height:int;
+					if (entriesToSave.length == 1) {
+						// display as msg box
+						currentState = "singleEditableResource";
+						width = 400;
+						height = 120;
+						// we need this, because otherwise, the text "pushes" the form
+						this.width = width;
+					} else {
+						currentState = "multiEditableResource";
+						width = 400;
+						height = 300;
+					}
+					showPopup(width, height, null, true);
+				}
+
+			}
+			
+			/**
+			 * Saves the selected resources (invokes the save logic on the server).
+			 * 
+			 * @author Sebastian Solomon
+			 */ 
+			private function saveSelected():void {
+				var commandToSend:FlexToJavaCompoundCommand = EditorPlugin.getInstance().globalEditorOperationsManager.getSaveCommandForSelectedEntries(entriesToSave);
+								
+				if (commandToSend.commandsList.length > 0) {
+					ModalSpinner.addModalSpinner(this);
+					for each (var entry:Object in entriesToSave) {
+						if (entry.selected) 
+							EditorStatefulClient(entry.editorStatefulClient).save();
+					}
+					closeEditorsOrEditorStatefulClients(null);
+					
+				} else {
+					// nothing is selected;
+					closeEditorsOrEditorStatefulClients(null);
+				}
+			}
+			
+			/**
+			 * When the save remote invokation returns, we close the editors.
+			 * 
+			 */
+			private function closeEditorsOrEditorStatefulClients(result:Object):void {
+				if (entriesToClose != null) {
+					for each (var entry:Object in entriesToClose) {
+						//StatefulClientRegistry.INSTANCE.unregister(entry.editorStatefulClient, null);
+						CommunicationPlugin.getInstance().statefulClientRegistry.unregister(entry.editorStatefulClient, null);
+					}
+				} else {
+					for each (var editorFrontend:EditorFrontend in editorsToClose) {
+						CommunicationPlugin.getInstance().statefulClientRegistry.unregister(editorFrontend.editorStatefulClient, editorFrontend);
+					}
+				}
+				
+				ModalSpinner.removeModalSpinner(this);
+				closeForm();
+				if (callbackFunction != null) {
+					callbackFunction.apply(callbackObject, callbackArguments);
+				}
+			}
+			
+			/**
+			 * Selects/deselects all items, depending on the given argument.
+			 * 
+			 */ 
+			private function selectOrDeselectItems(selected:Boolean):void {
+				for each (var obj:Object in entriesToSave) {
+					obj.selected = selected;
+				}
+				// because the data in the data provider = dynamic objects, they are not bindable
+				entriesToSave.refresh();
+			}
+
+			/**
+			 * Invoked when the item renderer of the list (i.e. a checkbox) is toggled;
+			 * we update the "isSelected" flag of the current entry.
+			 * 
+			 */
+			public function changeHandler(evt:Event):void {
+				evt.target.data.selected = !evt.target.data.selected;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:VBox id="content" width="100%" height="100%"/>
+		
+	<mx:HBox id="buttonBar" horizontalAlign="right" width="100%">
+		<mx:Button id="cancelButton" label="Cancel" click="closeForm()"/>
+	</mx:HBox>
+	
+	<states>
+		<mx:State name="multiEditableResource">
+			<mx:SetProperty target="{this}" name="title" value="Save Resources"/>
+			<mx:AddChild relativeTo="{content}">
+				<mx:VBox width="100%" height="100%">
+					<mx:Label text="Select the resources to save:"/>
+					<mx:List id="list" width="100%" height="100%"
+							 dataProvider="{entriesToSave}">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:CheckBox label="{EditorPlugin.getInstance().globalEditorOperationsManager.getEditableResourceLabel(data.editorStatefulClient.editableResourceStatus, false)}" selected="{data.selected}" change="parentDocument.changeHandler(event)">
+									<mx:Script>
+										<![CDATA[
+											import org.flowerplatform.editor.editorsupport.EditorSupport;
+										]]>
+									</mx:Script>
+								</mx:CheckBox>
+
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:List>
+					
+					<mx:HBox horizontalAlign="right" width="100%">
+						<mx:Button label="Select All" click="selectOrDeselectItems(true)"/>
+						<mx:Button label="Deselect All" click="selectOrDeselectItems(false)"/>
+					</mx:HBox>
+				</mx:VBox>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{buttonBar}" position="firstChild">
+				<mx:Button id="okButton" label="OK" click="saveSelected()"/>
+			</mx:AddChild>
+		</mx:State>
+		
+		<mx:State name="singleEditableResource">
+			<mx:SetProperty target="{this}" name="title" value="Save Resource"/>
+			<mx:AddChild relativeTo="{content}">
+				<mx:Text text="'{EditorPlugin.getInstance().globalEditorOperationsManager.getEditableResourceLabel(EditableResource(entriesToSave.getItemAt(0).editorStatefulClient.editableResourceStatus), false)}' has been modified. Save changes?" 
+						 width="100%" height="100%"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{buttonBar}" position="firstChild">
+				<mx:Button id="noButton" label="No" click="entriesToSave[0].selected = false; saveSelected()"/>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{buttonBar}" position="firstChild">
+				<mx:Button id="yesButton" label="Yes" click="saveSelected()"/>
+			</mx:AddChild>
+		</mx:State>
+	</states>
+	
+</ResizablePopupWindow>

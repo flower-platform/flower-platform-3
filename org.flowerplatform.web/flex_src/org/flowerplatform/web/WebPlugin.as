@@ -84,26 +84,6 @@ package org.flowerplatform.web {
 			
 			FlexUtilGlobals.getInstance().keyBindings = new KeyBindings();
 			
-			// is needed from other plugins
-			var workbench:Workbench = new Workbench();
-			FlexUtilGlobals.getInstance().workbench = workbench;
-			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
-			workbench.percentHeight = 100;
-			workbench.percentWidth = 100;
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			
-			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
-		}
-		
-		override public function start():void {
-			super.start();
-			// pass the same descriptor; to be used for images (that need the descriptor for the URL)
-			webCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
-			webCommonPlugin.start();
-			
-			ToolTipManager.showDelay = 0;
-			ToolTipManager.toolTipClass = HTMLToolTip;
-			
 			var hBox:HBox = new HBox();
 			test_addButton("User Form", UserForm, hBox);
 			test_addButton("Users Screen", UsersScreen, hBox);
@@ -133,6 +113,26 @@ package org.flowerplatform.web {
 			hBox.addChild(btn);
 			
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
+			
+			// is needed from other plugins
+			var workbench:Workbench = new Workbench();
+			FlexUtilGlobals.getInstance().workbench = workbench;
+			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
+			workbench.percentHeight = 100;
+			workbench.percentWidth = 100;
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
+			
+			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
+		}
+		
+		override public function start():void {
+			super.start();
+			// pass the same descriptor; to be used for images (that need the descriptor for the URL)
+			webCommonPlugin.flexPluginDescriptor = flexPluginDescriptor;	
+			webCommonPlugin.start();
+			
+			ToolTipManager.showDelay = 0;
+			ToolTipManager.toolTipClass = HTMLToolTip;
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 			

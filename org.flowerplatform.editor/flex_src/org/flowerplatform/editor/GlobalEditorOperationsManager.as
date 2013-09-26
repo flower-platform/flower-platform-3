@@ -43,8 +43,8 @@ package org.flowerplatform.editor {
 
 	public class GlobalEditorOperationsManager extends EventDispatcher {
 		
-		
-		public static var INSTANCE:GlobalEditorOperationsManager;
+		//use EditorPlugin.getInstance.globalEditorOperationsManager
+		public static var INSTANCE:GlobalEditorOperationsManager; 
 
 		private var workbench:Workbench;
 		
@@ -142,7 +142,7 @@ package org.flowerplatform.editor {
 			}
 			if (editorFrontends.length > 0) {
 				// TODO 
-//				new SaveResourcesDialog().show(editorFrontends, editorFrontends, null);
+				new SaveResourcesDialog().show(editorFrontends, editorFrontends, null);
 			}
 
 		}
@@ -315,34 +315,34 @@ package org.flowerplatform.editor {
 //		 * slave ERs (if exist) and number of other clients.
 //		 * 
 //		 */
-//		public function getEditableResourceLabel(editableResource:EditableResource, showDirtyStatus:Boolean):String {
-//			var result:String = String(editableResource.label);
-//			
-//			if (showDirtyStatus && editableResource.dirty) {
-//				result += " *";
-//			}
-//			
-//			if (editableResource.slaveEditableResources != null) {
-//				// master ER
-//				for (var i:int = 0; i < editableResource.slaveEditableResources.length; i++) {
-//					if (i == 0) {
-//						result += " (includes ";
-//					}
-//					result += EditableResource(editableResource.slaveEditableResources[i]).label;
-//					if (i != editableResource.slaveEditableResources.length - 1) {
-//						result += ", ";
-//					} else {
-//						result += ")";
-//					}
-//				}
-//			}
-//			
-//			// TODO CS/STFL coabitare; editableResource.clients == null nu cred ca mai e necesar
-//			if (editableResource.clients != null && editableResource.clients.length > 0) {
-//				result += ' [Open by ' + editableResource.clients.length + ' other client(s)]';
-//			}
-//			return result;
-//		}
+		public function getEditableResourceLabel(editableResource:EditableResource, showDirtyStatus:Boolean):String {
+			var result:String = String(editableResource.label);
+			
+			if (showDirtyStatus && editableResource.dirty) {
+				result += " *";
+			}
+			
+			if (editableResource.slaveEditableResources != null) {
+				// master ER
+				for (var i:int = 0; i < editableResource.slaveEditableResources.length; i++) {
+					if (i == 0) {
+						result += " (includes ";
+					}
+					result += EditableResource(editableResource.slaveEditableResources[i]).label;
+					if (i != editableResource.slaveEditableResources.length - 1) {
+						result += ", ";
+					} else {
+						result += ")";
+					}
+				}
+			}
+			
+			// TODO CS/STFL coabitare; editableResource.clients == null nu cred ca mai e necesar
+			if (editableResource.clients != null && editableResource.clients.length > 0) {
+				result += ' [Open by ' + editableResource.clients.length + ' other client(s)]';
+			}
+			return result;
+		}
 //
 //		public function getGlobalDirtyState():Boolean {
 //			// currently this is used by the Project Explorer view; I saw that when the app is started with this view
@@ -350,11 +350,11 @@ package org.flowerplatform.editor {
 //			return GlobalEditorOperationsManager.INSTANCE.saveAllAction != null ? GlobalEditorOperationsManager.INSTANCE.saveAllAction.enabled : false;
 //		}
 //		
-//		public function invokeSaveResourcesDialogAndInvoke(callbackObject:Object, callbackFunction:Function, callbackArguments:Array):void {
-//			// it's safe to pass the whole list, because it's copied; so the fact that ESCs
-//			// dissapear (i.e. list is modified) won't affect
-//			new SaveResourcesDialog().show(StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList, null, null, callbackObject, callbackFunction, callbackArguments);
-//		}
+		public function invokeSaveResourcesDialogAndInvoke(callbackObject:Object, callbackFunction:Function, callbackArguments:Array):void {
+			// it's safe to pass the whole list, because it's copied; so the fact that ESCs
+			// dissapear (i.e. list is modified) won't affect
+			new SaveResourcesDialog().show(CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList, null, null, callbackObject, callbackFunction, callbackArguments);
+		}
 	}
 	
 }
