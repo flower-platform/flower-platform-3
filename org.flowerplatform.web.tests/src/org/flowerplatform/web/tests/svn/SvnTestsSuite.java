@@ -16,34 +16,23 @@
 *
 * license-end
 */
-package org.flowerplatform.web.svn.common.remote.dto {
-	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
-		
-	/**
-	 * @author Victor Badila
-	 */	
-	[RemoteClass]
-	[Bindable]
-	public class FileDto {
-					
-			public var pathFromRoot:String;
-			
-			public var label:String;
-			
-			public var imageUrls:ArrayCollection;
-			
-			public var status:String;
-			
-			private var _selected:Boolean = true;
-		
-			public function getSelected():Boolean {
-				return _selected;
-			}
-			
-			public function setSelected(value:Boolean):void {
-				this._selected = value;
-			}			
-	}
-	
+
+package org.flowerplatform.web.tests.svn;
+
+import org.flowerplatform.web.tests.EclipseDependentTestSuiteBase;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({ 
+	SvnTestsVictor.class		
+})
+
+/**
+ * @author Victor Badila
+ */
+public class SvnTestsSuite extends EclipseDependentTestSuiteBase {
 }
+	
+

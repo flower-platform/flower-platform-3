@@ -30,6 +30,7 @@ license-end
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
 			import mx.collections.IList;
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
@@ -45,9 +46,8 @@ license-end
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
-			import org.flowerplatform.web.svn.common.SvnCommonPlugin;		
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-			import org.flowerplatform.web.common.WebCommonPlugin;
+
 
 			[Bindable]
 			public var svnLocation:String;			
@@ -72,14 +72,22 @@ license-end
 			
 			protected override function finishClickHandler():void {
 				var location:String = svnLocationBox.text;
+				var svnRepositoriesNode:TreeNode = node;
+				if (svnRepositoriesNode.pathFragment.type == SvnCommonPlugin.NODE_TYPE_ORGANIZATION) {					
+					for (var i:int=0; i<svnRepositoriesNode.children.length; i++) {
+						if (TreeNode(svnRepositoriesNode.children.getItemAt(i)).pathFragment.type == SvnCommonPlugin.NODE_TYPE_SVN_REPOSITORIES) {
+							svnRepositoriesNode = TreeNode(svnRepositoriesNode.children.getItemAt(i));
+						}
+					}
+				}				
 				for (var i:int; i<node.children.length; i++) {
 					if (node.children.getItemAt(i).label == location) {
 						Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.ui.checkout.errorRepositoryAlreadyExists"));
 						return;
 					}
-				}
+				}				
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [location, node.getPathForNode(true)], this,getProjectsCallbackHandler ));
+					new InvokeServiceMethodServerCommand("svnService", "createSvnRepository", [location, svnRepositoriesNode.getPathForNode(true)], this, getProjectsCallbackHandler ));
 				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createSvnRepository.view.spinner"));   
 			}
 			

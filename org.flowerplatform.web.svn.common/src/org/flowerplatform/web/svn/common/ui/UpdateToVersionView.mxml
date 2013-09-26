@@ -27,6 +27,7 @@ license-end
 			  xmlns:popup="org.flowerplatform.flexutil.popup.*"
 			  xmlns:mx="library://ns.adobe.com/flex/mx"			  
 			  minWidth="300" minHeight="200"
+			  implements="org.flowerplatform.flexutil.dialog.IDialogResultHandler"
 			  creationComplete="init()">
 	
 	<fx:Script>
@@ -46,6 +47,7 @@ license-end
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.ui.WorkingDirectorySelectionPopupView;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+			import org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView;
 			
 			[Bindable]
 			public var depthDropdownDataProvider:ArrayList;
@@ -79,11 +81,7 @@ license-end
 						[selectionPaths, revision, depthDropdown.selectedIndex, changeWorkingCopyToSpecifiedDepth.selected, 
 						ignoreExternals.selected,  allowUnversionedObstructions.selected], this, updateToVersionCallbackHandler ));
 				popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));				
-			}
-			
-			protected function handleDialogResult():IDialogResultHandler {
-				return null;
-			}
+			}			
 			
 			public function populateDropdown():void {
 				depthDropdownDataProvider = new ArrayList();
@@ -113,6 +111,25 @@ license-end
 				return selection.length;
 			}
 			
+			public function handleDialogResult(result:Object):void {
+				if (result != null) {
+					revisionTextBox.text = String(result);
+				}
+			}
+			
+			private function selectRevisionBtnHandler():void {
+				var view:SelectRevisionWindowView = new SelectRevisionWindowView();
+				var tn:TreeNode = TreeNode(selection.getItemAt(0));
+				view.remoteResourcePath = tn.getPathForNode(true);
+				view.remoteResourceName = tn.label;
+				view.setResultHandler(this);				
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setWidth(400)
+					.setHeight(450)
+					.setPopupContent(view)
+					.show();
+			}
+			
 		]]>		
 	</fx:Script>
 	
@@ -129,7 +146,7 @@ license-end
 						<s:Label text="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionLabel')}"/>
 						<s:TextInput id="revisionTextBox" 
 									 enabled="{!headRevisionCheckbox.selected &amp;&amp; selectionLength() == 1}" width="100%"/>
-						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionButton')}" enabled="{!headRevisionCheckbox.selected}"/>
+						<s:Button label="{SvnCommonPlugin.getInstance().getMessage('svn.ui.checkout.revisionButton')}" enabled="{!headRevisionCheckbox.selected}" click="{selectRevisionBtnHandler()}"/>
 					</s:HGroup>
 					<s:Rect width="1" height="10"/>
 					<s:HGroup width="100%">

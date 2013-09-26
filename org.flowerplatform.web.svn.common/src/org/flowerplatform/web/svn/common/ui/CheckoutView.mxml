@@ -87,7 +87,6 @@ license-end
 				view.remoteResourcePath = tn.getPathForNode(true);
 				view.remoteResourceName = tn.label;
 				view.setResultHandler(this);
-				//view.showPopup();
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setWidth(400)
 					.setHeight(450)
@@ -194,7 +193,7 @@ license-end
 				var organizationTreeNode:TreeNode = getSvnRepositoriesTreeNode(TreeNode(selection.getItemAt(0))).parent;
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "createFolderAndMarkAsWorkingDirectory", 
-						[workingDirectoryName, organizationTreeNode], this, createWorkingDirectoryCallbackHandler ));
+						[workingDirectoryName, organizationTreeNode.label], this, createWorkingDirectoryCallbackHandler ));
 				_popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.checkoutSvnRepository.view.spinner"));
 			} 
 			

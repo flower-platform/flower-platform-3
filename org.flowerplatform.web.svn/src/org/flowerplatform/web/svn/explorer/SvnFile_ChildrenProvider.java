@@ -19,11 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tigris.subversion.subclipse.core.ISVNRemoteResource;
 import org.tigris.subversion.subclipse.core.ISVNRepositoryLocation;
-import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.repo.SVNRepositoryLocation;
 import org.tigris.subversion.subclipse.core.resources.RemoteFile;
 import org.tigris.subversion.subclipse.core.resources.RemoteFolder;
-import org.tigris.subversion.svnclientadapter.SVNClientException;
 
 
 
@@ -74,6 +72,9 @@ public class SvnFile_ChildrenProvider implements IChildrenProvider {
 //				if (e.getCause() == null)
 //					return result;
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);				
+			} finally {
+				if (command != null)
+					SvnService.tlCommand.remove();
 			}
 		}
 		return result;

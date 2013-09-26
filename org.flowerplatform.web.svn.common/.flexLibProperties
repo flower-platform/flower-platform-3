@@ -16,6 +16,12 @@
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateRemoteFolderView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CreateSvnRepositoryView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.CheckoutAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
+    <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
+    <classEntry path="org.flowerplatform.web.svn.common.action.RefreshRemoteResourceAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.CheckoutView"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToHeadAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.UpdateToVersionAction"/>
@@ -33,6 +39,7 @@
     <classEntry path="org.flowerplatform.web.svn.common.action.RevertAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.action.SvnProjectFileAction"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.MarkResolvedView"/>
+  	<classEntry path="org.flowerplatform.web.svn.common.action.MergeAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

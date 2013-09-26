@@ -18,6 +18,8 @@
 */
 package org.flowerplatform.web.svn.common.action.remote {
 	
+	import flash.utils.Dictionary;
+	
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
@@ -48,18 +50,23 @@ package org.flowerplatform.web.svn.common.action.remote {
 		// FOR CREDENTIALS STATE
 		public var user:String;
 		
+		//USE ONE LOGIN WINDOW FOR A REPOSITORY
+		private static var openLoginViewsForRepository:Dictionary = new Dictionary();
+		
 		public override function execute():void {
 			
-			var loginView:LoginView = new LoginView();	
+			var loginView:LoginView = new LoginView();
 			loginView.setResultHandler(this);
 			loginView.message = SvnCommonPlugin.getInstance().getMessage("svn.login.message");
 			loginView.repositoryURI = repositoryURI;
 			loginView.user = user;
 			loginView.command = command;
-			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(loginView)
-				.show();
-			
+			if (openLoginViewsForRepository[repositoryURI] == null) {
+				openLoginViewsForRepository[repositoryURI] = loginView;
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContent(loginView)
+					.show();
+			}
 		}	
 		
 		public function handleDialogResult(result:Object):void {
@@ -72,16 +79,24 @@ package org.flowerplatform.web.svn.common.action.remote {
 			var password:String = resultInfo.getItemAt(3) as String;
 			
 			if(logging){
-			var	command:InvokeServiceMethodServerCommand = resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand;
-			CommunicationPlugin.getInstance().bridge.sendObject(
-				new InvokeServiceMethodServerCommand("svnService", 
-					"login", [repoURI, userName, password, command], this, null));
+				var	command:InvokeServiceMethodServerCommand = resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand;
+				delete openLoginViewsForRepository[repositoryURI];
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("svnService", 
+						"login", [repoURI, userName, password, command], this, null));
 			}
-			else
+			else{
+				if (openLoginViewsForRepository[repositoryURI] != null)
+					delete openLoginViewsForRepository[repositoryURI];
 				CommunicationPlugin.getInstance().bridge.sendObject(	
 					new InvokeServiceMethodServerCommand("svnService", 
 						"changeCredentials", [repoURI, userName, password], this, null));
-			
+			}
+				
+		}
+		
+		public function finishHandler(result:Object):void{
+//			delete openLoginViewsForRepository[repositoryURI];
 		}
 	}
 }

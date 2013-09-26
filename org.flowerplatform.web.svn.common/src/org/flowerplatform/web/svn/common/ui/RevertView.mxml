@@ -46,8 +46,6 @@ license-end
 			[Bindable]
 			public var modifiedResources:GetModifiedFilesDto = null;
 			
-			public var selection:ArrayList;
-			
 			public function cancelHandler():void {
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);				
 			}
@@ -73,7 +71,7 @@ license-end
 				if (result == true) {					
 					FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 				}
-			}	
+			}
 			
 			public override function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
@@ -83,22 +81,7 @@ license-end
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
-				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");			
-				getModifiedData();				
-			}
-			
-			public function getModifiedData():void {			
-				var selectionPaths:ArrayList = new ArrayList;
-				for(var i:int=0; i<selection.length; i++) {
-					var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
-					selectionPaths.addItem(path);
-				}				
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "getDifferences", [selectionPaths], this, getModifiedDataCallback));				
-			}
-			
-			public function getModifiedDataCallback(res:GetModifiedFilesDto):void {
-				modifiedResources = res;
+				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");							
 			}
 			
 			private function modifyAll(value:Boolean):void {

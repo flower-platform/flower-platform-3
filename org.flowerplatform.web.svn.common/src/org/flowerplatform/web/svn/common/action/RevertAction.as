@@ -22,6 +22,7 @@ package org.flowerplatform.web.svn.common.action {
 	import mx.collections.*;
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.controls.Alert;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -30,6 +31,7 @@ package org.flowerplatform.web.svn.common.action {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.svn.common.SvnCommonPlugin;
+	import org.flowerplatform.web.svn.common.remote.dto.GetModifiedFilesDto;
 	import org.flowerplatform.web.svn.common.ui.RevertView;
 	
 	/**
@@ -43,8 +45,22 @@ package org.flowerplatform.web.svn.common.action {
 		}		
 		
 		public override function run():void {
+			var selectionPaths:ArrayList = new ArrayList;
+			for(var i:int=0; i<selection.length; i++) {
+				var path:ArrayCollection = ArrayCollection(TreeNode(selection.getItemAt(i)).getPathForNode(true));				
+				selectionPaths.addItem(path);
+			}				
+			CommunicationPlugin.getInstance().bridge.sendObject(
+				new InvokeServiceMethodServerCommand("svnService", "getDifferences", [selectionPaths], this, runContinued));			
+		}
+		
+		public function runContinued(result:GetModifiedFilesDto):void {
+			if (result.files.length==0) {
+				Alert.show(SvnCommonPlugin.getInstance().getMessage("svn.action.revert.alertNoItemsInSelectionSuitableForAction"));
+				return;
+			}
 			var view:RevertView = new RevertView();
-			view.selection = ArrayList(selection);
+			view.modifiedResources = result;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(view)
 				.show();

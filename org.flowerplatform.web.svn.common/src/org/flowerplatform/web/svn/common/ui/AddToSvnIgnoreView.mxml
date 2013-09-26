@@ -48,7 +48,6 @@ license-end
 			public var defaultPattern:String = "";
 			
 			protected override function creationCompleteHandler():void {
-				callLater(patternTxt.setFocus);
 				super.creationCompleteHandler();
 				if (selection.length>1) {					
 					defaultPattern = "*";
@@ -56,6 +55,7 @@ license-end
 					var element:ArrayCollection = ArrayCollection(selection.getItemAt(0));
 					defaultPattern = PathFragment(ArrayCollection(element).getItemAt(element.length-1)).name;
 				}
+				callLater(patternTxt.setFocus);
 			}
 			
 			public override function set popupHost(value:IPopupHost):void {
