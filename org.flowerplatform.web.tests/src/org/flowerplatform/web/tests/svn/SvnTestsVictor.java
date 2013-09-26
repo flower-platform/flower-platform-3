@@ -24,41 +24,28 @@ import static org.junit.Assert.fail;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.CoreException;
+import org.apache.commons.io.FileUtils;
 import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
-import org.flowerplatform.web.entity.EntityFactory;
-import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
-import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
-import org.flowerplatform.web.svn.SvnPlugin;
-import org.flowerplatform.web.svn.remote.BranchResource;
 import org.flowerplatform.web.svn.remote.SvnService;
 import org.flowerplatform.web.svn.remote.dto.FileDto;
 import org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto;
 import org.hibernate.Query;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -131,7 +118,8 @@ public class SvnTestsVictor {
 				"hibernate", "organization",
 				"svn-repositories", "svnRepositories",
 				"svn://csp1/flower2", "svnRepository",
-				"nuSterge", "svnFolder"));		
+				"testing_do_not_delete", "svnFolder",
+				"victor", "svnFolder"));		
 		SvnService.getInstance().createFolderAndMarkAsWorkingDirectory(context, "commonWD", "hibernate");		
 		SvnService.getInstance().createFolderAndMarkAsWorkingDirectory(context, "markResolved", "hibernate");
 		SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
@@ -164,7 +152,7 @@ public class SvnTestsVictor {
 				"workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory",
 				"commonProject", "project"));
-		assertEquals("updateTest: updateToVersion 8243 successful", true, result);
+		assertEquals("updateTest: updateToVersion 8243 not successful", true, result);
 		// update to version 8243 (it exists)
 		SvnService.getInstance().updateToVersion(context, selectionForUpdate, "8243", 0, false, false, true);		
 		//check to see if files correspond to revision 8243
@@ -177,10 +165,10 @@ public class SvnTestsVictor {
 		}		
 		// update repository back to head
 		result = SvnService.getInstance().updateToHEAD(context, selectionForUpdate);
-		assertEquals("updateTest: updateToHEAD successful", result, true);
+		assertEquals("updateTest: updateToHEAD not successful", result, true);
 		// check to see if files correspond to head revision
 		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, selectionForUpdate);
-		assertEquals("updateTest: no differences with head revision found. updateToHEAD succeeded", 0, modDtos.getFiles().size());
+		assertEquals("updateTest: differences with head revision found. updateToHEAD failed", 0, modDtos.getFiles().size());
 	}
 
 	@Test
@@ -190,11 +178,12 @@ public class SvnTestsVictor {
 																"hibernate", "organization",
 																"svn-repositories", "svnRepositories",
 																"svn://csp1/flower2", "svnRepository",
-																"nuSterge", "svnFile"));			
+																"testing_do_not_delete", "svnFolder",
+																"victor", "svnFolder"));			
 		Boolean finalResult;
 		// see if normal checkout works
 		finalResult = SvnService.getInstance().checkout(context, selectionList, workingDirectoryPartialPath, "\\commonWD", "7000", 0, true, false, false, "commonProject2");
-		assertEquals("checkoutTest: Checkout successful", true, finalResult); 
+		assertEquals("checkoutTest: Checkout failed", true, finalResult); 
 		// check for working directory that was added during first checkout in the database
 		ArrayList<String> workingDirectoryList = SvnService.getInstance().getWorkingDirectoriesForOrganization(context, "hibernate");
 		Boolean wdFound = false;
@@ -203,16 +192,16 @@ public class SvnTestsVictor {
 				wdFound = true;
 			}
 		}
-		assertEquals("checkoutTest: Working directory found", true, wdFound);
+		assertEquals("checkoutTest: Working directory not found", true, wdFound);
 		//check if project was added to working directory
-		List<File> projects = getProjectsForWorkingDirectory("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD");
+		List<File> projects = getProjectsForWorkingDirectory(workspacePath + "hibernate\\commonWD");
 		Boolean projectFound = false;
 		for (File f : projects) {
-			if (f.getAbsolutePath().equals("D:\\data\\java_work\\eclipse_flower_workspace\\org.flowerplatform.web.tests\\workspace\\hibernate\\commonWD\\commonProject2")) {
+			if (f.getAbsolutePath().equals(workspacePath + "hibernate\\commonWD\\commonProject2")) {
 				projectFound = true;
 			}
 		}
-		assertEquals("checkoutTest: Project found", true, projectFound);
+		assertEquals("checkoutTest: Project not found", true, projectFound);
 	}
 
 	@Test
@@ -224,10 +213,10 @@ public class SvnTestsVictor {
  												".svn-repositories", "svnRepositories");		
 		// add 'bad url' repository:
 		result = SvnService.getInstance().createSvnRepository(context, "nosuchurl", parentPathFragment);
-		assertEquals("createSvnRepositoryTest: 'nosuchurl' repository was not added", false, result);		
+		assertEquals("createSvnRepositoryTest: 'nosuchurl' repository was added", false, result);		
 		// add existing repository:
-		result = SvnService.getInstance().createSvnRepository(context, "svn://csp1/flower2/nuSterge", parentPathFragment);
-		assertEquals("createSvnRepositoryTest: existing repository url was added", true, result);
+		result = SvnService.getInstance().createSvnRepository(context, "svn://csp1/flower2/testing_do_not_delete/victor", parentPathFragment);
+		assertEquals("createSvnRepositoryTest: existing repository url was not added", true, result);
 		new DatabaseOperationWrapper(new DatabaseOperation() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -236,9 +225,9 @@ public class SvnTestsVictor {
 					Query q = wrapper.getSession()
 							.createQuery(String.format("SELECT e from %s e where e.name = '%s' and e.organization.name = '%s'", 
 										 SVNRepositoryURLEntity.class.getSimpleName(),
-										 "svn://csp1/flower2/nuSterge",
+										 "svn://csp1/flower2/testing_do_not_delete/victor",
 										 "hibernate"));
-					assertEquals("createSvnRepositoryTest: new repository belongs to organization in the database", 1, q.list().size());
+					assertEquals("createSvnRepositoryTest: new repository does not belong to organization in the database", 1, q.list().size());
 					System.out.println(q.list().toString());
 				} catch (Exception e) {					
 				}
@@ -249,7 +238,7 @@ public class SvnTestsVictor {
 	@Test
 	public void commitTest() {		
 		//after each successful run filename must be changed or corresponding remote file deleted, in order for future tests to succeed
-		String filename = "5"; // after commit is successful, increment by 1.
+		String filename = "1"; // after commit is successful, increment by 1.
 		// add a new file:
 		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + filename);
 		int a = Integer.valueOf(filename);
@@ -270,7 +259,7 @@ public class SvnTestsVictor {
 		dto2.setStatus("missing");		
 		selectionForCommit.add(dto2);
 		Boolean result = SvnService.getInstance().commit(context, selectionForCommit, "new message", false);
-		assertEquals("commitTest: commit operation ended succesfully", true, result);
+		assertEquals("commitTest: commit operation did not end succesfully", true, result);
 		// check differences with head (if there are no differences it means that the deleted file is not on the repository and that the new file is)
 		ArrayList<PathFragment> selectionForDiff = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
@@ -281,7 +270,7 @@ public class SvnTestsVictor {
 		ArrayList<ArrayList<PathFragment>> m = new ArrayList<>();
 		m.add(selectionForDiff);
 		GetModifiedFilesDto modDto = SvnService.getInstance().getDifferences(context, m);
-		assertEquals("commtiTest: the new files were commited. no difference between local revision and head revision", 0, modDto.getFiles().size());
+		assertEquals("commitTest: differences between local revision and head revision found", 0, modDto.getFiles().size());
 	}
 	
 	@Test
@@ -302,7 +291,7 @@ public class SvnTestsVictor {
 		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, selectionForIgnore);
 		for (FileDto fd : modDtos.getFiles()) {
 			if (!fd.getStatus().equals("ignored")) {
-				fail("");
+				fail("addToSvnIgnoreTest: method did not behave as it should have");
 			}
 		}
 		assertEquals(1, modDtos.getFiles().size());
@@ -331,7 +320,7 @@ public class SvnTestsVictor {
 		ArrayList<ArrayList<PathFragment>> x = new ArrayList<>();
 		x.add(arrayOfPaths);
 		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, x);
-		assertEquals(true, modDtos.getFiles().size() == 0);
+		assertEquals("revertTest: revert did not succeed. differences were found", true, modDtos.getFiles().size() == 0);
 	}
 	
 	@Test
@@ -347,13 +336,13 @@ public class SvnTestsVictor {
 				"workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory",
 				"commonProject", "project",
-				filename, "projFile"));		
+				filename, "projFile"));
 		SvnService.getInstance().addToVersion(context, selectionForAddToVersion);
 		selectionForAddToVersion.get(0).remove(selectionForAddToVersion.get(0).size()-1);
 		// check differences and see if it is seen as added
 		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, selectionForAddToVersion);
-		assertEquals(1, modDtos.getFiles().size());
-		assertEquals("added", modDtos.getFiles().get(0).getStatus());
+		assertEquals("addToVersionControlTest: more than one difference found after file was added", 1, modDtos.getFiles().size());
+		assertEquals("addToVersionControlTest: added file's status is not 'added'", "added", modDtos.getFiles().get(0).getStatus());
 	}
 	
 	@Test
@@ -363,8 +352,8 @@ public class SvnTestsVictor {
 		File f2 = new File(workspacePath + "hibernate\\markResolved\\markResolvedProject2\\66zWzz33XzYz");
 		// write different stuff into both files:
 		try {
-			writeFile(f1.getAbsolutePath(), "AAAAAA");
-			writeFile(f2.getAbsolutePath(), "BBBBBB");
+			writeFile(f1.getAbsolutePath(), "A");
+			writeFile(f2.getAbsolutePath(), "B");
 		} catch (IOException e) {
 			e.printStackTrace(); // won't ever get here
 		}
@@ -381,7 +370,7 @@ public class SvnTestsVictor {
 		ArrayList<FileDto> selectionForCommit = new ArrayList<>();
 		selectionForCommit.add(fd);
 		Boolean res = SvnService.getInstance().commit(context, selectionForCommit, "new message", false);
-		assertEquals("markResolvedTest: commit was successful", true, res);
+		assertEquals("markResolvedTest: commit was not successful", true, res);
 		// update the second project
 		selectionForUpdate = new ArrayList<>();
 		selectionForUpdate.add(getArrayOfPathFragmentsFromStringArgs(
@@ -393,7 +382,7 @@ public class SvnTestsVictor {
 		SvnService.getInstance().updateToHEAD(context, selectionForUpdate);
 		// get differences
 		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, selectionForUpdate);
-		assertEquals("markResolvedTest: Files on second projects differ from head revision of project", true, modDtos.getFiles().size()>0);
+		assertEquals("markResolvedTest: Files on second projects do not differ from head revision of project", true, modDtos.getFiles().size()>0);
 		for (FileDto fdto : modDtos.getFiles()) {
 			if (!fdto.getStatus().equals("conflicted")) {
 				fail("markResolvedTest: Other files beside conflicted files show up as different from head revision");
@@ -403,7 +392,7 @@ public class SvnTestsVictor {
 		fd = modDtos.getFiles().get(0);
 		ArrayList<String> resolveArgument = new ArrayList<String>();
 		resolveArgument.add(fd.getPathFromRoot());
-		SvnService.getInstance().resolve(context, resolveArgument, 2);		
+		SvnService.getInstance().resolve(context, resolveArgument, 2);
 		// get differences and see if files conflict
 		modDtos = SvnService.getInstance().getDifferences(context, selectionForUpdate);
 		assertEquals("markResolvedTest: after 'resolve' action there are no more differences with the head revision", 0, modDtos.getFiles().size());
@@ -412,8 +401,11 @@ public class SvnTestsVictor {
 	@AfterClass
 	public static void undoChanges() {
 		// delete checked out working directory along with content
-		(new File(workspacePath + "hibernate\\commonWD")).delete();		
-		(new File(workspacePath + "hibernate\\markResolved")).delete();		
+		try {
+			FileUtils.deleteDirectory(new File(workspacePath + "hibernate\\commonWD"));
+			FileUtils.deleteDirectory(new File(workspacePath + "hibernate\\markResolved"));		
+		} catch (IOException e) {
+		}		
 	}
 
 }

@@ -973,7 +973,7 @@ public class SvnService {
 	public boolean checkout(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath,
 			String workingDirectoryDestination, String revisionNumberAsString, int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals, String newProjectName) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-		//ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
 		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
 		SVNRevision revision;
 		if (headRevision) {
@@ -998,13 +998,13 @@ public class SvnService {
 			}
 			remoteFolders[i] = correspondingRemoteResource;
 		}
-		//pm.beginTask(null, 1000);
+		pm.beginTask(null, 1000);
 		ISVNClientAdapter myClient;
-		//SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
 		try {
 			myClient = SVNProviderPlugin.getPlugin().getSVNClient();
 			//myClient.setProgressListener(opMng);
-			//opMng.beginOperation(pm, myClient, true);
+			opMng.beginOperation(pm, myClient, true);
 			for (int i = 0; i < folders.size(); i++) {
 				File fileArgumentForCheckout;
 				if (newProjectName != "" && newProjectName!=null) {
@@ -1016,15 +1016,15 @@ public class SvnService {
 				myClient.checkout(new SVNUrl(fullPath), fileArgumentForCheckout, revision, getDepthValue(depthIndex), ignoreExternals, force);
 				ProjectsService.getInstance().createOrImportProjectFromFile(context, fileArgumentForCheckout);
 			}
-			//opMng.endOperation();
+			opMng.endOperation();
 		} catch (Exception e) {
 			if (isAuthentificationException(e))
 				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			//channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
 			return false;
 		} finally {
-			//pm.done();
+			pm.done();
 		}
 		return true;
 	}
