@@ -73,6 +73,22 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 				parameters = {
 					"valueExpression" : "name"
 				};
+			} else if (template == "Form") {
+				type = "htmlFile";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "Company.html"
+				};
+			} else if (template == "FormItem") {
+				type = "htmlFormItem";
+				keyParameter = "title";
+				isCategory = false;
+				parameters = {
+					"title" : "Revenue",
+					"valueExpression" : "revenue",
+					"editId" : "revenue"
+				};
 			}
 			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)

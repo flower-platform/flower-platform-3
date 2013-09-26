@@ -101,6 +101,13 @@ public class Parser {
 	public static final String 
 					HTML_TABLE_ITEM_ENTRY_REGEX		= "<td>.*?<%= (.*?) %>.*?</td>";
 	
+	public static final String HTML_FORM_TEMPLATE	= "Form";
+	public static final String HTML_FORM_REGEX		= "<!-- template Form -->";
+	public static final String HTML_FORM_ITEM		= "htmlFormItem";
+	public static final String 
+							HTML_FORM_ITEM_TEMPLATE = "FormItem";
+	public static final String HTML_FORM_ITEM_REGEX = "<tr.*?<td>(.*?):</td>.*?<td .*?<%= (.*?) %>.*?<td.*?id=\"(.*?)\".*?</tr>";
+	
 	public static final String JS_REQUIRE_CATEGORY				= "require";
 	public static final String JS_MAIN_CLASS_CATEGORY 			= "main class";
 	public static final String JS_SUB_CLASSES_CATEGORY			= "sub classes";
@@ -218,6 +225,32 @@ public class Parser {
 					entry.setTemplate(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
 					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+					currentState.node.getChildren().add(entry);
+				}
+			}
+			
+		})
+		.add(new RegexWithAction(HTML_FORM_TEMPLATE, HTML_FORM_REGEX) {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				if (currentState.category.equals(HTML_FILE)) {
+					currentState.node.setTemplate(HTML_FORM_TEMPLATE);
+				}
+			}
+			
+		})
+		.add(new RegexWithAction(HTML_FORM_ITEM, HTML_FORM_ITEM_REGEX) {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				if (currentState.node.getTemplate().equals(HTML_FORM_TEMPLATE)) {
+					Node entry = createNode(HTML_FORM_ITEM, "title", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
+					entry.setTemplate(HTML_FORM_ITEM_TEMPLATE);
+					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
+					addParameter(entry, "title", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
+					addParameter(entry, "editId", session.getCurrentSubMatchesForCurrentRegex()[2], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 3), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 3));
 					currentState.node.getChildren().add(entry);
 				}
 			}
