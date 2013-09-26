@@ -113,6 +113,9 @@ public class SvnService {
 			List<PathFragment> parentPath, String folderName, String comment)
 			throws SVNException {
 
+		CommunicationChannel cc = (CommunicationChannel) context
+				.getCommunicationChannel();
+		
 		Object selectedParent = GenericTreeStatefulService.getNodeByPathFor(
 				parentPath, null);
 
@@ -128,22 +131,24 @@ public class SvnService {
 		}
 
 		try {
-			context.getCommand().getParameters().remove(0);
-			tlCommand.set(context.getCommand());
+			// save comment
+			/*addComment(cc.getPrincipal().getUser().getLogin(), comment);
+			context.getCommand().getParameters().remove(0);F
+			tlCommand.set(context.getCommand());*/
 			// create remote folder
 			parentFolder.createRemoteFolder(folderName, comment,
 					new NullProgressMonitor());
 		} catch (SVNException e) { // something wrong happened
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			CommunicationChannel channel = (CommunicationChannel) context
-					.getCommunicationChannel();
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			
+			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
+			
 			return false;
 		}
-
+		
 		// tree refresh
 		ISVNRepositoryLocation repository = null;
 
@@ -162,6 +167,64 @@ public class SvnService {
 		}
 		return true;
 	}
+	
+	/// test Create Remote Folder
+//	public boolean createRemoteFolderTest(ServiceInvocationContext context,
+//			Object selectedParent, String folderName, String comment)
+//			throws SVNException {
+//
+//		CommunicationChannel cc = (CommunicationChannel) context
+//				.getCommunicationChannel();
+//		
+//		
+//		ISVNRemoteFolder parentFolder = null;
+//
+//		if (selectedParent instanceof ISVNRemoteFolder) {
+//			parentFolder = (ISVNRemoteFolder) selectedParent;
+//		} else if (selectedParent instanceof IAdaptable) {
+//			// ISVNRepositoryLocation is adaptable to ISVNRemoteFolder
+//			IAdaptable a = (IAdaptable) selectedParent;
+//			Object adapter = a.getAdapter(ISVNRemoteFolder.class);
+//			parentFolder = (ISVNRemoteFolder) adapter;
+//		}
+//
+//		try {
+//			// save comment
+//			addComment(cc.getPrincipal().getUser().getLogin(), comment);
+//			context.getCommand().getParameters().remove(0);
+//			tlCommand.set(context.getCommand());
+//			// create remote folder
+//			parentFolder.createRemoteFolder(folderName, comment,
+//					new NullProgressMonitor());
+//		} catch (SVNException e) { // something wrong happened
+//			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
+//			
+//			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+//					CommonPlugin.getInstance().getMessage("error"), e
+//							.getMessage(),
+//					DisplaySimpleMessageClientCommand.ICON_ERROR));
+//			
+//			return false;
+//		}
+//		
+//		// tree refresh
+//		ISVNRepositoryLocation repository = null;
+//
+//		repository = parentFolder.getRepository();
+//
+//		if (repository.getRootFolder().equals(parentFolder)) {
+//			repository.refreshRootFolder();
+//			((GenericTreeStatefulService) GenericTreeStatefulService
+//					.getServiceFromPathWithRoot(  GenericTreeStatefulService.class.newInstance().getPathForNode(parentFolder)  ))
+//					.dispatchContentUpdate(repository);
+//		} else {
+//			parentFolder.refresh();
+//			((GenericTreeStatefulService) GenericTreeStatefulService
+//					.getServiceFromPathWithRoot(parentPath))
+//					.dispatchContentUpdate(parentFolder);
+//		}
+//		return true;
+//	}
 
 	/**
 	 * 
@@ -172,12 +235,12 @@ public class SvnService {
 			List<PathFragment> destinationPath, String remoteResourceName,
 			String comment) {
 
-		CommunicationChannel chan = (CommunicationChannel) context
+		CommunicationChannel cc = (CommunicationChannel) context
 				.getCommunicationChannel();
 
 		GenericTreeContext treeContext = GenericTreeStatefulService
 				.getServiceFromPathWithRoot(destinationPath).getTreeContext(
-						chan, remoteResourceName);
+						cc, remoteResourceName);
 
 		GenericTreeStatefulService explorerService = (GenericTreeStatefulService) GenericTreeStatefulService
 				.getServiceFromPathWithRoot(remoteResourcePath);
@@ -200,6 +263,8 @@ public class SvnService {
 		}
 
 		try {
+			// save comment
+			addComment(cc.getPrincipal().getUser().getLogin(), comment);
 			ISVNClientAdapter svnClient = remoteResource.getRepository()
 					.getSVNClient();
 			SVNUrl destUrl = parentFolder.getUrl().appendPath(
@@ -210,9 +275,9 @@ public class SvnService {
 		} catch (Exception e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			//if (e instanceof SVNException) {
-				CommunicationChannel channel = (CommunicationChannel) context
-						.getCommunicationChannel();
-				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+//				CommunicationChannel channel = (CommunicationChannel) context
+//						.getCommunicationChannel();
+				cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 						CommonPlugin.getInstance().getMessage("error"), e
 								.getMessage(),
 						DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -290,8 +355,13 @@ public class SvnService {
 		boolean makeParents = true;
 		ISVNRemoteFolder destinationFolder;
 		ISVNRepositoryLocation repository;
+		
+		CommunicationChannel cc = (CommunicationChannel) context
+				.getCommunicationChannel();
 
 		try {
+			// save comment
+			addComment(cc.getPrincipal().getUser().getLogin(), comment);
 			List<Object> remoteResources = new ArrayList<Object>();
 			for (BranchResource item : branchResources) {
 				remoteResources.add(GenericTreeStatefulService
@@ -346,14 +416,22 @@ public class SvnService {
 			ISVNClientAdapter client = null;
 			repository = SVNProviderPlugin.getPlugin().getRepository(
 					sourceUrls[0].toString());
-			destinationFolder = repository.getRemoteFolder(destinationURL
+			if (!destinationURL.equals(repository.getUrl().toString())) {
+				destinationFolder = repository.getRemoteFolder(destinationURL
 					.substring(
 							destinationURL.lastIndexOf(repository
 									.getRootFolder().getUrl().toString())
 									+ repository.getRootFolder().getUrl()
 											.toString().length(),
 							destinationURL.lastIndexOf("/")));
+			}
 
+			else {
+				//destinationFolder = repository.getRemoteFolder(repository.getUrl().toString());
+				destinationFolder = repository.getRootFolder();
+				
+			}
+				
 			if (repository != null)
 				client = repository.getSVNClient();
 			if (client == null)
@@ -392,9 +470,8 @@ public class SvnService {
 				}
 			} catch (Exception e) {
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-				CommunicationChannel channel = (CommunicationChannel) context
-						.getCommunicationChannel();
-				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+				
+				cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 						CommonPlugin.getInstance().getMessage("error"), e
 								.getMessage(),
 						DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -403,9 +480,8 @@ public class SvnService {
 
 		} catch (Exception e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			CommunicationChannel channel = (CommunicationChannel) context
-					.getCommunicationChannel();
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			
+			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -545,12 +621,15 @@ public class SvnService {
 					.getName());
 			item.setPartialPath(partialPath);
 			
-			
-			//if (remoteResource instanceof RemoteFolder)
-			
-			item.setImage("images/folder_pending.gif");
-			if (remoteResource instanceof RemoteFile)
+			if (selectedResource.get(selectedResource.size() - 1).getType().equals("svnFolder"))
+				item.setImage("images/folder_pending.gif");
+			else
 				item.setImage("images/file.gif");
+//			if (remoteResource instanceof RemoteFolder)
+//			
+//			item.setImage("images/folder_pending.gif");
+//			if (remoteResource instanceof RemoteFile)
+//				item.setImage("images/file.gif");
 			branchResources.add(item);
 		}
 
@@ -661,9 +740,9 @@ public class SvnService {
 
 		} catch (Exception e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			CommunicationChannel channel = (CommunicationChannel) context
+			CommunicationChannel cc = (CommunicationChannel) context
 					.getCommunicationChannel();
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -785,8 +864,12 @@ public class SvnService {
 			List<PathFragment> projectPath, String repositoryUrl,
 			String directoryName, boolean create, String comment) {
 		SVNUrl url;
+		CommunicationChannel cc = (CommunicationChannel) context
+				.getCommunicationChannel();
 
 		try {
+			// save comment
+			addComment(cc.getPrincipal().getUser().getLogin(), comment);
 			ISVNRepositoryLocation repository;
 			if (create) {
 				Properties properties = new Properties();
@@ -839,10 +922,7 @@ public class SvnService {
 				} catch (SVNClientException e) {
 
 					logger.error("Exception thrown while creating module!", e);
-
-					CommunicationChannel channel = (CommunicationChannel) context
-							.getCommunicationChannel();
-					channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+					cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 							CommonPlugin.getInstance().getMessage("error"), e
 									.getMessage(),
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -887,10 +967,7 @@ public class SvnService {
 				return true;
 			}
 			logger.error("Exception thrown while sharing project!", e);
-
-			CommunicationChannel channel = (CommunicationChannel) context
-					.getCommunicationChannel();
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -1187,12 +1264,12 @@ public class SvnService {
 		}
 		pm.beginTask(null, 1000);
 		ISVNClientAdapter myClient;
-		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(
-				CommunicationPlugin.tlCurrentChannel.get());
+//		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(
+//				CommunicationPlugin.tlCurrentChannel.get());
 		try {
 			myClient = SVNProviderPlugin.getPlugin().getSVNClient();
-			myClient.setProgressListener(opMng);
-			opMng.beginOperation(pm, myClient, true);
+			//myClient.setProgressListener(opMng);
+			//opMng.beginOperation(pm, myClient, true);
 			for (int i = 0; i < folders.size(); i++) {
 				File fileArgumentForCheckout;
 				if (newProjectName != "") {
@@ -1207,11 +1284,11 @@ public class SvnService {
 				myClient.checkout(new SVNUrl(fullPath),
 						fileArgumentForCheckout, revision,
 						getDepthValue(depthIndex), ignoreExternals, force);
-				ProjectsService.getInstance().createOrImportProjectFromFile(
-						context, fileArgumentForCheckout);
+//				ProjectsService.getInstance().createOrImportProjectFromFile(
+//						context, fileArgumentForCheckout);
 			}
-			opMng.endOperation();
-		} catch (MalformedURLException | SVNClientException | URISyntaxException | CoreException e) {
+			//opMng.endOperation();
+		} catch (Exception e) {
 
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(

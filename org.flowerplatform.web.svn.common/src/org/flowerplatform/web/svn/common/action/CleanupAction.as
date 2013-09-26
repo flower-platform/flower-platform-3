@@ -49,8 +49,7 @@ package  org.flowerplatform.web.svn.common.action {
 					return false;
 				}
 				if (currentSelection.customData == null ||
-					currentSelection.customData.svnFileType == null ||
-					currentSelection.customData.svnFileType == false) {
+					currentSelection.customData.svnFileType == null) {
 					return false;
 				}
 			}			

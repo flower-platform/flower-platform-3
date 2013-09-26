@@ -4,5 +4,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tomcat_temp"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.eclipse.core.runtime_3.7.0.v20110110.jar"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.eclipse.team.core_3.6.0.I20110525-0800.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
