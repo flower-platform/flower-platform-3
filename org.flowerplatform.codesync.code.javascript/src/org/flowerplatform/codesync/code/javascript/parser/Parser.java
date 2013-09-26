@@ -74,10 +74,10 @@ public class Parser {
 	public static final String 
 				 HTML_CHILDREN_INSERT_POINT			 = "htmlChildrenInsertPoint";
 	public static final String
-				HTML_CHILDREN_INSERT_POINT_REGEX	= "<!-- children-insert-point -->";
+				HTML_CHILDREN_INSERT_POINT_REGEX	= "<!-- children-insert-point .*?-->";
 	
 	public static final String HTML_TABLE_TEMPLATE	= "Table";
-	public static final String HTML_TABLE_REGEX		= "<table .*?id=\"(.*?)\">";
+	public static final String HTML_TABLE_REGEX		= "<!-- template Table -->\\s*<table .*?id=\\s*\"(.*?)\">\\s*<tr .*?id=\\s*\"(.*?)\"";
 	
 	public static final String 
 				HTML_TABLE_HEADER_ENTRY 			= "htmlTableHeaderEntry";
@@ -85,6 +85,21 @@ public class Parser {
 				HTML_TABLE_HEADER_ENTRY_TEMPLATE 	= "TableHeaderEntry";
 	public static final String 
 				HTML_TABLE_HEADER_ENTRY_REGEX 		= "<th>(.*?)</th>";
+
+	public static final String 
+						HTML_TABLE_ITEM_TEMPLATE 	= "TableItem";
+	public static final String 
+						HTML_TABLE_ITEM_REGEX 		= "<!-- template TableItem -->";
+	public static final String HTML_TABLE_ITEM_URL	= "TableItemUrl";
+	public static final String 
+						HTML_TABLE_ITEM_URL_REGEX 	= "<td><a .*?href=\"(.*)\""; 
+	
+	public static final String 
+					HTML_TABLE_ITEM_ENTRY 			= "htmlTableItemEntry";
+	public static final String 
+					HTML_TABLE_ITEM_ENTRY_TEMPLATE	= "TableItemEntry";
+	public static final String 
+					HTML_TABLE_ITEM_ENTRY_REGEX		= "<td>.*?<%= (.*?) %>.*?</td>";
 	
 	public static final String JS_REQUIRE_CATEGORY				= "require";
 	public static final String JS_MAIN_CLASS_CATEGORY 			= "main class";
@@ -92,8 +107,6 @@ public class Parser {
 	public static final String JS_CLASS_FUNCTIONS_CATEGORY 		= "functions";
 	public static final String JS_CLASS_ATTRIBUTES_CATEGORY 	= "attributes";
 	public static final String JS_EVENTS_CATEGORY 				= "events";
-	
-	
 	
 	public static final String NAME = "name";
 	
@@ -142,17 +155,6 @@ public class Parser {
 	
 	protected void buildHtmlConfig(RegexConfiguration config) {
 		config
-		.add(new RegexWithAction(HTML_TABLE_TEMPLATE, HTML_TABLE_REGEX) {
-
-			@Override
-			public void executeAction(RegexProcessingSession session) {
-				if (currentState.category.equals(HTML_FILE)) {
-					currentState.node.setTemplate(HTML_TABLE_TEMPLATE);
-					addParameter(currentState.node, "tableId", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-				}
-			}
-			
-		})
 		.add(new RegexWithAction(HTML_CHILDREN_INSERT_POINT, HTML_CHILDREN_INSERT_POINT_REGEX) {
 
 			@Override
@@ -161,7 +163,19 @@ public class Parser {
 			}
 			
 		})
-		.add(new RegexWithAction(HTML_TABLE_HEADER_ENTRY_TEMPLATE, HTML_TABLE_HEADER_ENTRY_REGEX) {
+		.add(new RegexWithAction(HTML_TABLE_TEMPLATE, HTML_TABLE_REGEX) {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				if (currentState.category.equals(HTML_FILE)) {
+					currentState.node.setTemplate(HTML_TABLE_TEMPLATE);
+					addParameter(currentState.node, "tableId", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+					addParameter(currentState.node, "headerRowId", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
+				}
+			}
+			
+		})
+		.add(new RegexWithAction(HTML_TABLE_HEADER_ENTRY, HTML_TABLE_HEADER_ENTRY_REGEX) {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -175,6 +189,40 @@ public class Parser {
 			}
 			
 		}) 
+		.add(new RegexWithAction(HTML_TABLE_ITEM_TEMPLATE, HTML_TABLE_ITEM_REGEX) {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				if (currentState.category.equals(HTML_FILE)) {
+					currentState.node.setTemplate(HTML_TABLE_ITEM_TEMPLATE);
+				}
+			}
+			
+		})
+		.add(new RegexWithAction(HTML_TABLE_ITEM_URL, HTML_TABLE_ITEM_URL_REGEX) {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				if (currentState.node.getTemplate().equals(HTML_TABLE_ITEM_TEMPLATE)) {
+					addParameter(currentState.node, "itemUrl", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+				}
+			}
+			
+		})
+		.add(new RegexWithAction(HTML_TABLE_ITEM_ENTRY, HTML_TABLE_ITEM_ENTRY_REGEX) {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				if (currentState.node.getTemplate().equals(HTML_TABLE_ITEM_TEMPLATE)) {
+					Node entry = createNode(HTML_TABLE_ITEM_ENTRY, "valueExpression", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
+					entry.setTemplate(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
+					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
+					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+					currentState.node.getChildren().add(entry);
+				}
+			}
+			
+		})
 		.compile(Pattern.DOTALL);
 	}
 	

@@ -54,10 +54,25 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"headerRowId" : "companies-list-header"
 				};
 			} else if (template == "TableHeaderEntry") {
-				type = "tableHeaderEntry";
+				type = "htmlTableHeaderEntry";
 				keyParameter = "title";
 				isCategory = false;
 				parameters = { "title" : "Logo" };
+			} else if (template == "TableItem") {
+				type = "htmlFile";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "CompaniesTableItem.html",
+					"itemUrl" : "#company/<%= id %>"
+				};
+			} else if (template == "TableItemEntry") {
+				type = "htmlTableItemEntry";
+				keyParameter = "valueExpression";
+				isCategory = false;
+				parameters = {
+					"valueExpression" : "name"
+				};
 			}
 			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)

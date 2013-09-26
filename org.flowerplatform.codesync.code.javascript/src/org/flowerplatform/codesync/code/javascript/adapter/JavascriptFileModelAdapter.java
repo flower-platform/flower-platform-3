@@ -185,6 +185,7 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 	 */
 	private String loadTemplate(Node node) {
 		String template = null;
+		// first find the template to use
 		try {
 			URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("public-resources/templates/" + node.getTemplate() + ".tpl");
 			File file = new File(FileLocator.resolve(url).toURI());
@@ -192,17 +193,19 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("Template does not exist", e);
 		}
+		
+		// replace the parameters with their values from the node
 		for (Parameter parameter : node.getParameters()) {
-			template = template.replace("@" + parameter.getName(), parameter.getValue());
+			template = template.replaceAll("@" + parameter.getName(), parameter.getValue());
 		}
-		int childrenInsertPoint = template.indexOf("<!-- children-insert-point -->");
-		if (childrenInsertPoint >= 0) {
-			String childrenArea = new String();
-			for (Node child : node.getChildren()) {
-				childrenArea += loadTemplate(child);
-			}
-			template = template.substring(0, childrenInsertPoint) + childrenArea + template.substring(childrenInsertPoint);
+		
+		// load children templates
+		for (Node child : node.getChildren()) {
+			String childTemplate = loadTemplate(child);
+			int childInsertPoint = template.indexOf("<!-- children-insert-point " + child.getTemplate() + " -->");
+			template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 		}
+		
 		return template;
 	}
 	
