@@ -18,30 +18,50 @@
  */
 package org.flowerplatform.web.explorer.remote;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
 import org.flowerplatform.communication.tree.IGenericTreeStatefulServiceAware;
 import org.flowerplatform.communication.tree.INodeDataProvider;
 import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.DelegatingGenericTreeStatefulService;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.file_event.FileEvent;
+import org.flowerplatform.file_event.IFileEventListener;
 import org.flowerplatform.web.WebPlugin;
+import org.flowerplatform.web.entity.WorkingDirectory;
+import org.flowerplatform.web.entity.impl.WorkingDirectoryImpl;
+import org.flowerplatform.web.explorer.FsFile_FileSystemChildrenProvider;
+import org.flowerplatform.web.projects.ProjFile_ProjectChildrenProvider;
+import org.flowerplatform.web.projects.Project_WorkingDirectoryChildrenProvider;
+import org.flowerplatform.web.projects.WorkingDirectories_OrganizationChildrenProvider;
+import org.flowerplatform.web.projects.WorkingDirectory_WorkingDirectoriesChildrenProvider;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulService {
+public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulService implements IFileEventListener {
 
 	private static Logger logger = LoggerFactory.getLogger(ExplorerTreeStatefulService.class);
 
 	public ExplorerTreeStatefulService() throws CoreException {
 		setStatefulClientPrefixId("Explorer");
-		
+		CommonPlugin.getInstance().getFileEventDispatcher().addFileEventListener(this);
 		{
 			// explorerChildrenProvider
 			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.explorerChildrenProvider");
@@ -134,5 +154,41 @@ public class ExplorerTreeStatefulService extends DelegatingGenericTreeStatefulSe
 		}
 		populators.add(populator);
 	}
-
+	
+	/**
+	 * @author Tache Razvan Mihai
+	 */
+	@Override
+	public void notify(FileEvent event) {
+		if(event.getEvent() == FileEvent.FILE_CREATED || event.getEvent() == FileEvent.FILE_DELETED) {
+			File parent = event.getFile().getParentFile();
+			
+			// Update for ws_trunk subtree
+			Object node = new Pair<File, String>(parent, FsFile_FileSystemChildrenProvider.NODE_TYPE_FS_FILE);
+			dispatchContentUpdate(node);
+			
+			// Update for project subtree
+			IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(parent);
+			// Update only if a project exists
+			if(resource != null) {
+				if(resource.getType() == IResource.FOLDER ) {
+					node = new Pair<File, String>(parent, ProjFile_ProjectChildrenProvider.NODE_TYPE_PROJ_FILE);
+					dispatchContentUpdate(node);	
+				} else {
+					node = new Pair<File, String>(parent, Project_WorkingDirectoryChildrenProvider.NODE_TYPE_PROJECT);
+					dispatchContentUpdate(node);
+				}
+			} else if(event.getEvent() == FileEvent.FILE_DELETED) {
+				String org = ProjectsService.getInstance().getOrganizationNameFromFile(parent);
+				List<WorkingDirectory> workingDirectories = ProjectsService.getInstance().getWorkingDirectoriesForOrganizationName(org);
+				for( WorkingDirectory workingDirectory : workingDirectories) {
+					String name = workingDirectory.getOrganization().getName();
+					if(name.equals(org)) {				
+						node = new Pair<WorkingDirectory, String>(workingDirectory, WorkingDirectory_WorkingDirectoriesChildrenProvider.NODE_TYPE_WORKING_DIRECTORY);
+						dispatchContentUpdate(workingDirectory);
+					}
+				}
+			}
+		}
+	}
 }

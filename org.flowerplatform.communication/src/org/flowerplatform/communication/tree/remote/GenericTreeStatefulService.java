@@ -738,8 +738,18 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	
 	public static GenericTreeStatefulService getServiceFromPathWithRoot(List<PathFragment> path) {
 		PathFragment firstNodePath = path.get(0);
-		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {			
-			return (GenericTreeStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(firstNodePath.getName());			
+		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {
+			String[] informations = firstNodePath.getName().split("\\|");
+			return (GenericTreeStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(informations[0]);			
+		}
+		return null;
+	}
+	
+	public static String getClientIDFromPathWithRoot(List<PathFragment> path) {
+		PathFragment firstNodePath = path.get(0);
+		if (NODE_TYPE_ROOT.equals(firstNodePath.getType())) {
+			String[] informations = firstNodePath.getName().split("\\|");
+			return informations[1];			
 		}
 		return null;
 	}

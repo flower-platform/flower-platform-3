@@ -53,6 +53,11 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	/**
+	 * @author Razvan Tache
+	 */
+	public static final String TREE_NODE_FILE_SYSTEM_IS_DIRECTORY = "isDirectory"; 
+	
+	/**
 	 * Only set by plugin test project activator, to avoid {@link ClassNotFoundException}
 	 * for <code>BridgeServlet</code>.
 	 * 

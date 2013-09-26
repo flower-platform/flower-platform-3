@@ -32,7 +32,7 @@ package org.flowerplatform.web.explorer;
  */
 public class FsFile_FileSystemChildrenProvider extends AbstractFileWrapperChildrenProvider {
 
-	protected static final String NODE_TYPE_FS_FILE = "fsFile";
+	public static final String NODE_TYPE_FS_FILE = "fsFile";
 	
 	@Override
 	protected String getNodeType() {

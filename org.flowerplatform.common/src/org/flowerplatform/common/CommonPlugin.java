@@ -23,6 +23,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.file_event.FileEventDispatcher;
 import org.osgi.framework.BundleContext;
 
 
@@ -43,6 +44,11 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 	private FlowerWebProperties flowerWebProperties;
+	
+	/**
+	 * @author Tache Razvan Mihai
+	 */
+	private FileEventDispatcher fileEventDispatcher =  new FileEventDispatcher();
 	
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
@@ -84,5 +90,12 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	public void initializeProperties(InputStream inputStream) {
 		flowerWebProperties = new FlowerWebProperties(inputStream);
+	}
+	
+	/**
+	 * @author Tache Razvan Mihai
+	 */
+	public FileEventDispatcher getFileEventDispatcher() {
+		return fileEventDispatcher;
 	}
 }
