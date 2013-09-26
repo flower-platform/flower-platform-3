@@ -22,11 +22,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContentTypeDescriptor {
+	
 	private int index;
 	
 	private String contentType;
 	
 	private List<String> compatibleEditors = new ArrayList<String>();
+	
+	private String defaultEditor;
 	
 	public int getIndex() {
 		return index;
@@ -51,9 +54,18 @@ public class ContentTypeDescriptor {
 	public void setCompatibleEditors(List<String> compatibleEditors) {
 		this.compatibleEditors = compatibleEditors;
 	}
+	
+	public String getDefaultEditor() {
+		return defaultEditor;
+	}
+
+	public void setDefaultEditor(String defaultEditor) {
+		this.defaultEditor = defaultEditor;
+	}
 
 	@Override
 	public String toString() {
-		return String.format("[contentType = %s; index = %d; compatibleEditors = %s]", contentType, index, compatibleEditors);
+		return String.format("[contentType = %s; index = %d; compatibleEditors = %s; defaultEditor = %s]", contentType, index, compatibleEditors, defaultEditor);
 	}
+	
 }

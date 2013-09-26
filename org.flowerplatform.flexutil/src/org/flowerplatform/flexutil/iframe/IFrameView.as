@@ -23,6 +23,7 @@ package org.flowerplatform.flexutil.iframe {
 	import flash.geom.Point;
 	import flash.utils.getDefinitionByName;
 	
+	import mx.core.ScrollPolicy;
 	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -52,7 +53,6 @@ package org.flowerplatform.flexutil.iframe {
 		
 		protected function removedFromStageHandler(event:Event):void {
 			removeIFrame();
-		}
-		
+		}		
 	}
 }

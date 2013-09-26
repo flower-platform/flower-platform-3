@@ -80,6 +80,13 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="isDefaultEditor" type="boolean">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

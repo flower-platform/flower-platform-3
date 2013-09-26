@@ -19,6 +19,8 @@
 package org.flowerplatform.editor;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
@@ -27,6 +29,9 @@ import org.flowerplatform.communication.tree.remote.TreeNode;
 
 public class FileContentTypeNodePopulator implements INodePopulator {
 
+	/**
+	 * @author Cristina Constatinescu
+	 */
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
 		if (!(source instanceof Pair<?, ?> && ((Pair<?, ?>) source).a instanceof File)) {
@@ -38,19 +43,24 @@ public class FileContentTypeNodePopulator implements INodePopulator {
 			return false;
 		}
 		
-		String contentType = null;
+		List<String> contentTypes = new ArrayList<String>();
 		int lastDotIndex = file.getName().lastIndexOf('.');
 		if (lastDotIndex >= 0) {
 			// has an extension
 			String extension = file.getName().substring(lastDotIndex + 1);
-			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get(extension);
+			if (EditorPlugin.getInstance().getFileExtensionToContentTypeMap().containsKey(extension)) {
+				contentTypes.add(EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get(extension));
+			}
 		}
-		if (contentType == null) {
-			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");
+		if (EditorPlugin.getInstance().getFileExtensionToContentTypeMap().containsKey("*")) {
+			contentTypes.add(EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*"));
 		}
-		if (contentType != null) {
-			
-			destination.getOrCreateCustomData().put(EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE, EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType).getIndex());
+		if (!contentTypes.isEmpty()) {
+			List<Integer> indexes = new ArrayList<Integer>();
+			for (String contentType : contentTypes) {
+				indexes.add(EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType).getIndex());
+			}
+			destination.getOrCreateCustomData().put(EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE, indexes);
 		}
 		return true;
 	}

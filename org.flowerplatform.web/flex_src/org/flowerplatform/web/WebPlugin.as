@@ -33,13 +33,11 @@ package org.flowerplatform.web {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
-	import org.flowerplatform.web.layout.IFrameViewProvider;
 	import org.flowerplatform.web.layout.Perspective;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
@@ -77,8 +75,7 @@ package org.flowerplatform.web {
 			
 			perspectives.push(new DefaultPerspective());
 			
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new IFrameViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 		}
 		
 		override public function start():void {
@@ -125,19 +122,7 @@ package org.flowerplatform.web {
 				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
 			});
 			hBox.addChild(btn);
-			
-			btn = new Button();
-			btn.label = "Add HTML View";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {				
-				var viewLayoutData:ViewLayoutData = new ViewLayoutData();
-				viewLayoutData.isEditor = true;
-				viewLayoutData.viewId = IFrameViewProvider.ID;	
-				
-				workbench.addEditorView(viewLayoutData, true);		
-
-			});
-			hBox.addChild(btn);
-			
+						
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
 					
 			

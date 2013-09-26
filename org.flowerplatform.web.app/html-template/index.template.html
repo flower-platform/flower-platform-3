@@ -59,7 +59,21 @@
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
             swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+            
+        	
+            // Internet Explorer and Mozilla-based browsers refer to the Flash application 
+            // object differently.
+            // This function returns the appropriate reference, depending on the browser.
+            function getFlexApp() {
+                if (navigator.appName.indexOf("Microsoft") !=-1) {
+                    return window["${application}"];
+                } else {
+                    return document["${application}"];
+                }
+            }
+            
         </script>
+        
     </head>
     <body>
         <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 

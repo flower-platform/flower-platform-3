@@ -80,6 +80,7 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 			String contentType = configurationElement.getAttribute("contentType");
 			String compatibleEditor = configurationElement.getAttribute("compatibleEditor");
 			String serviceId = configurationElement.getAttribute("serviceId");
+			boolean isDefaultEditor = Boolean.parseBoolean(configurationElement.getAttribute("isDefaultEditor"));
 			EditorStatefulService editorStatefulService = (EditorStatefulService) configurationElement.createExecutableExtension("editorStatefulService");
 			editorStatefulService.setEditorName(compatibleEditor);
 			CommunicationPlugin.getInstance().getServiceRegistry().registerService(serviceId, editorStatefulService);
@@ -89,7 +90,10 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 				throw new IllegalArgumentException("Cannot find contentType = " + contentType + 
 						" to register the compatible editor = " + compatibleEditor);
 			}
-			descriptor.getCompatibleEditors().add(compatibleEditor);
+			descriptor.getCompatibleEditors().add(compatibleEditor);	
+			if (isDefaultEditor) {
+				 descriptor.setDefaultEditor(compatibleEditor);
+			}
 		}
 		
 		// file extensions to content types mappings

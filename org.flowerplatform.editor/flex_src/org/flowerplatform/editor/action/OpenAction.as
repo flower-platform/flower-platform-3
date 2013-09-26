@@ -17,6 +17,8 @@
  * license-end
  */
 package  org.flowerplatform.editor.action {
+	import mx.collections.ArrayCollection;
+	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorDescriptor;
@@ -62,7 +64,7 @@ package  org.flowerplatform.editor.action {
 		}
 		
 		/**
-		 * 
+		 * @author Cristina Constatinescu
 		 */
 		override public function run():void {
 			var currentEditorDescriptor:BasicEditorDescriptor = editorDescriptor;
@@ -70,9 +72,17 @@ package  org.flowerplatform.editor.action {
 				if (currentEditorDescriptor == null) {
 					// top level action: Open => search for the first editorDescriptor
 					var treeNode:TreeNode = TreeNode(selection.getItemAt(0));
-					var ctIndex:int = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
-					var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
-					currentEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(String(ctDescriptor.compatibleEditors.getItemAt(0)));
+					var indexes:ArrayCollection = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
+					for (var j:int = 0; j < indexes.length; j++) {
+						var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[indexes.getItemAt(j)];
+						if (ctDescriptor.defaultEditor != null) {
+							currentEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(ctDescriptor.defaultEditor);
+							break;
+						}
+					}
+					if (currentEditorDescriptor == null) {
+						currentEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(String(ctDescriptor.compatibleEditors.getItemAt(0)));
+					}
 				}
 				var editableResourcePath:String = EditorPlugin.getInstance().getEditableResourcePathFromTreeNode(TreeNode(selection.getItemAt(i)));
 				currentEditorDescriptor.openEditor(editableResourcePath, forceNewEditor);
