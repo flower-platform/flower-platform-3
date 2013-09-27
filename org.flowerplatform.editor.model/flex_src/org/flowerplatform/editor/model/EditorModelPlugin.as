@@ -64,7 +64,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
 	 * @author Cristi
@@ -161,8 +160,8 @@ package org.flowerplatform.editor.model {
 		
 		override public function start():void {
 			super.start();
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
+//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
+//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
 		}
 		
 		override protected function registerClassAliases():void {

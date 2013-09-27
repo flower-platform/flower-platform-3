@@ -14,10 +14,10 @@
 			import org.flowerplatform.flexutil.FlowerArrayList;
 					
 			[Embed(source="/defaultIcon.gif")]	
-			private const defaultImage:Class;
+			public static const defaultImage:Class;
 			
 			[Embed(source="/info.png")]	
-			public const infoImage:Class;
+			public static const infoImage:Class;
 						
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				var arr:ArrayList = new ArrayList();

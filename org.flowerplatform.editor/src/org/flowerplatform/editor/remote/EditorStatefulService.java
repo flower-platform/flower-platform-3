@@ -367,6 +367,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 			}
 			// TODO CS/FP2 dezactivat act listener
 //			SingletonRefsInEditorPluginFromWebPlugin.INSTANCE_ACTIVITY_LISTENER.removeFromRecentResources(getFriendlyEditableResourcePath(calculateStatefulClientId(editableResource.getEditableResourcePath())));
+			logger.error(String.format("Error while loading resource %s", editableResource.getEditableResourcePath()), e);
 			return false;
 		} catch (Throwable e) {
 			if (context != null) {

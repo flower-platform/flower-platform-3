@@ -26,10 +26,13 @@ package  org.flowerplatform.blazeds {
 	import mx.core.FlexGlobals;
 	import mx.core.mx_internal;
 	import mx.events.PropertyChangeEvent;
+	import mx.messaging.Channel;
 	import mx.messaging.ChannelSet;
 	import mx.messaging.Consumer;
 	import mx.messaging.FlexClient;
 	import mx.messaging.Producer;
+	import mx.messaging.channels.AMFChannel;
+	import mx.messaging.channels.StreamingAMFChannel;
 	import mx.messaging.config.ServerConfig;
 	import mx.messaging.events.ChannelEvent;
 	import mx.messaging.events.MessageAckEvent;
@@ -43,6 +46,7 @@ package  org.flowerplatform.blazeds {
 	import mx.utils.URLUtil;
 	
 	import org.flowerplatform.common.log.Logger;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
 	use namespace mx_internal;
@@ -66,7 +70,22 @@ package  org.flowerplatform.blazeds {
 		
 		public const logger:Logger = new Logger(BlazeDSBridge, true  /* log enabled */, false /* debug enabled */, false /* stack trace enabled */); 
 
-		private static const BLAZEDS_DESTINATION:String = "blazedsSecuredDestination";
+		public static const BLAZEDS_DESTINATION:String = "blazedsSecuredDestination";
+		
+		/**
+		 * @author Cristi
+		 */
+		public static const BLAZEDS_ALL_CHANNELS:String = "allChannels";
+		
+		/**
+		 * @author Cristi
+		 */
+		public static const BLAZEDS_STREAMING_CHANNEL:String = "blazedsStreamingAMFChannel";
+		
+		/**
+		 * @author Cristi
+		 */
+		public static const BLAZEDS_POLLING_CHANNEL:String = "blazedsLongPollingAMFChannel";
 		
 		private static var RETRY_RECONNECTING_INTERVAL:int = 3000; // milliseconds
 		
@@ -126,8 +145,6 @@ package  org.flowerplatform.blazeds {
 		 */ 
 		private var laterUnderliveredObjects:ArrayCollection = new ArrayCollection();		
 		
-		private var explicitEndpointURI:String;
-		
 		/**
 		 * Initializes ChannelSet, Producer, Consumer, assigns their properties and their listeners.
 		 * 
@@ -138,18 +155,15 @@ package  org.flowerplatform.blazeds {
 			if (logger.isDebugEnabled())
 				ServerConfig.channelSetFactory = DebugChannelSet;
 			
-			this.explicitEndpointURI = explicitEndpointURI;
-			
-			configureEndpoints();
-			configureChannelRestrictions();
-
 			producer = !logger.isDebugEnabled() ? new CustomProducer() : new DebugCustomProducer(); 
 			producer.destination = BLAZEDS_DESTINATION;
-			producer.channelSet = channelSet;
 			
 			consumer = !logger.isDebugEnabled() ? new Consumer() : new DebugConsumer();
 			consumer.destination = BLAZEDS_DESTINATION;
-			consumer.channelSet = channelSet;
+
+			// this info may come from the params in the application
+			var channelToUse:String = FlexGlobals.topLevelApplication.parameters.channelToUse;
+			initializeChannelSet(channelToUse);			
 			
 			consumer.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, subscribeSuccessHandler); 
 			consumer.addEventListener(MessageFaultEvent.FAULT, subscribeFaultHandler);
@@ -549,87 +563,45 @@ package  org.flowerplatform.blazeds {
 		}
 
 		/**
-		 * Depending on the <code>restrictToChannel</code> parameter from jsp file passed to the SWF,
-		 * it may restrict the type of channel throught with to connect to the server side.
-		 * After using the initial parameter from the jsp file, the channel restriction can be changed
-		 * from the optional setting when loggin in. This means that the parameter is not permanent. 
-		 */
-		private function configureChannelRestrictions():void {
-			var applicationParameter:String = FlexGlobals.topLevelApplication.parameters.restrictToChannel;
-			if (applicationParameter == null)
-				applicationParameter = "all";
-			restrictToChannel(applicationParameter == "all" ? "all channels" : applicationParameter); 
-		}
-		
-		/**
-		 * Development purpose only
+		 * Used by the debug UI to propose entries in the "Connect using channels:" combo box.
+		 * 
+		 * @author Cristi
 		 */
 		public function getAvaiableChannels():ArrayCollection {
-			var availableChannels:ArrayCollection = new ArrayCollection(ServerConfig.mx_internal::getChannelIdList(BLAZEDS_DESTINATION));
-			availableChannels.addItemAt("all channels", 0);
-			return availableChannels;
+			return new ArrayCollection([BLAZEDS_ALL_CHANNELS, BLAZEDS_STREAMING_CHANNEL, BLAZEDS_POLLING_CHANNEL]);
 		}
 		
 		/**
-		 * Development purpose only
-		 */ 
-		public function restrictToChannel(restrictedChannelId:Object):void {
-			if (restrictedChannelId == "all channels") {
-				channelSet = ServerConfig.getChannelSet(BLAZEDS_DESTINATION);
-				return;
-			}
-			
-			var newChannels:Array =[];
-			for each (var channelId:String in ServerConfig.mx_internal::getChannelIdList(BLAZEDS_DESTINATION)) {
-				if (restrictedChannelId == channelId)
-					newChannels.push(ServerConfig.getChannel(channelId));
-			}
-			channelSet = new ChannelSet();
-			channelSet.channels = newChannels;
-		}
-		
-		/**
-		 * @author Mariana
+		 * Creates the channel set (containing 1 or 2 channels, depending on parameter) and assigns it to the
+		 * producer and consumer.
+		 * 
+		 * @author Cristi
 		 */
-		public function setExplicitEndpointURI(value:String):void {
-			if (value != null && value.length > 0) {
-				this.explicitEndpointURI = value;
-				configureEndpoints();
-			}
-		}
-		
-		private function configureEndpoints():void {
-			if (explicitEndpointURI == null) {
-				// Determine context root dynamically
-				var applicationURL:String = FlexGlobals.topLevelApplication.url;
-				var newContextRoot:String = getContextRootFromURL(applicationURL);
+		public function initializeChannelSet(channelToUse:String):void {
+			if (connectionEstablished) {
+				throw new Error("Cannot initialize the ChannelSet while the connection to server is established.");
 			}
 			
-			// Replace services-config.xml uri endpoint with the dynamicly computed context root.
-			// We need to do this because {context.root} in services-config.xml is replaced at compile time
-			// so moving the application in a different context at the runtime would make it to stop working.
-			for each(var endpoint:XML in ServerConfig.xml..endpoint) {
-//				if (explicitEndpointURI == null) {
-					var uri:String = String(endpoint.@uri);
-					var oldContextRoot:String = getContextRootFromURL(uri);
-					if (newContextRoot)
-						endpoint.@uri = uri.replace(oldContextRoot, newContextRoot);
-					if (explicitEndpointURI) {
-						uri = uri.replace("{server.name}", explicitEndpointURI.split(":")[0]);
-						endpoint.@uri = uri.replace("{server.port}", explicitEndpointURI.split(":")[1]);
-					}
-//				} else {
-//					endpoint.@uri = explicitEndpointURI;
-//				}
+			if (channelToUse == null) {
+				channelToUse = BLAZEDS_ALL_CHANNELS;
 			}
-		}
-		
-		private function getContextRootFromURL(fullURL:String):String {
-			var serverURL:String = URLUtil.getServerNameWithPort(fullURL) + "/";
-			var restURL:String = fullURL.split(serverURL)[1];
-			if (restURL)
-				return restURL.substring(0, restURL.indexOf("/"));
-			return null;
+			
+			channelSet = new ChannelSet();
+			
+			if (channelToUse == BLAZEDS_STREAMING_CHANNEL || channelToUse == BLAZEDS_ALL_CHANNELS) {
+				var streamingChannel:StreamingAMFChannel = new StreamingAMFChannel("blazedsStreamingAMFChannel", FlexUtilGlobals.getInstance().createAbsoluteUrl("messagebroker/streamingamf"));
+				channelSet.addChannel(streamingChannel);
+			}
+			
+			if (channelToUse == BLAZEDS_POLLING_CHANNEL || channelToUse == BLAZEDS_ALL_CHANNELS) {
+				var pollingChannel:AMFChannel = new AMFChannel("blazedsLongPollingAMFChannel", FlexUtilGlobals.getInstance().createAbsoluteUrl("messagebroker/amflongpolling"));
+				pollingChannel.pollingEnabled = true;
+				pollingChannel.pollingInterval = 3000;
+				channelSet.addChannel(pollingChannel);
+			}
+			
+			producer.channelSet = channelSet;
+			consumer.channelSet = channelSet;
 		}
 		
 		private static const CLIENT_CONNECTING_RETRY_PERIOD:String = "client.connecting.retry.period";

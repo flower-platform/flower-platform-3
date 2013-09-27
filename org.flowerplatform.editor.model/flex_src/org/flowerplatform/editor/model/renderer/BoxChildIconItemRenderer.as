@@ -23,7 +23,6 @@ package org.flowerplatform.editor.model.renderer {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	import spark.components.IconItemRenderer;
 	

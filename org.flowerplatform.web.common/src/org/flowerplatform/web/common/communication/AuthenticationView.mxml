@@ -188,8 +188,6 @@
 					username += "|" + activationCodeInput.text;
 				}
 				
-				CommunicationPlugin.getInstance().bridge.setExplicitEndpointURI(server.text);
-				
 //				CommunicationPlugin.getInstance().bridge.keepLayoutStructure = switchUserMode && keepWorkspaceCheckbox.selected;
 				if (switchUserMode) {							
 					// Possible enhancement : send command to server to detect if the username and password are good
@@ -345,7 +343,7 @@
 			/////////////////////////////////////////////
 			
 			private function restrictChannelDropDownListChangeHandler(event:IndexChangeEvent):void {
-				CommunicationPlugin.getInstance().bridge.restrictToChannel(restrictChannelDropDownList.selectedItem);
+				CommunicationPlugin.getInstance().bridge.initializeChannelSet(restrictChannelDropDownList.selectedItem);
 			}
 			
 			private function switchState(index:int):void {
@@ -444,10 +442,6 @@
 				
 				<s:FormItem width="100%" label="{getMessage('entity.user.password')}">
 					<s:TextInput id="loginViewPasswordInput" text="" width="100%" displayAsPassword="true"/>
-				</s:FormItem>
-				
-				<s:FormItem width="100%" label="Server">
-					<s:TextInput id="server" text="localhost:8080" width="100%"/>
 				</s:FormItem>
 				
 				<s:FormItem label="{getMessage('authentication.activationCode')}" width="100%"
