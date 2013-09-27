@@ -154,8 +154,10 @@ package org.flowerplatform.flexutil.mobile.popup {
 				}
 			});
 			
+			// give the viewMenuItems to the actions so that it can calculate it's enablement
 			openMenuAction.viewMenuItems = newViewMenuItems;
-			
+			viewMenuItems = newViewMenuItems; 
+
 			// TODO CS
 //			newActionContent.push(showOpenEditorsCalloutButton);
 			

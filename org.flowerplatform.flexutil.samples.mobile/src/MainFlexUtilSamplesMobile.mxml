@@ -30,5 +30,13 @@
 		}
 		
 	</fx:Style>
-	
+	<s:navigationContent>
+		<s:Button label="Back">
+			<s:click>
+				<![CDATA[
+				navigator.popView();
+				]]>
+			</s:click>
+		</s:Button>
+	</s:navigationContent>
 </s:ViewNavigatorApplication>

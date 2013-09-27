@@ -21,6 +21,7 @@
 				
 				var data:Object = {
 					leftActiveComponent: new ContextMenuSample(),
+//					leftActiveComponent: leftActiveComponent,
 					rightActiveComponent: rightActiveComponent
 				};
 				

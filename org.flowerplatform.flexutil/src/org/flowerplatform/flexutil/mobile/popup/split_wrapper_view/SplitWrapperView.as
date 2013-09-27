@@ -40,6 +40,7 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 			super();
 			
 			layout = new HorizontalLayout();
+			HorizontalLayout(layout).gap = 0;
 			
 			toggleOneViewModeAction = new ToggleOneViewModeAction();
 			toggleOneViewModeAction.splitWrapperView = this;
@@ -165,9 +166,7 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 				rightActiveComponent = IVisualElement(data.rightActiveComponent);
 			}
 
-			if (leftActiveComponent is IPopupContent) {
-				activePopupContent = IPopupContent(leftActiveComponent);
-			}
+			activePopupContent = leftActiveComponent is IPopupContent ? IPopupContent(leftActiveComponent) : null;
 		}
 		
 		override protected function getActionsFromPopupContent(popupContent:IPopupContent, selection:IList):Vector.<IAction> {

@@ -35,9 +35,6 @@ package org.flowerplatform.flexutil.mobile.popup {
 		
 		public function OpenMenuAction(view:WrapperViewBase) {
 			this.view = view;
-			// TODO CS
-//			icon = CommonPlugin.getInstance().getResourceUrl("images/menu.png");
-//			label = "M";
 			icon = menuIcon;
 		}
 		
@@ -45,9 +42,7 @@ package org.flowerplatform.flexutil.mobile.popup {
 			return viewMenuItems != null && viewMenuItems.length > 0;
 		}
 		
-		
 		override public function run():void {
-			view.viewMenuItems = viewMenuItems; 
 			FlexGlobals.topLevelApplication.viewMenuOpen = true;
 		}
 		
