@@ -997,14 +997,14 @@ public class SvnService {
 				correspondingRemoteResource = (RemoteResource) treeNode;
 			}
 			remoteFolders[i] = correspondingRemoteResource;
-		}
-		pm.beginTask(null, 1000);
+		}		
 		ISVNClientAdapter myClient;
 		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
 		try {
 			myClient = SVNProviderPlugin.getPlugin().getSVNClient();
-			//myClient.setProgressListener(opMng);
+			pm.beginTask(null, 1000);			
 			opMng.beginOperation(pm, myClient, true);
+			myClient.setProgressListener(opMng);
 			for (int i = 0; i < folders.size(); i++) {
 				File fileArgumentForCheckout;
 				if (newProjectName != "" && newProjectName!=null) {
@@ -1457,10 +1457,8 @@ public class SvnService {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.commit.commitMonitor"), channel);
 		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
-
 		// following 40 lines could be rewritten:
 		// replacement in D:\data\commit alternate block.txt
-		
 		ArrayList<File> markedForAddition = new ArrayList<File>();
 		ArrayList<File> markedForDeletion = new ArrayList<File>();
 		ArrayList<File> normalCommitFiles = new ArrayList<File>();
@@ -1502,6 +1500,7 @@ public class SvnService {
 		try {
 			ISVNClientAdapter myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
 
+			pm.beginTask(null, 1000);
 			myClientAdapter.setProgressListener(opMng);
 			try {
 				for (int i = 0; i < markedForAdditionFiles.length; i++) {
@@ -1511,7 +1510,7 @@ public class SvnService {
 				myClientAdapter.commit(files, message, recurse, keepLocks);
 			} catch (SVNClientException e) {
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-				//channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
 				return false;
 			}
 		} catch (SVNException e) {
@@ -1625,7 +1624,7 @@ public class SvnService {
 	 * 
 	 */
 
-	public boolean deleteSvnAction(ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment) {
+	public boolean deleteSvnAction(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> objectFullPaths, String comment) {
 
 		final CommunicationChannel cc = context.getCommunicationChannel();
 
@@ -1693,9 +1692,9 @@ public class SvnService {
 		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin
 				.getInstance().getMessage("svn.deleteSvnAction.monitor.title"),
 				cc);
-		if(context.getCommand().getParameters().size() >=1)
-			context.getCommand().getParameters().remove(0);
-		tlCommand.set(context.getCommand());
+//		if(context.getCommand().getParameters().size() >=1)
+//			context.getCommand().getParameters().remove(0);
+		//tlCommand.set(context.getCommand());
 		
 		try {
 			// save comment
