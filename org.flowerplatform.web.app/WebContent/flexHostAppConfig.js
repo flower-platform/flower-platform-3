@@ -9,4 +9,5 @@ flashvars.pluginUrls =
 	'servlet/public-resources/org.flowerplatform.editor.java/swc/org.flowerplatform.editor.java.swc|library.swf?pluginClass=JavaEditorPlugin,' +
 	'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf,' +
 	'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin,' +
+	'servlet/public-resources/org.flowerplatform.codesync.code.javascript/swc/org.flowerplatform.codesync.code.javascript.swc|library.swf?pluginClass=CodeSyncCodeJavascriptPlugin,' +
 	'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf';
