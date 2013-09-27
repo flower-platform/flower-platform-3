@@ -29,7 +29,6 @@
 <s:List xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx" 
-		skinClass="org.flowerplatform.flexutil.gradient_list.GradientBackgroundListSkin"
 		itemRenderer="org.flowerplatform.flexutil.gradient_list.SelectionTriangleItemRenderer">
 	
 	<fx:Metadata>
@@ -68,32 +67,36 @@
 			 * Define default styles.
 			 */
 			private static function classConstruct():Boolean {
-				if (!FlexGlobals.topLevelApplication.styleManager.
-					getStyleDeclaration("org.flowerplatform.flexutil.gradient_list.GradientBackgroundList")) {
-						var defaultStyles:CSSStyleDeclaration = new CSSStyleDeclaration();
-						defaultStyles.defaultFactory = function():void {
-							this.backgroundColor = 0xF8F8F8;
-							this.gradientColor = 0xDFDFDF;
-							this.borderColor = 0x7F7F7F;
-							this.gradientWidth = 8;
-							this.gradientStyle = "right_gradient";
-							this.sidesBorderStyle = "full_side_border";
-							
-							this.showSelectionTriangle = true;
-							this.selectionTriangleHeight = 30;
-							this.selectionTriangleWidth = 10;
-							this.selectionTriangleColor = 0x7F7F7F;
-							this.showSelectionTriangleOnLeftSide = false;
-							this.selectionTriangleBackgroundColor = 0xFFFFFF;
-							this.showGradientAroundSelectionTriangle = true;
-							this.selectionColor = 0x22AAEE;
-							this.horizontalDelimiterOffset = 4;
-							this.horizontalDelimiterColor = 0xDFDFDF;
-							this.showHoverEffect = true;
-							this.paddingLeft = 25;
-						}
-						FlexGlobals.topLevelApplication.styleManager.
-							setStyleDeclaration("org.flowerplatform.flexutil.gradient_list.GradientBackgroundList", defaultStyles, true);
+				var styles:CSSStyleDeclaration = FlexGlobals.topLevelApplication.styleManager.
+							getStyleDeclaration("org.flowerplatform.flexutil.gradient_list.GradientBackgroundList");
+				
+				if (styles == null) {
+					styles = new CSSStyleDeclaration();
+					FlexGlobals.topLevelApplication.styleManager.
+						setStyleDeclaration("org.flowerplatform.flexutil.gradient_list.GradientBackgroundList", styles, true);
+				}
+				styles.defaultFactory = function():void {
+					this.skinClass = org.flowerplatform.flexutil.gradient_list.GradientBackgroundListSkin;
+					
+					this.backgroundColor = 0xF8F8F8;
+					this.gradientColor = 0xDFDFDF;
+					this.borderColor = 0x7F7F7F;
+					this.gradientWidth = 8;
+					this.gradientStyle = "right_gradient";
+					this.sidesBorderStyle = "full_side_border";
+					
+					this.showSelectionTriangle = true;
+					this.selectionTriangleHeight = 30;
+					this.selectionTriangleWidth = 10;
+					this.selectionTriangleColor = 0x7F7F7F;
+					this.showSelectionTriangleOnLeftSide = false;
+					this.selectionTriangleBackgroundColor = 0xFFFFFF;
+					this.showGradientAroundSelectionTriangle = true;
+					this.selectionColor = 0x22AAEE;
+					this.horizontalDelimiterOffset = 4;
+					this.horizontalDelimiterColor = 0xDFDFDF;
+					this.showHoverEffect = true;
+					this.paddingLeft = 25;
 				}
 				return true;
 			}
