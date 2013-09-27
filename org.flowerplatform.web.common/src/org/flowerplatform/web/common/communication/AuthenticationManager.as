@@ -194,8 +194,8 @@ package  org.flowerplatform.web.common.communication {
 			
 			if (event.firstCredentialsRequest) {
 				// If user provided login, show the login popup pre-filled with the login
-				if (CommunicationPlugin.getInstance().applicationParametersProvider.getLogin()) {
-					showAuthenticationView(false, CommunicationPlugin.getInstance().applicationParametersProvider.getLogin(), anonymousAuthenticationRejected);
+				if (CommonPlugin.getInstance().linkProvider.getLogin()) {
+					showAuthenticationView(false, CommonPlugin.getInstance().linkProvider.getLogin(), anonymousAuthenticationRejected);
 				} else {
 					// Try automatically the anonymous user. 
 					bridge.connect(getAnonymousUser());

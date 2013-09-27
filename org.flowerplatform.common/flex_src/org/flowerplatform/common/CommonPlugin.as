@@ -17,6 +17,15 @@
  * license-end
  */
 package org.flowerplatform.common {
+	import flash.external.ExternalInterface;
+	import flash.utils.Dictionary;
+	
+	import mx.logging.ILogger;
+	import mx.logging.Log;
+	
+	import org.flowerplatform.common.link.ILinkHandler;
+	import org.flowerplatform.common.link.LinkProvider;
+	import org.flowerplatform.common.log.Logger;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
 	
@@ -30,8 +39,14 @@ package org.flowerplatform.common {
 		public static function getInstance():CommonPlugin {
 			return INSTANCE;
 		}
-		
+				
 		public static const VERSION:String = "2.0.0.M2_2013-06-04";
+		
+		/**
+		 * @author Cristina Constatinescu
+		 */
+		public var linkProvider:LinkProvider;		
+		public var linkHandlers:Dictionary;
 		
 		override public function preStart():void {
 			super.preStart();
@@ -39,7 +54,25 @@ package org.flowerplatform.common {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
+			
+			linkHandlers = new Dictionary();
+			linkProvider = new LinkProvider();
+			
+			ExternalInterface.addCallback("handleLink", handleLink);
+			
+			handleLink(linkProvider.getBrowserURL());
 		}
 		
+		/**
+		 * @author Cristina Constatinescu
+		 */
+		public function handleLink(url:String):void {
+			var parameters:Object = linkProvider.parseURLQueryParameters(url);
+			for (var object:String in parameters) {				
+				if (linkHandlers[object] != null) {	
+					ILinkHandler(linkHandlers[object]).handleLink(object, parameters[object]);					
+				}
+			}
+		}
 	}
 }
