@@ -16,22 +16,15 @@
  *
  * license-end
  */
-package org.flowerplatform.web.tests;
+package org.flowerplatform.web.tests.svn;
 
-import org.flowerplatform.web.tests.codesync.CodeSyncTestSuite;
-import org.flowerplatform.web.tests.security.sandbox.SecurityPermissionsTests;
-import org.flowerplatform.web.tests.svn.SvnTestSuit;
-import org.flowerplatform.web.tests.listener.ListenerTestSuite;
+import org.flowerplatform.web.tests.EclipseDependentTestSuiteBase;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ 
-	SecurityPermissionsTests.class,
-	CodeSyncTestSuite.class,
-	ListenerTestSuite.class,
-	SvnTestSuit.class
-})
-public class EclipseDependentTestSuite extends EclipseDependentTestSuiteBase {
+@SuiteClasses({TestingSvnCristina.class})
+public class SvnTestSuit extends EclipseDependentTestSuiteBase{
+	
 }

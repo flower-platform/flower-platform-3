@@ -23,9 +23,13 @@ Require-Bundle: org.flowerplatform.common,
  org.flowerplatform.emf_model.astcache.wiki,
  org.flowerplatform.emf_model.codesync,
  org.flowerplatform.editor.model,
- org.flowerplatform.editor.text
+ org.flowerplatform.editor.text,
+ org.flowerplatform.web.svn
 Import-Package: javax.persistence,
  javax.servlet,
- javax.servlet.http
+ javax.servlet.http,
+ org.tigris.subversion.subclipse.core,
+ org.tigris.subversion.subclipse.core.repo,
+ org.tigris.subversion.subclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.flowerplatform.web.tests.TestActivator
