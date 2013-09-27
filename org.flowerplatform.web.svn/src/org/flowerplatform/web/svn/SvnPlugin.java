@@ -6,10 +6,10 @@ import java.util.List;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.web.svn.service.SVNRepositoryPromptUserPassword;
 import org.osgi.framework.BundleContext;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 
-import service.SVNRepositoryPromptUserPassword;
 
 /**
  * 

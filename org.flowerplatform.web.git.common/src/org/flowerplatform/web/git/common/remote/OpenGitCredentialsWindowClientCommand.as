@@ -23,8 +23,8 @@ package org.flowerplatform.web.git.common.remote {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.common.ui.LoginView;
+	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	
 
 	/**
@@ -63,29 +63,30 @@ package org.flowerplatform.web.git.common.remote {
 		}	
 		
 		public function handleDialogResult(result:Object):void {
-			
 			var resultInfo:ArrayCollection = new ArrayCollection();
 			resultInfo.addAll(result as ArrayCollection);
-			var logging:Boolean = resultInfo.getItemAt(0) as Boolean;
-			
-			if (logging)
-				GitCommonPlugin.getInstance().service.login(
-					//repositoryURI
-					resultInfo.getItemAt(1) as String,
-					//username
-					resultInfo.getItemAt(2) as String, 
-					//password
-					resultInfo.getItemAt(3) as String, 
-					//command
-					resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand);
-			else
-				GitCommonPlugin.getInstance().service.changeCredentials(
-					//repositoryURI
-					resultInfo.getItemAt(1) as String,
-					//username
-					resultInfo.getItemAt(2) as String, 
-					//password
-					resultInfo.getItemAt(3) as String);
+			if((resultInfo.getItemAt(0) as String) != "cancel"){
+				var logging:Boolean = resultInfo.getItemAt(0) as Boolean;
+				
+				if (logging)
+					GitCommonPlugin.getInstance().service.login(
+						//repositoryURI
+						resultInfo.getItemAt(1) as String,
+						//username
+						resultInfo.getItemAt(2) as String, 
+						//password
+						resultInfo.getItemAt(3) as String, 
+						//command
+						resultInfo.getItemAt(4) as InvokeServiceMethodServerCommand);
+				else
+					GitCommonPlugin.getInstance().service.changeCredentials(
+						//repositoryURI
+						resultInfo.getItemAt(1) as String,
+						//username
+						resultInfo.getItemAt(2) as String, 
+						//password
+						resultInfo.getItemAt(3) as String);
+			}
 		}
 	}
 	
