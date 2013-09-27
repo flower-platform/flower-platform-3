@@ -1,3 +1,22 @@
+/* license-start
+ * 
+ * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation version 3.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *   Crispico - Initial API and implementation
+ *
+ * license-end
+ */
+
 package org.flowerplatform.web.tests.svn;
 
 import static org.junit.Assert.*;
@@ -23,51 +42,55 @@ import org.junit.Test;
  * @author Gabriela Murgoci
  */
 public class CleanupTest {
-	
+
 	private static String workspacePath;
 
-	public static ArrayList<PathFragment> workingDirectoryPartialPath;	
+	public static ArrayList<PathFragment> workingDirectoryPartialPath;
 
 	private static final CommunicationChannel communicationChannel = new RecordingTestWebCommunicationChannel();
 
 	private static TestServiceInvocationContext context;
-	
-	public static ArrayList<PathFragment> getArrayOfPathFragmentsFromStringArgs(String... strings) {
-		  ArrayList<PathFragment> result = new ArrayList<>();
-		  for (int i = 0; i < strings.length; i++) {
-			  PathFragment pf = new PathFragment();
-			  pf.setName(strings[i]);
-			  i++;
-			  pf.setType(strings[i]);
-			  result.add(pf);
-		  }
-		  return result;
-	}  
-	
-	public static void checkoutProjectsInPreparationForTests() {
-		// if checkouts fail, then all the other tests would have failed nonetheless if checkouts were made in their methods
-		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
-		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
-				"hibernate", "organization",
-				"svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository",
-				"tst", "svnFile"));
-		//commonProject is common for update, commit, revert and ignore tests
-		SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
-				"\\commonWD", "7000", 0, true, false, false, "commonProject");	
-		SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
-				"\\markResolvedWD", "20", 0, true, false, false, "markResolvedProject1");
-		SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
-				"\\markResolvedWD", "20", 0, true, false, false, "markResolvedProject2");
+
+	public static ArrayList<PathFragment> getArrayOfPathFragmentsFromStringArgs(
+			String... strings) {
+		ArrayList<PathFragment> result = new ArrayList<>();
+		for (int i = 0; i < strings.length; i++) {
+			PathFragment pf = new PathFragment();
+			pf.setName(strings[i]);
+			i++;
+			pf.setType(strings[i]);
+			result.add(pf);
+		}
+		return result;
 	}
-	
+
+	public static void checkoutProjectsInPreparationForTests() {
+		// if checkouts fail, then all the other tests would have failed
+		// nonetheless if checkouts were made in their methods
+		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
+		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs(
+				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+				"organization", "svn-repositories", "svnRepositories",
+				"svn://csp1/flower2", "svnRepository", "tst", "svnFile"));
+		// commonProject is common for update, commit, revert and ignore tests
+		SvnService.getInstance().checkout(context, selectionForCheckout,
+				workingDirectoryPartialPath, "\\commonWD", "7000", 0, true,
+				false, false, "commonProject");
+		SvnService.getInstance().checkout(context, selectionForCheckout,
+				workingDirectoryPartialPath, "\\markResolvedWD", "20", 0, true,
+				false, false, "markResolvedProject1");
+		SvnService.getInstance().checkout(context, selectionForCheckout,
+				workingDirectoryPartialPath, "\\markResolvedWD", "20", 0, true,
+				false, false, "markResolvedProject2");
+	}
+
 	@BeforeClass
 	public static void beforeClassMethods() {
-		context = new TestServiceInvocationContext(communicationChannel, new InvokeServiceMethodServerCommand());
-		workingDirectoryPartialPath 
-		= getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
-												"hibernate", "organization",
-												"workingDirectories", "workingDirectories");
+		context = new TestServiceInvocationContext(communicationChannel,
+				new InvokeServiceMethodServerCommand());
+		workingDirectoryPartialPath = getArrayOfPathFragmentsFromStringArgs(
+				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+				"organization", "workingDirectories", "workingDirectories");
 		File workspaceRoot = CommonPlugin.getInstance().getWorkspaceRoot();
 		workspacePath = workspaceRoot.getPath() + "\\";
 		checkoutProjectsInPreparationForTests();
@@ -78,21 +101,26 @@ public class CleanupTest {
 		Boolean actionResult;
 		List<List<PathFragment>> resourcesSelected = new ArrayList<List<PathFragment>>();
 		ArrayList<PathFragment> firstResourcePathFragment = getArrayOfPathFragmentsFromStringArgs(
-			    "explorerTreeStatefulService|Explorer1", "r", "hibernate",
-			    "organization", "workingDirectories", "workingDirectories", "commonWD", "workingDirectory", "commonProject", "project", "organization_default.PROIECT", "projFile");
+				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+				"organization", "workingDirectories", "workingDirectories",
+				"commonWD", "workingDirectory", "commonProject", "project",
+				"organization_default.PROIECT", "projFile");
 		resourcesSelected.add(firstResourcePathFragment);
-		// Test 1 => check if the action returns true (true = success, false = failure)
-		actionResult = SvnService.getInstance().cleanUp(context, resourcesSelected);
+		// Test 1 => check if the action returns true (true = success, false =
+		// failure)
+		actionResult = SvnService.getInstance().cleanUp(context,
+				resourcesSelected);
 		assertEquals(true, actionResult);
 	}
-	
+
 	@After
 	public static void undoChanges() {
 		// delete checked out working directory along with content
 		File f = new File(workspacePath + "hibernate\\commonWD");
 		f = new File(workspacePath + "hibernate\\checkoutWD");
-		f.delete();		
+		f.delete();
 		f = new File(workspacePath + "hibernate\\markResolvedWD");
 		f.delete();
 	}
+
 }

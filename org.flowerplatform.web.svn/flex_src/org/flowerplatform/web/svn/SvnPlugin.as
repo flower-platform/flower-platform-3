@@ -59,7 +59,6 @@ package  org.flowerplatform.web.svn {
 			}
 			INSTANCE = this;	
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new SvnHistoryViewProvider());
-			//WebPlugin.getInstance().perspectives.push(new GitPerspective());	
 			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(ShowHistoryAction);
 		}
 		

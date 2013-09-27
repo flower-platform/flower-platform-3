@@ -54,7 +54,7 @@ license-end
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.svn.common.projects.remote.SvnRepositoryTreeStatefulClient;
 			import org.flowerplatform.web.svn.common.remote.BranchResource;
-			import org.flowerplatform.web.svn.common.ui.component.BranchTagSelectionPageView;
+			import org.flowerplatform.web.svn.common.ui.component.RepositoryBrowserView;
 			import org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView;
 			
 			import spark.primitives.supportClasses.StrokedElement;
@@ -130,7 +130,7 @@ license-end
 					array.addItem(TreeNode(selection.getItemAt(i)).getPathForNode(true));
 				}
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "populateBranchResourcesList", [array, true], this, getBranchResourceCallBackHandler )); 
+					new InvokeServiceMethodServerCommand("svnService", "populateBranchResourcesList", [array, true], this, getBranchResourceCallBackHandler)); 
 			}
 			
 			/**
@@ -148,7 +148,7 @@ license-end
 			 */
 			private function browseBtnHandler(event:MouseEvent):void {
 				lastSelectedBtn = Button(event.target);
-				var view:BranchTagSelectionPageView = new BranchTagSelectionPageView(); 
+				var view:RepositoryBrowserView = new RepositoryBrowserView(); 
 				view.setResultHandler(this);
 				view.node = node;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
@@ -183,7 +183,6 @@ license-end
 				popUp.remoteResourcePath = commonParentPath;
 				popUp.remoteResourceName = commonParentName;
 				popUp.setResultHandler(this);
-				//popUp.showPopup();
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setWidth(400)
 					.setHeight(450)
@@ -253,5 +252,4 @@ license-end
 				</mx:AddChild>
 			</mx:State>		
 		</popup:states>	
-		
 </popup:Wizard>

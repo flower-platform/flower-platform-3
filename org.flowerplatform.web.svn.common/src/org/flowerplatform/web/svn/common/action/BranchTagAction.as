@@ -59,9 +59,6 @@ package  org.flowerplatform.web.svn.common.action {
 				if (selectedNode.pathFragment.type != SvnCommonPlugin.NODE_TYPE_FOLDER && selectedNode.pathFragment.type != SvnCommonPlugin.NODE_TYPE_FILE) {
 					return false;
 				}
-				/*if ((selectedNode.customData.isFolder == false)) {
-					return false;
-				}	*/
 			}
 			return true;
 		}
