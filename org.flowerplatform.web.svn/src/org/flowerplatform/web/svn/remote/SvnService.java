@@ -1150,22 +1150,12 @@ public class SvnService {
 		return true;
 	}
 
-	public boolean checkout(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> folders,
-			List<PathFragment> workingDirectoryPartialPath,
-			String workingDirectoryDestination, String revisionNumberAsString,
-			int depthIndex, Boolean headRevision, boolean force,
-			boolean ignoreExternals, String newProjectName) {
-		CommunicationChannel channel = (CommunicationChannel) context
-				.getCommunicationChannel();
-		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance()
-				.getMessage("svn.service.checkout.checkoutProgressMonitor"),
-				channel);
-		if(context.getCommand().getParameters().size() >=1)
-			context.getCommand().getParameters().remove(0);
-		tlCommand.set(context.getCommand());
-		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath)
-				+ workingDirectoryDestination;
+	public boolean checkout(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath,
+			String workingDirectoryDestination, String revisionNumberAsString, int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals, String newProjectName) {
+		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
+		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
+
 		SVNRevision revision;
 		if (headRevision) {
 			revision = SVNRevision.HEAD;
@@ -1195,11 +1185,13 @@ public class SvnService {
 		}
 		pm.beginTask(null, 1000);
 		ISVNClientAdapter myClient;
-		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(
-				CommunicationPlugin.tlCurrentChannel.get());
+
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
+
 		try {
 			myClient = SVNProviderPlugin.getPlugin().getSVNClient();
 			myClient.setProgressListener(opMng);
+
 			opMng.beginOperation(pm, myClient, true);
 			for (int i = 0; i < folders.size(); i++) {
 				File fileArgumentForCheckout;
@@ -1219,13 +1211,12 @@ public class SvnService {
 						context, fileArgumentForCheckout);
 			}
 			opMng.endOperation();
-		} catch (MalformedURLException | SVNClientException | URISyntaxException | CoreException e) {
+		} catch (Exception e) {
 			if (isAuthentificationException(e))
 				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
-					"Error", e.getMessage(),
-					DisplaySimpleMessageClientCommand.ICON_ERROR));
+			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+
 			return false;
 		} finally {
 			pm.done();
