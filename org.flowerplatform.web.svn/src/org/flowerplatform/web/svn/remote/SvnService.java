@@ -1092,7 +1092,7 @@ public class SvnService {
 		return true;
 	}
 
-	public boolean checkout(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath,
+	public boolean checkout(ServiceInvocationContext context, List<List<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath,
 			String workingDirectoryDestination, String revisionNumberAsString, int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals, String newProjectName) {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
@@ -1289,18 +1289,18 @@ public class SvnService {
 	}
 
 	public Boolean updateToHEAD(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selectionList) {
+			List<List<PathFragment>> selectionList) {
 		return updateToVersion(context, selectionList, "head", Depth.infinity,
 				false, false, true);
 	}
 
 	public Boolean updateToVersion(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selectionList, String revision,
+			List<List<PathFragment>> selectionList, String revision,
 			int depth, Boolean changeWorkingCopyToSpecifiedDepth,
 			Boolean ignoreExternals, Boolean allowUnversionedObstructions) {
 		File[] fileMethodArgument = new File[selectionList.size()];
 		for (int i = 0; i < selectionList.size(); i++) {
-			ArrayList<PathFragment> currentPathSelection = selectionList.get(i);
+			List<PathFragment> currentPathSelection = selectionList.get(i);
 			String path = currentPathSelection.get(1).getName();
 			path = ProjectsService.getInstance().getOrganizationDir(path)
 					.getAbsolutePath();
@@ -1362,7 +1362,7 @@ public class SvnService {
 				pm.done();
 				if (operationSuccesful) {
 					// mass refresh on all tree nodes
-					for (ArrayList<PathFragment> al : selectionList) {
+					for (List<PathFragment> al : selectionList) {
 						Object node = GenericTreeStatefulService
 								.getNodeByPathFor(al, null);
 						GenericTreeStatefulService.getServiceFromPathWithRoot(
@@ -1375,7 +1375,7 @@ public class SvnService {
 			pm.done();
 		}
 		// mass refresh on all tree nodes
-		for (ArrayList<PathFragment> al : selectionList) {
+		for (List<PathFragment> al : selectionList) {
 			Object node = GenericTreeStatefulService.getNodeByPathFor(al, null);
 			GenericTreeStatefulService.getServiceFromPathWithRoot(al)
 					.dispatchContentUpdate(node);
@@ -1443,7 +1443,7 @@ public class SvnService {
 	}
 
 	public ArrayList<String> getConflicted(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selectionList) {
+			List<List<PathFragment>> selectionList) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
 		ArrayList<String> result = new ArrayList<String>();
@@ -1483,8 +1483,8 @@ public class SvnService {
 	}
 
 	// TODO delete following method only after all tests are over
-	public ArrayList<String> getRevisionsForFilesInSelection(
-			ArrayList<ArrayList<PathFragment>> selection) {
+	public List<String> getRevisionsForFilesInSelection(
+			List<List<PathFragment>> selection) {
 		ArrayList<String> result = new ArrayList<>();
 		File[] filesToBeCompared = getFilesForSelectionList(selection);
 		ISVNClientAdapter myClientAdapter;
@@ -1512,7 +1512,7 @@ public class SvnService {
 	 */
 	public ArrayList<File> getFilesWithGivenStatusesForPathFragmentFiles(
 			ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selection,
+			List<List<PathFragment>> selection,
 			SVNStatusKind... kinds) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
@@ -1520,7 +1520,7 @@ public class SvnService {
 		try {
 			ISVNClientAdapter myClientAdapter = SVNProviderPlugin.getPlugin()
 					.getSVNClient();
-			for (ArrayList<PathFragment> path : selection) {
+			for (List<PathFragment> path : selection) {
 				File currentFile = ((Pair<File, String>) GenericTreeStatefulService
 						.getNodeByPathFor(path, null)).a;
 				ISVNStatus[] jhlStatusArray = myClientAdapter.getStatus(
@@ -1555,7 +1555,7 @@ public class SvnService {
 
 	public Boolean checkForUnversionedAndIgnoredFilesInSelection(
 			ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selection) {
+			List<List<PathFragment>> selection) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
 		ArrayList<File> files = getFilesWithGivenStatusesForPathFragmentFiles(
@@ -1569,13 +1569,13 @@ public class SvnService {
 
 	@SuppressWarnings("unchecked")
 	public Boolean addToSvnIgnore(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> paths, String pattern) {
+			List<List<PathFragment>> paths, String pattern) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
 		ISVNClientAdapter myClientAdapter;
 		try {
 			myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
-			for (ArrayList<PathFragment> element : paths) {
+			for (List<PathFragment> element : paths) {
 				File file = ((Pair<File, String>) GenericTreeStatefulService
 						.getNodeByPathFor(element, null)).a;
 				if (file.isFile()) {
@@ -1595,7 +1595,7 @@ public class SvnService {
 
 	@SuppressWarnings("unchecked")
 	public Boolean addToVersion(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selection) {
+			List<List<PathFragment>> selection) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
 		try {
@@ -1624,7 +1624,7 @@ public class SvnService {
 	}
 
 	public GetModifiedFilesDto getDifferences(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selectionList) {
+			List<List<PathFragment>> selectionList) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
 		ArrayList<FileDto> fileList = new ArrayList<FileDto>();
@@ -1796,10 +1796,10 @@ public class SvnService {
 	}
 
 	public File[] getFilesForSelectionList(
-			ArrayList<ArrayList<PathFragment>> selectionList) {
+			List<List<PathFragment>> selectionList) {
 		File[] result = new File[selectionList.size()];
 		for (int i = 0; i < selectionList.size(); i++) {
-			ArrayList<PathFragment> currentPathSelection = selectionList.get(i);
+			List<PathFragment> currentPathSelection = selectionList.get(i);
 			String path = currentPathSelection.get(1).getName();
 			path = ProjectsService.getInstance().getOrganizationDir(path)
 					.getAbsolutePath();
@@ -1913,7 +1913,7 @@ public class SvnService {
 	 * 
 	 */
 
-	public boolean deleteSvnAction(ServiceInvocationContext context, ArrayList<ArrayList<PathFragment>> objectFullPaths, String comment) {
+	public boolean deleteSvnAction(ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment) {
 
 		final CommunicationChannel cc = context.getCommunicationChannel();
 
@@ -2191,7 +2191,7 @@ public class SvnService {
 	 * 
 	 */
 	public boolean merge(ServiceInvocationContext context, String resourcePath,
-			ArrayList<ArrayList<PathFragment>> selectionList, String url1,
+			List<List<PathFragment>> selectionList, String url1,
 			long revision1, String url2, long revision2, boolean force,
 			boolean ignoreAncestry) throws SVNException {
 
@@ -2252,9 +2252,9 @@ public class SvnService {
 	 * 
 	 */
 	public List<String> getMergeSpecs(ServiceInvocationContext context,
-			ArrayList<ArrayList<PathFragment>> selectionList,
+			List<List<PathFragment>> selectionList,
 
-			ArrayList<PathFragment> path) {
+			List<PathFragment> path) {
 
 		tlCommand.set(context.getCommand());
 

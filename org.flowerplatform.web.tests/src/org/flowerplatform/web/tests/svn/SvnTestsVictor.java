@@ -62,14 +62,14 @@ public class SvnTestsVictor {
 	
 	public static CommunicationPlugin communicationPlugin = new CommunicationPlugin();
 	
-	public static ArrayList<PathFragment> workingDirectoryPartialPath;
+	public static List<PathFragment> workingDirectoryPartialPath;
 	
 	public String workspaceLocation = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath();
 	
 	/**
 	 * @param strings first the name, then the type of PathFragment
 	 */
-	public static ArrayList<PathFragment> getArrayOfPathFragmentsFromStringArgs(String... strings) {
+	public static List<PathFragment> getArrayOfPathFragmentsFromStringArgs(String... strings) {
 		ArrayList<PathFragment> result = new ArrayList<>();
 		for (int i=0; i<strings.length; i++) {
 			PathFragment pf = new PathFragment();
@@ -114,7 +114,7 @@ public class SvnTestsVictor {
 	
 	public static void checkoutProjectsInPreparationForTests() {
 		// if checkouts fail, then all the other tests would have failed nonetheles if checkouts were made in their methods
-		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
 		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
 				"svn-repositories", "svnRepositories",
@@ -147,7 +147,7 @@ public class SvnTestsVictor {
 	@Test
 	public void updateTest() {	
 		// updateToHead is just a case of updateToVersion. only updateToVersion will be tested
-		ArrayList<ArrayList<PathFragment>> selectionForUpdate = new ArrayList<>();
+		List<List<PathFragment>> selectionForUpdate = new ArrayList<>();
 		selectionForUpdate.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
@@ -158,7 +158,7 @@ public class SvnTestsVictor {
 		SvnService.getInstance().updateToVersion(context, selectionForUpdate, "8283", 0, false, false, true);		
 		//check to see if files correspond to revision 8283
 		String r = "8283";
-		ArrayList<String> revs = SvnService.getInstance().getRevisionsForFilesInSelection(selectionForUpdate);
+		List<String> revs = SvnService.getInstance().getRevisionsForFilesInSelection(selectionForUpdate);
 		for (String s : revs) {
 			if (!s.equals(r)) {
 				fail("updateTest: not all files belong to revision 8243");
@@ -174,7 +174,7 @@ public class SvnTestsVictor {
 
 	@Test
 	public void checkoutTest() {
-		ArrayList<ArrayList<PathFragment>> selectionList = new ArrayList<ArrayList<PathFragment>>();
+		List<List<PathFragment>> selectionList = new ArrayList<>();
 		selectionList.add(getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
 																"hibernate", "organization",
 																"svn-repositories", "svnRepositories",
@@ -208,7 +208,7 @@ public class SvnTestsVictor {
 	@Test
 	public void createSvnRepositoryTest() {
 		Boolean result;
-		ArrayList<PathFragment> parentPathFragment 
+		List<PathFragment> parentPathFragment 
  		= getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
  												"hibernate", "organization",
  												".svn-repositories", "svnRepositories");		
@@ -238,20 +238,20 @@ public class SvnTestsVictor {
 	
 	@Test
 	public void commitTest() {
-		ArrayList<PathFragment> selectionForDiff = getArrayOfPathFragmentsFromStringArgs(
+		List<PathFragment> selectionForDiff = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
 				"workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory",
 				"commonProject", "project");
-		ArrayList<ArrayList<PathFragment>> m = new ArrayList<>();
+		List<List<PathFragment>> m = new ArrayList<>();
 		m.add(selectionForDiff);		
 		// get revision of project. we will revert to this revision after commitTest succeeds
 		String revision = SvnService.getInstance().getRevisionsForFilesInSelection(m).get(0);
 		//after each successful run newFile and oldFile must be incremented by 1.
 		// add a new file:
-		String newFile = "14";
-		String oldFile = "13";
+		String newFile = "19";
+		String oldFile = "18";
 		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + newFile);
 		// delete a file (to avoid creation of file on repository before each test run, we delete the file created at the earlier run. don't forget to increment!!)
 		File f1 = new File(workspacePath + "hibernate\\commonWD\\commonProject\\" + oldFile);
@@ -273,9 +273,10 @@ public class SvnTestsVictor {
 		// check differences with head (if there are no differences it means that the deleted file is not on the repository and that the new file is)
 			GetModifiedFilesDto modDto = SvnService.getInstance().getDifferences(context, m);
 		assertEquals("commitTest: differences between local revision and head revision found", 0, modDto.getFiles().size());
+		
 		SvnService.getInstance().updateToVersion(context, m, revision, 0, false, false, true);
 		modDto = SvnService.getInstance().getDifferences(context, m);
-		SvnService.getInstance().commit(context, modDto.getFiles(), "", false);
+		SvnService.getInstance().commit(context, modDto.getFiles(), "", false);	
 	}
 	
 	@Test
@@ -284,7 +285,7 @@ public class SvnTestsVictor {
 		// add a new file
 		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + fileName);
 		// add to svn ignore with filename as pattern
-		ArrayList<ArrayList<PathFragment>> selectionForIgnore = new ArrayList<>();
+		List<List<PathFragment>> selectionForIgnore = new ArrayList<>();
 		selectionForIgnore.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
@@ -352,13 +353,13 @@ public class SvnTestsVictor {
 		array.add(fd);
 		SvnService.getInstance().revert(context, array);
 		// check for differences
-		ArrayList<PathFragment> arrayOfPaths = getArrayOfPathFragmentsFromStringArgs(
+		List<PathFragment> arrayOfPaths = getArrayOfPathFragmentsFromStringArgs(
 						"explorerTreeStatefulService|Explorer1", "r", 
 						"hibernate", "organization",
 						"workingDirectories", "workingDirectories",
 						"commonWD", "workingDirectory",
 						"commonProject", "project");
-		ArrayList<ArrayList<PathFragment>> x = new ArrayList<>();
+		List<List<PathFragment>> x = new ArrayList<>();
 		x.add(arrayOfPaths);
 		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, x);
 		assertEquals("revertTest: revert did not succeed. differences were found", true, modDtos.getFiles().size() == 0);
@@ -370,7 +371,7 @@ public class SvnTestsVictor {
 		// add a new file
 		File f = createFile(workspacePath + "hibernate\\commonWD\\commonProject\\" + filename);
 		// add file to version control
-		ArrayList<ArrayList<PathFragment>> selectionForAddToVersion = new ArrayList<>();
+		List<List<PathFragment>> selectionForAddToVersion = new ArrayList<>();
 		selectionForAddToVersion.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
@@ -397,7 +398,7 @@ public class SvnTestsVictor {
 		SvnService.getInstance().updateToHEAD(context, selectionForAddToVersion);
 	}
 	
-	public ArrayList<ArrayList<PathFragment>> markResolvedCommonBlock(String option) {
+	public List<List<PathFragment>> markResolvedCommonBlock(String option) {
 		String testName = option + "Test";
 		// get two files from two identical versions of a file from repository
 		File f1 = new File(workspacePath + "hibernate\\markResolved\\markResolvedProject1\\66zWzz33XzYz");
@@ -425,7 +426,7 @@ public class SvnTestsVictor {
 			}
 		}		
 		// get the correct dto file for committing the first project
-		ArrayList<ArrayList<PathFragment>> selectionForUpdate = new ArrayList<>();
+		List<List<PathFragment>> selectionForUpdate = new ArrayList<>();
 		selectionForUpdate.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
@@ -485,7 +486,7 @@ public class SvnTestsVictor {
 	}
 	
 	public void markResolvedUsingIncomingTest() {
-		ArrayList<ArrayList<PathFragment>> selectionForUpdate = markResolvedCommonBlock("markResolvedUsingIncoming");		
+		List<List<PathFragment>> selectionForUpdate = markResolvedCommonBlock("markResolvedUsingIncoming");		
 		// get differences and see if files conflict
 		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, selectionForUpdate);
 		assertEquals("markResolvedUsingIncoming: after 'resolve' action there are still differences with the head revision", 0, modDtos.getFiles().size());
@@ -504,7 +505,7 @@ public class SvnTestsVictor {
 		markResolvedUsingIncomingTest();
 		markResolvedUsingMyTest();
 		// update to head the second project
-		ArrayList<ArrayList<PathFragment>> selectionForUpdate = new ArrayList<>();
+		List<List<PathFragment>> selectionForUpdate = new ArrayList<>();
 		selectionForUpdate.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
@@ -516,8 +517,39 @@ public class SvnTestsVictor {
 		markResolvedUsingBaseTest();		
 	}
 	
+	public static void resolveCommitAndAddToVersionChanges() {
+		// first we delete the file added during the addToVersion test
+		List<List<PathFragment>> selectionForDelete = new ArrayList<>();
+			
+		selectionForDelete.add(getArrayOfPathFragmentsFromStringArgs(
+				"explorerTreeStatefulService|Explorer1", "r", 
+				"hibernate", "organization",
+				"svn-repositories", "svnRepositories",
+				"svn://csp1/flower2", "svnRepository",
+				"testing_do_not_delete", "svnFolder",
+				"victor", "svnFolder",
+				"willBeAddedToVersionControl", "svnFile"));
+		SvnService.getInstance().deleteSvnAction(context, selectionForDelete, "");
+		// rename the file committed during CommitTest
+		SvnService.getInstance().renameMove(context, 
+				getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
+						"hibernate", "organization",
+						"svn-repositories", "svnRepositories",
+						"svn://csp1/flower2", "svnRepository",
+						"testing_do_not_delete", "svnFolder",
+						"victor", "svnFolder",
+						"19", "svnFile"),
+				getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
+						"hibernate", "organization",
+						"svn-repositories", "svnRepositories",
+						"svn://csp1/flower2", "svnRepository",
+						"testing_do_not_delete", "svnFolder",
+						"victor", "svnFolder"), "18", "");
+	}
+	
 	@AfterClass
 	public static void undoChanges() {
+		resolveCommitAndAddToVersionChanges();
 		// delete checked out working directory along with content
 		try {
 			FileUtils.deleteDirectory(new File(workspacePath + "hibernate\\commonWD"));
