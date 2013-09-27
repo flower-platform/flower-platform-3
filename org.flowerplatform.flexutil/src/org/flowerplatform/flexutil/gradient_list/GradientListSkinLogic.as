@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.flexutil.selectiontrianglelist {
+package org.flowerplatform.flexutil.gradient_list {
 	import flash.display.GradientType;
 	import flash.display.Graphics;
 	import flash.geom.Matrix;

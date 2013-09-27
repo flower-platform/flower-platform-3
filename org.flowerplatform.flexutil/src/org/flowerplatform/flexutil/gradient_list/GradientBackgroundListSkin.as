@@ -16,13 +16,11 @@
  *
  * license-end
  */
-package org.flowerplatform.flexutil.selectiontrianglelist {
+package org.flowerplatform.flexutil.gradient_list {
 	import mx.core.ClassFactory;
 	import mx.graphics.GradientEntry;
 	import mx.graphics.LinearGradient;
 	import mx.graphics.SolidColor;
-	
-	import org.flowerplatform.flexutil.selectiontrianglelist.TopAndBottomVerticalScrollBarSkin;
 	
 	import spark.components.Scroller;
 	import spark.components.supportClasses.GroupBase;

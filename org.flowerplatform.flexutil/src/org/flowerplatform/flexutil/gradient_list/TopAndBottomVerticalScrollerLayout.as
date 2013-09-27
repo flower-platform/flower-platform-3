@@ -16,8 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.flexutil.selectiontrianglelist {
-	import org.flowerplatform.flexutil.selectiontrianglelist.TopAndBottomVerticalScrollBarSkin;
+package org.flowerplatform.flexutil.gradient_list {
 	
 	import spark.components.Scroller;
 	import spark.components.supportClasses.ScrollerLayout;

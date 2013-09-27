@@ -16,9 +16,10 @@
  *
  * license-end
  */
-package org.flowerplatform.flexutil.selectiontrianglelist.mobile {
+package org.flowerplatform.flexutil.mobile.gradient_list {
 		
-	import org.flowerplatform.flexutil.selectiontrianglelist.GradientListSkinLogic;
+	
+	import org.flowerplatform.flexutil.gradient_list.GradientListSkinLogic;
 	
 	import spark.skins.mobile.ListSkin;
 	 

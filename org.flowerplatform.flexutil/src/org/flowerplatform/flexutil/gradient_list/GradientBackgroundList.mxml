@@ -29,8 +29,8 @@
 <s:List xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
 		xmlns:mx="library://ns.adobe.com/flex/mx" 
-		skinClass="org.flowerplatform.flexutil.selectiontrianglelist.GradientBackgroundListSkin"
-		itemRenderer="org.flowerplatform.flexutil.selectiontrianglelist.SelectionTriangleItemRenderer">
+		skinClass="org.flowerplatform.flexutil.gradient_list.GradientBackgroundListSkin"
+		itemRenderer="org.flowerplatform.flexutil.gradient_list.SelectionTriangleItemRenderer">
 	
 	<fx:Metadata>
 		
@@ -69,7 +69,7 @@
 			 */
 			private static function classConstruct():Boolean {
 				if (!FlexGlobals.topLevelApplication.styleManager.
-					getStyleDeclaration("org.flowerplatform.flexutil.selectiontrianglelist.GradientBackgroundList")) {
+					getStyleDeclaration("org.flowerplatform.flexutil.gradient_list.GradientBackgroundList")) {
 						var defaultStyles:CSSStyleDeclaration = new CSSStyleDeclaration();
 						defaultStyles.defaultFactory = function():void {
 							this.backgroundColor = 0xF8F8F8;
@@ -93,7 +93,7 @@
 							this.paddingLeft = 25;
 						}
 						FlexGlobals.topLevelApplication.styleManager.
-							setStyleDeclaration("org.flowerplatform.flexutil.selectiontrianglelist.GradientBackgroundList", defaultStyles, true);
+							setStyleDeclaration("org.flowerplatform.flexutil.gradient_list.GradientBackgroundList", defaultStyles, true);
 				}
 				return true;
 			}
