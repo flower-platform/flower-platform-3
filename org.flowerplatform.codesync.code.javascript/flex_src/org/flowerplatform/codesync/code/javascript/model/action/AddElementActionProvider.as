@@ -22,6 +22,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 	
 	import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 	import org.flowerplatform.emf_model.notation.ExpandableNode;
+	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.flexutil.popup.ComposedAction;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
@@ -60,6 +61,10 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 			
 			for each (var availableTemplate:String in CodeSyncCodeJavascriptPlugin.getInstance().availableTemplates[selectedTemplate]) {
 				result.push(new AddElementAction(availableTemplate));
+			}
+			
+			if (selection.length == 1) {
+				result.push(new DeleteElementAction());
 			}
 			
 			return result;

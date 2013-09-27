@@ -62,7 +62,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("fileElementContainer", new JavascriptElementProcessor());
 	
 		// TODO this should be initialized from rules
-		availableTemplates.put("", Arrays.asList("Table", "TableItem", "Form"));
+		availableTemplates.put("", Arrays.asList("BackboneClass", "Table", "TableItem", "Form"));
+		availableTemplates.put("BackboneClass", Arrays.asList("RequireEntry", "Attribute", "Operation"));
 		availableTemplates.put("Table", Arrays.asList("TableHeaderEntry"));
 		availableTemplates.put("TableItem", Arrays.asList("TableItemEntry"));
 		availableTemplates.put("Form", Arrays.asList("FormItem"));

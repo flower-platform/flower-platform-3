@@ -117,6 +117,13 @@ public class JavascriptClassDiagramOperationsService {
 		}
 	}
 	
+	public void deleteElement(ServiceInvocationContext context, String viewId) {
+		View view = getViewById(context, viewId);
+		CodeSyncElement element = (CodeSyncElement) view.getDiagrammableElement();
+		CodeSyncElement parent = (CodeSyncElement) element.eContainer();
+		parent.getChildren().remove(element);
+	}
+	
 	protected String getParameterValue(RegExAstCacheElement ast, String key) {
 		for (Parameter parameter : ast.getParameters()) {
 			if (parameter.getName().equals(key)) {

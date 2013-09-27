@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
@@ -173,6 +174,8 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		if (node.isAdded()) {
 			String template = loadTemplate(node);
 			edit.addChild(new InsertEdit(getInsertPoint(node), template));
+		} else if (node.isDeleted()) {
+			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));
 		} else {
 			for (Node child : node.getChildren()) {
 				rewrite(document, child, edit);
@@ -203,6 +206,12 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		for (Node child : node.getChildren()) {
 			String childTemplate = loadTemplate(child);
 			int childInsertPoint = template.indexOf("<!-- children-insert-point " + child.getTemplate() + " -->");
+			if (childInsertPoint == -1) {
+				childInsertPoint = template.indexOf("// children-insert-point " + child.getTemplate());
+			}
+			if (childInsertPoint == -1) {
+				throw new RuntimeException("Node does not accept children of type " + child.getTemplate());
+			}
 			template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 		}
 		

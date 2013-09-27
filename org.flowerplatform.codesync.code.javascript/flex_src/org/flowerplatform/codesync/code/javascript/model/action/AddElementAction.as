@@ -89,6 +89,38 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"valueExpression" : "revenue",
 					"editId" : "revenue"
 				};
+			} else if (template == "BackboneClass") {
+				type = "jsFile";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "Company.js",
+					"superClass" : "Backbone.View"
+				};
+			} else if (template == "RequireEntry") {
+				type = "jsRequireEntry";
+				keyParameter = "varName";
+				isCategory = false;
+				parameters = {
+					"varName" : "Backbone",
+					"dependencyPath" : "backbone"
+				};
+			} else if (template == "Attribute") {
+				type = "jsAttribute";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "name",
+					"defaultValue" : "John"
+				};
+			} else if (template == "Operation") {
+				type = "jsOperation";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "render",
+					"parameters" : "param"
+				};
 			}
 			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)

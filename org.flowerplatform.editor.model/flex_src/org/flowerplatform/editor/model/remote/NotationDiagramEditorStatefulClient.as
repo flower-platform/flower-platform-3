@@ -99,5 +99,9 @@ package org.flowerplatform.editor.model.remote {
 		public function service_addElement(type:String, keyParameter:String, isCategory:Boolean, parameters:Object, template:String, parentViewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "addElement", [type, keyParameter, isCategory, parameters, template, parentViewId], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
+		
+		public function service_deleteElement(viewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "deleteElement", [viewId]));
+		}
 	}
 }

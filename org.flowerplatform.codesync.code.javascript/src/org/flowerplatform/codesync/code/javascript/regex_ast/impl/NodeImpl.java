@@ -41,6 +41,7 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getLength <em>Length</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#isAdded <em>Added</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#isDeleted <em>Deleted</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getTemplate <em>Template</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getChildrenInsertPoint <em>Children Insert Point</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
@@ -189,6 +190,26 @@ public class NodeImpl extends EObjectImpl implements Node {
 	 * @ordered
 	 */
 	protected boolean added = ADDED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDeleted() <em>Deleted</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeleted()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DELETED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDeleted() <em>Deleted</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeleted()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean deleted = DELETED_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getTemplate() <em>Template</em>}' attribute.
@@ -424,6 +445,27 @@ public class NodeImpl extends EObjectImpl implements Node {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDeleted(boolean newDeleted) {
+		boolean oldDeleted = deleted;
+		deleted = newDeleted;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.NODE__DELETED, oldDeleted, deleted));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getTemplate() {
 		return template;
 	}
@@ -522,6 +564,8 @@ public class NodeImpl extends EObjectImpl implements Node {
 				return getLength();
 			case RegExAstPackage.NODE__ADDED:
 				return isAdded();
+			case RegExAstPackage.NODE__DELETED:
+				return isDeleted();
 			case RegExAstPackage.NODE__TEMPLATE:
 				return getTemplate();
 			case RegExAstPackage.NODE__CHILDREN_INSERT_POINT:
@@ -566,6 +610,9 @@ public class NodeImpl extends EObjectImpl implements Node {
 				return;
 			case RegExAstPackage.NODE__ADDED:
 				setAdded((Boolean)newValue);
+				return;
+			case RegExAstPackage.NODE__DELETED:
+				setDeleted((Boolean)newValue);
 				return;
 			case RegExAstPackage.NODE__TEMPLATE:
 				setTemplate((String)newValue);
@@ -612,6 +659,9 @@ public class NodeImpl extends EObjectImpl implements Node {
 			case RegExAstPackage.NODE__ADDED:
 				setAdded(ADDED_EDEFAULT);
 				return;
+			case RegExAstPackage.NODE__DELETED:
+				setDeleted(DELETED_EDEFAULT);
+				return;
 			case RegExAstPackage.NODE__TEMPLATE:
 				setTemplate(TEMPLATE_EDEFAULT);
 				return;
@@ -649,6 +699,8 @@ public class NodeImpl extends EObjectImpl implements Node {
 				return length != LENGTH_EDEFAULT;
 			case RegExAstPackage.NODE__ADDED:
 				return added != ADDED_EDEFAULT;
+			case RegExAstPackage.NODE__DELETED:
+				return deleted != DELETED_EDEFAULT;
 			case RegExAstPackage.NODE__TEMPLATE:
 				return TEMPLATE_EDEFAULT == null ? template != null : !TEMPLATE_EDEFAULT.equals(template);
 			case RegExAstPackage.NODE__CHILDREN_INSERT_POINT:
@@ -681,6 +733,8 @@ public class NodeImpl extends EObjectImpl implements Node {
 		result.append(length);
 		result.append(", added: ");
 		result.append(added);
+		result.append(", deleted: ");
+		result.append(deleted);
 		result.append(", template: ");
 		result.append(template);
 		result.append(", childrenInsertPoint: ");

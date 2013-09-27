@@ -129,7 +129,9 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 
 	@Override
 	public void removeChildrenOnContainmentFeature(Object parent, Object feature, Object child) {
-		// TODO Auto-generated method stub
+		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
+			getNode(child).setDeleted(true);
+		}
 
 	}
 

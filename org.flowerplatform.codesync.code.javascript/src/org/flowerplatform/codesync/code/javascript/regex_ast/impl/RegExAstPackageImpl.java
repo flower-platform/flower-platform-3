@@ -207,7 +207,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getNode_Template() {
+	public EAttribute getNode_Deleted() {
 		return (EAttribute)nodeEClass.getEStructuralFeatures().get(8);
 	}
 
@@ -216,7 +216,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getNode_ChildrenInsertPoint() {
+	public EAttribute getNode_Template() {
 		return (EAttribute)nodeEClass.getEStructuralFeatures().get(9);
 	}
 
@@ -225,8 +225,17 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getNode_NextSiblingInsertPoint() {
+	public EAttribute getNode_ChildrenInsertPoint() {
 		return (EAttribute)nodeEClass.getEStructuralFeatures().get(10);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getNode_NextSiblingInsertPoint() {
+		return (EAttribute)nodeEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -365,6 +374,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		createEAttribute(nodeEClass, NODE__OFFSET);
 		createEAttribute(nodeEClass, NODE__LENGTH);
 		createEAttribute(nodeEClass, NODE__ADDED);
+		createEAttribute(nodeEClass, NODE__DELETED);
 		createEAttribute(nodeEClass, NODE__TEMPLATE);
 		createEAttribute(nodeEClass, NODE__CHILDREN_INSERT_POINT);
 		createEAttribute(nodeEClass, NODE__NEXT_SIBLING_INSERT_POINT);
@@ -429,6 +439,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		initEAttribute(getNode_Offset(), ecorePackage.getEInt(), "offset", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNode_Length(), ecorePackage.getEInt(), "length", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNode_Added(), theEcorePackage.getEBoolean(), "added", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getNode_Deleted(), theEcorePackage.getEBoolean(), "deleted", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNode_Template(), theEcorePackage.getEString(), "template", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNode_ChildrenInsertPoint(), theEcorePackage.getEInt(), "childrenInsertPoint", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNode_NextSiblingInsertPoint(), theEcorePackage.getEInt(), "nextSiblingInsertPoint", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

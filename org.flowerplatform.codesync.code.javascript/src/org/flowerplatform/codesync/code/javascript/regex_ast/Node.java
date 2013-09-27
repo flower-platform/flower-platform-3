@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getLength <em>Length</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isAdded <em>Added</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isDeleted <em>Deleted</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate <em>Template</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildrenInsertPoint <em>Children Insert Point</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
@@ -224,6 +225,32 @@ public interface Node extends EObject {
 	 * @generated
 	 */
 	void setAdded(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Deleted</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Deleted</em>' attribute.
+	 * @see #setDeleted(boolean)
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getNode_Deleted()
+	 * @model
+	 * @generated
+	 */
+	boolean isDeleted();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isDeleted <em>Deleted</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Deleted</em>' attribute.
+	 * @see #isDeleted()
+	 * @generated
+	 */
+	void setDeleted(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Template</b></em>' attribute.

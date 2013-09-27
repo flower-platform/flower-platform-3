@@ -143,13 +143,22 @@ public interface RegExAstPackage extends EPackage {
 	int NODE__ADDED = 7;
 
 	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NODE__DELETED = 8;
+
+	/**
 	 * The feature id for the '<em><b>Template</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__TEMPLATE = 8;
+	int NODE__TEMPLATE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Children Insert Point</b></em>' attribute.
@@ -158,7 +167,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__CHILDREN_INSERT_POINT = 9;
+	int NODE__CHILDREN_INSERT_POINT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Next Sibling Insert Point</b></em>' attribute.
@@ -167,7 +176,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__NEXT_SIBLING_INSERT_POINT = 10;
+	int NODE__NEXT_SIBLING_INSERT_POINT = 11;
 
 	/**
 	 * The number of structural features of the '<em>Node</em>' class.
@@ -176,7 +185,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE_FEATURE_COUNT = 11;
+	int NODE_FEATURE_COUNT = 12;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl <em>Parameter</em>}' class.
@@ -507,6 +516,17 @@ public interface RegExAstPackage extends EPackage {
 	EAttribute getNode_Added();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isDeleted <em>Deleted</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Deleted</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#isDeleted()
+	 * @see #getNode()
+	 * @generated
+	 */
+	EAttribute getNode_Deleted();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate <em>Template</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -752,6 +772,14 @@ public interface RegExAstPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute NODE__ADDED = eINSTANCE.getNode_Added();
+
+		/**
+		 * The meta object literal for the '<em><b>Deleted</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NODE__DELETED = eINSTANCE.getNode_Deleted();
 
 		/**
 		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
