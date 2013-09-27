@@ -6,6 +6,7 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodeByPathRetriever;
 import org.flowerplatform.communication.tree.INodeDataProvider;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.svn.SvnNodeType;
@@ -75,19 +76,14 @@ public class SvnFileNodeDataProvider implements INodeDataProvider,
 		return false;
 	}
 
+	/**
+	 * @author ..
+	 */
 	@Override
 	public Object getNodeByPath(List<PathFragment> fullPath,
 			GenericTreeContext context) {
-		// if (fullPath == null || fullPath.size() < ) {
-		// throw new
-		// IllegalArgumentException("We were expecting a path with 1 item, but we got: "
-		// + fullPath);
-		// }
-		
 		String remoteFilePath = new String();
 		String repositoryURL = fullPath.get(2).getName();
-		
-		// String remoteFilePath = fullPath.subList(3, fullPath.size());
 		try {
 			SVNRepositoryLocation repository = SVNRepositoryLocation
 					.fromString(repositoryURL);
@@ -96,15 +92,9 @@ public class SvnFileNodeDataProvider implements INodeDataProvider,
 				if (i < fullPath.size() - 1) {
 					remoteFilePath += "/";
 				}
-			}
-			// remoteFilePath.concat(fullPath.get(num).getName());
-
-			// remoteFilePath = fullPath.subList(3, fullPath.size());
-
-			// remoteFilePath.concat(fullPath.get(fullPath.size() - 1));
+			}			
 			return repository.getRemoteFolder(remoteFilePath.toString());
 		} catch (SVNException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

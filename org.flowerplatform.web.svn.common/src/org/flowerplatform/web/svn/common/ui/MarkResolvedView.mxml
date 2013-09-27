@@ -95,16 +95,14 @@ license-end
 					resolveSelection = SvnCommonPlugin.getInstance().getMessage("svn.ui.markResolved.multipleSelection");
 					return;
 				}				
-				var fullpath:ArrayCollection = SvnCommonPlugin.getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0))).getPathForNode(true);
+				var pathFragments:ArrayCollection = SvnCommonPlugin.getWorkingDirectoryTreeNode(TreeNode(selection.getItemAt(0))).getPathForNode(true);
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "getDirectoryFullPathFromPathFragments", [fullpath], 
+					new InvokeServiceMethodServerCommand("svnService", "getDirectoryRelativePathFromPathFragments", [pathFragments], 
 														 this, setSelectionPathCallback));
 			}
 			
 			public function setSelectionPathCallback(result:String):void {
-				var start:int = result.length;
-				var s:String = String(conflictingResources.getItemAt(0));
-				resolveSelection = "File: " + s.substring(start+1, s.length);
+				resolveSelection = "File: " + conflictingResources.getItemAt(0);
 			}		
 			
 		]]>

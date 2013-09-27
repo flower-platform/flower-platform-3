@@ -28,7 +28,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class FileDto {
 	
-		private String path;
+		private String pathFromRoot;
 		
 		private String label;
 
@@ -36,12 +36,12 @@ public class FileDto {
 
 		private String status;
 		
-		public String getPath() {
-			return path;
+		public String getPathFromRoot() {
+			return pathFromRoot;
 		}
 
-		public void setPath(String path) {
-			this.path = path;
+		public void setPathFromRoot(String path) {
+			this.pathFromRoot = path;
 		}
 		
 		public String getLabel() {

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -32,7 +33,6 @@ import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.entity.EntityFactory;
@@ -92,6 +92,8 @@ public class SvnService {
 	public static final ThreadLocal<String> tlURI = new ThreadLocal<String>();
 
 	private boolean recurse = true;
+	
+	private String workspaceLocation = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath();
 
 	/**
 	 * @flowerModelElementId _yaKVkAMcEeOrJqcAep-lCg
@@ -104,7 +106,7 @@ public class SvnService {
 	public static SvnService getInstance() {
 		return INSTANCE;
 	}
-
+	
 	/**
 	 * @author Gabriela Murgoci
 	 * @throws SVNException
@@ -1101,7 +1103,7 @@ public class SvnService {
 				choice = ISVNConflictResolver.Choice.chooseBase;
 			}
 			for (int i = 0; i < filePaths.size(); i++) {
-				myClientAdapter.resolve(new File(filePaths.get(i)), choice);
+				myClientAdapter.resolve(new File(workspaceLocation + filePaths.get(i)), choice);
 			}
 		} catch (SVNException | SVNClientException e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
@@ -1131,14 +1133,17 @@ public class SvnService {
 			for (int i = 0; i < fileDtos.size(); i++) {
 				FileDto currentDto = fileDtos.get(i);
 				if (currentDto.getStatus().equals("unversioned")) {
-					File f = new File(currentDto.getPath());
-					f.delete();
+					File f = new File(workspaceLocation + currentDto.getPathFromRoot());
+					if (f.isDirectory()) {
+						FileUtils.deleteDirectory(f);
+					} else {
+						f.delete();
+					}					
 				} else {
-					myClientAdapter.revert(new File(currentDto.getPath()),
-							recurse);
+					myClientAdapter.revert(new File(currentDto.getPathFromRoot()), recurse);
 				}
 			}
-		} catch (SVNException | SVNClientException e) {
+		} catch (SVNException | SVNClientException | IOException e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
 					"Error", e.getMessage(),
@@ -1155,7 +1160,6 @@ public class SvnService {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
 		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
-
 		SVNRevision revision;
 		if (headRevision) {
 			revision = SVNRevision.HEAD;
@@ -1204,11 +1208,10 @@ public class SvnService {
 									+ remoteFolders[i].getName());
 				}
 				String fullPath = remoteFolders[i].getUrl().toString();
-				myClient.checkout(new SVNUrl(fullPath),
-						fileArgumentForCheckout, revision,
-						getDepthValue(depthIndex), ignoreExternals, force);
-				ProjectsService.getInstance().createOrImportProjectFromFile(
-						context, fileArgumentForCheckout);
+
+				myClient.checkout(new SVNUrl(fullPath), fileArgumentForCheckout, revision, getDepthValue(depthIndex), ignoreExternals, force);
+				ProjectsService.getInstance().createOrImportProjectFromFile(context, fileArgumentForCheckout);
+
 			}
 			opMng.endOperation();
 		} catch (Exception e) {
@@ -1279,9 +1282,8 @@ public class SvnService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getWorkingDirectoryFullPath(List<PathFragment> pathWithRoot) {
-		Object workingDirectory = GenericTreeStatefulService.getNodeByPathFor(
-				pathWithRoot, null);
+	public String getWorkingDirectoryFullPathFromPathFragments(List<PathFragment> pathWithRoot) {
+		Object workingDirectory = GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null);
 
 		if (workingDirectory instanceof WorkingDirectory) {
 			return ""
@@ -1293,6 +1295,10 @@ public class SvnService {
 							.getPathFromOrganization();
 		} else
 			return ((Pair<File, String>) workingDirectory).a.getAbsolutePath();
+	}
+	
+	public String getDirectoryRelativePathFromPathFragments(List<PathFragment> pathWithRoot) {
+		return getWorkingDirectoryFullPathFromPathFragments(pathWithRoot).substring(workspaceLocation.length());	
 	}
 
 	/**
@@ -1321,14 +1327,11 @@ public class SvnService {
 		} else {
 			return ((Pair<File, String>) workingDirectory).a.getAbsolutePath();
 		}
-
 	}
 
-	public Boolean createFolderAndMarkAsWorkingDirectory(
-			ServiceInvocationContext context, String path, TreeNode organization) {
-		File targetFile = new File(ProjectsService.getInstance()
-				.getOrganizationDir(organization.getLabel()).getAbsolutePath()
-				+ "\\" + path);
+	public Boolean createFolderAndMarkAsWorkingDirectory(ServiceInvocationContext context, String path, String organization) {
+		File targetFile = new File(ProjectsService.getInstance().getOrganizationDir(organization).getAbsolutePath() + "\\" + path);
+
 		try {
 			targetFile.getCanonicalPath();
 		} catch (IOException e) {
@@ -1495,7 +1498,7 @@ public class SvnService {
 					ISVNStatus[] jhlStatusArray = myClientAdapter.getStatus(f, true, true);
 					for (int i = 0; i < jhlStatusArray.length; i++) {
 						if (jhlStatusArray[i].getTextStatus().toString().equals("conflicted")) {
-							result.add(jhlStatusArray[i].getPath());
+							result.add(jhlStatusArray[i].getPath().substring(workspaceLocation.length()));
 						}
 					}
 				} catch (SVNClientException e) {
@@ -1506,7 +1509,28 @@ public class SvnService {
 		} catch (SVNException e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
-		}		
+		}
+		return result;
+	}
+	
+	// TODO delete following method only after all tests are over
+	public ArrayList<String> getRevisionsForFilesInSelection(ArrayList<ArrayList<PathFragment>> selection) {
+		ArrayList<String> result = new ArrayList<>();
+		File[] filesToBeCompared = getFilesForSelectionList(selection);
+		ISVNClientAdapter myClientAdapter;
+		try {
+			myClientAdapter = SVNProviderPlugin.getPlugin().getSVNClient();
+			for (File f : filesToBeCompared) {
+				try {
+					ISVNStatus[] jhlStatusArray = myClientAdapter.getStatus(f, true, true);
+					for (int i = 0; i < jhlStatusArray.length; i++) {
+						result.add(jhlStatusArray[i].getRevision().toString());
+					}
+				} catch (SVNClientException e) {
+				}
+			}
+		} catch (SVNException e1) {
+		}	
 		return result;
 	}
 	
@@ -1649,8 +1673,11 @@ public class SvnService {
 						}
 						FileDto modifiedFileDto = new FileDto();
 						ISVNStatus currentTarget = jhlStatusArray[i];
-						modifiedFileDto.setPath(currentTarget.getFile().getAbsolutePath());
-						modifiedFileDto.setLabel(currentTarget.getFile().getAbsolutePath().substring(workingDirectoryFullPathLength + 1));
+
+						String absolutePath = currentTarget.getFile().getAbsolutePath();						
+						modifiedFileDto.setPathFromRoot(absolutePath.substring(workspaceLocation.length()));
+						modifiedFileDto.setLabel(absolutePath.substring(absolutePath.lastIndexOf("\\")));
+
 						String status = currentTarget.getTextStatus().toString();
 						modifiedFileDto.setStatus(status);
 						modifiedFileDto
@@ -1671,15 +1698,14 @@ public class SvnService {
 		Collections.sort(fileList, new Comparator<FileDto>() {
 			@Override
 			public int compare(FileDto dto1, FileDto dto2) {
-				return dto1.getPath().compareTo(dto2.getPath());
+				return dto1.getPathFromRoot().compareTo(dto2.getPathFromRoot());
 			}
 		});
 		// duplicates are removed
 		int currentIndex = 0;
 		int resultSize = fileList.size();
 		while (currentIndex < resultSize - 1) {
-			if (fileList.get(currentIndex).getPath()
-					.equals(fileList.get(currentIndex + 1).getPath())) {
+			if (fileList.get(currentIndex).getPathFromRoot().equals(fileList.get(currentIndex + 1).getPathFromRoot())) {
 				fileList.remove(currentIndex + 1);
 				resultSize--;
 			} else {
@@ -1706,7 +1732,7 @@ public class SvnService {
 		ArrayList<File> normalCommitFiles = new ArrayList<File>();
 
 		for (FileDto dto : selectionList) {
-			File file = new File(dto.getPath());
+			File file = new File(workspaceLocation + dto.getPathFromRoot());
 			switch (dto.getStatus()) {
 			case "missing": // will be added to a queue ready to be marked for
 							// deletion, after which it would be safe to have it

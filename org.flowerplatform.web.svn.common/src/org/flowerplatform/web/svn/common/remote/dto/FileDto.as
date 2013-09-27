@@ -27,7 +27,7 @@ package org.flowerplatform.web.svn.common.remote.dto {
 	[Bindable]
 	public class FileDto {
 					
-			public var path:String;
+			public var pathFromRoot:String;
 			
 			public var label:String;
 			
