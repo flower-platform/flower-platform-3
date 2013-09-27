@@ -63,15 +63,11 @@ license-end
 			
 			 protected override function cancelClickHandler():void {
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
-				
 			} 
 			
 			 protected override function finishClickHandler():void {
-				 /*  if (Validator.validateAll(validators).length > 0) {
-					return;
-				}   */
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, commComponent.commitMessage.text], this,getProjectsCallbackHandler ));
+					new InvokeServiceMethodServerCommand("svnService", "createRemoteFolder", [node.getPathForNode(true), myFolderName.text, commComponent.commitMessage.text], this, getProjectsCallbackHandler));
 					popupHost.showSpinner(SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.view.spinner"));
 			} 
 			
@@ -80,8 +76,8 @@ license-end
 					return;
 				}
 				super.nextClickHandler();
-				
 			}
+			
 			override public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
 				_popupHost.setLabel(SvnCommonPlugin.getInstance().getMessage("svn.action.createRemoteFolder.view.label"));
@@ -90,7 +86,7 @@ license-end
 			
 			protected override function creationCompleteHandler():void {
 				super.creationCompleteHandler();
-				 wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
+				wizardImage.source = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wizban.gif");
 			}
 		]]>
 	</fx:Script>
@@ -113,7 +109,6 @@ license-end
 				</s:VGroup>		 
 			</mx:AddChild>
 		</mx:State>	
-
 		<mx:State name="1">			
 			<mx:SetProperty name="wizardTitle" value="Commit"/>					
 			<mx:AddChild relativeTo="{contentArea}">									

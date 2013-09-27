@@ -47,11 +47,15 @@
 			public var logging:Boolean = true;
 			
 			public var user:String;	
+			
 			public var repositoryURI:String;		
+			
 			public var command:InvokeServiceMethodServerCommand;	
+			
 			public var resultHandl:IDialogResultHandler;
 			[Bindable]
 			public var message:String;
+			
 			private var _popupHost:IPopupHost;
 			
 			public function getActions(selection:IList):Vector.<IAction>{
@@ -91,7 +95,11 @@
 			}
 		
 			public function cancelHandler():void {			
+				var resultInfo:ArrayCollection = new ArrayCollection();
+				resultInfo.addItem("cancel");
+				resultHandl.handleDialogResult(resultInfo);
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
+				
 			}
 						
 			protected function creationCompleteHandler(event:FlexEvent):void {

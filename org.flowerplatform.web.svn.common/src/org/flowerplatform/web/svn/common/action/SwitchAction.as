@@ -39,17 +39,6 @@ package  org.flowerplatform.web.svn.common.action {
 			icon = SvnCommonPlugin.getInstance().getResourceUrl("images/switch.gif");
 		}
 		
-		/**
-		 * @flowerModelElementId _GWBDMAMhEeOrJqcAep-lCg
-		 */
-		public function isTreeNode():Boolean {
-			var i:int;
-			for (i = 0; i < selection.length; i++)
-				if (!(selection.getItemAt(i) is TreeNode))
-					return false;
-			return true;
-		}
-		
 		public override function get visible():Boolean {				
 			for (var i:int = 0; i < selection.length; i++) {
 				var currentSelection:Object = selection.getItemAt(i);
