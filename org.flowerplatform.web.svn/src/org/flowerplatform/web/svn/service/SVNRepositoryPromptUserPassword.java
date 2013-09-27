@@ -1,4 +1,4 @@
-package service;
+package org.flowerplatform.web.svn.service;
 
 import java.util.HashMap;
 
@@ -7,6 +7,7 @@ import org.flowerplatform.communication.IPrincipal;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
+import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
 import org.flowerplatform.web.svn.remote.OpenSvnCredentialsWindowClientCommand;
 import org.flowerplatform.web.svn.remote.SvnService;
@@ -86,8 +87,10 @@ public class SVNRepositoryPromptUserPassword implements ISVNPromptUserPassword{
 		if (principal.getUserSvnRepositories().get(promptRealm) == null || 
 			principal.getUserSvnRepositories().get(promptRealm).get(0) == null ||  // user
 			promptUsername == null) {
-				context.getCommunicationChannel().appendOrSendCommand(
-					new OpenSvnCredentialsWindowClientCommand(promptRealm, promptUsername, command));
+			if(command.getParameters().get(0).getClass() == StatefulServiceInvocationContext.class)
+				command.getParameters().remove(0);
+			context.getCommunicationChannel().appendOrSendCommand(
+				new OpenSvnCredentialsWindowClientCommand(promptRealm, promptUsername, command));
 			
 		} else {
 			username = principal.getUserSvnRepositories().get(promptRealm).get(0);

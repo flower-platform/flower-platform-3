@@ -132,8 +132,6 @@ public class SvnService {
 		try {
 			// save comment
 			addComment(context.getCommunicationChannel().getPrincipal().getUser().getLogin(), comment);
-			if(context.getCommand().getParameters().size() >=1)
-				context.getCommand().getParameters().remove(0);
 			tlCommand.set(context.getCommand());
 			// create remote folder
 			parentFolder.createRemoteFolder(folderName, comment,
@@ -952,8 +950,6 @@ public class SvnService {
 		// runnable
 		final List<String> operationSuccessful = new ArrayList<String>();
 
-		if(context.getCommand().getParameters().size() >=1)
-			context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
 		try {
 			new DatabaseOperationWrapper(new DatabaseOperation() {
@@ -1160,6 +1156,7 @@ public class SvnService {
 		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
 		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
+
 		SVNRevision revision;
 		if (headRevision) {
 			revision = SVNRevision.HEAD;
@@ -1338,8 +1335,7 @@ public class SvnService {
 			return false;
 		}
 		if (targetFile.mkdirs()) {
-			ProjectsService.getInstance().markAsWorkingDirectoryForFile(
-					context, targetFile);
+			ProjectsService.getInstance().markAsWorkingDirectoryForFile(context, targetFile);
 			return true;
 		} else {
 			return false;
@@ -1849,7 +1845,7 @@ public class SvnService {
 	 * @author Cristina Necula
 	 * 
 	 */
-	private void addComment(final String iuser, final String comment) {
+	public void addComment(final String iuser, final String comment) {
 
 		DatabaseOperationWrapper wrapper = new DatabaseOperationWrapper(
 				new DatabaseOperation() {
@@ -2002,8 +1998,6 @@ public class SvnService {
 		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin
 				.getInstance().getMessage("svn.deleteSvnAction.monitor.title"),
 				cc);
-		if(context.getCommand().getParameters().size() >=1)
-			context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
 		try {
 			// save comment
@@ -2125,14 +2119,13 @@ public class SvnService {
 	 * 
 	 */
 	@RemoteInvocation
-	public void login(ServiceInvocationContext context, String uri,
+	public boolean login(ServiceInvocationContext context, String uri,
 			String username, String password,
 			InvokeServiceMethodServerCommand command) {
 		tlCommand.remove();
 		try {
 			changeCredentials(context, uri, username, password);
 			command.setCommunicationChannel(context.getCommunicationChannel());
-			
 			command.executeCommand();
 		} catch (Exception e) {
 			logger.error("Exception thrown while logging user!", e);
@@ -2141,11 +2134,13 @@ public class SvnService {
 							.getInstance().getMessage("error"),
 							"Error while logging user!",
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return false;
 		} finally {
 			if (tlCommand != null){
 				tlCommand.remove();
 			}
 		}
+		return true;
 	}
 
 	/**
@@ -2234,12 +2229,17 @@ public class SvnService {
 			SVNRevision svnRevision2 = revision2 == -1 ? SVNRevision.HEAD
 					: new SVNRevision.Number(revision2);
 
-			client.merge(svnUrl1, svnRevision1, svnUrl2, svnRevision2,
-					files[0], force, recurse, false, ignoreAncestry);
+			client.merge(svnUrl1, svnRevision1, svnUrl2, svnRevision2, files[0], force, recurse, false, ignoreAncestry);
 			monitor.worked(100);
 		} catch (SVNClientException e) {
 			if (isAuthentificationException(e))
 				return true;
+			logger.error("Error during Merge operation!", e);
+			context.getCommunicationChannel().appendOrSendCommand(
+					new DisplaySimpleMessageClientCommand(CommonPlugin
+							.getInstance().getMessage("error"),
+							e.getMessage(),
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
 			checkForConflict = true;
 			throw SVNException.wrapException(e);
 		} catch (MalformedURLException e) {
@@ -2249,7 +2249,7 @@ public class SvnService {
 			opMng.endOperation();
 			monitor.done();
 			if (checkForConflict)
-				return true;
+				return false;
 		}
 		return true;
 	}
@@ -2263,8 +2263,6 @@ public class SvnService {
 			ArrayList<ArrayList<PathFragment>> selectionList,
 			ArrayList<PathFragment> path){
 		
-		if(context.getCommand().getParameters().size() >=1)
-			context.getCommand().getParameters().remove(0);
 		tlCommand.set(context.getCommand());
 		
 		List<String> specs = new ArrayList<String>();

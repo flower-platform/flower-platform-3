@@ -31,8 +31,6 @@ public class FSFile_SvnNodePopulator implements INodePopulator{
 		}
 		InvokeServiceMethodServerCommand command = (InvokeServiceMethodServerCommand)context.get("clientCommandKey");
 		if (command != null) {
-			if (command.getParameters().get(0).getClass() == StatefulServiceInvocationContext.class)
-				command.getParameters().remove(0);
 			SvnService.tlCommand.set(command);
 		}
 		@SuppressWarnings("unchecked")
