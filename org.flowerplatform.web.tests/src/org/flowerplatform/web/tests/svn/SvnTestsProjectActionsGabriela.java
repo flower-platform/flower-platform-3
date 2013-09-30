@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.team.core.TeamException;
+
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
@@ -102,12 +103,17 @@ public class SvnTestsProjectActionsGabriela {
 		return false;
 	}
 
-	public Boolean folderExistsAtDestination(List<PathFragment> destinationPath, String folderName) throws TeamException {
+	public Boolean folderExistsAtDestination(
+			List<PathFragment> destinationPath, String folderName)
+			throws TeamException {
 		RemoteFolder destinationFolder;
-		if (destinationPath.get(destinationPath.size() - 1).getName().equals("svn://csp1/flower2"))
-			destinationFolder = (RemoteFolder) SVNProviderPlugin.getPlugin().getRepository("svn://csp1/flower2").getRootFolder();
-		else	
-			destinationFolder = (RemoteFolder) GenericTreeStatefulService.getNodeByPathFor(destinationPath, null);
+		if (destinationPath.get(destinationPath.size() - 1).getName()
+				.equals("svn://csp1/flower2"))
+			destinationFolder = (RemoteFolder) SVNProviderPlugin.getPlugin()
+					.getRepository("svn://csp1/flower2").getRootFolder();
+		else
+			destinationFolder = (RemoteFolder) GenericTreeStatefulService
+					.getNodeByPathFor(destinationPath, null);
 		ISVNRemoteResource[] children = destinationFolder.members(null);
 		for (int i = 0; i < children.length; i++) {
 			if (children[i].getName().equals(folderName))
@@ -115,7 +121,7 @@ public class SvnTestsProjectActionsGabriela {
 		}
 		return false;
 	}
-	
+
 	public static void checkoutProjectsInPreparationForTests() {
 		// if checkouts fail, then all the other tests would have failed
 		// nonetheless if checkouts were made in their methods
@@ -123,7 +129,8 @@ public class SvnTestsProjectActionsGabriela {
 		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", "svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete", "svnFolder"));
+				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
+				"svnFolder"));
 		// commonProject is common for update, commit, revert and ignore tests
 		SvnService.getInstance().checkout(context, selectionForCheckout,
 				workingDirectoryPartialPath, "\\commonWD", "7000", 0, true,
@@ -145,10 +152,10 @@ public class SvnTestsProjectActionsGabriela {
 				"organization", "workingDirectories", "workingDirectories");
 		checkoutProjectsInPreparationForTests();
 	}
-	
+
 	@Test
-	public void branchTagProjectsTest() throws MalformedURLException, TeamException {
-		//fail("Not yet implemented");
+	public void branchTagProjectsTest() throws MalformedURLException,
+			TeamException {
 		boolean resourceSelected;
 		List<BranchResource> branchResources = new ArrayList<BranchResource>();
 		String destinationURL;
@@ -186,23 +193,27 @@ public class SvnTestsProjectActionsGabriela {
 				"organization", ".svn-repositories", "svnRepositories",
 				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
 				"svnFolder", "gabriela", "svnFolder");
-		assertEquals(true, folderExistsAtDestination(destinationPathFragment, "branchTagTestProjects"));
+		assertEquals(
+				true,
+				folderExistsAtDestination(destinationPathFragment,
+						"branchTagTestProjects"));
 		// end of Test 2
-		
+
 		// Test 3 => undo the action from Test 1
 		List<List<PathFragment>> objectFullPaths = new ArrayList<List<PathFragment>>();
 		List<PathFragment> selectedItemToDelete = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete", "svnFolder",
-				"gabriela", "svnFolder", 
-				"branchTagTestProjects", "svnFolder");
-				objectFullPaths.add(selectedItemToDelete);
-				actionResult = SvnService.getInstance().deleteSvnAction(context, objectFullPaths, "");
-				assertEquals("The folder was not deleted", true, actionResult);
+				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
+				"svnFolder", "gabriela", "svnFolder", "branchTagTestProjects",
+				"svnFolder");
+		objectFullPaths.add(selectedItemToDelete);
+		actionResult = SvnService.getInstance().deleteSvnAction(context,
+				objectFullPaths, "");
+		assertEquals("The folder was not deleted", true, actionResult);
 		// end of Test 3
 	}
-	
+
 	@Test
 	public void switchToBranchTag() {
 		List<BranchResource> branchResources = new ArrayList<BranchResource>();
@@ -240,7 +251,7 @@ public class SvnTestsProjectActionsGabriela {
 						force));
 		// end of Test 1
 	}
-	
+
 	@Test
 	public void cleanupTest() {
 		Boolean actionResult;
@@ -257,33 +268,22 @@ public class SvnTestsProjectActionsGabriela {
 				resourcesSelected);
 		assertEquals(true, actionResult);
 	}
-	
-/*	@Test
-	public void shareProjectTest() {
-		ArrayList<PathFragment> projectPath;
-		String repositoryUrl;
-		String directoryName;
-		boolean create;
-		String comment;
-		boolean actionResult;
 
-		// Test 1 => Share Project (the destination is the root folder
-		projectPath = getArrayOfPathFragmentsFromStringArgs(
-				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
-				"organization", "workingDirectories", "workingDirectories",
-				"my_workingdir", "workingDirectory", "proj_unversioned", "project", "proj", "projFile");
-		repositoryUrl = "svn://csp1/flower2";
-		directoryName = "river";
-		create = false;
-		comment = "lala";
-		actionResult = SvnService.getInstance().shareProject(context,
-				projectPath, repositoryUrl, directoryName, create, comment);
-		assertEquals(true, actionResult);
-		// end of Test 1
-		
-		
-		
-		
-	}*/
+	/*
+	 * @Test public void shareProjectTest() { ArrayList<PathFragment>
+	 * projectPath; String repositoryUrl; String directoryName; boolean create;
+	 * String comment; boolean actionResult;
+	 * 
+	 * // Test 1 => Share Project (the destination is the root folder
+	 * projectPath = getArrayOfPathFragmentsFromStringArgs(
+	 * "explorerTreeStatefulService|Explorer1", "r", "hibernate",
+	 * "organization", "workingDirectories", "workingDirectories",
+	 * "my_workingdir", "workingDirectory", "proj_unversioned", "project",
+	 * "proj", "projFile"); repositoryUrl = "svn://csp1/flower2"; directoryName
+	 * = "river"; create = false; comment = "lala"; actionResult =
+	 * SvnService.getInstance().shareProject(context, projectPath,
+	 * repositoryUrl, directoryName, create, comment); assertEquals(true,
+	 * actionResult); // end of Test 1 }
+	 */
 
 }

@@ -1,9 +1,27 @@
+/* license-start
+* 
+* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation version 3.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+* 
+* Contributors:
+*   Crispico - Initial API and implementation
+*
+* license-end
+*/
+
 package org.flowerplatform.web.svn.common.remote {
 	import mx.collections.ArrayCollection;
 	import mx.controls.List;
 	
 	import org.flowerplatform.communication.tree.remote.PathFragment;
-	
 	
 	/**
 	 * @see Corresponding Java class.
@@ -12,7 +30,6 @@ package org.flowerplatform.web.svn.common.remote {
 	 * 
 	 * @flowerModelElementId _n4QD4GxTEeGmX-bWmnlzew
 	 */
-	/*[RemoteClass(alias="org.flowerplatform.web.svn.remote.BranchResource")]*/
 	[Bindable]
 	[SecureSWF(rename="off")]
 	public class BranchResource {

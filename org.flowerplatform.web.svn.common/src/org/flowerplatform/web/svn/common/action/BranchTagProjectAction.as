@@ -30,7 +30,7 @@ package  org.flowerplatform.web.svn.common.action {
 	/**
 	 * @author Gabriela Murgoci
 	 */
-	public class BranchTagProjectAction extends ActionBase  {
+	public class BranchTagProjectAction extends ActionBase {
 		/**
 		 * @flowerModelElementId _-0ZzQAMdEeOrJqcAep-lCg
 		 */
@@ -56,7 +56,7 @@ package  org.flowerplatform.web.svn.common.action {
 		/**
 		 * @flowerModelElementId _TnF_EAMeEeOrJqcAep-lCg
 		 */
-		public override function run():void {			
+		public override function run():void { 			
 			var view:BranchTagView = new BranchTagView();
 			view.node = TreeNode(selection.getItemAt(0));
 			view.selection = selection;

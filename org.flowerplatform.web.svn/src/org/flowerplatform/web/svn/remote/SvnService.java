@@ -256,7 +256,7 @@ public class SvnService {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public boolean branchTagResources(ServiceInvocationContext context,
-			boolean resourceSelected, List<BranchResource> branchResources,
+			boolean repositoryOrProjects, List<BranchResource> branchResources,
 			String destinationURL, String comment, Number revision,
 			boolean createMissingFolders, boolean preserveFolderStructure)
 			throws MalformedURLException {
@@ -278,7 +278,7 @@ public class SvnService {
 			SVNUrl[] sourceUrls = null;
 			if (remoteResources.size() > 1) {
 				ArrayList<SVNUrl> urlArray = new ArrayList<SVNUrl>();
-				if (!resourceSelected) {
+				if (!repositoryOrProjects) {
 					for (int i = 0; i < remoteResources.size(); i++) {
 						urlArray.add(((ISVNRemoteResource) remoteResources
 								.get(i)).getUrl());
@@ -300,7 +300,7 @@ public class SvnService {
 				sourceUrls = new SVNUrl[urlArray.size()];
 				urlArray.toArray(sourceUrls);
 			} else {
-				if (!resourceSelected) {
+				if (!repositoryOrProjects) {
 					sourceUrls = new SVNUrl[1];
 					sourceUrls[0] = ((ISVNRemoteResource) (remoteResources
 							.get(0))).getUrl();
@@ -328,9 +328,7 @@ public class SvnService {
 										+ repository.getRootFolder().getUrl()
 												.toString().length(),
 								destinationURL.lastIndexOf("/")));
-			}
-
-			else {
+			} else {
 				destinationFolder = repository.getRootFolder();
 			}
 			if (repository != null)
@@ -382,8 +380,7 @@ public class SvnService {
 			return false;
 		}
 		// tree refresh
-		if (!resourceSelected) {
-			
+		if (!repositoryOrProjects) {
 			List<PathFragment> partialPath = (List<PathFragment>) branchResources
 					.get(0).getPath();
 			partialPath.remove(partialPath.size() - 1);
@@ -394,7 +391,6 @@ public class SvnService {
 					.getServiceFromPathWithRoot(partialPath))
 					.dispatchContentUpdate(destinationFolder);
 			ISVNRemoteFolder node = null;
-
 			if (selection instanceof ISVNRemoteFolder) {
 				node = (ISVNRemoteFolder) selection;
 			} else if (selection instanceof IAdaptable) {
@@ -475,6 +471,7 @@ public class SvnService {
 	 * @author Gabriela Murgoci
 	 * @throws SVNException
 	 */
+	@SuppressWarnings("rawtypes")
 	public ArrayList<Object> populateBranchResourcesList(
 			ServiceInvocationContext context,
 			List<List<PathFragment>> selected, boolean actionType)
@@ -499,9 +496,6 @@ public class SvnService {
 			}
 			remoteResource = GenericTreeStatefulService.getNodeByPathFor(
 					selectedResource, null);
-			// /
-
-			// /
 			item.setPath(selectedResource);
 			item.setName(selectedResource.get(selectedResource.size() - 1)
 					.getName());
@@ -735,7 +729,6 @@ public class SvnService {
 			if (create) {
 				Properties properties = new Properties();
 				properties.setProperty("url", repositoryUrl);
-
 				repository = SVNProviderPlugin.getPlugin().getRepositories()
 						.createRepository(properties);
 			} else {
@@ -1093,11 +1086,19 @@ public class SvnService {
 		return true;
 	}
 
-	public boolean checkout(ServiceInvocationContext context, List<List<PathFragment>> folders, List<PathFragment> workingDirectoryPartialPath,
-			String workingDirectoryDestination, String revisionNumberAsString, int depthIndex, Boolean headRevision, boolean force, boolean ignoreExternals, String newProjectName) {
-		CommunicationChannel channel = (CommunicationChannel) context.getCommunicationChannel();
-		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
-		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
+	public boolean checkout(ServiceInvocationContext context,
+			List<List<PathFragment>> folders,
+			List<PathFragment> workingDirectoryPartialPath,
+			String workingDirectoryDestination, String revisionNumberAsString,
+			int depthIndex, Boolean headRevision, boolean force,
+			boolean ignoreExternals, String newProjectName) {
+		CommunicationChannel channel = (CommunicationChannel) context
+				.getCommunicationChannel();
+		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance()
+				.getMessage("svn.service.checkout.checkoutProgressMonitor"),
+				channel);
+		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath)
+				+ workingDirectoryDestination;
 		SVNRevision revision;
 		if (headRevision) {
 			revision = SVNRevision.HEAD;
@@ -1124,12 +1125,13 @@ public class SvnService {
 				correspondingRemoteResource = (RemoteResource) treeNode;
 			}
 			remoteFolders[i] = correspondingRemoteResource;
-		}		
+		}
 		ISVNClientAdapter myClient;
-		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(CommunicationPlugin.tlCurrentChannel.get());
+		SvnOperationNotifyListener opMng = new SvnOperationNotifyListener(
+				CommunicationPlugin.tlCurrentChannel.get());
 		try {
 			myClient = SVNProviderPlugin.getPlugin().getSVNClient();
-			pm.beginTask(null, 1000);			
+			pm.beginTask(null, 1000);
 			opMng.beginOperation(pm, myClient, true);
 			myClient.setProgressListener(opMng);
 			for (int i = 0; i < folders.size(); i++) {
@@ -1158,7 +1160,6 @@ public class SvnService {
 			channel.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					"Error", e.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
-
 
 			return false;
 		} finally {
@@ -1300,9 +1301,9 @@ public class SvnService {
 	}
 
 	public Boolean updateToVersion(ServiceInvocationContext context,
-			List<List<PathFragment>> selectionList, String revision,
-			int depth, Boolean changeWorkingCopyToSpecifiedDepth,
-			Boolean ignoreExternals, Boolean allowUnversionedObstructions) {
+			List<List<PathFragment>> selectionList, String revision, int depth,
+			Boolean changeWorkingCopyToSpecifiedDepth, Boolean ignoreExternals,
+			Boolean allowUnversionedObstructions) {
 		File[] fileMethodArgument = new File[selectionList.size()];
 		for (int i = 0; i < selectionList.size(); i++) {
 			List<PathFragment> currentPathSelection = selectionList.get(i);
@@ -1517,8 +1518,7 @@ public class SvnService {
 	 */
 	public ArrayList<File> getFilesWithGivenStatusesForPathFragmentFiles(
 			ServiceInvocationContext context,
-			List<List<PathFragment>> selection,
-			SVNStatusKind... kinds) {
+			List<List<PathFragment>> selection, SVNStatusKind... kinds) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
 		ArrayList<File> files = new ArrayList<File>();
@@ -1559,8 +1559,7 @@ public class SvnService {
 	}
 
 	public Boolean checkForUnversionedAndIgnoredFilesInSelection(
-			ServiceInvocationContext context,
-			List<List<PathFragment>> selection) {
+			ServiceInvocationContext context, List<List<PathFragment>> selection) {
 		CommunicationChannel channel = (CommunicationChannel) context
 				.getCommunicationChannel();
 		ArrayList<File> files = getFilesWithGivenStatusesForPathFragmentFiles(
@@ -1785,7 +1784,9 @@ public class SvnService {
 				myClientAdapter.commit(files, message, recurse, keepLocks);
 			} catch (SVNClientException e) {
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand("Error", e.getMessage(), DisplaySimpleMessageClientCommand.ICON_ERROR));
+				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+						"Error", e.getMessage(),
+						DisplaySimpleMessageClientCommand.ICON_ERROR));
 				return false;
 			}
 		} catch (SVNException e) {
@@ -1918,7 +1919,8 @@ public class SvnService {
 	 * 
 	 */
 
-	public boolean deleteSvnAction(ServiceInvocationContext context, List<List<PathFragment>> objectFullPaths, String comment) {
+	public boolean deleteSvnAction(ServiceInvocationContext context,
+			List<List<PathFragment>> objectFullPaths, String comment) {
 
 		final CommunicationChannel cc = context.getCommunicationChannel();
 
@@ -1991,7 +1993,7 @@ public class SvnService {
 		ProgressMonitor monitor = ProgressMonitor.create(SvnPlugin
 				.getInstance().getMessage("svn.deleteSvnAction.monitor.title"),
 				cc);
-		
+
 		tlCommand.set(context.getCommand());
 
 		try {

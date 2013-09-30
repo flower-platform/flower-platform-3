@@ -22,10 +22,12 @@ package org.flowerplatform.web.tests.svn;
 import static org.junit.Assert.*;
 
 import java.net.MalformedURLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.team.core.TeamException;
+
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
@@ -97,12 +99,17 @@ public class SvnTestsRepositoryActionsGabriela {
 		return folders;
 	}
 
-	public Boolean folderExistsAtDestination(List<PathFragment> destinationPath, String folderName) throws TeamException {
+	public Boolean folderExistsAtDestination(
+			List<PathFragment> destinationPath, String folderName)
+			throws TeamException {
 		RemoteFolder destinationFolder;
-		if (destinationPath.get(destinationPath.size() - 1).getName().equals("svn://csp1/flower2"))
-			destinationFolder = (RemoteFolder) SVNProviderPlugin.getPlugin().getRepository("svn://csp1/flower2").getRootFolder();
-		else	
-			destinationFolder = (RemoteFolder) GenericTreeStatefulService.getNodeByPathFor(destinationPath, null);
+		if (destinationPath.get(destinationPath.size() - 1).getName()
+				.equals("svn://csp1/flower2"))
+			destinationFolder = (RemoteFolder) SVNProviderPlugin.getPlugin()
+					.getRepository("svn://csp1/flower2").getRootFolder();
+		else
+			destinationFolder = (RemoteFolder) GenericTreeStatefulService
+					.getNodeByPathFor(destinationPath, null);
 		ISVNRemoteResource[] children = destinationFolder.members(null);
 		for (int i = 0; i < children.length; i++) {
 			if (children[i].getName().equals(folderName))
@@ -110,7 +117,7 @@ public class SvnTestsRepositoryActionsGabriela {
 		}
 		return false;
 	}
-	
+
 	public Boolean existsNewFolder(String folderName) {
 		List<RemoteFolder> foldersOfRepo = getRepositoryFolders("svn://csp1/flower2");
 		for (int i = 0; i < foldersOfRepo.size(); i++) {
@@ -176,33 +183,37 @@ public class SvnTestsRepositoryActionsGabriela {
 		assertEquals("The folder already exists in the repository", true,
 				actionResult);
 		// end of Test 3
-		
+
 		// Undo previous actions
-		
-		// Test 4 => Delete a folder; it will delete the folder created by Test 1
+
+		// Test 4 => Delete a folder; it will delete the folder created by Test
+		// 1
 		List<List<PathFragment>> objectFullPaths = new ArrayList<List<PathFragment>>();
 		List<PathFragment> selectedItemToDelete = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories",
 				"svn://csp1/flower2", "svnRepository", "create1", "svnFolder");
 		objectFullPaths.add(selectedItemToDelete);
-		actionResult = SvnService.getInstance().deleteSvnAction(context, objectFullPaths, "");
+		actionResult = SvnService.getInstance().deleteSvnAction(context,
+				objectFullPaths, "");
 		assertEquals("The folder was not deleted", true, actionResult);
 		// end of Test 4
-		
-		// Test 5 => Delete a folder; it will delete the folder created by Test 3
+
+		// Test 5 => Delete a folder; it will delete the folder created by Test
+		// 3
 		objectFullPaths = new ArrayList<List<PathFragment>>();
 		selectedItemToDelete = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete", "svnFolder", "gabriela", "svnFolder",
-				"create2", "svnFolder");
+				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
+				"svnFolder", "gabriela", "svnFolder", "create2", "svnFolder");
 		objectFullPaths.add(selectedItemToDelete);
-		actionResult = SvnService.getInstance().deleteSvnAction(context, objectFullPaths, "");
+		actionResult = SvnService.getInstance().deleteSvnAction(context,
+				objectFullPaths, "");
 		assertEquals("The folder was not deleted", true, actionResult);
 		// end of Test 5
 	}
-	
+
 	@Test
 	public void renameMoveTest() throws TeamException {
 		Boolean actionResult;
@@ -217,7 +228,8 @@ public class SvnTestsRepositoryActionsGabriela {
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories",
 				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
-				"svnFolder", "gabriela", "svnFolder", "rename2", "svnFolder", "rename7", "svnFolder");
+				"svnFolder", "gabriela", "svnFolder", "rename2", "svnFolder",
+				"rename7", "svnFolder");
 		destinationPath = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories",
@@ -230,9 +242,11 @@ public class SvnTestsRepositoryActionsGabriela {
 				comment);
 		assertEquals(true, actionResult);
 		// end of Test 1
-		
-		// // Test 2 => check if the folder from Test 1 exists at the destination
-		assertEquals(true, folderExistsAtDestination(destinationPath, "rename7"));
+
+		// // Test 2 => check if the folder from Test 1 exists at the
+		// destination
+		assertEquals(true,
+				folderExistsAtDestination(destinationPath, "rename7"));
 		// end of Test 2
 
 		// Test 3 => move a folder from a folder to the repository
@@ -253,27 +267,28 @@ public class SvnTestsRepositoryActionsGabriela {
 		assertEquals(true, actionResult);
 		// end of Test 3
 
-		 // Test 4 => move a folder to a folder that already contains a folder
-		 //with the same name; 
-		 remoteResourcePath = getArrayOfPathFragmentsFromStringArgs(
-		 "explorerTreeStatefulService|Explorer1", "r", "hibernate",
-		 "organization", ".svn-repositories", "svnRepositories",
-		 "svn://csp1/flower2", "svnRepository", "testing_do_not_delete", "svnFolder",
-		 "gabriela", "svnFolder", "rename7", "svnFolder");
-		 destinationPath = getArrayOfPathFragmentsFromStringArgs(
-		 "explorerTreeStatefulService|Explorer1", "r", "hibernate",
-		 "organization", ".svn-repositories", "svnRepositories",
-		 "svn://csp1/flower2", "svnRepository", "testing_do_not_delete", "svnFolder",
-		 "gabriela", "svnFolder", "rename1", "svnFolder");
-		 remoteResourceName = "rename7";
-		 comment = "lala";
-		 actionResult = SvnService.getInstance().renameMove(context,
-		 remoteResourcePath, destinationPath, remoteResourceName, comment);
-		 assertEquals(false, actionResult);
-		 // end of Test 4
-		 
-		 // Test 5 => undo action from Test 1
-		 remoteResourcePath = getArrayOfPathFragmentsFromStringArgs(
+		// Test 4 => move a folder to a folder that already contains a folder
+		// with the same name;
+		remoteResourcePath = getArrayOfPathFragmentsFromStringArgs(
+				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+				"organization", ".svn-repositories", "svnRepositories",
+				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
+				"svnFolder", "gabriela", "svnFolder", "rename7", "svnFolder");
+		destinationPath = getArrayOfPathFragmentsFromStringArgs(
+				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+				"organization", ".svn-repositories", "svnRepositories",
+				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
+				"svnFolder", "gabriela", "svnFolder", "rename1", "svnFolder");
+		remoteResourceName = "rename7";
+		comment = "lala";
+		actionResult = SvnService.getInstance().renameMove(context,
+				remoteResourcePath, destinationPath, remoteResourceName,
+				comment);
+		assertEquals(false, actionResult);
+		// end of Test 4
+
+		// Test 5 => undo action from Test 1
+		remoteResourcePath = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories",
 				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
@@ -290,7 +305,7 @@ public class SvnTestsRepositoryActionsGabriela {
 				comment);
 		assertEquals(true, actionResult);
 		// end of Test 5
-		
+
 		// Test 6 => undo action from Test 3
 		remoteResourcePath = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
@@ -309,7 +324,7 @@ public class SvnTestsRepositoryActionsGabriela {
 		assertEquals(true, actionResult);
 		// end of Test 6
 	}
-	
+
 	@Test
 	public void branchTagTest() throws MalformedURLException, TeamException {
 		boolean resourceSelected;
@@ -351,42 +366,49 @@ public class SvnTestsRepositoryActionsGabriela {
 				"organization", ".svn-repositories", "svnRepositories",
 				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
 				"svnFolder", "gabriela", "svnFolder");
-		assertEquals(true, folderExistsAtDestination(destinationPathFragment, "branchTagTestSingleSelection"));
+		assertEquals(
+				true,
+				folderExistsAtDestination(destinationPathFragment,
+						"branchTagTestSingleSelection"));
 		// end of Test 2
-		
+
 		// Test 3 => undo the previous action
 		List<List<PathFragment>> objectFullPaths = new ArrayList<List<PathFragment>>();
 		List<PathFragment> selectedItemToDelete = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete", "svnFolder",
-				"gabriela", "svnFolder", "branchTagTestSingleSelection", "svnFolder");
-				objectFullPaths.add(selectedItemToDelete);
-				actionResult = SvnService.getInstance().deleteSvnAction(context, objectFullPaths, "");
-				assertEquals("The folder was not deleted", true, actionResult);
+				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
+				"svnFolder", "gabriela", "svnFolder",
+				"branchTagTestSingleSelection", "svnFolder");
+		objectFullPaths.add(selectedItemToDelete);
+		actionResult = SvnService.getInstance().deleteSvnAction(context,
+				objectFullPaths, "");
+		assertEquals("The folder was not deleted", true, actionResult);
 		// end of Test 3
-				
-		// Test 4 => multiple selection; 
+
+		// Test 4 => multiple selection;
 		// the application works but the test does not work;
 		// Error:
-		//org.tigris.subversion.svnclientadapter.SVNClientException: org.apache.subversion.javahl.ClientException: Filesystem is corrupt
-		//svn: Invalid change ordering: new node revision ID without delete
-		/*ArrayList<PathFragment> secondResourcePathFragment = getArrayOfPathFragmentsFromStringArgs(
-				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
-				"organization", ".svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
-				"svnFolder", "gabriela", "svnFolder", "branchTagTestDestination",
-				"svnFolder");
-		bRes.setImage("image/folder_pending.gif");
-		bRes.setName("hey");
-		bRes.setPartialPath("");
-		bRes.setPath(secondResourcePathFragment);
-		branchResources.add(bRes);
-		destinationURL = "svn://csp1/flower2/testing_do_not_delete/gabriela/branchTagTestMultipleSelection";
-		actionResult = SvnService.getInstance().branchTagResources(context,
-				resourceSelected, branchResources, destinationURL, comment, 7,
-				createMissingFolders, preserveFolderStructure);
-		assertEquals(true, actionResult);*/
+		// org.tigris.subversion.svnclientadapter.SVNClientException:
+		// org.apache.subversion.javahl.ClientException: Filesystem is corrupt
+		// svn: Invalid change ordering: new node revision ID without delete
+		/*
+		 * ArrayList<PathFragment> secondResourcePathFragment =
+		 * getArrayOfPathFragmentsFromStringArgs(
+		 * "explorerTreeStatefulService|Explorer1", "r", "hibernate",
+		 * "organization", ".svn-repositories", "svnRepositories",
+		 * "svn://csp1/flower2", "svnRepository", "testing_do_not_delete",
+		 * "svnFolder", "gabriela", "svnFolder", "branchTagTestDestination",
+		 * "svnFolder"); bRes.setImage("image/folder_pending.gif");
+		 * bRes.setName("hey"); bRes.setPartialPath("");
+		 * bRes.setPath(secondResourcePathFragment); branchResources.add(bRes);
+		 * destinationURL =
+		 * "svn://csp1/flower2/testing_do_not_delete/gabriela/branchTagTestMultipleSelection"
+		 * ; actionResult = SvnService.getInstance().branchTagResources(context,
+		 * resourceSelected, branchResources, destinationURL, comment, 7,
+		 * createMissingFolders, preserveFolderStructure); assertEquals(true,
+		 * actionResult);
+		 */
 		// end of Test 3
 	}
 

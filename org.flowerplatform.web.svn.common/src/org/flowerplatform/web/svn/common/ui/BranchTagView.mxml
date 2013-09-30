@@ -177,7 +177,7 @@ license-end
 					new InvokeServiceMethodServerCommand("svnService",
 						"branchTagResources",
 						[actionType, branchResources, locationTxt.text, commComponent.commitMessage.text, revision, createMissingFolders.selected, preserveFolderStructure.selected],
-						this, getProjectsCallbackHandler ));  
+						this, getProjectsCallbackHandler));  
 			} 
 			
 			override public function set popupHost(value:IPopupHost):void {

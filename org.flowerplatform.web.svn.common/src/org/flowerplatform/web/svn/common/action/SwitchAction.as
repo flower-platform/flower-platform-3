@@ -30,7 +30,7 @@ package  org.flowerplatform.web.svn.common.action {
 	/**
 	 * @author Gabriela Murgoci
 	 */
-	public class SwitchAction extends ActionBase  {
+	public class SwitchAction extends ActionBase {
 		/**
 		 * @flowerModelElementId _-0ZzQAMdEeOrJqcAep-lCg
 		 */

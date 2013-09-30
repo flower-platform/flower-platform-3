@@ -28,7 +28,7 @@ package  org.flowerplatform.web.svn.common.action {
 	/**
 	 * @author Gabriela Murgoci
 	 */
-	public class RenameMoveAction extends ActionBase  {
+	public class RenameMoveAction extends ActionBase {
 		/**
 		 * @flowerModelElementId _-0ZzQAMdEeOrJqcAep-lCg
 		 */

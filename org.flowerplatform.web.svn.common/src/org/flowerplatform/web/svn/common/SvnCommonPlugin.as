@@ -57,7 +57,7 @@ package org.flowerplatform.web.svn.common {
 	 * @author Gabriela Murgoci
 	 * 	 
 	 */
-	public class SvnCommonPlugin extends AbstractFlowerFlexPlugin  {
+	public class SvnCommonPlugin extends AbstractFlowerFlexPlugin {
 		/**
 		 * @flowerModelElementId _fUOOYAM7EeOrJqcAep-lCg
 		 */
@@ -112,7 +112,6 @@ package org.flowerplatform.web.svn.common {
 			registerClassAlias("org.flowerplatform.web.svn.remote.dto.FileDto", FileDto);
 			registerClassAlias("org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto", GetModifiedFilesDto);	
 			registerClassAlias("org.flowerplatform.web.svn.history.HistoryEntry", HistoryEntry);			
-
 		}
 			
 		/**
@@ -160,7 +159,6 @@ package org.flowerplatform.web.svn.common {
 				isSvnRepositoryFile = false;
 			}			
 			return isSvnProjectFile || isSvnRepositoryFile;
-			
 		} 
 	}
 }
