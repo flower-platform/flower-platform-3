@@ -2,6 +2,7 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.common.link.ILinkHandler"/>
+    <classEntry path="org.flowerplatform.common.link.LinkTextArea"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

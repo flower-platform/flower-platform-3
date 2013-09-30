@@ -32,9 +32,7 @@ package org.flowerplatform.common.link {
 	 */
 	public class LinkProvider {
 		
-		public static const ORGANIZATION:String = "organization";
-		public static const OPEN_RESOURCES:String = "openResources";
-		public static const SELECT_RESOURCE_AT_INDEX:String = "selectResourceAtIndex";
+		public static const ORGANIZATION:String = "organization";		
 		public static const ACTIVATION_CODE:String = "activationCode";
 		public static const LOGIN:String = "login";
 		public static const SHOW_DEBUG_MENU:String = "showDebugMenu";
@@ -69,35 +67,7 @@ package org.flowerplatform.common.link {
 		public function getShowDebugMenu():String {
 			return parameters[SHOW_DEBUG_MENU];
 		}
-		
-		/**
-		 * 
-		 */
-		public function getOpenResources():String {
-			return parameters[OPEN_RESOURCES];
-		}
-		
-		/**
-		 * 
-		 */
-		public function clearOpenResources():void {
-			delete parameters[OPEN_RESOURCES];
-		}
-		
-		/**
-		 * 
-		 */
-		public function getSelectResourceAtIndex():int {
-			return parameters[SELECT_RESOURCE_AT_INDEX];
-		}
-		
-		/**
-		 * 
-		 */
-		public function clearSelectResourceAtIndex():void {
-			delete parameters[SELECT_RESOURCE_AT_INDEX];
-		}
-		
+						
 		private function printParameters():void {
 			for (var key:String in parameters) 
 				trace("[" + key + "] = [" + parameters[key] + "]");

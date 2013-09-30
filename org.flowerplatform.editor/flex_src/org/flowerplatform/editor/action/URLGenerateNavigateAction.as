@@ -1,3 +1,21 @@
+/* license-start
+* 
+* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation version 3.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+* 
+* Contributors:
+*   Crispico - Initial API and implementation
+*
+* license-end
+*/
 package org.flowerplatform.editor.action {
 	import mx.collections.ArrayCollection;
 	
@@ -27,19 +45,17 @@ package org.flowerplatform.editor.action {
 			for (var i:int = 0; i < selection.length; i++) {
 				// top level action: Open => search for the first editorDescriptor
 				var treeNode:TreeNode = TreeNode(selection.getItemAt(0));
-				var ctIndex:int = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
-				var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
-				currentEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(String(ctDescriptor.compatibleEditors.getItemAt(0)));
-				
-				if (currentEditorDescriptor == null || !currentEditorDescriptor.canCalculateFriendlyEditableResourcePath()) {
-					return false;
-				}
+				var ctIndex:int = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];				
+				var foundEditorDescriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getFirstEditorDescriptorForNode(ctIndex);
+				if (foundEditorDescriptor == null || !foundEditorDescriptor.canCalculateFriendlyEditableResourcePath())
+					return false; // node is not openable
 			}			
 			return true;
 		}
 		
 		override public function run():void {
 			var generateUrlView:URLGenerateNavigateView = new URLGenerateNavigateView();
+			generateUrlView.explorerSelection = selection;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(generateUrlView)
 				.setWidth(550)

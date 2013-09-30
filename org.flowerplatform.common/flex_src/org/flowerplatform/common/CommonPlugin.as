@@ -59,18 +59,26 @@ package org.flowerplatform.common {
 			linkProvider = new LinkProvider();
 			
 			ExternalInterface.addCallback("handleLink", handleLink);
-			
-			handleLink(linkProvider.getBrowserURL());
 		}
 		
 		/**
 		 * @author Cristina Constatinescu
 		 */
-		public function handleLink(url:String):void {
-			var parameters:Object = linkProvider.parseURLQueryParameters(url);
-			for (var object:String in parameters) {				
-				if (linkHandlers[object] != null) {	
-					ILinkHandler(linkHandlers[object]).handleLink(object, parameters[object]);					
+		public function handleLink(url:String = null, defaultCommand:String = null):void {
+			if (url == null) {
+				url = linkProvider.getBrowserURL();
+			}
+			var commands:Object = linkProvider.parseURLQueryParameters(url); // map command -> parameters
+			if (commands.length == 1 && url.indexOf("?") < 0 && defaultCommand) { 
+				// one command, url doesn't contain command name -> command can be passed in defaultCommand
+				if (linkHandlers[defaultCommand] != null) {	
+					ILinkHandler(linkHandlers[defaultCommand]).handleLink(defaultCommand, commands[object]);					
+				}
+			} else {
+				for (var object:String in commands) {				
+					if (linkHandlers[object] != null) {	
+						ILinkHandler(linkHandlers[object]).handleLink(object, commands[object]);					
+					}
 				}
 			}
 		}
