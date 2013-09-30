@@ -32,6 +32,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 
 /**
  * @author Mariana
+ * @author Sebastian Solomon
  */
 public class ImageComposerServlet extends PublicResourcesServlet {
 
@@ -52,10 +53,7 @@ public class ImageComposerServlet extends PublicResourcesServlet {
 			send404(request, response);
 			return;
 		}
-		
-		// both variables are prefixed with /
-		String plugin = requestedFile.substring(0, indexOfSecondSlash);
-		String[] paths = requestedFile.substring(indexOfSecondSlash).split("\\+");
+		String[] paths = requestedFile.split("\\|");
 		
 		BufferedImage result = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = result.createGraphics();
@@ -64,6 +62,9 @@ public class ImageComposerServlet extends PublicResourcesServlet {
 			if (!path.startsWith("/")) {
 				path = "/" + path;
 			}
+			indexOfSecondSlash = path.indexOf('/', 1);
+			String plugin = path.substring(0, indexOfSecondSlash);
+			path = path.substring(indexOfSecondSlash);
 			requestedFile = "platform:/plugin" + plugin + "/" + AbstractFlowerJavaPlugin.PUBLIC_RESOURCES_DIR + path;
 			try {
 				URL url = new URL(requestedFile);
@@ -79,6 +80,7 @@ public class ImageComposerServlet extends PublicResourcesServlet {
 		OutputStream output = null;
 		output = response.getOutputStream();
 		ImageIO.write(result, "png", output);
+		
 	}
 
 }
