@@ -48,7 +48,7 @@ license-end
 			import org.flowerplatform.flexutil.popup.IPopupHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
-			import org.flowerplatform.web.svn.common.ui.component.BranchTagSelectionPageView;
+			import org.flowerplatform.web.svn.common.ui.component.RepositoryBrowserView;
 			import org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView;
 			
 			public var resourcePath:String;
@@ -89,7 +89,7 @@ license-end
 			
 			private function browseBtnHandler(event:MouseEvent):void {
 				lastBtnPressedId = Button(event.target);
-				var view:BranchTagSelectionPageView = new BranchTagSelectionPageView();
+				var view:RepositoryBrowserView = new RepositoryBrowserView();
 				view.setResultHandler(this);
 				view.node = node;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()

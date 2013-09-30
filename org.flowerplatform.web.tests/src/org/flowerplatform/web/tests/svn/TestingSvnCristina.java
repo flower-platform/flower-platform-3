@@ -94,7 +94,7 @@ public class TestingSvnCristina {
 												"hibernate", "organization",
 												"workingDirectories", "workingDirectories");
 		
-		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
 		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs(
 			       "explorerTreeStatefulService|Explorer1", "r", "hibernate",
 			       "organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository", 
@@ -110,8 +110,6 @@ public class TestingSvnCristina {
 		//sometime fails due to absence of client 
 		//if so, run again, only his class
 		SvnService.getInstance().createFolderAndMarkAsWorkingDirectory(context, "commonWD", "hibernate");
-		
-		
 		
 		Boolean result = SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
 					"\\commonWD", "HEAD", 0, true, false, false, "");
@@ -136,6 +134,8 @@ public class TestingSvnCristina {
 
 			SvnService.tlCommand.set(command);
 			SvnService.getInstance().login(context, uri, username, password, command);
+//			SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
+//					"\\commonWD", "HEAD", 0, true, false, false, "");
 		}
 		
 	}
@@ -165,6 +165,7 @@ public class TestingSvnCristina {
 		result = SvnService.getInstance().createRemoteFolder(context, parentPathFragment, "cristina", "cristina create folder");
 		if (result == false) {
 			//user login
+//			CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
 
 			//command from CommunicationChannel is null; had to create new one
 			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
@@ -218,7 +219,6 @@ public class TestingSvnCristina {
 	    	result = SvnService.getInstance().createRemoteFolder(context, parentPathFragment, folderName, folderName + " create folder");
 	    } catch (Exception e) {
 			//user login
-
 			//command from CommunicationChannel is null; had to create new one
 			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
 			command.setServiceId("svnService");
@@ -297,10 +297,12 @@ public class TestingSvnCristina {
 			listPathFragment.add(two);
 	
 			//delete them
+//			CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
 			try {
 				result = SvnService.getInstance().deleteSvnAction(context, listPathFragment, "cc c");
 			}catch (Exception e) {
 				//user login; create new command
+//				CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
 				InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
 				command.setServiceId("svnService");
 				command.setMethodName("deleteSvnAction");
@@ -393,7 +395,7 @@ public class TestingSvnCristina {
 				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
 				"organization", "workingDirectories", "workingDirectories",
 				"ws_trunk", "ws_trunk", "ws_trunk", "project");
-		ArrayList<ArrayList<PathFragment>> listPathFragment = new ArrayList<>();
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(pathFragment);
 		CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
 		List<String> specs = new ArrayList<String>();
@@ -434,7 +436,7 @@ public class TestingSvnCristina {
 		selectionForFinalDelte.add(folder);
 		
 		//checkout folder
-		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
 		selectionForCheckout.add(folder);
 		try { 
 			SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
@@ -470,7 +472,7 @@ public class TestingSvnCristina {
 				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
 				"organization", "workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory", "cristina", "project", "merge_test", "project");
-		ArrayList<ArrayList<PathFragment>> listPathFragment = new ArrayList<>();
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(path);
 		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
 		
@@ -567,7 +569,7 @@ public class TestingSvnCristina {
 		selectionForFinalDelte.add(folder);
 		
 		//checkout folder
-		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
 		selectionForCheckout.add(folder);
 		try { 
 			SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
@@ -597,11 +599,11 @@ public class TestingSvnCristina {
 		//merge the files
 		
 		//local folder path for merge
-		ArrayList<PathFragment> path = getArrayOfPathFragmentsFromStringArgs(
+		List<PathFragment> path = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
 				"organization", "workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory", "cristina", "project", "merge_test", "project");
-		ArrayList<ArrayList<PathFragment>> listPathFragment = new ArrayList<>();
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(path);
 		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
 		
@@ -649,7 +651,7 @@ public class TestingSvnCristina {
 		assertEquals("Merge operation did not succeed", true, result);
 		
 		//test to see if the new file was modified
-		ArrayList<ArrayList<PathFragment>> selection = new ArrayList<>();
+		List<List<PathFragment>> selection = new ArrayList<>();
 		selection.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",

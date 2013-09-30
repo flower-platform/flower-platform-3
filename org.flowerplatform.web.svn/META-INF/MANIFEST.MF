@@ -17,4 +17,7 @@ Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.flowerplatform.web.svn.SvnPlugin
 Export-Package: org.flowerplatform.web.svn,
  org.flowerplatform.web.svn.remote,
- org.flowerplatform.web.svn.remote.dto
+ org.flowerplatform.web.svn.remote.dto,
+ org.flowerplatform.web.svn.remote
+
+

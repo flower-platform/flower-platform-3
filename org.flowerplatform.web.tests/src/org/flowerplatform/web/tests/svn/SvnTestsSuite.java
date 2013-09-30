@@ -1,4 +1,5 @@
 /* license-start
+<<<<<<< HEAD
  * 
  * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
  * 
@@ -24,7 +25,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({TestingSvnCristina.class})
+@SuiteClasses({TestingSvnCristina.class, SvnTestsVictor.class})
 public class SvnTestsSuite extends EclipseDependentTestSuiteBase{
 	
 }
+
+

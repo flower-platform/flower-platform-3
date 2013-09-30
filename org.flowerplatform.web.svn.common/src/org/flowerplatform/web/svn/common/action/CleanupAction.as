@@ -20,6 +20,7 @@
 package  org.flowerplatform.web.svn.common.action {
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.controls.Alert;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -48,11 +49,11 @@ package  org.flowerplatform.web.svn.common.action {
 				if (!(currentSelection is TreeNode)) {
 					return false;
 				}
-				if (currentSelection.customData == null ||
-					currentSelection.customData.svnFileType == null ||
-					currentSelection.customData.svnFileType == false) {
+				if (currentSelection.customData == null || !currentSelection.customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY] ||
+					currentSelection.customData.svnFileType == null || currentSelection.customData.svnFileType == false) {
 					return false;
 				}
+				//Alert.show(TreeNode(currentSelection).pathFragment.type.toString());
 			}			
 			return true;
 		}

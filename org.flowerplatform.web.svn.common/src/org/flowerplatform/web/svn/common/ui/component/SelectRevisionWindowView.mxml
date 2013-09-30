@@ -17,16 +17,13 @@ The result can be:
 
 @flowerModelElementId _v2V2QGwbEeGN3LpFXIiaDw
 -->
-<s:Group
-	xmlns:fx="http://ns.adobe.com/mxml/2009"
-	xmlns:s="library://ns.adobe.com/flex/spark"
-	xmlns:mx="library://ns.adobe.com/flex/mx"
-	
-	xmlns:pnl="com.crispico.flower.util.popup.*" 	
-	xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
-	
-	creationComplete="creationCompleteHandler(event)"
-	implements="org.flowerplatform.flexutil.popup.IPopupContent">
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009"
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:pnl="com.crispico.flower.util.popup.*"
+		 xmlns:common="com.crispico.flower.flexdiagram.util.common.*"
+		 creationComplete="creationCompleteHandler(event)"
+		 implements="org.flowerplatform.flexutil.popup.IPopupContent">
 	
 	<fx:Script>
 		<![CDATA[
@@ -108,8 +105,6 @@ The result can be:
 					if (revisionStart.charAt(0) == '*') {
 						revisionStart = revisionStart.substr(1);
 					}
-					
-					//ModalSpinner.addModalSpinner(this, "Loading data...");			
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnHistoryService",
 							"getEntries",
@@ -129,8 +124,6 @@ The result can be:
 					if (revisionStart.charAt(0) == '*') {
 						revisionStart = revisionStart.substr(1);
 					}
-					
-					//ModalSpinner.addModalSpinner(this, "Loading data...");			
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand("svnHistoryService",
 							"getEntries",
@@ -150,8 +143,6 @@ The result can be:
 					} else {
 						ArrayCollection(historyEntriesTable.dataProvider).addAll(value);
 					}
-					
-					//	ModalSpinner.removeModalSpinner(this);
 				}
 			}
 			
@@ -168,7 +159,6 @@ The result can be:
 					revisionStart = revisionStart.substr(1);
 				}
 				resultHandler.handleDialogResult(revisionStart);
-				//closeForm();
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 			}
 			
@@ -177,7 +167,6 @@ The result can be:
 			 */
 			protected function formCancelHandler(event:Event=null):void {	
 				resultHandler.handleDialogResult(null);
-				//super.formCancelHandler(event);
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);
 			}
 			
@@ -250,39 +239,43 @@ The result can be:
 	</fx:Script>
 	
 	<fx:Declarations>
-		<s:HGroup horizontalAlign="right" id="buttonBar">
-			<s:Button id="getAllBtn" click="getAllBtnHandler()" label="Get All"/>
-			<s:Button id="getNextBtn" click="getNextBtnHandler()" label="{'Next ' + SvnCommonPlugin.NUMBER_LOG_ENTRIES}"/>					
-			<s:Button id="okBtn" width="80" label="Ok" click="{formOkHandler(event)}" />
-			<s:Button id="cancelBtn" width="80" label="Cancel" click="{formCancelHandler(event)}" /> 	
+		<s:HGroup id="buttonBar" horizontalAlign="right">
+			<s:Button id="getAllBtn" label="Get All" click="getAllBtnHandler()"/>
+			<s:Button id="getNextBtn" label="{'Next ' + SvnCommonPlugin.NUMBER_LOG_ENTRIES}"
+					  click="getNextBtnHandler()"/>					
+			<s:Button id="okBtn" width="80" label="Ok" click="{formOkHandler(event)}"/>
+			<s:Button id="cancelBtn" width="80" label="Cancel" click="{formCancelHandler(event)}"/> 	
 		</s:HGroup>
 	</fx:Declarations>
 	
 	<s:layout>
-		<s:VerticalLayout />
+		<s:VerticalLayout/>
 	</s:layout>
 	
-	<s:VGroup gap="3" width="100%" height="100%" >	
+	<s:VGroup width="100%" height="100%" gap="3">	
 		<s:DataGrid id="historyEntriesTable" width="100%" height="50%" click="{getAffectedPaths()}">		
 			<s:columns>
 				<s:ArrayList>
-					<s:GridColumn headerText="Revision" dataField="revision" sortCompareFunction="revision_sortCompareFunc"/>
-					<s:GridColumn headerText="Date" sortCompareFunction="date_sortCompareFunc" dataTipFormatter="{dateTimeFormatter}" dataField="date"/>
-					<s:GridColumn headerText="Author" dataField="author" />
-					<s:GridColumn headerText="Comment" dataField="comment" id="commentField"/>
+					<s:GridColumn dataField="revision" headerText="Revision"
+								  sortCompareFunction="revision_sortCompareFunc"/>
+					<s:GridColumn dataField="date" dataTipFormatter="{dateTimeFormatter}"
+								  headerText="Date" sortCompareFunction="date_sortCompareFunc"/>
+					<s:GridColumn dataField="author" headerText="Author"/>
+					<s:GridColumn id="commentField" dataField="comment" headerText="Comment"/>
 				</s:ArrayList>
 			</s:columns>
 		</s:DataGrid> 
-		
-		<s:TextArea id="commentArea" width="100%" height="10%" editable="false" 
-					text="{HistoryEntry(historyEntriesTable.selectedItem).comment}" />	
-		<s:DataGrid id="affectedPathEntriesTable" width="100%" height="25%" 
-					dataProvider="{volatileAffectedPathsEntry}" >
+		<s:TextArea id="commentArea" width="100%" height="10%" editable="false"
+					text="{HistoryEntry(historyEntriesTable.selectedItem).comment}"/>	
+		<s:DataGrid id="affectedPathEntriesTable" width="100%" height="25%"
+					dataProvider="{volatileAffectedPathsEntry}">
 			<s:columns>
 				<s:ArrayList>
-					<s:GridColumn headerText="Action" dataField="action"/>
-					<s:GridColumn headerText="Affected paths" dataField="affectedPath" dataTipField="affectedPath" showDataTips="true"/>
-					<s:GridColumn headerText="Description" dataField="description" dataTipField="description" showDataTips="true"/>
+					<s:GridColumn dataField="action" headerText="Action"/>
+					<s:GridColumn dataField="affectedPath" dataTipField="affectedPath"
+								  headerText="Affected paths" showDataTips="true"/>
+					<s:GridColumn dataField="description" dataTipField="description"
+								  headerText="Description" showDataTips="true"/>
 				</s:ArrayList>
 			</s:columns>
 		</s:DataGrid>			

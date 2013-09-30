@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tomcat_temp"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.flowerplatform.web.svn"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.tigris.subversion.clientadapter.svnkit_1.8.0.1.jar"/>

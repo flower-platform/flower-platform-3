@@ -52,7 +52,8 @@ package org.flowerplatform.web.svn.common.action {
 			for (var i:int = 0; i<selection.length; i++) {
 				var currentNode:TreeNode = TreeNode(selection.getItemAt(i)); 
 				var pathFragmentsOfSelection:ArrayCollection = currentNode.getPathForNode(true);
-				if (PathFragment(pathFragmentsOfSelection.getItemAt(pathFragmentsOfSelection.length - 1)).type != SvnCommonPlugin.NODE_TYPE_FOLDER)
+				if (PathFragment(pathFragmentsOfSelection.getItemAt(pathFragmentsOfSelection.length - 1)).type != SvnCommonPlugin.NODE_TYPE_FOLDER &&
+					PathFragment(pathFragmentsOfSelection.getItemAt(pathFragmentsOfSelection.length - 1)).type != SvnCommonPlugin.NODE_TYPE_REPOSITORY)
 					return false;
 			}
 			var organizationName:String = PathFragment(TreeNode(selection.getItemAt(0)).getPathForNode(false).getItemAt(0)).name;

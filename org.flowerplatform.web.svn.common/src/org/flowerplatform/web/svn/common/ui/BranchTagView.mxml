@@ -55,7 +55,7 @@ license-end
 			import org.flowerplatform.web.svn.common.SvnCommonPlugin;
 			import org.flowerplatform.web.svn.common.projects.remote.SvnRepositoryTreeStatefulClient;
 			import org.flowerplatform.web.svn.common.remote.BranchResource;
-			import org.flowerplatform.web.svn.common.ui.component.BranchTagSelectionPageView;
+			import org.flowerplatform.web.svn.common.ui.component.RepositoryBrowserView;
 			import org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView;
 			
 			import spark.primitives.supportClasses.StrokedElement;
@@ -143,7 +143,7 @@ license-end
 			
 			public function browseBtnHandler():void {
 				lastBtnPressed = treeSelBtn;
-				var view:BranchTagSelectionPageView = new BranchTagSelectionPageView(); 
+				var view:RepositoryBrowserView = new RepositoryBrowserView(); 
 				view.setResultHandler(this);
 				view.node = node;
 				view.treeType = actionType;
@@ -160,7 +160,6 @@ license-end
 				view.remoteResourcePath = commonParentPath;
 				view.remoteResourceName = commonParentName;
 				view.setResultHandler(this);
-				//view.showPopup();
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setWidth(400)
 					.setHeight(450)
@@ -194,7 +193,7 @@ license-end
 				for (var i:int=0; i < selection.length; i++) {
 					array.addItem(TreeNode(selection.getItemAt(i)).getPathForNode(true));
 				}
-				 CommunicationPlugin.getInstance().bridge.sendObject(
+				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("svnService", "populateBranchResourcesList", [array, actionType], this, getBranchResourceCallBackHandler )); 
 			}
 		]]>
@@ -203,7 +202,8 @@ license-end
 	<popup:states>
 		<s:State name="0">			
 			<mx:SetProperty name="wizardTitle" value="Repository Location"/>			
-			<mx:SetProperty name="wizardDescription" value="Enter or select the target URL for the copy."/>			
+			<mx:SetProperty name="wizardDescription"
+							value="Enter or select the target URL for the copy."/>			
 			<mx:AddChild relativeTo="{contentArea}">	
 				<s:VGroup width="100%" height="100%">
 					<s:VGroup width="100%" height="110">
@@ -245,7 +245,6 @@ license-end
 				</s:VGroup>
 			</mx:AddChild>
 		</s:State>	
-		
 		<s:State name="1">			
 			<mx:SetProperty name="wizardTitle" value="Copy Revision"/>	
 			<mx:SetProperty name="wizardDescription"
@@ -272,17 +271,12 @@ license-end
 			</s:VGroup>       
 			</mx:AddChild>
 		</s:State>	
-		
 		<mx:State name="2">			
 			<mx:SetProperty name="wizardTitle" value="Commit"/>				
 			<mx:SetProperty name="wizardDescription" value="Enter commit message"/>				
 			<mx:AddChild relativeTo="{contentArea}">									
 				<ui:CommentComponent id="commComponent" width="100%" height="100%"/>
-				<!--<s:CheckBox id="switchBranch" visible="{actionType}"
-							label="Switch working copy to new branch/tag">
-				</s:CheckBox>-->
 			</mx:AddChild>
 		</mx:State>	
 	</popup:states>
-	
 </popup:Wizard>
