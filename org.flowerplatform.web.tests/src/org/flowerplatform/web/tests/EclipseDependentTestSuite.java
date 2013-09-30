@@ -20,7 +20,7 @@ package org.flowerplatform.web.tests;
 
 import org.flowerplatform.web.tests.codesync.CodeSyncTestSuite;
 import org.flowerplatform.web.tests.security.sandbox.SecurityPermissionsTests;
-import org.flowerplatform.web.tests.svn.SVNTests;
+import org.flowerplatform.web.tests.svn.SvnTestSuiteGabriela;
 import org.flowerplatform.web.tests.svn.SvnTestsSuite;
 import org.flowerplatform.web.tests.listener.ListenerTestSuite;
 
@@ -30,10 +30,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 	@SuiteClasses({ 
-		SecurityPermissionsTests.class,
-		CodeSyncTestSuite.class,
-		ListenerTestSuite.class,
-		SVNTests.class,
+//		SecurityPermissionsTests.class,
+//		CodeSyncTestSuite.class,
+//		ListenerTestSuite.class,
+		SvnTestSuiteGabriela.class,
 		SvnTestsSuite.class	
 	})
 	public class EclipseDependentTestSuite extends EclipseDependentTestSuiteBase {

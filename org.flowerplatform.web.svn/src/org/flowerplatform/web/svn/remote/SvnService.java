@@ -139,7 +139,7 @@ public class SvnService {
 			if (isAuthentificationException(e))
 				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			cc.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -198,7 +198,7 @@ public class SvnService {
 					SVNRevision.HEAD);
 		} catch (Exception e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			cc.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -367,7 +367,7 @@ public class SvnService {
 				}
 			} catch (Exception e) {
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-				cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+				cc.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 						CommonPlugin.getInstance().getMessage("error"), e
 								.getMessage(),
 						DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -375,7 +375,7 @@ public class SvnService {
 			}
 		} catch (Exception e) {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			cc.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -383,6 +383,7 @@ public class SvnService {
 		}
 		// tree refresh
 		if (!resourceSelected) {
+			
 			List<PathFragment> partialPath = (List<PathFragment>) branchResources
 					.get(0).getPath();
 			partialPath.remove(partialPath.size() - 1);
@@ -618,7 +619,7 @@ public class SvnService {
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 			CommunicationChannel cc = (CommunicationChannel) context
 					.getCommunicationChannel();
-			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			cc.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -776,7 +777,7 @@ public class SvnService {
 					}
 				} catch (SVNClientException e) {
 					logger.error("Exception thrown while creating module!", e);
-					cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+					cc.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 							CommonPlugin.getInstance().getMessage("error"), e
 									.getMessage(),
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -818,7 +819,7 @@ public class SvnService {
 				return true;
 			}
 			logger.error("Exception thrown while sharing project!", e);
-			cc.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			cc.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					CommonPlugin.getInstance().getMessage("error"), e
 							.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
@@ -1115,7 +1116,7 @@ public class SvnService {
 				revision = SVNRevision.getRevision(revisionNumberAsString);
 			} catch (ParseException e) {
 				logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
-				channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+				channel.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 						"Error", e.getMessage(),
 						DisplaySimpleMessageClientCommand.ICON_ERROR));
 				return false;
@@ -1172,7 +1173,7 @@ public class SvnService {
 				return true;
 			logger.debug(CommonPlugin.getInstance().getMessage("error"), e);
 
-			channel.appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+			channel.appendOrSendCommand(new DisplaySimpleMessageClientCommand(
 					"Error", e.getMessage(),
 					DisplaySimpleMessageClientCommand.ICON_ERROR));
 

@@ -11,14 +11,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-	CreateRemoteFolderTest.class,
-	RenameMoveTest.class,
-	CleanupTest.class,
-	BranchTagTest.class,
-	BranchTagProjectsTest.class,
-	SwitchToBranchTest.class,
-	ShareProjectTest.class
+	SvnTestsRepositoryActionsGabriela.class,
+	SvnTestsProjectActionsGabriela.class
 })
-public class SVNTests  extends EclipseDependentTestSuiteBase {
-
+	public class SvnTestSuiteGabriela extends EclipseDependentTestSuiteBase {
 }
