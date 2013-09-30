@@ -4,5 +4,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/tomcat_temp"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.tigris.subversion.clientadapter.javahl_1.8.3.jar"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.tigris.subversion.clientadapter_1.10.0.jar"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.eclipse.team.core_3.6.0.I20110525-0800.jar"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.tigris.subversion.subclipse.ui_1.10.2.jar"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.tigris.subversion.subclipse.tools.usage_1.1.0.jar"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.tigris.subversion.subclipse.doc_1.3.0.jar"/>
+	<classpathentry kind="lib" path="D:/java/eclipse_3.7_modeling/plugins/org.tigris.subversion.subclipse.core_1.10.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

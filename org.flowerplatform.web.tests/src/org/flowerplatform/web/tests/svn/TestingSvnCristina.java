@@ -20,7 +20,10 @@ package org.flowerplatform.web.tests.svn;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +32,15 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
-import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
+import org.flowerplatform.web.database.DatabaseOperation;
+import org.flowerplatform.web.database.DatabaseOperationWrapper;
+import org.flowerplatform.web.entity.SVNRepositoryURLEntity;
 import org.flowerplatform.web.svn.remote.SvnService;
+import org.flowerplatform.web.svn.remote.dto.FileDto;
+import org.flowerplatform.web.svn.remote.dto.GetModifiedFilesDto;
+import org.hibernate.Query;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,6 +48,12 @@ import org.tigris.subversion.subclipse.core.SVNException;
 import org.tigris.subversion.subclipse.core.SVNProviderPlugin;
 import org.tigris.subversion.svnclientadapter.ISVNClientAdapter;
 import org.tigris.subversion.svnclientadapter.ISVNInfo;
+
+/**
+ * 
+ * @author Cristina Necula
+ * 
+ */
 
 public class TestingSvnCristina {
 
@@ -56,6 +70,10 @@ public class TestingSvnCristina {
 	private static ArrayList<PathFragment> workingDirectoryPartialPath;
 	
 	private static String workspacePath;
+	
+	private static List<List<PathFragment>> selectionForFinalDelte;
+	
+	public String workspaceLocation = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath();
 
 	@BeforeClass
 	public static void first() throws SVNException {
@@ -66,6 +84,9 @@ public class TestingSvnCristina {
 		password = "intern_crispico_fpwqoeri";
 		
 		context = new ServiceInvocationContext(communicationChannel);
+		CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
+		
+		selectionForFinalDelte = new ArrayList<>();
 		
 		//create working directory and checkout project for merge action
 		workingDirectoryPartialPath 
@@ -74,53 +95,98 @@ public class TestingSvnCristina {
 												"workingDirectories", "workingDirectories");
 		
 		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
-		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
-				"hibernate", "organization",
-				"svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository",
-				"test", "svnFile"));
+		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs(
+			       "explorerTreeStatefulService|Explorer1", "r", "hibernate",
+			       "organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository", 
+			       "testing_do_not_delete", "svnFolder", "cristina", "svnFolder"));
 		
-		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
-				"hibernate", "organization",
-				"svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository",
-				"nuSterge", "svnFile"));
+		//create merge remote folder inside "cristina" folder for merge
+		ArrayList<PathFragment> folder = createRemoteFolder("merge_test");
+		selectionForFinalDelte.add(folder);
 		
 		File workspaceRoot = CommonPlugin.getInstance().getWorkspaceRoot();
 		workspacePath = workspaceRoot.getPath() + "\\";
 		
 		//sometime fails due to absence of client 
-		CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
+		//if so, run again, only his class
 		SvnService.getInstance().createFolderAndMarkAsWorkingDirectory(context, "commonWD", "hibernate");
-		SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
-				"\\commonWD", "HEAD", 0, true, false, false, "");
-		createRepositories();
-	}
-	
-	private static void createRepositories() throws SVNException {
 		
-		ArrayList<PathFragment> parentPathFragment;
-		Boolean result;
-		parentPathFragment = getArrayOfPathFragmentsFromStringArgs(
-		       "explorerTreeStatefulService|Explorer1", "r", "hibernate",
-		       "organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository");
-		result = SvnService.getInstance().createRemoteFolder(context, parentPathFragment, "merge", "");
-		assertEquals(true, result);
-		
-		parentPathFragment = getArrayOfPathFragmentsFromStringArgs(
-			       "explorerTreeStatefulService|Explorer1", "r", "hibernate",
-			       "organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository");
-		result = SvnService.getInstance().createRemoteFolder(context, parentPathFragment, "merge_test", "");
-		assertEquals(true, result);
-		
+		Boolean result = SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
+					"\\commonWD", "HEAD", 0, true, false, false, "");
+		if (result == false){
+			//need login
+			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
+			command.setServiceId("svnService");
+			command.setMethodName("checkout");
+			command.setCommunicationChannel(communicationChannel);
+
+			List<Object> parameters = new ArrayList<>();
+			parameters.add(selectionForCheckout);
+			parameters.add(workingDirectoryPartialPath);
+			parameters.add("\\commonWD");
+			parameters.add("HEAD");
+			parameters.add(0);
+			parameters.add(true);
+			parameters.add(false);
+			parameters.add(false);
+			parameters.add("");
+			command.setParameters(parameters);
+
+			SvnService.tlCommand.set(command);
+			SvnService.getInstance().login(context, uri, username, password, command);
+//			SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
+//					"\\commonWD", "HEAD", 0, true, false, false, "");
+		}
 		
 	}
 	
 	@AfterClass
+	public static void clean(){
+		SvnService.getInstance().deleteSvnAction(context, selectionForFinalDelte, "final");
+	}
 	
-	public static void deleteCreatedReposForMerge(){
+	public static void writeFile(String filename, String text) throws IOException {
+	    FileWriter fstream = new FileWriter(filename, true); //true tells to append data.
+	    BufferedWriter out = new BufferedWriter(fstream);
+	    out.write(text);
+	    out.close();			    
+	}
+	
+	//create necessary folders and repos for testing
+	private static void create() throws SVNException {
+			
+		//create "Cristina" folder in "testins_do_not_delete" svn remote folder
+		ArrayList<PathFragment> parentPathFragment;
+		Boolean result;
+	    parentPathFragment = getArrayOfPathFragmentsFromStringArgs(
+		       "explorerTreeStatefulService|Explorer1", "r", "hibernate",
+		       "organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository", 
+		       "testing_do_not_delete", "svnFolder");
+		result = SvnService.getInstance().createRemoteFolder(context, parentPathFragment, "cristina", "cristina create folder");
+		if (result == false) {
+			//user login
+//			CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
+
+			//command from CommunicationChannel is null; had to create new one
+			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
+			command.setServiceId("svnService");
+			command.setMethodName("createRemoteFolder");
+			command.setCommunicationChannel(communicationChannel);
+
+			List<Object> parameters = new ArrayList<>();
+			parameters.add(parentPathFragment);
+			parameters.add("cristina");
+			parameters.add("cristina create folder");
+			command.setParameters(parameters);
+
+			SvnService.tlCommand.set(command);
+			SvnService.getInstance().login(context, uri, username, password, command);
+			result = SvnService.getInstance().createRemoteFolder(context, parentPathFragment, "cristina", "cristina create folder");
+		}
+		assertEquals("Could not create folder for testing", true, result);
 		
 	}
+	
 
 	public static ArrayList<PathFragment> getArrayOfPathFragmentsFromStringArgs(
 			String... strings) {
@@ -133,67 +199,156 @@ public class TestingSvnCristina {
 			result.add(pf);
 		}
 		return result;
+
+	}
+	
+	//function that creates a new remote folder inside "cristina" folder, testing login action
+	//assume createRemoteFolder is correct
+	public static ArrayList<PathFragment> createRemoteFolder(String folderName) throws SVNException{
+		ArrayList<PathFragment> parentPathFragment;
+		Boolean result;
+	    parentPathFragment = getArrayOfPathFragmentsFromStringArgs(
+		       "explorerTreeStatefulService|Explorer1", "r", "hibernate",
+		       "organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository", 
+		       "testing_do_not_delete", "svnFolder", "cristina", "svnFolder");
+	    
+	    //change credentials to test login
+	    
+	    SvnService.getInstance().changeCredentials(context, "<svn://csp1:3690> flower2", "fgh", "bgb");
+	    try {
+	    	result = SvnService.getInstance().createRemoteFolder(context, parentPathFragment, folderName, folderName + " create folder");
+	    } catch (Exception e) {
+			//user login
+			//command from CommunicationChannel is null; had to create new one
+			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
+			command.setServiceId("svnService");
+			command.setMethodName("createRemoteFolder");
+			command.setCommunicationChannel(communicationChannel);
+
+			List<Object> parameters = new ArrayList<>();
+			parameters.add(parentPathFragment);
+			parameters.add(folderName);
+			parameters.add(folderName + " create folder");
+			command.setParameters(parameters);
+
+			SvnService.tlCommand.set(command);
+			SvnService.getInstance().login(context, uri, username, password, command);
+			result = true;
+		}
+		assertEquals("Could not create remote folder", true, result);
+		if (result == true)
+			return getArrayOfPathFragmentsFromStringArgs(
+					"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+					"organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository", 
+					"testing_do_not_delete", "svnFolder", "cristina", "svnFolder", 
+					folderName, "svnFolder");
+		else
+			return null;
 	}
 
-	@Test
-	public void createSvnRepository() {
+	//function creates a new svn repository, testing login action
+	//assume CreateSvnRepository from SvnService is correct 
+	public void createSvnRepository(String url) {
 		Boolean result;
 		ArrayList<PathFragment> parentPathFragment = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", ".svn-repositories", "svnRepositories");
 
-		// add 'bad url' repository:
-		result = SvnService.getInstance().createSvnRepository(context,
-				"nosuchurl", parentPathFragment);
+		//change credentials to test login
+	    SvnService.getInstance().changeCredentials(context, "<svn://csp1:3690> flower2", "fgh", "bgb");
+		result = SvnService.getInstance().createSvnRepository(context, url, parentPathFragment);
 
-		assertEquals(false, result);
-
-		// add existing repository:
-		result = SvnService.getInstance().createSvnRepository(context, "svn://csp1/flower2/tst", parentPathFragment);
-		if (result == false) {
-			//user login
-			CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
-
-			//command from CommunicationChannel is null; had to create new one
+		if(result == false){
 			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
 			command.setServiceId("svnService");
 			command.setMethodName("createSvnRepository");
 			command.setCommunicationChannel(communicationChannel);
 
 			List<Object> parameters = new ArrayList<>();
-			parameters.add("svn://csp1/flower2/tst");
+			parameters.add(url);
 			parameters.add(parentPathFragment);
 			command.setParameters(parameters);
 
 			SvnService.tlCommand.set(command);
 			SvnService.getInstance().login(context, uri, username, password, command);
-			result = SvnService.getInstance().createSvnRepository(context, "svn://csp1/flower2/tst", parentPathFragment);
+			result = true;
+			
 		}
-		assertEquals(true, result);
+		assertEquals("Could not create repository", true, result);
 	}
 
+	//test delete remote folder with login action
 	@Test
-	public void deleteSvnAction() {
+	public void deleteRemoteFolder() throws SVNException {
 		Boolean result;
+		//multiple selection test - 2 remote folders
 		
-		//multiple selection test
-		//change this paths to test delete for another files
-		ArrayList<PathFragment> pathFragment = getArrayOfPathFragmentsFromStringArgs(
-				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
-				"organization", ".svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository", "1", "svnFolder");
-		ArrayList<PathFragment> pathFragment1 = getArrayOfPathFragmentsFromStringArgs(
-				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
-				"organization", ".svn-repositories", "svnRepositories",
-				"svn://csp1/flower2", "svnRepository", "2", "svnFolder");
-		List<List<PathFragment>> listPathFragment = new ArrayList<>();
-		listPathFragment.add(pathFragment1);
-		listPathFragment.add(pathFragment);
+		//first, create two remote folders
+		ArrayList<PathFragment> one = createRemoteFolder("one");
+		ArrayList<PathFragment> two = createRemoteFolder("two");
 
+		//change credentials to test login
+	    SvnService.getInstance().changeCredentials(context, "<svn://csp1:3690> flower2", "fgh", "bgb");
+	    
+		if(one != null && two != null){
+		
+			List<List<PathFragment>> listPathFragment = new ArrayList<>();
+			listPathFragment.add(one);
+			listPathFragment.add(two);
+	
+			//delete them
+//			CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
+			try {
+				result = SvnService.getInstance().deleteSvnAction(context, listPathFragment, "cc c");
+			}catch (Exception e) {
+				//user login; create new command
+//				CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
+				InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
+				command.setServiceId("svnService");
+				command.setMethodName("deleteSvnAction");
+				command.setCommunicationChannel(communicationChannel);
+	
+				List<Object> parameters = new ArrayList<>();
+				parameters.add(listPathFragment);
+				parameters.add("cc c");
+				command.setParameters(parameters);
+	
+				SvnService.tlCommand.set(command);
+				SvnService.getInstance().login(context, uri, username, password, command);
+				result = true;
+			}
+			assertEquals("Could not delete selected folders", true, result);
+			
+			//check to see if folders were deleted
+			//if folders were deleted, if you try to delete them again, result will be false
+			//login should not be necessary
+			result = SvnService.getInstance().deleteSvnAction(context, listPathFragment, "cc c");
+			assertEquals("Files were not deleted!", false, result);
+		}
+		else 
+			assertEquals("Delete method failed because folders were not created", true, false);
+		
+	}
+	
+	//test delete svn repository with login action
+	@Test
+	public void deleteSvnRepository() {
+		Boolean result;
+		// first create svn repository
+		String url = "svn://csp1/flower2/testing_do_not_delete";
+		createSvnRepository(url);
+	    
+		// delete repo
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
+		listPathFragment.add(getArrayOfPathFragmentsFromStringArgs(
+				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+				"organization", ".svn-repositories", "svnRepositories", url,
+				"svnRepository"));
+		
 		CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
 		try {
-			result = SvnService.getInstance().deleteSvnAction(context, listPathFragment, "");
-		} catch (Exception e) {
+			result = SvnService.getInstance().deleteSvnAction(context, listPathFragment, "delete svn repo");
+		} catch (Exception e){
 			//user login; create new command
 			CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
 			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
@@ -203,24 +358,37 @@ public class TestingSvnCristina {
 
 			List<Object> parameters = new ArrayList<>();
 			parameters.add(listPathFragment);
-			parameters.add("");
+			parameters.add("delete svn repo");
 			command.setParameters(parameters);
 
 			SvnService.tlCommand.set(command);
-			if (command.getParameters().get(0).getClass() == StatefulServiceInvocationContext.class)
-				command.getParameters().remove(0);
-
-			SvnService.tlCommand.set(command);
 			SvnService.getInstance().login(context, uri, username, password, command);
-			result = SvnService.getInstance().deleteSvnAction(context, listPathFragment, "delete comment");
+			result = SvnService.getInstance().deleteSvnAction(context, listPathFragment, "delete svn repo");
 		}
-		//files do not exist anymore in Svn Repositories
-		//create them and then change false with true to test delete action
-		assertEquals(false, result);
+		assertEquals("Could not delete selected folders", true, result);
+		
+		//check to see if repo was deleted from database
+		new DatabaseOperationWrapper(new DatabaseOperation() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void run() {
+				try {
+					Query q = wrapper.getSession()
+							.createQuery(String.format("SELECT e from %s e where e.name = '%s' and e.organization.name = '%s'", 
+										 SVNRepositoryURLEntity.class.getSimpleName(),
+										 "svn://csp1/distr",
+										 "hibernate"));
+					assertEquals("SvnRepository still in database", 0, q.list().size());
+				} catch (Exception e) {					
+				}
+			}
+		});
+		
 	}
 
 	
-	//could not use this function; had to introduce merge specifications manually
+	//could not use this function because status of project - unversioned 
+	//had to introduce merge specifications manually
 	public List<String> getMergeSpecs() {
 
 		ArrayList<PathFragment> pathFragment = getArrayOfPathFragmentsFromStringArgs(
@@ -248,59 +416,68 @@ public class TestingSvnCristina {
 		
 	}
 
-	//merge action is tested without login
-	
+
 	@Test
-	public void mergeIdentical() {
+	public void mergeWithNewFilesAdded() throws SVNException, IOException{
 		
-		//local file path for merge action
-		ArrayList<PathFragment> path = getArrayOfPathFragmentsFromStringArgs(
-				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
-				"organization", "workingDirectories", "workingDirectories",
-				"commonWD", "workingDirectory", "nuSterge", "project");
+		ArrayList<PathFragment> folder = new ArrayList<>();
 		
-		List<List<PathFragment>> listPathFragment = new ArrayList<>();
-		listPathFragment.add(path);
-		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
-		
-		//merge two identical files
-		String url1 = "svn://csp1/flower2/nuSterge";
-		String url2 = "svn://csp1/flower2/nuSterge";
-		
-		long revision1 = 0;
-		long revision2 = 0;
-		
-		boolean force = false;
-		boolean ignoreAncestry = false;
-		
-		boolean result = false;
-		
+		//need new remote folder on svn to merge
 		try {
-			result = SvnService.getInstance().merge(context, files[0].getAbsolutePath(),
-					listPathFragment, url1, revision1, url2, revision2, force, ignoreAncestry);
-		} catch (SVNException e) {
-			// TODO Auto-generated catch block
+			folder = createRemoteFolder("to_merge");
+		} catch (Exception e){
+			//already exists
+			folder = getArrayOfPathFragmentsFromStringArgs(
+					"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+					"organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository", 
+					"testing_do_not_delete", "svnFolder", "cristina", "svnFolder", 
+					"to_merge", "svnFolder");
+		}
+		selectionForFinalDelte.add(folder);
+		
+		//checkout folder
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
+		selectionForCheckout.add(folder);
+		try { 
+			SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
+				"\\commonWD", "HEAD", 0, true, false, false, "");
+		} catch (Exception e){
 			e.printStackTrace();
 		}
-		assertEquals(true, result);
-
-	}
-	
-	@Test
-	public void mergeDifferentProjects(){
-		//local file path for merge
+			
+		//create new files
+		File f1 = new File(workspacePath + "hibernate\\commonWD\\to_merge\\" + "1");
+		f1.createNewFile();
+		File f2 = new File(workspacePath + "hibernate\\commonWD\\to_merge\\" + "2");
+		f2.createNewFile();
+		
+		//commit
+		ArrayList<FileDto> selectionForCommit = new ArrayList<>();		
+		FileDto dto = new FileDto();
+		dto.setLabel("1");
+		dto.setPathFromRoot(f1.getAbsolutePath().substring(workspaceLocation.length()));
+		dto.setStatus("unversioned");
+		selectionForCommit.add(dto);
+		FileDto dto2 = new FileDto();
+		dto2.setLabel("2");
+		dto2.setPathFromRoot(f2.getAbsolutePath().substring(workspaceLocation.length()));
+		dto2.setStatus("unversioned");		
+		selectionForCommit.add(dto2);
+		SvnService.getInstance().commit(context, selectionForCommit, "new message", false);
+		
+		//merge the files
+		
+		//local folder path for merge
 		ArrayList<PathFragment> path = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
 				"organization", "workingDirectories", "workingDirectories",
-				"commonWD", "workingDirectory", "test", "project", "test", "project");
-		
+				"commonWD", "workingDirectory", "cristina", "project", "merge_test", "project");
 		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(path);
 		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
 		
-		//merge different projects
-		String url1 = "svn://csp1/flower2/test";
-		String url2 = "svn://csp1/flower2/merge";
+		String url1 = "svn://csp1/flower2/testing_do_not_delete/cristina/merge_test";
+		String url2 = "svn://csp1/flower2/testing_do_not_delete/cristina/to_merge";
 		
 		long revision1 = -1;
 		long revision2 = -1;
@@ -310,50 +487,179 @@ public class TestingSvnCristina {
 		
 		boolean result = false;
 		
+		SvnService.getInstance().changeCredentials(context, "", "", "");
+		
 		try {
 			result = SvnService.getInstance().merge(context, files[0].getAbsolutePath(),
 					listPathFragment, url1, revision1, url2, revision2, force, ignoreAncestry);
 		} catch (SVNException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// user login
+			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
+			command.setServiceId("svnService");
+			command.setMethodName("merge");
+			command.setCommunicationChannel(communicationChannel);
+
+			List<Object> parameters = new ArrayList<>();
+			parameters.add(files[0].getAbsolutePath());
+			parameters.add(listPathFragment);
+			parameters.add(url1);
+			parameters.add(revision1);
+			parameters.add(url2);
+			parameters.add(revision2);
+			parameters.add(force);
+			parameters.add(ignoreAncestry);
+			command.setParameters(parameters);
+
+			SvnService.tlCommand.set(command);
+			SvnService.getInstance().login(context, uri, username, password, command);
+			result = SvnService.getInstance().merge(context, files[0].getAbsolutePath(),
+					listPathFragment, url1, revision1, url2, revision2, force, ignoreAncestry);
 		}
-		assertEquals(true, result);
+		assertEquals("Merge operation did not succeed", true, result);
+		File check1 = new File(workspacePath + "hibernate\\commonWD\\cristina\\merge_test\\1");
+		result = check1.exists();
+		assertEquals("Files does not exist on the disk", true, result);
+		File check2 = new File(workspacePath + "hibernate\\commonWD\\cristina\\merge_test\\2");
+		result = check2.exists();
+		assertEquals("Files does not exist on the disk", true, result);
 		
 	}
 	
 	@Test
-	public void mergeModified(){
-		//local file path for merge
+	public void mergeModifiedFiles() throws IOException, SVNException{
+		
+		ArrayList<PathFragment> folder = new ArrayList<>();
+		
+		//change something to file, then commit it before merge
+		boolean modified = false;
+		File f1 = new File(workspacePath + "hibernate\\commonWD\\cristina\\merge_test\\" + "1");
+		if (f1.exists())
+			modified = true;
+		else 
+			f1.createNewFile();
+		
+		FileWriter fstream1 = new FileWriter(workspacePath + "hibernate\\commonWD\\cristina\\merge_test\\" + "1", true);
+	    BufferedWriter out1 = new BufferedWriter(fstream1);
+	    out1.write("first line\n");
+	    out1.close();
+	    
+	    //commit
+	    ArrayList<FileDto> selectionForCommit = new ArrayList<>();		
+	    FileDto dto = new FileDto();
+	    dto.setLabel("1");
+	    dto.setPathFromRoot(f1.getAbsolutePath().substring(workspaceLocation.length()));
+	    if (modified)
+	    	dto.setStatus("modified");
+	    else
+	    	dto.setStatus("unversioned");
+	    selectionForCommit.add(dto);
+	  	SvnService.getInstance().commit(context, selectionForCommit, "new message", false);
+		
+		//need new remote folder on svn to merge
+		try {
+			folder = createRemoteFolder("to_merge_modified");
+		} catch (Exception e){
+			//already exists
+			folder = getArrayOfPathFragmentsFromStringArgs(
+					"explorerTreeStatefulService|Explorer1", "r", "hibernate",
+					"organization", ".svn-repositories", "svnRepositories", "svn://csp1/flower2", "svnRepository", 
+					"testing_do_not_delete", "svnFolder", "cristina", "svnFolder", 
+					"to_merge_modified", "svnFolder");
+		}
+		selectionForFinalDelte.add(folder);
+		
+		//checkout folder
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
+		selectionForCheckout.add(folder);
+		try { 
+			SvnService.getInstance().checkout(context, selectionForCheckout, workingDirectoryPartialPath, 
+				"\\commonWD", "HEAD", 0, true, false, false, "");
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+			
+		//create new files
+		f1 = new File(workspacePath + "hibernate\\commonWD\\to_merge_modified\\" + "1");
+		f1.createNewFile();
+		
+		FileWriter fstream2 = new FileWriter(workspacePath + "hibernate\\commonWD\\to_merge_modified\\" + "1", true);
+	    BufferedWriter out2 = new BufferedWriter(fstream2);
+	    out2.write("tests\n" + "added some content");
+	    out2.close();
+	    
+		//commit
+		selectionForCommit = new ArrayList<>();		
+		dto = new FileDto();
+		dto.setLabel("1");
+		dto.setPathFromRoot(f1.getAbsolutePath().substring(workspaceLocation.length()));
+		dto.setStatus("unversioned");
+		selectionForCommit.add(dto);
+		SvnService.getInstance().commit(context, selectionForCommit, "new message", false);
+		
+		//merge the files
+		
+		//local folder path for merge
 		List<PathFragment> path = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
 				"organization", "workingDirectories", "workingDirectories",
-				"commonWD", "workingDirectory", "test", "project");
-		
+				"commonWD", "workingDirectory", "cristina", "project", "merge_test", "project");
 		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(path);
 		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
 		
-		//added new file and folder in svnRepo, should have new ones local after merge
-				String url1 = "svn://csp1/flower2/test";
-				String url2 = "svn://csp1/flower2/merge_test";
-				
-				long revision1 = -1;
-				long revision2 = -1;
-				
-				boolean force = false;
-				boolean ignoreAncestry = false;
-				
-				boolean result = false;
-				
-				try {
-					result = SvnService.getInstance().merge(context, files[0].getAbsolutePath(),
-							listPathFragment, url1, revision1, url2, revision2, force, ignoreAncestry);
-				} catch (SVNException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				assertEquals(true, result);
-	
-	}
+		String url1 = "svn://csp1/flower2/testing_do_not_delete/cristina/merge_test";
+		String url2 = "svn://csp1/flower2/testing_do_not_delete/cristina/to_merge_modified";
+		
+		long revision1 = -1;
+		long revision2 = -1;
+		
+		boolean force = false;
+		boolean ignoreAncestry = false;
+		
+		boolean result = false;
+		
+		SvnService.getInstance().changeCredentials(context, "", "", "");
+		
+		try {
+			result = SvnService.getInstance().merge(context, files[0].getAbsolutePath(),
+					listPathFragment, url1, revision1, url2, revision2, force, ignoreAncestry);
+		} catch (SVNException e) {
+			// user login
+			InvokeServiceMethodServerCommand command = new InvokeServiceMethodServerCommand();
+			command.setServiceId("svnService");
+			command.setMethodName("merge");
+			command.setCommunicationChannel(communicationChannel);
 
+			List<Object> parameters = new ArrayList<>();
+			parameters.add(files[0].getAbsolutePath());
+			parameters.add(listPathFragment);
+			parameters.add(url1);
+			parameters.add(revision1);
+			parameters.add(url2);
+			parameters.add(revision2);
+			parameters.add(force);
+			parameters.add(ignoreAncestry);
+			command.setParameters(parameters);
+
+			SvnService.tlCommand.set(command);
+			SvnService.getInstance().login(context, uri, username, password,
+					command);
+			result = SvnService.getInstance().merge(context,
+					files[0].getAbsolutePath(), listPathFragment, url1,
+					revision1, url2, revision2, force, ignoreAncestry);
+		}
+		assertEquals("Merge operation did not succeed", true, result);
+		
+		//test to see if the new file was modified
+		List<List<PathFragment>> selection = new ArrayList<>();
+		selection.add(getArrayOfPathFragmentsFromStringArgs(
+				"explorerTreeStatefulService|Explorer1", "r", 
+				"hibernate", "organization",
+				"workingDirectories", "workingDirectories",
+				"commonWD", "workingDirectory",
+				"cristina", "project",
+				"merge_test", "project"));
+		GetModifiedFilesDto modDtos = SvnService.getInstance().getDifferences(context, selection);
+		assertEquals("File was not modified", true, modDtos.getFiles().size()>0);
+	}
 }

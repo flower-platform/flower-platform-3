@@ -47,7 +47,6 @@
     <classEntry path="org.flowerplatform.web.svn.common.ui.ShareProjectView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.SwitchView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.UpdateToVersionView"/>
-    <classEntry path="org.flowerplatform.web.svn.common.ui.component.BranchTagSelectionPageView"/>
     <classEntry path="org.flowerplatform.web.svn.common.ui.component.SelectRevisionWindowView"/>
   </includeClasses>
   <includeResources/>
