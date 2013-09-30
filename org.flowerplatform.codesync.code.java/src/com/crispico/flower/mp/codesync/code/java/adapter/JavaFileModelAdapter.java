@@ -81,7 +81,7 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 				IMarker marker = file.createMarker(IMarker.MARKER);
 				marker.setAttribute(RENAMED, value);
 			} catch (CoreException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -165,9 +165,8 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 			IDocument document = textFileBuffer.getDocument();
 			return document.get().toCharArray();
 		} catch (CoreException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-		return new char[0];
 	}
 
 	@Override
@@ -186,7 +185,7 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 			try {
 				file.create(is, true, null);
 			} catch (CoreException e) {
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 		
@@ -199,6 +198,7 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 				}
 			}
 		} catch (CoreException e1) {
+			throw new RuntimeException(e1);
 		}
 		
 		IPath path = file.getFullPath();
@@ -216,12 +216,12 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 					// commit changes to underlying file
 					textFileBuffer.commit(null, true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 				try {
 					bufferManager.disconnect(path, LocationKind.IFILE, null);
 				} catch (CoreException e) {
-					e.printStackTrace();
+					throw new RuntimeException(e);
 				}
 			}
 		}
@@ -245,6 +245,11 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	
 	private IFile getFile(Object modelElement) {
 		return (IFile) modelElement;
+	}
+
+	@Override
+	protected void updateUID(Object element, Object correspondingElement) {
+		// nothing to do
 	}
 	
 }

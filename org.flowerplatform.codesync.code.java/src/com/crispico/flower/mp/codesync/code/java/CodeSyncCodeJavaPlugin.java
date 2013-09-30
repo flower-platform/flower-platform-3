@@ -25,7 +25,6 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.java.JavaClassAttributeProcessor;
-import org.flowerplatform.editor.model.java.JavaClassChildProcessor;
 import org.flowerplatform.editor.model.java.JavaClassOperationProcessor;
 import org.flowerplatform.editor.model.java.JavaClassProcessor;
 import org.flowerplatform.editor.model.java.JavaClassTitleProcessor;

@@ -908,6 +908,133 @@ public interface NotationPackage extends EPackage {
 	int MIND_MAP_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
 
 	/**
+	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl <em>Expandable Node</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl
+	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getExpandableNode()
+	 * @generated
+	 */
+	int EXPANDABLE_NODE = 10;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__ID = NODE__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__ID_BEFORE_REMOVAL = NODE__ID_BEFORE_REMOVAL;
+
+	/**
+	 * The feature id for the '<em><b>View Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__VIEW_TYPE = NODE__VIEW_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Persistent Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__PERSISTENT_CHILDREN = NODE__PERSISTENT_CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>View Details</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__VIEW_DETAILS = NODE__VIEW_DETAILS;
+
+	/**
+	 * The feature id for the '<em><b>Diagrammable Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__DIAGRAMMABLE_ELEMENT = NODE__DIAGRAMMABLE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__SOURCE_EDGES = NODE__SOURCE_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__TARGET_EDGES = NODE__TARGET_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Layout Constraint</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__LAYOUT_CONSTRAINT = NODE__LAYOUT_CONSTRAINT;
+
+	/**
+	 * The feature id for the '<em><b>Expanded</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__EXPANDED = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Has Children</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__HAS_CHILDREN = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE__TEMPLATE = NODE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Expandable Node</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPANDABLE_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
+
+	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.NotationElement <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1239,6 +1366,49 @@ public interface NotationPackage extends EPackage {
 	EAttribute getMindMapNode_Side();
 
 	/**
+	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.ExpandableNode <em>Expandable Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Expandable Node</em>'.
+	 * @see org.flowerplatform.emf_model.notation.ExpandableNode
+	 * @generated
+	 */
+	EClass getExpandableNode();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.ExpandableNode#isExpanded <em>Expanded</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Expanded</em>'.
+	 * @see org.flowerplatform.emf_model.notation.ExpandableNode#isExpanded()
+	 * @see #getExpandableNode()
+	 * @generated
+	 */
+	EAttribute getExpandableNode_Expanded();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.ExpandableNode#isHasChildren <em>Has Children</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Has Children</em>'.
+	 * @see org.flowerplatform.emf_model.notation.ExpandableNode#isHasChildren()
+	 * @see #getExpandableNode()
+	 * @generated
+	 */
+	EAttribute getExpandableNode_HasChildren();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.ExpandableNode#getTemplate <em>Template</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Template</em>'.
+	 * @see org.flowerplatform.emf_model.notation.ExpandableNode#getTemplate()
+	 * @see #getExpandableNode()
+	 * @generated
+	 */
+	EAttribute getExpandableNode_Template();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1527,6 +1697,40 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MIND_MAP_NODE__SIDE = eINSTANCE.getMindMapNode_Side();
+
+		/**
+		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl <em>Expandable Node</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl
+		 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getExpandableNode()
+		 * @generated
+		 */
+		EClass EXPANDABLE_NODE = eINSTANCE.getExpandableNode();
+
+		/**
+		 * The meta object literal for the '<em><b>Expanded</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXPANDABLE_NODE__EXPANDED = eINSTANCE.getExpandableNode_Expanded();
+
+		/**
+		 * The meta object literal for the '<em><b>Has Children</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXPANDABLE_NODE__HAS_CHILDREN = eINSTANCE.getExpandableNode_HasChildren();
+
+		/**
+		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXPANDABLE_NODE__TEMPLATE = eINSTANCE.getExpandableNode_Template();
 
 	}
 

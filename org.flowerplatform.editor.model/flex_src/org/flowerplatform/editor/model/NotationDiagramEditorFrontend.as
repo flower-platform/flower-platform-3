@@ -25,9 +25,6 @@ package org.flowerplatform.editor.model
 	import mx.collections.IList;
 	import mx.events.FlexEvent;
 	
-	import spark.components.Button;
-	import spark.components.TextInput;
-	
 	import org.flowerplatform.communication.tree.GenericTreeList;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
@@ -43,6 +40,10 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.popup.IActionProvider;
+	
+	import spark.components.Button;
+	import spark.components.TextInput;
 
 	/**
 	 * @author Cristian Spiescu
@@ -114,12 +115,14 @@ package org.flowerplatform.editor.model
 		override public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
-			var actions:Vector.<IAction> = EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.getActions(selection);
-			if (actions != null) {
-				for each (var action:IAction in actions) {
-					result.push(action);
-				}
-			}		
+			for each (var ap:IActionProvider in EditorModelPlugin.getInstance().notationDiagramActionProviders) {
+				var actions:Vector.<IAction> = ap.getActions(selection);
+				if (actions != null) {
+					for each (var action:IAction in actions) {
+						result.push(action);
+					}
+				}	
+			}
 			return result;
 		}
 		

@@ -91,12 +91,15 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 
 	@Override
-	public void initialize(Resource astCache) {
+	public void initialize(Resource astCache, String limitedPath, boolean useUIDs) {
+		super.initialize(astCache, limitedPath, useUIDs);
+		
 		// right - AST
 		rightFactory = new ModelAdapterFactory();
 		
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
+		folderModelAdapter.setLimitedPath(limitedPath);
 		rightFactory.addModelAdapter(IFolder.class, folderModelAdapter);
 		
 		// java specific adapters

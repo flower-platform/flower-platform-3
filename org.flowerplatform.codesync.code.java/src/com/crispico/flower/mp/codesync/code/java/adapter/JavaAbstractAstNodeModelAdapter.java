@@ -22,12 +22,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.BodyDeclaration;
-import org.eclipse.jdt.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -35,7 +35,6 @@ import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberRef;
 import org.eclipse.jdt.core.dom.MethodRef;
 import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.QualifiedName;
@@ -57,6 +56,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  * 
  * @author Mariana
  */
+@SuppressWarnings("unchecked")
 public abstract class JavaAbstractAstNodeModelAdapter extends AstModelElementAdapter {
 
 	@Override
@@ -125,9 +125,6 @@ public abstract class JavaAbstractAstNodeModelAdapter extends AstModelElementAda
 							(com.crispico.flower.mp.model.astcache.code.Modifier) correspondingChild;
 					
 					extendedModifier = ast.newModifier(Modifier.ModifierKeyword.fromFlagValue(modifier.getType()));
-					ChildListPropertyDescriptor descriptor = parent instanceof BodyDeclaration ? 
-							((BodyDeclaration) parent).getModifiersProperty() :
-							SingleVariableDeclaration.MODIFIERS2_PROPERTY;
 					if (parent instanceof BodyDeclaration) {
 						((BodyDeclaration) parent).modifiers().add(extendedModifier);
 					} else {
@@ -151,9 +148,6 @@ public abstract class JavaAbstractAstNodeModelAdapter extends AstModelElementAda
 						NormalAnnotation normalAnnotation = ast.newNormalAnnotation();
 						extendedModifier = normalAnnotation;
 					}
-					ChildListPropertyDescriptor descriptor = parent instanceof BodyDeclaration ? 
-							((BodyDeclaration) parent).getModifiersProperty() :
-							SingleVariableDeclaration.MODIFIERS2_PROPERTY;
 					if (parent instanceof BodyDeclaration) {
 						((BodyDeclaration) parent).modifiers().add(extendedModifier);
 					} else {
@@ -197,23 +191,58 @@ public abstract class JavaAbstractAstNodeModelAdapter extends AstModelElementAda
 		return false;
 	}
 
+	@Override
+	protected void updateUID(Object element, Object correspondingElement) {
+		if (element instanceof BodyDeclaration) {
+			BodyDeclaration node = (BodyDeclaration) element;
+			Javadoc javadoc = node.getJavadoc();
+			// if it doesn't have any doc, create it
+			if (javadoc == null) {
+				javadoc = node.getAST().newJavadoc();
+				node.setJavadoc(javadoc);
+			}
+			// first remove the existing flower tag, this way we also make sure that it's the last tag
+			// note: if we only change the id, the rewriter won't format it correctly
+			for (Object obj : javadoc.tags()) {
+				if (FLOWER_UID.equals(((TagElement) obj).getTagName())) {
+					javadoc.tags().remove(obj);
+					break;
+				}
+			}
+			// create new tag element for UID
+			TagElement tag = javadoc.getAST().newTagElement();
+			tag.setTagName(FLOWER_UID);
+			javadoc.tags().add(tag);
+			TextElement text = javadoc.getAST().newTextElement();
+			tag.fragments().add(text);
+			EObject eObject = (EObject) correspondingElement;
+			text.setText(eObject.eResource().getURIFragment(eObject));
+			System.out.println(javadoc);
+		}
+	}
+
 	protected Object getJavaDoc(Object element) {
 		if (element instanceof BodyDeclaration) {
 			BodyDeclaration node = (BodyDeclaration) element;
 			if (node.getJavadoc() != null) {
-				String docComment = new String();
+				String docComment = null;
 				for (Object o : node.getJavadoc().tags()) {
 					TagElement tag = (TagElement) o;
 					String tagName = tag.getTagName();
+					if (getModelAdapterFactorySet().useUIDs() && FLOWER_UID.equals(tagName)) {
+						continue;
+					}
+					if (docComment == null) {
+						docComment = new String();
+					}
 					if (tagName != null) {
-						docComment += tag.getTagName();
+						docComment += tag.getTagName() + " ";
 					}
 					for (Object o2 : tag.fragments()) {
 						docComment += getTextFromDocElement(o2);
 					}
 					docComment += "\n";
 				}
-				docComment = docComment.trim();
 				return docComment;
 			}
 		}

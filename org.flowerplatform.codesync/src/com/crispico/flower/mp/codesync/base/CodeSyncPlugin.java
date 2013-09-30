@@ -35,8 +35,10 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
@@ -55,6 +57,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 	
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
 	
+	protected boolean useUIDs = true;
+	
 	public static CodeSyncPlugin getInstance() {
 		return INSTANCE;
 	}
@@ -67,6 +71,10 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		return codeSyncAlgorithmRunner;
 	}
 	
+	public boolean useUIDs() {
+		return useUIDs;
+	}
+	
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -75,8 +83,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
 		
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
-		
-//		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -91,6 +97,11 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		}
 	}
 	
+	@Override
+	public void registerMessageBundle() throws Exception {
+		// no messages yet
+	}
+
 	/**
 	 * Important: the code sync mapping and cache resources <b>must</b> be loaded through the same {@link ResourceSet}.
 	 */
@@ -107,7 +118,20 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 		if (diagramEditableResource != null) {
 			return diagramEditableResource.getResourceSet();
 		}
-		return new ResourceSetImpl();
+		
+		ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new ResourceFactoryImpl() {
+			
+			@Override
+			public Resource createResource(URI uri) {
+				return new XMIResourceImpl(uri) {
+			    	protected boolean useUUIDs() {
+			    		return true;
+			    	}
+				};
+			}
+		});
+		return resourceSet;
 	}
 	
 	/**
