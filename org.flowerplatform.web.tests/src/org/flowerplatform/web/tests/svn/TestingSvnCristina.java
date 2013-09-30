@@ -73,7 +73,7 @@ public class TestingSvnCristina {
 												"hibernate", "organization",
 												"workingDirectories", "workingDirectories");
 		
-		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
 		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs("explorerTreeStatefulService|Explorer1", "r", 
 				"hibernate", "organization",
 				"svn-repositories", "svnRepositories",
@@ -227,7 +227,7 @@ public class TestingSvnCristina {
 				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
 				"organization", "workingDirectories", "workingDirectories",
 				"ws_trunk", "ws_trunk", "ws_trunk", "project");
-		ArrayList<ArrayList<PathFragment>> listPathFragment = new ArrayList<>();
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(pathFragment);
 		CommunicationPlugin.tlCurrentChannel.set(communicationChannel);
 		List<String> specs = new ArrayList<String>();
@@ -259,7 +259,7 @@ public class TestingSvnCristina {
 				"organization", "workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory", "nuSterge", "project");
 		
-		ArrayList<ArrayList<PathFragment>> listPathFragment = new ArrayList<>();
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(path);
 		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
 		
@@ -294,7 +294,7 @@ public class TestingSvnCristina {
 				"organization", "workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory", "test", "project", "test", "project");
 		
-		ArrayList<ArrayList<PathFragment>> listPathFragment = new ArrayList<>();
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(path);
 		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
 		
@@ -324,12 +324,12 @@ public class TestingSvnCristina {
 	@Test
 	public void mergeModified(){
 		//local file path for merge
-		ArrayList<PathFragment> path = getArrayOfPathFragmentsFromStringArgs(
+		List<PathFragment> path = getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer 1", "r", "hibernate",
 				"organization", "workingDirectories", "workingDirectories",
 				"commonWD", "workingDirectory", "test", "project");
 		
-		ArrayList<ArrayList<PathFragment>> listPathFragment = new ArrayList<>();
+		List<List<PathFragment>> listPathFragment = new ArrayList<>();
 		listPathFragment.add(path);
 		File[] files = SvnService.getInstance().getFilesForSelectionList(listPathFragment);
 		

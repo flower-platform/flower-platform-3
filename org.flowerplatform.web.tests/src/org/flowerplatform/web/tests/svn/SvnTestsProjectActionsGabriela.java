@@ -119,7 +119,7 @@ public class SvnTestsProjectActionsGabriela {
 	public static void checkoutProjectsInPreparationForTests() {
 		// if checkouts fail, then all the other tests would have failed
 		// nonetheless if checkouts were made in their methods
-		ArrayList<ArrayList<PathFragment>> selectionForCheckout = new ArrayList<>();
+		List<List<PathFragment>> selectionForCheckout = new ArrayList<>();
 		selectionForCheckout.add(getArrayOfPathFragmentsFromStringArgs(
 				"explorerTreeStatefulService|Explorer1", "r", "hibernate",
 				"organization", "svn-repositories", "svnRepositories",
