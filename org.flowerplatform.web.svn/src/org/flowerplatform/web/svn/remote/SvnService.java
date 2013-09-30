@@ -1157,6 +1157,8 @@ public class SvnService {
 		ProgressMonitor pm = ProgressMonitor.create(SvnPlugin.getInstance().getMessage("svn.service.checkout.checkoutProgressMonitor"), channel);
 		workingDirectoryDestination = getDirectoryFullPathFromPathFragments(workingDirectoryPartialPath) + workingDirectoryDestination;
 
+		tlCommand.set(context.getCommand());
+		
 		SVNRevision revision;
 		if (headRevision) {
 			revision = SVNRevision.HEAD;
@@ -1908,10 +1910,10 @@ public class SvnService {
 							// set new list of comments to user
 
 							user.getSvnComments().add(newComment);
-							for (int i = 0; i < previousComments.size(); i++) {
-								user.getSvnComments().add(
-										previousComments.get(i));
-							}
+//							for (int i = 0; i < previousComments.size(); i++) {
+//								user.getSvnComments().add(
+//										previousComments.get(i));
+//							}
 							user = (User) wrapper.merge(user);
 						}
 					}

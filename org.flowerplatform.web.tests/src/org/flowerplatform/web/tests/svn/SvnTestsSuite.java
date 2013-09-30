@@ -25,6 +25,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({TestingSvnCristina.class})
-public class SvnTestSuit extends EclipseDependentTestSuiteBase{
+public class SvnTestsSuite extends EclipseDependentTestSuiteBase{
 	
 }
