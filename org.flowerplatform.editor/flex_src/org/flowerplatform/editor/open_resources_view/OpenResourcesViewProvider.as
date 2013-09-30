@@ -65,6 +65,5 @@ package org.flowerplatform.editor.open_resources_view {
 		public function getViewPopupWindow(viewLayoutData:ViewLayoutData):UIComponent {
 			return null;
 		}
-		
 	}
 }

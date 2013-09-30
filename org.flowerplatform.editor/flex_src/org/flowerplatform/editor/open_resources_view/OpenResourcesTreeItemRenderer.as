@@ -21,8 +21,11 @@ package org.flowerplatform.editor.open_resources_view {
 	import com.crispico.flower.flexdiagram.util.common.BitmapContainer;
 	import com.crispico.flower.util.tree.CustomIconTreeItemRenderer;
 	
+	import flash.events.Event;
+	
 	import mx.collections.ArrayCollection;
 	import mx.core.IFlexDisplayObject;
+	import mx.events.PropertyChangeEvent;
 	
 	import org.flowerplatform.communication.tree.GenericTreeItemRenderer;
 	import org.flowerplatform.editor.EditorPlugin;
@@ -30,12 +33,15 @@ package org.flowerplatform.editor.open_resources_view {
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditableResourceClient;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
+	import org.flowerplatform.flexutil.tree.TreeList;
 	
 	/**
 	 * Customized to handle <code>EditableResource</code>s and
 	 * <code>EditableResourceClient</code>s.
 	 * 
 	 * @author Cristi
+	 * @author Sebastian Solomon
+	 * 
 	 */
 	public class OpenResourcesTreeItemRenderer extends GenericTreeItemRenderer {
 		
@@ -59,9 +65,6 @@ package org.flowerplatform.editor.open_resources_view {
 //			}
 //		}
 		
-		/**
-		 * @author Sebastian
-		 */
 
 		override protected function getIconFunction(data:HierarchicalModelWrapper):Object
 		{
@@ -73,18 +76,29 @@ package org.flowerplatform.editor.open_resources_view {
 			return null;
 		}
 		
-		/**
-		 * @author Sebastian
-		 */
 		override protected function getLabelFunction(data:HierarchicalModelWrapper):String
 		{
-			if (data.treeNode is EditableResource){
-				return EditableResource(data.treeNode).label;
-			}else if (data.treeNode is EditableResourceClient)
-				return EditableResourceClient(data.treeNode).name;				
-			return null;
-			
-			
+			if ( data.treeNode is EditableResource ) {
+				return EditorPlugin.getInstance().globalEditorOperationsManager.getEditableResourceLabel( EditableResource(data.treeNode) , true);
+				//return EditableResource(data.treeNode).label;
+			} else if (data.treeNode is EditableResourceClient) {
+				var label:String = EditableResourceClient(data.treeNode).name + " (" + 
+					EditableResourceClient(data.treeNode).login + ")";
+				return label;
+			}
+		return null;
+		}
+		
+		
+		override public function set data(value:Object):void
+		{
+			super.data = value;
+			HierarchicalModelWrapper(data).treeNode.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, listener);				
+		}
+		
+		protected function listener(event:PropertyChangeEvent):void {			
+			data = data;
+			dispatchEvent(new Event(TreeList.UPDATE_TREE_RENDERER_EVENT));
 		}
 		
 	}

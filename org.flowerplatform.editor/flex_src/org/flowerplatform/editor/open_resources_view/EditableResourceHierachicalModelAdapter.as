@@ -32,11 +32,7 @@ package org.flowerplatform.editor.open_resources_view
 	
 	public class EditableResourceHierachicalModelAdapter implements IHierarchicalModelAdapter
 	{
-		public function EditableResourceHierachicalModelAdapter()
-		{
 
-		}
-		
 		/**
 		 * @author Sebastian
 		 */	

@@ -35,6 +35,7 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.editor.EditorFrontend;
 	import org.flowerplatform.editor.action.SaveAction;
 	import org.flowerplatform.editor.action.SaveAllAction;
+	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -243,10 +244,8 @@ package org.flowerplatform.editor {
 					saveAllAction.enabled = editorStatefulClient.editableResourceStatus.dirty; // the value of this variable should always be true
 				} // otherwise we are not interested; i.e. global dirty = false and an ER has left (which was non dirty for sure)
 			}
-			Workbench(FlexUtilGlobals.getInstance().workbench).refreshLabels();
-			//workbench.refreshLabels();	
+			Workbench(FlexUtilGlobals.getInstance().workbench).refreshLabels();			
 			dispatchEvent(new DirtyStateUpdatedEvent(editorStatefulClient));
-			
 		}
 
 		/**

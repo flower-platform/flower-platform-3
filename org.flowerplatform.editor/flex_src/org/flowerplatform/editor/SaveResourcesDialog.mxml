@@ -29,10 +29,15 @@ license-end
 	
 	<mx:Script>
 		<![CDATA[
+			import com.crispico.flower.util.layout.Workbench;
+			
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
 			import mx.collections.ArrayCollection;
 			import mx.controls.Alert;
+			import mx.core.FlexGlobals;
 			import mx.utils.ArrayUtil;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
@@ -103,16 +108,16 @@ license-end
 								
 				if (commandToSend.commandsList.length > 0) {
 					ModalSpinner.addModalSpinner(this);
-					for each (var entry:Object in entriesToSave) {
-						if (entry.selected) 
-							EditorStatefulClient(entry.editorStatefulClient).save();
-					}
-					closeEditorsOrEditorStatefulClients(null);
 					
-				} else {
-					// nothing is selected;
-					closeEditorsOrEditorStatefulClients(null);
-				}
+					for each (var entry:Object in entriesToSave) {
+						if (entry.selected)
+							EditorStatefulClient(entry.editorStatefulClient).save();							
+					}
+				} 
+				
+				// nothing is selected;
+				closeEditorsOrEditorStatefulClients(null);
+				Workbench(FlexUtilGlobals.getInstance().workbench).refreshLabels();
 			}
 			
 			/**

@@ -40,21 +40,14 @@
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.stateful_service.StatefulClient;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.editor.EditorPlugin;
+			import org.flowerplatform.editor.GlobalEditorOperationsManager;
 			import org.flowerplatform.editor.remote.EditableResource;
+			import org.flowerplatform.editor.remote.EditableResourceClient;
 			import org.flowerplatform.editor.remote.EditorStatefulClient;
 			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
-//			implements="com.crispico.flower.mp.web.editorsupport.IDirtyStateProvider"
+			import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 			
-//			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
-//			import com.crispico.flower.mp.communication.stateful_service.StatefulClient;
-//			import com.crispico.flower.mp.communication.stateful_service.StatefulClientRegistry;
-//			import com.crispico.flower.mp.web.editor.GlobalEditorOperationsManager;
-//			import com.crispico.flower.mp.web.editor.communication.EditorStatefulClient;
-//			import com.crispico.flower.mp.web.editorsupport.EditableResource;
-//			import com.crispico.flower.mp.web.editorsupport.EditableResourceClient;
-//			import com.crispico.flower.mp.web.editorsupport.openresourcesview.action.UnsubscribeFromEditableResourceAction;
-//			import com.crispico.flower.util.layout.event.ViewRemovedEvent;
-//			
 //			import mx.collections.ArrayCollection;
 			
 			/**
@@ -120,28 +113,32 @@
 //			 * 
 //			 */
 //			private function getLabel(object:Object):String {
-//				if (object is EditableResource) {
-//					var editableResource:EditableResource = EditableResource(object);
-//					return GlobalEditorOperationsManager.INSTANCE.getEditableResourceLabel(editableResource, true);
-//				} else if (object is EditableResourceClient) {
-//					return EditableResourceClient(object).name + " (" + 
-//						EditableResourceClient(object).login + ")";
-//				} else {
-//					return null;
+//				if (object is HierarchicalModelWrapper){
+//					var hierarchicalModelWrapper:HierarchicalModelWrapper = HierarchicalModelWrapper(object);
+//					if ( hierarchicalModelWrapper.treeNode is EditableResource ) {
+//						return EditorPlugin.getInstance().globalEditorOperationsManager.getEditableResourceLabel( EditableResource(hierarchicalModelWrapper.treeNode) , true);
+//					} else if (hierarchicalModelWrapper.treeNode is EditableResourceClient) {
+//						var label:String = EditableResourceClient(hierarchicalModelWrapper.treeNode).name + " (" + 
+//							EditableResourceClient(hierarchicalModelWrapper.treeNode).login + ")";
+//						return label;
+//					} else {
+//						return null;
+//					}
 //				}
+//				return null;
 //			}			
-//			
-//			/**
-//			* Returns true if at least one of the resources it displays is dirty.
-//			* 
-//			* @author Daniela
-//			* @author Mariana 
-//			*/ 
+			
+			/**
+			* Returns true if at least one of the resources it displays is dirty.
+			* 
+			* @author Daniela
+			* @author Mariana 
+			*/ 
 			public function isDirty():Boolean {
-//				for each (var editableResource:EditableResource in editableResourcesCollection) {
-//					if (editableResource.dirty)
-//						return true;
-//				}
+				for each (var editableResource:EditableResource in TreeNode(tree.rootNode).children) {
+					if (editableResource.dirty)
+						return true;
+				}
 				return false;
 			}
 //TODO			
@@ -171,8 +168,7 @@
 					// I haven't actually seen this case (i.e. == null), but in theory could happen,
 					// if the editor is closed really quickly, before the data arrives
 				}
-//				
-//				var itemIndex:int = editableResourcesCollection.getItemIndex(editableResourceStatus);
+				
 				var itemIndex:int = TreeNode(tree.rootNode).children.getItemIndex(editableResourceStatus);
 				
 				if (itemIndex < 0) {
@@ -181,7 +177,6 @@
 					return;
 				}
 				
-				//editableResourcesCollection.removeItemAt(itemIndex);
 				TreeNode(tree.rootNode).children.removeItemAt(itemIndex);
 			}
 			
@@ -189,7 +184,7 @@
 //				// inject a refresh, in order to force the refresh of the item renderer;
 //				// needed for: change state from "no children" <-> "has children"; and for the label
 //				// update, because we show the size of the list, which is not binded/listened
-//				tree.invalidateDisplayList();
+				tree.invalidateDisplayList();
 			}
 			
 		]]>
