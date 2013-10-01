@@ -450,6 +450,8 @@ public abstract class EditorStatefulService extends StatefulService implements I
 			reloadEditableResource_loadWithSlaves(editableResource, slaveEditableResourcesThatWereUnloaded, displayMessageToClient);
 		} finally {
 			namedLockPool.unlock(editableResource.getEditableResourcePath());
+			editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
+
 		}
 	}
 	
@@ -543,6 +545,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 				boolean initialDirtyState = editableResource.isDirty();
 				doSave(editableResource);	
 				if (initialDirtyState != editableResource.isDirty() && !context.getCommunicationChannel().isDisposed()) {
+					editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
 					dispatchEditableResourceStatus(editableResource);
 				}
 //			}
@@ -997,7 +1000,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 					// i.e. load has thrown an error
 					return;
 				}
-
+				editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
 				editableResources.put(state.getEditableResourcePath(), editableResource);
 			}
 			
