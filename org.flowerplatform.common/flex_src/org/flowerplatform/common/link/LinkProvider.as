@@ -16,41 +16,34 @@
  *
  * license-end
  */
-package org.flowerplatform.communication
-{
+package org.flowerplatform.common.link {
 	import flash.external.ExternalInterface;
 	
 	import mx.core.FlexGlobals;
+	import mx.managers.BrowserManager;
+	import mx.utils.URLUtil;
 	
+	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 
 	/**
-	 * Exposes a map with parameters and value for the Application.
-	 * 
-	 * The map is filled with browser URL parameters (those after ?p1=v1&p2=v2) and with .swf parameters when embeding in the .jsp   
 	 * @author Sorin
-	 * 
-	 */ 
-	public class ApplicationParametersProvider {
+	 * @author Cristina Constatinescu
+	 */
+	public class LinkProvider {
 		
-		public static const ORGANIZATION:String = "organization";
-		public static const OPEN_RESOURCES:String = "openResources";
-		public static const SELECT_RESOURCE_AT_INDEX:String = "selectResourceAtIndex";
+		public static const ORGANIZATION:String = "organization";		
 		public static const ACTIVATION_CODE:String = "activationCode";
 		public static const LOGIN:String = "login";
 		public static const SHOW_DEBUG_MENU:String = "showDebugMenu";
 		
 		public const parameters:Object = new Object();
 		
-		public function ApplicationParametersProvider() {
+		public function LinkProvider() {
 			if (FlexGlobals.topLevelApplication) {
 				for (var key:String in FlexGlobals.topLevelApplication.parameters)
 					parameters[key] = FlexGlobals.topLevelApplication.parameters[key];
 			}
-			
-			var browserURL:String = getBrowserURL();
-			parseURLQueryParamters(browserURL, parameters);
-			// printParameters(); // To show the available parameters
 		}
 		
 		public function getOrganization():String {
@@ -74,35 +67,7 @@ package org.flowerplatform.communication
 		public function getShowDebugMenu():String {
 			return parameters[SHOW_DEBUG_MENU];
 		}
-		
-		/**
-		 * 
-		 */
-		public function getOpenResources():String {
-			return parameters[OPEN_RESOURCES];
-		}
-		
-		/**
-		 * 
-		 */
-		public function clearOpenResources():void {
-			delete parameters[OPEN_RESOURCES];
-		}
-		
-		/**
-		 * 
-		 */
-		public function getSelectResourceAtIndex():int {
-			return parameters[SELECT_RESOURCE_AT_INDEX];
-		}
-		
-		/**
-		 * 
-		 */
-		public function clearSelectResourceAtIndex():void {
-			delete parameters[SELECT_RESOURCE_AT_INDEX];
-		}
-		
+						
 		private function printParameters():void {
 			for (var key:String in parameters) 
 				trace("[" + key + "] = [" + parameters[key] + "]");
@@ -115,18 +80,19 @@ package org.flowerplatform.communication
 		/**
 		 * @author Mariana
 		 */
-		public static function getBrowserURL():String {
-			if (ExternalInterface.available)
-				return String(ExternalInterface.call("window.location.href.toString"));
+		public function getBrowserURL():String {
+			if (ExternalInterface.available) {
+				return String(ExternalInterface.call("getURL"));
+			}
 			return "";
 		}
 		
-		public static function getBrowserURLWithoutQuery():String {
+		public function getBrowserURLWithoutQuery():String {
 			var browserURL:String = getBrowserURL();
 			return browserURL.split("?")[0];
 		}
 		
-		public static function getBrowserURLQuery():String {
+		public function getBrowserURLQuery():String {
 			var browserURL:String = getBrowserURL();
 			if (browserURL.indexOf("?") < 0) // no parameters passed in the browser
 				return null;
@@ -140,7 +106,7 @@ package org.flowerplatform.communication
 		 * @param parameters the destination object where the parsed parameters are put.
 		 * 		If null then the result must be obtaind from the returned value.
 		 */ 
-		public static function parseURLQueryParamters(url:String, parameters:Object = null):Object {
+		public function parseURLQueryParameters(url:String, parameters:Object = null):Object {
 			if (parameters == null)
 				parameters = new Object();
 			if (url.indexOf("?") < 0) // no parameters passed in the url

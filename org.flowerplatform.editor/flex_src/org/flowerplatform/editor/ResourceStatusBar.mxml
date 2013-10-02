@@ -38,12 +38,13 @@
 
 	<mx:Script>
 		<![CDATA[
-			import mx.controls.Button;
 			import mx.utils.StringUtil;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.editor.link.URLGenerateNavigateView;
 			import org.flowerplatform.editor.remote.EditableResource;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
 			/**
 			 * 
@@ -261,6 +262,16 @@
 				editorFrontend.editorStatefulClient.save();		
 			}
 			
+			protected function urlGenerateNavigate_clickHandler(event:MouseEvent):void {
+				var generateUrlView:URLGenerateNavigateView = new URLGenerateNavigateView();
+				generateUrlView.showForCurrentOpenResource = true;
+				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+					.setPopupContent(generateUrlView)
+					.setWidth(550)
+					.setHeight(500)
+					.show();
+			}
+			
 //			///////////////////////////////////////////////////////
 //			// Collaboration related logic
 //			///////////////////////////////////////////////////////
@@ -329,6 +340,7 @@
 //					Tool(event.target.data));
 //			}
 //			
+			
 		]]>
 	</mx:Script>
 	  
@@ -403,11 +415,12 @@
 	
 	<mx:Spacer width="100%" />
 	
-<!--	<common:FlowerButton id="urlGenerateNavigate" 
+	<common:FlowerButton id="urlGenerateNavigate" 
 						 label="URL..." toolTip="Open URL Generate / Navigate Dialog" 
-						 fontWeight="normal" iconURL="{SingletonRefsFromPrePluginEra.iconURLGenerateNavigateDialog}" 
-						 click="SingletonRefsFromPrePluginEra.showURLGenerateNavigateDialogFunction()" />
--->	
+						 fontWeight="normal" 
+						 iconURL="{FlexUtilGlobals.getInstance().createAbsoluteUrl(EditorPlugin.getInstance().getResourceUrl('images/external_link.png'))}" 
+						 click="urlGenerateNavigate_clickHandler(event)"/>
+
 	
 	<effects:FadeColor
 		id="fadeColor"

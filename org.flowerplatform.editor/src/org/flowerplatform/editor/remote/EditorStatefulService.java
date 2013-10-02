@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.editor.remote;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -935,6 +934,50 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		return friendlyName;
 	}
 	
+	/**
+	 * Doesn't have a channel parameter because this method would always be called for a resource after loading it's master resource.
+	 * <p>
+	 * Doesn't have validationProblems parameter because this method is safely called with input created internally whereas the other method
+	 * is called with input given by the user.
+	 * 
+	 * @see #getCanonicalEditableResourcePath(String, CommunicationChannel, StringBuffer)
+	 *  
+	 * 
+	 * @author Sorin
+	 * 
+	 */
+	public String getFriendlyEditableResourcePath(String canonicalEditableResourcePath) {
+		return getFriendlyNameEncoded(canonicalEditableResourcePath);
+	}
+
+	/**
+	 * @param channel needed because certain editors may present resource from a master resource that first must be opened for the current user (like diagram from model)
+	 * @param validationProblems problems resulted from validating the path. This must be rigorously validated because it is called with input directly from user
+	 * @return the canonical editableResourcePath or null if there were validation problems
+	 * 
+	 * 
+	 * @author Sorin
+	 * 
+	 */
+	public String getCanonicalEditableResourcePath(String friendlyEditableResourcePath, CommunicationChannel channel, StringBuffer validationProblems) {
+		return getFriendlyNameDecoded(friendlyEditableResourcePath);
+	}
+	
+	/**
+	 * Method called to navigate to the given <code>fragment</code> by the external url feature.
+	 * Each implementation should interpret <code>fragment</code> in it's own way.
+	 *  
+	 * @param editableResourcePath the resource that was already opened in an editor
+	 * @param fragment a string used to located the desired fragment. It is recommended  to have a key=value
+	 * @param channel the client in which the editableResourcePath is opened in an editor.
+	 * 
+	 * 
+	 * @author Sorin
+	 * 
+	 */
+	public void navigateToFragment(CommunicationChannel channel, String editableResourcePath, String fragment) {
+	}
+	
 	///////////////////////////////////////////////////////////////
 	// @RemoteInvocation methods
 	///////////////////////////////////////////////////////////////
@@ -1415,50 +1458,6 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		
 		invokeClientMethod(channel, editableResourceClient.getStatefulClientId(), "revealEditor", new Object[] {});
 	}
-
-	/**
-	 * Doesn't have a channel parameter because this method would always be called for a resource after loading it's master resource.
-	 * <p>
-	 * Doesn't have validationProblems parameter because this method is safely called with input created internally whereas the other method
-	 * is called with input given by the user.
-	 * 
-	 * @see #getCanonicalEditableResourcePath(String, CommunicationChannel, StringBuffer)
-	 *  
-	 * 
-	 * @author Sorin
-	 * 
-	 */
-	public String getFriendlyEditableResourcePath(String canonicalEditableResourcePath) {
-		return getFriendlyNameEncoded(canonicalEditableResourcePath);
-	}
-
-	/**
-	 * @param channel needed because certain editors may present resource from a master resource that first must be opened for the current user (like diagram from model)
-	 * @param validationProblems problems resulted from validating the path. This must be rigorously validated because it is called with input directly from user
-	 * @return the canonical editableResourcePath or null if there were validation problems
-	 * 
-	 * 
-	 * @author Sorin
-	 * 
-	 */
-	public String getCanonicalEditableResourcePath(String friendlyEditableResourcePath, CommunicationChannel channel, StringBuffer validationProblems) {
-		return getFriendlyNameDecoded(friendlyEditableResourcePath);
-	}
-	
-	/**
-	 * Method called to navigate to the given <code>fragment</code> by the external url feature.
-	 * Each implementation should interpret <code>fragment</code> in it's own way.
-	 *  
-	 * @param editableResourcePath the resource that was already opened in an editor
-	 * @param fragment a string used to located the desired fragment. It is recommended  to have a key=value
-	 * @param channel the client in which the editableResourcePath is opened in an editor.
-	 * 
-	 * 
-	 * @author Sorin
-	 * 
-	 */
-	public void navigateToFragment(CommunicationChannel channel, String editableResourcePath, String fragment) {
-	}
 	
 	/**
 	 * @see ActivityService#getIconUrl(String)
@@ -1468,4 +1467,5 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	public String getIconUrl() {
 		return createEditableResourceInstance().getIconUrl();
 	}
+	
 }

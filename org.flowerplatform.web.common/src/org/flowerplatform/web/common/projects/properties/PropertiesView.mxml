@@ -135,7 +135,7 @@
 			skinClass="{FlexUtilGlobals.getInstance().isMobile ?  GradientBackgroundMobileListSkin : GradientBackgroundListSkin}"
 			id="list"
 			width="20%" height="100%"
-			sidesBorderStyle="right_border" borderColor="#CCCCCC" paddingLeft="5"			
+			sidesBorderStyle="right_border" borderColor="#CCCCCC" paddingLeft="5"
 			change="changeHandler(event)">
 			<selectiontrianglelist:itemRenderer>
 				<fx:Component>
