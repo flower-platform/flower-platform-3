@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="copyright" content="Copyright (c) IBM Corporation and others 2010." >
+		<meta http-equiv="Content-Language" content="en-us">
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Plugin Content</title>
+		<link rel="stylesheet" type="text/css" href="flowerContent.css" />
+    	<script type="text/javascript" src="../requirejs/require.js"></script>
+		<script type="text/javascript">
+		require({
+			  baseUrl: '..',			 
+			  paths: {
+				  text: 'requirejs/text',
+				  i18n: 'requirejs/i18n',
+				  domReady: 'requirejs/domReady'	    
+			  }
+			});
+		
+		require(["flowerContent.js"]);		
+		</script>
+	</head>
+	
+	<body id="orion-delegatedContent" class="orionPage">
+		<div class="content-fixedHeight">
+			<div id="innerPanels"> <!--  style="height:100%;width:100%;" -->
+				<div id="outlineContainer" class="auxpane sidePanelLayout hasSplit">
+					<div class="sidePanelMargins" id="fileSystems"></div>
+					<div class="fixedToolbarHolder">					
+						<div id="pageToolbar" class="sidebarToolbar mainToolbar toolComposite toolbarLayout"></div>
+						<div id="explorer-tree" class="toolbarTarget"></div>
+					</div>
+				</div>				
+				<div class="split splitLayout" style="left: 25%;"></div> <!-- 1:3 -->
+				<div id="rightPane" class="mainpane mainPanelLayout hasSplit">
+					<div id="delegatedContent" class="toolbarTarget"></div>						
+				</div>
+			</div>
+		</div>
+		<div class="footer-fixed-bottom footer" id="footer"></div>
+		<div id="contentassist" class="contentassist" role="listbox" tabindex="-1"></div>
+	</body>	
+</html>
