@@ -9,6 +9,7 @@ package org.flowerplatform.codesync.code.javascript.regex_ast.util;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import java.io.Serializable;
+import java.util.Map;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
 
@@ -75,8 +76,12 @@ public class RegExAstAdapterFactory extends AdapterFactoryImpl {
 	protected RegExAstSwitch<Adapter> modelSwitch =
 		new RegExAstSwitch<Adapter>() {
 			@Override
-			public Adapter caseNode(Node object) {
-				return createNodeAdapter();
+			public Adapter caseRegExAstNode(RegExAstNode object) {
+				return createRegExAstNodeAdapter();
+			}
+			@Override
+			public Adapter caseStringToIntegerEntry(Map.Entry<String, Integer> object) {
+				return createStringToIntegerEntryAdapter();
 			}
 			@Override
 			public Adapter caseParameter(Parameter object) {
@@ -123,16 +128,30 @@ public class RegExAstAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node <em>Node</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode
 	 * @generated
 	 */
-	public Adapter createNodeAdapter() {
+	public Adapter createRegExAstNodeAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link java.util.Map.Entry <em>String To Integer Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see java.util.Map.Entry
+	 * @generated
+	 */
+	public Adapter createStringToIntegerEntryAdapter() {
 		return null;
 	}
 

@@ -41,7 +41,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 		override public function run():void {
 			var parentViewId:Object = selection.length == 0 ? null : ExpandableNode(selection.getItemAt(0)).id;
 			
-			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object;
+			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object, parentCategory:String;
 			
 			// test
 			if (template == "Table") {
@@ -105,6 +105,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"varName" : "Backbone",
 					"dependencyPath" : "backbone"
 				};
+				parentCategory = "Require";
 			} else if (template == "Attribute") {
 				type = "jsAttribute";
 				keyParameter = "name";
@@ -113,6 +114,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"name" : "name",
 					"defaultValue" : "John"
 				};
+				parentCategory = "Attribute";
 			} else if (template == "Operation") {
 				type = "jsOperation";
 				keyParameter = "name";
@@ -121,10 +123,52 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"name" : "render",
 					"parameters" : "param"
 				};
+				parentCategory = "Operation";
+			} else if (template == "EventsAttribute") {
+				// add a category too
+				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
+						.service_addElement("jsEventsAttribute", "name", true, { "name" : "EventsAttribute" }, "EventsAttribute", parentViewId, null);
+				
+				type = "jsEventsAttribute";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "EventsAttribute"
+				};
+				parentCategory = "Attribute";
+			} else if (template == "EventsAttributeEntry") {
+				type = "jsEventsAttributeEntry";
+				keyParameter = "event";
+				isCategory = false;
+				parameters = {
+					"event" : "click",
+					"selector" : "#edit",
+					"function" : "editView"
+				};
+			} else if (template == "RoutesAttribute") {
+				// add a category too
+				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
+				.service_addElement("jsRoutesAttribute", "name", true, { "name" : "RoutesAttribute" }, "RoutesAttribute", parentViewId, null);
+				
+				type = "jsRoutesAttribute";
+				keyParameter = "name";
+				isCategory = false;
+				parameters = {
+					"name" : "RoutesAttribute"
+				};
+				parentCategory = "Attribute";
+			} else if (template == "RoutesAttributeEntry") {
+				type = "jsRoutesAttributeEntry";
+				keyParameter = "path";
+				isCategory = false;
+				parameters = {
+					"path" : "companies",
+					"function" : "companiesDetails"
+				};
 			}
 			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-					.service_addElement(type, keyParameter, isCategory, parameters, template, parentViewId);
+					.service_addElement(type, keyParameter, isCategory, parameters, template, parentViewId, parentCategory);
 		}
 		
 	}

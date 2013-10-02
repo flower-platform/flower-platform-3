@@ -20,6 +20,7 @@ package org.flowerplatform.codesync.code.javascript {
 	
 	import org.flowerplatform.codesync.code.javascript.model.action.AddElementAction;
 	import org.flowerplatform.codesync.code.javascript.model.action.AddElementActionProvider;
+	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController;
 	import org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand;
@@ -64,6 +65,7 @@ package org.flowerplatform.codesync.code.javascript {
 			INSTANCE = this;
 			
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddElementActionProvider());
+			EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteElementAction);
 			
 			var composedControllerProviderFactory:ComposedControllerProviderFactory;
 			

@@ -23,3 +23,7 @@ Require-Bundle: org.eclipse.osgi,
  org.flowerplatform.editor
 Bundle-Activator: org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin
 Bundle-ActivationPolicy: lazy
+Export-Package: org.flowerplatform.codesync.code.javascript,
+ org.flowerplatform.codesync.code.javascript.parser,
+ org.flowerplatform.codesync.code.javascript.regex_ast,
+ org.flowerplatform.codesync.code.javascript.remote

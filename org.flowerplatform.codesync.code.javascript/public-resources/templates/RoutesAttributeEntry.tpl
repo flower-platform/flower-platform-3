@@ -1,1 +1,1 @@
-"@event @selector": "@function"
+"@path": "@function"

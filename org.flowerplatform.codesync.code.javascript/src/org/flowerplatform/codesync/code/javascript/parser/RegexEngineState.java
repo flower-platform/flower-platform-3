@@ -18,7 +18,8 @@
  */
 package org.flowerplatform.codesync.code.javascript.parser;
 
-import org.flowerplatform.codesync.code.javascript.regex_ast.Node;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
+
 
 /**
  * @author Mariana Gheorghe
@@ -26,9 +27,9 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.Node;
 public class RegexEngineState {
 	
 	public String category;
-	public Node node;
+	public RegExAstNode node;
 	
-	public RegexEngineState(String category, Node node) {
+	public RegexEngineState(String category, RegExAstNode node) {
 		super();
 		this.category = category;
 		this.node = node;

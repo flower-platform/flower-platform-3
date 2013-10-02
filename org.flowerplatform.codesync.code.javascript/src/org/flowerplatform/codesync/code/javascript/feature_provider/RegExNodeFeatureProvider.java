@@ -20,7 +20,6 @@ package org.flowerplatform.codesync.code.javascript.feature_provider;
 
 import java.util.List;
 
-import org.flowerplatform.codesync.code.javascript.regex_ast.Node;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;

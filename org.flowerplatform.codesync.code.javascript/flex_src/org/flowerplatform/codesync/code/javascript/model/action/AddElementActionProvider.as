@@ -63,10 +63,6 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 				result.push(new AddElementAction(availableTemplate));
 			}
 			
-			if (selection.length == 1) {
-				result.push(new DeleteElementAction());
-			}
-			
 			return result;
 		}
 	}

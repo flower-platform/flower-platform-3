@@ -96,7 +96,7 @@ public class CodeSyncTest {
 	public static final String MODIFIED_CONFLICTS = "modified_conflicts";
 	public static final String MODIFIED_NO_CONFLICTS_PERFORM_SYNC = "modified_no_conflicts_perform_sync";
 	
-	public static final String DIR = TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" + PROJECT + "/";
+	public static final String DIR = TestUtil.getResourcesDir(CodeSyncTest.class);
 	
 	public static final String SOURCE_FILE = "Test.java";
 	public static final String MODEL_FILE = "CSE.notation";
@@ -610,15 +610,11 @@ public class CodeSyncTest {
 	/////////////////////////////
 	
 	private IProject getProject() {
-		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + PROJECT;
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
-		return resource.getProject();
+		return CodeSyncTestSuite.getProject(PROJECT);
 	}
 	
 	private IFile getFile(String path) {
-		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + path;
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
-		return (IFile) resource;
+		return CodeSyncTestSuite.getFile(path);
 	}
 	
 	private Pair[] typeList;

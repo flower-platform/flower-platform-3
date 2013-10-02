@@ -63,10 +63,12 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 	
 		// TODO this should be initialized from rules
 		availableTemplates.put("", Arrays.asList("BackboneClass", "Table", "TableItem", "Form"));
-		availableTemplates.put("BackboneClass", Arrays.asList("RequireEntry", "Attribute", "Operation"));
+		availableTemplates.put("BackboneClass", Arrays.asList("RequireEntry", "Attribute", "Operation", "EventsAttribute", "RoutesAttribute"));
 		availableTemplates.put("Table", Arrays.asList("TableHeaderEntry"));
 		availableTemplates.put("TableItem", Arrays.asList("TableItemEntry"));
 		availableTemplates.put("Form", Arrays.asList("FormItem"));
+		availableTemplates.put("EventsAttribute", Arrays.asList("EventsAttributeEntry"));
+		availableTemplates.put("RoutesAttribute", Arrays.asList("RoutesAttributeEntry"));
 	}
 	
 	public Map<String, List<String>> getAvailableTemplates() {

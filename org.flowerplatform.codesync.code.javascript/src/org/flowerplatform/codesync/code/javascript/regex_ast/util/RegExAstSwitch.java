@@ -9,6 +9,7 @@ package org.flowerplatform.codesync.code.javascript.regex_ast.util;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import java.io.Serializable;
+import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
@@ -73,9 +74,15 @@ public class RegExAstSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case RegExAstPackage.NODE: {
-				Node node = (Node)theEObject;
-				T result = caseNode(node);
+			case RegExAstPackage.REG_EX_AST_NODE: {
+				RegExAstNode regExAstNode = (RegExAstNode)theEObject;
+				T result = caseRegExAstNode(regExAstNode);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case RegExAstPackage.STRING_TO_INTEGER_ENTRY: {
+				@SuppressWarnings("unchecked") Map.Entry<String, Integer> stringToIntegerEntry = (Map.Entry<String, Integer>)theEObject;
+				T result = caseStringToIntegerEntry(stringToIntegerEntry);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -115,7 +122,22 @@ public class RegExAstSwitch<T> extends Switch<T> {
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T caseNode(Node object) {
+	public T caseRegExAstNode(RegExAstNode object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>String To Integer Entry</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>String To Integer Entry</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseStringToIntegerEntry(Map.Entry<String, Integer> object) {
 		return null;
 	}
 

@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.codesync.code.javascript.remote;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -43,6 +44,7 @@ import org.flowerplatform.web.projects.remote.ProjectsService;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 
 /**
  * @author Mariana Gheorghe
@@ -58,46 +60,41 @@ public class JavascriptClassDiagramOperationsService {
 		}
 	}
 	
-	public void addElement(ServiceInvocationContext context, String type, String keyParameter, boolean isCategory, Map<String, String> parameters, String template, String parentViewId) {
+	public void addElement(
+			ServiceInvocationContext context, 
+			String type, 
+			String keyParameter, 
+			boolean isCategory, 
+			Map<String, String> parameters, 
+			String template, 
+			String parentViewId,
+			String parentCategory) {
 
 		// step 1: create the element
-		RegExAstCodeSyncElement cse = RegExAstFactory.eINSTANCE.createRegExAstCodeSyncElement();
-		cse.setType(type);
-		RegExAstCacheElement ast = RegExAstFactory.eINSTANCE.createRegExAstCacheElement();
-		ast.setCategoryNode(isCategory);
-		ast.setKeyParameter(keyParameter);
-		if (parameters != null) {
-			for (Entry<String, String> entry : parameters.entrySet()) {
-				Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
-				parameter.setName(entry.getKey());
-				parameter.setValue(entry.getValue());
-				ast.getParameters().add(parameter);
-			}
-		}
-		cse.setName(getParameterValue(ast, keyParameter));
-		cse.setAstCacheElement(ast);
-		DiagramEditableResource der = getEditableResource(context);
-		ResourceSet resourceSet = der.getResourceSet();
-		IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(der.getFile()).getProject();
-		Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(project, resourceSet);
-		astCache.getContents().add(ast);
-		cse.setTemplate(template);
+		RegExAstCodeSyncElement cse = (RegExAstCodeSyncElement) createElement(context, type, keyParameter, isCategory, parameters, template);
 		
 		// step 2: add the element to the model
 		if (parentViewId != null) {
 			// in an existing node
-			View parent = getViewById(context, parentViewId);
-			((CodeSyncElement) parent.getDiagrammableElement()).getChildren().add(cse);
-			((ExpandableNode) parent).setHasChildren(true);
+			CodeSyncElement parent = (CodeSyncElement) getViewById(context, parentViewId).getDiagrammableElement();
+			if (parentCategory != null) {
+				parent = getOrCreateCategory(context, parent, parentCategory);
+			}
+			parent.getChildren().add(cse);
+			((ExpandableNode) getViewById(context, parentViewId)).setHasChildren(true);
 		} else {
 			// on the diagram
 			Diagram diagram = getDiagram(context);
 			
 			CodeSyncElement file = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 			file.setType("File");
+			file.setAdded(true);
 			file.setName(cse.getName());
 			file.getChildren().add(cse);
 			
+			DiagramEditableResource der = getEditableResource(context);
+			ResourceSet resourceSet = der.getResourceSet();
+			IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(der.getFile()).getProject();
 			CodeSyncElement srcDir = (CodeSyncElement) CodeSyncCodePlugin.getInstance().getCodeSyncMapping(project, resourceSet)
 					.getContents().get(0);
 			srcDir.getChildren().add(file);
@@ -122,6 +119,48 @@ public class JavascriptClassDiagramOperationsService {
 		CodeSyncElement element = (CodeSyncElement) view.getDiagrammableElement();
 		CodeSyncElement parent = (CodeSyncElement) element.eContainer();
 		parent.getChildren().remove(element);
+		if (parent instanceof CodeSyncRoot) {
+			((View) view.eContainer()).getPersistentChildren().remove(view);
+		}
+	}
+	
+	protected CodeSyncElement getOrCreateCategory(ServiceInvocationContext context, CodeSyncElement parent, String parentCategory) {
+		for (CodeSyncElement child : parent.getChildren()) {
+			if (child.getType().equals(parentCategory)) {
+				return child;
+			}
+		}
+		Map<String, String> parameters = new HashMap<String, String>();
+		parameters.put("name", parentCategory);
+		CodeSyncElement cse = createElement(context, parentCategory, "name", true, parameters, null);
+		parent.getChildren().add(cse);
+		return cse;
+	}
+	
+	protected RegExAstCodeSyncElement createElement(ServiceInvocationContext context, String type, String keyParameter, boolean isCategory, Map<String, String> parameters, String template) {
+		RegExAstCodeSyncElement cse = RegExAstFactory.eINSTANCE.createRegExAstCodeSyncElement();
+		cse.setType(type);
+		RegExAstCacheElement ast = RegExAstFactory.eINSTANCE.createRegExAstCacheElement();
+		ast.setCategoryNode(isCategory);
+		ast.setKeyParameter(keyParameter);
+		if (parameters != null) {
+			for (Entry<String, String> entry : parameters.entrySet()) {
+				Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
+				parameter.setName(entry.getKey());
+				parameter.setValue(entry.getValue());
+				ast.getParameters().add(parameter);
+			}
+		}
+		cse.setName(getParameterValue(ast, keyParameter));
+		cse.setAstCacheElement(ast);
+		DiagramEditableResource der = getEditableResource(context);
+		ResourceSet resourceSet = der.getResourceSet();
+		IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(der.getFile()).getProject();
+		Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(project, resourceSet);
+		astCache.getContents().add(ast);
+		cse.setTemplate(template);
+		cse.setAdded(true);
+		return cse;
 	}
 	
 	protected String getParameterValue(RegExAstCacheElement ast, String key) {

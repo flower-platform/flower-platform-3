@@ -23,7 +23,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExNodeFeatureProvider;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExParameterFeatureProvider;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Node;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
@@ -33,6 +33,8 @@ import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.code.CodeSyncModelAdapterFactory;
 import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapter;
+import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterAncestor;
+import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterLeft;
 import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
@@ -55,7 +57,7 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		
 		// javascript specific adapter
 		rightFactory.addModelAdapter(IFile.class, createAstModelAdapter(new JavascriptFileModelAdapter()));
-		rightFactory.addModelAdapter(Node.class, createAstModelAdapter(new RegExNodeAstModelAdapter()));
+		rightFactory.addModelAdapter(RegExAstNode.class, createAstModelAdapter(new RegExNodeAstModelAdapter()));
 		rightFactory.addModelAdapter(Parameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
 		
 		// ancestor - CSE
@@ -71,9 +73,9 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		addFeatureProvider(IFile.class, featureProvider);
 		addFeatureProvider(AstModelElementAdapter.FILE, featureProvider);
 		
-		RegExNodeFeatureProvider regexNodeFeatureProvider = new RegExNodeFeatureProvider();
-		addFeatureProvider(CodeSyncElement.class, regexNodeFeatureProvider);
-		addFeatureProvider(Node.class, regexNodeFeatureProvider);
+		RegExNodeFeatureProvider regexRegExAstNodeFeatureProvider = new RegExNodeFeatureProvider();
+		addFeatureProvider(CodeSyncElement.class, regexRegExAstNodeFeatureProvider);
+		addFeatureProvider(RegExAstNode.class, regexRegExAstNodeFeatureProvider);
 		
 		addFeatureProvider(Parameter.class, new RegExParameterFeatureProvider());
 	}
@@ -81,7 +83,7 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 	private CodeSyncModelAdapterFactory createCodeSyncModelAdapterFactory(Resource resource, boolean isLeft) {
 		CodeSyncModelAdapterFactory factory = new CodeSyncModelAdapterFactory(this, rightFactory, resource, isLeft);
 		CodeSyncElementModelAdapter cseAdapter = (CodeSyncElementModelAdapter) createAstModelAdapter(
-				new CodeSyncElementModelAdapter());
+				isLeft ? new CodeSyncElementModelAdapterLeft() : new CodeSyncElementModelAdapterAncestor());
 		cseAdapter.setEObjectConverter(rightFactory);
 		factory.addModelAdapter(CodeSyncElement.class, cseAdapter);
 		factory.addModelAdapter(Parameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));

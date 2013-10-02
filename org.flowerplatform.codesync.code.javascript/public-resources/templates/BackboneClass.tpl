@@ -7,7 +7,7 @@ define(function (require) {
     
     return @superClass.extend({
     
-    	// children-inse/rt-point ClassMembers
+    	// children-insert-point ClassMember
     
     })
 

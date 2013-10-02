@@ -35,6 +35,10 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 			label = "Delete Element";
 		}
 		
+		override public function get visible():Boolean {
+			return selection.length == 1;
+		}
+		
 		override public function run():void {
 			var node:Node = Node(selection.getItemAt(0));
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_deleteElement(node.id);

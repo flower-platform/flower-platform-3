@@ -61,14 +61,14 @@ public interface RegExAstPackage extends EPackage {
 	RegExAstPackage eINSTANCE = org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl <em>Node</em>}' class.
+	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl <em>Node</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getRegExAstNode()
 	 * @generated
 	 */
-	int NODE = 0;
+	int REG_EX_AST_NODE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -77,7 +77,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__CHILDREN = 0;
+	int REG_EX_AST_NODE__CHILDREN = 0;
 
 	/**
 	 * The feature id for the '<em><b>Parameters</b></em>' containment reference list.
@@ -86,7 +86,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__PARAMETERS = 1;
+	int REG_EX_AST_NODE__PARAMETERS = 1;
 
 	/**
 	 * The feature id for the '<em><b>Key Parameter</b></em>' attribute.
@@ -95,7 +95,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__KEY_PARAMETER = 2;
+	int REG_EX_AST_NODE__KEY_PARAMETER = 2;
 
 	/**
 	 * The feature id for the '<em><b>Type</b></em>' attribute.
@@ -104,7 +104,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__TYPE = 3;
+	int REG_EX_AST_NODE__TYPE = 3;
 
 	/**
 	 * The feature id for the '<em><b>Category Node</b></em>' attribute.
@@ -113,7 +113,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__CATEGORY_NODE = 4;
+	int REG_EX_AST_NODE__CATEGORY_NODE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Offset</b></em>' attribute.
@@ -122,7 +122,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__OFFSET = 5;
+	int REG_EX_AST_NODE__OFFSET = 5;
 
 	/**
 	 * The feature id for the '<em><b>Length</b></em>' attribute.
@@ -131,7 +131,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__LENGTH = 6;
+	int REG_EX_AST_NODE__LENGTH = 6;
 
 	/**
 	 * The feature id for the '<em><b>Added</b></em>' attribute.
@@ -140,7 +140,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__ADDED = 7;
+	int REG_EX_AST_NODE__ADDED = 7;
 
 	/**
 	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
@@ -149,7 +149,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__DELETED = 8;
+	int REG_EX_AST_NODE__DELETED = 8;
 
 	/**
 	 * The feature id for the '<em><b>Template</b></em>' attribute.
@@ -158,16 +158,16 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__TEMPLATE = 9;
+	int REG_EX_AST_NODE__TEMPLATE = 9;
 
 	/**
-	 * The feature id for the '<em><b>Children Insert Point</b></em>' attribute.
+	 * The feature id for the '<em><b>Children Insert Points</b></em>' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__CHILDREN_INSERT_POINT = 10;
+	int REG_EX_AST_NODE__CHILDREN_INSERT_POINTS = 10;
 
 	/**
 	 * The feature id for the '<em><b>Next Sibling Insert Point</b></em>' attribute.
@@ -176,7 +176,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE__NEXT_SIBLING_INSERT_POINT = 11;
+	int REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT = 11;
 
 	/**
 	 * The number of structural features of the '<em>Node</em>' class.
@@ -185,7 +185,44 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE_FEATURE_COUNT = 12;
+	int REG_EX_AST_NODE_FEATURE_COUNT = 12;
+
+	/**
+	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.StringToIntegerEntryImpl <em>String To Integer Entry</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.StringToIntegerEntryImpl
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getStringToIntegerEntry()
+	 * @generated
+	 */
+	int STRING_TO_INTEGER_ENTRY = 1;
+
+	/**
+	 * The feature id for the '<em><b>Key</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_INTEGER_ENTRY__KEY = 0;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_INTEGER_ENTRY__VALUE = 1;
+
+	/**
+	 * The number of structural features of the '<em>String To Integer Entry</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_TO_INTEGER_ENTRY_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl <em>Parameter</em>}' class.
@@ -195,7 +232,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getParameter()
 	 * @generated
 	 */
-	int PARAMETER = 1;
+	int PARAMETER = 2;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -251,7 +288,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getRegExAstCodeSyncElement()
 	 * @generated
 	 */
-	int REG_EX_AST_CODE_SYNC_ELEMENT = 2;
+	int REG_EX_AST_CODE_SYNC_ELEMENT = 3;
 
 	/**
 	 * The feature id for the '<em><b>Synchronized</b></em>' attribute.
@@ -369,7 +406,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getRegExAstCacheElement()
 	 * @generated
 	 */
-	int REG_EX_AST_CACHE_ELEMENT = 3;
+	int REG_EX_AST_CACHE_ELEMENT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Code Sync Element</b></em>' reference.
@@ -418,146 +455,180 @@ public interface RegExAstPackage extends EPackage {
 
 
 	/**
-	 * Returns the meta object for class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node <em>Node</em>}'.
+	 * Returns the meta object for class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode <em>Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for class '<em>Node</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode
 	 * @generated
 	 */
-	EClass getNode();
+	EClass getRegExAstNode();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildren <em>Children</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Children</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildren()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildren()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EReference getNode_Children();
+	EReference getRegExAstNode_Children();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getParameters <em>Parameters</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getParameters <em>Parameters</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Parameters</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getParameters()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getParameters()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EReference getNode_Parameters();
+	EReference getRegExAstNode_Parameters();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getKeyParameter <em>Key Parameter</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getKeyParameter <em>Key Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Key Parameter</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getKeyParameter()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getKeyParameter()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_KeyParameter();
+	EAttribute getRegExAstNode_KeyParameter();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getType <em>Type</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getType <em>Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Type</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getType()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getType()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_Type();
+	EAttribute getRegExAstNode_Type();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isCategoryNode <em>Category Node</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isCategoryNode <em>Category Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Category Node</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#isCategoryNode()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isCategoryNode()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_CategoryNode();
+	EAttribute getRegExAstNode_CategoryNode();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getOffset <em>Offset</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getOffset <em>Offset</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Offset</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getOffset()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getOffset()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_Offset();
+	EAttribute getRegExAstNode_Offset();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getLength <em>Length</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getLength <em>Length</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Length</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getLength()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getLength()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_Length();
+	EAttribute getRegExAstNode_Length();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isAdded <em>Added</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isAdded <em>Added</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Added</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#isAdded()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isAdded()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_Added();
+	EAttribute getRegExAstNode_Added();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#isDeleted <em>Deleted</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isDeleted <em>Deleted</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Deleted</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#isDeleted()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isDeleted()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_Deleted();
+	EAttribute getRegExAstNode_Deleted();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate <em>Template</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getTemplate <em>Template</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Template</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getTemplate()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getTemplate()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_Template();
+	EAttribute getRegExAstNode_Template();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildrenInsertPoint <em>Children Insert Point</em>}'.
+	 * Returns the meta object for the map '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildrenInsertPoints <em>Children Insert Points</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Children Insert Point</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getChildrenInsertPoint()
-	 * @see #getNode()
+	 * @return the meta object for the map '<em>Children Insert Points</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildrenInsertPoints()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_ChildrenInsertPoint();
+	EReference getRegExAstNode_ChildrenInsertPoints();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Node#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Next Sibling Insert Point</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Node#getNextSiblingInsertPoint()
-	 * @see #getNode()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingInsertPoint()
+	 * @see #getRegExAstNode()
 	 * @generated
 	 */
-	EAttribute getNode_NextSiblingInsertPoint();
+	EAttribute getRegExAstNode_NextSiblingInsertPoint();
+
+	/**
+	 * Returns the meta object for class '{@link java.util.Map.Entry <em>String To Integer Entry</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>String To Integer Entry</em>'.
+	 * @see java.util.Map.Entry
+	 * @model keyDataType="org.eclipse.emf.ecore.EString"
+	 *        valueDataType="org.eclipse.emf.ecore.EIntegerObject"
+	 * @generated
+	 */
+	EClass getStringToIntegerEntry();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Key</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getStringToIntegerEntry()
+	 * @generated
+	 */
+	EAttribute getStringToIntegerEntry_Key();
+
+	/**
+	 * Returns the meta object for the attribute '{@link java.util.Map.Entry <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see java.util.Map.Entry
+	 * @see #getStringToIntegerEntry()
+	 * @generated
+	 */
+	EAttribute getStringToIntegerEntry_Value();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter <em>Parameter</em>}'.
@@ -700,14 +771,14 @@ public interface RegExAstPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
-		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl <em>Node</em>}' class.
+		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl <em>Node</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.NodeImpl
-		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getNode()
+		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl
+		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getRegExAstNode()
 		 * @generated
 		 */
-		EClass NODE = eINSTANCE.getNode();
+		EClass REG_EX_AST_NODE = eINSTANCE.getRegExAstNode();
 
 		/**
 		 * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature.
@@ -715,7 +786,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE__CHILDREN = eINSTANCE.getNode_Children();
+		EReference REG_EX_AST_NODE__CHILDREN = eINSTANCE.getRegExAstNode_Children();
 
 		/**
 		 * The meta object literal for the '<em><b>Parameters</b></em>' containment reference list feature.
@@ -723,7 +794,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE__PARAMETERS = eINSTANCE.getNode_Parameters();
+		EReference REG_EX_AST_NODE__PARAMETERS = eINSTANCE.getRegExAstNode_Parameters();
 
 		/**
 		 * The meta object literal for the '<em><b>Key Parameter</b></em>' attribute feature.
@@ -731,7 +802,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__KEY_PARAMETER = eINSTANCE.getNode_KeyParameter();
+		EAttribute REG_EX_AST_NODE__KEY_PARAMETER = eINSTANCE.getRegExAstNode_KeyParameter();
 
 		/**
 		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
@@ -739,7 +810,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__TYPE = eINSTANCE.getNode_Type();
+		EAttribute REG_EX_AST_NODE__TYPE = eINSTANCE.getRegExAstNode_Type();
 
 		/**
 		 * The meta object literal for the '<em><b>Category Node</b></em>' attribute feature.
@@ -747,7 +818,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__CATEGORY_NODE = eINSTANCE.getNode_CategoryNode();
+		EAttribute REG_EX_AST_NODE__CATEGORY_NODE = eINSTANCE.getRegExAstNode_CategoryNode();
 
 		/**
 		 * The meta object literal for the '<em><b>Offset</b></em>' attribute feature.
@@ -755,7 +826,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__OFFSET = eINSTANCE.getNode_Offset();
+		EAttribute REG_EX_AST_NODE__OFFSET = eINSTANCE.getRegExAstNode_Offset();
 
 		/**
 		 * The meta object literal for the '<em><b>Length</b></em>' attribute feature.
@@ -763,7 +834,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__LENGTH = eINSTANCE.getNode_Length();
+		EAttribute REG_EX_AST_NODE__LENGTH = eINSTANCE.getRegExAstNode_Length();
 
 		/**
 		 * The meta object literal for the '<em><b>Added</b></em>' attribute feature.
@@ -771,7 +842,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__ADDED = eINSTANCE.getNode_Added();
+		EAttribute REG_EX_AST_NODE__ADDED = eINSTANCE.getRegExAstNode_Added();
 
 		/**
 		 * The meta object literal for the '<em><b>Deleted</b></em>' attribute feature.
@@ -779,7 +850,7 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__DELETED = eINSTANCE.getNode_Deleted();
+		EAttribute REG_EX_AST_NODE__DELETED = eINSTANCE.getRegExAstNode_Deleted();
 
 		/**
 		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
@@ -787,15 +858,15 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__TEMPLATE = eINSTANCE.getNode_Template();
+		EAttribute REG_EX_AST_NODE__TEMPLATE = eINSTANCE.getRegExAstNode_Template();
 
 		/**
-		 * The meta object literal for the '<em><b>Children Insert Point</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Children Insert Points</b></em>' map feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__CHILDREN_INSERT_POINT = eINSTANCE.getNode_ChildrenInsertPoint();
+		EReference REG_EX_AST_NODE__CHILDREN_INSERT_POINTS = eINSTANCE.getRegExAstNode_ChildrenInsertPoints();
 
 		/**
 		 * The meta object literal for the '<em><b>Next Sibling Insert Point</b></em>' attribute feature.
@@ -803,7 +874,33 @@ public interface RegExAstPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute NODE__NEXT_SIBLING_INSERT_POINT = eINSTANCE.getNode_NextSiblingInsertPoint();
+		EAttribute REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT = eINSTANCE.getRegExAstNode_NextSiblingInsertPoint();
+
+		/**
+		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.StringToIntegerEntryImpl <em>String To Integer Entry</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.StringToIntegerEntryImpl
+		 * @see org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstPackageImpl#getStringToIntegerEntry()
+		 * @generated
+		 */
+		EClass STRING_TO_INTEGER_ENTRY = eINSTANCE.getStringToIntegerEntry();
+
+		/**
+		 * The meta object literal for the '<em><b>Key</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STRING_TO_INTEGER_ENTRY__KEY = eINSTANCE.getStringToIntegerEntry_Key();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STRING_TO_INTEGER_ENTRY__VALUE = eINSTANCE.getStringToIntegerEntry_Value();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl <em>Parameter</em>}' class.

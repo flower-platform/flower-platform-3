@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +50,7 @@ import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.parser.Parser;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Node;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
@@ -62,7 +63,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 
-	protected Map<IPath, Node> compilationUnits = new HashMap<IPath, Node>();
+	protected Map<IPath, RegExAstNode> compilationUnits = new HashMap<IPath, RegExAstNode>();
 	
 	@Override
 	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue) {
@@ -89,7 +90,7 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 	@Override
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
 		Resource resource = new ResourceImpl();
-		Node node = RegExAstFactory.eINSTANCE.createNode();
+		RegExAstNode node = RegExAstFactory.eINSTANCE.createRegExAstNode();
 		node.setAdded(true);
 		// adding to resource to avoid UNDEFINED values during sync
 		// see EObjectModelAdapter.getValueFeatureValue()
@@ -100,8 +101,7 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 
 	@Override
 	public void removeChildrenOnContainmentFeature(Object parent, Object feature, Object child) {
-		// TODO Auto-generated method stub
-
+		((RegExAstNode) child).setDeleted(true);
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		
 		IPath path = file.getFullPath();
 		if (file.exists()) {
-			Node node = compilationUnits.get(path);
+			RegExAstNode node = compilationUnits.get(path);
 			if (node != null) {
 				ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager(); // get the buffer manager
 				try {
@@ -164,20 +164,20 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		return false;
 	}
 
-	private TextEdit rewrite(IDocument document, Node node) {
+	private TextEdit rewrite(IDocument document, RegExAstNode node) {
 		MultiTextEdit edit = new MultiTextEdit();
 		rewrite(document, node, edit);
 		return edit;
 	}
 
-	private void rewrite(IDocument document, Node node, MultiTextEdit edit) {
+	private void rewrite(IDocument document, RegExAstNode node, MultiTextEdit edit) {
 		if (node.isAdded()) {
 			String template = loadTemplate(node);
 			edit.addChild(new InsertEdit(getInsertPoint(node), template));
 		} else if (node.isDeleted()) {
 			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));
 		} else {
-			for (Node child : node.getChildren()) {
+			for (RegExAstNode child : node.getChildren()) {
 				rewrite(document, child, edit);
 			}
 		}
@@ -186,15 +186,17 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 	/**
 	 * Loads children templates as well, because we can't allow overlapping edits.
 	 */
-	private String loadTemplate(Node node) {
+	private String loadTemplate(RegExAstNode node) {
 		String template = null;
 		// first find the template to use
-		try {
-			URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("public-resources/templates/" + node.getTemplate() + ".tpl");
-			File file = new File(FileLocator.resolve(url).toURI());
-			template = FileUtils.readFileToString(file);
-		} catch (IOException | URISyntaxException e) {
-			throw new RuntimeException("Template does not exist", e);
+		if (node.getTemplate() != null) {
+			try {
+				URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("public-resources/templates/" + node.getTemplate() + ".tpl");
+				File file = new File(FileLocator.resolve(url).toURI());
+				template = FileUtils.readFileToString(file);
+			} catch (IOException | URISyntaxException e) {
+				throw new RuntimeException("Template does not exist", e);
+			}
 		}
 		
 		// replace the parameters with their values from the node
@@ -203,38 +205,55 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		}
 		
 		// load children templates
-		for (Node child : node.getChildren()) {
+		for (RegExAstNode child : getChildrenWithTemplate(node, new ArrayList<RegExAstNode>())) {
 			String childTemplate = loadTemplate(child);
-			int childInsertPoint = template.indexOf("<!-- children-insert-point " + child.getTemplate() + " -->");
-			if (childInsertPoint == -1) {
-				childInsertPoint = template.indexOf("// children-insert-point " + child.getTemplate());
+			if (child.getTemplate() != null) {
+				int childInsertPoint = template.indexOf("<!-- children-insert-point " + child.getTemplate() + " -->");
+				if (childInsertPoint == -1) {
+					childInsertPoint = template.indexOf("// children-insert-point " + child.getTemplate());
+				}
+				if (childInsertPoint == -1) {
+					throw new RuntimeException("RegExAstNode does not accept children of type " + child.getTemplate());
+				}
+				template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 			}
-			if (childInsertPoint == -1) {
-				throw new RuntimeException("Node does not accept children of type " + child.getTemplate());
-			}
-			template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 		}
 		
 		return template;
 	}
 	
+	private List<RegExAstNode> getChildrenWithTemplate(RegExAstNode parent, List<RegExAstNode> children) {
+		for (RegExAstNode child : parent.getChildren()) {
+			if (child.isCategoryNode()) {
+				getChildrenWithTemplate(child, children);
+			} else {
+				children.add(child);
+			}
+		}
+		return children;
+	}
+	
 	/**
-	 * Returns the {@link Node#getChildrenInsertPoint()} of the parent node, or the
-	 * {@link Node#getNextSiblingInsertPoint()} of the previous sibling, if any.
+	 * Returns the {@link RegExAstNode#getChildrenInsertPoint()} of the parent node, or the
+	 * {@link RegExAstNode#getNextSiblingInsertPoint()} of the previous sibling, if any.
 	 */
-	private int getInsertPoint(Node node) {
-		Node parent = (Node) node.eContainer();
+	private int getInsertPoint(RegExAstNode node) {
+		RegExAstNode parent = (RegExAstNode) node.eContainer();
 		if (parent == null) {
 			return 0;
 		}
 		int childIndex = parent.getChildren().indexOf(node);
 		for (int i = childIndex - 1; i >= 0 ; i--) {
-			Node sibling = parent.getChildren().get(i);
+			RegExAstNode sibling = parent.getChildren().get(i);
 			if (!sibling.isAdded()) {
 				return sibling.getNextSiblingInsertPoint();
 			}
 		}
-		return parent.getChildrenInsertPoint();
+		if (parent.getChildrenInsertPoints().contains(node.getTemplate())) {
+			return parent.getChildrenInsertPoints().get(node.getTemplate());
+		} else {
+			throw new RuntimeException("RegExAstNode does not accept children of type " + node.getTemplate());
+		}
 	}
 	
 	@Override
@@ -252,7 +271,7 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 	public List<?> getChildren(Object modelElement) {
 		Parser parser = new Parser();
 		File file = ProjectsService.getInstance().getFileFromProjectWrapperResource((IResource) modelElement);
-		Node node = parser.parse(file);
+		RegExAstNode node = parser.parse(file);
 		compilationUnits.put(((IResource) modelElement).getFullPath(), node);
 		return Collections.singletonList(node);
 	}

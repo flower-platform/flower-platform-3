@@ -32,7 +32,7 @@ public interface RegExAstFactory extends EFactory {
 	 * @return a new object of class '<em>Node</em>'.
 	 * @generated
 	 */
-	Node createNode();
+	RegExAstNode createRegExAstNode();
 
 	/**
 	 * Returns a new object of class '<em>Parameter</em>'.

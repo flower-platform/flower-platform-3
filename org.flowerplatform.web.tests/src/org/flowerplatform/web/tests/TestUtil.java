@@ -44,6 +44,7 @@ import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.temp.GeneralService;
+import org.flowerplatform.web.tests.security.sandbox.SecurityPermissionsTests;
 import org.junit.Assert;
 
 /**
@@ -52,15 +53,18 @@ import org.junit.Assert;
  */
 public class TestUtil {
 
-	public static final String ECLIPSE_DEPENDENT_FILES_DIR = "files_needed_by_tests/eclipse_dependent";
-	
-	public static final String ECLIPSE_INDEPENDENT_FILES_DIR = "files_needed_by_tests/eclipse_independent";
-	
 	public static final String NORMAL = "normal";
 	
 	public static final String EXPECTED = "expected";
 	
 	public static final String INITIAL_TO_BE_COPIED = "initial_to_be_copied";
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	public static String getResourcesDir(Class<?> cls) {
+		return "src/" + cls.getPackage().getName().replaceAll("\\.", "/") + "/resources/";
+	}	
 	
 	public static String getWorkspaceResourceAbsolutePath(String pathWithinWorkspace) {
 		return ResourcesPlugin.getWorkspace().getRoot().findMember(pathWithinWorkspace).getLocation().toString();
@@ -275,5 +279,6 @@ public class TestUtil {
 		EditorStatefulService editorStatefulService = (EditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry()
 				.getService("");
 		return editorStatefulService.calculateStatefulClientId(editableResourcePath);
-	}	
+	}
+	
 }

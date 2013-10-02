@@ -6,6 +6,7 @@
  */
 package org.flowerplatform.codesync.code.javascript.regex_ast.impl;
 
+import java.util.Map;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -60,7 +61,8 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 	@Override
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
-			case RegExAstPackage.NODE: return createNode();
+			case RegExAstPackage.REG_EX_AST_NODE: return createRegExAstNode();
+			case RegExAstPackage.STRING_TO_INTEGER_ENTRY: return (EObject)createStringToIntegerEntry();
 			case RegExAstPackage.PARAMETER: return createParameter();
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT: return createRegExAstCodeSyncElement();
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT: return createRegExAstCacheElement();
@@ -74,9 +76,19 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Node createNode() {
-		NodeImpl node = new NodeImpl();
-		return node;
+	public RegExAstNode createRegExAstNode() {
+		RegExAstNodeImpl regExAstNode = new RegExAstNodeImpl();
+		return regExAstNode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Map.Entry<String, Integer> createStringToIntegerEntry() {
+		StringToIntegerEntryImpl stringToIntegerEntry = new StringToIntegerEntryImpl();
+		return stringToIntegerEntry;
 	}
 
 	/**

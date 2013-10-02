@@ -69,7 +69,7 @@ import flex.messaging.HttpFlexSession;
 public class CodeSyncWikiTest {
 
 	private static final String PROJECT = "codesync_wiki";
-	private static String DIR = TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/codesync/" +TestUtil.NORMAL;
+	private static String DIR = TestUtil.getResourcesDir(CodeSyncWikiTest.class) + TestUtil.NORMAL;
 	
 	public static final String LINK = "/link-to-project";
 	
