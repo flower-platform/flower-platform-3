@@ -57,11 +57,11 @@ public abstract class IconDiagrammableElementFeatureChangesProcessor implements 
 	}
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		viewDetails.put("label", getLabel(object));
+		viewDetails.put("label", getLabel(object, false));
 		viewDetails.put("iconUrls", getIconUrls(object));
 	}
 	
-	abstract protected String getLabel(EObject object);
+	abstract public String getLabel(EObject object, boolean forEditing);
 
 	abstract protected String getIconUrls(EObject object);
 	

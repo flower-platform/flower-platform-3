@@ -18,12 +18,7 @@
  */
 package org.flowerplatform.codesync.code.javascript.processor;
 
-import java.util.List;
-
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.code.javascript.parser.Parser;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
-import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 import org.flowerplatform.editor.model.change_processor.IconDiagrammableElementFeatureChangesProcessor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -36,7 +31,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavascriptFileElementProcessor extends IconDiagrammableElementFeatureChangesProcessor {
 
 	@Override
-	protected String getLabel(EObject object) {
+	public String getLabel(EObject object, boolean forEditing) {
 		CodeSyncElement cse = (CodeSyncElement) object;
 		String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 //		if (Parser.JS_FUNCTION.equals(cse.getType())) {

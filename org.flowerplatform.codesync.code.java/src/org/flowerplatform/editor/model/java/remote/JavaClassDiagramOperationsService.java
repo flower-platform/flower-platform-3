@@ -18,14 +18,19 @@
  */
 package org.flowerplatform.editor.model.java.remote;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
+import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.model.EditorModelPlugin;
-import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
+import org.flowerplatform.editor.model.java.JavaClassChildProcessor;
+import org.flowerplatform.editor.model.java.JavaInplaceEditorProvider;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Node;
@@ -37,15 +42,22 @@ import com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapt
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
+import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.Attribute;
+import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.ModifiableElement;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
 import com.crispico.flower.mp.model.astcache.code.Operation;
 import com.crispico.flower.mp.model.astcache.code.Parameter;
+import com.crispico.flower.mp.model.astcache.code.TypedElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
+/**
+ * @author Cristian Spiescu
+ * @author Mariana Gheorghe
+ */
 public class JavaClassDiagramOperationsService {
 	
 	public static final String SERVICE_ID = "classDiagramOperationsDispatcher";
@@ -53,6 +65,8 @@ public class JavaClassDiagramOperationsService {
 	public static final String ATTRIBUTE_SEPARATOR = "classAttributesCompartmentSeparator";
 	
 	public static final String OPERATIONS_SEPARATOR = "classOperationsCompartmentSeparator";
+	
+	private InplaceEditorLabelParser labelParser = new InplaceEditorLabelParser(new JavaInplaceEditorProvider());
 	
 	public void setInplaceEditorText(ServiceInvocationContext context, String viewId, String text) {
 		View view = getViewById(context, viewId);
@@ -66,6 +80,18 @@ public class JavaClassDiagramOperationsService {
 		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
 			CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		}
+	}
+	
+	public String getInplaceEditorText(ServiceInvocationContext context, String viewId) {
+		View view = getViewById(context, viewId);
+		CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
+		for (IDiagrammableElementFeatureChangesProcessor processor : EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor()
+				.getDiagrammableElementFeatureChangesProcessors(view.getViewType())) {
+			if (processor instanceof JavaClassChildProcessor) {
+				return ((JavaClassChildProcessor) processor).getLabel(cse, true);
+			}
+		}
+		throw new RuntimeException("Cannot edit this element!");
 	}
 
 	public void collapseCompartment(ServiceInvocationContext context, String viewId) {
@@ -91,88 +117,60 @@ public class JavaClassDiagramOperationsService {
 		cls.getPersistentChildren().add(separator);
 	}
 	
+	/**
+	 * Creates a new {@link CodeSyncElement} with an associated {@link Attribute}.
+	 */
 	public void addNew_attribute(ServiceInvocationContext context, String viewId, String label) {
 		View view = getViewById(context, viewId);
 		View cls = (View) view.eContainer();
 		CodeSyncElement clsCse = (CodeSyncElement) cls.getDiagrammableElement();
 		
 		CodeSyncElement attributeCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
+		attributeCse.setType(JavaAttributeModelAdapter.ATTRIBUTE);
+		// this is a new element => set added flag
+		attributeCse.setAdded(true);
 		Attribute attribute = AstCacheCodeFactory.eINSTANCE.createAttribute();
 		attribute.setCodeSyncElement(attributeCse);
 		
 		processAttribute(attributeCse, attribute, label);
 		
-		int i = 0;
-		boolean exists = true;
-		while (exists) {
-			i++;
-			exists = false;
-			for (CodeSyncElement child : clsCse.getChildren()) {
-				if (child.getName().equals(attributeCse.getName() + i)) {
-					exists = true;
-					break;
-				}
-			}
-		}
-		attributeCse.setName(attributeCse.getName() + i);
 		clsCse.getChildren().add(attributeCse);
 	}
 	
 	protected void processAttribute(CodeSyncElement attributeCse, Attribute attribute, String label) {
-		label = setVisibility(attribute, label);
-		String[] info = label.split(":");
-		attributeCse.setName(info[0]);
-		attributeCse.setType(JavaAttributeModelAdapter.ATTRIBUTE);
-		attribute.setType(info[1]);
+		InplaceEditorLabelParseResult result = labelParser.parseAttributeLabel(label);
+		setName(attributeCse, result.getName());
+		setInitializer(attributeCse, attribute, result.getDefaultValue());
+		setType(attributeCse, attribute, result.getType());
+		setVisibility(attributeCse, attribute, result.getVisibilityCharacter());
 	}
 	
+	/**
+	 * Creates a new {@link CodeSyncElement} with an associated {@link Operation}.
+	 */
 	public void addNew_operation(ServiceInvocationContext context, String viewId, String label) {
 		View view = getViewById(context, viewId);
 		View cls = (View) view.eContainer();
 		CodeSyncElement clsCse = (CodeSyncElement) cls.getDiagrammableElement();
 		
 		CodeSyncElement operationCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
+		operationCse.setType(JavaOperationModelAdapter.OPERATION);
+		// this is a new element => set added flag
+		operationCse.setAdded(true);
 		Operation operation = AstCacheCodeFactory.eINSTANCE.createOperation();
 		operation.setCodeSyncElement(operationCse);
 		
 		processOperation(operationCse, operation, label);
 		
-		int i = 0;
-		boolean exists = true;
-		while (exists) {
-			i++;
-			exists = false;
-			StringBuilder builder = new StringBuilder(operationCse.getName());
-			builder.insert(builder.indexOf("("), i);
-			for (CodeSyncElement child : clsCse.getChildren()) {
-				if (child.getName().equals(builder.toString())) {
-					exists = true;
-					break;
-				}
-			}
-		}
-		StringBuilder builder = new StringBuilder(operationCse.getName());
-		builder.insert(builder.indexOf("("), i);
-		operationCse.setName(builder.toString());
 		clsCse.getChildren().add(operationCse);
 	}
 	
 	protected void processOperation(CodeSyncElement operationCse, Operation operation, String label) {
-		label = setVisibility(operation, label);
-		int lastIndexOfColon = label.lastIndexOf(":");
-		String name = label.substring(0, lastIndexOfColon);
-		int indexOfBracket = name.indexOf("(");
-		operationCse.setName(name.substring(0, indexOfBracket) + "()");
-		String[] parameters = name.substring(indexOfBracket + 1, name.length() -1)
-				.split(",");
-		operation.getParameters().clear();
-		for (String parameter : parameters) {
-			Parameter param = AstCacheCodeFactory.eINSTANCE.createParameter();
-			param.setType(parameter);
-			operation.getParameters().add(param);
-		}
-		operation.setType(label.substring(lastIndexOfColon + 1));
-		operationCse.setType(JavaOperationModelAdapter.OPERATION);
+		InplaceEditorLabelParseResult result = labelParser.parseOperationLabel(label);
+		setName(operationCse, result.getName());
+		setType(operationCse, operation, result.getType());
+		setVisibility(operationCse, operation, result.getVisibilityCharacter());
+		setParameters(operationCse, operation, result.getParameters());
 	}
 	
 	public void deleteView(ServiceInvocationContext context, String viewId) {
@@ -189,40 +187,95 @@ public class JavaClassDiagramOperationsService {
 		}
 	}
 	
-	protected String setVisibility(ModifiableElement element, String label) {
+	///////////////////////
+	// Model modifications
+	///////////////////////
+	
+	protected void setName(CodeSyncElement element, String newName) {
+		EStructuralFeature feature = CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name();
+		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, newName);
+	}
+	
+	protected void setType(CodeSyncElement element, TypedElement typedElement, String newType) {
+		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getTypedElement_Type();
+		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, newType);
+	}
+	
+	protected void setInitializer(CodeSyncElement element, Attribute attribute, String newInitializer) {
+		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getAttribute_Initializer();
+		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, newInitializer);
+	}
+	
+	protected void setVisibility(CodeSyncElement element, ModifiableElement modifiableElement, char newVisibility) {
 		int type = 0;
-		char visibility = label.charAt(0);
-		boolean result = false;
-		switch (visibility) {
+		switch (newVisibility) {
 		case '+':
 			type = org.eclipse.jdt.core.dom.Modifier.PUBLIC;
-			result = true;
 			break;
 		case '-':
 			type = org.eclipse.jdt.core.dom.Modifier.PRIVATE;
-			result = true;
 			break;
 		case '#':
 			type = org.eclipse.jdt.core.dom.Modifier.PROTECTED;
-			result = true;
 			break;
-		case '~':
-			type = org.eclipse.jdt.core.dom.Modifier.NONE;
-			result = true;
-			break;
+			
 		default:
 			type = org.eclipse.jdt.core.dom.Modifier.NONE;
 			break;
 		}
-		Modifier modifier = AstCacheCodeFactory.eINSTANCE.createModifier();
-		modifier.setType(type);
-		element.getModifiers().clear();
-		element.getModifiers().add(modifier);
-		if (result) {
-			return label.substring(1);
+		
+		Collection<ExtendedModifier> modifiers = EcoreUtil.copyAll(getModifiers(element));
+		Modifier modifier = getVisibility(modifiers);
+		Modifier newModifier = AstCacheCodeFactory.eINSTANCE.createModifier();
+		newModifier.setType(type);
+		if (modifier == null || modifier.getType() != type) {
+			if (modifier != null) {
+				modifiers.remove(modifier);
+			}
+			modifiers.add(newModifier);
 		}
-		return label;
+		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers();
+		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, modifiers);
 	}
+	
+	protected List<ExtendedModifier> getModifiers(CodeSyncElement codeSyncElement) {
+		return (List<ExtendedModifier>) CodeSyncPlugin.getInstance().getFeatureValue(codeSyncElement,
+				AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+	}
+	
+	protected Modifier getVisibility(Collection<ExtendedModifier> modifiers) {
+		for (ExtendedModifier modifier : modifiers) {
+			if (modifier instanceof Modifier) {
+				switch (((Modifier) modifier).getType()) {
+				case org.eclipse.jdt.core.dom.Modifier.PUBLIC:
+				case org.eclipse.jdt.core.dom.Modifier.PRIVATE:
+				case org.eclipse.jdt.core.dom.Modifier.PROTECTED:	
+				case org.eclipse.jdt.core.dom.Modifier.NONE:
+					return (Modifier) modifier;
+				}
+			}
+		}
+		return null;
+	}
+	
+	protected void setParameters(CodeSyncElement element, Operation operation, Collection<InplaceEditorLabelParseResult> newParameters) {
+		// first create the list of parameters corresponding to newParameters
+		List<Parameter> parameters = new BasicEList<>();
+		for (InplaceEditorLabelParseResult newParameter : newParameters) {
+			Parameter parameter = AstCacheCodeFactory.eINSTANCE.createParameter();
+			parameter.setName(newParameter.getName());
+			parameter.setType(newParameter.getType());
+			parameters.add(parameter);
+		}
+		
+		// compare the new parameters with the current list
+		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getOperation_Parameters();
+		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, parameters);
+	}
+	
+	///////////////////////
+	// Utils
+	///////////////////////
 	
 	protected DiagramEditableResource getEditableResource(ServiceInvocationContext context) {
 		return (DiagramEditableResource) context.getAdditionalData().get(DiagramEditorStatefulService.ADDITIONAL_DATA_EDITABLE_RESOURCE);

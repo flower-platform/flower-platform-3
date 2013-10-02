@@ -33,7 +33,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -41,6 +40,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.launching.JavaRuntime;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -144,7 +144,7 @@ public class JavaProjectPropertyPageService {
 			IClasspathEntry[][] entries = ((JavaProject) javaProject).readFileEntriesWithException(null);
 			for (IClasspathEntry entry : entries[0]) {
 				if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-					srcFolders.add(entry.getPath().makeRelativeTo(project.getFullPath()).toFile().getPath());
+					srcFolders.add(entry.getPath().makeRelativeTo(project.getFolder(ProjectsService.LINK_TO_PROJECT).getFullPath()).toFile().getPath());
 				} else if (entry.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
 					File file = ProjectsService.getInstance().getFileFromProjectWrapperResource(ResourcesPlugin.getWorkspace().getRoot().getProject(entry.getPath().lastSegment()));					
 					projects.add(CommonPlugin.getInstance().getPathRelativeToFile(file, wd));
@@ -162,6 +162,10 @@ public class JavaProjectPropertyPageService {
 		return new Object[] {srcFolders, projects, libraries};	
 	}
 	
+	/**
+	 * @author Cristina Constantinescu
+	 * @author Mariana Gheorghe - added linked source folders and JRE container
+	 */
 	public boolean setClasspathEntries(ServiceInvocationContext context, List<PathFragment> path, List<String> srcFolders, List<String> projects, List<String> libraries) {
 		@SuppressWarnings("unchecked")
 		Pair<File, String> node = (Pair<File, String>) GenericTreeStatefulService.getNodeByPathFor(path, null);
@@ -173,7 +177,7 @@ public class JavaProjectPropertyPageService {
 		
 		List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
 		for (String srcFolder : srcFolders) {
-			entries.add(JavaCore.newSourceEntry(project.getFullPath().append(srcFolder)));
+			entries.add(JavaCore.newSourceEntry(project.getFolder(ProjectsService.LINK_TO_PROJECT).getFullPath().append(srcFolder)));
 		}
 		for (String projectName : projects) {		
 			entries.add(JavaCore.newProjectEntry(ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(wd, projectName)).getFullPath()));
@@ -182,8 +186,8 @@ public class JavaProjectPropertyPageService {
 			entries.add(JavaCore.newLibraryEntry(ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(wd, library)).getFullPath(), null, null));
 		}
 		// default entry
-		entries.add(JavaCore.newContainerEntry(new Path("org.eclipse.jdt.launching.JRE_CONTAINER"), false));
-		
+		entries.add(JavaRuntime.getDefaultJREContainerEntry());
+
 		try {
 			javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), new NullProgressMonitor());
 		} catch (JavaModelException e) {

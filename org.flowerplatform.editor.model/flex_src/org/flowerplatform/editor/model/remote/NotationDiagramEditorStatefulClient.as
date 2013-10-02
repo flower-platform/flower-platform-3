@@ -29,6 +29,7 @@ package org.flowerplatform.editor.model.remote {
 	/**
 	 * @author Cristian Spiescu
 	 * @author Cristina Constantinescu
+	 * @author Mariana Gheorghe
 	 */
 	public class NotationDiagramEditorStatefulClient extends DiagramEditorStatefulClient {
 		
@@ -52,6 +53,10 @@ package org.flowerplatform.editor.model.remote {
 			//			attemptUpdateContent(null, invokeServiceMethod("setInplaceEditorText", [viewId, text], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 		
+		public function service_getInplaceEditorText(viewId:Object, callbackFunction:Function):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "getInplaceEditorText", [viewId], null, callbackFunction));
+		}
+		
 		public function service_collapseCompartment(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "collapseCompartment", [viewId]));
 		}
@@ -70,6 +75,11 @@ package org.flowerplatform.editor.model.remote {
 		
 		public function service_deleteView(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
+		}
+		
+		public function service_contentAssist(viewId:Object, pattern:String, callbackFunction:Function):void {
+			var options:ServiceInvocationOptions = new ServiceInvocationOptions().setReturnCommandWithoutSending(true).setResultCallbackFunction(callbackFunction);
+			attemptUpdateContent(null, invokeServiceMethod("contentAssist", [viewId, pattern], options));
 		}
 		
 		public function service_addNewConnection(sourceViewId:Object, targetViewId:Object):void {
