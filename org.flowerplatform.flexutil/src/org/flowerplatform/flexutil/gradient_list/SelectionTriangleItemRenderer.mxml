@@ -64,6 +64,8 @@
 				return hovered;
 			}
 			
+			public var backgroundColor:Number = -1;
+			
 		]]>
 	</fx:Script>
 	
@@ -91,7 +93,13 @@
 							graphics.moveTo(horizontalDelimiterOffset, height);
 							graphics.lineTo(width - horizontalDelimiterOffset, height);
 							
-							graphics.lineStyle(1, owner.getStyle("gradientColor"), 1);
+							var gradientColor:Number = owner.getStyle("gradientColor");
+							if (renderer.backgroundColor != -1) {
+								drawBackground(graphics, renderer.backgroundColor);
+								gradientColor = renderer.backgroundColor;
+							}
+							
+							graphics.lineStyle(1, gradientColor, 1);
 							
 							if (renderer.dataLabel) {
 								renderer.dataLabel.setStyle("paddingLeft", owner.getStyle('paddingLeft'));
@@ -103,22 +111,19 @@
 									var gradientAlpha:Number = 1;
 									var count:int = 1;
 									while (gradientAlpha > 0) {
-										drawTriangle(graphics, owner.getStyle("gradientColor"), gradientAlpha, count);
+										drawTriangle(graphics, gradientColor, gradientAlpha, count);
 										gradientAlpha -= 0.25;
 										count++;
 									}
 								}
 								
 								// draw the selection background
-								graphics.lineStyle(0, 0xFFFFFF, 0);
-								graphics.beginFill(owner.getStyle("selectionColor"), 0.5);
-								graphics.drawRect(0, 0, width, height);
-								graphics.endFill();
+								drawBackground(graphics, owner.getStyle("selectionColor"), 0.5);
 								
 								// fill the triangle with the background color
 								if (owner.getStyle("showSelectionTriangle")) {
 									graphics.beginFill(owner.getStyle("selectionTriangleBackgroundColor"));
-									drawTriangle(graphics, owner.getStyle("gradientColor"));
+									drawTriangle(graphics, gradientColor);
 									graphics.endFill();
 								
 									// draw a white line to cover up the vertical side of the triangle
@@ -137,6 +142,13 @@
 								graphics.drawRect(0, 0, width, height);
 								graphics.endFill();
 							}
+						}
+						
+						private function drawBackground(graphics:Graphics, color:Number, gradientAlpha:Number = 1):void {
+							graphics.lineStyle(0, 0xFFFFFF, 0);
+							graphics.beginFill(color, gradientAlpha);
+							graphics.drawRect(0, 0, width, height);
+							graphics.endFill();
 						}
 						
 						private function drawTriangle(graphics:Graphics, color:Number, gradientAlpha:Number = 1, count:int = 0):void {
