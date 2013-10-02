@@ -63,6 +63,6 @@ public abstract class IconDiagrammableElementFeatureChangesProcessor implements 
 	
 	abstract protected String getLabel(EObject object);
 
-	abstract protected String[] getIconUrls(EObject object);
+	abstract protected String getIconUrls(EObject object);
 	
 }

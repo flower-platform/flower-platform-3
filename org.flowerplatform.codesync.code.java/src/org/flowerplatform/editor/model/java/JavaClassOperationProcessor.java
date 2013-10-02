@@ -32,6 +32,6 @@ public class JavaClassOperationProcessor extends JavaClassChildProcessor {
 		default: 											return "images/obj16/SyncOperation_package.gif";
 		}
 	}
-
-
+	
+	
 }
