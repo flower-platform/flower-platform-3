@@ -38,6 +38,7 @@
             var flashvars = {};
         </script>
         
+        <script type="text/javascript" src="commons.js"></script> 
         <script type="text/javascript" src="flexHostAppConfig.js"></script> 
             
         <script type="text/javascript" src="swfobject.js"></script>
