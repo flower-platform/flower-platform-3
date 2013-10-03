@@ -21,6 +21,7 @@ package org.flowerplatform.editor.remote;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.EditorPlugin;
@@ -32,6 +33,10 @@ public class EditorService {
 	private static final Logger logger = LoggerFactory.getLogger(EditorService.class);
 	
 	public static final String SERVICE_ID = "editorService";
+	
+	public static EditorService getInstance() {
+		return (EditorService) CommunicationPlugin.getInstance().getServiceRegistry().getService(SERVICE_ID);
+	}
 	
 	/**
 	 * An <em>external editableResourcePath</em> is either a <em>canonical editableResourcePath</em or a <em>friendly editableResourcePath</em>.

@@ -1,14 +1,10 @@
 package org.flowerplatform.eclipse;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.public_resources.PublicResourcesServlet;
-import org.flowerplatform.eclipse.communication.HelloEclipseServerCommand;
-import org.flowerplatform.eclipse.communication.IEclipseChannelListener;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -23,22 +19,7 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 	}
 
 	private FlowerJettyServer server;
-		
-	private CopyOnWriteArrayList<IEclipseChannelListener> listeners =
-			new CopyOnWriteArrayList<IEclipseChannelListener>();
-	
-	public CopyOnWriteArrayList<IEclipseChannelListener> getListeners(){
-		return this.listeners;
-	}
-	
-	public void removeListener(IEclipseChannelListener listener){
-		listeners.remove(listener);
-	}
-	
-	public void addListener(IEclipseChannelListener listener){
-		listeners.add(listener);
-	}
-	
+			
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
