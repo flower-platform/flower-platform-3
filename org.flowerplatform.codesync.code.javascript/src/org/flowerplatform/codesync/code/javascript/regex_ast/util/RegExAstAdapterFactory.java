@@ -84,8 +84,8 @@ public class RegExAstAdapterFactory extends AdapterFactoryImpl {
 				return createStringToIntegerEntryAdapter();
 			}
 			@Override
-			public Adapter caseParameter(Parameter object) {
-				return createParameterAdapter();
+			public Adapter caseRegExAstNodeParameter(RegExAstNodeParameter object) {
+				return createRegExAstNodeParameterAdapter();
 			}
 			@Override
 			public Adapter caseRegExAstCodeSyncElement(RegExAstCodeSyncElement object) {
@@ -156,16 +156,16 @@ public class RegExAstAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter <em>Parameter</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter <em>Node Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.Parameter
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter
 	 * @generated
 	 */
-	public Adapter createParameterAdapter() {
+	public Adapter createRegExAstNodeParameterAdapter() {
 		return null;
 	}
 

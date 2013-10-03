@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
@@ -48,7 +48,7 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 	}
 	
 	protected String getParameterValue(RegExAstNode node, String parameterName) {
-		for (Parameter parameter : node.getParameters()) {
+		for (RegExAstNodeParameter parameter : node.getParameters()) {
 			if (parameter.getName().equals(node.getKeyParameter())) {
 				return parameter.getValue();
 			}
@@ -119,7 +119,7 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 			return node;
 		}
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters().equals(feature)) {
-			Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
+			RegExAstNodeParameter parameter = RegExAstFactory.eINSTANCE.createRegExAstNodeParameter();
 			((RegExAstNode) element).getParameters().add(parameter);
 			return parameter;
 		}

@@ -13,26 +13,26 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Parameter</b></em>'.
+ * An implementation of the model object '<em><b>Node Parameter</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl#getValue <em>Value</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl#getOffset <em>Offset</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.ParameterImpl#getLength <em>Length</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeParameterImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeParameterImpl#getValue <em>Value</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeParameterImpl#getOffset <em>Offset</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeParameterImpl#getLength <em>Length</em>}</li>
  * </ul>
  * </p>
  *
  * @generated
  */
-public class ParameterImpl extends EObjectImpl implements Parameter {
+public class RegExAstNodeParameterImpl extends EObjectImpl implements RegExAstNodeParameter {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -118,7 +118,7 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ParameterImpl() {
+	protected RegExAstNodeParameterImpl() {
 		super();
 	}
 
@@ -129,7 +129,7 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return RegExAstPackage.Literals.PARAMETER;
+		return RegExAstPackage.Literals.REG_EX_AST_NODE_PARAMETER;
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.PARAMETER__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE_PARAMETER__NAME, oldName, name));
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 		String oldValue = value;
 		value = newValue;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.PARAMETER__VALUE, oldValue, value));
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE_PARAMETER__VALUE, oldValue, value));
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 		int oldOffset = offset;
 		offset = newOffset;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.PARAMETER__OFFSET, oldOffset, offset));
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE_PARAMETER__OFFSET, oldOffset, offset));
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 		int oldLength = length;
 		length = newLength;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.PARAMETER__LENGTH, oldLength, length));
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE_PARAMETER__LENGTH, oldLength, length));
 	}
 
 	/**
@@ -224,13 +224,13 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case RegExAstPackage.PARAMETER__NAME:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__NAME:
 				return getName();
-			case RegExAstPackage.PARAMETER__VALUE:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__VALUE:
 				return getValue();
-			case RegExAstPackage.PARAMETER__OFFSET:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__OFFSET:
 				return getOffset();
-			case RegExAstPackage.PARAMETER__LENGTH:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__LENGTH:
 				return getLength();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -244,16 +244,16 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case RegExAstPackage.PARAMETER__NAME:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__NAME:
 				setName((String)newValue);
 				return;
-			case RegExAstPackage.PARAMETER__VALUE:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__VALUE:
 				setValue((String)newValue);
 				return;
-			case RegExAstPackage.PARAMETER__OFFSET:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__OFFSET:
 				setOffset((Integer)newValue);
 				return;
-			case RegExAstPackage.PARAMETER__LENGTH:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__LENGTH:
 				setLength((Integer)newValue);
 				return;
 		}
@@ -268,16 +268,16 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case RegExAstPackage.PARAMETER__NAME:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case RegExAstPackage.PARAMETER__VALUE:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__VALUE:
 				setValue(VALUE_EDEFAULT);
 				return;
-			case RegExAstPackage.PARAMETER__OFFSET:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__OFFSET:
 				setOffset(OFFSET_EDEFAULT);
 				return;
-			case RegExAstPackage.PARAMETER__LENGTH:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__LENGTH:
 				setLength(LENGTH_EDEFAULT);
 				return;
 		}
@@ -292,13 +292,13 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case RegExAstPackage.PARAMETER__NAME:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case RegExAstPackage.PARAMETER__VALUE:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__VALUE:
 				return VALUE_EDEFAULT == null ? value != null : !VALUE_EDEFAULT.equals(value);
-			case RegExAstPackage.PARAMETER__OFFSET:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__OFFSET:
 				return offset != OFFSET_EDEFAULT;
-			case RegExAstPackage.PARAMETER__LENGTH:
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER__LENGTH:
 				return length != LENGTH_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
@@ -326,4 +326,4 @@ public class ParameterImpl extends EObjectImpl implements Parameter {
 		return result.toString();
 	}
 
-} //ParameterImpl
+} //RegExAstNodeParameterImpl

@@ -26,8 +26,8 @@ import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.common.regex.RegexConfiguration;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.common.regex.RegexUtil;
@@ -76,7 +76,7 @@ public class Parser {
 	//////////////////////////////////
 	
 	public static final String HTML_CHILDREN_INSERT_POINT		= "htmlChildrenInsertPoint";
-	public static final String HTML_CHILDREN_INSERT_POINT_REGEX	= "<!-- children-insert-point (.*?)-->";
+	public static final String HTML_CHILDREN_INSERT_POINT_REGEX	= "<!-- children-insert-point (.*?) -->";
 	
 	public static final String HTML_TABLE_TEMPLATE				= "Table";
 	public static final String HTML_TABLE_REGEX					= "<!-- template Table -->\\s*<table .*?id=\\s*\"(.*?)\">\\s*<tr .*?id=\\s*\"(.*?)\"";
@@ -707,7 +707,7 @@ public class Parser {
 	}
 	
 	protected void addParameter(RegExAstNode node, String name, String value, int start, int end) {
-		Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
+		RegExAstNodeParameter parameter = RegExAstFactory.eINSTANCE.createRegExAstNodeParameter();
 		parameter.setName(name);
 		parameter.setValue(value);
 		parameter.setValue(value);
@@ -730,7 +730,7 @@ public class Parser {
 			label += " (" + node.getOffset() + ", " + node.getLength() + ") ";
 		}
 		label += ": ";
-		for (Parameter parameter : node.getParameters()) {
+		for (RegExAstNodeParameter parameter : node.getParameters()) {
 			if (parameter.getOffset() != 0 || parameter.getLength() != 0) {
 				label += String.format("(%s = %s) (%s, %s), ", 
 						parameter.getName(),
@@ -755,7 +755,7 @@ public class Parser {
 	}
 	
 	private String getParameterValue(RegExAstNode node, String name) {
-		for (Parameter parameter : node.getParameters()) {
+		for (RegExAstNodeParameter parameter : node.getParameters()) {
 			if (parameter.getName().equals(name)) {
 				return parameter.getValue();
 			}

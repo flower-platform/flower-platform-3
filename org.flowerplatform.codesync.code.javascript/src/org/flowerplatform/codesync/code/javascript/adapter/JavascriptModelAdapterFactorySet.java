@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExNodeFeatureProvider;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExParameterFeatureProvider;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
@@ -58,7 +58,7 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		// javascript specific adapter
 		rightFactory.addModelAdapter(IFile.class, createAstModelAdapter(new JavascriptFileModelAdapter()));
 		rightFactory.addModelAdapter(RegExAstNode.class, createAstModelAdapter(new RegExNodeAstModelAdapter()));
-		rightFactory.addModelAdapter(Parameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
+		rightFactory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
 		
 		// ancestor - CSE
 		ancestorFactory = createCodeSyncModelAdapterFactory(cache, false);
@@ -77,7 +77,7 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		addFeatureProvider(CodeSyncElement.class, regexRegExAstNodeFeatureProvider);
 		addFeatureProvider(RegExAstNode.class, regexRegExAstNodeFeatureProvider);
 		
-		addFeatureProvider(Parameter.class, new RegExParameterFeatureProvider());
+		addFeatureProvider(RegExAstNodeParameter.class, new RegExParameterFeatureProvider());
 	}
 	
 	private CodeSyncModelAdapterFactory createCodeSyncModelAdapterFactory(Resource resource, boolean isLeft) {
@@ -86,7 +86,7 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 				isLeft ? new CodeSyncElementModelAdapterLeft() : new CodeSyncElementModelAdapterAncestor());
 		cseAdapter.setEObjectConverter(rightFactory);
 		factory.addModelAdapter(CodeSyncElement.class, cseAdapter);
-		factory.addModelAdapter(Parameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
+		factory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
 		return factory;
 	}
 

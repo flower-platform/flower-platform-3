@@ -16,11 +16,11 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 /**
@@ -49,7 +49,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass parameterEClass = null;
+	private EClass regExAstNodeParameterEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -278,8 +278,8 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getParameter() {
-		return parameterEClass;
+	public EClass getRegExAstNodeParameter() {
+		return regExAstNodeParameterEClass;
 	}
 
 	/**
@@ -287,8 +287,8 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getParameter_Name() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(0);
+	public EAttribute getRegExAstNodeParameter_Name() {
+		return (EAttribute)regExAstNodeParameterEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -296,8 +296,8 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getParameter_Value() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(1);
+	public EAttribute getRegExAstNodeParameter_Value() {
+		return (EAttribute)regExAstNodeParameterEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -305,8 +305,8 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getParameter_Offset() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(2);
+	public EAttribute getRegExAstNodeParameter_Offset() {
+		return (EAttribute)regExAstNodeParameterEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -314,8 +314,8 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getParameter_Length() {
-		return (EAttribute)parameterEClass.getEStructuralFeatures().get(3);
+	public EAttribute getRegExAstNodeParameter_Length() {
+		return (EAttribute)regExAstNodeParameterEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -418,11 +418,11 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		createEAttribute(stringToIntegerEntryEClass, STRING_TO_INTEGER_ENTRY__KEY);
 		createEAttribute(stringToIntegerEntryEClass, STRING_TO_INTEGER_ENTRY__VALUE);
 
-		parameterEClass = createEClass(PARAMETER);
-		createEAttribute(parameterEClass, PARAMETER__NAME);
-		createEAttribute(parameterEClass, PARAMETER__VALUE);
-		createEAttribute(parameterEClass, PARAMETER__OFFSET);
-		createEAttribute(parameterEClass, PARAMETER__LENGTH);
+		regExAstNodeParameterEClass = createEClass(REG_EX_AST_NODE_PARAMETER);
+		createEAttribute(regExAstNodeParameterEClass, REG_EX_AST_NODE_PARAMETER__NAME);
+		createEAttribute(regExAstNodeParameterEClass, REG_EX_AST_NODE_PARAMETER__VALUE);
+		createEAttribute(regExAstNodeParameterEClass, REG_EX_AST_NODE_PARAMETER__OFFSET);
+		createEAttribute(regExAstNodeParameterEClass, REG_EX_AST_NODE_PARAMETER__LENGTH);
 
 		regExAstCodeSyncElementEClass = createEClass(REG_EX_AST_CODE_SYNC_ELEMENT);
 		createEAttribute(regExAstCodeSyncElementEClass, REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE);
@@ -471,7 +471,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		// Initialize classes and features; add operations and parameters
 		initEClass(regExAstNodeEClass, RegExAstNode.class, "RegExAstNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRegExAstNode_Children(), this.getRegExAstNode(), null, "children", null, 0, -1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getRegExAstNode_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRegExAstNode_Parameters(), this.getRegExAstNodeParameter(), null, "parameters", null, 0, -1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstNode_KeyParameter(), ecorePackage.getEString(), "keyParameter", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstNode_Type(), ecorePackage.getEString(), "type", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstNode_CategoryNode(), ecorePackage.getEBoolean(), "categoryNode", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -487,17 +487,17 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		initEAttribute(getStringToIntegerEntry_Key(), theEcorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getStringToIntegerEntry_Value(), theEcorePackage.getEIntegerObject(), "value", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(parameterEClass, Parameter.class, "Parameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getParameter_Value(), ecorePackage.getEString(), "value", null, 0, 1, Parameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getParameter_Offset(), ecorePackage.getEInt(), "offset", null, 0, 1, Parameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getParameter_Length(), ecorePackage.getEInt(), "length", null, 0, 1, Parameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(regExAstNodeParameterEClass, RegExAstNodeParameter.class, "RegExAstNodeParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getRegExAstNodeParameter_Name(), ecorePackage.getEString(), "name", null, 0, 1, RegExAstNodeParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRegExAstNodeParameter_Value(), ecorePackage.getEString(), "value", null, 0, 1, RegExAstNodeParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRegExAstNodeParameter_Offset(), ecorePackage.getEInt(), "offset", null, 0, 1, RegExAstNodeParameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRegExAstNodeParameter_Length(), ecorePackage.getEInt(), "length", null, 0, 1, RegExAstNodeParameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(regExAstCodeSyncElementEClass, RegExAstCodeSyncElement.class, "RegExAstCodeSyncElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getRegExAstCodeSyncElement_Template(), theEcorePackage.getEString(), "template", null, 0, 1, RegExAstCodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(regExAstCacheElementEClass, RegExAstCacheElement.class, "RegExAstCacheElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getRegExAstCacheElement_Parameters(), this.getParameter(), null, "parameters", null, 0, -1, RegExAstCacheElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRegExAstCacheElement_Parameters(), this.getRegExAstNodeParameter(), null, "parameters", null, 0, -1, RegExAstCacheElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstCacheElement_KeyParameter(), ecorePackage.getEString(), "keyParameter", null, 0, 1, RegExAstCacheElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstCacheElement_CategoryNode(), ecorePackage.getEBoolean(), "categoryNode", null, 0, 1, RegExAstCacheElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

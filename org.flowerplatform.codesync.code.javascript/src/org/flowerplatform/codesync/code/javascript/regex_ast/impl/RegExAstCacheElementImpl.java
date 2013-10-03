@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 /**
@@ -58,7 +58,7 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Parameter> parameters;
+	protected EList<RegExAstNodeParameter> parameters;
 
 	/**
 	 * The default value of the '{@link #getKeyParameter() <em>Key Parameter</em>}' attribute.
@@ -124,9 +124,9 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Parameter> getParameters() {
+	public EList<RegExAstNodeParameter> getParameters() {
 		if (parameters == null) {
-			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__PARAMETERS);
+			parameters = new EObjectContainmentEList<RegExAstNodeParameter>(RegExAstNodeParameter.class, this, RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__PARAMETERS);
 		}
 		return parameters;
 	}
@@ -216,7 +216,7 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 		switch (featureID) {
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__PARAMETERS:
 				getParameters().clear();
-				getParameters().addAll((Collection<? extends Parameter>)newValue);
+				getParameters().addAll((Collection<? extends RegExAstNodeParameter>)newValue);
 				return;
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__KEY_PARAMETER:
 				setKeyParameter((String)newValue);

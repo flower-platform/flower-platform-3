@@ -26,10 +26,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -145,7 +145,7 @@ public class JavascriptClassDiagramOperationsService {
 		ast.setKeyParameter(keyParameter);
 		if (parameters != null) {
 			for (Entry<String, String> entry : parameters.entrySet()) {
-				Parameter parameter = RegExAstFactory.eINSTANCE.createParameter();
+				RegExAstNodeParameter parameter = RegExAstFactory.eINSTANCE.createRegExAstNodeParameter();
 				parameter.setName(entry.getKey());
 				parameter.setValue(entry.getValue());
 				ast.getParameters().add(parameter);
@@ -164,7 +164,7 @@ public class JavascriptClassDiagramOperationsService {
 	}
 	
 	protected String getParameterValue(RegExAstCacheElement ast, String key) {
-		for (Parameter parameter : ast.getParameters()) {
+		for (RegExAstNodeParameter parameter : ast.getParameters()) {
 			if (parameter.getName().equals(key)) {
 				return parameter.getValue();
 			}

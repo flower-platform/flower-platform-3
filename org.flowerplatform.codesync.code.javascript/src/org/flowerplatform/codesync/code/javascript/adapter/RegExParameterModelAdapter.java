@@ -20,7 +20,7 @@ package org.flowerplatform.codesync.code.javascript.adapter;
 
 import java.util.List;
 
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 
 import com.crispico.flower.mp.codesync.merge.EObjectModelAdapter;
 
@@ -33,7 +33,7 @@ public class RegExParameterModelAdapter extends EObjectModelAdapter {
 
 	@Override
 	public String getLabel(Object modelElement) {
-		Parameter parameter = (Parameter) modelElement;
+		RegExAstNodeParameter parameter = (RegExAstNodeParameter) modelElement;
 		return parameter.getName() + " = " + parameter.getValue();
 	}
 
@@ -44,7 +44,7 @@ public class RegExParameterModelAdapter extends EObjectModelAdapter {
 
 	@Override
 	public Object getMatchKey(Object element) {
-		return ((Parameter) element).getName();
+		return ((RegExAstNodeParameter) element).getName();
 	}
 	
 }

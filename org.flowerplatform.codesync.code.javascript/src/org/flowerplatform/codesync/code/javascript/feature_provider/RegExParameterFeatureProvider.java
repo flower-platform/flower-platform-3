@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 import com.crispico.flower.mp.codesync.base.IFeatureProvider;
@@ -38,8 +37,8 @@ public class RegExParameterFeatureProvider implements IFeatureProvider {
 	@Override
 	public List<?> getFeatures(Object element) {
 		List<EStructuralFeature> features = new ArrayList<EStructuralFeature>();
-		features.add(RegExAstPackage.eINSTANCE.getParameter_Name());
-		features.add(RegExAstPackage.eINSTANCE.getParameter_Value());
+		features.add(RegExAstPackage.eINSTANCE.getRegExAstNodeParameter_Name());
+		features.add(RegExAstPackage.eINSTANCE.getRegExAstNodeParameter_Value());
 		return features;
 	}
 

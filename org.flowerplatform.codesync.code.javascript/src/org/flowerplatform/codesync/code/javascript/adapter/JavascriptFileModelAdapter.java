@@ -51,8 +51,8 @@ import org.eclipse.text.edits.TextEdit;
 import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.parser.Parser;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
 import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
@@ -200,7 +200,7 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		}
 		
 		// replace the parameters with their values from the node
-		for (Parameter parameter : node.getParameters()) {
+		for (RegExAstNodeParameter parameter : node.getParameters()) {
 			template = template.replaceAll("@" + parameter.getName(), parameter.getValue());
 		}
 		

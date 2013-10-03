@@ -25,8 +25,8 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.flowerplatform.codesync.code.javascript.regex_ast.Parameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 /**
@@ -72,7 +72,7 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Parameter> parameters;
+	protected EList<RegExAstNodeParameter> parameters;
 
 	/**
 	 * The default value of the '{@link #getKeyParameter() <em>Key Parameter</em>}' attribute.
@@ -300,9 +300,9 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<Parameter> getParameters() {
+	public EList<RegExAstNodeParameter> getParameters() {
 		if (parameters == null) {
-			parameters = new EObjectContainmentEList<Parameter>(Parameter.class, this, RegExAstPackage.REG_EX_AST_NODE__PARAMETERS);
+			parameters = new EObjectContainmentEList<RegExAstNodeParameter>(RegExAstNodeParameter.class, this, RegExAstPackage.REG_EX_AST_NODE__PARAMETERS);
 		}
 		return parameters;
 	}
@@ -578,7 +578,7 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				return;
 			case RegExAstPackage.REG_EX_AST_NODE__PARAMETERS:
 				getParameters().clear();
-				getParameters().addAll((Collection<? extends Parameter>)newValue);
+				getParameters().addAll((Collection<? extends RegExAstNodeParameter>)newValue);
 				return;
 			case RegExAstPackage.REG_EX_AST_NODE__KEY_PARAMETER:
 				setKeyParameter((String)newValue);

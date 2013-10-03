@@ -31,10 +31,15 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.parser.Parser;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.remote.JavascriptClassDiagramOperationsService;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
@@ -43,6 +48,7 @@ import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.View;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
@@ -55,7 +61,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
-import com.crispico.flower.mp.codesync.base.Match;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -79,12 +85,16 @@ public class CodeSyncJavascriptTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestUtil.copyFilesAndCreateProject(new ServiceInvocationContext(communicationChannel), INITIAL_TO_BE_COPIED, PROJECT);
+		
 		diagramEditorStatefulService = (DiagramEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry()
 				.getService("diagramEditorStatefulService");
 		assertNotNull("DiagramEditorStatefulService was not registered", diagramEditorStatefulService);
 		codeSyncEditorStatefulService = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry()
 				.getService("codeSyncEditorStatefulService");
 		assertNotNull("CodeSyncEditorStatefulService was not registered", codeSyncEditorStatefulService);
+		
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/ACE.notation";
 	}
 
 	@AfterClass
@@ -93,14 +103,15 @@ public class CodeSyncJavascriptTest {
 
 	@Before
 	public void setUp() throws Exception {
-		IProject project = getProject();
-		codeSyncEditorStatefulService.cancelSelectedActions(project.getFullPath().toString(), false);
-		
+		File to = new File(TestUtil.getWorkspaceResourceAbsolutePath("") + "/org/ws_trunk/" + PROJECT);
+		FileUtils.copyDirectory(new File(INITIAL_TO_BE_COPIED), to);
 		diagramEditorStatefulService.subscribeClientForcefully(communicationChannel, getDiagramEditableResourcePath());
 	}
 	
 	@After
 	public void tearDown() throws Exception {
+		String codeSyncEditableResourcePath = getProject().getFullPath().toString();
+		codeSyncEditorStatefulService.cancelSelectedActions(codeSyncEditableResourcePath, false);
 		diagramEditorStatefulService.unsubscribeAllClientsForcefully(getDiagramEditableResourcePath(), false);
 	}
 
@@ -113,36 +124,37 @@ public class CodeSyncJavascriptTest {
 		//////////////////////////////////////////////////
 		
 		String fileName = TABLE;
-		List<Object> tableParameters = getList(
+		List<RegExAstNodeParameter> tableParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(tableParameters, "name", fileName, 0, 0);
+		addParameter(tableParameters, "tableId", "companies-list", 79, 14);
+		addParameter(tableParameters, "headerRowId", "companies-list-header", 106, 21);
+		List<Object> table = getList(
 				"htmlFile", 
 				"name", 
 				false, 
-				getParameters(new String[] { "name", fileName, "tableId", "companies-list", "headerRowId", "companies-list-header" }), 
+				getParameters(tableParameters), 
 				"Table", 
 				null, 
 				null);
-		invokeServiceMethod(tableParameters);
-		View table = findByName(fileName);
-		List<Object> tableHeaderEntryParameters = getList(
+		invokeServiceMethod(table);
+		View tableView = findByName(fileName);
+		List<RegExAstNodeParameter> tableHeaderEntryParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(tableHeaderEntryParameters, "title", "Logo", 137, 4);
+		List<Object> tableHeaderEntry = getList(
 				"htmlTableHeaderEntry",
 				"title",
 				false,
-				getParameters(new String[] { "title", "Logo" }),
+				getParameters(tableHeaderEntryParameters),
 				"TableHeaderEntry",
-				table.eResource().getURIFragment(table),
+				tableView.eResource().getURIFragment(tableView),
 				null);
-		invokeServiceMethod(tableHeaderEntryParameters);
+		invokeServiceMethod(tableHeaderEntry);
 		
 		//////////////////////////////////////////////////
 		// Step 2: sync -> generate Regex tree + file
 		//////////////////////////////////////////////////
 		
-		IFile file = getFile(fileName);
-		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, communicationChannel, true);
-		String editableResourcePath = getProject().getFullPath().toString();
-		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
-		codeSyncEditorStatefulService.synchronize(context, editableResourcePath);
-		codeSyncEditorStatefulService.applySelectedActions(context, editableResourcePath, false);
+		sync(fileName);
 		
 		//////////////////////////////////////////////////
 		// Step 3: compare generated code
@@ -153,17 +165,131 @@ public class CodeSyncJavascriptTest {
 		Parser parser = new Parser();
 		RegExAstNode root = parser.parse(
 				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
-		testParsedAst(null, root);
+		
+		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
+		childrenInsertPoints.put("TableHeaderEntry", 146);
+		testParsedAstNode(table, 0, 211, 0, childrenInsertPoints, tableParameters, root);
+		assertEquals("Table children count", 1, root.getChildren().size());
+		childrenInsertPoints.clear();
+		testParsedAstNode(tableHeaderEntry, 133, 13, 146, childrenInsertPoints, tableHeaderEntryParameters, root.getChildren().get(0));
 	}
+	
+	public static final String TABLE_ITEM = "CompaniesTableItem.html";
 	
 	@Test
 	public void testTableItem() {
-		fail("Not yet implemented");
+		//////////////////////////////////////////////////
+		// Step 1: add to diagram
+		//////////////////////////////////////////////////
+		
+		String fileName = TABLE_ITEM;
+		List<RegExAstNodeParameter> tableItemParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(tableItemParameters, "name", fileName, 0, 0);
+		addParameter(tableItemParameters, "itemUrl", "#company/<%= id %>", 130, 18);
+		List<Object> tableItem = getList(
+				"htmlFile",
+				"name",
+				false,
+				getParameters(tableItemParameters),
+				"TableItem",
+				null,
+				null);
+		invokeServiceMethod(tableItem);
+		View tableItemView = findByName(fileName);
+		List<RegExAstNodeParameter> tableItemEntryParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(tableItemEntryParameters, "valueExpression", "name", 37, 4);
+		List<Object> tableItemEntry = getList(
+				"htmlTableItemEntry",
+				"valueExpression",
+				false,
+				getParameters(tableItemEntryParameters),
+				"TableItemEntry",
+				tableItemView.eResource().getURIFragment(tableItemView),
+				null);
+		invokeServiceMethod(tableItemEntry);
+		
+		//////////////////////////////////////////////////
+		// Step 2: sync -> generate Regex tree + file
+		//////////////////////////////////////////////////
+		
+		sync(fileName);
+		
+		//////////////////////////////////////////////////
+		// Step 3: compare generated code
+		//////////////////////////////////////////////////
+		
+		testGeneratedFileContent(fileName);
+		
+		Parser parser = new Parser();
+		RegExAstNode root = parser.parse(
+				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
+				
+		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
+		childrenInsertPoints.put("TableItemEntry", 49);
+		testParsedAstNode(tableItem, 0, 166, 0, childrenInsertPoints, tableItemParameters, root);
+		assertEquals("Table item children count", 1, root.getChildren().size());
+		childrenInsertPoints.clear();
+		testParsedAstNode(tableItemEntry, 29, 20, 49, childrenInsertPoints, tableItemEntryParameters, root.getChildren().get(0));
 	}
 
+	public static final String FORM = "Company.html";
+	
 	@Test
 	public void testForm() {
-		fail("Not yet implemented");
+		//////////////////////////////////////////////////
+		// Step 1: add to diagram
+		//////////////////////////////////////////////////
+		
+		String fileName = FORM;
+		List<RegExAstNodeParameter> formParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(formParameters, "name", fileName, 0, 0);
+		List<Object> form = getList(
+				"htmlFile",
+				"name",
+				false,
+				getParameters(formParameters),
+				"Form",
+				null,
+				null);
+		invokeServiceMethod(form);
+		View formView = findByName(fileName);
+		List<RegExAstNodeParameter> formItemParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(formItemParameters, "title", "Revenue", 73, 7);
+		addParameter(formItemParameters, "valueExpression", "revenue", 148, 7);
+		addParameter(formItemParameters, "editId", "revenue", 223, 7);
+		List<Object> formItem = getList(
+				"htmlFormItem",
+				"title",
+				false,
+				getParameters(formItemParameters),
+				"FormItem",
+				formView.eResource().getURIFragment(formView),
+				null);
+		invokeServiceMethod(formItem);
+		
+		//////////////////////////////////////////////////
+		// Step 2: sync -> generate Regex tree + file
+		//////////////////////////////////////////////////
+		
+		sync(fileName);
+		
+		//////////////////////////////////////////////////
+		// Step 3: compare generated code
+		//////////////////////////////////////////////////
+		
+		testGeneratedFileContent(fileName);
+		
+		Parser parser = new Parser();
+		RegExAstNode root = parser.parse(
+				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
+		
+		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
+		childrenInsertPoints.put("FormItem", 274);
+		testParsedAstNode(form, 0, 323, 0, childrenInsertPoints, formParameters, root);
+		assertEquals("Form item children count", 1, root.getChildren().size());
+		childrenInsertPoints.clear();
+		testParsedAstNode(formItem, 62, 212, 274, childrenInsertPoints, formItemParameters, root.getChildren().get(0));
+		
 	}
 	
 	@Test
@@ -171,12 +297,61 @@ public class CodeSyncJavascriptTest {
 		fail("Not yet implemented");
 	}
 	
+	private void sync(String fileName) {
+		IFile file = getFile(fileName);
+		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, communicationChannel, true);
+		String editableResourcePath = getProject().getFullPath().toString();
+		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
+		codeSyncEditorStatefulService.synchronize(context, editableResourcePath);
+		codeSyncEditorStatefulService.applySelectedActions(context, editableResourcePath, false);
+	}
+	
 	protected void testGeneratedFileContent(String fileName) {
 		String expected = getExpectedFileContent(fileName);
 		String actual = getActualFileContent(fileName);
 		assertEquals("Generated code is not as expected", expected, actual);
 	}
-	protected void testParsedAst(List<Object> expected, RegExAstNode actual) {
+	
+	protected void testParsedAstNode(List<Object> expected, int offset, int length, int nextSiblingInsertPoint, Map<String, Integer> childrenInsertPoints, List<RegExAstNodeParameter> expectedParameters, RegExAstNode actual) {
+		assertEquals("Node type", expected.get(1), actual.getType());
+		assertEquals("Key parameter", expected.get(2), actual.getKeyParameter());
+		assertEquals("Is category node", expected.get(3), actual.isCategoryNode());
+
+		assertEquals("Parameters count", expectedParameters.size(), actual.getParameters().size());
+		for (RegExAstNodeParameter expectedParameter : expectedParameters) {
+			testParsedParameter(expectedParameter, getParameter(expectedParameter.getName(), actual));
+		}
+		
+		assertEquals("Template", expected.get(5), actual.getTemplate());
+		
+		assertEquals("Offset", offset, actual.getOffset());
+		assertEquals("Length", length, actual.getLength());
+		assertEquals("Next sibling insert point", nextSiblingInsertPoint, actual.getNextSiblingInsertPoint());
+		testParsedChildrenInsertPoints(childrenInsertPoints, actual.getChildrenInsertPoints());
+	}
+	
+	private RegExAstNodeParameter getParameter(String key, RegExAstNode actual) {
+		for (RegExAstNodeParameter parameter : actual.getParameters()) {
+			if (parameter.getName().equals(key)) {
+				return parameter;
+			}
+		}
+		fail("No parameter parsed for key " + key);
+		return null;
+	}
+	
+	protected void testParsedParameter(RegExAstNodeParameter expected, RegExAstNodeParameter actual) {
+		assertEquals("Parameter name", expected.getName(), actual.getName());
+		assertEquals("Parameter value", expected.getValue(), actual.getValue());
+		assertEquals("Parameter offset", expected.getOffset(), actual.getOffset());
+		assertEquals("Parameter length", expected.getLength(), actual.getLength());
+	}
+	
+	protected void testParsedChildrenInsertPoints(Map<String, Integer> expected, EMap<String, Integer> actual) {
+		assertEquals("Children insert points count", expected.size(), actual.size());
+		for (String key : expected.keySet()) {
+			assertEquals("Children insert point", expected.get(key), actual.get(key));
+		}
 	}
 	
 	///////////////////////////
@@ -214,10 +389,19 @@ public class CodeSyncJavascriptTest {
 		diagramEditorStatefulService.attemptUpdateEditableResourceContent(new StatefulServiceInvocationContext(communicationChannel), getDiagramEditableResourcePath(), cmd);
 	}
 	
-	private Map<String, String> getParameters(String[] parameters) {
+	private void addParameter(List<RegExAstNodeParameter> parameters, String name, String value, int offset, int length) {
+		RegExAstNodeParameter parameter = RegExAstFactory.eINSTANCE.createRegExAstNodeParameter();
+		parameter.setName(name);
+		parameter.setValue(value);
+		parameter.setOffset(offset);
+		parameter.setLength(length);
+		parameters.add(parameter);
+	}
+	
+	private Map<String, String> getParameters(List<RegExAstNodeParameter> parameters) {
 		Map<String, String> result = new HashMap<String, String>();
-		for (int i = 0; i < parameters.length; i += 2) {
-			result.put(parameters[i], parameters[i + 1]);
+		for (RegExAstNodeParameter parameter : parameters) {
+			result.put(parameter.getName(), parameter.getValue());
 		}
 		return result;
 	}
@@ -238,10 +422,13 @@ public class CodeSyncJavascriptTest {
 		DiagramEditableResource der = (DiagramEditableResource) diagramEditorStatefulService.getEditableResource(getDiagramEditableResourcePath());
 		assertNotNull("Diagram not found", der);
 		for (Iterator<EObject> it = der.getMainResource().getAllContents(); it.hasNext(); ) {
-			View child = (View) it.next();
-			CodeSyncElement cse = (CodeSyncElement) child.getDiagrammableElement();
-			if (child instanceof ExpandableNode && cse != null && cse.getName().equals(name)) {
-				return child;
+			EObject child = it.next();
+			if (child instanceof View) {
+				View view = (View) child;
+				CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
+				if (view instanceof ExpandableNode && cse != null && cse.getName().equals(name)) {
+					return view;
+				}
 			}
 		}
 		fail("No view for element with name " + name);

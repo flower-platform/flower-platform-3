@@ -57,7 +57,7 @@ public interface RegExAstNode extends EObject {
 
 	/**
 	 * Returns the value of the '<em><b>Parameters</b></em>' containment reference list.
-	 * The list contents are of type {@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter}.
+	 * The list contents are of type {@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter}.
 	 * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Parameters</em>' containment reference list isn't clear,
@@ -69,7 +69,7 @@ public interface RegExAstNode extends EObject {
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Parameter> getParameters();
+	EList<RegExAstNodeParameter> getParameters();
 
 	/**
 	 * Returns the value of the '<em><b>Key Parameter</b></em>' attribute.

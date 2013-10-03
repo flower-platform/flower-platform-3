@@ -10,24 +10,24 @@ import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Parameter</b></em>'.
+ * A representation of the model object '<em><b>Node Parameter</b></em>'.
  * <!-- end-user-doc -->
  *
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getName <em>Name</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getValue <em>Value</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getOffset <em>Offset</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getLength <em>Length</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getName <em>Name</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getValue <em>Value</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getOffset <em>Offset</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getLength <em>Length</em>}</li>
  * </ul>
  * </p>
  *
- * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getParameter()
+ * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNodeParameter()
  * @model
  * @generated
  */
-public interface Parameter extends EObject {
+public interface RegExAstNodeParameter extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -38,14 +38,14 @@ public interface Parameter extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getParameter_Name()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNodeParameter_Name()
 	 * @model
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -64,14 +64,14 @@ public interface Parameter extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Value</em>' attribute.
 	 * @see #setValue(String)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getParameter_Value()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNodeParameter_Value()
 	 * @model
 	 * @generated
 	 */
 	String getValue();
 
 	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getValue <em>Value</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getValue <em>Value</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Value</em>' attribute.
@@ -90,14 +90,14 @@ public interface Parameter extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Offset</em>' attribute.
 	 * @see #setOffset(int)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getParameter_Offset()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNodeParameter_Offset()
 	 * @model transient="true"
 	 * @generated
 	 */
 	int getOffset();
 
 	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getOffset <em>Offset</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getOffset <em>Offset</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Offset</em>' attribute.
@@ -116,14 +116,14 @@ public interface Parameter extends EObject {
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Length</em>' attribute.
 	 * @see #setLength(int)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getParameter_Length()
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNodeParameter_Length()
 	 * @model transient="true"
 	 * @generated
 	 */
 	int getLength();
 
 	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.Parameter#getLength <em>Length</em>}' attribute.
+	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter#getLength <em>Length</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Length</em>' attribute.
@@ -132,4 +132,4 @@ public interface Parameter extends EObject {
 	 */
 	void setLength(int value);
 
-} // Parameter
+} // RegExAstNodeParameter

@@ -63,7 +63,7 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 		switch (eClass.getClassifierID()) {
 			case RegExAstPackage.REG_EX_AST_NODE: return createRegExAstNode();
 			case RegExAstPackage.STRING_TO_INTEGER_ENTRY: return (EObject)createStringToIntegerEntry();
-			case RegExAstPackage.PARAMETER: return createParameter();
+			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER: return createRegExAstNodeParameter();
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT: return createRegExAstCodeSyncElement();
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT: return createRegExAstCacheElement();
 			default:
@@ -96,9 +96,9 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public Parameter createParameter() {
-		ParameterImpl parameter = new ParameterImpl();
-		return parameter;
+	public RegExAstNodeParameter createRegExAstNodeParameter() {
+		RegExAstNodeParameterImpl regExAstNodeParameter = new RegExAstNodeParameterImpl();
+		return regExAstNodeParameter;
 	}
 
 	/**
