@@ -33,8 +33,8 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 		}
 		
 		override public function get visible():Boolean {
-			return splitWrapperView.oneViewMode;
-		}
+			return splitWrapperView.oneViewMode && (selection.length == 0 || !splitWrapperView.visibleOnlyOnEmptySelection);
+		}		
 		
 	}
 }

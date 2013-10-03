@@ -41,5 +41,9 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 			splitWrapperView.refreshActions(splitWrapperView.activePopupContent);
 		}
 		
+		override public function get visible():Boolean {
+			return selection.length == 0 || !splitWrapperView.visibleOnlyOnEmptySelection;
+		}		
+		
 	}
 }
