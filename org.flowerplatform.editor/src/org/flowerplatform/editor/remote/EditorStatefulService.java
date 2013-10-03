@@ -42,11 +42,13 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulService;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.LinkGenerateNavigateUtilities;
 import org.flowerplatform.editor.UnlockEditableResourceRunnable;
 import org.flowerplatform.editor.collaboration.CollaborativeFigureModel;
 import org.slf4j.Logger;
@@ -110,6 +112,8 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	private ScheduledExecutorService scheduler = CommunicationPlugin.getInstance().getScheduledExecutorServiceFactory().createScheduledExecutorService();
 	
 	protected AtomicInteger collaborativeFigureModelsIdFactory = new AtomicInteger(1);
+
+	private LinkGenerateNavigateUtilities linkUtilities = new LinkGenerateNavigateUtilities();
 	
 	private RunnableWithParam<Void, EditableResource> standardRemoveEditableResourceRunnable = new RunnableWithParam<Void, EditableResource>() {
 		@Override
@@ -1468,4 +1472,11 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		return createEditableResourceInstance().getIconUrl();
 	}
 	
+	public List<String> getFriendlyEditableResourcePathList(ServiceInvocationContext context, List<String> canonicalEditableResourcePathList) {
+		return linkUtilities.getFriendlyEditableResourcePathList(canonicalEditableResourcePathList);
+	}
+	
+	public boolean navigateFriendlyEditableResourcePathList(ServiceInvocationContext context, String openResources, int selectResourceAtIndex) {
+		return linkUtilities.navigateFriendlyEditableResourcePathList(context.getCommunicationChannel(), openResources, selectResourceAtIndex);
+	}
 }

@@ -46,12 +46,14 @@ package org.flowerplatform.common.link {
 			return StringUtil.trim(getStyle("color") != "0x999999" ? text : ""); // if null returns '' 
 		}
 		
-		public function handleLink(defaultCommand:String = null):Boolean {
-			var text:String = getText();			
+		public function handleLink(text:String = null):Boolean {
+			if (text == null) {
+				text = getText();
+			}					
 			if (text.length == 0) {
 				return false; // No path to handle
 			}
-			CommonPlugin.getInstance().handleLink(text, defaultCommand);
+			CommonPlugin.getInstance().handleLink(text);
 			
 			return true;
 		}

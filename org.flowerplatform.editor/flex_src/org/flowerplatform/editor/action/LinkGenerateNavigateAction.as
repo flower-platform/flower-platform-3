@@ -17,23 +17,20 @@
 * license-end
 */
 package org.flowerplatform.editor.action {
-	import mx.collections.ArrayCollection;
-	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.link.URLGenerateNavigateView;
-	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
+	import org.flowerplatform.editor.LinkGenerateNavigateView;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	
 	/**
 	 * @author Cristina Constatinescu
 	 */ 
-	public class URLGenerateNavigateAction extends ActionBase  {
+	public class LinkGenerateNavigateAction extends ActionBase  {
 				
-		public function URLGenerateNavigateAction() {
-			label = "URL Generate / Navigate";
+		public function LinkGenerateNavigateAction() {
+			label = EditorPlugin.getInstance().getMessage("link.navigate");
 			icon = EditorPlugin.getInstance().getResourceUrl("images/external_link.png");
 		}
 		
@@ -54,7 +51,7 @@ package org.flowerplatform.editor.action {
 		}
 		
 		override public function run():void {
-			var generateUrlView:URLGenerateNavigateView = new URLGenerateNavigateView();
+			var generateUrlView:LinkGenerateNavigateView = new LinkGenerateNavigateView();
 			generateUrlView.explorerSelection = selection;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setPopupContent(generateUrlView)

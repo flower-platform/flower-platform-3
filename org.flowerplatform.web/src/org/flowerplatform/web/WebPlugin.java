@@ -68,7 +68,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	private String TESTING_FLAG = "testing";
 	
-	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
+	private EclipseDispatcherServlet eclipseDispatcherServlet;
 	
 	private DatabaseManager databaseManager;
 	
@@ -85,6 +85,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
 				.getResourceAsStream("META-INF/flower-web.properties"));
 		databaseManager = new DatabaseManager();
+		eclipseDispatcherServlet = new EclipseDispatcherServlet();
 	}
 	
 	/**

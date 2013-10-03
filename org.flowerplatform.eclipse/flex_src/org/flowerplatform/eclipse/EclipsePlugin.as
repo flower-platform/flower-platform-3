@@ -83,7 +83,7 @@ package org.flowerplatform.eclipse
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
 //			return (Workbench(FlexUtilGlobals.getInstance().workbench));
 //			ModalSpinner.removeGlobalModalSpinner();
-			CommonPlugin.getInstance().handleLink();
+			CommonPlugin.getInstance().handleLinkWithQueryStringDecoded(FlexGlobals.topLevelApplication.parameters);
 		}
 		
 		override protected function registerMessageBundle():void {

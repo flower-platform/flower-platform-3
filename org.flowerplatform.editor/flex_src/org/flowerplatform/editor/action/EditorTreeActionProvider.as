@@ -75,7 +75,7 @@ package org.flowerplatform.editor.action {
 				result.push(new OpenAction(null, false));
 			}
 			
-			result.push(new URLGenerateNavigateAction());
+			result.push(new LinkGenerateNavigateAction());
 			
 			return result;
 		}

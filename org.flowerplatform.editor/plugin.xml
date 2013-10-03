@@ -10,12 +10,5 @@
             commandToAppendToWelcomeClientCommand="org.flowerplatform.editor.remote.InitializeEditorPluginClientCommand">
       </welcomeInitializationsContributor>
    </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
-      <service
-            id="editorService"
-            serviceClass="org.flowerplatform.editor.remote.EditorService">
-      </service>
-   </extension>
 
 </plugin>

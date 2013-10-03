@@ -34,7 +34,7 @@
 	xmlns:collaboration="com.crispico.flower.mp.web.editorsupport.collaboration.*" 
 	xmlns:util="com.crispico.flower.util.*" 
 	xmlns:tool="com.crispico.flower.mp.web.editorsupport.collaboration.tool.*" 
-	xmlns:figure="com.crispico.flower.mp.web.editorsupport.collaboration.figure.*" xmlns:effects="com.crispico.flower.util.effects.*">
+	xmlns:figure="com.crispico.flower.mp.web.editorsupport.collaboration.figure.*" xmlns:effects="com.crispico.flower.util.effects.*" xmlns:s="library://ns.adobe.com/flex/spark">
 
 	<mx:Script>
 		<![CDATA[
@@ -42,7 +42,6 @@
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-			import org.flowerplatform.editor.link.URLGenerateNavigateView;
 			import org.flowerplatform.editor.remote.EditableResource;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
@@ -263,7 +262,7 @@
 			}
 			
 			protected function urlGenerateNavigate_clickHandler(event:MouseEvent):void {
-				var generateUrlView:URLGenerateNavigateView = new URLGenerateNavigateView();
+				var generateUrlView:LinkGenerateNavigateView = new LinkGenerateNavigateView();
 				generateUrlView.showForCurrentOpenResource = true;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 					.setPopupContent(generateUrlView)
@@ -347,7 +346,7 @@
 	<mx:DateFormatter id="timeFormatter" formatString="HH:NN:SS"/>
 	<mx:DateFormatter id="durationFormatter" formatString="NN':SS''" />  
 	
-	<common:FlowerButton id="saveButton" label="Save" click="saveButtonClickHandler()"/>
+	<s:Button id="saveButton" label="Save" click="saveButtonClickHandler()"/>
 <!--	<common:FlowerButton id="saveButton" label="Save" fontWeight="normal" iconURL="{SWTImageUtil.INSTANCE.getImageURLFromAlias('save_img')}" enabled="false" click="saveButtonClickHandler()"/>
 -->	
 	<mx:HBox id="lockStatusBox" paddingTop="1" paddingBottom="1" paddingLeft="2" paddingRight="2" verticalAlign="middle" horizontalGap="3">
@@ -415,10 +414,11 @@
 	
 	<mx:Spacer width="100%" />
 	
-	<common:FlowerButton id="urlGenerateNavigate" 
-						 label="URL..." toolTip="Open URL Generate / Navigate Dialog" 
+	<s:Button id="urlGenerateNavigate" 
+						 label="{EditorPlugin.getInstance().getMessage('link.navigate.short')}" 
+						 toolTip="{EditorPlugin.getInstance().getMessage('link.navigate')}" 
 						 fontWeight="normal" 
-						 iconURL="{FlexUtilGlobals.getInstance().createAbsoluteUrl(EditorPlugin.getInstance().getResourceUrl('images/external_link.png'))}" 
+						 icon="{FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorPlugin.getInstance().getResourceUrl('images/external_link.png'))}" 
 						 click="urlGenerateNavigate_clickHandler(event)"/>
 
 	
