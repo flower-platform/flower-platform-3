@@ -48,8 +48,7 @@ public class FileContentTypeNodePopulator implements INodePopulator {
 		if (contentType == null) {
 			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");
 		}
-		if (contentType != null) {
-			
+		if (contentType != null) {			
 			destination.getOrCreateCustomData().put(EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE, EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType).getIndex());
 		}
 		return true;
