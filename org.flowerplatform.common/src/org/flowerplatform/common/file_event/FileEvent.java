@@ -1,4 +1,4 @@
-package org.flowerplatform.file_event;
+package org.flowerplatform.common.file_event;
 
 import java.io.File;
 /**
