@@ -18,6 +18,8 @@
  */
 package  org.flowerplatform.web.common.communication {
 	
+	import mx.core.FlexGlobals;
+	
 	import org.flowerplatform.blazeds.BlazeDSBridge;
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.CommonPlugin;
@@ -194,8 +196,8 @@ package  org.flowerplatform.web.common.communication {
 			
 			if (event.firstCredentialsRequest) {
 				// If user provided login, show the login popup pre-filled with the login
-				if (CommonPlugin.getInstance().linkProvider.getLogin()) {
-					showAuthenticationView(false, CommonPlugin.getInstance().linkProvider.getLogin(), anonymousAuthenticationRejected);
+				if (FlexGlobals.topLevelApplication.parameters.login) {
+					showAuthenticationView(false, FlexGlobals.topLevelApplication.parameters.login, anonymousAuthenticationRejected);
 				} else {
 					// Try automatically the anonymous user. 
 					bridge.connect(getAnonymousUser());

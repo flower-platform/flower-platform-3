@@ -19,5 +19,40 @@ function getURL() /* : String */ {
 			return url;
 	} catch(err) { }
 
-	alert("Could not obtain URL !");
+	alert("The JavaScript code that relays the query string to the Flex app has failed. Please contact support!");
+}
+
+function getQueryString() /* : String */ {
+	try {		
+		if (document.location.search.indexOf("?") > -1)	{
+			return document.location.search.substring(1);
+		}
+	} catch(err) {		
+		// swallowed error
+		try {
+			var index = window.location.href.indexOf("?");
+			if (index > -1) { 
+				queryString = new String(window.location.href);
+				return queryString.substring(index + 1);
+			}
+		} catch(err) {
+			// swallowed error
+			try {
+				if (window.location.search.indexOf("?") > -1) {
+					return window.location.search.substring(1);
+				}
+			} catch(err) {
+				// swallowed error
+				try {
+					var index = window.document.URL.indexOf("?");
+					if (index > -1)	{
+						return window.document.URL.substring(index + 1);
+					}
+				} catch(err) {
+					// swallowed error
+					alert("Could not find URL query string parameters. Please contact support!");
+				}
+			}
+		}
+	}
 }

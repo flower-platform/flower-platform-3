@@ -80,29 +80,17 @@ license-end
 			import com.crispico.flower.util.layout.Workbench;
 			
 			import mx.collections.ArrayCollection;
-			import mx.collections.ArrayList;
 			import mx.collections.IList;
-			import mx.controls.Alert;
-			import mx.core.UIComponent;
-			import mx.utils.StringUtil;
 			
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.common.CommonPlugin;
-			import org.flowerplatform.common.link.LinkProvider;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
-			import org.flowerplatform.editor.BasicEditorDescriptor;
-			import org.flowerplatform.editor.EditorFrontend;
-			import org.flowerplatform.editor.EditorPlugin;
-			import org.flowerplatform.editor.remote.EditorStatefulClient;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.Utils;
-			import org.flowerplatform.flexutil.layout.IWorkbench;
 			import org.flowerplatform.flexutil.layout.ViewLayoutData;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IPopupHost;
-			import org.flowerplatform.flexutil.text.TextUtils;
 			
 			public var showForCurrentOpenResource:Boolean;
 
@@ -124,12 +112,12 @@ license-end
 			
 			public function set popupHost(value:IPopupHost):void {
 				_popupHost = value;				
-				popupHost.setLabel(EditorPlugin.getInstance().getMessage("url.navigate"));
+				popupHost.setLabel(EditorPlugin.getInstance().getMessage("link.navigate"));
 				popupHost.setIcon(EditorPlugin.getInstance().getResourceUrl("images/external_link.png"));
 			}
 			
 			private function getOpenResourcesURLPrefix():String {
-				return CommonPlugin.getInstance().linkProvider.getBrowserURLWithoutQuery() + "?" + EditorPlugin.OPEN_RESOURCES + "=";
+				return CommonPlugin.getInstance().getBrowserURLWithoutQuery() + "?" + EditorPlugin.OPEN_RESOURCES + "=";
 			}
 			
 			private function creationCompleteHandler():void {
@@ -166,7 +154,7 @@ license-end
 				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"editorService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
+						"editorStatefulService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
 						function(friendlyEditableResourcePathList : ArrayCollection):void {
 							multipleResourcesLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList);
 						}));				
@@ -196,7 +184,7 @@ license-end
 				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"editorService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
+						"editorStatefulService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
 						function(friendlyEditableResourcePathList : ArrayCollection):void {
 							var indexOfSelectedResource:int = canonicalEditableResourcePathList.getItemIndex(visibleCanonicalEditableResourcePath);
 							multipleResourcesLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList, indexOfSelectedResource);
@@ -204,7 +192,7 @@ license-end
 				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"editorService", "getFriendlyEditableResourcePathList", [new ArrayCollection([visibleCanonicalEditableResourcePath])],	null, 
+						"editorStatefulService", "getFriendlyEditableResourcePathList", [new ArrayCollection([visibleCanonicalEditableResourcePath])],	null, 
 						function(friendlyEditableResourcePathList : ArrayCollection):void {
 							visibleEditorLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList);
 						}));
@@ -256,7 +244,11 @@ license-end
 			}
 		
 			private function openResourcesButtonHandler():void {
-				if (openResourcesFromTextArea.handleLink(EditorPlugin.OPEN_RESOURCES)) {				
+				var text:String = openResourcesFromTextArea.getText();
+				if (text.indexOf(getOpenResourcesURLPrefix()) == -1) {
+					text = getOpenResourcesURLPrefix() + text;
+				}
+				if (openResourcesFromTextArea.handleLink(text)) {				
 					cancelHandler();
 				}
 			}			

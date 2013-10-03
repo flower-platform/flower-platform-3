@@ -13,8 +13,8 @@
    <extension
          point="org.flowerplatform.communication.service">
       <service
-            id="editorService"
-            serviceClass="org.flowerplatform.editor.remote.EditorService">
+            id="editorStatefulService"
+            serviceClass="org.flowerplatform.editor.remote.EditorStatefulService">
       </service>
    </extension>
 

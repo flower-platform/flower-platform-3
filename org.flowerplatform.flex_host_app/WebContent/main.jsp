@@ -56,8 +56,11 @@
             attributes.id = "FlexHostApp";
             attributes.name = "FlexHostApp";
             attributes.align = "middle";
+            
+            var swfLink = "FlexHostApp.swf?" + getQueryString();
+            
             swfobject.embedSWF(
-                "FlexHostApp.swf", "flashContent", 
+            	swfLink, "flashContent", 
                 "100%", "100%", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
