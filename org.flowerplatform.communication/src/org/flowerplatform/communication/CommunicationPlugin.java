@@ -65,6 +65,8 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 	
 	private ServiceRegistry serviceRegistry = new ServiceRegistry();
 	
+	private List<Runnable> allServicesStartedListeners = new ArrayList<Runnable>();
+	
 	/**
 	 * @author Mariana
 	 */
@@ -95,15 +97,24 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 		return scheduledExecutorServiceFactory;
 	}
 	
+	public List<Runnable> getAllServicesStartedListeners() {
+		return allServicesStartedListeners;
+	}
+
 	public static final ThreadLocal<IPrincipal> tlCurrentPrincipal = new ThreadLocal<IPrincipal>();
 
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
+
 		initExtensionPoint_servlet();
-		initExtensionPoint_service();
 		initExtensionPoint_authenticator();
+		initExtensionPoint_service();
+		// notify the listeners that the services have been started
+		for (Runnable listener : allServicesStartedListeners) {
+			listener.run();
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -124,6 +124,19 @@ license-end
 			ImageSnapshot;
 			
 			protected function applicationCompleteHandler(event:FlexEvent):void	{
+				// The channels are puzzled by a query string that has slashes,
+				// e.g. FlexHostApp.swf?openUrl=/my/Resource. That's why we
+				// set the absolute URL here (based on the URL of the application).
+				var appDirUrl:String = FlexGlobals.topLevelApplication.url;
+				var indexOfQuestionMark:int = appDirUrl.indexOf("?");
+				if (indexOfQuestionMark >= 0) {
+					// remove ? and what follows it 
+					appDirUrl = appDirUrl.substr(0, indexOfQuestionMark);
+				}
+				var lastIndexOfSlash:int = appDirUrl.lastIndexOf("/");
+				appDirUrl = appDirUrl.substr(0, lastIndexOfSlash + 1);
+				FlexUtilGlobals.getInstance().rootUrl = appDirUrl;
+				
 				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new ResizablePopupWindowPopupHandlerFactory();
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorDialogHandlerFactory();

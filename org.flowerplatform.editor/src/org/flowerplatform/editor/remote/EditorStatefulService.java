@@ -42,6 +42,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
@@ -110,7 +111,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	private ScheduledExecutorService scheduler = CommunicationPlugin.getInstance().getScheduledExecutorServiceFactory().createScheduledExecutorService();
 	
 	protected AtomicInteger collaborativeFigureModelsIdFactory = new AtomicInteger(1);
-	
+
 	private RunnableWithParam<Void, EditableResource> standardRemoveEditableResourceRunnable = new RunnableWithParam<Void, EditableResource>() {
 		@Override
 		public Void run(EditableResource editableResource) {

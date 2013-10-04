@@ -22,19 +22,15 @@ import org.eclipse.ui.internal.EditorPane;
 import org.eclipse.ui.internal.EditorSite;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
-import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.eclipse.EclipsePlugin;
-import org.flowerplatform.eclipse.communication.IEclipseChannelListener;
-import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 
-public class FlowerDiagramEditor extends EditorPart implements
-		IEclipseChannelListener {
+public class FlowerDiagramEditor extends EditorPart {
 
 	public static final String EDITOR_ID = "org.flowerplatform.eclipse.editor.FlowerDiagramEditor";
 
@@ -91,8 +87,7 @@ public class FlowerDiagramEditor extends EditorPart implements
 		// TODO Auto-generated method stub
 	}
 	
-	public FlowerDiagramEditor() {	
-		EclipsePlugin.getInstance().addListener(this);
+	public FlowerDiagramEditor() {		
 	}
 
 	@Override
@@ -217,7 +212,7 @@ public class FlowerDiagramEditor extends EditorPart implements
 				}
 			}
 		}
-		// if (communicationChannel == null) {
+		
 		int type = SWT.NONE;
 		if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
 			type = SWT.MOZILLA;
@@ -225,15 +220,8 @@ public class FlowerDiagramEditor extends EditorPart implements
 		browser = new Browser(parent, type);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer()
-				.getUrl());
-		// } else {
-		// DiagramEditorStatefulService.getInstance()
-		// .subscribeClientForcefully(
-		// communicationChannel,
-		// getFriendlyEditableResourcePath()
-		// + "/|_1eeo4L7FEeKY4uWt8tp0Gw");
-		// }
+		// TODO CC: here we must append openResources command
+		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl());		
 	}
 
 	@Override
@@ -244,18 +232,6 @@ public class FlowerDiagramEditor extends EditorPart implements
 	private String getFriendlyEditableResourcePath() {
 		 return ((FileEditorInput)
 		 getEditorInput()).getFile().getFullPath().toString();
-	}
-
-	@Override
-	public void newClientInitializationsSent(CommunicationChannel channel) {
-		
-		this.communicationChannel = channel;
-		DiagramEditorStatefulService diagramService = (DiagramEditorStatefulService)CommunicationPlugin.
-				getInstance().getServiceRegistry().getService("diagramEditorStatefulService");
-		diagramService.subscribeClientForcefully(
-						channel,
-						getFriendlyEditableResourcePath());
-		EclipsePlugin.getInstance().removeListener(this);
 	}
 
 }

@@ -19,6 +19,7 @@
 package org.flowerplatform.web;
 
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.CommonPlugin;
@@ -88,7 +90,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		// Initially, this initialization was in the attribute initializer. But this lead to an issue:
 		// .communication was loaded, which processed the extension points, including services, 
 		// which forced the initialization of .web.git plugin, which wanted to use the properties, which
-		// are initialized in the line above. Maybe in the future we'll solve this kind of issues generated
+		// are initialized in the line above. Maybe in the future we'll solve this kind of issues
 		eclipseDispatcherServlet = new EclipseDispatcherServlet();
 		
 		databaseManager = new DatabaseManager();
@@ -119,23 +121,34 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		return databaseManager;
 	}
 
-	public void start(BundleContext bundleContext) throws Exception {
+	public void start(final BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
-		UserService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
-		GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
-		OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
-		OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
-		// do the initializations after the bundle is activated, because we need the resources bundle
-		databaseManager.initialize();
+
 		if (bundleContext.getProperty(TESTING_FLAG) == null) {
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
 		}
-		SendMailService.getInstance().initializeProperties();
-
 		initExtensionPoint_nodeTypeToCategoriesMapping();
 		
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());
+		// do these initializations here, after the services have been instantiated
+		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
+			@Override
+			public void run() {
+				UserService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+				GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+				OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+				OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
+				// TODO CS: see GH???
+				databaseManager.initialize();
+				SendMailService.getInstance().initializeProperties();
+				
+				try {
+					// TODO CS: see GH???
+					CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 	}
 	
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {

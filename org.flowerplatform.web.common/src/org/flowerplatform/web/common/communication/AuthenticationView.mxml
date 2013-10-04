@@ -72,6 +72,7 @@
 			import mx.binding.utils.BindingUtils;
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
+			import mx.core.FlexGlobals;
 			import mx.core.IFlexDisplayObject;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
@@ -120,7 +121,7 @@
 					{ label : switchUserMode ? getMessage('authentication.switch') : getMessage('authentication.login'), icon : getResourceUrl("images/login.png"), state : "login" },
 					{ label : getMessage('authentication.register'), icon : getResourceUrl("images/usr_admin/user.png"), state : "register" },
 					{ label : getMessage('authentication.iForgot'), icon : getResourceUrl("images/question.png"), state : "iForgot" });
-				var showDebugButtonFromUrl:String = CommonPlugin.getInstance().linkProvider.getShowDebugMenu();
+				var showDebugButtonFromUrl:String = FlexGlobals.topLevelApplication.parameters.showDebugMenu;
 //				if (showDebugButtonFromUrl == "true") {
 					dp.push({ label : getMessage('authentication.debug'), icon : getResourceUrl("images/debug.gif"), state : "debug" });
 //				}
@@ -214,7 +215,7 @@
 			 * @author Mariana
 			 */ 
 			private function fillInActivationCode(event:FlexEvent):void {
-				var code:String = CommonPlugin.getInstance().linkProvider.getActivationCode();
+				var code:String = FlexGlobals.topLevelApplication.parameters.activationCode;
 				if (code != null) {
 					spark.components.TextInput(event.target).text = code;
 					spark.components.TextInput(event.target).enabled = false;
@@ -227,7 +228,7 @@
 			 * @author Mariana
 			 */ 
 			private function resendActivationCodeHandler():void {
-				registerUserService.resendActivationCode(usernameInput.text, CommonPlugin.getInstance().linkProvider.getOrganization());
+				registerUserService.resendActivationCode(usernameInput.text, FlexGlobals.topLevelApplication.parameters.organization);
 			}
 			
 			private function resendActivationCodeResultHandler(event:ResultEvent):void {
@@ -259,7 +260,7 @@
 				dto.password = registerViewPasswordInput.text;
 				dto.isActivated = false;
 				
-				registerUserService.register(dto, CommonPlugin.getInstance().linkProvider.getOrganization());		
+				registerUserService.register(dto, FlexGlobals.topLevelApplication.parameters.organization);		
 			}
 			
 			/**
@@ -358,8 +359,8 @@
 			public function onCreationComplete():void {
 				popupHost.addToControlBar(buttonBar);
 				
-				if (CommonPlugin.getInstance().linkProvider.getLogin() != null) {
-					usernameInput.text = CommonPlugin.getInstance().linkProvider.getLogin();
+				if (FlexGlobals.topLevelApplication.parameters.login != null) {
+					usernameInput.text = FlexGlobals.topLevelApplication.parameters.login;
 				}
 				if (providedUsername) {
 					var index:int = providedUsername.indexOf("|"); 
@@ -373,8 +374,8 @@
 					PopUpManager.centerPopUp(popupHost as IFlexDisplayObject);
 				}
 				
-				if (CommonPlugin.getInstance().linkProvider.getOrganization()) {
-					registerUserService.getOrganizationFilter(CommonPlugin.getInstance().linkProvider.getOrganization());
+				if (FlexGlobals.topLevelApplication.parameters.organization) {
+					registerUserService.getOrganizationFilter(FlexGlobals.topLevelApplication.parameters.organization);
 				}
 			}
 			

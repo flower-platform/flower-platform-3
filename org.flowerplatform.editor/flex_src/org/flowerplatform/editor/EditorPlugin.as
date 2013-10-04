@@ -21,13 +21,10 @@ package org.flowerplatform.editor {
 	
 	import flash.utils.Dictionary;
 	
-	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
-	import mx.controls.Alert;
 	
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.common.link.ILinkHandler;
-	import org.flowerplatform.common.link.LinkProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -134,24 +131,15 @@ package org.flowerplatform.editor {
 				}
 			}
 		}
-		
-		public function getFirstEditorDescriptorForNode(contentTypeIndex:int):BasicEditorDescriptor {
-			try {
-				return getFirstEditorDescriptorForNodeUnsafe(contentTypeIndex);
-			} catch (e:Error) { 
-				/* swallow */ 
-			}
-			return null;
-		}
-		
-		public function getFirstEditorDescriptorForNodeUnsafe(contentTypeIndex:int):BasicEditorDescriptor {			
+				
+		public function getFirstEditorDescriptorForNode(contentTypeIndex:int, throwErrorIfNotFound:Boolean = true):BasicEditorDescriptor {			
 			var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[contentTypeIndex];
 			
 			var editorName:String = String(ctDescriptor.compatibleEditors[0]);
 			var descriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(editorName);
-			if (descriptor == null)
+			if (descriptor == null && throwErrorIfNotFound) {
 				throw new Error("There is no compatible editor descriptor found for editor: " + editorName + "!");
-			
+			}
 			return descriptor;
 		}
 		
@@ -170,7 +158,7 @@ package org.flowerplatform.editor {
 				}
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"editorService", "navigateFriendlyEditableResourcePathList", 
+						"editorOperationsService", "navigateFriendlyEditableResourcePathList", 
 						[files, index == null ? -1 : int(index)]));
 			}		
 		}

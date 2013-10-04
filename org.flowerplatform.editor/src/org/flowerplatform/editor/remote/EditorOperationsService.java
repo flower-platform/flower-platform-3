@@ -1,21 +1,3 @@
-/* license-start
-* 
-* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
-* 
-* This program is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation version 3.
-* 
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
-* 
-* Contributors:
-*   Crispico - Initial API and implementation
-*
-* license-end
-*/
 package org.flowerplatform.editor.remote;
 
 import java.util.ArrayList;
@@ -25,15 +7,14 @@ import java.util.regex.Pattern;
 
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
+import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.editor.EditorPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class EditorService {
+public class EditorOperationsService {
 
-	private static final Logger logger = LoggerFactory.getLogger(EditorService.class);
-	
-	public static final String SERVICE_ID = "editorService";
+	private static final Logger logger = LoggerFactory.getLogger(EditorOperationsService.class);
 	
 	/**
 	 * An <em>external editableResourcePath</em> is either a <em>canonical editableResourcePath</em or a <em>friendly editableResourcePath</em>.
@@ -50,7 +31,8 @@ public class EditorService {
 	 * @author Cristi
 	 * @flowerModelElementId _TeUxAEhHEeKn-dlTSOkszw
 	 */
-	public List<String> getFriendlyEditableResourcePathList(ServiceInvocationContext context, List<String> canonicalEditableResourcePathList) {
+	@RemoteInvocation
+	public List<String> getFriendlyEditableResourcePathList(List<String> canonicalEditableResourcePathList) {
 		List<String> friendlyEditableResourcePathList = new ArrayList<String>();
 		for (String canonicalEditableResourcePath : canonicalEditableResourcePathList) {
 			DecodedLink decodedLink = new DecodedLink(canonicalEditableResourcePath);
@@ -87,6 +69,7 @@ public class EditorService {
 	 * 
 	 * @flowerModelElementId _TeVYEkhHEeKn-dlTSOkszw
 	 */
+	@RemoteInvocation
 	public boolean navigateFriendlyEditableResourcePathList(ServiceInvocationContext context, String openResources, int selectResourceAtIndex) {
 		List<String> friendlyEditableResourcePathList = parseFriendlyEditableResourcePathList(openResources);
 		
