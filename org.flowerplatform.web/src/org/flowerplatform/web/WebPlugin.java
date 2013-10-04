@@ -68,7 +68,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	private String TESTING_FLAG = "testing";
 	
-	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
+	private EclipseDispatcherServlet eclipseDispatcherServlet;
 	
 	private DatabaseManager databaseManager;
 	
@@ -84,6 +84,13 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		
 		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
 				.getResourceAsStream("META-INF/flower-web.properties"));
+		
+		// Initially, this initialization was in the attribute initializer. But this lead to an issue:
+		// .communication was loaded, which processed the extension points, including services, 
+		// which forced the initialization of .web.git plugin, which wanted to use the properties, which
+		// are initialized in the line above. Maybe in the future we'll solve this kind of issues generated
+		eclipseDispatcherServlet = new EclipseDispatcherServlet();
+		
 		databaseManager = new DatabaseManager();
 	}
 	

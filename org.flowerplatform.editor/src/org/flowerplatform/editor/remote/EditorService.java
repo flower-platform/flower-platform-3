@@ -20,6 +20,8 @@ package org.flowerplatform.editor.remote;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -45,15 +47,20 @@ public class EditorService {
 	 * @see #navigateFriendlyEditableResourcePathList()
 	 * 
 	 * @author Sorin
+	 * @author Cristi
 	 * @flowerModelElementId _TeUxAEhHEeKn-dlTSOkszw
 	 */
 	public List<String> getFriendlyEditableResourcePathList(ServiceInvocationContext context, List<String> canonicalEditableResourcePathList) {
 		List<String> friendlyEditableResourcePathList = new ArrayList<String>();
 		for (String canonicalEditableResourcePath : canonicalEditableResourcePathList) {
-			String editorName = URLGenerateNavigateUtilities.getEditorNameFromExternalEditableResourcePath(canonicalEditableResourcePath);
-			EditorStatefulService editorStatefulService = EditorPlugin.getInstance().getEditorStatefulServiceByEditorName(editorName);
+			DecodedLink decodedLink = new DecodedLink(canonicalEditableResourcePath);
+			
+			EditorStatefulService editorStatefulService = null;
+			if (decodedLink.editorName != null) {
+				editorStatefulService = EditorPlugin.getInstance().getEditorStatefulServiceByEditorName(decodedLink.editorName);
+			}
 			if (editorStatefulService == null) {
-				logger.error("Could not obtain EditorStatefulService with editorName = " + editorName); 
+				logger.error("Could not obtain EditorStatefulService with editorName = " + decodedLink.editorName); 
 				continue;
 			}			
 			friendlyEditableResourcePathList.add(editorStatefulService.getFriendlyEditableResourcePath(canonicalEditableResourcePath));			
@@ -76,6 +83,7 @@ public class EditorService {
 	 *      
 	 * @author Sorin
 	 * @author Mariana
+	 * @author Cristi
 	 * 
 	 * @flowerModelElementId _TeVYEkhHEeKn-dlTSOkszw
 	 */
@@ -90,15 +98,26 @@ public class EditorService {
 		StringBuffer validationProblems = new StringBuffer(); 
 		for (String friendlyEditableResourcePath : friendlyEditableResourcePathList) {
 			try { // Run navigation logic independent one another path
-				String editorName = URLGenerateNavigateUtilities.getEditorNameFromExternalEditableResourcePath(friendlyEditableResourcePath);
-				if (URLGenerateNavigateUtilities.isStringEmpty(editorName)) { // Validation
-					validationProblems.append("Could not determine editor for path '" + friendlyEditableResourcePath + "' .").append("\n");
-					continue;
+				DecodedLink decodedLink = new DecodedLink(friendlyEditableResourcePath);
+//				String editorName = URLGenerateNavigateUtilities.getEditorNameFromExternalEditableResourcePath(friendlyEditableResourcePath);
+				if (decodedLink.editorName == null) {
+					// the link doesn't contain the editor name; so we try to find the default
+					// editor, based on its extension
+					String contentType = EditorPlugin.getInstance().getContentTypeFromFileName(decodedLink.resourcePath);
+					ContentTypeDescriptor descriptor = EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType);
+					if (descriptor == null) {
+						validationProblems.append("Could not determine content type for path '" + friendlyEditableResourcePath + "' .").append("\n");
+						continue;
+					} else {
+						if (!descriptor.getCompatibleEditors().isEmpty()) {
+							decodedLink.editorName = descriptor.getCompatibleEditors().get(0);	
+						}
+					}
 				}
 
-				EditorStatefulService editorStatefulService = EditorPlugin.getInstance().getEditorStatefulServiceByEditorName(editorName);
+				EditorStatefulService editorStatefulService = EditorPlugin.getInstance().getEditorStatefulServiceByEditorName(decodedLink.editorName);
 				if (editorStatefulService == null) { // Validation
-					validationProblems.append("Could not find editor '" + editorName + "' for path '" + friendlyEditableResourcePath + "' .").append("\n");
+					validationProblems.append("Could not find editor '" + decodedLink.editorName + "' for path '" + friendlyEditableResourcePath + "' .").append("\n");
 					continue;
 				}
 				
@@ -108,22 +127,20 @@ public class EditorService {
 					continue;
 				}
 
-				String canonicalOpenableResourcePath = URLGenerateNavigateUtilities.getOpenableResourcePathFromExternalEditableResourcePath(canonicalEditableResourcePath);
-				EditableResource editableResource = editorStatefulService.subscribeClientForcefully(context.getCommunicationChannel(), canonicalOpenableResourcePath, true);
+				EditableResource editableResource = editorStatefulService.subscribeClientForcefully(context.getCommunicationChannel(), decodedLink.resourcePath, true);
 				if (editableResource == null) { // Validation
-					validationProblems.append("Could not find '" + canonicalOpenableResourcePath + "' . Either it doesn't exist, or it failed during load.").append("\n");
+					validationProblems.append("Could not find '" + decodedLink.resourcePath + "' . Either it doesn't exist, or it failed during load.").append("\n");
 					continue;
 				}
 				
 				if (friendlyEditableResourcePathList.indexOf(friendlyEditableResourcePath) == selectResourceAtIndex) { // Caches info about the friendly editableResourcePath that must be revealed in an editor.
 					selectedResourceAtIndexIsValid = true;
-					selectedCanonicalOpenableResourcePath = canonicalOpenableResourcePath;
+					selectedCanonicalOpenableResourcePath = decodedLink.resourcePath;
 					selectedEditorStatefulService = editorStatefulService;
 				}
 					
-				String canonicalFragment = URLGenerateNavigateUtilities.getFragmentFromExternalEditableResourcePath(canonicalEditableResourcePath);
-				if (!URLGenerateNavigateUtilities.isStringEmpty(canonicalFragment)) // No need to navigate if there is no fragment.
-					editorStatefulService.navigateToFragment(context.getCommunicationChannel(), canonicalOpenableResourcePath, canonicalFragment);
+				if (decodedLink.fragment != null) // No need to navigate if there is no fragment.
+					editorStatefulService.navigateToFragment(context.getCommunicationChannel(), decodedLink.resourcePath, decodedLink.fragment);
 			} catch (Throwable t) {
 				logger.error("Error happened while performing logic to navigate path : " + friendlyEditableResourcePath, t);
 				validationProblems.append("Internal error happened while trying to navigate to path '" + friendlyEditableResourcePath + "'.").append("\n");
@@ -159,31 +176,36 @@ public class EditorService {
 				friendlyEditableResourcePathList.add(openResourceItem);
 		}	
 		return friendlyEditableResourcePathList;
-	}
-		
-	public static class URLGenerateNavigateUtilities {
+	}	
+	
+	/**
+	 * @author Cristi
+	 */
+	private static class DecodedLink {
+		public String editorName;
+		public String resourcePath;
+		public String fragment;
 
-		public static String getEditorNameFromExternalEditableResourcePath(String externalEditableResourcePath) {
-			return getTokenFromEditableResourcePath(externalEditableResourcePath, 0);
-		}
-		
-		public static String getOpenableResourcePathFromExternalEditableResourcePath(String externalEditableResourcePath) {
-			return getTokenFromEditableResourcePath(externalEditableResourcePath, 1);
-		}
+		public DecodedLink(String externalEditableResourcePath) {
+			// e.g. editor:/path/to/url#fragment
+			// editor and fragment are optional
+			final String regex = "(?:(.*?):/)?([^#]*)(?:#(.+))?";					
+			Matcher matcher = Pattern.compile(regex).matcher(externalEditableResourcePath);
+			if (!matcher.find()) {
+				// this shouldn't happen, as the expression matches any string
+			}
 
-		static String getFragmentFromExternalEditableResourcePath(String externalEditableResourcePath) {
-			return getTokenFromEditableResourcePath(externalEditableResourcePath, 2);
+			editorName = getNullIfStringEmpty(matcher.group(1));
+			resourcePath = getNullIfStringEmpty(matcher.group(2));
+			fragment = getNullIfStringEmpty(matcher.group(3));
 		}
 		
-		private static String getTokenFromEditableResourcePath(String externalEitableResourcePath, int index) {
-			if (externalEitableResourcePath == null)
+		private String getNullIfStringEmpty(String s) {
+			if (s != null && s.trim().length() == 0) {
 				return null;
-			String[] tokens = externalEitableResourcePath.split("(:/)|(#)"); // format like editor_name :/ openable_resource # fragment
-			return tokens.length > index ? tokens[index].trim() : null;
-		}
-
-		public static boolean isStringEmpty(String string) {
-			return string == null || string.trim().length() == 0;
+			} else {
+				return s;
+			}
 		}
 	}
 }
