@@ -25,6 +25,8 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl#getTemplate <em>Template</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl#getNextSiblingSeparator <em>Next Sibling Separator</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl#getChildType <em>Child Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -50,6 +52,46 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 	 * @ordered
 	 */
 	protected String template = TEMPLATE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getNextSiblingSeparator() <em>Next Sibling Separator</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNextSiblingSeparator()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NEXT_SIBLING_SEPARATOR_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getNextSiblingSeparator() <em>Next Sibling Separator</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNextSiblingSeparator()
+	 * @generated
+	 * @ordered
+	 */
+	protected String nextSiblingSeparator = NEXT_SIBLING_SEPARATOR_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getChildType() <em>Child Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String CHILD_TYPE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getChildType() <em>Child Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildType()
+	 * @generated
+	 * @ordered
+	 */
+	protected String childType = CHILD_TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -96,11 +138,57 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getNextSiblingSeparator() {
+		return nextSiblingSeparator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setNextSiblingSeparator(String newNextSiblingSeparator) {
+		String oldNextSiblingSeparator = nextSiblingSeparator;
+		nextSiblingSeparator = newNextSiblingSeparator;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR, oldNextSiblingSeparator, nextSiblingSeparator));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getChildType() {
+		return childType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setChildType(String newChildType) {
+		String oldChildType = childType;
+		childType = newChildType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE, oldChildType, childType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
 				return getTemplate();
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
+				return getNextSiblingSeparator();
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE:
+				return getChildType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -115,6 +203,12 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 		switch (featureID) {
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
 				setTemplate((String)newValue);
+				return;
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
+				setNextSiblingSeparator((String)newValue);
+				return;
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE:
+				setChildType((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -131,6 +225,12 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
 				setTemplate(TEMPLATE_EDEFAULT);
 				return;
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
+				setNextSiblingSeparator(NEXT_SIBLING_SEPARATOR_EDEFAULT);
+				return;
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE:
+				setChildType(CHILD_TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -145,6 +245,10 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 		switch (featureID) {
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
 				return TEMPLATE_EDEFAULT == null ? template != null : !TEMPLATE_EDEFAULT.equals(template);
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
+				return NEXT_SIBLING_SEPARATOR_EDEFAULT == null ? nextSiblingSeparator != null : !NEXT_SIBLING_SEPARATOR_EDEFAULT.equals(nextSiblingSeparator);
+			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE:
+				return CHILD_TYPE_EDEFAULT == null ? childType != null : !CHILD_TYPE_EDEFAULT.equals(childType);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -161,6 +265,10 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (template: ");
 		result.append(template);
+		result.append(", nextSiblingSeparator: ");
+		result.append(nextSiblingSeparator);
+		result.append(", childType: ");
+		result.append(childType);
 		result.append(')');
 		return result.toString();
 	}

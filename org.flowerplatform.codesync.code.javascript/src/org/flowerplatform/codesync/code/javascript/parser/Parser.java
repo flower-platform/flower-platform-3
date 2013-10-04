@@ -112,17 +112,19 @@ public class Parser {
 	//////////////////////////////////
 	
 	public static final String JS_CHILDREN_INSERT_POINT			= "jsChildrenInsertPoint";
-	public static final String JS_CHILDREN_INSERT_POINT_REGEX	= "// children-insert-point (\\S*?)";
+	public static final String JS_CHILDREN_INSERT_POINT_REGEX	= "// children-insert-point (\\S*)";
 	
 	public static final String JS_BACKBONE_CLASS_TEMPLATE 		= "BackboneClass";
 	public static final String JS_BACKBONE_CLASS_REGEX			= "// template BackboneClass";
 	public static final String JS_BACKBONE_SUPER_CLASS			= "jsBackboneClassSuperClass";
-	public static final String JS_BACKBONE_SUPER_CLASS_REGEX	= "return\\s*+(.*?).extend\\s*\\(\\s*\\{";
+	public static final String JS_BACKBONE_SUPER_CLASS_REGEX	= "return\\s*+(.*?).extend\\s*\\(";
 	
 	public static final String JS_REQUIRE_ENTRY					= "jsRequireEntry";
 	public static final String JS_REQUIRE_ENTRY_TEMPLATE		= "RequireEntry";
 	public static final String JS_REQUIRE_ENTRY_CATEGORY		= "Require";
 	public static final String JS_REQUIRE_ENTRY_REGEX			= "var\\s*?(\\S*?)\\s*?=\\s*?require\\('(.*?)'\\)\\s*?;";
+	
+	public static final String JS_BACKBONE_CLASS_MEMBER			= "ClassMember";
 	
 	public static final String JS_OPERATION						= "jsOperation";
 	public static final String JS_OPERATION_TEMPLATE			= "Operation";
@@ -132,12 +134,12 @@ public class Parser {
 	public static final String JS_ATTRIBUTE						= "jsAttribute";
 	public static final String JS_ATTRIBUTE_TEMPLATE			= "Attribute";
 	public static final String JS_ATTRIBUTE_CATEGORY			= "Attribute";
-	public static final String JS_ATTRIBUTE_REGEX				= "(\\w+)\\s*+[:=]";
+	public static final String JS_ATTRIBUTE_REGEX				= "(\\w+)\\s*+:\\s*(\\w+)";
 	
 	public static final String JS_EVENTS_ATTRIBUTE				= "jsEventsAttribute";
 	public static final String JS_EVENTS_ATTRIBUTE_TEMPLATE		= "EventsAttribute";
 	public static final String JS_EVENTS_ATTRIBUTE_CATEGORY 	= "Events";
-	public static final String JS_EVENTS_ATTRIBUTE_REGEX		= "events\\s*:\\s*\\{";
+	public static final String JS_EVENTS_ATTRIBUTE_REGEX		= "(events)\\s*:\\s*\\{";
 	
 	public static final String JS_EVENTS_ATTRIBUTE_ENTRY		= "jsEventsAttributeEntry";
 	public static final String JS_EVENTS_ATTRIBUTE_ENTRY_TEMPLATE = "EventsAttributeEntry";
@@ -146,7 +148,7 @@ public class Parser {
 	public static final String JS_ROUTES_ATTRIBUTE				= "jsRoutesAttribute";
 	public static final String JS_ROUTES_ATTRIBUTE_TEMPLATE		= "RoutesAttribute";
 	public static final String JS_ROUTES_ATTRIBUTE_CATEGORY		= "Routes";
-	public static final String JS_ROUTES_ATTRIBUTE_REGEX		= "routes\\s*:\\s*\\{";
+	public static final String JS_ROUTES_ATTRIBUTE_REGEX		= "(routes)\\s*:\\s*\\{";
 	
 	public static final String JS_ROUTES_ATTRIBUTE_ENTRY		= "jsRoutesAttributeEntry";
 	public static final String JS_ROUTES_ATTRIBUTE_ENTRY_TEMPLATE = "RoutesAttributeEntry";
@@ -245,6 +247,7 @@ public class Parser {
 				if (currentState.node.getTemplate().equals(HTML_TABLE_TEMPLATE)) {
 					RegExAstNode entry = createRegExAstNode(HTML_TABLE_HEADER_ENTRY, "title", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					entry.setTemplate(HTML_TABLE_HEADER_ENTRY_TEMPLATE);
+					entry.setChildType(HTML_TABLE_HEADER_ENTRY_TEMPLATE);
 					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(entry, "title", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					currentState.node.getChildren().add(entry);
@@ -282,6 +285,7 @@ public class Parser {
 				if (currentState.node.getTemplate().equals(HTML_TABLE_ITEM_TEMPLATE)) {
 					RegExAstNode entry = createRegExAstNode(HTML_TABLE_ITEM_ENTRY, "valueExpression", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					entry.setTemplate(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
+					entry.setChildType(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
 					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					currentState.node.getChildren().add(entry);
@@ -308,6 +312,7 @@ public class Parser {
 				if (currentState.node.getTemplate().equals(HTML_FORM_TEMPLATE)) {
 					RegExAstNode entry = createRegExAstNode(HTML_FORM_ITEM, "title", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					entry.setTemplate(HTML_FORM_ITEM_TEMPLATE);
+					entry.setChildType(HTML_FORM_ITEM_TEMPLATE);
 					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(entry, "title", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
@@ -336,7 +341,7 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(JS_FILE)) {
 					currentState.node.setTemplate(JS_BACKBONE_CLASS_TEMPLATE);
-					
+					currentState.node.setChildType(JS_BACKBONE_CLASS_TEMPLATE);
 					attachJsDoc(currentState.node);
 					
 					enterState(session, JS_BACKBONE_CLASS_TEMPLATE, currentState.node, 1);
@@ -346,14 +351,14 @@ public class Parser {
 		})
 		.add(new RegexWithAction.IfFindThisSkip("multiline commment", RegexUtil.MULTI_LINE_COMMENT))
 		.add(new RegexWithAction.IfFindThisSkip("single line comment", RegexUtil.SINGLE_LINE_COMMENT))
-		.add(new RegexWithAction("closing bracket", "[\\}\\]]") {
+		.add(new RegexWithAction("closing bracket", "[\\}\\]\\)]") {
 			
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				exitState(session);
 			}
 		})
-		.add(new RegexWithAction("opening bracket", "[\\{\\[]") {
+		.add(new RegexWithAction("opening bracket", "[\\{\\[\\(]") {
 			
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -377,6 +382,7 @@ public class Parser {
 				if (currentState.node.getTemplate().equals(JS_BACKBONE_CLASS_TEMPLATE)) {
 					RegExAstNode requireEntry = addToCategory(JS_REQUIRE_ENTRY_CATEGORY, currentState.node, "varName", JS_REQUIRE_ENTRY, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					requireEntry.setTemplate(JS_REQUIRE_ENTRY_TEMPLATE);
+					requireEntry.setChildType(JS_REQUIRE_ENTRY_TEMPLATE);
 					requireEntry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(requireEntry, "varName", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(requireEntry, "dependencyPath", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
@@ -391,6 +397,8 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode function = addToCategory(JS_OPERATION_CATEGORY, currentState.node, NAME, JS_OPERATION, session.getMatcher().start(), 0);
 				function.setTemplate(JS_OPERATION_CATEGORY);
+				function.setChildType(JS_BACKBONE_CLASS_MEMBER);
+				function.setNextSiblingSeparator(",\r\n");
 				addParameter(function, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 				addParameter(function, "parameters", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 				
@@ -405,7 +413,10 @@ public class Parser {
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode events = addToCategory(JS_ATTRIBUTE_CATEGORY, currentState.node, NAME, JS_EVENTS_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
-				
+				addParameter(events, "name", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+				events.setTemplate(JS_EVENTS_ATTRIBUTE_TEMPLATE);
+				events.setChildType(JS_BACKBONE_CLASS_MEMBER);
+				events.setNextSiblingSeparator(",\r\n");
 				enterState(session, JS_EVENTS_ATTRIBUTE, currentState.node, 1);
 				
 				attachJsDoc(events);
@@ -416,11 +427,14 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				RegExAstNode events = addToCategory(JS_ATTRIBUTE_CATEGORY, currentState.node, NAME, JS_ROUTES_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
-				
+				RegExAstNode routes = addToCategory(JS_ATTRIBUTE_CATEGORY, currentState.node, NAME, JS_ROUTES_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
+				addParameter(routes, "name", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+				routes.setTemplate(JS_ROUTES_ATTRIBUTE_TEMPLATE);
+				routes.setChildType(JS_BACKBONE_CLASS_MEMBER);
+				routes.setNextSiblingSeparator(",\r\n");
 				enterState(session, JS_ROUTES_ATTRIBUTE, currentState.node, 1);
 				
-				attachJsDoc(events);
+				attachJsDoc(routes);
 			}
 			
 		})
@@ -429,11 +443,16 @@ public class Parser {
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode attr = addToCategory(JS_ATTRIBUTE_CATEGORY, currentState.node, NAME, JS_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
+				attr.setTemplate(JS_ATTRIBUTE_TEMPLATE);
+				attr.setChildType(JS_BACKBONE_CLASS_MEMBER);
+				attr.setNextSiblingInsertPoint(attr.getOffset() + attr.getLength());
+				attr.setNextSiblingSeparator(",\r\n");
 				addParameter(attr, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+				addParameter(attr, "defaultValue", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 				
 				attachJsDoc(attr);
 				
-				enterState(session, JS_ATTRIBUTE, attr, 1);
+//				enterState(session, JS_ATTRIBUTE, attr, 1);
 			}
 			
 		})
@@ -443,6 +462,9 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(JS_EVENTS_ATTRIBUTE)) {
 					RegExAstNode event = addToCategory(JS_EVENTS_ATTRIBUTE_CATEGORY, currentState.node, "event", JS_EVENTS_ATTRIBUTE_ENTRY, session.getMatcher().start(), session.getMatcher().end());
+					event.setTemplate(JS_EVENTS_ATTRIBUTE_ENTRY_TEMPLATE);
+					event.setChildType(JS_EVENTS_ATTRIBUTE_ENTRY_TEMPLATE);
+					event.setNextSiblingSeparator(",\r\n");
 					addParameter(event, "event", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(event, "selector", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 					addParameter(event, "handler", session.getCurrentSubMatchesForCurrentRegex()[2], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 3), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 3));
@@ -455,9 +477,12 @@ public class Parser {
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(JS_ROUTES_ATTRIBUTE)) {
-					RegExAstNode event = addToCategory(JS_ROUTES_ATTRIBUTE_CATEGORY, currentState.node, "event", JS_ROUTES_ATTRIBUTE_ENTRY, session.getMatcher().start(), session.getMatcher().end());
-					addParameter(event, "path", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-					addParameter(event, "function", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
+					RegExAstNode route = addToCategory(JS_ROUTES_ATTRIBUTE_CATEGORY, currentState.node, "event", JS_ROUTES_ATTRIBUTE_ENTRY, session.getMatcher().start(), session.getMatcher().end());
+					route.setTemplate(JS_ROUTES_ATTRIBUTE_ENTRY_TEMPLATE);
+					route.setChildType(JS_ROUTES_ATTRIBUTE_ENTRY_TEMPLATE);
+					route.setNextSiblingSeparator(",\r\n");
+					addParameter(route, "path", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+					addParameter(route, "function", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 				}
 			}
 		
@@ -668,6 +693,7 @@ public class Parser {
 	protected static void exitState(RegexProcessingSession session) {
 		if (statesStack[session.currentNestingLevel--] != null) {
 			currentState.node.setLength(session.getMatcher().end() - currentState.node.getOffset());
+			currentState.node.setNextSiblingInsertPoint(session.getMatcher().end());
 			statesStack[session.currentNestingLevel + 1] = null;
 			int index = session.currentNestingLevel;
 			while (statesStack[index] == null) {

@@ -18,7 +18,6 @@
 */
 package org.flowerplatform.codesync.code.javascript {
 	
-	import org.flowerplatform.codesync.code.javascript.model.action.AddElementAction;
 	import org.flowerplatform.codesync.code.javascript.model.action.AddElementActionProvider;
 	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;

@@ -179,13 +179,31 @@ public interface RegExAstPackage extends EPackage {
 	int REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT = 11;
 
 	/**
+	 * The feature id for the '<em><b>Next Sibling Separator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR = 12;
+
+	/**
+	 * The feature id for the '<em><b>Child Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_NODE__CHILD_TYPE = 13;
+
+	/**
 	 * The number of structural features of the '<em>Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_NODE_FEATURE_COUNT = 12;
+	int REG_EX_AST_NODE_FEATURE_COUNT = 14;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.StringToIntegerEntryImpl <em>String To Integer Entry</em>}' class.
@@ -389,13 +407,31 @@ public interface RegExAstPackage extends EPackage {
 	int REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Next Sibling Separator</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Child Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
 	 * The number of structural features of the '<em>Code Sync Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_CODE_SYNC_ELEMENT_FEATURE_COUNT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
+	int REG_EX_AST_CODE_SYNC_ELEMENT_FEATURE_COUNT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl <em>Cache Element</em>}' class.
@@ -596,6 +632,28 @@ public interface RegExAstPackage extends EPackage {
 	EAttribute getRegExAstNode_NextSiblingInsertPoint();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingSeparator <em>Next Sibling Separator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Next Sibling Separator</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingSeparator()
+	 * @see #getRegExAstNode()
+	 * @generated
+	 */
+	EAttribute getRegExAstNode_NextSiblingSeparator();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildType <em>Child Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Child Type</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildType()
+	 * @see #getRegExAstNode()
+	 * @generated
+	 */
+	EAttribute getRegExAstNode_ChildType();
+
+	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>String To Integer Entry</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -703,6 +761,28 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getRegExAstCodeSyncElement_Template();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getNextSiblingSeparator <em>Next Sibling Separator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Next Sibling Separator</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getNextSiblingSeparator()
+	 * @see #getRegExAstCodeSyncElement()
+	 * @generated
+	 */
+	EAttribute getRegExAstCodeSyncElement_NextSiblingSeparator();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getChildType <em>Child Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Child Type</em>'.
+	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getChildType()
+	 * @see #getRegExAstCodeSyncElement()
+	 * @generated
+	 */
+	EAttribute getRegExAstCodeSyncElement_ChildType();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement <em>Cache Element</em>}'.
@@ -876,6 +956,22 @@ public interface RegExAstPackage extends EPackage {
 		EAttribute REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT = eINSTANCE.getRegExAstNode_NextSiblingInsertPoint();
 
 		/**
+		 * The meta object literal for the '<em><b>Next Sibling Separator</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR = eINSTANCE.getRegExAstNode_NextSiblingSeparator();
+
+		/**
+		 * The meta object literal for the '<em><b>Child Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REG_EX_AST_NODE__CHILD_TYPE = eINSTANCE.getRegExAstNode_ChildType();
+
+		/**
 		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.StringToIntegerEntryImpl <em>String To Integer Entry</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -960,6 +1056,22 @@ public interface RegExAstPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE = eINSTANCE.getRegExAstCodeSyncElement_Template();
+
+		/**
+		 * The meta object literal for the '<em><b>Next Sibling Separator</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR = eINSTANCE.getRegExAstCodeSyncElement_NextSiblingSeparator();
+
+		/**
+		 * The meta object literal for the '<em><b>Child Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE = eINSTANCE.getRegExAstCodeSyncElement_ChildType();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl <em>Cache Element</em>}' class.

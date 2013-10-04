@@ -113,6 +113,9 @@ public class CodeSyncJavascriptTest {
 		String codeSyncEditableResourcePath = getProject().getFullPath().toString();
 		codeSyncEditorStatefulService.cancelSelectedActions(codeSyncEditableResourcePath, false);
 		diagramEditorStatefulService.unsubscribeAllClientsForcefully(getDiagramEditableResourcePath(), false);
+		
+		File to = new File(TestUtil.getWorkspaceResourceAbsolutePath("") + "/org/ws_trunk/" + PROJECT);
+		FileUtils.deleteDirectory(to);
 	}
 
 	public static final String TABLE = "Companies.html";
@@ -134,7 +137,9 @@ public class CodeSyncJavascriptTest {
 				false, 
 				getParameters(tableParameters), 
 				"Table", 
+				null,
 				null, 
+				null,
 				null);
 		invokeServiceMethod(table);
 		View tableView = findByName(fileName);
@@ -146,6 +151,8 @@ public class CodeSyncJavascriptTest {
 				false,
 				getParameters(tableHeaderEntryParameters),
 				"TableHeaderEntry",
+				"TableHeaderEntry",
+				null,
 				tableView.eResource().getURIFragment(tableView),
 				null);
 		invokeServiceMethod(tableHeaderEntry);
@@ -168,7 +175,7 @@ public class CodeSyncJavascriptTest {
 		
 		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
 		childrenInsertPoints.put("TableHeaderEntry", 146);
-		testParsedAstNode(table, 0, 211, 0, childrenInsertPoints, tableParameters, root);
+		testParsedAstNode(table, 0, 211, 211, childrenInsertPoints, tableParameters, root);
 		assertEquals("Table children count", 1, root.getChildren().size());
 		childrenInsertPoints.clear();
 		testParsedAstNode(tableHeaderEntry, 133, 13, 146, childrenInsertPoints, tableHeaderEntryParameters, root.getChildren().get(0));
@@ -193,6 +200,8 @@ public class CodeSyncJavascriptTest {
 				getParameters(tableItemParameters),
 				"TableItem",
 				null,
+				null,
+				null,
 				null);
 		invokeServiceMethod(tableItem);
 		View tableItemView = findByName(fileName);
@@ -204,6 +213,8 @@ public class CodeSyncJavascriptTest {
 				false,
 				getParameters(tableItemEntryParameters),
 				"TableItemEntry",
+				"TableItemEntry",
+				null,
 				tableItemView.eResource().getURIFragment(tableItemView),
 				null);
 		invokeServiceMethod(tableItemEntry);
@@ -226,7 +237,7 @@ public class CodeSyncJavascriptTest {
 				
 		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
 		childrenInsertPoints.put("TableItemEntry", 49);
-		testParsedAstNode(tableItem, 0, 166, 0, childrenInsertPoints, tableItemParameters, root);
+		testParsedAstNode(tableItem, 0, 166, 166, childrenInsertPoints, tableItemParameters, root);
 		assertEquals("Table item children count", 1, root.getChildren().size());
 		childrenInsertPoints.clear();
 		testParsedAstNode(tableItemEntry, 29, 20, 49, childrenInsertPoints, tableItemEntryParameters, root.getChildren().get(0));
@@ -250,6 +261,8 @@ public class CodeSyncJavascriptTest {
 				getParameters(formParameters),
 				"Form",
 				null,
+				null,
+				null,
 				null);
 		invokeServiceMethod(form);
 		View formView = findByName(fileName);
@@ -263,6 +276,8 @@ public class CodeSyncJavascriptTest {
 				false,
 				getParameters(formItemParameters),
 				"FormItem",
+				"FormItem",
+				null,
 				formView.eResource().getURIFragment(formView),
 				null);
 		invokeServiceMethod(formItem);
@@ -285,16 +300,158 @@ public class CodeSyncJavascriptTest {
 		
 		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
 		childrenInsertPoints.put("FormItem", 274);
-		testParsedAstNode(form, 0, 323, 0, childrenInsertPoints, formParameters, root);
+		testParsedAstNode(form, 0, 323, 323, childrenInsertPoints, formParameters, root);
 		assertEquals("Form item children count", 1, root.getChildren().size());
 		childrenInsertPoints.clear();
 		testParsedAstNode(formItem, 62, 212, 274, childrenInsertPoints, formItemParameters, root.getChildren().get(0));
-		
 	}
+	
+	public static String BACKBONE_CLASS = "Company.js";
 	
 	@Test
 	public void testBackboneClass() {
-		fail("Not yet implemented");
+		//////////////////////////////////////////////////
+		// Step 1: add to diagram
+		//////////////////////////////////////////////////
+		
+		String fileName = BACKBONE_CLASS;
+		List<RegExAstNodeParameter> backboneClassParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(backboneClassParameters, "name", fileName, 0, 0);
+		addParameter(backboneClassParameters, "superClass", "Backbone.View", 182, 13);
+		List<Object> backboneClass = getList(
+				"jsFile",
+				"name",
+				false,
+				getParameters(backboneClassParameters),
+				"BackboneClass",
+				null,
+				null,
+				null,
+				null);
+		invokeServiceMethod(backboneClass);
+		
+		View backboneClassView = findByName(fileName);
+		String parentId = backboneClassView.eResource().getURIFragment(backboneClassView);
+		
+		List<RegExAstNodeParameter> requireEntryParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(requireEntryParameters, "varName", "Backbone", 95, 8);
+		addParameter(requireEntryParameters, "dependencyPath", "backbone", 115, 8);
+		List<Object> requireEntry = getList(
+				"jsRequireEntry",
+				"varName",
+				false,
+				getParameters(requireEntryParameters),
+				"RequireEntry",
+				"RequireEntry",
+				null,
+				parentId,
+				"Require");
+		invokeServiceMethod(requireEntry);
+		
+		List<RegExAstNodeParameter> operationParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(operationParameters, "name", "render", 217, 6);
+		addParameter(operationParameters, "parameters", "param", 236, 5);
+		List<Object> operation = getList(
+				"jsOperation",
+				"name",
+				false,
+				getParameters(operationParameters),
+				"Operation",
+				"ClassMember",
+				",\r\n",
+				parentId,
+				"Operation");
+		invokeServiceMethod(operation);
+		
+		List<RegExAstNodeParameter> attributeParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(attributeParameters, "name", "name", 252, 4);
+		addParameter(attributeParameters, "defaultValue", "John", 259, 4);
+		List<Object> attribute = getList(
+				"jsAttribute",
+				"name",
+				false,
+				getParameters(attributeParameters),
+				"Attribute",
+				"ClassMember",
+				",\r\n",
+				parentId,
+				"Attribute");
+		invokeServiceMethod(attribute);
+		
+		//////////////////////////////////////////////////
+		// Step 2: sync -> generate Regex tree + file
+		//////////////////////////////////////////////////
+		
+		sync(fileName);
+		
+		//////////////////////////////////////////////////
+		// Step 3: compare generated code
+		//////////////////////////////////////////////////
+		
+		testGeneratedFileContent(fileName);
+		
+		Parser parser = new Parser();
+		RegExAstNode root = parser.parse(
+				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
+		
+		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
+		childrenInsertPoints.put("RequireEntry", 126);
+		childrenInsertPoints.put("ClassMember", 263);
+		testParsedAstNode(backboneClass, 0, 319, 319 /* should be 320, does not contain the final semicolon */, childrenInsertPoints, backboneClassParameters, root);
+		assertEquals("Backbone Class categories count", 3, root.getChildren().size());
+		
+		RegExAstNode requireCategory = getCategoryNode("Require", root);
+		assertEquals("Require category children count", 1, requireCategory.getChildren().size());
+		childrenInsertPoints.clear();
+		testParsedAstNode(requireEntry, 91, 35, 126, childrenInsertPoints, requireEntryParameters, requireCategory.getChildren().get(0));
+		
+		RegExAstNode operationCategory = getCategoryNode("Operation", root);
+		assertEquals("Operation category children count", 1, operationCategory.getChildren().size());
+		testParsedAstNode(operation, 217, 32, 249, childrenInsertPoints, operationParameters, operationCategory.getChildren().get(0));
+		
+		RegExAstNode attributeCategory = getCategoryNode("Attribute", root);
+		assertEquals("Attribute category children count", 1, attributeCategory.getChildren().size());
+		testParsedAstNode(attribute, 252, 11, 263, childrenInsertPoints, attributeParameters, attributeCategory.getChildren().get(0));
+	}
+	
+	@Test
+	public void testBackboneClassEventsAttribute() {
+		//////////////////////////////////////////////////
+		// Step 1: add to diagram
+		//////////////////////////////////////////////////
+		
+		testBackboneClass();
+		
+		String fileName = BACKBONE_CLASS;
+		
+		View backboneClassView = findByName(fileName);
+		String parentId = backboneClassView.eResource().getURIFragment(backboneClassView);
+		
+		List<RegExAstNodeParameter> eventsAttributeParameters = new ArrayList<RegExAstNodeParameter>();
+		addParameter(eventsAttributeParameters, "name", "events", 0, 0);
+		List<Object> eventsAttribute = getList(
+				"jsEventsAttribute",
+				"name",
+				false,
+				getParameters(eventsAttributeParameters),
+				"EventsAttribute",
+				"ClassMember",
+				",\r\n",
+				parentId,
+				"Attribute");
+		invokeServiceMethod(eventsAttribute);
+		
+		//////////////////////////////////////////////////
+		// Step 2: sync -> generate Regex tree + file
+		//////////////////////////////////////////////////
+		
+		sync(fileName);
+		
+		//////////////////////////////////////////////////
+		// Step 3: compare generated code
+		//////////////////////////////////////////////////
+
+		testGeneratedFileContent(fileName, BACKBONE_CLASS + "_withEvents");
 	}
 	
 	private void sync(String fileName) {
@@ -307,7 +464,11 @@ public class CodeSyncJavascriptTest {
 	}
 	
 	protected void testGeneratedFileContent(String fileName) {
-		String expected = getExpectedFileContent(fileName);
+		testGeneratedFileContent(fileName, fileName);
+	}
+	
+	protected void testGeneratedFileContent(String fileName, String expectedFileName) {
+		String expected = getExpectedFileContent(expectedFileName);
 		String actual = getActualFileContent(fileName);
 		assertEquals("Generated code is not as expected", expected, actual);
 	}
@@ -352,6 +513,16 @@ public class CodeSyncJavascriptTest {
 		for (String key : expected.keySet()) {
 			assertEquals("Children insert point", expected.get(key), actual.get(key));
 		}
+	}
+	
+	protected RegExAstNode getCategoryNode(String category, RegExAstNode parent) {
+		for (RegExAstNode child : parent.getChildren()) {
+			if (child.isCategoryNode() && child.getType().equals(category)) {
+				return child;
+			}
+		}
+		fail("Category node not found for " + category);
+		return null;
 	}
 	
 	///////////////////////////

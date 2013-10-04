@@ -41,7 +41,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 		override public function run():void {
 			var parentViewId:Object = selection.length == 0 ? null : ExpandableNode(selection.getItemAt(0)).id;
 			
-			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object, parentCategory:String;
+			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object, childType:String = template, nextSiblingSeparator:String, parentCategory:String;
 			
 			// test
 			if (template == "Table") {
@@ -114,6 +114,8 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"name" : "name",
 					"defaultValue" : "John"
 				};
+				childType = "ClassMember";
+				nextSiblingSeparator = ",\r\n";
 				parentCategory = "Attribute";
 			} else if (template == "Operation") {
 				type = "jsOperation";
@@ -123,18 +125,22 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"name" : "render",
 					"parameters" : "param"
 				};
+				childType = "ClassMember";
+				nextSiblingSeparator = ",\r\n";
 				parentCategory = "Operation";
 			} else if (template == "EventsAttribute") {
 				// add a category too
 				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-						.service_addElement("jsEventsAttribute", "name", true, { "name" : "EventsAttribute" }, "EventsAttribute", parentViewId, null);
+						.service_addElement("jsEventsAttribute", "name", true, { "name" : "EventsAttribute" }, "EventsAttribute", null, null, parentViewId, null);
 				
 				type = "jsEventsAttribute";
 				keyParameter = "name";
 				isCategory = false;
 				parameters = {
-					"name" : "EventsAttribute"
+					"name" : "events"
 				};
+				childType = "ClassMember";
+				nextSiblingSeparator = ",\r\n";
 				parentCategory = "Attribute";
 			} else if (template == "EventsAttributeEntry") {
 				type = "jsEventsAttributeEntry";
@@ -145,17 +151,20 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"selector" : "#edit",
 					"function" : "editView"
 				};
+				nextSiblingSeparator = ",\r\n";
 			} else if (template == "RoutesAttribute") {
 				// add a category too
 				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-				.service_addElement("jsRoutesAttribute", "name", true, { "name" : "RoutesAttribute" }, "RoutesAttribute", parentViewId, null);
+						.service_addElement("jsRoutesAttribute", "name", true, { "name" : "RoutesAttribute" }, "RoutesAttribute", null, null, parentViewId, null);
 				
 				type = "jsRoutesAttribute";
 				keyParameter = "name";
 				isCategory = false;
 				parameters = {
-					"name" : "RoutesAttribute"
+					"name" : "routes"
 				};
+				childType = "ClassMember";
+				nextSiblingSeparator = ",\r\n";
 				parentCategory = "Attribute";
 			} else if (template == "RoutesAttributeEntry") {
 				type = "jsRoutesAttributeEntry";
@@ -165,10 +174,11 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 					"path" : "companies",
 					"function" : "companiesDetails"
 				};
+				nextSiblingSeparator = ",\r\n";
 			}
 			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-					.service_addElement(type, keyParameter, isCategory, parameters, template, parentViewId, parentCategory);
+					.service_addElement(type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory);
 		}
 		
 	}

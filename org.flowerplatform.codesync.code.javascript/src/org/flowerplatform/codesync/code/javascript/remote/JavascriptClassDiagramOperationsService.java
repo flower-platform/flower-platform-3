@@ -67,11 +67,13 @@ public class JavascriptClassDiagramOperationsService {
 			boolean isCategory, 
 			Map<String, String> parameters, 
 			String template, 
+			String childType,
+			String nextSiblingSeparator,
 			String parentViewId,
 			String parentCategory) {
 
 		// step 1: create the element
-		RegExAstCodeSyncElement cse = (RegExAstCodeSyncElement) createElement(context, type, keyParameter, isCategory, parameters, template);
+		RegExAstCodeSyncElement cse = (RegExAstCodeSyncElement) createElement(context, type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator);
 		
 		// step 2: add the element to the model
 		if (parentViewId != null) {
@@ -132,12 +134,20 @@ public class JavascriptClassDiagramOperationsService {
 		}
 		Map<String, String> parameters = new HashMap<String, String>();
 		parameters.put("name", parentCategory);
-		CodeSyncElement cse = createElement(context, parentCategory, "name", true, parameters, null);
+		CodeSyncElement cse = createElement(context, parentCategory, "name", true, parameters, null, null, null);
 		parent.getChildren().add(cse);
 		return cse;
 	}
 	
-	protected RegExAstCodeSyncElement createElement(ServiceInvocationContext context, String type, String keyParameter, boolean isCategory, Map<String, String> parameters, String template) {
+	protected RegExAstCodeSyncElement createElement(
+			ServiceInvocationContext context, 
+			String type, 
+			String keyParameter, 
+			boolean isCategory, 
+			Map<String, String> parameters, 
+			String template, 
+			String childType,
+			String nextSiblingSeparator) {
 		RegExAstCodeSyncElement cse = RegExAstFactory.eINSTANCE.createRegExAstCodeSyncElement();
 		cse.setType(type);
 		RegExAstCacheElement ast = RegExAstFactory.eINSTANCE.createRegExAstCacheElement();
@@ -159,6 +169,8 @@ public class JavascriptClassDiagramOperationsService {
 		Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(project, resourceSet);
 		astCache.getContents().add(ast);
 		cse.setTemplate(template);
+		cse.setChildType(childType);
+		cse.setNextSiblingSeparator(nextSiblingSeparator);
 		cse.setAdded(true);
 		return cse;
 	}

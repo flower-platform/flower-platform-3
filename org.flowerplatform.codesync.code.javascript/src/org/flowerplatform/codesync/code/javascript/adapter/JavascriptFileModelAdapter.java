@@ -173,6 +173,9 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 	private void rewrite(IDocument document, RegExAstNode node, MultiTextEdit edit) {
 		if (node.isAdded()) {
 			String template = loadTemplate(node);
+			if (node.getNextSiblingSeparator() != null) {
+				template = node.getNextSiblingSeparator() + template;
+			}
 			edit.addChild(new InsertEdit(getInsertPoint(node), template));
 		} else if (node.isDeleted()) {
 			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));
@@ -205,17 +208,25 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		}
 		
 		// load children templates
+		boolean firstChild = true;
 		for (RegExAstNode child : getChildrenWithTemplate(node, new ArrayList<RegExAstNode>())) {
 			String childTemplate = loadTemplate(child);
-			if (child.getTemplate() != null) {
-				int childInsertPoint = template.indexOf("<!-- children-insert-point " + child.getTemplate() + " -->");
+			if (child.getChildType() != null) {
+				int childInsertPoint = template.indexOf("<!-- children-insert-point " + child.getChildType() + " -->");
 				if (childInsertPoint == -1) {
-					childInsertPoint = template.indexOf("// children-insert-point " + child.getTemplate());
+					childInsertPoint = template.indexOf("// children-insert-point " + child.getChildType());
 				}
 				if (childInsertPoint == -1) {
-					throw new RuntimeException("RegExAstNode does not accept children of type " + child.getTemplate());
+					throw new RuntimeException("RegExAstNode does not accept children of type " + child.getChildType());
+				}
+				if (!firstChild) {
+					if (child.getNextSiblingSeparator() != null) {
+						childTemplate = child.getNextSiblingSeparator() + childTemplate;
+					}
 				}
 				template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
+				
+				firstChild = false;
 			}
 		}
 		
@@ -249,10 +260,10 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 				return sibling.getNextSiblingInsertPoint();
 			}
 		}
-		if (parent.getChildrenInsertPoints().contains(node.getTemplate())) {
-			return parent.getChildrenInsertPoints().get(node.getTemplate());
+		if (parent.getChildrenInsertPoints().contains(node.getChildType())) {
+			return parent.getChildrenInsertPoints().get(node.getChildType());
 		} else {
-			throw new RuntimeException("RegExAstNode does not accept children of type " + node.getTemplate());
+			throw new RuntimeException("RegExAstNode does not accept children of type " + node.getChildType());
 		}
 	}
 	

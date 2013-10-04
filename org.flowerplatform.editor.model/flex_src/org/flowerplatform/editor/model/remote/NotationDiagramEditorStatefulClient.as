@@ -96,8 +96,8 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "expandCollapseCompartment", [viewId, expand]));
 		}
 		
-		public function service_addElement(type:String, keyParameter:String, isCategory:Boolean, parameters:Object, template:String, parentViewId:Object, parentCategory:String):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "addElement", [type, keyParameter, isCategory, parameters, template, parentViewId, parentCategory], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+		public function service_addElement(type:String, keyParameter:String, isCategory:Boolean, parameters:Object, template:String, childType:String, nextSiblingSeparator:String, parentViewId:Object, parentCategory:String):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "addElement", [type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 		
 		public function service_deleteElement(viewId:Object):void {

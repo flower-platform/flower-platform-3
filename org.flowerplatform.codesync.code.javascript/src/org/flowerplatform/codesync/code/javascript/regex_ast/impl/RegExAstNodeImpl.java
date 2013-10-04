@@ -48,6 +48,8 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getTemplate <em>Template</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getChildrenInsertPoints <em>Children Insert Points</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getNextSiblingSeparator <em>Next Sibling Separator</em>}</li>
+ *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getChildType <em>Child Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -263,6 +265,46 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 	 * @ordered
 	 */
 	protected int nextSiblingInsertPoint = NEXT_SIBLING_INSERT_POINT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getNextSiblingSeparator() <em>Next Sibling Separator</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNextSiblingSeparator()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NEXT_SIBLING_SEPARATOR_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getNextSiblingSeparator() <em>Next Sibling Separator</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNextSiblingSeparator()
+	 * @generated
+	 * @ordered
+	 */
+	protected String nextSiblingSeparator = NEXT_SIBLING_SEPARATOR_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getChildType() <em>Child Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String CHILD_TYPE_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getChildType() <em>Child Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getChildType()
+	 * @generated
+	 * @ordered
+	 */
+	protected String childType = CHILD_TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -513,6 +555,48 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getNextSiblingSeparator() {
+		return nextSiblingSeparator;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setNextSiblingSeparator(String newNextSiblingSeparator) {
+		String oldNextSiblingSeparator = nextSiblingSeparator;
+		nextSiblingSeparator = newNextSiblingSeparator;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR, oldNextSiblingSeparator, nextSiblingSeparator));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getChildType() {
+		return childType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setChildType(String newChildType) {
+		String oldChildType = childType;
+		childType = newChildType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE, oldChildType, childType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -559,6 +643,10 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				else return getChildrenInsertPoints().map();
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				return getNextSiblingInsertPoint();
+			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
+				return getNextSiblingSeparator();
+			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
+				return getChildType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -610,6 +698,12 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				setNextSiblingInsertPoint((Integer)newValue);
 				return;
+			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
+				setNextSiblingSeparator((String)newValue);
+				return;
+			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
+				setChildType((String)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -658,6 +752,12 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				setNextSiblingInsertPoint(NEXT_SIBLING_INSERT_POINT_EDEFAULT);
 				return;
+			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
+				setNextSiblingSeparator(NEXT_SIBLING_SEPARATOR_EDEFAULT);
+				return;
+			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
+				setChildType(CHILD_TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -694,6 +794,10 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				return childrenInsertPoints != null && !childrenInsertPoints.isEmpty();
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				return nextSiblingInsertPoint != NEXT_SIBLING_INSERT_POINT_EDEFAULT;
+			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
+				return NEXT_SIBLING_SEPARATOR_EDEFAULT == null ? nextSiblingSeparator != null : !NEXT_SIBLING_SEPARATOR_EDEFAULT.equals(nextSiblingSeparator);
+			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
+				return CHILD_TYPE_EDEFAULT == null ? childType != null : !CHILD_TYPE_EDEFAULT.equals(childType);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -726,6 +830,10 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 		result.append(template);
 		result.append(", nextSiblingInsertPoint: ");
 		result.append(nextSiblingInsertPoint);
+		result.append(", nextSiblingSeparator: ");
+		result.append(nextSiblingSeparator);
+		result.append(", childType: ");
+		result.append(childType);
 		result.append(')');
 		return result.toString();
 	}

@@ -149,4 +149,23 @@ public class CodeSyncElementModelAdapter extends SyncElementModelAdapter {
 		}
 		return super.getMatchKey(element);
 	}
+	
+	@Override
+	public void allActionsPerformed(Object element, Object correspondingElement) {
+		super.allActionsPerformed(element, correspondingElement);
+		
+		getCodeSyncElement(element).setAdded(false);
+	}
+
+	protected CodeSyncElement getCodeSyncElement(Object element) {
+		CodeSyncElement cse = null;
+		if (element instanceof CodeSyncElement) {
+			cse = (CodeSyncElement) element;
+		} else {
+			if (element instanceof AstCacheElement) {
+				cse = ((AstCacheElement) element).getCodeSyncElement();
+			}
+		}
+		return cse;
+	}
 }
