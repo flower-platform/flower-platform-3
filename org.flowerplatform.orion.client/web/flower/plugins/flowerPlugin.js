@@ -12,13 +12,13 @@ define([
 	provider.registerServiceProvider("orion.page.content", {}, {
 	     id: "orion.flower.content",
 	     name: "Flower",	   
-	     uriTemplate: "http://localhost:8080/org.flowerplatform.web.app/MainWeb.html"
+	     uriTemplate: "/flowerplatform/main.jsp"
 	});
 	     
 	provider.registerServiceProvider("orion.edit.editor", {}, {
 		id: "orion.flower",
 	    name: "Flower Platform Editor",
-	    uriTemplate: "{OrionHome}/flower/flowerContent.html#{Location},contentProvider=orion.flower.content"
+	    uriTemplate: "{OrionHome}/flowerplatform/flowerContent.html#{Location},contentProvider=orion.flower.content"
 	});
 	     
 	provider.registerServiceProvider("orion.navigate.openWith", {}, {
@@ -28,7 +28,7 @@ define([
 		
 	provider.registerService("orion.page.link", null, {
 		name: "Flower Editor",		
-		uriTemplate: "{OrionHome}/flower/flowerContent.html#{Location},contentProvider=orion.flower.content"
+		uriTemplate: "{OrionHome}/flowerplatform/flowerContent.html#{Location},contentProvider=orion.flower.content"
 	});	
 	
 	provider.connect();

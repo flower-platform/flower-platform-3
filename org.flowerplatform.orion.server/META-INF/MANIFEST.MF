@@ -5,3 +5,10 @@ Bundle-SymbolicName: org.flowerplatform.orion.server;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: %Bundle-Vendor
 Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.equinox.http.registry,
+ org.flowerplatform.blazeds,
+ org.flowerplatform.common,
+ org.flowerplatform.communication,
+ org.eclipse.equinox.jsp.jasper.registry,
+ org.eclipse.osgi
+Bundle-Activator: org.flowerplatform.orion.server.OrionPlugin

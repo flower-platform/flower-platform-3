@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
+  
+   <extension
+         point="org.eclipse.equinox.http.registry.servlets">
+      <servlet
+            alias="/*.jsp"
+            class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/WebContent/"
+            httpcontextId="org.eclipse.orion.server.configurator.httpcontext.flower">
+      </servlet>
+      <servlet
+            alias="/flowerapi"
+            class="org.flowerplatform.communication.FlowerDispatcherServlet"
+            httpcontextId="org.eclipse.orion.server.configurator.httpcontext.flower">
+      </servlet>
+      <serviceSelector
+            filter="(other.info=org.eclipse.orion)">
+      </serviceSelector>
+   </extension>
 
 </plugin>
