@@ -71,7 +71,7 @@ import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.FlowerWebProperties;
+import org.flowerplatform.common.FlowerProperties;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.web.entity.User;
@@ -109,13 +109,13 @@ public class GitUtils {
 	private static final String GIT_NEW_WORKDIR_LINUX = "git-new-workdir_linux.sh";
 	
 	static {
-		FlowerWebProperties.AddProperty addProperty = new FlowerWebProperties.AddProperty(GIT_INSTALL_DIR, "") {			
+		FlowerProperties.AddProperty addProperty = new FlowerProperties.AddProperty(GIT_INSTALL_DIR, "") {			
 			/**
 			 * Verify if git.exe exists at given location.
 			 */
 			@Override			
 			protected String validateProperty(String input) {				
-				String git = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
+				String git = CommonPlugin.getInstance().getFlowerProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
 				if (!new File(git).exists()) {
 					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
 				}
@@ -123,7 +123,7 @@ public class GitUtils {
 			}
 		}.setInputFromFileMandatory(System.getProperty("os.name").toLowerCase().indexOf("win") >= 0);
 		
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(addProperty);
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(addProperty);
 				
 		// verify JavaVM version; it must be >= 1.7
 		String jvmVersion = System.getProperty("java.vm.specification.version");
@@ -618,7 +618,7 @@ public class GitUtils {
 			cmd.add(source);
 			cmd.add(destination);
 			if (isWindows) {
-				String git = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
+				String git = CommonPlugin.getInstance().getFlowerProperties().getProperty(GIT_INSTALL_DIR) + "/cmd/git.exe";
 				if (!new File(git).exists()) {
 					return String.format("Git executable wasn't found at '%s'! Please verify '%s' property!", git, GIT_INSTALL_DIR);				
 				}

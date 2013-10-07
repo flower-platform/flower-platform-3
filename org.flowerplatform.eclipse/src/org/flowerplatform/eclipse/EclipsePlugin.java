@@ -24,9 +24,6 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
-		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
-				.getResourceAsStream("META-INF/flower.properties"));
-		
 		PublicResourcesServlet s;
 
 		// CommunicationChannelManager.INSTANCE = new

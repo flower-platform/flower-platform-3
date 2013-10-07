@@ -330,4 +330,10 @@
             serviceClass="org.flowerplatform.web.projects.remote.FileManagerService">
       </service>
    </extension>
+   <extension
+         point="org.flowerplatform.common.flowerProperties">
+      <flowerPropertiesProvider
+            flowerPropertiesProviderClass="org.flowerplatform.web.FlowerWebPropertiesProvider">
+      </flowerPropertiesProvider>
+   </extension>
 </plugin>

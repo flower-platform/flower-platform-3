@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.web;
 
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,10 +29,12 @@ import javax.servlet.http.HttpServlet;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.IFlowerPropertiesProvider;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.FileAccessController;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.mail.SendMailService;
@@ -82,8 +85,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		super();
 		INSTANCE = this;
 		
-		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
-				.getResourceAsStream("META-INF/flower-web.properties"));
 		databaseManager = new DatabaseManager();
 		eclipseDispatcherServlet = new EclipseDispatcherServlet();
 	}
@@ -115,6 +116,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
+				
 		UserService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
 		GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
 		OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
@@ -129,7 +131,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		initExtensionPoint_nodeTypeToCategoriesMapping();
 		
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());
+		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());		
 	}
 	
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {
@@ -169,5 +171,5 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public List<GenericTreeStatefulService> getTreeStatefulServicesDisplayingWorkingDirectoryContent() {
 		return treeStatefulServicesDisplayingWorkingDirectoryContent;
 	}
-
+	
 }

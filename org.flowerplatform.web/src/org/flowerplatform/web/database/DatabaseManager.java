@@ -35,16 +35,15 @@ import org.eclipse.emf.teneo.PersistenceOptions;
 import org.eclipse.emf.teneo.hibernate.HbDataStore;
 import org.eclipse.emf.teneo.hibernate.HbHelper;
 import org.eclipse.emf.teneo.hibernate.resource.HibernateResource;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.FlowerProperties;
+import org.flowerplatform.common.FlowerProperties.AddProperty;
+import org.flowerplatform.common.FlowerProperties.AddBooleanProperty;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
-import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.FlowerWebProperties;
-import org.flowerplatform.common.FlowerWebProperties.AddBooleanProperty;
-import org.flowerplatform.common.FlowerWebProperties.AddProperty;
-import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.DBVersion;
 import org.flowerplatform.web.entity.EntityFactory;
 import org.flowerplatform.web.entity.EntityPackage;
@@ -54,7 +53,6 @@ import org.flowerplatform.web.entity.OrganizationMembershipStatus;
 import org.flowerplatform.web.entity.OrganizationUser;
 import org.flowerplatform.web.entity.User;
 import org.flowerplatform.web.entity.WorkingDirectory;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.dto.OrganizationAdminUIDto;
 import org.flowerplatform.web.security.permission.AdminSecurityEntitiesPermission;
 import org.flowerplatform.web.security.permission.FlowerWebFilePermission;
@@ -94,7 +92,7 @@ public class DatabaseManager {
 		Policy.setPolicy(new FlowerWebPolicy(Policy.getPolicy())); // FlowerWebPolicy uses the permissionServer. 
 		
 		// adding properties
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(PROP_DB_PERSISTENCE_UNIT, PROP_DEFAULT_PROD_PERSISTENCE_UNIT) {
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(new AddProperty(PROP_DB_PERSISTENCE_UNIT, PROP_DEFAULT_PROD_PERSISTENCE_UNIT) {
 			@Override
 			protected String validateProperty(String input) {
 				// nothing to do; if the persistence unit is not found, an exception will be
@@ -102,7 +100,7 @@ public class DatabaseManager {
 				return null;
 			}
 		});
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(PROP_DB_INIT_WITH_TEST_DATA, "false") {
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(new AddBooleanProperty(PROP_DB_INIT_WITH_TEST_DATA, "false") {
 
 			@Override
 			protected String validateProperty(String input) {
@@ -185,10 +183,10 @@ public class DatabaseManager {
 				dbVersion = wrapper.find(DBVersion.class, DBVersion.SINGLETON_RECORD_ID);
 				if (dbVersion == null) {
 					logger.error("Cannot find database version from the database.");
-				} else if (dbVersion.getDbVersion() < FlowerWebProperties.DB_VERSION) {
-					logger.error("Database version mismatch. Database version = {} is lower than expected = {}. Please run the DB update scripts.", dbVersion.getDbVersion(), FlowerWebProperties.DB_VERSION);
-				} else if (dbVersion.getDbVersion() > FlowerWebProperties.DB_VERSION) {
-					logger.warn("Database version mismatch. Database version = {} is greater than expected = {}. You may continue, but please be aware that the application may malfunction and/or corrupt the data in the DB.", dbVersion.getDbVersion(), FlowerWebProperties.DB_VERSION);
+				} else if (dbVersion.getDbVersion() < FlowerProperties.DB_VERSION) {
+					logger.error("Database version mismatch. Database version = {} is lower than expected = {}. Please run the DB update scripts.", dbVersion.getDbVersion(), FlowerProperties.DB_VERSION);
+				} else if (dbVersion.getDbVersion() > FlowerProperties.DB_VERSION) {
+					logger.warn("Database version mismatch. Database version = {} is greater than expected = {}. You may continue, but please be aware that the application may malfunction and/or corrupt the data in the DB.", dbVersion.getDbVersion(), FlowerProperties.DB_VERSION);
 				} else {
 					// same version; everything is OK
 					logger.info("Database version check OK. Version = {}", dbVersion.getDbVersion());
@@ -307,7 +305,7 @@ public class DatabaseManager {
 		}
 		hbResource.unload();
 		
-		if ("false".equals(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
+		if ("false".equals(CommonPlugin.getInstance().getFlowerProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
 			return;
 		}
 
@@ -321,7 +319,7 @@ public class DatabaseManager {
 				// db version
 				DBVersion dbVersion = EntityFactory.eINSTANCE.createDBVersion();
 				dbVersion.setId(DBVersion.SINGLETON_RECORD_ID);
-				dbVersion.setDbVersion(FlowerWebProperties.DB_VERSION);
+				dbVersion.setDbVersion(FlowerProperties.DB_VERSION);
 				wrapper.merge(dbVersion);
 				
 				GeneralService service = new GeneralService();
@@ -350,7 +348,7 @@ public class DatabaseManager {
 			}
 		});
 		
-		if (!PROP_DB_INIT_WITH_TEST_DATA_INTERNAL.equals(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
+		if (!PROP_DB_INIT_WITH_TEST_DATA_INTERNAL.equals(CommonPlugin.getInstance().getFlowerProperties().getProperty(PROP_DB_INIT_WITH_TEST_DATA))) {
 			return;
 		}
 
