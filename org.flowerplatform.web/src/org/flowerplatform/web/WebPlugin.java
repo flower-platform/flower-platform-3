@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.web;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.projects.remote.ProjectsService;
-import org.flowerplatform.web.properties.remote.FileSelectedItem;
 import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.service.GroupService;
 import org.flowerplatform.web.security.service.OrganizationService;
