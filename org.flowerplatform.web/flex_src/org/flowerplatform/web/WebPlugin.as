@@ -22,6 +22,7 @@ package org.flowerplatform.web {
 	
 	import flash.events.MouseEvent;
 	
+	import mx.collections.ArrayCollection;
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
@@ -30,6 +31,8 @@ package org.flowerplatform.web {
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -39,6 +42,8 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
+	import org.flowerplatform.web.properties.remote.DiagramSelectedItem;
+	import org.flowerplatform.web.properties.remote.FileSelectedItem;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.PermissionsScreen;
@@ -93,7 +98,7 @@ package org.flowerplatform.web {
 			test_addButton("Organizations Screen", OrganizationsScreen, hBox);
 			test_addButton("Groups Screen", GroupsScreen, hBox);
 			test_addButton("Permissions Screen", PermissionsScreen, hBox);
-			
+
 			var btn:Button = new Button();
 			btn.label = "Logout";
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
@@ -115,6 +120,50 @@ package org.flowerplatform.web {
 			});
 			hBox.addChild(btn);
 			
+			/* test button */
+			// TODO remove me :
+			btn = new Button();
+			btn.label = "File Prop Prov";
+			registerClassAliasFromAnnotation(FileSelectedItem);
+			registerClassAliasFromAnnotation(DiagramSelectedItem);
+			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				var pathFromWorkspace:String = "crispico/ws_trunk/wd1";
+				
+				var selectedItems:ArrayCollection = new ArrayCollection();
+				selectedItems.addItem(new FileSelectedItem(pathFromWorkspace));
+				var myObject:Object;
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("propertiesProviderService",
+								"getProperties",[selectedItems],
+								myObject,
+								function(object:Object):void {
+									var x:Object = object;
+									btn.label = "succes";
+								}
+					));				
+			});
+			hBox.addChild(btn);
+			btn = new Button();
+			btn.label = "Diagram Prop Prov";
+			registerClassAliasFromAnnotation(FileSelectedItem);
+			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				var diagramEditableResourcePath:String = "/crispico/ws_trunk/wd1/NewDiagram1.notation";
+				var xmiID:String = "_wUgVYPnAEeKpg94yU-UoAw";
+				var serviceID:String = "diagramEditorStatefulService";
+				var selectedItems:ArrayCollection = new ArrayCollection();
+				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, "javaClass"));
+				var myObject:Object;
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand("propertiesProviderService",
+						"getProperties",[selectedItems],
+						myObject,
+						function(object:Object):void {
+							var x:Object = object;
+							btn.label = "succes";
+						}
+					));				
+			});
+			hBox.addChild(btn);
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
 			
 			var workbench:Workbench = new Workbench();
