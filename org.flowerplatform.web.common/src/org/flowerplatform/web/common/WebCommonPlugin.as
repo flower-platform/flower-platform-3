@@ -42,6 +42,7 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.web.common.projects.ProjectPropertiesAction;
 	import org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction;
 	import org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction;
+	import org.flowerplatform.web.common.properties.ui.PropertiesViewProvider;
 	import org.flowerplatform.web.common.remote.InitializeNodeTypeCategoryToNodeTypesMapClientCommand;
 	import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
 	import org.flowerplatform.web.common.security.dto.InitializeCurrentUserLoggedInClientCommand;
@@ -96,6 +97,8 @@ package org.flowerplatform.web.common {
 			INSTANCE = this;
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new ExplorerViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new PropertiesViewProvider());
+
 			explorerTreeActionProviders.push(explorerTreeClassFactoryActionProvider);
 			explorerTreeActionProviders.push(EditorPlugin.getInstance().editorTreeActionProvider);
 			

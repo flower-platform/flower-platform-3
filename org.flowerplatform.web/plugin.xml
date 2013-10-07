@@ -323,4 +323,33 @@
             serviceClass="org.flowerplatform.web.projects.remote.WorkingDirectoryTreeStatefulService">
       </service>
    </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            id="org.flowerplatform.web.propertiesProvider1"
+            itemType="file"
+            propertiesProviderClass="org.flowerplatform.web.properties.FilePropertiesProvider">
+      </propertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="javaClass"
+            propertiesProviderClass="org.flowerplatform.web.properties.JavaClassPropertiesProvider">
+      </propertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="javaAttribute"
+            propertiesProviderClass="org.flowerplatform.web.properties.JavaAttributePropertiesProvider">
+      </propertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="propertiesProviderService"
+            serviceClass="org.flowerplatform.properties.PropertiesService">
+      </service>
+   </extension>
 </plugin>
