@@ -21,8 +21,11 @@ package org.flowerplatform.editor.model.java.remote;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
@@ -36,8 +39,10 @@ import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapter;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter;
@@ -119,24 +124,37 @@ public class JavaClassDiagramOperationsService {
 	
 	/**
 	 * Creates a new {@link CodeSyncElement} with an associated {@link Attribute}.
+	 * @author Sebastian Solomon
 	 */
 	public void addNew_attribute(ServiceInvocationContext context, String viewId, String label) {
 		View view = getViewById(context, viewId);
 		View cls = (View) view.eContainer();
 		CodeSyncElement clsCse = (CodeSyncElement) cls.getDiagrammableElement();
 		
-		CodeSyncElement attributeCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
-		attributeCse.setType(JavaAttributeModelAdapter.ATTRIBUTE);
-		// this is a new element => set added flag
-		attributeCse.setAdded(true);
-		Attribute attribute = AstCacheCodeFactory.eINSTANCE.createAttribute();
-		attribute.setCodeSyncElement(attributeCse);
+		if (!clsCse.isDeleted()){ //if isDeleted(), don't add attribute
+			CodeSyncElement attributeCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
+			attributeCse.setType(JavaAttributeModelAdapter.ATTRIBUTE);
+			// this is a new element => set added flag
+			attributeCse.setAdded(true);
+			Attribute attribute = AstCacheCodeFactory.eINSTANCE.createAttribute();
+			attribute.setCodeSyncElement(attributeCse);
 		
-		processAttribute(attributeCse, attribute, label);
+			processAttribute(attributeCse, attribute, label);
+			
+			DiagramEditableResource der = getEditableResource(context);
+			ResourceSet resourceSet = der.getResourceSet();
+			IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(der.getFile()).getProject();
+			Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(project, resourceSet);
+			astCache.getContents().add(attribute);
 		
-		clsCse.getChildren().add(attributeCse);
+			clsCse.getChildren().add(attributeCse);
+		
+			CodeSyncPlugin.getInstance().propagateParentSyncFalse(attributeCse);
+		}
+		
 	}
 	
+
 	protected void processAttribute(CodeSyncElement attributeCse, Attribute attribute, String label) {
 		InplaceEditorLabelParseResult result = labelParser.parseAttributeLabel(label);
 		setName(attributeCse, result.getName());
@@ -147,22 +165,36 @@ public class JavaClassDiagramOperationsService {
 	
 	/**
 	 * Creates a new {@link CodeSyncElement} with an associated {@link Operation}.
+	 * @author Sebastian Solomon
 	 */
 	public void addNew_operation(ServiceInvocationContext context, String viewId, String label) {
+		
 		View view = getViewById(context, viewId);
 		View cls = (View) view.eContainer();
 		CodeSyncElement clsCse = (CodeSyncElement) cls.getDiagrammableElement();
+
+		if (!clsCse.isDeleted()){ //if isDeleted(), don't add element
 		
-		CodeSyncElement operationCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
-		operationCse.setType(JavaOperationModelAdapter.OPERATION);
-		// this is a new element => set added flag
-		operationCse.setAdded(true);
-		Operation operation = AstCacheCodeFactory.eINSTANCE.createOperation();
-		operation.setCodeSyncElement(operationCse);
+			CodeSyncElement operationCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
+			operationCse.setType(JavaOperationModelAdapter.OPERATION);
+			// this is a new element => set added flag
+			operationCse.setAdded(true);
+			Operation operation = AstCacheCodeFactory.eINSTANCE.createOperation();
+			operation.setCodeSyncElement(operationCse);
 		
-		processOperation(operationCse, operation, label);
+			processOperation(operationCse, operation, label);
+			
+			DiagramEditableResource der = getEditableResource(context);
+			ResourceSet resourceSet = der.getResourceSet();
+			IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(der.getFile()).getProject();
+			Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(project, resourceSet);
+			astCache.getContents().add(operation);
+			
+			clsCse.getChildren().add(operationCse);
 		
-		clsCse.getChildren().add(operationCse);
+			CodeSyncPlugin.getInstance().propagateParentSyncFalse(operationCse);
+		}
+		
 	}
 	
 	protected void processOperation(CodeSyncElement operationCse, Operation operation, String label) {
@@ -173,17 +205,46 @@ public class JavaClassDiagramOperationsService {
 		setParameters(operationCse, operation, result.getParameters());
 	}
 	
+	/**
+	 * @author Sebastian Solomon
+	 */
 	public void deleteView(ServiceInvocationContext context, String viewId) {
 		View view = getViewById(context, viewId);
+		
 		CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
+		
 		if (cse.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE) ||
-				cse.getType().equals(JavaOperationModelAdapter.OPERATION)) {
+				cse.getType().equals(JavaOperationModelAdapter.OPERATION)||
+				cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
 			CodeSyncElement cls = (CodeSyncElement) cse.eContainer();
-			cls.getChildren().remove(cse);
+			if (cse.isAdded()){
+				CodeSyncPlugin.getInstance().propagateParentSyncTrue(cse);
+				//delete it
+				if (cse.getType().equals(JavaTypeModelAdapter.CLASS)){
+					View parent = (View) view.eContainer();
+					parent.getPersistentChildren().remove(view);
+				}else {
+					 
+					CodeSyncPlugin.getInstance().propagateParentSyncTrue(cse); 
+					cls.getChildren().remove(cse);
+				}
+			}else{ //mark as deleted
+				cse.setDeleted(true);
+				CodeSyncPlugin.getInstance().propagateParentSyncFalse(cse);
+				CodeSyncPlugin.getInstance().propageteOnChildDelete(cse); 
+			}
+				
 		}
+		
 		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
-			View parent = (View) view.eContainer();
-			parent.getPersistentChildren().remove(view);
+			if (cse.isAdded()){
+				CodeSyncPlugin.getInstance().propagateParentSyncTrue(cse);
+				View parent = (View) view.eContainer();
+				parent.getPersistentChildren().remove(view);
+			}else{
+				cse.setDeleted(true);
+				CodeSyncPlugin.getInstance().propageteOnChildDelete(cse);
+			}
 		}
 	}
 	

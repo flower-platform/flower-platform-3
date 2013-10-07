@@ -254,9 +254,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setSynchronized(boolean newSynchronized) {
 		if (newSynchronized) {
-			statusFlags |= STATUS_FLAG_SYNCHRONIZED;
+			setStatusFlags(statusFlags | STATUS_FLAG_SYNCHRONIZED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_SYNCHRONIZED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_SYNCHRONIZED);
 		}
 	}
 
@@ -274,9 +274,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setChildrenSynchronized(boolean newChildrenSynchronized) {
 		if (newChildrenSynchronized) {
-			statusFlags |= STATUS_FLAG_CHILDREN_SYNCHRONIZED;
+			setStatusFlags(statusFlags | STATUS_FLAG_CHILDREN_SYNCHRONIZED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_CHILDREN_SYNCHRONIZED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_CHILDREN_SYNCHRONIZED);
 		}
 	}
 
@@ -294,9 +294,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setAdded(boolean newAdded) {
 		if (newAdded) {
-			statusFlags |= STATUS_FLAG_ADDED;
+			setStatusFlags(statusFlags | STATUS_FLAG_ADDED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_ADDED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_ADDED);
 		}
 	}
 
@@ -314,9 +314,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setDeleted(boolean newDeleted) {
 		if (newDeleted) {
-			statusFlags |= STATUS_FLAG_DELETED;
+			setStatusFlags(statusFlags | STATUS_FLAG_DELETED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_DELETED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_DELETED);
 		}
 	}
 

@@ -37,8 +37,6 @@ public abstract class JavaClassChildProcessor extends CodeSyncDecoratorsProcesso
 
 	protected InplaceEditorLabelParser labelParser = new InplaceEditorLabelParser(new JavaInplaceEditorProvider());
 
-	abstract public String getLabel(EObject object, boolean forEditing);
-	
 	@Override
 	public String getIconBeforeCodeSyncDecoration(EObject object) {
 		return composeImage(getCodeSyncElement(object));

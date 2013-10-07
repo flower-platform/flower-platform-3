@@ -27,6 +27,8 @@ import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 import org.flowerplatform.emf_model.notation.View;
 
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+
 /**
  * @author Mariana Gheorghe
  */
@@ -48,20 +50,23 @@ public abstract class IconDiagrammableElementFeatureChangesProcessor implements 
 		
 		if (!viewDetails.isEmpty()) {
 			ViewDetailsUpdate update = new ViewDetailsUpdate();
-			update.setViewId(associatedViewOnOpenDiagram.eResource().getURIFragment(associatedViewOnOpenDiagram));
-			update.setViewDetails(viewDetails);
+			if (associatedViewOnOpenDiagram.eResource() != null) {
+				
+				update.setViewId(associatedViewOnOpenDiagram.eResource().getURIFragment(associatedViewOnOpenDiagram));
+				update.setViewDetails(viewDetails);
 			
-			DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(context, true).
-				getViewDetailsUpdates().add(update);
+				DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(context, true).
+					getViewDetailsUpdates().add(update);
+			}
 		}
 	}
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		viewDetails.put("label", getLabel(object, false));
+		viewDetails.put("label", getLabel(object,/*featureChange,*/ false));
 		viewDetails.put("iconUrls", getIconUrls(object));
 	}
 	
-	abstract public String getLabel(EObject object, boolean forEditing);
+	abstract public String getLabel(EObject object,/* FeatureChange featureChange,*/ boolean forEditing);
 
 	abstract protected String getIconUrls(EObject object);
 	
