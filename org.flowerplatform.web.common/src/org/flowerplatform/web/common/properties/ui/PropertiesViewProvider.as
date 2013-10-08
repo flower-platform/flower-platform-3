@@ -17,6 +17,8 @@
 * license-end
 */
 package org.flowerplatform.web.common.properties.ui {
+	import mx.containers.HBox;
+	import mx.containers.VBox;
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
@@ -25,7 +27,14 @@ package org.flowerplatform.web.common.properties.ui {
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.web.common.explorer.ExplorerTreeList;
-
+	
+	import spark.components.Button;
+	import spark.components.Group;
+	import spark.components.VGroup;
+	
+	/**
+	 * @author Tache Razvan Mihai
+	 */
 	public class PropertiesViewProvider implements IViewProvider {
 		
 		public static const ID:String = "properties";
@@ -36,16 +45,7 @@ package org.flowerplatform.web.common.properties.ui {
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {
 			var propertiesList:PropertiesList = new PropertiesList();
-			var statefulClient:GenericTreeStatefulClient = new GenericTreeStatefulClient();
 			
-//			PropertiesList.dispatchEnabled = true;
-//			PropertiesList.statefulClient = statefulClient;
-			
-//			statefulClient.statefulServiceId = "explorerTreeStatefulService";
-//			statefulClient.clientIdPrefix = "Explorer2";
-//			statefulClient.treeList = treeList;
-			
-//			CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 			return propertiesList;
 		}
 		
