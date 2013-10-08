@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				autoDrawBackground="true">
+	
+	<s:layout>
+		<s:HorizontalLayout/>
+	</s:layout>
+	<s:Label text='{data.name}' width="50%" height="100%"/>
+	<s:TextInput text='{data.value}' width="50%" height="100%"/>
+	
+</s:ItemRenderer>
