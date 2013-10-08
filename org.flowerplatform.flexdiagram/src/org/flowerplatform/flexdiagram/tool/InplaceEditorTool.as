@@ -109,10 +109,18 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);			
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 * @author Mariana Gheorghe
+		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
 			switch (event.keyCode) {
 				case Keyboard.F2: // active tool
-					diagramShell.mainTool = this;
+					var model:Object = IDataRenderer(getRendererFromDisplayCoordinates()).data;
+					var inplaceEditorController:IInplaceEditorController = diagramShell.getControllerProvider(model).getInplaceEditorController(model);
+					if (inplaceEditorController != null) {
+						diagramShell.mainTool = this;
+					}
 					break;
 				case Keyboard.ENTER: // commit value			
 					if (this == diagramShell.mainTool) {
