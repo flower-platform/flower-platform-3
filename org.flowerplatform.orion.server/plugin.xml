@@ -5,18 +5,23 @@
    <extension
          point="org.eclipse.equinox.http.registry.servlets">
       <servlet
-            alias="/*.jsp"
+            alias="/flowerplatform/*.jsp"
             class="org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/WebContent/"
             httpcontextId="org.eclipse.orion.server.configurator.httpcontext.flower">
       </servlet>
       <servlet
-            alias="/flowerapi"
-            class="org.flowerplatform.communication.FlowerDispatcherServlet"
-            httpcontextId="org.eclipse.orion.server.configurator.httpcontext.flower">
+            alias="/flowerplatform/api"
+            class="org.flowerplatform.communication.FlowerDispatcherServlet">
       </servlet>
       <serviceSelector
             filter="(other.info=org.eclipse.orion)">
       </serviceSelector>
+   </extension>
+   <extension
+         point="org.flowerplatform.common.flowerProperties">
+      <flowerPropertiesProvider
+            flowerPropertiesProviderClass="org.flowerplatform.orion.server.OrionFlowerPropertiesProvider">
+      </flowerPropertiesProvider>
    </extension>
 
 </plugin>

@@ -116,14 +116,8 @@ package org.flowerplatform.web {
 			hBox.addChild(btn);
 			
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
-			
-			var workbench:Workbench = new Workbench();
-			FlexUtilGlobals.getInstance().workbench = workbench;
-			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
-			workbench.percentHeight = 100;
-			workbench.percentWidth = 100;
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
+	
+			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 		}
