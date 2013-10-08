@@ -25,9 +25,12 @@ package org.flowerplatform.web.common {
 	import mx.collections.ArrayList;
 	import mx.core.FlexGlobals;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
+	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
@@ -132,7 +135,9 @@ package org.flowerplatform.web.common {
 			explorerTreeClassFactoryActionProvider.actionClasses.push(DeleteAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(RenameAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(RefreshDirectoryAction);
-		}
+			explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
+ 		}
 		
 		/**
 		 * @author Cristi
@@ -149,6 +154,8 @@ package org.flowerplatform.web.common {
 				}
 			});
 			heartbeatStatefulClient = new HeartbeatStatefulClient();
+			
+			explorerTreeActionProviders.push(CodeSyncPlugin.getInstance().codeSyncTreeActionProvider);
 		}
 		
 		/**

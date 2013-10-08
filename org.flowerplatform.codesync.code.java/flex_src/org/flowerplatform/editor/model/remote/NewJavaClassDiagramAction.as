@@ -17,6 +17,7 @@
  * license-end
  */
 package org.flowerplatform.editor.model.remote {
+	import org.flowerplatform.codesync.code.java.CodeSyncCodeJavaPlugin;
 
 	/**
 	 * @author Mariana Gheorghe
@@ -27,8 +28,9 @@ package org.flowerplatform.editor.model.remote {
 		public function NewJavaClassDiagramAction() {
 			super();
 			
-			label = "New Class Diagram";
+			label = CodeSyncCodeJavaPlugin.getInstance().getMessage("action.newClassDiagram");
 			name = "NewDiagram.notation";
+			icon = CodeSyncCodeJavaPlugin.getInstance().getResourceUrl("images/ClassDiagram.gif");
 		}
 	}
 }

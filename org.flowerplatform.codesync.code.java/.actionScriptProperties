@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<actionScriptProperties analytics="false" mainApplicationPath="org.flowerplatform.editor.mindmap.as" projectUUID="99d465ac-7803-440c-b8b6-ab75ab1455d5" version="10">
+<actionScriptProperties analytics="false" mainApplicationPath="org.flowerplatform.codesync.code.java.as" projectUUID="7322163c-7160-4821-b241-8d3af6236a57" version="10">
   <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="public-resources/swc" removeUnusedRSL="true" sourceFolderPath="flex_src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
     <compilerSourcePath/>
     <libraryPath defaultLinkType="0">
@@ -9,18 +9,14 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/core.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
-      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexdiagram/bin/org.flowerplatform.flexdiagram.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.flexutil/bin/org.flowerplatform.flexutil.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor.model/public-resources/swc/org.flowerplatform.editor.model.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.common/public-resources/swc/org.flowerplatform.common.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.communication/public-resources/swc/org.flowerplatform.communication.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor/public-resources/swc/org.flowerplatform.editor.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/mobile/mobilecomponents.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor.model/public-resources/swc/org.flowerplatform.editor.model.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
   <applications>
-    <application path="org.flowerplatform.editor.mindmap.as"/>
+    <application path="org.flowerplatform.codesync.code.java.as"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
