@@ -37,6 +37,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.osgi.framework.BundleContext;
@@ -136,7 +137,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 	 * @author Mariana
 	 */
 	public Resource getResource(ResourceSet resourceSet, File file) {
-		URI uri = URI.createFileURI(file.getAbsolutePath());
+		URI uri = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(file);
 		boolean fileExists = file.exists();
 		return getResource(resourceSet, uri, fileExists);
 	}

@@ -24,18 +24,6 @@ import java.io.File;
  * @author Mariana Gheorghe
  */
 public interface IProjectsProvider {
-
-	/**
-	 * TODO move to FileAccessController
-	 * @return the path relative to the workspace
-	 */
-	String getPath(File file);
-	
-	/**
-	 * TODO move to FileAccessController
-	 * @param path relative to the workspace
-	 */
-	File getFile(String path);
 	
 	/**
 	 * @param path relative to project

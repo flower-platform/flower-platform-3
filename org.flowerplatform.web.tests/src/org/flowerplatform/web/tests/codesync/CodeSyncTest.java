@@ -39,6 +39,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.java.JavaDragOnDiagramHandler;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
 import org.flowerplatform.web.projects.remote.ProjectsService;
@@ -92,7 +93,7 @@ public class CodeSyncTest {
 	public void before() {
 		File project = getProject();
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		service.cancelSelectedActions(CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project), true);
+		service.cancelSelectedActions(EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
 	}
 	
 	@Test
@@ -112,9 +113,9 @@ public class CodeSyncTest {
 		
 		assertEquals(1, match.getSubMatches().size());
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project));
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project), true);
-		service.cancelSelectedActions(CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project), true);
+		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project));
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
+		service.cancelSelectedActions(EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		Pair[] typeList = {
@@ -435,8 +436,8 @@ public class CodeSyncTest {
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project));
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project), true);
+		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project));
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
 		
 		String expected = TestUtil.readFile(DIR + TestUtil.EXPECTED + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE);
 		String actual = FileUtils.readFileToString(file);
@@ -637,7 +638,7 @@ public class CodeSyncTest {
 	private Match getMatch() {
 		File project = getProject();
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource er = (CodeSyncEditableResource) service.getEditableResource(CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project));
+		CodeSyncEditableResource er = (CodeSyncEditableResource) service.getEditableResource(EditorPlugin.getInstance().getFileAccessController().getPath(project));
 		assertNotNull("Editable resource for project " + project + " was not created", er);
 		return er.getMatch();
 	}

@@ -25,6 +25,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
@@ -76,7 +77,7 @@ public class CodeSyncMergePlugin extends AbstractFlowerJavaPlugin {
 		match.setRight(CodeSyncPlugin.getInstance().getResource(null, rightFile).getContents().get(0));
 		
 		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(ancestorFile);
-		String projectPath = CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project);
+		String projectPath = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 //		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) ServiceRegistry.INSTANCE.getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 

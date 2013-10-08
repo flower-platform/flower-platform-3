@@ -22,6 +22,7 @@ import java.io.File;
 
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.editor.EditorPlugin;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.ICodeSyncAlgorithmRunner;
@@ -35,7 +36,7 @@ public class WikiSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner {
 
 	@Override
 	public void runCodeSyncAlgorithm(File project, File resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
-		String name = CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project);
+		String name = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
 		// this will be a temporary tree, do not send the project
 		CodeSyncRoot leftRoot = WikiPlugin.getInstance().getWikiTree(null, resourceSet, project, name, technology);

@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.IDragOnDiagramHandler;
 import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
@@ -59,7 +60,7 @@ public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 //		}
 		
 		for (Object object : draggedObjects) {
-			File resource = CodeSyncPlugin.getInstance().getProjectsProvider().getFile((String) object);
+			File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
 			CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 			

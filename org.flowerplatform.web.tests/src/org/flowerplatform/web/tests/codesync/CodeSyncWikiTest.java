@@ -37,6 +37,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
 import org.flowerplatform.model.astcache.wiki.Page;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
@@ -293,12 +294,12 @@ public class CodeSyncWikiTest {
 		wikiPlugin.updateTree(leftRoot, rightRoot, project, resourceSet, technology, communicationChannel, true);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project));
+		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, EditorPlugin.getInstance().getFileAccessController().getPath(project));
 		
 		assertNotNull(editableResource);
 		
-		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project));
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project), true);
+		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project));
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
 		
 		if (expected != null) {
 			testWikiTree(rightRoot, 0);

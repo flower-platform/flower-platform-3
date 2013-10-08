@@ -21,6 +21,7 @@ package org.flowerplatform.codesync.remote;
 import java.io.File;
 
 import org.flowerplatform.communication.command.AbstractServerCommand;
+import org.flowerplatform.editor.EditorPlugin;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
@@ -35,7 +36,7 @@ public class CodeSyncAction extends AbstractServerCommand {
 	
 	@Override
 	public void executeCommand() {
-		File file = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(path);
+		File file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
 		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
 		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, file, technology, communicationChannel, true);
 	}

@@ -39,6 +39,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.osgi.framework.BundleContext;
 
@@ -246,7 +247,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, File project, ResourceSet resourceSet, String path, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		String editableResourcePath = CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project);
+		String editableResourcePath = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 		CodeSyncEditableResource editableResource; // = (CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
 		if (showDialog) {
 			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, editableResourcePath);

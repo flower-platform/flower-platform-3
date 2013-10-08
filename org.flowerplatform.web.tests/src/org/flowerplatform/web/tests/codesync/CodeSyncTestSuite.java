@@ -20,7 +20,7 @@ package org.flowerplatform.web.tests.codesync;
 
 import java.io.File;
 
-import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.web.tests.EclipseDependentTestSuiteBase;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -39,13 +39,13 @@ public class CodeSyncTestSuite extends EclipseDependentTestSuiteBase {
 
 	public static File getProject(String project) {
 		String absolutePath = "/org/ws_trunk/" + project;
-		File resource = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(absolutePath);
+		File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile(absolutePath);
 		return CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
 	}
 	
 	public static File getFile(String path) {
 		String absolutePath = "/org/ws_trunk/" + path;
-		return CodeSyncPlugin.getInstance().getProjectsProvider().getFile(absolutePath);
+		return (File) EditorPlugin.getInstance().getFileAccessController().getFile(absolutePath);
 	}
 	
 }

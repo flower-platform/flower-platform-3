@@ -24,7 +24,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
-import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
 /**
@@ -32,17 +31,6 @@ import org.flowerplatform.web.projects.remote.ProjectsService;
  */
 public class WebProjectsProvider implements IProjectsProvider {
 
-	@Override
-	public String getPath(File file) {
-		return CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
-	}
-
-	@Override
-	public File getFile(String path) {
-		return new File(CommonPlugin.getInstance().getWorkspaceRoot(), path);
-	}
-
-	
 	/**
 	 * @param path relative to project, i.e. contains {@link ProjectsService#LINK_TO_PROJECT}
 	 */

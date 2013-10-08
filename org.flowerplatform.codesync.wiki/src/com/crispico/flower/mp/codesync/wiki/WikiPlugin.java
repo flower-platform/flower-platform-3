@@ -33,6 +33,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.flowerplatform.model.astcache.wiki.FlowerBlock;
 import org.flowerplatform.model.astcache.wiki.Page;
@@ -114,7 +115,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 
 	public CodeSyncRoot getWikiRoot(File file, String technology, ResourceSet resourceSet, CommunicationChannel communicationChannel) {
 		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
-		String name = CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project);
+		String name = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 		// this will be a temporary tree, do not send the project
 		CodeSyncRoot leftRoot = getWikiTree(null, resourceSet, project, name, technology);
 		CodeSyncRoot rightRoot = getWikiTree(project, resourceSet, null, name, technology);
@@ -125,7 +126,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	
 	public void updateTree(CodeSyncElement left, CodeSyncElement right, File project, ResourceSet resourceSet, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		String editableResourcePath = CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project);
+		String editableResourcePath = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 		CodeSyncEditableResource editableResource;
 		if (showDialog) {
 			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, editableResourcePath);
