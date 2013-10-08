@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.editor.remote;
 
-import java.io.File;
 
 
 /**
@@ -31,58 +30,9 @@ import java.io.File;
 public abstract class FileBasedEditableResource extends EditableResource {
 	
 	/**
-	 * 
-	 */
-	private File file;
-	
-	/**
-	 * Keeps the last modification stamp when this resource was synchronized
-	 * with the corresponding file.
-	 * 
-	 * @see IFile#getModificationStamp()
-	 * 
-	 * 
-	 */
-	private long synchronizationStamp = -1;
-	
-	/**
 	 * @see Getter.
 	 */
 	private boolean ignoreResourceChangedNotification;
-	
-	/**
-	 * 
-	 */
-	public File getFile() {
-		return file;
-	}
-
-	/**
-	 * 
-	 */
-	public void setFile(File file) {
-		this.file = file;
-//		if (file != null)
-//			synchronizationStamp = file.getModificationStamp();
-	}
-
-//	/**
-//	 * Called after saving; this way, the resource changed listener will not reload the
-//	 * file after detecting changes.
-//	 * 
-//	 * @see FileBasedEditorStatefulService#save()
-//	 * 
-//	 */
-//	public void updateSynchronizationStamp() {
-//		synchronizationStamp = file.getModificationStamp();
-//	}
-//	
-//	/**
-//	 * 
-//	 */
-//	public boolean isSynchronized() {
-//		return synchronizationStamp == file.getModificationStamp();
-//	}
 
 	/**
 	 * Resource changed notifications for resources where the {@link #ignoreResourceChangedNotification} flag

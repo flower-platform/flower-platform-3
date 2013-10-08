@@ -18,8 +18,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,
  org.flowerplatform.editor,
  org.flowerplatform.emf_model.notation,
- org.flowerplatform.file_event
-Bundle-ActivationPolicy: lazy
+ org.flowerplatform.file_event,
+ org.flowerplatform.editor.model
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.persistence,
  javax.servlet,

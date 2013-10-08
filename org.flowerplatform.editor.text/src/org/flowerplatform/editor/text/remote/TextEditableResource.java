@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.editor.text.remote;
 
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.remote.FileBasedEditableResource;
 
 
@@ -92,7 +93,7 @@ public class TextEditableResource extends FileBasedEditableResource {
 
 	@Override
 	public String getLabel() {
-		return getFile().getName();
+		return EditorPlugin.getInstance().getFileAccessController().getName(this);
 	}
 
 	/**
