@@ -225,7 +225,6 @@ public class JavaClassDiagramOperationsService {
 					parent.getPersistentChildren().remove(view);
 				}else {
 					 
-					CodeSyncPlugin.getInstance().propagateParentSyncTrue(cse); 
 					cls.getChildren().remove(cse);
 				}
 			}else{ //mark as deleted
@@ -235,17 +234,7 @@ public class JavaClassDiagramOperationsService {
 			}
 				
 		}
-		
-		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
-			if (cse.isAdded()){
-				CodeSyncPlugin.getInstance().propagateParentSyncTrue(cse);
-				View parent = (View) view.eContainer();
-				parent.getPersistentChildren().remove(view);
-			}else{
-				cse.setDeleted(true);
-				CodeSyncPlugin.getInstance().propageteOnChildDelete(cse);
-			}
-		}
+
 	}
 	
 	///////////////////////
