@@ -54,6 +54,8 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 	
 	private Map<String, String> fileExtensionToContentTypeMap;
 	
+	private List<EditorStatefulService> editorStatefulServices = new ArrayList<EditorStatefulService>();
+		
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
@@ -83,6 +85,7 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 			EditorStatefulService editorStatefulService = (EditorStatefulService) configurationElement.createExecutableExtension("editorStatefulService");
 			editorStatefulService.setEditorName(compatibleEditor);
 			CommunicationPlugin.getInstance().getServiceRegistry().registerService(serviceId, editorStatefulService);
+			editorStatefulServices.add(editorStatefulService);
 			
 			ContentTypeDescriptor descriptor = contentTypeDescriptorsMap.get(contentType);
 			if (descriptor == null) {
@@ -152,4 +155,14 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 		return fileExtensionToContentTypeMap;
 	}
 
+	public List<EditorStatefulService> getEditorStatefulServices() {
+		return editorStatefulServices;
+	}
+		
+	public EditorStatefulService getEditorStatefulServiceByEditorName(String editorName) {
+		for (EditorStatefulService editorStatefulService : editorStatefulServices)
+			if (editorStatefulService.getEditorName().equals(editorName))
+				return editorStatefulService;
+		return null;
+	}
 }

@@ -28,9 +28,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
@@ -44,7 +41,6 @@ import org.flowerplatform.web.database.DatabaseOperation;
 import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.temp.GeneralService;
-import org.flowerplatform.web.tests.security.sandbox.SecurityPermissionsTests;
 import org.junit.Assert;
 
 /**

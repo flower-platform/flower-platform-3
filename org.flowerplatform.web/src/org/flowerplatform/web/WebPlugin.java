@@ -31,6 +31,7 @@ import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.mail.SendMailService;
@@ -48,9 +49,16 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 
 	protected static WebPlugin INSTANCE;
 	
+	private List<GenericTreeStatefulService>treeStatefulServicesDisplayingWorkingDirectoryContent = new ArrayList<GenericTreeStatefulService>();
+
 	public static WebPlugin getInstance() {
 		return INSTANCE;
 	}
+	
+	/**
+	 * @author Razvan Tache
+	 */
+	public static final String TREE_NODE_FILE_SYSTEM_IS_DIRECTORY = "isDirectory"; 
 	
 	/**
 	 * Only set by plugin test project activator, to avoid {@link ClassNotFoundException}
@@ -60,7 +68,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	private String TESTING_FLAG = "testing";
 	
-	private EclipseDispatcherServlet eclipseDispatcherServlet = new EclipseDispatcherServlet();
+	private EclipseDispatcherServlet eclipseDispatcherServlet;
 	
 	private DatabaseManager databaseManager;
 	
@@ -77,6 +85,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
 				.getResourceAsStream("META-INF/flower-web.properties"));
 		databaseManager = new DatabaseManager();
+		eclipseDispatcherServlet = new EclipseDispatcherServlet();
 	}
 	
 	/**
@@ -155,6 +164,10 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 			invokeBridgeServletMethod("unregisterServletDelegate", eclipseDispatcherServlet);
 		}
 		INSTANCE = null;
+	}
+
+	public List<GenericTreeStatefulService> getTreeStatefulServicesDisplayingWorkingDirectoryContent() {
+		return treeStatefulServicesDisplayingWorkingDirectoryContent;
 	}
 
 }

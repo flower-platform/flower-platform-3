@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+ Dialog shown from :
+ - Project Explorer when selecting openable nodes;
+ - Global Menu, Navigate > URL Generate / Navigate;
+ - Editor Header Bar
+ 
+ Capable of generating an external link to be shared to open some resources.
+ Also capable of navigating to some resources using an external link or manually introduced paths.
+ 
+ @author Sorin
+ @author Cristina 
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	  xmlns:s="library://ns.adobe.com/flex/spark" 
+	  xmlns:mx="library://ns.adobe.com/flex/mx"
+	  creationComplete="creationCompleteHandler();"
+	  implements="org.flowerplatform.flexutil.popup.IPopupContent" xmlns:link="org.flowerplatform.common.link.*"
+	  >
+	
+	<fx:Declarations>
+		<s:VGroup width="100%" height="100%" id="visibleEditorLinkArea">					
+			<s:Label text="{EditorPlugin.getInstance().getMessage('open.resources.current')}" fontWeight="bold" />
+			<s:TextArea id="visibleEditorLinkTextArea" width="100%" height="100%" /> 
+			<s:HGroup horizontalAlign="right" width="100%" >
+				<s:Button label="{EditorPlugin.getInstance().getMessage('copy.clipboard')}" click="System.setClipboard(visibleEditorLinkTextArea.text);"/>
+			</s:HGroup>		
+		</s:VGroup>
+		
+		<s:HGroup id="buttonBar" width="100%" horizontalAlign="right" verticalAlign="middle">
+			<s:Button id="ok" label="{EditorPlugin.getInstance().getMessage('open.resources')}" click="openResourcesButtonHandler()" width="120"/>
+			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
+		</s:HGroup>	
+		
+	</fx:Declarations>
+	
+	<s:layout>
+		<s:VerticalLayout verticalAlign="middle"/>
+	</s:layout>
+		
+	<s:Label id="customLabel" fontWeight="bold"/>
+	<s:TextArea id="multipleResourcesLinkTextArea" width="100%" height="100%" />
+	<s:HGroup horizontalAlign="right" width="100%" >
+		<s:Button label="{EditorPlugin.getInstance().getMessage('copy.clipboard')}" click="System.setClipboard(multipleResourcesLinkTextArea.text);" />
+	</s:HGroup> 
+	
+	<s:Spacer width="100%" height="5" />
+	<s:Line width="100%">
+		<s:stroke>
+			<s:SolidColorStroke weight="2" color="#d3d3d3"/>
+		</s:stroke>
+	</s:Line>
+	<s:Spacer width="100%" height="5" />
+	
+	<s:Label text="{EditorPlugin.getInstance().getMessage('open.resources.link')}" fontWeight="bold" />
+	<link:LinkTextArea id="openResourcesFromTextArea" minHeight="90" width="100%" height="100%" textToDisplayAsTip="{EditorPlugin.getInstance().getMessage('open.resources.link.tip')}" />
+	
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.layout.PopupHostViewWrapper;
+			import com.crispico.flower.util.layout.Workbench;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			
+			import org.flowerplatform.blazeds.BridgeEvent;
+			import org.flowerplatform.common.CommonPlugin;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.layout.ViewLayoutData;
+			import org.flowerplatform.flexutil.popup.IAction;
+			import org.flowerplatform.flexutil.popup.IPopupHost;
+			
+			public var showForCurrentOpenResource:Boolean;
+
+			public var explorerSelection:IList; /* of TreeNode */
+			
+			private var _popupHost:IPopupHost;
+			
+			public function getActions(selection:IList):Vector.<IAction> {				
+				return null;
+			}
+			
+			public function getSelection():IList {				
+				return null;
+			}
+			
+			public function get popupHost():IPopupHost {
+				return _popupHost;
+			}
+			
+			public function set popupHost(value:IPopupHost):void {
+				_popupHost = value;				
+				popupHost.setLabel(EditorPlugin.getInstance().getMessage("link.navigate"));
+				popupHost.setIcon(EditorPlugin.getInstance().getResourceUrl("images/external_link.png"));
+			}
+			
+			private function getOpenResourcesURLPrefix():String {
+				return CommonPlugin.getInstance().getBrowserURLWithoutQuery() + "?" + EditorPlugin.OPEN_RESOURCES + "=";
+			}
+			
+			private function creationCompleteHandler():void {
+				CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.DISCONNECTED, bridgeDisconnectedHandler);
+				
+				if (showForCurrentOpenResource) {
+					this.addElementAt(visibleEditorLinkArea, 0);	
+					computeLinkFromEditors();
+				} else {
+					computeLinkFromExplorer();
+				}
+				customLabel.text = EditorPlugin.getInstance().getMessage(showForCurrentOpenResource ? 'open.resources.all' : 'open.resources.selected');
+				
+				_popupHost.addToControlBar(buttonBar);
+			}
+			
+			/**
+			 * Close dialog when disconnected.
+			 */
+			private function bridgeDisconnectedHandler(event:BridgeEvent):void {
+				cancelHandler();
+			}
+
+			/**
+			 * When opened from Project Explorer the dialog can generate only for openable nodes.
+			 */ 
+			private function computeLinkFromExplorer():void {
+			 	var canonicalEditableResourcePathList:ArrayCollection /* of String */ = new ArrayCollection();
+				for (var i:int=0; i < explorerSelection.length; i++) {
+					var canonicalEditableResourcePath:String = getCanonicalEditableResourcePathFromNavigatorTreeNode(TreeNode(explorerSelection.getItemAt(i)));
+					if (canonicalEditableResourcePath != null)
+						canonicalEditableResourcePathList.addItem(canonicalEditableResourcePath);
+				}
+				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"textEditorStatefulService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
+						function(friendlyEditableResourcePathList : ArrayCollection):void {
+							multipleResourcesLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList);
+						}));				
+			}
+			
+			/**
+			 * Generates 2 links one for the visible editor and one for all editors.
+			 * For the last it also writes the tab to be selected.
+			 */ 
+			private function computeLinkFromEditors():void {
+				var workbench:Workbench = Workbench(FlexUtilGlobals.getInstance().workbench);
+				
+				var editorLayoutDataList:ArrayCollection /* of ViewLayoutData */ = new ArrayCollection();
+				workbench.getAllViewLayoutData(null, editorLayoutDataList, true);
+				
+				if (editorLayoutDataList.length == 0)
+					return; // No editors opened => nothing to show
+				
+				var canonicalEditableResourcePathList:ArrayCollection /* of String */= new ArrayCollection();
+				
+				for each (var editorLayoutData:ViewLayoutData in editorLayoutDataList) {
+					canonicalEditableResourcePathList.addItem(getCanonicalEditableResourcePathFromEditorLayoutData(editorLayoutData));
+				}
+				
+				var visibleEditorLayoutData:ViewLayoutData = workbench.getAllVisibleViewLayoutData(true /* only editors*/)[0];
+				var visibleCanonicalEditableResourcePath:String = getCanonicalEditableResourcePathFromEditorLayoutData(visibleEditorLayoutData);
+				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"textEditorStatefulService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
+						function(friendlyEditableResourcePathList : ArrayCollection):void {
+							var indexOfSelectedResource:int = canonicalEditableResourcePathList.getItemIndex(visibleCanonicalEditableResourcePath);
+							multipleResourcesLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList, indexOfSelectedResource);
+						}));
+				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"textEditorStatefulService", "getFriendlyEditableResourcePathList", [new ArrayCollection([visibleCanonicalEditableResourcePath])],	null, 
+						function(friendlyEditableResourcePathList : ArrayCollection):void {
+							visibleEditorLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList);
+						}));
+			}
+			
+			private function getCanonicalEditableResourcePathFromNavigatorTreeNode(node:TreeNode):String {
+				var ctIndex:int = node.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
+				var editorDescriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getFirstEditorDescriptorForNode(ctIndex);
+				if (editorDescriptor == null || !editorDescriptor.canCalculateFriendlyEditableResourcePath()) 
+					return null; // Only if the node is openable
+				var editableResourcePath:String = EditorPlugin.getInstance().getEditableResourcePathFromTreeNode(node);
+				return editorDescriptor.calculateStatefulClientId(editableResourcePath);
+			}
+			
+			private function getCanonicalEditableResourcePathFromEditorLayoutData(editorLayoutData:ViewLayoutData):String {
+				var workbench:Workbench = Workbench(FlexUtilGlobals.getInstance().workbench);
+				var component:Object = workbench.layoutDataToComponent[editorLayoutData];
+				if (component is PopupHostViewWrapper) {
+					component = PopupHostViewWrapper(component).activePopupContent;
+					if (!(component is EditorFrontend)) {
+						throw new Error("This isn't an editor!");
+					}
+				}
+				var editorFrontend:EditorFrontend = EditorFrontend(component);
+				
+				var editorDescriptor:BasicEditorDescriptor = editorFrontend.editorStatefulClient.editorDescriptor;
+				var editableResourcePath:String = editorFrontend.editorInput as String;
+				return editorDescriptor.calculateStatefulClientId(editableResourcePath);
+			}
+			
+			/**
+			 * Given a list of paths it creates something like : http://fdc.com/fdc/main.jsp?openResources=path1,path2,path3|selectedResourceIndex=1
+			 * <p>
+			 * <code>selectedResourceIndex</code> url parameter may be missing if an index of a path isn't specified (NaN).
+			 */ 
+			private function createNavigableURL(friendlyEditableResourcePathList:ArrayCollection /* of String */, indexOfSelectedResource:Number = NaN):String {
+				if (friendlyEditableResourcePathList.length == 0)
+					return null;
+				
+				var navigableURL:String = getOpenResourcesURLPrefix();
+				var comma:String = "";
+				for each (var friendlyEditableResourcePath:String in friendlyEditableResourcePathList) {
+					navigableURL += comma + friendlyEditableResourcePath;
+					comma = ",";
+				}
+				if (!isNaN(indexOfSelectedResource) && friendlyEditableResourcePathList.length > 1) 
+					navigableURL += "|" + EditorPlugin.SELECT_RESOURCE_AT_INDEX + "=" + indexOfSelectedResource;
+				return navigableURL;
+			}
+		
+			private function openResourcesButtonHandler():void {
+				var text:String = openResourcesFromTextArea.getText();
+				if (text.indexOf(getOpenResourcesURLPrefix()) == -1) {
+					text = getOpenResourcesURLPrefix() + text;
+				}
+				if (openResourcesFromTextArea.handleLink(text)) {				
+					cancelHandler();
+				}
+			}			
+						
+			public function cancelHandler():void {		
+				CommunicationPlugin.getInstance().bridge.removeEventListener(BridgeEvent.DISCONNECTED, bridgeDisconnectedHandler);
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
+			}	
+			
+		]]>
+	</fx:Script>
+</s:Group>

@@ -18,12 +18,15 @@
  */
 package  org.flowerplatform.editor.remote {
 	
+	import com.crispico.flower.util.layout.Workbench;
+	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.Application;
 	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
 	import mx.utils.DescribeTypeCache;
 	import mx.utils.ObjectUtil;
@@ -38,6 +41,7 @@ package  org.flowerplatform.editor.remote {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.layout.IWorkbench;
 	
 	/**
 	 * 
@@ -525,20 +529,18 @@ package  org.flowerplatform.editor.remote {
 //			collaborativeFigureModels.dispatchEvent(new CollaborativeFigureModelsUpdateEvent());
 //		}
 //		
-//		/**
-//		 * @author Mariana - check if there are any editors open; this may happen if the open resources 
-//		 * cannot be open in editors (e.g. models)
-//		 * 
-//		 * 
-//		 */
-//		[RemoteInvocation]
-//		public function revealEditor():void {
-//			if (editorFrontends.length > 0) {
-//				var workbench:Workbench = SingletonRefsFromPrePluginEra.workbench;
-//				var lastEditorFrontend:EditorFrontend = editorFrontends[editorFrontends.length - 1];
-//				
-//				workbench.callLater(workbench.activeViewList.setActiveView, [lastEditorFrontend]);
-//			}
-//		}
+		/**
+		 * @author Mariana - check if there are any editors open; this may happen if the open resources 
+		 * cannot be open in editors (e.g. models)
+		 */
+		[RemoteInvocation]
+		public function revealEditor():void {
+			if (editorFrontends.length > 0) {
+				var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
+				var lastEditorFrontend:EditorFrontend = editorFrontends[editorFrontends.length - 1];
+				
+				UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend]);
+			}
+		}
 	}
 }

@@ -323,4 +323,11 @@
             serviceClass="org.flowerplatform.web.projects.remote.WorkingDirectoryTreeStatefulService">
       </service>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="fileManagerService"
+            serviceClass="org.flowerplatform.web.projects.remote.FileManagerService">
+      </service>
+   </extension>
 </plugin>

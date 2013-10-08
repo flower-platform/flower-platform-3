@@ -23,7 +23,6 @@ package org.flowerplatform.editor.action {
 	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
-	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.flexutil.popup.ComposedAction;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
@@ -75,6 +74,8 @@ package org.flowerplatform.editor.action {
 				}
 				result.push(new OpenAction(null, false));
 			}
+			
+			result.push(new LinkGenerateNavigateAction());
 			
 			return result;
 		}

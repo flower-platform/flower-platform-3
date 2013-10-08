@@ -20,4 +20,23 @@
 -->
 <s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 							xmlns:s="library://ns.adobe.com/flex/spark" firstView="org.flowerplatform.flexutil.samples.views.HomeView" applicationDPI="160">
+
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace ns "org.flowerplatform.flexutil.gradient_list.*";
+		
+		ns|GradientBackgroundList {
+			skinClass: ClassReference("org.flowerplatform.flexutil.mobile.gradient_list.GradientBackgroundMobileListSkin");
+		}
+		
+	</fx:Style>
+	<s:navigationContent>
+		<s:Button label="Back">
+			<s:click>
+				<![CDATA[
+				navigator.popView();
+				]]>
+			</s:click>
+		</s:Button>
+	</s:navigationContent>
 </s:ViewNavigatorApplication>

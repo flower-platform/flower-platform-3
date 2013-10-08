@@ -25,9 +25,13 @@ package org.flowerplatform.web.common {
 	import mx.collections.ArrayList;
 	import mx.core.FlexGlobals;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
+	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
+	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
@@ -39,6 +43,11 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient;
 	import org.flowerplatform.web.common.entity.dto.NamedDto;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
+	import org.flowerplatform.web.common.explorer.action.CreateDirectoryAction;
+	import org.flowerplatform.web.common.explorer.action.CreateFileAction;
+	import org.flowerplatform.web.common.explorer.action.DeleteAction;
+	import org.flowerplatform.web.common.explorer.action.RefreshDirectoryAction;
+	import org.flowerplatform.web.common.explorer.action.RenameAction;
 	import org.flowerplatform.web.common.projects.ProjectPropertiesAction;
 	import org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction;
 	import org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction;
@@ -63,6 +72,8 @@ package org.flowerplatform.web.common {
 			return INSTANCE;
 		}
 		
+		public static const TREE_NODE_FILE_SYSTEM_IS_DIRECTORY:String = "isDirectory"; 
+		
 		public static const NODE_TYPE_ORGANIZATION:String = "organization";
 		
 		public static const NODE_TYPE_PROJECT:String = "project";
@@ -72,6 +83,8 @@ package org.flowerplatform.web.common {
 		public static const NODE_TYPE_CATEGORY_PATH_FRAGMENT_NAME_POINTS_TO_FILE:String = "pathFragmentNamePointsToFile";
 		
 		public static const NODE_TYPE_CATEGORY_DECORATABLE_FILE:String = "decoratableFile";
+		
+		public static const NODE_TYPE_WORKING_DIRECTORY:String = "workingDirectory";
 		
 		public var authenticationManager:AuthenticationManager;
 		
@@ -117,8 +130,16 @@ package org.flowerplatform.web.common {
 			// actions
 			explorerTreeClassFactoryActionProvider.actionClasses.push(MarkAsWorkingDirectoryAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateOrImportProjectAction);
-			explorerTreeClassFactoryActionProvider.actionClasses.push(ProjectPropertiesAction);			
-		}
+			explorerTreeClassFactoryActionProvider.actionClasses.push(ProjectPropertiesAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateDirectoryAction);			
+			explorerTreeClassFactoryActionProvider.actionClasses.push(CreateFileAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(DeleteAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(RenameAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(RefreshDirectoryAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
+ 		}
 		
 		/**
 		 * @author Cristi
@@ -135,6 +156,8 @@ package org.flowerplatform.web.common {
 				}
 			});
 			heartbeatStatefulClient = new HeartbeatStatefulClient();
+			
+			explorerTreeActionProviders.push(CodeSyncPlugin.getInstance().codeSyncTreeActionProvider);
 		}
 		
 		/**

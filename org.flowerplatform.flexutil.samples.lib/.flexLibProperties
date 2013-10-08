@@ -10,6 +10,7 @@
     <classEntry path="org.flowerplatform.flexutil.samples.gradient_list.LeftList"/>
     <classEntry path="org.flowerplatform.flexutil.samples.gradient_list.RightList"/>
     <classEntry path="org.flowerplatform.flexutil.samples.gradient_list.ListSettings"/>
+    <classEntry path="org.flowerplatform.flexutil.samples.gradient_list.DummyData"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

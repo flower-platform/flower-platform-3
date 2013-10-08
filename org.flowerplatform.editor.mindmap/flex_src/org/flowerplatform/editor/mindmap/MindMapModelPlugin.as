@@ -37,8 +37,6 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-	import org.flowerplatform.web.common.WebCommonPlugin;
-
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -77,11 +75,6 @@ package org.flowerplatform.editor.mindmap {
 			
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewDefaultNodeAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(ManageIconsAction);
-		}
-		
-		override public function start():void {
-			super.start();
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
 		}
 		
 		override protected function registerClassAliases():void {

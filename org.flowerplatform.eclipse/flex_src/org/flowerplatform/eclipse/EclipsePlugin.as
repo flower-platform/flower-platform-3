@@ -3,7 +3,6 @@ package org.flowerplatform.eclipse
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
-	import com.crispico.flower.util.spinner.ModalSpinner;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
@@ -17,14 +16,11 @@ package org.flowerplatform.eclipse
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.eclipse.communication.HelloEclipseServerCommand;
 	
 	
 	public class EclipsePlugin extends AbstractFlowerFlexPlugin{
 		
 		protected static var INSTANCE:EclipsePlugin;
-		
-		public static var command:HelloEclipseServerCommand
 		
 		public static function getInstance():EclipsePlugin {
 			return INSTANCE;
@@ -37,7 +33,6 @@ package org.flowerplatform.eclipse
 			super.start();
 			
 			INSTANCE = this;
-			command = new HelloEclipseServerCommand();
 			
 			workbench = new Workbench();
 			var wld:WorkbenchLayoutData = new WorkbenchLayoutData();
@@ -78,7 +73,7 @@ package org.flowerplatform.eclipse
 //			ModalSpinner.addGlobalModalSpinner("Initializing...");
 			
 			// We send always the Hello to the server, regardless of app init or not 
-			var helloServerCommand:HelloEclipseServerCommand = new HelloEclipseServerCommand();
+			var helloServerCommand:HelloServerCommand = new HelloServerCommand();
 			helloServerCommand.clientApplicationVersion = CommonPlugin.VERSION;
 //			BaseFlowerDiagramEditor.instance.sendObject(helloServerCommand);
 			helloServerCommand.firstWelcomeWithInitializationsReceived = CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived;
@@ -88,14 +83,14 @@ package org.flowerplatform.eclipse
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
 //			return (Workbench(FlexUtilGlobals.getInstance().workbench));
 //			ModalSpinner.removeGlobalModalSpinner();
+			CommonPlugin.getInstance().handleLinkWithQueryStringDecoded(FlexGlobals.topLevelApplication.parameters);
 		}
 		
 		override protected function registerMessageBundle():void {
 			super.registerMessageBundle();
 		}
 		
-		override protected function registerClassAliases():void {
-			registerClassAliasFromAnnotation(HelloEclipseServerCommand);
+		override protected function registerClassAliases():void {			
 		}
 	}
 }

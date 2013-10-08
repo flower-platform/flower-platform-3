@@ -36,7 +36,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
-	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
@@ -158,12 +157,6 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 		}
 		
-		override public function start():void {
-			super.start();
-//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
-//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
-		}
-		
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(View);
 			registerClassAliasFromAnnotation(Node);
@@ -176,12 +169,6 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);
 			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
-			
-			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
-		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
 		}
 		
 	}

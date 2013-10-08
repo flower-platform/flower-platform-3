@@ -22,7 +22,6 @@ package org.flowerplatform.editor.model.remote {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.popup.ActionBase;
-//	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -34,8 +33,6 @@ package org.flowerplatform.editor.model.remote {
 		
 		public function NewDiagramAction() {
 			super();
-			
-//			icon = WebCommonPlugin.getInstance().getResourceUrl("images/common/add.png");
 		}
 		
 		override public function get visible():Boolean {
