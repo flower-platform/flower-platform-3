@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.file_event.IFileEventListener;
 import org.slf4j.Logger;
@@ -129,13 +130,17 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	}
 
 	private void processResourceChanged(EditableResource editableResource) {
-		logger.debug("Process resource changed = {} with modification stamp = {}", editableResource.getEditableResourcePath(), ((FileBasedEditableResource) editableResource).getFile().lastModified());
+		logger.debug("Process resource changed = {} with modification stamp = {}", 
+				editableResource.getEditableResourcePath(), 
+				EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(editableResource.getFile()));
 		reloadEditableResource(editableResource, true);
 		// TODO check if refresh handles this
 	}
 	
 	private void processResourceRemoved(EditableResource editableResource) {
-		logger.debug("Process resource removed = {} with modification stamp = {}", editableResource.getEditableResourcePath(), ((FileBasedEditableResource) editableResource).getFile().lastModified());
+		logger.debug("Process resource removed = {} with modification stamp = {}", 
+				editableResource.getEditableResourcePath(), 
+				EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(editableResource.getFile()));
 		unsubscribeAllClientsForcefully(editableResource.getEditableResourcePath(), true);
 	}
 	

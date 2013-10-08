@@ -20,7 +20,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.emf_model.notation,
  org.flowerplatform.file_event,
  org.flowerplatform.codesync,
- org.flowerplatform.codesync.code
+ org.flowerplatform.codesync.code,
+ org.flowerplatform.file_event,
+ org.flowerplatform.editor.model
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.persistence,

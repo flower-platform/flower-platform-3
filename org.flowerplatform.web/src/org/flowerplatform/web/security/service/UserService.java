@@ -33,9 +33,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.FlowerWebProperties.AddBooleanProperty;
-import org.flowerplatform.common.FlowerWebProperties.AddIntegerProperty;
-import org.flowerplatform.common.FlowerWebProperties.AddProperty;
+import org.flowerplatform.common.FlowerProperties.AddBooleanProperty;
+import org.flowerplatform.common.FlowerProperties.AddIntegerProperty;
+import org.flowerplatform.common.FlowerProperties.AddProperty;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -405,7 +405,7 @@ public class UserService extends ServiceObservable {
 						}
 						
 						// check for uniqueness
-						if (Boolean.parseBoolean(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(EMAIL_SHOULD_BE_UNIQUE))) {
+						if (Boolean.parseBoolean(CommonPlugin.getInstance().getFlowerProperties().getProperty(EMAIL_SHOULD_BE_UNIQUE))) {
 							Query query = wrapper.createQuery("SELECT u " +
 														"FROM User u " +
 														"WHERE u.email = :email");
@@ -422,7 +422,7 @@ public class UserService extends ServiceObservable {
 				// allow updating the user without providing the password; if a password is provided, update it
 				if (dto.getPassword() != null) {
 					// check for min length
-					int minLength = Integer.parseInt(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(MIN_PASSWORD_LENGTH));
+					int minLength = Integer.parseInt(CommonPlugin.getInstance().getFlowerProperties().getProperty(MIN_PASSWORD_LENGTH));
 					if (dto.getPassword().length() < minLength) {
 						wrapper.setOperationResult(WebPlugin.getInstance().getMessage("authentication.register.passwordTooShort", minLength));
 					}
@@ -852,7 +852,7 @@ public class UserService extends ServiceObservable {
 			
 			@Override
 			protected String validateProperty(String input) {
-				String createdGroups = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS);
+				String createdGroups = CommonPlugin.getInstance().getFlowerProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS);
 				for (String group : input.split(",")) {
 					if (!createdGroups.contains(group)) {
 						return "Group " + group + " is not created on organization approve: " + createdGroups;
@@ -865,12 +865,12 @@ public class UserService extends ServiceObservable {
 	}
 	
 	static {
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(ORGANIZATION_DIRECTORIES, "{0}"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(ORGANIZATION_DEFAULT_DIRECTORY, "ws_trunk"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(ORGANIZATION_APPROVED_CREATE_DIRS, "{0}, {0}/ws_trunk"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(ORGANIZATION_APPROVED_CREATE_GROUPS, "{0}.admin, {0}.user"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(ORGANIZATION_APPROVED_CREATE_USERS, "anonymous.{0}"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddProperty(ORGANIZATION_APPROVED_CREATE_PERMISSIONS, 
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(ORGANIZATION_DIRECTORIES, "{0}"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(ORGANIZATION_DEFAULT_DIRECTORY, "ws_trunk"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(ORGANIZATION_APPROVED_CREATE_DIRS, "{0}, {0}/ws_trunk"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(ORGANIZATION_APPROVED_CREATE_GROUPS, "{0}.admin, {0}.user"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(ORGANIZATION_APPROVED_CREATE_USERS, "anonymous.{0}"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(new AddProperty(ORGANIZATION_APPROVED_CREATE_PERMISSIONS, 
 				"@{0}.admin: AdminSecurityEntitiesPermission(null, #{0})," +
 				"@{0}.admin: ModifyTreePermissionsPermission({0}, #{0})," +
 				"@{0}.admin: ModifyTreePermissionsPermission({0}/*, #{0})," +
@@ -881,7 +881,7 @@ public class UserService extends ServiceObservable {
 
 					@Override
 					protected String validateProperty(String input) {
-						String createdGroups = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS);
+						String createdGroups = CommonPlugin.getInstance().getFlowerProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS);
 						Pattern pattern = Pattern.compile("s*?@(.*?):s*?");
 						Matcher matcher = pattern.matcher(input);
 						while (matcher.find()) {
@@ -894,10 +894,10 @@ public class UserService extends ServiceObservable {
 					}
 			
 		}) ;
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getPropertyWithGroupValidation(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS, "{0}.admin")); 
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getPropertyWithGroupValidation(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS, "{0}.user"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddBooleanProperty(EMAIL_SHOULD_BE_UNIQUE, "true"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(new AddIntegerProperty(MIN_PASSWORD_LENGTH, "4") {
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getPropertyWithGroupValidation(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS, "{0}.admin")); 
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getPropertyWithGroupValidation(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS, "{0}.user"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(new AddBooleanProperty(EMAIL_SHOULD_BE_UNIQUE, "true"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(new AddIntegerProperty(MIN_PASSWORD_LENGTH, "4") {
 
 			@Override
 			protected String validateProperty(String input) {
@@ -1040,7 +1040,7 @@ public class UserService extends ServiceObservable {
 					
 					// create directories
 					String createDirsProp = MessageFormat.format(
-							CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_DIRS), 
+							CommonPlugin.getInstance().getFlowerProperties().getProperty(ORGANIZATION_APPROVED_CREATE_DIRS), 
 							organization.getName());
 					logger.debug("Create directories = {}", createDirsProp);
 					String[] dirsList = createDirsProp.split(",\\s*");
@@ -1053,7 +1053,7 @@ public class UserService extends ServiceObservable {
 					
 					// create groups
 					String createGroupsProp = MessageFormat.format(
-							CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS), 
+							CommonPlugin.getInstance().getFlowerProperties().getProperty(ORGANIZATION_APPROVED_CREATE_GROUPS), 
 							organization.getName());
 					logger.debug("Create new groups = {}", createGroupsProp);
 					String[] groupNames = createGroupsProp.split(",\\s*");
@@ -1066,7 +1066,7 @@ public class UserService extends ServiceObservable {
 					}
 					
 					// create users
-					String createUsersProp = MessageFormat.format(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_USERS), organization.getName());
+					String createUsersProp = MessageFormat.format(CommonPlugin.getInstance().getFlowerProperties().getProperty(ORGANIZATION_APPROVED_CREATE_USERS), organization.getName());
 					logger.debug("Create new users = {}", createUsersProp);
 					String[] userNames = createUsersProp.split(",\\s*");
 					for (String username : userNames) {
@@ -1086,7 +1086,7 @@ public class UserService extends ServiceObservable {
 					
 					// add admin to admin groups
 					String adminGroups = MessageFormat.format(
-							CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
+							CommonPlugin.getInstance().getFlowerProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
 							organization.getName());
 					if (organizationOwner != null) {
 						logger.debug("Add {} to admin groups = {}", organizationOwner, adminGroups);
@@ -1095,7 +1095,7 @@ public class UserService extends ServiceObservable {
 					
 					// create permissions
 					String createPermissionsProp = MessageFormat.format(
-							CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ORGANIZATION_APPROVED_CREATE_PERMISSIONS), 
+							CommonPlugin.getInstance().getFlowerProperties().getProperty(ORGANIZATION_APPROVED_CREATE_PERMISSIONS), 
 							organization.getName());
 					logger.debug("Create permissions = {}", createPermissionsProp);
 					Pattern pattern = Pattern.compile("\\s*?(.*?)\\s*:\\s*(\\w*)\\s*\\((.*?)\\),?\\s*?");
@@ -1330,7 +1330,7 @@ public class UserService extends ServiceObservable {
 					}
 					
 					// add user to groups
-					String prop = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS);
+					String prop = CommonPlugin.getInstance().getFlowerProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS);
 					
 					String groupsString = MessageFormat.format(prop, organizationUser.getOrganization().getName());
 					String result = addRemoveUserFromGroups(user, groupsString, true, wrapper);
@@ -1519,11 +1519,11 @@ public class UserService extends ServiceObservable {
 						
 							// in case of upgrade, add to admin groups and remove from member groups
 							// in case of downgrade, add to member groups and remove from admin groups
-							String adminGroups = MessageFormat.format(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
+							String adminGroups = MessageFormat.format(CommonPlugin.getInstance().getFlowerProperties().getProperty(ON_BECOME_ADMIN_ADD_USER_TO_GROUPS), 
 									ou.getOrganization().getName());
 							message += addRemoveUserFromGroups(ou.getUser(), adminGroups, upgrade, wrapper);
 							
-							String memberGroups = MessageFormat.format(CommonPlugin.getInstance().getFlowerWebProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS), 
+							String memberGroups = MessageFormat.format(CommonPlugin.getInstance().getFlowerProperties().getProperty(ON_APPROVE_MEMBERSHIP_ADD_USER_TO_GROUPS), 
 									ou.getOrganization().getName());
 							message += addRemoveUserFromGroups(ou.getUser(), memberGroups, !upgrade, wrapper);
 							

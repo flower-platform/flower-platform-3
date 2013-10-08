@@ -195,20 +195,22 @@ public class FlowerDiagramEditor extends EditorPart {
 				.getSite().getPage().getEditorReferences();
 		if (editorReferences.length > 0) {
 			for (IEditorReference ref : editorReferences) {
-				FlowerDiagramEditor editor = (FlowerDiagramEditor) ref
-						.getEditor(false);
-				if (editor != null) {
-					EditorPane editorPartPane = (EditorPane) ((EditorSite) editor
-							.getSite()).getPane();
-					if (FlowerDiagramEditor.EDITOR_ID.equals(ref.getId())
-							&& editorPartPane.getContainer().equals(
-									((EditorPane) ((EditorSite) this.getSite())
-											.getPane()).getContainer())) {
-						// communicationChannel =
-						// editor.getCommunicationChannel();
-						browser = editor.getBrowser();
+				IEditorPart editor = ref.getEditor(false);
+				if (editor instanceof FlowerDiagramEditor) {
+					FlowerDiagramEditor flowerEditor = (FlowerDiagramEditor) editor;
+					if (editor != null) {
+						EditorPane editorPartPane = (EditorPane) ((EditorSite) flowerEditor
+								.getSite()).getPane();
+						if (FlowerDiagramEditor.EDITOR_ID.equals(ref.getId())
+								&& editorPartPane.getContainer().equals(
+										((EditorPane) ((EditorSite) this.getSite())
+												.getPane()).getContainer())) {
+							// communicationChannel =
+							// editor.getCommunicationChannel();
+							browser = flowerEditor.getBrowser();
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}

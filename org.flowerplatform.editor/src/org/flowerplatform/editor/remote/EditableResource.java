@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.collaboration.CollaborativeFigureModel;
 
 /**
@@ -55,6 +56,11 @@ import org.flowerplatform.editor.collaboration.CollaborativeFigureModel;
 public abstract class EditableResource {
 
 	private EditorStatefulService editorStatefulService;
+	
+	/**
+	 * This property is NOT transferred to the client.
+	 */
+	private Object file;
 	
 	/**
 	 * @see Getter
@@ -94,30 +100,38 @@ public abstract class EditableResource {
 	 * @see Getter.
 	 * 
 	 */
-	private long editableResourceLastModifiedStamp;
+	private long lastModifiedTimestamp;
+	
 	private EditableResourceClient lockOwner;
 	
 	private Collection<CollaborativeFigureModel> collaborativeFigureModels;
-	
-	/**
-	 * @author Tache Razvan Mihai
-	 * @return
-	 */
-	public long getEditableResourceLastModifiedStamp() {
-		return editableResourceLastModifiedStamp;
+		
+	public Object getFile() {
+		return file;
 	}
+
+	public void setFile(Object file) {
+		this.file = file;
+	}
+
 	
-	/**
-	 * @author Tache Razvan Mihai
-	 * @return
-	 */
-	public void setEditableResourceLastModifiedStamp(long editableResourceLastModifiedStamp) {
-		this.editableResourceLastModifiedStamp = editableResourceLastModifiedStamp;
+	public long getLastModifiedStamp() {
+		return lastModifiedTimestamp;
+	}
+
+	public void updateLastModifiedStamp() {
+		if (getFile() != null) {
+			this.lastModifiedTimestamp = EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(getFile());
+		}
 	}
 
 	public boolean isSynchronized() {
-		return (editableResourceLastModifiedStamp == ((FileBasedEditableResource) this).getFile().lastModified());
+		if (getFile() != null) {
+			return lastModifiedTimestamp == EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(getFile());
+		}
+		return true;
 	}
+	
 	public EditorStatefulService getEditorStatefulService() {
 		return editorStatefulService;
 	}
