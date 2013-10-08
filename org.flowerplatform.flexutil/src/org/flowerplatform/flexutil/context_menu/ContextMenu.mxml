@@ -30,11 +30,13 @@
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+			import mx.utils.ArrayUtil;
 			
 			import org.flowerplatform.flexutil.popup.ActionUtil;
 			import org.flowerplatform.flexutil.popup.IAction;
 			import org.flowerplatform.flexutil.popup.IComposedAction;
 			
+			import spark.collections.Sort;
 			import spark.events.IndexChangeEvent;
 			
 			protected static const GAP_BETWEEN_MENUS:int = 3;
@@ -69,6 +71,11 @@
 						actions.addItem(action);
 					});
 				}
+				if (actions != null && actions.length > 0) {
+					var source:Array = actions.toArray();
+					source.sortOn("orderIndex");
+					actions = new ArrayList(source);
+				}	
 				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
 			}
 			

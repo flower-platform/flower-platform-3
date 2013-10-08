@@ -24,7 +24,7 @@ package org.flowerplatform.flexutil.popup {
 
 		private var _id:String;
 		private var _parentId:String;
-		private var _orderIndex:int;
+		private var _orderIndex:Number;
 		private var _preferShowOnActionBar:Boolean;
 		private var _visible:Boolean = true;
 		private var _enabled:Boolean = true;
@@ -52,12 +52,12 @@ package org.flowerplatform.flexutil.popup {
 			_parentId = value;
 		}
 	
-		public function get orderIndex():int
+		public function get orderIndex():Number
 		{
 			return _orderIndex;
 		}
 
-		public function set orderIndex(value:int):void
+		public function set orderIndex(value:Number):void
 		{
 			_orderIndex = value;
 		}

@@ -22,7 +22,7 @@ package org.flowerplatform.flexutil.popup {
 	public interface IAction {
 		function get id():String;
 		function get parentId():String;
-		function get orderIndex():int;
+		function get orderIndex():Number;
 		function get preferShowOnActionBar():Boolean;
 		function get icon():Object;
 		function get label():String;

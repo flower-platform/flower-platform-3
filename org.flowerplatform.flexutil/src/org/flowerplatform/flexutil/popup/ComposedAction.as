@@ -31,11 +31,16 @@ package org.flowerplatform.flexutil.popup {
 			_childActions = value;
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */
 		override public function get visible():Boolean {
 			if (childActions == null) {
 				return false;
 			} else {
 				for (var i:int = 0; i < childActions.length; i++) {
+					var childAction:IAction = childActions[i];
+					childAction.selection = selection;
 					if (childActions[i].visible) {
 						// at least one visible => the composed action is visible
 						return true;

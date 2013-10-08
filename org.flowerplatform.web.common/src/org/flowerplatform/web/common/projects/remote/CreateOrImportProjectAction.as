@@ -28,6 +28,8 @@ package org.flowerplatform.web.common.projects.remote {
 		public function CreateOrImportProjectAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.createOrImportProject.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+			parentId = "new";
+			orderIndex = 30;
 		}
 		
 		override public function get visible():Boolean {
