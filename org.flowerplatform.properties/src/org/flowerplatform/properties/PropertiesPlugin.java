@@ -52,11 +52,11 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
-		initExtensionPoint_servlet();
+		initExtensionPoint_propertiesProvider();
 		INSTANCE = this;
 	}
 
-	protected void initExtensionPoint_servlet() throws CoreException {
+	protected void initExtensionPoint_propertiesProvider() throws CoreException {
 		propertiesProviders = new HashMap<>();
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(
 				PROVIDER_EXTENSION_POINT);

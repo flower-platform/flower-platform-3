@@ -21,7 +21,7 @@ package org.flowerplatform.properties.remote;
  * @author Tache Razvan Mihai
  * @return
  */
-public class SelectedItem {
+public abstract class SelectedItem {
 
 	private String itemType;
 

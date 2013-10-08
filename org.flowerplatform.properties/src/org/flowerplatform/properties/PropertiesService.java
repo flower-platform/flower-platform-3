@@ -33,14 +33,14 @@ public class PropertiesService {
 	public List<Property> getProperties(List<SelectedItem> selection) {
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
-		for(SelectedItem selectedItem : selection) {
+		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// retrieve properties by providers
 			newProperties = itemProvider.getProperties(selectedItem);
 			// merge with the previous results
-			if(properties.isEmpty()) {
+			if (properties.isEmpty()) {
 				properties.addAll(newProperties);
 			} else {
 				for(Property property:properties) {
