@@ -20,6 +20,9 @@ package org.flowerplatform.common {
 	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	
+
+	import mx.core.FlexGlobals;
+	
 	import org.flowerplatform.common.link.ILinkHandler;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.Utils;
@@ -108,19 +111,9 @@ package org.flowerplatform.common {
 			}
 			return parameters;
 		}
-		
-		/**
-		 * @author Mariana
-		 */
-		public function getBrowserURL():String {
-			if (ExternalInterface.available) {
-				return String(ExternalInterface.call("getURL"));
-			}
-			return "";
-		}
-		
+			
 		public function getBrowserURLWithoutQuery():String {
-			var browserURL:String = getBrowserURL();
+			var browserURL:String = FlexGlobals.topLevelApplication.url;
 			return browserURL.split("?")[0];
 		}
 	

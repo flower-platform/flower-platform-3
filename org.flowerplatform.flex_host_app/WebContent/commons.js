@@ -23,8 +23,8 @@ function getURL() /* : String */ {
 }
 
 function getQueryString() /* : String */ {
-	try {		
-		if (document.location.search.indexOf("?") > -1)	{
+	try {			
+		if (document.location.search.indexOf("?") > -1)	{			
 			return document.location.search.substring(1);
 		}
 	} catch(err) {		
