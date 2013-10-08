@@ -1047,7 +1047,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 					// i.e. load has thrown an error
 					return;
 				}
-				editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
+//				editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
 				editableResources.put(state.getEditableResourcePath(), editableResource);
 			}
 			

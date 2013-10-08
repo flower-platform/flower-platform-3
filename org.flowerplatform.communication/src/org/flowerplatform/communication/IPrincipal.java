@@ -19,6 +19,7 @@
 package org.flowerplatform.communication;
 
 import java.security.Principal;
+import java.util.Map;
 
 import javax.security.auth.Subject;
 
@@ -27,4 +28,5 @@ public interface IPrincipal extends Principal {
 	public long getUserId();
 	public void clearCachedUser();
 	public Subject getSubject();
+	public Map<String, Object> getWikiClientConfigurations();
 }

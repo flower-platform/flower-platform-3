@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
-import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
+import org.flowerplatform.communication.IPrincipal;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
@@ -97,7 +97,7 @@ public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	protected DokuWikiClientConfiguration getClientConfiguration() {
-		FlowerWebPrincipal principal = (FlowerWebPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
+		IPrincipal principal = (IPrincipal) CommunicationPlugin.tlCurrentPrincipal.get();
 		DokuWikiClientConfiguration clientConfig = (DokuWikiClientConfiguration) principal.getWikiClientConfigurations().get(TECHNOLOGY);
 		return clientConfig;
 	}

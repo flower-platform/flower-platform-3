@@ -16,23 +16,34 @@
  *
  * license-end
  */
-package com.crispico.flower.mp.codesync.code;
+package org.flowerplatform.codesync.projects;
 
-import org.eclipse.core.resources.IResource;
-
-import com.crispico.flower.mp.codesync.base.IFullyQualifiedNameProvider;
+import java.io.File;
 
 /**
- * @author Mariana
+ * @author Mariana Gheorghe
  */
-public class IResourceFullyQualifiedNameProvider implements IFullyQualifiedNameProvider {
+public interface IProjectsProvider {
 
-	@Override
-	public String getFullyQualifiedName(Object object) {
-		if (object instanceof IResource) {
-			return ((IResource) object).getFullPath().toString();
-		}
-		return null;
-	}
-
+	/**
+	 * TODO move to FileAccessController
+	 * @return the path relative to the workspace
+	 */
+	String getPath(File file);
+	
+	/**
+	 * TODO move to FileAccessController
+	 * @param path relative to the workspace
+	 */
+	File getFile(String path);
+	
+	/**
+	 * @param path relative to project
+	 */
+	File getFile(File project, String path);
+	
+	File getContainingProjectForFile(File file);
+	
+	String getPathRelativeToProject(File file);
+	
 }

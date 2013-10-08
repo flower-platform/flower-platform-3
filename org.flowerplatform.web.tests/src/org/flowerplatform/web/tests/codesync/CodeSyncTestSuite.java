@@ -18,10 +18,15 @@
  */
 package org.flowerplatform.web.tests.codesync;
 
+import java.io.File;
+
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.web.tests.EclipseDependentTestSuiteBase;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
 /**
  * @author Mariana
@@ -32,4 +37,15 @@ import org.junit.runners.Suite.SuiteClasses;
 	CodeSyncWikiTest.class })
 public class CodeSyncTestSuite extends EclipseDependentTestSuiteBase {
 
+	public static File getProject(String project) {
+		String absolutePath = "/org/ws_trunk/" + project;
+		File resource = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(absolutePath);
+		return CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
+	}
+	
+	public static File getFile(String path) {
+		String absolutePath = "/org/ws_trunk/" + path;
+		return CodeSyncPlugin.getInstance().getProjectsProvider().getFile(absolutePath);
+	}
+	
 }

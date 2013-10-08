@@ -18,13 +18,11 @@
  */
 package com.crispico.flower.mp.codesync.base;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.eclipse.core.resources.IFile;
-
 
 /**
  * @author Cristi
@@ -46,8 +44,9 @@ public class ComposedFullyQualifiedNameProvider implements IFullyQualifiedNamePr
 	@Override
 	public String getFullyQualifiedName(Object object) {
 		IFullyQualifiedNameProvider foundConverter = null;
-		if (object instanceof IFile) {
-			foundConverter = fileExtensionBasedDelegateProviders.get(((IFile) object).getFileExtension());
+		if (object instanceof File) {
+			String fileExtension = CodeSyncPlugin.getInstance().getFileExtension((File) object);
+			foundConverter = fileExtensionBasedDelegateProviders.get(fileExtension);
 		}
 		
 		if (foundConverter != null) {

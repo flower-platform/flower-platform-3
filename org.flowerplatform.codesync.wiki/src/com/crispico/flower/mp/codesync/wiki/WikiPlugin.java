@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -39,7 +36,6 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.flowerplatform.model.astcache.wiki.FlowerBlock;
 import org.flowerplatform.model.astcache.wiki.Page;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
@@ -117,24 +113,22 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 
 	public CodeSyncRoot getWikiRoot(File file, String technology, ResourceSet resourceSet, CommunicationChannel communicationChannel) {
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
-		IProject project = resource.getProject();
-		File projectFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project);
-		String name = projectFile.getPath();
+		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
+		String name = CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project);
 		// this will be a temporary tree, do not send the project
-		CodeSyncRoot leftRoot = getWikiTree(null, resourceSet, projectFile, name, technology);
+		CodeSyncRoot leftRoot = getWikiTree(null, resourceSet, project, name, technology);
 		CodeSyncRoot rightRoot = getWikiTree(project, resourceSet, null, name, technology);
 		
 		updateTree(leftRoot, rightRoot, project, resourceSet, technology, communicationChannel, false);
 		return rightRoot;
 	}
 	
-	public void updateTree(CodeSyncElement left, CodeSyncElement right, IProject project, ResourceSet resourceSet, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public void updateTree(CodeSyncElement left, CodeSyncElement right, File project, ResourceSet resourceSet, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		String editableResourcePath = project.getFullPath().toString();
+		String editableResourcePath = CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project);
 		CodeSyncEditableResource editableResource;
 		if (showDialog) {
-			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, editableResourcePath);
 		} else {
 			service.subscribe(new StatefulServiceInvocationContext(communicationChannel), new EditorStatefulClientLocalState(editableResourcePath));
 			editableResource = (CodeSyncEditableResource) service.getEditableResource(editableResourcePath);
@@ -196,13 +190,13 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		return null;
 	}
 	
-	public Resource getAstCacheResource(IProject project, ResourceSet resourceSet) {
-		File astCacheElementFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + ACE_FILE_LOCATION)));
+	public Resource getAstCacheResource(File project, ResourceSet resourceSet) {
+		File astCacheElementFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, ACE_FILE_LOCATION);
 		return CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
 	}
 	
-	public Resource getCodeSyncMappingResource(IProject project, ResourceSet resourceSet) {
-		File codeSyncElementMappingFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + CSE_FILE_LOCATION)));
+	public Resource getCodeSyncMappingResource(File project, ResourceSet resourceSet) {
+		File codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CSE_FILE_LOCATION);
 		return CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 	}
 
@@ -238,7 +232,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * Delegates to {@link IConfigurationProvider#getWikiTree(String, Object)}.
 	 */
-	public CodeSyncRoot getWikiTree(IProject project, ResourceSet resourceSet, Object wiki, String name, String technology) {
+	public CodeSyncRoot getWikiTree(File project, ResourceSet resourceSet, Object wiki, String name, String technology) {
 		Resource codeSyncResource = project == null ? resourceSet.createResource(URI.createURI("tempCSE")) : getCodeSyncMappingResource(project, resourceSet);
 		CodeSyncRoot root = getRoot(codeSyncResource, name);
 		if (root == null) {

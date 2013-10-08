@@ -30,8 +30,6 @@ import java.util.Iterator;
 import javax.security.auth.Subject;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.common.CommonPlugin;
@@ -69,17 +67,17 @@ import flex.messaging.HttpFlexSession;
 public class CodeSyncWikiTest {
 
 	private static final String PROJECT = "codesync_wiki";
-	private static String DIR = TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/codesync/" +TestUtil.NORMAL;
+	private static String DIR = TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/codesync/" + TestUtil.NORMAL;
 	
 	public static final String LINK = "/link-to-project";
 	
-	private String DOKUWIKI_FILE = getProject().getFullPath().toString() + LINK + "/dokuwiki/teste Scenarios in Diagrams.txt";
-	private String DOKUWIKI_FILE_2 = getProject().getFullPath().toString() + LINK + "/dokuwiki/teste Scenarios in Diagrams 2.txt";
-	private String DOKUWIKI_FILE_3 = getProject().getFullPath().toString() + LINK + "/dokuwiki/teste Scenarios in Diagrams 3.txt";
+	private File DOKUWIKI_FILE = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams.txt");
+	private File DOKUWIKI_FILE_2 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 2.txt");
+	private File DOKUWIKI_FILE_3 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 3.txt");
 	
-	private String MD_FILE = getProject().getFullPath().toString() + LINK + "/markdown/Test.md";
-	private String MD_FILE_2 = getProject().getFullPath().toString() + LINK + "/markdown/left/Test.md";
-	private String MD_FILE_3 = getProject().getFullPath().toString() + LINK + "/markdown/right/Test.md";
+	private File MD_FILE = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/Test.md");
+	private File MD_FILE_2 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/left/Test.md");
+	private File MD_FILE_3 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/right/Test.md");
 	
 	private Pair[] expected;
 	private int index;
@@ -123,7 +121,7 @@ public class CodeSyncWikiTest {
 				WikiPlugin.getInstance().getConfigurationProviders().put(technology, new DokuWikiConfigurationProvider());
 				
 				WikiPlugin wikiPlugin = WikiPlugin.getInstance();
-				IProject project = getProject();
+				File project = getProject();
 				ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
 				CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, resourceSet, wiki, "proiecte:flower:teste", technology);
 				CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, resourceSet, null, "proiecte:flower:teste", technology);
@@ -161,11 +159,11 @@ public class CodeSyncWikiTest {
 	}
 	
 	@Test
-	public void testDokuWiki_dummy() throws CoreException {
+	public void testDokuWiki_dummy() throws CoreException, IOException {
 		WikiPlugin wikiPlugin = WikiPlugin.getInstance();
-		String ancestor = TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(DOKUWIKI_FILE));
-		String left = TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(DOKUWIKI_FILE_2));
-		String right = TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(DOKUWIKI_FILE_3));
+		String ancestor = FileUtils.readFileToString(DOKUWIKI_FILE);
+		String left = FileUtils.readFileToString(DOKUWIKI_FILE_2);
+		String right = FileUtils.readFileToString(DOKUWIKI_FILE_3);
 		String pageName = "page";
 		DokuWikiPage page = new DokuWikiPage(pageName, ancestor);
 		
@@ -173,7 +171,7 @@ public class CodeSyncWikiTest {
 		DummyDokuWikiConfigurationProvider dummyConfigProvider = new DummyDokuWikiConfigurationProvider();
 		WikiPlugin.getInstance().getConfigurationProviders().put(technology, dummyConfigProvider);
 		
-		IProject project = getProject();
+		File project = getProject();
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
 		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, resourceSet, Arrays.asList(page), "", technology);
 		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, resourceSet, null, "", technology);
@@ -237,11 +235,11 @@ public class CodeSyncWikiTest {
 		String technology = GithubConfigurationProvider.TECHNOLOGY;
 		wikiPlugin.getConfigurationProviders().put(technology, new GithubConfigurationProvider());
 		
-		File ancestor = new File(TestUtil.getWorkspaceResourceAbsolutePath(MD_FILE));
-		File left = new File(TestUtil.getWorkspaceResourceAbsolutePath(MD_FILE_2));
-		File right = new File(TestUtil.getWorkspaceResourceAbsolutePath(MD_FILE_3));
+		File ancestor = MD_FILE;
+		File left = MD_FILE_2;
+		File right = MD_FILE_3;
 		
-		IProject project = getProject();
+		File project = getProject();
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
 		CodeSyncRoot leftRoot = wikiPlugin.getWikiTree(null, resourceSet, ancestor, ancestor.getPath(), technology);
 		CodeSyncRoot rightRoot = wikiPlugin.getWikiTree(project, resourceSet, null, ancestor.getPath(), technology);
@@ -281,28 +279,26 @@ public class CodeSyncWikiTest {
 		
 		test(leftRoot, rightRoot, resourceSet, technology, null);
 		
-		String newContent = FileUtils.readFileToString(new File(TestUtil.getWorkspaceResourceAbsolutePath(MD_FILE_2)));
+		String newContent = FileUtils.readFileToString(MD_FILE_2);
 		assertEquals(wikiPlugin.getWikiText(newRightPage, technology), newContent);
 	}
 	
-	private IProject getProject() {
-		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + PROJECT;
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
-		return resource.getProject();
+	private File getProject() {
+		return CodeSyncTestSuite.getProject(PROJECT);
 	}
 	
 	private void test(CodeSyncRoot leftRoot, CodeSyncRoot rightRoot, ResourceSet resourceSet, String technology, Pair[] expected) {
-		IProject project = getProject();
+		File project = getProject();
 		WikiPlugin wikiPlugin = WikiPlugin.getInstance();
 		wikiPlugin.updateTree(leftRoot, rightRoot, project, resourceSet, technology, communicationChannel, true);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, project.getFullPath().toString());
+		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project));
 		
 		assertNotNull(editableResource);
 		
-		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString(), true);
+		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project));
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), CodeSyncPlugin.getInstance().getProjectsProvider().getPath(project), true);
 		
 		if (expected != null) {
 			testWikiTree(rightRoot, 0);

@@ -16,28 +16,24 @@
  *
  * license-end
  */
-package com.crispico.flower.mp.codesync.base;
+package com.crispico.flower.mp.codesync.code;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.flowerplatform.communication.channel.CommunicationChannel;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.codesync.base.IFullyQualifiedNameProvider;
 
 /**
  * @author Mariana
  */
-public class ComposedCodeSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner {
+public class FileFullyQualifiedNameProvider implements IFullyQualifiedNameProvider {
 
-	protected Map<String, ICodeSyncAlgorithmRunner> runners = new HashMap<String, ICodeSyncAlgorithmRunner>();
-	
-	public void addRunner(String technology, ICodeSyncAlgorithmRunner runner) {
-		runners.put(technology, runner);
-	}
-	
 	@Override
-	public void runCodeSyncAlgorithm(File project, File resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
-		runners.get(technology).runCodeSyncAlgorithm(project, resource, technology, communicationChannel, showDialog);
+	public String getFullyQualifiedName(Object object) {
+		if (object instanceof File) {
+			return CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject((File) object);
+		}
+		return null;
 	}
 
 }

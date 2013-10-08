@@ -33,6 +33,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.web.database.DatabaseManager;
+import org.flowerplatform.web.projects.WebProjectsProvider;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.service.GroupService;
@@ -40,6 +41,9 @@ import org.flowerplatform.web.security.service.OrganizationService;
 import org.flowerplatform.web.security.service.PermissionService;
 import org.flowerplatform.web.security.service.UserService;
 import org.osgi.framework.BundleContext;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 
 /**
  * @author Cristi
@@ -127,6 +131,10 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		SendMailService.getInstance().initializeProperties();
 
 		initExtensionPoint_nodeTypeToCategoriesMapping();
+		
+		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
 		
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());

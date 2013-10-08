@@ -18,23 +18,21 @@
  */
 package com.crispico.flower.mp.codesync.code.adapter;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
- * Mapped to {@link IFolder}. Children are {@link IResource}s that match the {@link #limitedPath}, if set.
+ * Mapped to {@link File}. Children are {@link File}s that match the {@link #limitedPath}, if set.
  * 
  * @author Mariana
  */
@@ -42,9 +40,9 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 
 	protected String limitedPath;
 	
-	private final String DELETED = "deleted";
-	
-	private final String RENAMED = "renamed";
+	private List<File> filesToDelete = new ArrayList<File>();
+
+	private Map<File, String> filesToRename = new HashMap<File, String>();
 	
 	public FolderModelAdapter() {
 		super();
@@ -69,13 +67,8 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	@Override
 	public void setValueFeatureValue(Object element, Object feature, Object value) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name().equals(feature)) {
-			IFolder folder = getFolder(element);
-			try {
-				IMarker marker = folder.createMarker(IMarker.MARKER);
-				marker.setAttribute(RENAMED, value);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+			File folder = getFolder(element);
+			filesToRename.put(folder, (String) value);
 		}
 	}
 
@@ -83,13 +76,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
 			CodeSyncElement cse = (CodeSyncElement) correspondingChild;
-			IPath path = getFolder(element).getFullPath().append(cse.getName());
-			if (FOLDER.equals(cse.getType())) {
-				return ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
-			}
-			if (FILE.equals(cse.getType())) {
-				return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			}
+			return new File(getFolder(element), cse.getName());
 		}
 		return null;
 	}
@@ -97,13 +84,8 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	@Override
 	public void removeChildrenOnContainmentFeature(Object parent, Object feature, Object child) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
-			IResource resource = (IResource) child;
-			try {
-				IMarker marker = resource.createMarker(IMarker.MARKER);
-				marker.setAttribute(DELETED, true);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+			File resource = (File) child;
+			filesToDelete.add(resource);
 		}
 	}
 
@@ -114,12 +96,11 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 
 	@Override
 	public List<?> getChildren(Object modelElement) {
-		try {
-			((IFolder) modelElement).refreshLocal(IResource.DEPTH_ONE, null);
-			return Arrays.asList(((IFolder) modelElement).members());
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
+		File[] files = getFolder(modelElement).listFiles();
+		if (files == null) {
+			return Collections.emptyList();
 		}
+		return Arrays.asList(files);
 	}
 
 	@Override
@@ -140,7 +121,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	
 				@Override
 				protected boolean isAccepted(Object candidate) {
-					String candidatePath = ((IResource) candidate).getFullPath().toString();
+					String candidatePath = CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject((File) candidate);
 					if (limitedPath == null || limitedPath.startsWith(candidatePath)) {
 						return true;
 					}
@@ -167,34 +148,29 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 
 	@Override
 	public boolean save(Object element) {
-		IFolder folder = getFolder(element);
-		try {
-			if (!folder.exists()) {
-				// create the folder if it doesn't exist
-				folder.create(true, true, null);
-			}
-			
-			// remove children that were mark deleted
-			for (Object child : getChildren(element)) {
-				IResource resource = (IResource) child;
-				for (IMarker childMarker : resource.findMarkers(IMarker.MARKER, false, IResource.DEPTH_ZERO)) {
-					Object deleted = childMarker.getAttribute(DELETED);
-					if (deleted != null && (boolean) childMarker.getAttribute(DELETED)) {
-						resource.delete(true, null);
-					}
+		File folder = getFolder(element);
+		if (!folder.exists()) {
+			// create the folder if it doesn't exist
+			folder.mkdirs();
+		}
+		
+		// remove children that were mark deleted	
+		File[] children = folder.listFiles();
+		if (children != null) {
+			for (File child : folder.listFiles()) {
+				if (filesToDelete.contains(child)) {
+					child.delete();
+					filesToDelete.remove(child);
 				}
 			}
-			
-			// move the folder if it was marked renamed
-			for (IMarker marker : folder.findMarkers(IMarker.MARKER, false, IResource.DEPTH_ZERO)) {
-				String value = (String) marker.getAttribute(RENAMED);
-				if (value != null) {
-					folder.move(folder.getFullPath().removeLastSegments(1).append((String) value), true, null);
-					break;
-				}
-			}
-		} catch (CoreException e) {
-			e.printStackTrace();
+		}
+		
+		// move the folder if it was marked renamed
+		String newName = filesToRename.get(folder);
+		if (newName != null) {
+			File dest = new File(folder.getParent(), newName);
+			folder.renameTo(dest);
+			filesToRename.remove(folder);
 		}
 		return true;
 	}
@@ -204,8 +180,8 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 		return true;
 	}
 	
-	private IFolder getFolder(Object element) {
-		return (IFolder) element;
+	private File getFolder(Object element) {
+		return (File) element;
 	}
 
 	@Override

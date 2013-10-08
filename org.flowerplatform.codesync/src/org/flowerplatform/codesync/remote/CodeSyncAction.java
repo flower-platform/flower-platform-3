@@ -18,12 +18,9 @@
  */
 package org.flowerplatform.codesync.remote;
 
-import java.util.List;
+import java.io.File;
 
-import org.eclipse.core.resources.IResource;
 import org.flowerplatform.communication.command.AbstractServerCommand;
-import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
@@ -32,14 +29,15 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
  */
 public class CodeSyncAction extends AbstractServerCommand {
 
-	public List<PathFragment> pathWithRoot;
+	public String path;
 	
 	public String technology;
 	
 	@Override
 	public void executeCommand() {
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(pathWithRoot);
-		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(resource.getProject(), resource, technology, communicationChannel, true);
+		File file = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(path);
+		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
+		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, file, technology, communicationChannel, true);
 	}
 
 }
