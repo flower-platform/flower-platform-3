@@ -152,11 +152,6 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 		}
 		
-		override public function start():void {
-			super.start();
-//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
-		}
-		
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(View);
 			registerClassAliasFromAnnotation(Node);
@@ -168,10 +163,6 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);
 			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
-		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
 		}
 		
 	}

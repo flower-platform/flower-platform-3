@@ -18,6 +18,7 @@
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor.mindmap/public-resources/swc/org.flowerplatform.editor.mindmap.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.codesync.code.java/public-resources/swc/org.flowerplatform.codesync.code.java.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.codesync/public-resources/swc/org.flowerplatform.codesync.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor.model/public-resources/swc/org.flowerplatform.editor.model.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

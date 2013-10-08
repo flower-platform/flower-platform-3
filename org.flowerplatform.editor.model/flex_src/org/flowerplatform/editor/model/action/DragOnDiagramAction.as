@@ -21,14 +21,15 @@ package org.flowerplatform.editor.model.action {
 	import mx.collections.ArrayList;
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	
 	public class DragOnDiagramAction extends ActionBase {
+		
 		public function DragOnDiagramAction() {
-			// TODO CS/FP2 msg
-			label = "Add to Diagram";
+			label = EditorModelPlugin.getInstance().getMessage("action.addOnDiagram");
 			preferShowOnActionBar = true;
 			super();
 		}
