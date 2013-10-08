@@ -3,25 +3,35 @@ package org.flowerplatform.web.common.properties.ui {
 	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
-	import mx.events.IndexChangedEvent;
+	import mx.core.ClassFactory;
 	
-	import org.flowerplatform.communication.tree.GenericTreeList;
-	import org.flowerplatform.editor.action.EditorTreeActionProvider;
 	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 	
+	import spark.components.Button;
 	import spark.components.List;
+	import spark.components.VGroup;
 	import spark.events.IndexChangeEvent;
-
+	
+	/**
+	 * @author Tache Razvan Mihai
+	 */
 	public class PropertiesList extends List implements IPopupContent {
 		
 		protected var _popupHost:IPopupHost;
 				
 		public function PropertiesList() {
 			super();
+			itemRenderer = new ClassFactory(PropertyItemRenderer);
+			dataProvider = new ArrayList();
+			var property:Property = new Property();
+			
+			dataProvider.addItem(property);
+			dataProvider.addItem(property);
+			dataProvider.addItem(property);
+			dataProvider.addItem(property);
+			
 			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
 		}
 		
