@@ -261,13 +261,38 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 					Object child = findChild(children, result.childMatchKey);
 					if (child != null && child instanceof CodeSyncElement) {
 						if (result.childAdded) {
-							((CodeSyncElement) child).setAdded(false);
+							setSyncAndPropagateToChildren((CodeSyncElement) child);
+							setParentSync((CodeSyncElement) element);
 						} else {
 							children.remove(child);
 						}
 					}
 				}
 			}
+		}
+	}
+	
+	private void setSyncAndPropagateToChildren(CodeSyncElement element) {
+		element.setAdded(false);
+		element.setDeleted(false);
+		element.setSynchronized(true);
+		element.setChildrenSynchronized(true);
+		for (CodeSyncElement child : element.getChildren()) {
+			setSyncAndPropagateToChildren(child);
+		}
+	}
+	
+	private void setParentSync(CodeSyncElement element) {
+		boolean childrenSync = true;
+		for (CodeSyncElement child : element.getChildren()) {
+			if (!child.isSynchronized() || !child.isChildrenSynchronized()) {
+				childrenSync = false;
+			}
+		}
+		element.setChildrenSynchronized(childrenSync);
+		CodeSyncElement parent = (CodeSyncElement) element.eContainer();
+		if (parent != null) {
+			setParentSync(parent);
 		}
 	}
 	
