@@ -12,7 +12,6 @@
     <classEntry path="org.flowerplatform.web.common.remote.InitializeNodeTypeCategoryToNodeTypesMapClientCommand"/>
     <classEntry path="org.flowerplatform.web.common.properties.ui.PropertiesViewProvider"/>
     <classEntry path="org.flowerplatform.web.common.properties.ui.PropertiesList"/>
-    <classEntry path="org.flowerplatform.web.common.properties.ui.PropertyItemRenderer"/>
     <classEntry path="org.flowerplatform.web.common.properties.ui.Property"/>
   </includeClasses>
   <includeResources/>

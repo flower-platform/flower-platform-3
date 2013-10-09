@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package org.flowerplatform.web.common.properties.ui {
+package org.flowerplatform.properties.ui {
 	import mx.containers.HBox;
 	import mx.containers.VBox;
 	import mx.core.UIComponent;
@@ -26,8 +26,8 @@ package org.flowerplatform.web.common.properties.ui {
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
-	import org.flowerplatform.web.common.WebCommonPlugin;
-	import org.flowerplatform.web.common.explorer.ExplorerTreeList;
+	
+	import org.flowerplatform.properties.PropertiesPlugin;
 	
 	import spark.components.Button;
 	import spark.components.Group;
@@ -45,9 +45,9 @@ package org.flowerplatform.web.common.properties.ui {
 		}
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {
-			WebCommonPlugin.getInstance().propertyList = new PropertiesList();
+			PropertiesPlugin.getInstance().propertyList = new PropertiesList();
 			
-			return WebCommonPlugin.getInstance().propertyList;
+			return PropertiesPlugin.getInstance().propertyList;
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String	{

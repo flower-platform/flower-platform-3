@@ -25,9 +25,9 @@ package org.flowerplatform.web.layout {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.properties.ui.PropertiesViewProvider;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
-	import org.flowerplatform.web.common.properties.ui.PropertiesViewProvider;
-	
+		
 	/**
 	 * Flower Modeling Perspective.
 	 * Contains : 

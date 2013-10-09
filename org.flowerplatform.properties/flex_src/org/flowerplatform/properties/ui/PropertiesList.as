@@ -1,4 +1,4 @@
-package org.flowerplatform.web.common.properties.ui {
+package org.flowerplatform.properties.ui {
 	import flash.events.FocusEvent;
 	
 	import mx.collections.ArrayList;
@@ -20,7 +20,9 @@ package org.flowerplatform.web.common.properties.ui {
 	public class PropertiesList extends List implements IPopupContent {
 		
 		protected var _popupHost:IPopupHost;
-				
+		
+		public var propertyList:PropertiesList;
+
 		public function PropertiesList() {
 			super();
 			itemRenderer = new ClassFactory(PropertyItemRenderer);

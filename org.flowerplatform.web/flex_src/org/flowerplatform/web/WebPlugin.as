@@ -41,7 +41,6 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-	import org.flowerplatform.web.common.properties.ui.PropertiesList;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
 	import org.flowerplatform.web.properties.remote.DiagramSelectedItem;
@@ -52,6 +51,8 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.security.ui.UserForm;
 	import org.flowerplatform.web.security.ui.UserFormViewProvider;
 	import org.flowerplatform.web.security.ui.UsersScreen;
+	
+	import org.flowerplatform.properties.PropertiesPlugin;
 	
 	import spark.components.Button;
 	
@@ -140,7 +141,7 @@ package org.flowerplatform.web {
 								myObject,
 								function(object:Object):void {
 									var x:Object = object;
-									webCommonPlugin.propertyList.dataProvider = object as IList;
+									PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
 								}
 					));				
 			});
@@ -161,7 +162,7 @@ package org.flowerplatform.web {
 						myObject,
 						function(object:Object):void {
 							var x:Object = object;
-							webCommonPlugin.propertyList.dataProvider = object as IList;
+							PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
 						}
 					));				
 			});
