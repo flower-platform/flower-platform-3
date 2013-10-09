@@ -158,7 +158,7 @@ package org.flowerplatform.editor {
 				}
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"textEditorStatefulService", "navigateFriendlyEditableResourcePathList", 
+						"editorOperationsService", "navigateFriendlyEditableResourcePathList", 
 						[files, index == null ? -1 : int(index)]));
 			}		
 		}

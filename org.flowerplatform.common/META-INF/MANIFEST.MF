@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.flowerplatform.common;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.flowerplatform.common.CommonPlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.flowerplatform.file_event
+ org.eclipse.core.resources
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: lib/logback-classic-1.0.7.jar,
@@ -18,6 +17,8 @@ Bundle-ClassPath: lib/logback-classic-1.0.7.jar,
 Export-Package: org.apache.commons.io,
  org.apache.commons.lang3,
  org.flowerplatform.common,
+ org.flowerplatform.common.file_event,
+ org.flowerplatform.common.ied,
  org.flowerplatform.common.log,
  org.flowerplatform.common.plugin,
  org.flowerplatform.common.regex,

@@ -344,4 +344,32 @@ public class ParameterImpl extends AstCacheElementImpl implements Parameter {
 		return result.toString();
 	}
 
+	/**
+	 * @author Mariana Gheorghe
+	 * @generated NOT
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj instanceof Parameter) {
+			return equal(this.getName(), ((Parameter) obj).getName()) &&
+					equal(this.getType(), ((Parameter) obj).getType()) &&
+					this.getModifiers().equals(((Parameter) obj).getModifiers());
+		}
+		return false;
+	}
+	
+	/**
+	 * @author Mariana Gheorghe
+	 * @generated NOT
+	 */
+	private boolean equal(String a, String b) {
+		if (a == null) {
+			return (b == null);
+		}
+		return a.equals(b);
+	}
+	
 } //ParameterImpl

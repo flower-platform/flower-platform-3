@@ -23,6 +23,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
+	import org.flowerplatform.editor.model.action.ContentAssistAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
@@ -34,6 +35,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
 	import org.flowerplatform.editor.model.controller.DragToCreateRelationController;
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
+	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
@@ -61,6 +63,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
 	
@@ -121,6 +124,9 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+			if (!FlexUtilGlobals.getInstance().isMobile) {
+				composedControllerProviderFactory.inplaceEditorControllerClass = new ControllerFactory(InplaceEditorController);
+			}
 			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classOperation"] = composedControllerProviderFactory;
 			
@@ -151,6 +157,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 		}
 		
 		override public function start():void {
@@ -172,6 +179,8 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
 			
 			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
+			
+			registerClassAliasFromAnnotation(ContentAssistItem);
 		}
 		
 		override protected function registerMessageBundle():void {

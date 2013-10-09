@@ -58,7 +58,7 @@
             attributes.align = "middle";
             
             var swfLink = "FlexHostApp.swf?" + getQueryString();
-           
+            
             swfobject.embedSWF(
             	swfLink, "flashContent", 
                 "100%", "100%", 

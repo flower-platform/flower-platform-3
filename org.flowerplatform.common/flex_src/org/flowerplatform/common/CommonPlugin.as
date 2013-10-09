@@ -20,6 +20,7 @@ package org.flowerplatform.common {
 	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	
+
 	import mx.core.FlexGlobals;
 	
 	import org.flowerplatform.common.link.ILinkHandler;

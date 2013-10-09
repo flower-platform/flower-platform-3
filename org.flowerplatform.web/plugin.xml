@@ -334,6 +334,14 @@
          point="org.flowerplatform.common.flowerProperties">
       <flowerPropertiesProvider
             flowerPropertiesProviderClass="org.flowerplatform.web.WebFlowerPropertiesProvider">
-      </flowerPropertiesProvider>
+      </flowerPropertiesProvider>         
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="explorerTreeStatefulService"
+            serviceClass="org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService">
+      </service>
+
    </extension>
 </plugin>

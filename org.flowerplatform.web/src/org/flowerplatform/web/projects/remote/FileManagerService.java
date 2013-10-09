@@ -26,6 +26,7 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IResource;
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.file_event.FileEvent;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
@@ -35,7 +36,6 @@ import org.flowerplatform.communication.tree.NodeInfo;
 import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.file_event.FileEvent;
 import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.explorer.FsFile_FileSystemChildrenProvider;

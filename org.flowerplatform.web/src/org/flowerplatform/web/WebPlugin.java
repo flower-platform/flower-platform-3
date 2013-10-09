@@ -32,7 +32,6 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.editor.EditorPlugin;
-import org.flowerplatform.editor.file.FileAccessController;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.projects.remote.ProjectsService;
@@ -84,8 +83,13 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		super();
 		INSTANCE = this;
 		
-		databaseManager = new DatabaseManager();
+		// Initially, this initialization was in the attribute initializer. But this lead to an issue:
+		// .communication was loaded, which processed the extension points, including services, 
+		// which forced the initialization of .web.git plugin, which wanted to use the properties, which
+		// are initialized in the line above. Maybe in the future we'll solve this kind of issues
 		eclipseDispatcherServlet = new EclipseDispatcherServlet();
+		
+		databaseManager = new DatabaseManager();
 	}
 	
 	/**
@@ -113,27 +117,36 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		return databaseManager;
 	}
 
-	public void start(BundleContext bundleContext) throws Exception {
+	public void start(final BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
-				
-		UserService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
-		GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
-		OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
-		OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
-		// do the initializations after the bundle is activated, because we need the resources bundle
-		databaseManager.initialize();
+
 		if (bundleContext.getProperty(TESTING_FLAG) == null) {
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
 		}
-		SendMailService.getInstance().initializeProperties();
-
 		initExtensionPoint_nodeTypeToCategoriesMapping();
 		
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());
-		
-		EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
-		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
+		// do these initializations here, after the services have been instantiated
+		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
+			@Override
+			public void run() {
+				UserService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+				GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+				OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
+				OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
+				// TODO CS: see GH???
+				databaseManager.initialize();
+				SendMailService.getInstance().initializeProperties();
+				
+				try {
+					// TODO CS: see GH???
+					CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}				
+				EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
+				EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
+			}
+		});
 	}
 	
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {
@@ -173,5 +186,5 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public List<GenericTreeStatefulService> getTreeStatefulServicesDisplayingWorkingDirectoryContent() {
 		return treeStatefulServicesDisplayingWorkingDirectoryContent;
 	}
-	
 }
+

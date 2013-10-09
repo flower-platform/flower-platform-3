@@ -35,14 +35,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>flex_host_app_bin</name>
-			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/org.flowerplatform.flex_host_app/bin</locationURI>
-		</link>
-		<link>
 			<name>flex_host_app_WebContent</name>
 			<type>2</type>
 			<locationURI>PARENT-1-PROJECT_LOC/org.flowerplatform.flex_host_app/WebContent</locationURI>
+		</link>
+		<link>
+			<name>flex_host_app_bin</name>
+			<type>2</type>
+			<locationURI>PARENT-1-PROJECT_LOC/org.flowerplatform.flex_host_app/bin</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

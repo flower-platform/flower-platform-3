@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="dragOnDiagramHandler" name="dragOnDiagramHandler" schema="schema/dragOnDiagramHandler.exsd"/>
+   <extension-point id="contentAssist" name="contentAssist" schema="schema/contentAssist.exsd"/>
    <extension
          point="org.flowerplatform.editor.contentType">
       <contentType

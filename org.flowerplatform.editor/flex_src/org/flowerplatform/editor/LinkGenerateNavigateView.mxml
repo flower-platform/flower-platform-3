@@ -154,7 +154,7 @@ license-end
 				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"textEditorStatefulService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
+						"editorOperationsService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
 						function(friendlyEditableResourcePathList : ArrayCollection):void {
 							multipleResourcesLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList);
 						}));				
@@ -184,7 +184,7 @@ license-end
 				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"textEditorStatefulService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
+						"editorOperationsService", "getFriendlyEditableResourcePathList", [canonicalEditableResourcePathList], null, 
 						function(friendlyEditableResourcePathList : ArrayCollection):void {
 							var indexOfSelectedResource:int = canonicalEditableResourcePathList.getItemIndex(visibleCanonicalEditableResourcePath);
 							multipleResourcesLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList, indexOfSelectedResource);
@@ -192,7 +192,7 @@ license-end
 				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"textEditorStatefulService", "getFriendlyEditableResourcePathList", [new ArrayCollection([visibleCanonicalEditableResourcePath])],	null, 
+						"editorOperationsService", "getFriendlyEditableResourcePathList", [new ArrayCollection([visibleCanonicalEditableResourcePath])],	null, 
 						function(friendlyEditableResourcePathList : ArrayCollection):void {
 							visibleEditorLinkTextArea.text = createNavigableURL(friendlyEditableResourcePathList);
 						}));

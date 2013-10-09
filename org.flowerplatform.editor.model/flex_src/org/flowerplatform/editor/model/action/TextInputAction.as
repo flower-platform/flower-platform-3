@@ -35,7 +35,7 @@ package org.flowerplatform.editor.model.action {
 			super();
 		}
 		
-		protected function askForTextInput(defaultText:String, title:String, button:String, handler:Function):void {
+		protected function askForTextInput(defaultText:String, title:String, button:String, handler:Function):IMessageBox {
 			var textArea:Object;
 			var name:String = defaultText;
 			var messageBox:Object = FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
@@ -55,6 +55,7 @@ package org.flowerplatform.editor.model.action {
 				textArea = messageBox.textArea;
 			}
 			IMessageBox(messageBox).showMessageBox();
+			return IMessageBox(messageBox);
 		}
 	}
 }
