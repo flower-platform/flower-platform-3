@@ -27,8 +27,8 @@ import static com.crispico.flower.mp.codesync.code.java.adapter.JavaEnumConstant
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.INTERFACE;
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter.OPERATION;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
+import java.io.File;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Annotation;
@@ -97,11 +97,11 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 		
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
-		rightFactory.addModelAdapter(IFolder.class, folderModelAdapter);
+		rightFactory.addModelAdapter(File.class, folderModelAdapter, "");
 		
 		// java specific adapters
 		JavaFileModelAdapter fileModelAdapter = (JavaFileModelAdapter) createAstModelAdapter(new JavaFileModelAdapter());
-		rightFactory.addModelAdapter(IFile.class, fileModelAdapter, CodeSyncCodeJavaPlugin.TECHNOLOGY);
+		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavaPlugin.TECHNOLOGY);
 		rightFactory.addModelAdapter(AbstractTypeDeclaration.class, createAstModelAdapter(new JavaTypeModelAdapter()));
 		rightFactory.addModelAdapter(FieldDeclaration.class, createAstModelAdapter(new JavaAttributeModelAdapter()));
 		rightFactory.addModelAdapter(MethodDeclaration.class, createAstModelAdapter(new JavaOperationModelAdapter()));
@@ -121,9 +121,9 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 		
 		// feature providers
 		CodeSyncElementFeatureProvider featureProvider = new CodeSyncElementFeatureProvider();
-		addFeatureProvider(IFolder.class, featureProvider);
+		addFeatureProvider(File.class, featureProvider);
 		addFeatureProvider(AstModelElementAdapter.FOLDER, featureProvider);
-		addFeatureProvider(IFile.class, featureProvider);
+		addFeatureProvider(File.class, featureProvider);
 		addFeatureProvider(AstModelElementAdapter.FILE, featureProvider);
 		
 		JavaTypeFeatureProvider typeFeatureProvider = new JavaTypeFeatureProvider();

@@ -18,15 +18,15 @@
  */
 package com.crispico.flower.mp.codesync.base;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.core.resources.IFile;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModelAdapterFactory {
 	
 	protected static class ModelAdapterEntry {
 		public Class<?> clazz;
+		public String type;
 		public IModelAdapter modelAdapter;
 		public String extension;
 		
@@ -44,16 +44,16 @@ public class ModelAdapterFactory {
 	 * am pus functia de genul "IModelAdapter.isForType()", care ar fi implicat mereu
 	 * o iteratie.
 	 */
-	protected Map<Object, ModelAdapterEntry> modelAdapters = new HashMap<Object, ModelAdapterEntry>();
+	protected List<ModelAdapterEntry> modelAdapters = new ArrayList<ModelAdapterEntry>();
 	
 	/**
 	 * @author Cristi
 	 * @author Mariana
 	 */
 	public IModelAdapter getModelAdapter(Object modelElement) {
-		for (ModelAdapterEntry e : modelAdapters.values())
+		for (ModelAdapterEntry e : modelAdapters)
 			if (e.clazz != null && e.clazz.isAssignableFrom(modelElement.getClass())) {
-				if (e.extension == null || e.extension.equals(((IFile) modelElement).getFileExtension())) {
+				if (!(modelElement instanceof File) || CodeSyncPlugin.getInstance().getFileExtension(((File) modelElement)).equals(e.extension)) {
 					return e.modelAdapter;
 				}
 			}
@@ -64,7 +64,7 @@ public class ModelAdapterFactory {
 		ModelAdapterEntry e = new ModelAdapterEntry();
 		e.clazz = clazz;
 		e.modelAdapter = modelAdapter;
-		modelAdapters.put(clazz, e);
+		modelAdapters.add(e);
 		return e;
 	}
 	

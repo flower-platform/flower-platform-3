@@ -24,65 +24,44 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.java.JavaDragOnDiagramHandler;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
-import org.flowerplatform.web.database.DatabaseOperation;
-import org.flowerplatform.web.database.DatabaseOperationWrapper;
 import org.flowerplatform.web.projects.remote.ProjectsService;
-import org.flowerplatform.web.security.service.OrganizationService;
-import org.flowerplatform.web.temp.GeneralService;
 import org.flowerplatform.web.tests.TestUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
-import com.crispico.flower.mp.codesync.base.Diff;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.Match.MatchType;
-import com.crispico.flower.mp.codesync.base.action.ActionResult;
-import com.crispico.flower.mp.codesync.base.action.ActionSynchronize;
-import com.crispico.flower.mp.codesync.base.action.DiffAction;
-import com.crispico.flower.mp.codesync.base.action.MatchActionAddLeftToRight;
-import com.crispico.flower.mp.codesync.base.action.MatchActionAddRightToLeft;
-import com.crispico.flower.mp.codesync.base.action.MatchActionRemoveLeft;
-import com.crispico.flower.mp.codesync.base.action.MatchActionRemoveLeftRight;
-import com.crispico.flower.mp.codesync.base.action.MatchActionRemoveRight;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.codesync.code.java.CodeSyncCodeJavaPlugin;
-import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
-import com.crispico.flower.mp.model.astcache.code.Annotation;
-import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
+import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
-import com.crispico.flower.mp.model.astcache.code.Attribute;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
-import com.crispico.flower.mp.model.astcache.code.Operation;
-import com.crispico.flower.mp.model.astcache.code.Parameter;
-import com.crispico.flower.mp.model.astcache.code.TypedElement;
-import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
-import com.sun.xml.internal.bind.annotation.OverrideAnnotationOf;
 
 /**
  * @author Mariana
@@ -112,21 +91,21 @@ public class CodeSyncTest {
 	
 	@Before
 	public void before() {
-		IProject project = getProject();
+		File project = getProject();
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		service.cancelSelectedActions(project.getFullPath().toString(), true);
+		service.cancelSelectedActions(EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
 	}
 	
 	@Test
 	public void testMatchWhenSync() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(INITIAL);
-		String fullyQualifiedName = "/" + PROJECT + "/" + INITIAL + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + INITIAL + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + INITIAL + "/ACE.notation";
+		String fullyQualifiedName = PROJECT + "/" + INITIAL + "/" + SOURCE_FILE;
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + INITIAL + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + INITIAL + "/ACE.notation";
 		
-		IProject project = getProject();
+		File project = getProject();
 		
-		IFile file = getFile(fullyQualifiedName);
+		File file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
@@ -134,9 +113,9 @@ public class CodeSyncTest {
 		
 		assertEquals(1, match.getSubMatches().size());
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString(), true);
-		service.cancelSelectedActions(project.getFullPath().toString(), true);
+		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project));
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
+		service.cancelSelectedActions(EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, getFile(fullyQualifiedName), CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		Pair[] typeList = {
@@ -172,11 +151,11 @@ public class CodeSyncTest {
 	@Test
 	public void testMatchCacheDeleted() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(CACHE_DELETED);
-		String fullyQualifiedName = "/" + PROJECT + "/" + CACHE_DELETED + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + CACHE_DELETED + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + CACHE_DELETED + "/ACE.notation";
+		String fullyQualifiedName = PROJECT + "/" + CACHE_DELETED + "/" + SOURCE_FILE;
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + CACHE_DELETED + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + CACHE_DELETED + "/ACE.notation";
 		
-		IFile file = getFile(fullyQualifiedName);
+		File file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
@@ -213,11 +192,11 @@ public class CodeSyncTest {
 	@Test
 	public void testMatchNoConflicts() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(MODIFIED_NO_CONFLICTS);
-		String fullyQualifiedName = "/" + PROJECT + "/" + MODIFIED_NO_CONFLICTS + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS + "/ACE.notation";
+		String fullyQualifiedName = PROJECT + "/" + MODIFIED_NO_CONFLICTS + "/" + SOURCE_FILE;
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS + "/ACE.notation";
 
-		IFile file = getFile(fullyQualifiedName);
+		File file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
@@ -442,34 +421,34 @@ public class CodeSyncTest {
 	}
 	
 	@Test
-	public void testMatchNoConflictsAndPerformSync() {
+	public void testMatchNoConflictsAndPerformSync() throws IOException {
 		CodeSyncCodePlugin.getInstance().addSrcDir(MODIFIED_NO_CONFLICTS_PERFORM_SYNC);
-		String fullyQualifiedName = "/" + PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE;
-		String cseLocation = getProject().getFullPath().toString() + "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation";
-		String aceLocation = getProject().getFullPath().toString() + "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation";
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation";
+		String fullyQualifiedName = PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE;
+		File project = getProject();
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation";
+		File cseLocation = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION);
+		File aceLocation = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION);
 
-		IProject project = getProject();
 		
-		IFile file = getFile(fullyQualifiedName);
+		File file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString());
-		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), project.getFullPath().toString(), true);
+		service.synchronize(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project));
+		service.applySelectedActions(new StatefulServiceInvocationContext(communicationChannel), EditorPlugin.getInstance().getFileAccessController().getPath(project), true);
 		
 		String expected = TestUtil.readFile(DIR + TestUtil.EXPECTED + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE);
-		String actual = TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(file.getFullPath().toString()));
+		String actual = FileUtils.readFileToString(file);
 		assertEquals("Source not in sync", expected, actual);
 		
 		expected = TestUtil.readFile(DIR + TestUtil.EXPECTED + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation");
-		actual = TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(cseLocation));
+		actual = FileUtils.readFileToString(cseLocation);
 		assertEquals("CSE not in sync", expected, actual);
 		
 		expected = TestUtil.readFile(DIR + TestUtil.EXPECTED + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/ACE.notation");
-		actual = TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(aceLocation));
+		actual = FileUtils.readFileToString(aceLocation);
 		assertEquals("ACE not in sync", expected, actual);
 		
 //		Resource expectedCSE = CodeSyncMergePlugin.getInstance().getResource(null, new File(DIR + TestUtil.EXPECTED + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/CSE.notation"));
@@ -481,11 +460,11 @@ public class CodeSyncTest {
 	@Test
 	public void testMatchConflicts() {
 		CodeSyncCodePlugin.getInstance().addSrcDir(MODIFIED_CONFLICTS);
-		String fullyQualifiedName = "/" + PROJECT + "/" + MODIFIED_CONFLICTS + "/" + SOURCE_FILE;
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + MODIFIED_CONFLICTS + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + MODIFIED_CONFLICTS + "/ACE.notation";
+		String fullyQualifiedName = PROJECT + "/" + MODIFIED_CONFLICTS + "/" + SOURCE_FILE;
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_CONFLICTS + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/" + MODIFIED_CONFLICTS + "/ACE.notation";
 
-		IFile file = getFile(fullyQualifiedName);
+		File file = getFile(fullyQualifiedName);
 //		CodeSyncCodeJavaPlugin.getInstance().getFolderModelAdapter().setLimitedPath(file.getFullPath().toString());
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, true);
 		
@@ -601,24 +580,55 @@ public class CodeSyncTest {
 	}
 	
 	@Test
-	public void testValueAsString() {
-		assertTrue(CodeSyncCodePlugin.getInstance().testValueAsString());
+	public void testValueAsString() throws CoreException {
+		// STEP 1 : create FeatureChange
+		CodeSyncElement expectedCSE = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
+		FeatureChange expectedChange = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createFeatureChange();
+		expectedCSE.getFeatureChanges().put(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers(), expectedChange); 
+		EList<ExtendedModifier> modifiers = new BasicEList<ExtendedModifier>();
+		Modifier modifier = AstCacheCodeFactory.eINSTANCE.createModifier();
+		modifier.setType(3);
+		modifiers.add(modifier);
+		expectedChange.setOldValue(modifiers);
+		
+		// STEP 2 : put FC in resource and save
+		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("test");
+		if (!project.exists()) {
+			project.create(null);
+		}
+		project.open(null);
+		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(CodeSyncTestSuite.getProject("test"), "diagramEditorStatefulService");
+		File codeSyncElementsFile = CodeSyncTestSuite.getFile("test/CSE.notation");
+		Resource resource = null;
+		if (!codeSyncElementsFile.exists()) {
+			resource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementsFile);
+			resource.getContents().add(expectedCSE);
+			CodeSyncPlugin.getInstance().saveResource(resource);
+		}
+		
+		CodeSyncPlugin.getInstance().discardResource(resource);
+		
+		// STEP 3 : get value from resource
+		resource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementsFile);
+		assertEquals(1, resource.getContents().size());
+		CodeSyncElement actualCSE = (CodeSyncElement) resource.getContents().get(0);
+		FeatureChange actualChange = actualCSE.getFeatureChanges().get(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+		assertNotNull(actualChange);
+		EList<ExtendedModifier> actual = (EList<ExtendedModifier>) actualChange.getOldValue();
+		assertEquals(1, actual.size());
+		assertEquals(3, ((Modifier) actual.get(0)).getType());
 	}
 	
 	/////////////////////////////
 	// Utils
 	/////////////////////////////
 	
-	private IProject getProject() {
-		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + PROJECT;
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
-		return resource.getProject();
+	private File getProject() {
+		return CodeSyncTestSuite.getProject(PROJECT);
 	}
 	
-	private IFile getFile(String path) {
-		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath() + "/org/ws_trunk/" + path;
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
-		return (IFile) resource;
+	private File getFile(String path) {
+		return CodeSyncTestSuite.getFile(path);
 	}
 	
 	private Pair[] typeList;
@@ -626,9 +636,9 @@ public class CodeSyncTest {
 	private int i;
 	
 	private Match getMatch() {
-		IProject project = getProject();
+		File project = getProject();
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		CodeSyncEditableResource er = (CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
+		CodeSyncEditableResource er = (CodeSyncEditableResource) service.getEditableResource(EditorPlugin.getInstance().getFileAccessController().getPath(project));
 		assertNotNull("Editable resource for project " + project + " was not created", er);
 		return er.getMatch();
 	}
