@@ -21,6 +21,8 @@
         eType="#//CodeSyncElement" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="featureChanges" upperBound="-1"
         eType="#//EStructuralFeatureToFeatureChangeEntry" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relations" upperBound="-1"
+        eType="#//Relation" containment="true" eOpposite="#//Relation/source"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="EStructuralFeatureToFeatureChangeEntry"
       instanceClassName="java.util.Map$Entry">
@@ -59,4 +61,9 @@
         eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="MindMapRoot" eSuperTypes="#//CodeSyncRoot #//MindMapElement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Relation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//CodeSyncElement"
+        eOpposite="#//CodeSyncElement/relations"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//CodeSyncElement"/>
+  </eClassifiers>
 </ecore:EPackage>

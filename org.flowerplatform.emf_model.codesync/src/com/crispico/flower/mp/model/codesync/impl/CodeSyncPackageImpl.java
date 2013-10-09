@@ -38,9 +38,11 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
+import com.crispico.flower.mp.model.codesync.Connection;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 import com.crispico.flower.mp.model.codesync.MindMapElement;
 import com.crispico.flower.mp.model.codesync.MindMapRoot;
+import com.crispico.flower.mp.model.codesync.Relation;
 import com.crispico.flower.mp.model.codesync.ScenarioElement;
 import java.io.Serializable;
 
@@ -113,6 +115,13 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 	 * @generated
 	 */
 	private EClass mindMapRootEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass relationEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -275,6 +284,15 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 	 */
 	public EReference getCodeSyncElement_FeatureChanges() {
 		return (EReference)codeSyncElementEClass.getEStructuralFeatures().get(9);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getCodeSyncElement_Relations() {
+		return (EReference)codeSyncElementEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -471,6 +489,33 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getRelation() {
+		return relationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRelation_Source() {
+		return (EReference)relationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRelation_Target() {
+		return (EReference)relationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CodeSyncFactory getCodeSyncFactory() {
 		return (CodeSyncFactory)getEFactoryInstance();
 	}
@@ -505,6 +550,7 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		createEReference(codeSyncElementEClass, CODE_SYNC_ELEMENT__AST_CACHE_ELEMENT);
 		createEReference(codeSyncElementEClass, CODE_SYNC_ELEMENT__CHILDREN);
 		createEReference(codeSyncElementEClass, CODE_SYNC_ELEMENT__FEATURE_CHANGES);
+		createEReference(codeSyncElementEClass, CODE_SYNC_ELEMENT__RELATIONS);
 
 		eStructuralFeatureToFeatureChangeEntryEClass = createEClass(ESTRUCTURAL_FEATURE_TO_FEATURE_CHANGE_ENTRY);
 		createEReference(eStructuralFeatureToFeatureChangeEntryEClass, ESTRUCTURAL_FEATURE_TO_FEATURE_CHANGE_ENTRY__KEY);
@@ -534,6 +580,10 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		createEAttribute(mindMapElementEClass, MIND_MAP_ELEMENT__ICONS);
 
 		mindMapRootEClass = createEClass(MIND_MAP_ROOT);
+
+		relationEClass = createEClass(RELATION);
+		createEReference(relationEClass, RELATION__SOURCE);
+		createEReference(relationEClass, RELATION__TARGET);
 	}
 
 	/**
@@ -586,6 +636,7 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		initEReference(getCodeSyncElement_AstCacheElement(), this.getAstCacheElement(), this.getAstCacheElement_CodeSyncElement(), "astCacheElement", null, 0, 1, CodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCodeSyncElement_Children(), this.getCodeSyncElement(), null, "children", null, 0, -1, CodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getCodeSyncElement_FeatureChanges(), this.getEStructuralFeatureToFeatureChangeEntry(), null, "featureChanges", null, 0, -1, CodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCodeSyncElement_Relations(), this.getRelation(), this.getRelation_Source(), "relations", null, 0, -1, CodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(eStructuralFeatureToFeatureChangeEntryEClass, Map.Entry.class, "EStructuralFeatureToFeatureChangeEntry", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getEStructuralFeatureToFeatureChangeEntry_Key(), theEcorePackage.getEStructuralFeature(), null, "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -615,6 +666,10 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		initEAttribute(getMindMapElement_Icons(), theEcorePackage.getEString(), "icons", null, 0, -1, MindMapElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mindMapRootEClass, MindMapRoot.class, "MindMapRoot", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(relationEClass, Relation.class, "Relation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRelation_Source(), this.getCodeSyncElement(), this.getCodeSyncElement_Relations(), "source", null, 0, 1, Relation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRelation_Target(), this.getCodeSyncElement(), null, "target", null, 0, 1, Relation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -48,6 +48,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
  *   <li>{@link com.crispico.flower.mp.model.codesync.CodeSyncElement#getAstCacheElement <em>Ast Cache Element</em>}</li>
  *   <li>{@link com.crispico.flower.mp.model.codesync.CodeSyncElement#getChildren <em>Children</em>}</li>
  *   <li>{@link com.crispico.flower.mp.model.codesync.CodeSyncElement#getFeatureChanges <em>Feature Changes</em>}</li>
+ *   <li>{@link com.crispico.flower.mp.model.codesync.CodeSyncElement#getRelations <em>Relations</em>}</li>
  * </ul>
  * </p>
  *
@@ -298,5 +299,23 @@ public interface CodeSyncElement extends EObject {
 	 * @generated
 	 */
 	EMap<EStructuralFeature, FeatureChange> getFeatureChanges();
+
+	/**
+	 * Returns the value of the '<em><b>Relations</b></em>' containment reference list.
+	 * The list contents are of type {@link com.crispico.flower.mp.model.codesync.Relation}.
+	 * It is bidirectional and its opposite is '{@link com.crispico.flower.mp.model.codesync.Relation#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Relations</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Relations</em>' containment reference list.
+	 * @see com.crispico.flower.mp.model.codesync.CodeSyncPackage#getCodeSyncElement_Relations()
+	 * @see com.crispico.flower.mp.model.codesync.Relation#getSource
+	 * @model opposite="source" containment="true"
+	 * @generated
+	 */
+	EList<Relation> getRelations();
 
 } // CodeSyncElement

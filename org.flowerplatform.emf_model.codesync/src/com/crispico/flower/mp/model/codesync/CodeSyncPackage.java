@@ -178,13 +178,22 @@ public interface CodeSyncPackage extends EPackage {
 	int CODE_SYNC_ELEMENT__FEATURE_CHANGES = 9;
 
 	/**
+	 * The feature id for the '<em><b>Relations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_SYNC_ELEMENT__RELATIONS = 10;
+
+	/**
 	 * The number of structural features of the '<em>Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CODE_SYNC_ELEMENT_FEATURE_COUNT = 10;
+	int CODE_SYNC_ELEMENT_FEATURE_COUNT = 11;
 
 	/**
 	 * The meta object id for the '{@link com.crispico.flower.mp.model.codesync.impl.EStructuralFeatureToFeatureChangeEntryImpl <em>EStructural Feature To Feature Change Entry</em>}' class.
@@ -397,6 +406,15 @@ public interface CodeSyncPackage extends EPackage {
 	int CODE_SYNC_ROOT__FEATURE_CHANGES = CODE_SYNC_ELEMENT__FEATURE_CHANGES;
 
 	/**
+	 * The feature id for the '<em><b>Relations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_SYNC_ROOT__RELATIONS = CODE_SYNC_ELEMENT__RELATIONS;
+
+	/**
 	 * The number of structural features of the '<em>Root</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -554,6 +572,15 @@ public interface CodeSyncPackage extends EPackage {
 	int SCENARIO_ELEMENT__FEATURE_CHANGES = CODE_SYNC_ELEMENT__FEATURE_CHANGES;
 
 	/**
+	 * The feature id for the '<em><b>Relations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCENARIO_ELEMENT__RELATIONS = CODE_SYNC_ELEMENT__RELATIONS;
+
+	/**
 	 * The feature id for the '<em><b>Number</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -691,6 +718,15 @@ public interface CodeSyncPackage extends EPackage {
 	int MIND_MAP_ELEMENT__FEATURE_CHANGES = CODE_SYNC_ELEMENT__FEATURE_CHANGES;
 
 	/**
+	 * The feature id for the '<em><b>Relations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__RELATIONS = CODE_SYNC_ELEMENT__RELATIONS;
+
+	/**
 	 * The feature id for the '<em><b>Icons</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -809,6 +845,15 @@ public interface CodeSyncPackage extends EPackage {
 	int MIND_MAP_ROOT__FEATURE_CHANGES = CODE_SYNC_ROOT__FEATURE_CHANGES;
 
 	/**
+	 * The feature id for the '<em><b>Relations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__RELATIONS = CODE_SYNC_ROOT__RELATIONS;
+
+	/**
 	 * The feature id for the '<em><b>Icons</b></em>' attribute list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -826,6 +871,43 @@ public interface CodeSyncPackage extends EPackage {
 	 */
 	int MIND_MAP_ROOT_FEATURE_COUNT = CODE_SYNC_ROOT_FEATURE_COUNT + 1;
 
+
+	/**
+	 * The meta object id for the '{@link com.crispico.flower.mp.model.codesync.impl.RelationImpl <em>Relation</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.crispico.flower.mp.model.codesync.impl.RelationImpl
+	 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getRelation()
+	 * @generated
+	 */
+	int RELATION = 9;
+
+	/**
+	 * The feature id for the '<em><b>Source</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RELATION__SOURCE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Target</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RELATION__TARGET = 1;
+
+	/**
+	 * The number of structural features of the '<em>Relation</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RELATION_FEATURE_COUNT = 2;
 
 	/**
 	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.CodeSyncElement <em>Element</em>}'.
@@ -946,6 +1028,17 @@ public interface CodeSyncPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getCodeSyncElement_FeatureChanges();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link com.crispico.flower.mp.model.codesync.CodeSyncElement#getRelations <em>Relations</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Relations</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.CodeSyncElement#getRelations()
+	 * @see #getCodeSyncElement()
+	 * @generated
+	 */
+	EReference getCodeSyncElement_Relations();
 
 	/**
 	 * Returns the meta object for class '{@link java.util.Map.Entry <em>EStructural Feature To Feature Change Entry</em>}'.
@@ -1174,6 +1267,38 @@ public interface CodeSyncPackage extends EPackage {
 	EClass getMindMapRoot();
 
 	/**
+	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.Relation <em>Relation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Relation</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.Relation
+	 * @generated
+	 */
+	EClass getRelation();
+
+	/**
+	 * Returns the meta object for the container reference '{@link com.crispico.flower.mp.model.codesync.Relation#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Source</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.Relation#getSource()
+	 * @see #getRelation()
+	 * @generated
+	 */
+	EReference getRelation_Source();
+
+	/**
+	 * Returns the meta object for the reference '{@link com.crispico.flower.mp.model.codesync.Relation#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.Relation#getTarget()
+	 * @see #getRelation()
+	 * @generated
+	 */
+	EReference getRelation_Target();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1284,6 +1409,14 @@ public interface CodeSyncPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CODE_SYNC_ELEMENT__FEATURE_CHANGES = eINSTANCE.getCodeSyncElement_FeatureChanges();
+
+		/**
+		 * The meta object literal for the '<em><b>Relations</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CODE_SYNC_ELEMENT__RELATIONS = eINSTANCE.getCodeSyncElement_Relations();
 
 		/**
 		 * The meta object literal for the '{@link com.crispico.flower.mp.model.codesync.impl.EStructuralFeatureToFeatureChangeEntryImpl <em>EStructural Feature To Feature Change Entry</em>}' class.
@@ -1468,6 +1601,32 @@ public interface CodeSyncPackage extends EPackage {
 		 * @generated
 		 */
 		EClass MIND_MAP_ROOT = eINSTANCE.getMindMapRoot();
+
+		/**
+		 * The meta object literal for the '{@link com.crispico.flower.mp.model.codesync.impl.RelationImpl <em>Relation</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.crispico.flower.mp.model.codesync.impl.RelationImpl
+		 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getRelation()
+		 * @generated
+		 */
+		EClass RELATION = eINSTANCE.getRelation();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RELATION__SOURCE = eINSTANCE.getRelation_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RELATION__TARGET = eINSTANCE.getRelation_Target();
 
 	}
 
