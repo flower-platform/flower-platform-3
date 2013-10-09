@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.web.properties.remote;
+package org.flowerplatform.editor.model.properties.remote;
 
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;

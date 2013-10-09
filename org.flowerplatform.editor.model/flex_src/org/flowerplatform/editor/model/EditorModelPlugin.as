@@ -36,6 +36,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
@@ -152,6 +153,8 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
+			
+			
 		}
 		
 		override public function start():void {
@@ -173,6 +176,8 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
 			
 			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
+			
+			registerClassAliasFromAnnotation(DiagramSelectedItem);
 		}
 		
 		override protected function registerMessageBundle():void {

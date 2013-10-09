@@ -24,5 +24,19 @@
             fileExtension="notation">
       </fileExtensionToContentTypeMapping>
    </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="javaClass"
+            propertiesProviderClass="org.flowerplatform.editor.model.properties.JavaClassPropertiesProvider">
+      </propertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="javaAttribute"
+            propertiesProviderClass="org.flowerplatform.editor.model.properties.JavaAttributePropertiesProvider">
+      </propertiesProvider>
+   </extension>
 
 </plugin>

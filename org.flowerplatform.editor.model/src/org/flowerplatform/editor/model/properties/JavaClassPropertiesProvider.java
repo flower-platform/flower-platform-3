@@ -16,18 +16,18 @@
  *
  * license-end
  */
-package org.flowerplatform.web.properties;
+package org.flowerplatform.editor.model.properties;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.View;
 import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.SelectedItem;
-import org.flowerplatform.web.properties.remote.DiagramSelectedItem;
 
 import com.crispico.flower.mp.model.astcache.code.Attribute;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;

@@ -43,7 +43,6 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
-	import org.flowerplatform.web.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.web.properties.remote.FileSelectedItem;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
@@ -127,8 +126,6 @@ package org.flowerplatform.web {
 			// TODO remove me :
 			btn = new Button();
 			btn.label = "File Prop Prov";
-			registerClassAliasFromAnnotation(FileSelectedItem);
-			registerClassAliasFromAnnotation(DiagramSelectedItem);
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				var pathFromWorkspace:String = "crispico/ws_trunk/wd1";
 				
@@ -146,9 +143,8 @@ package org.flowerplatform.web {
 					));				
 			});
 			hBox.addChild(btn);
-			btn = new Button();
+/*			btn = new Button();
 			btn.label = "Diagram Prop Prov";
-			registerClassAliasFromAnnotation(FileSelectedItem);
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				var diagramEditableResourcePath:String = "/crispico/ws_trunk/wd1/NewDiagram1.notation";
 				var xmiID:String = "_wUgVYPnAEeKpg94yU-UoAw";
@@ -166,7 +162,7 @@ package org.flowerplatform.web {
 						}
 					));				
 			});
-			hBox.addChild(btn);
+			hBox.addChild(btn);*/
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
 			
 			var workbench:Workbench = new Workbench();
@@ -212,6 +208,13 @@ package org.flowerplatform.web {
 				}
 			}
 			return null;
+		}
+		
+		/**
+		 * @author Tache Razvan Mihai
+		 */
+		override protected function registerClassAliases():void {
+			registerClassAliasFromAnnotation(FileSelectedItem);
 		}
 	}
 }

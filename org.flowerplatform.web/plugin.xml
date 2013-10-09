@@ -332,20 +332,6 @@
       </propertiesProvider>
    </extension>
    <extension
-         point="org.flowerplatform.properties.propertiesProvider">
-      <propertiesProvider
-            itemType="javaClass"
-            propertiesProviderClass="org.flowerplatform.web.properties.JavaClassPropertiesProvider">
-      </propertiesProvider>
-   </extension>
-   <extension
-         point="org.flowerplatform.properties.propertiesProvider">
-      <propertiesProvider
-            itemType="javaAttribute"
-            propertiesProviderClass="org.flowerplatform.web.properties.JavaAttributePropertiesProvider">
-      </propertiesProvider>
-   </extension>
-   <extension
          point="org.flowerplatform.communication.service">
       <service
             id="propertiesProviderService"

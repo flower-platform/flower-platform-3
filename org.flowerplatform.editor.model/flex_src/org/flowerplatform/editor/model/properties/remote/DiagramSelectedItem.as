@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package org.flowerplatform.web.properties.remote {
+package org.flowerplatform.editor.model.properties.remote {
 	[Bindable]
 	[RemoteClass]
 	[SecureSWF(rename="off")]
