@@ -23,6 +23,7 @@ package org.flowerplatform.web {
 	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
+	import mx.collections.IList;
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
@@ -40,6 +41,7 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.common.properties.ui.PropertiesList;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
 	import org.flowerplatform.web.properties.remote.DiagramSelectedItem;
@@ -69,7 +71,7 @@ package org.flowerplatform.web {
 		public var currentPerspective:Perspective;
 		
 		public var perspectives:Vector.<Perspective> = new Vector.<Perspective>();
-		
+	
 		override public function preStart():void {
 			super.preStart();
 			webCommonPlugin.preStart();
@@ -138,7 +140,7 @@ package org.flowerplatform.web {
 								myObject,
 								function(object:Object):void {
 									var x:Object = object;
-									btn.label = "succes";
+									webCommonPlugin.propertyList.dataProvider = object as IList;
 								}
 					));				
 			});
@@ -159,7 +161,7 @@ package org.flowerplatform.web {
 						myObject,
 						function(object:Object):void {
 							var x:Object = object;
-							btn.label = "succes";
+							webCommonPlugin.propertyList.dataProvider = object as IList;
 						}
 					));				
 			});

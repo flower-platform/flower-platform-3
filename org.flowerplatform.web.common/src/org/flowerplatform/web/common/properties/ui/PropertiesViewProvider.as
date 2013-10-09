@@ -26,6 +26,7 @@ package org.flowerplatform.web.common.properties.ui {
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.explorer.ExplorerTreeList;
 	
 	import spark.components.Button;
@@ -44,9 +45,9 @@ package org.flowerplatform.web.common.properties.ui {
 		}
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {
-			var propertiesList:PropertiesList = new PropertiesList();
+			WebCommonPlugin.getInstance().propertyList = new PropertiesList();
 			
-			return propertiesList;
+			return WebCommonPlugin.getInstance().propertyList;
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String	{

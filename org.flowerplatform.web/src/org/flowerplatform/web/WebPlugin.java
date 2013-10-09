@@ -121,7 +121,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService("explorerTreeStatefulService", new org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService());
 	}
-	
+	 
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {
 		// nodeTypeToCategoriesMapping 
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.nodeTypeToCategoriesMapping");

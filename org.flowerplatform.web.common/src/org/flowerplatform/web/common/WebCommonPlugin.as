@@ -42,6 +42,7 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.web.common.projects.ProjectPropertiesAction;
 	import org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction;
 	import org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction;
+	import org.flowerplatform.web.common.properties.ui.PropertiesList;
 	import org.flowerplatform.web.common.properties.ui.PropertiesViewProvider;
 	import org.flowerplatform.web.common.remote.InitializeNodeTypeCategoryToNodeTypesMapClientCommand;
 	import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
@@ -75,6 +76,8 @@ package org.flowerplatform.web.common {
 		public static const NODE_TYPE_CATEGORY_DECORATABLE_FILE:String = "decoratableFile";
 		
 		public var authenticationManager:AuthenticationManager;
+		
+		public var propertyList:PropertiesList;
 		
 		/**
 		 * @author Mariana
