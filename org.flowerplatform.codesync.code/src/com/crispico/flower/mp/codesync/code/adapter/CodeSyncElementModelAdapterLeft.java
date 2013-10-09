@@ -136,6 +136,22 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	}
 
 	@Override
+	public void allActionsPerformed(Object element, Object correspondingElement) {
+		super.allActionsPerformed(element, correspondingElement);
+		
+		CodeSyncElement cse = getCodeSyncElement(element);
+		if (cse != null) {
+			boolean sync = cse.getFeatureChanges().size() == 0;
+			if (sync != cse.isSynchronized()) {
+				cse.setSynchronized(sync);
+				if (cse.eContainer() instanceof CodeSyncElement) {
+					setChildrenSync((CodeSyncElement) cse.eContainer());
+				}
+			}
+		}
+	}
+
+	@Override
 	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature) {
 		CodeSyncElement cse = getCodeSyncElement(element);
 		if (cse != null) {
@@ -261,8 +277,9 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 					Object child = findChild(children, result.childMatchKey);
 					if (child != null && child instanceof CodeSyncElement) {
 						if (result.childAdded) {
-							setSyncAndPropagateToChildren((CodeSyncElement) child);
-							setParentSync((CodeSyncElement) element);
+							if (child instanceof CodeSyncElement) {
+								((CodeSyncElement) child).setAdded(false);
+							}
 						} else {
 							children.remove(child);
 						}
@@ -272,27 +289,22 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 		}
 	}
 	
-	private void setSyncAndPropagateToChildren(CodeSyncElement element) {
-		element.setAdded(false);
-		element.setDeleted(false);
-		element.setSynchronized(true);
-		element.setChildrenSynchronized(true);
-		for (CodeSyncElement child : element.getChildren()) {
-			setSyncAndPropagateToChildren(child);
-		}
-	}
-	
-	private void setParentSync(CodeSyncElement element) {
+	private void setChildrenSync(CodeSyncElement element) {
 		boolean childrenSync = true;
 		for (CodeSyncElement child : element.getChildren()) {
 			if (!child.isSynchronized() || !child.isChildrenSynchronized()) {
 				childrenSync = false;
+				break; // found one child that is not sync
 			}
 		}
-		element.setChildrenSynchronized(childrenSync);
-		CodeSyncElement parent = (CodeSyncElement) element.eContainer();
-		if (parent != null) {
-			setParentSync(parent);
+		boolean oldChildrenSync = element.isChildrenSynchronized();
+		if (oldChildrenSync != childrenSync) {
+			// set new childrenSync status and go up on the parent
+			element.setChildrenSynchronized(childrenSync);
+			CodeSyncElement parent = (CodeSyncElement) element.eContainer();
+			if (parent != null) {
+				setChildrenSync(parent);
+			}
 		}
 	}
 	
