@@ -42,7 +42,6 @@ package  org.flowerplatform.blazeds {
 	import mx.rpc.AsyncResponder;
 	import mx.rpc.events.FaultEvent;
 	import mx.rpc.events.ResultEvent;
-	import mx.utils.StringUtil;
 	import mx.utils.UIDUtil;
 	import mx.utils.URLUtil;
 	
@@ -156,7 +155,6 @@ package  org.flowerplatform.blazeds {
 			if (logger.isDebugEnabled())
 				ServerConfig.channelSetFactory = DebugChannelSet;
 			
-			
 			producer = !logger.isDebugEnabled() ? new CustomProducer() : new DebugCustomProducer(); 
 			producer.destination = BLAZEDS_DESTINATION;
 			
@@ -174,7 +172,7 @@ package  org.flowerplatform.blazeds {
 			producer.addEventListener(MessageAckEvent.ACKNOWLEDGE, messageArrivedHandler);
 			producer.addEventListener(MessageFaultEvent.FAULT, producerFaultHandler);
 		}
-		
+
 		/**
 		 * Called without username and password for connecting without authentication.
 		 * In case that connection can not be done without credentials, 
@@ -591,12 +589,12 @@ package  org.flowerplatform.blazeds {
 			channelSet = new ChannelSet();
 			
 			if (channelToUse == BLAZEDS_STREAMING_CHANNEL || channelToUse == BLAZEDS_ALL_CHANNELS) {
-				var streamingChannel:StreamingAMFChannel = new StreamingAMFChannel("blazedsStreamingAMFChannel", getFullURL("messagebroker/streamingamf"));			
+				var streamingChannel:StreamingAMFChannel = new StreamingAMFChannel("blazedsStreamingAMFChannel", FlexUtilGlobals.getInstance().createAbsoluteUrl("messagebroker/streamingamf"));
 				channelSet.addChannel(streamingChannel);
 			}
 			
 			if (channelToUse == BLAZEDS_POLLING_CHANNEL || channelToUse == BLAZEDS_ALL_CHANNELS) {
-				var pollingChannel:AMFChannel = new AMFChannel("blazedsLongPollingAMFChannel", getFullURL("messagebroker/amflongpolling"));
+				var pollingChannel:AMFChannel = new AMFChannel("blazedsLongPollingAMFChannel", FlexUtilGlobals.getInstance().createAbsoluteUrl("messagebroker/amflongpolling"));
 				pollingChannel.pollingEnabled = true;
 				pollingChannel.pollingInterval = 3000;
 				channelSet.addChannel(pollingChannel);
@@ -604,19 +602,6 @@ package  org.flowerplatform.blazeds {
 			
 			producer.channelSet = channelSet;
 			consumer.channelSet = channelSet;
-		}
-		
-		private function getFullURL(channelPath:String):String {
-			// Determine context root dynamically
-			var applicationURL:String = FlexGlobals.topLevelApplication.url;
-			
-			var serverURLWithPort:String = URLUtil.getServerNameWithPort(applicationURL) + "/";
-			var tokens:Array = applicationURL.split(serverURLWithPort);
-			var protocol:String = tokens[0];
-			var restURL:String = tokens[1];
-			var newContextRoot:String = restURL.substring(0, restURL.indexOf("/"));
-			
-			return protocol.concat(serverURLWithPort, newContextRoot, "/", channelPath);			
 		}
 		
 		private static const CLIENT_CONNECTING_RETRY_PERIOD:String = "client.connecting.retry.period";

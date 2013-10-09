@@ -23,9 +23,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.file_event.FileEvent;
+import org.flowerplatform.common.file_event.IFileEventListener;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
-import org.flowerplatform.file_event.FileEvent;
-import org.flowerplatform.file_event.IFileEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

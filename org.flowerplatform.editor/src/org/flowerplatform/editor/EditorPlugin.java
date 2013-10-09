@@ -165,4 +165,19 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 				return editorStatefulService;
 		return null;
 	}
+	
+	public String getContentTypeFromFileName(String fileName) {
+		String contentType = null;
+		int lastDotIndex = fileName.lastIndexOf('.');
+		if (lastDotIndex >= 0) {
+			// has an extension
+			String extension = fileName.substring(lastDotIndex + 1);
+			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get(extension);
+		}
+		if (contentType == null) {
+			// not found; revert to default
+			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");
+		}
+		return contentType;
+	}
 }

@@ -14,8 +14,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.change,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.teneo.hibernate,
- org.hibernate,
- org.flowerplatform.file_event
+ org.hibernate
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.flowerplatform.editor.model,

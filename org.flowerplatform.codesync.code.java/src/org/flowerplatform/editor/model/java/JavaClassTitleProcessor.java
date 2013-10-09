@@ -29,7 +29,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavaClassTitleProcessor extends JavaClassChildProcessor {
 
 	@Override
-	protected String getLabel(EObject object) {
+	public String getLabel(EObject object, boolean forEditing) {
 		return (String) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, 
 				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 	}

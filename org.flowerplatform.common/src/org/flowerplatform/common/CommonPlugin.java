@@ -22,8 +22,8 @@ import java.io.File;
 import java.io.InputStream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.flowerplatform.common.file_event.FileEventDispatcher;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
-import org.flowerplatform.file_event.FileEventDispatcher;
 import org.osgi.framework.BundleContext;
 
 

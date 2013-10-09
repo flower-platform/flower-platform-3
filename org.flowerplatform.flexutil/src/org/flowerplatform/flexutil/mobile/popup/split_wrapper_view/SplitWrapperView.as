@@ -36,6 +36,8 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 		
 		protected var toggleOneViewModeLeftViewActive:ToggleOneViewModeLeftViewActiveAction;
 		
+		public var visibleOnlyOnEmptySelection:Boolean = true;
+		
 		public function SplitWrapperView() {
 			super();
 			
@@ -47,6 +49,8 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 			
 			toggleOneViewModeLeftViewActive = new ToggleOneViewModeLeftViewActiveAction();
 			toggleOneViewModeLeftViewActive.splitWrapperView = this;
+			
+			destructionPolicy = "never";
 		}
 		
 		public function get leftActiveComponent():IVisualElement {
@@ -164,6 +168,14 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 			
 			if (data.rightActiveComponent) {
 				rightActiveComponent = IVisualElement(data.rightActiveComponent);
+			}
+			
+			if (data.visibleOnlyOnEmptySelection) {
+				visibleOnlyOnEmptySelection = data.visibleOnlyOnEmptySelection;
+			}
+			
+			if (data.destructionPolicy) {
+				destructionPolicy = data.destructionPolicy;
 			}
 
 			activePopupContent = leftActiveComponent is IPopupContent ? IPopupContent(leftActiveComponent) : null;

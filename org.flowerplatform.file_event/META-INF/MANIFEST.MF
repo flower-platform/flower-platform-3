@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: File_event
-Bundle-SymbolicName: org.flowerplatform.file_event
-Export-Package: org.flowerplatform.file_event
-Bundle-Version: 1.0

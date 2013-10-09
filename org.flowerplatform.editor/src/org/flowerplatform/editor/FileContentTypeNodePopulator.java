@@ -38,17 +38,8 @@ public class FileContentTypeNodePopulator implements INodePopulator {
 			return false;
 		}
 		
-		String contentType = null;
-		int lastDotIndex = file.getName().lastIndexOf('.');
-		if (lastDotIndex >= 0) {
-			// has an extension
-			String extension = file.getName().substring(lastDotIndex + 1);
-			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get(extension);
-		}
-		if (contentType == null) {
-			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");
-		}
-		if (contentType != null) {			
+		String contentType = EditorPlugin.getInstance().getContentTypeFromFileName(file.getName());
+		if (contentType != null) {
 			destination.getOrCreateCustomData().put(EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE, EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType).getIndex());
 		}
 		return true;
