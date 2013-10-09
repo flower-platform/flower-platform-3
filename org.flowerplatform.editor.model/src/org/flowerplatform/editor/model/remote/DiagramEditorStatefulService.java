@@ -47,6 +47,7 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.model.ContentAssistItem;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.IContentAssist;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
@@ -115,7 +116,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
 		super.loadEditableResource(context, editableResource);		
 		DiagramEditableResource er = (DiagramEditableResource) editableResource;
-		URI resourceURI = URI.createFileURI(er.getFile().getAbsolutePath());
+		URI resourceURI = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(er.getFile());
 		er.setChangeRecorder(new ChangeRecorder());
 		
 		try {
@@ -288,9 +289,8 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		if (project != null) {
 			String path = project.getAbsolutePath();
 			for (EditableResource er : editableResources.values()) {
-				DiagramEditableResource der = (DiagramEditableResource) er;
-				File diagram = der.getFile();
-				if (diagram.getAbsolutePath().startsWith(path)) {
+				DiagramEditableResource der = (DiagramEditableResource) er;				
+				if (EditorPlugin.getInstance().getFileAccessController().getAbsolutePath(der.getFile()).startsWith(path)) {
 					return der;
 				}
 			}

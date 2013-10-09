@@ -19,10 +19,12 @@
 package org.flowerplatform.common;
 
 import java.io.File;
-import java.io.InputStream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.common.file_event.FileEventDispatcher;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
+import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -34,6 +36,8 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 
 	protected static CommonPlugin INSTANCE;
 	
+	public static final String FLOWER_PROPERTIES_EXTENSION_POINT = "org.flowerplatform.common.flowerProperties";
+	
 	public static CommonPlugin getInstance() {
 		return INSTANCE;
 	}
@@ -43,7 +47,7 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	private FlowerWebProperties flowerWebProperties;
+	private FlowerProperties flowerProperties;
 	
 	/**
 	 * @author Tache Razvan Mihai
@@ -76,26 +80,34 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 		return relative;
 	}
 	
-	/**
-	 * Initialized from the web plugin.
-	 * 
-	 * @author Mariana
+	/**	
+	 * @author Cristina Constatinescu
 	 */
-	public FlowerWebProperties getFlowerWebProperties() {
-		return flowerWebProperties;
+	public FlowerProperties getFlowerProperties() {
+		if (flowerProperties == null) {
+			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(FLOWER_PROPERTIES_EXTENSION_POINT);
+			if (configurationElements.length == 0) {
+				throw new RuntimeException("No flower properties provider has been set! Please register it using " + FLOWER_PROPERTIES_EXTENSION_POINT + " extension point.");
+			}
+			for (IConfigurationElement configurationElement : configurationElements) {
+				try {
+					IFlowerPropertiesProvider provider = (IFlowerPropertiesProvider) configurationElement.createExecutableExtension("flowerPropertiesProviderClass");
+					flowerProperties = new FlowerProperties(provider.getFlowerPropertiesAsInputStream());
+					break;
+				} catch (CoreException e) {
+					return null;
+				}				
+			}
+			
+		}
+		return flowerProperties;
 	}
 
-	/**
-	 * @author Mariana
-	 */
-	public void initializeProperties(InputStream inputStream) {
-		flowerWebProperties = new FlowerWebProperties(inputStream);
-	}
-	
 	/**
 	 * @author Tache Razvan Mihai
 	 */
 	public FileEventDispatcher getFileEventDispatcher() {
 		return fileEventDispatcher;
 	}
+	
 }

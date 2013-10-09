@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.editor;
+package org.flowerplatform.editor.file;
 
 import java.io.File;
 
@@ -24,6 +24,7 @@ import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.INodePopulator;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.editor.EditorPlugin;
 
 public class FileContentTypeNodePopulator implements INodePopulator {
 

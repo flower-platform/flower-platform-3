@@ -50,6 +50,8 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected ComposedContentAssist composedContentAssist;
 	
+	private IModelAccessController modelAccessController;
+	
 	public ComposedChangeProcessor getComposedChangeProcessor() {
 		return composedChangeProcessor;
 	}
@@ -148,4 +150,12 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		// do nothing, because we don't have messages (yet)
 	}
 
+	public IModelAccessController getModelAccessController() {
+		return modelAccessController;
+	}
+
+	public void setModelAccessController(IModelAccessController modelAccessController) {
+		this.modelAccessController = modelAccessController;
+	}
+	
 }

@@ -46,11 +46,11 @@ public abstract class HeartbeatTask extends TimeoutAbstractObject {
 	protected static long noActivityOnClientInterval;
 	
 	static {
-		noHeartbeatFromClientInterval = valueOf(CommonPlugin.getInstance().getFlowerWebProperties()
+		noHeartbeatFromClientInterval = valueOf(CommonPlugin.getInstance().getFlowerProperties()
 				.getProperty(SERVER_HEARTBEAT_PERIOD));
-		warnAboutNoActivityInterval = valueOf(CommonPlugin.getInstance().getFlowerWebProperties()
+		warnAboutNoActivityInterval = valueOf(CommonPlugin.getInstance().getFlowerProperties()
 				.getProperty(WARN_ABOUT_NO_ACTIVITY_INTERVAL));
-		noActivityOnClientInterval = valueOf(CommonPlugin.getInstance().getFlowerWebProperties()
+		noActivityOnClientInterval = valueOf(CommonPlugin.getInstance().getFlowerProperties()
 				.getProperty(CLIENT_NO_ACTIVITY_PERIOD));			
 	} 
 	

@@ -62,5 +62,11 @@
             filter="(other.info=org.flowerplatform.eclipse)">
       </serviceSelector>
    </extension>
+   <extension
+         point="org.flowerplatform.common.flowerProperties">
+      <flowerPropertiesProvider
+            flowerPropertiesProviderClass="org.flowerplatform.eclipse.EclipseFlowerPropertiesProvider">
+      </flowerPropertiesProvider>
+   </extension>
 
 </plugin>
