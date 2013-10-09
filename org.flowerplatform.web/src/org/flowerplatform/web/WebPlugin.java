@@ -37,6 +37,7 @@ import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.file.FileAccessController;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
+import org.flowerplatform.web.projects.WebProjectsProvider;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.service.GroupService;
@@ -44,6 +45,9 @@ import org.flowerplatform.web.security.service.OrganizationService;
 import org.flowerplatform.web.security.service.PermissionService;
 import org.flowerplatform.web.security.service.UserService;
 import org.osgi.framework.BundleContext;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 
 /**
  * @author Cristi
@@ -129,6 +133,10 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
 		}
 		initExtensionPoint_nodeTypeToCategoriesMapping();
+		
+		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
 		
 		// do these initializations here, after the services have been instantiated
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {

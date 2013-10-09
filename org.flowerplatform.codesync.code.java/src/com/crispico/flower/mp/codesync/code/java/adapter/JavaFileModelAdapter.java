@@ -18,44 +18,37 @@
  */
 package com.crispico.flower.mp.codesync.code.java.adapter;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.ITextFileBufferManager;
-import org.eclipse.core.filebuffers.LocationKind;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
+import org.apache.commons.io.FileUtils;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jface.text.IDocument;
+import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
+import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
-
 import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
- * Mapped to {@link IFile}s with the extension <code>java</code>. Chidren are {@link ASTNode}s.
+ * Mapped to {@link File}s with the extension <code>java</code>. Chidren are {@link ASTNode}s.
  * 
  * @author Mariana
  */
 public class JavaFileModelAdapter extends AstModelElementAdapter {
 
-	private Map<IPath, CompilationUnit> compilationUnits = new HashMap<IPath, CompilationUnit>();
+	private Map<File, CompilationUnit> compilationUnits = new HashMap<File, CompilationUnit>();
 	
-	private final String RENAMED = "renamed";
+	private Map<File, String> filesToRename = new HashMap<File, String>();
 	
 	@Override
 	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue) {
@@ -76,19 +69,14 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	@Override
 	public void setValueFeatureValue(Object element, Object feature, Object value) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name().equals(feature)) {
-			IFile file = getFile(element);
-			try {
-				IMarker marker = file.createMarker(IMarker.MARKER);
-				marker.setAttribute(RENAMED, value);
-			} catch (CoreException e) {
-				e.printStackTrace();
-			}
+			File file = getFile(element);
+			filesToRename.put(file, (String) value);
 		}
 	}
 
 	@Override
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
-		IFile file = getFile(element);
+		File file = getFile(element);
 		CompilationUnit cu = getOrCreateCompilationUnit(file);
 		ASTNode node = (ASTNode) JavaTypeModelAdapter.createCorrespondingModelElement(cu.getAST(), (CodeSyncElement) correspondingChild);
 		cu.types().add(node);
@@ -114,24 +102,18 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	 * Returns the compilation unit for the <code>file</code>'s path, if it exists.
 	 * Otherwise, creates a new compilation unit from the file's content.
 	 */
-	private CompilationUnit getOrCreateCompilationUnit(IFile file) {
-		IPath path = file.getFullPath();
-		if (compilationUnits.containsKey(path)) {
-			return compilationUnits.get(path);
+	private CompilationUnit getOrCreateCompilationUnit(File file) {
+		if (compilationUnits.containsKey(file)) {
+			return compilationUnits.get(file);
 		} else {
 			ASTParser parser = ASTParser.newParser(AST.JLS4);
 			Map options = new HashMap<>(JavaCore.getOptions());
 			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
 			parser.setCompilerOptions(options);
-			try {
-				file.refreshLocal(IResource.DEPTH_ZERO, null);
-			} catch (CoreException e) {
-				throw new RuntimeException(e);
-			}
 			char[] initialContent = file.exists() ? getFileContent(file) : new char[0];
 			parser.setSource(initialContent);
 			CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
-			compilationUnits.put(file.getFullPath(), astRoot);
+			compilationUnits.put(file, astRoot);
 			astRoot.recordModifications();
 			return astRoot;
 		}
@@ -155,19 +137,12 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 		return Collections.emptyList();
 	}
 	
-	private char[] getFileContent(IFile file) {
-		ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager(); // get the buffer manager
-		IPath path = file.getFullPath();
+	private char[] getFileContent(File file) {
 		try {
-			bufferManager.connect(path, LocationKind.IFILE, null);
-			ITextFileBuffer textFileBuffer = bufferManager.getTextFileBuffer(path, LocationKind.IFILE);
-			// retrieve the buffer
-			IDocument document = textFileBuffer.getDocument();
-			return document.get().toCharArray();
-		} catch (CoreException e) {
-			e.printStackTrace();
+			return FileUtils.readFileToString(file).toCharArray();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		return new char[0];
 	}
 
 	@Override
@@ -180,52 +155,36 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	 */
 	@Override
 	public boolean save(Object element) {
-		IFile file = getFile(element);
+		File file = getFile(element);
 		if (!file.exists()) {
-			InputStream is = new ByteArrayInputStream(new byte[0]);
 			try {
-				file.create(is, true, null);
-			} catch (CoreException e) {
-				e.printStackTrace();
+				file.createNewFile();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
 			}
 		}
 		
-		try {
-			for (IMarker marker : file.findMarkers(IMarker.MARKER, false, IResource.DEPTH_ZERO)) {
-				String value = (String) marker.getAttribute(RENAMED);
-				if (value != null) {
-					file.move(file.getFullPath().removeLastSegments(1).append((String) value), true, null);
-					break;
-				}
-			}
-		} catch (CoreException e1) {
+		String newName = filesToRename.get(file);
+		if (newName != null) {
+			File dest = new File(file.getParent(), newName);
+			file.renameTo(dest);
 		}
 		
-		IPath path = file.getFullPath();
 		if (file.exists()) {
-			CompilationUnit cu = compilationUnits.get(path);
+			CompilationUnit cu = compilationUnits.get(file);
 			if (cu != null) {
-				ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager(); // get the buffer manager
+				Document document;
 				try {
-					bufferManager.connect(path, LocationKind.IFILE, null);
-					ITextFileBuffer textFileBuffer = bufferManager.getTextFileBuffer(path, LocationKind.IFILE);
-					// retrieve the buffer
-					IDocument document = textFileBuffer.getDocument();
+					document = new Document(FileUtils.readFileToString(file));
 					TextEdit edits = cu.rewrite(document, null);
 					edits.apply(document);
-					// commit changes to underlying file
-					textFileBuffer.commit(null, true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				try {
-					bufferManager.disconnect(path, LocationKind.IFILE, null);
-				} catch (CoreException e) {
-					e.printStackTrace();
+					FileUtils.writeStringToFile(file, document.get()); // TODO replace with call to IFileAccess
+				} catch (IOException | MalformedTreeException | BadLocationException e) {
+					throw new RuntimeException(e);
 				}
 			}
 		}
-		compilationUnits.remove(path);
+		compilationUnits.remove(file);
 		
 		// no need to call save for the AST
 		return false;
@@ -236,15 +195,14 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	 */
 	@Override
 	public boolean discard(Object element) {
-		IPath path = getFile(element).getFullPath();
-		compilationUnits.remove(path);
+		compilationUnits.remove(getFile(element));
 		
 		// no need to call discard for the AST
 		return false;
 	}
 	
-	private IFile getFile(Object modelElement) {
-		return (IFile) modelElement;
+	private File getFile(Object modelElement) {
+		return (File) modelElement;
 	}
 	
 }

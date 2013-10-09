@@ -18,13 +18,14 @@
  */
 package com.crispico.flower.mp.codesync.merge;
 
+import java.io.File;
 import java.util.List;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
@@ -66,16 +67,17 @@ public class CodeSyncMergePlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 	public void mergeModels(List<?> selection, CommunicationChannel communicationChannel) {
-		IFile ancestorFile = (IFile) selection.get(0);
-		IFile leftFile = (IFile) selection.get(1);
-		IFile rightFile = (IFile) selection.get(2);
+		File ancestorFile = (File) selection.get(0);
+		File leftFile = (File) selection.get(1);
+		File rightFile = (File) selection.get(2);
 		
 		Match match = new Match();
 		match.setAncestor(CodeSyncPlugin.getInstance().getResource(null, ancestorFile).getContents().get(0));
 		match.setLeft(CodeSyncPlugin.getInstance().getResource(null, leftFile).getContents().get(0));
 		match.setRight(CodeSyncPlugin.getInstance().getResource(null, rightFile).getContents().get(0));
 		
-		String projectPath = ancestorFile.getProject().getFullPath().toString();
+		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(ancestorFile);
+		String projectPath = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 //		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) ServiceRegistry.INSTANCE.getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 

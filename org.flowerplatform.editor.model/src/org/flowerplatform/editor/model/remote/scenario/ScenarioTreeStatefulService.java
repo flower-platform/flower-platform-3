@@ -36,6 +36,7 @@ import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.communication.tree.remote.TreeNode;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
@@ -87,7 +88,7 @@ public class ScenarioTreeStatefulService extends GenericTreeStatefulService {
 		name.insert(name.indexOf("."), "Scenarios");
 		scenariosResourcePath += name;
 		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), scenariosResourcePath);
-		URI scenariosResourceUri = URI.createFileURI(file.getAbsolutePath());
+		URI scenariosResourceUri = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(file);
 		Resource resource = er.getMainResource().getResourceSet().getResource(scenariosResourceUri, false);
 		if (resource == null) {
 			if (file.exists()) {

@@ -13,7 +13,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.communication,
  org.flowerplatform.editor,
  org.flowerplatform.emf_model.codesync,
- org.eclipse.core.resources,
  org.flowerplatform.emf_model.notation
 Bundle-Activator: com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin
 Bundle-ActivationPolicy: lazy

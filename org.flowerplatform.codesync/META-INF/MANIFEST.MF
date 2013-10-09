@@ -5,8 +5,7 @@ Bundle-SymbolicName: org.flowerplatform.codesync;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: CRISPICO
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.eclipse.core.resources,
- org.eclipse.osgi,
+Require-Bundle: org.eclipse.osgi,
  org.eclipse.equinox.common,
  org.eclipse.core.jobs,
  org.eclipse.core.runtime,
@@ -16,13 +15,13 @@ Require-Bundle: org.eclipse.core.resources,
  org.flowerplatform.blazeds,
  org.flowerplatform.emf_model.notation,
  org.flowerplatform.emf_model.codesync,
- org.flowerplatform.web,
  org.flowerplatform.editor.model;visibility:=reexport,
  org.eclipse.emf.ecore.change,
  org.eclipse.emf.ecore.xmi
 Export-Package: com.crispico.flower.mp.codesync.base,
  com.crispico.flower.mp.codesync.base.action,
  com.crispico.flower.mp.codesync.base.communication,
+ org.flowerplatform.codesync.projects,
  org.flowerplatform.codesync.remote
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.crispico.flower.mp.codesync.base.CodeSyncPlugin
