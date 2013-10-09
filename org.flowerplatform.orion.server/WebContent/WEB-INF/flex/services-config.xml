@@ -15,7 +15,7 @@
 		<!-- The actionscript class will probably be changed when implementing cookies. -->
      	<channel-definition id="blazedsStreamingAMFChannel" 
      			class="mx.messaging.channels.StreamingAMFChannel"> 
-			<endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/streamingamf" 
+			<endpoint url="http://{server.name}:{server.port}/{context.root}/flowerplatform/messagebroker/streamingamf" 
 				class="org.flowerplatform.blazeds.endpoint.FlowerWebSecureStreamingAMFEndpoint"/>
 			<properties>
 	 			<!--
@@ -53,7 +53,7 @@
 			 For more details check "Configuring channels with servlet-based endpoints" section in http://livedocs.adobe.com/livecycle/8.2/programLC/programmer/lcds/help.html?content=lcconfig_3.html. -->
 		<channel-definition id="blazedsLongPollingAMFChannel" 
 				class="mx.messaging.channels.AMFChannel">
-			<endpoint url="http://{server.name}:{server.port}/{context.root}/messagebroker/amflongpolling" 
+			<endpoint url="http://{server.name}:{server.port}/{context.root}/flowerplatform/messagebroker/amflongpolling" 
 				class="org.flowerplatform.blazeds.endpoint.FlowerWebSecureAMFEndpoint" />
 				
 			<!-- The following are properties for configuring the polling.

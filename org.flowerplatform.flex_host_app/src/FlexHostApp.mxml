@@ -145,10 +145,6 @@ license-end
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorDialogHandlerFactory();
 				FlexUtilGlobals.getInstance().contextMenuManager = new ContextMenuManager();
 				
-				if (FlexGlobals.topLevelApplication.parameters.rootUrl) {
-					FlexUtilGlobals.getInstance().rootUrl = FlexGlobals.topLevelApplication.parameters.rootUrl;
-				}
-				
 				var pluginUrlsAsString:String = FlexGlobals.topLevelApplication.parameters.pluginUrls;
 				if (pluginUrlsAsString == null) {
 					throw new Error("No pluginUrls have been specified. Flower Platform cannot start.");

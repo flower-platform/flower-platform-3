@@ -11,8 +11,10 @@ package org.flowerplatform.orion.client {
 	import mx.controls.Alert;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
+	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.command.HelloServerCommand;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -40,7 +42,17 @@ package org.flowerplatform.orion.client {
 			super.start();			
 			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 			
+			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.CONNECTED, handleConnected);
+			
+			CommunicationPlugin.getInstance().bridge.connect();
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
+		}
+		
+		public function handleConnected(event:BridgeEvent):void {			
+			var hello:HelloServerCommand = new HelloServerCommand();
+			hello.clientApplicationVersion = CommonPlugin.VERSION;
+			hello.firstWelcomeWithInitializationsReceived = CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived;
+			CommunicationPlugin.getInstance().bridge.sendObject(hello);			
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
@@ -67,6 +79,5 @@ package org.flowerplatform.orion.client {
 			
 			Workbench(FlexUtilGlobals.getInstance().workbench).load(wld, true, true);
 		}
-		
 	}
 }

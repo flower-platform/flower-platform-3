@@ -28,7 +28,7 @@ public class MessageBrokerMappingEvaluator implements RunnableWithParam<Boolean,
 	public Boolean run(HttpServletRequest param) {
 		// when the mapping will be on /servlet/*, the next commented line should be used
 //		return param.getPathInfo().startsWith("/messagebroker");
-		return param.getServletPath().startsWith("/messagebroker");
+		return param.getServletPath().endsWith("/messagebroker");
 	}
 
 }
