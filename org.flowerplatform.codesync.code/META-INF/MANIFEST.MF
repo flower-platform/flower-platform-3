@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin
 Bundle-Vendor: CRISPICO
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources,
  org.flowerplatform.common,
  org.flowerplatform.communication,
  org.flowerplatform.codesync,
@@ -14,8 +13,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.codesync.merge,
  org.flowerplatform.emf_model.astcache.code,
  org.flowerplatform.emf_model.codesync,
- org.flowerplatform.emf_model.notation,
- org.flowerplatform.web
+ org.flowerplatform.emf_model.notation
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Export-Package: com.crispico.flower.mp.codesync.code,

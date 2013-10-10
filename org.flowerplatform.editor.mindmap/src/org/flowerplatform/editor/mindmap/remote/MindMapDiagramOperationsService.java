@@ -186,6 +186,17 @@ public class MindMapDiagramOperationsService {
 		}		
 	}
 	
+	public boolean setMinMaxWidth(ServiceInvocationContext context, List<String> viewIds, long minWidth, long maxWidth) {
+		for (String viewId : viewIds) {
+			MindMapNode node = getMindMapNodeById(context, viewId);		
+			MindMapElement cse = (MindMapElement) node.getDiagrammableElement();	
+			
+			cse.setMinWidth(minWidth);
+			cse.setMaxWidth(maxWidth);
+		}	
+		return true;
+	}
+	
 	protected DiagramEditableResource getEditableResource(ServiceInvocationContext context) {
 		return (DiagramEditableResource) context.getAdditionalData().get(DiagramEditorStatefulService.ADDITIONAL_DATA_EDITABLE_RESOURCE);
 	}

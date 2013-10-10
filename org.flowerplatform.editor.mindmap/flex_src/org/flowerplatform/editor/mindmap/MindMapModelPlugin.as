@@ -32,7 +32,9 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.mindmap.action.NewPageAction;
 	import org.flowerplatform.editor.mindmap.action.NewParagraphAction;
 	import org.flowerplatform.editor.mindmap.action.RenameAction;
+	import org.flowerplatform.editor.mindmap.action.SetMinMaxWidthAction;
 	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
+	import org.flowerplatform.editor.mindmap.ui.SetNodeWidthLimitsView;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -77,6 +79,7 @@ package org.flowerplatform.editor.mindmap {
 			
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewDefaultNodeAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(ManageIconsAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(SetMinMaxWidthAction);
 		}
 		
 		override public function start():void {

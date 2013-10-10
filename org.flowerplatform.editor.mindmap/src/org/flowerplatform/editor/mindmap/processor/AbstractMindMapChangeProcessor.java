@@ -33,6 +33,7 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
+import com.crispico.flower.mp.model.codesync.MindMapElement;
 import com.crispico.flower.mp.model.codesync.MindMapRoot;
 
 /**
@@ -65,11 +66,13 @@ public class AbstractMindMapChangeProcessor implements IDiagrammableElementFeatu
 	}
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		if (object instanceof MindMapRoot) {
-			viewDetails.put("text", "Root");
-		} else {
-			viewDetails.put("text", CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
-		}
+		if (featureChange == null || CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name().equals(featureChange.getFeature())) {
+			if (object instanceof MindMapRoot) {
+				viewDetails.put("text", "Root");
+			} else {
+				viewDetails.put("text", CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
+			}
+		}	
 	}
 
 }

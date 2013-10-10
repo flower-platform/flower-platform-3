@@ -26,7 +26,7 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
-	resize="resizeEventHandler()">
+	creationComplete="creationCompleteHandler(event)">
 	
 	<s:layout>
 		<s:VerticalLayout
@@ -36,7 +36,9 @@
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
+			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
+			import mx.events.ResizeEvent;
 			
 			import org.flowerplatform.communication.transferable_object.ReferenceHolder;
 			import org.flowerplatform.editor.model.NotationDiagramShell;
@@ -87,8 +89,8 @@
 					bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 					x = bounds.x;
 					y = bounds.y;
-//					minWidth = bounds.width;
-//					minHeight = bounds.height;
+					measuredWidth = bounds.width;
+					measuredHeight = bounds.height;
 				}
 			}
 			
@@ -101,12 +103,12 @@
 					case "y":
 						y = bounds.y;
 						break;
-//					case "height":
-//						minHeight = bounds.height;
-//						break;
-//					case "width":
-//						minWidth = bounds.width;
-//						break;
+					case "height":
+						measuredHeight = bounds.height;
+						break;
+					case "width":
+						measuredWidth = bounds.width;
+						break;
 				}
 			}
 
@@ -126,17 +128,24 @@
 			/**
 			 * @author Mariana Gheorghe
 			 */
-			protected function resizeEventHandler():void {
-				if (super.data != null) {
-					var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-					var command:MoveResizeServerCommand = new MoveResizeServerCommand();
-					command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
-					command.newWidth = width;
-					command.newHeight = height;
-					command.newX = bounds.x;
-					command.newY = bounds.y;
-					NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
+			protected function resizeEventHandler(event:ResizeEvent):void {				
+				if (event.target is BoxChildIconItemRenderer && BoxChildIconItemRenderer(event.target).parent == this) {
+					event.stopPropagation();
+					if (super.data != null) {				
+						var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+						var command:MoveResizeServerCommand = new MoveResizeServerCommand();
+						command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
+						command.newWidth = width;
+						command.newHeight = height;
+						command.newX = bounds.x;
+						command.newY = bounds.y;
+						NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
+					}
 				}
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
 			}
 			
 		]]>

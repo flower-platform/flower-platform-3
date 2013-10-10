@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.AbstractServerCommand;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.emf_model.notation.Diagram;
 
 /**
@@ -56,7 +57,7 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 			throw new RuntimeException(e);
 		}
 		
-		URI resourceURI = URI.createFileURI(diagram.getAbsolutePath());
+		URI resourceURI = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(diagram);
 		ResourceSet resourceSet = new ResourceSetImpl();
 		Resource resource = resourceSet.createResource(resourceURI);
 		resource.getContents().clear();
