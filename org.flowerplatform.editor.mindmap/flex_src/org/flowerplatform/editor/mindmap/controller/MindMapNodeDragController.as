@@ -29,6 +29,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.editor.mindmap.NotationMindMapDiagramShell;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
@@ -50,7 +51,7 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function activate(model:Object, initialX:Number, initialY:Number):void {		
-			if (getModelController(model).getParent(model) == null) { // don't drag the root node
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is Diagram) { // don't drag the root node
 				return;
 			}
 			getDynamicObject(model).initialX = initialX;
@@ -67,7 +68,7 @@ package org.flowerplatform.editor.mindmap.controller {
 						
 			if (renderer is DiagramRenderer // don't drop over diagram 
 				|| !dragModelIsParentForDropModel(model, dropModel) // or children structure
-				|| (getModelController(dropModel).getParent(dropModel) is MindMapNode && getModelController(model).getParent(model) == dropModel) // or in same parent (except root)
+				|| (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(dropModel) is MindMapNode && diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) == dropModel) // or in same parent (except root)
 				|| ArrayList(NotationMindMapDiagramShell(diagramShell).editorStatefulClient.viewTypeToAcceptedViewTypeChildren[MindMapNode(dropModel).viewType]).getItemIndex(MindMapNode(model).viewType) == -1) { 
 				// or not accepted edit part
 				deletePlaceHolder(model);
@@ -125,7 +126,7 @@ package org.flowerplatform.editor.mindmap.controller {
 			var dropModel:Object = IDataRenderer(renderer).data;
 			if (renderer is DiagramRenderer // don't drop over diagram 
 				|| !dragModelIsParentForDropModel(model, dropModel) // or children structure
-				|| (getModelController(dropModel).getParent(dropModel) is MindMapNode && getModelController(model).getParent(model) == dropModel) // or in same parent (except root)
+				|| (diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel) is MindMapNode && diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) == dropModel) // or in same parent (except root)
 				|| ArrayList(NotationMindMapDiagramShell(diagramShell).editorStatefulClient.viewTypeToAcceptedViewTypeChildren[MindMapNode(dropModel).viewType]).getItemIndex(MindMapNode(model).viewType) == -1) { 
 				// or not accepted edit part
 				return;
@@ -136,10 +137,10 @@ package org.flowerplatform.editor.mindmap.controller {
 			var side:int = getDynamicObject(model).side;
 			
 			// remove model from current parent
-			var dragParentModel:Object = getModelController(model).getParent(model);		
+			var dragParentModel:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model);		
 
 			// calculate new parent and position based on side
-			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : getModelController(dropModel).getParent(dropModel);	
+			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel);	
 			var children:IList = diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getChildren(dropParentModel);	
 		
 			var index:int = 0;
@@ -256,10 +257,10 @@ package org.flowerplatform.editor.mindmap.controller {
 			if (dragModel == dropModel) {
 				return false;
 			}
-			if (getModelController(dropModel).getParent(dropModel) == null) {
+			if (diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel) == null) {
 				return true;
 			}
-			return dragModelIsParentForDropModel(dragModel, getModelController(dropModel).getParent(dropModel));
+			return dragModelIsParentForDropModel(dragModel, diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel));
 		}
 	}
 }

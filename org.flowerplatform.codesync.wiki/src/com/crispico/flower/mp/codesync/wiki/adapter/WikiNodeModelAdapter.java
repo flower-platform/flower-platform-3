@@ -22,15 +22,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import astcache.wiki.Page;
-import astcache.wiki.WikiPackage;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiPackage;
+import org.flowerplatform.model.astcache.wiki.Page;
 
-import com.crispico.flower.mp.codesync.base.action.ActionResult;
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
+import com.crispico.flower.mp.codesync.base.action.ActionResult;
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.codesync.wiki.WikiDiff;
 import com.crispico.flower.mp.codesync.wiki.WikiPlugin;
-import com.crispico.flower.mp.codesync.wiki.WikiTreeBuilder;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -102,7 +102,7 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 
 	@Override
 	public void setValueFeatureValue(Object element, Object feature, Object value) {
-		if (WikiPackage.eINSTANCE.getPage_InitialContent().equals(feature)) {
+		if (AstCacheWikiPackage.eINSTANCE.getPage_InitialContent().equals(feature)) {
 			Page page = getWikiPage(element);
 			if (page != null) {
 				WikiDiff diff = (WikiDiff) page.getDiff();
@@ -122,7 +122,7 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 			AstCacheElement ace = cse.getAstCacheElement();
 			if (ace != null) {
 				if (ace instanceof Page) {
-					Page page = WikiPackage.eINSTANCE.getWikiFactory().createPage();
+					Page page = AstCacheWikiFactory.eINSTANCE.createPage();
 					page.setDiff(((Page) ace).getDiff());
 					page.setLineDelimiter(((Page) ace).getLineDelimiter());
 					return page;

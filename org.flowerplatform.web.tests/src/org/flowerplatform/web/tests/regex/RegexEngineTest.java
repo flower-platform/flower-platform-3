@@ -20,6 +20,7 @@ package org.flowerplatform.web.tests.regex;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -74,7 +75,7 @@ public class RegexEngineTest extends RegexTestBase {
 					Assert.assertEquals("tip", session.getCurrentSubMatchesForCurrentRegex()[1]);
 				}
 			})
-			.compile();	
+			.compile(Pattern.DOTALL);	
 		
 		RegexProcessingSession session = re.startSession("Aceste este un string dar si un suf23. Am mai adaugat si atr:tip.");
 		while (session.find()) {

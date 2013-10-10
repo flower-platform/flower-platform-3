@@ -324,6 +324,23 @@
       </service>
    </extension>
    <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="fileManagerService"
+            serviceClass="org.flowerplatform.web.projects.remote.FileManagerService">
+      </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="explorerTreeStatefulService"
+            serviceClass="org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService">
+      </service>
+   </extension>
+   <extension
          point="org.flowerplatform.properties.propertiesProvider">
       <propertiesProvider
             id="org.flowerplatform.web.propertiesProvider1"

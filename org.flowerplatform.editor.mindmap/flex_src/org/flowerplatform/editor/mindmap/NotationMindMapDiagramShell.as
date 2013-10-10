@@ -23,7 +23,6 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeDragController;
 	import org.flowerplatform.editor.mindmap.controller.MindMapNodeInplaceEditorController;
-	import org.flowerplatform.editor.mindmap.controller.MindMapNodeRendererController;
 	import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
 	import org.flowerplatform.editor.mindmap.renderer.MindMapModelRenderer;
 	import org.flowerplatform.editor.mindmap.renderer.MindMapNodeSelectionRenderer;
@@ -44,6 +43,7 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
+	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapModelRendererController;
 	import org.flowerplatform.flexdiagram.tool.DragTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
@@ -74,7 +74,7 @@ package org.flowerplatform.editor.mindmap {
 		private var mindMapNodeChildrenController:IModelChildrenController;
 		private var mindMapDiagramChildrenController:IModelChildrenController;
 		
-		private var mindMapNodeRendererController:MindMapNodeRendererController;
+		private var mindMapNodeRendererController:MindMapModelRendererController;
 		private var lightWeightModelExtraInfoController:IModelExtraInfoController;
 						
 		public function NotationMindMapDiagramShell() {
@@ -91,7 +91,7 @@ package org.flowerplatform.editor.mindmap {
 			mindMapNodeChildrenController = new MindMapNodeChildrenController(this);
 			mindMapDiagramChildrenController = new MindMapDiagramNodeChildrenController(this);
 			
-			mindMapNodeRendererController = new MindMapNodeRendererController(this, MindMapModelRenderer);
+			mindMapNodeRendererController = new MindMapModelRendererController(this, MindMapModelRenderer);
 			lightWeightModelExtraInfoController = new LightweightModelExtraInfoController(this);
 			
 			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, DragTool]);		
@@ -100,8 +100,7 @@ package org.flowerplatform.editor.mindmap {
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			return this;
 		}		
-		
-		
+				
 		public function getMindMapModelController(model:Object):IMindMapModelController {
 			return mindMapNodeController;
 		}
@@ -173,8 +172,6 @@ package org.flowerplatform.editor.mindmap {
 			} 
 			return null;
 		}
-		
-		
-		
+			
 	}
 }

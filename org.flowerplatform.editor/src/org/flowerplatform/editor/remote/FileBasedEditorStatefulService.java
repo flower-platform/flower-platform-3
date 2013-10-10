@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.file_event.FileEvent;
+import org.flowerplatform.common.file_event.IFileEventListener;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * 
  * 
  */
-public abstract class FileBasedEditorStatefulService extends EditorStatefulService
+public abstract class FileBasedEditorStatefulService extends EditorStatefulService implements IFileEventListener
 //	implements IResourceChangeListener 
 	{
 	
@@ -45,10 +47,10 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	private static final Logger logger = LoggerFactory.getLogger(FileBasedEditorStatefulService.class);
 	
 	/**
-	 * 
+	 * Registers the listener
 	 */
 	public FileBasedEditorStatefulService() {
-//		ResourcesPlugin.getWorkspace().addResourceChangeListener(this, IResourceChangeEvent.POST_CHANGE);
+		CommonPlugin.getInstance().getFileEventDispatcher().addFileEventListener(this);
 	}
 
 	@Override
@@ -61,6 +63,82 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 		}
 	}
 
+	@Override
+	public void notify(FileEvent event) {
+		File file = (event.getEvent() == FileEvent.FILE_RENAMED) ? event.getOldFile() : event.getFile();
+		String filePathRelativeToWorkspace = "/" + CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
+		EditableResource editableResource = getEditableResource(filePathRelativeToWorkspace);
+		if(editableResource != null) {
+			switch (event.getEvent()) {
+				case FileEvent.FILE_REFRESHED : {
+					if(!editableResource.isSynchronized()) {
+						processResourceChanged(editableResource);
+					}
+					break;
+				}
+				case FileEvent.FILE_MODIFIED : {
+					processResourceChanged(editableResource);
+					break;
+				}	
+				case FileEvent.FILE_DELETED : {
+					processResourceRemoved(editableResource);
+					break;
+				}	
+				case FileEvent.FILE_RENAMED : {
+					// for now just remove the file from editor
+					processResourceRemoved(editableResource);
+					break;
+				}	
+				default:
+					break;
+				}
+		} else {
+			switch (event.getEvent()) {
+				case FileEvent.FILE_REFRESHED : {
+					processResourcesRefreshed(editableResource);
+					break;
+				}	
+				case FileEvent.FILE_DELETED : {
+					for(EditableResource edRed : editableResources.values()) {
+						if(edRed.getEditableResourcePath().contains(filePathRelativeToWorkspace)) {
+							processResourceRemoved(edRed);
+						}
+					}
+					break;
+				}	
+				case FileEvent.FILE_RENAMED : {
+					for(EditableResource edRed : editableResources.values()) {
+						if(edRed.getEditableResourcePath().contains(filePathRelativeToWorkspace)) {
+							processResourceRemoved(edRed);
+						}
+					}
+					break;
+				}	
+				default:
+					break;
+			}
+		}
+	}
+
+	private void processResourcesRefreshed(EditableResource editableResource) {
+		for(EditableResource edRes : editableResources.values()) {
+			if(!edRes.isSynchronized()) {
+				processResourceChanged(edRes);
+			}
+		}
+	}
+
+	private void processResourceChanged(EditableResource editableResource) {
+		logger.debug("Process resource changed = {} with modification stamp = {}", editableResource.getEditableResourcePath(), ((FileBasedEditableResource) editableResource).getFile().lastModified());
+		reloadEditableResource(editableResource, true);
+		// TODO check if refresh handles this
+	}
+	
+	private void processResourceRemoved(EditableResource editableResource) {
+		logger.debug("Process resource removed = {} with modification stamp = {}", editableResource.getEditableResourcePath(), ((FileBasedEditableResource) editableResource).getFile().lastModified());
+		unsubscribeAllClientsForcefully(editableResource.getEditableResourcePath(), true);
+	}
+	
 //	/**
 //	 * 
 //	 */

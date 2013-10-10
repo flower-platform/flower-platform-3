@@ -36,6 +36,8 @@ import static org.flowerplatform.common.regex.RegexUtil.SPACE_OR_COMMENT;
 import static org.flowerplatform.common.regex.RegexUtil.STAR;
 import static org.flowerplatform.common.regex.RegexUtil.STOP_BEFORE_OPEN_BRACKET_CHAR;
 
+import java.util.regex.Pattern;
+
 import org.flowerplatform.common.regex.RegexConfiguration;
 import org.flowerplatform.common.regex.RegexWithAction;
 
@@ -94,7 +96,7 @@ public class JavaRegexConfigurationProvider {
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(ATTRIBUTE_CATEGORY, JAVA_ATTRIBUTE, ATTRIBUTE_CATEGORY))
 		.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(METHOD_CATEGORY, JAVA_METHOD, METHOD_CATEGORY))
 		.setTargetNestingForMatches(JAVA_NEXTING_LEVEL_FOR_DECLARATIONS)
-		.compile();
+		.compile(Pattern.DOTALL);
 	}
 		
 }

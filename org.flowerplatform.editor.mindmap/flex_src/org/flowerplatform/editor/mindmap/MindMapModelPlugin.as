@@ -21,8 +21,10 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.mindmap.action.DeleteAction;
+	import org.flowerplatform.editor.mindmap.action.ManageIconsAction;
 	import org.flowerplatform.editor.mindmap.action.MoveDownAction;
 	import org.flowerplatform.editor.mindmap.action.MoveUpAction;
+	import org.flowerplatform.editor.mindmap.action.NewDefaultNodeAction;
 	import org.flowerplatform.editor.mindmap.action.NewFolderAction;
 	import org.flowerplatform.editor.mindmap.action.NewHeadline1Action;
 	import org.flowerplatform.editor.mindmap.action.NewHeadline2Action;
@@ -62,16 +64,19 @@ package org.flowerplatform.editor.mindmap {
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 
-			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewFolderAction);
-			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewPageAction);
-			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline1Action);
-			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline2Action);
-			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline3Action);
-			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewParagraphAction);
+//			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewFolderAction);
+//			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewPageAction);
+//			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline1Action);
+//			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline2Action);
+//			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewHeadline3Action);
+//			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewParagraphAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(MoveUpAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(MoveDownAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
+			
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewDefaultNodeAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(ManageIconsAction);
 		}
 		
 		override public function start():void {
@@ -82,10 +87,6 @@ package org.flowerplatform.editor.mindmap {
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(MindMapNode);	
 			registerClassAliasFromAnnotation(NewMindMapDiagramAction);
-		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
 		}
 		
 	}

@@ -591,6 +591,243 @@ public interface CodeSyncPackage extends EPackage {
 
 
 	/**
+	 * The meta object id for the '{@link com.crispico.flower.mp.model.codesync.impl.MindMapElementImpl <em>Mind Map Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.crispico.flower.mp.model.codesync.impl.MindMapElementImpl
+	 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getMindMapElement()
+	 * @generated
+	 */
+	int MIND_MAP_ELEMENT = 7;
+
+	/**
+	 * The feature id for the '<em><b>Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__SYNCHRONIZED = CODE_SYNC_ELEMENT__SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Children Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__CHILDREN_SYNCHRONIZED = CODE_SYNC_ELEMENT__CHILDREN_SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Added</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__ADDED = CODE_SYNC_ELEMENT__ADDED;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__DELETED = CODE_SYNC_ELEMENT__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Status Flags</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__STATUS_FLAGS = CODE_SYNC_ELEMENT__STATUS_FLAGS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__NAME = CODE_SYNC_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__TYPE = CODE_SYNC_ELEMENT__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Ast Cache Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__AST_CACHE_ELEMENT = CODE_SYNC_ELEMENT__AST_CACHE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__CHILDREN = CODE_SYNC_ELEMENT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Feature Changes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__FEATURE_CHANGES = CODE_SYNC_ELEMENT__FEATURE_CHANGES;
+
+	/**
+	 * The feature id for the '<em><b>Icons</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT__ICONS = CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Mind Map Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ELEMENT_FEATURE_COUNT = CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl <em>Mind Map Root</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl
+	 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getMindMapRoot()
+	 * @generated
+	 */
+	int MIND_MAP_ROOT = 8;
+
+	/**
+	 * The feature id for the '<em><b>Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__SYNCHRONIZED = CODE_SYNC_ROOT__SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Children Synchronized</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__CHILDREN_SYNCHRONIZED = CODE_SYNC_ROOT__CHILDREN_SYNCHRONIZED;
+
+	/**
+	 * The feature id for the '<em><b>Added</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__ADDED = CODE_SYNC_ROOT__ADDED;
+
+	/**
+	 * The feature id for the '<em><b>Deleted</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__DELETED = CODE_SYNC_ROOT__DELETED;
+
+	/**
+	 * The feature id for the '<em><b>Status Flags</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__STATUS_FLAGS = CODE_SYNC_ROOT__STATUS_FLAGS;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__NAME = CODE_SYNC_ROOT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__TYPE = CODE_SYNC_ROOT__TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Ast Cache Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__AST_CACHE_ELEMENT = CODE_SYNC_ROOT__AST_CACHE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__CHILDREN = CODE_SYNC_ROOT__CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>Feature Changes</b></em>' map.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__FEATURE_CHANGES = CODE_SYNC_ROOT__FEATURE_CHANGES;
+
+	/**
+	 * The feature id for the '<em><b>Icons</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT__ICONS = CODE_SYNC_ROOT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Mind Map Root</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MIND_MAP_ROOT_FEATURE_COUNT = CODE_SYNC_ROOT_FEATURE_COUNT + 1;
+
+
+	/**
 	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.CodeSyncElement <em>Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -906,6 +1143,37 @@ public interface CodeSyncPackage extends EPackage {
 	EAttribute getScenarioElement_Comment();
 
 	/**
+	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.MindMapElement <em>Mind Map Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Mind Map Element</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.MindMapElement
+	 * @generated
+	 */
+	EClass getMindMapElement();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link com.crispico.flower.mp.model.codesync.MindMapElement#getIcons <em>Icons</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Icons</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.MindMapElement#getIcons()
+	 * @see #getMindMapElement()
+	 * @generated
+	 */
+	EAttribute getMindMapElement_Icons();
+
+	/**
+	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.MindMapRoot <em>Mind Map Root</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Mind Map Root</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.MindMapRoot
+	 * @generated
+	 */
+	EClass getMindMapRoot();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1172,6 +1440,34 @@ public interface CodeSyncPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute SCENARIO_ELEMENT__COMMENT = eINSTANCE.getScenarioElement_Comment();
+
+		/**
+		 * The meta object literal for the '{@link com.crispico.flower.mp.model.codesync.impl.MindMapElementImpl <em>Mind Map Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.crispico.flower.mp.model.codesync.impl.MindMapElementImpl
+		 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getMindMapElement()
+		 * @generated
+		 */
+		EClass MIND_MAP_ELEMENT = eINSTANCE.getMindMapElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Icons</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MIND_MAP_ELEMENT__ICONS = eINSTANCE.getMindMapElement_Icons();
+
+		/**
+		 * The meta object literal for the '{@link com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl <em>Mind Map Root</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see com.crispico.flower.mp.model.codesync.impl.MindMapRootImpl
+		 * @see com.crispico.flower.mp.model.codesync.impl.CodeSyncPackageImpl#getMindMapRoot()
+		 * @generated
+		 */
+		EClass MIND_MAP_ROOT = eINSTANCE.getMindMapRoot();
 
 	}
 

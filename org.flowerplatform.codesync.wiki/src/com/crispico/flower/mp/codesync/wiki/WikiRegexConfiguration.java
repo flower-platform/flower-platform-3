@@ -26,9 +26,40 @@ import org.flowerplatform.common.regex.RegexWithAction;
  */
 public class WikiRegexConfiguration extends RegexConfiguration {
 	
-	public static final String LINE_TERMINATOR = "(?:\r\n|[\r\n]|\\z)";
+
+	///////////////////////////
+	// Helper formats and regex
+	///////////////////////////
 	
-	public static final String PARAGRAPH_REGEX = "(.*?)" + LINE_TERMINATOR;
+	public static final String MULTILINE_MATCH_FORMAT = "^%s$";
+	
+	public static final String CAPTURE_GROUP_FORMAT = "(%s)";
+	
+	public static final String NON_CAPTURE_GROUP_FORMAT = "(?:%s)";
+	
+	public static final String ZERO_OR_MORE_TIMES_FORMAT = "%s*";
+	
+	public static final String ONE_OR_MORE_TIMES_FORMAT = "%s+"; 
+	
+	public static final String CLASS = "[%s]";
+	
+	public static final String ANY_CHARACTER = ".";
+	
+	public static final String WHITESPACE = "\\s";
+	
+	public static final String DIGIT = "\\d";
+	
+	public static final String LINE_DELIMITER = "\r\n|[\r\n]";
+	
+	public static final String CAPTURE_ANY = String.format(CAPTURE_GROUP_FORMAT, String.format(ZERO_OR_MORE_TIMES_FORMAT, ANY_CHARACTER));
+	
+	public static final String NON_CAPTURE_LINE_DELIMITER = String.format(NON_CAPTURE_GROUP_FORMAT, LINE_DELIMITER);
+	
+	///////////////////////////
+	// Default wiki syntax
+	///////////////////////////
+	
+	public static final String PARAGRAPH_REGEX = String.format(MULTILINE_MATCH_FORMAT, CAPTURE_ANY);
 		
 	public static final String FLOWER_BLOCK_START = "@flower-platform-type";
 	

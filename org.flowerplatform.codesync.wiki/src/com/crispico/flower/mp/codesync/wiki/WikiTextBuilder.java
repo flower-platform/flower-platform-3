@@ -20,15 +20,16 @@ package com.crispico.flower.mp.codesync.wiki;
 
 import static com.crispico.flower.mp.codesync.wiki.WikiRegexConfiguration.*;
 
+import org.flowerplatform.model.astcache.wiki.FlowerBlock;
+import org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat;
+import org.flowerplatform.model.astcache.wiki.Page;
+
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
-import astcache.wiki.FlowerBlock;
-import astcache.wiki.Page;
-
 /**
- * @author Mariana
+ * @author Mariana Gheorghe
  */
-public abstract class WikiTextBuilder {
+public class WikiTextBuilder {
 
 	private StringBuilder builder = new StringBuilder();
 	
@@ -40,8 +41,14 @@ public abstract class WikiTextBuilder {
 		}
 		if (WikiPlugin.PAGE_CATEGORY.equals(tree.getType())) {
 			Page page = (Page) tree.getAstCacheElement();
-			lineDelimiter = page.getLineDelimiter();
+			if (page.getLineDelimiter() != null) {
+				lineDelimiter = page.getLineDelimiter();
+			}
 			generateWikiText(tree);
+			int index = builder.lastIndexOf(lineDelimiter);
+			if (index >= 0) {
+				builder.delete(index, builder.length());
+			}
 			return builder.toString();
 		} else {
 			return null; // only pages have content
@@ -56,21 +63,23 @@ public abstract class WikiTextBuilder {
 	}
 	
 	protected String buildText(CodeSyncElement node) {
+		String text = "";
+		if (node instanceof NodeWithOriginalFormat) {
+			text = formatNodeWithOriginalFormat((NodeWithOriginalFormat) node) + lineDelimiter;
+		}
 		String category = node.getType();
 		if (WikiPlugin.PARAGRAPH_CATEGORY.equals(category)) {
-			return String.format("%s", node.getName() + lineDelimiter);
-		}
-		int headlineLevel = WikiPlugin.getInstance().getHeadlineLevel(category);
-		if (headlineLevel > 0) {
-			return formatHeadline(node, headlineLevel);
+			text = node.getName() + lineDelimiter;
 		}
 		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(node.getType())) {
-			builder.append(formatFlowerBlock(node));
+			text = formatFlowerBlock(node) + lineDelimiter;
 		}
-		return "";
+		return text;
 	}
 	
-	protected abstract String formatHeadline(CodeSyncElement node, int headlineLevel);
+	protected String formatNodeWithOriginalFormat(NodeWithOriginalFormat node) {
+		return String.format(node.getOriginalFormat(), node.getName());
+	}
 
 	private String formatFlowerBlock(CodeSyncElement node) {
 		if (node.getAstCacheElement() instanceof FlowerBlock) {

@@ -36,6 +36,7 @@ package com.crispico.flower.util.layout {
 	 * There is an issue with NavigatorContent: https://github.com/flex-users/flexlib/issues/301
 	 * so we use Canvas instead of a NavigatorContent that should wrap spark components.
 	 */
+	[DefaultProperty("popupContent")]
 	public class PopupHostViewWrapper extends VBox implements IPopupHost {
 		
 		public var allActions:Vector.<IAction>
@@ -46,21 +47,38 @@ package com.crispico.flower.util.layout {
 		
 		protected var buttonBar:HGroup;
 		
-		protected var popupContent:IPopupContent;
+		protected var _popupContent:IPopupContent;
+
+		public function get popupContent():IPopupContent {
+			return _popupContent;
+		}
+
+		public function set popupContent(value:IPopupContent):void {
+			if (value == null) {
+				return;
+			}
+			if (_popupContent != null) {
+				throw new Error("Illegal usage. This setter can be called only once!");
+			}
+			_popupContent = value;
+			popupContent.percentHeight = 100;
+			popupContent.percentWidth = 100;
+			popupContent.popupHost = this;
+		}
 		
-		public function PopupHostViewWrapper(popupContent:IPopupContent) {
+		public function PopupHostViewWrapper(popupContent:IPopupContent = null) {
 			super();
 			percentHeight = 100;
 			percentWidth = 100;
 			addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU,fillContextMenuHandler); 
 			setStyle("verticalGap", 0);
 			this.popupContent = popupContent;
-			popupContent.percentHeight = 100;
-			popupContent.percentWidth = 100;
-			popupContent.popupHost = this;
 		}
 		
 		override protected function createChildren():void {
+			if (popupContent == null) {
+				throw new Error("Illegal state. The popupContent shouldn't be null.");
+			}
 			super.createChildren();
 			buttonBar = new HGroup();
 			buttonBar.percentWidth = 100;

@@ -13,6 +13,9 @@
     <classEntry path="org.flowerplatform.web.common.properties.ui.PropertiesViewProvider"/>
     <classEntry path="org.flowerplatform.web.common.properties.ui.PropertiesList"/>
     <classEntry path="org.flowerplatform.web.common.properties.ui.Property"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.action.CreateFileAction"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.action.DeleteAction"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.action.RenameAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

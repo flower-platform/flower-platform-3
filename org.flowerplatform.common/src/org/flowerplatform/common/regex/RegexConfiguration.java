@@ -80,7 +80,7 @@ public class RegexConfiguration {
 	/**
 	 * 
 	 */
-	public RegexConfiguration compile() {
+	public RegexConfiguration compile(int flags) {
 		if (logger.isTraceEnabled()) {
 			logger.trace("Compiling configuration...");
 		}
@@ -112,7 +112,7 @@ public class RegexConfiguration {
 			logger.trace("Composed regex = {} having {} capture groups. Compiling pattern...", composedRegex.toString(), nextCaptureGroupIndex - 1);
 		}
 		
-		pattern = Pattern.compile(composedRegex.toString(), Pattern.DOTALL);
+		pattern = Pattern.compile(composedRegex.toString(), flags);
 		return this;
 	}
 	

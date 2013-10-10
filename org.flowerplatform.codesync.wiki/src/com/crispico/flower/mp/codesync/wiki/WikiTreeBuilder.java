@@ -18,6 +18,8 @@
  */
 package com.crispico.flower.mp.codesync.wiki;
 
+import static com.crispico.flower.mp.codesync.wiki.WikiPlugin.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,11 +29,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.flowerplatform.common.regex.RegexProcessingSession;
-
-import astcache.wiki.FlowerBlock;
-import astcache.wiki.WikiPackage;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
+import org.flowerplatform.model.astcache.wiki.FlowerBlock;
+import org.flowerplatform.model.astcache.wiki.NodeWithOriginalFormat;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
@@ -43,16 +46,6 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 	 * Used for final levels (e.g. paragraphs).
 	 */
 	protected final int LEAF_LEVEL = 100;
-	
-	/**
-	 * Used for top levels that can contain nodes of the same level (e.g. folders).
-	 */
-	protected final int FOLDER_LEVEL = -1;
-	
-	/**
-	 * Used for file level.
-	 */
-	protected final int FILE_LEVEL = 0;
 	
 	protected CodeSyncElement root;
 	
@@ -71,7 +64,7 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 		this.currentNode = root;
 		for (Iterator it = root.getChildren().iterator(); it.hasNext();) {
 			CodeSyncElement child = (CodeSyncElement) it.next();
-			if (!WikiPlugin.PAGE_CATEGORY.equals(child.getType()) && !WikiPlugin.FOLDER_CATEGORY.equals(child.getType())) {
+			if (!PAGE_CATEGORY.equals(child.getType()) && !FOLDER_CATEGORY.equals(child.getType())) {
 				it.remove();
 			}
 		}
@@ -123,13 +116,89 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 	 * Creates and populates a {@link CodeSyncElement} for the matched <code>category</code>.
 	 */
 	protected CodeSyncElement createWikiNode(String category) {
-		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(category)) {
+		if (FLOWER_BLOCK_CATEGORY.equals(category)) {
 			return createFlowerBlockNode();
 		}
+		
+		if (ORDERED_LIST_ITEM_CATEGORY.equals(category) || UNORDERED_LIST_ITEM_CATEGORY.equals(category)) {
+			return createListItemNode(category);
+		}
+		
+		if (BLOCKQUOTE_CHILD_CATEGORY.equals(category)) {
+			return createBlockquoteChildNode(category);
+		}
+		
+		if (CODE_LINE_CATEGORY.equals(category)) {
+			return createCodeLineNode(category);
+		}
+		
+		if (ORDERED_LIST_CATEGORY.equals(category) || UNORDERED_LIST_CATEGORY.equals(category) ||
+				BLOCKQUOTE_CATEGORY.equals(category) ||
+				CODE_CATEGORY.equals(category)) {
+			return createParentNode(category);
+		}
+		
+		if (WikiPlugin.getInstance().getHeadingLevel(category) > 0) {
+			return createNodeWithOriginalFormat(category);
+		}
+		
 		CodeSyncElement cse = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
 		cse.setName(currentSubMatchesForCurrentRegex[0]);
 		cse.setType(category);
 		return cse;
+	}
+	
+	/**
+	 * If this is the first list item, create the parent list node.
+	 */
+	protected CodeSyncElement createListItemNode(String category) {
+		CodeSyncElement item = createNodeWithOriginalFormat(category);
+		if (!ORDERED_LIST_ITEM_CATEGORY.equals(currentNode.getType()) && !UNORDERED_LIST_ITEM_CATEGORY.equals(currentNode.getType())) {
+			candidateAnnounced(ORDERED_LIST_ITEM_CATEGORY.equals(category) ? ORDERED_LIST_CATEGORY : UNORDERED_LIST_CATEGORY);
+		}
+		return item;
+	}
+	
+	/**
+	 * If this is the first blockquote child, create the parent blockquote node.
+	 */
+	protected CodeSyncElement createBlockquoteChildNode(String category) {
+		CodeSyncElement child = createNodeWithOriginalFormat(category);
+		if (!BLOCKQUOTE_CHILD_CATEGORY.equals(currentNode.getType())) {
+			candidateAnnounced(BLOCKQUOTE_CATEGORY);
+		}
+		return child;
+	}
+	
+	/**
+	 * If this is the first code line, create the parent code node.
+	 */
+	protected CodeSyncElement createCodeLineNode(String category) {
+		CodeSyncElement line = createNodeWithOriginalFormat(category);
+		if (!CODE_LINE_CATEGORY.equals(currentNode.getType())) {
+			candidateAnnounced(CODE_CATEGORY);
+		}
+		return line;
+	}
+	
+	protected CodeSyncElement createParentNode(String category) {
+		CodeSyncElement parent = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
+		parent.setName(category);
+		parent.setType(category);
+		return parent;
+	}
+	
+	protected CodeSyncElement createNodeWithOriginalFormat(String category) {
+		NodeWithOriginalFormat node = AstCacheWikiFactory.eINSTANCE.createNodeWithOriginalFormat();
+		String originalFormat = currentSubMatchesForCurrentRegex[0];
+		String name = currentSubMatchesForCurrentRegex[1];
+		StringBuilder builder = new StringBuilder(originalFormat);
+		int index = builder.lastIndexOf(name);
+		builder.replace(index, index + name.length(), "%s");
+		node.setOriginalFormat(builder.toString());
+		node.setName(name);
+		node.setType(category);
+		return node;
 	}
 	
 	/**
@@ -153,9 +222,9 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 			}
 		}
 		CodeSyncElement cse = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
-		FlowerBlock flowerBlock = WikiPackage.eINSTANCE.getWikiFactory().createFlowerBlock();
+		FlowerBlock flowerBlock = AstCacheWikiFactory.eINSTANCE.createFlowerBlock();
 		cse.setName(name);
-		cse.setType(WikiPlugin.FLOWER_BLOCK_CATEGORY);
+		cse.setType(FLOWER_BLOCK_CATEGORY);
 		flowerBlock.setContent(content);
 		flowerBlock.setLineStart(lineStart);
 		flowerBlock.setLineEnd(lineEnd);
@@ -171,39 +240,57 @@ public class WikiTreeBuilder extends RegexProcessingSession {
 	 * false otherwise
 	 */
 	protected boolean acceptAsChild(CodeSyncElement candidate) {
-		int currentLevel = getLevelForCategory(currentNode.getType());
-		if (currentLevel == LEAF_LEVEL) {
-			return false;	// leaves cannot have children
-		}
-		int candidateLevel = getLevelForCategory(candidate.getType());
-		if (currentLevel == -1) {
-			// folders can only contain other folders or files
-			return candidateLevel <= FILE_LEVEL;
-		}
-		return currentLevel < candidateLevel;
+		Level currentLevel = getLevelForCategory(currentNode.getType());
+		Level candidateLevel = getLevelForCategory(candidate.getType());
+		return currentLevel.acceptChild(candidateLevel);
 	}
 	
 	/**
-	 * @return the level of indentation for this category (e.g. headline level). Nodes with lower
+	 * @return the level of indentation for this category (e.g. heading level). Nodes with lower
 	 * level will contain nodes with higher levels.
 	 */
-	protected int getLevelForCategory(String category) {
-		if (WikiPlugin.PARAGRAPH_CATEGORY.equals(category)) {
-			return LEAF_LEVEL;
+	protected Level getLevelForCategory(String category) {
+		if (PARAGRAPH_CATEGORY.equals(category)) {
+			return Level.PARAGRAPH; // cannot have children
 		}
-		int headlineLevel = WikiPlugin.getInstance().getHeadlineLevel(category);
-		if (headlineLevel > 0) {
-			return headlineLevel;
+		
+		if (ORDERED_LIST_ITEM_CATEGORY.equals(category) || UNORDERED_LIST_ITEM_CATEGORY.equals(category)) {
+			return Level.LIST_ITEM;	// cannot have children
 		}
-		if (WikiPlugin.FOLDER_CATEGORY.equals(category)) {
-			return -1;
+		if (ORDERED_LIST_CATEGORY.equals(category) || UNORDERED_LIST_CATEGORY.equals(category)) {
+			return Level.LIST;
 		}
-		if (WikiPlugin.PAGE_CATEGORY.equals(category)) {
-			return FILE_LEVEL;	// page can contain anything that is not a folder
+		
+		if (BLOCKQUOTE_CHILD_CATEGORY.equals(category)) {
+			return Level.BLOCKQUOTE_CHILD; // cannot have children
 		}
-		if (WikiPlugin.FLOWER_BLOCK_CATEGORY.equals(category)) {
-			return LEAF_LEVEL;	// cannot have children
+		
+		if (BLOCKQUOTE_CATEGORY.equals(category)) {
+			return Level.BLOCKQUOTE;
 		}
-		return -1;
+		
+		if (CODE_LINE_CATEGORY.equals(category)) {
+			return Level.CODE_LINE;
+		}
+		
+		if (CODE_CATEGORY.equals(category)) {
+			return Level.CODE;
+		}
+		
+		int headingLevel = WikiPlugin.getInstance().getHeadingLevel(category);
+		if (headingLevel > 0) {
+			return Level.getHeading(headingLevel);
+		}
+		
+		if (FOLDER_CATEGORY.equals(category)) {
+			return Level.FOLDER;
+		}
+		if (PAGE_CATEGORY.equals(category)) {
+			return Level.FILE;	// page can contain anything that is not a folder
+		}
+		if (FLOWER_BLOCK_CATEGORY.equals(category)) {
+			return Level.FLOWER_BLOCK;	// cannot have children
+		}
+		throw new RuntimeException("Unknown category " + category);
 	}
 }

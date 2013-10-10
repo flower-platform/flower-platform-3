@@ -26,6 +26,7 @@ package org.flowerplatform.flexutil {
 	import mx.utils.DescribeTypeCache;
 	
 	import spark.components.TextInput;
+	import spark.components.supportClasses.SkinnableTextBase;
 	
 	/**
 	 * @author Cristina
@@ -36,7 +37,7 @@ package org.flowerplatform.flexutil {
 		 * Makes the given text input non-editable and applies a grey color as background.
 		 */ 
 		public static function makePseudoDisabled(object:Object):void {
-			if (object is spark.components.TextInput || object is ITextInput) {
+			if (object is spark.components.TextInput || object is ITextInput || object is SkinnableTextBase) {
 				object.editable = false;
 				object.setStyle("backgroundColor", "#DEDCDC");
 				object.setStyle("color", "#666666");

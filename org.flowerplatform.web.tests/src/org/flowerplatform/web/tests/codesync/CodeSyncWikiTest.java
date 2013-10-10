@@ -39,6 +39,8 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.model.astcache.wiki.AstCacheWikiFactory;
+import org.flowerplatform.model.astcache.wiki.Page;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.sandbox.FlowerWebPrincipal;
@@ -46,10 +48,6 @@ import org.flowerplatform.web.tests.TestUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import astcache.wiki.Page;
-import astcache.wiki.WikiFactory;
-import astcache.wiki.WikiPackage;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -138,21 +136,21 @@ public class CodeSyncWikiTest {
 								
 									new Pair(WikiPlugin.FOLDER_CATEGORY, 4),				// teste
 									new Pair(WikiPlugin.PAGE_CATEGORY, 5),				// new_test
-										new Pair(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, 6),
-											new Pair(WikiPlugin.HEADLINE_LEVEL_3_CATEGORY, 7),
+										new Pair(WikiPlugin.HEADING_LEVEL_2_CATEGORY, 6),
+											new Pair(WikiPlugin.HEADING_LEVEL_3_CATEGORY, 7),
 												new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 8),
 											
-									new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 4),
-									new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 4),
-										new Pair(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, 5),
+									new Pair(WikiPlugin.HEADING_LEVEL_1_CATEGORY, 4),
+									new Pair(WikiPlugin.HEADING_LEVEL_1_CATEGORY, 4),
+										new Pair(WikiPlugin.HEADING_LEVEL_2_CATEGORY, 5),
 											new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 6),
 											new Pair(WikiPlugin.FLOWER_BLOCK_CATEGORY, 6),
 											new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 6),
 											new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 6),
 											new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 6),
 											new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 6),
-										new Pair(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, 5),
-									new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 4)
+										new Pair(WikiPlugin.HEADING_LEVEL_2_CATEGORY, 5),
+									new Pair(WikiPlugin.HEADING_LEVEL_1_CATEGORY, 4)
 									
 				};
 				test(leftRoot, rightRoot, resourceSet, technology, expected);
@@ -184,15 +182,15 @@ public class CodeSyncWikiTest {
 			new Pair(WikiPlugin.FOLDER_CATEGORY, 0), 
 				new Pair(WikiPlugin.PAGE_CATEGORY, 1),
 					new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 2),
-					new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 2),
+					new Pair(WikiPlugin.HEADING_LEVEL_1_CATEGORY, 2),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
-					new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 2),
+					new Pair(WikiPlugin.HEADING_LEVEL_1_CATEGORY, 2),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
-						new Pair(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, 3),
+						new Pair(WikiPlugin.HEADING_LEVEL_2_CATEGORY, 3),
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
 							new Pair(WikiPlugin.FLOWER_BLOCK_CATEGORY, 4),
@@ -203,9 +201,9 @@ public class CodeSyncWikiTest {
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
-						new Pair(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, 3),
+						new Pair(WikiPlugin.HEADING_LEVEL_2_CATEGORY, 3),
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
-					new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 2),
+					new Pair(WikiPlugin.HEADING_LEVEL_1_CATEGORY, 2),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3),
 						new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 3)
@@ -219,7 +217,7 @@ public class CodeSyncWikiTest {
 		CodeSyncElement newRightPage = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
 		newRightPage.setName("page");
 		newRightPage.setType(WikiPlugin.PAGE_CATEGORY);
-		Page wikiPage = WikiPackage.eINSTANCE.getWikiFactory().createPage();
+		Page wikiPage = AstCacheWikiFactory.eINSTANCE.createPage();
 		wikiPage.setInitialContent(ancestor);
 		wikiPage.setLineDelimiter("\r\n");
 		newRightPage.setAstCacheElement(wikiPage);
@@ -253,9 +251,9 @@ public class CodeSyncWikiTest {
 			new Pair(WikiPlugin.FOLDER_CATEGORY, 0),
 				new Pair(WikiPlugin.PAGE_CATEGORY, 1),
 					new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 2),
-					new Pair(WikiPlugin.HEADLINE_LEVEL_1_CATEGORY, 2),
-						new Pair(WikiPlugin.HEADLINE_LEVEL_4_CATEGORY, 3),
-						new Pair(WikiPlugin.HEADLINE_LEVEL_2_CATEGORY, 3),
+					new Pair(WikiPlugin.HEADING_LEVEL_1_CATEGORY, 2),
+						new Pair(WikiPlugin.HEADING_LEVEL_4_CATEGORY, 3),
+						new Pair(WikiPlugin.HEADING_LEVEL_2_CATEGORY, 3),
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
 							new Pair(WikiPlugin.FLOWER_BLOCK_CATEGORY, 4),
 							new Pair(WikiPlugin.PARAGRAPH_CATEGORY, 4),
@@ -272,7 +270,7 @@ public class CodeSyncWikiTest {
 		CodeSyncElement newRightPage = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 		newRightPage.setName(ancestor.getName());
 		newRightPage.setType(WikiPlugin.PAGE_CATEGORY);
-		Page wikiPage = WikiFactory.eINSTANCE.createPage();
+		Page wikiPage = AstCacheWikiFactory.eINSTANCE.createPage();
 		wikiPage.setInitialContent(FileUtils.readFileToString(ancestor));
 		wikiPage.setLineDelimiter(wikiPlugin.getLineDelimiter(FileUtils.readFileToString(ancestor)));
 		newRightPage.setAstCacheElement(wikiPage);

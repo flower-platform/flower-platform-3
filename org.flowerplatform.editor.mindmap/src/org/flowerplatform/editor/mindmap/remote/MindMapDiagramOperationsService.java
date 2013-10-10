@@ -18,27 +18,21 @@
  */
 package org.flowerplatform.editor.mindmap.remote;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
-import org.flowerplatform.editor.model.EditorModelPlugin;
-import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
-import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.MindMapNode;
-import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
+import com.crispico.flower.mp.model.codesync.MindMapElement;
 
 /**
  * @author Cristina Constantinescu
@@ -51,19 +45,14 @@ public class MindMapDiagramOperationsService {
 		return (MindMapDiagramOperationsService) CommunicationPlugin.getInstance().getServiceRegistry().getService(SERVICE_ID);
 	}
 		
-	public void setExpanded(ServiceInvocationContext context, String viewId, boolean expanded) {
-		MindMapNode node = getMindMapNodeById(context, viewId);		
-		if (!expanded) {			
-			node.getPersistentChildren().clear();				
-		}
-		node.setExpanded(expanded);
+	public void setExpanded(ServiceInvocationContext context, String viewId, boolean expanded) {		
+		getMindMapNodeById(context, viewId).setExpanded(expanded);
 	}
 
 	public void setText(ServiceInvocationContext context, String viewId, String text) {
 		MindMapNode node = getMindMapNodeById(context, viewId);		
 		CodeSyncElement cse = (CodeSyncElement) node.getDiagrammableElement();
-		CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
-		
+		CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);		
 	}
 	
 	public Object changeParent(ServiceInvocationContext context, String viewId, String parentViewId, int index, int side) {
@@ -76,7 +65,7 @@ public class MindMapDiagramOperationsService {
 		
 		if (oldParentCSE.equals(newParentCSE)) {
 		} else {			
-			((MindMapNode) node.eContainer()).getPersistentChildren().remove(node);
+//			((MindMapNode) node.eContainer()).getPersistentChildren().remove(node);
 			oldParentCSE.getChildren().remove(cse);			
 			newParentCSE.getChildren().add(index, cse);
 	
@@ -124,12 +113,12 @@ public class MindMapDiagramOperationsService {
 		return node;
 	}
 	
-	public Object createNew(ServiceInvocationContext context, String viewId, String viewType) {
+	public Object createNode(ServiceInvocationContext context, String viewId, String viewType) {
 		MindMapNode node = getMindMapNodeById(context, viewId);	
 		
 		CodeSyncElement parentCSE = (CodeSyncElement) node.getDiagrammableElement();	
 		
-		CodeSyncElement mindmapCse = CodeSyncFactory.eINSTANCE.createCodeSyncElement();				
+		MindMapElement mindmapCse = CodeSyncFactory.eINSTANCE.createMindMapElement();				
 		mindmapCse.setName("New " + viewType);
 		mindmapCse.setType(viewType);
 		
@@ -155,6 +144,46 @@ public class MindMapDiagramOperationsService {
 		for (EObject child : node.getPersistentChildren()) {
 			setSide((MindMapNode) child, side);
 		}
+	}
+	
+	public void removeAllIcons(ServiceInvocationContext context, List<String> viewIds) {
+		for (String viewId : viewIds) {
+			MindMapNode node = getMindMapNodeById(context, viewId);		
+			MindMapElement cse = (MindMapElement) node.getDiagrammableElement();	
+			
+			cse.getIcons().clear();
+		}		
+	}
+	
+	public void removeFirstIcon(ServiceInvocationContext context, List<String> viewIds) {
+		for (String viewId : viewIds) {
+			MindMapNode node = getMindMapNodeById(context, viewId);		
+			MindMapElement cse = (MindMapElement) node.getDiagrammableElement();	
+			
+			if (cse.getIcons().size() > 0) {
+				cse.getIcons().remove(0);
+			}
+		}		
+	}
+	
+	public void removeLastIcon(ServiceInvocationContext context, List<String> viewIds) {
+		for (String viewId : viewIds) {
+			MindMapNode node = getMindMapNodeById(context, viewId);		
+			MindMapElement cse = (MindMapElement) node.getDiagrammableElement();	
+			
+			if (cse.getIcons().size() > 0) {
+				cse.getIcons().remove(cse.getIcons().size() - 1);
+			}
+		}		
+	}
+	
+	public void addIcon(ServiceInvocationContext context, List<String> viewIds, String icon) {
+		for (String viewId : viewIds) {
+			MindMapNode node = getMindMapNodeById(context, viewId);		
+			MindMapElement cse = (MindMapElement) node.getDiagrammableElement();	
+			
+			cse.getIcons().add(icon);
+		}		
 	}
 	
 	protected DiagramEditableResource getEditableResource(ServiceInvocationContext context) {

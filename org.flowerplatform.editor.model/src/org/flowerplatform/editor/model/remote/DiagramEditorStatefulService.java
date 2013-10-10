@@ -45,10 +45,10 @@ import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
-import org.flowerplatform.communication.tree.remote.AbstractTreeStatefulService;
-import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.IContentAssist;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.command.AbstractEMFServerCommand;
@@ -179,7 +179,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		
 		DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, false);
 
-		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
+		client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), list, Collections.emptyList(), null, diagramUpdaterChangeDescriptionProcessingContext != null ? diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates() : null);
 		String diagramId = diagram.eResource().getURIFragment(diagram);
 		invokeClientMethod(client.getCommunicationChannel(), client.getStatefulClientId(), "openDiagram", new Object[] { diagramId });
 		
@@ -269,6 +269,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 				for (EditableResourceClient client : diagramEditableResource.getClients()) {
 					client_updateTransferableObjects(client.getCommunicationChannel(), client.getStatefulClientId(), 
 							diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate(), 
+							diagramUpdaterChangeDescriptionProcessingContext.getObjectsToDispose(),
 							diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose(),
 							diagramUpdaterChangeDescriptionProcessingContext.getViewDetailsUpdates());
 				}
@@ -297,11 +298,28 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		return null;
 	}
 	
+	private DiagramEditableResource getDiagramEditableResource(ServiceInvocationContext context) {
+		return (DiagramEditableResource) context.getAdditionalData().get(ADDITIONAL_DATA_EDITABLE_RESOURCE);
+	}
+	
 	///////////////////////////////////////////////////////////////
 	// Proxies to client methods
 	///////////////////////////////////////////////////////////////
 	
-	public void client_updateTransferableObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectsToUpdate, Collection<?> objectsIdsToDispose, Collection<ViewDetailsUpdate> viewDetailsUpdates) {
+	/**
+	 * Before sending the objects to the client, first iterate the <code>objectsToUpdate</code> list and
+	 * clean references towards model elements. This should be done when the objects are removed from the 
+	 * resource; however, we do not want to treat this as a change and process it.
+	 * 
+	 * @author Mariana Gheorghe
+	 */
+	public void client_updateTransferableObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectsToUpdate, Collection<?> objectsToDispose, Collection<?> objectsIdsToDispose, Collection<ViewDetailsUpdate> viewDetailsUpdates) {
+		for (Object object : objectsToDispose) {
+			if (object instanceof View) {
+				((View) object).setDiagrammableElement(null);
+			}
+		}
+		
 		invokeClientMethod(communicationChannel, statefulClientId, "updateTransferableObjects", new Object[] { objectsToUpdate, objectsIdsToDispose, viewDetailsUpdates });
 	}
 	
@@ -311,7 +329,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	
 	@RemoteInvocation
 	public void handleDragOnDiagram(StatefulServiceInvocationContext context, List<List<PathFragment>> pathsWithRoot, String diagramId) {
-		DiagramEditableResource editableResource = (DiagramEditableResource) context.getAdditionalData().get(ADDITIONAL_DATA_EDITABLE_RESOURCE);
+		DiagramEditableResource editableResource = getDiagramEditableResource(context);
 		Diagram diagram = (Diagram) editableResource.getEObjectById(diagramId);
 		
 //		List<Object> objects = new ArrayList<Object>(pathsWithRoot.size());
@@ -319,6 +337,33 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //			objects.add(GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null));
 //		}
 		EditorModelPlugin.getInstance().getComposedDragOnDiagramHandler().handleDragOnDiagram(pathsWithRoot, diagram, null, null, context.getCommunicationChannel());
+	}
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	@RemoteInvocation
+	public List<ContentAssistItem> contentAssist(StatefulServiceInvocationContext context, String viewId, String pattern) {
+		logger.debug("Search types for pattern [{}]", pattern);
+		DiagramEditableResource editableResource = getDiagramEditableResource(context);
+		View view = (View) editableResource.getEObjectById(viewId);
+		CodeSyncElement diagrammableElement = (CodeSyncElement) view.getDiagrammableElement();
+		if (diagrammableElement == null) {
+			throw new RuntimeException("No diagrammable element for view with id " + viewId);
+		}
+		
+		// populate the search context, needed to set the search scope
+		Map<String, Object> searchContext = new HashMap<String, Object>();
+		searchContext.put(IContentAssist.TYPE, diagrammableElement.getType());
+		searchContext.put(IContentAssist.RESOURCE, editableResource.getFile());
+		List<ContentAssistItem> types = EditorModelPlugin.getInstance()
+				.getComposedContentAssist().findMatches(searchContext, pattern);
+		if (types == null) {
+			logger.debug("No types found for pattern [{}]", pattern);
+		} else {
+			logger.debug("Found [{}] types for pattern [{}]", types.size(), pattern);
+		}
+		return types;
 	}
 	
 	/**

@@ -18,6 +18,9 @@
  */
 package org.flowerplatform.web.common.security.dto {
 	
+	import mx.core.FlexGlobals;
+	
+	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.command.AbstractClientCommand;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
@@ -31,6 +34,7 @@ package org.flowerplatform.web.common.security.dto {
 		
 		override public function execute():void {
 			WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn = user;
+			CommonPlugin.getInstance().handleLinkWithQueryStringDecoded(FlexGlobals.topLevelApplication.parameters); // handle browser url
 		}
 		
 	}

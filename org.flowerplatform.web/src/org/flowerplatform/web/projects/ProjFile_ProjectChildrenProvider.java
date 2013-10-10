@@ -30,7 +30,7 @@ import org.flowerplatform.web.explorer.AbstractFileWrapperChildrenProvider;
  */
 public class ProjFile_ProjectChildrenProvider extends AbstractFileWrapperChildrenProvider {
 
-	protected static final String NODE_TYPE_PROJ_FILE = "projFile";
+	public static final String NODE_TYPE_PROJ_FILE = "projFile";
 	
 	@Override
 	protected String getNodeType() {

@@ -40,6 +40,8 @@ import static org.flowerplatform.common.regex.RegexUtil.STOP_BEFORE_OPEN_BRACKET
 import static org.flowerplatform.common.regex.JavaRegexConfigurationProvider.ATTRIBUTE_CATEGORY;
 import static org.flowerplatform.common.regex.JavaRegexConfigurationProvider.METHOD_CATEGORY;
 
+import java.util.regex.Pattern;
+
 import org.flowerplatform.common.regex.RegexConfiguration;
 import org.flowerplatform.common.regex.RegexWithAction;
 
@@ -98,7 +100,7 @@ public class ActionscriptRegexConfigurationProvider {
 			.add(new RegexWithAction.IfFindThisAnnounceMatchCandidate(METHOD_CATEGORY, ACTIONSCRIPT_METHOD, METHOD_CATEGORY))
 			.add(new RegexWithAction.IfFindThisSkip("Multi-line comment", MULTI_LINE_COMMENT))
 			.add(new RegexWithAction.IfFindThisSkip("Single-line comment", SINGLE_LINE_COMMENT))
-			.compile();
+			.compile(Pattern.DOTALL);
 	}
 	
 }

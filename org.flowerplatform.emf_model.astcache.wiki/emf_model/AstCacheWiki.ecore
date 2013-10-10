@@ -21,5 +21,8 @@
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="conflict" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"
           transient="true"/>
     </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="NodeWithOriginalFormat" eSuperTypes="../../org.flowerplatform.emf_model.codesync/emf_model/CodeSync.ecore#//CodeSyncElement">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="originalFormat" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
+    </eClassifiers>
   </eSubpackages>
 </ecore:EPackage>

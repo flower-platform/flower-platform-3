@@ -21,11 +21,13 @@ package org.flowerplatform.editor {
 	
 	import flash.utils.Dictionary;
 	
-	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	
+	import org.flowerplatform.common.CommonPlugin;
+	import org.flowerplatform.common.link.ILinkHandler;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
@@ -41,7 +43,7 @@ package org.flowerplatform.editor {
 	/**
 	 * @author Cristi
 	 */
-	public class EditorPlugin extends AbstractFlowerFlexPlugin {
+	public class EditorPlugin extends AbstractFlowerFlexPlugin implements ILinkHandler {
 		
 		protected static var INSTANCE:EditorPlugin;
 		
@@ -50,6 +52,8 @@ package org.flowerplatform.editor {
 		}
 		
 		public static const TREE_NODE_KEY_CONTENT_TYPE:String = "contentType";
+		public static const OPEN_RESOURCES:String = "openResources";
+		public static const SELECT_RESOURCE_AT_INDEX:String = "selectResourceAtIndex";
 		
 		// initialized by server, at client app startup
 		public var contentTypeDescriptors:IList;
@@ -70,6 +74,8 @@ package org.flowerplatform.editor {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
+			
+			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;			
 		}
 		
 		override protected function registerClassAliases():void	{
@@ -125,6 +131,36 @@ package org.flowerplatform.editor {
 				}
 			}
 		}
+				
+		public function getFirstEditorDescriptorForNode(contentTypeIndex:int, throwErrorIfNotFound:Boolean = true):BasicEditorDescriptor {			
+			var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[contentTypeIndex];
+			
+			var editorName:String = String(ctDescriptor.compatibleEditors[0]);
+			var descriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(editorName);
+			if (descriptor == null && throwErrorIfNotFound) {
+				throw new Error("There is no compatible editor descriptor found for editor: " + editorName + "!");
+			}
+			return descriptor;
+		}
 		
+		public function handleLink(command:String, parameters:String):void {
+			if (command == OPEN_RESOURCES) {
+				// parameters format = file1,file2,file3|selectResourceAtIndex=1
+				var files:String = parameters;
+				var index:String;
+				
+				if (parameters.lastIndexOf("|") != -1) { // index exists
+					files = parameters.split("|")[0];
+					index = parameters.split("|")[1];	
+					if (index.match(SELECT_RESOURCE_AT_INDEX + "=[0-9]")) {
+						index = index.substring(index.lastIndexOf("=") + 1);
+					}					
+				}
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"editorOperationsService", "navigateFriendlyEditableResourcePathList", 
+						[files, index == null ? -1 : int(index)]));
+			}		
+		}
 	}
 }

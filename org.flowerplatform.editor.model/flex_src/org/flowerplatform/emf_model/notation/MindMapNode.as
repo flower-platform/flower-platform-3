@@ -27,61 +27,9 @@ package org.flowerplatform.emf_model.notation {
 		
 		public var expanded:Boolean;
 		
-		public var side:int;
-		
 		public var hasChildren:Boolean;
 		
-		private var _x:Number = 0;	
-		private var _y:Number = 0;	
-		private var _width:Number = 10;		
-		private var _height:Number = 10;
-				
-		[Transient]		
-		public function get x():Number {			
-			return _x;
-		}
-		
-		public function setX(value:Number):void {
-			var oldValue:Number = _x;
-			_x = value;
+		public var side:int;
 			
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "x", oldValue, _x));
-		}
-		
-		[Transient]
-		public function get y():Number {		
-			return _y;
-		}
-		
-		public function setY(value:Number):void {
-			var oldValue:Number = _y;
-			_y = value;
-			
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "y", oldValue, _y));
-		}
-		
-		[Transient]
-		public function get width():Number {			
-			return _width;
-		}
-		
-		public function setWidth(value:Number):void {
-			var oldValue:Number = _width;
-			_width = value;
-			
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "width", oldValue, _width));
-		}
-		
-		[Transient]
-		public function get height():Number {			
-			return _height;
-		}
-		
-		public function setHeight(value:Number):void {
-			var oldValue:Number = _height;
-			_height = value;
-			
-			dispatchEvent(PropertyChangeEvent.createUpdateEvent(this, "height", oldValue, _height));
-		}
 	}
 }

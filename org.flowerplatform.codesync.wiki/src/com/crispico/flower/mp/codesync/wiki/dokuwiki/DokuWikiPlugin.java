@@ -79,7 +79,7 @@ public class DokuWikiPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 	
-	public void savePage(astcache.wiki.Page page) {
+	public void savePage(org.flowerplatform.model.astcache.wiki.Page page) {
 		try {
 			DokuJClient client = getClient();
 			client.putPage(WikiPlugin.getInstance().getPagePath(page, ":", false), page.getInitialContent());

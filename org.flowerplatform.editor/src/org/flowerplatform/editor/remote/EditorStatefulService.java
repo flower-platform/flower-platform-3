@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.editor.remote;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -43,6 +42,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
@@ -111,7 +111,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	private ScheduledExecutorService scheduler = CommunicationPlugin.getInstance().getScheduledExecutorServiceFactory().createScheduledExecutorService();
 	
 	protected AtomicInteger collaborativeFigureModelsIdFactory = new AtomicInteger(1);
-	
+
 	private RunnableWithParam<Void, EditableResource> standardRemoveEditableResourceRunnable = new RunnableWithParam<Void, EditableResource>() {
 		@Override
 		public Void run(EditableResource editableResource) {
@@ -367,6 +367,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 			}
 			// TODO CS/FP2 dezactivat act listener
 //			SingletonRefsInEditorPluginFromWebPlugin.INSTANCE_ACTIVITY_LISTENER.removeFromRecentResources(getFriendlyEditableResourcePath(calculateStatefulClientId(editableResource.getEditableResourcePath())));
+			logger.error(String.format("Error while loading resource %s", editableResource.getEditableResourcePath()), e);
 			return false;
 		} catch (Throwable e) {
 			if (context != null) {
@@ -449,6 +450,8 @@ public abstract class EditorStatefulService extends StatefulService implements I
 			reloadEditableResource_loadWithSlaves(editableResource, slaveEditableResourcesThatWereUnloaded, displayMessageToClient);
 		} finally {
 			namedLockPool.unlock(editableResource.getEditableResourcePath());
+			editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
+
 		}
 	}
 	
@@ -542,6 +545,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 				boolean initialDirtyState = editableResource.isDirty();
 				doSave(editableResource);	
 				if (initialDirtyState != editableResource.isDirty() && !context.getCommunicationChannel().isDisposed()) {
+					editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
 					dispatchEditableResourceStatus(editableResource);
 				}
 //			}
@@ -931,6 +935,50 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		return friendlyName;
 	}
 	
+	/**
+	 * Doesn't have a channel parameter because this method would always be called for a resource after loading it's master resource.
+	 * <p>
+	 * Doesn't have validationProblems parameter because this method is safely called with input created internally whereas the other method
+	 * is called with input given by the user.
+	 * 
+	 * @see #getCanonicalEditableResourcePath(String, CommunicationChannel, StringBuffer)
+	 *  
+	 * 
+	 * @author Sorin
+	 * 
+	 */
+	public String getFriendlyEditableResourcePath(String canonicalEditableResourcePath) {
+		return getFriendlyNameEncoded(canonicalEditableResourcePath);
+	}
+
+	/**
+	 * @param channel needed because certain editors may present resource from a master resource that first must be opened for the current user (like diagram from model)
+	 * @param validationProblems problems resulted from validating the path. This must be rigorously validated because it is called with input directly from user
+	 * @return the canonical editableResourcePath or null if there were validation problems
+	 * 
+	 * 
+	 * @author Sorin
+	 * 
+	 */
+	public String getCanonicalEditableResourcePath(String friendlyEditableResourcePath, CommunicationChannel channel, StringBuffer validationProblems) {
+		return getFriendlyNameDecoded(friendlyEditableResourcePath);
+	}
+	
+	/**
+	 * Method called to navigate to the given <code>fragment</code> by the external url feature.
+	 * Each implementation should interpret <code>fragment</code> in it's own way.
+	 *  
+	 * @param editableResourcePath the resource that was already opened in an editor
+	 * @param fragment a string used to located the desired fragment. It is recommended  to have a key=value
+	 * @param channel the client in which the editableResourcePath is opened in an editor.
+	 * 
+	 * 
+	 * @author Sorin
+	 * 
+	 */
+	public void navigateToFragment(CommunicationChannel channel, String editableResourcePath, String fragment) {
+	}
+	
 	///////////////////////////////////////////////////////////////
 	// @RemoteInvocation methods
 	///////////////////////////////////////////////////////////////
@@ -996,7 +1044,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 					// i.e. load has thrown an error
 					return;
 				}
-
+				editableResource.setEditableResourceLastModifiedStamp(((FileBasedEditableResource) editableResource).getFile().lastModified());
 				editableResources.put(state.getEditableResourcePath(), editableResource);
 			}
 			
@@ -1411,50 +1459,6 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		
 		invokeClientMethod(channel, editableResourceClient.getStatefulClientId(), "revealEditor", new Object[] {});
 	}
-
-	/**
-	 * Doesn't have a channel parameter because this method would always be called for a resource after loading it's master resource.
-	 * <p>
-	 * Doesn't have validationProblems parameter because this method is safely called with input created internally whereas the other method
-	 * is called with input given by the user.
-	 * 
-	 * @see #getCanonicalEditableResourcePath(String, CommunicationChannel, StringBuffer)
-	 *  
-	 * 
-	 * @author Sorin
-	 * 
-	 */
-	public String getFriendlyEditableResourcePath(String canonicalEditableResourcePath) {
-		return getFriendlyNameEncoded(canonicalEditableResourcePath);
-	}
-
-	/**
-	 * @param channel needed because certain editors may present resource from a master resource that first must be opened for the current user (like diagram from model)
-	 * @param validationProblems problems resulted from validating the path. This must be rigorously validated because it is called with input directly from user
-	 * @return the canonical editableResourcePath or null if there were validation problems
-	 * 
-	 * 
-	 * @author Sorin
-	 * 
-	 */
-	public String getCanonicalEditableResourcePath(String friendlyEditableResourcePath, CommunicationChannel channel, StringBuffer validationProblems) {
-		return getFriendlyNameDecoded(friendlyEditableResourcePath);
-	}
-	
-	/**
-	 * Method called to navigate to the given <code>fragment</code> by the external url feature.
-	 * Each implementation should interpret <code>fragment</code> in it's own way.
-	 *  
-	 * @param editableResourcePath the resource that was already opened in an editor
-	 * @param fragment a string used to located the desired fragment. It is recommended  to have a key=value
-	 * @param channel the client in which the editableResourcePath is opened in an editor.
-	 * 
-	 * 
-	 * @author Sorin
-	 * 
-	 */
-	public void navigateToFragment(CommunicationChannel channel, String editableResourcePath, String fragment) {
-	}
 	
 	/**
 	 * @see ActivityService#getIconUrl(String)
@@ -1464,4 +1468,5 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	public String getIconUrl() {
 		return createEditableResourceInstance().getIconUrl();
 	}
+	
 }

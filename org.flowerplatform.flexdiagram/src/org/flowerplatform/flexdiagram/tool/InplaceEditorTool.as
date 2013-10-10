@@ -89,6 +89,9 @@ package org.flowerplatform.flexdiagram.tool {
 			if (inplaceEditorController != null) {
 				if (inplaceEditorController.canActivate(context.model)) {
 					inplaceEditorController.activate(context.model);
+					if (context.wakedByMouseDownEvent) {
+						diagramRenderer.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);	
+					}
 				}
 			}
 		}
@@ -97,6 +100,9 @@ package org.flowerplatform.flexdiagram.tool {
 			var inplaceEditorController:IInplaceEditorController = diagramShell.getControllerProvider(context.model).getInplaceEditorController(context.model);
 			if (inplaceEditorController != null) {
 				inplaceEditorController.deactivate(context.model);
+				if (context.wakedByMouseDownEvent) {
+					diagramRenderer.stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);	
+				}
 			}
 			
 			delete context.model;			

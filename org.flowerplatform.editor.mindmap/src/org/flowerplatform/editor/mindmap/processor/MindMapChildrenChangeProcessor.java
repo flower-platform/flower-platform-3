@@ -35,7 +35,10 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class MindMapChildrenChangeProcessor extends CodeSyncElementFeatureChangesProcessor {
 
 	@Override
-	protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram) {		
+	protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram) {	
+		if (!((MindMapNode) associatedViewOnOpenDiagram).isExpanded()) {
+			return -1;
+		}
 		return 0;
 	}
 
