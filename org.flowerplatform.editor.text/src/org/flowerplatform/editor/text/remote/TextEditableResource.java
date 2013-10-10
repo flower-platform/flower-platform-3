@@ -93,7 +93,7 @@ public class TextEditableResource extends FileBasedEditableResource {
 
 	@Override
 	public String getLabel() {
-		return EditorPlugin.getInstance().getFileAccessController().getName(this);
+		return EditorPlugin.getInstance().getFileAccessController().getName(this.getFile());
 	}
 
 	/**

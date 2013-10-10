@@ -150,6 +150,10 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		return result;
 	}
 	
+	public Map<String, EditableResource> getEditableResources() {
+		return Collections.unmodifiableMap(editableResources);
+	}
+	
 	/**
 	 * 
 	 */

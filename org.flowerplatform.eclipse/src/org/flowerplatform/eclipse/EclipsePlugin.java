@@ -4,6 +4,7 @@ import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.swt.widgets.Display;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.public_resources.PublicResourcesServlet;
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -20,6 +21,14 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 
+	public EclipsePlugin() {
+		super();
+		INSTANCE = this;
+		
+		CommonPlugin.getInstance().initializeFlowerProperties(
+				this.getClass().getClassLoader().getResourceAsStream("META-INF/flower.properties"));		
+	}
+	
 	private FlowerJettyServer server;
 			
 	public void start(BundleContext bundleContext) throws Exception {
@@ -72,8 +81,14 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 		server = new FlowerJettyServer();
 		server.start();
 		
-		EditorPlugin.getInstance().setFileAccessController(new EclipseFileAccessController());
-		EditorModelPlugin.getInstance().setModelAccessController(new EclipseModelAccessController());
+		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
+			@Override
+			public void run() {
+				EditorPlugin.getInstance().setFileAccessController(new EclipseFileAccessController());
+				EditorModelPlugin.getInstance().setModelAccessController(new EclipseModelAccessController());
+			}
+		});		
+		
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

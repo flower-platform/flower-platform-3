@@ -1,14 +1,20 @@
 package org.flowerplatform.editor.file;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import javax.print.attribute.standard.MediaSize.Other;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
 /**
  * @author Cristina Constantinescu
  */
-public abstract class FileAccessController implements IFileAccessController {
+public abstract class PlainFileAccessController implements IFileAccessController {
 
 	@Override
 	public long getLastModifiedTimestamp(Object file) {
@@ -19,31 +25,27 @@ public abstract class FileAccessController implements IFileAccessController {
 	public String getName(Object file) {
 		return ((File) file).getName();		
 	}
-
+	
+	/**
+	 * @see IOUtils
+	 * @see FileUtils	
+	 */
 	@Override
-	public StringBuffer getContent(Object file) {
-		String content;
-		try {
-			content = FileUtils.readFileToString((File) file);
+	public InputStream getContent(Object file) {		
+		try {			
+			return FileUtils.openInputStream((File) file);
 		} catch (Throwable e) {
 			throw new RuntimeException("Error while loading file content " + file, e);
-		}
-		
-		return new StringBuffer(content);
+		}		
 	}
 
 	@Override
-	public void setContent(Object file, StringBuffer content) {
-		try {
-			FileUtils.writeByteArrayToFile((File) file, content.toString().getBytes());
+	public void setContent(Object file, String content) {
+		try {			
+			FileUtils.writeStringToFile((File) file, content);
 		} catch (IOException e) {
 			throw new RuntimeException("Error while saving the file " + file, e);
 		}
-	}
-
-	@Override
-	public String getAbsolutePath(Object file) {		
-		return ((File) file).getAbsolutePath();
 	}
 	
 }

@@ -39,8 +39,10 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
@@ -104,14 +106,24 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	public ResourceSet getOrCreateResourceSet(IProject project, String diagramEditorStatefulServiceId) {
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) CommunicationPlugin.getInstance()
 				.getServiceRegistry().getService(diagramEditorStatefulServiceId);
-		DiagramEditableResource diagramEditableResource = service.getDiagramEditableResource(
-				ProjectsService.getInstance().getFileFromProjectWrapperResource(project));
+		DiagramEditableResource diagramEditableResource = null;
+		File projectFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project);
+		if (projectFile != null) {
+			String path = projectFile.getAbsolutePath();
+			for (EditableResource er : service.getEditableResources().values()) {
+				DiagramEditableResource der = (DiagramEditableResource) er;				
+				if (((File)der.getFile()).getAbsolutePath().startsWith(path)) {
+					diagramEditableResource = der;
+					break;
+				}
+			}
+		}		
 		if (diagramEditableResource != null) {
 			return diagramEditableResource.getResourceSet();
 		}
 		return new ResourceSetImpl();
 	}
-	
+
 	/**
 	 * @author Mariana
 	 */

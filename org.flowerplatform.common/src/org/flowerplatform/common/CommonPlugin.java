@@ -19,6 +19,7 @@
 package org.flowerplatform.common;
 
 import java.io.File;
+import java.io.InputStream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.common.file_event.FileEventDispatcher;
@@ -80,26 +81,31 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 		return relative;
 	}
 	
+	public void initializeFlowerProperties(InputStream is) {
+		flowerProperties = new FlowerProperties(is);
+	}
+	
 	/**	
 	 * @author Cristina Constatinescu
 	 */
 	public FlowerProperties getFlowerProperties() {
-		if (flowerProperties == null) {
-			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(FLOWER_PROPERTIES_EXTENSION_POINT);
-			if (configurationElements.length == 0) {
-				throw new RuntimeException("No flower properties provider has been set! Please register it using " + FLOWER_PROPERTIES_EXTENSION_POINT + " extension point.");
-			}
-			for (IConfigurationElement configurationElement : configurationElements) {
-				try {
-					IFlowerPropertiesProvider provider = (IFlowerPropertiesProvider) configurationElement.createExecutableExtension("flowerPropertiesProviderClass");
-					flowerProperties = new FlowerProperties(provider.getFlowerPropertiesAsInputStream());
-					break;
-				} catch (CoreException e) {
-					return null;
-				}				
-			}
-			
-		}
+// 		TODO: remove if no problems are detected when starting server
+//		if (flowerProperties == null) {
+//			IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor(FLOWER_PROPERTIES_EXTENSION_POINT);
+//			if (configurationElements.length == 0) {
+//				throw new RuntimeException("No flower properties provider has been set! Please register it using " + FLOWER_PROPERTIES_EXTENSION_POINT + " extension point.");
+//			}
+//			for (IConfigurationElement configurationElement : configurationElements) {
+//				try {
+//					IFlowerPropertiesProvider provider = (IFlowerPropertiesProvider) configurationElement.createExecutableExtension("flowerPropertiesProviderClass");
+//					flowerProperties = new FlowerProperties(provider.getFlowerPropertiesAsInputStream());
+//					break;
+//				} catch (CoreException e) {
+//					return null;
+//				}				
+//			}
+//			
+//		}
 		return flowerProperties;
 	}
 
