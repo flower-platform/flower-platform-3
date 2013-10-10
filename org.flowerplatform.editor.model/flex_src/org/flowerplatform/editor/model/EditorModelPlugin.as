@@ -163,6 +163,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(TestDiagramPropAction);
+			
 
 
 		}

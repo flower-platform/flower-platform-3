@@ -28,14 +28,14 @@
    <extension
          point="org.flowerplatform.properties.propertiesProvider">
       <propertiesProvider
-            itemType="javaClass"
+            itemType="class"
             propertiesProviderClass="org.flowerplatform.editor.model.properties.JavaClassPropertiesProvider">
       </propertiesProvider>
    </extension>
    <extension
          point="org.flowerplatform.properties.propertiesProvider">
       <propertiesProvider
-            itemType="javaAttribute"
+            itemType="classAttribute"
             propertiesProviderClass="org.flowerplatform.editor.model.properties.JavaAttributePropertiesProvider">
       </propertiesProvider>
    </extension>
