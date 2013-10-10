@@ -25,14 +25,17 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		override public function run():void {
-			var node:Node = Node(selection.getItemAt(0));//.id / 
-			//var diagramEditableResourcePath:String = "/crispico/ws_trunk/wd1/NewDiagram1.notation";
-			var diagramEditableResourcePath:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).editableResourcePath;
-			var xmiID:String = node.idAsString;
-			var serviceID:String = "diagramEditorStatefulService";
-			var diagramViewType = node.viewType;
+			
 			var selectedItems:ArrayCollection = new ArrayCollection();
-			selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
+			for (var i:int = 0; i < selection.length; i++) {
+				var node:Node = Node(selection.getItemAt(i));//.id / 
+				var diagramEditableResourcePath:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).editableResourcePath;
+				var xmiID:String = node.idAsString;
+				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
+				var diagramViewType:String = node.viewType;
+				
+				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
+			}
 			var myObject:Object;
 			CommunicationPlugin.getInstance().bridge.sendObject(
 				new InvokeServiceMethodServerCommand("propertiesProviderService",
