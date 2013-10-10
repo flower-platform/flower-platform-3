@@ -44,9 +44,6 @@
     <application path="MindMapDiagramSampleMobile.mxml">
       <airExcludes/>
     </application>
-    <application path="IEDSample.mxml">
-      <airExcludes/>
-    </application>
   </applications>
   <modules/>
   <buildCSSFiles/>

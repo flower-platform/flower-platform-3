@@ -155,7 +155,9 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);			
+
+			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 		}
 		

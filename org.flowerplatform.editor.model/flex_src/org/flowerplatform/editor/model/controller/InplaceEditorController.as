@@ -58,7 +58,7 @@ package org.flowerplatform.editor.model.controller {
 			var bounds:Rectangle = renderer.getBounds(DisplayObject(diagramShell.diagramRenderer));
 			textField.x = bounds.x + 2;
 			textField.y = bounds.y;
-			textField.width = bounds.width;
+			textField.minWidth = bounds.width;
 			textField.height = bounds.height;
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_getInplaceEditorText(Node(model).id, function(text:String):void {
 				textField.text = text;

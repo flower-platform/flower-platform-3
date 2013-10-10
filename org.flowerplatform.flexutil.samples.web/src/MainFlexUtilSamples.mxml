@@ -21,7 +21,7 @@
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:tree="org.flowerplatform.flexutil.samples.tree.*" xmlns:renderer="org.flowerplatform.flexutil.samples.renderer.*" xmlns:ns="org.flowerplatform.flexutil.samples.context_menu.*" xmlns:layout="com.crispico.flower.util.layout.*"
-			   applicationComplete="applicationCompleteHandler()" xmlns:ns1="org.flowerplatform.flexutil.samples.gradient_list.*">
+			   applicationComplete="applicationCompleteHandler()" xmlns:ns1="org.flowerplatform.flexutil.samples.gradient_list.*" xmlns:text="org.flowerplatform.flexutil.samples.text.*">
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
@@ -52,5 +52,9 @@
 		<s:NavigatorContent label="Gradient List">
 			<ns1:GradientBackgroundListSample width="100%" height="100%"/>
 		</s:NavigatorContent>
+		<s:NavigatorContent label="Auto grow Textinput/TextArea" width="100%" height="100%">
+			<text:AutoGrowTextInputSample top="10" />
+		</s:NavigatorContent>
 	</mx:TabNavigator>
+			
 </s:Application>
