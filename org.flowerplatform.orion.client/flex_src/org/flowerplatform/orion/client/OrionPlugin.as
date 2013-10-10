@@ -12,22 +12,26 @@ package org.flowerplatform.orion.client {
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.CommonPlugin;
+	import org.flowerplatform.common.link.ILinkHandler;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.HelloServerCommand;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 
-	public class OrionPlugin extends AbstractFlowerFlexPlugin {
+	public class OrionPlugin extends AbstractFlowerFlexPlugin implements ILinkHandler {
 		
 		protected static var INSTANCE:OrionPlugin;
 		
 		public static function getInstance():OrionPlugin {
 			return INSTANCE;
 		}
+		
+		public static const OPEN_RESOURCES:String = "openResourcesFromOrion";
 		
 		override public function preStart():void {
 			super.preStart();
@@ -36,6 +40,7 @@ package org.flowerplatform.orion.client {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
+			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;
 		}
 		
 		override public function start():void {
@@ -46,6 +51,8 @@ package org.flowerplatform.orion.client {
 			
 			CommunicationPlugin.getInstance().bridge.connect();
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
+			
+			
 		}
 		
 		public function handleConnected(event:BridgeEvent):void {			
@@ -78,6 +85,15 @@ package org.flowerplatform.orion.client {
 			sashEditor.children.addItem(stackEditor);
 			
 			Workbench(FlexUtilGlobals.getInstance().workbench).load(wld, true, true);
+		}
+		
+		public function handleLink(command:String, parameters:String):void {
+			if (command == OPEN_RESOURCES) {				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"orionOperationsService", "navigateFriendlyEditableResourcePathList", 
+						[parameters, 0]));
+			}		
 		}
 	}
 }

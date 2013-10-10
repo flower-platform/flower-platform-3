@@ -15,21 +15,33 @@ define([
 	     uriTemplate: "/flowerplatform/main.jsp"
 	});
 	     
+	provider.registerService("orion.core.contenttype", {}, {
+		contentTypes:
+			// Text types
+			[{	id: "flower/diagram",
+				name: "Diagram",
+				extension: ["notation"]				
+			}]
+		});
+	
 	provider.registerServiceProvider("orion.edit.editor", {}, {
 		id: "orion.flower",
 	    name: "Flower Platform Editor",
 	    uriTemplate: "{OrionHome}/flowerplatform/flowerContent.html#{Location},contentProvider=orion.flower.content"
 	});
-	     
-	provider.registerServiceProvider("orion.navigate.openWith", {}, {
+	     		
+	provider.registerService("orion.navigate.openWith", {}, {
 		editor: "orion.flower",
-	    contentType: ["image/gif", "image/jpeg", "image/ico", "image/png","image/tiff"]
-	});
-		
+		contentType: ["text/plain", "text/html", "text/css", "application/javascript", "application/json", "application/xml", "text/x-java-source", "flower/diagram"]});
+	
+	provider.registerService("orion.navigate.openWith.default", {}, {
+		editor: "orion.flower"});
+	
 	provider.registerService("orion.page.link", null, {
-		name: "Flower Editor",		
+		name: "Flower Editor",
 		uriTemplate: "{OrionHome}/flowerplatform/flowerContent.html#{Location},contentProvider=orion.flower.content"
 	});	
+	
 	
 	provider.connect();
 });

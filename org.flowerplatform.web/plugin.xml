@@ -344,4 +344,12 @@
       </service>
 
    </extension>
+   <extension
+         point="org.flowerplatform.communication.servlet">
+      <servlet
+            mappingEvaluator="org.flowerplatform.blazeds.MessageBrokerMappingEvaluator"
+            priority="200"
+            servlet="flex.messaging.MessageBrokerServlet">
+      </servlet>
+   </extension>
 </plugin>

@@ -2,14 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.flowerplatform.communication.servlet">
-      <servlet
-            mappingEvaluator="org.flowerplatform.blazeds.MessageBrokerMappingEvaluator"
-            priority="200"
-            servlet="flex.messaging.MessageBrokerServlet">
-      </servlet>
-   </extension>
-   <extension
          point="org.flowerplatform.communication.service">
       <service
             id="heartbeatStatefulService"

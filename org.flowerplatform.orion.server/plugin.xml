@@ -17,12 +17,12 @@
       </servlet>
       <servlet
             alias="/flowerplatform/messagebroker"
-            class="org.flowerplatform.communication.FlowerDispatcherServlet"
+            class="flex.messaging.MessageBrokerServlet"
             httpcontextId="flower-platform">
       </servlet>
       <servlet
             alias="/flowerplatform/servlet"
-            class="org.flowerplatform.orion.server.OrionFlowerDispatcherServlet"
+            class="org.flowerplatform.communication.FlowerDispatcherServlet"
             httpcontextId="flower-platform">
       </servlet>
    </extension>
@@ -69,6 +69,13 @@
       <serviceSelector
             filter="(other.info=org.eclipse.orion)">
       </serviceSelector>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="orionOperationsService"
+            serviceClass="org.flowerplatform.orion.server.OrionOperationsService">
+      </service>
    </extension>
 
 </plugin>
