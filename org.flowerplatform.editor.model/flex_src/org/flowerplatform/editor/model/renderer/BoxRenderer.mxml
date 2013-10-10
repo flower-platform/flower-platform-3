@@ -37,6 +37,9 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
+			
+			import flash.filters.DropShadowFilter;
+			
 			import mx.events.PropertyChangeEvent;
 			import mx.events.ResizeEvent;
 			
@@ -51,6 +54,9 @@
 			private var _diagramShell:DiagramShell;
 			protected var visualChildrenController:IVisualChildrenController;
 			private var _shouldRefreshVisualChildren:Boolean;
+			private var shadow:DropShadowFilter;
+			private var effectsController:BoxEffectsController;
+			private var shapeDrawer:ShapeDrawer;
 			
 			public function get diagramShell():DiagramShell {
 				return _diagramShell;
@@ -119,10 +125,9 @@
 				}
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
 				
-				graphics.clear();
-				graphics.lineStyle(1);
-				graphics.beginFill(0xCCCCCC, 0);
-				graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
+				if (shapeDrawer != null) {
+					shapeDrawer.drawFigure();
+				}
 			}
 			
 			/**
@@ -144,8 +149,26 @@
 				}
 			}
 			
+			private function addShadow():void {
+				shadow = new DropShadowFilter();
+				shadow.alpha = 0.55;
+				shadow.blurX = 5;
+				shadow.blurY = 5;
+				shadow.distance = 6;
+				shadow.color = 0x000000;
+				shadow.angle = 35; 
+				this.filters = [shadow];
+			}
+			
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
+				
+				effectsController = new BoxEffectsController(this, true);
+				effectsController.glowEffect.blurXTo = effectsController.glowEffect.blurYTo = 20;
+				
+				addShadow();
+				
+				shapeDrawer = new ShapeDrawer(ShapeDrawer.RECTANGLE, this, true, true);
 			}
 			
 		]]>
