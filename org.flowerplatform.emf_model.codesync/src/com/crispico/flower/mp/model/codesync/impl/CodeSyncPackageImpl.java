@@ -38,7 +38,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
-import com.crispico.flower.mp.model.codesync.Connection;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 import com.crispico.flower.mp.model.codesync.MindMapElement;
 import com.crispico.flower.mp.model.codesync.MindMapRoot;

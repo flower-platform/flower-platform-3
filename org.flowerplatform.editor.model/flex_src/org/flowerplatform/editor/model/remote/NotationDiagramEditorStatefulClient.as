@@ -82,8 +82,8 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, invokeServiceMethod("contentAssist", [viewId, pattern], options));
 		}
 		
-		public function service_addNewConnection(sourceViewId:Object, targetViewId:Object):void {
-			attemptUpdateContent(null, invokeServiceMethod("addNewConnection", [editableResourcePath, diagramId, sourceViewId, targetViewId], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+		public function service_addNewRelation(sourceViewId:Object, targetViewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewRelation", [sourceViewId, targetViewId]));
 		}
 
 		public function service_addNewScenario(name:String):void {

@@ -53,6 +53,7 @@ import com.crispico.flower.mp.model.astcache.code.TypedElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
  * @author Cristian Spiescu
@@ -171,6 +172,17 @@ public class JavaClassDiagramOperationsService {
 		setType(operationCse, operation, result.getType());
 		setVisibility(operationCse, operation, result.getVisibilityCharacter());
 		setParameters(operationCse, operation, result.getParameters());
+	}
+	
+	public void addNewRelation(ServiceInvocationContext context, String sourceViewId, String targetViewId) {
+		View sourceView = getViewById(context, sourceViewId);
+		View targetView = getViewById(context, targetViewId);
+		CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
+		CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
+		Relation relation = CodeSyncFactory.eINSTANCE.createRelation();
+		relation.setSource(source);
+		relation.setTarget(target);
+		source.getRelations().add(relation);
 	}
 	
 	public void deleteView(ServiceInvocationContext context, String viewId) {

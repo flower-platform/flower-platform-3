@@ -148,7 +148,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(EdgeRendererController, { removeRendererIfModelIsDisposed: true });
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactories["scenarioInterraction"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["edge"] = composedControllerProviderFactory;
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);

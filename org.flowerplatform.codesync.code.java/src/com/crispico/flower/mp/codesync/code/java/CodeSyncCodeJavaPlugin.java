@@ -18,6 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.code.java;
 
+import org.flowerplatform.codesync.processor.CodeSyncElementRelationsChangesProcessor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -57,6 +58,11 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classAttribute", new JavaClassAttributeProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classOperation", new JavaClassOperationProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("scenarioInterraction", new JavaScenarioElementProcessor());
+		CodeSyncElementRelationsChangesProcessor relationsProcessor = new CodeSyncElementRelationsChangesProcessor();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("class", relationsProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classAttribute", relationsProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classOperation", relationsProcessor);
+		
 		CodeSyncPlugin.getInstance().getFullyQualifiedNameProvider().addDelegateProvider(new JavaFullyQualifiedNameProvider());
 //		ResourcesPlugin.getWorkspace().addResourceChangeListener(new JavaResourceChangeListener());
 //		JavaCore.addElementChangedListener(new JavaElementChangedListener(), ElementChangedEvent.POST_RECONCILE);

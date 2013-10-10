@@ -31,7 +31,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -44,10 +43,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
-import com.crispico.flower.mp.model.codesync.Connection;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 import com.crispico.flower.mp.model.codesync.Relation;
-import java.io.Serializable;
 
 /**
  * <!-- begin-user-doc -->

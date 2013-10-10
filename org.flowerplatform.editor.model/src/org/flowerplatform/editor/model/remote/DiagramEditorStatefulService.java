@@ -383,38 +383,6 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		openNode(context, null, clientContext);
 	}
 	
-	@RemoteInvocation
-	public void addNewConnection(StatefulServiceInvocationContext context, String editableResourcePath, 
-			String diagramId, String sourceViewId, String targetViewId) {
-		DiagramEditableResource er = (DiagramEditableResource) getEditableResource(editableResourcePath);
-		View sourceView = (View) er.getEObjectById(sourceViewId);
-		View targetView = (View) er.getEObjectById(targetViewId);
-		Diagram diagram = (Diagram) er.getEObjectById(diagramId);
-		Edge edge = NotationFactory.eINSTANCE.createEdge();
-		edge.setViewType("scenarioInterraction");
-		edge.setSource(sourceView);
-		edge.setTarget(targetView);
-		diagram.getPersistentEdges().add(edge);
-		
-		DiagramEditorStatefulService service = (DiagramEditorStatefulService) CommunicationPlugin.getInstance()
-				.getServiceRegistry().getService("diagramEditorStatefulService");
-		Resource resource = service.getScenarioTreeStatefulService().getScenariosResource(er);
-		if (resource.getContents().size() > 0) {
-			ScenarioElement scenario = (ScenarioElement) resource.getContents().get(0);
-			CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
-			CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
-			ScenarioElement interaction = addScenarioInteraction(scenario, source, target);
-			if (interaction == null) {
-				ScenarioElement elt = createScenarioElement(source, scenario);
-				interaction = createScenarioElement(target, elt);
-			} 
-			edge.setDiagrammableElement(interaction);
-			Map<Object, Object> clientContext = new HashMap<Object, Object>();
-			clientContext.put("diagramEditableResourcePath", editableResourcePath);
-			service.getScenarioTreeStatefulService().openNode(context, null, clientContext);
-		}
-	}
-	
 	protected ScenarioElement createScenarioElement(CodeSyncElement cse, ScenarioElement parent) {
 		ScenarioElement interaction = CodeSyncFactory.eINSTANCE.createScenarioElement();
 		interaction.setInteraction(cse);
