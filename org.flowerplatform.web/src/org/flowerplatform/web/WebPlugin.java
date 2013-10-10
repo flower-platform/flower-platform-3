@@ -30,11 +30,14 @@ import javax.servlet.http.HttpServlet;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
-import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.FileAccessController;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
+import org.flowerplatform.web.projects.WebProjectsProvider;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.service.GroupService;
@@ -42,6 +45,9 @@ import org.flowerplatform.web.security.service.OrganizationService;
 import org.flowerplatform.web.security.service.PermissionService;
 import org.flowerplatform.web.security.service.UserService;
 import org.osgi.framework.BundleContext;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 
 /**
  * @author Cristi
@@ -84,8 +90,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		super();
 		INSTANCE = this;
 		
-		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
-				.getResourceAsStream("META-INF/flower-web.properties"));
 		
 		// Initially, this initialization was in the attribute initializer. But this lead to an issue:
 		// .communication was loaded, which processed the extension points, including services, 
@@ -123,11 +127,16 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 
 	public void start(final BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
+				
 
 		if (bundleContext.getProperty(TESTING_FLAG) == null) {
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
 		}
 		initExtensionPoint_nodeTypeToCategoriesMapping();
+		
+		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
 
 		// do these initializations here, after the services have been instantiated
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
@@ -149,6 +158,9 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 				}
 			}
 		});
+		
+		EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
+		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
 	}
 	 
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {
@@ -188,5 +200,5 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public List<GenericTreeStatefulService> getTreeStatefulServicesDisplayingWorkingDirectoryContent() {
 		return treeStatefulServicesDisplayingWorkingDirectoryContent;
 	}
-
+	
 }

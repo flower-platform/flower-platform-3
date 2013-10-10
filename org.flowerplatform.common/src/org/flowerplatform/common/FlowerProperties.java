@@ -37,15 +37,15 @@ import org.slf4j.LoggerFactory;
  * @author Cristi
  * @author Sorin
  */
-public class FlowerWebProperties extends Properties {
+public class FlowerProperties extends Properties {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final Logger logger = LoggerFactory.getLogger(FlowerWebProperties.class);
+	private static final Logger logger = LoggerFactory.getLogger(FlowerProperties.class);
 	
 	public static final long DB_VERSION = 8;
 	
-	/* package */ FlowerWebProperties(InputStream inputStream) {
+	/* package */ FlowerProperties(InputStream inputStream) {
 		super();
 		
 		defaults = new Properties();

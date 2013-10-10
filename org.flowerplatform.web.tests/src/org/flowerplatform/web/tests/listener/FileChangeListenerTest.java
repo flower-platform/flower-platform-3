@@ -82,7 +82,7 @@ public class FileChangeListenerTest {
 		textEditorStatefulService.subscribe(contextForSecondClient, new EditorStatefulClientLocalState(editableResourcePath));
 		EditableResource editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);	
 		assertNotNull(editableResource);
-		long oldTimeStamp = editableResource.getEditableResourceLastModifiedStamp();
+		long oldTimeStamp = editableResource.getLastModifiedStamp();
 		
 		PrintWriter writer;
 		try {
@@ -97,7 +97,7 @@ public class FileChangeListenerTest {
 		
 		editableResource = textEditorStatefulService.getEditableResource(editableResourcePath);
 		assertNotNull(editableResource);
-		assertNotSame(oldTimeStamp, editableResource.getEditableResourceLastModifiedStamp());
+		assertNotSame(oldTimeStamp, editableResource.getLastModifiedStamp());
 	}
 	
 	@Test

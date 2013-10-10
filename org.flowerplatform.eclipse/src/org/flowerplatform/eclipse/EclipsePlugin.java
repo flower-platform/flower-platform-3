@@ -5,6 +5,8 @@ import org.eclipse.swt.widgets.Display;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.public_resources.PublicResourcesServlet;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -23,9 +25,6 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
-		
-		CommonPlugin.getInstance().initializeProperties(this.getClass().getClassLoader()
-				.getResourceAsStream("META-INF/flower.properties"));
 		
 		PublicResourcesServlet s;
 
@@ -72,6 +71,9 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 
 		server = new FlowerJettyServer();
 		server.start();
+		
+		EditorPlugin.getInstance().setFileAccessController(new EclipseFileAccessController());
+		EditorModelPlugin.getInstance().setModelAccessController(new EclipseModelAccessController());
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

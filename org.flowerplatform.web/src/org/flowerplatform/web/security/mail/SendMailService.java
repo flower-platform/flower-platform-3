@@ -40,7 +40,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.FlowerWebProperties.AddProperty;
+import org.flowerplatform.common.FlowerProperties.AddProperty;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,22 +88,22 @@ public class SendMailService {
 		initialized = true;
 		
 		// Initialize server settings; these are used to get the server address that will be sent to the users by mail
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(SERVER_URL, "").setInputFromFileMandatory(true));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(SERVER_URL_GLOBAL, "{0}/{1}"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(SERVER_URL_FOR_ORGANIZATION, "{0}/{1}/org/{2}"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(SERVER_URL, "").setInputFromFileMandatory(true));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(SERVER_URL_GLOBAL, "{0}/{1}"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(SERVER_URL_FOR_ORGANIZATION, "{0}/{1}/org/{2}"));
 		
 		// Initialize mail server settings
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(HOST, "").setInputFromFileMandatory(true));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(PORT, "Default"));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(USER, "").setInputFromFileMandatory(true));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(PASSWORD, "").setInputFromFileMandatory(true));
-		CommonPlugin.getInstance().getFlowerWebProperties().addProperty(getDefaultAddProperty(SECURITY, "None"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(HOST, "").setInputFromFileMandatory(true));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(PORT, "Default"));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(USER, "").setInputFromFileMandatory(true));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(PASSWORD, "").setInputFromFileMandatory(true));
+		CommonPlugin.getInstance().getFlowerProperties().addProperty(getDefaultAddProperty(SECURITY, "None"));
 		
-		host = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(HOST);
-		String port = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PORT);
-		user = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(USER);
-		password = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(PASSWORD);
-		String security = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(SECURITY);
+		host = CommonPlugin.getInstance().getFlowerProperties().getProperty(HOST);
+		String port = CommonPlugin.getInstance().getFlowerProperties().getProperty(PORT);
+		user = CommonPlugin.getInstance().getFlowerProperties().getProperty(USER);
+		password = CommonPlugin.getInstance().getFlowerProperties().getProperty(PASSWORD);
+		String security = CommonPlugin.getInstance().getFlowerProperties().getProperty(SECURITY);
 		
 		properties.put("mail.smtp.host", host);
 		properties.put("mail.smtp.user", user);
@@ -206,8 +206,8 @@ public class SendMailService {
 		if (!initialized)
 			return null;
 		return MessageFormat.format(
-				CommonPlugin.getInstance().getFlowerWebProperties().getProperty(SERVER_URL_GLOBAL), 
-				CommonPlugin.getInstance().getFlowerWebProperties().getProperty(SERVER_URL),
+				CommonPlugin.getInstance().getFlowerProperties().getProperty(SERVER_URL_GLOBAL), 
+				CommonPlugin.getInstance().getFlowerProperties().getProperty(SERVER_URL),
 				FrameworkProperties.getProperty("flower.server.app.context"));
 	}
 	
@@ -215,8 +215,8 @@ public class SendMailService {
 		if (!initialized)
 			return null;
 		return MessageFormat.format(
-				CommonPlugin.getInstance().getFlowerWebProperties().getProperty(SERVER_URL_FOR_ORGANIZATION), 
-				CommonPlugin.getInstance().getFlowerWebProperties().getProperty(SERVER_URL),
+				CommonPlugin.getInstance().getFlowerProperties().getProperty(SERVER_URL_FOR_ORGANIZATION), 
+				CommonPlugin.getInstance().getFlowerProperties().getProperty(SERVER_URL),
 				FrameworkProperties.getProperty("flower.server.app.context"),
 				organizationUrl);
 	}

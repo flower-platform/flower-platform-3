@@ -374,9 +374,9 @@ public class OrganizationService extends ServiceObservable {
 		List<OrganizationAdminUIDto> organizations = findMyOrganizationsAsADminUIDto(CommunicationPlugin.tlCurrentPrincipal.get().getUserId());
 		for (OrganizationAdminUIDto organization : organizations) {
 			if (organizationsFilter.contains(organization.getName()) || organizationsFilter.size() == 0) {
-				String organizationDir = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*")[0];
+				String organizationDir = CommonPlugin.getInstance().getFlowerProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*")[0];
 				organizationDir = MessageFormat.format(organizationDir, organization.getName());
-				organizationDir += "/" + CommonPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DEFAULT_DIRECTORY);
+				organizationDir += "/" + CommonPlugin.getInstance().getFlowerProperties().getProperty(UserService.ORGANIZATION_DEFAULT_DIRECTORY);
 				return organizationDir;
 			}
 		}
@@ -384,7 +384,7 @@ public class OrganizationService extends ServiceObservable {
 	}
 	
 	public Organization getOrganizationForResource(String resourcePath) {
-		String[] organizationDirectories = CommonPlugin.getInstance().getFlowerWebProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*");
+		String[] organizationDirectories = CommonPlugin.getInstance().getFlowerProperties().getProperty(UserService.ORGANIZATION_DIRECTORIES).split(",\\s*");
 		for (String dir : organizationDirectories) {
 			dir = CommonPlugin.getInstance().getWorkspaceRoot().getPath() + "/" + dir;
 			// append a / if the dir doesn't end in /

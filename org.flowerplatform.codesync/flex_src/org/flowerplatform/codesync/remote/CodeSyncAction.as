@@ -21,13 +21,14 @@ package org.flowerplatform.codesync.remote {
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	[RemoteClass(alias="org.flowerplatform.codesync.remote.CodeSyncAction")]
 	public class CodeSyncAction extends ActionBase {
 		
-		public var pathWithRoot:IList;
+		public var path:String;
 		
 		public var technology:String;
 		
@@ -49,7 +50,7 @@ package org.flowerplatform.codesync.remote {
 		
 		
 		override public function run():void {
-			pathWithRoot = TreeNode(selection.getItemAt(0)).getPathForNode(true);
+			path = EditorPlugin.getInstance().getEditableResourcePathFromTreeNode(TreeNode(selection.getItemAt(0)));
 			CommunicationPlugin.getInstance().bridge.sendObject(this);
 		}
 		

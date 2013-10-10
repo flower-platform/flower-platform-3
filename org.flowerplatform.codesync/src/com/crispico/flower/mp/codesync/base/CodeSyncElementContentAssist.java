@@ -23,14 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.IContentAssist;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -40,38 +37,38 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public abstract class CodeSyncElementContentAssist implements IContentAssist {
 
-	@Override
-	public List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern) {
-		File file = (File) context.get(RESOURCE);
-		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
-		if (resource == null) {
-			throw new RuntimeException(CodeSyncPlugin.getInstance().getMessage("contentAssist.resourceIsNotInProject"));
-		}
-		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(file, "diagramEditorStatefulService");
-		Resource codeSyncMapping = getCodeSyncElementsResource(resource.getProject(), resourceSet); 
-		List<ContentAssistItem> matches = new ArrayList<ContentAssistItem>();
-		for (EObject object : codeSyncMapping.getContents()) {
-			if (object instanceof CodeSyncElement) {
-				iterateContents((CodeSyncElement) object, pattern, matches);
-			}
-		}
-		return matches;
-	}
-	
-	protected void iterateContents(CodeSyncElement element, String pattern, List<ContentAssistItem> matches) {
-		if (element.isAdded() && getAllowedTypes().contains(element.getType())) {
-			String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(element, 
-					CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-			if (name.toLowerCase().startsWith(pattern.toLowerCase())) {
-				matches.add(createContentAssistItem(element));
-			}
-		}
-		for (CodeSyncElement child : element.getChildren()) {
-			iterateContents(child, pattern, matches);
-		}
-	}
-
-	abstract protected List<String> getAllowedTypes();
-	abstract protected Resource getCodeSyncElementsResource(IProject project, ResourceSet resourceSet);
-	abstract protected ContentAssistItem createContentAssistItem(CodeSyncElement element);
+//	@Override
+//	public List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern) {
+//		File file = (File) context.get(RESOURCE);
+//		IResource resource = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
+//		if (resource == null) {
+//			throw new RuntimeException(CodeSyncPlugin.getInstance().getMessage("contentAssist.resourceIsNotInProject"));
+//		}
+//		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(file, "diagramEditorStatefulService");
+//		Resource codeSyncMapping = getCodeSyncElementsResource(resource.getProject(), resourceSet); 
+//		List<ContentAssistItem> matches = new ArrayList<ContentAssistItem>();
+//		for (EObject object : codeSyncMapping.getContents()) {
+//			if (object instanceof CodeSyncElement) {
+//				iterateContents((CodeSyncElement) object, pattern, matches);
+//			}
+//		}
+//		return matches;
+//	}
+//	
+//	protected void iterateContents(CodeSyncElement element, String pattern, List<ContentAssistItem> matches) {
+//		if (element.isAdded() && getAllowedTypes().contains(element.getType())) {
+//			String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(element, 
+//					CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+//			if (name.toLowerCase().startsWith(pattern.toLowerCase())) {
+//				matches.add(createContentAssistItem(element));
+//			}
+//		}
+//		for (CodeSyncElement child : element.getChildren()) {
+//			iterateContents(child, pattern, matches);
+//		}
+//	}
+//
+//	abstract protected List<String> getAllowedTypes();
+//	abstract protected Resource getCodeSyncElementsResource(IProject project, ResourceSet resourceSet);
+//	abstract protected ContentAssistItem createContentAssistItem(CodeSyncElement element);
 }

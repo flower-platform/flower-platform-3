@@ -27,14 +27,17 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 	import mx.core.IUIComponent;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
+	import mx.core.UIComponent;
 	import mx.messaging.errors.NoChannelAvailableError;
-	import org.flowerplatform.flexdiagram.controller.ControllerBase;
+	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
-	import org.flowerplatform.flexdiagram.renderer.IAbsoluteLayoutRenderer;
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
+	import org.flowerplatform.flexdiagram.renderer.IAbsoluteLayoutRenderer;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
+	import org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -136,8 +139,9 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 //							figuresToAdd++;
 						} else {
 							// TODO la ce o trebui asta?
+							// CC: am observat ca erau folosite cand se facea zoom (figurile cu label prea mare erau trunchiate)
 							// model is visible and still has a figure => position the figure correctly
-//							notifyVisualChildren(UIComponent(ep.getFigure()));
+							notifyVisualChildren(UIComponent(childRenderer));
 //							
 //							AbsolutePositionEditPartUtils.setChildFigureIndex(IVisualElementContainer(getFigure()), IVisualElement(ep.getFigure()), visualIndex - figuresToAdd);
 						}
@@ -258,7 +262,8 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 //				}
 				
 				// TODO la ce servesc astea?
-//				notifyVisualChildren(UIComponent(currentFigure));
+				// CC: am observat ca erau folosite cand se facea zoom (figurile cu label prea mare erau trunchiate)
+				notifyVisualChildren(UIComponent(childRenderer));
 			}
 			
 //			childrenChangedFlag = false;
@@ -293,6 +298,18 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 			trace("AbsLayout.refrVC(): " + (logTsModelIterationDone - logTsStart) + "ms/" + (new Date().time - logTsModelIterationDone) + "ms visibleReusableRenderers=" + visibleModelsCounter + 
 				",newModels=" + logNewModels + ",renderersReused=" + logRenderersReused + ",reusableRenderersCreated=" + logReusableRenderersCreated + 
 				",nonReusableRenderersCreated=" + logNonReusableRenderersCreated + ",reusableRenderersRemoved=" + logReusableRenderersRemoved);
+		}
+		
+		/**
+		 * Recursive method used to notify all the graphical children.		
+		 */
+		private function notifyVisualChildren(child:UIComponent):void {
+			child.dispatchEvent(new ZoomPerformedEvent());
+			for (var i:int = 0; i < child.numChildren; i++) {
+				if (child.getChildAt(i) is UIComponent) {
+					notifyVisualChildren(UIComponent(child.getChildAt(i)));		
+				}
+			}
 		}
 	
 	}

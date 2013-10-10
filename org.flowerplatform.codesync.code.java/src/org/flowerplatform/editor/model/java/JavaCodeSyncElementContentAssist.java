@@ -29,6 +29,7 @@ import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.INTERF
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -46,57 +47,63 @@ import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
  */
 public class JavaCodeSyncElementContentAssist extends CodeSyncElementContentAssist {
 
-	private List<String> allowedTypes = Arrays.asList(
-			CLASS,
-			INTERFACE,
-			ENUM,
-			ANNOTATION);
-	
 	@Override
-	protected List<String> getAllowedTypes() {
-		return allowedTypes;
-	}
-
-	@Override
-	protected Resource getCodeSyncElementsResource(IProject project, ResourceSet resourceSet) {
-		return CodeSyncCodePlugin.getInstance().getCodeSyncMapping(project, resourceSet);
-	}
-
-	@Override
-	protected ContentAssistItem createContentAssistItem(CodeSyncElement element) {
-		String simpleName = element.getName();
-		StringBuilder pckBuilder = new StringBuilder();
-		CodeSyncElement parent = element;
-		while (parent != null) {
-			if (parent.getType().equals(FolderModelAdapter.FOLDER) && !(parent instanceof CodeSyncRoot)) {
-				pckBuilder.insert(0, "." + parent.getName());
-			}
-			parent = (CodeSyncElement) parent.eContainer();
-		}
-		if (pckBuilder.length() > 0) {
-			pckBuilder.deleteCharAt(0);
-		}
-
-		String pck = pckBuilder.toString();
-		String fullyQualifiedName = pck + (pck.length() > 0 ? "." : "") + simpleName;
-		
-		return new ContentAssistItem(fullyQualifiedName, simpleName, pck, getIconUrl(element));
-	}
-
-	protected String getIconUrl(CodeSyncElement element) {
-		if (element.getType().equals(CLASS)) {
-			return CLASS_ICON;
-		}
-		if (element.getType().equals(INTERFACE)) {
-			return INTERFACE_ICON;
-		}
-		if (element.getType().equals(ENUM)) {
-			return ENUM_ICON;
-		}
-		if (element.getType().equals(ANNOTATION)) {
-			return ANNOTATION_ICON;
-		}
+	public List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern) {
+		// TODO Auto-generated method stub
 		return null;
 	}
+
+//	private List<String> allowedTypes = Arrays.asList(
+//			CLASS,
+//			INTERFACE,
+//			ENUM,
+//			ANNOTATION);
+//	
+//	@Override
+//	protected List<String> getAllowedTypes() {
+//		return allowedTypes;
+//	}
+//
+//	@Override
+//	protected Resource getCodeSyncElementsResource(IProject project, ResourceSet resourceSet) {
+//		return CodeSyncCodePlugin.getInstance().getCodeSyncMapping(project, resourceSet);
+//	}
+//
+//	@Override
+//	protected ContentAssistItem createContentAssistItem(CodeSyncElement element) {
+//		String simpleName = element.getName();
+//		StringBuilder pckBuilder = new StringBuilder();
+//		CodeSyncElement parent = element;
+//		while (parent != null) {
+//			if (parent.getType().equals(FolderModelAdapter.FOLDER) && !(parent instanceof CodeSyncRoot)) {
+//				pckBuilder.insert(0, "." + parent.getName());
+//			}
+//			parent = (CodeSyncElement) parent.eContainer();
+//		}
+//		if (pckBuilder.length() > 0) {
+//			pckBuilder.deleteCharAt(0);
+//		}
+//
+//		String pck = pckBuilder.toString();
+//		String fullyQualifiedName = pck + (pck.length() > 0 ? "." : "") + simpleName;
+//		
+//		return new ContentAssistItem(fullyQualifiedName, simpleName, pck, getIconUrl(element));
+//	}
+//
+//	protected String getIconUrl(CodeSyncElement element) {
+//		if (element.getType().equals(CLASS)) {
+//			return CLASS_ICON;
+//		}
+//		if (element.getType().equals(INTERFACE)) {
+//			return INTERFACE_ICON;
+//		}
+//		if (element.getType().equals(ENUM)) {
+//			return ENUM_ICON;
+//		}
+//		if (element.getType().equals(ANNOTATION)) {
+//			return ANNOTATION_ICON;
+//		}
+//		return null;
+//	}
 	
 }

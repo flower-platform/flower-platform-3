@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Common
-Bundle-SymbolicName: org.flowerplatform.common
+Bundle-SymbolicName: org.flowerplatform.common;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.flowerplatform.common.CommonPlugin
 Require-Bundle: org.eclipse.core.runtime,

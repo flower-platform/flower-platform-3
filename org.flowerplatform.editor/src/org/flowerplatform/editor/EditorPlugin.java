@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
@@ -56,6 +57,8 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 	
 	private List<EditorStatefulService> editorStatefulServices = new ArrayList<EditorStatefulService>();
 		
+	private IFileAccessController fileAccessController;
+	
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
@@ -158,7 +161,15 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 	public List<EditorStatefulService> getEditorStatefulServices() {
 		return editorStatefulServices;
 	}
-		
+			
+	public IFileAccessController getFileAccessController() {
+		return fileAccessController;
+	}
+
+	public void setFileAccessController(IFileAccessController fileAccessController) {
+		this.fileAccessController = fileAccessController;
+	}
+
 	public EditorStatefulService getEditorStatefulServiceByEditorName(String editorName) {
 		for (EditorStatefulService editorStatefulService : editorStatefulServices)
 			if (editorStatefulService.getEditorName().equals(editorName))

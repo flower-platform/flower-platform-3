@@ -26,33 +26,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.common.util.BasicEList;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.edit.provider.ComposedAdapterFactory;
-import org.eclipse.emf.edit.provider.ReflectiveItemProviderAdapterFactory;
-import org.eclipse.emf.edit.provider.resource.ResourceItemProviderAdapterFactory;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
-import org.flowerplatform.emf_model.notation.util.NotationAdapterFactory;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
@@ -61,26 +49,19 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
-import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
-import com.crispico.flower.mp.codesync.merge.CodeSyncMergePlugin;
 import com.crispico.flower.mp.model.astcache.code.Annotation;
 import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
-import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
-import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.Class;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.ModifiableElement;
-import com.crispico.flower.mp.model.astcache.code.Modifier;
 import com.crispico.flower.mp.model.astcache.code.Operation;
 import com.crispico.flower.mp.model.astcache.code.Parameter;
-import com.crispico.flower.mp.model.astcache.code.util.AstCacheCodeAdapterFactory;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
-import com.crispico.flower.mp.model.codesync.util.CodeSyncAdapterFactory;
 
 /**
  * @author Cristi
@@ -110,7 +91,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 * 
 	 * @author Mariana
 	 */
-	protected Map<IProject, AdapterFactoryEditingDomain> editingDomains = new HashMap<IProject, AdapterFactoryEditingDomain>();
+	protected Map<File, AdapterFactoryEditingDomain> editingDomains = new HashMap<File, AdapterFactoryEditingDomain>();
 	
 	private Utils utils = new Utils();
 	
@@ -182,7 +163,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 //	public CodeSyncElement getCodeSyncElement(String fullyQualifiedName, String technology, CommunicationChannel communicationChannel) {
-	public CodeSyncElement getCodeSyncElement(IProject project, IResource file, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public CodeSyncElement getCodeSyncElement(File project, File file, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 //		if (fullyQualifiedName.startsWith("/")) {
 //			fullyQualifiedName = fullyQualifiedName.substring(1);
 //		}
@@ -208,22 +189,27 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		
 		// STEP 2 : find the SrcDir corresponding to the 2nd path fragment
 //		CodeSyncElement srcDir = getSrcDir(cseResource, pathFragments[1]);
-		CodeSyncElement srcDir = getSrcDir(cseResource, file.getFullPath().segment(2));
+		String path = CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject(file);
+		if (path.startsWith("/")) {
+			path = path.substring(1);
+		}
+		String[] fragments = path.split("/");
+		CodeSyncElement srcDir = getSrcDir(cseResource, fragments[2]);
 		
 //		// STEP 3 : find the CSE corresponding to the name
-		String[] path = Arrays.copyOfRange(file.getFullPath().segments(), 3, file.getFullPath().segments().length);
-		CodeSyncElement codeSyncElement = getCodeSyncElement(srcDir, path);
+		String[] csePath = Arrays.copyOfRange(fragments, 3, fragments.length);
+		CodeSyncElement codeSyncElement = getCodeSyncElement(srcDir, csePath);
 		if (codeSyncElement == null) {
 			// SUBSTEP : run the CodeSync algorithm if the CSE does not exist
 //			runCodeSyncAlgorithm(srcDir, project, pathFragments[1], technology, communicationChannel);
-			runCodeSyncAlgorithm(srcDir, project, resourceSet, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
+			runCodeSyncAlgorithm(srcDir, project, resourceSet, fragments[1].concat("/" + fragments[2]), technology, communicationChannel, showDialog);
 		} else {
 			if (showDialog) {
-				runCodeSyncAlgorithm(srcDir, project, resourceSet, file.getFullPath().segment(1).concat("/" + file.getFullPath().segment(2)), technology, communicationChannel, showDialog);
+				runCodeSyncAlgorithm(srcDir, project, resourceSet, fragments[1].concat("/" + fragments[2]), technology, communicationChannel, showDialog);
 			}
 			return codeSyncElement;
 		}
-		return getCodeSyncElement(srcDir, path);
+		return getCodeSyncElement(srcDir, csePath);
 	}
 	
 	/**
@@ -258,10 +244,10 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, ResourceSet resourceSet, String path, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, File project, ResourceSet resourceSet, String path, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
-		String editableResourcePath = project.getFullPath().toString();
+		String editableResourcePath = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 		CodeSyncEditableResource editableResource; // = (CodeSyncEditableResource) service.getEditableResource(project.getFullPath().toString());
 		if (showDialog) {
 			editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, editableResourcePath);
@@ -274,14 +260,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		Match match = new Match();
 		match.setAncestor(model);
 		match.setLeft(model);
-		IResource ast = null;
-		if (model.getType().equals(AstModelElementAdapter.FOLDER)) {
-			ast = project.getFolder(path);
-		} else {
-			if (model.getType().equals(AstModelElementAdapter.FILE)) {
-				ast = project.getFile(path);
-			}
-		}
+		File ast = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, path);
 //		ast = file.getParent();
 		match.setRight(ast);
 		
@@ -311,8 +290,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public Resource getCodeSyncMapping(IProject project, ResourceSet resourceSet) {
-		File codeSyncElementMappingFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + CSE_MAPPING_FILE_LOCATION)));
+	public Resource getCodeSyncMapping(File project, ResourceSet resourceSet) {
+		File codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CSE_MAPPING_FILE_LOCATION); 
 		Resource cseResource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 		if (!codeSyncElementMappingFile.exists()) {
 			// first clear the resource in case the mapping file was deleted 
@@ -338,8 +317,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana
 	 */
-	public Resource getAstCache(IProject project, ResourceSet resourceSet) {
-		File astCacheElementFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project.getFile(new Path(ProjectsService.LINK_TO_PROJECT + ACE_FILE_LOCATION)));
+	public Resource getAstCache(File project, ResourceSet resourceSet) {
+		File astCacheElementFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, ACE_FILE_LOCATION); 
 		return CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
 	}
 	
@@ -435,59 +414,12 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 			op.getParameters().addAll(params);
 		}
 		
-		public void addToResource(IProject project, ResourceSet resourceSet, AstCacheElement ace) {
+		public void addToResource(File project, ResourceSet resourceSet, AstCacheElement ace) {
 			getAstCache(project, resourceSet).getContents().add(ace);
 		}
 		
 		public boolean testEquality(Resource expected, Resource actual, String name) {
 			return EcoreUtil.equals(getSrcDir(expected, name), getSrcDir(actual, name));
-		}
-	}
-	
-	/**
-	 * TODO Mariana : move to test
-	 */
-	public boolean testValueAsString() {
-		// STEP 1 : create FeatureChange
-		CodeSyncElement expectedCSE = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncElement();
-		FeatureChange expectedChange = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createFeatureChange();
-		expectedCSE.getFeatureChanges().put(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers(), expectedChange); 
-		EList<ExtendedModifier> modifiers = new BasicEList<ExtendedModifier>();
-		Modifier modifier = AstCacheCodeFactory.eINSTANCE.createModifier();
-		modifier.setType(3);
-		modifiers.add(modifier);
-		expectedChange.setOldValue(modifiers);
-		
-		// STEP 2 : put FC in resource and save
-		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject("test");
-		try {
-			if (!project.exists()) {
-				project.create(null);
-			}
-			project.open(null);
-			ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "diagramEditorStatefulService");
-			IFile codeSyncElementsFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path("test/CSE.notation"));
-			Resource resource = null;
-			if (!codeSyncElementsFile.exists()) {
-				resource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementsFile);
-				resource.getContents().add(expectedCSE);
-				CodeSyncPlugin.getInstance().saveResource(resource);
-			}
-			
-			CodeSyncPlugin.getInstance().discardResource(resource);
-			
-			// STEP 3 : get value from resource
-			resource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementsFile);
-//					assertEquals(1, resource.getContents().size());
-			CodeSyncElement actualCSE = (CodeSyncElement) resource.getContents().get(0);
-			FeatureChange actualChange = actualCSE.getFeatureChanges().get(AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
-//					assertNotNull(actualChange);
-			EList<ExtendedModifier> actual = (EList<ExtendedModifier>) actualChange.getOldValue();
-//					assertEquals(1, actual.size());
-//					assertEquals(3, ((Modifier) actual.get(0)).getType());
-			return ((Modifier) actual.get(0)).getType() == 3;
-		} catch (CoreException e) {
-			return false;
 		}
 	}
 	

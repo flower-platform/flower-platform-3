@@ -20,12 +20,12 @@ package com.crispico.flower.mp.codesync.code.java;
 
 import org.eclipse.jdt.internal.core.CompilationUnit;
 
-import com.crispico.flower.mp.codesync.code.IResourceFullyQualifiedNameProvider;
+import com.crispico.flower.mp.codesync.code.FileFullyQualifiedNameProvider;
 
 /**
  * @author Mariana
  */
-public class JavaFullyQualifiedNameProvider extends IResourceFullyQualifiedNameProvider {
+public class JavaFullyQualifiedNameProvider extends FileFullyQualifiedNameProvider {
 
 	@Override
 	public String getFullyQualifiedName(Object object) {

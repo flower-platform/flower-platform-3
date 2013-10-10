@@ -250,7 +250,7 @@
    <extension
          point="org.flowerplatform.web.explorerAdditionalNodePopulator">
       <explorerAdditionalNodePopulator
-            populator="org.flowerplatform.editor.FileContentTypeNodePopulator">
+            populator="org.flowerplatform.editor.file.FileContentTypeNodePopulator">
          <nodeTypeCategory
                nodeTypeCategory="decoratableFile">
          </nodeTypeCategory>
@@ -354,5 +354,11 @@
             id="propertiesProviderService"
             serviceClass="org.flowerplatform.properties.PropertiesService">
       </service>
+    </extension>
+	<extension
+         point="org.flowerplatform.common.flowerProperties">
+      <flowerPropertiesProvider
+            flowerPropertiesProviderClass="org.flowerplatform.web.WebFlowerPropertiesProvider">
+      </flowerPropertiesProvider>
    </extension>
 </plugin>
