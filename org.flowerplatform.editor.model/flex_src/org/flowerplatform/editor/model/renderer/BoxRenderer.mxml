@@ -149,7 +149,7 @@
 				}
 			}
 			
-			private function addShadow():void {
+			protected function addShadow():void {
 				shadow = new DropShadowFilter();
 				shadow.alpha = 0.55;
 				shadow.blurX = 5;
