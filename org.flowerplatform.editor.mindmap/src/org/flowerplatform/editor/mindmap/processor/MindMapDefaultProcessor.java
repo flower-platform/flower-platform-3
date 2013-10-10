@@ -24,6 +24,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.emf_model.notation.View;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.MindMapElement;
 
 /**
@@ -34,6 +36,15 @@ public class MindMapDefaultProcessor extends AbstractMindMapChangeProcessor {
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		super.processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
 		
-		viewDetails.put("icons", ((MindMapElement) object).getIcons());
+		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_Icons().equals(featureChange.getFeature())) {
+			viewDetails.put("icons", CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Icons()));
+		} 
+		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_MinWidth().equals(featureChange.getFeature())) {
+			viewDetails.put("minWidth", CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MinWidth()));
+		}
+		if (featureChange == null ||CodeSyncPackage.eINSTANCE.getMindMapElement_MaxWidth().equals(featureChange.getFeature())) {
+			viewDetails.put("maxWidth", CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MaxWidth()));
+		}		
 	}
+	
 }
