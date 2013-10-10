@@ -164,8 +164,6 @@ package org.flowerplatform.editor.model {
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(TestDiagramPropAction);
 			
-
-
 		}
 		
 		override public function start():void {
