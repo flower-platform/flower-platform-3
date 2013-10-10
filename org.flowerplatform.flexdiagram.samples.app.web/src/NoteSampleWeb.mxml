@@ -41,7 +41,7 @@
 			protected function btn4_clickHandler(event:MouseEvent):void {
 				for (var i:int = 0; i < notes.length; i++) {
 					NoteRenderer(notes.getItemAt(i)).maxWidth = Number(noteMaxWidth.text);
-				}	
+				}
 			}
 						
 		]]>
@@ -63,7 +63,8 @@
 			<s:Button label="New Width" click="btn3_clickHandler(event)" />
 			<s:Spacer width="50" />
 			<s:TextInput id="noteMaxWidth" width="100%" text="100" />
-			<s:Button label="Max Width" click="btn4_clickHandler(event)" />										
+			<s:Button label="Max Width" click="btn4_clickHandler(event)" />	
+						
 		</s:VGroup>
 		
 		<s:Spacer width="50" />
