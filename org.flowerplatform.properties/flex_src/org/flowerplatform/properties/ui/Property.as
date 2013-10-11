@@ -33,9 +33,14 @@ package org.flowerplatform.properties.ui {
 		[SecureSWF(rename="off")]
 		public var value:String;
 		
+		/**
+		 * 
+		 */
+		[SecureSWF(rename="off")]
+		public var readOnly:Boolean;
+		
 		public function Property() {
-			name = "name1";
-			value = "value2";
+			
 		}
 	}
 }
