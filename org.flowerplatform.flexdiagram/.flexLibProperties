@@ -42,6 +42,7 @@
     <classEntry path="org.flowerplatform.flexdiagram.controller.selection.SelectionController"/>
     <classEntry path="org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController"/>
     <classEntry path="org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent"/>
+    <classEntry path="org.flowerplatform.flexdiagram.util.MultilineLabelItemRenderer"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

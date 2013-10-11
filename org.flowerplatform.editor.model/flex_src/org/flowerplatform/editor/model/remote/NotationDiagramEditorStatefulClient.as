@@ -77,6 +77,10 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
 		}
 		
+		public function service_displayMissingRelations(viewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "displayMissingRelations", [viewId]));
+		}
+		
 		public function service_contentAssist(viewId:Object, pattern:String, callbackFunction:Function):void {
 			var options:ServiceInvocationOptions = new ServiceInvocationOptions().setReturnCommandWithoutSending(true).setResultCallbackFunction(callbackFunction);
 			attemptUpdateContent(null, invokeServiceMethod("contentAssist", [viewId, pattern], options));

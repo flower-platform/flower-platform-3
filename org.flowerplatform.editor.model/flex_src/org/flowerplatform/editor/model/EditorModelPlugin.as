@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
@@ -156,6 +157,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandAttributesCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(DisplayMissingRelationsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
@@ -183,10 +185,6 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
 			
 			registerClassAliasFromAnnotation(ContentAssistItem);
-		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
 		}
 		
 	}

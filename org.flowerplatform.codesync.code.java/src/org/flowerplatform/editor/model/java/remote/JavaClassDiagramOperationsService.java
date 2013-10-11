@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -32,8 +33,6 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.java.JavaClassChildProcessor;
 import org.flowerplatform.editor.model.java.JavaInplaceEditorProvider;
-import org.flowerplatform.editor.model.remote.DiagramEditableResource;
-import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
@@ -60,7 +59,7 @@ import com.crispico.flower.mp.model.codesync.Relation;
  * @author Cristian Spiescu
  * @author Mariana Gheorghe
  */
-public class JavaClassDiagramOperationsService {
+public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperationsService {
 	
 	public static final String SERVICE_ID = "classDiagramOperationsDispatcher";
 	
@@ -207,7 +206,7 @@ public class JavaClassDiagramOperationsService {
 			relation.getSource().getRelations().remove(relation);
 		}
 	}
-	
+
 	///////////////////////
 	// Model modifications
 	///////////////////////
@@ -292,18 +291,6 @@ public class JavaClassDiagramOperationsService {
 		// compare the new parameters with the current list
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getOperation_Parameters();
 		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, parameters);
-	}
-	
-	///////////////////////
-	// Utils
-	///////////////////////
-	
-	protected DiagramEditableResource getEditableResource(ServiceInvocationContext context) {
-		return (DiagramEditableResource) context.getAdditionalData().get(DiagramEditorStatefulService.ADDITIONAL_DATA_EDITABLE_RESOURCE);
-	}
-	
-	protected View getViewById(ServiceInvocationContext context, String viewId) {
-		return (View) getEditableResource(context).getEObjectById(viewId);
 	}
 	
 }

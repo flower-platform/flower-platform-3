@@ -18,26 +18,18 @@
  */
 package org.flowerplatform.codesync.processor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
-import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
-import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
-import org.flowerplatform.editor.model.remote.DiagramEditableResource;
-import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
-import org.flowerplatform.emf_model.notation.NotationFactory;
-import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -54,8 +46,7 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 	@Override
 	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (featureChanges == null) {
-			// full content
-			addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
+			// full content; do not add new edges for existing relations
 		} else {
 			for (FeatureChange featureChange : featureChanges) {
 				if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Relations().equals(featureChange.getFeature())) {
@@ -67,7 +58,7 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 
 	protected void processRelationsChanges(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (featureChange.getListChanges().isEmpty()) {
-			addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
+			getService().addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
 		} else {
 			for (ListChange listChange : featureChange.getListChanges()) {
 				if (listChange.getKind().equals(ChangeKind.ADD_LITERAL)) {
@@ -76,7 +67,7 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 				} else {
 					if (listChange.getKind().equals(ChangeKind.REMOVE_LITERAL)) {
 						// send the full list of relations for now, because we've noticed an issue with the indexes from the listChange
-						addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
+						getService().addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
 					}
 				}
 			}
@@ -87,11 +78,10 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 	 * Removes all {@link Edge}s for the deleted {@link Relation}s.
 	 */
 	protected void removeEdgesForRelations(EObject object, EList<Object> relations, View associatedViewOnOpenDiagram, Map<String, Object> context) {
-		Diagram diagram = getDiagram(context);
+		Diagram diagram = getService().getDiagram(context);
 		for (Object relation : relations) {
-			for (EObject eObject : getInverseReferencesForElement(((Relation) relation).getTarget(), NotationPackage.eINSTANCE.getView_DiagrammableElement())) {
-				View target = (View) eObject;
-				Edge edge = getEdge(associatedViewOnOpenDiagram, target);
+			for (View target : getService().getViewsForElement(((Relation) relation).getTarget())) {
+				Edge edge = getService().getEdge(associatedViewOnOpenDiagram, target);
 				if (edge != null) {
 					associatedViewOnOpenDiagram.getSourceEdges().remove(edge);
 					target.getTargetEdges().remove(edge);
@@ -101,66 +91,8 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 		}
 	}
 	
-	/**
-	 * Adds new {@link Edge}s for each {@link Relation}.
-	 */
-	protected void addEdgesForRelations(EObject object, List<Relation> relations, View associatedViewOnOpenDiagram, Map<String, Object> context) {
-		Diagram diagram = getDiagram(context);
-		for (Relation relation : relations) {
-			for (EObject eObject : getInverseReferencesForElement(relation.getTarget(), NotationPackage.eINSTANCE.getView_DiagrammableElement())) {
-				View target = (View) eObject;
-				if (acceptsEdges(target) && getEdge(associatedViewOnOpenDiagram, target) == null) {
-					Edge edge = NotationFactory.eINSTANCE.createEdge();
-					edge.setDiagrammableElement(relation);
-					edge.setSource(associatedViewOnOpenDiagram);
-					edge.setTarget(target);
-					edge.setViewType("edge");
-					diagram.getPersistentEdges().add(edge);
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Gets the {@link Edge} with the specified <code>source</code> and <code>target</code>,
-	 * if it exists.
-	 */
-	protected Edge getEdge(View source, View target) {
-		for (Edge edge : source.getSourceEdges()) {
-			if (edge.getSource().equals(source) && edge.getTarget().equals(target)) {
-				return edge;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * Some views (e.g. class title) cannot have edges even though their diagrammable element can have relations.
-	 */
-	protected boolean acceptsEdges(View view) {
-		return EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor()
-				.getDiagrammableElementFeatureChangesProcessors(view.getViewType()).contains(this);
-	}
-	
-	protected List<EObject> getInverseReferencesForElement(CodeSyncElement element, EStructuralFeature feature) {
-		List<EObject> result = new ArrayList<EObject>();
-		ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(element);
-		for (Setting setting : adapter.getNonNavigableInverseReferences(element)) {
-			if (feature.equals(setting.getEStructuralFeature())) {
-				result.add(setting.getEObject());
-			}
-		}
-		return result;
-	}
-	
-	protected Diagram getDiagram(Map<String, Object> context) {
-		DiagramEditableResource der = (DiagramEditableResource) context.get(DiagramEditorStatefulService.ADDITIONAL_DATA_EDITABLE_RESOURCE);
-		for (EObject eObject : der.getMainResource().getContents()) {
-			if (eObject instanceof Diagram) {
-				return (Diagram) eObject;
-			}
-		}
-		throw new RuntimeException("No diagram for " + der.getEditableResourcePath());
+	private CodeSyncDiagramOperationsService getService() {
+		return CodeSyncDiagramOperationsService.getInstance();
 	}
 	
 }
