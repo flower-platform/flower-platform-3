@@ -51,4 +51,8 @@ public class PropertiesService {
 		}	
 		return properties;
 	}
+	
+	public void setProperties(Property property) {
+		System.out.println("Changing propery " + property.getName() + ".Giving it the value of: " + property.getValue());
+	}
 }
