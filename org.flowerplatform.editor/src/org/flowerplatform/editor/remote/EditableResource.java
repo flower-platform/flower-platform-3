@@ -120,11 +120,16 @@ public abstract class EditableResource {
 	}
 
 	public void updateLastModifiedStamp() {
-		this.lastModifiedTimestamp = EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(getFile());
+		if (getFile() != null) {
+			this.lastModifiedTimestamp = EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(getFile());
+		}
 	}
 
 	public boolean isSynchronized() {
-		return lastModifiedTimestamp == EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(getFile());
+		if (getFile() != null) {
+			return lastModifiedTimestamp == EditorPlugin.getInstance().getFileAccessController().getLastModifiedTimestamp(getFile());
+		}
+		return true;
 	}
 	
 	public EditorStatefulService getEditorStatefulService() {

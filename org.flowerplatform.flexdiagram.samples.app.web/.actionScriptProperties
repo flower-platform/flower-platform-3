@@ -15,6 +15,7 @@
     <sourceAttachmentPath/>
   </compiler>
   <applications>
+    <application path="NoteSampleWeb.mxml"/>
     <application path="FlexDiagramSamplesWeb.mxml"/>
     <application path="MindMapSamplesWeb.mxml"/>
   </applications>

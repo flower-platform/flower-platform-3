@@ -19,6 +19,7 @@
     <classEntry path="org.flowerplatform.editor.mindmap.action.ManageIconsAction"/>
     <classEntry path="org.flowerplatform.editor.mindmap.ui.ManageIconsView"/>
     <classEntry path="org.flowerplatform.editor.mindmap.action.NewDefaultNodeAction"/>
+    <classEntry path="org.flowerplatform.editor.mindmap.ui.SetNodeWidthLimitsView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

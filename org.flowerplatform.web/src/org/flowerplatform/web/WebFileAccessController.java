@@ -17,8 +17,7 @@ public class WebFileAccessController extends PlainFileAccessController {
 
 	@Override
 	public Object getFile(String path) {
-		// TODO: implement
-		return null;
+		return new File(CommonPlugin.getInstance().getWorkspaceRoot(), path);
 	}
 
 }

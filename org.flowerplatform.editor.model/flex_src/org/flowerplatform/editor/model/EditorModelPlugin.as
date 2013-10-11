@@ -65,7 +65,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
 	
 	/**
 	 * @author Cristi
@@ -156,7 +155,9 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
+
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 		}
 		

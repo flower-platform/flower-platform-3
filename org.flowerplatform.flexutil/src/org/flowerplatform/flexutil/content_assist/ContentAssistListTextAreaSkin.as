@@ -25,12 +25,12 @@ package org.flowerplatform.flexutil.content_assist {
 	import mx.events.FlexEvent;
 	import mx.managers.PopUpManager;
 	
-	import spark.skins.spark.TextAreaSkin;
+	import org.flowerplatform.flexutil.text.AutoGrowSkinnableTextBaseSkin;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class ContentAssistListTextAreaSkin extends TextAreaSkin {
+	public class ContentAssistListTextAreaSkin extends AutoGrowSkinnableTextBaseSkin {
 
 		protected var contentAssist:ContentAssistList;
 		

@@ -759,10 +759,10 @@ package org.flowerplatform.flexutil.renderer {
 				numHorizontalSectionBetweenIcons += iconDisplays.length;
 			}
 						
-			if (labelDisplay)
+			if (labelDisplay) {
 				numHorizontalSections++;
-			
-			var paddingAndGapWidth:Number = getStyle("paddingLeft") + getStyle("paddingRight");
+			}
+			var paddingAndGapWidth:Number = Number(getStyle("paddingLeft")) + Number(getStyle("paddingRight"));
 			if (numHorizontalSections > 0)
 				paddingAndGapWidth += (getStyle("horizontalGap") * (numHorizontalSections - 1));
 			if (numHorizontalSectionBetweenIcons > 0) {
@@ -793,9 +793,7 @@ package org.flowerplatform.flexutil.renderer {
 			// Text is aligned next to icon
 			var labelWidth:Number = 0;
 			var labelHeight:Number = 0;
-			var messageWidth:Number = 0;
-			var messageHeight:Number = 0;
-			
+						
 			if (hasLabel) {
 				// reset text if it was truncated before.
 				if (labelDisplay.isTruncated)
@@ -805,8 +803,8 @@ package org.flowerplatform.flexutil.renderer {
 				labelHeight = getElementPreferredHeight(labelDisplay);
 			}
 					
-			myMeasuredWidth += Math.max(labelWidth, messageWidth);
-			myMeasuredHeight = Math.max(myMeasuredHeight, labelHeight + messageHeight + verticalGap);
+			myMeasuredWidth += labelWidth;
+			myMeasuredHeight = Math.max(myMeasuredHeight, labelHeight + verticalGap);
 			
 			myMeasuredWidth += paddingAndGapWidth;
 			myMeasuredMinWidth += paddingAndGapWidth;
@@ -844,9 +842,7 @@ package org.flowerplatform.flexutil.renderer {
 			// start laying out our children now
 			var iconWidth:Number = 0;
 			var iconHeight:Number = 0;
-			var decoratorWidth:Number = 0;
-			var decoratorHeight:Number = 0;
-			
+						
 			var hasLabel:Boolean = labelDisplay && labelDisplay.text != "";
 			
 			var paddingLeft:Number   = getStyle("paddingLeft");
@@ -892,7 +888,7 @@ package org.flowerplatform.flexutil.renderer {
 			
 			// Figure out how much space we have for label and message as well as the 
 			// starting left position
-			var labelComponentsViewWidth:Number = viewWidth - iconWidth - decoratorWidth;
+			var labelComponentsViewWidth:Number = viewWidth - iconWidth;
 			
 			// don't forget the extra gap padding if these elements exist
 			if (iconDisplays && iconDisplays.length > 0) 
@@ -923,9 +919,7 @@ package org.flowerplatform.flexutil.renderer {
 			
 			var labelWidth:Number = 0;
 			var labelHeight:Number = 0;
-			var messageWidth:Number = 0;
-			var messageHeight:Number = 0;
-			
+						
 			if (hasLabel) {
 				// handle labelDisplay.  it can only be 1 line
 				

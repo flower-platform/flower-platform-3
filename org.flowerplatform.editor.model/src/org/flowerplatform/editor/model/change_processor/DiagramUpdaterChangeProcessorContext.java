@@ -19,8 +19,10 @@
 package org.flowerplatform.editor.model.change_processor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -43,28 +45,15 @@ public class DiagramUpdaterChangeProcessorContext {
 	// TODO CS/CS3: de facut aceste liste lazy; de asemenea, cred ca ID-ul tr. facut generic Object
 	private List<Object> objectsToUpdate = new ArrayList<Object>();
 	
-	private List<Object> objectsToDispose = new ArrayList<Object>();
-	
-	private List<String> objectIdsToDispose = new ArrayList<String>();
+	private Set<String> objectIdsToDispose = new HashSet<String>();
 	
 	private List<ViewDetailsUpdate> viewDetailsUpdates = new ArrayList<ViewDetailsUpdate>();
 
 	public List<Object> getObjectsToUpdate() {
 		return objectsToUpdate;
 	}
-	
-	/**
-	 * Not sent on client side. Used to retrieve the objects to dispose
-	 * and clean references towards model elements after the change 
-	 * processing is finished.
-	 * 
-	 * @author Mariana Gheorghe
-	 */
-	public List<Object> getObjectsToDispose() {
-		return objectsToDispose;
-	}
 
-	public List<String> getObjectIdsToDispose() {
+	public Set<String> getObjectIdsToDispose() {
 		return objectIdsToDispose;
 	}
 
@@ -76,16 +65,4 @@ public class DiagramUpdaterChangeProcessorContext {
 		return objectsToUpdate.isEmpty() && objectIdsToDispose.isEmpty() && viewDetailsUpdates.isEmpty();
 	}
 	
-	public void addObjectToUpdate(EObject object, boolean notifyProcessorsIfView, Map<String, Object> context) {
-		getObjectsToUpdate().add(object);
-		if (notifyProcessorsIfView && object instanceof View) {
-			View view = (View) object;
-			List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
-			if (processors != null) {
-				for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-					processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);
-				}
-			}
-		}
-	}
 }

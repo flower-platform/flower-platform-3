@@ -18,33 +18,17 @@
  */
 package com.crispico.flower.mp.codesync.base.communication;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
-import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
-import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
-import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
-import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.flowerplatform.editor.remote.EditorStatefulService;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
@@ -72,32 +56,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
 	}
 	
-//	@Override
-//	public void subscribe(StatefulServiceInvocationContext context,	IStatefulClientLocalState statefulClientLocalState) {
-//		EditorStatefulClientLocalState editorStatefulClientLocalState = (EditorStatefulClientLocalState) statefulClientLocalState;
-//		Pair<IProject, IResource> pair = getProjectAndResource(editorStatefulClientLocalState.getEditableResourcePath());
-//		IFile file = (IFile) pair.b; 
-//		IProject project = pair.a;
-//		editorStatefulClientLocalState.setEditableResourcePath(project.getFullPath().toString());
-//		super.subscribe(context, statefulClientLocalState);
-//		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, file, "java", context.getCommunicationChannel());
-//	}
-//	
-//	@Override
-//	public void unsubscribe(StatefulServiceInvocationContext context, IStatefulClientLocalState statefulClientLocalState) {
-//		EditorStatefulClientLocalState editorStatefulClientLocalState = (EditorStatefulClientLocalState) statefulClientLocalState;
-//		editorStatefulClientLocalState.setEditableResourcePath(getProjectPath(editorStatefulClientLocalState.getEditableResourcePath()));
-//		super.unsubscribe(context, statefulClientLocalState);
-//	}
-
-	private IResource getResource(String editableResourcePath) {
-		String absolutePath = CommonPlugin.getInstance().getWorkspaceRoot().getAbsolutePath().toString() + editableResourcePath;
-		return ProjectsService.getInstance().getProjectWrapperResourceFromFile(new File(absolutePath));
-	}
-	
 	private String getProjectPath(String editableResourcePath) {
-//		Pair<IProject, IResource> pair = getProjectAndResource(editableResourcePath);
-//		return pair.a.getFullPath().toString();
 		return editableResourcePath;
 	}
 

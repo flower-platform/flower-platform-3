@@ -25,9 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
@@ -37,13 +34,13 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
-import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
@@ -58,6 +55,11 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
 	
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
+
+	/**
+	 * @see #getProjectsProvider()
+	 */
+	private IProjectsProvider projectsProvider;
 	
 	public static CodeSyncPlugin getInstance() {
 		return INSTANCE;
@@ -69,6 +71,19 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	
 	public ComposedCodeSyncAlgorithmRunner getCodeSyncAlgorithmRunner() {
 		return codeSyncAlgorithmRunner;
+	}
+	
+	/**
+	 * Platform-dependent.
+	 * 
+	 * @author Mariana Gheorghe
+	 */
+	public IProjectsProvider getProjectsProvider() {
+		return projectsProvider;
+	}
+
+	public void setProjectsProvider(IProjectsProvider projectsProvider) {
+		this.projectsProvider = projectsProvider;
 	}
 	
 	@Override
@@ -96,20 +111,28 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	}
 	
 	/**
+	 * @author Mariana Gheorghe
+	 */
+	public String getFileExtension(File file) {
+		String name = file.getName();
+		int index = name.lastIndexOf(".");
+		if (index >= 0) {
+			return name.substring(index + 1);
+		}
+		return "";
+	}
+	
+	/**
 	 * Important: the code sync mapping and cache resources <b>must</b> be loaded through the same {@link ResourceSet}.
 	 */
 	public ResourceSet getOrCreateResourceSet(File file, String diagramEditorStatefulServiceId) {
-		IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file).getProject();
-		return getOrCreateResourceSet(project, diagramEditorStatefulServiceId);
-	}
-	
-	public ResourceSet getOrCreateResourceSet(IProject project, String diagramEditorStatefulServiceId) {
+		File project = getProjectsProvider().getContainingProjectForFile(file);
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) CommunicationPlugin.getInstance()
 				.getServiceRegistry().getService(diagramEditorStatefulServiceId);
-		DiagramEditableResource diagramEditableResource = null;
-		File projectFile = ProjectsService.getInstance().getFileFromProjectWrapperResource(project);
-		if (projectFile != null) {
-			String path = projectFile.getAbsolutePath();
+
+		DiagramEditableResource diagramEditableResource = null;		
+		if (project != null) {
+			String path = project.getAbsolutePath();
 			for (EditableResource er : service.getEditableResources().values()) {
 				DiagramEditableResource der = (DiagramEditableResource) er;				
 				if (((File)der.getFile()).getAbsolutePath().startsWith(path)) {
@@ -117,7 +140,7 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 					break;
 				}
 			}
-		}		
+		}
 		if (diagramEditableResource != null) {
 			return diagramEditableResource.getResourceSet();
 		}
@@ -127,22 +150,8 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	/**
 	 * @author Mariana
 	 */
-	public Resource getResource(ResourceSet resourceSet, IFile file) {
-		URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
-		try {
-			file.refreshLocal(IResource.DEPTH_ZERO, null);
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
-		}
-		boolean fileExists = file == null ? true : file.exists();
-		return getResource(resourceSet, uri, fileExists);
-	}
-	
-	/**
-	 * @author Mariana
-	 */
 	public Resource getResource(ResourceSet resourceSet, File file) {
-		URI uri = URI.createFileURI(file.getAbsolutePath());
+		URI uri = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(file);
 		boolean fileExists = file.exists();
 		return getResource(resourceSet, uri, fileExists);
 	}

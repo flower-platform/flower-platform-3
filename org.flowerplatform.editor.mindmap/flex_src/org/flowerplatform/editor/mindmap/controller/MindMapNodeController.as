@@ -51,12 +51,12 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		public function getChildrenBasedOnSide(model:Object, side:int = 0):IList /* of MindMapNode */ {
 			if (side == 0) {
-				side = model.side;
+				side = getSide(model);
 			}
 			var list:ArrayList = new ArrayList();			
 			for (var i:int = 0; i < getChildren(model).length; i++) {
 				var child:MindMapNode = MindMapNode(getChildren(model).getItemAt(i));
-				if (side == 0 || side == child.side) {
+				if (side == 0 || side == getSide(child)) {
 					list.addItem(child);
 				}
 			}
@@ -124,15 +124,15 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function getExpanded(model:Object):Boolean {
-			return MindMapNode(model).expanded;
+			return MindMapNode(model).viewDetails.expanded;
 		}
 		
 		public function setExpanded(model:Object, value:Boolean):void {
 			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setExpanded(MindMapNode(model).id, value);
 		}
 		
-		public function getSide(model:Object):int {
-			return MindMapNode(model).side;
+		public function getSide(model:Object):int {		
+			return MindMapNode(model).viewDetails.side;
 		}
 		
 		public function setSide(model:Object, value:int):void {
