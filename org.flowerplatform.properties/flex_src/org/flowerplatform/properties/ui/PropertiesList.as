@@ -22,13 +22,19 @@ package org.flowerplatform.properties.ui {
 		protected var _popupHost:IPopupHost;
 		
 		public var propertyList:PropertiesList;
-
+		
+		public var selectedItemsForProperties:Object;
+		
 		public function PropertiesList() {
 			super();
 			itemRenderer = new ClassFactory(PropertyItemRenderer);
 			dataProvider = new ArrayList();
 			
 			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
+		}
+		
+		public function getSelectedItemsForProperties():Object {
+			return selectedItemsForProperties;	
 		}
 		
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {

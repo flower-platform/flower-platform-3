@@ -10,16 +10,17 @@
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-
+	//		
 			public function focusOutHandler2(event:FocusEvent):void {
 				//mx.controls.Alert.show(data.name + " " + data.value); 
 				//data.value = "xoxo";
+				var selectionOfItems:Object = PropertiesList(owner).getSelectedItemsForProperties();
 				if(!data.readOnly) {
 					CommunicationPlugin.getInstance().bridge.sendObject(
 						new InvokeServiceMethodServerCommand(
 							"propertiesProviderService",
 							"setProperties",
-							[data]
+							[data, selectionOfItems]
 						)
 					);
 				}	

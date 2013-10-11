@@ -139,6 +139,7 @@ package org.flowerplatform.web {
 								function(object:Object):void {
 									var x:Object = object;
 									PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
+									PropertiesPlugin.getInstance().propertyList.selectedItemsForProperties = selectedItems;
 								}
 					));				
 			});

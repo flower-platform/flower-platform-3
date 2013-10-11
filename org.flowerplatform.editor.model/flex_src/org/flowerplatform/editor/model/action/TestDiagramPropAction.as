@@ -44,6 +44,7 @@ package org.flowerplatform.editor.model.action {
 					function(object:Object):void {
 						var x:Object = object;
 						PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
+						PropertiesPlugin.getInstance().propertyList.selectedItemsForProperties = selectedItems;
 					}
 				));		
 		}
