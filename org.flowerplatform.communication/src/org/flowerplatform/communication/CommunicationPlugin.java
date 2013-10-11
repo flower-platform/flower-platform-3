@@ -33,6 +33,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.common.util.RunnableWithParam;
 import org.flowerplatform.communication.channel.CommunicationChannelManager;
 import org.flowerplatform.communication.service.ServiceRegistry;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
@@ -105,6 +106,10 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 
 	public static final ThreadLocal<IPrincipal> tlCurrentPrincipal = new ThreadLocal<IPrincipal>();
 
+	/**
+	 * @author Cristian Spiescu
+	 * @author Mariana Gheorghe
+	 */
 	@Override
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
@@ -112,33 +117,46 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 
 		initExtensionPoint_servlet();
 		initExtensionPoint_authenticator();
-		bundleContext.addFrameworkListener(new FrameworkListener() {
-		@Override
-		public void frameworkEvent(FrameworkEvent event) {
-			if (event.getType() != FrameworkEvent.STARTLEVEL_CHANGED) {
-				return;
-			}
-			try {
-				// When STARTLEVEL_CHANGED event happens, Eclipse seems to have finished starting.
-				// It is now that we start the services. If we didn't do this, e.g. of thing that
-				// would go wrong: this plugin is activated because FlowerDispatcherServlet is referenced
-				// (is superclass) of EclipseDispatcherServlet, which is referenced somewhere in the
-				// initializer or constructor of WebPlugin. => the services would be instantiated, including
-				// some services from .web, which would want to use the resourceBundle, which hasn't been
-				// yet initialized because WebPlugin.start() hasn't been called yet.
-				initExtensionPoint_service();
-				
-				// notify the listeners that the services have been started
-				for (Runnable listener : allServicesStartedListeners) {
-					listener.run();
+		
+		if (bundleContext.getBundle(0).getState() == Bundle.ACTIVE) {
+			// If Eclipse is already started before this plugin is activated (happens during testing or
+			// running the app from the IDE), it's safe to start the services.
+			initializeServicesAndNotifyServicesStartedListeners();
+		} else {
+			// Wait until Eclipse is started (see comment below).
+			bundleContext.addFrameworkListener(new FrameworkListener() {
+			@Override
+			public void frameworkEvent(FrameworkEvent event) {
+				if (event.getType() != FrameworkEvent.STARTLEVEL_CHANGED) {
+					return;
 				}
-			} catch (CoreException e) {
-				throw new RuntimeException(e);
+				
+				CommunicationPlugin.this.initializeServicesAndNotifyServicesStartedListeners();
 			}
+		});
 		}
-	});
 	}
 	
+	protected void initializeServicesAndNotifyServicesStartedListeners() {
+		try {
+			// When STARTLEVEL_CHANGED event happens, Eclipse seems to have finished starting.
+			// It is now that we start the services. If we didn't do this, e.g. of thing that
+			// would go wrong: this plugin is activated because FlowerDispatcherServlet is referenced
+			// (is superclass) of EclipseDispatcherServlet, which is referenced somewhere in the
+			// initializer or constructor of WebPlugin. => the services would be instantiated, including
+			// some services from .web, which would want to use the resourceBundle, which hasn't been
+			// yet initialized because WebPlugin.start() hasn't been called yet.
+			initExtensionPoint_service();
+			
+			// notify the listeners that the services have been started
+			for (Runnable listener : allServicesStartedListeners) {
+				listener.run();
+			}
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	protected void initExtensionPoint_servlet() throws CoreException {
 		servletMappings = new ArrayList<ServletMapping>();
