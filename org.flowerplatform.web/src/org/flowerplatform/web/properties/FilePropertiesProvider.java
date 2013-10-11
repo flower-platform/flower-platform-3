@@ -39,7 +39,7 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		File file = ((FileSelectedItem)selectedItem).getFile();
 		List<Property> properties = new ArrayList<Property>();	
 		// TODO decide what properties are needed
-		properties.add(new Property("Name", file.getName()));
+		properties.add(new Property("Name", file.getName(), false));
 		properties.add(new Property("Location", file.getAbsolutePath()));
 		properties.add(new Property("Size", file.length()));
 		properties.add(new Property("Last modified", new Date(file.lastModified())));
