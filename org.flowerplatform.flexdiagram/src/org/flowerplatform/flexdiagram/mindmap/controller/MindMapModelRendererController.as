@@ -36,7 +36,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 			removeRendererIfModelIsDisposed = true;
 		}
 		
-		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {			
+		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {		

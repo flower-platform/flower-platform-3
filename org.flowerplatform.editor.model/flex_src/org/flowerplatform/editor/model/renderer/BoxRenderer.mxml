@@ -18,11 +18,11 @@
  
 	license-end
 -->
-<!---
+<!--- 
 @author Cristian Spiescu
 -->
 <s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
-	cacheAsBitmap="true"
+	cacheAsBitmap="true"  
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
@@ -36,6 +36,7 @@
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
+			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
 			import mx.events.ResizeEvent;
@@ -47,6 +48,9 @@
 			import org.flowerplatform.emf_model.notation.Node;
 			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+			import org.osmf.layout.ScaleMode;
+			
+			import spark.effects.Scale;
 			
 			private var _diagramShell:DiagramShell;
 			protected var visualChildrenController:IVisualChildrenController;
@@ -89,25 +93,26 @@
 					bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
 					x = bounds.x;
 					y = bounds.y;
-					measuredWidth = bounds.width;
-					measuredHeight = bounds.height;
+					
+					measuredMinWidth = bounds.width;
+					measuredMinHeight = bounds.height;
 				}
 			}
 			
 			private function modelChangedHandler(event:PropertyChangeEvent):void {
 				var bounds:Bounds = Bounds(event.target);
 				switch (event.property) {
-					case "x":
+					case "x":					
 						x = bounds.x;
 						break;
-					case "y":
+					case "y":					
 						y = bounds.y;
 						break;
 					case "height":
-						measuredHeight = bounds.height;
+						measuredMinHeight = bounds.height;
 						break;
 					case "width":
-						measuredWidth = bounds.width;
+						measuredMinWidth = bounds.width;
 						break;
 				}
 			}
@@ -131,14 +136,15 @@
 			protected function resizeEventHandler(event:ResizeEvent):void {				
 				if (event.target is BoxChildIconItemRenderer && BoxChildIconItemRenderer(event.target).parent == this) {
 					event.stopPropagation();
-					if (super.data != null) {				
+				
+					if (super.data != null) {
 						var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
 						var command:MoveResizeServerCommand = new MoveResizeServerCommand();
 						command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
-						command.newWidth = width;
-						command.newHeight = height;
+						command.newWidth = getLayoutBoundsWidth();
+						command.newHeight = getLayoutBoundsHeight();
 						command.newX = bounds.x;
-						command.newY = bounds.y;
+						command.newY = bounds.y;						
 						NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
 					}
 				}

@@ -40,6 +40,7 @@ package org.flowerplatform.flexdiagram.tool.controller.drag {
 		public function activate(model:Object, initialX:Number, initialY:Number):void {
 			var movePlaceHolder:MoveResizePlaceHolder = new MoveResizePlaceHolder();
 			var rect:Rectangle = getInitialBounds(model);
+			
 			movePlaceHolder.x = rect.x;
 			movePlaceHolder.y = rect.y;
 			movePlaceHolder.width = rect.width;
@@ -47,6 +48,9 @@ package org.flowerplatform.flexdiagram.tool.controller.drag {
 			
 			diagramShell.modelToExtraInfoMap[model].movePlaceHolder = movePlaceHolder;
 			diagramShell.diagramRenderer.addElement(movePlaceHolder);
+			
+//			movePlaceHolder.setLayoutBoundsPosition(rect.x, rect.y);
+//			movePlaceHolder.setLayoutBoundsSize(rect.width, rect.height);
 			
 			diagramShell.modelToExtraInfoMap[model].initialX = movePlaceHolder.x;
 			diagramShell.modelToExtraInfoMap[model].initialY = movePlaceHolder.y;

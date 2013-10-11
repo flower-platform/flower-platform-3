@@ -9,18 +9,29 @@
   <foreignModel>Notation.ecore</foreignModel>
   <genPackages prefix="Notation" basePackage="org.flowerplatform.emf_model" disposableProviderFactory="true"
       ecorePackage="Notation.ecore#/">
+    <genClasses image="false" ecoreClass="Notation.ecore#//NotationElement">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//NotationElement/id"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//NotationElement/idBeforeRemoval"/>
+    </genClasses>
     <genClasses image="false" ecoreClass="Notation.ecore#//View">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//View/viewType"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Notation.ecore#//View/persistentChildren"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//View/viewDetails"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Notation.ecore#//View/diagrammableElement"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Notation.ecore#//View/sourceEdges"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Notation.ecore#//View/targetEdges"/>
       <genOperations ecoreOperation="Notation.ecore#//View/getAllChildren"/>
     </genClasses>
     <genClasses ecoreClass="Notation.ecore#//Node">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Notation.ecore#//Node/layoutConstraint"/>
     </genClasses>
+    <genClasses ecoreClass="Notation.ecore#//Edge">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Notation.ecore#//Edge/source"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Notation.ecore#//Edge/target"/>
+    </genClasses>
     <genClasses ecoreClass="Notation.ecore#//Diagram">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Diagram/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Notation.ecore#//Diagram/persistentEdges"/>
     </genClasses>
     <genClasses image="false" ecoreClass="Notation.ecore#//LayoutConstraint"/>
     <genClasses ecoreClass="Notation.ecore#//Location">
@@ -34,5 +45,6 @@
     <genClasses ecoreClass="Notation.ecore#//Note">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Notation.ecore#//Note/text"/>
     </genClasses>
+    <genClasses ecoreClass="Notation.ecore#//MindMapNode"/>
   </genPackages>
 </genmodel:GenModel>

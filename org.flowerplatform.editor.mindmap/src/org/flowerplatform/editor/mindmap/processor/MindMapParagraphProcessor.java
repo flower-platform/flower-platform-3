@@ -18,8 +18,6 @@
  */
 package org.flowerplatform.editor.mindmap.processor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
@@ -29,7 +27,7 @@ import org.flowerplatform.emf_model.notation.View;
 /**
  * @author Cristina Constantinescu
  */
-public class MindMapParagraphProcessor extends AbstractMindMapChangeProcessor {
+public class MindMapParagraphProcessor extends MindMapDefaultProcessor {
 
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		super.processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
