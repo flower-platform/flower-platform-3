@@ -73,6 +73,11 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 				if (listChange.getKind().equals(ChangeKind.ADD_LITERAL)) {
 					// removed a relation
 					removeEdgesForRelations(object, listChange.getValues(), associatedViewOnOpenDiagram, context);
+				} else {
+					if (listChange.getKind().equals(ChangeKind.REMOVE_LITERAL)) {
+						// send the full list of relations for now, because we've noticed an issue with the indexes from the listChange
+						addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
+					}
 				}
 			}
 		}
