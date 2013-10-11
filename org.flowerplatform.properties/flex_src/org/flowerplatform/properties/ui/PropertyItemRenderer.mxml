@@ -4,10 +4,32 @@
 				xmlns:mx="library://ns.adobe.com/flex/mx" 
 				autoDrawBackground="true">
 	
+	<fx:Script>
+		<![CDATA[	
+			import mx.controls.Alert;
+			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+
+			public function focusOutHandler2(event:FocusEvent):void {
+				//mx.controls.Alert.show(data.name + " " + data.value); 
+				//data.value = "xoxo";
+				if(!data.readOnly) {
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand(
+							"propertiesProviderService",
+							"setProperties",
+							[data]
+						)
+					);
+				}	
+			}
+		]]>
+	</fx:Script>
 	<s:layout>
 		<s:HorizontalLayout/>
 	</s:layout>
-	<s:Label text='{data.name}' width="50%" height="100%"/>
-	<s:TextInput text='{data.value}' width="50%" height="100%"/>
-	
+	<s:Label text='{data.name}' width="50%" height="100%" />
+	<s:TextInput id="value" text='{data.value}' width="50%" height="100%"  editable='{!data.readOnly}' focusOut="focusOutHandler2(event)" />
+	<fx:Binding source="value.text" destination='data.value' />
 </s:ItemRenderer>
