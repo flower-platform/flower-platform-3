@@ -58,8 +58,6 @@ import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.FileBasedEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
-import org.flowerplatform.emf_model.notation.Edge;
-import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 import org.slf4j.Logger;
@@ -318,6 +316,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			if (object instanceof View) {
 				((View) object).setDiagrammableElement(null);
 			}
+			objectsToUpdate.remove(object);
 		}
 		
 		invokeClientMethod(communicationChannel, statefulClientId, "updateTransferableObjects", new Object[] { objectsToUpdate, objectsIdsToDispose, viewDetailsUpdates });

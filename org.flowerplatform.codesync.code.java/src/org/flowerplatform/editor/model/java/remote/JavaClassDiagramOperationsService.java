@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
@@ -187,15 +188,23 @@ public class JavaClassDiagramOperationsService {
 	
 	public void deleteView(ServiceInvocationContext context, String viewId) {
 		View view = getViewById(context, viewId);
-		CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
-		if (cse.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE) ||
-				cse.getType().equals(JavaOperationModelAdapter.OPERATION)) {
-			CodeSyncElement cls = (CodeSyncElement) cse.eContainer();
-			cls.getChildren().remove(cse);
+		EObject diagrammableElement = view.getDiagrammableElement();
+		if (diagrammableElement instanceof CodeSyncElement) {
+			CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
+			if (cse.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE) ||
+					cse.getType().equals(JavaOperationModelAdapter.OPERATION)) {
+				CodeSyncElement cls = (CodeSyncElement) cse.eContainer();
+				cls.getChildren().remove(cse);
+			}
+			// only remove the view, don't delete the class from the model
+			if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
+				View parent = (View) view.eContainer();
+				parent.getPersistentChildren().remove(view);
+			}
 		}
-		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
-			View parent = (View) view.eContainer();
-			parent.getPersistentChildren().remove(view);
+		if (diagrammableElement instanceof Relation) {
+			Relation relation = (Relation) diagrammableElement;
+			relation.getSource().getRelations().remove(relation);
 		}
 	}
 	

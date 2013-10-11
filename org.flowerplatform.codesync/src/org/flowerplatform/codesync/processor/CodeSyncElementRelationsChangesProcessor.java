@@ -22,10 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
+import org.eclipse.emf.ecore.change.ChangeKind;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
@@ -65,6 +68,31 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 	protected void processRelationsChanges(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (featureChange.getListChanges().isEmpty()) {
 			addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
+		} else {
+			for (ListChange listChange : featureChange.getListChanges()) {
+				if (listChange.getKind().equals(ChangeKind.ADD_LITERAL)) {
+					// removed a relation
+					removeEdgesForRelations(object, listChange.getValues(), associatedViewOnOpenDiagram, context);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Removes all {@link Edge}s for the deleted {@link Relation}s.
+	 */
+	protected void removeEdgesForRelations(EObject object, EList<Object> relations, View associatedViewOnOpenDiagram, Map<String, Object> context) {
+		Diagram diagram = getDiagram(context);
+		for (Object relation : relations) {
+			for (EObject eObject : getInverseReferencesForElement(((Relation) relation).getTarget(), NotationPackage.eINSTANCE.getView_DiagrammableElement())) {
+				View target = (View) eObject;
+				Edge edge = getEdge(associatedViewOnOpenDiagram, target);
+				if (edge != null) {
+					associatedViewOnOpenDiagram.getSourceEdges().remove(edge);
+					target.getTargetEdges().remove(edge);
+					diagram.getPersistentEdges().remove(edge);
+				}
+			}
 		}
 	}
 	
@@ -76,7 +104,7 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 		for (Relation relation : relations) {
 			for (EObject eObject : getInverseReferencesForElement(relation.getTarget(), NotationPackage.eINSTANCE.getView_DiagrammableElement())) {
 				View target = (View) eObject;
-				if (acceptsEdges(target) && !edgeExists(associatedViewOnOpenDiagram, target)) {
+				if (acceptsEdges(target) && getEdge(associatedViewOnOpenDiagram, target) == null) {
 					Edge edge = NotationFactory.eINSTANCE.createEdge();
 					edge.setDiagrammableElement(relation);
 					edge.setSource(associatedViewOnOpenDiagram);
@@ -89,15 +117,16 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 	}
 	
 	/**
-	 * Prevent adding duplicate edges for an existing relation.
+	 * Gets the {@link Edge} with the specified <code>source</code> and <code>target</code>,
+	 * if it exists.
 	 */
-	protected boolean edgeExists(View source, View target) {
+	protected Edge getEdge(View source, View target) {
 		for (Edge edge : source.getSourceEdges()) {
 			if (edge.getSource().equals(source) && edge.getTarget().equals(target)) {
-				return true;
+				return edge;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	/**
