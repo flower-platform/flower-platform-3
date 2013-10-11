@@ -88,17 +88,13 @@ package org.flowerplatform.editor.model.renderer {
 				return;				
 			}
 			
-			var canPlay:Boolean = true;			
-			
-			if (canPlay) {
-				if (glowEffect.isPlaying) {
-					glowEffect.end();
-				}
-				
-				glowEffect.play([figure]);
-				
-				glowStarted = true;
+			if (glowEffect.isPlaying) {
+				glowEffect.end();
 			}
+			
+			glowEffect.play([figure]);
+			
+			glowStarted = true;
 		}
 		
 		protected function stopGlowHandler(event:Event):void {
