@@ -33,6 +33,8 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.java.JavaClassChildProcessor;
 import org.flowerplatform.editor.model.java.JavaInplaceEditorProvider;
+import org.flowerplatform.emf_model.notation.Bounds;
+import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
@@ -207,6 +209,35 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 		}
 	}
 
+	@Override
+	protected View createViewForElement(CodeSyncElement element, Diagram diagram) {
+		Node node = NotationFactory.eINSTANCE.createNode();
+		node.setViewType("class");
+		node.setDiagrammableElement(element);
+		
+		Node classTitle = NotationFactory.eINSTANCE.createNode();
+		classTitle.setViewType("classTitle");
+		classTitle.setDiagrammableElement(element);
+		node.getPersistentChildren().add(classTitle);
+		
+		Node classAttrSeparator = NotationFactory.eINSTANCE.createNode();
+		classAttrSeparator.setViewType(JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR);
+		node.getPersistentChildren().add(classAttrSeparator);
+		
+		Node classOperationSeparator = NotationFactory.eINSTANCE.createNode();
+		classOperationSeparator.setViewType(JavaClassDiagramOperationsService.OPERATIONS_SEPARATOR);
+		node.getPersistentChildren().add(classOperationSeparator);
+		
+		Bounds bounds = NotationFactory.eINSTANCE.createBounds();
+		bounds.setX(200);
+		bounds.setHeight(100);
+		bounds.setWidth(100);
+		node.setLayoutConstraint(bounds);
+		diagram.getPersistentChildren().add(node);
+		
+		return node;
+	}
+	
 	///////////////////////
 	// Model modifications
 	///////////////////////
@@ -292,5 +323,5 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getOperation_Parameters();
 		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, parameters);
 	}
-	
+
 }

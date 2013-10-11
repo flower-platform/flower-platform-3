@@ -46,7 +46,7 @@ import com.crispico.flower.mp.model.codesync.Relation;
 /**
  * @author Mariana Gheorghe
  */
-public class CodeSyncDiagramOperationsService {
+public abstract class CodeSyncDiagramOperationsService {
 
 	protected static CodeSyncDiagramOperationsService INSTANCE;
 	
@@ -58,7 +58,7 @@ public class CodeSyncDiagramOperationsService {
 		INSTANCE = this;
 	}
 	
-	public void displayMissingRelations(ServiceInvocationContext context, String viewId) {
+	public void displayMissingRelations(ServiceInvocationContext context, String viewId, boolean addMissingElements) {
 		CodeSyncElement cse = (CodeSyncElement) getViewById(context, viewId).getDiagrammableElement();
 		List<View> views = getViewsForElement(cse);
 		// filter out views that can't have edges
@@ -71,14 +71,18 @@ public class CodeSyncDiagramOperationsService {
 		
 		// add edges for relations where this element is the source
 		for (View view : views) {
-			addEdgesForRelations(cse, cse.getRelations(), view, context.getAdditionalData());
+			addEdgesForRelations(cse, cse.getRelations(), view, addMissingElements, context.getAdditionalData());
 		}
 		
 		// add edges for relations where this element is the target
 		Diagram diagram = getDiagram(context.getAdditionalData());
 		for (EObject eObject : getInverseReferencesForElement(cse, CodeSyncPackage.eINSTANCE.getRelation_Target())) {
 			Relation relation = (Relation) eObject;
-			for (View sourceView : getViewsForElement(relation.getSource())) {
+			List<View> sourceViews = getViewsForElement(relation.getSource());
+			if (addMissingElements && sourceViews.size() == 0) {
+				sourceViews.add(createViewForElement(relation.getSource(), diagram));
+			}
+			for (View sourceView : sourceViews) {
 				if (acceptsEdges(sourceView)) {
 					for (View targetView : views) {
 						if (getEdge(sourceView, targetView) == null) {
@@ -93,10 +97,15 @@ public class CodeSyncDiagramOperationsService {
 	/**
 	 * Adds new {@link Edge}s for each {@link Relation}.
 	 */
-	public void addEdgesForRelations(EObject object, List<Relation> relations, View associatedViewOnOpenDiagram, Map<String, Object> context) {
+	public void addEdgesForRelations(EObject object, List<Relation> relations, View associatedViewOnOpenDiagram, boolean addMissingElements, Map<String, Object> context) {
 		Diagram diagram = getDiagram(context);
 		for (Relation relation : relations) {
-			for (View target : getViewsForElement(relation.getTarget())) {
+			List<View> views = getViewsForElement(relation.getTarget());
+			// if there are no views for the target and addMissingElements is true
+			if (addMissingElements && views.size() == 0) {
+				views.add(createViewForElement(relation.getTarget(), diagram));
+			}
+			for (View target : views) {
 				if (acceptsEdges(target) && getEdge(associatedViewOnOpenDiagram, target) == null) {
 					createEdge(relation, associatedViewOnOpenDiagram, target, diagram);
 				}
@@ -104,6 +113,8 @@ public class CodeSyncDiagramOperationsService {
 		}
 	}
 	
+	protected abstract View createViewForElement(CodeSyncElement target, Diagram diagram);
+
 	protected Edge createEdge(Relation relation, View source, View target, Diagram diagram) {
 		Edge edge = NotationFactory.eINSTANCE.createEdge();
 		edge.setDiagrammableElement(relation);

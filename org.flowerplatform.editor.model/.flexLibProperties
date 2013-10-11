@@ -21,6 +21,7 @@
     <classEntry path="org.flowerplatform.editor.model.controller.InplaceEditorController"/>
     <classEntry path="org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer"/>
     <classEntry path="org.flowerplatform.editor.model.action.DisplayMissingRelationsAction"/>
+    <classEntry path="org.flowerplatform.editor.model.action.AddRelatedElementsAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -21,12 +21,13 @@ package org.flowerplatform.editor.model {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
+	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
+	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
@@ -158,6 +159,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandAttributesCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DisplayMissingRelationsAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelatedElementsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);

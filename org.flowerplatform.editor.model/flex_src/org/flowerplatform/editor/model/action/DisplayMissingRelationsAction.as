@@ -29,6 +29,8 @@ package org.flowerplatform.editor.model.action {
 	 */
 	public class DisplayMissingRelationsAction extends ActionBase {
 		
+		protected var addMissingElementsToDiagram:Boolean = false;
+		
 		public function DisplayMissingRelationsAction() {
 			super();
 			
@@ -49,7 +51,7 @@ package org.flowerplatform.editor.model.action {
 		override public function run():void	{
 			var node:Node = Node(selection.getItemAt(0));
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-				.service_displayMissingRelations(node.id);
+				.service_displayMissingRelations(node.id, addMissingElementsToDiagram);
 		}
 		
 	}

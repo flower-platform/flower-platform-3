@@ -58,7 +58,7 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 
 	protected void processRelationsChanges(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (featureChange.getListChanges().isEmpty()) {
-			getService().addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
+			getService().addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, false, context);
 		} else {
 			for (ListChange listChange : featureChange.getListChanges()) {
 				if (listChange.getKind().equals(ChangeKind.ADD_LITERAL)) {
@@ -67,7 +67,7 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 				} else {
 					if (listChange.getKind().equals(ChangeKind.REMOVE_LITERAL)) {
 						// send the full list of relations for now, because we've noticed an issue with the indexes from the listChange
-						getService().addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, context);
+						getService().addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, false, context);
 					}
 				}
 			}
