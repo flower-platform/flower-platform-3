@@ -27,12 +27,6 @@ package org.flowerplatform.properties.ui {
 			super();
 			itemRenderer = new ClassFactory(PropertyItemRenderer);
 			dataProvider = new ArrayList();
-			var property:Property = new Property();
-			
-			dataProvider.addItem(property);
-			dataProvider.addItem(property);
-			dataProvider.addItem(property);
-			dataProvider.addItem(property);
 			
 			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
 		}
