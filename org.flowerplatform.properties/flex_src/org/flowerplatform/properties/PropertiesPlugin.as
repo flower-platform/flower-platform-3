@@ -2,9 +2,9 @@ package org.flowerplatform.properties {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	
 	import org.flowerplatform.properties.ui.PropertiesList;
 	import org.flowerplatform.properties.ui.PropertiesViewProvider;
+	import org.flowerplatform.properties.ui.Property;
 
 	public class PropertiesPlugin extends AbstractFlowerFlexPlugin {
 		
@@ -35,7 +35,7 @@ package org.flowerplatform.properties {
 		}
 		
 		override protected function registerClassAliases():void {
-			
+			registerClassAliasFromAnnotation(Property);
 		}
 		
 	}
