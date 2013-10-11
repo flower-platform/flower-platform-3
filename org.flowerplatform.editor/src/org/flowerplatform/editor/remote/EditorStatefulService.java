@@ -19,8 +19,6 @@
 package org.flowerplatform.editor.remote;
 
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -42,7 +40,6 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
-import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
@@ -927,12 +924,8 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * @author Cristina
 	 */
 	public String getFriendlyNameDecoded(String friendlyName) {
-		try {
-			friendlyName = URLDecoder.decode(friendlyName, "UTF-8");		
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Could not decode using UTF-8 charset : " + friendlyName);
-		}
-		return friendlyName;
+		return ((EditorOperationsService) CommunicationPlugin.getInstance().getServiceRegistry().getService("editorOperationsService"))
+				.getFriendlyNameDecoded(friendlyName);
 	}
 	
 	/**

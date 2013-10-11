@@ -32,7 +32,8 @@ package org.flowerplatform.orion.client {
 			return INSTANCE;
 		}
 		
-		public static const OPEN_RESOURCES:String = "openResourcesFromOrion";
+		public static const OPEN_RESOURCES:String = "orionOpenResources";
+		public static const CREATE_DIAGRAM:String = "orionCreateDiagram";
 		
 		override public function preStart():void {
 			super.preStart();
@@ -42,6 +43,7 @@ package org.flowerplatform.orion.client {
 			}
 			INSTANCE = this;
 			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;
+			CommonPlugin.getInstance().linkHandlers[CREATE_DIAGRAM] = this;
 		}
 		
 		override public function start():void {
@@ -95,7 +97,12 @@ package org.flowerplatform.orion.client {
 					new InvokeServiceMethodServerCommand(
 						"orionOperationsService", "navigateFriendlyEditableResourcePathList", 
 						[parameters, 0]));
-			}		
+			} else if (command == CREATE_DIAGRAM) {
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"orionOperationsService", "createDiagram", 
+						[parameters]));
+			}
 		}
 	}
 }

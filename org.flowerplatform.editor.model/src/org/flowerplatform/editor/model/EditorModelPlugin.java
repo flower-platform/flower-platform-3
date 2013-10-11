@@ -145,11 +145,6 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		INSTANCE = null;
 	}
 
-	@Override
-	public void registerMessageBundle() throws Exception {
-		// do nothing, because we don't have messages (yet)
-	}
-
 	public IModelAccessController getModelAccessController() {
 		return modelAccessController;
 	}
