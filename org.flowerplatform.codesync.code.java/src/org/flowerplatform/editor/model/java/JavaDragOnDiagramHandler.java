@@ -60,7 +60,12 @@ public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 //		}
 		
 		for (Object object : draggedObjects) {
-			File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
+			File resource;
+			try {
+				resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
+			} catch (Exception e) {
+				throw new RuntimeException(String.format("Error while getting resource %s", object), e);
+			}
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
 			CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 			

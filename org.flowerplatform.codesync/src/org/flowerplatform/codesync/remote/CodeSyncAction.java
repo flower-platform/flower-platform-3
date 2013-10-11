@@ -36,9 +36,16 @@ public class CodeSyncAction extends AbstractServerCommand {
 	
 	@Override
 	public void executeCommand() {
-		File file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
-		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
-		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, file, technology, communicationChannel, true);
+		File file = null;
+		try {
+			file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("Error while getting resource %s", path), e);
+		}
+		if (file != null) {
+			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
+			CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, file, technology, communicationChannel, true);
+		}
 	}
 
 }

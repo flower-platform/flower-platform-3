@@ -115,8 +115,8 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	}
 	
 	@Override
-	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
-		super.loadEditableResource(context, editableResource);		
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) {
+		super.loadEditableResource(context, editableResource);
 		DiagramEditableResource er = (DiagramEditableResource) editableResource;
 		URI resourceURI = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(er.getFile());
 		er.setChangeRecorder(new ChangeRecorder());

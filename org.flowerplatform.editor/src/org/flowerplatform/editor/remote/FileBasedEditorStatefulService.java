@@ -20,11 +20,11 @@ package org.flowerplatform.editor.remote;
 
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.file_event.FileEvent;
 import org.flowerplatform.common.file_event.IFileEventListener;
+import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.editor.EditorPlugin;
 import org.slf4j.Logger;
@@ -55,15 +55,23 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	}
 
 	@Override
-	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) {
 		FileBasedEditableResource er = (FileBasedEditableResource) editableResource;
-		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), er.getEditableResourcePath());
-		er.setFile(file);
-		if (!file.exists()) {
-			throw new FileNotFoundException(editableResource.getEditableResourcePath());
-		}
+		Object file = null;
+		try {
+			file = EditorPlugin.getInstance().getFileAccessController().getFile(er.getEditableResourcePath());			
+		} catch (Exception e) {
+			// Mariana: context may be null if the resource was reloaded by the resource changed listener
+			if (context != null) {
+				context.getCommunicationChannel().appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
+						"Resource not Found", String.format("The resource %s was not found", editableResource.getEditableResourcePath()), DisplaySimpleMessageClientCommand.ICON_WARNING));
+			}
+			logger.error(String.format("Error while loading resource %s", editableResource.getEditableResourcePath()), e);			
+		}	
+		er.setFile(file);		
 	}
 
+	// TODO CC: add listener mechanism in FileAccessController
 	@Override
 	public void notify(FileEvent event) {
 		File file = (event.getEvent() == FileEvent.FILE_RENAMED) ? event.getOldFile() : event.getFile();

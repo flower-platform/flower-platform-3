@@ -12,7 +12,7 @@ public interface IFileAccessController {
 	// get relative path to a location
 	String getPath(Object file);
 	// path is relative
-	Object getFile(String path);
+	Object getFile(String path) throws Exception;
 	
 	long getLastModifiedTimestamp(Object file);
 	

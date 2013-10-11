@@ -97,7 +97,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 * 
 	 */
 	@Override
-	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) {
 		super.loadEditableResource(context, editableResource);
 		TextEditableResource er = (TextEditableResource) editableResource;
 				
