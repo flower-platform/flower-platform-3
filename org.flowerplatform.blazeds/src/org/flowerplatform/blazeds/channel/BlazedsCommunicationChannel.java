@@ -61,7 +61,9 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
 		super.handleReceivedObjectWillStart(object);
 		HeartbeatStatefulService heartbeatStatefulService = (HeartbeatStatefulService) CommunicationPlugin.getInstance()
         		.getServiceRegistry().getService(HeartbeatStatefulService.SERVICE_ID);
-		heartbeatStatefulService.notifyObjectReceived(this, object);
+		if (heartbeatStatefulService != null) {
+			heartbeatStatefulService.notifyObjectReceived(this, object);
+		}
 	}
 
 	@Override
@@ -81,7 +83,9 @@ public class BlazedsCommunicationChannel extends CommunicationChannel {
         
         HeartbeatStatefulService heartbeatStatefulService = (HeartbeatStatefulService) CommunicationPlugin.getInstance()
         		.getServiceRegistry().getService(HeartbeatStatefulService.SERVICE_ID);
-        heartbeatStatefulService.notifyObjectSent(this, command);
+        if (heartbeatStatefulService != null) {
+        	heartbeatStatefulService.notifyObjectSent(this, command);
+        }
 	}
 
 	@Override

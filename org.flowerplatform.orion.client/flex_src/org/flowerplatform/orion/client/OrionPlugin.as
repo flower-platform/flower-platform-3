@@ -5,6 +5,7 @@ package org.flowerplatform.orion.client {
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
 	
+	import flash.external.ExternalInterface;
 	import flash.geom.Utils3D;
 	
 	import mx.collections.ArrayCollection;
@@ -51,8 +52,6 @@ package org.flowerplatform.orion.client {
 			
 			CommunicationPlugin.getInstance().bridge.connect();
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
-			
-			
 		}
 		
 		public function handleConnected(event:BridgeEvent):void {			
@@ -64,6 +63,9 @@ package org.flowerplatform.orion.client {
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
 			loadWorkbenchLayoutData();
+			
+			// tell js that the app has finished loading
+			ExternalInterface.call("flowerApplicationCompleteHandler");
 		}
 				
 		private function loadWorkbenchLayoutData():void {		

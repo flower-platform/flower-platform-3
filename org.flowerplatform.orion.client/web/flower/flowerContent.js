@@ -1,7 +1,7 @@
 define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 'orion/bootstrap', 'orion/status', 'orion/progress', 'orion/commandRegistry', 'orion/fileClient', 'orion/operationsClient',
 	        'orion/searchClient', 'orion/globalCommands', 'orion/URITemplate', 'orion/PageUtil', 'orion/PageLinks', 'orion/selection', 'orion/contentTypes', 'orion/fileCommands', 'orion/extensionCommands',
 	        'orion/explorers/explorer-table', 'orion/explorers/navigatorRenderer', 'orion/fileUtils', 'orion/keyBinding', 'orion/outliner', 'orion/inputManager', 
-	        'orion/folderView', 'orion/editorView', 'orion/blameAnnotations', 'orion/problems', 'orion/EventTarget', 'orion/sidebar', 'orion/i18nUtil', 'orion/URL-shim'], 
+	        'orion/folderView', 'orion/editorView', 'orion/blameAnnotations', 'orion/problems', 'orion/EventTarget', 'orion/sidebar', 'orion/i18nUtil', 'orion/URL-shim', 'flowerplatform/commons'], 
 			function(messages, require, lib, mBootstrap, mStatus, mProgress, mCommandRegistry, mFileClient, mOperationsClient, mSearchClient, 
 			mGlobalCommands, URITemplate, PageUtil, PageLinks, mSelection, mContentTypes, mFileCommands, mExtensionCommands, mExplorerTable, mNavigatorRenderer, mFileUtils, 
 			KeyBinding, mOutliner, mInputManager, mFolderView, mEditorView, mBlameAnnotation, mProblems, EventTarget, Sidebar, i18nUtil) {
@@ -100,7 +100,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 			if (evt.input === null || evt.input === undefined) {
 				return;
 			}
-			changeSelection(metadata);				
+			openEditor(metadata);				
 		});
 	
 		// Sidebar
@@ -168,10 +168,10 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 			mGlobalCommands.setDirtyIndicator(editor.isDirty());
 		});
 	
-		selection.addEventListener("selectionChanged", function(event) { //$NON-NLS-0$
+		selection.addEventListener("selectionChanged", function(event) { //$NON-NLS-0$		
 			inputManager.setInput(event.selection);
 		});
-		window.addEventListener("hashchange", function() { //$NON-NLS-0$
+		window.addEventListener("hashchange", function() { //$NON-NLS-0$			
 			inputManager.setInput(window.location.hash);
 			// inform the sidebar
 			sidebarNavInputManager.processHash(window.location.hash);
@@ -189,7 +189,8 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		};
 			
 		var orionHome = PageLinks.getOrionHome();
-		
+		 var fileMetadata = null;
+		 
 		function loadContent() {
 			var foundContent = false;
 			var params = PageUtil.matchResourceParameters(window.location.href);
@@ -236,10 +237,19 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 						iframe.width = "100%"; //$NON-NLS-0$
 						iframe.height = "100%"; //$NON-NLS-0$
 						iframe.frameborder= 0; //$NON-NLS-0$
-						iframe.src = href; //$NON-NLS-0$
+						iframe.src = href;
 						lib.empty(parent);
 						parent.appendChild(iframe); 
-																		
+
+						window.addEventListener("message", function(event) {
+							// listen for flower platform application complete handler to open selected item
+							// for potentially dangerous actions, we will force the content to be from our domain
+							if (orionHome && fileMetadata && event.source.parent === window && event.origin === new URL(window.location.href).origin) {								
+								if (event.data === "flowerApplicationCompleteHandler") {								
+									openEditor(fileMetadata);
+								}
+							}
+						}, false);
 						break;
 					}
 				}
@@ -252,15 +262,16 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 				parent.appendChild(message);
 			}
 		}
-		
+			
         function getFlowerPlatformApp() {
         	var iframe = document.getElementById('orion.flower.content');  
         	var contDoc = iframe.contentDocument || iframe.contentWindow.document;
         	        	
         	return contDoc.getElementById("FlexHostApp");        	
         } 
-        
-        function changeSelection(metadata) {
+               
+        function openEditor(metadata) {
+        	fileMetadata = metadata;
         	if (metadata && metadata.Directory) {
 				return;
 			}			
