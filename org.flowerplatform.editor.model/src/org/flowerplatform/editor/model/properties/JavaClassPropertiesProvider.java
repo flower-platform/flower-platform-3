@@ -50,14 +50,22 @@ public class JavaClassPropertiesProvider implements IPropertiesProvider {
 		View view = (View) diagramEditableResource.getEObjectById(id);
 		CodeSyncElement myCodeSyncObject = (CodeSyncElement) view.getDiagrammableElement();
 		// TODO decide what properties are needed
-		properties.add(new Property("Name", myCodeSyncObject.getName()));
+		properties.add(new Property("Name", myCodeSyncObject.getName(), false));
 		properties.add(new Property("Type", myCodeSyncObject.getType()));
 		
 		com.crispico.flower.mp.model.astcache.code.Class javaClass = (com.crispico.flower.mp.model.astcache.code.Class) myCodeSyncObject.getAstCacheElement();
 
-		properties.add(new Property("Documentation", javaClass.getDocumentation()));
+		properties.add(new Property("Documentation", javaClass.getDocumentation(), false));
 		// TODO decide what modifiers should be shown/edited: javaClass.getModifiers();
 		return properties;
+	}
+
+	@Override
+	public void setProperty(SelectedItem selectedItem, Property property) {
+		// TODO Auto-generated method stub
+		System.out.println("Changing the item with id " + ((DiagramSelectedItem) selectedItem).getXmiID());
+		System.out.println("Setting the property: " + property.getName() + " with the value " + property.getValue() );
+
 	}
 
 }
