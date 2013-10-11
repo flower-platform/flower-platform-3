@@ -34,6 +34,13 @@ package org.flowerplatform.editor.model.renderer {
 	 * @author Cristian Spiescu
 	 */
 	public class BoxChildIconItemRenderer extends IconItemRenderer {
+		
+		protected var effectsController:BoxEffectsController;
+		
+		protected const GLOW_STRENGTH:Number = 3;
+		
+		protected const GLOW_BLUR_TO:Number = 15;
+		
 		public function BoxChildIconItemRenderer() {
 			super();
 			iconFunction = getImage;
@@ -41,10 +48,13 @@ package org.flowerplatform.editor.model.renderer {
 			minHeight = 0;
 			percentWidth = 100;
 			
-			setStyle("verticalAlign", "middle");			
+			setStyle("verticalAlign", "middle");
 			cacheAsBitmap = true;
 			
 			addEventListener(ZoomPerformedEvent.ZOOM_PERFORMED, zoomPerformedHandler);
+			
+			// activate glow on mouse over
+			createBoxEffects();
 		}
 		
 		private function getImage(object:Object):Object {
@@ -53,6 +63,12 @@ package org.flowerplatform.editor.model.renderer {
 				return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getComposedImageUrl(iconUrls));
 			}
 			return null;
+		}
+		
+		protected function createBoxEffects():void {
+			effectsController = new BoxEffectsController(this, true);
+			effectsController.glowEffect.strength = GLOW_STRENGTH;
+			effectsController.glowEffect.blurXTo = effectsController.glowEffect.blurYTo = GLOW_BLUR_TO;
 		}
 		
 		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {
@@ -88,6 +104,22 @@ package org.flowerplatform.editor.model.renderer {
 		override protected function createLabelDisplay():void	{
 			super.createLabelDisplay();
 			labelDisplay.multiline = true;
+		}
+		
+		override protected function drawBackground(unscaledWidth:Number, unscaledHeight:Number):void {
+			// replace the code from LabelItemRenderer with ours
+			// since we are gonna do our own selection (down, select, ..) and hover
+			
+			// transparent background for hit detection
+			graphics.beginFill(0xFFFFFF, 0);
+			graphics.lineStyle();
+			graphics.drawRect(0, 0, unscaledWidth, unscaledHeight);
+			graphics.endFill();
+			
+			//turn of opaqueBackground since the renderer has some transparency
+			opaqueBackground = null;
+			
+			drawBorder(unscaledWidth, unscaledHeight);
 		}
 		
 	}
