@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml" >
+	
+	<mx:Tree id="tree1" labelField="@label" showRoot="true" width="100%" height="100%">
+		<mx:XMLListCollection id="MailBox">
+			<mx:XMLList>
+				<folder label="Mail">
+					<folder label="INBOX"/>
+					<folder label="Personal Folder">
+						<Pfolder label="Business" />
+						<Pfolder label="Demo" /> 
+						<Pfolder label="Personal" isBranch="true" /> 
+						<Pfolder label="Saved Mail" /> 
+					</folder>
+					<folder label="Sent" />
+					<folder label="Trash" />
+				</folder>
+			</mx:XMLList>
+		</mx:XMLListCollection>
+	</mx:Tree>
+	
+</mx:Box>

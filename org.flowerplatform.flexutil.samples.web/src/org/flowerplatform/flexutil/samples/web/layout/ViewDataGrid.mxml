@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Box xmlns:mx="http://www.adobe.com/2006/mxml">
+	
+	<mx:DataGrid id="myDG" width="350"> 
+		<mx:dataProvider>
+			<mx:ArrayCollection>
+				<mx:source>
+					<mx:Object Artist="Pavement" Price="11.99" 
+							   Album="Slanted and Enchanted" />
+					<mx:Object Artist="Pavement" 
+							   Album="Brighten the Corners" Price="11.99" />
+				</mx:source>
+			</mx:ArrayCollection>
+		</mx:dataProvider>
+		<mx:columns>
+			<mx:DataGridColumn dataField="Artist" />
+			<mx:DataGridColumn dataField="Album" />
+			<mx:DataGridColumn id="price" dataField="Price" visible="false"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+	<!-- The column id property specifies the column to show.-->
+	<mx:Button label="Toggle Price Column" click="price.visible = !price.visible;" />
+	
+</mx:Box>

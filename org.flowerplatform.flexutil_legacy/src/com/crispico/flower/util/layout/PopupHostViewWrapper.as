@@ -38,7 +38,7 @@ package com.crispico.flower.util.layout {
 	 * There is an issue with NavigatorContent: https://github.com/flex-users/flexlib/issues/301
 	 * so we use Canvas instead of a NavigatorContent that should wrap spark components.
 	 */
-	[DefaultProperty("popupContent")]
+	[DefaultProperty("activePopupContent")]
 	public class PopupHostViewWrapper extends VBox implements IPopupHost {
 		
 		public var allActions:Vector.<IAction>
@@ -55,6 +55,10 @@ package com.crispico.flower.util.layout {
 			return _popupContent;
 		}
 
+		public function set activePopupContent(value:IPopupContent):void {
+			setActivePopupContent(value);
+		}
+		
 		public function setActivePopupContent(value:IPopupContent, viaFocusIn:Boolean = false):void {
 			if (value == null) {
 				return;
@@ -108,7 +112,9 @@ package com.crispico.flower.util.layout {
 		public function selectionChanged():IList {
 			var popupContent:IPopupContent = activePopupContent;
 			
-			if (!(popupContent is ISelectionProvider)) {
+			if (!(popupContent is ISelectionProvider) || buttonBar == null) {
+				// testing buttonBar because this call may happen very quickly, when
+				// the children are not yet created
 				return null;
 			}
 			
