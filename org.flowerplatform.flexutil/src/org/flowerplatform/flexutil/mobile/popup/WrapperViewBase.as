@@ -32,6 +32,8 @@ package org.flowerplatform.flexutil.mobile.popup {
 	import org.flowerplatform.flexutil.popup.IComposedAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.popup.selection.ISelectionForServerProvider;
+	import org.flowerplatform.flexutil.popup.selection.ISelectionProvider;
 	
 	import spark.components.CalloutButton;
 	import spark.components.Group;
@@ -43,7 +45,18 @@ package org.flowerplatform.flexutil.mobile.popup {
 	import spark.components.supportClasses.SkinnableComponent;
 	import spark.primitives.BitmapImage;
 	
+	/**
+	 * Abstract class. A mobile view that implements <code>IViewHost</code>.
+	 * Its logic populates the navigator content and menu.
+	 * 
+	 * <p>
+	 * Caches the selection and actions for the current VH.
+	 * 
+	 * @author Cristian Spiescu
+	 */
 	public class WrapperViewBase extends View implements IPopupHost {
+		
+		private var _activePopupContent:IPopupContent;
 		
 		protected var openMenuAction:OpenMenuAction;
 		
@@ -59,6 +72,15 @@ package org.flowerplatform.flexutil.mobile.popup {
 		protected var selectionForActivePopupContent:IList;
 		
 		protected var spinner:MobileSpinner;
+		
+		public function get activePopupContent():IPopupContent {	
+			return _activePopupContent;
+		}
+		
+		public function setActivePopupContent(value:IPopupContent, viaFocusIn:Boolean = false):void {	
+			_activePopupContent = value;
+			FlexUtilGlobals.getInstance().selectionManager.viewContentActivated(this, value, viaFocusIn);
+		}
 		
 		public function WrapperViewBase() {
 			super();
@@ -84,13 +106,6 @@ package org.flowerplatform.flexutil.mobile.popup {
 			iconComponent = new BitmapImage();
 			labelComponent = new Label();
 			titleContent = [iconComponent, labelComponent]; 
-		}
-		
-		public function get activePopupContent():IPopupContent {
-			throw new Error("Should be implemented");
-		}
-		
-		public function set activePopupContent(value:IPopupContent):void {		
 		}
 		
 		public function setIcon(value:Object):void {
@@ -130,16 +145,20 @@ package org.flowerplatform.flexutil.mobile.popup {
 		/**
 		 * Populates the View Navigator and the OpenMenuAction, with the first level of actions.
 		 */
-		public function refreshActions(popupContent:IPopupContent):void	{
-			if (activePopupContent != popupContent) {
-				return;
+		public function selectionChanged():IList	{
+			var popupContent:IPopupContent = activePopupContent;
+			
+			if (popupContent is ISelectionProvider) {
+				selectionForActivePopupContent = ISelectionProvider(popupContent).getSelection();	
+			} else {
+				// for SplitViewWrapper, popupContent may be null if the current active view (left or right) is
+				// not a IPopupContent. However, we want the action logic to execute, so that SplitViewWrapper can
+				// add its switch* actions
+				selectionForActivePopupContent = null;
 			}
-			// for SplitViewWrapper, popupContent may be null if the current active view (left or right) is
-			// not a IPopupContent. However, we want the action logic to execute, so that SplitViewWrapper can
-			// add its switch* actions
-			selectionForActivePopupContent = popupContent != null ? popupContent.getSelection() : null;
+			
 			allActionsForActivePopupContent = getActionsFromPopupContent(popupContent, selectionForActivePopupContent);
-
+			
 			var newActionContent:Array = new Array();
 			var newViewMenuItems:Vector.<ViewMenuItem> = new Vector.<ViewMenuItem>();
 			ActionUtil.processAndIterateActions(null, allActionsForActivePopupContent, selectionForActivePopupContent, this, function (action:IAction):void {
@@ -164,8 +183,9 @@ package org.flowerplatform.flexutil.mobile.popup {
 			var menuButton:ActionButton = new ActionButton();
 			populateButtonWithAction(menuButton, openMenuAction);
 			newActionContent.push(menuButton);
-			
 			actionContent = newActionContent;
+			
+			return selectionForActivePopupContent;
 		}
 		
 		protected function populateButtonWithAction(button:ButtonBase, action:IAction):void {

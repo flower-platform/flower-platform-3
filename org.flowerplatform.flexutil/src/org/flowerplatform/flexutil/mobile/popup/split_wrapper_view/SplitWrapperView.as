@@ -22,21 +22,17 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 		
 		public var leftAreaPercentWidth:int = 30;
 		
-//		public var leftComponents:ArrayList = new ArrayList();
-//		
-//		public var rightComponents:ArrayList = new ArrayList();
-		
 		private var _leftActiveComponent:IVisualElement;
 		
 		private var _rightActiveComponent:IVisualElement;
-		
-		private var _activePopupContent:IPopupContent;
 		
 		protected var toggleOneViewModeAction:ToggleOneViewModeAction;
 		
 		protected var toggleOneViewModeLeftViewActive:ToggleOneViewModeLeftViewActiveAction;
 		
-		public var visibleOnlyOnEmptySelection:Boolean = true;
+		public var switchActionsVisibleOnNonEmptySelection:Boolean;
+		
+		protected var childrenCreated1:Boolean;
 		
 		public function SplitWrapperView() {
 			super();
@@ -104,8 +100,6 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 		public function set oneViewModeLeftViewActive(value:Boolean):void {
 			_oneViewModeLeftViewActive = value;
 			rearrangeLayout();
-			var activeComponent:IVisualElement = oneViewModeLeftViewActive ? leftActiveComponent : rightActiveComponent;
-			activePopupContent = activeComponent is IPopupContent ? IPopupContent(activeComponent) : null;
 		}
 		
 		protected function rearrangeLayout():void {
@@ -140,23 +134,18 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 					rightActiveComponent.percentWidth = 100;
 				}					
 			}
+			
+			if (childrenCreated1) {
+				// we have this flag to avoid calling this method (and dispatching selection) when the
+				// component is being created (i.e. in createChildren())
+				var activeComponent:IVisualElement = oneViewModeLeftViewActive ? leftActiveComponent : rightActiveComponent;
+				setActivePopupContent(activeComponent is IPopupContent ? IPopupContent(activeComponent) : null);
+			}
 		}
 		
 		protected function leftOrRightComponentFocusInHandler(event:FocusEvent):void {
 			// .target is the element that actually triggered the event
-			activePopupContent = event.currentTarget is IPopupContent ? IPopupContent(event.currentTarget) : null;
-		}
-		
-		override public function get activePopupContent():IPopupContent {	
-			return _activePopupContent;
-		}
-		
-		override public function set activePopupContent(value:IPopupContent):void {	
-			_activePopupContent = value;
-			if (activePopupContent != null) {
-				activePopupContent.popupHost = this;
-			}
-			refreshActions(_activePopupContent);
+			setActivePopupContent(event.currentTarget is IPopupContent ? IPopupContent(event.currentTarget) : null, true);
 		}
 		
 		override protected function createChildren():void {
@@ -170,15 +159,16 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 				rightActiveComponent = IVisualElement(data.rightActiveComponent);
 			}
 			
-			if (data.visibleOnlyOnEmptySelection) {
-				visibleOnlyOnEmptySelection = data.visibleOnlyOnEmptySelection;
+			if (data.switchActionsVisibleOnNonEmptySelection ) {
+				switchActionsVisibleOnNonEmptySelection = data.switchActionsVisibleOnNonEmptySelection;
 			}
 			
 			if (data.destructionPolicy) {
 				destructionPolicy = data.destructionPolicy;
 			}
 
-			activePopupContent = leftActiveComponent is IPopupContent ? IPopupContent(leftActiveComponent) : null;
+			childrenCreated1 = true;
+			setActivePopupContent(leftActiveComponent is IPopupContent ? IPopupContent(leftActiveComponent) : null);
 		}
 		
 		override protected function getActionsFromPopupContent(popupContent:IPopupContent, selection:IList):Vector.<IAction> {

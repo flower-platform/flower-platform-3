@@ -18,6 +18,11 @@
  
 	license-end
 -->
+<!---
+The graphical component that displays a list of actions, for one level.
+
+@author Cristian Spiescu
+-->
 <popup:ScreenSizeAwarePopup xmlns:fx="http://ns.adobe.com/mxml/2009"
 				   xmlns:s="library://ns.adobe.com/flex/spark"
 				   xmlns:mx="library://ns.adobe.com/flex/mx"
@@ -47,7 +52,11 @@
 			
 			protected var indexInStack:int;
 			
-			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, rootActionId:String):void {
+			/**
+			 * Calculates the actions for the current level, and displays the menu. Called by <code>ContextMenuManager</code> or
+			 * by this class; not intented to be called directly.
+			 */
+			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, parentActionId:String):void {
 				this.contextMenuManager = contextMenuManager;
 				this.x = x;
 				this.y = y;
@@ -65,7 +74,7 @@
 					actions = actionsForCurrentLevelAreadyCalculated;
 				} else {
 					actions = new ArrayList();
-					ActionUtil.processAndIterateActions(rootActionId, contextMenuManager.allActions, contextMenuManager.selection, this, function (action:IAction):void {
+					ActionUtil.processAndIterateActions(parentActionId, contextMenuManager.allActions, contextMenuManager.selection, this, function (action:IAction):void {
 						actions.addItem(action);
 					});
 				}
@@ -115,6 +124,9 @@
 				}
 			}
 
+			/**
+			 * If the current action is composed, opens the corresponding sub menu.
+			 */
 			protected function listSelectionChangeHandler(event:IndexChangeEvent):void {
 				closeContextMenuStack(indexInStack + 1);
 				if (list.selectedItem is IComposedAction) {

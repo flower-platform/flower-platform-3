@@ -28,6 +28,8 @@ package com.crispico.flower.util.layout {
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.popup.selection.ISelectionForServerProvider;
+	import org.flowerplatform.flexutil.popup.selection.ISelectionProvider;
 	
 	import spark.components.Button;
 	import spark.components.HGroup;
@@ -49,11 +51,11 @@ package com.crispico.flower.util.layout {
 		
 		protected var _popupContent:IPopupContent;
 
-		public function get popupContent():IPopupContent {
+		public function get activePopupContent():IPopupContent {
 			return _popupContent;
 		}
 
-		public function set popupContent(value:IPopupContent):void {
+		public function setActivePopupContent(value:IPopupContent, viaFocusIn:Boolean = false):void {
 			if (value == null) {
 				return;
 			}
@@ -61,22 +63,23 @@ package com.crispico.flower.util.layout {
 				throw new Error("Illegal usage. This setter can be called only once!");
 			}
 			_popupContent = value;
-			popupContent.percentHeight = 100;
-			popupContent.percentWidth = 100;
-			popupContent.popupHost = this;
+			activePopupContent.percentHeight = 100;
+			activePopupContent.percentWidth = 100;
+			activePopupContent.popupHost = this;
+			FlexUtilGlobals.getInstance().selectionManager.viewContentActivated(this, activePopupContent, false);
 		}
 		
 		public function PopupHostViewWrapper(popupContent:IPopupContent = null) {
 			super();
 			percentHeight = 100;
 			percentWidth = 100;
-			addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU,fillContextMenuHandler); 
+			addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU, fillContextMenuHandler); 
 			setStyle("verticalGap", 0);
-			this.popupContent = popupContent;
+			setActivePopupContent(popupContent);
 		}
 		
 		override protected function createChildren():void {
-			if (popupContent == null) {
+			if (activePopupContent == null) {
 				throw new Error("Illegal state. The popupContent shouldn't be null.");
 			}
 			super.createChildren();
@@ -89,7 +92,7 @@ package com.crispico.flower.util.layout {
 			buttonBar.paddingRight = 2;
 			buttonBar.horizontalAlign = "right";
 			buttonBar.height = 24;
-			addElement(popupContent);
+			addElement(activePopupContent);
 		}
 		
 		protected function fillContextMenuHandler(event:FillContextMenuEvent):void {
@@ -98,8 +101,18 @@ package com.crispico.flower.util.layout {
 			event.rootActionsAlreadyCalculated = rootActionsAlreadyCalculated;
 		}
 		
-		public function refreshActions(popupContent:IPopupContent):void {
-			selection = popupContent.getSelection();
+		/**
+		 * Fills the action bar with the corresponding actions and caches the selection and
+		 * actions, to be able to provide it, if right click menu is caught.
+		 */
+		public function selectionChanged():IList {
+			var popupContent:IPopupContent = activePopupContent;
+			
+			if (!(popupContent is ISelectionProvider)) {
+				return null;
+			}
+			
+			selection = ISelectionProvider(popupContent).getSelection();
 			allActions = popupContent.getActions(selection);
 			
 			buttonBar.removeAllElements();
@@ -116,13 +129,7 @@ package com.crispico.flower.util.layout {
 					rootActionsAlreadyCalculated.addItem(action);
 				}
 			});
-		}
-		
-		public function get activePopupContent():IPopupContent {
-			return popupContent;
-		}
-		
-		public function set activePopupContent(value:IPopupContent):void {		
+			return selection;
 		}
 		
 		public function setLabel(value:String):void

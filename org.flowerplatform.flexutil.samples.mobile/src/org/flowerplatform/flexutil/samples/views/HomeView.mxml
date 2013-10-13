@@ -12,6 +12,7 @@
 			import org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.SplitWrapperView;
 			import org.flowerplatform.flexutil.samples.gradient_list.LeftList;
 			import org.flowerplatform.flexutil.samples.gradient_list.RightList;
+			
 			private function splitViewWrapperClickHandler(event:MouseEvent):void {
 				var leftActiveComponent:Button = new Button();
 				leftActiveComponent.label = "Left";
@@ -20,9 +21,11 @@
 				rightActiveComponent.label = "Right";
 				
 				var data:Object = {
-					leftActiveComponent: new ContextMenuSample(),
+					switchActionsVisibleOnNonEmptySelection: true,
 //					leftActiveComponent: leftActiveComponent,
-					rightActiveComponent: rightActiveComponent
+					leftActiveComponent: new ContextMenuSample(),
+//					rightActiveComponent: rightActiveComponent
+					rightActiveComponent: new ContextMenuSample()
 				};
 				
 				navigator.pushView(SplitWrapperView, data);

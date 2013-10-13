@@ -25,6 +25,9 @@
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItem"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin"/>
     <classEntry path="org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.selection.ISelectionProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.selection.SelectionManager"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.selection.SelectionChangedEvent"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

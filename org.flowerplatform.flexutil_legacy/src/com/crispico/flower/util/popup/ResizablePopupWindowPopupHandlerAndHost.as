@@ -21,6 +21,7 @@ package com.crispico.flower.util.popup {
 	
 	import flash.display.DisplayObject;
 	
+	import mx.collections.IList;
 	import mx.containers.ControlBar;
 	
 	import org.flowerplatform.flexutil.popup.IPopupContent;
@@ -56,7 +57,7 @@ package com.crispico.flower.util.popup {
 			return popupContent;
 		}
 		
-		public function set activePopupContent(value:IPopupContent):void {		
+		public function setActivePopupContent(value:IPopupContent, viaFocusIn:Boolean = false):void {
 		}
 		
 		public function setWidth(value:int):IPopupHandler {
@@ -79,8 +80,9 @@ package com.crispico.flower.util.popup {
 			ModalSpinner.addGlobalModalSpinner(null, modalSpinner);
 		}
 		
-		public function refreshActions(popupContent:IPopupContent):void {
-			// not supported			
+		public function selectionChanged():IList {
+			// not supported		
+			return null;
 		}
 		
 		public function setIcon(value:Object):void {

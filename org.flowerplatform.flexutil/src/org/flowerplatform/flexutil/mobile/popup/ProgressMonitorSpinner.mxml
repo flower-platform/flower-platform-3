@@ -101,12 +101,17 @@
 			}
 			
 			public function getSelection():IList {
-				return null
+				return null;
 			}
 			
 			public function set popupHost(popupHost:IPopupHost):void {	
 			}
-						
+			
+			public function get popupHost():IPopupHost {
+				return null;
+			}
+			
+			
 		]]>
 	</fx:Script>
 	

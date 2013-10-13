@@ -32,9 +32,10 @@ package org.flowerplatform.flexutil.mobile.popup {
 	import spark.core.IViewport;
 	import spark.primitives.BitmapImage;
 	
+	/**
+	 * @author Cristian Spiescu
+	 */
 	public class WrapperView extends WrapperViewBase {
-		
-		protected var popupContent:IPopupContent;
 		
 		override protected function createChildren():void {
 			super.createChildren();
@@ -44,21 +45,15 @@ package org.flowerplatform.flexutil.mobile.popup {
 			scroller.percentHeight = 100;
 			addElement(scroller);
 			
-			popupContent = IPopupContent(data.popupContent);
-			popupContent.popupHost = this;
-			popupContent.percentHeight = 100;
-			popupContent.percentWidth = 100;
-			scroller.viewport = IViewport(popupContent);
+			setActivePopupContent(IPopupContent(data.popupContent));
+			activePopupContent.popupHost = this;
+			activePopupContent.percentHeight = 100;
+			activePopupContent.percentWidth = 100;
+			scroller.viewport = IViewport(activePopupContent);
 			
 			if (data.modalOverAllApplication) {
 				navigationContent = [];
 			}
-			
-			refreshActions(activePopupContent);
-		}
-		
-		override public function get activePopupContent():IPopupContent {
-			return popupContent;
 		}
 		
 	}

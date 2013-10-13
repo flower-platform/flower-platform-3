@@ -21,31 +21,39 @@ package org.flowerplatform.flexutil.popup {
 	
 	import mx.collections.IList;
 
+	/**
+	 * @author Cristian Spiescu
+	 */
 	public class ActionUtil {
 
-		public static function processAndIterateActions(rootActionId:String, actions:Vector.<IAction>, selection:IList, forEachCallbackObject:Object, forEachCallbackFunction:Function):void {
+		/**
+		 * Selects all the visible actions from the <code>actions</code> list, for a give
+		 * <code>parentActionId</code> (or level, which can be <code>null</code> for the root level). For each
+		 * visible action, the callback is invoked (which probably does UI related stuff).
+		 */
+		public static function processAndIterateActions(parentActionId:String, actions:Vector.<IAction>, selection:IList, forEachCallbackObject:Object, forEachCallbackFunction:Function):void {
 			if (actions == null) {
 				return;
 			}
-			var actionsInMap:Vector.<IAction>;
+			var actionsForCurrentParentActionId:Vector.<IAction>;
 			// process the main list of subactions; i.e. display the first level of actions
 			var parentActionIdToActions:Dictionary = new Dictionary();
 			for (var i:int = 0; i < actions.length; i++) {
 				var action:IAction = actions[i];
-				actionsInMap = parentActionIdToActions[action.parentId];
-				if (actionsInMap == null) {
-					actionsInMap = new Vector.<IAction>();
-					parentActionIdToActions[action.parentId] = actionsInMap;
+				actionsForCurrentParentActionId = parentActionIdToActions[action.parentId];
+				if (actionsForCurrentParentActionId == null) {
+					actionsForCurrentParentActionId = new Vector.<IAction>();
+					parentActionIdToActions[action.parentId] = actionsForCurrentParentActionId;
 				}
-				actionsInMap.push(action);
+				actionsForCurrentParentActionId.push(action);
 			}
-			actionsInMap = parentActionIdToActions[rootActionId];	
-			if (actionsInMap == null) {
+			actionsForCurrentParentActionId = parentActionIdToActions[parentActionId];	
+			if (actionsForCurrentParentActionId == null) {
 				return;
 			}
 			
-			for (i = 0; i < actionsInMap.length; i++) {
-				action = actionsInMap[i];
+			for (i = 0; i < actionsForCurrentParentActionId.length; i++) {
+				action = actionsForCurrentParentActionId[i];
 				if (action is IComposedAction) {
 					// we do this only when processing the main list of actions
 					IComposedAction(action).childActions = parentActionIdToActions[action.id];

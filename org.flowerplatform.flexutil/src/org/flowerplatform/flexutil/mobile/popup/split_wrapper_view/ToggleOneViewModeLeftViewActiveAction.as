@@ -27,13 +27,10 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 		
 		override public function run():void {
 			splitWrapperView.oneViewModeLeftViewActive = !splitWrapperView.oneViewModeLeftViewActive;
-			// force refresh so that the new label/enablement is taken into account
-			splitWrapperView.refreshActions(splitWrapperView.activePopupContent);
-
 		}
 		
 		override public function get visible():Boolean {
-			return splitWrapperView.oneViewMode && (selection.length == 0 || !splitWrapperView.visibleOnlyOnEmptySelection);
+			return splitWrapperView.oneViewMode && (selection == null || selection.length == 0 || splitWrapperView.switchActionsVisibleOnNonEmptySelection);
 		}		
 		
 	}

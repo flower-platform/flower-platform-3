@@ -19,6 +19,8 @@
 package com.crispico.flower.util.popup {
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	
+	import mx.collections.IList;
+	
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
 	
@@ -34,11 +36,13 @@ package com.crispico.flower.util.popup {
 			return IPopupContent(childrenUnderSpinner[0]);
 		}
 		
-		public function set activePopupContent(value:IPopupContent):void {		
+		public function setActivePopupContent(value:IPopupContent, viaFocusIn:Boolean = false):void {
+		
 		}
 		
-		public function refreshActions(popupContent:IPopupContent):void {
+		public function selectionChanged():IList {
 			// doesn't support this			
+			return null;
 		}
 		
 		public function setIcon(value:Object):void {

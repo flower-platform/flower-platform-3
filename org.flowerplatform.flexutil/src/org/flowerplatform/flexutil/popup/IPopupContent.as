@@ -20,8 +20,12 @@ package org.flowerplatform.flexutil.popup {
 	import mx.collections.IList;
 	import mx.core.IVisualElement;
 
+	/**
+	 * @see ISelectionProvider
+	 * @author Cristian Spiescu
+	 */
 	public interface IPopupContent extends IVisualElement, IActionProvider {
+		function get popupHost():IPopupHost;
 		function set popupHost(popupHost:IPopupHost):void;
-		function getSelection():IList;
 	}
 }
