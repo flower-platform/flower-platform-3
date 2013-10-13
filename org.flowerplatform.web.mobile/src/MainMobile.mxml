@@ -21,7 +21,6 @@
 <!---
 @author Cristian Spiescu
 -->
-<!--<s:Application-->
 <s:ViewNavigatorApplication 
 	applicationDPI="160" creationComplete="creationCompleteHandler()"
 	xmlns:fx="http://ns.adobe.com/mxml/2009"  
@@ -86,17 +85,16 @@
 			import org.flowerplatform.editor.model.EditorModelPlugin;
 			import org.flowerplatform.editor.text.EditorTextPlugin;
 			import org.flowerplatform.editor.text.java.EditorTextJavaPlugin;
-			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.mobile.popup.ProgressMonitorSpinnerHandlerFactory;
+			import org.flowerplatform.flexutil.mobile.popup.WrapperViewPopupHandlerFactory;
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
 			import org.flowerplatform.flexutil.popup.AlertPopupMessageBoxFactory;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.mobile.RecentActivityView;
-			import org.flowerplatform.web.mobile.SplitView;
-			import org.flowerplatform.web.mobile.popup.ProgressMonitorSpinnerHandlerFactory;
-			import org.flowerplatform.web.mobile.popup.WrapperViewPopupHandlerFactory;
+			import org.flowerplatform.web.mobile.split_wrapper_view.SplitWrapperViewWithMultipleEditors;
 			
 			public static function get mainApp():MainMobile {
 				return MainMobile(FlexGlobals.topLevelApplication);
@@ -157,7 +155,7 @@
 			}
 			
 			protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-				navigator.pushView(SplitView);
+				navigator.pushView(SplitWrapperViewWithMultipleEditors);
 			}
 			
 		]]>

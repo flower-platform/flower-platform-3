@@ -22,7 +22,9 @@ package org.flowerplatform.flexutil.popup.selection {
 		
 		public var timerAfterFocusIn:Timer = new Timer(250, 1);
 		
-		protected var viewHostPreparedForSelectionChangedInvocation:IPopupContent;
+		protected var viewHostPreparedForSelectionChangedInvocation:IPopupHost;
+		
+		protected var viewContentPreparedForSelectionChangedInvocation:IPopupContent;
 		
 		public function SelectionManager() {
 			timerAfterFocusIn.addEventListener(TimerEvent.TIMER_COMPLETE, timerAfterFocusInHandler);
@@ -54,7 +56,7 @@ package org.flowerplatform.flexutil.popup.selection {
 				}
 				timerAfterFocusIn.start();
 			}
-			selectionChanged(viewContent);
+			selectionChanged(viewHost, viewContent);
 		}
 		
 		/**
@@ -67,8 +69,9 @@ package org.flowerplatform.flexutil.popup.selection {
 		}
 		
 		protected function timerAfterFocusInHandler(event:TimerEvent):void {
-			selectionChanged(viewHostPreparedForSelectionChangedInvocation);
+			selectionChanged(viewHostPreparedForSelectionChangedInvocation, viewContentPreparedForSelectionChangedInvocation);
 			viewHostPreparedForSelectionChangedInvocation = null;
+			viewContentPreparedForSelectionChangedInvocation = null;
 		}
 		
 		/**
@@ -86,22 +89,17 @@ package org.flowerplatform.flexutil.popup.selection {
 		 * one processing for the selection/actions. However, there are cases, when clicking on a VH doesn't trigger the 
 		 * selection changed listener; so we need the focus in mechanism as well.
 		 */
-		public function selectionChanged(selectionProvider:IPopupContent):void {
-			if (selectionProvider != null && selectionProvider.popupHost == null) {
-				// may happen (in theory), if the sel_changed listener from the VC fires
-				// really quickly, before it has a VH
-				return;
-			}
-			
+		public function selectionChanged(viewHost:IPopupHost, selectionProvider:IPopupContent):void {
 			if (timerAfterFocusIn.running) {
 				// an invocation caused by "focusIn" has recently been fired; don't do anything
 				// now; reschedule
-				viewHostPreparedForSelectionChangedInvocation = selectionProvider;
+				viewHostPreparedForSelectionChangedInvocation = viewHost;
+				viewContentPreparedForSelectionChangedInvocation = selectionProvider;
 				return;
 			}
 			
-			if (selectionProvider != null) {
-				var selection:IList = selectionProvider.popupHost.selectionChanged();
+			if (viewHost != null) {
+				var selection:IList = viewHost.selectionChanged();
 			}
 			
 			if (activeSelectionProvider == selectionProvider) {

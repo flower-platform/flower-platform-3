@@ -34,7 +34,7 @@
 			
 		]]>
 	</mx:Script>
-	<mx:DataGrid id="myDG" width="350" change="FlexUtilGlobals.getInstance().selectionManager.selectionChanged(this)"> 
+	<mx:DataGrid id="myDG" width="350" change="FlexUtilGlobals.getInstance().selectionManager.selectionChanged(popupHost, this)"> 
 		<mx:dataProvider>
 			<mx:ArrayCollection>
 				<mx:source>

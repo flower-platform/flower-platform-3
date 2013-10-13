@@ -61,9 +61,6 @@ package org.flowerplatform.flexutil.mobile.popup {
 		
 		protected var openMenuAction:OpenMenuAction;
 		
-		// TODO CS
-//		protected var showOpenEditorsCalloutButton:ShowOpenEditorsCalloutButton;
-		
 		protected var iconComponent:BitmapImage;
 		
 		protected var labelComponent:Label;
@@ -86,12 +83,6 @@ package org.flowerplatform.flexutil.mobile.popup {
 		public function WrapperViewBase() {
 			super();
 			openMenuAction = new OpenMenuAction(this);
-			// TODO CS
-			// de asemenea, cand pleaca un editor, ar trebui sa se apeleze ...viewDeactivated()
-			
-//			showOpenEditorsCalloutButton = new ShowOpenEditorsCalloutButton();
-//			showOpenEditorsCalloutButton.visible = false;
-//			showOpenEditorsCalloutButton.includeInLayout = false;
 			addEventListener(FlexEvent.MENU_KEY_PRESSED, menuKeyPressedEvent);
 			addEventListener(ViewNavigatorEvent.VIEW_DEACTIVATE, viewDeactivateHandler);
 		}
@@ -185,15 +176,16 @@ package org.flowerplatform.flexutil.mobile.popup {
 			openMenuAction.viewMenuItems = newViewMenuItems;
 			viewMenuItems = newViewMenuItems; 
 
-			// TODO CS
-//			newActionContent.push(showOpenEditorsCalloutButton);
-			
-			var menuButton:ActionButton = new ActionButton();
-			populateButtonWithAction(menuButton, openMenuAction);
-			newActionContent.push(menuButton);
+			appendToActionContent(newActionContent);			
 			actionContent = newActionContent;
 			
 			return selectionForActivePopupContent;
+		}
+		
+		protected function appendToActionContent(actionContent:Array):void {
+			var menuButton:ActionButton = new ActionButton();
+			populateButtonWithAction(menuButton, openMenuAction);
+			actionContent.push(menuButton);
 		}
 		
 		protected function populateButtonWithAction(button:ButtonBase, action:IAction):void {

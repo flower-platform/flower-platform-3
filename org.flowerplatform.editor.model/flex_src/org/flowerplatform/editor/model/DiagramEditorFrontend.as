@@ -34,6 +34,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
@@ -49,9 +50,7 @@ package org.flowerplatform.editor.model {
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
-			if (popupHost) {
-				popupHost.refreshActions(this);
-			}
+			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(popupHost, this);
 		}
 		
 		protected function getDiagramShellInstance():DiagramShell {
@@ -100,11 +99,6 @@ package org.flowerplatform.editor.model {
 		
 		public function set popupHost(value:IPopupHost):void {
 			_popupHost = value;
-		}
-		
-		override protected function focusInHandler(event:FocusEvent):void {
-			super.focusInHandler(event);
-			popupHost.activePopupContent = this;
 		}
 		
 	}

@@ -35,6 +35,10 @@ package org.flowerplatform.editor.action {
 		}
 		
 		public function getActions(selection:IList):Vector.<IAction> {
+			if (selection.length == 0) {
+				return null;
+			}
+
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
 			if (selection.length == 1) {
@@ -67,8 +71,10 @@ package org.flowerplatform.editor.action {
 				}
 			} else {
 				for (var i:int = 0; i < selection.length; i++) {
-					if (TreeNode(selection.getItemAt(i)).customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
-						// found at least one node not openable
+					treeNode = TreeNode(selection.getItemAt(i));
+					
+					if (treeNode.customData == null || treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
+						// node not openable
 						return null;
 					}
 				}

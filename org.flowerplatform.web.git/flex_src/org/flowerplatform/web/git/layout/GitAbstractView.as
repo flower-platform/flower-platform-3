@@ -42,16 +42,17 @@ package org.flowerplatform.web.git.layout {
 		}
 		
 		protected function getSelectedObjectFromExplorer():Object {	
-			var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
-			
-			var explorer:UIComponent = workbench.getComponent("explorer");
-		
-			if (explorer is PopupHostViewWrapper) {
-				var selection:IList = PopupHostViewWrapper(explorer).activePopupContent.getSelection();
-				if (selection != null && selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-					return TreeNode(selection.getItemAt(0)).getPathForNode(true);
-				}
-			}
+			// TODO CS: use the global selection
+//			var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
+//			
+//			var explorer:UIComponent = workbench.getComponent("explorer");
+//		
+//			if (explorer is PopupHostViewWrapper) {
+//				var selection:IList = PopupHostViewWrapper(explorer).activePopupContent.getSelection();
+//				if (selection != null && selection.length == 1 && selection.getItemAt(0) is TreeNode) {
+//					return TreeNode(selection.getItemAt(0)).getPathForNode(true);
+//				}
+//			}
 			return null;				
 		}
 		

@@ -25,17 +25,19 @@ package org.flowerplatform.web.common.explorer {
 	
 	import org.flowerplatform.communication.tree.GenericTreeList;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.ActionBase;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IActionProvider;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
 	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.popup.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	import spark.events.IndexChangeEvent;
 	
-	public class ExplorerTreeList extends GenericTreeList implements IPopupContent {
+	public class ExplorerTreeList extends GenericTreeList implements IPopupContent, ISelectionProvider {
 		
 		protected var _popupHost:IPopupHost;
 		
@@ -43,14 +45,11 @@ package org.flowerplatform.web.common.explorer {
 		
 		public function ExplorerTreeList() {
 			super();
-			allowMultipleSelection = true;
 			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
 		}
 		
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {
-			if (popupHost) {
-				popupHost.refreshActions(this);
-			}
+			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(popupHost, this);
 		}
 				
 		public function getActions(selection:IList):Vector.<IAction> {
@@ -75,9 +74,5 @@ package org.flowerplatform.web.common.explorer {
 			_popupHost = value;
 		}
 
-		override protected function focusInHandler(event:FocusEvent):void {
-			super.focusInHandler(event);
-			popupHost.activePopupContent = this;
-		}
 	}
 }

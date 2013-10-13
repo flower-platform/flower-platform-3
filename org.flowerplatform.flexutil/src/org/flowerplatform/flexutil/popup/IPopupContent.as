@@ -25,7 +25,6 @@ package org.flowerplatform.flexutil.popup {
 	 * @author Cristian Spiescu
 	 */
 	public interface IPopupContent extends IVisualElement, IActionProvider {
-		function get popupHost():IPopupHost;
 		function set popupHost(popupHost:IPopupHost):void;
 	}
 }

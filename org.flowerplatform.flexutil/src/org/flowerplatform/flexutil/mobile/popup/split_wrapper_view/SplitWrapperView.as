@@ -151,20 +151,22 @@ package org.flowerplatform.flexutil.mobile.popup.split_wrapper_view {
 		override protected function createChildren():void {
 			super.createChildren();
 			
-			if (data.leftActiveComponent) {
-				leftActiveComponent = IVisualElement(data.leftActiveComponent);
-			}
-			
-			if (data.rightActiveComponent) {
-				rightActiveComponent = IVisualElement(data.rightActiveComponent);
-			}
-			
-			if (data.switchActionsVisibleOnNonEmptySelection ) {
-				switchActionsVisibleOnNonEmptySelection = data.switchActionsVisibleOnNonEmptySelection;
-			}
-			
-			if (data.destructionPolicy) {
-				destructionPolicy = data.destructionPolicy;
+			if (data != null) {
+				if (data.leftActiveComponent) {
+					leftActiveComponent = IVisualElement(data.leftActiveComponent);
+				}
+				
+				if (data.rightActiveComponent) {
+					rightActiveComponent = IVisualElement(data.rightActiveComponent);
+				}
+				
+				if (data.switchActionsVisibleOnNonEmptySelection ) {
+					switchActionsVisibleOnNonEmptySelection = data.switchActionsVisibleOnNonEmptySelection;
+				}
+				
+				if (data.destructionPolicy) {
+					destructionPolicy = data.destructionPolicy;
+				}
 			}
 
 			childrenCreated1 = true;

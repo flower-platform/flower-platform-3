@@ -38,8 +38,8 @@
 						
 						import org.flowerplatform.editor.EditorFrontend;
 						import org.flowerplatform.flexutil.FlexUtilGlobals;
+						import org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.SplitWrapperView;
 						import org.flowerplatform.web.common.WebCommonPlugin;
-						import org.flowerplatform.web.mobile.SplitView;
 						
 						import spark.components.Group;
 						
@@ -48,7 +48,7 @@
 						
 						public var container:Group;
 						
-						public var splitView:SplitView;
+						public var splitView:SplitWrapperViewWithMultipleEditors;
 						
 						protected function switchToEditorFrontend(event:MouseEvent):void {
 							splitView.rightActiveComponent = editorFrontend;
@@ -93,9 +93,9 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.SplitWrapperView;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.editor.EditorPlugin;
-			import org.flowerplatform.web.mobile.SplitView;
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			import mx.core.UIComponent;
@@ -104,7 +104,7 @@
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			
 			[Bindable]
-			public var splitView:SplitView;
+			public var splitView:SplitWrapperViewWithMultipleEditors;
 			
 			public function addEditorFrontend(editorFrontend:UIComponent):void {
 				var entry:EditorFrontendEntry = new EditorFrontendEntry();
