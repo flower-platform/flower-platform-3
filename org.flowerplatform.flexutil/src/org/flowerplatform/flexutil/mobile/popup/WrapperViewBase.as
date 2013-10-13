@@ -43,6 +43,7 @@ package org.flowerplatform.flexutil.mobile.popup {
 	import spark.components.ViewMenuItem;
 	import spark.components.supportClasses.ButtonBase;
 	import spark.components.supportClasses.SkinnableComponent;
+	import spark.events.ViewNavigatorEvent;
 	import spark.primitives.BitmapImage;
 	
 	/**
@@ -86,10 +87,13 @@ package org.flowerplatform.flexutil.mobile.popup {
 			super();
 			openMenuAction = new OpenMenuAction(this);
 			// TODO CS
+			// de asemenea, cand pleaca un editor, ar trebui sa se apeleze ...viewDeactivated()
+			
 //			showOpenEditorsCalloutButton = new ShowOpenEditorsCalloutButton();
 //			showOpenEditorsCalloutButton.visible = false;
 //			showOpenEditorsCalloutButton.includeInLayout = false;
 			addEventListener(FlexEvent.MENU_KEY_PRESSED, menuKeyPressedEvent);
+			addEventListener(ViewNavigatorEvent.VIEW_DEACTIVATE, viewDeactivateHandler);
 		}
 		
 		protected function menuKeyPressedEvent(event:FlexEvent):void {
@@ -98,6 +102,10 @@ package org.flowerplatform.flexutil.mobile.popup {
 			if (openMenuAction.enabled) {
 				openMenuAction.run();
 			}
+		}
+		
+		protected function viewDeactivateHandler(event:ViewNavigatorEvent):void {
+			FlexUtilGlobals.getInstance().selectionManager.viewContentRemoved(this, activePopupContent); 
 		}
 		
 		override protected function createChildren():void {

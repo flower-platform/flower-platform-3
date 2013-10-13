@@ -17,6 +17,8 @@
  * license-end
  */
 package com.crispico.flower.util.layout {
+	import com.crispico.flower.util.layout.event.ActiveViewChangedEvent;
+	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.containers.Canvas;
@@ -24,6 +26,7 @@ package com.crispico.flower.util.layout {
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.context_menu.FillContextMenuEvent;
+	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.popup.ActionUtil;
 	import org.flowerplatform.flexutil.popup.IAction;
 	import org.flowerplatform.flexutil.popup.IPopupContent;
@@ -37,6 +40,8 @@ package com.crispico.flower.util.layout {
 	/**
 	 * There is an issue with NavigatorContent: https://github.com/flex-users/flexlib/issues/301
 	 * so we use Canvas instead of a NavigatorContent that should wrap spark components.
+	 * 
+	 * @author Cristian Spiescu
 	 */
 	[DefaultProperty("activePopupContent")]
 	public class PopupHostViewWrapper extends VBox implements IPopupHost {
@@ -80,6 +85,16 @@ package com.crispico.flower.util.layout {
 			addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU, fillContextMenuHandler); 
 			setStyle("verticalGap", 0);
 			setActivePopupContent(popupContent);
+			addEventListener(ActiveViewChangedEvent.ACTIVE_VIEW_CHANGED, viewActivatedHandler);
+			addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
+		}
+		
+		protected function viewActivatedHandler(event:ActiveViewChangedEvent):void {
+			FlexUtilGlobals.getInstance().selectionManager.viewContentActivated(this, activePopupContent, true);
+		}
+		
+		protected function viewRemovedHandler(event:ViewRemovedEvent):void {
+			FlexUtilGlobals.getInstance().selectionManager.viewContentRemoved(this, activePopupContent);
 		}
 		
 		override protected function createChildren():void {

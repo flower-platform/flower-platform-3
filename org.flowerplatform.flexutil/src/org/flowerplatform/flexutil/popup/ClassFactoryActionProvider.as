@@ -31,5 +31,10 @@ package org.flowerplatform.flexutil.popup {
 			}
 			return result;
 		}
+		
+		public function addActionClass(actionClass:Class):ClassFactoryActionProvider {
+			actionClasses.push(actionClass);
+			return this;
+		}
 	}
 }

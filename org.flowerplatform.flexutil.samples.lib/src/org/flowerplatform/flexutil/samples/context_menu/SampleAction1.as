@@ -8,9 +8,17 @@ package org.flowerplatform.flexutil.samples.context_menu {
 	public class SampleAction1 extends ActionBase {
 		public function SampleAction1() {
 			super();
-			label = "Sample Action 1";
 			icon = MultipleIconItemRendererSample.infoImage;
 			preferShowOnActionBar = true;
 		}
+		
+		override public function get label():String {
+			if (selection == null || selection.length == 0) {
+				return "Action for: empty";
+			} else {
+				return "Action for: " + selection.getItemAt(0);
+			}
+		}
+		
 	}
 }

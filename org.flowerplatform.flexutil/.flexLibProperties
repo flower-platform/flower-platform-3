@@ -28,6 +28,7 @@
     <classEntry path="org.flowerplatform.flexutil.popup.selection.ISelectionProvider"/>
     <classEntry path="org.flowerplatform.flexutil.popup.selection.SelectionManager"/>
     <classEntry path="org.flowerplatform.flexutil.popup.selection.SelectionChangedEvent"/>
+    <classEntry path="org.flowerplatform.flexutil.mobile.FlowerViewNavigatorApplication"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

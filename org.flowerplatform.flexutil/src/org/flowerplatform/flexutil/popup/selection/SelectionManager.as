@@ -36,11 +36,16 @@ package org.flowerplatform.flexutil.popup.selection {
 		 * When <code>viaFocusIn</code> is <code>true</code> the <code>timerAfterFocusIn</code> is started.
 		 */
 		public function viewContentActivated(viewHost:IPopupHost, viewContent:IPopupContent, viaFocusIn:Boolean):void {
-			if (viewContent != null) {
-				viewContent.popupHost = viewHost;
-			}
-			if (viewContent is ISelectionProvider) {
-				activeSelectionProvider = ISelectionProvider(viewContent);
+			if (viewHost != null) {
+				if (viewContent != null) {
+					viewContent.popupHost = viewHost;
+				}
+				if (viewContent is ISelectionProvider) {
+					activeSelectionProvider = ISelectionProvider(viewContent);
+				}		
+			} else {
+				// VC closed
+				activeSelectionProvider = null;
 			}
 			
 			if (viaFocusIn) {
@@ -50,6 +55,15 @@ package org.flowerplatform.flexutil.popup.selection {
 				timerAfterFocusIn.start();
 			}
 			selectionChanged(viewContent);
+		}
+		
+		/**
+		 * Invoked by <code>IViewHost</code>s when the view closes.
+		 */ 
+		public function viewContentRemoved(viewHost:IPopupHost, viewContent:IPopupContent):void {
+			if (activeSelectionProvider == viewContent) {
+				viewContentActivated(null, null, true);
+			}
 		}
 		
 		protected function timerAfterFocusInHandler(event:TimerEvent):void {
@@ -73,7 +87,7 @@ package org.flowerplatform.flexutil.popup.selection {
 		 * selection changed listener; so we need the focus in mechanism as well.
 		 */
 		public function selectionChanged(selectionProvider:IPopupContent):void {
-			if (selectionProvider.popupHost == null) {
+			if (selectionProvider != null && selectionProvider.popupHost == null) {
 				// may happen (in theory), if the sel_changed listener from the VC fires
 				// really quickly, before it has a VH
 				return;
@@ -86,7 +100,9 @@ package org.flowerplatform.flexutil.popup.selection {
 				return;
 			}
 			
-			var selection:IList = selectionProvider.popupHost.selectionChanged();
+			if (selectionProvider != null) {
+				var selection:IList = selectionProvider.popupHost.selectionChanged();
+			}
 			
 			if (activeSelectionProvider == selectionProvider) {
 				// this "if" is intended for a case like the following: there are 2 ViewContent/SelectionProviders;

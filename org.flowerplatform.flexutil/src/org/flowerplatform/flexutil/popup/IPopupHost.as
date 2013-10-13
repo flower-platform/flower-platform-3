@@ -35,6 +35,10 @@ package org.flowerplatform.flexutil.popup {
 	 * (e.g. for web/Workbench)</li>
 	 * </ul>
 	 * 
+	 * <p>
+	 * The VH should detect when the active VC is closed, or when the VH is closed. When this happens =>
+	 * invoke <code>FlexUtilGlobals.getInstance().selectionManager.viewContentRemoved()</code>.
+	 * 
 	 * @author Cristian Spiescu
 	 */
 	public interface IPopupHost {
