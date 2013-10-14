@@ -209,15 +209,29 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 		}
 	}
 
+	/**
+	 * Creates a new {@link Node} for <code>element</code>.
+	 * 
+	 * <p>
+	 * If the element is an attribute or operation, a view for the containing class
+	 * is also created.
+	 */
 	@Override
 	protected View createViewForElement(CodeSyncElement element, Diagram diagram) {
+		CodeSyncElement cls = null;
+		if (element.getType().equals(JavaTypeModelAdapter.CLASS)) {
+			cls = element;
+		} else {
+			cls = (CodeSyncElement) element.eContainer();
+		}
+		
 		Node node = NotationFactory.eINSTANCE.createNode();
 		node.setViewType("class");
-		node.setDiagrammableElement(element);
+		node.setDiagrammableElement(cls);
 		
 		Node classTitle = NotationFactory.eINSTANCE.createNode();
 		classTitle.setViewType("classTitle");
-		classTitle.setDiagrammableElement(element);
+		classTitle.setDiagrammableElement(cls);
 		node.getPersistentChildren().add(classTitle);
 		
 		Node classAttrSeparator = NotationFactory.eINSTANCE.createNode();
@@ -235,6 +249,21 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 		node.setLayoutConstraint(bounds);
 		diagram.getPersistentChildren().add(node);
 		
+		if (element.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE)) {
+			Node attrNode = NotationFactory.eINSTANCE.createNode();
+			attrNode.setViewType("classAttribute");
+			attrNode.setDiagrammableElement(element);
+			node.getPersistentChildren().add(2, attrNode);
+			return attrNode;
+		} else {
+			if (element.getType().equals(JavaOperationModelAdapter.OPERATION)) {
+				Node operationNode = NotationFactory.eINSTANCE.createNode();
+				operationNode.setViewType("classOperation");
+				operationNode.setDiagrammableElement(element);
+				node.getPersistentChildren().add(3, operationNode);
+				return operationNode;
+			}
+		}
 		return node;
 	}
 	
