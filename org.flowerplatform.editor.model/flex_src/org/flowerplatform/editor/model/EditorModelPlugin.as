@@ -64,7 +64,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
-	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
+	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	
 	/**
 	 * @author Cristi

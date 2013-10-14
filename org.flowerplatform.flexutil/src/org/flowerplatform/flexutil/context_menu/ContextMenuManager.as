@@ -25,8 +25,8 @@ package org.flowerplatform.flexutil.context_menu {
 	import mx.core.FlexGlobals;
 	import mx.managers.PopUpManager;
 	
-	import org.flowerplatform.flexutil.popup.ActionUtil;
-	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.action.ActionUtil;
+	import org.flowerplatform.flexutil.action.IAction;
 
 	/**
 	 * Listens to the right click menu, dispatches FILL_CONTEXT_MENU in order to get actions

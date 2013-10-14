@@ -25,7 +25,7 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
-	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.action.IAction;
 	
 	/**
 	 * @author Cristina Constantinescu

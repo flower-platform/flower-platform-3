@@ -143,7 +143,7 @@
 				var view:EditSourceBuildPathView = new EditSourceBuildPathView();
 				view.setResultHandler(this);
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(view)
+					.setViewContent(view)
 					.show();
 			}
 			
@@ -166,7 +166,7 @@
 				view.setResultHandler(this);
 				view.currentSource = String(lstSource.selectedItem);
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(view)
+					.setViewContent(view)
 					.setWidth(300)
 					.setHeight(200)
 					.show();
@@ -187,7 +187,7 @@
 				view.setResultHandler(this);
 				view.projects = list;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(view)
+					.setViewContent(view)
 					.setWidth(400)
 					.setHeight(300)
 					.show();
@@ -209,7 +209,7 @@
 				view.setResultHandler(this);
 				view.node = selectedNode.parent;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(view)
+					.setViewContent(view)
 					.setWidth(400)
 					.setHeight(300)
 					.show();

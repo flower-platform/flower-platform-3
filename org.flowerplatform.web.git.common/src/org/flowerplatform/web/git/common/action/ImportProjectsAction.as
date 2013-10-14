@@ -22,7 +22,7 @@ package org.flowerplatform.web.git.common.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.common.ui.ImportProjectView;
 	
@@ -52,7 +52,7 @@ package org.flowerplatform.web.git.common.action {
 			var wizard:ImportProjectView = new ImportProjectView();			
 			wizard.node = TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(wizard)
+				.setViewContent(wizard)
 				.setWidth(450)
 				.setHeight(400)
 				.show();

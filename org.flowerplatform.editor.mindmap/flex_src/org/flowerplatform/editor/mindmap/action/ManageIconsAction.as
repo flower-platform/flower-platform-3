@@ -22,7 +22,7 @@ package org.flowerplatform.editor.mindmap.action {
 	import org.flowerplatform.editor.mindmap.ui.ManageIconsView;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -48,7 +48,7 @@ package org.flowerplatform.editor.mindmap.action {
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setWidth(290)
 				.setHeight(320)
-				.setPopupContent(view)
+				.setViewContent(view)
 				.show();
 		}
 		

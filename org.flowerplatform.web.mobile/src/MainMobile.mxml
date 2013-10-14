@@ -86,8 +86,8 @@
 			import org.flowerplatform.editor.text.EditorTextPlugin;
 			import org.flowerplatform.editor.text.java.EditorTextJavaPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.mobile.popup.ProgressMonitorSpinnerHandlerFactory;
-			import org.flowerplatform.flexutil.mobile.popup.WrapperViewPopupHandlerFactory;
+			import org.flowerplatform.flexutil.mobile.view_content_host.ProgressMonitorSpinnerHandlerFactory;
+			import org.flowerplatform.flexutil.mobile.view_content_host.MobileViewHostPopupHandlerFactory;
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
 			import org.flowerplatform.flexutil.popup.AlertPopupMessageBoxFactory;
@@ -140,7 +140,7 @@
 				navigator.pushView(RecentActivityView);
 				
 				FlexUtilGlobals.getInstance().isMobile = true;	
-				FlexUtilGlobals.getInstance().popupHandlerFactory = new WrapperViewPopupHandlerFactory();
+				FlexUtilGlobals.getInstance().popupHandlerFactory = new MobileViewHostPopupHandlerFactory();
 				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorSpinnerHandlerFactory();
 				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";

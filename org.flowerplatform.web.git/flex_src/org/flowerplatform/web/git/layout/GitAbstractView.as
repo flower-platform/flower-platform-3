@@ -18,7 +18,7 @@
  */
 package org.flowerplatform.web.git.layout {
 	
-	import com.crispico.flower.util.layout.PopupHostViewWrapper;
+	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	import com.crispico.flower.util.spinner.ModalSpinnerSupport;
 	
@@ -48,7 +48,7 @@ package org.flowerplatform.web.git.layout {
 //			var explorer:UIComponent = workbench.getComponent("explorer");
 //		
 //			if (explorer is PopupHostViewWrapper) {
-//				var selection:IList = PopupHostViewWrapper(explorer).activePopupContent.getSelection();
+//				var selection:IList = PopupHostViewWrapper(explorer).activeViewContent.getSelection();
 //				if (selection != null && selection.length == 1 && selection.getItemAt(0) is TreeNode) {
 //					return TreeNode(selection.getItemAt(0)).getPathForNode(true);
 //				}

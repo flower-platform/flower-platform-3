@@ -67,11 +67,13 @@
 		 xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
 		 creationComplete="creationCompleteHandler()" 		
 		 xmlns:popup="com.crispico.flower.util.popup.*" 
-		 implements="org.flowerplatform.flexutil.popup.IPopupContent"
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent"
 		 top="2" bottom="2" left="2" right="2" >
 	
 	<fx:Script>
 		<![CDATA[
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import mx.collections.IList;
 			import mx.states.State;
 			
@@ -84,7 +86,7 @@
 			[Bindable]
 			public var wizardDescription:String;
 			
-			protected var _popupHost:IPopupHost;
+			protected var _viewHost:IViewHost;
 			
 			/**
 			 * Handler function called to get the index for a given state name.
@@ -104,7 +106,7 @@
 			private var idToStateMap:Dictionary;
 			
 			protected function creationCompleteHandler():void {
-				popupHost.addToControlBar(buttonBar);
+				viewHost.addToControlBar(buttonBar);
 				currentState = getStateFromIndex(0);			
 			}
 			
@@ -265,12 +267,12 @@
 				return null;
 			}
 			
-			public function get popupHost():IPopupHost {
-				return _popupHost;
+			public function get viewHost():IViewHost {
+				return _viewHost;
 			}
 			
-			public function set popupHost(value:IPopupHost):void {
-				_popupHost = value;				
+			public function set viewHost(value:IViewHost):void {
+				_viewHost = value;				
 			}
 			
 		]]>

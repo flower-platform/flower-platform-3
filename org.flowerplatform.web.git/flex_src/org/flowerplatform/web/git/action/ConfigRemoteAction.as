@@ -19,7 +19,7 @@
 package org.flowerplatform.web.git.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.git.GitNodeType;
 	import org.flowerplatform.web.git.GitPlugin;
 	import org.flowerplatform.web.git.dto.RemoteConfig;

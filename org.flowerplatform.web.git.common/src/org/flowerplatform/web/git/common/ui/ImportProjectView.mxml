@@ -35,7 +35,7 @@
 			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.git.common.remote.dto.ImportProjectPageDto;
 			import org.flowerplatform.web.git.common.remote.dto.ProjectDto;
@@ -45,10 +45,10 @@
 			[Bindable]
 			private var dto:ImportProjectPageDto;
 						
-			override public function set popupHost(value:IPopupHost):void {
-				super.popupHost = value;
-				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.importProjects.label'));
-				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/import_prj.gif'));
+			override public function set viewHost(value:IViewHost):void {
+				super.viewHost = value;
+				viewHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.importProjects.label'));
+				viewHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/import_prj.gif'));
 			}
 			
 			protected override function creationCompleteHandler():void {
@@ -56,13 +56,13 @@
 				
 				wizardImage.source = GitCommonPlugin.getInstance().getResourceUrl("images/newconnect_wizban.png");
 				
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage('spinner.gettingData'));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage('spinner.gettingData'));
 				// get data from server to populate current page
 				GitCommonPlugin.getInstance().service.getProjects(node, this, getProjectsCallbackHandler);
 			}
 				
 			private function getProjectsCallbackHandler(result:ImportProjectPageDto):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (result != null) {
 					dto = result;
 				} else {

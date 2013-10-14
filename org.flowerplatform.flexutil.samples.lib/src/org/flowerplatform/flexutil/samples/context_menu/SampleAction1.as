@@ -1,5 +1,5 @@
 package org.flowerplatform.flexutil.samples.context_menu {
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.samples.renderer.MultipleIconItemRendererSample;
 	
 	/**

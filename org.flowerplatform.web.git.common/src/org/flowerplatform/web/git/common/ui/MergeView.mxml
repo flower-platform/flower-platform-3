@@ -30,7 +30,7 @@
 		<![CDATA[
 			import com.crispico.flower.util.spinner.ModalSpinner;
 			
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
@@ -42,10 +42,10 @@
 			[Bindable]
 			public var dto:GitActionDto;
 								
-			override public function set popupHost(value:IPopupHost):void {
-				super.popupHost = value;
-				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.merge'));
-				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/merge.gif'));
+			override public function set viewHost(value:IViewHost):void {
+				super.viewHost = value;
+				viewHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.merge'));
+				viewHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/merge.gif'));
 			}
 			
 			protected override function creationCompleteHandler():void {
@@ -59,12 +59,12 @@
 				
 				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 								
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
 				branchPage.tree.statefulClient.openNode(dto.repositoryNode, this, getData_callbackHandler);
 			}
 			
 			private function getData_callbackHandler(value:Object):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 			}
 			
 			protected override function finishClickHandler():void {	

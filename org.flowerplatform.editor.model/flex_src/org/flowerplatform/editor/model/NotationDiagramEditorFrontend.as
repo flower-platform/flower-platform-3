@@ -40,7 +40,7 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
-	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.action.IAction;
 	
 	import spark.components.Button;
 	import spark.components.TextInput;

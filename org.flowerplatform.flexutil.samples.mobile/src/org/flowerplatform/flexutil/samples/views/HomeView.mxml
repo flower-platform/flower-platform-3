@@ -9,7 +9,7 @@
 		<![CDATA[
 			import mx.core.IVisualElement;
 			
-			import org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.SplitWrapperView;
+			import org.flowerplatform.flexutil.mobile.view_content_host.split.SplitMobileViewHost;
 			import org.flowerplatform.flexutil.samples.gradient_list.LeftList;
 			import org.flowerplatform.flexutil.samples.gradient_list.RightList;
 			
@@ -28,7 +28,7 @@
 					rightActiveComponent: new ContextMenuSample()
 				};
 				
-				navigator.pushView(SplitWrapperView, data);
+				navigator.pushView(SplitMobileViewHost, data);
 			}
 			
 			private function gradientListClickHandler(event:MouseEvent):void {
@@ -36,20 +36,20 @@
 					leftActiveComponent: new LeftList(),
 					rightActiveComponent: new RightList()
 				};
-				navigator.pushView(SplitWrapperView, data);
+				navigator.pushView(SplitMobileViewHost, data);
 			}
 		]]>
 	</fx:Script>
 	
 	<fx:Script>
 		<![CDATA[
-			import org.flowerplatform.flexutil.mobile.popup.WrapperView;
+			import org.flowerplatform.flexutil.mobile.view_content_host.MobileViewHost;
 			import org.flowerplatform.flexutil.samples.context_menu.ContextMenuSample;
 		]]>
 	</fx:Script>
 	
 	<s:Button label="TreeList" click="navigator.pushView(TreeListSampleView)"/>
-	<s:Button label="Context Menu" click="navigator.pushView(WrapperView, { popupContent: new ContextMenuSample() })"/>
-	<s:Button label="Split View Wrapper" click="splitViewWrapperClickHandler(event)"/>
+	<s:Button label="Context Menu" click="navigator.pushView(MobileViewHost, { viewContent: new ContextMenuSample() })"/>
+	<s:Button label="Split Mobile View Host" click="splitViewWrapperClickHandler(event)"/>
 	<s:Button label="Gradient List" click="gradientListClickHandler(event)"/>
 </s:View>

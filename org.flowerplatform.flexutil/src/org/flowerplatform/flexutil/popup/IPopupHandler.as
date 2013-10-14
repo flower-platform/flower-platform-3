@@ -18,12 +18,13 @@
  */
 package org.flowerplatform.flexutil.popup {
 	import mx.core.IVisualElement;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 
 	public interface IPopupHandler {
 		function setTitle(value:String):IPopupHandler;
 		function setWidth(value:int):IPopupHandler;
 		function setHeight(value:int):IPopupHandler;
-		function setPopupContent(value:IPopupContent):IPopupHandler;
+		function setViewContent(value:IViewContent):IPopupHandler;
 		
 		function show(modal:Boolean = true):void;
 		function showModalOverAllApplication():void;

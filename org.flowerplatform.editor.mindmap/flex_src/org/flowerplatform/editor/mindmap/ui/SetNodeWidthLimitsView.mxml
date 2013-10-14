@@ -25,7 +25,7 @@ license-end
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
 		 xmlns:local="org.flowerplatform.editor.mindmap.ui.*"
-		 implements="org.flowerplatform.flexutil.popup.IPopupContent"
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent"
 		 creationComplete="creationCompleteHandler(event)">
 	
 	<fx:Script>
@@ -41,10 +41,10 @@ license-end
 			import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			
-			private var _popupHost:IPopupHost;
+			private var _viewHost:IViewHost;
 			
 			public var selection:IList;
 			
@@ -61,18 +61,18 @@ license-end
 				return null;
 			}
 			
-			public function get popupHost():IPopupHost {
-				return _popupHost;
+			public function get viewHost():IViewHost {
+				return _viewHost;
 			}
 			
-			public function set popupHost(popupHost:IPopupHost):void {
-				_popupHost = popupHost;
-				_popupHost.setLabel(MindMapModelPlugin.getInstance().getMessage('setWidthLimits.action.label'));
-				_popupHost.setIcon(MindMapModelPlugin.getInstance().getResourceUrl('images/images.png'));
+			public function set viewHost(viewHost:IViewHost):void {
+				_viewHost = viewHost;
+				_viewHost.setLabel(MindMapModelPlugin.getInstance().getMessage('setWidthLimits.action.label'));
+				_viewHost.setIcon(MindMapModelPlugin.getInstance().getResourceUrl('images/images.png'));
 			}
 					
 			protected function creationCompleteHandler(event:FlexEvent):void {
-				popupHost.addToControlBar(buttonBar);
+				viewHost.addToControlBar(buttonBar);
 			}
 			
 			public function okHandler():void {
@@ -81,7 +81,7 @@ license-end
 					return;
 				}				
 				
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
 				MindMapDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_setMinMaxWidth(
 					selection, Number(nodeMinWidth.text), Number(nodeMaxWidth.text),
 					this, setMinMaxWidthCallbackHandler);		
@@ -92,7 +92,7 @@ license-end
 			}
 			
 			private function setMinMaxWidthCallbackHandler(value:Boolean):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (value) {
 					cancelHandler();
 				}

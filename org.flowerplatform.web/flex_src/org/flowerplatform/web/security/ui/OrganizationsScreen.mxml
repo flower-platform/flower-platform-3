@@ -26,7 +26,7 @@ after pressing OK.
 @author Mariana
 -->
 <mx:VBox
-	implements="org.flowerplatform.flexutil.popup.IPopupContent" 
+	implements="org.flowerplatform.flexutil.view_content_host.IViewContent" 
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:popup="com.crispico.flower.util.popup.*"
 	xmlns:ui="org.flowerplatform.web.security.ui.*"
@@ -42,9 +42,9 @@ after pressing OK.
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupContent;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewContent;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.WebPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
@@ -57,7 +57,7 @@ after pressing OK.
 				return null;
 			}
 			
-			public function set popupHost(value:IPopupHost):void {
+			public function set viewHost(value:IViewHost):void {
 				value.setLabel(WebPlugin.getInstance().getMessage("entity.organization._table"));
 				value.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"));
 			}

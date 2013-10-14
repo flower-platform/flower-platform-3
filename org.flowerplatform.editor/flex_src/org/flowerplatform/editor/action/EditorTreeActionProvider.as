@@ -23,9 +23,9 @@ package org.flowerplatform.editor.action {
 	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
-	import org.flowerplatform.flexutil.popup.ComposedAction;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
+	import org.flowerplatform.flexutil.action.ComposedAction;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
 
 	public class EditorTreeActionProvider implements IActionProvider {
 		

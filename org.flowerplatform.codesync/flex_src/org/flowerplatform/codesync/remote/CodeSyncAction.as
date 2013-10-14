@@ -22,7 +22,7 @@ package org.flowerplatform.codesync.remote {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	[RemoteClass(alias="org.flowerplatform.codesync.remote.CodeSyncAction")]

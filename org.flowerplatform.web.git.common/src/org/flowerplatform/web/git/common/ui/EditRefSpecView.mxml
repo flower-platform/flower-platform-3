@@ -24,7 +24,7 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog"
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.dialog.IDialog"
 		 creationComplete="creationCompleteHandler(event)">
 	
 	<fx:Script>
@@ -37,8 +37,8 @@
 			import org.flowerplatform.flexutil.FlexUtilAssets;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 						
 			/**
@@ -47,7 +47,7 @@
 			[Bindable]
 			public var currentRef:String;
 			
-			private var _popupHost:IPopupHost;
+			private var _viewHost:IViewHost;
 			
 			/**
 			 * 
@@ -61,14 +61,14 @@
 				this.resultHandler = resultHandler;
 			}
 						
-			public function get popupHost():IPopupHost {
-				return _popupHost;
+			public function get viewHost():IViewHost {
+				return _viewHost;
 			}
 			
-			public function set popupHost(value:IPopupHost):void {
-				_popupHost = value;				
-				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.editRefSpecPage.title'));
-				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/remote_entry_tbl.gif'));
+			public function set viewHost(value:IViewHost):void {
+				_viewHost = value;				
+				viewHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.editRefSpecPage.title'));
+				viewHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/remote_entry_tbl.gif'));
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction>{
@@ -80,7 +80,7 @@
 			}
 			
 			private function creationCompleteHandler(event:FlexEvent):void {
-				popupHost.addToControlBar(buttonBar);
+				viewHost.addToControlBar(buttonBar);
 			}
 			
 			/**

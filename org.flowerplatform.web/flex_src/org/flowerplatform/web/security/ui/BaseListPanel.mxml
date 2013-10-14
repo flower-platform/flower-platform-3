@@ -167,7 +167,7 @@
 				}
 				var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
 				var form:BaseForm = new formClass();
-				handler.setPopupContent(form).show();
+				handler.setViewContent(form).show();
 
 				// we do the initializations here to let some time for the component children to be created
 				// because the setter assumes that the children are created

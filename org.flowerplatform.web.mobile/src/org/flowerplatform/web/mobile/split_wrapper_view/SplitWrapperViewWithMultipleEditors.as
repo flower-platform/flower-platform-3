@@ -13,14 +13,14 @@ package org.flowerplatform.web.mobile.split_wrapper_view {
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.SplitWrapperView;
+	import org.flowerplatform.flexutil.mobile.view_content_host.split.SplitMobileViewHost;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.mobile.MainNavigatorContent;
 	
 	/**
 	 * @author Cristian Spiescu
 	 */
-	public class SplitWrapperViewWithMultipleEditors extends SplitWrapperView implements IWorkbench {
+	public class SplitWrapperViewWithMultipleEditors extends SplitMobileViewHost implements IWorkbench {
 		
 		protected var showOpenEditorsCalloutButton:ShowOpenEditorsCalloutButton;
 		

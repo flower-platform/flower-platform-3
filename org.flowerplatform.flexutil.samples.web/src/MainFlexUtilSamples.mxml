@@ -46,9 +46,9 @@
 		<s:NavigatorContent label="Multi Icon Item Renderer">
 			<renderer:MultipleIconItemRendererSample width="100%" height="100%" />
 		</s:NavigatorContent>
-		<layout:PopupHostViewWrapper label="Context Menu">
+		<layout:WorkbenchViewHost label="Context Menu">
 			<ns:ContextMenuSample width="100%" height="100%"/>				
-		</layout:PopupHostViewWrapper>
+		</layout:WorkbenchViewHost>
 		<s:NavigatorContent label="Gradient List">
 			<ns1:GradientBackgroundListSample width="100%" height="100%"/>
 		</s:NavigatorContent>

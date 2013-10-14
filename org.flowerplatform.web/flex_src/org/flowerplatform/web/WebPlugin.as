@@ -34,7 +34,7 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
@@ -136,8 +136,8 @@ package org.flowerplatform.web {
 			btn.label = label;
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
-				var content:IPopupContent = new cls();
-				handler.setPopupContent(content).show();
+				var content:IViewContent = new cls();
+				handler.setViewContent(content).show();
 				if (Object(content).hasOwnProperty("entityId")) {
 					Object(content).entityId = WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id;
 				}

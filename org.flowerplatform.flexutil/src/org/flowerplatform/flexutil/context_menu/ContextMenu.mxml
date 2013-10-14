@@ -37,9 +37,9 @@ The graphical component that displays a list of actions, for one level.
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			
-			import org.flowerplatform.flexutil.popup.ActionUtil;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IComposedAction;
+			import org.flowerplatform.flexutil.action.ActionUtil;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.action.IComposedAction;
 			
 			import spark.events.IndexChangeEvent;
 			

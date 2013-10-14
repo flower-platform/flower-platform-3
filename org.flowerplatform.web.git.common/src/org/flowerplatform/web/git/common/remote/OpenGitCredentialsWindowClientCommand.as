@@ -51,7 +51,7 @@ package org.flowerplatform.web.git.common.remote {
 			loginView.logging = logging;
 						
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(loginView)
+				.setViewContent(loginView)
 				.show();
 		}		
 	}

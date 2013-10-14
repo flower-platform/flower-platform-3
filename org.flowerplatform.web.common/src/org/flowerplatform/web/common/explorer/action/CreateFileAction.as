@@ -23,7 +23,7 @@ package org.flowerplatform.web.common.explorer.action
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.explorer.ui.TextInputView;
 
@@ -57,7 +57,7 @@ package org.flowerplatform.web.common.explorer.action
 			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/new_untitled_text_file.gif");
 			view.setResultHandler(this);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(view)
+				.setViewContent(view)
 				.show();
 		}
 		

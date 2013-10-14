@@ -22,7 +22,7 @@ package  org.flowerplatform.editor.action {
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * Opens an editor. Exists directly in the context menu or

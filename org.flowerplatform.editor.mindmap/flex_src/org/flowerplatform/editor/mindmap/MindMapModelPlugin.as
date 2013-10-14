@@ -38,7 +38,7 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
+	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 
 	

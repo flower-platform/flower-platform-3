@@ -23,7 +23,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	public class DragOnDiagramAction extends ActionBase {
 		public function DragOnDiagramAction() {
