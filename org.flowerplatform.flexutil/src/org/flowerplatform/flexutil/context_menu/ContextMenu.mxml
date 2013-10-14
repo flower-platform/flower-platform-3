@@ -57,6 +57,20 @@ The graphical component that displays a list of actions, for one level.
 			 * by this class; not intented to be called directly.
 			 */
 			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, parentActionId:String):void {
+				if (actionsForCurrentLevelAreadyCalculated) {
+					actions = actionsForCurrentLevelAreadyCalculated;
+				} else {
+					actions = new ArrayList();
+					ActionUtil.processAndIterateActions(parentActionId, contextMenuManager.allActions, contextMenuManager.selection, this, function (action:IAction):void {
+						actions.addItem(action);
+					});
+				}
+				
+				if (actions.length == 0) {
+					// this happens, when all the actions are with "preferShowOnActionBar"
+					return;
+				}
+
 				this.contextMenuManager = contextMenuManager;
 				this.x = x;
 				this.y = y;
@@ -67,15 +81,6 @@ The graphical component that displays a list of actions, for one level.
 					// only the first one listens for click outside the menu
 					addEventListener(Event.ADDED_TO_STAGE, function (event:Event):void {
 						stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-					});
-				}
-
-				if (actionsForCurrentLevelAreadyCalculated) {
-					actions = actionsForCurrentLevelAreadyCalculated;
-				} else {
-					actions = new ArrayList();
-					ActionUtil.processAndIterateActions(parentActionId, contextMenuManager.allActions, contextMenuManager.selection, this, function (action:IAction):void {
-						actions.addItem(action);
 					});
 				}
 				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
