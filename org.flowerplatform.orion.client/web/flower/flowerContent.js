@@ -27,7 +27,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		var sidebarDomNode = lib.node("sidebar"), //$NON-NLS-0$
 		sidebarToolbar = lib.node("sidebarToolbar"), //$NON-NLS-0$
 		editorDomNode = lib.node("editor"); //$NON-NLS-0$
-		
+				
 		var editor, inputManager, folderView, editorView;
 		function renderToolbars(metadata) {
 			var toolbar = lib.node("pageActions"); //$NON-NLS-0$
@@ -165,7 +165,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		editor.addEventListener("DirtyChanged", function(evt) { //$NON-NLS-0$
 			mGlobalCommands.setDirtyIndicator(editor.isDirty());
 		});
-	
+			
 		selection.addEventListener("selectionChanged", function(event) { //$NON-NLS-0$		
 			inputManager.setInput(event.selection);
 		});
@@ -196,7 +196,8 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 			fileMetadata = metadata;
 			
 			var foundContent = false;
-			var params = PageUtil.matchResourceParameters(window.location.href);			
+			var params = PageUtil.matchResourceParameters(window.location.href);	
+			var locationObject = {OrionHome: orionHome, Location: params.resource};
 			if (params.contentProvider) {				
 				var contentProviders = serviceRegistry.getServiceReferences("orion.page.content"); //$NON-NLS-0$
 				for (var i=0; i<contentProviders.length; i++) {
@@ -272,7 +273,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 			}
 			return item;
 		}    
-               
+      
         var newDiagramCommand = new mCommands.Command({
 			   name: "New Diagram",
 			   tooltip: "Create a new flower diagram",
@@ -287,8 +288,31 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 				   return item.Directory && !mFileUtils.isAtRoot(item.Location);
 			   }});
 		commandRegistry.addCommand(newDiagramCommand);
-		commandRegistry.registerCommandContribution(sidebarToolbar.id + "childModes" + "New", "flower.newDiagram", 1, "orion.miniNavNewGroup"); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+		commandRegistry.registerCommandContribution(sidebarToolbar.id + "childModes" + "New", "flower.newDiagram", 100, "orion.miniNavNewGroup"); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
 		
+		 var addToDiagramCommand = new mCommands.Command({
+			   name: "Add to Diagram",			  
+			   imageClass: "core-sprite-new_folder",
+			   id: "flower.addToDiagram",			   
+			   callback: function(data) {
+				   var parameters = "";
+				   data.items.forEach(function(item) {						
+						parameters = parameters + item.Location + ",";
+					});
+				   parameters = parameters.slice(0, -1); // remove last ,
+				   getFlowerPlatformApp().handleLink("orionAddToDiagram=" + parameters);			   			 
+			   },
+			   visibleWhen: function(item) {
+				   item = forceSingleItem(item);
+				   return !item.Directory && !mFileUtils.isAtRoot(item.Location);
+			   }});
+		commandRegistry.addCommand(addToDiagramCommand);
+		commandRegistry.registerCommandContribution(sidebarToolbar.id + "childModes" + "New", "flower.addToDiagram", 200, "orion.miniNavNewGroup"); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+				
+        serviceRegistry.getService("miniNavFileSelection").addEventListener("selectionChanged", function(event) {
+        	commandRegistry.destroy(sidebarToolbar.id + "childModes" + "New");
+        	commandRegistry.renderCommands(sidebarToolbar.id + "childModes" + "New", sidebarToolbar.id + "childModes" + "New", event.selections, lib.node("sidebarinnerTree"), "tool");
+        });
 		
 	});
 });

@@ -1,6 +1,8 @@
 package org.flowerplatform.orion.server;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -16,6 +18,9 @@ import org.flowerplatform.editor.remote.EditorOperationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @author Cristina Constantinescu
+ */
 public class OrionOperationsService extends EditorOperationsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrionOperationsService.class);
@@ -43,6 +48,16 @@ public class OrionOperationsService extends EditorOperationsService {
 		command.name = "New Diagram.notation";
 		command.setCommunicationChannel(context.getCommunicationChannel());
 		command.executeCommand();
+	}
+	
+	@RemoteInvocation
+	public List<String> getPaths(ServiceInvocationContext context, String paths) {
+		List<String> friendlyEditableResourcePathList = parseFriendlyEditableResourcePathList(paths);		
+		List<String> fsPaths = new ArrayList<String>();
+		for (String path : friendlyEditableResourcePathList) {
+			fsPaths.add(getResourcePath(path));
+		}
+		return fsPaths;
 	}
 	
 }
