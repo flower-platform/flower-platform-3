@@ -38,14 +38,21 @@ package org.flowerplatform.web.common.explorer.action
 		public function CreateDirectoryAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.createDirectory.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/newfolder_wiz.gif");
+			parentId = "new";
+			orderIndex = 20;
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */
 		override public function get visible():Boolean {
 			if (selection == null || selection.length != 1) {
 				return false;
 			}
-			var obj:Object = selection.getItemAt(0);		
-			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY]);
+			var node:TreeNode = TreeNode(selection.getItemAt(0));			
+			return WebCommonPlugin.getInstance().nodeTypeBelongsToNodeTypeCategory(node.pathFragment.type, WebCommonPlugin.NODE_TYPE_CATEGORY_DECORATABLE_FILE)
+					&& node.customData != null 
+					&& node.customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY];
 		}
 		
 		override public function run():void	{

@@ -128,6 +128,6 @@
 		<s:HorizontalLayout verticalAlign="middle"/>
 	</s:layout>
 	<s:BitmapImage id="iconComponent" width="16"/>
-	<s:Label id="labelComponent"/>
+	<s:Label id="labelComponent" width="100%"/>
 	<s:BitmapImage id="hasSubActions" visible="false" includeInLayout="false"/>
 </s:ItemRenderer>

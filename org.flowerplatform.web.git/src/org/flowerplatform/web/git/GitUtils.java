@@ -208,6 +208,9 @@ public class GitUtils {
 				if (GIT_REPOSITORIES_NAME.equals(file.getName())) {
 					return null;
 				}
+				if (CommonPlugin.getInstance().getWorkspaceRoot().getName().equals(file.getName())) {
+					return null;
+				}
 				if (RepositoryCache.FileKey.isGitRepository(file, FS.DETECTED)) {
 					return file;
 				} else if (RepositoryCache.FileKey.isGitRepository(new File(file, Constants.DOT_GIT), FS.DETECTED)) {

@@ -36,11 +36,13 @@ The graphical component that displays a list of actions, for one level.
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+			import mx.utils.ArrayUtil;
 			
 			import org.flowerplatform.flexutil.action.ActionUtil;
 			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.action.IComposedAction;
 			
+			import spark.collections.Sort;
 			import spark.events.IndexChangeEvent;
 			
 			protected static const GAP_BETWEEN_MENUS:int = 3;
@@ -83,6 +85,11 @@ The graphical component that displays a list of actions, for one level.
 						stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 					});
 				}
+				if (actions != null && actions.length > 0) {
+					var source:Array = actions.toArray();
+					source.sortOn("orderIndex");
+					actions = new ArrayList(source);
+				}	
 				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
 			}
 			

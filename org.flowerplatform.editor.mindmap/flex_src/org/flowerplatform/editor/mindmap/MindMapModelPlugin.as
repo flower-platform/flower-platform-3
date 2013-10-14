@@ -25,12 +25,6 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.mindmap.action.MoveDownAction;
 	import org.flowerplatform.editor.mindmap.action.MoveUpAction;
 	import org.flowerplatform.editor.mindmap.action.NewDefaultNodeAction;
-	import org.flowerplatform.editor.mindmap.action.NewFolderAction;
-	import org.flowerplatform.editor.mindmap.action.NewHeadline1Action;
-	import org.flowerplatform.editor.mindmap.action.NewHeadline2Action;
-	import org.flowerplatform.editor.mindmap.action.NewHeadline3Action;
-	import org.flowerplatform.editor.mindmap.action.NewPageAction;
-	import org.flowerplatform.editor.mindmap.action.NewParagraphAction;
 	import org.flowerplatform.editor.mindmap.action.RenameAction;
 	import org.flowerplatform.editor.mindmap.action.SetMinMaxWidthAction;
 	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
@@ -39,7 +33,6 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 
 	
 	/**
@@ -84,7 +77,6 @@ package org.flowerplatform.editor.mindmap {
 		
 		override public function start():void {
 			super.start();
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
 		}
 		
 		override protected function registerClassAliases():void {

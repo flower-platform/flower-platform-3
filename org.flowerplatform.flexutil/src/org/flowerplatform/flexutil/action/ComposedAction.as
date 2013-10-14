@@ -26,13 +26,11 @@ package org.flowerplatform.flexutil.action {
 
 		private var _childActions:Vector.<IAction>;
 
-		public function get childActions():Vector.<IAction>
-		{
+		public function get childActions():Vector.<IAction> {
 			return _childActions;
 		}
 
-		public function set childActions(value:Vector.<IAction>):void
-		{
+		public function set childActions(value:Vector.<IAction>):void {
 			_childActions = value;
 		}
 		
@@ -41,9 +39,15 @@ package org.flowerplatform.flexutil.action {
 				return false;
 			} else {
 				for (var i:int = 0; i < childActions.length; i++) {
-					if (childActions[i].visible) {
-						// at least one visible => the composed action is visible
-						return true;
+					var childAction:IAction = childActions[i];
+					childAction.selection = selection;
+					try {
+						if (childAction.visible) {
+							// at least one visible => the composed action is visible
+							return true;
+						}
+					} finally {
+						childAction.selection = null;
 					}
 				}
 				return false;

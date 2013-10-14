@@ -53,6 +53,7 @@ package org.flowerplatform.editor.action {
 				openWithAction.label = EditorPlugin.getInstance().getMessage("editor.openWith");
 				openWithAction.icon = OpenAction.ICON_URL;
 				openWithAction.id = OPEN_WITH_ACTION_ID;
+				openWithAction.orderIndex = 151;
 				result.push(openWithAction);
 				
 				var ctIndex:int = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
