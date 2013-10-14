@@ -30,7 +30,7 @@
 			
 			import org.flowerplatform.blazeds.BlazeDSBridge;
 			import org.flowerplatform.communication.CommunicationPlugin;
-			import org.flowerplatform.web.mobile.split_wrapper_view.SplitWrapperViewWithMultipleEditors;
+			import org.flowerplatform.web.mobile.view_content_host.WorkbenchMobileSplitViewHost;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void
 			{
@@ -45,6 +45,6 @@
 		<s:VerticalLayout/>
 	</s:layout>
 	<s:Label text="Recent Activity Content ..." />
-	<s:Button label="Open Split View" click="navigator.pushView(SplitWrapperViewWithMultipleEditors);"/>
+	<s:Button label="Open Split View" click="navigator.pushView(WorkbenchMobileSplitViewHost);"/>
 	<s:Button label="Test Svc" click="CommunicationPlugin.getInstance().bridge.sendObject('salut')"/>
 </s:View>

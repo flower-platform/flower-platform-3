@@ -27,8 +27,8 @@ The graphical component that displays a list of actions, for one level.
 				   xmlns:s="library://ns.adobe.com/flex/spark"
 				   xmlns:mx="library://ns.adobe.com/flex/mx"
 				   xmlns:popup="org.flowerplatform.flexutil.popup.*"
-				   backgroundAlpha="0.9" backgroundColor="#DDEEEE"
-				   borderVisible="true" dropShadowVisible="true">
+				   backgroundAlpha="0.9" backgroundColor="#DEECFC"
+				   borderVisible="true" dropShadowVisible="true" borderColor="#616161">
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayList;
@@ -45,7 +45,7 @@ The graphical component that displays a list of actions, for one level.
 			import spark.collections.Sort;
 			import spark.events.IndexChangeEvent;
 			
-			protected static const GAP_BETWEEN_MENUS:int = 3;
+			protected static const GAP_BETWEEN_MENUS:int = -7;
 			
 			[Bindable]
 			public var actions:IList;

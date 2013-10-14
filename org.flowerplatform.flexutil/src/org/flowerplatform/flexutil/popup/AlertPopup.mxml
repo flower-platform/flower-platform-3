@@ -57,10 +57,6 @@
 			
 			private var _viewHost:IViewHost;
 						
-			public function getSelection():IList {
-				return null;
-			}
-						
 			public function getActions(selection:IList):Vector.<IAction>{
 				return null;
 			}

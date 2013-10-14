@@ -76,10 +76,6 @@
 				viewHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/project.gif"));
 			}
 			
-			public function getSelection():IList {
-				return null;
-			}
-			
 			public function getActions(selection:IList):Vector.<IAction> {
 				return null;
 			}

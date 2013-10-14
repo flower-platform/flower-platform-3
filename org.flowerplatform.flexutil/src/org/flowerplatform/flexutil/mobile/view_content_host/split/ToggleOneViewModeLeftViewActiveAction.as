@@ -10,7 +10,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host.split {
 		[Embed(source="switch_view.png")]
 		public static var ICON:Class;
 		
-		public var splitWrapperView:SplitMobileViewHost;
+		public var splitWrapperView:MobileSplitViewHost;
 		
 		public function ToggleOneViewModeLeftViewActiveAction() {
 			super();

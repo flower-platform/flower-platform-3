@@ -65,10 +65,6 @@
 				return null;
 			}
 			
-			public function getSelection():IList {
-				return null;
-			}
-			
 			private function creationCompleteHandler(event:FlexEvent):void {
 				viewHost.addToControlBar(buttonBar);
 			}

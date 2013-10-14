@@ -125,7 +125,7 @@
 		]]>
 	</fx:Script>
 	<s:layout>
-		<s:HorizontalLayout verticalAlign="middle"/>
+		<s:HorizontalLayout verticalAlign="middle" paddingLeft="5" paddingRight="5"/>
 	</s:layout>
 	<s:BitmapImage id="iconComponent" width="16"/>
 	<s:Label id="labelComponent" width="100%"/>
