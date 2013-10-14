@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.change.FeatureChange;
 import org.eclipse.emf.ecore.change.ListChange;
 import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
+import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.View;
@@ -46,7 +47,12 @@ public class CodeSyncElementRelationsChangesProcessor implements IDiagrammableEl
 	@Override
 	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (featureChanges == null) {
-			// full content; do not add new edges for existing relations
+			// new element added to diagram; do not add new edges for existing relations if this is the first time the diagram was open 
+			Boolean isInitialContent = (Boolean) context.get(DiagramEditorStatefulService.ADDITIONAL_DATA_INITIAL_FULL_CONTENT);
+			if (isInitialContent == null || !isInitialContent) {
+				getService().addEdgesForRelations(object, ((CodeSyncElement) object).getRelations(), associatedViewOnOpenDiagram, false, context);
+				getService().addEdgesForRelationsWithTarget(object, getService().getViewsForElement((CodeSyncElement) object), false, context);
+			}
 		} else {
 			for (FeatureChange featureChange : featureChanges) {
 				if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Relations().equals(featureChange.getFeature())) {

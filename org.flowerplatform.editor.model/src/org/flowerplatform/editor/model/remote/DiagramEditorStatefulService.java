@@ -72,6 +72,14 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	public static final String ADDITIONAL_DATA_EDITABLE_RESOURCE = "editableResource";
 
 	public static final String ADDITIONAL_DATA_EDITABLE_RESOURCE_CLIENT = "editableResourceClient";
+	
+	/**
+	 * Added to context when the diagram is open.
+	 * 
+	 * @see #sendFullContentToClient(EditableResource, EditableResourceClient)
+	 * @author Mariana Gheorghe
+	 */
+	public static final String ADDITIONAL_DATA_INITIAL_FULL_CONTENT = "intialFullContent";
 
 	public static final String PROCESSING_CONTEXT_EDITABLE_RESOURCE = ADDITIONAL_DATA_EDITABLE_RESOURCE;
 	
@@ -174,6 +182,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		Map<String, Object> processingContext = createProcessingContext(editableResource);
 		
 		list.add(diagram);
+		processingContext.put(ADDITIONAL_DATA_INITIAL_FULL_CONTENT, true);
 		iterateContents(diagram, list, processingContext);
 		
 		DiagramUpdaterChangeProcessorContext diagramUpdaterChangeDescriptionProcessingContext = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(processingContext, false);

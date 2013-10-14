@@ -61,13 +61,6 @@ public abstract class CodeSyncDiagramOperationsService {
 	public void displayMissingRelations(ServiceInvocationContext context, String viewId, boolean addMissingElements) {
 		CodeSyncElement cse = (CodeSyncElement) getViewById(context, viewId).getDiagrammableElement();
 		List<View> views = getViewsForElement(cse);
-		// filter out views that can't have edges
-		for (Iterator<View> iterator = views.iterator(); iterator.hasNext();) {
-			View view = (View) iterator.next();
-			if (!acceptsEdges(view)) {
-				iterator.remove();
-			}
-		}
 		
 		// add edges for relations where this element is the source
 		for (View view : views) {
@@ -75,23 +68,7 @@ public abstract class CodeSyncDiagramOperationsService {
 		}
 		
 		// add edges for relations where this element is the target
-		Diagram diagram = getDiagram(context.getAdditionalData());
-		for (EObject eObject : getInverseReferencesForElement(cse, CodeSyncPackage.eINSTANCE.getRelation_Target())) {
-			Relation relation = (Relation) eObject;
-			List<View> sourceViews = getViewsForElement(relation.getSource());
-			if (addMissingElements && sourceViews.size() == 0) {
-				sourceViews.add(createViewForElement(relation.getSource(), diagram));
-			}
-			for (View sourceView : sourceViews) {
-				if (acceptsEdges(sourceView)) {
-					for (View targetView : views) {
-						if (getEdge(sourceView, targetView) == null) {
-							createEdge(relation, sourceView, targetView, diagram);
-						}
-					}
-				}
-			}
-		}
+		addEdgesForRelationsWithTarget(cse, views, addMissingElements, context.getAdditionalData());
 	}
 	
 	/**
@@ -103,17 +80,38 @@ public abstract class CodeSyncDiagramOperationsService {
 			List<View> views = getViewsForElement(relation.getTarget());
 			// if there are no views for the target and addMissingElements is true
 			if (addMissingElements && views.size() == 0) {
-				views.add(createViewForElement(relation.getTarget(), diagram));
-			}
-			for (View target : views) {
-				if (acceptsEdges(target) && getEdge(associatedViewOnOpenDiagram, target) == null) {
-					createEdge(relation, associatedViewOnOpenDiagram, target, diagram);
+				createViewForElement(relation.getTarget(), diagram);
+			} else {
+				for (View target : views) {
+					if (getEdge(associatedViewOnOpenDiagram, target) == null) {
+						createEdge(relation, associatedViewOnOpenDiagram, target, diagram);
+					}
 				}
 			}
 		}
 	}
 	
-	protected abstract View createViewForElement(CodeSyncElement target, Diagram diagram);
+	public void addEdgesForRelationsWithTarget(EObject object, List<View> targetViews, boolean addMissingElements, Map<String, Object> context) {
+		CodeSyncElement cse = (CodeSyncElement) object;
+		Diagram diagram = getDiagram(context);
+		for (EObject eObject : getInverseReferencesForElement(cse, CodeSyncPackage.eINSTANCE.getRelation_Target())) {
+			Relation relation = (Relation) eObject;
+			List<View> sourceViews = getViewsForElement(relation.getSource());
+			if (addMissingElements && sourceViews.size() == 0) {
+				createViewForElement(relation.getSource(), diagram);
+			} else {
+				for (View sourceView : sourceViews) {
+					for (View targetView : targetViews) {
+						if (getEdge(sourceView, targetView) == null) {
+							createEdge(relation, sourceView, targetView, diagram);
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	protected abstract void createViewForElement(CodeSyncElement target, Diagram diagram);
 
 	protected Edge createEdge(Relation relation, View source, View target, Diagram diagram) {
 		Edge edge = NotationFactory.eINSTANCE.createEdge();
@@ -163,9 +161,21 @@ public abstract class CodeSyncDiagramOperationsService {
 		throw new RuntimeException("No diagram for " + der.getEditableResourcePath());
 	}
 	
+	/**
+	 * Finds all the {@link View}s for <code>element</code> and filters out
+	 * elements that cannot accept edges.
+	 */
 	public List<View> getViewsForElement(CodeSyncElement element) {
-		return (List<View>) getInverseReferencesForElement(element,
+		List<View> views = (List<View>) getInverseReferencesForElement(element,
 				NotationPackage.eINSTANCE.getView_DiagrammableElement());
+		// filter out views that can't have edges
+		for (Iterator<View> iterator = views.iterator(); iterator.hasNext();) {
+			View view = (View) iterator.next();
+			if (!acceptsEdges(view)) {
+				iterator.remove();
+			}
+		}
+		return views;
 	}
 	
 	protected List<? extends EObject> getInverseReferencesForElement(CodeSyncElement element, EStructuralFeature feature) {
