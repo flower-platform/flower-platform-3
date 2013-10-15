@@ -31,21 +31,9 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavascriptFileElementProcessor extends IconDiagrammableElementFeatureChangesProcessor {
 
 	@Override
-	protected String getLabel(EObject object) {
+	public String getLabel(EObject object, boolean forEditing) {
 		CodeSyncElement cse = (CodeSyncElement) object;
 		String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-//		if (Parser.JS_FUNCTION.equals(cse.getType())) {
-//			List<Parameter> parameters = (List<Parameter>) CodeSyncPlugin.getInstance().getFeatureValue(cse, 
-//					RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
-//			if (parameters != null) {
-//				for (Parameter parameter : parameters) {
-//					if (parameter.getName().equals("signature")) {
-//						name += "(" + parameter.getValue() + ")";
-//						break;
-//					}
-//				}
-//			}
-//		}
 		return name;
 	}
 

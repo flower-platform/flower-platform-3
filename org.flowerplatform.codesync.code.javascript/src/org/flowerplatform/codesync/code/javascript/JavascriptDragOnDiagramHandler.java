@@ -21,7 +21,6 @@ package org.flowerplatform.codesync.code.javascript;
 import java.io.File;
 import java.util.Collection;
 
-import org.eclipse.core.resources.IFile;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.IDragOnDiagramHandler;
@@ -69,7 +68,7 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 	}
 	
 	private boolean acceptDraggedObject(Object object) {
-		return (object instanceof IFile && ((IFile) object).getFileExtension().equals(CodeSyncCodeJavascriptPlugin.TECHNOLOGY));
+		return (object instanceof File && (CodeSyncPlugin.getInstance().getFileExtension((File) object).equals(CodeSyncCodeJavascriptPlugin.TECHNOLOGY)));
 	}
 
 }

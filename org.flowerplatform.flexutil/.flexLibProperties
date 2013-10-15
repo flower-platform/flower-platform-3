@@ -6,15 +6,13 @@
     <classEntry path="org.flowerplatform.flexutil.layout.IWorkbench"/>
     <classEntry path="org.flowerplatform.flexutil.layout.LayoutData"/>
     <classEntry path="org.flowerplatform.flexutil.layout.ViewLayoutData"/>
-    <classEntry path="org.flowerplatform.flexutil.action.ActionBase"/>
-    <classEntry path="org.flowerplatform.flexutil.action.ClassFactoryActionProvider"/>
-    <classEntry path="org.flowerplatform.flexutil.action.IAction"/>
-    <classEntry path="org.flowerplatform.flexutil.action.IActionProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.ClassFactoryActionProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IAction"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IMessageBox"/>
-    <classEntry path="org.flowerplatform.flexutil.view_content_host.IViewContent"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IPopupContent"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandler"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandlerFactory"/>
-    <classEntry path="org.flowerplatform.flexutil.view_content_host.IViewHost"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.IPopupHost"/>
     <classEntry path="org.flowerplatform.flexutil.renderer.MultipleIconItemRenderer"/>
     <classEntry path="org.flowerplatform.flexutil.tree.HierarchicalModelWrapper"/>
     <classEntry path="org.flowerplatform.flexutil.tree.IHierarchicalModelAdapter"/>
@@ -25,10 +23,6 @@
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItem"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin"/>
     <classEntry path="org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup"/>
-    <classEntry path="org.flowerplatform.flexutil.selection.ISelectionProvider"/>
-    <classEntry path="org.flowerplatform.flexutil.selection.SelectionManager"/>
-    <classEntry path="org.flowerplatform.flexutil.selection.SelectionChangedEvent"/>
-    <classEntry path="org.flowerplatform.flexutil.mobile.FlowerViewNavigatorApplication"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

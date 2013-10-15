@@ -234,7 +234,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (currentState.node.getTemplate().equals(HTML_TABLE_TEMPLATE) || currentState.node.getTemplate().equals(HTML_FORM_TEMPLATE)) {
+				if (HTML_TABLE_TEMPLATE.equals(currentState.node.getTemplate()) || HTML_FORM_TEMPLATE.equals(currentState.node.getTemplate())) {
 					exitState(session);
 				}
 			}
@@ -244,7 +244,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (currentState.node.getTemplate().equals(HTML_TABLE_TEMPLATE)) {
+				if (HTML_TABLE_TEMPLATE.equals(currentState.node.getTemplate())) {
 					RegExAstNode entry = createRegExAstNode(HTML_TABLE_HEADER_ENTRY, "title", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					entry.setTemplate(HTML_TABLE_HEADER_ENTRY_TEMPLATE);
 					entry.setChildType(HTML_TABLE_HEADER_ENTRY_TEMPLATE);
@@ -271,7 +271,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (currentState.node.getTemplate().equals(HTML_TABLE_ITEM_TEMPLATE)) {
+				if (HTML_TABLE_ITEM_TEMPLATE.equals(currentState.node.getTemplate())) {
 					addParameter(currentState.node, "itemUrl", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					exitState(session);
 				}
@@ -282,7 +282,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (currentState.node.getTemplate().equals(HTML_TABLE_ITEM_TEMPLATE)) {
+				if (HTML_TABLE_ITEM_TEMPLATE.equals(currentState.node.getTemplate())) {
 					RegExAstNode entry = createRegExAstNode(HTML_TABLE_ITEM_ENTRY, "valueExpression", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					entry.setTemplate(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
 					entry.setChildType(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
@@ -309,7 +309,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (currentState.node.getTemplate().equals(HTML_FORM_TEMPLATE)) {
+				if (HTML_FORM_TEMPLATE.equals(currentState.node.getTemplate())) {
 					RegExAstNode entry = createRegExAstNode(HTML_FORM_ITEM, "title", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					entry.setTemplate(HTML_FORM_ITEM_TEMPLATE);
 					entry.setChildType(HTML_FORM_ITEM_TEMPLATE);
@@ -369,7 +369,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (currentState.node.getTemplate().equals(JS_BACKBONE_CLASS_TEMPLATE)) {
+				if (JS_BACKBONE_CLASS_TEMPLATE.equals(currentState.node.getTemplate())) {
 					addParameter(currentState.node, "superClass", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 				}
 			}
@@ -379,7 +379,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (currentState.node.getTemplate().equals(JS_BACKBONE_CLASS_TEMPLATE)) {
+				if (JS_BACKBONE_CLASS_TEMPLATE.equals(currentState.node.getTemplate())) {
 					RegExAstNode requireEntry = addToCategory(JS_REQUIRE_ENTRY_CATEGORY, currentState.node, "varName", JS_REQUIRE_ENTRY, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					requireEntry.setTemplate(JS_REQUIRE_ENTRY_TEMPLATE);
 					requireEntry.setChildType(JS_REQUIRE_ENTRY_TEMPLATE);
@@ -691,15 +691,17 @@ public class Parser {
 	}
 	
 	protected static void exitState(RegexProcessingSession session) {
-		if (statesStack[session.currentNestingLevel--] != null) {
-			currentState.node.setLength(session.getMatcher().end() - currentState.node.getOffset());
-			currentState.node.setNextSiblingInsertPoint(session.getMatcher().end());
-			statesStack[session.currentNestingLevel + 1] = null;
-			int index = session.currentNestingLevel;
-			while (statesStack[index] == null) {
-				index--;
+		if (session.currentNestingLevel > 0) {
+			if (statesStack[session.currentNestingLevel--] != null) {
+				currentState.node.setLength(session.getMatcher().end() - currentState.node.getOffset());
+				currentState.node.setNextSiblingInsertPoint(session.getMatcher().end());
+				statesStack[session.currentNestingLevel + 1] = null;
+				int index = session.currentNestingLevel;
+				while (statesStack[index] == null) {
+					index--;
+				}
+				currentState = statesStack[index];
 			}
-			currentState = statesStack[index];
 		}
 	}
 	

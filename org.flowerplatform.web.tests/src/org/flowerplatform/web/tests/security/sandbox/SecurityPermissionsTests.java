@@ -86,7 +86,8 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 		props.setProperty(PersistenceOptions.PERSISTENCE_XML, "annotations.xml");
 		props.setProperty(PersistenceOptions.JOIN_TABLE_FOR_NON_CONTAINED_ASSOCIATIONS, "false");
 		props.setProperty(PersistenceOptions.ALWAYS_VERSION, "false");
-		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
+//		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
+		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "SINGLE_TABLE");
 		props.setProperty(PersistenceOptions.ADD_INDEX_FOR_FOREIGN_KEY, "false");
 
 //		props.setProperty(Environment.DRIVER, "org.postgresql.Driver");

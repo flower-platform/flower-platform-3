@@ -46,6 +46,7 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
@@ -93,8 +94,8 @@ public class CodeSyncJavascriptTest {
 				.getService("codeSyncEditorStatefulService");
 		assertNotNull("CodeSyncEditorStatefulService was not registered", codeSyncEditorStatefulService);
 		
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/ACE.notation";
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/CSE.notation";
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/ACE.notation";
 	}
 
 	@AfterClass
@@ -110,7 +111,7 @@ public class CodeSyncJavascriptTest {
 	
 	@After
 	public void tearDown() throws Exception {
-		String codeSyncEditableResourcePath = getProject().getFullPath().toString();
+		String codeSyncEditableResourcePath = EditorPlugin.getInstance().getFileAccessController().getPath(getProject());
 		codeSyncEditorStatefulService.cancelSelectedActions(codeSyncEditableResourcePath, false);
 		diagramEditorStatefulService.unsubscribeAllClientsForcefully(getDiagramEditableResourcePath(), false);
 		
@@ -170,8 +171,7 @@ public class CodeSyncJavascriptTest {
 		testGeneratedFileContent(fileName);
 		
 		Parser parser = new Parser();
-		RegExAstNode root = parser.parse(
-				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
+		RegExAstNode root = parser.parse(getFile(fileName));
 		
 		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
 		childrenInsertPoints.put("TableHeaderEntry", 146);
@@ -232,8 +232,7 @@ public class CodeSyncJavascriptTest {
 		testGeneratedFileContent(fileName);
 		
 		Parser parser = new Parser();
-		RegExAstNode root = parser.parse(
-				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
+		RegExAstNode root = parser.parse(getFile(fileName));
 				
 		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
 		childrenInsertPoints.put("TableItemEntry", 49);
@@ -295,8 +294,7 @@ public class CodeSyncJavascriptTest {
 		testGeneratedFileContent(fileName);
 		
 		Parser parser = new Parser();
-		RegExAstNode root = parser.parse(
-				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
+		RegExAstNode root = parser.parse(getFile(fileName));
 		
 		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
 		childrenInsertPoints.put("FormItem", 274);
@@ -391,8 +389,7 @@ public class CodeSyncJavascriptTest {
 		testGeneratedFileContent(fileName);
 		
 		Parser parser = new Parser();
-		RegExAstNode root = parser.parse(
-				ProjectsService.getInstance().getFileFromProjectWrapperResource(getFile(fileName)));
+		RegExAstNode root = parser.parse(getFile(fileName));
 		
 		Map<String, Integer> childrenInsertPoints = new HashMap<String, Integer>();
 		childrenInsertPoints.put("RequireEntry", 126);
@@ -455,9 +452,9 @@ public class CodeSyncJavascriptTest {
 	}
 	
 	private void sync(String fileName) {
-		IFile file = getFile(fileName);
+		File file = getFile(fileName);
 		CodeSyncCodePlugin.getInstance().getCodeSyncElement(getProject(), file, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, communicationChannel, true);
-		String editableResourcePath = getProject().getFullPath().toString();
+		String editableResourcePath = EditorPlugin.getInstance().getFileAccessController().getPath(getProject());
 		StatefulServiceInvocationContext context = new StatefulServiceInvocationContext(communicationChannel);
 		codeSyncEditorStatefulService.synchronize(context, editableResourcePath);
 		codeSyncEditorStatefulService.applySelectedActions(context, editableResourcePath, false);
@@ -529,11 +526,11 @@ public class CodeSyncJavascriptTest {
 	// Utils
 	///////////////////////////
 	
-	private IProject getProject() {
+	private File getProject() {
 		return CodeSyncTestSuite.getProject(PROJECT);
 	}
 	
-	private IFile getFile(String fileName) {
+	private File getFile(String fileName) {
 		return CodeSyncTestSuite.getFile("/" + PROJECT + "/js/" + fileName);
 	}
 	
@@ -542,8 +539,7 @@ public class CodeSyncJavascriptTest {
 	}
 	
 	private String getActualFileContent(String fileName) {
-		return TestUtil.readFile(TestUtil.getWorkspaceResourceAbsolutePath(
-				getFile(fileName).getFullPath().toString()));
+		return TestUtil.readFile(EXPECTED + fileName);
 	}
 	
 	private String getDiagramEditableResourcePath() {

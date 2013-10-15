@@ -18,31 +18,18 @@
  */
 package org.flowerplatform.codesync.code.javascript.adapter;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.filebuffers.FileBuffers;
-import org.eclipse.core.filebuffers.ITextFileBuffer;
-import org.eclipse.core.filebuffers.ITextFileBufferManager;
-import org.eclipse.core.filebuffers.LocationKind;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
@@ -53,48 +40,31 @@ import org.flowerplatform.codesync.code.javascript.parser.Parser;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
-
-import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import com.crispico.flower.mp.codesync.code.adapter.AbstractFileModelAdapter;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavascriptFileModelAdapter extends AstModelElementAdapter {
-
-	protected Map<IPath, RegExAstNode> compilationUnits = new HashMap<IPath, RegExAstNode>();
-	
-	@Override
-	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue) {
-		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name().equals(feature)) {
-			return getLabel(element);
-		}
-		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return FILE;
-		}
-		return null;
-	}
-	
-	@Override
-	public Object getMatchKey(Object element) {
-		return getLabel(element);
-	}
-
-	@Override
-	public void setValueFeatureValue(Object element, Object feature, Object value) {
-		// TODO Auto-generated method stub
-
-	}
+public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
 
 	@Override
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
-		Resource resource = new ResourceImpl();
 		RegExAstNode node = RegExAstFactory.eINSTANCE.createRegExAstNode();
 		node.setAdded(true);
 		// adding to resource to avoid UNDEFINED values during sync
 		// see EObjectModelAdapter.getValueFeatureValue()
+		Resource resource = new ResourceImpl();
 		resource.getContents().add(node);
-		compilationUnits.put(((IFile) element).getFullPath(), node);
+		return node;
+	}
+	
+	protected Object createFileInfo(File file) {
+		Parser parser = new Parser();
+		RegExAstNode node = parser.parse(file);
+		// adding to resource to avoid UNDEFINED values during sync
+		// see EObjectModelAdapter.getValueFeatureValue()
+		Resource resource = new ResourceImpl();
+		resource.getContents().add(node);
 		return node;
 	}
 
@@ -103,67 +73,8 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 		((RegExAstNode) child).setDeleted(true);
 	}
 
-	@Override
-	public Object createCorrespondingModelElement(Object element) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean save(Object element) {
-		IFile file = (IFile) element;
-		if (!file.exists()) {
-			InputStream is = new ByteArrayInputStream(new byte[0]);
-			try {
-				file.create(is, true, null);
-			} catch (CoreException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
-		try {
-			for (IMarker marker : file.findMarkers(IMarker.MARKER, false, IResource.DEPTH_ZERO)) {
-				String value = (String) marker.getAttribute("renamed");
-				if (value != null) {
-					file.move(file.getFullPath().removeLastSegments(1).append((String) value), true, null);
-					break;
-				}
-			}
-		} catch (CoreException e1) {
-			throw new RuntimeException(e1);
-		}
-		
-		IPath path = file.getFullPath();
-		if (file.exists()) {
-			RegExAstNode node = compilationUnits.get(path);
-			if (node != null) {
-				ITextFileBufferManager bufferManager = FileBuffers.getTextFileBufferManager(); // get the buffer manager
-				try {
-					bufferManager.connect(path, LocationKind.IFILE, null);
-					ITextFileBuffer textFileBuffer = bufferManager.getTextFileBuffer(path, LocationKind.IFILE);
-					// retrieve the buffer
-					IDocument document = textFileBuffer.getDocument();
-					TextEdit edits = rewrite(document, node);
-					edits.apply(document);
-					// commit changes to underlying file
-					textFileBuffer.commit(null, true);
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-				try {
-					bufferManager.disconnect(path, LocationKind.IFILE, null);
-				} catch (CoreException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-		compilationUnits.remove(path);
-		
-		// no need to call save for the AST
-		return false;
-	}
-
-	private TextEdit rewrite(IDocument document, RegExAstNode node) {
+	protected TextEdit rewrite(Document document, Object fileInfo) {
+		RegExAstNode node = (RegExAstNode) fileInfo;
 		MultiTextEdit edit = new MultiTextEdit();
 		rewrite(document, node, edit);
 		return edit;
@@ -265,49 +176,10 @@ public class JavascriptFileModelAdapter extends AstModelElementAdapter {
 			throw new RuntimeException("RegExAstNode does not accept children of type " + node.getChildType());
 		}
 	}
-	
-	@Override
-	public boolean discard(Object element) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean hasChildren(Object modelElement) {
-		return true;
-	}
 
 	@Override
 	public List<?> getChildren(Object modelElement) {
-		Parser parser = new Parser();
-		File file = ProjectsService.getInstance().getFileFromProjectWrapperResource((IResource) modelElement);
-		RegExAstNode node = parser.parse(file);
-		compilationUnits.put(((IResource) modelElement).getFullPath(), node);
-		return Collections.singletonList(node);
-	}
-
-	@Override
-	public String getLabel(Object modelElement) {
-		return ((IFile) modelElement).getName();
-	}
-
-	@Override
-	public List<String> getIconUrls(Object modelElement) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Iterable<?> getContainmentFeatureIterable(Object element, Object feature, Iterable<?> correspondingIterable) {
-		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
-			return getChildren(element);
-		}
-		return Collections.emptyList();
-	}
-	
-	@Override
-	protected void updateUID(Object element, Object correspondingElement) {
-		// nothing to do
+		return Collections.singletonList(getOrCreateFileInfo(getFile(modelElement)));
 	}
 
 }

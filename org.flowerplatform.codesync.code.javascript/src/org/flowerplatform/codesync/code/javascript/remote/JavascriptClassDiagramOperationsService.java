@@ -18,11 +18,11 @@
  */
 package org.flowerplatform.codesync.code.javascript.remote;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -39,8 +39,8 @@ import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
@@ -96,7 +96,7 @@ public class JavascriptClassDiagramOperationsService {
 			
 			DiagramEditableResource der = getEditableResource(context);
 			ResourceSet resourceSet = der.getResourceSet();
-			IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(der.getFile()).getProject();
+			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) der.getFile());
 			CodeSyncElement srcDir = (CodeSyncElement) CodeSyncCodePlugin.getInstance().getCodeSyncMapping(project, resourceSet)
 					.getContents().get(0);
 			srcDir.getChildren().add(file);
@@ -165,7 +165,7 @@ public class JavascriptClassDiagramOperationsService {
 		cse.setAstCacheElement(ast);
 		DiagramEditableResource der = getEditableResource(context);
 		ResourceSet resourceSet = der.getResourceSet();
-		IProject project = ProjectsService.getInstance().getProjectWrapperResourceFromFile(der.getFile()).getProject();
+		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) der.getFile());
 		Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(project, resourceSet);
 		astCache.getContents().add(ast);
 		cse.setTemplate(template);

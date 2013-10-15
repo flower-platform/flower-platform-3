@@ -18,9 +18,10 @@
  */
 package org.flowerplatform.codesync.code.javascript.adapter;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
+import java.io.File;
+
 import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExNodeFeatureProvider;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExParameterFeatureProvider;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
@@ -53,10 +54,10 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
 		folderModelAdapter.setLimitedPath(limitedPath);
-		rightFactory.addModelAdapter(IFolder.class, folderModelAdapter);
+		rightFactory.addModelAdapter(File.class, folderModelAdapter, "");
 		
 		// javascript specific adapter
-		rightFactory.addModelAdapter(IFile.class, createAstModelAdapter(new JavascriptFileModelAdapter()));
+		rightFactory.addModelAdapter(File.class, createAstModelAdapter(new JavascriptFileModelAdapter()), CodeSyncCodeJavascriptPlugin.TECHNOLOGY);
 		rightFactory.addModelAdapter(RegExAstNode.class, createAstModelAdapter(new RegExNodeAstModelAdapter()));
 		rightFactory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
 		
@@ -68,9 +69,8 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		
 		// feature providers
 		CodeSyncElementFeatureProvider featureProvider = new CodeSyncElementFeatureProvider();
-		addFeatureProvider(IFolder.class, featureProvider);
+		addFeatureProvider(File.class, featureProvider);
 		addFeatureProvider(AstModelElementAdapter.FOLDER, featureProvider);
-		addFeatureProvider(IFile.class, featureProvider);
 		addFeatureProvider(AstModelElementAdapter.FILE, featureProvider);
 		
 		RegExNodeFeatureProvider regexRegExAstNodeFeatureProvider = new RegExNodeFeatureProvider();

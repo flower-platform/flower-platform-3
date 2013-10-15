@@ -104,5 +104,14 @@ package org.flowerplatform.codesync.code.javascript.model.renderer {
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
 					.service_expandCollapseCompartment(node.id, !node.expanded);
 		}
+		
+		override protected function addEffects():void {
+			// no effects
+		}
+		
+		override protected function addShadow():void {
+			// no shadow
+		}
+		
 	}
 }

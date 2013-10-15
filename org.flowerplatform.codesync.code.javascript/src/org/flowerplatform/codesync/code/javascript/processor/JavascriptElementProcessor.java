@@ -19,6 +19,7 @@
 package org.flowerplatform.codesync.code.javascript.processor;
 
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement;
@@ -52,7 +53,7 @@ public class JavascriptElementProcessor extends CodeSyncElementFeatureChangesPro
 	}
 
 	@Override
-	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child) {
+	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {
 		CodeSyncElement cse = getCodeSyncElement(child);
 		ExpandableNode container = NotationFactory.eINSTANCE.createExpandableNode();
 		container.setExpanded(false);
