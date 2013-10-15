@@ -53,10 +53,6 @@
 				return null;
 			}
 			
-			public function getSelection():IList {
-				return null;
-			}
-			
 			public function get viewHost():IViewHost {
 				return _viewHost;
 			}

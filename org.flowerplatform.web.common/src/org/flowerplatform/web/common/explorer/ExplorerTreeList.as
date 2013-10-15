@@ -18,13 +18,19 @@
  */
 package org.flowerplatform.web.common.explorer {
 	import flash.events.FocusEvent;
+	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.ui.Keyboard;
 	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.events.IndexChangedEvent;
 	
 	import org.flowerplatform.communication.tree.GenericTreeList;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
+	import org.flowerplatform.editor.action.OpenAction;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.action.IAction;
@@ -45,7 +51,12 @@ package org.flowerplatform.web.common.explorer {
 		
 		public function ExplorerTreeList() {
 			super();
+			doubleClickEnabled = true;
 			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
+			
+			// open file at double click or ENTER
+			addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickHandler);
+			addEventListener(KeyboardEvent.KEY_UP, keyUpHandler1);
 		}
 		
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {
@@ -74,5 +85,32 @@ package org.flowerplatform.web.common.explorer {
 			_viewHost = value;
 		}
 
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		private function doubleClickHandler(event:MouseEvent):void {
+			var selection:IList = getSelection();	
+			for (var i:int = 0; i < selection.length; i++) {
+				var node:TreeNode = TreeNode(selection.getItemAt(i));
+				if (node.customData == null || node.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
+					// found at least one node not openable
+					return;
+				}
+			}
+			// run action
+			var action:OpenAction = new OpenAction(null, false);
+			action.selection = selection;
+			action.run();
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		private function keyUpHandler1(event:KeyboardEvent):void {
+			if (event.keyCode == Keyboard.ENTER) {
+				doubleClickHandler(null);
+			}
+		}
 	}
 }

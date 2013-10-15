@@ -32,6 +32,7 @@ package org.flowerplatform.editor.action {
 		public function LinkGenerateNavigateAction() {
 			label = EditorPlugin.getInstance().getMessage("link.navigate");
 			icon = EditorPlugin.getInstance().getResourceUrl("images/external_link.png");
+			orderIndex = 350;
 		}
 		
 		override public function get visible():Boolean {

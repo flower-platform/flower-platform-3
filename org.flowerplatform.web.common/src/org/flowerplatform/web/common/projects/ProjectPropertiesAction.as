@@ -32,6 +32,7 @@ package org.flowerplatform.web.common.projects {
 		public function ProjectPropertiesAction() {
 			label = "Properties";
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+			orderIndex = 600;
 		}
 		
 		override public function get visible():Boolean {

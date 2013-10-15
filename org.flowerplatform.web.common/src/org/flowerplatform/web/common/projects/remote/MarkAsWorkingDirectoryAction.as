@@ -27,6 +27,7 @@ package org.flowerplatform.web.common.projects.remote {
 		public function MarkAsWorkingDirectoryAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.markAsWorkingDirectory.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/workset.gif");
+			orderIndex = 500;
 		}
 		
 		public static function isProjectsActionVisible(nodeType:String):Boolean {

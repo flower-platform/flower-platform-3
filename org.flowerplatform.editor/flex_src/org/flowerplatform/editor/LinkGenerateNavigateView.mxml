@@ -18,7 +18,7 @@ Crispico - Initial API and implementation  The product is licensed under GPL. Th
 
 license-end
 -->
-<!--
+<!---
  Dialog shown from :
  - Project Explorer when selecting openable nodes;
  - Global Menu, Navigate > URL Generate / Navigate;
@@ -99,10 +99,6 @@ license-end
 			private var _viewHost:IViewHost;
 			
 			public function getActions(selection:IList):Vector.<IAction> {				
-				return null;
-			}
-			
-			public function getSelection():IList {				
 				return null;
 			}
 			

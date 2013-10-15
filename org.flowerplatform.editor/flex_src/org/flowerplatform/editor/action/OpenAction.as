@@ -51,6 +51,7 @@ package  org.flowerplatform.editor.action {
 				label = EditorPlugin.getInstance().getMessage("editor.open");
 				icon = ICON_URL;
 				preferShowOnActionBar = true;
+				orderIndex = 150;
 			} else {
 				// child action of Open With
 				this.editorDescriptor = editorDescriptor;

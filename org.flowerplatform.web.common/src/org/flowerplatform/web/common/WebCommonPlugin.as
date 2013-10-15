@@ -25,9 +25,13 @@ package org.flowerplatform.web.common {
 	import mx.collections.ArrayList;
 	import mx.core.FlexGlobals;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
+	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
+	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
@@ -42,6 +46,7 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.web.common.explorer.action.CreateDirectoryAction;
 	import org.flowerplatform.web.common.explorer.action.CreateFileAction;
 	import org.flowerplatform.web.common.explorer.action.DeleteAction;
+	import org.flowerplatform.web.common.explorer.action.NewComposedAction;
 	import org.flowerplatform.web.common.explorer.action.RefreshDirectoryAction;
 	import org.flowerplatform.web.common.explorer.action.RenameAction;
 	import org.flowerplatform.web.common.projects.ProjectPropertiesAction;
@@ -132,7 +137,11 @@ package org.flowerplatform.web.common {
 			explorerTreeClassFactoryActionProvider.actionClasses.push(DeleteAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(RenameAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(RefreshDirectoryAction);
-		}
+			explorerTreeClassFactoryActionProvider.actionClasses.push(NewComposedAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
+ 		}
 		
 		/**
 		 * @author Cristi
@@ -149,6 +158,8 @@ package org.flowerplatform.web.common {
 				}
 			});
 			heartbeatStatefulClient = new HeartbeatStatefulClient();
+			
+			explorerTreeActionProviders.push(CodeSyncPlugin.getInstance().codeSyncTreeActionProvider);
 		}
 		
 		/**

@@ -15,7 +15,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host.split {
 	/**
 	 * @author Cristian Spiescu
 	 */
-	public class SplitMobileViewHost extends MobileViewHostBase {
+	public class MobileSplitViewHost extends MobileViewHostBase {
 		private var _oneViewMode:Boolean = true;
 		
 		private var _oneViewModeLeftViewActive:Boolean = true;
@@ -34,7 +34,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host.split {
 		
 		protected var childrenCreated1:Boolean;
 		
-		public function SplitMobileViewHost() {
+		public function MobileSplitViewHost() {
 			super();
 			
 			layout = new HorizontalLayout();

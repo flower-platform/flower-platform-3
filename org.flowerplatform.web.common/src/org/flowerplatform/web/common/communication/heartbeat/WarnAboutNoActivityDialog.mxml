@@ -72,10 +72,6 @@ If you do not want to be disconnected close this popup.
 				return null;
 			}
 			
-			public function getSelection():IList {
-				return null;
-			}
-			
 			public function set viewHost(value:IViewHost):void {
 				_viewHost = value;
 				viewHost.setLabel("Automatic Disconnect");

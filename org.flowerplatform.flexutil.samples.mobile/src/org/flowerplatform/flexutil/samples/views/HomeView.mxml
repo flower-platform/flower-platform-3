@@ -9,7 +9,7 @@
 		<![CDATA[
 			import mx.core.IVisualElement;
 			
-			import org.flowerplatform.flexutil.mobile.view_content_host.split.SplitMobileViewHost;
+			import org.flowerplatform.flexutil.mobile.view_content_host.split.MobileSplitViewHost;
 			import org.flowerplatform.flexutil.samples.gradient_list.LeftList;
 			import org.flowerplatform.flexutil.samples.gradient_list.RightList;
 			
@@ -28,7 +28,7 @@
 					rightActiveComponent: new ContextMenuSample()
 				};
 				
-				navigator.pushView(SplitMobileViewHost, data);
+				navigator.pushView(MobileSplitViewHost, data);
 			}
 			
 			private function gradientListClickHandler(event:MouseEvent):void {
@@ -36,7 +36,7 @@
 					leftActiveComponent: new LeftList(),
 					rightActiveComponent: new RightList()
 				};
-				navigator.pushView(SplitMobileViewHost, data);
+				navigator.pushView(MobileSplitViewHost, data);
 			}
 		]]>
 	</fx:Script>
