@@ -38,6 +38,7 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
 
 	/**
 	 * @author Cristian Spiescu
@@ -109,15 +110,18 @@ package org.flowerplatform.editor.model
 		override public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
-			var actions:Vector.<IAction> = EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.getActions(selection);
-			if (actions != null) {
-				for each (var action:IAction in actions) {
-					if (action is IDiagramShellAware) {
-						IDiagramShellAware(action).diagramShell = diagramShell;
+			for each (var ap:IActionProvider in EditorModelPlugin.getInstance().notationDiagramActionProviders) {
+				var actions:Vector.<IAction> = ap.getActions(selection);
+				if (actions != null) {
+					for each (var action:IAction in actions) {
+						if (action is IDiagramShellAware) {
+							IDiagramShellAware(action).diagramShell = diagramShell;
+						}
+						result.push(action);
 					}
-					result.push(action);
-				}
-			}		
+				}		
+			}
+
 			return result;
 		}
 		
