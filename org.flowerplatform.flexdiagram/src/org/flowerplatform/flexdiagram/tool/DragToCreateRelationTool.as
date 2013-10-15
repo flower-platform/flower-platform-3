@@ -70,6 +70,10 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		private function mouseMoveHandler(event:MouseEvent):void {
+			if (diagramShell.modelToExtraInfoMap[context.model].waitingToDeactivateDragTool) {
+				// don't do nothing, tool waits to be deactivated
+				return;
+			}
 			if (event.buttonDown) {			
 				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));
 				var deltaX:int = mousePoint.x;
@@ -83,6 +87,10 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		private function mouseUpHandler(event:MouseEvent = null):void {	
+			if (diagramShell.modelToExtraInfoMap[context.model].waitingToDeactivateDragTool) {
+				// don't do nothing, tool waits to be deactivated
+				return;
+			}
 			var controller:IDragToCreateRelationController = diagramShell.getControllerProvider(context.model).
 				getDragToCreateRelationController(context.model);
 			if (controller) {
@@ -91,7 +99,7 @@ package org.flowerplatform.flexdiagram.tool {
 				if (renderer is IDataRenderer) {
 					model = IDataRenderer(renderer).data;
 				}
-				controller.drop(model);
+				controller.drop(context.model, model);
 			}
 		}
 		

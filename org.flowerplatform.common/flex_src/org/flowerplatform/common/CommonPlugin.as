@@ -20,7 +20,6 @@ package org.flowerplatform.common {
 	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	
-
 	import mx.core.FlexGlobals;
 	
 	import org.flowerplatform.common.link.ILinkHandler;
@@ -55,7 +54,10 @@ package org.flowerplatform.common {
 			
 			linkHandlers = new Dictionary();			
 			
-			ExternalInterface.addCallback("handleLink", handleLink);
+			if (ExternalInterface.available) {
+				// on mobile, it's not available
+				ExternalInterface.addCallback("handleLink", handleLink);
+			}
 		}
 		
 		/**

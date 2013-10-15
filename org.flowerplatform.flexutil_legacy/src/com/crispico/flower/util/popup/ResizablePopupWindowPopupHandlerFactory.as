@@ -32,36 +32,36 @@ package com.crispico.flower.util.popup {
 	
 	public class ResizablePopupWindowPopupHandlerFactory implements IPopupHandlerFactory {
 		public function createPopupHandler():IPopupHandler {
-			return new ResizablePopupWindowPopupHandlerAndHost();
+			return new ResizablePopupWindowPopupHandlerAndViewHost();
 		}
 		
-		public function removePopup(popupContent:IVisualElement):void {
+		public function removePopup(viewContent:IVisualElement):void {
 			var popup:UIComponent;
 			// from what I have seen, popups can be located in both locations
-			popup = iteratePopups(FlexGlobals.topLevelApplication.systemManager, popupContent);
+			popup = iteratePopups(FlexGlobals.topLevelApplication.systemManager, viewContent);
 			if (popup == null) {
-				popup = iteratePopups(FlexGlobals.topLevelApplication.systemManager.popUpChildren, popupContent);
+				popup = iteratePopups(FlexGlobals.topLevelApplication.systemManager.popUpChildren, viewContent);
 			}
 			if (popup != null) {
 				PopUpManager.removePopUp(popup);
 			}
 		}
 		
-		private function iteratePopups(childList:IChildList, popupContent:IVisualElement):UIComponent {
+		private function iteratePopups(childList:IChildList, viewContent:IVisualElement):UIComponent {
 			for (var i:int = 0; i < childList.numChildren; i++) {
 				var child:DisplayObject = childList.getChildAt(i);
-				if (!(child is ResizablePopupWindowPopupHandlerAndHost || child is ModalSpinner) || !UIComponent(child).isPopUp) {
+				if (!(child is ResizablePopupWindowPopupHandlerAndViewHost || child is ModalSpinner) || !UIComponent(child).isPopUp) {
 					continue;
 				}
-				if (child is ResizablePopupWindowPopupHandlerAndHost) {
+				if (child is ResizablePopupWindowPopupHandlerAndViewHost) {
 					var d:UIComponent = UIComponent(child);
-					if (d.numChildren == 0 || !(d.getChildAt(0) == popupContent)) {
+					if (d.numChildren == 0 || !(d.getChildAt(0) == viewContent)) {
 						continue;
 					}
 					return d;	
 				} else {
 					// ModalSpinner
-					if (ModalSpinner(child).childrenUnderSpinner.length > 0 && ModalSpinner(child).childrenUnderSpinner[0] == popupContent) {
+					if (ModalSpinner(child).childrenUnderSpinner.length > 0 && ModalSpinner(child).childrenUnderSpinner[0] == viewContent) {
 						return ModalSpinner(child);
 					}
 				}

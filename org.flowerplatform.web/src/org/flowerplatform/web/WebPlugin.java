@@ -146,12 +146,12 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 				GroupService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
 				OrganizationService.getInstance().getObservable().addObserver(PermissionService.getInstance().getSecurityEntityObserver());
 				OrganizationService.getInstance().getObservable().addObserver(OrganizationService.getInstance().getOrganizationObserver());	
-				// TODO CS: see GH???
+				// TODO CS: see GH211
 				databaseManager.initialize();
 				SendMailService.getInstance().initializeProperties();
 				
 				try {
-					// TODO CS: see GH???
+					// TODO CS: see GH211
 					CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
 				} catch (Exception e) {
 					throw new RuntimeException(e);

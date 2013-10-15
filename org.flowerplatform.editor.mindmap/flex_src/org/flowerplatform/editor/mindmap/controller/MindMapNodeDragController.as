@@ -22,6 +22,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.core.IDataRenderer;
@@ -51,7 +52,8 @@ package org.flowerplatform.editor.mindmap.controller {
 		}
 		
 		public function activate(model:Object, initialX:Number, initialY:Number):void {		
-			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is Diagram) { // don't drag the root node
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is Diagram) { 
+				// don't drag the root node
 				return;
 			}
 			getDynamicObject(model).initialX = initialX;
@@ -66,10 +68,7 @@ package org.flowerplatform.editor.mindmap.controller {
 			var renderer:IVisualElement = getRendererFromCoordinates(point);			
 			var dropModel:Object = IDataRenderer(renderer).data;
 						
-			if (renderer is DiagramRenderer // don't drop over diagram 
-				|| !dragModelIsParentForDropModel(model, dropModel) // or children structure
-				|| (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(dropModel) is MindMapNode && diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) == dropModel) // or in same parent (except root)
-				|| ArrayList(NotationMindMapDiagramShell(diagramShell).editorStatefulClient.viewTypeToAcceptedViewTypeChildren[MindMapNode(dropModel).viewType]).getItemIndex(MindMapNode(model).viewType) == -1) { 
+			if (!isDropAccepted(renderer, model, dropModel)) { 
 				// or not accepted edit part
 				deletePlaceHolder(model);
 				return;
@@ -85,31 +84,37 @@ package org.flowerplatform.editor.mindmap.controller {
 			placeHolder.colors = [0x000000, 0xFFFFFF];
 			
 			var side:int = MindMapDiagramShell.NONE;
-			if (dropModel.side == MindMapDiagramShell.LEFT) { 
-				if (new Rectangle(rect.x, rect.y, rect.width / 2, rect.height).containsPoint(point)) {	// set styles for left rectangle			
+			if (getModelController(dropModel).getSide(dropModel) == MindMapDiagramShell.LEFT) { 
+				if (new Rectangle(rect.x, rect.y, rect.width / 2, rect.height).containsPoint(point)) {	
+					// set styles for left rectangle			
 					placeHolder.width = rect.width / 2;
 					placeHolder.gradientBoxRotation = 0;
 					side =  MindMapDiagramShell.LEFT;
-				} else { // set styles for top rectangle
+				} else { 
+					// set styles for top rectangle
 					placeHolder.gradientBoxRotation = Math.PI / 2;
 				}
-			} else if (dropModel.side == MindMapDiagramShell.RIGHT) { 
-				if (new Rectangle(rect.x + rect.width / 2, rect.y, rect.width, rect.height).containsPoint(point)) {	// set styles for right rectangle
+			} else if (getModelController(dropModel).getSide(dropModel) == MindMapDiagramShell.RIGHT) { 
+				if (new Rectangle(rect.x + rect.width / 2, rect.y, rect.width, rect.height).containsPoint(point)) {	
+					// set styles for right rectangle
 					placeHolder.x = rect.x + rect.width / 2;
 					placeHolder.width = rect.width / 2;
 					placeHolder.colors = [0xFFFFFF, 0x000000];
 					placeHolder.gradientBoxRotation = 0;
 					side =  MindMapDiagramShell.RIGHT;
-				} else {	// set styles for top rectangle			
+				} else {	
+					// set styles for top rectangle			
 					placeHolder.gradientBoxRotation = Math.PI / 2;
 				}
 			} else { // root model
-				if (new Rectangle(rect.x, rect.y, rect.width / 2, rect.height).containsPoint(point)) {	 // set styles for left rectangle
+				if (new Rectangle(rect.x, rect.y, rect.width / 2, rect.height).containsPoint(point)) {	
+					// set styles for left rectangle
 					placeHolder.x = rect.x;
 					placeHolder.width = rect.width / 2;					
 					placeHolder.gradientBoxRotation = 0;
 					side =  MindMapDiagramShell.LEFT;
-				} else { // set styles for right rectangle					
+				} else { 
+					// set styles for right rectangle					
 					placeHolder.x = rect.x + rect.width / 2;
 					placeHolder.width = rect.width / 2;
 					placeHolder.colors = [0xFFFFFF, 0x000000];
@@ -124,10 +129,7 @@ package org.flowerplatform.editor.mindmap.controller {
 			var renderer:IVisualElement = getRendererFromCoordinates(dropPoint);
 			
 			var dropModel:Object = IDataRenderer(renderer).data;
-			if (renderer is DiagramRenderer // don't drop over diagram 
-				|| !dragModelIsParentForDropModel(model, dropModel) // or children structure
-				|| (diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel) is MindMapNode && diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) == dropModel) // or in same parent (except root)
-				|| ArrayList(NotationMindMapDiagramShell(diagramShell).editorStatefulClient.viewTypeToAcceptedViewTypeChildren[MindMapNode(dropModel).viewType]).getItemIndex(MindMapNode(model).viewType) == -1) { 
+			if (!isDropAccepted(renderer, model, dropModel)) { 
 				// or not accepted edit part
 				return;
 			}
@@ -141,42 +143,51 @@ package org.flowerplatform.editor.mindmap.controller {
 
 			// calculate new parent and position based on side
 			var dropParentModel:Object = (side != MindMapDiagramShell.NONE) ? dropModel : diagramShell.getControllerProvider(dropModel).getModelChildrenController(dropModel).getParent(dropModel);	
-			var children:IList = diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getChildren(dropParentModel);	
-		
-			var index:int = 0;
-			if (side != MindMapDiagramShell.NONE) {
-				index = children.length;
+			var children:IList;
+			if (diagramShell.getControllerProvider(dropParentModel).getModelChildrenController(dropParentModel).getParent(dropParentModel) == null) {
+				children = MindMapDiagramShell(diagramShell).getModelController(dropParentModel).getChildrenBasedOnSide(dropParentModel, side);
 			} else {
+				children = MindMapDiagramShell(diagramShell).getModelController(dropParentModel).getChildren(dropParentModel);	
+			}
+					
+			var index:int = -1;
+			if (side != MindMapDiagramShell.NONE) {
+				// left/right => put as last child in list
+				index = children.length;
+			} else { 
+				// top
+				var moveDragModelDownInSameParent:Boolean = false;
 				for (var i:int = 0; i < children.length; i++) {
+					if (i == children.length - 1 && children.getItemAt(i - 1) == model) {
+						// if dragModel = last but one & dropModel = last => don't allow move (index remains -1)
+						break;
+					}
+					if (children.getItemAt(i) == model) {
+						// dragModel & dropModel are siblings => index must be decreased with 1 at the end
+						moveDragModelDownInSameParent = true;
+					}
 					if (children.getItemAt(i) == dropModel) {
-						index = i;
+						// found dropModel index
+						index = moveDragModelDownInSameParent ? i - 1 : i;
 						break;
 					}
 				}
 			}
+			
 			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_changeParent(
 				model.id, 
 				dropParentModel.id,
 				index, 
-				(side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel), 
-				this, selectModelAfterDroppingHandler);
-			
-			// add model in new parent
-//			getModelController(dropParentModel).getChildren(dropParentModel).addItemAt(model, index);		
-//			getModelController(model).setSide(model, (side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel));
-//			getModelController(model).setParent(model, dropParentModel);	
-			
+				(side != MindMapDiagramShell.NONE) ? side : getModelController(dropModel).getSide(dropModel), this, selectModelAfterDroppingHandler);
+						
 			// select model or parent 
 			diagramShell.selectedItems.removeAll();
-//			if (getModelController(dropParentModel).getExpanded(dropParentModel)) {
-//				diagramShell.selectedItems.addItem(model);
-//			} else {
-//				diagramShell.selectedItems.addItem(dropParentModel);
-//			}
 		}
 		
-		private function selectModelAfterDroppingHandler(viewId:Object):void {
-			trace(viewId);
+		private function selectModelAfterDroppingHandler(result:Object):void {
+//			NotationMindMapDiagramShell(diagramShell).editorStatefulClient.service_setSide(
+//				result.getItemAt(0).id, 
+//				result.getItemAt(1));
 		}
 		
 		public function deactivate(model:Object):void {
@@ -251,6 +262,15 @@ package org.flowerplatform.editor.mindmap.controller {
 			
 			// no found on the obj's hierarchy
 			return null;
+		}
+		
+		private function isDropAccepted(renderer:Object, dragModel:Object, dropModel:Object):Boolean {
+			if (renderer is DiagramRenderer // don't drop over diagram 
+				|| !dragModelIsParentForDropModel(dragModel, dropModel) // or children structure
+				|| ArrayList(NotationMindMapDiagramShell(diagramShell).editorStatefulClient.viewTypeToAcceptedViewTypeChildren[MindMapNode(dropModel).viewType]).getItemIndex(MindMapNode(dragModel).viewType) == -1) {				
+				return false;
+			}
+			return true;
 		}
 		
 		private function dragModelIsParentForDropModel(dragModel:Object, dropModel:Object):Boolean {

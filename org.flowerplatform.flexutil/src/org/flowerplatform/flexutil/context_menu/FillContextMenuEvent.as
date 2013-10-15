@@ -22,7 +22,7 @@ package org.flowerplatform.flexutil.context_menu {
 	
 	import mx.collections.IList;
 	
-	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.action.IAction;
 	
 	public class FillContextMenuEvent extends Event {
 		
@@ -33,6 +33,8 @@ package org.flowerplatform.flexutil.context_menu {
 		public var rootActionsAlreadyCalculated:IList;
 		
 		public var selection:IList;
+		
+		public var context:Object;
 		
 		public function FillContextMenuEvent() {
 			super(FILL_CONTEXT_MENU);

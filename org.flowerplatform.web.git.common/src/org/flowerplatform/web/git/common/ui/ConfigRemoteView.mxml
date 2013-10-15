@@ -39,7 +39,7 @@
 			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.Utils;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
 			
@@ -48,9 +48,9 @@
 			[Bindable]
 			public var remoteConfig:RemoteConfig = new RemoteConfig();
 			
-			override public function set popupHost(value:IPopupHost):void {
-				super.popupHost = value;				
-				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/remote_entry_tbl.gif'));
+			override public function set viewHost(value:IViewHost):void {
+				super.viewHost = value;				
+				viewHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/remote_entry_tbl.gif'));
 			}
 			
 			protected override function creationCompleteHandler():void {
@@ -60,13 +60,13 @@
 				 				
 				if (remoteConfig.name) {
 					wizardTitle = GitCommonPlugin.getInstance().getMessage('git.configRemoteWizard.title');
-					popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.configRemote.label'));
+					viewHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.configRemote.label'));
 					
 					Utils.makePseudoDisabled(remoteName);
 					callLater(tiUri.setFocus);
 				} else {
 					wizardTitle = GitCommonPlugin.getInstance().getMessage('git.createRemoteWizard.title');
-					popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.createRemote.label'));
+					viewHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.createRemote.label'));
 					
 					callLater(remoteName.setFocus);
 				}
@@ -92,7 +92,7 @@
 						}
 					}
 				}
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
 				
 				remoteConfig.name = remoteName.text;
 				remoteConfig.uri = tiUri.text;
@@ -104,7 +104,7 @@
 			}
 						
 			private function configRemoteCallbackHandler(value:Boolean):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (value) {
 					super.finishClickHandler();
 				}

@@ -37,10 +37,10 @@ package org.flowerplatform.editor.model.renderer {
 		
 		protected var effectsController:BoxEffectsController;
 		
-		protected const GLOW_STRENGTH:Number = 3;
+		protected static const GLOW_STRENGTH:Number = 3;
 		
-		protected const GLOW_BLUR_TO:Number = 15;
-		
+		protected static const GLOW_BLUR_TO:Number = 15;
+
 		public function BoxChildIconItemRenderer() {
 			super();
 			iconFunction = getImage;
@@ -48,7 +48,7 @@ package org.flowerplatform.editor.model.renderer {
 			minHeight = 0;
 			percentWidth = 100;
 			
-			setStyle("verticalAlign", "middle");
+			setStyle("verticalAlign", "middle");			
 			cacheAsBitmap = true;
 			
 			addEventListener(ZoomPerformedEvent.ZOOM_PERFORMED, zoomPerformedHandler);
@@ -97,8 +97,7 @@ package org.flowerplatform.editor.model.renderer {
 		
 		protected function zoomPerformedHandler(event:ZoomPerformedEvent):void {
 			invalidateSize();
-			// use calllater because the updateList must be done after recalculating size
-			callLater(invalidateDisplayList);
+			invalidateDisplayList();
 		}
 		
 		override protected function createLabelDisplay():void	{

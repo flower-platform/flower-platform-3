@@ -23,27 +23,33 @@ package com.crispico.flower.util.layout {
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.context_menu.ContextMenu;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IComposedAction;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IComposedAction;
 	
 	import spark.components.Button;
 	
+	/**		
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */
 	public class ActionButton extends Button {
 		
-		public var viewWrapper:PopupHostViewWrapper;
+		public var viewWrapper:WorkbenchViewHost;
 		
 		public var action:IAction;
 		
 		protected override function clickHandler(event:MouseEvent):void {
 			super.clickHandler(event);
 			if (action is IComposedAction) {
-				FlexUtilGlobals.getInstance().contextMenuManager.openContextMenu(event.stageX, event.stageY, viewWrapper.allActions, null, IComposedAction(action).id, viewWrapper.selection);
+				viewWrapper.openMenu(event.stageX, event.stageY, viewWrapper.contextForActions, IComposedAction(action).id);
 			} else {
 				try {
 					action.selection = viewWrapper.selection;
+					action.context = viewWrapper.contextForActions;
 					action.run();
 				} finally {
 					action.selection = null;
+					action.context = null;
 				}
 			}
 		}

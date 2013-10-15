@@ -19,6 +19,8 @@
 package org.flowerplatform.flexdiagram.mindmap {
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.core.IInvalidating;
+	import mx.core.IVisualElement;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -59,7 +61,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		}
 				
 		public function addChildren(model:Object):void {			
-			if (model.expanded) {
+			if (getModelController(model).getExpanded(model)) {
 				var children:IList = getModelController(model).getChildren(model);
 				for (var i:int = 0; i < children.length; i++) {
 					addChildren(children.getItemAt(i));
@@ -79,7 +81,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		private function getExpandedHeight(model:Object):Number {
 			var expandedHeight:Number = getDynamicObject(model).expandedHeight;
 			if (isNaN(expandedHeight)) {
-				expandedHeight =getModelController(model).getHeight(model);
+				expandedHeight = getModelController(model).getHeight(model);
 			}
 			return expandedHeight;
 		}
@@ -97,10 +99,10 @@ package org.flowerplatform.flexdiagram.mindmap {
 			var oldExpandedHeightLeft:Number = getDynamicObject(model).expandedHeightLeft;			
 			var oldExpandedHeightRight:Number = getDynamicObject(model).expandedHeightRight;
 			
-			calculateRootNodeExpandedHeight(model.side);
+			calculateRootNodeExpandedHeight(getModelController(model).getSide(model));
 		
 			var side:int = getModelController(model).getSide(model);
-			if (side == NONE || side == LEFT) { 
+			if (side == NONE || side == LEFT) {
 				if (side == NONE) {
 					getDynamicObject(model).expandedHeight = getDynamicObject(model).expandedHeightLeft;
 					oldExpandedHeight = oldExpandedHeightLeft;
@@ -111,9 +113,9 @@ package org.flowerplatform.flexdiagram.mindmap {
 				if (side == NONE) {
 					getDynamicObject(model).expandedHeight = getDynamicObject(model).expandedHeightRight;
 					oldExpandedHeight = oldExpandedHeightRight;
-				}			
+				}				
 				changeCoordinates(model, oldExpandedHeight, getExpandedHeight(model), side == NONE ? RIGHT : side);
-			}			
+			}
 		}
 		
 		private function calculateRootNodeExpandedHeight(side:int):void {
@@ -131,7 +133,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 		private function calculateExpandedHeight(model:Object, side:int):Number {			
 			var expandedHeight:Number = 0;
 			var children:IList = getModelController(model).getChildrenBasedOnSide(model, side);
-			if (model.expanded && children.length > 0) {
+			if (getModelController(model).getExpanded(model) && children.length > 0) {
 				for (var i:int = 0; i < children.length; i++) {
 					var child:Object = children.getItemAt(i);
 					expandedHeight += calculateExpandedHeight(child, side);
@@ -151,6 +153,7 @@ package org.flowerplatform.flexdiagram.mindmap {
 			
 			changeChildrenCoordinates(model, side, true);				
 			changeSiblingsCoordinates(model, (newExpandedHeight - oldExpandedHeight)/2, side);
+			getDynamicObject(model).shouldRefreshPosition = false;
 		}		
 		
 		private function changeChildrenCoordinates(model:Object, side:int, changeOnlyForChildren:Boolean = false):void {	

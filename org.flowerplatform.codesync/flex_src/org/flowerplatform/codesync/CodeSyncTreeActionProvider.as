@@ -21,8 +21,8 @@ package org.flowerplatform.codesync {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
 	
 	public class CodeSyncTreeActionProvider implements IActionProvider {
 		

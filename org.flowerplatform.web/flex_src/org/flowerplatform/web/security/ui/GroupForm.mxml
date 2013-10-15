@@ -46,15 +46,15 @@
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.command.CompoundServerCommand;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.WebPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.entity.dto.NamedDto;
 			import org.flowerplatform.web.common.security.dto.GroupAdminUIDto;
 			
-			override public function set popupHost(value:IPopupHost):void {
-				super.popupHost = value;
-				popupHost.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/group.png"));
+			override public function set viewHost(value:IViewHost):void {
+				super.viewHost = value;
+				viewHost.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/group.png"));
 			}
 			
 			/**
@@ -71,12 +71,12 @@
 				if (entityId != 0) {
 					form.enabled = false;
 					save.enabled = false;
-					popupHost.setLabel(WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.group")]));
+					viewHost.setLabel(WebPlugin.getInstance().getMessage("form.edit", [WebPlugin.getInstance().getMessage("entity.group")]));
 					ModalSpinner.addModalSpinner(this, CommonPlugin.getInstance().getMessage("spinner.processing"));
 					command.append(
 						new InvokeServiceMethodServerCommand("groupService", "findByIdAsAdminUIDto", [entityId], this, dataReceivedCallback, exceptionCallback));
 				} else {
-					popupHost.setLabel(WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.group")]));
+					viewHost.setLabel(WebPlugin.getInstance().getMessage("form.add", [WebPlugin.getInstance().getMessage("entity.group")]));
 					dto = new GroupAdminUIDto();
 					groupName.setFocus();	
 				}

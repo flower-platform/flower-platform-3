@@ -55,7 +55,7 @@
 				popUp.currentRef = "";
 				popUp.setResultHandler(this);
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(popUp)
+					.setViewContent(popUp)
 					.show();
 			}
 			
@@ -65,7 +65,7 @@
 				popUp.currentRef = String(lstRefMappings.selectedItem);
 				popUp.setResultHandler(this);
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(popUp)
+					.setViewContent(popUp)
 					.show();
 			}
 			

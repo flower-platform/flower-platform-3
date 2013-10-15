@@ -1,4 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
 <!---
 @author Cristina Constantinescu
 -->
@@ -6,7 +25,7 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
 		 xmlns:local="org.flowerplatform.editor.mindmap.ui.*"
-		 implements="org.flowerplatform.flexutil.popup.IPopupContent"
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent"
 		 >
 	
 	<fx:Script>
@@ -20,10 +39,10 @@
 			import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			
-			private var _popupHost:IPopupHost;
+			private var _viewHost:IViewHost;
 			
 			public var selection:IList;
 			
@@ -31,18 +50,14 @@
 				return null;
 			}
 			
-			public function getSelection():IList {
-				return null;
+			public function get viewHost():IViewHost {
+				return _viewHost;
 			}
 			
-			public function get popupHost():IPopupHost {
-				return _popupHost;
-			}
-			
-			public function set popupHost(popupHost:IPopupHost):void {
-				_popupHost = popupHost;
-				_popupHost.setLabel(MindMapModelPlugin.getInstance().getMessage('manageIcons.action.label'));
-				_popupHost.setIcon(MindMapModelPlugin.getInstance().getResourceUrl('images/images.png'));
+			public function set viewHost(viewHost:IViewHost):void {
+				_viewHost = viewHost;
+				_viewHost.setLabel(MindMapModelPlugin.getInstance().getMessage('manageIcons.action.label'));
+				_viewHost.setIcon(MindMapModelPlugin.getInstance().getResourceUrl('images/images.png'));
 			}
 			
 			override protected function createChildren():void {

@@ -21,24 +21,24 @@ package org.flowerplatform.editor.model {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.model.action.AddElementAction;
+	import org.flowerplatform.editor.model.action.AddRelationAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
-	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
+	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
-	import org.flowerplatform.editor.model.controller.DragToCreateRelationController;
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
-	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
@@ -61,11 +61,12 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
+	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
+	import org.flowerplatform.flexdiagram.tool.controller.SelectOrDragToCreateElementController;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
-	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
 	
 	/**
 	 * @author Cristi
@@ -100,9 +101,10 @@ package org.flowerplatform.editor.model {
 			
 			// classDiagram
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(DiagramModelChildrenController);
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(AbsoluteLayoutVisualChildrenController);
+			composedControllerProviderFactory.selectOrDragToCreateElementControllerClass = new ControllerFactory(SelectOrDragToCreateElementController);
 			composedControllerProviderFactories["classDiagram"] = composedControllerProviderFactory;
 			
 			// class
@@ -156,14 +158,14 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
+
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
-		}
-		
-		override public function start():void {
-			super.start();
-//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
-//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
+			
+			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
+			notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
 		}
 		
 		override protected function registerClassAliases():void {
@@ -173,18 +175,9 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
 			registerClassAliasFromAnnotation(Bounds);
-			
-			registerClassAliasFromAnnotation(MoveResizeServerCommand);
-			
+			registerClassAliasFromAnnotation(MoveResizeServerCommand);			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
-			
-			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
-			
 			registerClassAliasFromAnnotation(ContentAssistItem);
-		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
 		}
 		
 	}

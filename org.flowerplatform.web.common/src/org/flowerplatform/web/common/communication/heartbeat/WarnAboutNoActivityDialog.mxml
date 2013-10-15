@@ -33,7 +33,7 @@
 	xmlns:mx="library://ns.adobe.com/flex/mx"
 	minWidth="200" minHeight="150"
 	horizontalAlign="center"
-	implements="org.flowerplatform.flexutil.popup.IPopupContent"
+	implements="org.flowerplatform.flexutil.view_content_host.IViewContent"
 	creationComplete="onCreationComplete()"
 	>
 	
@@ -51,11 +51,11 @@ If you do not want to be disconnected close this popup.
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			
-			private var _popupHost:IPopupHost;
+			private var _viewHost:IViewHost;
 			
 			[Bindable]
 			public var secondsUntilDisconnect:Number;
@@ -72,19 +72,15 @@ If you do not want to be disconnected close this popup.
 				return null;
 			}
 			
-			public function getSelection():IList {
-				return null;
+			public function set viewHost(value:IViewHost):void {
+				_viewHost = value;
+				viewHost.setLabel("Automatic Disconnect");
+				viewHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/login.png"));
+				viewHost.displayCloseButton(false);
 			}
 			
-			public function set popupHost(value:IPopupHost):void {
-				_popupHost = value;
-				popupHost.setLabel("Automatic Disconnect");
-				popupHost.setIcon(WebCommonPlugin.getInstance().getResourceUrl("images/login.png"));
-				popupHost.displayCloseButton(false);
-			}
-			
-			public function get popupHost():IPopupHost {
-				return _popupHost;
+			public function get viewHost():IViewHost {
+				return _viewHost;
 			}
 			
 			public function closeForm():void {

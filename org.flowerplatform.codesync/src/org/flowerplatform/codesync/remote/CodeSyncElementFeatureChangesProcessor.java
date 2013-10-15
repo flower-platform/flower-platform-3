@@ -70,9 +70,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 			// add a view for each child of the model element (cases: initial, or adding a new child model element)
 			for (EObject child : childModelElements) {
 				if (canAddChildView(associatedViewOnOpenDiagram, child)) {
-					Node newView = createChildView(associatedViewOnOpenDiagram, child);
-					newView.setDiagrammableElement(child);
-					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
+					addChildView(associatedViewOnOpenDiagram, child, newViewsIndex, context);					
 				}
 				newViewsIndex++;
 			}
@@ -87,14 +85,25 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 				if (newChild != null) {
 					getChildrenForCodeSyncElement(object).add(associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child), newChild);
 				} else {
+					removeChildView(child, child.getDiagrammableElement(), context);					
 					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+				}
+			} else {
+				int modelIndex = childModelElements.indexOf(child.getDiagrammableElement());
+				if (modelIndex != childViews.indexOf(child)) {
+					associatedViewOnOpenDiagram.getPersistentChildren().move(modelIndex, (Node) child);
 				}
 			}
 		}
 		
 		if (newViewsIndex < 0) {
-			// remove all views (cases: collapsed view/compartment)
-			associatedViewOnOpenDiagram.getPersistentChildren().removeAll(childViews);
+			// remove all views (cases: collapsed view/compartment)			
+			CopyOnWriteArrayList<Node> persistentChildren = new CopyOnWriteArrayList<Node>(associatedViewOnOpenDiagram.getPersistentChildren());
+			for (Iterator<Node> it = persistentChildren.iterator(); it.hasNext();) {
+				View child = it.next();
+				removeChildView(child, child.getDiagrammableElement(), context);
+				associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+			}			
 		}
 	}
 	
@@ -117,7 +126,25 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	
 	abstract protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram);
 	
-	abstract protected Node createChildView(View associatedViewOnOpenDiagram, EObject child);
+	abstract protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context);
+	
+	/**
+	 * @author Cristina Constatinescu
+	 */
+	protected Node addChildView(View associatedViewOnOpenDiagram, EObject child, int newViewsIndex, Map<String, Object> context) {
+		Node newView = createChildView(associatedViewOnOpenDiagram, child, context);
+		newView.setDiagrammableElement(child);
+		associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
+		
+		return newView;
+	}
+	
+	/**
+	 * @author Cristina Constatinescu
+	 */
+	protected void removeChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {
+		associatedViewOnOpenDiagram.setDiagrammableElement(null);
+	}
 	
 	protected boolean canAddChildView(View view, EObject candidate) {
 		return !containsChildViewForModelElement(view, candidate);

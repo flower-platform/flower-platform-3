@@ -18,27 +18,32 @@
  
 	license-end
 -->
+<!---
+The graphical component that displays a list of actions, for one level.
+
+@author Cristian Spiescu
+-->
 <popup:ScreenSizeAwarePopup xmlns:fx="http://ns.adobe.com/mxml/2009"
 				   xmlns:s="library://ns.adobe.com/flex/spark"
 				   xmlns:mx="library://ns.adobe.com/flex/mx"
 				   xmlns:popup="org.flowerplatform.flexutil.popup.*"
-				   backgroundAlpha="0.9" backgroundColor="#DDEEEE"
-				   borderVisible="true" dropShadowVisible="true">
+				   backgroundAlpha="0.9" backgroundColor="#DEECFC"
+				   borderVisible="true" dropShadowVisible="true" borderColor="#616161">
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			import mx.core.FlexGlobals;
-			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			
-			import org.flowerplatform.flexutil.popup.ActionUtil;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IComposedAction;
+			import org.flowerplatform.flexutil.action.ActionUtil;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.action.IComposedAction;
+			import org.flowerplatform.flexutil.action.MenuClosedEvent;
 			
 			import spark.events.IndexChangeEvent;
 			
-			protected static const GAP_BETWEEN_MENUS:int = 3;
+			protected static const GAP_BETWEEN_MENUS:int = -7;
 			
 			[Bindable]
 			public var actions:IList;
@@ -47,7 +52,25 @@
 			
 			protected var indexInStack:int;
 			
-			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, rootActionId:String):void {
+			/**
+			 * Calculates the actions for the current level, and displays the menu. Called by <code>ContextMenuManager</code> or
+			 * by this class; not intented to be called directly.
+			 */
+			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, parentActionId:String):Boolean {
+				if (actionsForCurrentLevelAreadyCalculated) {
+					actions = actionsForCurrentLevelAreadyCalculated;
+				} else {
+					actions = new ArrayList();
+					ActionUtil.processAndIterateActions(parentActionId, contextMenuManager.allActions, contextMenuManager.selection, contextMenuManager.context, this, function (action:IAction):void {
+						actions.addItem(action);
+					});
+				}
+				
+				if (actions.length == 0) {
+					// this happens, when all the actions are with "preferShowOnActionBar"
+					return false;
+				}
+
 				this.contextMenuManager = contextMenuManager;
 				this.x = x;
 				this.y = y;
@@ -60,16 +83,13 @@
 						stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 					});
 				}
-
-				if (actionsForCurrentLevelAreadyCalculated) {
-					actions = actionsForCurrentLevelAreadyCalculated;
-				} else {
-					actions = new ArrayList();
-					ActionUtil.processAndIterateActions(rootActionId, contextMenuManager.allActions, contextMenuManager.selection, this, function (action:IAction):void {
-						actions.addItem(action);
-					});
-				}
+				if (actions != null && actions.length > 0) {
+					var source:Array = actions.toArray();
+					source.sortOn("orderIndex");
+					actions = new ArrayList(source);
+				}	
 				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
+				return true;
 			}
 			
 			override protected function adjustHorizontalPosition(appWidth:Number):void {
@@ -86,9 +106,13 @@
 			public function closeContextMenu():void {
 				if (indexInStack == 0) {
 					// only the first one listens for click outside the menu
-					stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+					stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);					
+					
 					contextMenuManager.allActions = null;
 					contextMenuManager.selection = null;
+					contextMenuManager.context = null;
+					
+					FlexGlobals.topLevelApplication.dispatchEvent(new MenuClosedEvent());		
 				}
 				PopUpManager.removePopUp(this);
 				if (contextMenuManager.contextMenuStack[contextMenuManager.contextMenuStack.length - 1] != this) {
@@ -115,6 +139,9 @@
 				}
 			}
 
+			/**
+			 * If the current action is composed, opens the corresponding sub menu.
+			 */
 			protected function listSelectionChangeHandler(event:IndexChangeEvent):void {
 				closeContextMenuStack(indexInStack + 1);
 				if (list.selectedItem is IComposedAction) {

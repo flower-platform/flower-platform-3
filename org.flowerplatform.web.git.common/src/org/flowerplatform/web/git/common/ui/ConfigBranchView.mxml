@@ -36,7 +36,7 @@
 			import org.flowerplatform.communication.tree.remote.TreeNode;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.Utils;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.git.common.remote.dto.ConfigBranchPageDto;
 			import org.flowerplatform.web.git.common.remote.dto.GitRef;
@@ -53,10 +53,10 @@
 			private var cbRemotes:spark.components.DropDownList;
 			private var cbRemoteBranches:spark.components.DropDownList;
 			
-			override public function set popupHost(value:IPopupHost):void {
-				super.popupHost = value;
-				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.configBranch.label'));
-				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/editconfig.gif'));
+			override public function set viewHost(value:IViewHost):void {
+				super.viewHost = value;
+				viewHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.configBranch.label'));
+				viewHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/editconfig.gif'));
 			}
 			
 			override protected function creationCompleteHandler():void {
@@ -66,13 +66,13 @@
 				
 				Utils.makePseudoDisabled(brName);
 				
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
 				GitCommonPlugin.getInstance().service.getConfigBranchData(
 					node, this, getConfigBranchDataCallbackHandler);
 			}
 			
 			private function getConfigBranchDataCallbackHandler(value:ConfigBranchPageDto):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (value != null) {
 					ref = value.ref;		
 					brName.text = ref.name;
@@ -90,12 +90,12 @@
 			}
 					
 			protected function cbRemotes_changeHandler(event:IndexChangeEvent):void 	{
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
 				GitCommonPlugin.getInstance().service.getBranches(RemoteConfig(cbRemotes.selectedItem).uri, this, getRemoteBranchesCallbackHandler);
 			}
 			
 			private function getRemoteBranchesCallbackHandler(result:ArrayCollection):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (result != null) {
 					cbRemoteBranches.dataProvider = result[0];
 				} else {
@@ -104,14 +104,14 @@
 			}
 			
 			protected override function finishClickHandler():void {	
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
 				GitCommonPlugin.getInstance().service.configBranch(
 					node, GitRef(cbRemoteBranches.selectedItem), RemoteConfig(cbRemotes.selectedItem), cbRebase.selected, 
 					this, configBranch_callbackHandler);
 			}
 			
 			private function configBranch_callbackHandler(value:Boolean):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (value) {
 					super.finishClickHandler();
 				}

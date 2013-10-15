@@ -22,7 +22,7 @@ package  org.flowerplatform.web.git.common.action {
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	
 	/**

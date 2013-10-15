@@ -21,7 +21,7 @@ package org.flowerplatform.web.git.common.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.common.ui.ConfigBranchView;
 	
@@ -48,7 +48,7 @@ package org.flowerplatform.web.git.common.action {
 			var popup:ConfigBranchView = new ConfigBranchView();
 			popup.node = TreeNode(selection.getItemAt(0));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(popup)
+				.setViewContent(popup)
 				.setWidth(400)
 				.setHeight(350)
 				.show();			

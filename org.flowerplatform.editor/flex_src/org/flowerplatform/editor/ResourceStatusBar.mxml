@@ -265,7 +265,7 @@
 				var generateUrlView:LinkGenerateNavigateView = new LinkGenerateNavigateView();
 				generateUrlView.showForCurrentOpenResource = true;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(generateUrlView)
+					.setViewContent(generateUrlView)
 					.setWidth(550)
 					.setHeight(500)
 					.show();

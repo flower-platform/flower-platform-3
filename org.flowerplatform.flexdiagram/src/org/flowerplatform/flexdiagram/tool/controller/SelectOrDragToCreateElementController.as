@@ -25,7 +25,9 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	import mx.charts.chartClasses.DualStyleObject;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.core.UIComponent;
 	
+	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
@@ -151,7 +153,14 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			var models:IList = getModelsUnderPlaceHolder(model, selectDragToCreatePlaceHolder);
 			
 			if (models.length == 0) {
-				// TODO CC: add here drag to create element behavior
+				// the tool will be deactivated later, so wait until then
+				diagramShell.modelToExtraInfoMap[model].waitingToDeactivateDragTool = true;
+				
+				//create context
+				var context:Object = new Object();
+				context.rectangle = selectDragToCreatePlaceHolder.getRect(selectDragToCreatePlaceHolder);				
+				// dispatch event in order to let others implement the creation behavior
+				UIComponent(diagramShell.diagramRenderer).dispatchEvent(new CreateModelEvent(context, true));
 			} else {
 				// select/deselect models
 				for (var i:int = 0; i < models.length; i++) {
@@ -166,9 +175,9 @@ package org.flowerplatform.flexdiagram.tool.controller {
 						}
 					}
 				}
-			}
-			// done
-			diagramShell.mainToolFinishedItsJob();
+				// done
+				diagramShell.mainToolFinishedItsJob();
+			}			
 		}
 		
 		public function deactivate(model:Object):void {	
@@ -180,6 +189,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				// remove placeholder from model's extra info
 				delete diagramShell.modelToExtraInfoMap[model].selectDragToCreatePlaceHolder;
 				delete diagramShell.modelToExtraInfoMap[model].selectDragToCreateMode;
+				delete diagramShell.modelToExtraInfoMap[model].waitingToDeactivateDragTool;
 			}
 		}
 		

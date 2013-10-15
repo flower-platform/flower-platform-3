@@ -20,7 +20,7 @@ package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.emf_model.notation.Node;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Mariana Gheorghe

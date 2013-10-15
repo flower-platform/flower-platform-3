@@ -25,9 +25,18 @@ package org.flowerplatform.flexutil.context_menu {
 	import mx.core.FlexGlobals;
 	import mx.managers.PopUpManager;
 	
-	import org.flowerplatform.flexutil.popup.ActionUtil;
-	import org.flowerplatform.flexutil.popup.IAction;
+	import org.flowerplatform.flexutil.action.ActionUtil;
+	import org.flowerplatform.flexutil.action.IAction;
 
+	/**
+	 * Listens to the right click menu, dispatches FILL_CONTEXT_MENU in order to get actions
+	 * and selection and then opens the context menu.
+	 * 
+	 * <p>
+	 * Holds the actions and selection for the current "right click session".
+	 * 
+	 * @author Cristian Spiescu
+	 */
 	public class ContextMenuManager	{
 		
 		public var contextMenuStack:Vector.<ContextMenu> = new Vector.<ContextMenu>();
@@ -35,6 +44,8 @@ package org.flowerplatform.flexutil.context_menu {
 		public var allActions:Vector.<IAction>;
 		
 		public var selection:IList;
+		
+		public var context:Object;
 		
 		public function ContextMenuManager() {
 			FlexGlobals.topLevelApplication.stage.addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
@@ -44,14 +55,21 @@ package org.flowerplatform.flexutil.context_menu {
 			FlexGlobals.topLevelApplication.stage.removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 		}
 		
+		/**
+		 * Opens the menu (first level), if someone has items to provide to the menu.
+		 */
 		protected function rightClickHandler(event:MouseEvent):void {
+			// if there are open menus => close them
 			if (contextMenuStack.length > 0) {
 				contextMenuStack[0].closeContextMenuStack(0);
 			}
+			
+			// find a provider for actions (i.e. someone listening to FILL_CONTEXT_MENU) and
+			// open the menu
 			var currentElementUnderMouse:DisplayObject = DisplayObject(event.target);
 			while (currentElementUnderMouse != null) {
 				if (currentElementUnderMouse.hasEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU)) {
-					dispatchSimulatedMouseDownEvent(DisplayObject(event.target), currentElementUnderMouse, event);
+					dispatchSimulatedMouseDownAndUpEvents(event);
 					var cmEvent:FillContextMenuEvent = new FillContextMenuEvent();
 					currentElementUnderMouse.dispatchEvent(cmEvent);
 
@@ -59,6 +77,7 @@ package org.flowerplatform.flexutil.context_menu {
 						var cm:org.flowerplatform.flexutil.context_menu.ContextMenu = new org.flowerplatform.flexutil.context_menu.ContextMenu();
 						allActions = cmEvent.allActions;
 						selection = cmEvent.selection;
+						context = cmEvent.context;
 						cm.openContextMenu(this, event.stageX, event.stageY, cmEvent.rootActionsAlreadyCalculated, null);		
 					}
 					return;
@@ -67,26 +86,44 @@ package org.flowerplatform.flexutil.context_menu {
 			}
 		}
 		
-		protected function dispatchSimulatedMouseDownEvent(startingWith:DisplayObject, endingWidth:DisplayObject, event:MouseEvent):void {
-			var simulatedLeftClickEvent:MouseEvent = new MouseEvent(
+		/**
+		 * When a right click has been caught (and the object has a listener for FILL_CONTEXT_MENU event), 
+		 * we simulate a left click on the component hierarchy, so that they can do the logic associated with
+		 * a click (e.g. select the item).
+		 *  
+		 * @author Cristian Spiescu
+		 * @author Cristina Constatinescu
+		 */ 
+		protected function dispatchSimulatedMouseDownAndUpEvents(event:MouseEvent):void {
+			var simulatedMouseDownEvent:MouseEvent = new MouseEvent(
 				MouseEvent.MOUSE_DOWN, event.bubbles, event.cancelable, event.localX, event.localY,
 				event.relatedObject, event.ctrlKey, event.altKey, event.shiftKey, 
 				event.buttonDown, event.delta);
-			var currentElementUnderMouse:DisplayObject = DisplayObject(event.target);
-			while (currentElementUnderMouse != null && currentElementUnderMouse != endingWidth) {
-				currentElementUnderMouse.dispatchEvent(simulatedLeftClickEvent);
-				currentElementUnderMouse = currentElementUnderMouse.parent;
-			}
-
+			var simulatedMouseUpEvent:MouseEvent = new MouseEvent(
+				MouseEvent.MOUSE_UP, event.bubbles, event.cancelable, event.localX, event.localY,
+				event.relatedObject, event.ctrlKey, event.altKey, event.shiftKey, 
+				event.buttonDown, event.delta);
+			
+			// no need to dispatch events for each component in the hierarchy
+			// dispatchEvent does this autamatically
+			var currentElementUnderMouse:DisplayObject = DisplayObject(event.target);		
+			currentElementUnderMouse.dispatchEvent(simulatedMouseDownEvent);	
+			currentElementUnderMouse.dispatchEvent(simulatedMouseUpEvent);		
 		}
 		
-		public function openContextMenu(x:Number, y:Number, allActions:Vector.<IAction>, actionsForCurrentLevelAreadyCalculated:IList, rootActionId:String, selection:IList):void {
+		/**
+		 * Closes any open menus, and opens a menu for the current parentActionId (which
+		 * should belong to a composed action).
+		 */
+		public function openContextMenu(x:Number, y:Number, allActions:Vector.<IAction>, actionsForCurrentLevelAreadyCalculated:IList, parentActionId:String, selection:IList, context:Object):Boolean {
 			if (contextMenuStack.length > 0) {
 				contextMenuStack[0].closeContextMenuStack(0);
 			}
 			this.allActions = allActions;
 			this.selection = selection;
-			new ContextMenu().openContextMenu(this, x, y, actionsForCurrentLevelAreadyCalculated, rootActionId);
+			this.context = context;
+					
+			return new ContextMenu().openContextMenu(this, x, y, actionsForCurrentLevelAreadyCalculated, parentActionId);
 		}
 	}
 }

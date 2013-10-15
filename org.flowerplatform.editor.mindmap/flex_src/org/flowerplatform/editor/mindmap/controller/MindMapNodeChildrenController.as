@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.editor.mindmap.controller {
 	
+	import flash.events.Event;
+	
 	import flashx.textLayout.events.UpdateCompleteEvent;
 	
 	import mx.collections.ArrayList;
@@ -26,6 +28,7 @@ package org.flowerplatform.editor.mindmap.controller {
 	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
 	import org.flowerplatform.communication.transferable_object.TransferableObjectDisposedEvent;
 	import org.flowerplatform.communication.transferable_object.TransferableObjectUpdatedEvent;
+	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -56,44 +59,20 @@ package org.flowerplatform.editor.mindmap.controller {
 			return EMPTY_LIST;
 		}
 		
-		public function beginListeningForChanges(model:Object):void {
-			View(model).addEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);
+		public function beginListeningForChanges(model:Object):void {			
 			View(model).addEventListener(TransferableObjectDisposedEvent.OBJECT_DISPOSED, objectDisposedHandler);
 			View(model).addEventListener(UpdateConnectionEndsEvent.UPDATE_CONNECTION_ENDS, updateConnectionEndsHandler);
 		}
 		
-		public function endListeningForChanges(model:Object):void {
-			View(model).removeEventListener(TransferableObjectUpdatedEvent.OBJECT_UPDATED, objectUpdatedHandler);
+		public function endListeningForChanges(model:Object):void {			
 			View(model).removeEventListener(TransferableObjectDisposedEvent.OBJECT_DISPOSED, objectDisposedHandler);
 			View(model).removeEventListener(UpdateConnectionEndsEvent.UPDATE_CONNECTION_ENDS, updateConnectionEndsHandler);
 		}
 		
-		protected function objectUpdatedHandler(event:TransferableObjectUpdatedEvent):void {		
-			var model:MindMapNode = MindMapNode(event.object);	
-
-			MindMapDiagramShell(diagramShell).refreshDiagramChildren();			
-			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) { // refresh parent position if exists
-				MindMapDiagramShell(diagramShell).refreshNodePositions(diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model));
-			} else { // otherwise refresh root mindmap model
-				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
-			}
-			MindMapDiagramShell(diagramShell).shouldRefreshVisualChildren(diagramShell.rootModel);
-		}
-		
 		protected function objectDisposedHandler(event:TransferableObjectDisposedEvent):void {
 			var model:MindMapNode = MindMapNode(event.object);
-						
+					
 			diagramShell.unassociateModelFromRenderer(model, diagramShell.getRendererForModel(model), true);
-
-			MindMapDiagramShell(diagramShell).refreshDiagramChildren();
-			
-			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) { // refresh parent position if exists
-				MindMapDiagramShell(diagramShell).refreshNodePositions(diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model));
-			} else { // otherwise refresh root mindmap model
-				var rootModel:Object = diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);
-				MindMapDiagramShell(diagramShell).refreshNodePositions(rootModel);
-			}			
 			MindMapDiagramShell(diagramShell).shouldRefreshVisualChildren(diagramShell.rootModel);
 		}
 		
@@ -103,6 +82,14 @@ package org.flowerplatform.editor.mindmap.controller {
 		
 		private function getDynamicObject(model:Object):Object {
 			return DynamicModelExtraInfoController(diagramShell.getControllerProvider(model).getModelExtraInfoController(model)).getDynamicObject(model);
+		}
+		
+		private function getParentForModel(model:Object):Object {
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) is MindMapNode) { // refresh parent position if exists
+				return diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model);
+			} else { // otherwise refresh root mindmap model
+				return diagramShell.getControllerProvider(diagramShell.rootModel).getModelChildrenController(diagramShell.rootModel).getChildren(diagramShell.rootModel).getItemAt(0);				
+			}		
 		}
 	}
 }

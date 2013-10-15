@@ -153,7 +153,7 @@ package org.flowerplatform.web.common.communication.heartbeat {
 			warnAboutNoActivityDialog = new WarnAboutNoActivityDialog();
 			warnAboutNoActivityDialog.secondsUntilDisconnect = secondsUntilDisconnect;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(warnAboutNoActivityDialog)
+				.setViewContent(warnAboutNoActivityDialog)
 				.show();
 		}
 		

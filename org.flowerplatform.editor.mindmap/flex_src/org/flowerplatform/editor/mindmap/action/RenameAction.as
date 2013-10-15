@@ -26,6 +26,7 @@ package org.flowerplatform.editor.mindmap.action {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	
 	public class RenameAction extends TextInputAction {
 		
@@ -40,7 +41,7 @@ package org.flowerplatform.editor.mindmap.action {
 		override public function get visible():Boolean {
 			if (selection != null && selection.length == 1) {
 				var node:MindMapNode = MindMapNode(selection.getItemAt(0));
-				return node.side != 0;
+				return node.viewDetails != null && node.viewDetails.side != MindMapDiagramShell.NONE;
 			}
 			return false;
 		}

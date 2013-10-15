@@ -19,7 +19,7 @@
 package org.flowerplatform.web.git.common.action {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.common.remote.dto.GitActionDto;
 	import org.flowerplatform.web.git.common.ui.MergeView;
@@ -50,7 +50,7 @@ package org.flowerplatform.web.git.common.action {
 				popup.dto = result;
 				popup.dto.repositoryNode = node.parent.parent;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(popup)
+					.setViewContent(popup)
 					.setWidth(400)
 					.setHeight(400)					
 					.show();	

@@ -23,7 +23,7 @@ package org.flowerplatform.web.common.explorer.action
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.explorer.ui.TextInputView;
 
@@ -37,14 +37,21 @@ package org.flowerplatform.web.common.explorer.action
 		public function CreateFileAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.createFile.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/new_untitled_text_file.gif");
+			parentId = "new";
+			orderIndex = 10;
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */
 		override public function get visible():Boolean {
 			if (selection == null || selection.length != 1) {
 				return false;
-			}
-			var obj:Object = selection.getItemAt(0);		
-			return !(TreeNode(obj).customData == null) && (TreeNode(obj).customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY]);
+			}				
+			var node:TreeNode = TreeNode(selection.getItemAt(0));			
+			return WebCommonPlugin.getInstance().nodeTypeBelongsToNodeTypeCategory(node.pathFragment.type, WebCommonPlugin.NODE_TYPE_CATEGORY_DECORATABLE_FILE)
+				&& node.customData != null 
+				&& node.customData[WebCommonPlugin.TREE_NODE_FILE_SYSTEM_IS_DIRECTORY];
 		}
 		
 		override public function run():void	{
@@ -57,7 +64,7 @@ package org.flowerplatform.web.common.explorer.action
 			view.popupIcon = WebCommonPlugin.getInstance().getResourceUrl("images/new_untitled_text_file.gif");
 			view.setResultHandler(this);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(view)
+				.setViewContent(view)
 				.show();
 		}
 		

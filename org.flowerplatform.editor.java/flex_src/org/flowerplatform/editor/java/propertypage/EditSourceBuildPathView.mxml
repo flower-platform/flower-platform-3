@@ -24,7 +24,7 @@
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 implements="org.flowerplatform.flexutil.popup.IPopupContent, org.flowerplatform.flexutil.dialog.IDialog"
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.dialog.IDialog"
 		 creationComplete="creationCompleteHandler(event)">
 	
 	<fx:Script>
@@ -38,13 +38,13 @@
 			import org.flowerplatform.flexutil.FlexUtilAssets;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 					
 			[Bindable]
 			public var currentSource:String;
 			
-			private var _popupHost:IPopupHost;
+			private var _viewHost:IViewHost;
 			
 			private var resultHandler:IDialogResultHandler;
 			
@@ -52,25 +52,21 @@
 				this.resultHandler = resultHandler;
 			}
 						
-			public function get popupHost():IPopupHost {
-				return _popupHost;
+			public function get viewHost():IViewHost {
+				return _viewHost;
 			}
 			
-			public function set popupHost(value:IPopupHost):void {
-				_popupHost = value;				
-				popupHost.setLabel(JavaEditorPlugin.getInstance().getMessage("java.propertypage.addSource"));
+			public function set viewHost(value:IViewHost):void {
+				_viewHost = value;				
+				viewHost.setLabel(JavaEditorPlugin.getInstance().getMessage("java.propertypage.addSource"));
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction>{
 				return null;
 			}
 			
-			public function getSelection():IList {
-				return null;
-			}
-			
 			private function creationCompleteHandler(event:FlexEvent):void {
-				popupHost.addToControlBar(buttonBar);
+				viewHost.addToControlBar(buttonBar);
 			}
 			
 			private function okHandler():void {

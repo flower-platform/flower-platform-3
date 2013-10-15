@@ -23,9 +23,9 @@ package org.flowerplatform.editor.action {
 	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
-	import org.flowerplatform.flexutil.popup.ComposedAction;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
+	import org.flowerplatform.flexutil.action.ComposedAction;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
 
 	public class EditorTreeActionProvider implements IActionProvider {
 		
@@ -35,6 +35,10 @@ package org.flowerplatform.editor.action {
 		}
 		
 		public function getActions(selection:IList):Vector.<IAction> {
+			if (selection.length == 0) {
+				return null;
+			}
+
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
 			if (selection.length == 1) {
@@ -49,6 +53,7 @@ package org.flowerplatform.editor.action {
 				openWithAction.label = EditorPlugin.getInstance().getMessage("editor.openWith");
 				openWithAction.icon = OpenAction.ICON_URL;
 				openWithAction.id = OPEN_WITH_ACTION_ID;
+				openWithAction.orderIndex = 151;
 				result.push(openWithAction);
 				
 				var ctIndex:int = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
@@ -67,8 +72,10 @@ package org.flowerplatform.editor.action {
 				}
 			} else {
 				for (var i:int = 0; i < selection.length; i++) {
-					if (TreeNode(selection.getItemAt(i)).customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
-						// found at least one node not openable
+					treeNode = TreeNode(selection.getItemAt(i));
+					
+					if (treeNode.customData == null || treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
+						// node not openable
 						return null;
 					}
 				}
