@@ -75,10 +75,6 @@ package org.flowerplatform.editor.mindmap {
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(SetMinMaxWidthAction);
 		}
 		
-		override public function start():void {
-			super.start();
-		}
-		
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(MindMapNode);	
 			registerClassAliasFromAnnotation(NewMindMapDiagramAction);
