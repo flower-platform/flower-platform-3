@@ -1,3 +1,4 @@
 === Link required ===
 
 cursor.png http://www.famfamfam.com/lab/icons/silk/
+chart_line_add.png http://www.famfamfam.com/lab/icons/silk/

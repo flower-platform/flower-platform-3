@@ -101,8 +101,10 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 			CopyOnWriteArrayList<Node> persistentChildren = new CopyOnWriteArrayList<Node>(associatedViewOnOpenDiagram.getPersistentChildren());
 			for (Iterator<Node> it = persistentChildren.iterator(); it.hasNext();) {
 				View child = it.next();
-				removeChildView(child, child.getDiagrammableElement(), context);
-				associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+				if (childViews.contains(child)) {
+					removeChildView(child, child.getDiagrammableElement(), context);
+					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+				}
 			}			
 		}
 	}

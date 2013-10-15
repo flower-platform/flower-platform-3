@@ -100,8 +100,15 @@ package org.flowerplatform.flexdiagram.tool {
 					}
 					diagramShell.mainSelectedItem = model;
 				} else {
-					diagramShell.selectedItems.removeAll();
-					diagramShell.selectedItems.addItem(model);										
+					try {
+						// Because an addItem is called after, the eventsCanBeIgnored is set to true,
+						// this way listeners can limit the number of unwanted events.
+						diagramShell.selectedItems.eventsCanBeIgnored = true;
+						diagramShell.selectedItems.removeAll();							
+					} finally {
+						diagramShell.selectedItems.eventsCanBeIgnored = false;
+					}
+					diagramShell.selectedItems.addItem(model);
 				}
 			}
 			diagramShell.mainToolFinishedItsJob();
