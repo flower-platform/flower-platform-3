@@ -37,5 +37,9 @@ package org.flowerplatform.editor.model.renderer {
 		override protected function set hovered(value:Boolean):void {
 			super.hovered = false;
 		}
+		
+		override protected function createBoxEffects():void {
+			// we do not want effects here
+		}
 	}
 }
