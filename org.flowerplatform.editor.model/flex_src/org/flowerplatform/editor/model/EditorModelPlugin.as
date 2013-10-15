@@ -61,10 +61,11 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
+	import org.flowerplatform.flexdiagram.tool.controller.SelectOrDragToCreateElementController;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
+	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	
 	/**
 	 * @author Cristi
@@ -99,9 +100,10 @@ package org.flowerplatform.editor.model {
 			
 			// classDiagram
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(DiagramModelChildrenController);
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(AbsoluteLayoutVisualChildrenController);
+			composedControllerProviderFactory.selectOrDragToCreateElementControllerClass = new ControllerFactory(SelectOrDragToCreateElementController);
 			composedControllerProviderFactories["classDiagram"] = composedControllerProviderFactory;
 			
 			// class
@@ -113,7 +115,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.dragControllerClass = new ControllerFactory(AbsoluteNodePlaceHolderDragController);
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);			
 			composedControllerProviderFactories["class"] = composedControllerProviderFactory;
 			
 			// class members
@@ -183,10 +185,6 @@ package org.flowerplatform.editor.model {
 			
 			registerClassAliasFromAnnotation(ContentAssistItem);
 		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
-		}
-		
+			
 	}
 }

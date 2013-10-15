@@ -72,8 +72,10 @@ package org.flowerplatform.editor.model {
 			
 			diagramShell = getDiagramShellInstance();
 			diagramShell.diagramRenderer = diagramRenderer;
-						
-			super.createChildren();			
+									
+			super.createChildren();		
+			
+			toolbarsArea.addElement(new Toolbar());
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {

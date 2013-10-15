@@ -105,11 +105,15 @@ package org.flowerplatform.flexdiagram.tool {
 				}
 			}
 			diagramShell.mainToolFinishedItsJob();
+			
+			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {
 			delete context.ctrlPressed;
-			delete context.shiftPressed;		
+			delete context.shiftPressed;	
+			
+			super.deactivateAsMainTool();
 		}
 		
 	}	
