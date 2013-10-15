@@ -65,15 +65,13 @@ public class SetUpTestEnviroment {
 		File destDir = null;
 		if(event == EVENT_DELETE) {
 			sourceDir = new File(
-					TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" 
-					+ RESOURCE_FOLDER_NAME + "/" 
+					TestUtil.getResourcesDir(SetUpTestEnviroment.class) + "/" 
 					+ TestUtil.INITIAL_TO_BE_COPIED + "/" 
 					+ FOLDER_TO_BE_COPIED_FOR_DELETE);
 			destDir = new File(pathOfWorkspaceRoot + "/" + FOLDER_TO_BE_COPIED_FOR_DELETE);
 		} else {
 			sourceDir = new File(
-					TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" 
-					+ RESOURCE_FOLDER_NAME + "/" 
+					TestUtil.getResourcesDir(SetUpTestEnviroment.class) + "/" 
 					+ TestUtil.INITIAL_TO_BE_COPIED + "/" 
 					+ FOLDER_TO_BE_COPIED_FOR_DELETE);
 			destDir = new File(pathOfWorkspaceRoot + "/" + FOLDER_TO_BE_COPIED_FOR_RENAME);
@@ -106,8 +104,7 @@ public class SetUpTestEnviroment {
 		File workspaceRoot = CommonPlugin.getInstance().getWorkspaceRoot();
 		String pathOfWorkspaceRoot = workspaceRoot.getPath();
 		File sourceDir = new File(
-				TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" 
-				+ RESOURCE_FOLDER_NAME + "/" 
+				TestUtil.getResourcesDir(SetUpTestEnviroment.class) + "/" 
 				+ TestUtil.INITIAL_TO_BE_COPIED + "/" 
 				+ FOLDER_TO_BE_COPIED_FOR_FILE_CHANGED);
 		File destDir = new File(pathOfWorkspaceRoot + "/" + FOLDER_TO_BE_COPIED_FOR_FILE_CHANGED);

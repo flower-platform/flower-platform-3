@@ -127,7 +127,7 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 		
 		Utils.deleteAllData();
 		
-		System.setProperty("java.security.policy", new File(TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/user_admin/all.policy").getAbsolutePath());
+		System.setProperty("java.security.policy", new File(TestUtil.getResourcesDir(SecurityPermissionsTests.class) + "all.policy").getAbsolutePath());
 		PolicyFile policyFile = new PolicyFile();
 		Policy.setPolicy(new FlowerWebPolicyTest(policyFile));
 		Policy.getPolicy().refresh();

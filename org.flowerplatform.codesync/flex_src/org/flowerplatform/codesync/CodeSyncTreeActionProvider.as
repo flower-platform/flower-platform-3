@@ -28,7 +28,8 @@ package org.flowerplatform.codesync {
 		
 		public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
-			result.push(new CodeSyncAction("Code Sync", "java"));
+			result.push(new CodeSyncAction("Code Sync - java", "java"));
+			result.push(new CodeSyncAction("Code Sync - js", "js"));
 			result.push(new CodeSyncAction("Wiki Sync", "github"));
 			return result;
 		}

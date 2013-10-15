@@ -35,6 +35,7 @@ import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
+
 import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -203,6 +204,11 @@ public class JavaFileModelAdapter extends AstModelElementAdapter {
 	
 	private File getFile(Object modelElement) {
 		return (File) modelElement;
+	}
+
+	@Override
+	protected void updateUID(Object element, Object correspondingElement) {
+		// nothing to do
 	}
 	
 }

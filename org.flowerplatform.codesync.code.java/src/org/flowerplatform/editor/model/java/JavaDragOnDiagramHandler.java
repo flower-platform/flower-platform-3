@@ -62,6 +62,9 @@ public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 		for (Object object : draggedObjects) {
 			File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
+			if (!acceptDraggedObject(resource)) {
+				return false;
+			}
 			CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, resource, CodeSyncCodeJavaPlugin.TECHNOLOGY, communicationChannel, false);
 			
 			Node node = NotationFactory.eINSTANCE.createNode();

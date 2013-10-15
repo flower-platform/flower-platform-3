@@ -26,7 +26,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
-	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
@@ -47,6 +46,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Edge;
+	import org.flowerplatform.emf_model.notation.ExpandableNode;
 	import org.flowerplatform.emf_model.notation.Location;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
@@ -62,8 +62,9 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
+	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	
 	/**
 	 * @author Cristi
@@ -71,6 +72,8 @@ package org.flowerplatform.editor.model {
 	public class EditorModelPlugin extends AbstractFlowerFlexPlugin {
 		
 		protected static var INSTANCE:EditorModelPlugin;
+		
+		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
 		
@@ -89,6 +92,8 @@ package org.flowerplatform.editor.model {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
+			
+			notationDiagramActionProviders.push(notationDiagramClassFactoryActionProvider);
 			
 			var editorDescriptor:NotationDiagramEditorDescriptor = new NotationDiagramEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
@@ -167,6 +172,7 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
 			registerClassAliasFromAnnotation(Bounds);
+			registerClassAliasFromAnnotation(ExpandableNode);
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
 			registerClassAliasFromAnnotation(ContentAssistItem);

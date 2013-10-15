@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.model.action.AddElementAction"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.model.action.AddElementActionProvider"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand"/>
+    <classEntry path="org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

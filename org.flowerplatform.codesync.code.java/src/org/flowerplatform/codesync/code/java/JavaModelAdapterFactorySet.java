@@ -18,14 +18,14 @@
  */
 package org.flowerplatform.codesync.code.java;
 
-import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.ANNOTATION;
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaAnnotationTypeMemberDeclarationModelAdapter.ANNOTATION_MEMBER;
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapter.ATTRIBUTE;
+import static com.crispico.flower.mp.codesync.code.java.adapter.JavaEnumConstantDeclarationModelAdapter.ENUM_CONSTANT;
+import static com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter.OPERATION;
+import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.ANNOTATION;
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.CLASS;
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.ENUM;
-import static com.crispico.flower.mp.codesync.code.java.adapter.JavaEnumConstantDeclarationModelAdapter.ENUM_CONSTANT;
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.INTERFACE;
-import static com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter.OPERATION;
 
 import java.io.File;
 
@@ -91,12 +91,15 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 
 	@Override
-	public void initialize(Resource astCache) {
+	public void initialize(Resource astCache, String limitedPath, boolean useUIDs) {
+		super.initialize(astCache, limitedPath, useUIDs);
+		
 		// right - AST
 		rightFactory = new ModelAdapterFactory();
 		
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
+		folderModelAdapter.setLimitedPath(limitedPath);
 		rightFactory.addModelAdapter(File.class, folderModelAdapter, "");
 		
 		// java specific adapters

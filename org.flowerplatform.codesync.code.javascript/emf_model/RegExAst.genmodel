@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.flowerplatform.codesync.code.javascript/src"
+    modelPluginID="org.flowerplatform.codesync.code.javascript" modelName="RegExAst"
+    importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0" copyrightFields="false"
+    usedGenPackages="../../org.flowerplatform.emf_model.codesync/emf_model/CodeSync.genmodel#//codesync platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore">
+  <foreignModel>RegExAst.ecore</foreignModel>
+  <genPackages prefix="RegExAst" basePackage="org.flowerplatform.codesync.code.javascript"
+      disposableProviderFactory="true" ecorePackage="RegExAst.ecore#/">
+    <genClasses ecoreClass="RegExAst.ecore#//Node">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegExAst.ecore#//Node/children"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegExAst.ecore#//Node/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Node/keyParameter"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Node/type"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Node/categoryNode"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Node/offset"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Node/length"/>
+    </genClasses>
+    <genClasses ecoreClass="RegExAst.ecore#//Parameter">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Parameter/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Parameter/value"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Parameter/offset"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//Parameter/length"/>
+    </genClasses>
+    <genClasses ecoreClass="RegExAst.ecore#//RegExAstCacheElement">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference RegExAst.ecore#//RegExAstCacheElement/parameters"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute RegExAst.ecore#//RegExAstCacheElement/categoryNode"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

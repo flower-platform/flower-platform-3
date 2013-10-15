@@ -82,8 +82,10 @@
 					return;
 				}
 				if (super.data != null) {
-					var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-					bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					if (Node(data).layoutConstraint_RH != null) {
+						var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+						bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					}
 				}
 				
 				super.data = value;

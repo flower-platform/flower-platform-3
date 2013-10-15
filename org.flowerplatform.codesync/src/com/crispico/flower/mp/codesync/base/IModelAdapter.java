@@ -18,7 +18,6 @@
  */
 package com.crispico.flower.mp.codesync.base;
 
-import java.util.List;
 import java.util.Map;
 
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
@@ -36,6 +35,8 @@ public interface IModelAdapter extends IModelAdapterUI {
 	public static final int FEATURE_TYPE_VALUE = 2;
 	
 	public static final int FEATURE_TYPE_REFERENCE = 3;
+	
+	public static final String FLOWER_UID = "@flowerUID";
 	
 	public ModelAdapterFactorySet getModelAdapterFactorySet();
 	
