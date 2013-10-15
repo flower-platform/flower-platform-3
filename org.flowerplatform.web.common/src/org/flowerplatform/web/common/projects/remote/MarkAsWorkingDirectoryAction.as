@@ -20,13 +20,14 @@ package org.flowerplatform.web.common.projects.remote {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	public class MarkAsWorkingDirectoryAction extends ActionBase {
 		public function MarkAsWorkingDirectoryAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.markAsWorkingDirectory.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/workset.gif");
+			orderIndex = 500;
 		}
 		
 		public static function isProjectsActionVisible(nodeType:String):Boolean {

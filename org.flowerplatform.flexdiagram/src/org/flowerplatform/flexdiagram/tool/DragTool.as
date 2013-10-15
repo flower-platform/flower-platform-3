@@ -22,11 +22,14 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
+	import mx.collections.IList;
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
 	
@@ -61,22 +64,14 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 				
 			context.initialMousePoint = globalToDiagram(Math.ceil(diagramRenderer.stage.mouseX), Math.ceil(diagramRenderer.stage.mouseY));
-						
-			var renderer:IDataRenderer = IDataRenderer(getRendererFromDisplayCoordinates());
-			
-			if (diagramShell.selectedItems.getItemIndex(renderer.data) != -1) {				
-				for (var i:int = 0; i < diagramShell.selectedItems.length; i++) {
-					var model:Object = diagramShell.selectedItems.getItemAt(i);
-					var dragController:IDragController = diagramShell.getControllerProvider(model).getDragController(model);
-					if (dragController != null) {
-						if (context.draggableItems == null) {
-							context.draggableItems = new ArrayList();
-						}
-						ArrayList(context.draggableItems).addItem(model);
-						dragController.activate(model, context.initialMousePoint.x, context.initialMousePoint.y);						
-					}
-				}	
-			}		
+		
+			var acceptedDraggableModels:IList = getAcceptedDraggableModelsFromSelection(diagramShell.selectedItems);
+			for (var i:int = 0; i < acceptedDraggableModels.length; i++) {					
+				var model:Object = acceptedDraggableModels.getItemAt(i);				
+				diagramShell.getControllerProvider(model).getDragController(model)
+					.activate(model, context.initialMousePoint.x, context.initialMousePoint.y);					
+			}
+			context.draggableItems = acceptedDraggableModels;		
 		}
 		
 		override public function deactivateAsMainTool():void {			
@@ -92,7 +87,7 @@ package org.flowerplatform.flexdiagram.tool {
 			delete context.draggableItems;
 		}
 		
-		private function mouseMoveHandler(event:MouseEvent):void {			
+		protected function mouseMoveHandler(event:MouseEvent):void {			
 			if (event.buttonDown) {		
 				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));
 				var deltaX:int = mousePoint.x - context.initialMousePoint.x;
@@ -107,12 +102,24 @@ package org.flowerplatform.flexdiagram.tool {
 			}
 		}
 		
-		private function mouseUpHandler(event:MouseEvent):void {
+		protected function mouseUpHandler(event:MouseEvent):void {
 			for (var i:int = 0; i < ArrayList(context.draggableItems).length; i++) {
 				var model:Object = ArrayList(context.draggableItems).getItemAt(i);
 				diagramShell.getControllerProvider(model).getDragController(model).drop(model);				
 			}
 			diagramShell.mainToolFinishedItsJob();
+		}
+		
+		protected function getAcceptedDraggableModelsFromSelection(selection:IList):IList {
+			var acceptedDraggableModels:ArrayList = new ArrayList();
+			for (var i:int = 0; i < selection.length; i++) {					
+				var model:Object = selection.getItemAt(i);					
+				var dragController:IDragController = diagramShell.getControllerProvider(model).getDragController(model);
+				if (dragController != null) {
+					acceptedDraggableModels.addItem(model);								
+				}
+			}	
+			return acceptedDraggableModels;
 		}
 		
 	}

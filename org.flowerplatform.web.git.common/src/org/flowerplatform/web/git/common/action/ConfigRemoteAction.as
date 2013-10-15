@@ -20,7 +20,7 @@ package org.flowerplatform.web.git.common.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
 	import org.flowerplatform.web.git.common.ui.ConfigRemoteView;
@@ -51,7 +51,7 @@ package org.flowerplatform.web.git.common.action {
 				configWindow.node = node.parent;
 				configWindow.remoteConfig = result;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(configWindow)
+					.setViewContent(configWindow)
 					.setWidth(400)
 					.setHeight(350)					
 					.show();		

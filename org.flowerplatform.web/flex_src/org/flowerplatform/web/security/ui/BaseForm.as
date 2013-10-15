@@ -27,9 +27,9 @@ package org.flowerplatform.web.security.ui {
 	import mx.containers.VBox;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	import org.flowerplatform.web.common.entity.dto.Dto;
 		
 	/**
@@ -40,7 +40,7 @@ package org.flowerplatform.web.security.ui {
 	 * @author Mariana
 	 * 
 	 */
-	public class BaseForm extends VBox implements IPopupContent, ModalSpinnerSupport {
+	public class BaseForm extends VBox implements IViewContent, ModalSpinnerSupport {
 				
 		/**
 		 * 
@@ -57,7 +57,7 @@ package org.flowerplatform.web.security.ui {
 		 */
 		private var _parentListPanel:BaseListPanel;
 		
-		private var _popupHost:IPopupHost;
+		private var _viewHost:IViewHost;
 				
 		/**
 		 * 
@@ -111,12 +111,12 @@ package org.flowerplatform.web.security.ui {
 			return null;
 		}
 		
-		public function set popupHost(value:IPopupHost):void {
-			_popupHost = value;
+		public function set viewHost(value:IViewHost):void {
+			_viewHost = value;
 		}
 		
-		public function get popupHost():IPopupHost {
-			return _popupHost;
+		public function get viewHost():IViewHost {
+			return _viewHost;
 		}
 		
 		/**

@@ -5,9 +5,9 @@ package org.flowerplatform.properties.ui {
 	import mx.collections.IList;
 	import mx.core.ClassFactory;
 	
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
 	import spark.components.Button;
 	import spark.components.List;
@@ -17,9 +17,9 @@ package org.flowerplatform.properties.ui {
 	/**
 	 * @author Tache Razvan Mihai
 	 */
-	public class PropertiesList extends List implements IPopupContent {
+	public class PropertiesList extends List implements IViewContent {
 		
-		protected var _popupHost:IPopupHost;
+		protected var _viewHost:IViewHost;
 		
 		public var propertyList:PropertiesList;
 		
@@ -29,26 +29,19 @@ package org.flowerplatform.properties.ui {
 			super();
 			itemRenderer = new ClassFactory(PropertyItemRenderer);
 			dataProvider = new ArrayList();
-			
-			addEventListener(IndexChangeEvent.CHANGE, selectionChangedHandler);
 		}
 		
 		public function getSelectedItemsForProperties():Object {
 			return selectedItemsForProperties;	
 		}
 		
-		protected function selectionChangedHandler(e:IndexChangeEvent):void {
-			if (popupHost) {
-				popupHost.refreshActions(this);
-			}
+		
+		public function get viewHost():IViewHost {
+			return _viewHost;
 		}
 		
-		public function get popupHost():IPopupHost {
-			return _popupHost;
-		}
-		
-		public function set popupHost(value:IPopupHost):void {
-			_popupHost = value;
+		public function set viewHost(value:IViewHost):void {
+			_viewHost = value;
 		}
 		
 		public function getActions(selection:IList):Vector.<IAction> {
@@ -59,9 +52,5 @@ package org.flowerplatform.properties.ui {
 			return null;
 		}
 		
-		override protected function focusInHandler(event:FocusEvent):void {
-			super.focusInHandler(event);
-			popupHost.activePopupContent = this;
-		}
 	}
 }

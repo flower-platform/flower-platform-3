@@ -27,6 +27,7 @@ package org.flowerplatform.flexutil {
 	import org.flowerplatform.flexutil.popup.IMessageBoxFactory;
 	import org.flowerplatform.flexutil.popup.IPopupHandlerFactory;
 	import org.flowerplatform.flexutil.popup.IProgressMonitorFactory;
+	import org.flowerplatform.flexutil.selection.SelectionManager;
 
 	public class FlexUtilGlobals {
 
@@ -59,6 +60,8 @@ package org.flowerplatform.flexutil {
 		 * The mobile app should provide the explicit URL.
 		 */
 		public var rootUrl:String = "";
+		
+		public var selectionManager:SelectionManager = new SelectionManager();
 		
 		public function createAbsoluteUrl(url:String):String {
 			if (rootUrl.length > 0) {

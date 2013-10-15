@@ -115,5 +115,9 @@ package org.flowerplatform.editor.mindmap.remote {
 		public function service_addIcon(selection:IList, icon:String, callbackObject:Object = null, callbackFunction:Function = null):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "addIcon", [convertSelection(selection), icon], callbackObject, callbackFunction));
 		}
+		
+		public function service_setMinMaxWidth(selection:IList, minWidth:Number, minHeight:Number, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(SERVICE_ID, "setMinMaxWidth", [convertSelection(selection), minWidth, minHeight], callbackObject, callbackFunction));
+		}
 	}
 }

@@ -28,12 +28,13 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	/**
 	 * @author Cristi
 	 */
 	public class CodeSyncPlugin extends AbstractFlowerFlexPlugin {
+		
+		public var codeSyncTreeActionProvider:CodeSyncTreeActionProvider = new CodeSyncTreeActionProvider();
 		
 		protected static var INSTANCE:CodeSyncPlugin;
 		
@@ -51,8 +52,6 @@ package org.flowerplatform.codesync {
 			var editorDescriptor:EditorDescriptor = new CodeSyncEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
-			
-			WebCommonPlugin.getInstance().explorerTreeActionProviders.push(new CodeSyncTreeActionProvider());
 		}
 		
 		override protected function registerClassAliases():void {

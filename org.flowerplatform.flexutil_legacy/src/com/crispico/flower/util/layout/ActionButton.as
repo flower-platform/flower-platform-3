@@ -23,14 +23,14 @@ package com.crispico.flower.util.layout {
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.context_menu.ContextMenu;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IComposedAction;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IComposedAction;
 	
 	import spark.components.Button;
 	
 	public class ActionButton extends Button {
 		
-		public var viewWrapper:PopupHostViewWrapper;
+		public var viewWrapper:WorkbenchViewHost;
 		
 		public var action:IAction;
 		

@@ -17,7 +17,7 @@
  * license-end
  */
 package org.flowerplatform.editor {
-	import com.crispico.flower.util.layout.PopupHostViewWrapper;
+	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	
 	import flash.utils.Dictionary;
 	
@@ -118,9 +118,9 @@ package org.flowerplatform.editor {
 				if (view is EditorFrontend) {
 					editorStatefulClient = EditorFrontend(view).editorStatefulClient;
 				}
-				if (view is PopupHostViewWrapper) {
-					if (PopupHostViewWrapper(view).activePopupContent is EditorFrontend) {
-						editorStatefulClient = EditorFrontend(PopupHostViewWrapper(view).activePopupContent).editorStatefulClient;
+				if (view is WorkbenchViewHost) {
+					if (WorkbenchViewHost(view).activeViewContent is EditorFrontend) {
+						editorStatefulClient = EditorFrontend(WorkbenchViewHost(view).activeViewContent).editorStatefulClient;
 					}
 				}
 				if (editorStatefulClient != null) {

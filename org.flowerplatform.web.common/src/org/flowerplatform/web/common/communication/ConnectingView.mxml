@@ -18,7 +18,7 @@
  
 	license-end
 -->
-<s:Group implements="org.flowerplatform.flexutil.popup.IPopupContent" currentState="connecting"
+<s:Group implements="org.flowerplatform.flexutil.view_content_host.IViewContent" currentState="connecting"
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx">
@@ -26,8 +26,8 @@
 		<![CDATA[
 			import mx.collections.IList;
 			
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			// TODO CS/FP2 msg
 			
 			public function getActions(selection:IList):Vector.<IAction>
@@ -40,7 +40,7 @@
 				return null;
 			}
 			
-			public function set popupHost(popupHost:IPopupHost):void
+			public function set viewHost(viewHost:IViewHost):void
 			{
 			}
 			

@@ -27,7 +27,7 @@ package  org.flowerplatform.web.common.communication {
 	import org.flowerplatform.communication.command.HelloServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.resources.ResourceUpdatedEvent;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.security.dto.User_CurrentUserLoggedInDto;
@@ -122,9 +122,9 @@ package  org.flowerplatform.web.common.communication {
 		public function showAuthenticationView(switchUserMode:Boolean = false, providedUsername:String = null, anonymousFailed:Boolean = false, showActivationCodeField:Boolean = false):void {
 			if (authenticationView == null) {
 				var authenticationViewProvider:IViewProvider = FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(AuthenticationViewProvider.ID);
-				authenticationView = IPopupContent(authenticationViewProvider.createView(null)) as AuthenticationView;
+				authenticationView = IViewContent(authenticationViewProvider.createView(null)) as AuthenticationView;
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-					.setPopupContent(authenticationView)
+					.setViewContent(authenticationView)
 					.show();
 			}
 			authenticationView.addEventListener(ResourceUpdatedEvent.RESOURCE_UPDATED, authenticationView.resourceUpdated);
@@ -137,7 +137,7 @@ package  org.flowerplatform.web.common.communication {
 //			ModalSpinner.addGlobalModalSpinner(CommonPlugin.getInstance().getMessage("spinner.connecting"), new ReconnectingSpinner());
 			connectingView = new ConnectingView()
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(connectingView)
+				.setViewContent(connectingView)
 				.showModalOverAllApplication();
 		}
 		

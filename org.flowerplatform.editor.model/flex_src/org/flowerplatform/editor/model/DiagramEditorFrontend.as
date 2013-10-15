@@ -34,24 +34,24 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.selection.ISelectionProvider;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
-	public class DiagramEditorFrontend extends EditorFrontend implements IPopupContent, IFocusManagerComponent {
+	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider {
 	
 		public var diagramShell:DiagramShell;
 		
-		protected var _popupHost:IPopupHost;
+		protected var _viewHost:IViewHost;
 		
 		override protected function creationCompleteHandler(event:FlexEvent):void {
 			diagramShell.selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangedHandler);
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
-			if (popupHost) {
-				popupHost.refreshActions(this);
-			}
+			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
 		}
 		
 		protected function getDiagramShellInstance():DiagramShell {
@@ -94,17 +94,12 @@ package org.flowerplatform.editor.model {
 			return diagramShell.selectedItems;
 		}
 		
-		public function get popupHost():IPopupHost {
-			return _popupHost;
+		public function get viewHost():IViewHost {
+			return _viewHost;
 		}
 		
-		public function set popupHost(value:IPopupHost):void {
-			_popupHost = value;
-		}
-		
-		override protected function focusInHandler(event:FocusEvent):void {
-			super.focusInHandler(event);
-			popupHost.activePopupContent = this;
+		public function set viewHost(value:IViewHost):void {
+			_viewHost = value;
 		}
 		
 	}

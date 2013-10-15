@@ -87,8 +87,8 @@ package  com.crispico.flower.util.layout {
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.popup.IPopupContent;
-	import org.flowerplatform.flexutil.popup.IPopupHost;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
 	import spark.components.NavigatorContent;
 
@@ -2027,10 +2027,10 @@ package  com.crispico.flower.util.layout {
 				throw new Error("A graphical component must be associated for view id '" + viewLayoutData.viewId + "'!");
 			}
 			
-			if (component is IPopupContent) {
-				component = new PopupHostViewWrapper(IPopupContent(component));
+			if (component is IViewContent) {
+				component = new WorkbenchViewHost(IViewContent(component));
 			} else if (!(component is Container)) {
-				throw new Error("A view should be either a Container or an IPopupContent");
+				throw new Error("A view should be either a Container or an IViewContent");
 			} 
 
 			component.addEventListener(FlexEvent.CREATION_COMPLETE, componentCreationCompleteHandler);

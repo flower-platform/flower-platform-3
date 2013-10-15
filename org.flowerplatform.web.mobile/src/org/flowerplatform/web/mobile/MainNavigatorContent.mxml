@@ -32,13 +32,22 @@
 					]]>
 				</s:click>
 			</s:Button>
+			<s:Button id="closeAppButton" label="Ex" icon="{getAbsoluteUrl('images/exit.png')}"
+					  click="NativeApplication.nativeApplication.exit()"/>
 		</fx:Array>
 	</fx:Declarations>
 	<fx:Script>
 		<![CDATA[
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.web.common.WebCommonPlugin;
+			
 			import spark.components.ViewNavigator;
 			
 			public var navigator:ViewNavigator;
+			
+			public function getAbsoluteUrl(resource:String):String {
+				return FlexUtilGlobals.getInstance().createAbsoluteUrl(WebCommonPlugin.getInstance().getResourceUrl(resource));
+			}
 		]]>
 	</fx:Script>
 </fx:Object>

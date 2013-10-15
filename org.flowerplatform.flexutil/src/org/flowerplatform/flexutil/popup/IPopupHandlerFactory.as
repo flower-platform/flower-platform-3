@@ -21,6 +21,6 @@ package org.flowerplatform.flexutil.popup {
 
 	public interface IPopupHandlerFactory {
 		function createPopupHandler():IPopupHandler;
-		function removePopup(popupContent:IVisualElement):void;
+		function removePopup(viewContent:IVisualElement):void;
 	}
 }

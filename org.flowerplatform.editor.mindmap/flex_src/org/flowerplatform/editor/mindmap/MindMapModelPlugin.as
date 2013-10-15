@@ -25,19 +25,14 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.editor.mindmap.action.MoveDownAction;
 	import org.flowerplatform.editor.mindmap.action.MoveUpAction;
 	import org.flowerplatform.editor.mindmap.action.NewDefaultNodeAction;
-	import org.flowerplatform.editor.mindmap.action.NewFolderAction;
-	import org.flowerplatform.editor.mindmap.action.NewHeadline1Action;
-	import org.flowerplatform.editor.mindmap.action.NewHeadline2Action;
-	import org.flowerplatform.editor.mindmap.action.NewHeadline3Action;
-	import org.flowerplatform.editor.mindmap.action.NewPageAction;
-	import org.flowerplatform.editor.mindmap.action.NewParagraphAction;
 	import org.flowerplatform.editor.mindmap.action.RenameAction;
+	import org.flowerplatform.editor.mindmap.action.SetMinMaxWidthAction;
 	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
+	import org.flowerplatform.editor.mindmap.ui.SetNodeWidthLimitsView;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 
 	
 	/**
@@ -77,11 +72,7 @@ package org.flowerplatform.editor.mindmap {
 			
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(NewDefaultNodeAction);
 			mindmapDiagramClassFactoryActionProvider.actionClasses.push(ManageIconsAction);
-		}
-		
-		override public function start():void {
-			super.start();
-			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
+			mindmapDiagramClassFactoryActionProvider.actionClasses.push(SetMinMaxWidthAction);
 		}
 		
 		override protected function registerClassAliases():void {

@@ -21,13 +21,15 @@ package org.flowerplatform.web.common.projects.remote {
 	import org.flowerplatform.communication.command.CompoundServerCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	public class CreateOrImportProjectAction extends ActionBase {
 		public function CreateOrImportProjectAction() {
 			label = WebCommonPlugin.getInstance().getMessage("explorer.createOrImportProject.action");
 			icon = WebCommonPlugin.getInstance().getResourceUrl("images/project.gif");
+			parentId = "new";
+			orderIndex = 30;
 		}
 		
 		override public function get visible():Boolean {

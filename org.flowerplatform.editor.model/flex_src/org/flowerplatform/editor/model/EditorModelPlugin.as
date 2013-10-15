@@ -40,7 +40,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
-	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
@@ -66,8 +65,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
-	import org.flowerplatform.flexutil.popup.ClassFactoryActionProvider;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
+	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	
 	/**
 	 * @author Cristi
@@ -158,18 +156,13 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
+
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(TestDiagramPropAction);
 			
-		}
-		
-		override public function start():void {
-			super.start();
-//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
-//			WebCommonPlugin.getInstance().explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
 		}
 		
 		override protected function registerClassAliases():void {
@@ -179,13 +172,9 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
 			registerClassAliasFromAnnotation(Bounds);
-			
-			registerClassAliasFromAnnotation(MoveResizeServerCommand);
-			
+			registerClassAliasFromAnnotation(MoveResizeServerCommand);			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
-			
-			registerClassAliasFromAnnotation(NewJavaClassDiagramAction);
-			
+						
 			registerClassAliasFromAnnotation(DiagramSelectedItem);
 
 			registerClassAliasFromAnnotation(ContentAssistItem);

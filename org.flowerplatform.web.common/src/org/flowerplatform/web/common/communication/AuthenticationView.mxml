@@ -21,7 +21,7 @@
 <!--
 @author Mariana
 -->
-<s:Group implements="org.flowerplatform.flexutil.popup.IPopupContent" 
+<s:Group implements="org.flowerplatform.flexutil.view_content_host.IViewContent" 
 		 xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
@@ -83,9 +83,9 @@
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.popup.ActionBase;
-			import org.flowerplatform.flexutil.popup.IAction;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.action.ActionBase;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
 			import org.flowerplatform.web.common.security.dto.UserAdminUIDto;
@@ -94,7 +94,7 @@
 			import spark.events.IndexChangeEvent;
 			// TODO CS/FP2 msg
 			
-			private var _popupHost:IPopupHost;
+			private var _viewHost:IViewHost;
 			
 			public static const ORGANIZATION_LOGO_MAX_WIDTH:int = 180;
 			
@@ -143,20 +143,15 @@
 				return result;
 			}
 			
-			public function getSelection():IList {
-				return null;
+			public function get viewHost():IViewHost {
+				return _viewHost;
 			}
 			
-			
-			public function get popupHost():IPopupHost {
-				return _popupHost;
-			}
-			
-			public function set popupHost(value:IPopupHost):void {
-				_popupHost = value;
-				popupHost.setLabel(getMessage('authentication.login'));
-				popupHost.setIcon(getResourceUrl("images/login.png"));
-				popupHost.displayCloseButton(false);
+			public function set viewHost(value:IViewHost):void {
+				_viewHost = value;
+				viewHost.setLabel(getMessage('authentication.login'));
+				viewHost.setIcon(getResourceUrl("images/login.png"));
+				viewHost.displayCloseButton(false);
 			}
 			
 			[Bindable(event="resourceUpdated")]
@@ -351,13 +346,13 @@
 			private function switchState(index:int):void {
 				if (index >= 0) {
 					currentState = buttonBar.dataProvider.getItemAt(index).state;
-					popupHost.setLabel(buttonBar.dataProvider.getItemAt(index).label);
-					popupHost.setIcon(buttonBar.dataProvider.getItemAt(index).icon);
+					viewHost.setLabel(buttonBar.dataProvider.getItemAt(index).label);
+					viewHost.setIcon(buttonBar.dataProvider.getItemAt(index).icon);
 				}
 			}
 			
 			public function onCreationComplete():void {
-				popupHost.addToControlBar(buttonBar);
+				viewHost.addToControlBar(buttonBar);
 				
 				if (FlexGlobals.topLevelApplication.parameters.login != null) {
 					usernameInput.text = FlexGlobals.topLevelApplication.parameters.login;
@@ -371,7 +366,7 @@
 					// only for desktop; otherwise it will mess up the scrolling on mobile
 					minHeight = 318;
 					minWidth = 351;
-					PopUpManager.centerPopUp(popupHost as IFlexDisplayObject);
+					PopUpManager.centerPopUp(viewHost as IFlexDisplayObject);
 				}
 				
 				if (FlexGlobals.topLevelApplication.parameters.organization) {
@@ -408,7 +403,9 @@
 			}
 			
 			public function resourceUpdated(evt:Event):void {
-				popupHost.setLabel(getMessage('authentication.login'));
+				if (viewHost != null) {
+					viewHost.setLabel(getMessage('authentication.login'));
+				}
 			}
 			
 		]]>

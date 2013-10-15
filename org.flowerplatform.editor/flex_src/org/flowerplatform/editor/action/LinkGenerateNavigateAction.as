@@ -22,7 +22,7 @@ package org.flowerplatform.editor.action {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.LinkGenerateNavigateView;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Cristina Constatinescu
@@ -32,6 +32,7 @@ package org.flowerplatform.editor.action {
 		public function LinkGenerateNavigateAction() {
 			label = EditorPlugin.getInstance().getMessage("link.navigate");
 			icon = EditorPlugin.getInstance().getResourceUrl("images/external_link.png");
+			orderIndex = 350;
 		}
 		
 		override public function get visible():Boolean {
@@ -54,7 +55,7 @@ package org.flowerplatform.editor.action {
 			var generateUrlView:LinkGenerateNavigateView = new LinkGenerateNavigateView();
 			generateUrlView.explorerSelection = selection;
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(generateUrlView)
+				.setViewContent(generateUrlView)
 				.setWidth(550)
 				.setHeight(400)
 				.show();

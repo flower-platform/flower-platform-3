@@ -20,9 +20,7 @@ package com.crispico.flower.util.layout.view.activeview
 {
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.event.ActiveViewChangedEvent;
-	import org.flowerplatform.flexutil.layout.LayoutData;
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
-	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import com.crispico.flower.util.layout.view.LayoutTabNavigator;
 	
 	import mx.collections.ArrayCollection;
@@ -30,6 +28,9 @@ package com.crispico.flower.util.layout.view.activeview
 	import mx.core.UIComponent;
 	import mx.managers.FocusManager;
 	import mx.managers.IFocusManagerComponent;
+	
+	import org.flowerplatform.flexutil.layout.LayoutData;
+	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
 	/**
 	 * Provides functionality for active view mechanism used on workbench.
@@ -113,7 +114,12 @@ package com.crispico.flower.util.layout.view.activeview
 				LayoutTabNavigator(newActiveView.parent).setStyles();
 			}
 			if (dispatchActiveViewChangedEvent) {
-				workbench.dispatchEvent(new ActiveViewChangedEvent(newActiveView, oldActiveView));
+				var event:ActiveViewChangedEvent = new ActiveViewChangedEvent(newActiveView, oldActiveView); 
+				newActiveView.dispatchEvent(event);
+				// it seems that an event cannot be redispatched; I had a strange error like: 
+				// "Event" cannot be coerced to ActiveViewChangedEvent 
+				event = new ActiveViewChangedEvent(newActiveView, oldActiveView); 
+				workbench.dispatchEvent(event);
 			}
 		}
 		
@@ -152,7 +158,14 @@ package com.crispico.flower.util.layout.view.activeview
 					LayoutTabNavigator(getActiveView().parent).setStyles();	
 				}
 			}
-			workbench.dispatchEvent(new ActiveViewChangedEvent(getActiveView(), currentView));
+			var event:ActiveViewChangedEvent = new ActiveViewChangedEvent(getActiveView(), currentView); 
+			if (getActiveView() != null) {
+				getActiveView().dispatchEvent(event);
+				// it seems that an event cannot be redispatched; I had a strange error like: 
+				// "Event" cannot be coerced to ActiveViewChangedEvent 
+				event = new ActiveViewChangedEvent(getActiveView(), currentView);
+			}
+			workbench.dispatchEvent(event);
 		}
 		
 		public function getPreviousActiveViews():ArrayCollection {

@@ -19,7 +19,7 @@
 package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.flexutil.content_assist.ContentAssistList;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	public class ContentAssistAction extends ActionBase {
 		

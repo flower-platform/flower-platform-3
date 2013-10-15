@@ -39,7 +39,7 @@
 			
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.git.common.remote.dto.CommitPageDto;
 			import org.flowerplatform.web.git.common.remote.dto.CommitResourceDto;
@@ -57,10 +57,10 @@
 			[Bindable]
 			public var commitResources:ArrayCollection;
 			
-			override public function set popupHost(value:IPopupHost):void {
-				super.popupHost = value;
-				popupHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.commit.label'));
-				popupHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/commit.gif'));
+			override public function set viewHost(value:IViewHost):void {
+				super.viewHost = value;
+				viewHost.setLabel(GitCommonPlugin.getInstance().getMessage('git.action.commit.label'));
+				viewHost.setIcon(GitCommonPlugin.getInstance().getResourceUrl('images/full/obj16/commit.gif'));
 			}
 		
 			/**
@@ -71,13 +71,13 @@
 				
 				wizardImage.source = GitCommonPlugin.getInstance().getResourceUrl("images/newconnect_wizban.png");
 				
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage('spinner.gettingData'));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage('spinner.gettingData'));
 				// get data from server to populate current page
 				GitCommonPlugin.getInstance().service.getCommitData(selectedNodes, this, getCommitDataCallbackHandler);				
 			}
 						
 			private function getCommitDataCallbackHandler(result:CommitPageDto):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (result != null) {
 					dto = result;
 					commitResources = dto.commitResources;
@@ -126,14 +126,14 @@
 				if (Validator.validateAll(validators).length > 0) {
 					return;
 				}
-				popupHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
+				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.processing"));
 				GitCommonPlugin.getInstance().service.commit(
 					dto.repository, getFiles(), authorName.text, committerName.text, commitMessage.text, amendCommit.selected, 
 					this, commitCallbackHandler);	
 			}	
 			
 			private function commitCallbackHandler(value:Boolean):void {
-				popupHost.hideSpinner();
+				viewHost.hideSpinner();
 				if (value) {
 					GitCommonPlugin.getInstance().service.pushToUpstream(dto.repository);
 					super.finishClickHandler();

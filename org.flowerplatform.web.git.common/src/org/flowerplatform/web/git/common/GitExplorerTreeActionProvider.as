@@ -19,8 +19,8 @@
 package org.flowerplatform.web.git.common {
 	import mx.collections.IList;
 	
-	import org.flowerplatform.flexutil.popup.IAction;
-	import org.flowerplatform.flexutil.popup.IActionProvider;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.web.git.common.action.ChangeCredentialsAction;
 	import org.flowerplatform.web.git.common.action.CheckoutAction;
 	import org.flowerplatform.web.git.common.action.ClearCredentialsAction;

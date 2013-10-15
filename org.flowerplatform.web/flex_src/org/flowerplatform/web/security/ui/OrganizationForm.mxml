@@ -44,14 +44,14 @@
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-			import org.flowerplatform.flexutil.popup.IPopupHost;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			import org.flowerplatform.web.WebPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.common.security.dto.OrganizationAdminUIDto;
 			
-			override public function set popupHost(value:IPopupHost):void {
-				super.popupHost = value;
-				popupHost.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"));
+			override public function set viewHost(value:IViewHost):void {
+				super.viewHost = value;
+				viewHost.setIcon(WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"));
 			}
 			
 			/**
@@ -60,7 +60,7 @@
 			override public function set entityId(_entityId:Number):void {
 				super.entityId = _entityId;
 				
-				popupHost.setLabel(entityId == 0
+				viewHost.setLabel(entityId == 0
 					? WebPlugin.getInstance().getMessage('form.add', [WebPlugin.getInstance().getMessage('entity.organization')]) 
 					: WebPlugin.getInstance().getMessage('form.edit', [WebPlugin.getInstance().getMessage('entity.organization')]));
 				

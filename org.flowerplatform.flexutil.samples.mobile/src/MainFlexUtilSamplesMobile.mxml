@@ -18,8 +18,8 @@
  
 	license-end
 -->
-<s:ViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
-							xmlns:s="library://ns.adobe.com/flex/spark" firstView="org.flowerplatform.flexutil.samples.views.HomeView" applicationDPI="160">
+<flexutil_mobile:FlowerViewNavigatorApplication xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" xmlns:flexutil_mobile="org.flowerplatform.flexutil.mobile.*" 
+	firstView="org.flowerplatform.flexutil.samples.views.HomeView" applicationDPI="160">
 
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
@@ -30,7 +30,8 @@
 		}
 		
 	</fx:Style>
-	<s:navigationContent>
+
+	<flexutil_mobile:navigationContent>
 		<s:Button label="Back">
 			<s:click>
 				<![CDATA[
@@ -38,5 +39,5 @@
 				]]>
 			</s:click>
 		</s:Button>
-	</s:navigationContent>
-</s:ViewNavigatorApplication>
+	</flexutil_mobile:navigationContent>
+</flexutil_mobile:FlowerViewNavigatorApplication>

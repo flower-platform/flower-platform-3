@@ -21,7 +21,7 @@ package org.flowerplatform.web.git.common.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.ActionBase;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
 	import org.flowerplatform.web.git.common.ui.CommitView;
@@ -50,7 +50,7 @@ package org.flowerplatform.web.git.common.action {
 			var popup:CommitView = new CommitView();
 			popup.selectedNodes = ArrayList(selection);
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setPopupContent(popup)	
+				.setViewContent(popup)	
 				.setWidth(400)
 				.setHeight(450)
 				.show();	

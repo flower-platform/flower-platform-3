@@ -8,13 +8,7 @@
     <classEntry path="org.flowerplatform.web.git.ui.CloneWindow"/>
     <classEntry path="org.flowerplatform.web.git.GitService"/>
     <classEntry path="org.flowerplatform.web.git.BranchTreeStatefulClient"/>
-    <classEntry path="org.flowerplatform.web.git.action.ConfigRemoteAction"/>
-    <classEntry path="org.flowerplatform.web.git.action.DeleteRemoteAction"/>
     <classEntry path="org.flowerplatform.web.git.action.FetchAction"/>
-    <classEntry path="org.flowerplatform.web.git.action.PushAction"/>
-    <classEntry path="org.flowerplatform.web.git.action.CheckoutAction"/>
-    <classEntry path="org.flowerplatform.web.git.action.ImportProjectsAction"/>
-    <classEntry path="org.flowerplatform.web.git.action.CommitAction"/>
     <classEntry path="org.flowerplatform.web.git.action.PullAction"/>
   </includeClasses>
   <includeResources/>

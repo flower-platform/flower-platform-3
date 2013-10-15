@@ -22,8 +22,8 @@ package org.flowerplatform.codesync.remote {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.flexutil.popup.ActionBase;
-	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.flexutil.action.ActionBase;
+//	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	[RemoteClass(alias="org.flowerplatform.codesync.remote.CodeSyncAction")]
 	public class CodeSyncAction extends ActionBase {
@@ -38,7 +38,7 @@ package org.flowerplatform.codesync.remote {
 			// TODO CS/FP2 msg
 			this.label = label;
 			this.technology = technology;
-			this.icon = WebCommonPlugin.getInstance().getResourceUrl("images/common/refresh.png");
+//			this.icon = WebCommonPlugin.getInstance().getResourceUrl("images/common/refresh.png");
 		}
 		
 		override public function get visible():Boolean {

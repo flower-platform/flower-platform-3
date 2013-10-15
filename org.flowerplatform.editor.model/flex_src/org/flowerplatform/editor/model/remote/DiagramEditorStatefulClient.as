@@ -34,6 +34,7 @@ package org.flowerplatform.editor.model.remote {
 	public class DiagramEditorStatefulClient extends EditorStatefulClient {
 		
 		public static const VIEW_DETAILS_UPDATED_EVENT:String = "viewDetailsUpdated";
+		public static const TRANSFERABLE_OBJECTS_UPDATED_EVENT:String = "transferableObjectsUpdated";
 		
 		protected var transferableObjectRegistry:LocalIdTransferableObjectRegistry = new LocalIdTransferableObjectRegistry();
 		
@@ -83,6 +84,9 @@ package org.flowerplatform.editor.model.remote {
 					view.dispatchEvent(new Event(VIEW_DETAILS_UPDATED_EVENT));
 				}
 			}
+			for each (var ef:DiagramEditorFrontend in editorFrontends) {
+				ef.diagramShell.dispatchEvent(new Event(TRANSFERABLE_OBJECTS_UPDATED_EVENT));
+			}			
 		}
 		
 		[RemoteInvocation]

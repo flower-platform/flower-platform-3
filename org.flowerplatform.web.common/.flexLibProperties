@@ -16,6 +16,7 @@
     <classEntry path="org.flowerplatform.web.common.explorer.action.CreateFileAction"/>
     <classEntry path="org.flowerplatform.web.common.explorer.action.DeleteAction"/>
     <classEntry path="org.flowerplatform.web.common.explorer.action.RenameAction"/>
+    <classEntry path="org.flowerplatform.web.common.explorer.action.NewComposedAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
