@@ -134,10 +134,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		}
 		initExtensionPoint_nodeTypeToCategoriesMapping();
 		
-		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
-		
 		// do these initializations here, after the services have been instantiated
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
 			@Override
@@ -160,7 +156,11 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		});
 		
 		EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
-		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
+		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());
+		
+		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
 	}
 	
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {

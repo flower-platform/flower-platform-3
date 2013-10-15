@@ -87,7 +87,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 				if (newChild != null) {
 					getChildrenForCodeSyncElement(object).add(associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child), newChild);
 				} else {
-					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+//					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 				}
 			}
 		}
