@@ -19,18 +19,15 @@
 package org.flowerplatform.editor.model
 {
 	import flash.events.Event;
-	import flash.events.MouseEvent;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
-	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.communication.tree.GenericTreeList;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulClient;
-	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
@@ -41,9 +38,9 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexutil.action.IAction;
-	
-	import spark.components.Button;
-	import spark.components.TextInput;
+
+	import org.flowerplatform.flexutil.action.IActionProvider;
+
 
 	/**
 	 * @author Cristian Spiescu
@@ -115,15 +112,18 @@ package org.flowerplatform.editor.model
 		override public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
-			var actions:Vector.<IAction> = EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.getActions(selection);
-			if (actions != null) {
-				for each (var action:IAction in actions) {
-					if (action is IDiagramShellAware) {
-						IDiagramShellAware(action).diagramShell = diagramShell;
+			for each (var ap:IActionProvider in EditorModelPlugin.getInstance().notationDiagramActionProviders) {
+				var actions:Vector.<IAction> = ap.getActions(selection);
+				if (actions != null) {
+					for each (var action:IAction in actions) {
+						if (action is IDiagramShellAware) {
+							IDiagramShellAware(action).diagramShell = diagramShell;
+						}
+						result.push(action);
 					}
-					result.push(action);
-				}
-			}		
+				}		
+			}
+
 			return result;
 		}
 		

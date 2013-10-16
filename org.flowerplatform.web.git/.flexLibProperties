@@ -3,12 +3,12 @@
   <includeClasses>
     <classEntry path="org.flowerplatform.web.git.history.GitHistoryView"/>
     <classEntry path="org.flowerplatform.web.git.GitNodeType"/>
-    <classEntry path="org.flowerplatform.web.git.GitExplorerTreeActionProvider"/>
-    <classEntry path="org.flowerplatform.web.git.action.CloneAction"/>
     <classEntry path="org.flowerplatform.web.git.ui.CloneWindow"/>
     <classEntry path="org.flowerplatform.web.git.GitService"/>
     <classEntry path="org.flowerplatform.web.git.BranchTreeStatefulClient"/>
     <classEntry path="org.flowerplatform.web.git.action.FetchAction"/>
+    <classEntry path="org.flowerplatform.web.git.action.PushAction"/>
+    <classEntry path="org.flowerplatform.web.git.action.ImportProjectsAction"/>
     <classEntry path="org.flowerplatform.web.git.action.PullAction"/>
   </includeClasses>
   <includeResources/>

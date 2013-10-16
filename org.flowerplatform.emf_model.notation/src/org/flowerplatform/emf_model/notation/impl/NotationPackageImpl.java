@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
+import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.LayoutConstraint;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.MindMapNode;
@@ -118,6 +119,13 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	private EClass mindMapNodeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass expandableNodeEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -437,6 +445,44 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+
+	public EClass getExpandableNode() {
+		return expandableNodeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExpandableNode_Expanded() {
+		return (EAttribute)expandableNodeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExpandableNode_HasChildren() {
+		return (EAttribute)expandableNodeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getExpandableNode_Template() {
+		return (EAttribute)expandableNodeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+
 	public NotationFactory getNotationFactory() {
 		return (NotationFactory)getEFactoryInstance();
 	}
@@ -497,6 +543,12 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		createEAttribute(noteEClass, NOTE__TEXT);
 
 		mindMapNodeEClass = createEClass(MIND_MAP_NODE);
+
+		expandableNodeEClass = createEClass(EXPANDABLE_NODE);
+		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__EXPANDED);
+		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__HAS_CHILDREN);
+		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__TEMPLATE);
+
 	}
 
 	/**
@@ -536,6 +588,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		boundsEClass.getESuperTypes().add(this.getLocation());
 		noteEClass.getESuperTypes().add(this.getNode());
 		mindMapNodeEClass.getESuperTypes().add(this.getNode());
+		expandableNodeEClass.getESuperTypes().add(this.getNode());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(notationElementEClass, NotationElement.class, "NotationElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -577,6 +630,11 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEAttribute(getNote_Text(), ecorePackage.getEString(), "text", null, 0, 1, Note.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mindMapNodeEClass, MindMapNode.class, "MindMapNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(expandableNodeEClass, ExpandableNode.class, "ExpandableNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExpandableNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExpandableNode_HasChildren(), ecorePackage.getEBoolean(), "hasChildren", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExpandableNode_Template(), ecorePackage.getEString(), "template", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);

@@ -85,6 +85,7 @@ public class NotationFactoryImpl extends EFactoryImpl implements NotationFactory
 			case NotationPackage.BOUNDS: return createBounds();
 			case NotationPackage.NOTE: return createNote();
 			case NotationPackage.MIND_MAP_NODE: return createMindMapNode();
+			case NotationPackage.EXPANDABLE_NODE: return createExpandableNode();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -158,6 +159,16 @@ public class NotationFactoryImpl extends EFactoryImpl implements NotationFactory
 	public MindMapNode createMindMapNode() {
 		MindMapNodeImpl mindMapNode = new MindMapNodeImpl();
 		return mindMapNode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ExpandableNode createExpandableNode() {
+		ExpandableNodeImpl expandableNode = new ExpandableNodeImpl();
+		return expandableNode;
 	}
 
 	/**

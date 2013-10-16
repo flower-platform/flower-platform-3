@@ -86,7 +86,8 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 		props.setProperty(PersistenceOptions.PERSISTENCE_XML, "annotations.xml");
 		props.setProperty(PersistenceOptions.JOIN_TABLE_FOR_NON_CONTAINED_ASSOCIATIONS, "false");
 		props.setProperty(PersistenceOptions.ALWAYS_VERSION, "false");
-		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
+//		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "TABLE_PER_CLASS");
+		props.setProperty(PersistenceOptions.INHERITANCE_MAPPING, "SINGLE_TABLE");
 		props.setProperty(PersistenceOptions.ADD_INDEX_FOR_FOREIGN_KEY, "false");
 
 //		props.setProperty(Environment.DRIVER, "org.postgresql.Driver");
@@ -127,7 +128,7 @@ public class SecurityPermissionsTests extends EclipseDependentTestSuiteBase {
 		
 		Utils.deleteAllData();
 		
-		System.setProperty("java.security.policy", new File(TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/user_admin/all.policy").getAbsolutePath());
+		System.setProperty("java.security.policy", new File(TestUtil.getResourcesDir(SecurityPermissionsTests.class) + "all.policy").getAbsolutePath());
 		PolicyFile policyFile = new PolicyFile();
 		Policy.setPolicy(new FlowerWebPolicyTest(policyFile));
 		Policy.getPolicy().refresh();

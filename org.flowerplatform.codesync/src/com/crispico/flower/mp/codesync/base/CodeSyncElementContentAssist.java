@@ -18,19 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.base;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.IContentAssist;
-
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @author Mariana Gheorghe

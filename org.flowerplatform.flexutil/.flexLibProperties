@@ -6,7 +6,6 @@
     <classEntry path="org.flowerplatform.flexutil.layout.IWorkbench"/>
     <classEntry path="org.flowerplatform.flexutil.layout.LayoutData"/>
     <classEntry path="org.flowerplatform.flexutil.layout.ViewLayoutData"/>
-    <classEntry path="org.flowerplatform.flexutil.popup.ActionBase"/>
     <classEntry path="org.flowerplatform.flexutil.popup.ClassFactoryActionProvider"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IAction"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IMessageBox"/>

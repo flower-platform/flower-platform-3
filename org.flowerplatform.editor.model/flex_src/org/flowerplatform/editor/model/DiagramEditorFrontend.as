@@ -48,7 +48,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	import org.flowerplatform.properties.PropertiesPlugin;
-	
+
 	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider, ISelectionForServerProvider {
 	
 		public var diagramShell:DiagramShell;

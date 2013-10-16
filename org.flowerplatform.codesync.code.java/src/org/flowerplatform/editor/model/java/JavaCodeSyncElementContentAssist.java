@@ -18,29 +18,12 @@
  */
 package org.flowerplatform.editor.model.java;
 
-import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.ANNOTATION;
-import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.CLASS;
-import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.ENUM;
-import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.INTERFACE;
-import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.ANNOTATION_ICON;
-import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.CLASS_ICON;
-import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.ENUM_ICON;
-import static org.flowerplatform.editor.model.java.JavaTypeIconsConstants.INTERFACE_ICON;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.editor.model.ContentAssistItem;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementContentAssist;
-import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
-import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 
 /**
  * @author Mariana Gheorghe

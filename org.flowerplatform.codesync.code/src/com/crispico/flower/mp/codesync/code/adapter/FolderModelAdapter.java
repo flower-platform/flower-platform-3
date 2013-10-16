@@ -122,7 +122,9 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 				@Override
 				protected boolean isAccepted(Object candidate) {
 					String candidatePath = CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject((File) candidate);
-					if (limitedPath == null || limitedPath.startsWith(candidatePath)) {
+					if (limitedPath == null 
+							|| limitedPath.startsWith(candidatePath) 	// accept candidate a/b/c for limit a/b/c/d
+							|| candidatePath.startsWith(limitedPath)) {	// accept candidate a/b/c/d for limit a/b/c 
 						return true;
 					}
 					return false;
@@ -191,6 +193,11 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	
 	@Override
 	public void featuresProcessed(Object element) {
+		// nothing to do
+	}
+
+	@Override
+	protected void updateUID(Object element, Object correspondingElement) {
 		// nothing to do
 	}
 	

@@ -75,7 +75,7 @@ public class CodeSyncTest {
 	public static final String MODIFIED_CONFLICTS = "modified_conflicts";
 	public static final String MODIFIED_NO_CONFLICTS_PERFORM_SYNC = "modified_no_conflicts_perform_sync";
 	
-	public static final String DIR = TestUtil.ECLIPSE_DEPENDENT_FILES_DIR + "/" + PROJECT + "/";
+	public static final String DIR = TestUtil.getResourcesDir(CodeSyncTest.class);
 	
 	public static final String SOURCE_FILE = "Test.java";
 	public static final String MODEL_FILE = "CSE.notation";
