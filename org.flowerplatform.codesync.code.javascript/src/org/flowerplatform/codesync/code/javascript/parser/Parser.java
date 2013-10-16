@@ -222,6 +222,7 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(HTML_FILE)) {
 					currentState.node.setTemplate(HTML_TABLE_TEMPLATE);
+					currentState.node.setChildType(HTML_TABLE_TEMPLATE);
 					addParameter(currentState.node, "tableId", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(currentState.node, "headerRowId", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
@@ -261,6 +262,7 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(HTML_FILE)) {
 					currentState.node.setTemplate(HTML_TABLE_ITEM_TEMPLATE);
+					currentState.node.setChildType(HTML_TABLE_ITEM_TEMPLATE);
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
 					enterState(session, HTML_TABLE_ITEM_TEMPLATE, currentState.node, 1);
 				}
@@ -299,6 +301,7 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(HTML_FILE)) {
 					currentState.node.setTemplate(HTML_FORM_TEMPLATE);
+					currentState.node.setChildType(HTML_FORM_TEMPLATE);
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
 					enterState(session, HTML_FORM_TEMPLATE, currentState.node, 1);
 				}
@@ -396,7 +399,7 @@ public class Parser {
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode function = addToCategory(JS_OPERATION_CATEGORY, currentState.node, NAME, JS_OPERATION, session.getMatcher().start(), 0);
-				function.setTemplate(JS_OPERATION_CATEGORY);
+				function.setTemplate(JS_OPERATION_TEMPLATE);
 				function.setChildType(JS_BACKBONE_CLASS_MEMBER);
 				function.setNextSiblingSeparator(",\r\n");
 				addParameter(function, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));

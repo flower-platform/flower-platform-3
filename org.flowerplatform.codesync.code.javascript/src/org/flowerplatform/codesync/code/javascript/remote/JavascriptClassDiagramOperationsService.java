@@ -72,6 +72,13 @@ public class JavascriptClassDiagramOperationsService {
 			String parentViewId,
 			String parentCategory) {
 
+		// if the CSE resource does not exist, create it before the element is created, to avoid DanglingHREFExceptions
+		// because the element will be referenced by its astCacheElement that was already added to the resource set
+		DiagramEditableResource der = getEditableResource(context);
+		ResourceSet resourceSet = der.getResourceSet();
+		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) der.getFile());
+		Resource codeSyncMappingResource = CodeSyncCodePlugin.getInstance().getCodeSyncMapping(project, resourceSet);
+		
 		// step 1: create the element
 		RegExAstCodeSyncElement cse = (RegExAstCodeSyncElement) createElement(context, type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator);
 		
@@ -94,11 +101,7 @@ public class JavascriptClassDiagramOperationsService {
 			file.setName(cse.getName());
 			file.getChildren().add(cse);
 			
-			DiagramEditableResource der = getEditableResource(context);
-			ResourceSet resourceSet = der.getResourceSet();
-			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) der.getFile());
-			CodeSyncElement srcDir = (CodeSyncElement) CodeSyncCodePlugin.getInstance().getCodeSyncMapping(project, resourceSet)
-					.getContents().get(0);
+			CodeSyncElement srcDir = (CodeSyncElement) codeSyncMappingResource.getContents().get(0);
 			srcDir.getChildren().add(file);
 			
 			// copied from dnd handler
