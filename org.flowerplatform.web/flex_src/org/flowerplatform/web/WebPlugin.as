@@ -44,7 +44,6 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
-//	import org.flowerplatform.web.properties.remote.FileSelectedItem;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.PermissionsScreen;
@@ -123,48 +122,6 @@ package org.flowerplatform.web {
 			});
 			hBox.addChild(btn);
 			
-			/* test button */
-			// TODO remove me :
-			/*btn = new Button();
-			btn.label = "File Prop Prov";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				var pathFromWorkspace:String = "crispico/ws_trunk/wd1";
-				
-				var selectedItems:ArrayCollection = new ArrayCollection();
-				selectedItems.addItem(new FileSelectedItem(pathFromWorkspace));
-				var myObject:Object;
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("propertiesProviderService",
-								"getProperties",[selectedItems],
-								myObject,
-								function(object:Object):void {
-									var x:Object = object;
-									PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
-									PropertiesPlugin.getInstance().propertyList.selectedItemsForProperties = selectedItems;
-								}
-					));				
-			});*/
-//			hBox.addChild(btn);
-/*			btn = new Button();
-			btn.label = "Diagram Prop Prov";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				var diagramEditableResourcePath:String = "/crispico/ws_trunk/wd1/NewDiagram1.notation";
-				var xmiID:String = "_wUgVYPnAEeKpg94yU-UoAw";
-				var serviceID:String = "diagramEditorStatefulService";
-				var selectedItems:ArrayCollection = new ArrayCollection();
-				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, "javaClass"));
-				var myObject:Object;
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("propertiesProviderService",
-						"getProperties",[selectedItems],
-						myObject,
-						function(object:Object):void {
-							var x:Object = object;
-							PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
-						}
-					));				
-			});
-			hBox.addChild(btn);*/
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
 			
 			var workbench:Workbench = new Workbench();
@@ -219,7 +176,6 @@ package org.flowerplatform.web {
 		 * @author Tache Razvan Mihai
 		 */
 		override protected function registerClassAliases():void {
-		//	registerClassAliasFromAnnotation(FileSelectedItem);
 		}
 	}
 }
