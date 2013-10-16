@@ -22,10 +22,13 @@ package org.flowerplatform.web.common.explorer {
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.events.IndexChangedEvent;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.GenericTreeList;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
@@ -35,15 +38,18 @@ package org.flowerplatform.web.common.explorer {
 	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
-	import org.flowerplatform.flexutil.view_content_host.IViewContent;
-	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.common.explorer.properties.FileSelectedItem;
 	
 	import spark.events.IndexChangeEvent;
 	
-	public class ExplorerTreeList extends GenericTreeList implements IViewContent, ISelectionProvider {
+	public class ExplorerTreeList extends GenericTreeList implements IViewContent, ISelectionProvider, ISelectionForServerProvider {
 		
 		protected var _viewHost:IViewHost;
 		
@@ -111,6 +117,26 @@ package org.flowerplatform.web.common.explorer {
 			if (event.keyCode == Keyboard.ENTER) {
 				doubleClickHandler(null);
 			}
+		}
+		
+		public function convertSelectionToSelectionForServer(selection:IList):IList {
+			if (selection == null) return selection;
+			var itemsOfSelection:Array = selection.toArray();
+			var selectedItems = new ArrayCollection();
+			for each (var itemOfSelection:TreeNode in itemsOfSelection) {
+				selectedItems.addItem(new FileSelectedItem(itemOfSelection.getPathForNode(true)));
+			}
+			var myObject:Object;
+			CommunicationPlugin.getInstance().bridge.sendObject(
+				new InvokeServiceMethodServerCommand("propertiesProviderService",
+					"getProperties",[selectedItems],
+					myObject,
+					function(object:Object):void {
+						PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
+						PropertiesPlugin.getInstance().propertyList.selectedItemsForProperties = selectedItems;
+					}
+				));				
+			return selection;
 		}
 	}
 }
