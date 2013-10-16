@@ -23,9 +23,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
+import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.SelectedItem;
+import org.flowerplatform.web.entity.Organization;
+import org.flowerplatform.web.entity.WorkingDirectory;
+import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.properties.remote.FileSelectedItem;
 /**
  * @author Tache Razvan Mihai
@@ -33,10 +39,29 @@ import org.flowerplatform.web.properties.remote.FileSelectedItem;
  */
 public class FilePropertiesProvider implements IPropertiesProvider {
 
+	private File getFile(List<PathFragment> pathWithRoot) {
+		
+		Object object = GenericTreeStatefulService.getNodeByPathFor(
+				pathWithRoot, null);
+
+		if(object instanceof WorkingDirectory) {
+			String orgName = ((WorkingDirectory) object).getOrganization().getName();
+			File orgDir = ProjectsService.getInstance().getOrganizationDir(orgName);
+			String path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
+			return new File(path);
+		} else if(object instanceof File) {
+			return (File)object;
+		} else {
+			return ((Pair<File, Object>) object).a;
+		}
+	}
 	@Override
 	public List<Property> getProperties(SelectedItem selectedItem) {
+		// proccessing step;
+		List<PathFragment> pathWithRoot = ((FileSelectedItem)selectedItem).getPathWithRoot();
+
+		File file = getFile(pathWithRoot);
 		
-		File file = ((FileSelectedItem)selectedItem).getFile();
 		List<Property> properties = new ArrayList<Property>();	
 		// TODO decide what properties are needed
 		properties.add(new Property("Name", file.getName(), false));
@@ -49,8 +74,10 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 
 	@Override
 	public void setProperty(SelectedItem selectedItem, Property property) {
-		// TODO Auto-generated method stub
-		System.out.println("Changing the file with path " + ((FileSelectedItem)selectedItem).getFile().getPath());
+		List<PathFragment> pathWithRoot = ((FileSelectedItem)selectedItem).getPathWithRoot();
+		File file = getFile(pathWithRoot);
+		
+		System.out.println("Changing the file with path " + file.getPath());
 		System.out.println("Setting the property: " + property.getName() + " with the value " + property.getValue() );
 	}
 	

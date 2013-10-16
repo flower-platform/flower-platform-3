@@ -19,8 +19,11 @@
 package org.flowerplatform.web.properties.remote;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.properties.remote.SelectedItem;
 /**
  * @author Tache Razvan Mihai
@@ -29,27 +32,24 @@ import org.flowerplatform.properties.remote.SelectedItem;
 public class FileSelectedItem extends SelectedItem {
 	
 	private final String TYPE_FILE = "File";
-
-	private String fileName;
+	
+	private List<PathFragment> pathWithRoot = new ArrayList<PathFragment>();
 	
 	public FileSelectedItem(String fileName, File file) {
 		super();
 		this.setItemType(TYPE_FILE);
-		this.fileName = fileName;
 	}
+	
 	public FileSelectedItem() {
 		
 	}
-	public String getFileName() {
-		return fileName;
+	
+	public List<PathFragment> getPathWithRoot() {
+		return pathWithRoot;
 	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public File getFile() {
-		return new File(CommonPlugin.getInstance().getWorkspaceRoot(), fileName);
+	
+	public void setPathWithRoot(List<PathFragment> pathWithRoot) {
+		this.pathWithRoot = pathWithRoot;
 	}
 
 }

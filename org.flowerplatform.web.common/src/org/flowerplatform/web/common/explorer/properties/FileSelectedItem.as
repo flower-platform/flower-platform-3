@@ -16,22 +16,18 @@
 *
 * license-end
 */
-package org.flowerplatform.web.properties.remote {
+package org.flowerplatform.web.common.explorer.properties {
+	import mx.collections.ArrayCollection;
+
 	[Bindable]
-	[RemoteClass]
+	[RemoteClass(alias="org.flowerplatform.web.properties.remote.FileSelectedItem")]
 	[SecureSWF(rename="off")]
 	public class FileSelectedItem {
-		/**
-		 * 
-		 */
-		[SecureSWF(rename="off")]
-		public var fileName:String;
-		
 		/** 
 		 * 
 		 */
 		[SecureSWF(rename="off")]
-		public var file:String;
+		public var pathWithRoot:ArrayCollection;
 		
 		/** 
 		 * 
@@ -39,8 +35,8 @@ package org.flowerplatform.web.properties.remote {
 		[SecureSWF(rename="off")]
 		public var itemType:String;
 		
-		public function FileSelectedItem(pathFromWorkspace:String) {
-			this.fileName = pathFromWorkspace;	
+		public function FileSelectedItem(pathWithRoot:ArrayCollection) {
+			this.pathWithRoot = pathWithRoot;	
 			this.itemType = "file";
 		}
 		
