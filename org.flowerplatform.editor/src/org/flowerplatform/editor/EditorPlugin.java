@@ -37,6 +37,10 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * @author Cristian Spiescu
+ */
 public class EditorPlugin extends AbstractFlowerJavaPlugin {
 
 	private static final Logger logger = LoggerFactory.getLogger(EditorPlugin.class);
@@ -85,6 +89,7 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 			String contentType = configurationElement.getAttribute("contentType");
 			String compatibleEditor = configurationElement.getAttribute("compatibleEditor");
 			String serviceId = configurationElement.getAttribute("serviceId");
+			boolean isDefaultEditor = Boolean.parseBoolean(configurationElement.getAttribute("isDefaultEditor"));
 			EditorStatefulService editorStatefulService = (EditorStatefulService) configurationElement.createExecutableExtension("editorStatefulService");
 			editorStatefulService.setEditorName(compatibleEditor);
 			CommunicationPlugin.getInstance().getServiceRegistry().registerService(serviceId, editorStatefulService);
@@ -95,7 +100,10 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 				throw new IllegalArgumentException("Cannot find contentType = " + contentType + 
 						" to register the compatible editor = " + compatibleEditor);
 			}
-			descriptor.getCompatibleEditors().add(compatibleEditor);
+			descriptor.getCompatibleEditors().add(compatibleEditor);	
+			if (isDefaultEditor) {
+				 descriptor.setDefaultEditor(compatibleEditor);
+			}
 		}
 		
 		// file extensions to content types mappings
@@ -177,18 +185,24 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 		return null;
 	}
 	
-	public String getContentTypeFromFileName(String fileName) {
+	public List<String> getContentTypeFromFileName(String fileName) {
+		List<String> contentTypes = new ArrayList<String>(2);
 		String contentType = null;
 		int lastDotIndex = fileName.lastIndexOf('.');
 		if (lastDotIndex >= 0) {
 			// has an extension
 			String extension = fileName.substring(lastDotIndex + 1);
 			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get(extension);
+			if (contentType != null) {
+				contentTypes.add(contentType);
+			}
 		}
-		if (contentType == null) {
-			// not found; revert to default
-			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");
+//		if (contentType == null) {
+//			// not found; revert to default
+		contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");
+		if (contentType != null) {
+			contentTypes.add(contentType);
 		}
-		return contentType;
+		return contentTypes;
 	}
 }

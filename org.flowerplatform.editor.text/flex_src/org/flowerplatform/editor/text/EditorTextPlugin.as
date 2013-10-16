@@ -19,7 +19,6 @@
 package org.flowerplatform.editor.text {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.editor.text.remote.TextEditorUpdate;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -45,6 +44,10 @@ package org.flowerplatform.editor.text {
 			var editorDescriptor:TextEditorDescriptor = new TextEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
+			
+			var orionEditorDescriptor:CodeMirrorEditorDescriptor = new CodeMirrorEditorDescriptor();
+			EditorPlugin.getInstance().editorDescriptors.push(orionEditorDescriptor);
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(orionEditorDescriptor);
 		}
 		
 		override protected function registerClassAliases():void	{
