@@ -322,7 +322,12 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	 */
 	public Resource getAstCache(File project, ResourceSet resourceSet) {
 		File astCacheElementFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, ACE_FILE_LOCATION); 
-		return CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
+		Resource resource = CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
+		if (!astCacheElementFile.exists()) {
+			resource.getContents().clear();
+			CodeSyncPlugin.getInstance().saveResource(resource);
+		}
+		return resource;
 	}
 	
 	/**

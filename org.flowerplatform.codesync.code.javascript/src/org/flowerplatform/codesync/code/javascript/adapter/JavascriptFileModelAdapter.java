@@ -46,26 +46,29 @@ import com.crispico.flower.mp.codesync.code.adapter.AbstractFileModelAdapter;
  * @author Mariana Gheorghe
  */
 public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
-
+	
 	@Override
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
-		RegExAstNode node = RegExAstFactory.eINSTANCE.createRegExAstNode();
-		node.setAdded(true);
-		// adding to resource to avoid UNDEFINED values during sync
-		// see EObjectModelAdapter.getValueFeatureValue()
-		Resource resource = new ResourceImpl();
-		resource.getContents().add(node);
+		File file = getFile(element);
+		RegExAstNode node = (RegExAstNode) getOrCreateFileInfo(file);
 		return node;
 	}
 	
 	protected Object createFileInfo(File file) {
-		Parser parser = new Parser();
-		RegExAstNode node = parser.parse(file);
-		// adding to resource to avoid UNDEFINED values during sync
-		// see EObjectModelAdapter.getValueFeatureValue()
-		Resource resource = new ResourceImpl();
-		resource.getContents().add(node);
-		return node;
+		// parse the file
+		if (file.exists()) {
+			Parser parser = new Parser();
+			RegExAstNode node = parser.parse(file);
+			return node;
+		} else {
+			RegExAstNode node = RegExAstFactory.eINSTANCE.createRegExAstNode();
+			node.setAdded(true);
+			// adding to resource to avoid UNDEFINED values during sync
+			// see EObjectModelAdapter.getValueFeatureValue()
+			Resource resource = new ResourceImpl();
+			resource.getContents().add(node);
+			return node;
+		}
 	}
 
 	@Override
@@ -102,14 +105,12 @@ public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
 	private String loadTemplate(RegExAstNode node) {
 		String template = null;
 		// first find the template to use
-		if (node.getTemplate() != null) {
-			try {
-				URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("public-resources/templates/" + node.getTemplate() + ".tpl");
-				File file = new File(FileLocator.resolve(url).toURI());
-				template = FileUtils.readFileToString(file);
-			} catch (IOException | URISyntaxException e) {
-				throw new RuntimeException("Template does not exist", e);
-			}
+		try {
+			URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("public-resources/templates/" + node.getTemplate() + ".tpl");
+			File file = new File(FileLocator.resolve(url).toURI());
+			template = FileUtils.readFileToString(file);
+		} catch (IOException | URISyntaxException e) {
+			throw new RuntimeException("Template does not exist", e);
 		}
 		
 		// replace the parameters with their values from the node

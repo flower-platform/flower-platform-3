@@ -57,7 +57,9 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		rightFactory.addModelAdapter(File.class, folderModelAdapter, "");
 		
 		// javascript specific adapter
-		rightFactory.addModelAdapter(File.class, createAstModelAdapter(new JavascriptFileModelAdapter()), CodeSyncCodeJavascriptPlugin.TECHNOLOGY);
+		IModelAdapter fileModelAdapter = createAstModelAdapter(new JavascriptFileModelAdapter());
+		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavascriptPlugin.TECHNOLOGY);
+		rightFactory.addModelAdapter(File.class, fileModelAdapter, "html");
 		rightFactory.addModelAdapter(RegExAstNode.class, createAstModelAdapter(new RegExNodeAstModelAdapter()));
 		rightFactory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
 		
