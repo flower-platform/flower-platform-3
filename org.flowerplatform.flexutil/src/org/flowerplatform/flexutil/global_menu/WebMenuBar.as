@@ -174,6 +174,7 @@ package org.flowerplatform.flexutil.global_menu {
 				menu.addEventListener("menuHide", childMenu_eventHandler);
 				menu.addEventListener("menuShow", childMenu_eventHandler);
 				menu.addEventListener(KeyboardEvent.KEY_DOWN, childMenu_eventHandler);
+				menu.dataDescriptor = new WebMenuDataDescriptor(actionProvider, selection);
 				
 				var pt:Point = new Point(0, 0);
 				pt = (menuBarItems[selectedIndex] as DisplayObject).localToGlobal(pt);
