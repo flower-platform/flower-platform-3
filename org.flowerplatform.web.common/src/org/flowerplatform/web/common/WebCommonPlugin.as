@@ -49,6 +49,7 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.web.common.explorer.action.NewComposedAction;
 	import org.flowerplatform.web.common.explorer.action.RefreshDirectoryAction;
 	import org.flowerplatform.web.common.explorer.action.RenameAction;
+	import org.flowerplatform.web.common.explorer.properties.FileSelectedItem;
 	import org.flowerplatform.web.common.projects.ProjectPropertiesAction;
 	import org.flowerplatform.web.common.projects.remote.CreateOrImportProjectAction;
 	import org.flowerplatform.web.common.projects.remote.MarkAsWorkingDirectoryAction;
@@ -183,6 +184,8 @@ package org.flowerplatform.web.common {
 			registerClassAlias("org.flowerplatform.web.security.dto.PermissionsByResourceFilter", PermissionsByResourceFilter);
 			registerClassAliasFromAnnotation(InitializeCurrentUserLoggedInClientCommand);
 			registerClassAliasFromAnnotation(InitializeNodeTypeCategoryToNodeTypesMapClientCommand);
+			registerClassAliasFromAnnotation(FileSelectedItem);
+
 		}
 		
 		public function nodeTypeBelongsToNodeTypeCategory(nodeType:String, nodeTypeCategory:String):Boolean {

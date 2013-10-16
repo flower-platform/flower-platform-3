@@ -44,7 +44,7 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
-	import org.flowerplatform.web.properties.remote.FileSelectedItem;
+//	import org.flowerplatform.web.properties.remote.FileSelectedItem;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.PermissionsScreen;
@@ -125,7 +125,7 @@ package org.flowerplatform.web {
 			
 			/* test button */
 			// TODO remove me :
-			btn = new Button();
+			/*btn = new Button();
 			btn.label = "File Prop Prov";
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				var pathFromWorkspace:String = "crispico/ws_trunk/wd1";
@@ -143,8 +143,8 @@ package org.flowerplatform.web {
 									PropertiesPlugin.getInstance().propertyList.selectedItemsForProperties = selectedItems;
 								}
 					));				
-			});
-			hBox.addChild(btn);
+			});*/
+//			hBox.addChild(btn);
 /*			btn = new Button();
 			btn.label = "Diagram Prop Prov";
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
@@ -219,7 +219,7 @@ package org.flowerplatform.web {
 		 * @author Tache Razvan Mihai
 		 */
 		override protected function registerClassAliases():void {
-			registerClassAliasFromAnnotation(FileSelectedItem);
+		//	registerClassAliasFromAnnotation(FileSelectedItem);
 		}
 	}
 }
