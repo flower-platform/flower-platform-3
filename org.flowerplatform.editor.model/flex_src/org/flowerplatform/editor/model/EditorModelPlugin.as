@@ -29,6 +29,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
+	import org.flowerplatform.editor.model.action.SearchAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
@@ -162,7 +163,7 @@ package org.flowerplatform.editor.model {
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 		}
 		
 		override protected function registerClassAliases():void {
