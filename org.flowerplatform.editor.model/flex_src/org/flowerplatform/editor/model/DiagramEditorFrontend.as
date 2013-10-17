@@ -122,8 +122,8 @@ package org.flowerplatform.editor.model {
 				var xmiID:String = node.idAsString;
 				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
 				var diagramViewType:String = node.viewType;
-				
-				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
+				if(diagramViewType != "classOperation") 
+					selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
 			}			
 			
 			return selectedItems;
