@@ -98,16 +98,20 @@ package org.flowerplatform.flexutil.global_menu {
 			return "normal";
 		}
 		
+		public function isEnabled(node:Object):Boolean {
+			if (node is IAction) {
+				return IAction(node).enabled;
+			}
+			
+			return false;
+		}
+		
 		public function addChildAt(parent:Object, newChild:Object, index:int, model:Object=null):Boolean {
 			return false;
 		}
 		
 		public function removeChildAt(parent:Object, child:Object, index:int, model:Object=null):Boolean {
 			return false;
-		}
-		
-		public function isEnabled(node:Object):Boolean {
-			return true;
 		}
 		
 		public function setEnabled(node:Object, value:Boolean):void {

@@ -21,7 +21,6 @@ package org.flowerplatform.flexutil.global_menu {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
-	import flash.utils.Dictionary;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
@@ -36,6 +35,7 @@ package org.flowerplatform.flexutil.global_menu {
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.action.IComposedAction;
 	
 	/**
 	 * Extends the existing MenuBar so it can use an actionProvider.
@@ -82,14 +82,14 @@ package org.flowerplatform.flexutil.global_menu {
 				
 				var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
 				
-				dataProvider = getXMLListActions(selection, null);
+				dataProvider = getMenusList(selection, null);
 			}
 		}
 		
 		/**
-		 * Utility function to build the xmlList for menubar/menus from the actionProvider
+		 * Utility function to build the list for menubar/menus from the actionProvider
 		 */ 
-		protected function getXMLListActions(selection:IList, parentId:String = null):ArrayCollection {
+		protected function getMenusList(selection:IList, parentId:String = null):ArrayCollection {
 			if (actionProvider != null) {
 				var index:int = 0;
 				
@@ -140,35 +140,39 @@ package org.flowerplatform.flexutil.global_menu {
 				var item:IMenuBarItemRenderer = menuBarItems[selectedIndex];
 				var menuBarAction:IAction = item.data as IAction;
 				
-				// get the current selection
-				var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
-				
-				// get the list of actions of the current action
-				var xmlList:ArrayCollection = getXMLListActions(selection, menuBarAction.id);
-				
-				// create and show the menu
-				menu = Menu.createMenu(this, xmlList, false);
-				menu.labelField = this.labelField;
-				menu.iconField = this.iconField;
-				
-				var menuStyle:Object = getStyle("menuStyleName");
-				if (menuStyle != null) {
-					menu.styleName = menuStyle;
-				}
+				// Only a composed action can have children
+				if (menuBarAction is IComposedAction) {
+					// get the current selection
+					var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
 					
-				menu.addEventListener(MenuEvent.MENU_HIDE, childMenu_eventHandler);
-				menu.addEventListener(MenuEvent.MENU_SHOW, childMenu_eventHandler);
-				menu.addEventListener(KeyboardEvent.KEY_DOWN, childMenu_eventHandler);
-				menu.dataDescriptor = new WebMenuDataDescriptor(actionProvider, selection);
-				
-				var pt:Point = new Point(0, 0);
-				pt = (menuBarItems[selectedIndex] as DisplayObject).localToGlobal(pt);
-				pt.y += menuBarItems[selectedIndex].height + 1;
-				// TODO: take ltr and screen boundaries into account
-				
-				menu.show(pt.x, pt.y);
-				
-				menuBarItems[selectedIndex].menuBarItemState = "itemDownSkin";
+					// get the list of actions of the current action
+					var childMenuList:ArrayCollection = getMenusList(selection, menuBarAction.id);
+					
+					// create and show the menu
+					menu = Menu.createMenu(this, childMenuList, false);
+					menu.labelField = this.labelField;
+					menu.iconField = this.iconField;
+					
+					var menuStyle:Object = getStyle("menuStyleName");
+					if (menuStyle != null) {
+						menu.styleName = menuStyle;
+					}
+						
+					menu.addEventListener(MenuEvent.MENU_HIDE, childMenu_eventHandler);
+					menu.addEventListener(MenuEvent.MENU_SHOW, childMenu_eventHandler);
+					menu.addEventListener(MenuEvent.ITEM_CLICK, childMenu_itemClickHandler);
+					menu.addEventListener(KeyboardEvent.KEY_DOWN, childMenu_eventHandler);
+					menu.dataDescriptor = new WebMenuDataDescriptor(actionProvider, selection);
+					
+					var pt:Point = new Point(0, 0);
+					pt = (menuBarItems[selectedIndex] as DisplayObject).localToGlobal(pt);
+					pt.y += menuBarItems[selectedIndex].height + 1;
+					// TODO: take ltr and screen boundaries into account
+					
+					menu.show(pt.x, pt.y);
+					
+					menuBarItems[selectedIndex].menuBarItemState = "itemDownSkin";
+				}
 			}
 		}
 		
@@ -222,6 +226,18 @@ package org.flowerplatform.flexutil.global_menu {
 			} else if (event is KeyboardEvent) {
 				// TODO: Take the submenu into account too
 				dispatchEvent(event);
+			}
+		}
+		
+		/**
+		 * Clicking on a menu (simple action -> no submenu) will execute
+		 * the action.
+		 */
+		protected function childMenu_itemClickHandler(event:MenuEvent):void {
+			var action:IAction = event.item as IAction;
+			
+			if (action != null) {
+				action.run();
 			}
 		}
 	}
