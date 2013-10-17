@@ -22,8 +22,13 @@ package org.flowerplatform.codesync {
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorDescriptor;
 	
+	import mx.collections.ArrayCollection;
+	
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
+	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -35,6 +40,8 @@ package org.flowerplatform.codesync {
 	public class CodeSyncPlugin extends AbstractFlowerFlexPlugin {
 		
 		public var codeSyncTreeActionProvider:CodeSyncTreeActionProvider = new CodeSyncTreeActionProvider();
+		
+		protected var codeSyncElementDescriptors:ArrayCollection;
 		
 		protected static var INSTANCE:CodeSyncPlugin;
 		
@@ -55,6 +62,8 @@ package org.flowerplatform.codesync {
 		}
 		
 		override protected function registerClassAliases():void {
+			registerClassAliasFromAnnotation(CodeSyncElementDescriptor);
+			
 			registerClassAliasFromAnnotation(CodeSyncAction);
 			registerClassAliasFromAnnotation(DiffTreeNode);
 			registerClassAliasFromAnnotation(DiffContextMenuEntry);
@@ -64,6 +73,23 @@ package org.flowerplatform.codesync {
 		override protected function registerMessageBundle():void {
 		}
 		
+		/**
+		 * @author Mariana Gheorghe
+		 */
+		override public function handleConnectedToServer():void {
+			if (!CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived) {
+				var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+					"codeSyncDiagramOperationsService",
+					"getCodeSyncElementDescriptors", 
+					null,
+					this,
+					setCodeSyncElementDescriptors);
+				CommunicationPlugin.getInstance().bridge.sendObject(command);
+			}
+		}
 		
+		protected function setCodeSyncElementDescriptors(codeSyncElementDescriptors:ArrayCollection):void {
+			this.codeSyncElementDescriptors = codeSyncElementDescriptors;	
+		}
 	}
 }

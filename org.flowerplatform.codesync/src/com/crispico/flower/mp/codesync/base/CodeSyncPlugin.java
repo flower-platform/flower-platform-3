@@ -37,8 +37,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.flowerplatform.codesync.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
+import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -94,6 +94,10 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 
 	public void setProjectsProvider(IProjectsProvider projectsProvider) {
 		this.projectsProvider = projectsProvider;
+	}
+	
+	public List<CodeSyncElementDescriptor> getCodeSyncElementDescriptors() {
+		return codeSyncElementDescriptors;
 	}
 	
 	public boolean useUIDs() {

@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync;
+package org.flowerplatform.codesync.remote;
 
 import java.util.List;
 

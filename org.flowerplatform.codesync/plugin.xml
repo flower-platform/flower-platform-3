@@ -18,5 +18,12 @@
             serviceId="codeSyncEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="codeSyncDiagramOperationsService"
+            serviceClass="org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1">
+      </service>
+   </extension>
 
 </plugin>
