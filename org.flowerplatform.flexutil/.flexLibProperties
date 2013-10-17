@@ -24,6 +24,11 @@
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin"/>
     <classEntry path="org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup"/>
     <classEntry path="org.flowerplatform.flexutil.search.SearchView"/>
+    <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItemRenderer"/>
+    <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItem"/>
+    <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin"/>
+    <classEntry path="org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup"/>
+    <classEntry path="org.flowerplatform.flexutil.search.SearchView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

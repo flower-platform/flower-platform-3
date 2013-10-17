@@ -31,7 +31,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavaClassAttributeProcessor extends JavaClassChildProcessor {
 
 	@Override
-	public String getLabel(EObject object, boolean forEditing) {
+	public String getLabel(EObject object,/* FeatureChange featureChange,*/ boolean forEditing) {
 		CodeSyncElement cse = getCodeSyncElement(object);
 		return labelParser.createAttributeLabel(
 				new InplaceEditorLabelParseResult()
