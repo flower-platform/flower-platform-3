@@ -21,6 +21,7 @@ package org.flowerplatform.flexutil.global_menu {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
+	import flash.ui.Keyboard;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
@@ -30,6 +31,7 @@ package org.flowerplatform.flexutil.global_menu {
 	import mx.controls.MenuBar;
 	import mx.controls.menuClasses.IMenuBarItemRenderer;
 	import mx.controls.menuClasses.MenuBarItem;
+	import mx.core.LayoutDirection;
 	import mx.events.MenuEvent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -250,8 +252,24 @@ package org.flowerplatform.flexutil.global_menu {
 				}
 				
 			} else if (event is KeyboardEvent) {
-				// TODO: Take the submenu into account too
-				dispatchEvent(event);
+				var keyEvent:KeyboardEvent = event as KeyboardEvent;
+				var keyCode:uint = keyEvent.keyCode;
+				
+				// take rtl into account
+				if (layoutDirection == LayoutDirection.RTL) {
+					if (keyCode == Keyboard.LEFT) {
+						keyCode = Keyboard.RIGHT; 
+					} else if (keyCode == Keyboard.RIGHT) {
+						keyCode = Keyboard.LEFT;
+					}
+				}
+				
+				// dont notify parent if right and we are on a expandable menu
+				// so that the menu has a chance to expand itself
+				if (!(keyCode == Keyboard.RIGHT 
+					&& Menu(event.target).selectedItem is IComposedAction)) {
+					dispatchEvent(event);
+				}
 			}
 		}
 		

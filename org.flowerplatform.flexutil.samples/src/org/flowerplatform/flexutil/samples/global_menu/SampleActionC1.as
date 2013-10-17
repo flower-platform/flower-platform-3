@@ -33,7 +33,14 @@ package org.flowerplatform.flexutil.samples.global_menu {
 			if (selection == null || selection.length == 0) {
 				return "Action for: empty";
 			} else {
-				return "Action for: " + selection.getItemAt(0);
+				var sel:Object = selection.getItemAt(0);
+				var result:Object;
+				if (sel is XML) {
+					result = "XML";
+				} else {
+					result = sel;
+				}
+				return "Action for: " + result;
 			}
 		}
 		
