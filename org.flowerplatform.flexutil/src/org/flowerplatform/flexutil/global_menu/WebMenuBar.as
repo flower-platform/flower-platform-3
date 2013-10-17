@@ -21,6 +21,7 @@ package org.flowerplatform.flexutil.global_menu {
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.ui.Keyboard;
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
@@ -33,6 +34,7 @@ package org.flowerplatform.flexutil.global_menu {
 	import mx.controls.menuClasses.MenuBarItem;
 	import mx.core.LayoutDirection;
 	import mx.events.MenuEvent;
+	import mx.managers.ISystemManager;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionUtil;
@@ -185,20 +187,48 @@ package org.flowerplatform.flexutil.global_menu {
 					if (menuStyle != null) {
 						menu.styleName = menuStyle;
 					}
-						
+					
 					menu.addEventListener(MenuEvent.MENU_HIDE, childMenu_eventHandler);
 					menu.addEventListener(MenuEvent.MENU_SHOW, childMenu_eventHandler);
+					// on click execute the action
 					menu.addEventListener(MenuEvent.ITEM_CLICK, childMenu_itemClickHandler);
 					menu.addEventListener(KeyboardEvent.KEY_DOWN, childMenu_eventHandler);
 					menu.dataDescriptor = new WebMenuDataDescriptor(actionProvider, selection);
 					
+					// get the VisibleApplicationRect so we can correctly display the menu
+					// if it will try to get outside.
+					var sm:ISystemManager = systemManager.topLevelSystemManager;
+					var screen:Rectangle = sm.getVisibleApplicationRect(null, true);
+					
 					var pt:Point = new Point(0, 0);
 					pt = (menuBarItems[selectedIndex] as DisplayObject).localToGlobal(pt);
 					pt.y += menuBarItems[selectedIndex].height + 1;
-					// TODO: take ltr and screen boundaries into account
-					
+
+					// show the menu so we can have its ExplicitOrMeasuredWidth and ExplicitOrMeasuredHeight
+					// so we can check if it is inside or outside the visible screen, and to apply the 
+					// correction for RTL
 					menu.show(pt.x, pt.y);
 					
+					// if RTL make it shown from the right
+					if (layoutDirection == LayoutDirection.RTL) {
+						pt.x -= menu.getExplicitOrMeasuredWidth();
+					}
+					
+					// check to see if we'll go offscreen
+					if (pt.x + menu.getExplicitOrMeasuredWidth() > screen.x + screen.width) {
+						pt.x = screen.width - menu.getExplicitOrMeasuredWidth();
+					}
+					pt.x = Math.max(pt.x, screen.x);
+					
+					if (pt.y + menu.getExplicitOrMeasuredHeight() > screen.height + screen.y) {
+						pt.y -= menu.getExplicitOrMeasuredHeight();
+					}
+					pt.y = Math.max(pt.y, screen.y);
+					
+					// now move the menu to the correct position
+					menu.move(pt.x, pt.y);
+					
+					//tell the current barItem to be in down status and not hover
 					menuBarItems[selectedIndex].menuBarItemState = "itemDownSkin";
 				}
 			}
@@ -222,7 +252,9 @@ package org.flowerplatform.flexutil.global_menu {
 		 * 	<li>MENU_SHOW - cancel the timeout if the user selected another 
 		 * 		menu at a short time after the previouse was closed</li>
 		 * 	<li>KEY_DOWN - need to be sent to the parent menuBar (to implement left 
-		 * 		and right)</li>
+		 * 		and right). Also on right, if we are on a selection that can be expanded, don't
+		 * 		send anything to the parent - it needs to be interpreted by the menu and not menuBar
+		 *  </li>
 		 * </ul>
 		 */
 		protected function childMenu_eventHandler(event:Event):void {

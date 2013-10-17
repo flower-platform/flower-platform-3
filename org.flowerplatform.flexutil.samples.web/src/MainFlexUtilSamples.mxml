@@ -24,8 +24,6 @@
 			   applicationComplete="applicationCompleteHandler()" xmlns:ns1="org.flowerplatform.flexutil.samples.gradient_list.*" xmlns:text="org.flowerplatform.flexutil.samples.text.*" xmlns:layout1="org.flowerplatform.flexutil.samples.web.layout.*" xmlns:globalmenu="org.flowerplatform.flexutil.samples.web.global_menu" xmlns:ns2="org.flowerplatform.flexutil.samples.global_menu.*">
 	<fx:Script>
 		<![CDATA[
-			import mx.events.FlexEvent;
-			
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.context_menu.ContextMenuManager;
 			
