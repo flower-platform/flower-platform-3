@@ -42,6 +42,7 @@ package  org.flowerplatform.editor.remote {
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
+	import org.flowerplatform.flexutil.popup.IPopupContent;
 	
 	/**
 	 * 
@@ -539,7 +540,12 @@ package  org.flowerplatform.editor.remote {
 				var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
 				var lastEditorFrontend:EditorFrontend = editorFrontends[editorFrontends.length - 1];
 				
-				UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend]);
+				if (lastEditorFrontend is IPopupContent) {
+					UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend.parent]);
+				} else {
+					UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend]);
+				}
+				
 			}
 		}
 	}
