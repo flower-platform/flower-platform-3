@@ -67,7 +67,7 @@ package org.flowerplatform.editor.model.controller {
 		public function drop(model:Object):void {
 			if (model != null) {
 				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-					.service_addNewConnection(diagramShell.mainTool.context.model.id, model.id);
+					.service_addNewRelation(diagramShell.mainTool.context.model.id, model.id);
 			}
 			
 			diagramShell.mainToolFinishedItsJob();

@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.remote;
+package org.flowerplatform.codesync.processor;
 
 import java.util.Iterator;
 import java.util.List;
@@ -70,7 +70,11 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 			// add a view for each child of the model element (cases: initial, or adding a new child model element)
 			for (EObject child : childModelElements) {
 				if (canAddChildView(associatedViewOnOpenDiagram, child)) {
+//					Node newView = createChildView(associatedViewOnOpenDiagram, child);
+//					newView.setDiagrammableElement(child);
+//					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
 					addChildView(associatedViewOnOpenDiagram, child, newViewsIndex, context);					
+
 				}
 				newViewsIndex++;
 			}
@@ -85,6 +89,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 				if (newChild != null) {
 					getChildrenForCodeSyncElement(object).add(associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child), newChild);
 				} else {
+//					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 					removeChildView(child, child.getDiagrammableElement(), context);					
 					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 				}
@@ -97,6 +102,8 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 		}
 		
 		if (newViewsIndex < 0) {
+			// remove all views (cases: collapsed view/compartment)
+//			associatedViewOnOpenDiagram.getPersistentChildren().removeAll(childViews);
 			// remove all views (cases: collapsed view/compartment)			
 			CopyOnWriteArrayList<Node> persistentChildren = new CopyOnWriteArrayList<Node>(associatedViewOnOpenDiagram.getPersistentChildren());
 			for (Iterator<Node> it = persistentChildren.iterator(); it.hasNext();) {
@@ -126,6 +133,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	
 	abstract protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram);
 	
+//	abstract protected Node createChildView(View associatedViewOnOpenDiagram, EObject child);
 	abstract protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context);
 	
 	/**
