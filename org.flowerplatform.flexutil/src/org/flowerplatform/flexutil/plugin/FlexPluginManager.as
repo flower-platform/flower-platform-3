@@ -31,15 +31,6 @@ package org.flowerplatform.flexutil.plugin {
 	 */
 	public class FlexPluginManager {
 		
-		protected static var INSTANCE:FlexPluginManager;
-		
-		public static function getInstance():FlexPluginManager {
-			if (INSTANCE == null) {
-				INSTANCE = new FlexPluginManager();
-			}
-			return INSTANCE;
-		}
-		
 		public var flexPluginEntries:ArrayCollection = new ArrayCollection();
 		
 		public var currentLoadingSession:FlexPluginLoadingSession;
