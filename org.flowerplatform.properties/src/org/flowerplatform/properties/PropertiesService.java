@@ -38,7 +38,8 @@ public class PropertiesService {
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// retrieve properties by providers
-			newProperties = itemProvider.getProperties(selectedItem);
+			if (itemProvider != null)
+				newProperties = itemProvider.getProperties(selectedItem);
 			// merge with the previous results
 			if (properties.isEmpty()) {
 				properties.addAll(newProperties);
