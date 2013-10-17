@@ -276,53 +276,56 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	 * 
 	 * @author Sebastian Solomon
 	 */
-	protected void createAndAddFeatureChange(CodeSyncElement element, EStructuralFeature feature, Object oldValue, Object newValue) {
+	protected void createAndAddFeatureChange(CodeSyncElement element,
+			EStructuralFeature feature, Object oldValue, Object newValue) {
 		element.getFeatureChanges().removeKey(feature);
 		if (!equal(newValue, oldValue)) {
-			FeatureChange featureChange = CodeSyncFactory.eINSTANCE.createFeatureChange();
+			FeatureChange featureChange = CodeSyncFactory.eINSTANCE
+					.createFeatureChange();
 			featureChange.setOldValue(oldValue);
 			featureChange.setNewValue(newValue);
 			element.getFeatureChanges().put(feature, featureChange);
-			
-			if(element.isSynchronized()){
+
+			if (element.isSynchronized()) {
 				element.setSynchronized(false);
 				propagateParentSyncFalse(element);
 			}
-			
-		}else if (element.getFeatureChanges().size() == 0){
+
+		} else if (element.getFeatureChanges().size() == 0) {
 			propagateParentSyncTrue(element);
 		}
-			
+
 	}
 	
 	/**
 	 * @author Sebastian Solomon
 	 */
-	public void propageteOnChildDelete(CodeSyncElement cse){
-		
-		for(CodeSyncElement child: cse.getChildren()){
+	public void propageteOnChildDelete(CodeSyncElement cse) {
+
+		for (CodeSyncElement child : cse.getChildren()) {
 			child.setDeleted(true);
 			propageteOnChildDelete(child);
 		}
-		
+
 	}
 	
 	/**
 	 * @author Sebastian Solomon
 	 */
-	public void propagateParentSyncFalse(CodeSyncElement element){
-		while (element.eContainer() != null ){
-			
+	public void propagateParentSyncFalse(CodeSyncElement element) {
+		while (element.eContainer() != null) {
+
 			EObject parent = element.eContainer();
-			if (parent instanceof CodeSyncElement){
-				element = (CodeSyncElement)parent;
-				if (element.isSynchronized()){
+			if (parent instanceof CodeSyncElement) {
+				element = (CodeSyncElement) parent;
+				if (element.isSynchronized()) {
 					element.setChildrenSynchronized(false);
-					
+
 				}
 
-			}else return;
-			
+			} else
+				return;
+
 		}
 
 	}
@@ -331,25 +334,24 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	/**
 	 * @author Sebastian Solomon
 	 */
-	public void propagateParentSyncTrue(CodeSyncElement element){
-		if( !element.isAdded() && !element.isDeleted() && element.getFeatureChanges().size() == 0){
-			element.setSynchronized(true);   //orange
-			if (allChildrenGreen(element))   //if all childs green =>become green
-				element.setChildrenSynchronized(true); 
-			// * walk whole parent hierarchy; set childrenSync = true if all children are sync,not newly added not deleted
-			while (element.eContainer() != null){
-				if ( element.eContainer() instanceof CodeSyncElement){
-					element = (CodeSyncElement)element.eContainer();
-					if (allChildrenGreen(element)){ 
+	public void propagateParentSyncTrue(CodeSyncElement element) {
+		if (!element.isAdded() && !element.isDeleted()
+				&& element.getFeatureChanges().size() == 0) {
+			element.setSynchronized(true); // orange
+			if (allChildrenGreen(element)) // if all childs green =>become green
+				element.setChildrenSynchronized(true);
+			// * walk whole parent hierarchy; set childrenSync = true if all
+			// children are sync,not newly added not deleted
+			while (element.eContainer() != null) {
+				if (element.eContainer() instanceof CodeSyncElement) {
+					element = (CodeSyncElement) element.eContainer();
+					if (allChildrenGreen(element)) {
 						element.setChildrenSynchronized(true);
-					
-					}else return;  // if one child is notSync, return
-				
+					} else
+						return; // if one child is notSync, return
 				}
 			}
-			
 		}
-		
 	}
 	
 //	private boolean childsAreSync(CodeSyncElement element){ //orange or green
@@ -366,8 +368,9 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	 * @author Sebastian Solomon
 	 */
 	private boolean allChildrenGreen(CodeSyncElement element) {
-		for (CodeSyncElement cse: element.getChildren()){
-			if (cse.isAdded() || cse.isDeleted() || !cse.isSynchronized() || !cse.isChildrenSynchronized() )
+		for (CodeSyncElement cse : element.getChildren()) {
+			if (cse.isAdded() || cse.isDeleted() || !cse.isSynchronized()
+					|| !cse.isChildrenSynchronized())
 				return false;
 		}
 		return true;
