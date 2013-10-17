@@ -35,11 +35,6 @@ license-end
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
-		<fx:XMLList id="menuContent" xmlns="">
-			<menuitem label="Text">
-				<menuitem label="next text"/>
-			</menuitem>
-		</fx:XMLList>
 	</fx:Declarations>
 	<ns:WebMenuBar width="100%" id="mainMenu" actionProvider="{actionProvider}"/>
 </s:Group>

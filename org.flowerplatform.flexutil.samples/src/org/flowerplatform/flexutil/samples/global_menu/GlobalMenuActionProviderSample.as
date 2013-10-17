@@ -23,6 +23,7 @@ package org.flowerplatform.flexutil.samples.global_menu {
 	import org.flowerplatform.flexutil.action.ComposedAction;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.samples.context_menu.SampleAction1;
 	import org.flowerplatform.flexutil.samples.context_menu.SampleAction2;
 	import org.flowerplatform.flexutil.samples.context_menu.SampleAction3;
 	import org.flowerplatform.flexutil.samples.renderer.MultipleIconItemRendererSample;
@@ -45,9 +46,8 @@ package org.flowerplatform.flexutil.samples.global_menu {
 			action.parentId = "sampleaction4";
 			actions.push(action);
 			
-			action = new SampleAction3();
+			action = new SampleAction1();
 			action.id = "sampleaction2";
-			action.label = "Sample Action 2";
 			action.parentId = "sampleaction4";
 			actions.push(action);
 			
@@ -57,7 +57,7 @@ package org.flowerplatform.flexutil.samples.global_menu {
 			action.icon = MultipleIconItemRendererSample.defaultImage;
 			actions.push(action);
 			
-			action = new ComposedAction();
+			action = new SampleActionC1();
 			action.id = "sampleaction4";
 			action.label = "Sample Action 4";
 			actions.push(action);
@@ -80,9 +80,8 @@ package org.flowerplatform.flexutil.samples.global_menu {
 			action.parentId = "sampleaction1";
 			actions.push(action);
 			
-			action = new SampleAction2();
+			action = new SampleAction1();
 			action.id = "sampleaction24";
-			action.label = "Sample Action 24";
 			action.parentId = "sampleaction22";
 			actions.push(action);
 		}

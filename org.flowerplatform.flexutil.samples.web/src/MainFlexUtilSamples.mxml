@@ -39,26 +39,26 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<mx:TabNavigator width="100%" height="100%" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
-		<s:NavigatorContent label="TreeList">
-			<tree:TreeSample width="100%" height="100%"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent label="Multi Icon Item Renderer">
-			<renderer:MultipleIconItemRendererSample width="100%" height="100%" />
-		</s:NavigatorContent>
-		<layout:WorkbenchViewHost label="Context Menu">
-			<ns:ContextMenuSample width="100%" height="100%"/>				
-		</layout:WorkbenchViewHost>
-		<s:NavigatorContent label="Gradient List">
-			<ns1:GradientBackgroundListSample width="100%" height="100%"/>
-		</s:NavigatorContent>
-		<s:NavigatorContent label="Auto grow Textinput/TextArea" width="100%" height="100%">
-			<text:AutoGrowTextInputSample top="10" />
-		</s:NavigatorContent>
-		<layout1:LayoutSample label="Layout/Workbench Framework"/>
-		<s:NavigatorContent label="Web Global Menu" width="100%" height="100%">
-			<ns2:GlobalMenuSample width="100%"/>
-		</s:NavigatorContent>
-	</mx:TabNavigator>
-			
+	<s:VGroup width="100%" height="100%">
+		<ns2:GlobalMenuSample width="100%"/>	
+		<mx:TabNavigator width="100%" height="100%" paddingBottom="10" paddingTop="10" paddingLeft="10" paddingRight="10">
+			<s:NavigatorContent label="TreeList">
+				<tree:TreeSample width="100%" height="100%"/>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Multi Icon Item Renderer">
+				<renderer:MultipleIconItemRendererSample width="100%" height="100%" />
+			</s:NavigatorContent>
+			<layout:WorkbenchViewHost label="Context Menu">
+				<ns:ContextMenuSample width="100%" height="100%"/>				
+			</layout:WorkbenchViewHost>
+			<s:NavigatorContent label="Gradient List">
+				<ns1:GradientBackgroundListSample width="100%" height="100%"/>
+			</s:NavigatorContent>
+			<s:NavigatorContent label="Auto grow Textinput/TextArea" width="100%" height="100%">
+				<text:AutoGrowTextInputSample top="10" />
+			</s:NavigatorContent>
+			<layout1:LayoutSample label="Layout/Workbench Framework"/>
+		</mx:TabNavigator>
+	</s:VGroup>
+	
 </s:Application>

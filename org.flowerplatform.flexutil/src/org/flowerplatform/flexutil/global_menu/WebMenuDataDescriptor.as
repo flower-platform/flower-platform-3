@@ -59,6 +59,11 @@ package org.flowerplatform.flexutil.global_menu {
 			ActionUtil.processAndIterateActions(id, actionProvider.getActions(selection), selection, this, function(action:IAction):void {
 				children.addItem(action);
 			});
+
+			// add the selection so we can have the correct labels
+			for each (var action:IAction in children) {
+				action.selection = selection;
+			}
 			
 			return children;
 		}

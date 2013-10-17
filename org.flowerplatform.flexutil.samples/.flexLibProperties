@@ -11,6 +11,7 @@
     <classEntry path="org.flowerplatform.flexutil.samples.gradient_list.RightList"/>
     <classEntry path="org.flowerplatform.flexutil.samples.gradient_list.ListSettings"/>
     <classEntry path="org.flowerplatform.flexutil.samples.gradient_list.DummyData"/>
+    <classEntry path="org.flowerplatform.flexutil.samples.global_menu.SampleActionC1"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -29,6 +29,7 @@ package org.flowerplatform.flexutil.global_menu {
 	import mx.controls.Menu;
 	import mx.controls.MenuBar;
 	import mx.controls.menuClasses.IMenuBarItemRenderer;
+	import mx.controls.menuClasses.MenuBarItem;
 	import mx.events.MenuEvent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -36,6 +37,7 @@ package org.flowerplatform.flexutil.global_menu {
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.action.IComposedAction;
+	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
 	
 	/**
 	 * Extends the existing MenuBar so it can use an actionProvider.
@@ -78,9 +80,28 @@ package org.flowerplatform.flexutil.global_menu {
 		
 			// also build the menuBar
 			if (actionProvider != null) {
-				var xmlList:XMLList = new XMLList();
+				var selection:IList = null;
+				try {
+					selection = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
+				} catch (e:Error) {
+					
+				}
 				
-				var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
+				// now put a listener on the selection so we can update the menuBar when selection changes
+				FlexUtilGlobals.getInstance().selectionManager.addEventListener(
+					SelectionChangedEvent.SELECTION_CHANGED,
+					function(event:SelectionChangedEvent):void {
+						// update the selection for the actions in the menuBar
+						for each (var item:IMenuBarItemRenderer in menuBarItems) {
+							var action:IAction = item.data as IAction;
+							action.selection = event.selection;
+							item.enabled = action.enabled;
+							
+							MenuBarItem(item).invalidateProperties();
+							MenuBarItem(item).invalidateSize();
+						}
+					}
+				);
 				
 				dataProvider = getMenusList(selection, null);
 			}
@@ -103,6 +124,11 @@ package org.flowerplatform.flexutil.global_menu {
 						listActions.addItem(action);
 					}
 				);
+				
+				// force the selection so we can have the correct labels
+				for each (var action:IAction in listActions) {
+					action.selection = selection;
+				}
 				
 				return listActions;
 			}
