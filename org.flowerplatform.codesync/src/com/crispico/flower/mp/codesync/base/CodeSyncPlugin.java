@@ -20,6 +20,7 @@ package com.crispico.flower.mp.codesync.base;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.flowerplatform.codesync.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -49,13 +51,18 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 
-	public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
+/**
+ * @author Mariana Gheorghe
+ */
+public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected static CodeSyncPlugin INSTANCE;
 	
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
 	
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
+	
+	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
 
 	/**
 	 * @see #getProjectsProvider()
@@ -101,6 +108,8 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
 		
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
+		
+		initializeExtensionPoint_codeSyncElementDescriptor();
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -113,6 +122,35 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 			codeSyncAlgorithmRunner.addRunner(technology, (ICodeSyncAlgorithmRunner) instance);
 			logger.debug("Added CodeSync algorithm runner with id = {} with class = {}", id, instance.getClass());
 		}
+	}
+	
+	private void initializeExtensionPoint_codeSyncElementDescriptor() throws CoreException {
+		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementDescriptor");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			String codeSyncType = configurationElement.getAttribute("codeSyncType");
+			String iconUrl = configurationElement.getAttribute("iconUrl");
+			List<String> codeSyncTypeCategories = getAttributes(configurationElement, "codeSyncTypeCategory");
+			List<String> childrenCodeSyncTypeCategories = getAttributes(configurationElement, "childrenCodeSyncTypeCategory");
+			List<String> features = getAttributes(configurationElement, "feature");
+			CodeSyncElementDescriptor descriptor = new CodeSyncElementDescriptor();
+			descriptor.setCodeSyncType(codeSyncType);
+			descriptor.setIconUrl(iconUrl);
+			descriptor.setCodeSyncTypeCategories(codeSyncTypeCategories);
+			descriptor.setChildrenCodeSyncTypeCategories(childrenCodeSyncTypeCategories);
+			descriptor.setFeatures(features);
+			codeSyncElementDescriptors.add(descriptor);
+			logger.debug("Added CodeSyncElementDescriptor with type = {}", codeSyncType);
+		}
+	}
+	
+	private List<String> getAttributes(IConfigurationElement parentConfigurationElement, String id) {
+		List<String> result = new ArrayList<String>();
+		IConfigurationElement[] configurationElements = parentConfigurationElement.getChildren(id);
+		for (IConfigurationElement configurationElement : configurationElements) {
+			result.add(configurationElement.getAttribute("name"));
+		}
+		return result;
 	}
 	
 	@Override

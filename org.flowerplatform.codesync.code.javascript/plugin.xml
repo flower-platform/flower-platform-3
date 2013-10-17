@@ -35,5 +35,35 @@
             commandToAppendToWelcomeClientCommand="org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand">
       </welcomeInitializationsContributor>
    </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+      <codeSyncElementDescriptor
+            codeSyncType="BackboneClass">
+         <childrenCodeSyncTypeCategory
+               name="RequireEntry">
+         </childrenCodeSyncTypeCategory>
+         <childrenCodeSyncTypeCategory
+               name="ClassMember">
+         </childrenCodeSyncTypeCategory>
+      </codeSyncElementDescriptor>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+      <codeSyncElementDescriptor
+            codeSyncType="Operation">
+         <codeSyncTypeCategory
+               name="ClassMember">
+         </codeSyncTypeCategory>
+      </codeSyncElementDescriptor>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+      <codeSyncElementDescriptor
+            codeSyncType="Attribute">
+         <codeSyncTypeCategory
+               name="ClassMember">
+         </codeSyncTypeCategory>
+      </codeSyncElementDescriptor>
+   </extension>
 
 </plugin>

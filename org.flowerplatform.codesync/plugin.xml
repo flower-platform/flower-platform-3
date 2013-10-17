@@ -2,6 +2,7 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="codeSyncAlgorithmRunner" name="codeSyncAlgorithmRunner" schema="schema/codeSyncAlgorithmRunner.exsd"/>
+   <extension-point id="codeSyncElementDescriptor" name="codeSyncElementDescriptor" schema="schema/codeSyncElementDescriptor.exsd"/>
    <extension
          point="org.flowerplatform.editor.contentType">
       <contentType
