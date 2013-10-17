@@ -26,14 +26,14 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IComposedAction;
-	import org.flowerplatform.flexutil.view_content_host.IViewContent;
-	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
 	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
 	import spark.components.CalloutButton;
 	import spark.components.Group;
@@ -71,6 +71,8 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 		
 		protected var spinner:MobileSpinner;
 		
+		protected var preventBackKeyPress:Boolean = true;
+		
 		public function get activeViewContent():IViewContent {	
 			return _activeViewContent;
 		}
@@ -84,6 +86,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			super();
 			openMenuAction = new OpenMenuAction(this);
 			addEventListener(FlexEvent.MENU_KEY_PRESSED, menuKeyPressedEvent);
+			addEventListener(FlexEvent.BACK_KEY_PRESSED, backKeyPressHandler);
 			addEventListener(ViewNavigatorEvent.VIEW_DEACTIVATE, viewDeactivateHandler);
 		}
 		
@@ -95,12 +98,26 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			}
 		}
 		
+		protected function backKeyPressHandler(event:FlexEvent):void {
+			if (preventBackKeyPress) {
+				event.preventDefault();
+			}
+		}
+		
 		protected function viewDeactivateHandler(event:ViewNavigatorEvent):void {
 			FlexUtilGlobals.getInstance().selectionManager.viewContentRemoved(this, activeViewContent); 
 		}
 		
 		override protected function createChildren():void {
 			super.createChildren();
+			
+			if (data != null) {
+				if (data.preventBackKeyPress is Boolean) { 
+					// this value can exist or not in data; that's why we do the check like this;
+					// the normal way (i.e. if (data.prevent...)) doens't work, because the property is boolean
+					preventBackKeyPress = data.preventBackKeyPress;
+				}
+			}
 
 			iconComponent = new BitmapImage();
 			labelComponent = new Label();
