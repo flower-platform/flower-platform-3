@@ -20,7 +20,6 @@ package org.flowerplatform.common {
 	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	
-
 	import mx.core.FlexGlobals;
 	
 	import org.flowerplatform.common.link.ILinkHandler;
@@ -116,6 +115,6 @@ package org.flowerplatform.common {
 			var browserURL:String = FlexGlobals.topLevelApplication.url;
 			return browserURL.split("?")[0];
 		}
-	
 	}
+	
 }

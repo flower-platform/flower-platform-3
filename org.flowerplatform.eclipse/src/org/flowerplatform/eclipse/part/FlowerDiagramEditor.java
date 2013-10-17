@@ -2,6 +2,7 @@ package org.flowerplatform.eclipse.part;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ResourceBundle.Control;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -38,7 +39,7 @@ public class FlowerDiagramEditor extends EditorPart {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(FlowerDiagramEditor.class);
-
+	
 	static {
 		Bundle bundle = Platform.getBundle("org.flowerplatform.eclipse");
 		if (bundle != null) {
@@ -71,6 +72,10 @@ public class FlowerDiagramEditor extends EditorPart {
 
 	public Browser getBrowser() {
 		return browser;
+	}
+	
+	public void addDiagramToBrowser(String path){
+		browser.setUrl( browser.getUrl() + "," + ((FileEditorInput) getEditorInput()).getFile().getFullPath());
 	}
 
 	// public EclipseCommunicationChannel getCommunicationChannel() {
@@ -113,6 +118,7 @@ public class FlowerDiagramEditor extends EditorPart {
 					// communicationChannel,
 					// getFriendlyEditableResourcePath()
 					// + "/|_1eeo4L7FEeKY4uWt8tp0Gw");
+
 				}
 			}
 
@@ -187,8 +193,8 @@ public class FlowerDiagramEditor extends EditorPart {
 
 	@SuppressWarnings("restriction")
 	public void createPartControl(Composite parent) {
-		this.parent = parent;
-
+		
+		this.parent = parent;		
 		parent.setLayout(new FillLayout());
 
 		IEditorReference[] editorReferences = FlowerDiagramEditor.this
@@ -219,11 +225,13 @@ public class FlowerDiagramEditor extends EditorPart {
 		if (System.getProperty("os.name").toLowerCase().indexOf("win") >= 0) {
 			type = SWT.MOZILLA;
 		}
-		browser = new Browser(parent, type);
-		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		
+			browser = new Browser(parent, type);
+			browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// TODO CC: here we must append openResources command
-		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl());		
+		//browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl());
+		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl()+"?openResources=" + ((FileEditorInput) getEditorInput()).getFile().getFullPath());
 	}
 
 	@Override

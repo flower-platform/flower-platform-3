@@ -56,3 +56,31 @@ function getQueryString() /* : String */ {
 		}
 	}
 }
+
+
+
+	function handleLink(link) {
+		var isSafariBrowser = navigator.userAgent.toLowerCase().indexOf("safari") != -1;
+//		if (!isSafariBrowser) {
+//			window.document.temp_form.temp_field.handleLink(link);
+//		}
+		
+		window.document.getElementById("FlexHostApp").handleLink(link);
+	}
+	
+
+
+	function isFileOpened(path) {
+	var isOpen = window.document.getElementById("FlexHostApp")
+			.isEditableResoucesOpened(path);
+	theJavaFunction(isOpen);
+}
+	
+	
+//	function getFlexApp() {
+//        if (navigator.appName.indexOf ("Microsoft") !=-1) {
+//            return window["${FlexHostApp}"];
+//        } else {
+//            return document["${FlexHostApp}"];
+//        }
+//    }
