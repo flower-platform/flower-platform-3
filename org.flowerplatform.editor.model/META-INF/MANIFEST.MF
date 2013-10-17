@@ -21,5 +21,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.flowerplatform.editor.model,
  org.flowerplatform.editor.model.change_processor,
+ org.flowerplatform.editor.model.properties.remote,
  org.flowerplatform.editor.model.remote,
  org.flowerplatform.editor.model.remote.scenario
