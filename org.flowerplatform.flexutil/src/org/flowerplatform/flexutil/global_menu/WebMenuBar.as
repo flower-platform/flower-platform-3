@@ -25,9 +25,11 @@ package org.flowerplatform.flexutil.global_menu {
 	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.controls.Menu;
 	import mx.controls.MenuBar;
+	import mx.controls.menuClasses.IMenuBarItemRenderer;
 	import mx.events.MenuEvent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -50,20 +52,12 @@ package org.flowerplatform.flexutil.global_menu {
 		protected var menu:Menu;
 		
 		/**
-		 *  conversion between menuBar index and action id
-		 */
-		protected var menuBarIndexToId:Dictionary;
-		
-		/**
 		 *  after the submenu is closed the menuBar needs to be reset
 		 */
 		protected var resetMenuBarOnMenuClosingTimout:int = 0;
 		
 		public function WebMenuBar(ap:IActionProvider = null):void {
 			super();
-			
-			labelField = "@label";
-			iconField = "@icon";
 			
 			if (ap != null) {
 				_actionProvider = ap;
@@ -84,9 +78,6 @@ package org.flowerplatform.flexutil.global_menu {
 		
 			// also build the menuBar
 			if (actionProvider != null) {
-				menuBarIndexToId = new Dictionary();
-				var index:int = 0;
-				
 				var xmlList:XMLList = new XMLList();
 				
 				var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
@@ -98,34 +89,22 @@ package org.flowerplatform.flexutil.global_menu {
 		/**
 		 * Utility function to build the xmlList for menubar/menus from the actionProvider
 		 */ 
-		protected function getXMLListActions(selection:IList, parentId:String = null):XMLList {
+		protected function getXMLListActions(selection:IList, parentId:String = null):ArrayCollection {
 			if (actionProvider != null) {
 				var index:int = 0;
 				
-				var xmlList:XMLList = new XMLList;
+				var listActions:ArrayCollection = new ArrayCollection();
 				
 				ActionUtil.processAndIterateActions(parentId, 
 					actionProvider.getActions(selection),
 					selection,
 					this,
 					function(action:IAction):void {
-						var xml:XML = <menuitem/>;
-						xml.@id = action.id;
-						xml.@label = action.label;
-						xml.@icon = action.icon;
-						xml.@enabled = action.enabled;
-						
-						if (parentId == null) {
-							// root (menuBar) so need to update the conversion dict also
-							menuBarIndexToId[index] = action.id;
-							index++;
-						}
-						
-						xmlList += xml;
+						listActions.addItem(action);
 					}
 				);
 				
-				return xmlList;
+				return listActions;
 			}
 			
 			return null;
@@ -152,27 +131,33 @@ package org.flowerplatform.flexutil.global_menu {
 		 */
 		protected function buildAndShowMenu():void {
 			if (menu != null) {
-				// we have a shown menu -> hide it
+				// we have a menu displayed -> hide it
 				hideMenu();
 			}
 			
 			if (actionProvider != null) {
+				// get the current selected action
+				var item:IMenuBarItemRenderer = menuBarItems[selectedIndex];
+				var menuBarAction:IAction = item.data as IAction;
 				
+				// get the current selection
 				var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
 				
-				var xmlList:XMLList = getXMLListActions(selection, menuBarIndexToId[selectedIndex]);
+				// get the list of actions of the current action
+				var xmlList:ArrayCollection = getXMLListActions(selection, menuBarAction.id);
 				
+				// create and show the menu
 				menu = Menu.createMenu(this, xmlList, false);
-				menu.labelField = "@label";
-				menu.iconField = "@icon";
+				menu.labelField = this.labelField;
+				menu.iconField = this.iconField;
 				
 				var menuStyle:Object = getStyle("menuStyleName");
 				if (menuStyle != null) {
 					menu.styleName = menuStyle;
 				}
 					
-				menu.addEventListener("menuHide", childMenu_eventHandler);
-				menu.addEventListener("menuShow", childMenu_eventHandler);
+				menu.addEventListener(MenuEvent.MENU_HIDE, childMenu_eventHandler);
+				menu.addEventListener(MenuEvent.MENU_SHOW, childMenu_eventHandler);
 				menu.addEventListener(KeyboardEvent.KEY_DOWN, childMenu_eventHandler);
 				menu.dataDescriptor = new WebMenuDataDescriptor(actionProvider, selection);
 				

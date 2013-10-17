@@ -1,10 +1,9 @@
 package org.flowerplatform.flexutil.global_menu {
+	import mx.collections.ArrayCollection;
 	import mx.collections.ICollectionView;
 	import mx.collections.IList;
-	import mx.collections.XMLListCollection;
 	import mx.controls.menuClasses.IMenuDataDescriptor;
 	
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
@@ -51,23 +50,17 @@ package org.flowerplatform.flexutil.global_menu {
 		 */
 		public function getChildren(node:Object, model:Object=null):ICollectionView {
 			var id:String = null;
-			if (node is XML) {
-				id = node.@id;
+			if (node is IAction) {
+				id = node.id;
 			}
-
-			var children:XMLList  = new XMLList();
+			
+			var children:ArrayCollection = new ArrayCollection();
 			
 			ActionUtil.processAndIterateActions(id, actionProvider.getActions(selection), selection, this, function(action:IAction):void {
-				var xml:XML = <menuitem/>;
-				xml.@id = action.id;
-				xml.@label = action.label;
-				xml.@enabled = action.enabled;
-				xml.@icon = action.icon;
-				
-				children += xml;
+				children.addItem(action);
 			});
-				
-			return new XMLListCollection(children);
+			
+			return children;
 		}
 		
 		/**
@@ -76,20 +69,8 @@ package org.flowerplatform.flexutil.global_menu {
 		 * @return true if the action is IComposedAction, false otherwise
 		 */
 		public function hasChildren(node:Object, model:Object=null):Boolean {
-			if (node is XML) {
-				var id:String = node.@id;
-				
-				for each (var action:IAction in actionProvider.getActions(selection)) {
-					if (action.id == id) {
-						if (action is IComposedAction) {
-							return true;
-						} else {
-							return false;
-						}
-					}
-				}
-				
-				return false;
+			if (node is IAction) {
+				return (node is IComposedAction);
 			}
 			return false;
 		}
@@ -104,14 +85,8 @@ package org.flowerplatform.flexutil.global_menu {
 		 * @returns true if the action is IComposedAction, false otherwise
 		 */
 		public function isBranch(node:Object, model:Object=null):Boolean {
-			if (node is XML) {
-				var id:String = node.@id;
-				
-				for each (var action:IAction in actionProvider.getActions(selection)) {
-					if (action.id == id) {
-						return (action is IComposedAction);
-					}
-				}
+			if (node is IAction) {
+				return (node is IComposedAction);
 			}
 			return false;
 		}
