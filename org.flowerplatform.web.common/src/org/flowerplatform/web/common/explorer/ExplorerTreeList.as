@@ -43,7 +43,6 @@ package org.flowerplatform.web.common.explorer {
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
-	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.explorer.properties.FileSelectedItem;
 	
@@ -126,17 +125,8 @@ package org.flowerplatform.web.common.explorer {
 			for each (var itemOfSelection:TreeNode in itemsOfSelection) {
 				selectedItems.addItem(new FileSelectedItem(itemOfSelection.getPathForNode(true)));
 			}
-			var myObject:Object;
-			CommunicationPlugin.getInstance().bridge.sendObject(
-				new InvokeServiceMethodServerCommand("propertiesProviderService",
-					"getProperties",[selectedItems],
-					myObject,
-					function(object:Object):void {
-						PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
-						PropertiesPlugin.getInstance().propertyList.selectedItemsForProperties = selectedItems;
-					}
-				));				
-			return selection;
+		
+			return selectedItems;
 		}
 	}
 }

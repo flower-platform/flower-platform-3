@@ -112,7 +112,9 @@ package org.flowerplatform.editor.model {
 		}
 		
 		public function convertSelectionToSelectionForServer(selection:IList):IList {
-			if (selection == null) return selection;
+			if (selection == null) 
+				return selection;
+			
 			var selectedItems:ArrayCollection = new ArrayCollection();
 			for (var i:int = 0; i < selection.length; i++) {
 				var node:Node = Node(selection.getItemAt(i));//.id / 
@@ -122,19 +124,9 @@ package org.flowerplatform.editor.model {
 				var diagramViewType:String = node.viewType;
 				
 				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
-			}
-			var myObject:Object;
-			CommunicationPlugin.getInstance().bridge.sendObject(
-				new InvokeServiceMethodServerCommand("propertiesProviderService",
-					"getProperties",[selectedItems],
-					myObject,
-					function(object:Object):void {
-						var x:Object = object;
-						PropertiesPlugin.getInstance().propertyList.dataProvider = object as IList;
-						PropertiesPlugin.getInstance().propertyList.selectedItemsForProperties = selectedItems;
-					}
-				));			
-			return selection;
+			}			
+			
+			return selectedItems;
 		}
 	}
 }
