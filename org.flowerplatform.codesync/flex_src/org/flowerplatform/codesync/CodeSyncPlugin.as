@@ -35,13 +35,19 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**
-	 * @author Cristi
+	 * @author Cristian Spiescu
+	 * @author Mariana Gheorghe
 	 */
 	public class CodeSyncPlugin extends AbstractFlowerFlexPlugin {
 		
 		public var codeSyncTreeActionProvider:CodeSyncTreeActionProvider = new CodeSyncTreeActionProvider();
 		
 		protected var codeSyncElementDescriptors:ArrayCollection;
+		
+		/**
+		 * @see computeAvailableChildrenForCodeSyncType()
+		 */
+		public var availableChildrenForCodeSyncType:Object;
 		
 		protected static var INSTANCE:CodeSyncPlugin;
 		
@@ -89,7 +95,47 @@ package org.flowerplatform.codesync {
 		}
 		
 		protected function setCodeSyncElementDescriptors(codeSyncElementDescriptors:ArrayCollection):void {
-			this.codeSyncElementDescriptors = codeSyncElementDescriptors;	
+			this.codeSyncElementDescriptors = codeSyncElementDescriptors;
+			
+			computeAvailableChildrenForCodeSyncType();
 		}
+		
+		/**
+		 * Iterates the list of <code>CodeSyncElementDescriptor</code>s and computes a map from
+		 * codeSyncType -> available children codeSyncTypes.
+		 */
+		private function computeAvailableChildrenForCodeSyncType():void {
+			availableChildrenForCodeSyncType = new Object();
+			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
+				if (descriptor.codeSyncTypeCategories.length == 0) {
+					// top level elements
+					addChildCodeSyncTypeCategoryForParent("", descriptor.codeSyncType);
+				} else {
+					for each (var codeSyncTypeCategory:String in descriptor.codeSyncTypeCategories) {
+						for each (var parentCodeSyncType:String in getParentsForChildCodeSyncTypeCategory(codeSyncTypeCategory)) {
+							addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor.codeSyncType);	
+						}
+					}
+				}
+			}
+		}
+		
+		private function addChildCodeSyncTypeCategoryForParent(parent:String, child:String):void {
+			if (availableChildrenForCodeSyncType[parent] == null) {
+				availableChildrenForCodeSyncType[parent] = new ArrayCollection();
+			}
+			availableChildrenForCodeSyncType[parent].addItem(child);
+		}
+		
+		private function getParentsForChildCodeSyncTypeCategory(childCodeSyncTypeCategory:String):ArrayCollection {
+			var parents:ArrayCollection = new ArrayCollection();
+			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
+				if (descriptor.childrenCodeSyncTypeCategories.contains(childCodeSyncTypeCategory)) {
+					parents.addItem(descriptor.codeSyncType);
+				}
+			}
+			return parents;
+		}
+		
 	}
 }

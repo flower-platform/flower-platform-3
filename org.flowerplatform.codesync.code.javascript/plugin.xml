@@ -30,12 +30,6 @@
       </codeSyncAlgorithmRunner>
    </extension>
    <extension
-         point="org.flowerplatform.communication.welcomeInitializationsContributor">
-      <welcomeInitializationsContributor
-            commandToAppendToWelcomeClientCommand="org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand">
-      </welcomeInitializationsContributor>
-   </extension>
-   <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
             codeSyncType="BackboneClass">

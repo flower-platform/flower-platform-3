@@ -20,6 +20,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 	
 	import mx.collections.IList;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 	import org.flowerplatform.emf_model.notation.ExpandableNode;
 	import org.flowerplatform.flexutil.action.ComposedAction;
@@ -58,7 +59,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 				}
 			}
 			
-			for each (var availableTemplate:String in CodeSyncCodeJavascriptPlugin.getInstance().availableTemplates[selectedTemplate]) {
+			for each (var availableTemplate:String in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedTemplate]) {
 				result.push(new AddElementAction(availableTemplate));
 			}
 			
