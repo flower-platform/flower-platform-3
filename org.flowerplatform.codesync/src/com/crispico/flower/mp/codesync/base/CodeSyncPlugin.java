@@ -29,11 +29,14 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -60,6 +63,8 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	 */
 	private IProjectsProvider projectsProvider;
 	
+	protected boolean useUIDs = true;
+	
 	public static CodeSyncPlugin getInstance() {
 		return INSTANCE;
 	}
@@ -85,6 +90,10 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 		this.projectsProvider = projectsProvider;
 	}
 	
+	public boolean useUIDs() {
+		return useUIDs;
+	}
+	
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -93,8 +102,6 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
 		
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
-		
-//		CommunicationPlugin.getInstance().getServiceRegistry().registerService(CodeSyncEditorStatefulService.SERVICE_ID, new CodeSyncEditorStatefulService());
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -109,6 +116,11 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 		}
 	}
 	
+	@Override
+	public void registerMessageBundle() throws Exception {
+		// no messages yet
+	}
+
 	/**
 	 * @author Mariana Gheorghe
 	 */
@@ -132,7 +144,20 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 		if (diagramEditableResource != null) {
 			return diagramEditableResource.getResourceSet();
 		}
-		return new ResourceSetImpl();
+		
+		ResourceSet resourceSet = new ResourceSetImpl();
+		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new ResourceFactoryImpl() {
+			
+			@Override
+			public Resource createResource(URI uri) {
+				return new XMIResourceImpl(uri) {
+			    	protected boolean useUUIDs() {
+			    		return true;
+			    	}
+				};
+			}
+		});
+		return resourceSet;
 	}
 	
 	/**
@@ -213,7 +238,7 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 			return featureChange.getNewValue();
 		}
 		
-		if (codeSyncElement.eClass().isSuperTypeOf(feature.getEContainingClass())) {
+		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
 			return codeSyncElement.eGet(feature);
 		} else {
 			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
@@ -225,7 +250,7 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 		return null;
 	}
 	
-	protected Object getOldFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
+	public Object getOldFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
 		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
 		if (featureChange != null) {
 			return featureChange.getOldValue();
@@ -248,17 +273,106 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 	 * 
 	 * Important: we first remove, and then add a new feature change to trigger a change description on the {@link CodeSyncElement},
 	 * so the processors can update the views.
+	 * 
+	 * @author Sebastian Solomon
 	 */
-	public void createAndAddFeatureChange(CodeSyncElement element, EStructuralFeature feature, Object oldValue, Object newValue) {
+	protected void createAndAddFeatureChange(CodeSyncElement element, EStructuralFeature feature, Object oldValue, Object newValue) {
 		element.getFeatureChanges().removeKey(feature);
 		if (!equal(newValue, oldValue)) {
 			FeatureChange featureChange = CodeSyncFactory.eINSTANCE.createFeatureChange();
 			featureChange.setOldValue(oldValue);
 			featureChange.setNewValue(newValue);
 			element.getFeatureChanges().put(feature, featureChange);
+			
+			if(element.isSynchronized()){
+				element.setSynchronized(false);
+				propagateParentSyncFalse(element);
+			}
+			
+		}else if (element.getFeatureChanges().size() == 0){
+			propagateParentSyncTrue(element);
 		}
+			
 	}
 	
+	/**
+	 * @author Sebastian Solomon
+	 */
+	public void propageteOnChildDelete(CodeSyncElement cse){
+		
+		for(CodeSyncElement child: cse.getChildren()){
+			child.setDeleted(true);
+			propageteOnChildDelete(child);
+		}
+		
+	}
+	
+	/**
+	 * @author Sebastian Solomon
+	 */
+	public void propagateParentSyncFalse(CodeSyncElement element){
+		while (element.eContainer() != null ){
+			
+			EObject parent = element.eContainer();
+			if (parent instanceof CodeSyncElement){
+				element = (CodeSyncElement)parent;
+				if (element.isSynchronized()){
+					element.setChildrenSynchronized(false);
+					
+				}
+
+			}else return;
+			
+		}
+
+	}
+	
+
+	/**
+	 * @author Sebastian Solomon
+	 */
+	public void propagateParentSyncTrue(CodeSyncElement element){
+		if( !element.isAdded() && !element.isDeleted() && element.getFeatureChanges().size() == 0){
+			element.setSynchronized(true);   //orange
+			if (allChildrenGreen(element))   //if all childs green =>become green
+				element.setChildrenSynchronized(true); 
+			// * walk whole parent hierarchy; set childrenSync = true if all children are sync,not newly added not deleted
+			while (element.eContainer() != null){
+				if ( element.eContainer() instanceof CodeSyncElement){
+					element = (CodeSyncElement)element.eContainer();
+					if (allChildrenGreen(element)){ 
+						element.setChildrenSynchronized(true);
+					
+					}else return;  // if one child is notSync, return
+				
+				}
+			}
+			
+		}
+		
+	}
+	
+//	private boolean childsAreSync(CodeSyncElement element){ //orange or green
+//		
+//		for (CodeSyncElement childElem : element.getChildren()){
+//			if ( childElem.isAdded() || childElem.isDeleted() || !childElem.isSynchronized())
+//				return false;
+//		}
+//		return true;
+//	}
+	
+	
+	/**
+	 * @author Sebastian Solomon
+	 */
+	private boolean allChildrenGreen(CodeSyncElement element) {
+		for (CodeSyncElement cse: element.getChildren()){
+			if (cse.isAdded() || cse.isDeleted() || !cse.isSynchronized() || !cse.isChildrenSynchronized() )
+				return false;
+		}
+		return true;
+	}
+
 	protected void setFeatureValueDirectly(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
 		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
 			codeSyncElement.eSet(feature, newValue);

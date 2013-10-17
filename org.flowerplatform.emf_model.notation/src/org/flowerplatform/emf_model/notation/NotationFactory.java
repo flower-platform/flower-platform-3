@@ -107,6 +107,15 @@ public interface NotationFactory extends EFactory {
 	MindMapNode createMindMapNode();
 
 	/**
+	 * Returns a new object of class '<em>Expandable Node</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Expandable Node</em>'.
+	 * @generated
+	 */
+	ExpandableNode createExpandableNode();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

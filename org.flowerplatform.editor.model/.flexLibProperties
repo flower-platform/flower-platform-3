@@ -12,6 +12,7 @@
     <classEntry path="org.flowerplatform.editor.model.renderer.SeparatorRenderer"/>
     <classEntry path="org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient"/>
     <classEntry path="org.flowerplatform.editor.model.NotationDiagramEditorDescriptor"/>
+    <classEntry path="org.flowerplatform.editor.model.NotationDiagramEditorFrontend"/>
     <classEntry path="org.flowerplatform.editor.model.controller.DiagramModelChildrenController"/>
     <classEntry path="org.flowerplatform.editor.model.controller.EdgeRendererController"/>
     <classEntry path="org.flowerplatform.editor.model.action.DeleteScenarioElementAction"/>
@@ -19,6 +20,7 @@
     <classEntry path="org.flowerplatform.editor.model.action.ContentAssistAction"/>
     <classEntry path="org.flowerplatform.editor.model.controller.InplaceEditorController"/>
     <classEntry path="org.flowerplatform.editor.model.action.AddRelationAction"/>
+    <classEntry path="org.flowerplatform.editor.model.action.AddRelatedElementsAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -19,7 +19,6 @@
 package org.flowerplatform.web;
 
 import java.lang.reflect.Method;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,14 +26,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
 
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.editor.EditorPlugin;
-import org.flowerplatform.editor.file.FileAccessController;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
 import org.flowerplatform.web.projects.WebProjectsProvider;
@@ -134,10 +131,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		}
 		initExtensionPoint_nodeTypeToCategoriesMapping();
 		
-		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
-		
 		// do these initializations here, after the services have been instantiated
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
 			@Override
@@ -161,6 +154,11 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		
 		EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
 		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
+		
+		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
+		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
+		
 	}
 	
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {

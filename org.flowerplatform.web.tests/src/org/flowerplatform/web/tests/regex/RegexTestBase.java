@@ -35,7 +35,7 @@ import junit.framework.Assert;
 
 public class RegexTestBase {
 
-	protected static final String FILES_ROOT_DIR = TestUtil.ECLIPSE_INDEPENDENT_FILES_DIR + "/regex/" + TestUtil.NORMAL + "/";
+	protected static final String FILES_ROOT_DIR = TestUtil.getResourcesDir(RegexTestBase.class) + TestUtil.NORMAL + "/";
 	
 	protected Logger logger = LoggerFactory.getLogger(this.getClass()); 
 	

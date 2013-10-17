@@ -76,7 +76,7 @@ package org.flowerplatform.web {
 			
 			perspectives.push(new DefaultPerspective());
 			
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 		}
 		
 		override public function start():void {
@@ -87,6 +87,14 @@ package org.flowerplatform.web {
 			
 			ToolTipManager.showDelay = 0;
 			ToolTipManager.toolTipClass = HTMLToolTip;
+			
+			var workbench:Workbench = new Workbench();
+			FlexUtilGlobals.getInstance().workbench = workbench;
+			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
+			workbench.percentHeight = 100;
+			workbench.percentWidth = 100;
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
+			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 			
 			var hBox:HBox = new HBox();
 			test_addButton("User Form", UserForm, hBox);
@@ -102,7 +110,7 @@ package org.flowerplatform.web {
 			});
 			hBox.addChild(btn);
 			
-			var btn:Button = new Button();
+			btn = new Button();
 			btn.label = "Switch";
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				WebCommonPlugin.getInstance().authenticationManager.showAuthenticationView(true);
@@ -115,16 +123,9 @@ package org.flowerplatform.web {
 				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
 			});
 			hBox.addChild(btn);
-			
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(hBox);
-			
-			var workbench:Workbench = new Workbench();
-			FlexUtilGlobals.getInstance().workbench = workbench;
-			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
-			workbench.percentHeight = 100;
-			workbench.percentWidth = 100;
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
+						
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
+					
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 			FlexUtilGlobals.getInstance().selectionManager.addEventListener(SelectionChangedEvent.SELECTION_CHANGED, function (event:SelectionChangedEvent):void {

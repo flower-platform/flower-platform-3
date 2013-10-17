@@ -271,18 +271,6 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 		}
 	}
 	
-	private CodeSyncElement getCodeSyncElement(Object element) {
-		CodeSyncElement cse = null;
-		if (element instanceof CodeSyncElement) {
-			cse = (CodeSyncElement) element;
-		} else {
-			if (element instanceof AstCacheElement) {
-				cse = ((AstCacheElement) element).getCodeSyncElement();
-			}
-		}
-		return cse;
-	}
-	
 	private boolean elementContainsChildWithMatchKey(Object element, Object feature, Object matchKey) {
 		if (element == null || matchKey == null) {
 			return false;

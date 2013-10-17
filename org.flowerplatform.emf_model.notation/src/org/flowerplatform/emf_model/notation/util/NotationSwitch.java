@@ -166,6 +166,15 @@ public class NotationSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case NotationPackage.EXPANDABLE_NODE: {
+				ExpandableNode expandableNode = (ExpandableNode)theEObject;
+				T result = caseExpandableNode(expandableNode);
+				if (result == null) result = caseNode(expandableNode);
+				if (result == null) result = caseView(expandableNode);
+				if (result == null) result = caseNotationElement(expandableNode);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -317,6 +326,21 @@ public class NotationSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseMindMapNode(MindMapNode object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Expandable Node</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Expandable Node</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExpandableNode(ExpandableNode object) {
 		return null;
 	}
 

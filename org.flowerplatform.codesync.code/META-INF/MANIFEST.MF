@@ -6,6 +6,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin
 Bundle-Vendor: CRISPICO
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.text,
  org.flowerplatform.common,
  org.flowerplatform.communication,
  org.flowerplatform.codesync,

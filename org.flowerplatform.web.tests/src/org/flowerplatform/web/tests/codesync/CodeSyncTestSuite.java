@@ -34,6 +34,7 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 @RunWith(Suite.class)
 @SuiteClasses({ 
 	CodeSyncTest.class, 
+	CodeSyncJavascriptTest.class,
 	CodeSyncWikiTest.class })
 public class CodeSyncTestSuite extends EclipseDependentTestSuiteBase {
 

@@ -19,6 +19,7 @@
 package org.flowerplatform.editor.model.java;
 
 import org.eclipse.emf.ecore.EObject;
+
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;

@@ -17,6 +17,16 @@
       </contentTypeToEditorMapping>
    </extension>
    <extension
+         point="org.flowerplatform.editor.contentTypeToEditorMapping">
+      <contentTypeToEditorMapping
+            compatibleEditor="codeMirrorEditor"
+            contentType="text"
+            editorStatefulService="org.flowerplatform.editor.text.remote.CodeMirrorEditorStatefulService"
+            isDefaultEditor="true"
+            serviceId="codeMirrorEditorStatefulService">
+      </contentTypeToEditorMapping>
+   </extension>
+   <extension
          point="org.flowerplatform.editor.fileExtensionToContentTypeMapping">
       <fileExtensionToContentTypeMapping
             contentType="text"

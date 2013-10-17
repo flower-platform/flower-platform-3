@@ -32,6 +32,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
+	import org.flowerplatform.editor.model.action.SearchAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
@@ -48,6 +49,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Edge;
+	import org.flowerplatform.emf_model.notation.ExpandableNode;
 	import org.flowerplatform.emf_model.notation.Location;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
@@ -66,6 +68,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
+	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	
 	/**
@@ -74,6 +77,8 @@ package org.flowerplatform.editor.model {
 	public class EditorModelPlugin extends AbstractFlowerFlexPlugin {
 		
 		protected static var INSTANCE:EditorModelPlugin;
+		
+		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
 		
@@ -92,6 +97,8 @@ package org.flowerplatform.editor.model {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
+			
+			notationDiagramActionProviders.push(notationDiagramClassFactoryActionProvider);
 			
 			var editorDescriptor:NotationDiagramEditorDescriptor = new NotationDiagramEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
@@ -161,11 +168,12 @@ package org.flowerplatform.editor.model {
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
-			
+
 			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
+
+			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 		}
 		
 		override protected function registerClassAliases():void {
@@ -175,6 +183,7 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
 			registerClassAliasFromAnnotation(Bounds);
+			registerClassAliasFromAnnotation(ExpandableNode);
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
 			registerClassAliasFromAnnotation(ContentAssistItem);

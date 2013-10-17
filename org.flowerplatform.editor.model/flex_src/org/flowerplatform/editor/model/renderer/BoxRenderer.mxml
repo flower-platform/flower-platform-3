@@ -82,8 +82,10 @@
 					return;
 				}
 				if (super.data != null) {
-					var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-					bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					if (Node(data).layoutConstraint_RH != null) {
+						var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+						bounds.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+					}
 				}
 				
 				super.data = value;
@@ -94,13 +96,15 @@
 					visualChildrenController = diagramShell.getControllerProvider(data).getVisualChildrenController(data);
 				}
 				if (data != null) {
-					bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-					bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
-					x = bounds.x;
-					y = bounds.y;
-					
-					measuredMinWidth = bounds.width;
-					measuredMinHeight = bounds.height;
+					if (Node(data).layoutConstraint_RH != null) {					
+						bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+						bounds.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, modelChangedHandler);
+						x = bounds.x;
+						y = bounds.y;
+						
+						measuredMinWidth = bounds.width;
+						measuredMinHeight = bounds.height;
+					}
 				}
 			}
 			
@@ -142,14 +146,16 @@
 					event.stopPropagation();
 				
 					if (super.data != null) {
-						var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-						var command:MoveResizeServerCommand = new MoveResizeServerCommand();
-						command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
-						command.newWidth = getLayoutBoundsWidth();
-						command.newHeight = getLayoutBoundsHeight();
-						command.newX = bounds.x;
-						command.newY = bounds.y;						
-						NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
+					if (Node(data).layoutConstraint_RH != null) {
+							var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+							var command:MoveResizeServerCommand = new MoveResizeServerCommand();
+							command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
+							command.newWidth = getLayoutBoundsWidth();
+							command.newHeight = getLayoutBoundsHeight();
+							command.newX = bounds.x;
+							command.newY = bounds.y;						
+							NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
+						}
 					}
 				}
 			}
@@ -165,12 +171,15 @@
 				this.filters = [shadow];
 			}
 			
+			protected function addEffects():void {
+				effectsController = new BoxEffectsController(this, true);
+				effectsController.glowEffect.blurXTo = effectsController.glowEffect.blurYTo = 20;
+			}
+			
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
 				
-				effectsController = new BoxEffectsController(this, true);
-				effectsController.glowEffect.blurXTo = effectsController.glowEffect.blurYTo = 20;
-				
+				addEffects();
 				addShadow();
 				
 				shapeDrawer = new ShapeDrawer(ShapeDrawer.RECTANGLE, this, true, true);

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!--
+	@author Cristina Constantinescu
+-->
+<editorsupport:EditorFrontend
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:texteditor="com.crispico.flower.texteditor.*"
+	xmlns:editor="com.crispico.flower.mp.web.texteditor.*"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	xmlns:editorsupport="org.flowerplatform.editor.*"
+	xmlns:iframe="org.flowerplatform.flexutil.iframe.*">
+	
+	<mx:Script>	
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.editor.text.remote.TextEditorUpdate;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			
+			private var content:String;
+			private var readOnly:Boolean;	
+			private var creationComplete:Boolean;
+			
+			private static const EDITOR_PAGE:String = "codemirror/codeMirrorEditor.html";
+			
+			override protected function creationCompleteHandler(event:FlexEvent):void {		
+				super.creationCompleteHandler(event);
+								
+				codeMirrorEditor.source = FlexUtilGlobals.getInstance().createAbsoluteUrl(EditorTextPlugin.getInstance().getResourceUrl(getURL()));		
+				creationComplete = true;
+			}
+			
+			protected function getURL():String {
+				var lastDotIndex:int = editorStatefulClient.editableResourcePath.lastIndexOf('.');
+				if (lastDotIndex >= 0) {
+					// has an extension
+					var extension:String = editorStatefulClient.editableResourcePath.substring(lastDotIndex + 1);
+					return EDITOR_PAGE + "?extension=" + extension + "&objectId=" + FlexGlobals.topLevelApplication.id;
+				}
+				return EDITOR_PAGE;
+			}
+			
+			protected function orionEditor_frameLoadHandler(event:Event):void {
+				if (content != null) {					
+					codeMirrorEditor.callIFrameFunction("setContent", [escape(content)]);
+					codeMirrorEditor.callIFrameFunction(readOnly ? "disableEditing" : "enableEditing");
+					
+					ExternalInterface.addCallback("codeMirrorEditorChangedHandler",textEditorChangedHandler);
+				}
+			}
+			
+			override public function disableEditing():void {
+				if (creationComplete) {
+					codeMirrorEditor.callIFrameFunction("disableEditing");
+				} else {
+					readOnly = true;
+				}				
+			}
+			
+			override public function enableEditing():void {
+				if (creationComplete) {
+					codeMirrorEditor.callIFrameFunction("enableEditing");
+				} else {
+					readOnly = false;
+				}				
+			}
+			
+			protected function updateText(offset:int, oldTextLength:int, newText:String):void {
+				codeMirrorEditor.callIFrameFunction("updateText", [offset, oldTextLength, escape(newText)]);
+			}
+			
+			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {				
+				var updates:ArrayCollection = ArrayCollection(content);
+				if (isFullContent) {
+					// Taking the first because probably only one exists with fullText.
+					var update:TextEditorUpdate = TextEditorUpdate(updates[0]); 
+					this.content = update.newText;
+				} else { 
+					// apply the updates
+					for each (var update:TextEditorUpdate in updates) {						
+						updateText(update.offset, update.oldTextLength, update.newText);
+					}
+				}
+			}	
+				
+			protected function textEditorChangedHandler(offset:String, oldText:String, newText:String):void {
+				var updates:ArrayCollection = new ArrayCollection();
+				
+				var update:TextEditorUpdate = new TextEditorUpdate();
+				update.offset = int(offset);
+				update.oldTextLength = oldText.length;
+				update.newText = newText;
+				updates.addItem(update);
+								
+				editorStatefulClient.attemptUpdateContent(this, updates);
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<editorsupport:editor>		
+		<iframe:IFrameView id="codeMirrorEditor" frameLoad="orionEditor_frameLoadHandler(event)"  />
+	</editorsupport:editor>
+	
+</editorsupport:EditorFrontend>
