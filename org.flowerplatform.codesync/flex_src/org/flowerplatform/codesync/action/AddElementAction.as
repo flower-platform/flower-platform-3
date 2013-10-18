@@ -30,11 +30,11 @@ package org.flowerplatform.codesync.action {
 		
 		protected var codeSyncType:String;
 		
-		public function AddElementAction(codeSyncType:String, iconUrl:String) {
+		public function AddElementAction(codeSyncType:String, label:String, iconUrl:String) {
 			super();
 			parentId = "new";
 			this.codeSyncType = codeSyncType;
-			label = codeSyncType;
+			this.label = label;
 			if (iconUrl != null) {
 				// can't use getComposedImageUrl() because it adds the current plugin
 				icon = "servlet/image-composer/" + iconUrl;

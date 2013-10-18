@@ -27,13 +27,15 @@ public class CodeSyncElementDescriptor {
 
 	private String codeSyncType;
 	
+	private String label;
+	
 	private String iconUrl;
 	
 	private List<String> codeSyncTypeCategories;
 	
-	private List<String> features;
-	
 	private List<String> childrenCodeSyncTypeCategories;
+	
+	private List<String> features;
 
 	public String getCodeSyncType() {
 		return codeSyncType;
@@ -74,5 +76,13 @@ public class CodeSyncElementDescriptor {
 	public void setChildrenCodeSyncTypeCategories(
 			List<String> childrenCodeSyncTypeCategories) {
 		this.childrenCodeSyncTypeCategories = childrenCodeSyncTypeCategories;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 }

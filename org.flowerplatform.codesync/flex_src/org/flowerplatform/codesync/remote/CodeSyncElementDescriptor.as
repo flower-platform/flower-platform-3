@@ -27,6 +27,7 @@ package org.flowerplatform.codesync.remote {
 	public class CodeSyncElementDescriptor {
 	
 		public var codeSyncType:String;
+		public var label:String;
 		public var iconUrl:String;
 		public var codeSyncTypeCategories:ArrayCollection;
 		public var childrenCodeSyncTypeCategories:ArrayCollection;

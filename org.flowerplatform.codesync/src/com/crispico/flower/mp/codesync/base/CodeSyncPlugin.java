@@ -181,12 +181,14 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementDescriptor");
 		for (IConfigurationElement configurationElement : configurationElements) {
 			String codeSyncType = configurationElement.getAttribute("codeSyncType");
+			String label = configurationElement.getAttribute("label");
 			String iconUrl = configurationElement.getAttribute("iconUrl");
 			List<String> codeSyncTypeCategories = getAttributes(configurationElement, "codeSyncTypeCategory");
 			List<String> childrenCodeSyncTypeCategories = getAttributes(configurationElement, "childrenCodeSyncTypeCategory");
 			List<String> features = getAttributes(configurationElement, "feature");
 			CodeSyncElementDescriptor descriptor = new CodeSyncElementDescriptor();
 			descriptor.setCodeSyncType(codeSyncType);
+			descriptor.setLabel(label);
 			if (iconUrl != null) {
 				String contributorName = configurationElement.getContributor().getName();
 				iconUrl = contributorName + "/" + iconUrl;
