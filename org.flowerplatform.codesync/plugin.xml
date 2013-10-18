@@ -32,5 +32,11 @@
             addNewExtension="org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension">
       </addNewExtension>
    </extension>
-
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="codeSyncElement"
+            propertiesProviderClass="org.flowerplatform.codesync.properties.CodeSyncPropertiesProvider">
+      </propertiesProvider>
+   </extension>
 </plugin>

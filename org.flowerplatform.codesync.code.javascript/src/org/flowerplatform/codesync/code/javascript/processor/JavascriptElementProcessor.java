@@ -19,7 +19,7 @@
 package org.flowerplatform.codesync.code.javascript.processor;
 
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.remote.CodeSyncDecoratorsProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
