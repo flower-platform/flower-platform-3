@@ -32,136 +32,150 @@
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="BackboneClass">
+            codeSyncType="backboneClass"
+            label="Backbone Class">
          <childrenCodeSyncTypeCategory
-               name="RequireEntry">
+               name="requireEntry">
          </childrenCodeSyncTypeCategory>
          <childrenCodeSyncTypeCategory
-               name="ClassMember">
-         </childrenCodeSyncTypeCategory>
-      </codeSyncElementDescriptor>
-   </extension>
-   <extension
-         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
-      <codeSyncElementDescriptor
-            codeSyncType="Operation">
-         <codeSyncTypeCategory
-               name="ClassMember">
-         </codeSyncTypeCategory>
-      </codeSyncElementDescriptor>
-   </extension>
-   <extension
-         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
-      <codeSyncElementDescriptor
-            codeSyncType="Attribute">
-         <codeSyncTypeCategory
-               name="ClassMember">
-         </codeSyncTypeCategory>
-      </codeSyncElementDescriptor>
-   </extension>
-   <extension
-         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
-      <codeSyncElementDescriptor
-            codeSyncType="RequireEntry">
-         <codeSyncTypeCategory
-               name="RequireEntry">
-         </codeSyncTypeCategory>
-      </codeSyncElementDescriptor>
-   </extension>
-   <extension
-         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
-      <codeSyncElementDescriptor
-            codeSyncType="EventsAttribute">
-         <codeSyncTypeCategory
-               name="ClassMember">
-         </codeSyncTypeCategory>
-         <childrenCodeSyncTypeCategory
-               name="EventsAttributeEntry">
+               name="backboneClassMember">
          </childrenCodeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="RoutesAttribute">
+            codeSyncType="javaScriptOperation"
+            label="Operation">
          <codeSyncTypeCategory
-               name="ClassMember">
+               name="backboneClassMember">
+         </codeSyncTypeCategory>
+      </codeSyncElementDescriptor>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+      <codeSyncElementDescriptor
+            codeSyncType="javaScriptAttribute"
+            label="Attribute">
+         <codeSyncTypeCategory
+               name="backboneClassMember">
+         </codeSyncTypeCategory>
+      </codeSyncElementDescriptor>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+      <codeSyncElementDescriptor
+            codeSyncType="requireEntry"
+            label="Require Entry">
+         <codeSyncTypeCategory
+               name="requireEntry">
+         </codeSyncTypeCategory>
+      </codeSyncElementDescriptor>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+      <codeSyncElementDescriptor
+            codeSyncType="eventsAttribute"
+            label="Events">
+         <codeSyncTypeCategory
+               name="backboneClassMember">
          </codeSyncTypeCategory>
          <childrenCodeSyncTypeCategory
-               name="RoutesAttributeEntry">
+               name="eventsAttributeEntry">
          </childrenCodeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="EventsAttributeEntry">
+            codeSyncType="routesAttribute"
+            label="Routes">
          <codeSyncTypeCategory
-               name="EventsAttributeEntry">
+               name="backboneClassMember">
+         </codeSyncTypeCategory>
+         <childrenCodeSyncTypeCategory
+               name="routesAttributeEntry">
+         </childrenCodeSyncTypeCategory>
+      </codeSyncElementDescriptor>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+      <codeSyncElementDescriptor
+            codeSyncType="eventsAttributeEntry"
+            label="Event">
+         <codeSyncTypeCategory
+               name="eventsAttributeEntry">
          </codeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="RoutesAttributeEntry">
+            codeSyncType="routesAttributeEntry"
+            label="Route">
          <codeSyncTypeCategory
-               name="RoutesAttributeEntry">
+               name="routesAttributeEntry">
          </codeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="Table"
+            codeSyncType="table"
+            label="Table"
             iconUrl="images/full/obj16/table.gif">
          <childrenCodeSyncTypeCategory
-               name="TableHeaderEntry">
+               name="tableHeaderEntry">
          </childrenCodeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="TableHeaderEntry">
+            codeSyncType="tableHeaderEntry"
+            label="Table Header Entry">
          <codeSyncTypeCategory
-               name="TableHeaderEntry">
+               name="tableHeaderEntry">
          </codeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="TableItem">
+            codeSyncType="tableItem"
+            label="Table Item">
          <childrenCodeSyncTypeCategory
-               name="TableItemEntry">
+               name="tableItemEntry">
          </childrenCodeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="TableItemEntry">
+            codeSyncType="tableItemEntry"
+            label="Table Item Entry">
          <codeSyncTypeCategory
-               name="TableItemEntry">
+               name="tableItemEntry">
          </codeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="Form">
+            codeSyncType="form"
+            label="Form">
          <childrenCodeSyncTypeCategory
-               name="FormItem">
+               name="formItem">
          </childrenCodeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
    <extension
          point="org.flowerplatform.codesync.codeSyncElementDescriptor">
       <codeSyncElementDescriptor
-            codeSyncType="FormItem">
+            codeSyncType="formItem"
+            label="Form Item">
          <codeSyncTypeCategory
-               name="FormItem">
+               name="formItem">
          </codeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
