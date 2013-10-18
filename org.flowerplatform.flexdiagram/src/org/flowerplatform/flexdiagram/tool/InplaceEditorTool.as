@@ -47,10 +47,10 @@ package org.flowerplatform.flexdiagram.tool {
 			super(diagramShell);
 			
 			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DOWN, -1);
-			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_UP);
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_UP);			
 		}
 		
-		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {			
 			if (eventType == WakeUpTool.MOUSE_DOWN) {
 				context.wakedByMouseDownEvent = false;
 				var renderer:IVisualElement = getRendererFromDisplayCoordinates();
@@ -151,7 +151,7 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		override public function reset():void {				
-			delete context.wakedByMouseDownEvent;
+			delete context.wakedByMouseDownEvent;			
 		}
 	}
 	

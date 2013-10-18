@@ -18,28 +18,31 @@
  */
 package org.flowerplatform.editor.model {
 	import flash.events.Event;
-	import flash.events.FocusEvent;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 	
-	import mx.collections.ArrayList;
 	import mx.collections.IList;
-	import mx.containers.HBox;
 	import mx.containers.HDividedBox;
+	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
 	import mx.events.CollectionEvent;
 	import mx.events.FlexEvent;
 	import mx.managers.IFocusManagerComponent;
 	
 	import org.flowerplatform.editor.EditorFrontend;
+	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */ 
 	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider {
 	
 		public var diagramShell:DiagramShell;
@@ -48,12 +51,36 @@ package org.flowerplatform.editor.model {
 		
 		override protected function creationCompleteHandler(event:FlexEvent):void {
 			diagramShell.selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangedHandler);
+			// this event will be dispatched by dragToCreate tools to show create options to client
+			UIComponent(diagramShell.diagramRenderer).addEventListener(CreateModelEvent.SHOW_CREATE_OPTIONS, openMenuHandler);
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
 			if (!diagramShell.selectedItems.eventsCanBeIgnored) { // catch events only if necessary
 				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
 			}
+		}
+		
+		/**		
+		 * @author Cristina Constantinescu
+		 */ 
+		protected function openMenuHandler(e:CreateModelEvent):void {			
+			if (!viewHost.openMenu(stage.mouseX, stage.mouseY, e.context, "new")) { // no actions, call close logic
+				menuClosedHandler();
+			} else if (e.finishToolJobAfter) { // the tool must be deactivated after closing the menu
+				FlexGlobals.topLevelApplication.addEventListener(MenuClosedEvent.MENU_CLOSED, menuClosedHandler);
+			}
+		}
+		
+		/**		
+		 * @author Cristina Constantinescu
+		 */ 
+		protected function menuClosedHandler(e:MenuClosedEvent = null):void {
+			if (e != null) {
+				FlexGlobals.topLevelApplication.removeEventListener(MenuClosedEvent.MENU_CLOSED, menuClosedHandler);
+			}
+			// deactivate tool
+			diagramShell.mainToolFinishedItsJob();
 		}
 		
 		protected function getDiagramShellInstance():DiagramShell {

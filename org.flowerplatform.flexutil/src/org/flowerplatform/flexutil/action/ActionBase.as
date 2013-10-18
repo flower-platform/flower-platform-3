@@ -34,6 +34,10 @@ package org.flowerplatform.flexutil.action {
 		private var _label:String;
 		private var _icon:Object;
 		private var _selection:IList;
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		private var _context:Object;
 		
 		public function get id():String
 		{
@@ -123,6 +127,22 @@ package org.flowerplatform.flexutil.action {
 		public function set selection(value:IList):void
 		{
 			_selection = value;
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function get context():Object
+		{
+			return _context;
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function set context(value:Object):void
+		{
+			_context = value;
 		}
 		
 		public function run():void {

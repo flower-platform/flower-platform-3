@@ -43,8 +43,9 @@ package org.flowerplatform.flexdiagram.tool {
 			super(diagramShell);
 			
 			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DOWN);
-			// active if diagram select or item selected and not single -> deselect behavior
-			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_UP);	
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_UP);
+			// execute before DragTool
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DRAG, -1);
 		}
 		
 		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {
@@ -52,28 +53,32 @@ package org.flowerplatform.flexdiagram.tool {
 			context.shiftPressed = initialEvent.shiftKey;
 			var renderer:IVisualElement = getRendererFromDisplayCoordinates();	
 						
-			var model:Object;
-			
-			if (eventType == WakeUpTool.MOUSE_UP && !context.ctrlPressed && !context.shiftPressed) {
-				if (renderer is DiagramRenderer) {
-					return true;
-				}
-				if (renderer is IDataRenderer) {
-					model = IDataRenderer(renderer).data;
-					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
-						return (diagramShell.selectedItems.getItemIndex(model) != -1) && diagramShell.selectedItems.length > 1;
-					}				
-				}
+			if (eventType == WakeUpTool.MOUSE_DOWN && context.ctrlPressed && renderer is DiagramRenderer) {
+				// SelectOrDragToCreateElementTool behavior, deselect items if ctrl + click on diagram
+				return true;
 			} else if (eventType == WakeUpTool.MOUSE_DOWN) {
+				// first tool to process, add in wakedByMouseDownEvent if it can be activated
+				// the activation will be done later (when mouse drag/up)
+				context.wakedByMouseDownEvent = false;
 				if (renderer is DiagramRenderer) {
+					context.wakedByMouseDownEvent = true;
 					return false;
 				}
+				
 				if (renderer is IDataRenderer) {
+					var model:Object;
 					model = IDataRenderer(renderer).data;
 					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
-						return (diagramShell.selectedItems.getItemIndex(model) == -1) || context.ctrlPressed || context.shiftPressed;
+						context.wakedByMouseDownEvent = (diagramShell.selectedItems.length > 1 || diagramShell.selectedItems.getItemIndex(model) == -1) || context.ctrlPressed || context.shiftPressed;
 					}				
+				}				
+			} else if (context.wakedByMouseDownEvent) {
+				if (eventType == WakeUpTool.MOUSE_DRAG && renderer is DiagramRenderer) {
+					// DragTool behavior, don't activate
+					return false;
 				}
+				// activate tool (here we know exactly that the selection tool is the right one)
+				return true;
 			}
 			return false;
 		}
@@ -123,5 +128,8 @@ package org.flowerplatform.flexdiagram.tool {
 			super.deactivateAsMainTool();
 		}
 		
+		override public function reset():void {				
+			delete context.wakedByMouseDownEvent;
+		}
 	}	
 }

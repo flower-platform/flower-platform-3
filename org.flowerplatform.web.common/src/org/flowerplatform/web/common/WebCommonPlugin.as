@@ -31,7 +31,6 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
-	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
@@ -138,7 +137,7 @@ package org.flowerplatform.web.common {
 			explorerTreeClassFactoryActionProvider.actionClasses.push(RenameAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(RefreshDirectoryAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(NewComposedAction);
-			explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
+//			explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
  		}

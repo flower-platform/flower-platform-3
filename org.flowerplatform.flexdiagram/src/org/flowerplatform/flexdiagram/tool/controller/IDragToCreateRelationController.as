@@ -25,7 +25,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		
 		function activate(model:Object):void;
 		function drag(model:Object, deltaX:Number, deltaY:Number):void;
-		function drop(model:Object):void;
+		function drop(sourceModel:Object, targetModel:Object):void;
 		function deactivate(model:Object):void;
 		
 	}	

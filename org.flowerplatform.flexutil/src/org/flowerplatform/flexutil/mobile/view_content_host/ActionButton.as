@@ -23,6 +23,9 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	
 	import spark.components.Button;
 	
+	/**		
+	 * @author Cristian Spiescu
+	 */
 	public class ActionButton extends Button {
 		
 		public var action:IAction;

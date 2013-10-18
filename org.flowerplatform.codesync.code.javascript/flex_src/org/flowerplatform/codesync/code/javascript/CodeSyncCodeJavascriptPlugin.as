@@ -27,12 +27,8 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
-	import org.flowerplatform.editor.model.controller.DragToCreateRelationController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
-	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
-	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
-	import org.flowerplatform.flexdiagram.controller.ComposedControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -77,7 +73,7 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.dragControllerClass = new ControllerFactory(AbsoluteNodePlaceHolderDragController);
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+//			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["file"] = composedControllerProviderFactory;
 			
 			// compartment box - set as children of the main parent box
@@ -87,7 +83,7 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(ExpandableBoxVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+//			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["fileElementContainer"] = composedControllerProviderFactory;
 		}
 		
