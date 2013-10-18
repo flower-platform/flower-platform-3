@@ -126,7 +126,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);			
-			composedControllerProviderFactories["class"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.javaClass"] = composedControllerProviderFactory;
 			
 			// class members
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
@@ -138,8 +138,8 @@ package org.flowerplatform.editor.model {
 			if (!FlexUtilGlobals.getInstance().isMobile) {
 				composedControllerProviderFactory.inplaceEditorControllerClass = new ControllerFactory(InplaceEditorController);
 			}
-			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
-			composedControllerProviderFactories["classOperation"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.javaClass.javaAttribute"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.javaClass.javaOperation"] = composedControllerProviderFactory;
 				
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
