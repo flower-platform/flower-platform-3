@@ -25,8 +25,9 @@ package org.flowerplatform.web.layout {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.properties.ui.PropertiesViewProvider;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
-	
+		
 	/**
 	 * Flower Modeling Perspective.
 	 * Contains : 
@@ -105,10 +106,10 @@ package org.flowerplatform.web.layout {
 //			stack.children.addItem(view);
 //			view.parent = stack;
 //			
-//			view = new ViewLayoutData();
-//			view.viewId = WebPropertiesEditorViewProvider.ID;
-//			stack.children.addItem(view);
-//			view.parent = stack;
+			view = new ViewLayoutData();
+			view.viewId = PropertiesViewProvider.ID;
+			stack.children.addItem(view);
+			view.parent = stack;
 			
 			load(workbench, wld, sashEditor);
 		}

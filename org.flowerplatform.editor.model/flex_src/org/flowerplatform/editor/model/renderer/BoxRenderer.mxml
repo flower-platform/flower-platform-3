@@ -146,15 +146,15 @@
 					event.stopPropagation();
 				
 					if (super.data != null) {
-					if (Node(data).layoutConstraint_RH != null) {
-							var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-							var command:MoveResizeServerCommand = new MoveResizeServerCommand();
-							command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
-							command.newWidth = getLayoutBoundsWidth();
-							command.newHeight = getLayoutBoundsHeight();
-							command.newX = bounds.x;
-							command.newY = bounds.y;						
-							NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
+						if (Node(data).layoutConstraint_RH != null) {
+								var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
+								var command:MoveResizeServerCommand = new MoveResizeServerCommand();
+								command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
+								command.newWidth = getLayoutBoundsWidth();
+								command.newHeight = getLayoutBoundsHeight();
+								command.newX = bounds.x;
+								command.newY = bounds.y;						
+								NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
 						}
 					}
 				}
@@ -178,7 +178,7 @@
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
-				
+
 				addEffects();
 				addShadow();
 				

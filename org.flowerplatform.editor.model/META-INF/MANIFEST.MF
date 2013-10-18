@@ -14,10 +14,13 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.emf.ecore.change,
  org.eclipse.emf.ecore.xmi,
  org.eclipse.emf.teneo.hibernate,
- org.hibernate
+ org.hibernate,
+ org.flowerplatform.properties,
+ org.flowerplatform.emf_model.astcache.code
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.flowerplatform.editor.model,
  org.flowerplatform.editor.model.change_processor,
+ org.flowerplatform.editor.model.properties.remote,
  org.flowerplatform.editor.model.remote,
  org.flowerplatform.editor.model.remote.scenario

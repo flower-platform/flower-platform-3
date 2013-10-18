@@ -22,7 +22,7 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		override public function run():void {
-			if (diagramShell
+			if (diagramShell) {}
 		}
 		
 		public function handleDialogResult(result:Object):void {

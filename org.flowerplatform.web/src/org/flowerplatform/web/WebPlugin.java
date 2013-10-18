@@ -130,7 +130,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
 		}
 		initExtensionPoint_nodeTypeToCategoriesMapping();
-		
+
 		// do these initializations here, after the services have been instantiated
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
 			@Override
@@ -160,7 +160,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
 		
 	}
-	
+	 
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {
 		// nodeTypeToCategoriesMapping 
 		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.web.nodeTypeToCategoriesMapping");

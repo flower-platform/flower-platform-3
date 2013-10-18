@@ -19,6 +19,7 @@
 package org.flowerplatform.editor.model {
 	import flash.events.Event;
 	
+	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	import mx.containers.HDividedBox;
 	import mx.core.FlexGlobals;
@@ -28,6 +29,10 @@ package org.flowerplatform.editor.model {
 	import mx.managers.IFocusManagerComponent;
 	
 	import org.flowerplatform.editor.EditorFrontend;
+	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
+	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
@@ -35,15 +40,17 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.MenuClosedEvent;
+	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+
 	
 	/**
 	 * @author Cristian Spiescu
 	 * @author Cristina Constantinescu
-	 */ 
-	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider {
+	 */	
+	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider, ISelectionForServerProvider {
 	
 		public var diagramShell:DiagramShell;
 		
@@ -129,5 +136,22 @@ package org.flowerplatform.editor.model {
 			_viewHost = value;
 		}
 		
+		public function convertSelectionToSelectionForServer(selection:IList):IList {
+			if (selection == null) 
+				return selection;
+			
+			var selectedItems:ArrayCollection = new ArrayCollection();
+			for (var i:int = 0; i < selection.length; i++) {
+				var node:Node = Node(selection.getItemAt(i));//.id / 
+				var diagramEditableResourcePath:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).editableResourcePath;
+				var xmiID:String = node.idAsString;
+				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
+				var diagramViewType:String = node.viewType;
+				
+				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
+			}			
+			
+			return selectedItems;
+		}
 	}
 }

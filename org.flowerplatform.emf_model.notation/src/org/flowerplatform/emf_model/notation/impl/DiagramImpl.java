@@ -49,6 +49,8 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getPersistentEdges <em>Persistent Edges</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getNewElementsPath <em>New Elements Path</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#isShowNewElementsPathDialog <em>Show New Elements Path Dialog</em>}</li>
  * </ul>
  * </p>
  *
@@ -84,6 +86,46 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * @ordered
 	 */
 	protected EList<Edge> persistentEdges;
+
+	/**
+	 * The default value of the '{@link #getNewElementsPath() <em>New Elements Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNewElementsPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NEW_ELEMENTS_PATH_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getNewElementsPath() <em>New Elements Path</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNewElementsPath()
+	 * @generated
+	 * @ordered
+	 */
+	protected String newElementsPath = NEW_ELEMENTS_PATH_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isShowNewElementsPathDialog() <em>Show New Elements Path Dialog</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isShowNewElementsPathDialog()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT = true;
+
+	/**
+	 * The cached value of the '{@link #isShowNewElementsPathDialog() <em>Show New Elements Path Dialog</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isShowNewElementsPathDialog()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean showNewElementsPathDialog = SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -142,6 +184,48 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getNewElementsPath() {
+		return newElementsPath;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setNewElementsPath(String newNewElementsPath) {
+		String oldNewElementsPath = newElementsPath;
+		newElementsPath = newNewElementsPath;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH, oldNewElementsPath, newElementsPath));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isShowNewElementsPathDialog() {
+		return showNewElementsPathDialog;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setShowNewElementsPathDialog(boolean newShowNewElementsPathDialog) {
+		boolean oldShowNewElementsPathDialog = showNewElementsPathDialog;
+		showNewElementsPathDialog = newShowNewElementsPathDialog;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG, oldShowNewElementsPathDialog, showNewElementsPathDialog));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -163,6 +247,10 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 				return getName();
 			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
 				return getPersistentEdges();
+			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
+				return getNewElementsPath();
+			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
+				return isShowNewElementsPathDialog();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -183,6 +271,12 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 				getPersistentEdges().clear();
 				getPersistentEdges().addAll((Collection<? extends Edge>)newValue);
 				return;
+			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
+				setNewElementsPath((String)newValue);
+				return;
+			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
+				setShowNewElementsPathDialog((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -201,6 +295,12 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
 				getPersistentEdges().clear();
 				return;
+			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
+				setNewElementsPath(NEW_ELEMENTS_PATH_EDEFAULT);
+				return;
+			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
+				setShowNewElementsPathDialog(SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -217,6 +317,10 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
 				return persistentEdges != null && !persistentEdges.isEmpty();
+			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
+				return NEW_ELEMENTS_PATH_EDEFAULT == null ? newElementsPath != null : !NEW_ELEMENTS_PATH_EDEFAULT.equals(newElementsPath);
+			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
+				return showNewElementsPathDialog != SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -233,6 +337,10 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");
 		result.append(name);
+		result.append(", newElementsPath: ");
+		result.append(newElementsPath);
+		result.append(", showNewElementsPathDialog: ");
+		result.append(showNewElementsPathDialog);
 		result.append(')');
 		return result.toString();
 	}
