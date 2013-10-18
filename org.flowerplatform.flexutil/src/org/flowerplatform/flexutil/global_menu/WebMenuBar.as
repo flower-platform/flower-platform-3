@@ -75,6 +75,13 @@ package org.flowerplatform.flexutil.global_menu {
 			// when it thinks the menu should be shown/hidden
 			addEventListener(MenuEvent.MENU_SHOW, menu_showHandler);
 			addEventListener(MenuEvent.MENU_HIDE, menu_hideHandler);
+			
+			// put a listener on the selection so we can update the menuBar when selection changes
+			FlexUtilGlobals.getInstance().selectionManager.addEventListener(
+				SelectionChangedEvent.SELECTION_CHANGED,
+				selectionChangedHandler
+			);
+
 		}
 		
 		public function get actionProvider():IActionProvider {
@@ -87,17 +94,12 @@ package org.flowerplatform.flexutil.global_menu {
 			// also build the menuBar
 			if (actionProvider != null) {
 				var selection:IList = null;
+				// obtaining the selection can give us a NPE so put it in a try/catch block
 				try {
 					selection = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
 				} catch (e:Error) {
 					
 				}
-				
-				// now put a listener on the selection so we can update the menuBar when selection changes
-				FlexUtilGlobals.getInstance().selectionManager.addEventListener(
-					SelectionChangedEvent.SELECTION_CHANGED,
-					selectionChangedHandler
-				);
 				
 				dataProvider = getMenusList(selection, null);
 			}
@@ -120,14 +122,12 @@ package org.flowerplatform.flexutil.global_menu {
 			var menuActions:ArrayCollection = getMenusList(event.selection, null);
 			if (menuActions.length != menuBarItems.length) {
 				// different actions, regenerate the menu
-				trace("regenerate Menu");
 				dataProvider = menuActions;
 				return;
 			}
 			for (var i:int = 0; i < menuActions.length; i++) {
 				if (menuActions[i].id != ((menuBarItems[i] as IMenuBarItemRenderer).data as IAction).id) {
 					// different action, regenerate the menu
-					trace("regenerate Menu");
 					dataProvider = menuActions;
 					return;
 				}
@@ -259,8 +259,10 @@ package org.flowerplatform.flexutil.global_menu {
 					}
 					pt.y = Math.max(pt.y, screen.y);
 					
-					// now move the menu to the correct position
-					menu.move(pt.x, pt.y);
+					// now move the menu to the correct position (if needed)
+					if (menu.x != pt.x || menu.y != pt.y) {
+						menu.move(pt.x, pt.y);
+					}
 					
 					//tell the current barItem to be in down status and not hover
 					menuBarItems[selectedIndex].menuBarItemState = "itemDownSkin";

@@ -1,3 +1,21 @@
+/* license-start
+* 
+* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation version 3.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+* 
+* Contributors:
+*   Crispico - Initial API and implementation
+*
+* license-end
+*/
 package org.flowerplatform.flexutil.global_menu {
 	import mx.collections.ArrayCollection;
 	import mx.collections.ICollectionView;
@@ -10,9 +28,15 @@ package org.flowerplatform.flexutil.global_menu {
 	import org.flowerplatform.flexutil.action.IComposedAction;
 	
 	/**
-	 * Atention: If an action is a ComposedAction it means it has children.
-	 * (ActionUtil.processAndIterateActions will have filtered it out, if none of 
-	 * its children were visible)
+	 * IMenuDataDescriptor that know how to work with actions
+	 * 
+	 * <p>Assumptions:
+	 * <ul>
+	 * 	<li> only a IComposedAction can hava children.</li>
+	 *  <li> if an IComposedAction is interogated it means it is visible
+	 * (otherwise it would have been filtered out by the 
+	 * ActionUtil.processAndIterateActions)</li>
+	 * </ul></p>
 	 * 
 	 * @author Mircea Negreanu
 	 */
@@ -46,7 +70,9 @@ package org.flowerplatform.flexutil.global_menu {
 		}
 		
 		/**
-		 * Gets the id from the node and returns the list of children as am XMLList
+		 * Gets the id from the node and returns the list of children as an ArrayCollection.
+		 * <p>Also adds the selection to the action so that the label, icon, enabled are correctly
+		 * set</p>
 		 */
 		public function getChildren(node:Object, model:Object=null):ICollectionView {
 			var id:String = null;
@@ -60,7 +86,7 @@ package org.flowerplatform.flexutil.global_menu {
 				children.addItem(action);
 			});
 
-			// add the selection so we can have the correct labels
+			// add the selection so we can have the correct labels/enabled/icon
 			for each (var action:IAction in children) {
 				action.selection = selection;
 			}
@@ -85,9 +111,7 @@ package org.flowerplatform.flexutil.global_menu {
 		}
 		
 		/**
-		 * Check the associated action to the node.@id. 
-		 * 
-		 * @returns true if the action is IComposedAction, false otherwise
+		 * @return true if the action is IComposedAction, false otherwise
 		 */
 		public function isBranch(node:Object, model:Object=null):Boolean {
 			if (node is IAction) {
@@ -110,6 +134,8 @@ package org.flowerplatform.flexutil.global_menu {
 			
 			return false;
 		}
+		
+		// not interested in this -> set them to default
 		
 		public function addChildAt(parent:Object, newChild:Object, index:int, model:Object=null):Boolean {
 			return false;

@@ -21,7 +21,7 @@ package org.flowerplatform.flexutil.samples.context_menu {
 		}
 		
 		override public function get visible():Boolean {
-			if (selection != null && selection.getItemAt(0) == "ColdFusion") {
+			if (selection != null && selection.length > 0 && selection.getItemAt(0) == "ColdFusion") {
 				return false;
 			}
 			
