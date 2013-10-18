@@ -3,8 +3,6 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Properties
 Bundle-SymbolicName: org.flowerplatform.properties;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: properties.jar,
- eclipse_3.7_modeling/plugins/org.eclipse.osgi_3.7.2.v20120110-1415.jar
 Export-Package: org.flowerplatform.properties,
  org.flowerplatform.properties.providers,
  org.flowerplatform.properties.remote
