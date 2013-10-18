@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
-import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;

@@ -72,6 +72,8 @@ package org.flowerplatform.flexdiagram.tool {
 					.activate(model, context.initialMousePoint.x, context.initialMousePoint.y);					
 			}
 			context.draggableItems = acceptedDraggableModels;		
+			
+			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {			
@@ -85,6 +87,8 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			delete context.initialMousePoint;			
 			delete context.draggableItems;
+			
+			super.deactivateAsMainTool();
 		}
 		
 		protected function mouseMoveHandler(event:MouseEvent):void {			

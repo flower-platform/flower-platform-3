@@ -59,7 +59,7 @@ package org.flowerplatform.editor.model.renderer {
 		
 		private function getImage(object:Object):Object {
 			if (data != null && View(data).viewDetails != null) {
-				var iconUrls:Array = View(data).viewDetails.iconUrls;
+				var iconUrls:String = View(data).viewDetails.iconUrls;
 				return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getComposedImageUrl(iconUrls));
 			}
 			return null;

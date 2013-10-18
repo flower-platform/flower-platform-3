@@ -91,6 +91,7 @@ public class CodeSyncFactoryImpl extends EFactoryImpl implements CodeSyncFactory
 			case CodeSyncPackage.SCENARIO_ELEMENT: return createScenarioElement();
 			case CodeSyncPackage.MIND_MAP_ELEMENT: return createMindMapElement();
 			case CodeSyncPackage.MIND_MAP_ROOT: return createMindMapRoot();
+			case CodeSyncPackage.RELATION: return createRelation();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -164,6 +165,16 @@ public class CodeSyncFactoryImpl extends EFactoryImpl implements CodeSyncFactory
 	public MindMapRoot createMindMapRoot() {
 		MindMapRootImpl mindMapRoot = new MindMapRootImpl();
 		return mindMapRoot;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Relation createRelation() {
+		RelationImpl relation = new RelationImpl();
+		return relation;
 	}
 
 	/**

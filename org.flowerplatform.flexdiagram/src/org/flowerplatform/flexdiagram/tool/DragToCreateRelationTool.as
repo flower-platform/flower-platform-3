@@ -57,6 +57,8 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			diagramShell.getControllerProvider(context.model).
 				getDragToCreateRelationController(context.model).activate(context.model);
+			
+			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {
@@ -67,6 +69,8 @@ package org.flowerplatform.flexdiagram.tool {
 				getDragToCreateRelationController(context.model).deactivate(context.model);
 			
 			delete context.model;
+			
+			super.deactivateAsMainTool();
 		}
 		
 		private function mouseMoveHandler(event:MouseEvent):void {

@@ -47,6 +47,9 @@ package org.flowerplatform.flexdiagram.renderer.selection {
 		[Embed(source="../icons/vertCursor.gif")]		
 		protected var vertCursor:Class;
 		
+		[Embed(source="../icons/crossCursor.gif")]
+		protected var crossCursor:Class;
+		
 		override public function activate(diagramShell:DiagramShell, target:IVisualElement):void {
 			super.activate(diagramShell, target);			
 			

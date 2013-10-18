@@ -67,7 +67,7 @@ package org.flowerplatform.flexutil.context_menu {
 			var currentElementUnderMouse:DisplayObject = DisplayObject(event.target);
 			while (currentElementUnderMouse != null) {
 				if (currentElementUnderMouse.hasEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU)) {
-					dispatchSimulatedMouseDownEvent(DisplayObject(event.target), currentElementUnderMouse, event);
+					dispatchSimulatedMouseDownAndUpEvent(DisplayObject(event.target), currentElementUnderMouse, event);
 					var cmEvent:FillContextMenuEvent = new FillContextMenuEvent();
 					currentElementUnderMouse.dispatchEvent(cmEvent);
 
@@ -88,14 +88,19 @@ package org.flowerplatform.flexutil.context_menu {
 		 * we simulate a left click on the component hierarchy, so that they can do the logic associated with
 		 * a click (e.g. select the item).
 		 */ 
-		protected function dispatchSimulatedMouseDownEvent(startingWith:DisplayObject, endingWidth:DisplayObject, event:MouseEvent):void {
-			var simulatedLeftClickEvent:MouseEvent = new MouseEvent(
+		protected function dispatchSimulatedMouseDownAndUpEvent(startingWith:DisplayObject, endingWidth:DisplayObject, event:MouseEvent):void {
+			var simulatedMouseDownEvent:MouseEvent = new MouseEvent(
 				MouseEvent.MOUSE_DOWN, event.bubbles, event.cancelable, event.localX, event.localY,
+				event.relatedObject, event.ctrlKey, event.altKey, event.shiftKey, 
+				event.buttonDown, event.delta);
+			var simulatedMouseUpEvent:MouseEvent = new MouseEvent(
+				MouseEvent.MOUSE_UP, event.bubbles, event.cancelable, event.localX, event.localY,
 				event.relatedObject, event.ctrlKey, event.altKey, event.shiftKey, 
 				event.buttonDown, event.delta);
 			var currentElementUnderMouse:DisplayObject = DisplayObject(event.target);
 			while (currentElementUnderMouse != null && currentElementUnderMouse != endingWidth) {
-				currentElementUnderMouse.dispatchEvent(simulatedLeftClickEvent);
+				currentElementUnderMouse.dispatchEvent(simulatedMouseDownEvent);
+				currentElementUnderMouse.dispatchEvent(simulatedMouseUpEvent);
 				currentElementUnderMouse = currentElementUnderMouse.parent;
 			}
 
