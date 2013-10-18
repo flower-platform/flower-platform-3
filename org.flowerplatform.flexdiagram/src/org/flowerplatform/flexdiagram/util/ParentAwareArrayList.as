@@ -17,6 +17,7 @@
  * license-end
  */
 package org.flowerplatform.flexdiagram.util {
+	import flash.events.Event;
 	import flash.utils.ByteArray;
 	
 	import mx.collections.ArrayList;
@@ -33,6 +34,8 @@ package org.flowerplatform.flexdiagram.util {
 		
 		public var parent:Object;
 		
+		public var eventsCanBeIgnored:Boolean;
+		
 		public function ParentAwareArrayList(parent:Object, source:Array=null) {
 			super(source);
 			this.parent = parent;
@@ -47,12 +50,7 @@ package org.flowerplatform.flexdiagram.util {
 			
 			super.source = s;
 			
-			if (oldSource != null)	{
-				var len:int = length;
-				for (var i:int = 0; i < oldSource.length; i++) {
-					dispatchRemoveEvent(oldSource[i], i);
-				}
-			}    
+			dispatchRemoveEventForEachItem(oldSource); 
 		}
 		
 		/**
@@ -60,15 +58,24 @@ package org.flowerplatform.flexdiagram.util {
 		 */ 
 		override public function removeAll():void {
 			var oldSource:Array = source != null ? source.concat() : null;
-			
-			super.removeAll();
+						
+			super.removeAll();					
 				
-			if (oldSource != null)	{
-				var len:int = length;
-				for (var i:int = 0; i < oldSource.length; i++) {
-					dispatchRemoveEvent(oldSource[i], i);					
-				}
-			}    
+			dispatchRemoveEventForEachItem(oldSource); 
+		}
+		
+		private function dispatchRemoveEventForEachItem(oldSource:Array):void {
+			try {				
+				eventsCanBeIgnored = true;
+				if (oldSource != null)	{
+					var len:int = length;
+					for (var i:int = 0; i < oldSource.length; i++) {
+						dispatchRemoveEvent(oldSource[i], i);					
+					}
+				}  						
+			} finally {
+				eventsCanBeIgnored = false;
+			}		
 		}
 		
 		private function dispatchRemoveEvent(item:Object, location:int):void {
@@ -77,7 +84,6 @@ package org.flowerplatform.flexdiagram.util {
 			event.items.push(item);
 			event.location = location;
 			dispatchEvent(event);
-		}
-		
+		}		
 	}
 }

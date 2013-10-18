@@ -24,14 +24,10 @@
 				autoDrawBackground="true" height="{HEIGHT}" click="clickHandler(event)">
 	<fx:Script>
 		<![CDATA[
-			import mx.controls.Alert;
 			import mx.core.mx_internal;
-			import mx.events.FlexEvent;
 			
-			import org.flowerplatform.flexutil.action.ComposedAction;
 			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.action.IComposedAction;
-			import org.flowerplatform.flexutil.tree.TreeListItemRenderer;
 			
 			public static const HEIGHT:int = 22;
 			
@@ -68,14 +64,16 @@
 					var contextMenu:org.flowerplatform.flexutil.context_menu.ContextMenu = getContextMenu();
 					try {
 						IAction(data).selection = contextMenu.contextMenuManager.selection; 
+						IAction(data).context = contextMenu.contextMenuManager.context; 
 						IAction(data).run();
-					} finally {
+					} finally {										
 						IAction(data).selection = null;
+						IAction(data).context = null; 
 						contextMenu.closeContextMenuStack(0);
 					}
 				}
 			}
-			
+					
 			protected function getContextMenu():org.flowerplatform.flexutil.context_menu.ContextMenu {
 				var currentElementUnderMouse:DisplayObject = parent;
 				while (currentElementUnderMouse != null) {

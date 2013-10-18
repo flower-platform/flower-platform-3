@@ -153,7 +153,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		});
 		
 		EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
-		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
+		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());
 		
 		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
 		CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION;

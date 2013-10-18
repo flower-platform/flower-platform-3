@@ -25,14 +25,15 @@ package com.crispico.flower.util.layout {
 	import mx.containers.VBox;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.context_menu.FillContextMenuEvent;
-	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
-	import org.flowerplatform.flexutil.view_content_host.IViewContent;
-	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+	import org.flowerplatform.flexutil.context_menu.ContextMenu;
+	import org.flowerplatform.flexutil.context_menu.FillContextMenuEvent;
+	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
 	import spark.components.Button;
 	import spark.components.HGroup;
@@ -51,6 +52,11 @@ package com.crispico.flower.util.layout {
 		public var selection:IList;
 		
 		protected var rootActionsAlreadyCalculated:ArrayList;
+		
+		/**		
+		 * @author Cristina Constantinescu
+		 */
+		public var contextForActions:Object;
 		
 		protected var buttonBar:HGroup;
 		
@@ -118,6 +124,7 @@ package com.crispico.flower.util.layout {
 			event.allActions = allActions;
 			event.selection = selection;
 			event.rootActionsAlreadyCalculated = rootActionsAlreadyCalculated;
+			event.context = contextForActions;
 		}
 		
 		/**
@@ -135,10 +142,11 @@ package com.crispico.flower.util.layout {
 			
 			selection = ISelectionProvider(viewContent).getSelection();
 			allActions = viewContent.getActions(selection);
+			contextForActions = null;
 			
 			buttonBar.removeAllElements();
 			rootActionsAlreadyCalculated = new ArrayList();
-			ActionUtil.processAndIterateActions(null, allActions, selection, this, function (action:IAction):void {
+			ActionUtil.processAndIterateActions(null, allActions, selection, contextForActions, this, function (action:IAction):void {
 				if (action.preferShowOnActionBar) {
 					var actionButton:ActionButton = new ActionButton();
 					actionButton.label = action.label;
@@ -172,6 +180,25 @@ package com.crispico.flower.util.layout {
 		 */
 		public function addToControlBar(value:Object):void {
 		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean {
+			// merge with viewHost contextForActions
+			if (contextForActions == null) {
+				contextForActions = context;
+			} else {				
+				for (var key:String in context) {
+					contextForActions[key] = context[key];
+				}
+			}	
+			// set menu location
+			contextForActions.x = x;
+			contextForActions.y = y;
+			// open menu
+			return FlexUtilGlobals.getInstance().contextMenuManager.openContextMenu(x, y, allActions, null, parentActionId, selection, contextForActions);
+		}	
 		
 		/**
 		 * @author Cristina Constantinescu

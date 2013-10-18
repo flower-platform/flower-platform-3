@@ -87,13 +87,8 @@ package org.flowerplatform.common.plugin {
 		/**
 		 * @author Mariana
 		 */
-		public function getComposedImageUrl(images:Array):String {
-			var resource:String = "";
-			for each (var image:String in images) {
-				resource += image + "+";
-			}
-			resource = resource.substr(0, resource.length - 1);
-			return composedImagesUrl + resource;
+		public function getComposedImageUrl(images:String):String {
+			return composedImagesUrl + images;  
 		}
 		
 	}

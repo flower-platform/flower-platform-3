@@ -38,7 +38,7 @@ public class JavascriptFileElementProcessor extends IconDiagrammableElementFeatu
 	}
 
 	@Override
-	protected String[] getIconUrls(EObject object) {
+	protected String getIconUrls(EObject object) {
 		return null;
 	}
 

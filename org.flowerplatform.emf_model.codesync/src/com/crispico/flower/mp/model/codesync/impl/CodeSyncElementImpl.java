@@ -31,12 +31,12 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.EcoreEMap;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -44,7 +44,7 @@ import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
-import java.io.Serializable;
+import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
  * <!-- begin-user-doc -->
@@ -64,6 +64,7 @@ import java.io.Serializable;
  *   <li>{@link com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl#getAstCacheElement <em>Ast Cache Element</em>}</li>
  *   <li>{@link com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl#getChildren <em>Children</em>}</li>
  *   <li>{@link com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl#getFeatureChanges <em>Feature Changes</em>}</li>
+ *   <li>{@link com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl#getRelations <em>Relations</em>}</li>
  * </ul>
  * </p>
  *
@@ -222,6 +223,16 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	protected EMap<EStructuralFeature, FeatureChange> featureChanges;
 
 	/**
+	 * The cached value of the '{@link #getRelations() <em>Relations</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getRelations()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Relation> relations;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -254,9 +265,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setSynchronized(boolean newSynchronized) {
 		if (newSynchronized) {
-			statusFlags |= STATUS_FLAG_SYNCHRONIZED;
+			setStatusFlags(statusFlags | STATUS_FLAG_SYNCHRONIZED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_SYNCHRONIZED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_SYNCHRONIZED);
 		}
 	}
 
@@ -274,9 +285,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setChildrenSynchronized(boolean newChildrenSynchronized) {
 		if (newChildrenSynchronized) {
-			statusFlags |= STATUS_FLAG_CHILDREN_SYNCHRONIZED;
+			setStatusFlags(statusFlags | STATUS_FLAG_CHILDREN_SYNCHRONIZED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_CHILDREN_SYNCHRONIZED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_CHILDREN_SYNCHRONIZED);
 		}
 	}
 
@@ -294,9 +305,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setAdded(boolean newAdded) {
 		if (newAdded) {
-			statusFlags |= STATUS_FLAG_ADDED;
+			setStatusFlags(statusFlags | STATUS_FLAG_ADDED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_ADDED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_ADDED);
 		}
 	}
 
@@ -314,9 +325,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 */
 	public void setDeleted(boolean newDeleted) {
 		if (newDeleted) {
-			statusFlags |= STATUS_FLAG_DELETED;
+			setStatusFlags(statusFlags | STATUS_FLAG_DELETED);
 		} else {
-			statusFlags &= ~STATUS_FLAG_DELETED;
+			setStatusFlags(statusFlags & ~STATUS_FLAG_DELETED);
 		}
 	}
 
@@ -472,6 +483,19 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Relation> getRelations() {
+		if (relations == null) {
+			relations = new EObjectContainmentWithInverseEList<Relation>(Relation.class, this, CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS, CodeSyncPackage.RELATION__SOURCE);
+		}
+		return relations;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -479,6 +503,8 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 				if (astCacheElement != null)
 					msgs = ((InternalEObject)astCacheElement).eInverseRemove(this, CodeSyncPackage.AST_CACHE_ELEMENT__CODE_SYNC_ELEMENT, AstCacheElement.class, msgs);
 				return basicSetAstCacheElement((AstCacheElement)otherEnd, msgs);
+			case CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS:
+				return ((InternalEList<InternalEObject>)(InternalEList<?>)getRelations()).basicAdd(otherEnd, msgs);
 		}
 		return super.eInverseAdd(otherEnd, featureID, msgs);
 	}
@@ -497,6 +523,8 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 				return ((InternalEList<?>)getChildren()).basicRemove(otherEnd, msgs);
 			case CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES:
 				return ((InternalEList<?>)getFeatureChanges()).basicRemove(otherEnd, msgs);
+			case CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS:
+				return ((InternalEList<?>)getRelations()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -531,6 +559,8 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 			case CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES:
 				if (coreType) return getFeatureChanges();
 				else return getFeatureChanges().map();
+			case CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS:
+				return getRelations();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -575,6 +605,10 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 			case CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES:
 				((EStructuralFeature.Setting)getFeatureChanges()).set(newValue);
 				return;
+			case CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS:
+				getRelations().clear();
+				getRelations().addAll((Collection<? extends Relation>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -617,6 +651,9 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 			case CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES:
 				getFeatureChanges().clear();
 				return;
+			case CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS:
+				getRelations().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -649,6 +686,8 @@ public class CodeSyncElementImpl extends EObjectImpl implements CodeSyncElement 
 				return children != null && !children.isEmpty();
 			case CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES:
 				return featureChanges != null && !featureChanges.isEmpty();
+			case CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS:
+				return relations != null && !relations.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

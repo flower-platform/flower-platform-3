@@ -62,13 +62,15 @@ package org.flowerplatform.flexdiagram.tool {
 		override public function activateAsMainTool():void {			
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);			
-			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);			
+			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);		
+			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {		
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);			
-			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);			
+			super.deactivateAsMainTool();
 		}
 				
 		override public function activateDozingMode():void {
@@ -108,8 +110,8 @@ package org.flowerplatform.flexdiagram.tool {
 				reset();
 			}			
 		}
-			
-		private function dispatchMyEvent(eventType:String, initialEvent:MouseEvent):void {
+		
+		private function dispatchMyEvent(eventType:String, initialEvent:MouseEvent):void {			
 			var array:Array = filterAndSortListeners(eventType);
 			
 			while (array.length != 0) {				

@@ -22,7 +22,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
-	
+		
 	public class MobileViewHostPopupHandler implements IPopupHandler {
 		
 		protected var _viewContent:IViewContent;

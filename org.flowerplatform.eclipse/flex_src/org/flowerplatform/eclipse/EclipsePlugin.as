@@ -18,7 +18,7 @@ package org.flowerplatform.eclipse
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	
 	
-	public class EclipsePlugin extends AbstractFlowerFlexPlugin{
+	public class EclipsePlugin extends AbstractFlowerFlexPlugin {
 		
 		protected static var INSTANCE:EclipsePlugin;
 		

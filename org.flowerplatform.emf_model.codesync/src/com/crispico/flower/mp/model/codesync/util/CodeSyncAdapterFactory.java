@@ -133,6 +133,10 @@ public class CodeSyncAdapterFactory extends AdapterFactoryImpl {
 				return createMindMapRootAdapter();
 			}
 			@Override
+			public Adapter caseRelation(Relation object) {
+				return createRelationAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -275,6 +279,20 @@ public class CodeSyncAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createMindMapRootAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link com.crispico.flower.mp.model.codesync.Relation <em>Relation</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see com.crispico.flower.mp.model.codesync.Relation
+	 * @generated
+	 */
+	public Adapter createRelationAdapter() {
 		return null;
 	}
 

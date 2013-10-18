@@ -34,15 +34,13 @@ The graphical component that displays a list of actions, for one level.
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			import mx.core.FlexGlobals;
-			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
-			import mx.utils.ArrayUtil;
 			
 			import org.flowerplatform.flexutil.action.ActionUtil;
 			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.action.IComposedAction;
+			import org.flowerplatform.flexutil.action.MenuClosedEvent;
 			
-			import spark.collections.Sort;
 			import spark.events.IndexChangeEvent;
 			
 			protected static const GAP_BETWEEN_MENUS:int = -7;
@@ -58,19 +56,19 @@ The graphical component that displays a list of actions, for one level.
 			 * Calculates the actions for the current level, and displays the menu. Called by <code>ContextMenuManager</code> or
 			 * by this class; not intented to be called directly.
 			 */
-			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, parentActionId:String):void {
+			public function openContextMenu(contextMenuManager:ContextMenuManager, x:Number, y:Number, actionsForCurrentLevelAreadyCalculated:IList, parentActionId:String):Boolean {
 				if (actionsForCurrentLevelAreadyCalculated) {
 					actions = actionsForCurrentLevelAreadyCalculated;
 				} else {
 					actions = new ArrayList();
-					ActionUtil.processAndIterateActions(parentActionId, contextMenuManager.allActions, contextMenuManager.selection, this, function (action:IAction):void {
+					ActionUtil.processAndIterateActions(parentActionId, contextMenuManager.allActions, contextMenuManager.selection, contextMenuManager.context, this, function (action:IAction):void {
 						actions.addItem(action);
 					});
 				}
 				
 				if (actions.length == 0) {
 					// this happens, when all the actions are with "preferShowOnActionBar"
-					return;
+					return false;
 				}
 
 				this.contextMenuManager = contextMenuManager;
@@ -91,6 +89,7 @@ The graphical component that displays a list of actions, for one level.
 					actions = new ArrayList(source);
 				}	
 				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
+				return true;
 			}
 			
 			override protected function adjustHorizontalPosition(appWidth:Number):void {
@@ -107,9 +106,13 @@ The graphical component that displays a list of actions, for one level.
 			public function closeContextMenu():void {
 				if (indexInStack == 0) {
 					// only the first one listens for click outside the menu
-					stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+					stage.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);					
+					
 					contextMenuManager.allActions = null;
 					contextMenuManager.selection = null;
+					contextMenuManager.context = null;
+					
+					FlexGlobals.topLevelApplication.dispatchEvent(new MenuClosedEvent());		
 				}
 				PopUpManager.removePopUp(this);
 				if (contextMenuManager.contextMenuStack[contextMenuManager.contextMenuStack.length - 1] != this) {

@@ -54,6 +54,7 @@ package org.flowerplatform.flexdiagram.tool {
 			} else {
 				diagramRenderer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			}
+			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {		
@@ -70,6 +71,8 @@ package org.flowerplatform.flexdiagram.tool {
 			delete context.initialMousePoint;			
 			delete context.ctrlPressed;
 			delete context.shiftPressed;
+			
+			super.deactivateAsMainTool();
 		}		
 		
 		private function mouseDownHandler(event:MouseEvent = null):void {
@@ -82,7 +85,11 @@ package org.flowerplatform.flexdiagram.tool {
 				getSelectOrDragToCreateElementController(diagramShell.rootModel).activate(diagramShell.rootModel, context.initialMousePoint.x, context.initialMousePoint.y, getMode());
 		}
 		
-		private function mouseMoveHandler(event:MouseEvent):void {			
+		private function mouseMoveHandler(event:MouseEvent):void {	
+			if (diagramShell.modelToExtraInfoMap[diagramShell.rootModel].waitingToDeactivateDragTool) {
+				// don't do nothing, tool waits to be deactivated
+				return;
+			}
 			if (event == null || event.buttonDown) {
 				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));				
 				var deltaX:int = mousePoint.x - context.initialMousePoint.x;
@@ -96,6 +103,10 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		private function mouseUpHandler(event:MouseEvent):void {
+			if (diagramShell.modelToExtraInfoMap[diagramShell.rootModel].waitingToDeactivateDragTool) {
+				// don't do nothing, tool waits to be deactivated
+				return;
+			}
 			diagramShell.getControllerProvider(diagramShell.rootModel).
 				getSelectOrDragToCreateElementController(diagramShell.rootModel).drop(diagramShell.rootModel);
 		}

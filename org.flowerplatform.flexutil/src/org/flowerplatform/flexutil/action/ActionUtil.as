@@ -31,7 +31,7 @@ package org.flowerplatform.flexutil.action {
 		 * <code>parentActionId</code> (or level, which can be <code>null</code> for the root level). For each
 		 * visible action, the callback is invoked (which probably does UI related stuff).
 		 */
-		public static function processAndIterateActions(parentActionId:String, actions:Vector.<IAction>, selection:IList, forEachCallbackObject:Object, forEachCallbackFunction:Function):void {
+		public static function processAndIterateActions(parentActionId:String, actions:Vector.<IAction>, selection:IList, context:Object, forEachCallbackObject:Object, forEachCallbackFunction:Function):void {
 			if (actions == null) {
 				return;
 			}
@@ -60,11 +60,13 @@ package org.flowerplatform.flexutil.action {
 				}
 				try {
 					action.selection = selection;
+					action.context = context;
 					if (action.visible) {
 						forEachCallbackFunction.call(forEachCallbackObject, action);
 					}
 				} finally {
 					action.selection = null;
+					action.context = null;
 				}
 			}
 
