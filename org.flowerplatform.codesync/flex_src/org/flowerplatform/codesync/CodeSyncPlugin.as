@@ -24,6 +24,7 @@ package org.flowerplatform.codesync {
 	
 	import mx.collections.ArrayCollection;
 	
+	import org.flowerplatform.codesync.action.AddElementActionProvider;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
@@ -31,6 +32,7 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
@@ -67,6 +69,13 @@ package org.flowerplatform.codesync {
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 		}
 		
+		override public function start():void {
+			super.start();
+			
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddElementActionProvider());
+		}
+		
+		
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CodeSyncElementDescriptor);
 			
@@ -74,9 +83,6 @@ package org.flowerplatform.codesync {
 			registerClassAliasFromAnnotation(DiffTreeNode);
 			registerClassAliasFromAnnotation(DiffContextMenuEntry);
 			registerClassAliasFromAnnotation(DiffActionEntry);
-		}
-		
-		override protected function registerMessageBundle():void {
 		}
 		
 		/**

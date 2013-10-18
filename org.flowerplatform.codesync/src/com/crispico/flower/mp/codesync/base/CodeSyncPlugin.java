@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -37,8 +38,10 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.flowerplatform.codesync.operation_extension.AddNewExtension;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -49,6 +52,8 @@ import org.osgi.framework.BundleContext;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 
 /**
@@ -58,12 +63,38 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected static CodeSyncPlugin INSTANCE;
 	
+	/**
+	 * The location of the CSE mapping file, relative to the project. May be
+	 * configurable in the future.
+	 * 
+	 * @author Mariana
+	 */
+	public String CSE_MAPPING_FILE_LOCATION = "/CSE.notation";
+	
+	/**
+	 * The location of the ACE file, relative to the project. May be configurable
+	 * in the future.
+	 * 
+	 * @author Mariana
+	 */
+	public String ACE_FILE_LOCATION = "/ACE.notation";
+	
+	protected List<String> srcDirs = null;
+	
+	public static final String FOLDER = "FOLDER";
+	
+	public static final String FILE = "File";
+	
+	protected CodeSyncOperationsService codeSyncOperationService;
+	
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
 	
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
 
+	protected List<AddNewExtension> addNewExtensions;
+	
 	/**
 	 * @see #getProjectsProvider()
 	 */
@@ -73,6 +104,10 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static CodeSyncPlugin getInstance() {
 		return INSTANCE;
+	}
+	
+	public CodeSyncOperationsService getCodeSyncOperationsService() {
+		return codeSyncOperationService;
 	}
 	
 	public ComposedFullyQualifiedNameProvider getFullyQualifiedNameProvider() {
@@ -100,6 +135,19 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return codeSyncElementDescriptors;
 	}
 	
+	public CodeSyncElementDescriptor getCodeSyncElementDescriptor(String codeSyncType) {
+		for (CodeSyncElementDescriptor descriptor : getCodeSyncElementDescriptors()) {
+			if (descriptor.getCodeSyncType().equals(codeSyncType)) {
+				return descriptor;
+			}
+		}
+		return null;
+	}
+	
+	public List<AddNewExtension> getAddNewExtensions() {
+		return addNewExtensions;
+	}
+	
 	public boolean useUIDs() {
 		return useUIDs;
 	}
@@ -109,11 +157,11 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		super.start(context);
 		INSTANCE = this;
 		
+		codeSyncOperationService = new CodeSyncOperationsService();
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
-		
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
-		
 		initializeExtensionPoint_codeSyncElementDescriptor();
+		initializeExtensionPoint_operationExtension();
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -155,6 +203,15 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			result.add(configurationElement.getAttribute("name"));
 		}
 		return result;
+	}
+	
+	private void initializeExtensionPoint_operationExtension() throws CoreException {
+		addNewExtensions = new ArrayList<AddNewExtension>();
+		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.addNewExtension");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			Object instance = configurationElement.createExecutableExtension("addNewExtension");
+			addNewExtensions.add((AddNewExtension) instance);
+		}
 	}
 	
 	@Override
@@ -343,4 +400,96 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			return a.equals(b);
 		}
 	}
+	
+	/**
+	 * @author Mariana
+	 */
+	public Resource getCodeSyncMapping(File project, ResourceSet resourceSet) {
+		File codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CSE_MAPPING_FILE_LOCATION); 
+		Resource cseResource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
+		if (!codeSyncElementMappingFile.exists()) {
+			// first clear the resource in case the mapping file was deleted 
+			// after it has been loaded at a previous moment
+			cseResource.getContents().clear();
+			
+			for (String srcDir : getSrcDirs()) {
+				CodeSyncRoot cseRoot = (CodeSyncRoot) getRoot(cseResource, srcDir);
+				if (cseRoot == null) {
+					// create the CSE for the SrcDir
+					cseRoot = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncRoot();
+					cseRoot.setName(srcDir);
+					cseRoot.setType(FOLDER);
+				}
+				cseResource.getContents().add(cseRoot);
+			}
+			
+			CodeSyncPlugin.getInstance().saveResource(cseResource);
+		}
+		return cseResource;
+	}
+	
+	/**
+	 * @author Mariana
+	 */
+	public Resource getAstCache(File project, ResourceSet resourceSet) {
+		File astCacheElementFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, ACE_FILE_LOCATION); 
+		Resource resource = CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
+		if (!astCacheElementFile.exists()) {
+			resource.getContents().clear();
+			CodeSyncPlugin.getInstance().saveResource(resource);
+		}
+		return resource;
+	}
+	
+	/**
+	 * @author Mariana
+	 */
+	protected CodeSyncRoot getRoot(Resource resource, String srcDir) {
+		for (EObject eObj : resource.getContents()) {
+			if (eObj instanceof CodeSyncRoot) {
+				CodeSyncRoot root = (CodeSyncRoot) eObj;
+				if (root.getName().equals(srcDir))
+					return root;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * @author Mariana
+	 */
+	public CodeSyncElement getSrcDir(Resource resource, String name) {
+		CodeSyncElement srcDir = null;
+		for (EObject member : resource.getContents()) {
+			if (((CodeSyncElement) member).getName().equals(name)) {
+				srcDir = (CodeSyncElement) member;
+				break;
+			}
+		}
+		if (srcDir == null) {
+			throw new RuntimeException("SrcDir " + name + " is not mapped to a CSE!");
+		}
+		return srcDir;
+	}
+	
+	/**
+	 * @author Mariana
+	 */
+	public List<String> getSrcDirs() {
+		if (srcDirs == null) {
+			// TODO Mariana : get user input
+			return Collections.singletonList("src");
+		} 
+		return srcDirs;
+	}
+	
+	public void addSrcDir(String srcDir) {
+		if (srcDirs == null) {
+			srcDirs = new ArrayList<String>();
+		}
+		if (!srcDirs.contains(srcDir)) {
+			srcDirs.add(srcDir);
+		}
+	}
+	
 }

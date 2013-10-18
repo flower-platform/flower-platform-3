@@ -132,10 +132,13 @@ package org.flowerplatform.editor.model {
 			}
 			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classOperation"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.BackboneClass.Operation"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.BackboneClass.Attribute"] = composedControllerProviderFactory;
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["title"] = composedControllerProviderFactory;
 			
 			// class separators
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();

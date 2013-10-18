@@ -3,6 +3,7 @@
 <plugin>
    <extension-point id="codeSyncAlgorithmRunner" name="codeSyncAlgorithmRunner" schema="schema/codeSyncAlgorithmRunner.exsd"/>
    <extension-point id="codeSyncElementDescriptor" name="codeSyncElementDescriptor" schema="schema/codeSyncElementDescriptor.exsd"/>
+   <extension-point id="addNewExtension" name="addNewExtension" schema="schema/addNewExtension.exsd"/>
    <extension
          point="org.flowerplatform.editor.contentType">
       <contentType
@@ -24,6 +25,12 @@
             id="codeSyncDiagramOperationsService"
             serviceClass="org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1">
       </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.addNewExtension">
+      <addNewExtension
+            addNewExtension="org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension">
+      </addNewExtension>
    </extension>
 
 </plugin>

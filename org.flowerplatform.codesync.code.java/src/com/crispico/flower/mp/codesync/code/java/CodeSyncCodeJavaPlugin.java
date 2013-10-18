@@ -30,7 +30,6 @@ import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsSer
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
 
 /**
@@ -53,7 +52,7 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
-		CodeSyncCodePlugin.getInstance().addSrcDir("src");
+		CodeSyncPlugin.getInstance().addSrcDir("src");
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("class", new JavaClassProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classTitle", new JavaClassTitleProcessor());

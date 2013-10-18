@@ -16,13 +16,12 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.code.javascript.model.action {
+package org.flowerplatform.codesync.action {
 	
 	import mx.collections.IList;
 	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
-	import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
-	import org.flowerplatform.emf_model.notation.ExpandableNode;
+	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.flexutil.action.ComposedAction;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
@@ -46,14 +45,15 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
 			var addElementAction:ComposedAction = new ComposedAction();
-			addElementAction.label = CodeSyncCodeJavascriptPlugin.getInstance().getMessage("diagram.addElement");
+			addElementAction.label = CodeSyncPlugin.getInstance().getMessage("diagram.addElement");
 			addElementAction.id = ADD_ELEMENT_PARENT_ID;
 			result.push(addElementAction);
 			
 			var selectedTemplate:String = "";
 			if (selection.length == 1) {
-				if (selection.getItemAt(0) is ExpandableNode) {
-					selectedTemplate = ExpandableNode(selection.getItemAt(0)).template;
+				if (selection.getItemAt(0) is Node) {
+					var node:Node = Node(selection.getItemAt(0));
+					selectedTemplate = node.viewType.substr(node.viewType.lastIndexOf(".") + 1);
 				} else {
 					return null;
 				}
