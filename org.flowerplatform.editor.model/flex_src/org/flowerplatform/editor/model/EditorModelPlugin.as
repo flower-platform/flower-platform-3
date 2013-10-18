@@ -70,6 +70,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
+	import org.flowerplatform.flexutil.dialog.IDialog;
 	
 	/**
 	 * @author Cristi
@@ -81,6 +82,8 @@ package org.flowerplatform.editor.model {
 		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
+		
+		public var locationForNewElementsDialog:IDialog;
 		
 		public static function getInstance():EditorModelPlugin {
 			return INSTANCE;

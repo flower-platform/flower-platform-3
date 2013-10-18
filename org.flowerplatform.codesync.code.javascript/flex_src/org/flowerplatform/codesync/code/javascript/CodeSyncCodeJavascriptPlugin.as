@@ -27,12 +27,8 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
-	import org.flowerplatform.editor.model.controller.DragToCreateRelationController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
-	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
-	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
-	import org.flowerplatform.flexdiagram.controller.ComposedControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -41,6 +37,7 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
+	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**
