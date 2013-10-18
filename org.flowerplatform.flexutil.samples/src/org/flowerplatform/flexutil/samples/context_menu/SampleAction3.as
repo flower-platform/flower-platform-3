@@ -11,9 +11,5 @@ package org.flowerplatform.flexutil.samples.context_menu {
 			icon = MultipleIconItemRendererSample.defaultImage;
 			label = "Sample Action 3";
 		}
-		
-		override public function run():void {
-			trace("action " + id + " executed ");
-		}
 	}
 }

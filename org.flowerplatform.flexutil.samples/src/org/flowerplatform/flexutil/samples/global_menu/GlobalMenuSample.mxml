@@ -24,17 +24,22 @@ license-end
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" 
-		 xmlns:ns="org.flowerplatform.flexutil.global_menu.*">
+		 xmlns:ns="org.flowerplatform.flexutil.global_menu.*"
+		 creationComplete="creationCompleteHandler()">
 	<s:layout>
 		<s:VerticalLayout/>
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
-			protected var actionProvider:GlobalMenuActionProviderSample = new GlobalMenuActionProviderSample();
+			import mx.events.FlexEvent;
+			
+			private function creationCompleteHandler():void {
+				mainMenu.actionProvider = new GlobalMenuActionProviderSample();
+			}
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<ns:WebMenuBar width="100%" id="mainMenu" actionProvider="{actionProvider}"/>
+	<ns:WebMenuBar width="100%" id="mainMenu"/>
 </s:Group>

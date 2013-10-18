@@ -20,12 +20,8 @@ package org.flowerplatform.flexutil.samples.global_menu {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.flexutil.action.ActionBase;
-	import org.flowerplatform.flexutil.action.ComposedAction;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
-	import org.flowerplatform.flexutil.samples.context_menu.SampleAction1;
-	import org.flowerplatform.flexutil.samples.context_menu.SampleAction2;
-	import org.flowerplatform.flexutil.samples.context_menu.SampleAction3;
 	import org.flowerplatform.flexutil.samples.renderer.MultipleIconItemRendererSample;
 	
 	/**
@@ -40,49 +36,50 @@ package org.flowerplatform.flexutil.samples.global_menu {
 			// create the actions for the menu
 			actions = new Vector.<IAction>();
 			
-			var action:ActionBase = new ComposedAction();
-			action.id =  "sampleaction1";
-			action.label = "Sample Action 1";
-			action.parentId = "sampleaction4";
+			// first level (menu bar)
+			var action:ActionBase = new SampleActionGlobalMenuC1();
+			action.label = "First Action";
+			action.id = "firstaction";
+			action.icon = MultipleIconItemRendererSample.infoImage;
 			actions.push(action);
 			
-			action = new SampleAction1();
-			action.id = "sampleaction2";
-			action.parentId = "sampleaction4";
+			action = new SampleActionGlobalMenuC1();
+			action.id = "secondaction";
+			SampleActionGlobalMenuC1(action).disableFor = "Flash";
 			actions.push(action);
 			
-			action = new ComposedAction();
-			action.id = "sampleaction3";
-			action.label = "Sample Action 3";
+			// second level
+			action = new SampleActionGlobalMenu1();
+			action.label = "First SubAction";
+			action.id = "firstsubaction";
+			action.parentId = "firstaction";
+			actions.push(action);
+			
+			action = new SampleActionGlobalMenuC1();
+			action.label = "Second SubAction";
+			action.id = "secondsubaction";
+			action.parentId = "secondaction";
 			action.icon = MultipleIconItemRendererSample.defaultImage;
 			actions.push(action);
-			
-			action = new SampleActionC1();
-			action.id = "sampleaction4";
-			action.label = "Sample Action 4";
+
+			action = new SampleActionGlobalMenu1();
+			action.label = "Third SubAction";
+			action.id = "thirdsubaction";
+			action.parentId = "secondaction";
+			SampleActionGlobalMenu1(action).hideOn = "ColdFusion";
 			actions.push(action);
-			
-			action = new SampleAction2();
-			action.id = "sampleaction21";
-			action.label = "Sample Action 21";
-			action.parentId = "sampleaction3";
+
+			// Third level (only for Second SubAction)
+			action = new SampleActionGlobalMenu1();
+			action.label = "Second first SubAction";
+			action.id = "secondfirstsubaction";
+			action.parentId = "secondsubaction";
 			actions.push(action);
-			
-			action = new ComposedAction();
-			action.id = "sampleaction22";
-			action.label = "Sample Action 22";
-			action.parentId = "sampleaction1";
-			actions.push(action);
-			
-			action = new ActionBase();
-			action.id = "sampleaction23";
-			action.label = "Sample Action 23";
-			action.parentId = "sampleaction1";
-			actions.push(action);
-			
-			action = new SampleAction1();
-			action.id = "sampleaction24";
-			action.parentId = "sampleaction22";
+
+			action = new SampleActionGlobalMenu1();
+			action.id = "secondsecondsubaction";
+			action.parentId = "secondsubaction";
+			action.icon = MultipleIconItemRendererSample.defaultImage;
 			actions.push(action);
 		}
 		

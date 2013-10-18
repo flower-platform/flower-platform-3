@@ -64,6 +64,11 @@ package org.flowerplatform.flexutil.global_menu {
 		 */
 		protected var resetMenuBarOnMenuClosingTimout:int = 0;
 		
+		/**
+		 * Menu descriptor for the popup menus.
+		 */
+		protected var menuDescriptor:WebMenuDataDescriptor;
+		
 		public function WebMenuBar(ap:IActionProvider = null):void {
 			super();
 			
@@ -101,6 +106,9 @@ package org.flowerplatform.flexutil.global_menu {
 					
 				}
 				
+				// Also create the new menuDescriptor based on the new actionProvider
+				menuDescriptor = new WebMenuDataDescriptor(actionProvider);
+				
 				dataProvider = getMenusList(selection, null);
 			}
 		}
@@ -116,6 +124,10 @@ package org.flowerplatform.flexutil.global_menu {
 		 * the correct function of this, that the action have the correct id</p>
 		 */
 		protected function selectionChangedHandler(event:SelectionChangedEvent):void {
+			// no sense in continuing if no actionProvider
+			if (actionProvider == null) {
+				return;
+			}
 			// get the current list of actions based on the selection
 			// if it is different from the current list of actions (in menu)
 			// regenerate the menu
@@ -227,7 +239,10 @@ package org.flowerplatform.flexutil.global_menu {
 					// on click execute the action
 					menu.addEventListener(MenuEvent.ITEM_CLICK, childMenu_itemClickHandler);
 					menu.addEventListener(KeyboardEvent.KEY_DOWN, childMenu_eventHandler);
-					menu.dataDescriptor = new WebMenuDataDescriptor(actionProvider, selection);
+					
+					// set the menuDescriptor
+					menuDescriptor.selection = selection;
+					menu.dataDescriptor = menuDescriptor;
 					
 					// get the VisibleApplicationRect so we can correctly display the menu
 					// if it will try to get outside.
@@ -276,6 +291,12 @@ package org.flowerplatform.flexutil.global_menu {
 		protected function hideMenu():void {
 			if (menu != null) {
 				menu.hide();
+				
+				// also clean the selection from the submenus
+				if (menu.dataDescriptor != null && menu.dataDescriptor is WebMenuDataDescriptor) {
+					WebMenuDataDescriptor(menu.dataDescriptor).clearSelectionFromChildren();
+				}
+				
 				menu = null;
 			}
 		}

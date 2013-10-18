@@ -46,6 +46,12 @@ package org.flowerplatform.flexutil.global_menu {
 		
 		protected var _selection:IList;
 		
+		/**
+		 * List of actions returned by getChildren, so we know to remove the selection from them 
+		 * when the menu closes
+		 */
+		protected var childrenActions:Vector.<IAction> = new Vector.<IAction>();
+		
 		public function WebMenuDataDescriptor(ap:IActionProvider = null, sel:IList = null) {
 			super();
 			
@@ -84,6 +90,7 @@ package org.flowerplatform.flexutil.global_menu {
 			
 			ActionUtil.processAndIterateActions(id, actionProvider.getActions(selection), selection, this, function(action:IAction):void {
 				children.addItem(action);
+				childrenActions.push(action);
 			});
 
 			// add the selection so we can have the correct labels/enabled/icon
@@ -133,6 +140,19 @@ package org.flowerplatform.flexutil.global_menu {
 			}
 			
 			return false;
+		}
+		
+		/**
+		 * When the menu closes, this is used to purge the selection from 
+		 * created children.
+		 */
+		public function clearSelectionFromChildren():void {
+			for each (var action:IAction in childrenActions) {
+				action.selection = null;
+			}
+			
+			// prepare a new vector.
+			childrenActions = new Vector.<IAction>();
 		}
 		
 		// not interested in this -> set them to default

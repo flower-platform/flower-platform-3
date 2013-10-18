@@ -21,15 +21,21 @@ package org.flowerplatform.flexutil.samples.global_menu {
 	
 	/**
 	 * Composed action sample that reacts to selection.
+	 * <p>Also it disables itself when the disableFor is selected</p>
 	 * 
 	 * @author Mircea Negreanu
 	 */
-	public class SampleActionC1 extends ComposedAction {
-		public function SampleActionC1() {
+	public class SampleActionGlobalMenuC1 extends ComposedAction {
+		public var disableFor:String = null;
+		
+		public function SampleActionGlobalMenuC1() {
 			super();
 		}
 		
 		override public function get label():String {
+			if (super.label != null) {
+				return super.label;
+			}
 			if (selection == null || selection.length == 0) {
 				return "Action for: empty";
 			} else {
@@ -45,12 +51,10 @@ package org.flowerplatform.flexutil.samples.global_menu {
 		}
 		
 		override public function get enabled():Boolean {
-			if (selection == null || selection.length == 0) {
+			if (disableFor == null || selection == null || selection.length == 0) {
 				return true;
-			} else {
-				if (selection.getItemAt(0) == "Flash") {
-					return false;
-				}
+			} else if (selection.getItemAt(0) == disableFor) {
+				return false;
 			}
 			
 			return true;
