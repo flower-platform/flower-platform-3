@@ -21,6 +21,7 @@ package org.flowerplatform.codesync.action {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.flexutil.action.ComposedAction;
 	import org.flowerplatform.flexutil.action.IAction;
@@ -54,8 +55,8 @@ package org.flowerplatform.codesync.action {
 				}
 			}
 			
-			for each (var availableCodeSyncElementType:String in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedCodeSyncElementType]) {
-				result.push(new AddElementAction(availableCodeSyncElementType));
+			for each (var availableCodeSyncElement:CodeSyncElementDescriptor in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedCodeSyncElementType]) {
+				result.push(new AddElementAction(availableCodeSyncElement.codeSyncType, availableCodeSyncElement.iconUrl));
 			}
 			
 			return result;

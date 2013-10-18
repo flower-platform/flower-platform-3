@@ -115,18 +115,18 @@ package org.flowerplatform.codesync {
 			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
 				if (descriptor.codeSyncTypeCategories.length == 0) {
 					// top level elements
-					addChildCodeSyncTypeCategoryForParent("", descriptor.codeSyncType);
+					addChildCodeSyncTypeCategoryForParent("", descriptor);
 				} else {
 					for each (var codeSyncTypeCategory:String in descriptor.codeSyncTypeCategories) {
 						for each (var parentCodeSyncType:String in getParentsForChildCodeSyncTypeCategory(codeSyncTypeCategory)) {
-							addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor.codeSyncType);	
+							addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor);	
 						}
 					}
 				}
 			}
 		}
 		
-		private function addChildCodeSyncTypeCategoryForParent(parent:String, child:String):void {
+		private function addChildCodeSyncTypeCategoryForParent(parent:String, child:CodeSyncElementDescriptor):void {
 			if (availableChildrenForCodeSyncType[parent] == null) {
 				availableChildrenForCodeSyncType[parent] = new ArrayCollection();
 			}

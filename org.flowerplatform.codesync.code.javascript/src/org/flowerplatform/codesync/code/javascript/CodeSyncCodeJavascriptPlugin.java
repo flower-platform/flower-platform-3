@@ -18,7 +18,7 @@
  */
 package org.flowerplatform.codesync.code.javascript;
 
-import org.flowerplatform.codesync.code.javascript.processor.JavascriptFileElementProcessor;
+import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
 import org.flowerplatform.codesync.code.javascript.remote.JavascriptClassDiagramOperationsService;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -49,10 +49,19 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(JavascriptClassDiagramOperationsService.SERVICE_ID, new JavascriptClassDiagramOperationsService());
 		
-		JavascriptFileElementProcessor processor = new JavascriptFileElementProcessor();
+		JavascriptElementProcessor processor = new JavascriptElementProcessor();
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("title", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.BackboneClass.Operation", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.BackboneClass.Attribute", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.BackboneClass.RequireEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.BackboneClass.EventsAttribute", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.BackboneClass.RoutesAttribute", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.BackboneClass.EventsAttribute.EventsAttributeEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.BackboneClass.RoutesAttribute.RoutesAttributeEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.Table.TableHeaderEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.TableItem.TableItemEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.Form.FormItem", processor);
+	
 	}
 	
 }

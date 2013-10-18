@@ -81,7 +81,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected List<String> srcDirs = null;
 	
-	public static final String FOLDER = "FOLDER";
+	public static final String FOLDER = "Folder";
 	
 	public static final String FILE = "File";
 	
@@ -187,6 +187,10 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			List<String> features = getAttributes(configurationElement, "feature");
 			CodeSyncElementDescriptor descriptor = new CodeSyncElementDescriptor();
 			descriptor.setCodeSyncType(codeSyncType);
+			if (iconUrl != null) {
+				String contributorName = configurationElement.getContributor().getName();
+				iconUrl = contributorName + "/" + iconUrl;
+			}
 			descriptor.setIconUrl(iconUrl);
 			descriptor.setCodeSyncTypeCategories(codeSyncTypeCategories);
 			descriptor.setChildrenCodeSyncTypeCategories(childrenCodeSyncTypeCategories);
