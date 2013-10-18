@@ -22,9 +22,9 @@ package org.flowerplatform.properties.ui {
 		
 		public var nameOfProperty:Label = new Label();
 				
-		private var itemRenderer:Class;
+		public var itemRenderer:Class;
 		
-		private var itemRenderedInstance:BasicPropertyRenderer;
+		public var itemRenderedInstance:BasicPropertyRenderer;
 		
 		public function PropertiesItemRenderer() {
 			super();		
@@ -55,7 +55,7 @@ package org.flowerplatform.properties.ui {
 			if (itemRenderer != null) {
 				itemRenderedInstance = new itemRenderer(value);
 			}
-			
+			itemRenderedInstance.setParent(this);
 			addElement(itemRenderedInstance);
 			
 		}
