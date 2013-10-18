@@ -31,7 +31,7 @@ package org.flowerplatform.properties.ui {
 		 * 
 		 */
 		[SecureSWF(rename="off")]
-		public var value:String;
+		public var value:Object;
 		
 		/**
 		 * 
