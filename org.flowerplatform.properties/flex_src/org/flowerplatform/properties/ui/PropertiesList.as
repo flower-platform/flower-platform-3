@@ -31,15 +31,15 @@ package org.flowerplatform.properties.ui {
 		
 		public function PropertiesList() {
 			super();
-			itemRenderer = new ClassFactory(PropertyItemRenderer);
+			itemRenderer = new ClassFactory(PropertiesItemRenderer);
 			dataProvider = new ArrayList();
 			FlexUtilGlobals.getInstance().selectionManager.addEventListener(SelectionChangedEvent.SELECTION_CHANGED, function (event:SelectionChangedEvent):void {
 				// I did this, because the selection system, sends an empty selection when the diagram is opened
 				// so in case the event.selectionForServer is an empty array we stop the logic.
-				if(event.selectionForServer == null) 
-					return ;
-				if(event.selectionForServer.length == 0)
-					return ;
+				if (event.selectionForServer == null) 
+					return;
+				if (event.selectionForServer.length == 0)
+					return;
 				var myObject:Object;
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand("propertiesProviderService",
