@@ -116,8 +116,8 @@ package org.flowerplatform.flexutil.global_menu {
 		/**
 		 * Called when the selection changes.
 		 * <p>It obtains the current list of actions for the menu based on the curent selection
-		 * and regenerates the menu if the number, order of actions or the actions themselves are
-		 * different than the current actions on the menu</p>
+		 * and regenerates the menu bar if the number, order of actions or the actions themselves are
+		 * different than the current actions on the menu bar</p>
 		 * <p>If the actions are the same, just updates the selection on the current actions and
 		 * asks the menu to update itself</p>
 		 * <p>The comparing of the actions is based on their <strong>id</strong> so it is vital for 
@@ -354,7 +354,7 @@ package org.flowerplatform.flexutil.global_menu {
 					}
 				}
 				
-				// dont notify parent if right and we are on a expandable menu
+				// dont notify parent if RIGHT and we are on an expandable menu
 				// so that the menu has a chance to expand itself
 				if (!(keyCode == Keyboard.RIGHT 
 					&& Menu(event.target).selectedItem is IComposedAction)) {

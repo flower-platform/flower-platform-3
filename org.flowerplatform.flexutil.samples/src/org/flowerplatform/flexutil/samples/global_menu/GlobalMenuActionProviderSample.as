@@ -74,6 +74,7 @@ package org.flowerplatform.flexutil.samples.global_menu {
 			action.label = "Second first SubAction";
 			action.id = "secondfirstsubaction";
 			action.parentId = "secondsubaction";
+			SampleActionGlobalMenu1(action).hideOn = "Dreamweaver";
 			actions.push(action);
 
 			action = new SampleActionGlobalMenu1();

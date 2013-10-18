@@ -61,5 +61,9 @@ package org.flowerplatform.flexutil.samples.global_menu
 				return "Action for: " + result;
 			}
 		}
+		
+		override public function run():void {
+			trace("run for " + id + " (" + label + ")");
+		}
 	}
 }
