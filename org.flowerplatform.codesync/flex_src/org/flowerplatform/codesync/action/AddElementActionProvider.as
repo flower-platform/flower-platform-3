@@ -44,23 +44,18 @@ package org.flowerplatform.codesync.action {
 			
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
-			var addElementAction:ComposedAction = new ComposedAction();
-			addElementAction.label = CodeSyncPlugin.getInstance().getMessage("diagram.addElement");
-			addElementAction.id = ADD_ELEMENT_PARENT_ID;
-			result.push(addElementAction);
-			
-			var selectedTemplate:String = "";
+			var selectedCodeSyncElementType:String = "";
 			if (selection.length == 1) {
 				if (selection.getItemAt(0) is Node) {
 					var node:Node = Node(selection.getItemAt(0));
-					selectedTemplate = node.viewType.substr(node.viewType.lastIndexOf(".") + 1);
+					selectedCodeSyncElementType = node.viewType.substr(node.viewType.lastIndexOf(".") + 1);
 				} else {
 					return null;
 				}
 			}
 			
-			for each (var availableTemplate:String in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedTemplate]) {
-				result.push(new AddElementAction(availableTemplate));
+			for each (var availableCodeSyncElementType:String in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedCodeSyncElementType]) {
+				result.push(new AddElementAction(availableCodeSyncElementType));
 			}
 			
 			return result;

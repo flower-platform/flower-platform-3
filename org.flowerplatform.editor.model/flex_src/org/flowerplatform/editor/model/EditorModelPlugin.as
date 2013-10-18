@@ -22,7 +22,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
-	import org.flowerplatform.editor.model.action.AddElementAction;
 	import org.flowerplatform.editor.model.action.AddRelationAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
@@ -180,7 +179,6 @@ package org.flowerplatform.editor.model {
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
-			notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 		}

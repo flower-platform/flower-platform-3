@@ -28,13 +28,13 @@ package org.flowerplatform.codesync.action {
 	 */
 	public class AddElementAction extends ActionBase {
 		
-		protected var template:String;
+		protected var codeSyncType:String;
 		
-		public function AddElementAction(template:String) {
+		public function AddElementAction(codeSyncType:String) {
 			super();
-			this.template = template;
-			label = template;
-			parentId = AddElementActionProvider.ADD_ELEMENT_PARENT_ID;
+			parentId = "new";
+			this.codeSyncType = codeSyncType;
+			label = codeSyncType;
 		}
 		
 		override public function run():void {
@@ -49,7 +49,7 @@ package org.flowerplatform.codesync.action {
 			};
 			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-					.service_addNew(parentViewId, template, parameters);
+					.service_addNew(parentViewId, codeSyncType, parameters);
 			
 //			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object, childType:String = template, nextSiblingSeparator:String, parentCategory:String;
 //			
