@@ -22,7 +22,6 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	import mx.collections.IList;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElement;
-	import mx.core.IVisualElementContainer;
 	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -32,17 +31,15 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
 	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
+	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
-	import spark.components.CalloutButton;
 	import spark.components.Group;
 	import spark.components.Label;
-	import spark.components.SkinnableContainer;
 	import spark.components.View;
 	import spark.components.ViewMenuItem;
 	import spark.components.supportClasses.ButtonBase;
-	import spark.components.supportClasses.SkinnableComponent;
 	import spark.events.ViewNavigatorEvent;
 	import spark.primitives.BitmapImage;
 	
@@ -69,6 +66,11 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 		
 		protected var selectionForActiveViewContent:IList;
 		
+		/**		
+		 * @author Cristina Constantinescu
+		 */ 
+		protected var contextForActions:Object;
+		
 		protected var spinner:MobileSpinner;
 		
 		protected var preventBackKeyPress:Boolean = true;
@@ -88,6 +90,9 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			addEventListener(FlexEvent.MENU_KEY_PRESSED, menuKeyPressedEvent);
 			addEventListener(FlexEvent.BACK_KEY_PRESSED, backKeyPressHandler);
 			addEventListener(ViewNavigatorEvent.VIEW_DEACTIVATE, viewDeactivateHandler);
+			addEventListener("viewMenuClose", viewMenuClosedHandler);
+			
+			resetContextForActions();
 		}
 		
 		protected function menuKeyPressedEvent(event:FlexEvent):void {
@@ -104,8 +109,22 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			}
 		}
 		
+		protected function viewMenuClosedHandler(event:Event):void {			
+			FlexGlobals.topLevelApplication.dispatchEvent(new MenuClosedEvent());
+		}
+		
 		protected function viewDeactivateHandler(event:ViewNavigatorEvent):void {
 			FlexUtilGlobals.getInstance().selectionManager.viewContentRemoved(this, activeViewContent); 
+		}
+		
+		private function resetContextForActions():void {
+			if (contextForActions != null) {
+				contextForActions = null;
+			}
+			contextForActions = new Object();
+			// append to context some hardcoded coords
+			contextForActions.x = 100;
+			contextForActions.y = 100;
 		}
 		
 		override protected function createChildren():void {
@@ -170,31 +189,13 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 				// for SplitViewWrapper, viewContent may be null if the current active view (left or right) is
 				// not a IViewContent. However, we want the action logic to execute, so that SplitViewWrapper can
 				// add its switch* actions
-				selectionForActiveViewContent = null;
+				selectionForActiveViewContent = null;				
 			}
 			
 			allActionsForActiveViewContent = getActionsFromViewContent(viewContent, selectionForActiveViewContent);
+			resetContextForActions();
 			
-			var newActionContent:Array = new Array();
-			var newViewMenuItems:Vector.<ViewMenuItem> = new Vector.<ViewMenuItem>();
-			ActionUtil.processAndIterateActions(null, allActionsForActiveViewContent, selectionForActiveViewContent, this, function (action:IAction):void {
-				if (action.preferShowOnActionBar) {
-					var button:ActionButton = new ActionButton();
-					populateButtonWithAction(button, action);				
-					newActionContent.push(button);
-				} else {
-					var actionViewMenuItem:ActionViewMenuItem = new ActionViewMenuItem();
-					populateButtonWithAction(actionViewMenuItem, action);				
-					newViewMenuItems.push(actionViewMenuItem);
-				}
-			});
-			
-			// give the viewMenuItems to the actions so that it can calculate it's enablement
-			openMenuAction.viewMenuItems = newViewMenuItems;
-			viewMenuItems = newViewMenuItems; 
-
-			appendToActionContent(newActionContent);			
-			actionContent = newActionContent;
+			populateViewWithActions();
 			
 			return selectionForActiveViewContent;
 		}
@@ -225,13 +226,39 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 		 */
 		protected function populateViewMenuWithActions(composedAction:IComposedAction):void {
 			var newViewMenuItems:Vector.<ViewMenuItem> = new Vector.<ViewMenuItem>();
-			ActionUtil.processAndIterateActions(composedAction.id, allActionsForActiveViewContent, selectionForActiveViewContent, this, function (action:IAction):void {
+			ActionUtil.processAndIterateActions(composedAction.id, allActionsForActiveViewContent, selectionForActiveViewContent, null, this, function (action:IAction):void {
 				var actionViewMenuItem:ActionViewMenuItem = new ActionViewMenuItem();
 				populateButtonWithAction(actionViewMenuItem, action);				
 				newViewMenuItems.push(actionViewMenuItem);
 			});
 			
 			viewMenuItems = newViewMenuItems;
+		}
+		
+		/**		
+		 * @author Cristina Constantinescu
+		 */
+		protected function populateViewWithActions(parentActionId:String = null):void {
+			var newActionContent:Array = new Array();
+			var newViewMenuItems:Vector.<ViewMenuItem> = new Vector.<ViewMenuItem>();
+			ActionUtil.processAndIterateActions(parentActionId, allActionsForActiveViewContent, selectionForActiveViewContent, contextForActions, this, function (action:IAction):void {
+				if (action.preferShowOnActionBar) {
+					var button:ActionButton = new ActionButton();
+					populateButtonWithAction(button, action);				
+					newActionContent.push(button);
+				} else {
+					var actionViewMenuItem:ActionViewMenuItem = new ActionViewMenuItem();
+					populateButtonWithAction(actionViewMenuItem, action);				
+					newViewMenuItems.push(actionViewMenuItem);
+				}
+			});
+			
+			// give the viewMenuItems to the actions so that it can calculate it's enablement
+			openMenuAction.viewMenuItems = newViewMenuItems;
+			viewMenuItems = newViewMenuItems; 
+			
+			appendToActionContent(newActionContent);			
+			actionContent = newActionContent;	
 		}
 		
 		/**
@@ -266,12 +293,34 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			} else {
 				try {
 					action.selection = selectionForActiveViewContent;
+					action.context = contextForActions;
 					action.run();				
 				} finally {
 					action.selection = null;
+					action.context = contextForActions;
 				}
 			}
 		}
+		
+		/**		
+		 * @author Cristina Constantinescu
+		 */ 
+		public function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean {			
+			// merge with viewhost contextForActions
+			if (contextForActions == null) {
+				contextForActions = context;
+			} else {				
+				for (var key:String in context) {
+					contextForActions[key] = context[key];
+				}
+			}			
+			populateViewWithActions(parentActionId);
+			
+			if (openMenuAction.enabled) {
+				openMenuAction.run();
+			}
+			return true;
+		}		
 		
 		/**
 		 * @author Cristina Constantinescu

@@ -24,8 +24,8 @@ package com.crispico.flower.util.popup {
 	import mx.collections.IList;
 	import mx.containers.ControlBar;
 	
-	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
 	public class ResizablePopupWindowPopupHandlerAndViewHost extends ResizablePopupWindow implements IPopupHandler, IViewHost	{
@@ -117,6 +117,14 @@ package com.crispico.flower.util.popup {
 			
 			ControlBar(controlBar).addChild(DisplayObject(value));
 		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean {
+			// doesn't support this	
+			return false;
+		}	
 		
 		/**
 		 * @author Cristina Constantinescu

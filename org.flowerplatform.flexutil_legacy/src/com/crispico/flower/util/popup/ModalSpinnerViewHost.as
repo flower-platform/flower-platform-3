@@ -70,6 +70,14 @@ package com.crispico.flower.util.popup {
 		/**
 		 * @author Cristina Constantinescu
 		 */
+		public function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean {
+			// doesn't support this	
+			return false;
+		}	
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
 		public function showSpinner(text:String):void {			
 		}
 		

@@ -76,6 +76,16 @@ package org.flowerplatform.flexutil.view_content_host {
 		function displayCloseButton(value:Boolean):void;
 		function addToControlBar(value:Object):void;
 		
+		/**		
+		 * @param x, y - the coordinates where the menu must be open.
+		 * @param context - context used by actions (IAction.context)
+		 * @param parentActionId - if not null, the actions having this id as parentId will be displayed; 
+		 * 							if null, all actions structure will be displayed.
+		 * 
+		 * @author Cristina Constantinescu
+		 */ 
+		function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean;
+		
 		/**
 		 * @author Cristina Constantinescu
 		 */ 

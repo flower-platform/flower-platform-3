@@ -22,6 +22,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
+	import org.flowerplatform.editor.model.action.AddElementAction;
+	import org.flowerplatform.editor.model.action.AddRelationAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
@@ -30,12 +32,12 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
+	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.action.SearchAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
-	import org.flowerplatform.editor.model.controller.DragToCreateRelationController;
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
@@ -64,6 +66,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
+	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.tool.controller.SelectOrDragToCreateElementController;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -171,6 +174,11 @@ package org.flowerplatform.editor.model {
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
+
+			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
+			notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
+
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 		}
 		

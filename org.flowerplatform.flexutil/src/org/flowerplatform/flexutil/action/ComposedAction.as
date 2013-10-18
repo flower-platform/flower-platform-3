@@ -41,6 +41,7 @@ package org.flowerplatform.flexutil.action {
 				for (var i:int = 0; i < childActions.length; i++) {
 					var childAction:IAction = childActions[i];
 					childAction.selection = selection;
+					childAction.context = context;
 					try {
 						if (childAction.visible) {
 							// at least one visible => the composed action is visible
@@ -48,6 +49,7 @@ package org.flowerplatform.flexutil.action {
 						}
 					} finally {
 						childAction.selection = null;
+						childAction.context = null;
 					}
 				}
 				return false;
