@@ -169,6 +169,7 @@ package org.flowerplatform.flexutil.global_menu {
 				ActionUtil.processAndIterateActions(parentId, 
 					actionProvider.getActions(selection),
 					selection,
+					null,
 					this,
 					function(action:IAction):void {
 						listActions.addItem(action);

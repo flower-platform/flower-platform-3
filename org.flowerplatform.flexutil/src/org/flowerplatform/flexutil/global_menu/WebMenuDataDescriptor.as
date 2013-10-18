@@ -88,10 +88,16 @@ package org.flowerplatform.flexutil.global_menu {
 			
 			var children:ArrayCollection = new ArrayCollection();
 			
-			ActionUtil.processAndIterateActions(id, actionProvider.getActions(selection), selection, this, function(action:IAction):void {
-				children.addItem(action);
-				childrenActions.push(action);
-			});
+			ActionUtil.processAndIterateActions(id, 
+				actionProvider.getActions(selection), 
+				selection, 
+				null, 
+				this, 
+				function(action:IAction):void {
+					children.addItem(action);
+					childrenActions.push(action);
+				}
+			);
 
 			// add the selection so we can have the correct labels/enabled/icon
 			for each (var action:IAction in children) {
