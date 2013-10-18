@@ -19,6 +19,9 @@
 package org.flowerplatform.flexdiagram.tool {
 	import flash.display.DisplayObject;
 	import flash.display.Stage;
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
+	import flash.events.IEventDispatcher;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
 	import flash.ui.Keyboard;
@@ -36,7 +39,10 @@ package org.flowerplatform.flexdiagram.tool {
 	/**
 	 * @author Cristina Constantinescu
 	 */	
-	public class Tool {
+	public class Tool extends EventDispatcher {
+		
+		public static const ACTIVATED_AS_MAIN_TOOL:String = "activatedAsMainTool";
+		public static const DEACTIVATED_AS_MAIN_TOOL:String = "deactivatedAsMainTool";
 		
 		protected var diagramShell:DiagramShell;
 		
@@ -52,10 +58,12 @@ package org.flowerplatform.flexdiagram.tool {
 		public function deactivateDozingMode():void { 				
 		}
 		
-		public function activateAsMainTool():void {			
+		public function activateAsMainTool():void {		
+			dispatchEvent(new Event(ACTIVATED_AS_MAIN_TOOL));
 		}
 		
-		public function deactivateAsMainTool():void {			
+		public function deactivateAsMainTool():void {
+			dispatchEvent(new Event(DEACTIVATED_AS_MAIN_TOOL));		
 		}
 		
 		public function get diagramRenderer():DiagramRenderer {			

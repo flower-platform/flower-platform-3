@@ -51,7 +51,9 @@ package org.flowerplatform.editor.model {
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
-			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
+			if (!diagramShell.selectedItems.eventsCanBeIgnored) { // catch events only if necessary
+				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
+			}
 		}
 		
 		protected function getDiagramShellInstance():DiagramShell {
@@ -73,8 +75,10 @@ package org.flowerplatform.editor.model {
 			
 			diagramShell = getDiagramShellInstance();
 			diagramShell.diagramRenderer = diagramRenderer;
-						
-			super.createChildren();			
+									
+			super.createChildren();		
+			
+			toolbarsArea.addElement(new Toolbar());
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {

@@ -31,7 +31,7 @@ package org.flowerplatform.editor.model.action {
 			super();
 			
 			label = "Add Scenario";
-			icon = EditorModelPlugin.getInstance().getResourceUrl("images/scenario.png");
+			icon = EditorModelPlugin.getInstance().getResourceUrl("images/chart_line_add.png");
 			preferShowOnActionBar = true;
 		}
 		

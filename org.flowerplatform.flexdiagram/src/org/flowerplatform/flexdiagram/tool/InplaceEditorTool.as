@@ -94,6 +94,7 @@ package org.flowerplatform.flexdiagram.tool {
 					}
 				}
 			}
+			super.activateAsMainTool();
 		}
 				
 		override public function deactivateAsMainTool():void {
@@ -106,7 +107,8 @@ package org.flowerplatform.flexdiagram.tool {
 			}
 			
 			delete context.model;			
-			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);			
+			diagramRenderer.removeEventListener(MouseEvent.CLICK, mouseClickHandler);	
+			super.deactivateAsMainTool();
 		}
 		
 		/**

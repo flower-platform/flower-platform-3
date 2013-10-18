@@ -27,6 +27,7 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	
+	import spark.components.HGroup;
 	import spark.components.RichEditableText;
 	import spark.components.Scroller;
 	import spark.components.TextArea;
@@ -64,6 +65,9 @@ package org.flowerplatform.editor {
 		 * 
 		 */
 		protected var createCollaborativeTools:Array = new Array();
+		
+		
+		protected var toolbarsArea:HGroup;
 		
 		/**
 		 * This is the underlying layer from EditorAndDiagramContainer.
@@ -224,8 +228,16 @@ package org.flowerplatform.editor {
 		 */
 		override protected function createChildren():void {
 			super.createChildren();
+			
+			toolbarsArea = new HGroup();
+			toolbarsArea.percentWidth = 100;
+			toolbarsArea.verticalAlign = "middle";
+			toolbarsArea.gap = 10;
+			
 			resourceStatusBar.percentWidth = 100; // Streach so that buttons may appear on the right side
-			addChildAt(resourceStatusBar, 0);
+			toolbarsArea.addElementAt(resourceStatusBar, 0);
+			
+			addChildAt(toolbarsArea, 0);
 			
 			if (editor) {
 				editor.percentHeight = 100;
