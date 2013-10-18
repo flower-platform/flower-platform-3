@@ -21,6 +21,8 @@ package org.flowerplatform.web {
 	import com.crispico.flower.util.layout.Workbench;
 	
 	import flash.events.MouseEvent;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
@@ -33,6 +35,11 @@ package org.flowerplatform.web {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.action.ActionBase;
+	import org.flowerplatform.flexutil.action.ComposedAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.action.VectorActionProvider;
+	import org.flowerplatform.flexutil.global_menu.WebMenuBar;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
@@ -79,6 +86,10 @@ package org.flowerplatform.web {
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 		}
 		
+		/**
+		 * @author Cristi
+		 * @author Mircea Negreanu
+		 */
 		override public function start():void {
 			super.start();
 			// pass the same descriptor; to be used for images (that need the descriptor for the URL)
@@ -96,36 +107,66 @@ package org.flowerplatform.web {
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
 			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 			
-			var hBox:HBox = new HBox();
-			test_addButton("User Form", UserForm, hBox);
-			test_addButton("Users Screen", UsersScreen, hBox);
-			test_addButton("Organizations Screen", OrganizationsScreen, hBox);
-			test_addButton("Groups Screen", GroupsScreen, hBox);
-			test_addButton("Permissions Screen", PermissionsScreen, hBox);
+			// create the actionProvider from menu
+			var menuActionProvider:VectorActionProvider = new VectorActionProvider();
 			
-			var btn:Button = new Button();
-			btn.label = "Logout";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
-			});
-			hBox.addChild(btn);
+			createAndAddAction("Administration", "administration", null, null,
+				menuActionProvider);
+
+			createAndAddAction("Organizations", null, "administration", function():void {
+				showScreen(OrganizationsScreen);
+			}, menuActionProvider);
+
+			createAndAddAction("Groups", null, "administration", function():void {
+				showScreen(GroupsScreen);
+			}, menuActionProvider);
+
+			createAndAddAction("Users", null, "administration", function():void {
+				showScreen(UsersScreen);
+			}, menuActionProvider);
+
+			createAndAddAction("Permissions", null, "administration", function():void {
+				showScreen(PermissionsScreen);
+			}, menuActionProvider);
+
+			createAndAddAction("User", "user", null, null, menuActionProvider);
 			
-			btn = new Button();
-			btn.label = "Switch";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+			createAndAddAction("My Account", null, "user", function():void {
+				showScreen(UserForm);
+			},menuActionProvider);
+			
+			createAndAddAction("Switch User", null, "user", function():void {
 				WebCommonPlugin.getInstance().authenticationManager.showAuthenticationView(true);
-			});
-			hBox.addChild(btn);
+			}, menuActionProvider);
+
+			createAndAddAction("Logout", null, "user", function():void {
+				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
+			}, menuActionProvider);
+	
+			createAndAddAction("Help", "help", null, null, menuActionProvider);
+
+			createAndAddAction("Lean and Discuss (opens a new window)", null, "help",  function():void {
+				navigateToURL(new URLRequest("http://learn-discuss.flower-platform.com/flower_dev_center"), "_blank");
+			}, menuActionProvider);
 			
-			btn = new Button();
+			var hBox:HBox = new HBox();
+			hBox.percentWidth = 100;
+			
+			// create the menu
+			var menuBar:WebMenuBar = new WebMenuBar(menuActionProvider);
+			menuBar.percentWidth = 100;
+			hBox.addChild(menuBar);
+			
+			// removed all the other buttons (were replaced by the menu)
+			// this is the only one left
+			var btn:Button = new Button();
 			btn.label = "Get Current User";
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
 			});
 			hBox.addChild(btn);
-						
+			
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
-					
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 			FlexUtilGlobals.getInstance().selectionManager.addEventListener(SelectionChangedEvent.SELECTION_CHANGED, function (event:SelectionChangedEvent):void {
@@ -134,20 +175,35 @@ package org.flowerplatform.web {
 		}
 		
 		/**
-		 * @author Mariana
+		 * Creates and adds an action to the the actionProvider
+		 * 
+		 * @author Mircea Negreanu
 		 */
-		private function test_addButton(label:String, cls:Class, hBox:HBox):void {
-			var btn:Button = new Button();
-			btn.label = label;
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
-				var content:IViewContent = new cls();
-				handler.setViewContent(content).show();
-				if (Object(content).hasOwnProperty("entityId")) {
-					Object(content).entityId = WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id;
-				}
-			});
-			hBox.addElement(btn);
+		private function createAndAddAction(label:String, id:String, parentId:String, functionDelegate:Function, actionProvider:IActionProvider):void {
+			var action:ActionBase;
+			if (id != null) {
+				action = new ComposedAction();
+			} else {
+				action = new ActionBase();
+			}
+			
+			action.label = label;
+			action.id = id;
+			action.parentId = parentId;
+			action.functionDelegate = functionDelegate;
+			actionProvider.getActions(null).push(action);
+		}
+
+		/**
+		 * @author Mircea Negreanu
+		 */
+		private function showScreen(cls:Class):void {
+			var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
+			var content:IViewContent = new cls();
+			handler.setViewContent(content).show();
+			if (Object(content).hasOwnProperty("entityId")) {
+				Object(content).entityId = WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id;
+			}
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {

@@ -72,9 +72,7 @@ package org.flowerplatform.flexutil.global_menu {
 		public function WebMenuBar(ap:IActionProvider = null):void {
 			super();
 			
-			if (ap != null) {
-				_actionProvider = ap;
-			}
+			actionProvider = ap;
 			
 			// Since we do this dynamically, we need the menuBar to tell us
 			// when it thinks the menu should be shown/hidden
@@ -157,13 +155,11 @@ package org.flowerplatform.flexutil.global_menu {
 		}
 		
 		/**
-		 * Utility function to build the list for menubar/menus from the actionProvider.
+		 * Utility function to build the list for menubar from the actionProvider.
 		 * <p>Also sets the selection on the action so that the label/update/icon is the correct one</p>
 		 */ 
 		protected function getMenusList(selection:IList, parentId:String = null):ArrayCollection {
 			if (actionProvider != null) {
-				var index:int = 0;
-				
 				var listActions:ArrayCollection = new ArrayCollection();
 				
 				ActionUtil.processAndIterateActions(parentId, 
@@ -222,8 +218,9 @@ package org.flowerplatform.flexutil.global_menu {
 					// get the current selection
 					var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
 					
-					// get the list of actions of the current action
-					var childMenuList:ArrayCollection = getMenusList(selection, menuBarAction.id);
+					// get the list of actions of the current menu
+					menuDescriptor.selection = selection;
+					var childMenuList:ArrayCollection = ArrayCollection(menuDescriptor.getChildren(menuBarAction));
 					
 					// create and show the menu
 					menu = Menu.createMenu(this, childMenuList, false);
@@ -330,6 +327,9 @@ package org.flowerplatform.flexutil.global_menu {
 							if (selectedIndex != -1) {
 								menuBarItems[selectedIndex].menuBarItemState = "itemUpSkin";
 								selectedIndex = -1;
+								
+								// also clear the current menu
+								hideMenu();
 							}
 						}, 50);
 					} else if (menuEvent.type == MenuEvent.MENU_SHOW) {
