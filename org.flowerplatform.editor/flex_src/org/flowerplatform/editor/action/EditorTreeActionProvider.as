@@ -17,6 +17,7 @@
  * license-end
  */
 package org.flowerplatform.editor.action {
+	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
@@ -34,6 +35,9 @@ package org.flowerplatform.editor.action {
 		public function EditorTreeActionProvider() {
 		}
 		
+		/**
+		 * @author Cristina Constatinescu
+		 */
 		public function getActions(selection:IList):Vector.<IAction> {
 			if (selection.length == 0) {
 				return null;
@@ -56,18 +60,22 @@ package org.flowerplatform.editor.action {
 				openWithAction.orderIndex = 151;
 				result.push(openWithAction);
 				
-				var ctIndex:int = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
-				var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
+				var indexes:ArrayCollection = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
 				var defaultEditorDescriptorProcessed:Boolean = false;
-				for each (var editorName:String in ctDescriptor.compatibleEditors) {
-					var descriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(editorName);
-					if (descriptor == null) {
-						throw new Error("Cannot find editor descriptor for editor name = " + editorName);
-					}
-					result.push(new OpenAction(descriptor, !defaultEditorDescriptorProcessed));
-					if (!defaultEditorDescriptorProcessed) {
-						// i.e. for index == 0; this ensures that the first item will have an action with "force..."
-						defaultEditorDescriptorProcessed = true;
+				for (var i:int = 0; i < indexes.length; i++) {
+					var ctIndex:int = int(indexes.getItemAt(i));
+					var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
+					
+					for each (var editorName:String in ctDescriptor.compatibleEditors) {
+						var descriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(editorName);
+						if (descriptor == null) {
+							throw new Error("Cannot find editor descriptor for editor name = " + editorName);
+						}
+						result.push(new OpenAction(descriptor, !defaultEditorDescriptorProcessed));
+						if (!defaultEditorDescriptorProcessed) {
+							// i.e. for index == 0; this ensures that the first item will have an action with "force..."
+							defaultEditorDescriptorProcessed = true;
+						}
 					}
 				}
 			} else {

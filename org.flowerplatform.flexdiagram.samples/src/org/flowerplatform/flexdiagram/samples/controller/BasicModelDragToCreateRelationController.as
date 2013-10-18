@@ -36,7 +36,7 @@ package org.flowerplatform.flexdiagram.samples.controller {
 			trace("update");
 		}
 		
-		public function drop(model:Object):void {
+		public function drop(sourceModel:Object, targetModel:Object):void {
 			trace("endDragging");		
 			
 			diagramShell.mainToolFinishedItsJob();

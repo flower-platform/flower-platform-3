@@ -32,25 +32,32 @@ package org.flowerplatform.flexutil.action {
 		
 		/**
 		 * The system sets this before invoking: visible, enabled, run(). After
+		 * these invocations, the context is removed in a try/finally block
+		 * @author Cristina Constantinescu
+		 */
+		function set context(value:Object):void;
+		
+		/**
+		 * The system sets this before invoking: visible, enabled, run(). After
 		 * these invocations, the selection is removed in a try/finally block
 		 */
 		function set selection(value:IList):void;
 
 		/**
-		 * Before this method is invoked, the <code>selection</code> property is populated.
-		 * After this method call, the selection is removed.
+		 * Before this method is invoked, the <code>selection</code> and <code>context</code> properties are populated.
+		 * After this method call, the selection and context are removed.
 		 */
 		function get visible():Boolean;
 
 		/**
-		 * Before this method is invoked, the <code>selection</code> property is populated.
-		 * After this method call, the selection is removed.
+		 * Before this method is invoked, the <code>selection</code> and <code>context</code> properties are populated.
+		 * After this method call, the selection and context are removed.
 		 */
 		function get enabled():Boolean;
 		
 		/**
-		 * Before this method is invoked, the <code>selection</code> property is populated.
-		 * After this method call, the selection is removed.
+		 * Before this method is invoked, the <code>selection</code> and <code>context</code> properties are populated.
+		 * After this method call, the selection and context are removed.
 		 */
 		function run():void;
 	}

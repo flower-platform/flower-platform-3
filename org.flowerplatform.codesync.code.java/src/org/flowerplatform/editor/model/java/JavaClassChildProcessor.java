@@ -18,13 +18,13 @@
  */
 package org.flowerplatform.editor.model.java;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.flowerplatform.codesync.remote.CodeSyncDecoratorsProcessor;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
-import org.flowerplatform.editor.model.change_processor.IconDiagrammableElementFeatureChangesProcessor;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
@@ -35,12 +35,12 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
  * @author Mariana Gheorghe
  */
-public abstract class JavaClassChildProcessor extends IconDiagrammableElementFeatureChangesProcessor {
+public abstract class JavaClassChildProcessor extends CodeSyncDecoratorsProcessor {
 
 	protected InplaceEditorLabelParser labelParser = new InplaceEditorLabelParser(new JavaInplaceEditorProvider());
 
 	@Override
-	protected String[] getIconUrls(EObject object) {
+	public String getIconBeforeCodeSyncDecoration(EObject object) {
 		return composeImage(getCodeSyncElement(object));
 	}
 	
@@ -75,37 +75,50 @@ public abstract class JavaClassChildProcessor extends IconDiagrammableElementFea
 			}
 		}
 		return "";
-	}
+	}	
 	
-	protected String[] composeImage(CodeSyncElement object) {
-		List<String> result = new ArrayList<String>();
-		
+	/**
+	 * @author Sebastian Solomon
+	 */
+	public String composeImage(CodeSyncElement object) {
+		String result = new String();
+		String editorModelPakege = EditorModelPlugin.getInstance()
+				.getBundleContext().getBundle().getSymbolicName();
+
 		// decorate for visibility
-		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) 
-				CodeSyncPlugin.getInstance().getFeatureValue(object, AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) CodeSyncPlugin
+				.getInstance().getFeatureValue(
+						object,
+						AstCacheCodePackage.eINSTANCE
+								.getModifiableElement_Modifiers());
 		Modifier visibility = null;
 		if (modifiers != null) {
 			for (ExtendedModifier modifier : modifiers) {
 				if (modifier instanceof Modifier) {
 					switch (((Modifier) modifier).getType()) {
-					case org.eclipse.jdt.core.dom.Modifier.PUBLIC:		
-					case org.eclipse.jdt.core.dom.Modifier.PROTECTED:	
-					case org.eclipse.jdt.core.dom.Modifier.PRIVATE:	
-						visibility = (Modifier) modifier; 
+					case org.eclipse.jdt.core.dom.Modifier.PUBLIC:
+					case org.eclipse.jdt.core.dom.Modifier.PROTECTED:
+					case org.eclipse.jdt.core.dom.Modifier.PRIVATE:
+						visibility = (Modifier) modifier;
 						break;
 					case org.eclipse.jdt.core.dom.Modifier.STATIC:
-						result.add("images/ovr16/Static.gif"); 
+						result += editorModelPakege
+								+ "/images/ovr16/Static.gif|";
 						break;
-					case org.eclipse.jdt.core.dom.Modifier.FINAL:
-						result.add("images/ovr16/Final.gif");
+					case org.eclipse.jdt.core.dom.Modifier.FINAL: // "org.flowerplatform.editor.model/images/ovr16/Final.gif|";
+						result += editorModelPakege
+								+ "/images/ovr16/Final.gif|";
 						break;
 					}
 				}
 			}
 		}
-		result.add(0, getImageForVisibility(visibility == null ? 0 : visibility.getType()));
-		
-		return result.toArray(new String[0]);
+
+		result = (getImageForVisibility(visibility == null ? 0 : visibility
+				.getType())) + "|" + result;
+		if (result.length() != 0)
+			result = result.substring(0, result.length() - 1);
+		return result;
 	}
 	
 }

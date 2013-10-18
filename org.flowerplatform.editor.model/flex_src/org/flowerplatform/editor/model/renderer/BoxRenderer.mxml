@@ -21,7 +21,7 @@
 <!--- 
 @author Cristian Spiescu
 -->
-<s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
+<s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware, mx.managers.IFocusManagerComponent"
 	cacheAsBitmap="true"  
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
@@ -184,6 +184,7 @@
 				
 				shapeDrawer = new ShapeDrawer(ShapeDrawer.RECTANGLE, this, true, true);
 			}
+			
 			
 		]]>
 	</fx:Script>

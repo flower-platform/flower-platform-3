@@ -36,6 +36,7 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.ResizeTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
+	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexutil.action.IAction;
 
@@ -79,7 +80,7 @@ package org.flowerplatform.editor.model
 			
 			diagramShell.registerTools([
 				ScrollTool, SelectOnClickTool, InplaceEditorTool, ResizeTool, 
-				DragToCreateRelationTool, DragTool/*, SelectOrDragToCreateElementTool*/, ZoomTool]);
+				DragToCreateRelationTool, DragTool, SelectOrDragToCreateElementTool, ZoomTool]);
 			return diagramShell;
 		}
 		

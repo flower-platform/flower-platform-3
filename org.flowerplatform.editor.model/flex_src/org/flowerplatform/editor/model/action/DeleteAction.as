@@ -20,7 +20,7 @@ package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
-	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexutil.action.ActionBase;
 
 	/**
@@ -38,7 +38,7 @@ package org.flowerplatform.editor.model.action {
 		
 		override public function get visible():Boolean {
 			if (selection != null && selection.length == 1) {
-				if (selection.getItemAt(0) is Node) {
+				if (selection.getItemAt(0) is View) {
 					return true;
 				}
 			}
@@ -46,7 +46,7 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		override public function run():void {
-			var node:Node = Node(selection.getItemAt(0));
+			var node:View = View(selection.getItemAt(0));
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_deleteView(node.id);
 		}
 	}

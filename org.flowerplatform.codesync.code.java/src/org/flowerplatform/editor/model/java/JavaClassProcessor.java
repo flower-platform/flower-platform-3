@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
-import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;

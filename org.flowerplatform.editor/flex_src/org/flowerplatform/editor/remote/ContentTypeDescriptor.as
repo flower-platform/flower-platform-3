@@ -30,5 +30,10 @@ package  org.flowerplatform.editor.remote {
 		public var index:int;
 		public var contentType:String;
 		public var compatibleEditors:IList;
+		
+		/**
+		 * @author Cristina Constatinescu
+		 */
+		public var defaultEditor:String;
 	}
 }

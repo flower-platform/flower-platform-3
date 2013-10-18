@@ -56,3 +56,14 @@ function getQueryString() /* : String */ {
 		}
 	}
 }
+
+// Internet Explorer and Mozilla-based browsers refer to the Flash application 
+// object differently.
+// This function returns the appropriate reference, depending on the browser.
+function getFlexApp() {
+    if (navigator.appName.indexOf("Microsoft") !=-1) {
+        return window["FlexHostApp"];
+    } else {
+        return document["FlexHostApp"];
+    }
+}

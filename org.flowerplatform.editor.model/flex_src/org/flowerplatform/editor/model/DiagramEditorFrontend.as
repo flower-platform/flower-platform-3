@@ -18,15 +18,12 @@
  */
 package org.flowerplatform.editor.model {
 	import flash.events.Event;
-	import flash.events.FocusEvent;
-	import flash.events.MouseEvent;
-	import flash.geom.Rectangle;
 	
 	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
 	import mx.collections.IList;
-	import mx.containers.HBox;
 	import mx.containers.HDividedBox;
+	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
 	import mx.events.CollectionEvent;
 	import mx.events.FlexEvent;
 	import mx.managers.IFocusManagerComponent;
@@ -34,6 +31,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorFrontend;
+	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
@@ -44,6 +42,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
+	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
@@ -51,16 +50,46 @@ package org.flowerplatform.editor.model {
 
 	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider, ISelectionForServerProvider {
 	
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */ 
 		public var diagramShell:DiagramShell;
 		
 		protected var _viewHost:IViewHost;
 		
 		override protected function creationCompleteHandler(event:FlexEvent):void {
 			diagramShell.selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangedHandler);
+			// this event will be dispatched by dragToCreate tools to show create options to client
+			UIComponent(diagramShell.diagramRenderer).addEventListener(CreateModelEvent.SHOW_CREATE_OPTIONS, openMenuHandler);
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
-			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
+			if (!diagramShell.selectedItems.eventsCanBeIgnored) { // catch events only if necessary
+				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
+			}
+		}
+		
+		/**		
+		 * @author Cristina Constantinescu
+		 */ 
+		protected function openMenuHandler(e:CreateModelEvent):void {			
+			if (!viewHost.openMenu(stage.mouseX, stage.mouseY, e.context, "new")) { // no actions, call close logic
+				menuClosedHandler();
+			} else if (e.finishToolJobAfter) { // the tool must be deactivated after closing the menu
+				FlexGlobals.topLevelApplication.addEventListener(MenuClosedEvent.MENU_CLOSED, menuClosedHandler);
+			}
+		}
+		
+		/**		
+		 * @author Cristina Constantinescu
+		 */ 
+		protected function menuClosedHandler(e:MenuClosedEvent = null):void {
+			if (e != null) {
+				FlexGlobals.topLevelApplication.removeEventListener(MenuClosedEvent.MENU_CLOSED, menuClosedHandler);
+			}
+			// deactivate tool
+			diagramShell.mainToolFinishedItsJob();
 		}
 		
 		protected function getDiagramShellInstance():DiagramShell {
@@ -82,8 +111,10 @@ package org.flowerplatform.editor.model {
 			
 			diagramShell = getDiagramShellInstance();
 			diagramShell.diagramRenderer = diagramRenderer;
-						
-			super.createChildren();			
+									
+			super.createChildren();		
+			
+			toolbarsArea.addElement(new Toolbar());
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {

@@ -71,6 +71,7 @@ package org.flowerplatform.flexdiagram.tool {
 			if(!Multitouch.supportsGestureEvents) { // don't show cursor on touch screens
 				diagramRenderer.cursorManager.setCursor(_moveCursor, 2, -16, -16);
 			}
+			super.activateAsMainTool();
 		}
 				
 		override public function deactivateAsMainTool():void {			
@@ -82,6 +83,8 @@ package org.flowerplatform.flexdiagram.tool {
 			}
 			delete context.initialX;
 			delete context.initialY;
+			
+			super.deactivateAsMainTool();
 		}
 			
 		private function mouseMoveHandler(event:MouseEvent):void {

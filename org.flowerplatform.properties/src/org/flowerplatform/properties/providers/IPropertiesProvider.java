@@ -22,9 +22,9 @@ import java.util.List;
 
 import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
+
 /**
  * @author Tache Razvan Mihai
- * @return
  */
 public interface IPropertiesProvider {
 	

@@ -34,6 +34,8 @@ package org.flowerplatform.flexutil.context_menu {
 		
 		public var selection:IList;
 		
+		public var context:Object;
+		
 		public function FillContextMenuEvent() {
 			super(FILL_CONTEXT_MENU);
 		}
