@@ -68,5 +68,25 @@
             flowerPropertiesProviderClass="org.flowerplatform.eclipse.EclipseFlowerPropertiesProvider">
       </flowerPropertiesProvider>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?before=group.new">
+         <command
+               commandId="org.flowerplatform.eclipse.command1"
+               label="New Diagram!!!"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.flowerplatform.eclipse.action.NewDiagramHandler"
+            id="org.flowerplatform.eclipse.command1"
+            name="addDiagram!!!">
+      </command>
+   </extension>
 
 </plugin>

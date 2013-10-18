@@ -223,7 +223,8 @@ public class FlowerDiagramEditor extends EditorPart {
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// TODO CC: here we must append openResources command
-		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl());		
+		//browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl());
+		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl()+"?openResources=" + ((FileEditorInput) getEditorInput()).getFile().getFullPath());
 	}
 
 	@Override
