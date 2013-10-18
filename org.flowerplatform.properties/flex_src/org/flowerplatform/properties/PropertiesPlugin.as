@@ -1,10 +1,19 @@
 package org.flowerplatform.properties {
+	import flash.utils.Dictionary;
+	
+	import mx.collections.ArrayCollection;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.properties.ui.*;
 	import org.flowerplatform.properties.ui.PropertiesList;
 	import org.flowerplatform.properties.ui.PropertiesViewProvider;
 	import org.flowerplatform.properties.ui.Property;
+	import org.flowerplatform.properties.ui.property_renderer.BooleanPropertyRenderer;
+	import org.flowerplatform.properties.ui.property_renderer.StringPropertyRenderer;
+
+	import org.hamcrest.mxml.collection.Array;
 
 	public class PropertiesPlugin extends AbstractFlowerFlexPlugin {
 		
@@ -12,6 +21,8 @@ package org.flowerplatform.properties {
 		
 		public var propertyList:PropertiesList;
 
+		public var propertyRendererClasses:Dictionary = new Dictionary();
+		
 		public static function getInstance():PropertiesPlugin {
 			return INSTANCE;
 		}
@@ -28,6 +39,7 @@ package org.flowerplatform.properties {
 		
 		override public function start():void {
 			super.start();
+			registerPropertyProviders();
 		}
 		
 		override protected function registerMessageBundle():void {
@@ -38,5 +50,9 @@ package org.flowerplatform.properties {
 			registerClassAliasFromAnnotation(Property);
 		}
 		
+		private function registerPropertyProviders():void {
+			propertyRendererClasses["String"] = StringPropertyRenderer;
+			propertyRendererClasses["Boolean"] = BooleanPropertyRenderer;
+		}
 	}
 }
