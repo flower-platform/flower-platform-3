@@ -45,6 +45,8 @@ package org.flowerplatform.flexutil.global_menu {
 	
 	/**
 	 * Extends the existing MenuBar so it can use an actionProvider.
+	 * <p>Updating of the menu status when the selection changes is based
+	 * on the fact that the actions have the correct <strong>id</strong> set</p>
 	 * 
 	 * @author Mircea Negreanu
 	 */
@@ -94,17 +96,7 @@ package org.flowerplatform.flexutil.global_menu {
 				// now put a listener on the selection so we can update the menuBar when selection changes
 				FlexUtilGlobals.getInstance().selectionManager.addEventListener(
 					SelectionChangedEvent.SELECTION_CHANGED,
-					function(event:SelectionChangedEvent):void {
-						// update the selection for the actions in the menuBar
-						for each (var item:IMenuBarItemRenderer in menuBarItems) {
-							var action:IAction = item.data as IAction;
-							action.selection = event.selection;
-							item.enabled = action.enabled;
-							
-							MenuBarItem(item).invalidateProperties();
-							MenuBarItem(item).invalidateSize();
-						}
-					}
+					selectionChangedHandler
 				);
 				
 				dataProvider = getMenusList(selection, null);
@@ -112,7 +104,49 @@ package org.flowerplatform.flexutil.global_menu {
 		}
 		
 		/**
-		 * Utility function to build the list for menubar/menus from the actionProvider
+		 * Called when the selection changes.
+		 * <p>It obtains the current list of actions for the menu based on the curent selection
+		 * and regenerates the menu if the number, order of actions or the actions themselves are
+		 * different than the current actions on the menu</p>
+		 * <p>If the actions are the same, just updates the selection on the current actions and
+		 * asks the menu to update itself</p>
+		 * <p>The comparing of the actions is based on their <strong>id</strong> so it is vital for 
+		 * the correct function of this, that the action have the correct id</p>
+		 */
+		protected function selectionChangedHandler(event:SelectionChangedEvent):void {
+			// get the current list of actions based on the selection
+			// if it is different from the current list of actions (in menu)
+			// regenerate the menu
+			var menuActions:ArrayCollection = getMenusList(event.selection, null);
+			if (menuActions.length != menuBarItems.length) {
+				// different actions, regenerate the menu
+				trace("regenerate Menu");
+				dataProvider = menuActions;
+				return;
+			}
+			for (var i:int = 0; i < menuActions.length; i++) {
+				if (menuActions[i].id != ((menuBarItems[i] as IMenuBarItemRenderer).data as IAction).id) {
+					// different action, regenerate the menu
+					trace("regenerate Menu");
+					dataProvider = menuActions;
+					return;
+				}
+			}
+			
+			// update the selection for the actions in the menuBar
+			for each (var item:IMenuBarItemRenderer in menuBarItems) {
+				var action:IAction = item.data as IAction;
+				action.selection = event.selection;
+				item.enabled = action.enabled;
+				
+				MenuBarItem(item).invalidateProperties();
+				MenuBarItem(item).invalidateSize();
+			}
+		}
+		
+		/**
+		 * Utility function to build the list for menubar/menus from the actionProvider.
+		 * <p>Also sets the selection on the action so that the label/update/icon is the correct one</p>
 		 */ 
 		protected function getMenusList(selection:IList, parentId:String = null):ArrayCollection {
 			if (actionProvider != null) {
@@ -150,7 +184,7 @@ package org.flowerplatform.flexutil.global_menu {
 		}
 		
 		/**
-		 * Time for the menu to be hidden
+		 * Called when the current menu needs to hide.
 		 */
 		protected function menu_hideHandler(event:MenuEvent):void {
 			hideMenu();
