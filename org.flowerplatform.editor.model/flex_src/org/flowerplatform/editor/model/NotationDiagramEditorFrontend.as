@@ -39,7 +39,9 @@ package org.flowerplatform.editor.model
 	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexutil.action.IAction;
+
 	import org.flowerplatform.flexutil.action.IActionProvider;
+
 
 	/**
 	 * @author Cristian Spiescu

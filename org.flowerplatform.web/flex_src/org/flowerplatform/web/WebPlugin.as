@@ -22,6 +22,8 @@ package org.flowerplatform.web {
 	
 	import flash.events.MouseEvent;
 	
+	import mx.collections.ArrayCollection;
+	import mx.collections.IList;
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
@@ -30,6 +32,8 @@ package org.flowerplatform.web {
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -46,6 +50,8 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.security.ui.UserForm;
 	import org.flowerplatform.web.security.ui.UserFormViewProvider;
 	import org.flowerplatform.web.security.ui.UsersScreen;
+	
+	import org.flowerplatform.properties.PropertiesPlugin;
 	
 	import spark.components.Button;
 	
@@ -65,7 +71,7 @@ package org.flowerplatform.web {
 		public var currentPerspective:Perspective;
 		
 		public var perspectives:Vector.<Perspective> = new Vector.<Perspective>();
-		
+	
 		override public function preStart():void {
 			super.preStart();
 			webCommonPlugin.preStart();
@@ -102,7 +108,7 @@ package org.flowerplatform.web {
 			test_addButton("Organizations Screen", OrganizationsScreen, hBox);
 			test_addButton("Groups Screen", GroupsScreen, hBox);
 			test_addButton("Permissions Screen", PermissionsScreen, hBox);
-			
+
 			var btn:Button = new Button();
 			btn.label = "Logout";
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
@@ -165,6 +171,12 @@ package org.flowerplatform.web {
 				}
 			}
 			return null;
+		}
+		
+		/**
+		 * @author Tache Razvan Mihai
+		 */
+		override protected function registerClassAliases():void {
 		}
 	}
 }

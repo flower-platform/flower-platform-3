@@ -42,6 +42,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
+	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
@@ -73,6 +75,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
+	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	
 	/**
 	 * @author Cristi
@@ -173,6 +176,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteScenarioElementAction);
+
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
@@ -189,10 +193,18 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
 			registerClassAliasFromAnnotation(Bounds);
+
 			registerClassAliasFromAnnotation(ExpandableNode);
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);
+						
+			registerClassAliasFromAnnotation(DiagramSelectedItem);
+
 			registerClassAliasFromAnnotation(ContentAssistItem);
+		}
+		
+		override protected function registerMessageBundle():void {
+			// do nothing; this plugin doesn't have a .resources (yet)
 		}
 	}
 }
