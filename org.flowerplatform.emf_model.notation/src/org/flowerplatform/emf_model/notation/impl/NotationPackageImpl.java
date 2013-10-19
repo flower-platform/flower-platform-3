@@ -463,33 +463,6 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getMindMapNode_Expanded() {
-		return (EAttribute)mindMapNodeEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getMindMapNode_HasChildren() {
-		return (EAttribute)mindMapNodeEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getMindMapNode_Side() {
-		return (EAttribute)mindMapNodeEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 
 	public EClass getExpandableNode() {
 		return expandableNodeEClass;
@@ -590,9 +563,6 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		createEAttribute(noteEClass, NOTE__TEXT);
 
 		mindMapNodeEClass = createEClass(MIND_MAP_NODE);
-		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__EXPANDED);
-		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__HAS_CHILDREN);
-		createEAttribute(mindMapNodeEClass, MIND_MAP_NODE__SIDE);
 
 		expandableNodeEClass = createEClass(EXPANDABLE_NODE);
 		createEAttribute(expandableNodeEClass, EXPANDABLE_NODE__EXPANDED);
@@ -681,9 +651,6 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEAttribute(getNote_Text(), ecorePackage.getEString(), "text", null, 0, 1, Note.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mindMapNodeEClass, MindMapNode.class, "MindMapNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getMindMapNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMindMapNode_HasChildren(), ecorePackage.getEBoolean(), "hasChildren", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getMindMapNode_Side(), ecorePackage.getEInt(), "side", null, 0, 1, MindMapNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(expandableNodeEClass, ExpandableNode.class, "ExpandableNode", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getExpandableNode_Expanded(), ecorePackage.getEBoolean(), "expanded", null, 0, 1, ExpandableNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

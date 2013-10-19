@@ -890,40 +890,13 @@ public interface NotationPackage extends EPackage {
 	int MIND_MAP_NODE__LAYOUT_CONSTRAINT = NODE__LAYOUT_CONSTRAINT;
 
 	/**
-	 * The feature id for the '<em><b>Expanded</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIND_MAP_NODE__EXPANDED = NODE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Has Children</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIND_MAP_NODE__HAS_CHILDREN = NODE_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Side</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIND_MAP_NODE__SIDE = NODE_FEATURE_COUNT + 2;
-
-	/**
 	 * The number of structural features of the '<em>Mind Map Node</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MIND_MAP_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
+	int MIND_MAP_NODE_FEATURE_COUNT = NODE_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl <em>Expandable Node</em>}' class.
@@ -1375,39 +1348,6 @@ public interface NotationPackage extends EPackage {
 	EClass getMindMapNode();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.MindMapNode#isExpanded <em>Expanded</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Expanded</em>'.
-	 * @see org.flowerplatform.emf_model.notation.MindMapNode#isExpanded()
-	 * @see #getMindMapNode()
-	 * @generated
-	 */
-	EAttribute getMindMapNode_Expanded();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.MindMapNode#isHasChildren <em>Has Children</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Has Children</em>'.
-	 * @see org.flowerplatform.emf_model.notation.MindMapNode#isHasChildren()
-	 * @see #getMindMapNode()
-	 * @generated
-	 */
-	EAttribute getMindMapNode_HasChildren();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.MindMapNode#getSide <em>Side</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Side</em>'.
-	 * @see org.flowerplatform.emf_model.notation.MindMapNode#getSide()
-	 * @see #getMindMapNode()
-	 * @generated
-	 */
-	EAttribute getMindMapNode_Side();
-
-	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.ExpandableNode <em>Expandable Node</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1731,30 +1671,6 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EClass MIND_MAP_NODE = eINSTANCE.getMindMapNode();
-
-		/**
-		 * The meta object literal for the '<em><b>Expanded</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MIND_MAP_NODE__EXPANDED = eINSTANCE.getMindMapNode_Expanded();
-
-		/**
-		 * The meta object literal for the '<em><b>Has Children</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MIND_MAP_NODE__HAS_CHILDREN = eINSTANCE.getMindMapNode_HasChildren();
-
-		/**
-		 * The meta object literal for the '<em><b>Side</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute MIND_MAP_NODE__SIDE = eINSTANCE.getMindMapNode_Side();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.ExpandableNodeImpl <em>Expandable Node</em>}' class.
