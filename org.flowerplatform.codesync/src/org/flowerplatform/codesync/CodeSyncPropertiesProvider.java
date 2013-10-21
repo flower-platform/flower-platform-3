@@ -1,4 +1,4 @@
-package org.flowerplatform.codesync.properties;
+package org.flowerplatform.codesync;
 
 import java.util.ArrayList;
 import java.util.List;
