@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package org.flowerplatform.properties.ui {
+package org.flowerplatform.properties {
 	import mx.containers.HBox;
 	import mx.containers.VBox;
 	import mx.core.UIComponent;
@@ -34,7 +34,7 @@ package org.flowerplatform.properties.ui {
 	import spark.components.VGroup;
 	
 	/**
-	 * @author Tache Razvan Mihai
+	 * @author Razvan Tache
 	 */
 	public class PropertiesViewProvider implements IViewProvider {
 		

@@ -68,7 +68,11 @@ public class DiagramSelectedItem extends SelectedItem {
 	public void setEditorStatefulServiceId(String editorStatefulServiceId) {
 		this.editorStatefulServiceId = editorStatefulServiceId;
 	}
-
+	/**
+	 * @deprecated will be removed after the implementation of CodeSyncPropertiesProvider and the getFeatures
+	 * is finished
+	 * @return
+	 */
 	public DiagramEditorStatefulService getEditorStatefulService() {
 		return  (DiagramEditorStatefulService)CommunicationPlugin.getInstance().getServiceRegistry().getService(editorStatefulServiceId);
 	}

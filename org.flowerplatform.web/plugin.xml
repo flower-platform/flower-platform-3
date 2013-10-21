@@ -348,7 +348,7 @@
    <extension
          point="org.flowerplatform.communication.service">
       <service
-            id="propertiesProviderService"
+            id="propertiesService"
             serviceClass="org.flowerplatform.properties.PropertiesService">
       </service>
     </extension>

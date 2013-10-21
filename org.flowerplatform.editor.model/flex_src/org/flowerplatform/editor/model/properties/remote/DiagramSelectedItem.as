@@ -20,6 +20,9 @@ package org.flowerplatform.editor.model.properties.remote {
 	[Bindable]
 	[RemoteClass]
 	[SecureSWF(rename="off")]
+	/**
+	 * @author Razvan Tache
+	 */
 	public class DiagramSelectedItem {
 		/**
 		 * 

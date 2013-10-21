@@ -141,7 +141,9 @@ package org.flowerplatform.editor.model {
 		public function set viewHost(value:IViewHost):void {
 			_viewHost = value;
 		}
-		
+		/**
+		 * @author Razvan Tache
+		 */
 		public function convertSelectionToSelectionForServer(selection:IList):IList {
 			if (selection == null) 
 				return selection;

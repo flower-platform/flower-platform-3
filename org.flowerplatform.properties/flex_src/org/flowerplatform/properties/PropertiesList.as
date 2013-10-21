@@ -1,4 +1,4 @@
-package org.flowerplatform.properties.ui {
+package org.flowerplatform.properties {
 	import flash.events.FocusEvent;
 	
 	import mx.collections.ArrayList;
@@ -19,7 +19,7 @@ package org.flowerplatform.properties.ui {
 	import spark.events.IndexChangeEvent;
 	
 	/**
-	 * @author Tache Razvan Mihai
+	 * @author Razvan Tache
 	 */
 	public class PropertiesList extends List implements IViewContent {
 		
@@ -27,36 +27,35 @@ package org.flowerplatform.properties.ui {
 		
 		public var propertyList:PropertiesList;
 		
-		public var selectedItemsForProperties:Object;
+		public var selectionForServer:Object;
 		
 		public function PropertiesList() {
 			super();
-			itemRenderer = new ClassFactory(PropertyItemRenderer);
+			itemRenderer = new ClassFactory(PropertiesItemRenderer);
 			dataProvider = new ArrayList();
 			FlexUtilGlobals.getInstance().selectionManager.addEventListener(SelectionChangedEvent.SELECTION_CHANGED, function (event:SelectionChangedEvent):void {
 				// I did this, because the selection system, sends an empty selection when the diagram is opened
 				// so in case the event.selectionForServer is an empty array we stop the logic.
-				if(event.selectionForServer == null) 
-					return ;
-				if(event.selectionForServer.length == 0)
-					return ;
+				if (event.selectionForServer == null) 
+					return;
+				if (event.selectionForServer.length == 0)
+					return;
 				var myObject:Object;
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("propertiesProviderService",
+					new InvokeServiceMethodServerCommand("propertiesService",
 						"getProperties",[event.selectionForServer],
 						myObject,
 						function(object:Object):void {
-							dataProvider = object as IList;
-							selectedItemsForProperties = event.selectionForServer;
+							dataProvider = IList(object);
+							selectionForServer = event.selectionForServer;
 						}
 					));		
 			});
 		}
 		
-		public function getSelectedItemsForProperties():Object {
-			return selectedItemsForProperties;	
+		public function getSelectionForServer():Object {
+			return selectionForServer;	
 		}
-		
 		
 		public function get viewHost():IViewHost {
 			return _viewHost;
@@ -67,10 +66,6 @@ package org.flowerplatform.properties.ui {
 		}
 		
 		public function getActions(selection:IList):Vector.<IAction> {
-			return null;
-		}
-		
-		public function getSelection():IList {
 			return null;
 		}
 		

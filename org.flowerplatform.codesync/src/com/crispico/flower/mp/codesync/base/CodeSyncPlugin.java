@@ -47,7 +47,10 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.properties.PropertiesPlugin;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -84,6 +87,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected CodeSyncOperationsService codeSyncOperationService;
 	
+	private final static Logger logger = LoggerFactory.getLogger(CodeSyncPlugin.class);
+
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
 	
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;

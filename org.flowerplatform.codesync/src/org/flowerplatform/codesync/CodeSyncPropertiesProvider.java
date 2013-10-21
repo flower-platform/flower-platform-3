@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.properties;
+package org.flowerplatform.codesync;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.View;
-import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -54,9 +54,9 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, Property property) {
+	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
 		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
-		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(codeSyncElement, property.getName(), property.getValue());
+		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(codeSyncElement, propertyName, propertyValue);
 	}
 	
 	protected CodeSyncElement getCodeSyncElement(SelectedItem selectedItem) {
