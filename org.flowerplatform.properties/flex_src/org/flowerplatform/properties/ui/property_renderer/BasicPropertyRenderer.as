@@ -14,8 +14,7 @@ package org.flowerplatform.properties.ui.property_renderer {
 	public class BasicPropertyRenderer extends DataRenderer {
 						
 		public function BasicPropertyRenderer() {
-			percentWidth = 50;
-			percentHeight = 100;
+			super();
 		}
 		
 		override protected function focusOutHandler(event:FocusEvent):void {
@@ -34,5 +33,14 @@ package org.flowerplatform.properties.ui.property_renderer {
 				);
 			}	
 		}
+		
+		override protected function createChildren():void {
+			super.createChildren();
+			
+			percentWidth = 50;
+			percentHeight = 100;
+		}
+		
+		
 	}
 }
