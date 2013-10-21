@@ -227,7 +227,7 @@
    <extension
          point="org.flowerplatform.codesync.codeSyncElementFeatureConverter">
       <codeSyncElementFeatureConverter
-            codeSyncElementFeatureConverter="org.flowerplatform.codesync.code.javascript.feature_converter.JavaScriptElementFeatureConverter">
+            codeSyncElementFeatureConverter="org.flowerplatform.codesync.code.javascript.feature_converter.JavaScriptElementFeatureValueConverter">
       </codeSyncElementFeatureConverter>
    </extension>
 

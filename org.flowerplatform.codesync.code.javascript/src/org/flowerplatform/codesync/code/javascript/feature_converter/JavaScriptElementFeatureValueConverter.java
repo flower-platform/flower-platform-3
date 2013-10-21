@@ -18,8 +18,12 @@
  */
 package org.flowerplatform.codesync.code.javascript.feature_converter;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
@@ -29,7 +33,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
  * @author Mariana Gheorghe
  */
-public class JavaScriptElementFeatureConverter extends CodeSyncElementFeatureValueConverter {
+public class JavaScriptElementFeatureValueConverter extends CodeSyncElementFeatureValueConverter {
 
 	protected final String BACKBONE_SUPER_CLASS = "backboneSuperClass";
 	
@@ -55,7 +59,9 @@ public class JavaScriptElementFeatureConverter extends CodeSyncElementFeatureVal
 	protected final String FORM_ITEM_VALUE_EXPRESSION = "formItemValueExpression";
 	protected final String FORM_ITEM_EDIT_ID = "formItemEditId";
 	
-	public JavaScriptElementFeatureConverter() {
+	protected Map<String, String> parameterNames = new HashMap<String, String>();
+	
+	public JavaScriptElementFeatureValueConverter() {
 		super();
 		
 		addFeature(BACKBONE_SUPER_CLASS, RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
@@ -81,69 +87,51 @@ public class JavaScriptElementFeatureConverter extends CodeSyncElementFeatureVal
 		
 		addFeature(FORM_ITEM_VALUE_EXPRESSION, RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
 		addFeature(FORM_ITEM_EDIT_ID, RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
+		
+		parameterNames.put(BACKBONE_SUPER_CLASS, "superClass");
+		
+		parameterNames.put(JAVASCRIPT_ATTRIBUTE_DEFAULT_VALUE, "defaultValue");
+		
+		parameterNames.put(REQUIRE_ENTRY_VAR_NAME, "varName");
+		parameterNames.put(REQUIRE_ENTRY_DEPENDENCY_PATH, "dependencyPath");
+		
+		parameterNames.put(EVENTS_ATTRIBUTE_ENTRY_EVENT, "event");
+		parameterNames.put(EVENTS_ATTRIBUTE_ENTRY_SELECTOR, "selector");
+		parameterNames.put(EVENTS_ATRIBUTE_ENTRY_FUNCTION, "function");
+		
+		parameterNames.put(ROUTES_ATTRIBUTE_ENTRY_PATH, "path");
+		parameterNames.put(ROUTES_ATTRIBUTE_ENTRY_FUNCTION, "function");
+		
+		parameterNames.put(TABLE_ID, "tableId");
+		parameterNames.put(TABLE_HEADER_ROW_ID, "headerRowId");
+		
+		parameterNames.put(TABLE_ITEM_URL, "itemUrl");
+		
+		parameterNames.put(TABLE_ITEM_ENTRY_VALUE_EXPRESSION, "valueExpression");
+		
+		parameterNames.put(FORM_ITEM_VALUE_EXPRESSION, "valueExpression");
+		parameterNames.put(FORM_ITEM_EDIT_ID, "editId");
 	}
 
 	@Override
 	public Object getValue(CodeSyncElement codeSyncElement, String name) {
 		Object value = super.getValue(codeSyncElement, name);
-		switch (name) {
-			case BACKBONE_SUPER_CLASS: {
-				return getParameter(value, "superClass");
-			}
-			
-			case JAVASCRIPT_ATTRIBUTE_DEFAULT_VALUE: {
-				return getParameter(value, "defaultValue");
-			}
-			
-			case REQUIRE_ENTRY_VAR_NAME: {
-				return getParameter(value, "varName");
-			}
-			case REQUIRE_ENTRY_DEPENDENCY_PATH: {
-				return getParameter(value, "dependencyPath");
-			}
-			
-			case EVENTS_ATTRIBUTE_ENTRY_EVENT: {
-				return getParameter(value, "event");
-			}
-			case EVENTS_ATTRIBUTE_ENTRY_SELECTOR: {
-				return getParameter(value, "selector");
-			}
-			case EVENTS_ATRIBUTE_ENTRY_FUNCTION: {
-				return getParameter(value, "function");
-			}
-			
-			case ROUTES_ATTRIBUTE_ENTRY_PATH: {
-				return getParameter(value, "path");
-			}
-			case ROUTES_ATTRIBUTE_ENTRY_FUNCTION: {
-				return getParameter(value, "function");
-			}
-			
-			case TABLE_ID: {
-				return getParameter(value, "tableId");
-			}
-			case TABLE_HEADER_ROW_ID: {
-				return getParameter(value, "headerRowId");
-			}
-			
-			case TABLE_ITEM_URL: {
-				return getParameter(value, "itemUrl");
-			}
-			
-			case TABLE_ITEM_ENTRY_VALUE_EXPRESSION: {
-				return getParameter(value, "valueExpression");
-			}
-			
-			case FORM_ITEM_VALUE_EXPRESSION: {
-				return getParameter(value, "valueExpression");
-			}
-			case FORM_ITEM_EDIT_ID:	{
-				return getParameter(value, "editId");
-			}
+		if (parameterNames.containsKey(name)) {
+			return getParameter(value, parameterNames.get(name));
 		}
 		return value;
 	}
 	
+	@Override
+	public void setValue(CodeSyncElement codeSyncElement, String name, Object newValue) {
+		Object fromClient = newValue;
+		if (parameterNames.containsKey(name)) {
+			newValue = setParameter(super.getValue(codeSyncElement, name), parameterNames.get(name), (String) fromClient);
+		}
+		
+		super.setValue(codeSyncElement, name, newValue);
+	}
+
 	protected Object getParameter(Object value, String name) {
 		List<RegExAstNodeParameter> parameters = (List<RegExAstNodeParameter>) value;
 		if (parameters != null) {
@@ -154,6 +142,21 @@ public class JavaScriptElementFeatureConverter extends CodeSyncElementFeatureVal
 			}
 		}
 		return null;
+	}
+	
+	protected Object setParameter(Object value, String name, String parameterValue) {
+		List<RegExAstNodeParameter> parameters = (List<RegExAstNodeParameter>) 
+				EcoreUtil.copyAll((Collection<RegExAstNodeParameter>) value);
+		if (parameters != null) {
+			for (RegExAstNodeParameter parameter : parameters) {
+				if (parameter.getName().equals(name)) {
+					if (!parameter.getValue().equals(parameterValue)) {
+						parameter.setValue(parameterValue);
+					}
+				}
+			}
+		}
+		return parameters;
 	}
 		
 }
