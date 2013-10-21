@@ -24,7 +24,7 @@ package org.flowerplatform.properties.ui.property_renderer {
 		}
 		
 		protected function sendChangedValuesToServer(event:Event):void {
-			var selectionOfItems:Object = PropertiesList(PropertiesItemRenderer(parent).owner).getSelectedItemsForProperties();
+			var selectionOfItems:Object = PropertiesList(PropertiesItemRenderer(parent).owner).getSelectionForServer();
 			if (!data.readOnly) {
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(

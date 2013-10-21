@@ -27,7 +27,7 @@ package org.flowerplatform.properties.ui {
 		
 		public var propertyList:PropertiesList;
 		
-		public var selectedItemsForProperties:Object;
+		public var selectionForServer:Object;
 		
 		public function PropertiesList() {
 			super();
@@ -47,14 +47,14 @@ package org.flowerplatform.properties.ui {
 						myObject,
 						function(object:Object):void {
 							dataProvider = IList(object);
-							selectedItemsForProperties = event.selectionForServer;
+							selectionForServer = event.selectionForServer;
 						}
 					));		
 			});
 		}
 		
-		public function getSelectedItemsForProperties():Object {
-			return selectedItemsForProperties;	
+		public function getSelectionForServer():Object {
+			return selectionForServer;	
 		}
 		
 		
