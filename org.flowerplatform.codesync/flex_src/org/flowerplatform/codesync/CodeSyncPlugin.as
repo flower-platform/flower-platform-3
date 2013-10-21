@@ -22,19 +22,34 @@ package org.flowerplatform.codesync {
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorDescriptor;
 	
+	import mx.collections.ArrayCollection;
+	
+	import org.flowerplatform.codesync.action.AddElementActionProvider;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
+	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**
-	 * @author Cristi
+	 * @author Cristian Spiescu
+	 * @author Mariana Gheorghe
 	 */
 	public class CodeSyncPlugin extends AbstractFlowerFlexPlugin {
 		
 		public var codeSyncTreeActionProvider:CodeSyncTreeActionProvider = new CodeSyncTreeActionProvider();
+		
+		protected var codeSyncElementDescriptors:ArrayCollection;
+		
+		/**
+		 * @see computeAvailableChildrenForCodeSyncType()
+		 */
+		public var availableChildrenForCodeSyncType:Object;
 		
 		protected static var INSTANCE:CodeSyncPlugin;
 		
@@ -54,16 +69,79 @@ package org.flowerplatform.codesync {
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 		}
 		
+		override public function start():void {
+			super.start();
+			
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddElementActionProvider());
+		}
+		
+		
 		override protected function registerClassAliases():void {
+			registerClassAliasFromAnnotation(CodeSyncElementDescriptor);
+			
 			registerClassAliasFromAnnotation(CodeSyncAction);
 			registerClassAliasFromAnnotation(DiffTreeNode);
 			registerClassAliasFromAnnotation(DiffContextMenuEntry);
 			registerClassAliasFromAnnotation(DiffActionEntry);
 		}
 		
-		override protected function registerMessageBundle():void {
+		/**
+		 * @author Mariana Gheorghe
+		 */
+		override public function handleConnectedToServer():void {
+			if (!CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived) {
+				var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+					"codeSyncDiagramOperationsService",
+					"getCodeSyncElementDescriptors", 
+					null,
+					this,
+					setCodeSyncElementDescriptors);
+				CommunicationPlugin.getInstance().bridge.sendObject(command);
+			}
 		}
 		
+		protected function setCodeSyncElementDescriptors(codeSyncElementDescriptors:ArrayCollection):void {
+			this.codeSyncElementDescriptors = codeSyncElementDescriptors;
+			
+			computeAvailableChildrenForCodeSyncType();
+		}
+		
+		/**
+		 * Iterates the list of <code>CodeSyncElementDescriptor</code>s and computes a map from
+		 * codeSyncType -> available children codeSyncTypes.
+		 */
+		private function computeAvailableChildrenForCodeSyncType():void {
+			availableChildrenForCodeSyncType = new Object();
+			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
+				if (descriptor.codeSyncTypeCategories.length == 0) {
+					// top level elements
+					addChildCodeSyncTypeCategoryForParent("", descriptor);
+				} else {
+					for each (var codeSyncTypeCategory:String in descriptor.codeSyncTypeCategories) {
+						for each (var parentCodeSyncType:String in getParentsForChildCodeSyncTypeCategory(codeSyncTypeCategory)) {
+							addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor);	
+						}
+					}
+				}
+			}
+		}
+		
+		private function addChildCodeSyncTypeCategoryForParent(parent:String, child:CodeSyncElementDescriptor):void {
+			if (availableChildrenForCodeSyncType[parent] == null) {
+				availableChildrenForCodeSyncType[parent] = new ArrayCollection();
+			}
+			availableChildrenForCodeSyncType[parent].addItem(child);
+		}
+		
+		private function getParentsForChildCodeSyncTypeCategory(childCodeSyncTypeCategory:String):ArrayCollection {
+			var parents:ArrayCollection = new ArrayCollection();
+			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
+				if (descriptor.childrenCodeSyncTypeCategories.contains(childCodeSyncTypeCategory)) {
+					parents.addItem(descriptor.codeSyncType);
+				}
+			}
+			return parents;
+		}
 		
 	}
 }

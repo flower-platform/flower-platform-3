@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.flowerplatform.codesync.remote.CodeSyncDecoratorsProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 
@@ -55,7 +55,7 @@ public abstract class JavaClassChildProcessor extends CodeSyncDecoratorsProcesso
 	}
 	
 	protected Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
-		return CodeSyncPlugin.getInstance().getFeatureValue(codeSyncElement, feature);
+		return CodeSyncPlugin.getInstance().getCodeSyncOperationsService().getFeatureValue(codeSyncElement, feature);
 	}
 	
 	protected String encodeVisibility(CodeSyncElement object) {
@@ -86,8 +86,8 @@ public abstract class JavaClassChildProcessor extends CodeSyncDecoratorsProcesso
 				.getBundleContext().getBundle().getSymbolicName();
 
 		// decorate for visibility
-		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) CodeSyncPlugin
-				.getInstance().getFeatureValue(
+		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				.getFeatureValue(
 						object,
 						AstCacheCodePackage.eINSTANCE
 								.getModifiableElement_Modifiers());

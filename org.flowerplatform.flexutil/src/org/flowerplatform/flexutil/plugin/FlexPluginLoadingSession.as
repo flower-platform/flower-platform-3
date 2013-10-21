@@ -265,8 +265,6 @@ package org.flowerplatform.flexutil.plugin {
 						className = getClassNameForFlexPluginEntry(descriptor.url);
 						clazz = Class(getDefinitionByName(className));
 						descriptor.flexPlugin.start();
-						
-						flexPluginManager.flexPluginEntries.addItem(descriptor);
 					} catch (e:Object) {
 						descriptor.errorObject = e;
 					}

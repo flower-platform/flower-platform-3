@@ -31,8 +31,8 @@ public class JavaClassTitleProcessor extends JavaClassChildProcessor {
 
 	@Override
 	public String getLabel(EObject object, boolean forEditing) {
-		return (String) CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, 
-				CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		return (String) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				.getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 	}
 
 	@Override

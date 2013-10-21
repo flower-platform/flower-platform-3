@@ -73,7 +73,8 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 	
 	protected void processFeatureChangeForViewDetails(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		if (featureChange == null || featureChange.getFeature().equals(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name())) {
-			viewDetails.put("label", CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
+			viewDetails.put("label", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+					.getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
 		}
 	}
 	

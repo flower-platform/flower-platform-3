@@ -42,7 +42,9 @@ package org.flowerplatform.communication {
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClientLocalState;
 	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
 		
 	public class CommunicationPlugin extends AbstractFlowerFlexPlugin {
 		
@@ -97,6 +99,7 @@ package org.flowerplatform.communication {
 			
 			bridge = new BlazeDSBridge();
 			bridge.addEventListener(BridgeEvent.OBJECT_RECEIVED, handleReceivedObject);
+			bridge.addEventListener(BridgeEvent.CONNECTED, handleConnected);
 		}
 
 		override protected function registerMessageBundle():void {
@@ -109,6 +112,17 @@ package org.flowerplatform.communication {
 				return;
 			}
 			AbstractClientCommand(event.receivedObject).execute();
+		}
+		
+		/**
+		 * Notifies plugins that the client has connected to the server.
+		 * 
+		 * @author Mariana Gheorghe
+		 */
+		protected function handleConnected(event:BridgeEvent):void {
+			for each (var flexPluginDescriptor:FlexPluginDescriptor in FlexUtilGlobals.getInstance().flexPluginManager.flexPluginEntries) {
+				flexPluginDescriptor.flexPlugin.handleConnectedToServer();
+			}
 		}
 	}
 }

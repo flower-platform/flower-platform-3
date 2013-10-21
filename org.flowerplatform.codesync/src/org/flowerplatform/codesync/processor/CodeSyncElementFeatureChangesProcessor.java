@@ -121,8 +121,8 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	}
 	
 	protected List<EObject> getChildrenForCodeSyncElement(EObject object) {
-		return (List<EObject>) 
-				CodeSyncPlugin.getInstance().getFeatureValue(getCodeSyncElement(object), CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
+		return (List<EObject>) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				.getFeatureValue(getCodeSyncElement(object), CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
 	}
 	
 	protected List<Node> getChildrenForView(View view) {

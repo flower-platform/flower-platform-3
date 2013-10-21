@@ -35,6 +35,8 @@ package org.flowerplatform.editor.model.remote {
 		
 		public var scenarioTreeStatefulClient:ScenarioTreeStatefulClient;
 		
+		public const codeSyncDiagramOperationsServiceId:String = "codeSyncDiagramOperationsService";
+		
 		[RemoteInvocation]
 		public function updateNode(path:ArrayCollection, newNode:TreeNode, expandNode:Boolean = false, collapseNode:Boolean = false, selectNode:Boolean = false):void {			
 			scenarioTreeStatefulClient.updateNode(path, newNode, expandNode, collapseNode, selectNode);
@@ -43,6 +45,13 @@ package org.flowerplatform.editor.model.remote {
 		///////////////////////////////////////////////////////////////
 		// Proxies to service methods
 		///////////////////////////////////////////////////////////////
+		
+		public function service_addNew(viewIdOfParent:Object, codeSyncType:String, parameters:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId, 
+				"addNew",
+				[diagramId, viewIdOfParent, codeSyncType, parameters]));
+		}
 		
 		public function service_handleDragOnDiagram(pathsWithRoot:IList):void {
 			attemptUpdateContent(null, invokeServiceMethod("handleDragOnDiagram", [pathsWithRoot, diagramId], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
@@ -69,9 +78,9 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_operations", [viewId]));
 		}
 		
-		public function service_addNew(method:String, viewId:Object, label:String):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", method, [viewId, label]));
-		}
+//		public function service_addNew(method:String, viewId:Object, label:String):void {
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", method, [viewId, label]));
+//		}
 		
 		public function service_deleteView(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));

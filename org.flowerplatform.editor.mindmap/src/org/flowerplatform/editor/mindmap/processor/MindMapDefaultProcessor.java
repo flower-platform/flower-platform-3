@@ -72,23 +72,29 @@ public class MindMapDefaultProcessor implements IDiagrammableElementFeatureChang
 			if (object instanceof MindMapRoot) {
 				viewDetails.put("text", "Root");
 			} else {
-				viewDetails.put("text", CodeSyncPlugin.getInstance().getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
+				viewDetails.put("text", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+						.getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
 			}
 		}		
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_Expanded().equals(featureChange.getFeature())) {
-			viewDetails.put("expanded", CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Expanded()));
+			viewDetails.put("expanded", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Expanded()));
 		}		
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_Icons().equals(featureChange.getFeature())) {
-			viewDetails.put("icons", CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Icons()));
+			viewDetails.put("icons", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Icons()));
 		} 
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_MinWidth().equals(featureChange.getFeature())) {
-			viewDetails.put("minWidth", CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MinWidth()));
+			viewDetails.put("minWidth", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MinWidth()));
 		}
 		if (featureChange == null ||CodeSyncPackage.eINSTANCE.getMindMapElement_MaxWidth().equals(featureChange.getFeature())) {
-			viewDetails.put("maxWidth", CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MaxWidth()));
+			viewDetails.put("maxWidth", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MaxWidth()));
 		}	
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_Side().equals(featureChange.getFeature())) {
-			int side = (int) CodeSyncPlugin.getInstance().getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Side());
+			int side = (int) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Side());
 			if (featureChange == null && side == 0 && !(object instanceof MindMapRoot)) {
 				side = 1;
 			}

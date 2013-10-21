@@ -151,7 +151,7 @@ license-end
 				}
 								
 				var pluginUrls:Array = pluginUrlsAsString.split(",");
-				FlexPluginManager.getInstance().loadPlugins(new ArrayCollection(pluginUrls));
+				FlexUtilGlobals.getInstance().flexPluginManager.loadPlugins(new ArrayCollection(pluginUrls));
 			}
 		]]>
 	</fx:Script>

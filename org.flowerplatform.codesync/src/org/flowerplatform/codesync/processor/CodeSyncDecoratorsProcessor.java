@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.remote;
+package org.flowerplatform.codesync.processor;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.editor.model.change_processor.IconDiagrammableElementFeatureChangesProcessor;

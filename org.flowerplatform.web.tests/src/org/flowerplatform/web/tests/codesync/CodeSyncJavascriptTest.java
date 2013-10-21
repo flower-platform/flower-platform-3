@@ -29,12 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.parser.Parser;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
@@ -49,7 +45,6 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
-import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.View;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
@@ -61,7 +56,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
@@ -94,8 +88,8 @@ public class CodeSyncJavascriptTest {
 				.getService("codeSyncEditorStatefulService");
 		assertNotNull("CodeSyncEditorStatefulService was not registered", codeSyncEditorStatefulService);
 		
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/CSE.notation";
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/ACE.notation";
+		CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/CSE.notation";
+		CodeSyncPlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/ACE.notation";
 	}
 
 	@AfterClass

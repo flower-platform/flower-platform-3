@@ -49,7 +49,7 @@ package org.flowerplatform.editor.model.properties.remote {
 			this.diagramEditableResourcePath = diagramEditableResourcePath;
 			this.xmiID = xmiID;
 			this.editorStatefulServiceId = editorStatefulServiceId;
-			this.itemType = itemType;
+			this.itemType = "codeSyncElement";
 		}
 	}
 }
