@@ -53,15 +53,15 @@ public class PropertiesService {
 		return properties;
 	}
 	
-	public void setProperties(Property property, ArrayList<SelectedItem> selection) {
-		System.out.println("Changing propery " + property.getName() + ".Giving it the value of: " + property.getValue());
+	public void setProperties(ArrayList<SelectedItem> selection, String propertyName, Object propertyValue) {
+		System.out.println("Changing propery " + propertyName + ".Giving it the value of: " + propertyValue);
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// set the property
-			itemProvider.setProperty(selectedItem, property);
+			itemProvider.setProperty(selectedItem, propertyName, propertyValue);
 		}	
 	}
 }

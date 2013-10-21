@@ -37,7 +37,7 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, Property property) {
+	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
 		
 	}
 

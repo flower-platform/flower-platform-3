@@ -57,7 +57,6 @@ package org.flowerplatform.properties {
 			return selectionForServer;	
 		}
 		
-		
 		public function get viewHost():IViewHost {
 			return _viewHost;
 		}

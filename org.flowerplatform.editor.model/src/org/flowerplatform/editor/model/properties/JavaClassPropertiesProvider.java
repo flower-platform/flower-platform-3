@@ -60,10 +60,9 @@ public class JavaClassPropertiesProvider implements IPropertiesProvider {
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, Property property) {
+	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
 		System.out.println("Changing the item with id " + ((DiagramSelectedItem) selectedItem).getXmiID());
-		System.out.println("Setting the property: " + property.getName() + " with the value " + property.getValue() );
-
+		System.out.println("Setting the property: " + propertyName + " with the value " + propertyValue );
 	}
 
 }

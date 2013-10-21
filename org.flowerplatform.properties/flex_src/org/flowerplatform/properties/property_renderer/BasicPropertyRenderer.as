@@ -28,9 +28,9 @@ package org.flowerplatform.properties.property_renderer {
 			if (!data.readOnly) {
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
-						"propertiesProviderService",
+						"propertiesService",
 						"setProperties",
-						[data, selectionOfItems]
+						[selectionOfItems, data.name, data.value]
 					)
 				);
 			}	
