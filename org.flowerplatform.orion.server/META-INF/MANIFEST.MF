@@ -20,5 +20,7 @@ Require-Bundle: org.eclipse.equinox.http.registry,
  org.eclipse.core.filesystem,
  org.eclipse.orion.server.core,
  org.flowerplatform.editor.model,
- org.eclipse.emf.common
+ org.eclipse.emf.common,
+ org.flowerplatform.codesync.code.java,
+ org.flowerplatform.codesync
 Bundle-Activator: org.flowerplatform.orion.server.OrionPlugin

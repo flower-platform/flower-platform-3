@@ -23,6 +23,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
+	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.action.ActionBase;
@@ -40,12 +41,12 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		override public function run():void {
-			var pathsWithRoot:ArrayList = new ArrayList();
+			var paths:ArrayList = new ArrayList();
 			for (var i:int = 0; i < selection.length; i++) {
-				var treeNode:TreeNode = TreeNode(selection.getItemAt(i));
-				pathsWithRoot.addItem(EditorPlugin.getInstance().getEditableResourcePathFromTreeNode(treeNode));
+				var treeNode:TreeNode = TreeNode(selection.getItemAt(i));				
+				paths.addItem(EditorPlugin.getInstance().getEditableResourcePathFromTreeNode(treeNode));
 			}
-			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_handleDragOnDiagram(pathsWithRoot);
+			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_handleDragOnDiagram(paths);
 		}
 		
 	}

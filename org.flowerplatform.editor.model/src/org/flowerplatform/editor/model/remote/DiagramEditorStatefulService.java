@@ -349,15 +349,11 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	///////////////////////////////////////////////////////////////
 	
 	@RemoteInvocation
-	public void handleDragOnDiagram(StatefulServiceInvocationContext context, List<List<PathFragment>> pathsWithRoot, String diagramId) {
+	public void handleDragOnDiagram(StatefulServiceInvocationContext context, List<String> paths, String diagramId) {
 		DiagramEditableResource editableResource = getDiagramEditableResource(context);
 		Diagram diagram = (Diagram) editableResource.getEObjectById(diagramId);
 		
-//		List<Object> objects = new ArrayList<Object>(pathsWithRoot.size());
-//		for (List<PathFragment> pathWithRoot : pathsWithRoot) {
-//			objects.add(GenericTreeStatefulService.getNodeByPathFor(pathWithRoot, null));
-//		}
-		EditorModelPlugin.getInstance().getComposedDragOnDiagramHandler().handleDragOnDiagram(pathsWithRoot, diagram, null, null, context.getCommunicationChannel());
+		EditorModelPlugin.getInstance().getComposedDragOnDiagramHandler().handleDragOnDiagram(paths, diagram, null, null, context.getCommunicationChannel());
 	}
 	
 	/**

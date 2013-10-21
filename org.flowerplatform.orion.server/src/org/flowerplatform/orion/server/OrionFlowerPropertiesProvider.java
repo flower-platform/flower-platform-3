@@ -4,6 +4,9 @@ import java.io.InputStream;
 
 import org.flowerplatform.common.IFlowerPropertiesProvider;
 
+/**
+ * @author Cristina Constantinescu
+ */
 public class OrionFlowerPropertiesProvider implements IFlowerPropertiesProvider {
 
 	@Override

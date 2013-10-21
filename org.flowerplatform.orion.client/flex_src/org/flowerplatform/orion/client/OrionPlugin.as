@@ -19,6 +19,8 @@ package org.flowerplatform.orion.client {
 	import org.flowerplatform.communication.command.HelloServerCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
@@ -32,7 +34,9 @@ package org.flowerplatform.orion.client {
 			return INSTANCE;
 		}
 		
-		public static const OPEN_RESOURCES:String = "openResourcesFromOrion";
+		public static const OPEN_RESOURCES:String = "orionOpenResources";
+		public static const CREATE_DIAGRAM:String = "orionCreateDiagram";
+		public static const ADD_TO_DIAGRAM:String = "orionAddToDiagram";
 		
 		override public function preStart():void {
 			super.preStart();
@@ -42,6 +46,8 @@ package org.flowerplatform.orion.client {
 			}
 			INSTANCE = this;
 			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;
+			CommonPlugin.getInstance().linkHandlers[CREATE_DIAGRAM] = this;
+			CommonPlugin.getInstance().linkHandlers[ADD_TO_DIAGRAM] = this;
 		}
 		
 		override public function start():void {
@@ -95,7 +101,21 @@ package org.flowerplatform.orion.client {
 					new InvokeServiceMethodServerCommand(
 						"orionOperationsService", "navigateFriendlyEditableResourcePathList", 
 						[parameters, 0]));
-			}		
+			} else if (command == CREATE_DIAGRAM) {
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"orionOperationsService", "createDiagram", 
+						[parameters]));
+			} else if (command == ADD_TO_DIAGRAM) {
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"orionOperationsService", "getPaths", 
+						[parameters], this, addToDiagram));
+			}
+		}
+		
+		public function addToDiagram(paths:ArrayCollection):void {
+			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_handleDragOnDiagram(paths);
 		}
 	}
 }

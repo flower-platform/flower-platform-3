@@ -1,10 +1,10 @@
 define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 'orion/bootstrap', 'orion/status', 'orion/progress', 'orion/commandRegistry', 'orion/fileClient', 'orion/operationsClient',
 	        'orion/searchClient', 'orion/globalCommands', 'orion/URITemplate', 'orion/PageUtil', 'orion/PageLinks', 'orion/selection', 'orion/contentTypes', 'orion/fileCommands', 'orion/extensionCommands',
 	        'orion/explorers/explorer-table', 'orion/explorers/navigatorRenderer', 'orion/fileUtils', 'orion/keyBinding', 'orion/outliner', 'orion/inputManager', 
-	        'orion/folderView', 'orion/editorView', 'orion/blameAnnotations', 'orion/problems', 'orion/EventTarget', 'orion/sidebar', 'orion/i18nUtil', 'orion/URL-shim', 'flowerplatform/commons'], 
+	        'orion/folderView', 'orion/editorView', 'orion/blameAnnotations', 'orion/problems', 'orion/EventTarget', 'orion/sidebar', 'orion/i18nUtil', 'orion/commands', 'orion/URL-shim', 'flowerplatform/commons'], 
 			function(messages, require, lib, mBootstrap, mStatus, mProgress, mCommandRegistry, mFileClient, mOperationsClient, mSearchClient, 
 			mGlobalCommands, URITemplate, PageUtil, PageLinks, mSelection, mContentTypes, mFileCommands, mExtensionCommands, mExplorerTable, mNavigatorRenderer, mFileUtils, 
-			KeyBinding, mOutliner, mInputManager, mFolderView, mEditorView, mBlameAnnotation, mProblems, EventTarget, Sidebar, i18nUtil) {
+			KeyBinding, mOutliner, mInputManager, mFolderView, mEditorView, mBlameAnnotation, mProblems, EventTarget, Sidebar, i18nUtil, mCommands) {
 
 	mBootstrap.startup().then(function(core) {
 		var serviceRegistry = core.serviceRegistry;
@@ -27,7 +27,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		var sidebarDomNode = lib.node("sidebar"), //$NON-NLS-0$
 		sidebarToolbar = lib.node("sidebarToolbar"), //$NON-NLS-0$
 		editorDomNode = lib.node("editor"); //$NON-NLS-0$
-
+				
 		var editor, inputManager, folderView, editorView;
 		function renderToolbars(metadata) {
 			var toolbar = lib.node("pageActions"); //$NON-NLS-0$
@@ -67,7 +67,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 				}
 			});
 		};
-	
+			
 		inputManager = new mInputManager.InputManager({
 			serviceRegistry: serviceRegistry,
 			fileClient: fileClient,
@@ -91,9 +91,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		});
 		editor = editorView.editor;
 		inputManager.editor = editor;
-	
-		loadContent();
-		
+							
 		inputManager.addEventListener("InputChanged", function(evt) { //$NON-NLS-0$
 			var metadata = evt.metadata;
 			renderToolbars(metadata);
@@ -167,7 +165,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		editor.addEventListener("DirtyChanged", function(evt) { //$NON-NLS-0$
 			mGlobalCommands.setDirtyIndicator(editor.isDirty());
 		});
-	
+			
 		selection.addEventListener("selectionChanged", function(event) { //$NON-NLS-0$		
 			inputManager.setInput(event.selection);
 		});
@@ -189,44 +187,36 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		};
 			
 		var orionHome = PageLinks.getOrionHome();
-		 var fileMetadata = null;
-		 
-		function loadContent() {
+		var fileMetadata = null;
+		 			
+		function openEditor(metadata) {
+			if (metadata && metadata.Directory) {
+				return;
+			}	
+			fileMetadata = metadata;
+			
 			var foundContent = false;
-			var params = PageUtil.matchResourceParameters(window.location.href);
-			var nonHash = window.location.href.split('#')[0]; //$NON-NLS-0$
-			// TODO: should not be necessary, see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=373450
+			var params = PageUtil.matchResourceParameters(window.location.href);	
 			var locationObject = {OrionHome: orionHome, Location: params.resource};
-			if (params.contentProvider) {
-				// Note that the shape of the "orion.page.content" extension is not in any shape or form that could be considered final.
-				// We've included it to enable experimentation. Please provide feedback on IRC or bugzilla.
-		
-				// The shape of the extension is:
-				// info - information about the extension (object)
-				//		required attribute: name - the name to be used in the page title and orion page heading
-				//		required attribute: id - the id of the content contribution
-				//		required attribute: uriTemplate - a uriTemplate that expands to the URL of the content to be placed in a content iframe
-				//		optional attribute: saveToken - if specified, this token (or array of tokens) should be used to find a content URL provided inside a save URL
-				//		optional attribute: saveTokenTerminator - if specified this terminator (or array of terminators) should be used to find the 
-				//			end of a content URL provided in a save URL
+			if (params.contentProvider) {				
 				var contentProviders = serviceRegistry.getServiceReferences("orion.page.content"); //$NON-NLS-0$
 				for (var i=0; i<contentProviders.length; i++) {
 					// Exclude any navigation commands themselves, since we are the navigator.
-					var id = contentProviders[i].getProperty("id"); //$NON-NLS-0$
+					var id = contentProviders[i].getProperty("id"); //$NON-NLS-0$					
 					if (id === params.contentProvider) {
-						var impl = serviceRegistry.getService(contentProviders[i]);
+						// iFrame exists, only open selected resource
+						if (lib.node(id)) {
+							getFlowerPlatformApp().handleLink("orionOpenResources=" + metadata.Location);
+							return;
+						}						
+						// open iFrame						
 						var info = {};
 						var propertyNames = contentProviders[i].getPropertyKeys();
 						for (var j = 0; j < propertyNames.length; j++) {
 							info[propertyNames[j]] = contentProviders[i].getProperty(propertyNames[j]);
 						}
 						foundContent = true;
-						locationObject.ExitURL = orionHome+"/content/exit.html"; //$NON-NLS-0$
-						if (info.saveToken) {
-							// we need to set up a SaveURL for the iframe to use.
-							locationObject.SaveURL = orionHome+"/content/saveHook.html#" + params.resource + ",contentProvider=" + params.contentProvider + ","; //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
-						}
-												
+																		
 						var parent = lib.node("flowerEditor"); //$NON-NLS-0$
 						var uriTemplate = new URITemplate(info.uriTemplate);
 						var href = uriTemplate.expand(locationObject);
@@ -263,19 +253,66 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 			}
 		}
 			
-        function getFlowerPlatformApp() {
+		function getFlowerPlatformApp() {
         	var iframe = document.getElementById('orion.flower.content');  
         	var contDoc = iframe.contentDocument || iframe.contentWindow.document;
         	        	
         	return contDoc.getElementById("FlexHostApp");        	
         } 
-               
-        function openEditor(metadata) {
-        	fileMetadata = metadata;
-        	if (metadata && metadata.Directory) {
-				return;
-			}			
-			getFlowerPlatformApp().handleLink("openResourcesFromOrion=" + metadata.Location);		
-        }
+                 
+        function forceSingleItem(item) {
+			if (!item) {
+				return {};
+			}
+			if (Array.isArray(item)) {
+				if (item.length === 1) {
+					item = item[0];
+				} else {
+					item = {};
+				}
+			}
+			return item;
+		}    
+      
+        var newDiagramCommand = new mCommands.Command({
+			   name: "New Diagram",
+			   tooltip: "Create a new flower diagram",
+			   imageClass: "core-sprite-new_folder",
+			   id: "flower.newDiagram",			  
+			   callback: function(data) {				  
+				   var parentFolder = forceSingleItem(data.items);
+				   getFlowerPlatformApp().handleLink("orionCreateDiagram=" + parentFolder.Location);
+			   },
+			   visibleWhen: function(item) {
+				   item = forceSingleItem(item);
+				   return item.Directory && !mFileUtils.isAtRoot(item.Location);
+			   }});
+		commandRegistry.addCommand(newDiagramCommand);
+		commandRegistry.registerCommandContribution(sidebarToolbar.id + "childModes" + "New", "flower.newDiagram", 100, "orion.miniNavNewGroup"); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+		
+		 var addToDiagramCommand = new mCommands.Command({
+			   name: "Add to Diagram",			  
+			   imageClass: "core-sprite-new_folder",
+			   id: "flower.addToDiagram",			   
+			   callback: function(data) {
+				   var parameters = "";
+				   data.items.forEach(function(item) {						
+						parameters = parameters + item.Location + ",";
+					});
+				   parameters = parameters.slice(0, -1); // remove last ,
+				   getFlowerPlatformApp().handleLink("orionAddToDiagram=" + parameters);			   			 
+			   },
+			   visibleWhen: function(item) {
+				   item = forceSingleItem(item);
+				   return !item.Directory && !mFileUtils.isAtRoot(item.Location);
+			   }});
+		commandRegistry.addCommand(addToDiagramCommand);
+		commandRegistry.registerCommandContribution(sidebarToolbar.id + "childModes" + "New", "flower.addToDiagram", 200, "orion.miniNavNewGroup"); //$NON-NLS-2$ //$NON-NLS-1$ //$NON-NLS-0$
+				
+        serviceRegistry.getService("miniNavFileSelection").addEventListener("selectionChanged", function(event) {
+        	commandRegistry.destroy(sidebarToolbar.id + "childModes" + "New");
+        	commandRegistry.renderCommands(sidebarToolbar.id + "childModes" + "New", sidebarToolbar.id + "childModes" + "New", event.selections, lib.node("sidebarinnerTree"), "tool");
+        });
+		
 	});
 });

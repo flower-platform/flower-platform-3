@@ -47,24 +47,17 @@ package org.flowerplatform.editor.model {
 			return "org.flowerplatform.editor.diagram";
 		}
 		
-		public override function getIcon(viewLayoutData:ViewLayoutData=null):Object {	
-			//			var result:Object = super.getIcon(viewLayoutData);
-			//			if (result != null) {
-			//				return result;
-			//			} else {
-			//				return EditorTextPlugin.getInstance().getResourceUrl("images/file.gif");
-			//			}
-			return null;
+		public override function getIcon(viewLayoutData:ViewLayoutData=null):Object {			
+			return EditorModelPlugin.getInstance().getResourceUrl("images/icon_flower.gif");			
 		}
 		
 		public override function getTitle(viewLayoutData:ViewLayoutData=null):String {	
-			//			if (viewLayoutData == null) {
-			//				return EditorTextPlugin.getInstance().getMessage("editor.text.name");
-			//			} else {
-			//				return viewLayoutData.customData.slice(viewLayoutData.customData.lastIndexOf("/") + 1);
-			//			}
-			//			return null;
-			return "diagram ...";
+			if (viewLayoutData == null) {
+				return EditorModelPlugin.getInstance().getMessage("editor.model.name");
+			} else {
+				return viewLayoutData.customData.slice(viewLayoutData.customData.lastIndexOf("/") + 1);
+			}
+			return null;			
 		}
 	}
 }
