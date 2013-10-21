@@ -33,9 +33,9 @@ license-end
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
-			import org.flowerplatform.flexutil.samples.renderer.MultipleIconItemRendererSample;
 			import org.flowerplatform.flexutil.action.ActionBase;
 			import org.flowerplatform.flexutil.action.VectorActionProvider;
+			import org.flowerplatform.flexutil.samples.renderer.MultipleIconItemRendererSample;
 
 			
 			private function creationCompleteHandler():void {
@@ -51,6 +51,10 @@ license-end
 				action = new SampleActionGlobalMenuC1();
 				action.id = "secondaction";
 				SampleActionGlobalMenuC1(action).disableFor = "Flash";
+				actionProvider.getActions(null).push(action);
+				
+				action = new SampleActionGlobalMenuC1();
+				action.id = "thirdaction";
 				actionProvider.getActions(null).push(action);
 				
 				// second level
@@ -70,6 +74,12 @@ license-end
 				action.label = "Third SubAction";
 				action.parentId = "secondaction";
 				SampleActionGlobalMenu1(action).hideOn = "ColdFusion";
+				actionProvider.getActions(null).push(action);
+				
+				action = new SampleActionGlobalMenu1();
+				action.label = "Fourth SubAction";
+				action.parentId = "thirdaction";
+				SampleActionGlobalMenu1(action).showOn = "ColdFusion";
 				actionProvider.getActions(null).push(action);
 				
 				// Third level (only for Second SubAction)

@@ -203,6 +203,7 @@ package org.flowerplatform.web {
 		}
 
 		/**
+		 * @author Mariana
 		 * @author Mircea Negreanu
 		 */
 		private function showScreen(cls:Class):void {

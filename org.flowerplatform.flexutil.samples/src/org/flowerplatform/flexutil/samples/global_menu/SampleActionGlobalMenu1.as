@@ -29,19 +29,40 @@ package org.flowerplatform.flexutil.samples.global_menu
 	 */
 	public class SampleActionGlobalMenu1 extends ActionBase {
 		public var hideOn:String = null;
+		public var showOn:String = null;
 		
 		public function SampleActionGlobalMenu1() {
 			super();
 		}
 		
+		/**
+		 * <ul>
+		 * 	<li>if hideOn is set: if selection is equal to hideOn return false, else return true</li>
+		 *  <li>if showOn is set: if selection is equal to showOn return true, else return false</li>
+		 * 	<li>return super.visible</li>
+		 * </ul>
+		 */
 		override public function get visible():Boolean {
-			if (hideOn == null || selection == null || selection.length == 0) {
+			if (selection == null || selection.length == 0) {
 				return super.visible;
-			} else if (selection.getItemAt(0) == hideOn) {
+			}
+			if (hideOn == null && showOn == null) {
+				return super.visible;
+			} else if (hideOn != null) {
+				if (selection.getItemAt(0) == hideOn) {
+					return false;
+				}
+				
+				return true;
+			} else if (showOn != null) {
+				if (selection.getItemAt(0) == showOn) {
+					return true;
+				}
+				
 				return false;
 			}
 			
-			return true;
+			return super.visible;
 		}
 		
 		override public function get label():String {

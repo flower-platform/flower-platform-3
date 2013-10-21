@@ -47,8 +47,6 @@ package org.flowerplatform.flexutil.global_menu {
 	
 	/**
 	 * Extends the existing MenuBar so it can use an actionProvider.
-	 * <p>Updating of the menu status when the selection changes is based
-	 * on the fact that the actions have the correct <strong>id</strong> set</p>
 	 * 
 	 * @author Mircea Negreanu
 	 */
@@ -129,8 +127,6 @@ package org.flowerplatform.flexutil.global_menu {
 		 * different than the current actions on the menu bar</p>
 		 * <p>If the actions are the same, just updates the selection on the current actions and
 		 * asks the menu to update itself</p>
-		 * <p>The comparing of the actions is based on their <strong>id</strong> so it is vital for 
-		 * the correct function of this, that the action have the correct id</p>
 		 */
 		protected function selectionChangedHandler(event:SelectionChangedEvent):void {
 			// no sense in continuing if no actionProvider
@@ -147,7 +143,7 @@ package org.flowerplatform.flexutil.global_menu {
 				return;
 			}
 			for (var i:int = 0; i < menuActions.length; i++) {
-				if (menuActions[i].id != ((menuBarItems[i] as IMenuBarItemRenderer).data as IAction).id) {
+				if (menuActions[i] != ((menuBarItems[i] as IMenuBarItemRenderer).data as IAction)) {
 					// different action, regenerate the menu
 					dataProvider = menuActions;
 					return;
@@ -265,6 +261,11 @@ package org.flowerplatform.flexutil.global_menu {
 					pt = (menuBarItems[selectedIndex] as DisplayObject).localToGlobal(pt);
 					pt.y += menuBarItems[selectedIndex].height + 1;
 
+					// Because of the rtl fix below, we need that menu to not have any animation
+					if (layoutDirection == LayoutDirection.RTL) {
+						menu.setStyle("openDuration", 0);
+					}
+					
 					// show the menu so we can have its ExplicitOrMeasuredWidth and ExplicitOrMeasuredHeight
 					// so we can check if it is inside or outside the visible screen, and to apply the 
 					// correction for RTL
