@@ -42,6 +42,8 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
@@ -78,6 +80,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	
 	protected static CodeSyncCodePlugin INSTANCE;
 	
+	private final static Logger logger = LoggerFactory.getLogger(CodeSyncCodePlugin.class);
+
 	public static CodeSyncCodePlugin getInstance() {
 		return INSTANCE;
 	}

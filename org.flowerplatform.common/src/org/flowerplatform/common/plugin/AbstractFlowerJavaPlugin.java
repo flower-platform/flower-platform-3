@@ -38,8 +38,8 @@ public abstract class AbstractFlowerJavaPlugin implements BundleActivator {
 	public static final String PUBLIC_RESOURCES_DIR = "public-resources";
 	
 	public static final String MESSAGES_FILE = "messages.properties";
-	
-	protected final static Logger logger = LoggerFactory.getLogger(AbstractFlowerJavaPlugin.class);
+
+	private final static Logger logger = LoggerFactory.getLogger(AbstractFlowerJavaPlugin.class);
 	
 	private BundleContext bundleContext;
 	

@@ -26,12 +26,16 @@ import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * @author Razvan Tache
  */
 public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 
 	protected static PropertiesPlugin INSTANCE;
+
+	private final static Logger logger = LoggerFactory.getLogger(PropertiesPlugin.class);
 
 	private HashMap<String, IPropertiesProvider> propertiesProviders;
 

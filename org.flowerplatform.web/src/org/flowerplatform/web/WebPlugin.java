@@ -42,6 +42,8 @@ import org.flowerplatform.web.security.service.OrganizationService;
 import org.flowerplatform.web.security.service.PermissionService;
 import org.flowerplatform.web.security.service.UserService;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
@@ -54,6 +56,8 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 
 	protected static WebPlugin INSTANCE;
 	
+	private final static Logger logger = LoggerFactory.getLogger(WebPlugin.class);
+
 	private List<GenericTreeStatefulService>treeStatefulServicesDisplayingWorkingDirectoryContent = new ArrayList<GenericTreeStatefulService>();
 
 	public static WebPlugin getInstance() {
