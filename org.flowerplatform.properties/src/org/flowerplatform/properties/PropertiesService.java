@@ -46,10 +46,8 @@ public class PropertiesService {
 			if (properties.isEmpty()) {
 				properties.addAll(newProperties);
 			} else {
-				for (Property property:properties) {
-					// select common property, server logic to be discused
-				}
-				properties.addAll(newProperties);
+				// select common property, server logic to be discused
+				throw new UnsupportedOperationException();
 			}
 		}	
 		return properties;
