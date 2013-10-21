@@ -94,14 +94,6 @@ package org.flowerplatform.web {
 			ToolTipManager.showDelay = 0;
 			ToolTipManager.toolTipClass = HTMLToolTip;
 			
-			var workbench:Workbench = new Workbench();
-			FlexUtilGlobals.getInstance().workbench = workbench;
-			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
-			workbench.percentHeight = 100;
-			workbench.percentWidth = 100;
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
-			
 			var hBox:HBox = new HBox();
 			test_addButton("User Form", UserForm, hBox);
 			test_addButton("Users Screen", UsersScreen, hBox);
@@ -131,7 +123,6 @@ package org.flowerplatform.web {
 			hBox.addChild(btn);
 						
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
-					
 			
 			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 			
