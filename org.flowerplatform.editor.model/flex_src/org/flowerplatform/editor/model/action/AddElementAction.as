@@ -13,9 +13,7 @@ package org.flowerplatform.editor.model.action {
 	 * MUST BE REMOVED.
 	 * @author Cristina Constantinescu
 	 */ 
-	public class AddElementAction extends ActionBase implements IDiagramShellAware {
-		
-		private var _diagramShell:DiagramShell;
+	public class AddElementAction extends NewModelAction  {
 		
 		public function AddElementAction() {
 			super();
@@ -23,27 +21,20 @@ package org.flowerplatform.editor.model.action {
 			parentId = "new";
 			preferShowOnActionBar = true;
 		}
-		
-		public function get diagramShell():DiagramShell {			
-			return _diagramShell;
-		}
-		
-		public function set diagramShell(value:DiagramShell):void {
-			_diagramShell = value;
-		}
 				
 		override public function get visible():Boolean {			
 			return selection == null || selection.length == 0;
 		}
 		
-		override public function run():void {
-			if (context != null) { 
-				if (context.hasOwnProperty("rectangle")) { // exists for drag to create on web
-					trace(context.rectangle);
-				} else { // context x, y exists on mobile
-				}
-			}
-		}
+//		override public function run():void {
+//			super.run();
+//			if (context != null) { 
+//				if (context.hasOwnProperty("rectangle")) { // exists for drag to create on web
+//					trace(context.rectangle);
+//				} else { // context x, y exists on mobile
+//				}
+//			}
+//		}
 		
 	}
 }

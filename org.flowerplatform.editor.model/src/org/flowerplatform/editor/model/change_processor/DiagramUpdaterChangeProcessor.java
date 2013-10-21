@@ -223,9 +223,9 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
 				if (processors != null) {
 					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-						if (view.getDiagrammableElement() != null) {
+//						if (view.getDiagrammableElement() != null) {
 							processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);	
-						}
+//						}
 					}
 				}
 			}			

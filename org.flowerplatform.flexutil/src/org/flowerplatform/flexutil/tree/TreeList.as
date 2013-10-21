@@ -75,12 +75,21 @@ package org.flowerplatform.flexutil.tree {
 			invalidateProperties();
 		}
 		
-		override protected function commitProperties():void {
+		/**
+		 * @author Cristian Spiescu
+		 * @author Cristina Constantinescu
+		 */ 
+		override protected function commitProperties():void {	
+			// When working with selectedIndices (e.g. set it programatically), 
+			// the selectedIndices sets its value on super.commitProperties()
+			// so super.commitProperties() must be called first,
+			// otherwise selectedIndices will be re-set in refreshLinearizedDataProvider with old current selectedIndices
+			// and the one initially set is gone
+			super.commitProperties();
 			if (linearizedDataProviderRefreshRequested) {
 				refreshLinearizedDataProvider();
 				linearizedDataProviderRefreshRequested = false;
-			}
-			super.commitProperties();
+			}			
 		}
 		
 		public function refreshLinearizedDataProvider():void {

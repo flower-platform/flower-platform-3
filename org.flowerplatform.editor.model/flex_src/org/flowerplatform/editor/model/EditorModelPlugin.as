@@ -40,8 +40,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
-	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
@@ -71,9 +71,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
-	import org.flowerplatform.flexutil.dialog.IDialog;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
-	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
+	import org.flowerplatform.flexutil.dialog.IDialog;
 
 	
 	/**
@@ -87,7 +86,7 @@ package org.flowerplatform.editor.model {
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
 		
-		public var locationForNewElementsDialog:IDialog;
+		public var locationForNewElementsDialogClass:Class;
 		
 		public static function getInstance():EditorModelPlugin {
 			return INSTANCE;
@@ -180,7 +179,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
-
+			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 		}
 		
@@ -200,10 +199,19 @@ package org.flowerplatform.editor.model {
 
 			registerClassAliasFromAnnotation(ContentAssistItem);
 		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
+				
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public function getLocationForNewElementsDialogNewInstance():ILocationForNewElementsDialog {
+			if (locationForNewElementsDialogClass == null) {
+				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must be set!");
+			}
+			var dialog:Object = new locationForNewElementsDialogClass();
+			if (!(dialog is ILocationForNewElementsDialog)) {
+				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must implement ILocationForNewElementsDialog!");
+			}
+			return ILocationForNewElementsDialog(dialog);
 		}
-		
 	}
 }

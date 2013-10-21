@@ -503,20 +503,32 @@ package org.flowerplatform.communication.tree.remote {
 //			if (updateSelection) {
 //				genericTree.selectedItems = newSelection;
 //			}
-//			
-			if (expandNode) {					
-				//treeList.expandItem(existingNode, true);
+//						
+			if (expandNode || selectNode) {
+				// refresh first to refresh the dataProvider
+				treeList.refreshLinearizedDataProvider();
+				
+				// search for the wrapper and its index
+				var existingWrapper:HierarchicalModelWrapper = null;
+				var index:int;				
 				for (var i:int = 0; i<treeList.dataProvider.length; i++) {
 					var wrapper:HierarchicalModelWrapper = HierarchicalModelWrapper(treeList.dataProvider.getItemAt(i));
-						if (wrapper.treeNode == existingNode) {
-							if (!wrapper.expanded) {
-								wrapper.expanded = !wrapper.expanded;
-								treeList.requestRefreshLinearizedDataProvider();
-							}
-							treeList.refreshLinearizedDataProvider();
-							break;
-						}
-				}		
+					if (wrapper.treeNode == existingNode) {
+						existingWrapper = wrapper;
+						index = i;
+						break;
+					}
+				}				
+				if (expandNode) {
+					if (!existingWrapper.expanded) {
+						existingWrapper.expanded = !wrapper.expanded;						
+					}					
+				}	
+				if (selectNode) {
+					var vector:Vector.<int> = new Vector.<int>();
+					vector.push(index);
+					treeList.selectedIndices = vector;							
+				}
 			}
 //			
 //			if (genericTree.context[EXPAND_ALL_NODES_KEY] == true) {
@@ -529,9 +541,7 @@ package org.flowerplatform.communication.tree.remote {
 //				// i.e. if a model file has become corrupt, the children shouldn't show anymore
 //				existingNode.children = new ArrayCollection();
 //			}
-			if (selectNode) {
-				treeList.selectedItem = existingNode;
-			}
+
 		}
 				
 		/**

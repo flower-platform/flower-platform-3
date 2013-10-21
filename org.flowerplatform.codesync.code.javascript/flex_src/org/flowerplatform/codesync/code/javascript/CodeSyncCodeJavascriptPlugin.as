@@ -22,6 +22,7 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController;
+	import org.flowerplatform.codesync.code.javascript.new_elements_path.LocationForNewElementsDialog;
 	import org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -86,6 +87,8 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["fileElementContainer"] = composedControllerProviderFactory;
+		
+			EditorModelPlugin.getInstance().locationForNewElementsDialogClass = LocationForNewElementsDialog;
 		}
 		
 		override protected function registerClassAliases():void {

@@ -21,6 +21,7 @@ package com.crispico.flower.mp.codesync.code.java;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.java.JavaClassAttributeProcessor;
 import org.flowerplatform.editor.model.java.JavaClassOperationProcessor;
 import org.flowerplatform.editor.model.java.JavaClassProcessor;
@@ -60,6 +61,7 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classAttribute", new JavaClassAttributeProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classOperation", new JavaClassOperationProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("scenarioInterraction", new JavaScenarioElementProcessor());
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());
 		CodeSyncPlugin.getInstance().getFullyQualifiedNameProvider().addDelegateProvider(new JavaFullyQualifiedNameProvider());
 //		ResourcesPlugin.getWorkspace().addResourceChangeListener(new JavaResourceChangeListener());
 //		JavaCore.addElementChangedListener(new JavaElementChangedListener(), ElementChangedEvent.POST_RECONCILE);

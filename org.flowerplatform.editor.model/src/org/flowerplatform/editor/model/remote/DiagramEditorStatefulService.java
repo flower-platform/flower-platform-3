@@ -190,18 +190,18 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	}
 	
 	private void iterateContents(View view, List<EObject> list, Map<String, Object> processingContext) {
-		Iterator<EObject> iter = view.eContents().iterator();
+		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+		if (processors != null) {
+			for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+				processor.processFeatureChanges(view.getDiagrammableElement(), null, view, processingContext);
+			}
+		}
 		
+		Iterator<EObject> iter = view.eContents().iterator();		
 		while (iter.hasNext()) {
 			EObject next = iter.next();
 			if (next instanceof View) {
-				View child = (View) next;
-				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(child.getViewType());
-				if (processors != null) {
-					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-						processor.processFeatureChanges(child.getDiagrammableElement(), null, child, processingContext);
-					}
-				}
+				View child = (View) next;				
 				iterateContents(child, list, processingContext);
 			}
 			list.add(next);
@@ -531,4 +531,12 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		updateLabelsAfterIndex(parent, index);
 	}
 	
+	@RemoteInvocation
+	public void updateNewElementsPathProperties(StatefulServiceInvocationContext context, String diagramEditableResourcePath, String diagramId, String newElementsPath, boolean showNewElementsPathDialog) {
+		DiagramEditableResource editableResource = (DiagramEditableResource) getEditableResource(diagramEditableResourcePath);
+		Diagram diagram = (Diagram) editableResource.getEObjectById(diagramId);
+		
+		diagram.setShowNewElementsPathDialog(showNewElementsPathDialog);
+		diagram.setNewElementsPath(newElementsPath);
+	}
 }
