@@ -19,6 +19,7 @@
 package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.editor.model.content_assist.NotationDiagramContentAssistProvider;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
@@ -37,7 +38,7 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		override public function get visible():Boolean {
-			return selection.length == 1;
+			return selection.length == 1 && !(selection.getItemAt(0) is Diagram);
 		}
 		
 		override public function run():void {

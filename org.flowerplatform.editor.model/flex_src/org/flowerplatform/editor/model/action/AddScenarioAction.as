@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -35,8 +36,12 @@ package org.flowerplatform.editor.model.action {
 			preferShowOnActionBar = true;
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */
 		override public function get visible():Boolean {
-			if (selection == null || selection.length == 0) {
+			if (selection != null && selection.length == 1 && selection.getItemAt(0) is Diagram) {
+				// visible only on diagram
 				return true;
 			}
 			return false;
