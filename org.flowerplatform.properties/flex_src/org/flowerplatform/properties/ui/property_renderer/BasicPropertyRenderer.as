@@ -4,6 +4,7 @@ package org.flowerplatform.properties.ui.property_renderer {
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.properties.ui.PropertiesItemRenderer;
 	import org.flowerplatform.properties.ui.PropertiesList;
 	
 	import spark.components.DataRenderer;
@@ -11,9 +12,7 @@ package org.flowerplatform.properties.ui.property_renderer {
 	import spark.layouts.HorizontalLayout;
 
 	public class BasicPropertyRenderer extends DataRenderer {
-				
-		protected var _parent:Object;
-		
+						
 		public function BasicPropertyRenderer() {
 			percentWidth = 50;
 			percentHeight = 100;
@@ -23,13 +22,9 @@ package org.flowerplatform.properties.ui.property_renderer {
 			super.focusOutHandler(event);	
 		}
 		
-		public function setParent(value:Object):void {
-			_parent = value;
-		}
-		
 		protected function sendChangedValuesToServer(event:Event):void {
-			var selectionOfItems:Object = PropertiesList(_parent.owner).getSelectedItemsForProperties();
-			if(!data.readOnly) {
+			var selectionOfItems:Object = PropertiesList(PropertiesItemRenderer(parent).owner).getSelectedItemsForProperties();
+			if (!data.readOnly) {
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
 						"propertiesProviderService",

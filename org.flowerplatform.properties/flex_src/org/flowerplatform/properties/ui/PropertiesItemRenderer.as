@@ -19,7 +19,7 @@ package org.flowerplatform.properties.ui {
 	import spark.layouts.HorizontalLayout;
 	
 	public class PropertiesItemRenderer extends DataRenderer {
-		
+		// TODO move to create children
 		public var nameOfProperty:Label = new Label();
 				
 		public var itemRenderer:Class;
@@ -33,12 +33,15 @@ package org.flowerplatform.properties.ui {
 
 			nameOfProperty.percentWidth = 50;
 			nameOfProperty.percentHeight = 100;
-			
+			// TODO move to create children
 			addElement(nameOfProperty);
 			
 		}	
 		
-		override public function set data(value:Object):void {	
+		override public function set data(value:Object):void {
+			if (super.data == value) {
+				return;
+			}
 			super.data = value;
 			nameOfProperty.text = data.name;
 			
@@ -55,7 +58,6 @@ package org.flowerplatform.properties.ui {
 			if (itemRenderer != null) {
 				itemRenderedInstance = new itemRenderer(value);
 			}
-			itemRenderedInstance.setParent(this);
 			addElement(itemRenderedInstance);
 			
 		}
