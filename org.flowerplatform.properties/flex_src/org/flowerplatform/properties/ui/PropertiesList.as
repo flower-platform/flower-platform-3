@@ -70,9 +70,5 @@ package org.flowerplatform.properties.ui {
 			return null;
 		}
 		
-		public function getSelection():IList {
-			return null;
-		}
-		
 	}
 }
