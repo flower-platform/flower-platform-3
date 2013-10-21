@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package org.flowerplatform.properties.ui {
+package org.flowerplatform.properties {
 	import mx.containers.HBox;
 	import mx.containers.VBox;
 	import mx.core.UIComponent;

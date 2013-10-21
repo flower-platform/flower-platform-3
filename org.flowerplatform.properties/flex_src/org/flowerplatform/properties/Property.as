@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package org.flowerplatform.properties.ui {
+package org.flowerplatform.properties {
 	[Bindable]
 	[RemoteClass(alias="org.flowerplatform.properties.Property")]
 	[SecureSWF(rename="off")]

@@ -1,4 +1,4 @@
-package org.flowerplatform.properties.ui.property_renderer {
+package org.flowerplatform.properties.property_renderer {
 	import flash.events.FocusEvent;
 	
 	import mx.binding.utils.BindingUtils;

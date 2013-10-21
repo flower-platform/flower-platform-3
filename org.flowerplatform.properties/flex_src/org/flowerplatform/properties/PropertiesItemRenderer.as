@@ -1,4 +1,4 @@
-package org.flowerplatform.properties.ui {
+package org.flowerplatform.properties {
 	import flash.events.FocusEvent;
 	import flash.utils.getQualifiedClassName;
 	
@@ -9,7 +9,7 @@ package org.flowerplatform.properties.ui {
 	import mx.states.AddChild;
 	
 	import org.flowerplatform.properties.PropertiesPlugin;
-	import org.flowerplatform.properties.ui.property_renderer.BasicPropertyRenderer;
+	import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
 	
 	import spark.components.DataRenderer;
 	import spark.components.Label;

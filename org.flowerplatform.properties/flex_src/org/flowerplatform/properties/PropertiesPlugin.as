@@ -4,11 +4,11 @@ package org.flowerplatform.properties {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.properties.ui.PropertiesList;
-	import org.flowerplatform.properties.ui.PropertiesViewProvider;
-	import org.flowerplatform.properties.ui.Property;
-	import org.flowerplatform.properties.ui.property_renderer.BooleanPropertyRenderer;
-	import org.flowerplatform.properties.ui.property_renderer.StringPropertyRenderer;
+	import org.flowerplatform.properties.PropertiesList;
+	import org.flowerplatform.properties.PropertiesViewProvider;
+	import org.flowerplatform.properties.Property;
+	import org.flowerplatform.properties.property_renderer.BooleanPropertyRenderer;
+	import org.flowerplatform.properties.property_renderer.StringPropertyRenderer;
 	/**
 	 * @author Razvan Tache
 	 */

@@ -1,4 +1,4 @@
-package org.flowerplatform.properties.ui {
+package org.flowerplatform.properties {
 	import flash.events.FocusEvent;
 	
 	import mx.collections.ArrayList;

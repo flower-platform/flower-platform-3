@@ -1,11 +1,11 @@
-package org.flowerplatform.properties.ui.property_renderer {
+package org.flowerplatform.properties.property_renderer {
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-	import org.flowerplatform.properties.ui.PropertiesItemRenderer;
-	import org.flowerplatform.properties.ui.PropertiesList;
+	import org.flowerplatform.properties.PropertiesItemRenderer;
+	import org.flowerplatform.properties.PropertiesList;
 	
 	import spark.components.DataRenderer;
 	import spark.components.Label;
