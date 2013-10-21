@@ -22,7 +22,7 @@ package org.flowerplatform.properties.ui.property_renderer {
 			propertyValue.text = data.value;
 			propertyValue.editable = !data.readOnly;
 			
-			if(!data.readOnly) {
+			if (!data.readOnly) {
 				propertyValue.addEventListener(FocusEvent.FOCUS_OUT, sendChangedValuesToServer);		
 				BindingUtils.bindProperty( data, "value", propertyValue, "text" );
 			}
