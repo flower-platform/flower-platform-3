@@ -1,5 +1,7 @@
 package org.flowerplatform.editor.model.properties {
 	
+	import mx.collections.IList;
+	
 	import org.flowerplatform.flexutil.dialog.IDialog;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 
@@ -8,10 +10,11 @@ package org.flowerplatform.editor.model.properties {
 	 */
 	public interface ILocationForNewElementsDialog extends IDialog, IViewContent {
 		
-		function set diagramEditableResourcePath(value:String):void;
+		function set selectionOfItems(value:IList):void;
 		
 		function set currentLocationForNewElements(value:String):void;
 		
 		function set currentShowNewElementsPathDialog(value:Boolean):void;
+		
 	}
 }

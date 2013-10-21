@@ -33,6 +33,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
@@ -151,7 +152,7 @@ package org.flowerplatform.editor.model {
 			
 			var selectedItems:ArrayCollection = new ArrayCollection();
 			for (var i:int = 0; i < selection.length; i++) {
-				var node:Node = Node(selection.getItemAt(i));//.id / 
+				var node:View = View(selection.getItemAt(i));//.id / 
 				var diagramEditableResourcePath:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).editableResourcePath;
 				var xmiID:String = node.idAsString;
 				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();

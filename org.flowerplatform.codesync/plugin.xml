@@ -36,7 +36,7 @@
          point="org.flowerplatform.properties.propertiesProvider">
       <propertiesProvider
             itemType="codeSyncElement"
-            propertiesProviderClass="org.flowerplatform.codesync.CodeSyncPropertiesProvider">
+            propertiesProviderClass="org.flowerplatform.codesync.properties.CodeSyncPropertiesProvider">
       </propertiesProvider>
    </extension>
    <extension

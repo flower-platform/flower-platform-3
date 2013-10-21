@@ -85,11 +85,10 @@ package org.flowerplatform.flexdiagram.tool {
 			
 		override public function activateAsMainTool():void {			
 			var renderer:IDataRenderer = IDataRenderer(getRendererFromDisplayCoordinates());
+			var model:Object = renderer.data;
 			if (renderer is DiagramRenderer) {
-				// reset selection
-				diagramShell.selectedItems.removeAll();
-			} else {
-				var model:Object = renderer.data;
+				addModelByResettingSelection(model);
+			} else {				
 				var selected:Boolean = diagramShell.selectedItems.getItemIndex(model) != -1;
 				
 				if (context.ctrlPressed) { // substract mode
@@ -105,20 +104,24 @@ package org.flowerplatform.flexdiagram.tool {
 					}
 					diagramShell.mainSelectedItem = model;
 				} else {
-					try {
-						// Because an addItem is called after, the eventsCanBeIgnored is set to true,
-						// this way listeners can limit the number of unwanted events.
-						diagramShell.selectedItems.eventsCanBeIgnored = true;
-						diagramShell.selectedItems.removeAll();							
-					} finally {
-						diagramShell.selectedItems.eventsCanBeIgnored = false;
-					}
-					diagramShell.selectedItems.addItem(model);
+					addModelByResettingSelection(model);
 				}
 			}
 			diagramShell.mainToolFinishedItsJob();
 			
 			super.activateAsMainTool();
+		}
+		
+		private function addModelByResettingSelection(model:Object):void {
+			try {
+				// Because an addItem is called after, the eventsCanBeIgnored is set to true,
+				// this way listeners can limit the number of unwanted events.
+				diagramShell.selectedItems.eventsCanBeIgnored = true;
+				diagramShell.selectedItems.removeAll();							
+			} finally {
+				diagramShell.selectedItems.eventsCanBeIgnored = false;
+			}
+			diagramShell.selectedItems.addItem(model);
 		}
 		
 		override public function deactivateAsMainTool():void {

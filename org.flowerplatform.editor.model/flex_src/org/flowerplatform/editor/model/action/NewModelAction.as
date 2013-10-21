@@ -2,6 +2,7 @@ package org.flowerplatform.editor.model.action {
 	
 	import mx.collections.IList;
 	
+	import org.flowerplatform.editor.model.DiagramEditorFrontend;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
@@ -9,6 +10,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
@@ -20,7 +22,8 @@ package org.flowerplatform.editor.model.action {
 	 */
 	public class NewModelAction extends ActionBase implements IDialogResultHandler, IDiagramShellAware {
 		
-		protected var selectedElements:IList;
+		protected var storedSelection:IList;
+		protected var storedContext:Object;
 		
 		private var _diagramShell:DiagramShell;
 				
@@ -41,10 +44,12 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		override public function run():void {
-			selectedElements = selection;
+			storedSelection = selection;
+			storedContext = context;
+			
 			if (diagram.viewDetails.showNewElementsPathDialog) {
 				var dialog:ILocationForNewElementsDialog = EditorModelPlugin.getInstance().getLocationForNewElementsDialogNewInstance();
-				dialog.diagramEditableResourcePath = NotationDiagramShell(diagramShell).editorStatefulClient.editableResourcePath;
+				dialog.selectionOfItems = NotationDiagramShell(diagramShell).diagramFrontend.convertSelectionToSelectionForServer(selection);
 				dialog.currentLocationForNewElements = diagram.viewDetails.newElementsPath;
 				dialog.currentShowNewElementsPathDialog = diagram.viewDetails.showNewElementsPathDialog;
 				dialog.setResultHandler(this);
@@ -60,11 +65,8 @@ package org.flowerplatform.editor.model.action {
 			}
 		}
 		
-		public function handleDialogResult(result:Object):void {
-			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
-				.service_updateNewElementsPathProperties(String(result.newLocation), Boolean(result.showDialog));
-			
-			createNewModelElement(result.newLocation);
+		public function handleDialogResult(result:Object):void {		
+			createNewModelElement(String(result));
 		}		
 	}
 	

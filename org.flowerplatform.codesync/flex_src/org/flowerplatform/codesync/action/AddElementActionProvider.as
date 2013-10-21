@@ -22,7 +22,9 @@ package org.flowerplatform.codesync.action {
 	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexutil.action.ComposedAction;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
@@ -47,10 +49,10 @@ package org.flowerplatform.codesync.action {
 			
 			var selectedCodeSyncElementType:String = "";
 			if (selection.length == 1) {
-				if (selection.getItemAt(0) is Node) {
-					var node:Node = Node(selection.getItemAt(0));
-					selectedCodeSyncElementType = node.viewType.substr(node.viewType.lastIndexOf(".") + 1);
-				} else {
+				var view:View = View(selection.getItemAt(0));
+				if (view is Node) {					
+					selectedCodeSyncElementType = view.viewType.substr(view.viewType.lastIndexOf(".") + 1);
+				} else if (!(view is Diagram)) { // don't show this actions for edges
 					return null;
 				}
 			}

@@ -1,4 +1,4 @@
-package org.flowerplatform.codesync;
+package org.flowerplatform.codesync.properties;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 
 	@Override
 	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		
+
 	}
 
 	private DiagramEditorStatefulService getDiagramEditorStatefulService(String diagramEditorStatefulServiceId) {

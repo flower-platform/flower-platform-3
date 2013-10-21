@@ -18,15 +18,20 @@
 */
 package org.flowerplatform.codesync.action {
 	
+	import flash.sampler.stopSampling;
+	
 	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.action.NewModelAction;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
 	 */
 	public class AddElementAction extends NewModelAction {
 		
@@ -183,19 +188,22 @@ package org.flowerplatform.codesync.action {
 			//			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
 			//					.service_addElement(type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory);
 			
-			
-			var parentViewId:Object = selectedElements.length == 0 ? null : Node(selectedElements.getItemAt(0)).id;
+			var selectedParentView:View = View(storedSelection.getItemAt(0));
+			var parentViewId:Object = null;
+			if (selectedParentView is Node) {
+				parentViewId = selectedParentView.id;
+			}
 			
 			var parameters:Object = new Object();
 			parameters.location = location;
-			if (context.rectangle) { // from drag to create tool
-				parameters.x = context.rectangle.x;
-				parameters.y = context.rectangle.y;
-				parameters.width = context.rectangle.width;
-				parameters.height = context.rectangle.height;
+			if (storedContext.rectangle) { // from drag to create tool
+				parameters.x = storedContext.rectangle.x;
+				parameters.y = storedContext.rectangle.y;
+				parameters.width = storedContext.rectangle.width;
+				parameters.height = storedContext.rectangle.height;
 			} else {
-				parameters.x = context.x;
-				parameters.y = context.y;				
+				parameters.x = storedContext.x;
+				parameters.y = storedContext.y;				
 			}
 			
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)

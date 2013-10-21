@@ -18,9 +18,11 @@
 			import org.flowerplatform.codesync.new_elements_path.remote.LocationForNewElementsStatefulClient;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 			import org.flowerplatform.communication.tree.remote.PathFragment;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
@@ -29,12 +31,15 @@
 			
 			private var _viewHost:IViewHost;
 			
-			private var _diagramEditableResourcePath:String;
+			private var _selectionOfItems:IList;
 			
 			private var _currentLocationForNewElements:String;
 			
 			[Bindable]
 			private var _currentShowNewElementsPathDialog:Boolean;
+			
+			[Bindable]
+			private var showNewElementsPathDialogCheckBox:Boolean;
 			
 			private var _resultHandler:IDialogResultHandler;
 			
@@ -42,8 +47,8 @@
 				_viewHost = viewHost; 
 			}
 			
-			public function set diagramEditableResourcePath(value:String):void {
-				_diagramEditableResourcePath = value;
+			public function set selectionOfItems(value:IList):void {
+				_selectionOfItems = value;
 			}
 			
 			public function set currentLocationForNewElements(value:String):void {
@@ -52,6 +57,7 @@
 			
 			public function set currentShowNewElementsPathDialog(value:Boolean):void {
 				_currentShowNewElementsPathDialog = value;
+				showNewElementsPathDialogCheckBox = true;
 			}
 			
 			public function getActions(selection:IList):Vector.<IAction> {
@@ -71,8 +77,10 @@
 				
 				statefulClient.treeList = treeList;
 				
-				statefulClient.context[LocationForNewElementsStatefulClient.DIAGRAM_EDITABLE_RESOURCE_PATH_KEY] = _diagramEditableResourcePath;
-				statefulClient.context[LocationForNewElementsStatefulClient.NEW_ELEMENTS_PATH_KEY] = _currentLocationForNewElements;
+				statefulClient.context[LocationForNewElementsStatefulClient.DIAGRAM_EDITABLE_RESOURCE_PATH_KEY] = 
+					DiagramSelectedItem(_selectionOfItems.getItemAt(0)).diagramEditableResourcePath;
+				statefulClient.context[LocationForNewElementsStatefulClient.NEW_ELEMENTS_PATH_KEY] = 
+					_currentLocationForNewElements;
 			
 				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 				
@@ -82,11 +90,24 @@
 			private function okHandler():void {			
 				var location:String = TreeNode(treeList.getSelection().getItemAt(0)).getPath();
 				location += "/" + additionalPath.text;
-				
-				var result:Object = new Object();
-				result.newLocation = location;
-				result.showDialog = showDialog.selected;
-				_resultHandler.handleDialogResult(result);
+								
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"propertiesService",
+						"setProperties",
+						[_selectionOfItems, "newElementsPath", location]
+					)
+				);
+				if (showDialog.visible) {
+					CommunicationPlugin.getInstance().bridge.sendObject(
+						new InvokeServiceMethodServerCommand(
+							"propertiesService",
+							"setProperties",
+							[_selectionOfItems, "showNewElementsPathDialog", showDialog.selected]
+						)
+					);
+				}
+				_resultHandler.handleDialogResult(location);
 				cancelHandler();
 			}
 			
@@ -99,7 +120,8 @@
 	</fx:Script>
 	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="right" verticalAlign="middle">
-			<s:CheckBox label="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.showDialog')}" id = "showDialog" 
+			<s:CheckBox label="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.showDialog')}" id="showDialog" 
+						visible="{showNewElementsPathDialogCheckBox}"
 						selected="{_currentShowNewElementsPathDialog}" width="100%"/>
 			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
 			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			

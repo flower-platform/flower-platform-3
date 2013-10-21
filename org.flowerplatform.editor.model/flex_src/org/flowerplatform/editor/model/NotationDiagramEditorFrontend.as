@@ -77,6 +77,7 @@ package org.flowerplatform.editor.model
 		override protected function getDiagramShellInstance():DiagramShell {
 			var diagramShell:NotationDiagramShell = new NotationDiagramShell();
 			diagramShell.editorStatefulClient = DiagramEditorStatefulClient(editorStatefulClient);
+			diagramShell.diagramFrontend = this;
 			
 			diagramShell.registerTools([
 				ScrollTool, SelectOnClickTool, InplaceEditorTool, ResizeTool, 

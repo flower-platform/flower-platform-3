@@ -35,6 +35,11 @@ package org.flowerplatform.editor.model {
 		
 		public var editorStatefulClient:DiagramEditorStatefulClient;
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public var diagramFrontend:DiagramEditorFrontend;
+		
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			var viewType:String = View(model).viewType;
 			var result:ComposedControllerProvider = composedControllerProviders[viewType];
