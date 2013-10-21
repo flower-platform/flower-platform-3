@@ -8,12 +8,20 @@ package org.flowerplatform.properties.ui.property_renderer {
 	public class BooleanPropertyRenderer extends BasicPropertyRenderer {
 		
 		[Bindable]
-		public var checkBox:CheckBox = new CheckBox();
+		public var checkBox:CheckBox;
 		
-		public function BooleanPropertyRenderer(data) {
+		public function BooleanPropertyRenderer(data:Object) {
 			super();	
-			super.data = data;
+			super.data = data;	
+		}
+		
+		override protected function createChildren():void {
+			super.createChildren();
+
+			checkBox = new CheckBox();
 			
+			checkBox.percentHeight = 100;
+			checkBox.percentWidth = 100;
 			checkBox.selected = data.value;
 			checkBox.enabled = !data.readOnly;
 			
@@ -24,6 +32,5 @@ package org.flowerplatform.properties.ui.property_renderer {
 			
 			addElement(checkBox);
 		}
-		
 	}
 }

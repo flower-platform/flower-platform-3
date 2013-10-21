@@ -10,15 +10,22 @@ package org.flowerplatform.properties.ui.property_renderer {
 	public class StringPropertyRenderer extends BasicPropertyRenderer {
 		
 		[Bindable]
-		public var propertyValue:TextInput = new TextInput();
+		public var propertyValue:TextInput;
 		
-		public function StringPropertyRenderer(data) {
+		public function StringPropertyRenderer(data:Object) {
 			super();
 			super.data = data;
 			
-			propertyValue.percentWidth = 100;
-			propertyValue.percentHeight = 100;
 			
+		}
+		
+		override protected function createChildren():void {
+			super.createChildren();
+			
+			propertyValue = new TextInput();
+			
+			propertyValue.percentWidth = 100;
+			propertyValue.percentHeight = 100;		
 			propertyValue.text = data.value;
 			propertyValue.editable = !data.readOnly;
 			
@@ -29,6 +36,5 @@ package org.flowerplatform.properties.ui.property_renderer {
 			
 			addElement(propertyValue);
 		}
-			
 	}
 }
