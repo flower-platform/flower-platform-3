@@ -20,22 +20,14 @@ package org.flowerplatform.properties.ui {
 	
 	public class PropertiesItemRenderer extends DataRenderer {
 		// TODO move to create children
-		public var nameOfProperty:Label = new Label();
+		public var nameOfProperty:Label;
 				
 		public var itemRenderer:Class;
 		
 		public var itemRenderedInstance:BasicPropertyRenderer;
 		
 		public function PropertiesItemRenderer() {
-			super();		
-			
-			layout = new HorizontalLayout;
-
-			nameOfProperty.percentWidth = 50;
-			nameOfProperty.percentHeight = 100;
-			// TODO move to create children
-			addElement(nameOfProperty);
-			
+			super();					
 		}	
 		
 		override public function set data(value:Object):void {
@@ -61,6 +53,19 @@ package org.flowerplatform.properties.ui {
 			addElement(itemRenderedInstance);
 			
 		}
+		
+		override protected function createChildren():void {
+			super.createChildren();		
+			
+			layout = new HorizontalLayout;		
+			nameOfProperty = new Label;
+
+			nameOfProperty.percentWidth = 50;
+			nameOfProperty.percentHeight = 100;
+			
+			addElement(nameOfProperty);
+		}
+		
 		
 		override protected function focusOutHandler(event:FocusEvent):void {
 			super.focusOutHandler(event);
