@@ -42,7 +42,7 @@ package org.flowerplatform.properties {
 					return;
 				var myObject:Object;
 				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand("propertiesProviderService",
+					new InvokeServiceMethodServerCommand("propertiesService",
 						"getProperties",[event.selectionForServer],
 						myObject,
 						function(object:Object):void {
