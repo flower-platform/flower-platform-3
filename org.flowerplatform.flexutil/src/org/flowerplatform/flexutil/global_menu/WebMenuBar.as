@@ -32,6 +32,8 @@ package org.flowerplatform.flexutil.global_menu {
 	import mx.controls.MenuBar;
 	import mx.controls.menuClasses.IMenuBarItemRenderer;
 	import mx.controls.menuClasses.MenuBarItem;
+	import mx.core.ClassFactory;
+	import mx.core.IFactory;
 	import mx.core.LayoutDirection;
 	import mx.events.MenuEvent;
 	import mx.managers.ISystemManager;
@@ -69,8 +71,17 @@ package org.flowerplatform.flexutil.global_menu {
 		 */
 		protected var menuDescriptor:WebMenuDataDescriptor;
 		
+		/**
+		 * Item renderer for the menu items so that the icon is correctly rendered.
+		 */
+		protected var menuItemRender:IFactory;
+		
 		public function WebMenuBar(ap:IActionProvider = null):void {
 			super();
+			
+			// Prepare the item renderers
+			menuBarItemRenderer = new ClassFactory(WebMenuBarItem);
+			menuItemRender = new ClassFactory(WebMenuItemRenderer);
 			
 			actionProvider = ap;
 			
@@ -241,6 +252,9 @@ package org.flowerplatform.flexutil.global_menu {
 					// set the menuDescriptor
 					menuDescriptor.selection = selection;
 					menu.dataDescriptor = menuDescriptor;
+					
+					// set the renderer
+					menu.itemRenderer = menuItemRender;
 					
 					// get the VisibleApplicationRect so we can correctly display the menu
 					// if it will try to get outside.

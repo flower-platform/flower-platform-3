@@ -110,42 +110,49 @@ package org.flowerplatform.web {
 			// create the actionProvider from menu
 			var menuActionProvider:VectorActionProvider = new VectorActionProvider();
 			
-			createAndAddAction("Administration", "administration", null, null,
+			createAndAddAction("Administration", "administration", null, null, null,
 				menuActionProvider);
 
-			createAndAddAction("Organizations", null, "administration", function():void {
-				showScreen(OrganizationsScreen);
-			}, menuActionProvider);
+			createAndAddAction("Organizations", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"), function():void {
+					showScreen(OrganizationsScreen);
+				}, menuActionProvider);
 
-			createAndAddAction("Groups", null, "administration", function():void {
-				showScreen(GroupsScreen);
-			}, menuActionProvider);
+			createAndAddAction("Groups", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/group.png"), function():void {
+					showScreen(GroupsScreen);
+				}, menuActionProvider);
 
-			createAndAddAction("Users", null, "administration", function():void {
-				showScreen(UsersScreen);
-			}, menuActionProvider);
+			createAndAddAction("Users", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
+					showScreen(UsersScreen);
+				}, menuActionProvider);
 
-			createAndAddAction("Permissions", null, "administration", function():void {
-				showScreen(PermissionsScreen);
-			}, menuActionProvider);
+			createAndAddAction("Permissions", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/permission.png"), function():void {
+					showScreen(PermissionsScreen);
+				}, menuActionProvider);
 
-			createAndAddAction("User", "user", null, null, menuActionProvider);
+			createAndAddAction("User", "user", null,  
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), 
+				null, menuActionProvider);
 			
-			createAndAddAction("My Account", null, "user", function():void {
-				showScreen(UserForm);
-			},menuActionProvider);
+			createAndAddAction("My Account", null, "user", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
+					showScreen(UserForm);
+				},menuActionProvider);
 			
-			createAndAddAction("Switch User", null, "user", function():void {
+			createAndAddAction("Switch User", null, "user", null, function():void {
 				WebCommonPlugin.getInstance().authenticationManager.showAuthenticationView(true);
 			}, menuActionProvider);
 
-			createAndAddAction("Logout", null, "user", function():void {
+			createAndAddAction("Logout", null, "user", null, function():void {
 				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
 			}, menuActionProvider);
 	
-			createAndAddAction("Help", "help", null, null, menuActionProvider);
+			createAndAddAction("Help", "help", null, null, null, menuActionProvider);
 
-			createAndAddAction("Lean and Discuss (opens a new window)", null, "help",  function():void {
+			createAndAddAction("Lean and Discuss (opens a new window)", null, "help",  null, function():void {
 				navigateToURL(new URLRequest("http://learn-discuss.flower-platform.com/flower_dev_center"), "_blank");
 			}, menuActionProvider);
 			
@@ -179,7 +186,7 @@ package org.flowerplatform.web {
 		 * 
 		 * @author Mircea Negreanu
 		 */
-		private function createAndAddAction(label:String, id:String, parentId:String, functionDelegate:Function, actionProvider:IActionProvider):void {
+		private function createAndAddAction(label:String, id:String, parentId:String, icon:String, functionDelegate:Function, actionProvider:IActionProvider):void {
 			var action:ActionBase;
 			if (id != null) {
 				action = new ComposedAction();
@@ -190,6 +197,7 @@ package org.flowerplatform.web {
 			action.label = label;
 			action.id = id;
 			action.parentId = parentId;
+			action.icon = icon;
 			action.functionDelegate = functionDelegate;
 			actionProvider.getActions(null).push(action);
 		}
