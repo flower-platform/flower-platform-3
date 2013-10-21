@@ -25,13 +25,17 @@ import java.util.List;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * @author Razvan Tache
  */
 public class PropertiesService {
 	
+	private final static Logger logger = LoggerFactory.getLogger(PropertiesService.class);
+
 	public List<Property> getProperties(List<SelectedItem> selection) {
-		
+		logger.debug("Getting the property list for the selection");
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
 		
@@ -40,8 +44,9 @@ public class PropertiesService {
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// retrieve properties by providers
-			if (itemProvider != null)
+			if (itemProvider != null) {
 				newProperties = itemProvider.getProperties(selectedItem);
+			}
 			// merge with the previous results
 			if (properties.isEmpty()) {
 				properties.addAll(newProperties);
@@ -50,11 +55,12 @@ public class PropertiesService {
 				throw new UnsupportedOperationException();
 			}
 		}	
+		
 		return properties;
 	}
 	
 	public void setProperties(List<SelectedItem> selection, String propertyName, Object propertyValue) {
-		System.out.println("Changing propery " + propertyName + ".Giving it the value of: " + propertyValue);
+		logger.debug("Changing property {}. Giving it the value of: {}", propertyName, propertyValue);
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
