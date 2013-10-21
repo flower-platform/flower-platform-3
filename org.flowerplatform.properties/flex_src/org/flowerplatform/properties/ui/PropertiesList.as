@@ -46,7 +46,7 @@ package org.flowerplatform.properties.ui {
 						"getProperties",[event.selectionForServer],
 						myObject,
 						function(object:Object):void {
-							dataProvider = object as IList;
+							dataProvider = IList(object);
 							selectedItemsForProperties = event.selectionForServer;
 						}
 					));		
