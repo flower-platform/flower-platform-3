@@ -28,9 +28,10 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IComposedAction;
-	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
+	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
+	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
@@ -72,6 +73,8 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 		
 		protected var spinner:MobileSpinner;
 		
+		protected var preventBackKeyPress:Boolean = true;
+		
 		public function get activeViewContent():IViewContent {	
 			return _activeViewContent;
 		}
@@ -85,6 +88,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			super();
 			openMenuAction = new OpenMenuAction(this);
 			addEventListener(FlexEvent.MENU_KEY_PRESSED, menuKeyPressedEvent);
+			addEventListener(FlexEvent.BACK_KEY_PRESSED, backKeyPressHandler);
 			addEventListener(ViewNavigatorEvent.VIEW_DEACTIVATE, viewDeactivateHandler);
 			addEventListener("viewMenuClose", viewMenuClosedHandler);
 			
@@ -96,6 +100,12 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			event.preventDefault();
 			if (openMenuAction.enabled) {
 				openMenuAction.run();
+			}
+		}
+		
+		protected function backKeyPressHandler(event:FlexEvent):void {
+			if (preventBackKeyPress) {
+				event.preventDefault();
 			}
 		}
 		
@@ -119,6 +129,14 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 		
 		override protected function createChildren():void {
 			super.createChildren();
+			
+			if (data != null) {
+				if (data.preventBackKeyPress is Boolean) { 
+					// this value can exist or not in data; that's why we do the check like this;
+					// the normal way (i.e. if (data.prevent...)) doens't work, because the property is boolean
+					preventBackKeyPress = data.preventBackKeyPress;
+				}
+			}
 
 			iconComponent = new BitmapImage();
 			labelComponent = new Label();

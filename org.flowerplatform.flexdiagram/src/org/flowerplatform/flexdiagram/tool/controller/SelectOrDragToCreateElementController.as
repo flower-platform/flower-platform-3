@@ -156,7 +156,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				// the tool will be deactivated later, so wait until then
 				diagramShell.modelToExtraInfoMap[model].waitingToDeactivateDragTool = true;
 				
-				//create context
+				// create context
 				var context:Object = new Object();
 				context.rectangle = selectDragToCreatePlaceHolder.getRect(selectDragToCreatePlaceHolder);				
 				// dispatch event in order to let others implement the creation behavior

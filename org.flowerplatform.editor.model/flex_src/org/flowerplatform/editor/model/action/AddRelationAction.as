@@ -45,7 +45,7 @@ package org.flowerplatform.editor.model.action {
 				throw new Error("Target model id hasn't been set!");	
 			}
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(_diagramShell).editorStatefulClient)
-				.service_addNewConnection(context.sourceId, context.targetId);
+				.service_addNewRelation(context.sourceId, context.targetId);
 		}
 		
 	}

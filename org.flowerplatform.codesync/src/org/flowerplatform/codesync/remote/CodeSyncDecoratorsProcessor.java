@@ -27,35 +27,41 @@ import com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl;
 /**
  * @author Sebastian Solomon
  */
-public abstract class CodeSyncDecoratorsProcessor extends IconDiagrammableElementFeatureChangesProcessor {
+public abstract class CodeSyncDecoratorsProcessor extends
+		IconDiagrammableElementFeatureChangesProcessor {
 
 	@Override
 	protected String getIconUrls(EObject object) {
-		String codeSyncPackage = CodeSyncPlugin.getInstance().getBundleContext().getBundle().getSymbolicName();
+		String codeSyncPackage = CodeSyncPlugin.getInstance()
+				.getBundleContext().getBundle().getSymbolicName();
 		String url = getIconBeforeCodeSyncDecoration(object);
-		
-		if ( object instanceof  CodeSyncElementImpl){
-			
-			
-			CodeSyncElementImpl	codeSyncElement = (CodeSyncElementImpl) object;
-			if (codeSyncElement.isDeleted()){
-				url += "|" + codeSyncPackage + "/images/full/ovr16/syncMarker_deleted.gif";	
+
+		if (object instanceof CodeSyncElementImpl) {
+
+			CodeSyncElementImpl codeSyncElement = (CodeSyncElementImpl) object;
+			if (codeSyncElement.isDeleted()) {
+				url += "|" + codeSyncPackage
+						+ "/images/full/ovr16/syncMarker_deleted.gif";
 				return url;
 			}
-			
-			if (codeSyncElement.isAdded()){
-				url += "|" + codeSyncPackage + "/images/full/ovr16/syncMarker_added.gif";
+
+			if (codeSyncElement.isAdded()) {
+				url += "|" + codeSyncPackage
+						+ "/images/full/ovr16/syncMarker_added.gif";
 				return url;
 			}
-			
-			if (!codeSyncElement.isSynchronized()){
-				url += "|" + codeSyncPackage + "/images/full/ovr16/syncMarker_red.gif";
-			}else if(codeSyncElement.isChildrenSynchronized()){
-				url += "|" + codeSyncPackage + "/images/full/ovr16/syncMarker_green.gif";
-			}else
-				url += "|" + codeSyncPackage + "/images/full/ovr16/syncMarker_orange.gif";
+
+			if (!codeSyncElement.isSynchronized()) {
+				url += "|" + codeSyncPackage
+						+ "/images/full/ovr16/syncMarker_red.gif";
+			} else if (codeSyncElement.isChildrenSynchronized()) {
+				url += "|" + codeSyncPackage
+						+ "/images/full/ovr16/syncMarker_green.gif";
+			} else
+				url += "|" + codeSyncPackage
+						+ "/images/full/ovr16/syncMarker_orange.gif";
 		}
-		
+
 		return url;
 	}
 

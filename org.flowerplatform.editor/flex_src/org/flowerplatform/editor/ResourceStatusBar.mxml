@@ -226,7 +226,7 @@
 			}
 			
 			private function get editorFrontend():EditorFrontend {
-				return EditorFrontend(this.parent);
+				return EditorFrontend(this.parent.parent);
 			}
 			
 			/**

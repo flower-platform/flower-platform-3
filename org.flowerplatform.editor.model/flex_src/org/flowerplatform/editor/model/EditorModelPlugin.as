@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
 	import org.flowerplatform.editor.model.action.AddElementAction;
 	import org.flowerplatform.editor.model.action.AddRelationAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
@@ -28,6 +29,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
+	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
 	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
 	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
@@ -47,6 +49,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer;
 	import org.flowerplatform.editor.model.renderer.OperationsSeparatorRenderer;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
@@ -72,8 +75,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
-	import org.flowerplatform.flexutil.dialog.IDialog;
-
+	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	
 	/**
 	 * @author Cristi
@@ -129,7 +131,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.dragControllerClass = new ControllerFactory(AbsoluteNodePlaceHolderDragController);
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);			
 			composedControllerProviderFactories["class"] = composedControllerProviderFactory;
 			
 			// class members
@@ -160,15 +162,18 @@ package org.flowerplatform.editor.model {
 
 			// scenario interaction
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(LightweightModelExtraInfoController);
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(EdgeRendererController, { removeRendererIfModelIsDisposed: true });
+			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ConnectionAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactories["scenarioInterraction"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["edge"] = composedControllerProviderFactory;
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandAttributesCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(DisplayMissingRelationsAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelatedElementsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioCommentAction);
 

@@ -82,32 +82,41 @@ public abstract class JavaClassChildProcessor extends CodeSyncDecoratorsProcesso
 	 */
 	public String composeImage(CodeSyncElement object) {
 		String result = new String();
-		String editorModelPakege = EditorModelPlugin.getInstance().getBundleContext().getBundle().getSymbolicName();
+		String editorModelPakege = EditorModelPlugin.getInstance()
+				.getBundleContext().getBundle().getSymbolicName();
 
 		// decorate for visibility
-		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) 
-				CodeSyncPlugin.getInstance().getFeatureValue(object, AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) CodeSyncPlugin
+				.getInstance().getFeatureValue(
+						object,
+						AstCacheCodePackage.eINSTANCE
+								.getModifiableElement_Modifiers());
 		Modifier visibility = null;
 		if (modifiers != null) {
 			for (ExtendedModifier modifier : modifiers) {
 				if (modifier instanceof Modifier) {
 					switch (((Modifier) modifier).getType()) {
-					case org.eclipse.jdt.core.dom.Modifier.PUBLIC:		
-					case org.eclipse.jdt.core.dom.Modifier.PROTECTED:	
-					case org.eclipse.jdt.core.dom.Modifier.PRIVATE:	
-						visibility = (Modifier) modifier; 
+					case org.eclipse.jdt.core.dom.Modifier.PUBLIC:
+					case org.eclipse.jdt.core.dom.Modifier.PROTECTED:
+					case org.eclipse.jdt.core.dom.Modifier.PRIVATE:
+						visibility = (Modifier) modifier;
 						break;
 					case org.eclipse.jdt.core.dom.Modifier.STATIC:
-						result += editorModelPakege + "/images/ovr16/Static.gif|";  break;
-					case org.eclipse.jdt.core.dom.Modifier.FINAL:  //"org.flowerplatform.editor.model/images/ovr16/Final.gif|";
-						result += editorModelPakege + "/images/ovr16/Final.gif|"; break;
+						result += editorModelPakege
+								+ "/images/ovr16/Static.gif|";
+						break;
+					case org.eclipse.jdt.core.dom.Modifier.FINAL: // "org.flowerplatform.editor.model/images/ovr16/Final.gif|";
+						result += editorModelPakege
+								+ "/images/ovr16/Final.gif|";
+						break;
 					}
 				}
 			}
 		}
 
-		result = (getImageForVisibility(visibility == null ? 0 : visibility.getType())) +"|"+ result;
-		if (result.length()!=0)
+		result = (getImageForVisibility(visibility == null ? 0 : visibility
+				.getType())) + "|" + result;
+		if (result.length() != 0)
 			result = result.substring(0, result.length() - 1);
 		return result;
 	}

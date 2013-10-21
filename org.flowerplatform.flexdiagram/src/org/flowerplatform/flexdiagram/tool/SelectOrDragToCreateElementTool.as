@@ -54,6 +54,7 @@ package org.flowerplatform.flexdiagram.tool {
 			} else {
 				diagramRenderer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			}
+			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {		
@@ -70,6 +71,8 @@ package org.flowerplatform.flexdiagram.tool {
 			delete context.initialMousePoint;			
 			delete context.ctrlPressed;
 			delete context.shiftPressed;
+			
+			super.deactivateAsMainTool();
 		}		
 		
 		private function mouseDownHandler(event:MouseEvent = null):void {

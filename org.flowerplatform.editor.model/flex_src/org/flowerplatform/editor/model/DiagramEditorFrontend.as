@@ -44,7 +44,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
-
 	
 	/**
 	 * @author Cristian Spiescu
@@ -52,6 +51,10 @@ package org.flowerplatform.editor.model {
 	 */	
 	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider, ISelectionForServerProvider {
 	
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */ 
 		public var diagramShell:DiagramShell;
 		
 		protected var _viewHost:IViewHost;
@@ -63,7 +66,9 @@ package org.flowerplatform.editor.model {
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
-			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
+			if (!diagramShell.selectedItems.eventsCanBeIgnored) { // catch events only if necessary
+				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
+			}
 		}
 		
 		/**		
@@ -107,8 +112,10 @@ package org.flowerplatform.editor.model {
 			
 			diagramShell = getDiagramShellInstance();
 			diagramShell.diagramRenderer = diagramRenderer;
-						
-			super.createChildren();			
+									
+			super.createChildren();		
+			
+			toolbarsArea.addElement(new Toolbar());
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {

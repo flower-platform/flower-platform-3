@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement;
-import org.flowerplatform.codesync.remote.CodeSyncElementFeatureChangesProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncElementFeatureChangesProcessor;
 import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;

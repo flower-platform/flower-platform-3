@@ -58,7 +58,8 @@ package org.flowerplatform.flexdiagram.tool {
 				if (resizeController != null) {
 					resizeController.activate(model);
 				}				
-			}			
+			}	
+			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {
@@ -75,6 +76,8 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			delete context.initialMousePoint;
 			delete context.resizeType;
+			
+			super.deactivateAsMainTool();
 		}
 				
 		private function mouseMoveHandler(event:MouseEvent):void {

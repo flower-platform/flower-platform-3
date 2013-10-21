@@ -75,7 +75,7 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.dragControllerClass = new ControllerFactory(AbsoluteNodePlaceHolderDragController);
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+//			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["file"] = composedControllerProviderFactory;
 			
 			// compartment box - set as children of the main parent box
@@ -85,7 +85,7 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(ExpandableBoxVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+//			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["fileElementContainer"] = composedControllerProviderFactory;
 		
 			EditorModelPlugin.getInstance().locationForNewElementsDialogClass = LocationForNewElementsDialog;
