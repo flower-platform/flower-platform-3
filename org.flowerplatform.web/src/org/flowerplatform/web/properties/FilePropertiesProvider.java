@@ -43,12 +43,12 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 
-		if(object instanceof WorkingDirectory) {
+		if (object instanceof WorkingDirectory) {
 			String orgName = ((WorkingDirectory) object).getOrganization().getName();
 			File orgDir = ProjectsService.getInstance().getOrganizationDir(orgName);
 			String path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
 			return new File(path);
-		} else if(object instanceof File) {
+		} else if (object instanceof File) {
 			return (File)object;
 		} else {
 			return ((Pair<File, Object>) object).a;

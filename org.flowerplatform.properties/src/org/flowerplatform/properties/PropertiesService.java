@@ -30,8 +30,10 @@ import org.flowerplatform.properties.remote.SelectedItem;
 public class PropertiesService {
 	
 	public List<Property> getProperties(List<SelectedItem> selection) {
+		
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
+		
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider

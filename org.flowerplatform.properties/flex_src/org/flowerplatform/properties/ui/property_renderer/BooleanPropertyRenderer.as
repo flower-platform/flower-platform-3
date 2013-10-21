@@ -27,9 +27,9 @@ package org.flowerplatform.properties.ui.property_renderer {
 			checkBox.selected = data.value;
 			checkBox.enabled = !data.readOnly;
 			
-			if(!data.readOnly) {
+			if (!data.readOnly) {
 				checkBox.addEventListener(Event.CHANGE, sendChangedValuesToServer);
-				BindingUtils.bindProperty( data, "value", checkBox, "selected" );
+				BindingUtils.bindProperty(data, "value", checkBox, "selected");
 			}
 			
 			addElement(checkBox);
