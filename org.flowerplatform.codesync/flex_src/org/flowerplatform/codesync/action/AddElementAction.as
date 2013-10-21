@@ -18,6 +18,8 @@
 */
 package org.flowerplatform.codesync.action {
 	
+	import org.flowerplatform.editor.model.NotationDiagramShell;
+	import org.flowerplatform.editor.model.action.NewModelAction;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Node;
@@ -26,7 +28,7 @@ package org.flowerplatform.codesync.action {
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class AddElementAction extends ActionBase {
+	public class AddElementAction extends NewModelAction {
 		
 		protected var codeSyncType:String;
 		
@@ -41,159 +43,164 @@ package org.flowerplatform.codesync.action {
 			}
 		}
 		
-		override public function run():void {
-			var parentViewId:Object = selection.length == 0 ? null : Node(selection.getItemAt(0)).id;
+		override protected function createNewModelElement(location:String):void {
+			//			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object, childType:String = template, nextSiblingSeparator:String, parentCategory:String;
+			//			
+			//			// test
+			//			if (template == "Table") {
+			//				type = "htmlFile";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "Companies.html",
+			//					"tableId" : "companies-list",
+			//					"headerRowId" : "companies-list-header"
+			//				};
+			//			} else if (template == "TableHeaderEntry") {
+			//				type = "htmlTableHeaderEntry";
+			//				keyParameter = "title";
+			//				isCategory = false;
+			//				parameters = { "title" : "Logo" };
+			//			} else if (template == "TableItem") {
+			//				type = "htmlFile";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "CompaniesTableItem.html",
+			//					"itemUrl" : "#company/<%= id %>"
+			//				};
+			//			} else if (template == "TableItemEntry") {
+			//				type = "htmlTableItemEntry";
+			//				keyParameter = "valueExpression";
+			//				isCategory = false;
+			//				parameters = {
+			//					"valueExpression" : "name"
+			//				};
+			//			} else if (template == "Form") {
+			//				type = "htmlFile";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "Company.html"
+			//				};
+			//			} else if (template == "FormItem") {
+			//				type = "htmlFormItem";
+			//				keyParameter = "title";
+			//				isCategory = false;
+			//				parameters = {
+			//					"title" : "Revenue",
+			//					"valueExpression" : "revenue",
+			//					"editId" : "revenue"
+			//				};
+			//			} else if (template == "BackboneClass") {
+			//				type = "jsFile";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "Company.js",
+			//					"superClass" : "Backbone.View"
+			//				};
+			//			} else if (template == "RequireEntry") {
+			//				type = "jsRequireEntry";
+			//				keyParameter = "varName";
+			//				isCategory = false;
+			//				parameters = {
+			//					"varName" : "Backbone",
+			//					"dependencyPath" : "backbone"
+			//				};
+			//				parentCategory = "Require";
+			//			} else if (template == "Attribute") {
+			//				type = "jsAttribute";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "name",
+			//					"defaultValue" : "John"
+			//				};
+			//				childType = "ClassMember";
+			//				nextSiblingSeparator = ",\r\n";
+			//				parentCategory = "Attribute";
+			//			} else if (template == "Operation") {
+			//				type = "jsOperation";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "render",
+			//					"parameters" : "param"
+			//				};
+			//				childType = "ClassMember";
+			//				nextSiblingSeparator = ",\r\n";
+			//				parentCategory = "Operation";
+			//			} else if (template == "EventsAttribute") {
+			//				// add a category too
+			//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
+			//						.service_addElement("jsEventsAttribute", "name", true, { "name" : "EventsAttribute" }, "EventsAttribute", null, null, parentViewId, null);
+			//				
+			//				type = "jsEventsAttribute";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "events"
+			//				};
+			//				childType = "ClassMember";
+			//				nextSiblingSeparator = ",\r\n";
+			//				parentCategory = "Attribute";
+			//			} else if (template == "EventsAttributeEntry") {
+			//				type = "jsEventsAttributeEntry";
+			//				keyParameter = "event";
+			//				isCategory = false;
+			//				parameters = {
+			//					"event" : "click",
+			//					"selector" : "#edit",
+			//					"function" : "editView"
+			//				};
+			//				nextSiblingSeparator = ",\r\n";
+			//			} else if (template == "RoutesAttribute") {
+			//				// add a category too
+			//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
+			//						.service_addElement("jsRoutesAttribute", "name", true, { "name" : "RoutesAttribute" }, "RoutesAttribute", null, null, parentViewId, null);
+			//				
+			//				type = "jsRoutesAttribute";
+			//				keyParameter = "name";
+			//				isCategory = false;
+			//				parameters = {
+			//					"name" : "routes"
+			//				};
+			//				childType = "ClassMember";
+			//				nextSiblingSeparator = ",\r\n";
+			//				parentCategory = "Attribute";
+			//			} else if (template == "RoutesAttributeEntry") {
+			//				type = "jsRoutesAttributeEntry";
+			//				keyParameter = "path";
+			//				isCategory = false;
+			//				parameters = {
+			//					"path" : "companies",
+			//					"function" : "companiesDetails"
+			//				};
+			//				nextSiblingSeparator = ",\r\n";
+			//			}
+			//			
+			//			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
+			//					.service_addElement(type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory);
 			
-			var parameters:Object = {
-				x : 200,
-				y : 200,
-				width : 200,
-				height : 200,
-				location : "src/a/b/"
-			};
 			
-			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-					.service_addNew(parentViewId, codeSyncType, parameters);
+			var parentViewId:Object = selectedElements.length == 0 ? null : Node(selectedElements.getItemAt(0)).id;
 			
-//			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object, childType:String = template, nextSiblingSeparator:String, parentCategory:String;
-//			
-//			// test
-//			if (template == "Table") {
-//				type = "htmlFile";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "Companies.html",
-//					"tableId" : "companies-list",
-//					"headerRowId" : "companies-list-header"
-//				};
-//			} else if (template == "TableHeaderEntry") {
-//				type = "htmlTableHeaderEntry";
-//				keyParameter = "title";
-//				isCategory = false;
-//				parameters = { "title" : "Logo" };
-//			} else if (template == "TableItem") {
-//				type = "htmlFile";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "CompaniesTableItem.html",
-//					"itemUrl" : "#company/<%= id %>"
-//				};
-//			} else if (template == "TableItemEntry") {
-//				type = "htmlTableItemEntry";
-//				keyParameter = "valueExpression";
-//				isCategory = false;
-//				parameters = {
-//					"valueExpression" : "name"
-//				};
-//			} else if (template == "Form") {
-//				type = "htmlFile";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "Company.html"
-//				};
-//			} else if (template == "FormItem") {
-//				type = "htmlFormItem";
-//				keyParameter = "title";
-//				isCategory = false;
-//				parameters = {
-//					"title" : "Revenue",
-//					"valueExpression" : "revenue",
-//					"editId" : "revenue"
-//				};
-//			} else if (template == "BackboneClass") {
-//				type = "jsFile";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "Company.js",
-//					"superClass" : "Backbone.View"
-//				};
-//			} else if (template == "RequireEntry") {
-//				type = "jsRequireEntry";
-//				keyParameter = "varName";
-//				isCategory = false;
-//				parameters = {
-//					"varName" : "Backbone",
-//					"dependencyPath" : "backbone"
-//				};
-//				parentCategory = "Require";
-//			} else if (template == "Attribute") {
-//				type = "jsAttribute";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "name",
-//					"defaultValue" : "John"
-//				};
-//				childType = "ClassMember";
-//				nextSiblingSeparator = ",\r\n";
-//				parentCategory = "Attribute";
-//			} else if (template == "Operation") {
-//				type = "jsOperation";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "render",
-//					"parameters" : "param"
-//				};
-//				childType = "ClassMember";
-//				nextSiblingSeparator = ",\r\n";
-//				parentCategory = "Operation";
-//			} else if (template == "EventsAttribute") {
-//				// add a category too
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//						.service_addElement("jsEventsAttribute", "name", true, { "name" : "EventsAttribute" }, "EventsAttribute", null, null, parentViewId, null);
-//				
-//				type = "jsEventsAttribute";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "events"
-//				};
-//				childType = "ClassMember";
-//				nextSiblingSeparator = ",\r\n";
-//				parentCategory = "Attribute";
-//			} else if (template == "EventsAttributeEntry") {
-//				type = "jsEventsAttributeEntry";
-//				keyParameter = "event";
-//				isCategory = false;
-//				parameters = {
-//					"event" : "click",
-//					"selector" : "#edit",
-//					"function" : "editView"
-//				};
-//				nextSiblingSeparator = ",\r\n";
-//			} else if (template == "RoutesAttribute") {
-//				// add a category too
-//				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//						.service_addElement("jsRoutesAttribute", "name", true, { "name" : "RoutesAttribute" }, "RoutesAttribute", null, null, parentViewId, null);
-//				
-//				type = "jsRoutesAttribute";
-//				keyParameter = "name";
-//				isCategory = false;
-//				parameters = {
-//					"name" : "routes"
-//				};
-//				childType = "ClassMember";
-//				nextSiblingSeparator = ",\r\n";
-//				parentCategory = "Attribute";
-//			} else if (template == "RoutesAttributeEntry") {
-//				type = "jsRoutesAttributeEntry";
-//				keyParameter = "path";
-//				isCategory = false;
-//				parameters = {
-//					"path" : "companies",
-//					"function" : "companiesDetails"
-//				};
-//				nextSiblingSeparator = ",\r\n";
-//			}
-//			
-//			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-//					.service_addElement(type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory);
-		}
-		
+			var parameters:Object = new Object();
+			parameters.location = location;
+			if (context.rectangle) { // from drag to create tool
+				parameters.x = context.rectangle.x;
+				parameters.y = context.rectangle.y;
+				parameters.width = context.rectangle.width;
+				parameters.height = context.rectangle.height;
+			} else {
+				parameters.x = context.x;
+				parameters.y = context.y;				
+			}
+			
+			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
+			.service_addNew(parentViewId, codeSyncType, parameters);			
+		}			
 	}
+	
 }

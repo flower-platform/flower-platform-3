@@ -1,5 +1,7 @@
 package org.flowerplatform.editor.model.action {
 	
+	import mx.collections.IList;
+	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
@@ -17,6 +19,8 @@ package org.flowerplatform.editor.model.action {
 	 * @author Cristina Constantinescu
 	 */
 	public class NewModelAction extends ActionBase implements IDialogResultHandler, IDiagramShellAware {
+		
+		protected var selectedElements:IList;
 		
 		private var _diagramShell:DiagramShell;
 				
@@ -37,15 +41,19 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		override public function run():void {
+			selectedElements = selection;
 			if (diagram.viewDetails.showNewElementsPathDialog) {
 				var dialog:ILocationForNewElementsDialog = EditorModelPlugin.getInstance().getLocationForNewElementsDialogNewInstance();
 				dialog.diagramEditableResourcePath = NotationDiagramShell(diagramShell).editorStatefulClient.editableResourcePath;
 				dialog.currentLocationForNewElements = diagram.viewDetails.newElementsPath;
+				dialog.currentShowNewElementsPathDialog = diagram.viewDetails.showNewElementsPathDialog;
 				dialog.setResultHandler(this);
 				
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setViewContent(dialog)
-				.setTitle("Location For new Elements")
+				.setTitle(EditorModelPlugin.getInstance().getMessage("newElementsPath.title"))
+				.setWidth(400)
+				.setHeight(450)
 				.show();
 			} else {				
 				createNewModelElement(diagram.viewDetails.newElementsPath);
@@ -53,7 +61,8 @@ package org.flowerplatform.editor.model.action {
 		}
 		
 		public function handleDialogResult(result:Object):void {
-			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_updateNewElementsPathProperties(String(result.newLocation), Boolean(result.showDialog));
+			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
+				.service_updateNewElementsPathProperties(String(result.newLocation), Boolean(result.showDialog));
 			
 			createNewModelElement(result.newLocation);
 		}		

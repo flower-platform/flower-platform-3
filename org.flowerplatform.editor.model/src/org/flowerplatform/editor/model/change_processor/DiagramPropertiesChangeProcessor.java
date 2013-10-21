@@ -51,6 +51,4 @@ public class DiagramPropertiesChangeProcessor implements IDiagrammableElementFea
 		} 
 	}
 
-	
-
 }

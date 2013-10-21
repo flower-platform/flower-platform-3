@@ -23,6 +23,7 @@ import org.flowerplatform.codesync.code.javascript.remote.JavascriptClassDiagram
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -61,7 +62,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", processor);
-	
+		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());	
 	}
 	
 }

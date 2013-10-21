@@ -1,4 +1,4 @@
-package org.flowerplatform.codesync.code.javascript.remote;
+package org.flowerplatform.codesync.remote;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -149,7 +149,8 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
 		if (source instanceof CodeSyncElement) {
-			destination.setLabel(((CodeSyncElement) source).getName());			
+			destination.setLabel(((CodeSyncElement) source).getName());		
+			destination.setIcon(CodeSyncPlugin.getInstance().getResourceUrl("images/folder.gif"));		
 		}
 		return false;
 	}

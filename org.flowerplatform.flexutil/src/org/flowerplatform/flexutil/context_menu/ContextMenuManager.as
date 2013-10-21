@@ -77,7 +77,7 @@ package org.flowerplatform.flexutil.context_menu {
 						var cm:org.flowerplatform.flexutil.context_menu.ContextMenu = new org.flowerplatform.flexutil.context_menu.ContextMenu();
 						allActions = cmEvent.allActions;
 						selection = cmEvent.selection;
-						context = cmEvent.context;
+						context = cmEvent.context;						
 						cm.openContextMenu(this, event.stageX, event.stageY, cmEvent.rootActionsAlreadyCalculated, null);		
 					}
 					return;

@@ -158,7 +158,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				
 				// create context
 				var context:Object = new Object();
-				context.rectangle = selectDragToCreatePlaceHolder.getRect(selectDragToCreatePlaceHolder);				
+				context.rectangle = selectDragToCreatePlaceHolder.getRect(DisplayObject(diagramShell.diagramRenderer));				
 				// dispatch event in order to let others implement the creation behavior
 				UIComponent(diagramShell.diagramRenderer).dispatchEvent(new CreateModelEvent(context, true));
 			} else {

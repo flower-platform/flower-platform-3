@@ -19,9 +19,6 @@
 package org.flowerplatform.codesync.code.javascript {
 	
 	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
-	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;
-	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController;
-	import org.flowerplatform.codesync.code.javascript.new_elements_path.LocationForNewElementsDialog;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
@@ -40,7 +37,6 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**

@@ -7,7 +7,6 @@
     <classEntry path="org.flowerplatform.codesync.code.javascript.model.action.AddElementAction"/>
     <classEntry path="org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand"/>
     <classEntry path="org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction"/>
-    <classEntry path="org.flowerplatform.codesync.code.javascript.new_elements_path.LocationForNewElementsStatefulClient"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

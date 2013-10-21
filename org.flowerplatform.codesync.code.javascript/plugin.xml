@@ -179,12 +179,5 @@
          </codeSyncTypeCategory>
       </codeSyncElementDescriptor>
    </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
-      <service
-            id="locationForNewElementsStatefulService"
-            serviceClass="org.flowerplatform.codesync.code.javascript.remote.LocationForNewElementsStatefulService">
-      </service>
-   </extension>
 
 </plugin>

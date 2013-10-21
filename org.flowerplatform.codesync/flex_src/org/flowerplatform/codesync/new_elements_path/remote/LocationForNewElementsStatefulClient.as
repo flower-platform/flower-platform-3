@@ -1,7 +1,8 @@
-package org.flowerplatform.codesync.code.javascript.new_elements_path {
+package org.flowerplatform.codesync.new_elements_path.remote {
 	
 	import mx.collections.ArrayCollection;
 	
+	import org.flowerplatform.codesync.new_elements_path.LocationForNewElementsDialog;
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;

@@ -14,6 +14,8 @@
 			import mx.collections.IList;
 			import mx.events.FlexEvent;
 			
+			import org.flowerplatform.codesync.CodeSyncPlugin;
+			import org.flowerplatform.codesync.new_elements_path.remote.LocationForNewElementsStatefulClient;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
@@ -31,6 +33,7 @@
 			
 			private var _currentLocationForNewElements:String;
 			
+			[Bindable]
 			private var _currentShowNewElementsPathDialog:Boolean;
 			
 			private var _resultHandler:IDialogResultHandler;
@@ -96,7 +99,8 @@
 	</fx:Script>
 	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="right" verticalAlign="middle">
-			<s:CheckBox label="Show New Elements Path Dialog" id = "showDialog" selected="{_currentShowNewElementsPathDialog}"/>
+			<s:CheckBox label="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.showDialog')}" id = "showDialog" 
+						selected="{_currentShowNewElementsPathDialog}" width="100%"/>
 			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
 			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
 		</s:HGroup>		
@@ -106,9 +110,9 @@
 		<s:VerticalLayout verticalAlign="middle" horizontalAlign="left"/>
 	</s:layout>
 	
-	<s:Label text="Choose parent folder:" />
+	<s:Label text="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.chooseParent')}" />
 	<tree:GenericTreeList id="treeList" width="100%" height="100%" />
-	<s:Label text="Additional path to parent folder:" />
+	<s:Label text="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.additionalPath')}" />
 	<s:TextInput width="100%" id="additionalPath" />
 	
 </s:Group>
