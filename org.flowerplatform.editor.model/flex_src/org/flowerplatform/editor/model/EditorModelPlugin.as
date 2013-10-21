@@ -147,7 +147,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
-			composedControllerProviderFactories["title"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.javaClass.title"] = composedControllerProviderFactory;
 			
 			// class separators
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();

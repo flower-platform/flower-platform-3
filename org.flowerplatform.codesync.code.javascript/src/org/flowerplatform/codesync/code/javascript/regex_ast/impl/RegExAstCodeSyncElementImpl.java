@@ -24,7 +24,6 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl#getTemplate <em>Template</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl#getNextSiblingSeparator <em>Next Sibling Separator</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCodeSyncElementImpl#getChildType <em>Child Type</em>}</li>
  * </ul>
@@ -33,26 +32,6 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  * @generated
  */
 public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements RegExAstCodeSyncElement {
-	/**
-	 * The default value of the '{@link #getTemplate() <em>Template</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTemplate()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String TEMPLATE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getTemplate() <em>Template</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getTemplate()
-	 * @generated
-	 * @ordered
-	 */
-	protected String template = TEMPLATE_EDEFAULT;
-
 	/**
 	 * The default value of the '{@link #getNextSiblingSeparator() <em>Next Sibling Separator</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -117,27 +96,6 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getTemplate() {
-		return template;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setTemplate(String newTemplate) {
-		String oldTemplate = template;
-		template = newTemplate;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE, oldTemplate, template));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getNextSiblingSeparator() {
 		return nextSiblingSeparator;
 	}
@@ -183,8 +141,6 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
-				return getTemplate();
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
 				return getNextSiblingSeparator();
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE:
@@ -201,9 +157,6 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
-				setTemplate((String)newValue);
-				return;
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
 				setNextSiblingSeparator((String)newValue);
 				return;
@@ -222,9 +175,6 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
-				setTemplate(TEMPLATE_EDEFAULT);
-				return;
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
 				setNextSiblingSeparator(NEXT_SIBLING_SEPARATOR_EDEFAULT);
 				return;
@@ -243,8 +193,6 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE:
-				return TEMPLATE_EDEFAULT == null ? template != null : !TEMPLATE_EDEFAULT.equals(template);
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR:
 				return NEXT_SIBLING_SEPARATOR_EDEFAULT == null ? nextSiblingSeparator != null : !NEXT_SIBLING_SEPARATOR_EDEFAULT.equals(nextSiblingSeparator);
 			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE:
@@ -263,9 +211,7 @@ public class RegExAstCodeSyncElementImpl extends CodeSyncElementImpl implements 
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (template: ");
-		result.append(template);
-		result.append(", nextSiblingSeparator: ");
+		result.append(" (nextSiblingSeparator: ");
 		result.append(nextSiblingSeparator);
 		result.append(", childType: ");
 		result.append(childType);

@@ -29,6 +29,7 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -98,6 +99,15 @@ package org.flowerplatform.codesync.code.javascript {
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table.tableHeaderEntry"] = composedControllerProviderFactory;
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem.tableItemEntry"] = composedControllerProviderFactory;
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form.formItem"] = composedControllerProviderFactory;
+			
+			// title
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.title"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table.title"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem.title"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form.title"] = composedControllerProviderFactory;
+			
 		}
 		
 		override protected function registerMessageBundle():void {

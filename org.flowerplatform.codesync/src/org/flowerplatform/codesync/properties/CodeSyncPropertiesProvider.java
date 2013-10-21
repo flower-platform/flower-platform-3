@@ -34,29 +34,20 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Tache Razvan Mihai
+ * @author Mariana Gheorghe
  */
 public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 
-	/**
-	 * @author Tache Razvan Mihai
-	 * @author Mariana Gheorghe
-	 */
 	@Override
 	public List<Property> getProperties(SelectedItem selectedItem) {
 		List<Property> properties = new ArrayList<Property>();	
 
-		DiagramEditorStatefulService diagramEditorStatefulService = ((DiagramSelectedItem) selectedItem).getEditorStatefulService();		
-		String diagramEditableResourcePath = ((DiagramSelectedItem) selectedItem).getDiagramEditableResourcePath();
-		String id = ((DiagramSelectedItem) selectedItem).getXmiID();
-		
-		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) diagramEditorStatefulService.getEditableResource(diagramEditableResourcePath);
-		View view = (View) diagramEditableResource.getEObjectById(id);
-		CodeSyncElement codeSyncElement = (CodeSyncElement) view.getDiagrammableElement();
+		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
 		List<String> features = CodeSyncPlugin.getInstance().getCodeSyncOperationsService().getFeatures(codeSyncElement.getType());
 		
 		for (String feature : features) {
 			properties.add(new Property(feature, 
-					CodeSyncPlugin.getInstance().getCodeSyncOperationsService().getFeatureValue(codeSyncElement, feature)));
+					CodeSyncPlugin.getInstance().getCodeSyncOperationsService().getFeatureValue(codeSyncElement, feature), false));
 		}
 		
 		return properties;
@@ -64,7 +55,18 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 
 	@Override
 	public void setProperty(SelectedItem selectedItem, Property property) {
+		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
+		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(codeSyncElement, property.getName(), property.getValue());
+	}
+	
+	protected CodeSyncElement getCodeSyncElement(SelectedItem selectedItem) {
+		DiagramEditorStatefulService diagramEditorStatefulService = ((DiagramSelectedItem) selectedItem).getEditorStatefulService();		
+		String diagramEditableResourcePath = ((DiagramSelectedItem) selectedItem).getDiagramEditableResourcePath();
+		String id = ((DiagramSelectedItem) selectedItem).getXmiID();
 		
+		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) diagramEditorStatefulService.getEditableResource(diagramEditableResourcePath);
+		View view = (View) diagramEditableResource.getEObjectById(id);
+		return (CodeSyncElement) view.getDiagrammableElement();
 	}
 
 }

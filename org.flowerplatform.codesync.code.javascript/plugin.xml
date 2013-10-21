@@ -40,6 +40,9 @@
          <childrenCodeSyncTypeCategory
                name="backboneClassMember">
          </childrenCodeSyncTypeCategory>
+         <feature
+               name="backboneSuperClass">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -60,6 +63,9 @@
          <codeSyncTypeCategory
                name="backboneClassMember">
          </codeSyncTypeCategory>
+         <feature
+               name="javaScriptAttributeDefaultValue">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -70,6 +76,12 @@
          <codeSyncTypeCategory
                name="requireEntry">
          </codeSyncTypeCategory>
+         <feature
+               name="requireEntryVarName">
+         </feature>
+         <feature
+               name="requireEntryDependencyPath">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -106,6 +118,15 @@
          <codeSyncTypeCategory
                name="eventsAttributeEntry">
          </codeSyncTypeCategory>
+         <feature
+               name="eventsAttributeEntryEvent">
+         </feature>
+         <feature
+               name="eventsAttributeEntrySelector">
+         </feature>
+         <feature
+               name="eventsAttributeEntryFunction">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -116,6 +137,12 @@
          <codeSyncTypeCategory
                name="routesAttributeEntry">
          </codeSyncTypeCategory>
+         <feature
+               name="routesAttributeEntryPath">
+         </feature>
+         <feature
+               name="routesAttributeEntryFunction">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -127,6 +154,12 @@
          <childrenCodeSyncTypeCategory
                name="tableHeaderEntry">
          </childrenCodeSyncTypeCategory>
+         <feature
+               name="tableId">
+         </feature>
+         <feature
+               name="tableHeaderRowId">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -147,6 +180,9 @@
          <childrenCodeSyncTypeCategory
                name="tableItemEntry">
          </childrenCodeSyncTypeCategory>
+         <feature
+               name="tableItemUrl">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -157,6 +193,9 @@
          <codeSyncTypeCategory
                name="tableItemEntry">
          </codeSyncTypeCategory>
+         <feature
+               name="tableItemEntryValueExpression">
+         </feature>
       </codeSyncElementDescriptor>
    </extension>
    <extension
@@ -177,7 +216,19 @@
          <codeSyncTypeCategory
                name="formItem">
          </codeSyncTypeCategory>
+         <feature
+               name="formItemValueExpression">
+         </feature>
+         <feature
+               name="formItemEditId">
+         </feature>
       </codeSyncElementDescriptor>
+   </extension>
+   <extension
+         point="org.flowerplatform.codesync.codeSyncElementFeatureConverter">
+      <codeSyncElementFeatureConverter
+            codeSyncElementFeatureConverter="org.flowerplatform.codesync.code.javascript.feature_converter.JavaScriptElementFeatureValueConverter">
+      </codeSyncElementFeatureConverter>
    </extension>
 
 </plugin>

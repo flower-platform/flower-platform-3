@@ -107,7 +107,7 @@ public class JavascriptClassDiagramOperationsService {
 		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) der.getFile());
 		Resource astCache = CodeSyncPlugin.getInstance().getAstCache(project, resourceSet);
 		astCache.getContents().add(ast);
-		cse.setTemplate(template);
+		cse.setType(template);
 		cse.setChildType(childType);
 		cse.setNextSiblingSeparator(nextSiblingSeparator);
 		cse.setAdded(true);

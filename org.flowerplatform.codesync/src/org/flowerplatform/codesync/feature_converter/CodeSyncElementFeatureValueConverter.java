@@ -29,13 +29,21 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
+ * Converts from a {@code name} to the corresponding {@link EStructuralFeature}, 
+ * as set in the {@link #features} map, and delegates to {@link CodeSyncOperationsService}.
+ * 
+ * <p>
+ * Extending converters may override if the meaning of {@code name} is not identical
+ * with the meaning of the feature (e.g. the value of the feature named {@code visibility}
+ * should be computed from the list of modifiers).
+ * 
  * @author Mariana Gheorghe
  */
-public abstract class CodeSyncElementFeatureConverter {
+public abstract class CodeSyncElementFeatureValueConverter {
 
 	Map<String, EStructuralFeature> features;
 	
-	public CodeSyncElementFeatureConverter() {
+	public CodeSyncElementFeatureValueConverter() {
 		features = new HashMap<String, EStructuralFeature>();
 		
 		addFeature("name", CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
@@ -50,10 +58,6 @@ public abstract class CodeSyncElementFeatureConverter {
 		return features.get(name);
 	}
 	
-	/**
-	 * Finds the corresponding {@link EStructuralFeature} and delegates to
-	 * {@link CodeSyncOperationsService}.
-	 */
 	public Object getValue(CodeSyncElement codeSyncElement, String name) {
 		EStructuralFeature feature = getFeature(name);
 		if (feature != null) {
@@ -61,6 +65,14 @@ public abstract class CodeSyncElementFeatureConverter {
 					.getCodeSyncOperationsService().getFeatureValue(codeSyncElement, feature);
 		}
 		return null;
+	}
+	
+	public void setValue(CodeSyncElement codeSyncElement, String name, Object newValue) {
+		EStructuralFeature feature = getFeature(name);
+		if (feature != null) {
+			CodeSyncPlugin.getInstance()
+					.getCodeSyncOperationsService().setFeatureValue(codeSyncElement, feature, newValue);
+		}
 	}
 	
 }

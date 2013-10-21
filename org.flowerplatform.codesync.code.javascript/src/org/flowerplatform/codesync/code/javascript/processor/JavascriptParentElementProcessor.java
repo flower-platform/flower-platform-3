@@ -59,7 +59,7 @@ public class JavascriptParentElementProcessor extends CodeSyncElementFeatureChan
 		container.setExpanded(false);
 		container.setHasChildren(cse.getChildren().size() > 0);
 		if (cse instanceof RegExAstCodeSyncElement) {
-			container.setTemplate(((RegExAstCodeSyncElement) cse).getTemplate());
+			container.setTemplate(((RegExAstCodeSyncElement) cse).getType());
 		}
 		container.setViewType("fileElementContainer");
 		return container;
