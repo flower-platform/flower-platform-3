@@ -46,6 +46,27 @@
        <childrenCodeSyncTypeCategory
              name="javaClassMember">
        </childrenCodeSyncTypeCategory>
+       <feature
+             name="documentation">
+       </feature>
+       <feature
+             name="visibility">
+       </feature>
+       <feature
+             name="isAbstract">
+       </feature>
+       <feature
+             name="isFinal">
+       </feature>
+       <feature
+             name="isStatic">
+       </feature>
+       <feature
+             name="superClass">
+       </feature>
+       <feature
+             name="superInterfaces">
+       </feature>
     </codeSyncElementDescriptor>
  </extension>
  <extension
@@ -57,6 +78,24 @@
        <codeSyncTypeCategory
              name="javaClassMember">
        </codeSyncTypeCategory>
+       <feature
+             name="documentation">
+       </feature>
+       <feature
+             name="visibility">
+       </feature>
+       <feature
+             name="isAbstract">
+       </feature>
+       <feature
+             name="isFinal">
+       </feature>
+       <feature
+             name="isStatic">
+       </feature>
+       <feature
+             name="type">
+       </feature>
     </codeSyncElementDescriptor>
  </extension>
  <extension
@@ -68,7 +107,31 @@
        <codeSyncTypeCategory
              name="javaClassMember">
        </codeSyncTypeCategory>
+       <feature
+             name="documentation">
+       </feature>
+       <feature
+             name="visibility">
+       </feature>
+       <feature
+             name="isFinal">
+       </feature>
+       <feature
+             name="isStatic">
+       </feature>
+       <feature
+             name="type">
+       </feature>
+       <feature
+             name="initializer">
+       </feature>
     </codeSyncElementDescriptor>
+ </extension>
+ <extension
+       point="org.flowerplatform.codesync.codeSyncElementFeatureConverter">
+    <codeSyncElementFeatureConverter
+          codeSyncElementFeatureConverter="org.flowerplatform.codesync.code.java.feature_converter.JavaElementFeatureConverter">
+    </codeSyncElementFeatureConverter>
  </extension>
 
 </plugin>
