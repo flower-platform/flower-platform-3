@@ -23,16 +23,18 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class PropertiesService {
 	
 	public List<Property> getProperties(List<SelectedItem> selection) {
+		
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
+		
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
@@ -44,24 +46,22 @@ public class PropertiesService {
 			if (properties.isEmpty()) {
 				properties.addAll(newProperties);
 			} else {
-				for (Property property:properties) {
-					// select common property, server logic to be discused
-				}
-				properties.addAll(newProperties);
+				// select common property, server logic to be discused
+				throw new UnsupportedOperationException();
 			}
 		}	
 		return properties;
 	}
 	
-	public void setProperties(Property property, ArrayList<SelectedItem> selection) {
-		System.out.println("Changing propery " + property.getName() + ".Giving it the value of: " + property.getValue());
+	public void setProperties(ArrayList<SelectedItem> selection, String propertyName, Object propertyValue) {
+		System.out.println("Changing propery " + propertyName + ".Giving it the value of: " + propertyValue);
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// set the property
-			itemProvider.setProperty(selectedItem, property);
+			itemProvider.setProperty(selectedItem, propertyName, propertyValue);
 		}	
 	}
 }

@@ -16,10 +16,9 @@
  *
  * license-end
  */
-package org.flowerplatform.properties;
+package org.flowerplatform.properties.remote;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class Property {
 	

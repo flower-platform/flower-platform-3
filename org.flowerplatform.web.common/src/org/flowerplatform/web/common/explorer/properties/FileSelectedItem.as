@@ -22,6 +22,9 @@ package org.flowerplatform.web.common.explorer.properties {
 	[Bindable]
 	[RemoteClass(alias="org.flowerplatform.web.properties.remote.FileSelectedItem")]
 	[SecureSWF(rename="off")]
+	/**
+	 * @author Razvan Tache
+	 */
 	public class FileSelectedItem {
 		/** 
 		 * 

@@ -16,10 +16,13 @@
 *
 * license-end
 */
-package org.flowerplatform.properties.ui {
+package org.flowerplatform.properties.remote {
 	[Bindable]
-	[RemoteClass(alias="org.flowerplatform.properties.Property")]
+	[RemoteClass]
 	[SecureSWF(rename="off")]
+	/**
+	 * @author Razvan Tache
+	 */
 	public class Property {
 		/**
 		 * 
@@ -31,7 +34,7 @@ package org.flowerplatform.properties.ui {
 		 * 
 		 */
 		[SecureSWF(rename="off")]
-		public var value:String;
+		public var value:Object;
 		
 		/**
 		 * 

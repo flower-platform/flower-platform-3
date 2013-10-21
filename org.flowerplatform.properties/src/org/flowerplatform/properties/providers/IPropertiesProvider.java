@@ -20,15 +20,15 @@ package org.flowerplatform.properties.providers;
 
 import java.util.List;
 
-import org.flowerplatform.properties.Property;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 /**
- * @author Tache Razvan Mihai
+ * @author Razvan Tache
  */
 public interface IPropertiesProvider {
 	
 	public List<Property> getProperties(SelectedItem selectedItem);
-	public void setProperty(SelectedItem selectedItem, Property property);
+	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue);
 	
 }

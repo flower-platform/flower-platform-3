@@ -26,16 +26,15 @@ import java.util.List;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.properties.remote.FileSelectedItem;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class FilePropertiesProvider implements IPropertiesProvider {
 
@@ -44,12 +43,12 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
 
-		if(object instanceof WorkingDirectory) {
+		if (object instanceof WorkingDirectory) {
 			String orgName = ((WorkingDirectory) object).getOrganization().getName();
 			File orgDir = ProjectsService.getInstance().getOrganizationDir(orgName);
 			String path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
 			return new File(path);
-		} else if(object instanceof File) {
+		} else if (object instanceof File) {
 			return (File)object;
 		} else {
 			return ((Pair<File, Object>) object).a;
@@ -68,17 +67,19 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		properties.add(new Property("Location", file.getAbsolutePath()));
 		properties.add(new Property("Size", file.length()));
 		properties.add(new Property("Last modified", new Date(file.lastModified())));
+		properties.add(new Property("testEnabled", true, false));
+		properties.add(new Property("testDisabled", true));
 		
 		return properties;
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, Property property) {
+	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
 		List<PathFragment> pathWithRoot = ((FileSelectedItem)selectedItem).getPathWithRoot();
 		File file = getFile(pathWithRoot);
 		
 		System.out.println("Changing the file with path " + file.getPath());
-		System.out.println("Setting the property: " + property.getName() + " with the value " + property.getValue() );
+		System.out.println("Setting the property: " + propertyName + " with the value " + propertyValue );
 	}
 	
 }

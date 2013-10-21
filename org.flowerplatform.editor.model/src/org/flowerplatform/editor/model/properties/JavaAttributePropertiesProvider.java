@@ -27,15 +27,14 @@ import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.View;
-import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 import com.crispico.flower.mp.model.astcache.code.Attribute;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class JavaAttributePropertiesProvider implements IPropertiesProvider {
 
@@ -63,10 +62,10 @@ public class JavaAttributePropertiesProvider implements IPropertiesProvider {
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, Property property) {
+	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
 		// TODO Auto-generated method stub
 		System.out.println("Changing the item with id " + ((DiagramSelectedItem) selectedItem).getXmiID());
-		System.out.println("Setting the property: " + property.getName() + " with the value " + property.getValue() );
+		System.out.println("Setting the property: " + propertyName + " with the value " + propertyValue );
 	}
 
 }
