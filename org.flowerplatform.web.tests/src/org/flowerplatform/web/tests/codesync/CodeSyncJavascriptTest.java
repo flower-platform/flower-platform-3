@@ -474,7 +474,7 @@ public class CodeSyncJavascriptTest {
 			testParsedParameter(expectedParameter, getParameter(expectedParameter.getName(), actual));
 		}
 		
-		assertEquals("Template", expected.get(5), actual.getTemplate());
+		assertEquals("Template", expected.get(5), actual.getType());
 		
 		assertEquals("Offset", offset, actual.getOffset());
 		assertEquals("Length", length, actual.getLength());

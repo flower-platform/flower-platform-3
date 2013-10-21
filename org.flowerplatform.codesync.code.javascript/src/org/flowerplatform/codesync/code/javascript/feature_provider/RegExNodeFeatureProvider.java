@@ -38,11 +38,11 @@ public class RegExNodeFeatureProvider extends CodeSyncElementFeatureProvider {
 	public List<?> getFeatures(Object element) {
 		List features = super.getFeatures(element);
 		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
-		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode());
-		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter());
-		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template());
-		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_ChildType());
-		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_NextSiblingSeparator());
+//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode());
+//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter());
+//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template());
+//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_ChildType());
+//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_NextSiblingSeparator());
 		return features;
 	}
 

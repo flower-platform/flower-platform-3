@@ -53,7 +53,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 			
 			Node title = NotationFactory.eINSTANCE.createNode();
 			title.setDiagrammableElement(codeSyncElement);
-			title.setViewType("title");
+			title.setViewType("classDiagram." + codeSyncElement.getType() + ".title");
 			view.getPersistentChildren().add(title);
 			
 			// populate PARENT_CODE_SYNC_ELEMENT
@@ -63,7 +63,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 			}
 			CodeSyncElement parent = getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, location.split("/"));
 			CodeSyncElement file = CodeSyncPlugin.getInstance().getCodeSyncOperationsService().create(CodeSyncPlugin.FILE);
-			file.setName("javaClass.java"); // TODO where do we get this?
+			file.setName("backboneClass.js"); // TODO where do we get this?
 			CodeSyncPlugin.getInstance().getCodeSyncOperationsService().add(parent, file);
 			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
 		}
