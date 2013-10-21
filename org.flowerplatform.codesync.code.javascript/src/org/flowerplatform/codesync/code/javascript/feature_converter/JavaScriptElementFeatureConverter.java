@@ -22,14 +22,14 @@ import java.util.List;
 
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
-import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureConverter;
+import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavaScriptElementFeatureConverter extends CodeSyncElementFeatureConverter {
+public class JavaScriptElementFeatureConverter extends CodeSyncElementFeatureValueConverter {
 
 	protected final String BACKBONE_SUPER_CLASS = "backboneSuperClass";
 	
