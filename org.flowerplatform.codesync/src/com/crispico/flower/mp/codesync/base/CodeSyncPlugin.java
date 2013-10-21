@@ -37,7 +37,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureConverter;
+import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
@@ -90,7 +90,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
 
-	protected List<CodeSyncElementFeatureConverter> codeSyncElementFeatureConverters;
+	protected List<CodeSyncElementFeatureValueConverter> codeSyncElementFeatureConverters;
 	
 	protected List<AddNewExtension> addNewExtensions;
 	
@@ -143,7 +143,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return null;
 	}
 	
-	public List<CodeSyncElementFeatureConverter> getCodeSyncElementFeatureConverters() {
+	public List<CodeSyncElementFeatureValueConverter> getCodeSyncElementFeatureConverters() {
 		return codeSyncElementFeatureConverters;
 	}
 	
@@ -218,12 +218,12 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	private void initializeExtensionPoint_codeSyncElementFeatureConverter() throws CoreException {
-		codeSyncElementFeatureConverters = new ArrayList<CodeSyncElementFeatureConverter>();
+		codeSyncElementFeatureConverters = new ArrayList<CodeSyncElementFeatureValueConverter>();
 		IConfigurationElement[] configurationElements = 
 				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementFeatureConverter");
 		for (IConfigurationElement configurationElement : configurationElements) {
 			Object instance = configurationElement.createExecutableExtension("codeSyncElementFeatureConverter");
-			codeSyncElementFeatureConverters.add((CodeSyncElementFeatureConverter) instance);
+			codeSyncElementFeatureConverters.add((CodeSyncElementFeatureValueConverter) instance);
 		}
 	}
 	

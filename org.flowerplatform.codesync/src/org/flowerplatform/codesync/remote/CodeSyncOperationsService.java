@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureConverter;
+import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
@@ -50,6 +50,20 @@ public class CodeSyncOperationsService {
 	}
 	
 	/**
+	 * Delegates to registered {@link CodeSyncElementFeatureValueConverter}s.
+	 */
+	public Object getFeatureValue(CodeSyncElement codeSyncElement, String feature) {
+		List<CodeSyncElementFeatureValueConverter> converters = 
+				CodeSyncPlugin.getInstance().getCodeSyncElementFeatureConverters();
+		for (CodeSyncElementFeatureValueConverter converter : converters) {
+			if (converter.getFeature(feature) != null) {
+				return converter.getValue(codeSyncElement, feature);
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * Returns the value of <code>feature</code> on the <code>codeSyncElement</code>, first from the
 	 * list of {@link org.eclipse.emf.ecore.change.FeatureChange}s, if it exists.
 	 */
@@ -71,26 +85,25 @@ public class CodeSyncOperationsService {
 		return null;
 	}
 	
-	/**
-	 * Delegates to registered {@link CodeSyncElementFeatureConverter}s.
-	 */
-	public Object getFeatureValue(CodeSyncElement codeSyncElement, String feature) {
-		List<CodeSyncElementFeatureConverter> converters = 
-				CodeSyncPlugin.getInstance().getCodeSyncElementFeatureConverters();
-		for (CodeSyncElementFeatureConverter converter : converters) {
-			if (converter.getFeature(feature) != null) {
-				return converter.getValue(codeSyncElement, feature);
-			}
-		}
-		return null;
-	}
-	
 	public Object getOldFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
 		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
 		if (featureChange != null) {
 			return featureChange.getOldValue();
 		} else {
 			return getFeatureValue(codeSyncElement, feature);
+		}
+	}
+	
+	/**
+	 * Delegates to registered {@link CodeSyncElementFeatureValueConverter}s.
+	 */
+	public void setFeatureValue(CodeSyncElement codeSyncElement, String feature, Object newValue) {
+		List<CodeSyncElementFeatureValueConverter> converters = 
+				CodeSyncPlugin.getInstance().getCodeSyncElementFeatureConverters();
+		for (CodeSyncElementFeatureValueConverter converter : converters) {
+			if (converter.getFeature(feature) != null) {
+				converter.setValue(codeSyncElement, feature, newValue);
+			}
 		}
 	}
 	

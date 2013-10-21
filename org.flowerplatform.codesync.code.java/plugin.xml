@@ -130,7 +130,7 @@
  <extension
        point="org.flowerplatform.codesync.codeSyncElementFeatureConverter">
     <codeSyncElementFeatureConverter
-          codeSyncElementFeatureConverter="org.flowerplatform.codesync.code.java.feature_converter.JavaElementFeatureConverter">
+          codeSyncElementFeatureConverter="org.flowerplatform.codesync.code.java.feature_converter.JavaElementFeatureValueConverter">
     </codeSyncElementFeatureConverter>
  </extension>
 

@@ -41,36 +41,6 @@ public class Parser {
 	public static final String JS_FILE 				= "jsFile";
 	public static final String HTML_FILE 			= "htmlFile";
 	
-//	public static final String JS_REQUIRE 			= "jsRequire";
-//	public static final String JS_REQUIRE_REGEX 	= "var\\s*(\\S+?)\\s*=\\s*require\\((\\S+)\\)";
-//	
-//	public static final String JS_CLASS 			= "jsClass";
-//	public static final String JS_CLASS_REGEX 		= "return\\s*(\\S+?)\\.extend\\s*\\(\\s*\\{";
-//	
-//	public static final String JS_NAMED_CLASS		= "jsNamedClass";
-//	public static final String JS_NAMED_CLASS_REGEX	= "(\\S+?)\\s*=\\s*(\\S+?)\\.extend\\s*\\(\\s*\\{";
-//	
-//	public static final String JS_FUNCTION 			= "jsFunction";
-//	public static final String JS_FUNCTION_REGEX 	= "function\\s*\\((.*?)\\)\\s*\\{";
-//	
-//	public static final String JS_NAMED_FUNCTION	= "jsNamedFunction";
-//	public static final String 
-//						JS_NAMED_FUNCTION_REGEX		= "(\\S+?)\\s*[:=]\\s*" + JS_FUNCTION_REGEX;
-//	public static final String 
-//						JS_NAMED_FUNCTION_REGEX2	= "function\\s*(\\S+?)\\s*\\((.*?)\\)\\s*\\{";
-//	
-//	public static final String JS_EVENTS 			= "jsEvents";
-//	public static final String JS_EVENTS_REGEX 		= "events\\s*:\\s*\\{";
-//	
-//	public static final String JS_EVENT 			= "jsEvent";
-//	public static final String JS_EVENT_REGEX 		= "\"(\\S+?)\\s*(\\S*?)\"\\s*:\\s*\"(\\S+?)\"";
-//	
-//	public static final String JS_ATTRIBUTE 		= "jsAttribute";
-//	public static final String JS_ATTRIBUTE_REGEX 	= "(\\w+)\\s*+[:=]";
-//	
-//	public static final String JS_DOC				= "jsDoc";
-//	public static final String JS_DOC_REGEX			= "/\\*\\*(.+?)\\*/";
-	
 	//////////////////////////////////
 	// HTML
 	//////////////////////////////////
@@ -78,33 +48,30 @@ public class Parser {
 	public static final String HTML_CHILDREN_INSERT_POINT		= "htmlChildrenInsertPoint";
 	public static final String HTML_CHILDREN_INSERT_POINT_REGEX	= "<!-- children-insert-point (.*?) -->";
 	
-	public static final String HTML_TABLE_TEMPLATE				= "Table";
+	public static final String HTML_TABLE						= "table";
 	public static final String HTML_TABLE_REGEX					= "<!-- template Table -->\\s*<table .*?id=\\s*\"(.*?)\">\\s*<tr .*?id=\\s*\"(.*?)\"";
 	
-	public static final String HTML_TABLE_TEMPLATE_END			= "htmlTableEnd";
-	public static final String HTML_TABLE_TEMPLATE_END_REGEX	= "</table>";
+	public static final String HTML_TABLE_END			= "htmlTableEnd";
+	public static final String HTML_TABLE_END_REGEX	= "</table>";
 	
-	public static final String HTML_TABLE_HEADER_ENTRY 			= "htmlTableHeaderEntry";
-	public static final String HTML_TABLE_HEADER_ENTRY_TEMPLATE = "TableHeaderEntry";
+	public static final String HTML_TABLE_HEADER_ENTRY 			= "tableHeaderEntry";
 	public static final String HTML_TABLE_HEADER_ENTRY_REGEX 	= "<th>(.*?)</th>";
 
-	public static final String HTML_TABLE_ITEM_TEMPLATE 		= "TableItem";
+	public static final String HTML_TABLE_ITEM					= "tableItem";
 	public static final String HTML_TABLE_ITEM_REGEX 			= "<!-- template TableItem -->";
 	public static final String HTML_TABLE_ITEM_URL				= "TableItemUrl";
 	public static final String HTML_TABLE_ITEM_URL_REGEX 		= "<td><a .*?href=\"(.*)\".*?</td>"; 
 	
-	public static final String HTML_TABLE_ITEM_ENTRY 			= "htmlTableItemEntry";
-	public static final String HTML_TABLE_ITEM_ENTRY_TEMPLATE	= "TableItemEntry";
+	public static final String HTML_TABLE_ITEM_ENTRY 			= "tableItemEntry";
 	public static final String HTML_TABLE_ITEM_ENTRY_REGEX		= "<td>.*?<%= (.*?) %>.*?</td>";
 	
-	public static final String HTML_FORM_TEMPLATE				= "Form";
+	public static final String HTML_FORM						= "form";
 	public static final String HTML_FORM_REGEX					= "<!-- template Form -->.*?<table";
 	
-	public static final String HTML_FORM_TEMPLATE_END			= "htmlFormEnd";
-	public static final String HTML_FORM_TEMPLATE_END_REGEX		= "</table>";
+	public static final String HTML_FORM_END			= "htmlFormEnd";
+	public static final String HTML_FORM_END_REGEX		= "</table>";
 	
-	public static final String HTML_FORM_ITEM					= "htmlFormItem";
-	public static final String HTML_FORM_ITEM_TEMPLATE 			= "FormItem";
+	public static final String HTML_FORM_ITEM					= "formItem";
 	public static final String HTML_FORM_ITEM_REGEX 			= "<tr.*?<td>(.*?):</td>.*?<td .*?<%= (.*?) %>.*?<td.*?id=\"(.*?)\".*?</tr>";
 	
 	//////////////////////////////////
@@ -114,52 +81,38 @@ public class Parser {
 	public static final String JS_CHILDREN_INSERT_POINT			= "jsChildrenInsertPoint";
 	public static final String JS_CHILDREN_INSERT_POINT_REGEX	= "// children-insert-point (\\S*)";
 	
-	public static final String JS_BACKBONE_CLASS_TEMPLATE 		= "BackboneClass";
+	public static final String JS_BACKBONE_CLASS 				= "backboneClass";
 	public static final String JS_BACKBONE_CLASS_REGEX			= "// template BackboneClass";
 	public static final String JS_BACKBONE_SUPER_CLASS			= "jsBackboneClassSuperClass";
 	public static final String JS_BACKBONE_SUPER_CLASS_REGEX	= "return\\s*+(.*?).extend\\s*\\(";
 	
-	public static final String JS_REQUIRE_ENTRY					= "jsRequireEntry";
-	public static final String JS_REQUIRE_ENTRY_TEMPLATE		= "RequireEntry";
+	public static final String JS_REQUIRE_ENTRY					= "requireEntry";
 	public static final String JS_REQUIRE_ENTRY_CATEGORY		= "Require";
 	public static final String JS_REQUIRE_ENTRY_REGEX			= "var\\s*?(\\S*?)\\s*?=\\s*?require\\('(.*?)'\\)\\s*?;";
 	
-	public static final String JS_BACKBONE_CLASS_MEMBER			= "ClassMember";
+	public static final String JS_BACKBONE_CLASS_MEMBER			= "classMember";
 	
-	public static final String JS_OPERATION						= "jsOperation";
-	public static final String JS_OPERATION_TEMPLATE			= "Operation";
+	public static final String JS_OPERATION						= "javaScriptOperation";
 	public static final String JS_OPERATION_CATEGORY			= "Operation";
 	public static final String JS_OPERATION_REGEX				= "(\\S*?)\\s*?:\\s*?function\\s*?\\((.*?)\\)\\s*?\\{";
 	
-	public static final String JS_ATTRIBUTE						= "jsAttribute";
-	public static final String JS_ATTRIBUTE_TEMPLATE			= "Attribute";
+	public static final String JS_ATTRIBUTE						= "javaScriptAttribute";
 	public static final String JS_ATTRIBUTE_CATEGORY			= "Attribute";
 	public static final String JS_ATTRIBUTE_REGEX				= "(\\w+)\\s*+:\\s*(\\w+)";
 	
-	public static final String JS_EVENTS_ATTRIBUTE				= "jsEventsAttribute";
-	public static final String JS_EVENTS_ATTRIBUTE_TEMPLATE		= "EventsAttribute";
+	public static final String JS_EVENTS_ATTRIBUTE				= "eventsAttribute";
 	public static final String JS_EVENTS_ATTRIBUTE_CATEGORY 	= "Events";
 	public static final String JS_EVENTS_ATTRIBUTE_REGEX		= "(events)\\s*:\\s*\\{";
 	
-	public static final String JS_EVENTS_ATTRIBUTE_ENTRY		= "jsEventsAttributeEntry";
-	public static final String JS_EVENTS_ATTRIBUTE_ENTRY_TEMPLATE = "EventsAttributeEntry";
+	public static final String JS_EVENTS_ATTRIBUTE_ENTRY		= "eventsAttributeEntry";
 	public static final String JS_EVENTS_ATTRIBUTE_ENTRY_REGEX	= "\"(\\S+?)\\s*(\\S*?)\"\\s*:\\s*\"(\\S+?)\"";
 	
-	public static final String JS_ROUTES_ATTRIBUTE				= "jsRoutesAttribute";
-	public static final String JS_ROUTES_ATTRIBUTE_TEMPLATE		= "RoutesAttribute";
+	public static final String JS_ROUTES_ATTRIBUTE				= "routesAttribute";
 	public static final String JS_ROUTES_ATTRIBUTE_CATEGORY		= "Routes";
 	public static final String JS_ROUTES_ATTRIBUTE_REGEX		= "(routes)\\s*:\\s*\\{";
 	
-	public static final String JS_ROUTES_ATTRIBUTE_ENTRY		= "jsRoutesAttributeEntry";
-	public static final String JS_ROUTES_ATTRIBUTE_ENTRY_TEMPLATE = "RoutesAttributeEntry";
+	public static final String JS_ROUTES_ATTRIBUTE_ENTRY		= "routesAttributeEntry";
 	public static final String JS_ROUTES_ATTRIBUTE_ENTRY_REGEX	= "\"(\\S+?)\"\\s*:\\s*\"(\\S+?)\"";
-	
-//	public static final String JS_REQUIRE_CATEGORY				= "require";
-//	public static final String JS_MAIN_CLASS_CATEGORY 			= "main class";
-//	public static final String JS_SUB_CLASSES_CATEGORY			= "sub classes";
-//	public static final String JS_CLASS_FUNCTIONS_CATEGORY 		= "functions";
-//	public static final String JS_CLASS_ATTRIBUTES_CATEGORY 	= "attributes";
-//	public static final String JS_EVENTS_CATEGORY 				= "events";
 	
 	public static final String NAME = "name";
 	
@@ -178,7 +131,7 @@ public class Parser {
 		}
 		
 		RegExAstNode root = createRegExAstNode(file.getPath().endsWith(".js") ? JS_FILE : HTML_FILE, NAME, false, 0, 0);
-		addParameter(root, NAME, file.getName(), 0, 0);
+		addParameter(root, NAME, file.getName().substring(0, file.getName().indexOf(".")), 0, 0);
 		
 		RegexConfiguration config = new RegexConfiguration();
 		if (file.getPath().endsWith(".js")) {
@@ -216,26 +169,26 @@ public class Parser {
 			}
 			
 		})
-		.add(new RegexWithAction(HTML_TABLE_TEMPLATE, HTML_TABLE_REGEX) {
+		.add(new RegexWithAction(HTML_TABLE, HTML_TABLE_REGEX) {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(HTML_FILE)) {
-					currentState.node.setTemplate(HTML_TABLE_TEMPLATE);
-					currentState.node.setChildType(HTML_TABLE_TEMPLATE);
+					currentState.node.setType(HTML_TABLE);
+					currentState.node.setChildType(HTML_TABLE);
 					addParameter(currentState.node, "tableId", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(currentState.node, "headerRowId", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
-					enterState(session, HTML_TABLE_TEMPLATE, currentState.node, 1);
+					enterState(session, HTML_TABLE, currentState.node, 1);
 				}
 			}
 			
 		})
-		.add(new RegexWithAction(HTML_TABLE_TEMPLATE_END, HTML_TABLE_TEMPLATE_END_REGEX) {
+		.add(new RegexWithAction(HTML_TABLE_END, HTML_TABLE_END_REGEX) {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (HTML_TABLE_TEMPLATE.equals(currentState.node.getTemplate()) || HTML_FORM_TEMPLATE.equals(currentState.node.getTemplate())) {
+				if (HTML_TABLE.equals(currentState.node.getType()) || HTML_FORM.equals(currentState.node.getType())) {
 					exitState(session);
 				}
 			}
@@ -245,10 +198,10 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (HTML_TABLE_TEMPLATE.equals(currentState.node.getTemplate())) {
+				if (HTML_TABLE.equals(currentState.node.getType())) {
 					RegExAstNode entry = createRegExAstNode(HTML_TABLE_HEADER_ENTRY, "title", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
-					entry.setTemplate(HTML_TABLE_HEADER_ENTRY_TEMPLATE);
-					entry.setChildType(HTML_TABLE_HEADER_ENTRY_TEMPLATE);
+					entry.setType(HTML_TABLE_HEADER_ENTRY);
+					entry.setChildType(HTML_TABLE_HEADER_ENTRY);
 					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(entry, "title", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					currentState.node.getChildren().add(entry);
@@ -256,15 +209,15 @@ public class Parser {
 			}
 			
 		}) 
-		.add(new RegexWithAction(HTML_TABLE_ITEM_TEMPLATE, HTML_TABLE_ITEM_REGEX) {
+		.add(new RegexWithAction(HTML_TABLE_ITEM, HTML_TABLE_ITEM_REGEX) {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(HTML_FILE)) {
-					currentState.node.setTemplate(HTML_TABLE_ITEM_TEMPLATE);
-					currentState.node.setChildType(HTML_TABLE_ITEM_TEMPLATE);
+					currentState.node.setType(HTML_TABLE_ITEM);
+					currentState.node.setChildType(HTML_TABLE_ITEM);
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
-					enterState(session, HTML_TABLE_ITEM_TEMPLATE, currentState.node, 1);
+					enterState(session, HTML_TABLE_ITEM, currentState.node, 1);
 				}
 			}
 			
@@ -273,7 +226,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (HTML_TABLE_ITEM_TEMPLATE.equals(currentState.node.getTemplate())) {
+				if (HTML_TABLE_ITEM.equals(currentState.node.getType())) {
 					addParameter(currentState.node, "itemUrl", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					exitState(session);
 				}
@@ -284,10 +237,10 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (HTML_TABLE_ITEM_TEMPLATE.equals(currentState.node.getTemplate())) {
+				if (HTML_TABLE_ITEM.equals(currentState.node.getType())) {
 					RegExAstNode entry = createRegExAstNode(HTML_TABLE_ITEM_ENTRY, "valueExpression", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
-					entry.setTemplate(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
-					entry.setChildType(HTML_TABLE_ITEM_ENTRY_TEMPLATE);
+					entry.setType(HTML_TABLE_ITEM_ENTRY);
+					entry.setChildType(HTML_TABLE_ITEM_ENTRY);
 					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					currentState.node.getChildren().add(entry);
@@ -295,15 +248,15 @@ public class Parser {
 			}
 			
 		})
-		.add(new RegexWithAction(HTML_FORM_TEMPLATE, HTML_FORM_REGEX) {
+		.add(new RegexWithAction(HTML_FORM, HTML_FORM_REGEX) {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(HTML_FILE)) {
-					currentState.node.setTemplate(HTML_FORM_TEMPLATE);
-					currentState.node.setChildType(HTML_FORM_TEMPLATE);
+					currentState.node.setType(HTML_FORM);
+					currentState.node.setChildType(HTML_FORM);
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
-					enterState(session, HTML_FORM_TEMPLATE, currentState.node, 1);
+					enterState(session, HTML_FORM, currentState.node, 1);
 				}
 			}
 			
@@ -312,10 +265,10 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (HTML_FORM_TEMPLATE.equals(currentState.node.getTemplate())) {
+				if (HTML_FORM.equals(currentState.node.getType())) {
 					RegExAstNode entry = createRegExAstNode(HTML_FORM_ITEM, "title", false, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
-					entry.setTemplate(HTML_FORM_ITEM_TEMPLATE);
-					entry.setChildType(HTML_FORM_ITEM_TEMPLATE);
+					entry.setType(HTML_FORM_ITEM);
+					entry.setChildType(HTML_FORM_ITEM);
 					entry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(entry, "title", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
@@ -338,16 +291,16 @@ public class Parser {
 			}
 			
 		})
-		.add(new RegexWithAction(JS_BACKBONE_CLASS_TEMPLATE, JS_BACKBONE_CLASS_REGEX) {
+		.add(new RegexWithAction(JS_BACKBONE_CLASS, JS_BACKBONE_CLASS_REGEX) {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(JS_FILE)) {
-					currentState.node.setTemplate(JS_BACKBONE_CLASS_TEMPLATE);
-					currentState.node.setChildType(JS_BACKBONE_CLASS_TEMPLATE);
+					currentState.node.setType(JS_BACKBONE_CLASS);
+					currentState.node.setChildType(JS_BACKBONE_CLASS);
 					attachJsDoc(currentState.node);
 					
-					enterState(session, JS_BACKBONE_CLASS_TEMPLATE, currentState.node, 1);
+					enterState(session, JS_BACKBONE_CLASS, currentState.node, 1);
 				}
 			}
 			
@@ -372,7 +325,7 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (JS_BACKBONE_CLASS_TEMPLATE.equals(currentState.node.getTemplate())) {
+				if (JS_BACKBONE_CLASS.equals(currentState.node.getType())) {
 					addParameter(currentState.node, "superClass", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 				}
 			}
@@ -382,10 +335,10 @@ public class Parser {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				if (JS_BACKBONE_CLASS_TEMPLATE.equals(currentState.node.getTemplate())) {
+				if (JS_BACKBONE_CLASS.equals(currentState.node.getType())) {
 					RegExAstNode requireEntry = addToCategory(JS_REQUIRE_ENTRY_CATEGORY, currentState.node, "varName", JS_REQUIRE_ENTRY, session.getMatcher().start(session.getCurrentMatchGroupIndex()), session.getMatcher().end(session.getCurrentMatchGroupIndex()));
-					requireEntry.setTemplate(JS_REQUIRE_ENTRY_TEMPLATE);
-					requireEntry.setChildType(JS_REQUIRE_ENTRY_TEMPLATE);
+					requireEntry.setType(JS_REQUIRE_ENTRY);
+					requireEntry.setChildType(JS_REQUIRE_ENTRY);
 					requireEntry.setNextSiblingInsertPoint(session.getMatcher().end(session.getCurrentMatchGroupIndex()));
 					addParameter(requireEntry, "varName", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(requireEntry, "dependencyPath", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
@@ -399,7 +352,7 @@ public class Parser {
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode function = addToCategory(JS_OPERATION_CATEGORY, currentState.node, NAME, JS_OPERATION, session.getMatcher().start(), 0);
-				function.setTemplate(JS_OPERATION_TEMPLATE);
+				function.setType(JS_OPERATION);
 				function.setChildType(JS_BACKBONE_CLASS_MEMBER);
 				function.setNextSiblingSeparator(",\r\n");
 				addParameter(function, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
@@ -417,7 +370,7 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode events = addToCategory(JS_ATTRIBUTE_CATEGORY, currentState.node, NAME, JS_EVENTS_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
 				addParameter(events, "name", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-				events.setTemplate(JS_EVENTS_ATTRIBUTE_TEMPLATE);
+				events.setType(JS_EVENTS_ATTRIBUTE);
 				events.setChildType(JS_BACKBONE_CLASS_MEMBER);
 				events.setNextSiblingSeparator(",\r\n");
 				enterState(session, JS_EVENTS_ATTRIBUTE, currentState.node, 1);
@@ -432,7 +385,7 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode routes = addToCategory(JS_ATTRIBUTE_CATEGORY, currentState.node, NAME, JS_ROUTES_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
 				addParameter(routes, "name", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-				routes.setTemplate(JS_ROUTES_ATTRIBUTE_TEMPLATE);
+				routes.setType(JS_ROUTES_ATTRIBUTE);
 				routes.setChildType(JS_BACKBONE_CLASS_MEMBER);
 				routes.setNextSiblingSeparator(",\r\n");
 				enterState(session, JS_ROUTES_ATTRIBUTE, currentState.node, 1);
@@ -446,7 +399,7 @@ public class Parser {
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				RegExAstNode attr = addToCategory(JS_ATTRIBUTE_CATEGORY, currentState.node, NAME, JS_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
-				attr.setTemplate(JS_ATTRIBUTE_TEMPLATE);
+				attr.setType(JS_ATTRIBUTE);
 				attr.setChildType(JS_BACKBONE_CLASS_MEMBER);
 				attr.setNextSiblingInsertPoint(attr.getOffset() + attr.getLength());
 				attr.setNextSiblingSeparator(",\r\n");
@@ -465,8 +418,8 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(JS_EVENTS_ATTRIBUTE)) {
 					RegExAstNode event = addToCategory(JS_EVENTS_ATTRIBUTE_CATEGORY, currentState.node, "event", JS_EVENTS_ATTRIBUTE_ENTRY, session.getMatcher().start(), session.getMatcher().end());
-					event.setTemplate(JS_EVENTS_ATTRIBUTE_ENTRY_TEMPLATE);
-					event.setChildType(JS_EVENTS_ATTRIBUTE_ENTRY_TEMPLATE);
+					event.setType(JS_EVENTS_ATTRIBUTE_ENTRY);
+					event.setChildType(JS_EVENTS_ATTRIBUTE_ENTRY);
 					event.setNextSiblingSeparator(",\r\n");
 					addParameter(event, "event", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(event, "selector", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
@@ -481,8 +434,8 @@ public class Parser {
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(JS_ROUTES_ATTRIBUTE)) {
 					RegExAstNode route = addToCategory(JS_ROUTES_ATTRIBUTE_CATEGORY, currentState.node, "event", JS_ROUTES_ATTRIBUTE_ENTRY, session.getMatcher().start(), session.getMatcher().end());
-					route.setTemplate(JS_ROUTES_ATTRIBUTE_ENTRY_TEMPLATE);
-					route.setChildType(JS_ROUTES_ATTRIBUTE_ENTRY_TEMPLATE);
+					route.setType(JS_ROUTES_ATTRIBUTE_ENTRY);
+					route.setChildType(JS_ROUTES_ATTRIBUTE_ENTRY);
 					route.setNextSiblingSeparator(",\r\n");
 					addParameter(route, "path", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(route, "function", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
@@ -492,200 +445,6 @@ public class Parser {
 		})
 		.compile(Pattern.DOTALL);
 	}
-	
-//	protected void buildJsConfig(RegexConfiguration config) {
-//		config
-//		.add(new RegexWithAction(JS_DOC, JS_DOC_REGEX) {
-//
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				jsDoc = createRegExAstNode(JS_DOC, null, false, session.getMatcher().start(), session.getMatcher().end());
-//				addParameter(jsDoc, "text", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//			}
-//			
-//		})
-//		.add(new RegexWithAction.IfFindThisSkip("multiline commment", RegexUtil.MULTI_LINE_COMMENT))
-//		.add(new RegexWithAction.IfFindThisSkip("single line comment", RegexUtil.SINGLE_LINE_COMMENT))
-//		.add(new RegexWithAction("closing bracket", "[\\}\\]]") {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				exitState(session);
-//			}
-//		})
-//		.add(new RegexWithAction(JS_REQUIRE, JS_REQUIRE_REGEX) {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-////				if (currentState.category.equals(JS_FILE)) {
-//					RegExAstNode require = addToCategory(JS_REQUIRE_CATEGORY, currentState.node, NAME, JS_REQUIRE, session.getMatcher().start(), session.getMatcher().end());
-//					addParameter(require, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//					addParameter(require, "path", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
-//					
-//					attachJsDoc(require);
-////				}
-//			}
-//		})
-//		.add(new RegexWithAction(JS_NAMED_CLASS, JS_NAMED_CLASS_REGEX) {
-//
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				RegExAstNode cls = addToCategory(JS_SUB_CLASSES_CATEGORY, currentState.node, NAME, JS_NAMED_CLASS, session.getMatcher().start(), 0);
-//				addParameter(cls, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//				addParameter(cls, "superClass", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
-//				
-//				enterState(session, JS_CLASS, cls, 1);
-//				
-//				attachJsDoc(cls);
-//			}
-//		})
-//		.add(new RegexWithAction(JS_CLASS, JS_CLASS_REGEX) {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				RegExAstNode cls = createRegExAstNode(JS_MAIN_CLASS_CATEGORY, NAME, true, session.getMatcher().start(), 0);
-//				currentState.node.getChildren().add(cls);
-//				addParameter(cls, NAME, JS_MAIN_CLASS_CATEGORY, 0, 0);
-//				addParameter(cls, "superClass", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//				
-//				enterState(session, JS_CLASS, cls, 1);
-//				
-//				attachJsDoc(cls);
-//			}
-//		})
-//		.add(new RegexWithAction(JS_NAMED_FUNCTION, JS_NAMED_FUNCTION_REGEX) {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				RegExAstNode function = null;
-//				if (currentState.category.equals(JS_CLASS) || currentState.category.equals(JS_FILE)) {
-//					function = addToCategory(JS_CLASS_FUNCTIONS_CATEGORY, currentState.node, NAME, JS_FUNCTION, session.getMatcher().start(), 0);
-//					
-//					enterState(session, JS_FUNCTION, function, 1);
-//				} else if (currentState.category.equals(JS_FUNCTION)) {
-//					function = createRegExAstNode(JS_FUNCTION, NAME, false, session.getMatcher().start(), 0);
-//					currentState.node.getChildren().add(function);
-//					
-//					enterState(session, JS_FUNCTION, function, 1);
-//				}
-//				if (function != null) {
-//					addParameter(function, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//					addParameter(function, "signature", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
-//					
-//					attachJsDoc(function);
-//				} else {
-//					session.currentNestingLevel++;
-//				}
-//			}
-//		})
-//		.add(new RegexWithAction(JS_NAMED_FUNCTION, JS_NAMED_FUNCTION_REGEX2) {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				RegExAstNode function = null;
-//				if (currentState.category.equals(JS_CLASS) || currentState.category.equals(JS_FILE)) {
-//					function = addToCategory(JS_CLASS_FUNCTIONS_CATEGORY, currentState.node, NAME, JS_FUNCTION, session.getMatcher().start(), 0);
-//					
-//					enterState(session, JS_FUNCTION, function, 1);
-//				} else if (currentState.category.equals(JS_FUNCTION)) {
-//					function = createRegExAstNode(JS_FUNCTION, NAME, false, session.getMatcher().start(), 0);
-//					currentState.node.getChildren().add(function);
-//					
-//					enterState(session, JS_FUNCTION, function, 1);
-//				}
-//				if (function != null) {
-//					addParameter(function, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//					addParameter(function, "signature", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
-//				
-//					attachJsDoc(function);
-//				} else {
-//					session.currentNestingLevel++;
-//				}
-//			}
-//		})
-////		.add(new RegexWithAction(JS_FUNCTION, JS_FUNCTION_REGEX) {
-////
-////			@Override
-////			public void executeAction(RegexProcessingSession session) {
-////				RegExAstNode function = null;
-////				if (currentState.category.equals(JS_CLASS) || currentState.category.equals(JS_FILE)) {
-////					function = addToCategory(JS_CLASS_FUNCTIONS_CATEGORY, currentState.node, NAME, JS_FUNCTION, session.getMatcher().start(), 0);
-////				} else if (currentState.category.equals(JS_FUNCTION)) {
-////					function = createRegExAstNode(JS_FUNCTION, NAME, false, session.getMatcher().start(), 0);
-////					currentState.node.getChildren().add(function);
-////				}
-////				if (function != null) {
-////					enterState(session, JS_FUNCTION, function, 1);
-////					addParameter(function, "signature", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-////				
-////					attachJsDoc(function);
-////				} else {
-////					session.currentNestingLevel++;
-////				}
-////			}
-////			
-////		})
-//		.add(new RegexWithAction(JS_EVENTS, JS_EVENTS_REGEX) {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				if (currentState.category.equals(JS_CLASS)) {
-//					RegExAstNode events = addToCategory(JS_CLASS_ATTRIBUTES_CATEGORY, currentState.node, NAME, JS_EVENTS, session.getMatcher().start(), session.getMatcher().end());
-//					
-//					enterState(session, JS_EVENTS, currentState.node, 1);
-//					
-//					attachJsDoc(events);
-//				}
-//			}
-//		})
-//		.add(new RegexWithAction(JS_EVENT, JS_EVENT_REGEX) {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				if (currentState.category.equals(JS_EVENTS)) {
-//					RegExAstNode event = addToCategory(JS_EVENTS_CATEGORY, currentState.node, NAME, JS_EVENT, session.getMatcher().start(), session.getMatcher().end());
-//					addParameter(event, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//					addParameter(event, "selector", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
-//					addParameter(event, "handler", session.getCurrentSubMatchesForCurrentRegex()[2], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 3), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 3));
-//				}
-//			}
-//		})
-//		.add(new RegexWithAction(JS_ATTRIBUTE, JS_ATTRIBUTE_REGEX) {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				if (currentState.category.equals(JS_CLASS) || currentState.category.equals(JS_FILE)) {
-//					RegExAstNode attr = addToCategory(JS_CLASS_ATTRIBUTES_CATEGORY, currentState.node, NAME, JS_ATTRIBUTE, session.getMatcher().start(), session.getMatcher().end());
-//					addParameter(attr, NAME, session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-//					
-//					enterState(session, JS_ATTRIBUTE, attr, 1);
-//					
-//					attachJsDoc(attr);
-//				}
-//			}
-//		})
-//		.add(new RegexWithAction("opening bracket", "[\\{\\[]") {
-//			
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				session.currentNestingLevel++;
-//			}
-//		})
-//		.add(new RegexWithAction("", "[,;]") {
-//
-//			@Override
-//			public void executeAction(RegexProcessingSession session) {
-//				if (currentState.category.equals(JS_ATTRIBUTE) && statesStack[session.currentNestingLevel] != null
-//						&& statesStack[session.currentNestingLevel].category.equals(JS_ATTRIBUTE)) {
-////					addParameter(currentState.node, "value", input.substring(currentState.node.getOffset() + currentState.node.getLength(), session.getMatcher().start()), 
-////							currentState.node.getOffset() + currentState.node.getLength(), session.getMatcher().start());
-//					currentState.node.setLength(session.getMatcher().start() - currentState.node.getOffset());
-//					exitState(session);
-//				}
-//			}
-//		})
-//		.compile(Pattern.DOTALL);
-//	}
 	
 	protected static void enterState(RegexProcessingSession session, String state, RegExAstNode node, int increment) {
 		session.currentNestingLevel += increment;
@@ -747,6 +506,15 @@ public class Parser {
 		node.getParameters().add(parameter);
 	}
 	
+	private String getParameterValue(RegExAstNode node, String name) {
+		for (RegExAstNodeParameter parameter : node.getParameters()) {
+			if (parameter.getName().equals(name)) {
+				return parameter.getValue();
+			}
+		}
+		return "";
+	}
+	
 	protected void attachJsDoc(RegExAstNode node) {
 		if (jsDoc != null) {
 			node.getChildren().add(jsDoc);
@@ -785,12 +553,4 @@ public class Parser {
 		}
 	}
 	
-	private String getParameterValue(RegExAstNode node, String name) {
-		for (RegExAstNodeParameter parameter : node.getParameters()) {
-			if (parameter.getName().equals(name)) {
-				return parameter.getValue();
-			}
-		}
-		return "";
-	}
 }

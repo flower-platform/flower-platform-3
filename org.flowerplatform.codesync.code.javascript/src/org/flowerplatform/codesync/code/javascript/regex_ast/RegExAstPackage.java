@@ -152,22 +152,13 @@ public interface RegExAstPackage extends EPackage {
 	int REG_EX_AST_NODE__DELETED = 8;
 
 	/**
-	 * The feature id for the '<em><b>Template</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int REG_EX_AST_NODE__TEMPLATE = 9;
-
-	/**
 	 * The feature id for the '<em><b>Children Insert Points</b></em>' map.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_NODE__CHILDREN_INSERT_POINTS = 10;
+	int REG_EX_AST_NODE__CHILDREN_INSERT_POINTS = 9;
 
 	/**
 	 * The feature id for the '<em><b>Next Sibling Insert Point</b></em>' attribute.
@@ -176,7 +167,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT = 11;
+	int REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Next Sibling Separator</b></em>' attribute.
@@ -185,7 +176,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR = 12;
+	int REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR = 11;
 
 	/**
 	 * The feature id for the '<em><b>Child Type</b></em>' attribute.
@@ -194,7 +185,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_NODE__CHILD_TYPE = 13;
+	int REG_EX_AST_NODE__CHILD_TYPE = 12;
 
 	/**
 	 * The number of structural features of the '<em>Node</em>' class.
@@ -203,7 +194,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_NODE_FEATURE_COUNT = 14;
+	int REG_EX_AST_NODE_FEATURE_COUNT = 13;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.StringToIntegerEntryImpl <em>String To Integer Entry</em>}' class.
@@ -398,13 +389,13 @@ public interface RegExAstPackage extends EPackage {
 	int REG_EX_AST_CODE_SYNC_ELEMENT__FEATURE_CHANGES = CodeSyncPackage.CODE_SYNC_ELEMENT__FEATURE_CHANGES;
 
 	/**
-	 * The feature id for the '<em><b>Template</b></em>' attribute.
+	 * The feature id for the '<em><b>Relations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
+	int REG_EX_AST_CODE_SYNC_ELEMENT__RELATIONS = CodeSyncPackage.CODE_SYNC_ELEMENT__RELATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Next Sibling Separator</b></em>' attribute.
@@ -413,7 +404,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
+	int REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Child Type</b></em>' attribute.
@@ -422,7 +413,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 2;
+	int REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Code Sync Element</em>' class.
@@ -431,7 +422,7 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int REG_EX_AST_CODE_SYNC_ELEMENT_FEATURE_COUNT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 3;
+	int REG_EX_AST_CODE_SYNC_ELEMENT_FEATURE_COUNT = CodeSyncPackage.CODE_SYNC_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl <em>Cache Element</em>}' class.
@@ -599,17 +590,6 @@ public interface RegExAstPackage extends EPackage {
 	EAttribute getRegExAstNode_Deleted();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getTemplate <em>Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Template</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getTemplate()
-	 * @see #getRegExAstNode()
-	 * @generated
-	 */
-	EAttribute getRegExAstNode_Template();
-
-	/**
 	 * Returns the meta object for the map '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildrenInsertPoints <em>Children Insert Points</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -750,17 +730,6 @@ public interface RegExAstPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getRegExAstCodeSyncElement();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getTemplate <em>Template</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Template</em>'.
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getTemplate()
-	 * @see #getRegExAstCodeSyncElement()
-	 * @generated
-	 */
-	EAttribute getRegExAstCodeSyncElement_Template();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement#getNextSiblingSeparator <em>Next Sibling Separator</em>}'.
@@ -932,14 +901,6 @@ public interface RegExAstPackage extends EPackage {
 		EAttribute REG_EX_AST_NODE__DELETED = eINSTANCE.getRegExAstNode_Deleted();
 
 		/**
-		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute REG_EX_AST_NODE__TEMPLATE = eINSTANCE.getRegExAstNode_Template();
-
-		/**
 		 * The meta object literal for the '<em><b>Children Insert Points</b></em>' map feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -1048,14 +1009,6 @@ public interface RegExAstPackage extends EPackage {
 		 * @generated
 		 */
 		EClass REG_EX_AST_CODE_SYNC_ELEMENT = eINSTANCE.getRegExAstCodeSyncElement();
-
-		/**
-		 * The meta object literal for the '<em><b>Template</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE = eINSTANCE.getRegExAstCodeSyncElement_Template();
 
 		/**
 		 * The meta object literal for the '<em><b>Next Sibling Separator</b></em>' attribute feature.

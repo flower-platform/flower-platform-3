@@ -18,20 +18,23 @@
  */
 package org.flowerplatform.codesync.code.java.feature_converter;
 
-import static org.eclipse.jdt.core.dom.ASTNode.PROTECT;
 import static org.eclipse.jdt.core.dom.Modifier.ABSTRACT;
 import static org.eclipse.jdt.core.dom.Modifier.FINAL;
 import static org.eclipse.jdt.core.dom.Modifier.PRIVATE;
+import static org.eclipse.jdt.core.dom.Modifier.PROTECTED;
 import static org.eclipse.jdt.core.dom.Modifier.PUBLIC;
 import static org.eclipse.jdt.core.dom.Modifier.STATIC;
 import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.PRIVATE_KEYWORD;
 import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.PROTECTED_KEYWORD;
 import static org.eclipse.jdt.core.dom.Modifier.ModifierKeyword.PUBLIC_KEYWORD;
 
+import java.util.Collection;
 import java.util.List;
 
-import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureConverter;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
 
+import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
@@ -40,7 +43,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
  * @author Mariana Gheorghe
  */
-public class JavaElementFeatureConverter extends CodeSyncElementFeatureConverter {
+public class JavaElementFeatureValueConverter extends CodeSyncElementFeatureValueConverter {
 
 	// for DocumentableElements
 	protected final String DOCUMENTATION 	= "documentation";
@@ -62,7 +65,7 @@ public class JavaElementFeatureConverter extends CodeSyncElementFeatureConverter
 	// for Attributes
 	protected final String INITIALIZER		= "initializer";
 	
-	public JavaElementFeatureConverter() {
+	public JavaElementFeatureValueConverter() {
 		super();
 		
 		addFeature(DOCUMENTATION, 	 AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
@@ -86,43 +89,127 @@ public class JavaElementFeatureConverter extends CodeSyncElementFeatureConverter
 		
 		switch (name) {
 			case VISIBILITY: {
-				if (hasFlags(value, PUBLIC)) {
+				if (getModifier(value, PUBLIC) != null) {
 					return PUBLIC_KEYWORD.toString();
 				}
-				if (hasFlags(value, PROTECT)) {
+				if (getModifier(value, PROTECTED) != null) {
 					return PROTECTED_KEYWORD.toString();
 				}
-				if (hasFlags(value, PRIVATE)) {
+				if (getModifier(value, PRIVATE) != null) {
 					return PRIVATE_KEYWORD.toString();
 				}
 				return null;
 			}
 			case IS_ABSTRACT: {
-				return hasFlags(value, ABSTRACT);
+				return getModifier(value, ABSTRACT) != null;
 			}
 			case IS_FINAL: {
-				return hasFlags(value, FINAL);
+				return getModifier(value, FINAL) != null;
 			}
 			case IS_STATIC: {
-				return hasFlags(value, STATIC);
+				return getModifier(value, STATIC) != null;
 			}
 		}
 		
 		return value;
 	}
 	
-	protected boolean hasFlags(Object value, int flags) {
+	@Override
+	public void setValue(CodeSyncElement codeSyncElement, String name, Object newValue) {
+		Object fromClient = newValue;
+		switch (name) {
+			case VISIBILITY: {
+				newValue = super.getValue(codeSyncElement, name);
+				int visibilityType = PUBLIC | PROTECTED | PRIVATE;
+				if (PUBLIC_KEYWORD.toString().equals(fromClient)) {
+					newValue = addModifier(newValue, PUBLIC, visibilityType);
+					break;
+				}
+				if (PROTECTED_KEYWORD.toString().equals(fromClient)) {
+					newValue = addModifier(newValue, PROTECTED, visibilityType);
+					break;
+				}
+				if (PRIVATE_KEYWORD.toString().equals(fromClient)) {
+					newValue = addModifier(newValue, PRIVATE, visibilityType);
+					break;
+				}
+			}
+			case IS_ABSTRACT: {
+				newValue = super.getValue(codeSyncElement, name);
+				if (Boolean.parseBoolean((String) fromClient)) {
+					newValue = addModifier(newValue, ABSTRACT);
+				} else {
+					newValue = removeModifier(newValue, ABSTRACT);
+				}
+				
+				break;
+			}
+			case IS_FINAL: {
+				newValue = super.getValue(codeSyncElement, name);
+				if (Boolean.parseBoolean((String) fromClient)) {
+					newValue = addModifier(newValue, FINAL);
+				} else {
+					newValue = removeModifier(newValue, FINAL);
+				}
+				break;
+			}
+			case IS_STATIC: {
+				newValue = super.getValue(codeSyncElement, name);
+				if (Boolean.parseBoolean((String) fromClient)) {
+					newValue = addModifier(newValue, STATIC);
+				} else {
+					newValue = removeModifier(newValue, STATIC);
+				}
+				
+				break;
+			}
+		}
+		
+		super.setValue(codeSyncElement, name, newValue);
+	}
+	
+	protected Object addModifier(Object value, int type) {
+		return addModifier(value, type, type);
+	}
+	
+	protected Object addModifier(Object value, int newType, int type) {
+		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) 
+				EcoreUtil.copyAll((Collection<ExtendedModifier>) value);
+		Modifier modifier = getModifier(modifiers, type);
+		if (modifier == null || modifier.getType() != newType) {
+			if (modifier != null) {
+				modifiers.remove(modifier);
+			}
+			Modifier newModifier = AstCacheCodeFactory.eINSTANCE.createModifier();
+			newModifier.setType(newType);
+			modifiers.add(newModifier);
+		}
+		return modifiers;
+	}
+	
+	protected Object removeModifier(Object value, int type) {
+		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) 
+				EcoreUtil.copyAll((Collection<ExtendedModifier>) value);
+		Modifier modifier = getModifier(modifiers, type);
+		if (modifier != null) {
+			modifiers.remove(modifier);
+		}
+		return modifiers;
+	}
+	
+	protected Modifier getModifier(Object value, int flags) {
 		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) value;
 		 if (modifiers != null) {
 			 for (ExtendedModifier modifier : modifiers) {
 				 if (modifier instanceof Modifier) {
 					int type = ((Modifier) modifier).getType();
 					if ((type & flags) != 0) {
-						return true;
+						return (Modifier) modifier;
 					}
 				 }
 			 }
 		 }
-		 return false;
+		 return null;
 	}
+	
 }

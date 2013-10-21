@@ -224,17 +224,8 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRegExAstNode_Template() {
-		return (EAttribute)regExAstNodeEClass.getEStructuralFeatures().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EReference getRegExAstNode_ChildrenInsertPoints() {
-		return (EReference)regExAstNodeEClass.getEStructuralFeatures().get(10);
+		return (EReference)regExAstNodeEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -243,7 +234,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * @generated
 	 */
 	public EAttribute getRegExAstNode_NextSiblingInsertPoint() {
-		return (EAttribute)regExAstNodeEClass.getEStructuralFeatures().get(11);
+		return (EAttribute)regExAstNodeEClass.getEStructuralFeatures().get(10);
 	}
 
 	/**
@@ -252,7 +243,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * @generated
 	 */
 	public EAttribute getRegExAstNode_NextSiblingSeparator() {
-		return (EAttribute)regExAstNodeEClass.getEStructuralFeatures().get(12);
+		return (EAttribute)regExAstNodeEClass.getEStructuralFeatures().get(11);
 	}
 
 	/**
@@ -261,7 +252,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * @generated
 	 */
 	public EAttribute getRegExAstNode_ChildType() {
-		return (EAttribute)regExAstNodeEClass.getEStructuralFeatures().get(13);
+		return (EAttribute)regExAstNodeEClass.getEStructuralFeatures().get(12);
 	}
 
 	/**
@@ -350,7 +341,7 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRegExAstCodeSyncElement_Template() {
+	public EAttribute getRegExAstCodeSyncElement_NextSiblingSeparator() {
 		return (EAttribute)regExAstCodeSyncElementEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -359,17 +350,8 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getRegExAstCodeSyncElement_NextSiblingSeparator() {
-		return (EAttribute)regExAstCodeSyncElementEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getRegExAstCodeSyncElement_ChildType() {
-		return (EAttribute)regExAstCodeSyncElementEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)regExAstCodeSyncElementEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -446,7 +428,6 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		createEAttribute(regExAstNodeEClass, REG_EX_AST_NODE__LENGTH);
 		createEAttribute(regExAstNodeEClass, REG_EX_AST_NODE__ADDED);
 		createEAttribute(regExAstNodeEClass, REG_EX_AST_NODE__DELETED);
-		createEAttribute(regExAstNodeEClass, REG_EX_AST_NODE__TEMPLATE);
 		createEReference(regExAstNodeEClass, REG_EX_AST_NODE__CHILDREN_INSERT_POINTS);
 		createEAttribute(regExAstNodeEClass, REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT);
 		createEAttribute(regExAstNodeEClass, REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR);
@@ -463,7 +444,6 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		createEAttribute(regExAstNodeParameterEClass, REG_EX_AST_NODE_PARAMETER__LENGTH);
 
 		regExAstCodeSyncElementEClass = createEClass(REG_EX_AST_CODE_SYNC_ELEMENT);
-		createEAttribute(regExAstCodeSyncElementEClass, REG_EX_AST_CODE_SYNC_ELEMENT__TEMPLATE);
 		createEAttribute(regExAstCodeSyncElementEClass, REG_EX_AST_CODE_SYNC_ELEMENT__NEXT_SIBLING_SEPARATOR);
 		createEAttribute(regExAstCodeSyncElementEClass, REG_EX_AST_CODE_SYNC_ELEMENT__CHILD_TYPE);
 
@@ -519,7 +499,6 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		initEAttribute(getRegExAstNode_Length(), ecorePackage.getEInt(), "length", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstNode_Added(), theEcorePackage.getEBoolean(), "added", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstNode_Deleted(), theEcorePackage.getEBoolean(), "deleted", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getRegExAstNode_Template(), theEcorePackage.getEString(), "template", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRegExAstNode_ChildrenInsertPoints(), this.getStringToIntegerEntry(), null, "childrenInsertPoints", null, 0, -1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstNode_NextSiblingInsertPoint(), theEcorePackage.getEInt(), "nextSiblingInsertPoint", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstNode_NextSiblingSeparator(), theEcorePackage.getEString(), "nextSiblingSeparator", null, 0, 1, RegExAstNode.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -536,7 +515,6 @@ public class RegExAstPackageImpl extends EPackageImpl implements RegExAstPackage
 		initEAttribute(getRegExAstNodeParameter_Length(), ecorePackage.getEInt(), "length", null, 0, 1, RegExAstNodeParameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(regExAstCodeSyncElementEClass, RegExAstCodeSyncElement.class, "RegExAstCodeSyncElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getRegExAstCodeSyncElement_Template(), theEcorePackage.getEString(), "template", null, 0, 1, RegExAstCodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstCodeSyncElement_NextSiblingSeparator(), theEcorePackage.getEString(), "nextSiblingSeparator", null, 0, 1, RegExAstCodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getRegExAstCodeSyncElement_ChildType(), theEcorePackage.getEString(), "childType", null, 0, 1, RegExAstCodeSyncElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
