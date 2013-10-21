@@ -6,7 +6,7 @@ package org.flowerplatform.properties {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesViewProvider;
-	import org.flowerplatform.properties.Property;
+	import org.flowerplatform.properties.remote.Property;
 	import org.flowerplatform.properties.property_renderer.BooleanPropertyRenderer;
 	import org.flowerplatform.properties.property_renderer.StringPropertyRenderer;
 	/**

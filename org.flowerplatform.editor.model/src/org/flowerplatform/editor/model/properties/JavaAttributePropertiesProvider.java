@@ -27,8 +27,8 @@ import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.View;
-import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 import com.crispico.flower.mp.model.astcache.code.Attribute;

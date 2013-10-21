@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.properties;
+package org.flowerplatform.properties.remote;
 /**
  * @author Razvan Tache
  */

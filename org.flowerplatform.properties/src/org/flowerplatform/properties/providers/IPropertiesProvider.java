@@ -20,7 +20,7 @@ package org.flowerplatform.properties.providers;
 
 import java.util.List;
 
-import org.flowerplatform.properties.Property;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 /**

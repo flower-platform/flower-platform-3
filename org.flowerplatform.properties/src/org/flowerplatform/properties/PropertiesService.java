@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 /**
  * @author Razvan Tache

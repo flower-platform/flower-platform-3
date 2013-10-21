@@ -16,9 +16,9 @@
 *
 * license-end
 */
-package org.flowerplatform.properties {
+package org.flowerplatform.properties.remote {
 	[Bindable]
-	[RemoteClass(alias="org.flowerplatform.properties.Property")]
+	[RemoteClass]
 	[SecureSWF(rename="off")]
 	/**
 	 * @author Razvan Tache
