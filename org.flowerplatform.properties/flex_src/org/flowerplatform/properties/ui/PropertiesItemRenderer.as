@@ -19,7 +19,6 @@ package org.flowerplatform.properties.ui {
 	import spark.layouts.HorizontalLayout;
 	
 	public class PropertiesItemRenderer extends DataRenderer {
-		// TODO move to create children
 		public var nameOfProperty:Label;
 				
 		public var itemRenderer:Class;
