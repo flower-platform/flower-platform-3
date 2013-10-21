@@ -332,9 +332,6 @@
    </extension>
    <extension
          point="org.flowerplatform.communication.service">
-   </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
       <service
             id="explorerTreeStatefulService"
             serviceClass="org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService">
@@ -356,9 +353,24 @@
       </service>
     </extension>
 	<extension
+         point="org.flowerplatform.communication.servlet">
+      <servlet
+            mappingEvaluator="org.flowerplatform.blazeds.MessageBrokerMappingEvaluator"
+            priority="200"
+            servlet="flex.messaging.MessageBrokerServlet">
+      </servlet>
+   </extension>
+   <extension
          point="org.flowerplatform.common.flowerProperties">
       <flowerPropertiesProvider
             flowerPropertiesProviderClass="org.flowerplatform.web.WebFlowerPropertiesProvider">
       </flowerPropertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="heartbeatStatefulService"
+            serviceClass="org.flowerplatform.blazeds.heartbeat.HeartbeatStatefulService">
+      </service>
    </extension>
 </plugin>

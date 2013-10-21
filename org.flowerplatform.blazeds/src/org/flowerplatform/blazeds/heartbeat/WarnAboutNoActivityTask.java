@@ -43,6 +43,8 @@ public class WarnAboutNoActivityTask extends HeartbeatTask {
 			logger.debug("Client : {} did not have any activity for at least {} ms. Warning client about disconnection", channel, noActivityOnClientInterval - warnAboutNoActivityInterval);
 		
 		HeartbeatStatefulService heartbeatStatefulService = (HeartbeatStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(HeartbeatStatefulService.SERVICE_ID);
-		heartbeatStatefulService.warnAboutNoActivity(channel, warnAboutNoActivityInterval / 1000); // number of seconds until disconnect
+		if (heartbeatStatefulService != null) {
+			heartbeatStatefulService.warnAboutNoActivity(channel, warnAboutNoActivityInterval / 1000); // number of seconds until disconnect
+		}
 	}
 }

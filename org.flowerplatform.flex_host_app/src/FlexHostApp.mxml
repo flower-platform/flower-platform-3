@@ -21,7 +21,7 @@ license-end
 <s:Application applicationComplete="applicationCompleteHandler(event)"
 			   xmlns:fx="http://ns.adobe.com/mxml/2009" 
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx">
+			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:layout="com.crispico.flower.util.layout.*">
 	<fx:Style>
 		@namespace s "library://ns.adobe.com/flex/spark";
 		@namespace mx "library://ns.adobe.com/flex/mx";
@@ -122,7 +122,7 @@ license-end
 			ArrayList;
 			ObjectProxy;
 			ImageSnapshot;
-			
+	
 			protected function applicationCompleteHandler(event:FlexEvent):void	{
 				// The channels are puzzled by a query string that has slashes,
 				// e.g. FlexHostApp.swf?openUrl=/my/Resource. That's why we
@@ -136,7 +136,10 @@ license-end
 				var lastIndexOfSlash:int = appDirUrl.lastIndexOf("/");
 				appDirUrl = appDirUrl.substr(0, lastIndexOfSlash + 1);
 				FlexUtilGlobals.getInstance().rootUrl = appDirUrl;
-				
+
+				FlexUtilGlobals.getInstance().workbench = workbench;
+				workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
+	
 				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
 				FlexUtilGlobals.getInstance().popupHandlerFactory = new ResizablePopupWindowPopupHandlerFactory();
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorDialogHandlerFactory();
@@ -146,9 +149,13 @@ license-end
 				if (pluginUrlsAsString == null) {
 					throw new Error("No pluginUrls have been specified. Flower Platform cannot start.");
 				}
+								
 				var pluginUrls:Array = pluginUrlsAsString.split(",");
 				FlexPluginManager.getInstance().loadPlugins(new ArrayCollection(pluginUrls));
 			}
 		]]>
 	</fx:Script>
+	
+	<layout:Workbench id="workbench" width="100%" height="100%" />
+	
 </s:Application>

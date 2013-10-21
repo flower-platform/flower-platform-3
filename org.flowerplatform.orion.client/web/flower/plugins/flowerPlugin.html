@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Flower Platform Editor Plugin</title>	
+	<script src="../../requirejs/require.js"></script>
+	<script>
+		/*global require*/
+		require({
+		  baseUrl: '../../',
+		  // set the paths to our library packages
+		  packages: [],
+		  paths: {
+			  text: 'requirejs/text',
+			  i18n: 'requirejs/i18n',
+			  domReady: 'requirejs/domReady'
+		  }
+		});
+
+		require(['flowerPlugin.js']);
+	</script>
+</head>
+<body>
+</body>
+</html>

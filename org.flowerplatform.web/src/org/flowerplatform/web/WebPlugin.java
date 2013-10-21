@@ -86,8 +86,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public WebPlugin() {
 		super();
 		INSTANCE = this;
-		
-		
+
 		// Initially, this initialization was in the attribute initializer. But this lead to an issue:
 		// .communication was loaded, which processed the extension points, including services, 
 		// which forced the initialization of .web.git plugin, which wanted to use the properties, which
@@ -124,7 +123,6 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 
 	public void start(final BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
-				
 
 		if (bundleContext.getProperty(TESTING_FLAG) == null) {
 			invokeBridgeServletMethod("registerServletDelegate", eclipseDispatcherServlet);
@@ -148,7 +146,9 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 					CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
 				} catch (Exception e) {
 					throw new RuntimeException(e);
-				}
+				}				
+				EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
+				EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
 			}
 		});
 		
@@ -157,12 +157,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		
 		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
 		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
-		
-		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
-		CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
-		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;
-		
+		CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncCodePlugin.getInstance().ACE_FILE_LOCATION;		
 	}
 	 
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {
@@ -202,5 +197,5 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public List<GenericTreeStatefulService> getTreeStatefulServicesDisplayingWorkingDirectoryContent() {
 		return treeStatefulServicesDisplayingWorkingDirectoryContent;
 	}
-	
 }
+

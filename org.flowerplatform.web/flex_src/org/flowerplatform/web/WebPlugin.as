@@ -133,6 +133,8 @@ package org.flowerplatform.web {
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
 					
 			
+			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
+			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 			FlexUtilGlobals.getInstance().selectionManager.addEventListener(SelectionChangedEvent.SELECTION_CHANGED, function (event:SelectionChangedEvent):void {
 				trace("Selection changed: " + event.selection);

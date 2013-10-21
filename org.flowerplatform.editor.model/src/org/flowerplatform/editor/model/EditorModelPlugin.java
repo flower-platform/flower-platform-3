@@ -48,11 +48,11 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	protected DiagramUpdaterChangeProcessor diagramUpdaterChangeProcessor;
 	
 	protected ComposedDragOnDiagramHandler composedDragOnDiagramHandler;
-	
-	protected ComposedContentAssist composedContentAssist;
-	
+
 	private IModelAccessController modelAccessController;
-	
+
+	protected ComposedContentAssist composedContentAssist;
+
 	public ComposedChangeProcessor getComposedChangeProcessor() {
 		return composedChangeProcessor;
 	}

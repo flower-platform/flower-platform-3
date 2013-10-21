@@ -111,7 +111,7 @@ public class EditorOperationsService {
 					continue;
 				}
 
-				EditableResource editableResource = editorStatefulService.subscribeClientForcefully(context.getCommunicationChannel(), decodedLink.resourcePath, true);
+				EditableResource editableResource = editorStatefulService.subscribeClientForcefully(context.getCommunicationChannel(), getResourcePathFromLink(canonicalEditableResourcePath), true);
 				if (editableResource == null) { // Validation
 					validationProblems.append("Could not find '" + decodedLink.resourcePath + "' . Either it doesn't exist, or it failed during load.").append("\n");
 					continue;
@@ -150,7 +150,7 @@ public class EditorOperationsService {
 	/**
 	 * @flowerModelElementId _TeV_I0hHEeKn-dlTSOkszw
 	 */
-	private List<String> parseFriendlyEditableResourcePathList(String openResources) {
+	protected List<String> parseFriendlyEditableResourcePathList(String openResources) {
 		openResources = openResources.replace("\r\n", ",").replace("\n", ",").replace("\r", ",").trim(); // make it easier to process when it is multiline
 		
 		List<String> friendlyEditableResourcePathList = new ArrayList<String>();
@@ -162,10 +162,14 @@ public class EditorOperationsService {
 		return friendlyEditableResourcePathList;
 	}	
 	
+	protected String getResourcePathFromLink(String path) {
+		return path;
+	}
+	
 	/**
 	 * @author Cristi
 	 */
-	private static class DecodedLink {
+	public static class DecodedLink {
 		public String editorName;
 		public String resourcePath;
 		public String fragment;
