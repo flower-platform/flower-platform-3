@@ -34,8 +34,7 @@ import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.properties.remote.FileSelectedItem;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class FilePropertiesProvider implements IPropertiesProvider {
 

@@ -32,8 +32,7 @@ import org.flowerplatform.properties.remote.SelectedItem;
 import com.crispico.flower.mp.model.astcache.code.Attribute;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class JavaClassPropertiesProvider implements IPropertiesProvider {
 

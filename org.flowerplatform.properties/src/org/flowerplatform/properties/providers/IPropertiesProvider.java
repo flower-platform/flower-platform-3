@@ -24,7 +24,7 @@ import org.flowerplatform.properties.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 /**
- * @author Tache Razvan Mihai
+ * @author Razvan Tache
  */
 public interface IPropertiesProvider {
 	

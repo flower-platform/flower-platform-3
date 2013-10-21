@@ -9,7 +9,9 @@ package org.flowerplatform.properties {
 	import org.flowerplatform.properties.ui.Property;
 	import org.flowerplatform.properties.ui.property_renderer.BooleanPropertyRenderer;
 	import org.flowerplatform.properties.ui.property_renderer.StringPropertyRenderer;
-
+	/**
+	 * @author Razvan Tache
+	 */
 	public class PropertiesPlugin extends AbstractFlowerFlexPlugin {
 		
 		protected static var INSTANCE:PropertiesPlugin;

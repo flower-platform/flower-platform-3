@@ -17,7 +17,9 @@ package org.flowerplatform.properties.ui {
 	import spark.components.RadioButton;
 	import spark.components.supportClasses.ItemRenderer;
 	import spark.layouts.HorizontalLayout;
-	
+	/**
+	 * @author Razvan Tache
+	 */
 	public class PropertiesItemRenderer extends DataRenderer {
 		public var nameOfProperty:Label;
 				

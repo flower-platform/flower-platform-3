@@ -34,7 +34,7 @@ package org.flowerplatform.properties.ui {
 	import spark.components.VGroup;
 	
 	/**
-	 * @author Tache Razvan Mihai
+	 * @author Razvan Tache
 	 */
 	public class PropertiesViewProvider implements IViewProvider {
 		

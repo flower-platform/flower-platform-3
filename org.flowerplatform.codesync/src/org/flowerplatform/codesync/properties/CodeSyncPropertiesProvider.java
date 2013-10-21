@@ -12,7 +12,9 @@ import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-
+/**
+ * @author Razvan Tache
+ */
 public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 
 	@Override

@@ -6,7 +6,9 @@ package org.flowerplatform.properties.ui.property_renderer {
 	
 	import spark.components.DataRenderer;
 	import spark.components.TextInput;
-	
+	/**
+	 * @author Razvan Tache
+	 */
 	public class StringPropertyRenderer extends BasicPropertyRenderer {
 		
 		[Bindable]

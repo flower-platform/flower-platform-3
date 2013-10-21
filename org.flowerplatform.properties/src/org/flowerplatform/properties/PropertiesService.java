@@ -25,8 +25,7 @@ import java.util.List;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.SelectedItem;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class PropertiesService {
 	

@@ -18,8 +18,7 @@
  */
 package org.flowerplatform.properties;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class Property {
 	

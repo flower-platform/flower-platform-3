@@ -19,7 +19,7 @@ package org.flowerplatform.properties.ui {
 	import spark.events.IndexChangeEvent;
 	
 	/**
-	 * @author Tache Razvan Mihai
+	 * @author Razvan Tache
 	 */
 	public class PropertiesList extends List implements IViewContent {
 		

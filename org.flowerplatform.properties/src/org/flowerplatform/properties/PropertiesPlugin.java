@@ -27,8 +27,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.osgi.framework.BundleContext;
 /**
- * @author Tache Razvan Mihai
- * @return
+ * @author Razvan Tache
  */
 public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 

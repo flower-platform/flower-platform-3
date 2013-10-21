@@ -10,7 +10,9 @@ package org.flowerplatform.properties.ui.property_renderer {
 	import spark.components.DataRenderer;
 	import spark.components.Label;
 	import spark.layouts.HorizontalLayout;
-
+	/**
+	 * @author Razvan Tache
+	 */
 	public class BasicPropertyRenderer extends DataRenderer {
 						
 		public function BasicPropertyRenderer() {

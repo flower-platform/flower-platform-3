@@ -4,7 +4,9 @@ package org.flowerplatform.properties.ui.property_renderer {
 	import mx.binding.utils.BindingUtils;
 	
 	import spark.components.CheckBox;
-	
+	/**
+	 * @author Razvan Tache
+	 */
 	public class BooleanPropertyRenderer extends BasicPropertyRenderer {
 		
 		[Bindable]
