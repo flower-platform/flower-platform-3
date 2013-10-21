@@ -3,6 +3,7 @@ package org.flowerplatform.codesync;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -22,7 +23,8 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 		
 		List<Property> properties = new ArrayList<Property>();	
 
-		DiagramEditorStatefulService diagramEditorStatefulService = ((DiagramSelectedItem) selectedItem).getEditorStatefulService();		
+		String diagramEditorStatefulServiceId = ((DiagramSelectedItem) selectedItem).getEditorStatefulServiceId();
+		DiagramEditorStatefulService diagramEditorStatefulService = getDiagramEditorStatefulService(diagramEditorStatefulServiceId);	
 		String diagramEditableResourcePath = ((DiagramSelectedItem) selectedItem).getDiagramEditableResourcePath();
 		String id = ((DiagramSelectedItem) selectedItem).getXmiID();
 		
@@ -39,4 +41,7 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 		
 	}
 
+	private DiagramEditorStatefulService getDiagramEditorStatefulService(String diagramEditorStatefulServiceId) {
+		return (DiagramEditorStatefulService)CommunicationPlugin.getInstance().getServiceRegistry().getService(diagramEditorStatefulServiceId);
+	}
 }
