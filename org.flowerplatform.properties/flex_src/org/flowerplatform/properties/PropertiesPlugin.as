@@ -1,19 +1,14 @@
 package org.flowerplatform.properties {
 	import flash.utils.Dictionary;
 	
-	import mx.collections.ArrayCollection;
-	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.properties.ui.*;
 	import org.flowerplatform.properties.ui.PropertiesList;
 	import org.flowerplatform.properties.ui.PropertiesViewProvider;
 	import org.flowerplatform.properties.ui.Property;
 	import org.flowerplatform.properties.ui.property_renderer.BooleanPropertyRenderer;
 	import org.flowerplatform.properties.ui.property_renderer.StringPropertyRenderer;
-
-	import org.hamcrest.mxml.collection.Array;
 
 	public class PropertiesPlugin extends AbstractFlowerFlexPlugin {
 		
