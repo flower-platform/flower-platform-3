@@ -18,18 +18,18 @@
 */
 package org.flowerplatform.codesync.code.javascript {
 	
-	import org.flowerplatform.codesync.code.javascript.model.action.AddElementActionProvider;
 	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;
 	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController;
 	import org.flowerplatform.codesync.code.javascript.new_elements_path.LocationForNewElementsDialog;
-	import org.flowerplatform.codesync.code.javascript.remote.InitializeCodeSyncCodeJavascriptPluginClientCommand;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
+	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -39,6 +39,8 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**
@@ -52,8 +54,6 @@ package org.flowerplatform.codesync.code.javascript {
 			return INSTANCE;
 		}
 		
-		public var availableTemplates:Object = new Object();
-		
 		override public function start():void {
 			super.start();
 			if (INSTANCE != null) {
@@ -61,7 +61,6 @@ package org.flowerplatform.codesync.code.javascript {
 			}
 			INSTANCE = this;
 			
-			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddElementActionProvider());
 			EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteElementAction);
 			
 			var composedControllerProviderFactory:ComposedControllerProviderFactory;
@@ -76,23 +75,36 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 //			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["file"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form"] = composedControllerProviderFactory;
 			
-			// compartment box - set as children of the main parent box
+			// class members
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: ExpandableBoxRenderer, removeRendererIfModelIsDisposed: true });
+			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
 			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
-			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(ExpandableBoxVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-//			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["fileElementContainer"] = composedControllerProviderFactory;
-		
-			EditorModelPlugin.getInstance().locationForNewElementsDialogClass = LocationForNewElementsDialog;
+
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+			if (!FlexUtilGlobals.getInstance().isMobile) {
+				composedControllerProviderFactory.inplaceEditorControllerClass = new ControllerFactory(InplaceEditorController);
+			}
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.javaScriptOperation"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.javaScriptAttribute"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.requireEntry"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.eventsAttribute"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.routesAttribute"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.routesAttribute.routesAttributeEntry"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table.tableHeaderEntry"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem.tableItemEntry"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form.formItem"] = composedControllerProviderFactory;
 		}
 		
-		override protected function registerClassAliases():void {
-			registerClassAliasFromAnnotation(InitializeCodeSyncCodeJavascriptPluginClientCommand);
+		override protected function registerMessageBundle():void {
+			// no messages yet
 		}
 		
 	}

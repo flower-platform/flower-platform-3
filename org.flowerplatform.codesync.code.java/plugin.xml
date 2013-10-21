@@ -37,5 +37,38 @@
           contentAssist="org.flowerplatform.editor.model.java.JavaCodeSyncElementContentAssist">
     </contentAssist>
  </extension>
+ <extension
+       point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+    <codeSyncElementDescriptor
+          codeSyncType="javaClass"
+          iconUrl="images/obj16/SyncClass.gif"
+          label="Class">
+       <childrenCodeSyncTypeCategory
+             name="javaClassMember">
+       </childrenCodeSyncTypeCategory>
+    </codeSyncElementDescriptor>
+ </extension>
+ <extension
+       point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+    <codeSyncElementDescriptor
+          codeSyncType="javaOperation"
+          iconUrl="images/obj16/SyncOperation_public.gif"
+          label="Operation">
+       <codeSyncTypeCategory
+             name="javaClassMember">
+       </codeSyncTypeCategory>
+    </codeSyncElementDescriptor>
+ </extension>
+ <extension
+       point="org.flowerplatform.codesync.codeSyncElementDescriptor">
+    <codeSyncElementDescriptor
+          codeSyncType="javaAttribute"
+          iconUrl="images/obj16/SyncProperty_public.gif"
+          label="Attribute">
+       <codeSyncTypeCategory
+             name="javaClassMember">
+       </codeSyncTypeCategory>
+    </codeSyncElementDescriptor>
+ </extension>
 
 </plugin>

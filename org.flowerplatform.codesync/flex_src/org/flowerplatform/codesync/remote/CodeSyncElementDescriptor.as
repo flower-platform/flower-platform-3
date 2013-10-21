@@ -16,23 +16,22 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.code.javascript.remote {
+package org.flowerplatform.codesync.remote {
 	
-	import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
-	import org.flowerplatform.communication.command.AbstractClientCommand;
+	import mx.collections.ArrayCollection;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	[RemoteClass]
-	public class InitializeCodeSyncCodeJavascriptPluginClientCommand extends AbstractClientCommand {
-		
-		public var availableTemplates:Object;
-		
-		override public function execute():void {
-			super.execute();
-			CodeSyncCodeJavascriptPlugin.getInstance().availableTemplates = availableTemplates;
-		}
+	[RemoteClass(alias="org.flowerplatform.codesync.remote.CodeSyncElementDescriptor")]
+	public class CodeSyncElementDescriptor {
+	
+		public var codeSyncType:String;
+		public var label:String;
+		public var iconUrl:String;
+		public var codeSyncTypeCategories:ArrayCollection;
+		public var childrenCodeSyncTypeCategories:ArrayCollection;
+		public var features:ArrayCollection;
 		
 	}
 }

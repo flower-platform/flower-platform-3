@@ -49,7 +49,6 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
-import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
 import com.crispico.flower.mp.model.astcache.code.Annotation;
 import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
 import com.crispico.flower.mp.model.astcache.code.Class;
@@ -59,7 +58,6 @@ import com.crispico.flower.mp.model.astcache.code.Operation;
 import com.crispico.flower.mp.model.astcache.code.Parameter;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 
@@ -84,8 +82,6 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	
 	protected ModelAdapterFactorySetProvider modelAdapterFactorySetProvider;
 	
-	protected List<String> srcDirs = null;
-	
 	/**
 	 * @see #getOrCreateEditingDomain()
 	 * 
@@ -94,22 +90,6 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	protected Map<File, AdapterFactoryEditingDomain> editingDomains = new HashMap<File, AdapterFactoryEditingDomain>();
 	
 	private Utils utils = new Utils();
-	
-	/**
-	 * The location of the CSE mapping file, relative to the project. May be
-	 * configurable in the future.
-	 * 
-	 * @author Mariana
-	 */
-	public String CSE_MAPPING_FILE_LOCATION = "/CSE.notation";
-	
-	/**
-	 * The location of the ACE file, relative to the project. May be configurable
-	 * in the future.
-	 * 
-	 * @author Mariana
-	 */
-	public String ACE_FILE_LOCATION = "/ACE.notation";
 	
 	/**
 	 * @author Mariana
@@ -185,7 +165,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "diagramEditorStatefulService");
 		
-		Resource cseResource = getCodeSyncMapping(project, resourceSet);
+		Resource cseResource = CodeSyncPlugin.getInstance().getCodeSyncMapping(project, resourceSet);
 		
 		// STEP 2 : find the SrcDir corresponding to the 2nd path fragment
 //		CodeSyncElement srcDir = getSrcDir(cseResource, pathFragments[1]);
@@ -194,7 +174,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 			path = path.substring(1);
 		}
 		String[] fragments = path.split("/");
-		CodeSyncElement srcDir = getSrcDir(cseResource, fragments[2]);
+		CodeSyncElement srcDir = CodeSyncPlugin.getInstance().getSrcDir(cseResource, fragments[2]);
 		
 //		// STEP 3 : find the CSE corresponding to the name
 		String[] csePath = Arrays.copyOfRange(fragments, 3, fragments.length);
@@ -270,7 +250,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		if (!limitedPath.startsWith("/")) {
 			limitedPath = "/" + limitedPath;
 		}
-		modelAdapterFactorySet.initialize(getAstCache(project, resourceSet), limitedPath, CodeSyncPlugin.getInstance().useUIDs());
+		modelAdapterFactorySet.initialize(CodeSyncPlugin.getInstance().getAstCache(project, resourceSet), limitedPath, CodeSyncPlugin.getInstance().useUIDs());
 		editableResource.setModelAdapterFactorySet(modelAdapterFactorySet);
 		
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);
@@ -290,97 +270,6 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 //		return null;
 	}
 	
-	/**
-	 * @author Mariana
-	 */
-	public Resource getCodeSyncMapping(File project, ResourceSet resourceSet) {
-		File codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CSE_MAPPING_FILE_LOCATION); 
-		Resource cseResource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
-		if (!codeSyncElementMappingFile.exists()) {
-			// first clear the resource in case the mapping file was deleted 
-			// after it has been loaded at a previous moment
-			cseResource.getContents().clear();
-			
-			for (String srcDir : getSrcDirs()) {
-				CodeSyncRoot cseRoot = (CodeSyncRoot) getRoot(cseResource, srcDir);
-				if (cseRoot == null) {
-					// create the CSE for the SrcDir
-					cseRoot = CodeSyncPackage.eINSTANCE.getCodeSyncFactory().createCodeSyncRoot();
-					cseRoot.setName(srcDir);
-					cseRoot.setType(FolderModelAdapter.FOLDER);
-				}
-				cseResource.getContents().add(cseRoot);
-			}
-			
-			CodeSyncPlugin.getInstance().saveResource(cseResource);
-		}
-		return cseResource;
-	}
-	
-	/**
-	 * @author Mariana
-	 */
-	public Resource getAstCache(File project, ResourceSet resourceSet) {
-		File astCacheElementFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, ACE_FILE_LOCATION); 
-		Resource resource = CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
-		if (!astCacheElementFile.exists()) {
-			resource.getContents().clear();
-			CodeSyncPlugin.getInstance().saveResource(resource);
-		}
-		return resource;
-	}
-	
-	/**
-	 * @author Mariana
-	 */
-	protected CodeSyncRoot getRoot(Resource resource, String srcDir) {
-		for (EObject eObj : resource.getContents()) {
-			if (eObj instanceof CodeSyncRoot) {
-				CodeSyncRoot root = (CodeSyncRoot) eObj;
-				if (root.getName().equals(srcDir))
-					return root;
-			}
-		}
-		return null;
-	}
-	
-	/**
-	 * @author Mariana
-	 */
-	public CodeSyncElement getSrcDir(Resource resource, String name) {
-		CodeSyncElement srcDir = null;
-		for (EObject member : resource.getContents()) {
-			if (((CodeSyncElement) member).getName().equals(name)) {
-				srcDir = (CodeSyncElement) member;
-				break;
-			}
-		}
-		if (srcDir == null) {
-			throw new RuntimeException("SrcDir " + name + " is not mapped to a CSE!");
-		}
-		return srcDir;
-	}
-	
-	/**
-	 * @author Mariana
-	 */
-	public List<String> getSrcDirs() {
-		if (srcDirs == null) {
-			// TODO Mariana : get user input
-			return Collections.singletonList("src");
-		} 
-		return srcDirs;
-	}
-	
-	public void addSrcDir(String srcDir) {
-		if (srcDirs == null) {
-			srcDirs = new ArrayList<String>();
-		}
-		if (!srcDirs.contains(srcDir)) {
-			srcDirs.add(srcDir);
-		}
-	}
-
 	/**
 	 * @author Mariana
 	 */
@@ -423,11 +312,11 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		}
 		
 		public void addToResource(File project, ResourceSet resourceSet, AstCacheElement ace) {
-			getAstCache(project, resourceSet).getContents().add(ace);
+			CodeSyncPlugin.getInstance().getAstCache(project, resourceSet).getContents().add(ace);
 		}
 		
 		public boolean testEquality(Resource expected, Resource actual, String name) {
-			return EcoreUtil.equals(getSrcDir(expected, name), getSrcDir(actual, name));
+			return EcoreUtil.equals(CodeSyncPlugin.getInstance().getSrcDir(expected, name), CodeSyncPlugin.getInstance().getSrcDir(actual, name));
 		}
 	}
 	

@@ -60,7 +60,7 @@
 			}
 			
 			protected function addNew():void {
-				NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_addNew(serviceMethod, Node(data).id, newChildLabel);
+//				NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_addNew(serviceMethod, Node(data).id, newChildLabel);
 			}
 			
 			protected function getResourceUrl(resource:String):String {

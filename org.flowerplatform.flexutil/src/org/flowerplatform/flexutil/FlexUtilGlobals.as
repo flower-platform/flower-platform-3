@@ -24,6 +24,7 @@ package org.flowerplatform.flexutil {
 	import org.flowerplatform.flexutil.layout.ComposedViewProvider;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
+	import org.flowerplatform.flexutil.plugin.FlexPluginManager;
 	import org.flowerplatform.flexutil.popup.IMessageBoxFactory;
 	import org.flowerplatform.flexutil.popup.IPopupHandlerFactory;
 	import org.flowerplatform.flexutil.popup.IProgressMonitorFactory;
@@ -62,6 +63,8 @@ package org.flowerplatform.flexutil {
 		public var rootUrl:String = "";
 		
 		public var selectionManager:SelectionManager = new SelectionManager();
+		
+		public var flexPluginManager:FlexPluginManager = new FlexPluginManager();
 		
 		public function createAbsoluteUrl(url:String):String {
 			if (rootUrl.length > 0) {

@@ -31,6 +31,7 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
@@ -64,7 +65,7 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 			return getLabel(element);
 		}
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return FILE;
+			return CodeSyncPlugin.FILE;
 		}
 		return null;
 	}

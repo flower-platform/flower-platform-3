@@ -54,7 +54,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 			return getLabel(element);
 		}
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
-			return FOLDER;
+			return CodeSyncPlugin.FOLDER;
 		}
 		return null;
 	}

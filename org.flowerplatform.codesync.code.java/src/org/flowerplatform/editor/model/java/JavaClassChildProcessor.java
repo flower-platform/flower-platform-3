@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.flowerplatform.codesync.remote.CodeSyncDecoratorsProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 

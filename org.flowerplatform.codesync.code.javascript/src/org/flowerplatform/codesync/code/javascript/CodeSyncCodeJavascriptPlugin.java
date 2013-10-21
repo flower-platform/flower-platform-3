@@ -18,20 +18,14 @@
  */
 package org.flowerplatform.codesync.code.javascript;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
-import org.flowerplatform.codesync.code.javascript.processor.JavascriptFileElementProcessor;
 import org.flowerplatform.codesync.code.javascript.remote.JavascriptClassDiagramOperationsService;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
 /**
  * @author Mariana Gheorghe
@@ -46,33 +40,28 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 
-	private Map<String, List<String>> availableTemplates = new HashMap<String, List<String>>();
-
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
 		
-		CodeSyncCodePlugin.getInstance().addSrcDir("js");
+		CodeSyncPlugin.getInstance().addSrcDir("js");
 		
 		CommunicationPlugin.getInstance().getServiceRegistry().registerService(JavascriptClassDiagramOperationsService.SERVICE_ID, new JavascriptClassDiagramOperationsService());
 		
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("file", new JavascriptElementProcessor());
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("fileElementContainer", new JavascriptFileElementProcessor());
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("fileElementContainer", new JavascriptElementProcessor());
+		JavascriptElementProcessor processor = new JavascriptElementProcessor();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("title", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", processor);
 	
-		// TODO this should be initialized from rules
-		availableTemplates.put("", Arrays.asList("BackboneClass", "Table", "TableItem", "Form"));
-		availableTemplates.put("BackboneClass", Arrays.asList("RequireEntry", "Attribute", "Operation", "EventsAttribute", "RoutesAttribute"));
-		availableTemplates.put("Table", Arrays.asList("TableHeaderEntry"));
-		availableTemplates.put("TableItem", Arrays.asList("TableItemEntry"));
-		availableTemplates.put("Form", Arrays.asList("FormItem"));
-		availableTemplates.put("EventsAttribute", Arrays.asList("EventsAttributeEntry"));
-		availableTemplates.put("RoutesAttribute", Arrays.asList("RoutesAttributeEntry"));
-	}
-	
-	public Map<String, List<String>> getAvailableTemplates() {
-		return availableTemplates;
 	}
 	
 }

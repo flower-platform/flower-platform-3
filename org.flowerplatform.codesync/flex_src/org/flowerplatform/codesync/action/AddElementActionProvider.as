@@ -16,12 +16,13 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.code.javascript.model.action {
+package org.flowerplatform.codesync.action {
 	
 	import mx.collections.IList;
 	
-	import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
-	import org.flowerplatform.emf_model.notation.ExpandableNode;
+	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.flexutil.action.ComposedAction;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
@@ -44,22 +45,18 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 			
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
-			var addElementAction:ComposedAction = new ComposedAction();
-			addElementAction.label = CodeSyncCodeJavascriptPlugin.getInstance().getMessage("diagram.addElement");
-			addElementAction.id = ADD_ELEMENT_PARENT_ID;
-			result.push(addElementAction);
-			
-			var selectedTemplate:String = "";
+			var selectedCodeSyncElementType:String = "";
 			if (selection.length == 1) {
-				if (selection.getItemAt(0) is ExpandableNode) {
-					selectedTemplate = ExpandableNode(selection.getItemAt(0)).template;
+				if (selection.getItemAt(0) is Node) {
+					var node:Node = Node(selection.getItemAt(0));
+					selectedCodeSyncElementType = node.viewType.substr(node.viewType.lastIndexOf(".") + 1);
 				} else {
 					return null;
 				}
 			}
 			
-			for each (var availableTemplate:String in CodeSyncCodeJavascriptPlugin.getInstance().availableTemplates[selectedTemplate]) {
-				result.push(new AddElementAction(availableTemplate));
+			for each (var availableCodeSyncElement:CodeSyncElementDescriptor in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedCodeSyncElementType]) {
+				result.push(new AddElementAction(availableCodeSyncElement.codeSyncType, availableCodeSyncElement.label, availableCodeSyncElement.iconUrl));
 			}
 			
 			return result;

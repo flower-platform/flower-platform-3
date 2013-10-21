@@ -22,6 +22,7 @@ Require-Bundle: org.eclipse.osgi,
 Export-Package: com.crispico.flower.mp.codesync.base,
  com.crispico.flower.mp.codesync.base.action,
  com.crispico.flower.mp.codesync.base.communication,
+ org.flowerplatform.codesync.operation_extension,
  org.flowerplatform.codesync.processor,
  org.flowerplatform.codesync.projects,
  org.flowerplatform.codesync.remote

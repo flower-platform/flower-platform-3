@@ -147,7 +147,7 @@ license-end
 					throw new Error("No pluginUrls have been specified. Flower Platform cannot start.");
 				}
 				var pluginUrls:Array = pluginUrlsAsString.split(",");
-				FlexPluginManager.getInstance().loadPlugins(new ArrayCollection(pluginUrls));
+				FlexUtilGlobals.getInstance().flexPluginManager.loadPlugins(new ArrayCollection(pluginUrls));
 			}
 		]]>
 	</fx:Script>

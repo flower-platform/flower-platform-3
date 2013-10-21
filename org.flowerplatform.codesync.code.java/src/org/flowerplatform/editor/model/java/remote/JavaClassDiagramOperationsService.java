@@ -44,7 +44,6 @@ import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapter;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter;
@@ -151,7 +150,7 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 			ResourceSet resourceSet = der.getResourceSet();
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider()
 					.getContainingProjectForFile((File) der.getFile());
-			Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(
+			Resource astCache = CodeSyncPlugin.getInstance().getAstCache(
 					project, resourceSet);
 			astCache.getContents().add(attribute);
 
@@ -199,7 +198,7 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 			ResourceSet resourceSet = der.getResourceSet();
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider()
 					.getContainingProjectForFile((File) der.getFile());
-			Resource astCache = CodeSyncCodePlugin.getInstance().getAstCache(
+			Resource astCache = CodeSyncPlugin.getInstance().getAstCache(
 					project, resourceSet);
 			astCache.getContents().add(operation);
 

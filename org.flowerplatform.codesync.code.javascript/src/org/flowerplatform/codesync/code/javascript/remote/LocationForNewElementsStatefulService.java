@@ -21,8 +21,6 @@ import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.codesync.code.CodeSyncCodePlugin;
-import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
@@ -67,7 +65,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 			String additionalPath = "";		
 			List<List<PathFragment>> pathsToOpen = new ArrayList<List<PathFragment>>();
 			while (i < tokens.length) {
-				TreeNode tokenNode = pathFragmentExistsInTreeNode(startNode, new PathFragment(tokens[i], FolderModelAdapter.FOLDER));
+				TreeNode tokenNode = pathFragmentExistsInTreeNode(startNode, new PathFragment(tokens[i], CodeSyncPlugin.FOLDER));
 				if (tokenNode != null) {
 					List<PathFragment> path = new ArrayList<PathFragment>();
 					computePathForNode(tokenNode, path);	
@@ -115,12 +113,12 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 			DiagramEditableResource der = (DiagramEditableResource) getDiagramEditorStatefulService().getEditableResource(diagramEditableResourcePath);
 			ResourceSet resourceSet = der.getResourceSet();
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) der.getFile());
-			Resource codeSyncMappingResource = CodeSyncCodePlugin.getInstance().getCodeSyncMapping(project, resourceSet);
+			Resource codeSyncMappingResource = CodeSyncPlugin.getInstance().getCodeSyncMapping(project, resourceSet);
 			
 			List<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();			
 			for (EObject eObject : codeSyncMappingResource.getContents()) {
 				String type = ((CodeSyncElement) eObject).getType();
-				if (type.equals(FolderModelAdapter.FOLDER)) {
+				if (type.equals(CodeSyncPlugin.FOLDER)) {
 					Pair<Object, String> pair = new Pair<Object, String>(eObject, type);				
 					result.add(pair);
 				}
@@ -130,7 +128,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 			CodeSyncElement cse = (CodeSyncElement) node;
 			List<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();
 			for (CodeSyncElement child : cse.getChildren()) {
-				if (child.getType().equals(FolderModelAdapter.FOLDER)) {
+				if (child.getType().equals(CodeSyncPlugin.FOLDER)) {
 					Pair<Object, String> pair = new Pair<Object, String>(child, child.getType());
 					result.add(pair);
 				}
