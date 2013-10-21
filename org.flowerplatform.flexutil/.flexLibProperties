@@ -9,7 +9,6 @@
     <classEntry path="org.flowerplatform.flexutil.popup.ClassFactoryActionProvider"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IAction"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IMessageBox"/>
-    <classEntry path="org.flowerplatform.flexutil.popup.IPopupContent"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandler"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHandlerFactory"/>
     <classEntry path="org.flowerplatform.flexutil.popup.IPopupHost"/>

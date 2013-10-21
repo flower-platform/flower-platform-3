@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.osgi,
  org.flowerplatform.emf_model.codesync,
  org.flowerplatform.editor.model;visibility:=reexport,
  org.eclipse.emf.ecore.change,
- org.eclipse.emf.ecore.xmi
+ org.eclipse.emf.ecore.xmi,
+ org.flowerplatform.properties
 Export-Package: com.crispico.flower.mp.codesync.base,
  com.crispico.flower.mp.codesync.base.action,
  com.crispico.flower.mp.codesync.base.communication,
