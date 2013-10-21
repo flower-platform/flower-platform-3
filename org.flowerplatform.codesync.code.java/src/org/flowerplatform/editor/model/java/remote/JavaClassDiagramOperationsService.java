@@ -85,7 +85,8 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 			processOperation(cse, (Operation) cse.getAstCacheElement(), text);
 		}
 		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
-			CodeSyncPlugin.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
+			CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				.setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		}
 	}
 	
@@ -156,7 +157,7 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 
 			clsCse.getChildren().add(attributeCse);
 
-			CodeSyncPlugin.getInstance().propagateParentSyncFalse(attributeCse);
+			CodeSyncPlugin.getInstance().getCodeSyncOperationsService().propagateParentSyncFalse(attributeCse);
 		}
 		
 	}
@@ -204,7 +205,7 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 
 			clsCse.getChildren().add(operationCse);
 
-			CodeSyncPlugin.getInstance().propagateParentSyncFalse(operationCse);
+			CodeSyncPlugin.getInstance().getCodeSyncOperationsService().propagateParentSyncFalse(operationCse);
 		}
 
 	}
@@ -327,17 +328,17 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 	
 	protected void setName(CodeSyncElement element, String newName) {
 		EStructuralFeature feature = CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name();
-		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, newName);
+		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(element, feature, newName);
 	}
 	
 	protected void setType(CodeSyncElement element, TypedElement typedElement, String newType) {
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getTypedElement_Type();
-		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, newType);
+		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(element, feature, newType);
 	}
 	
 	protected void setInitializer(CodeSyncElement element, Attribute attribute, String newInitializer) {
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getAttribute_Initializer();
-		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, newInitializer);
+		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(element, feature, newInitializer);
 	}
 	
 	protected void setVisibility(CodeSyncElement element, ModifiableElement modifiableElement, char newVisibility) {
@@ -369,12 +370,12 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 			modifiers.add(newModifier);
 		}
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers();
-		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, modifiers);
+		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(element, feature, modifiers);
 	}
 	
 	protected List<ExtendedModifier> getModifiers(CodeSyncElement codeSyncElement) {
-		return (List<ExtendedModifier>) CodeSyncPlugin.getInstance().getFeatureValue(codeSyncElement,
-				AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
+		return (List<ExtendedModifier>) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				.getFeatureValue(codeSyncElement, AstCacheCodePackage.eINSTANCE.getModifiableElement_Modifiers());
 	}
 	
 	protected Modifier getVisibility(Collection<ExtendedModifier> modifiers) {
@@ -404,7 +405,7 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 		
 		// compare the new parameters with the current list
 		EStructuralFeature feature = AstCacheCodePackage.eINSTANCE.getOperation_Parameters();
-		CodeSyncPlugin.getInstance().setFeatureValue(element, feature, parameters);
+		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(element, feature, parameters);
 	}
 
 }

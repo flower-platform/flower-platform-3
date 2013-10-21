@@ -33,7 +33,8 @@ public class JavascriptElementProcessor extends CodeSyncDecoratorsProcessor {
 	@Override
 	public String getLabel(EObject object, boolean forEditing) {
 		CodeSyncElement cse = (CodeSyncElement) object;
-		String name = (String) CodeSyncPlugin.getInstance().getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		String name = (String) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				.getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 		return name;
 	}
 

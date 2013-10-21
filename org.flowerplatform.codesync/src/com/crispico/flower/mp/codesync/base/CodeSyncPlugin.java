@@ -31,13 +31,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureConverter;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
@@ -49,12 +49,9 @@ import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.osgi.framework.BundleContext;
 
-import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
-import com.crispico.flower.mp.model.codesync.FeatureChange;
 
 /**
  * @author Mariana Gheorghe
@@ -93,6 +90,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
 
+	protected List<CodeSyncElementFeatureConverter> codeSyncElementFeatureConverters;
+	
 	protected List<AddNewExtension> addNewExtensions;
 	
 	/**
@@ -144,6 +143,10 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return null;
 	}
 	
+	public List<CodeSyncElementFeatureConverter> getCodeSyncElementFeatureConverters() {
+		return codeSyncElementFeatureConverters;
+	}
+	
 	public List<AddNewExtension> getAddNewExtensions() {
 		return addNewExtensions;
 	}
@@ -161,12 +164,14 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
 		initializeExtensionPoint_codeSyncElementDescriptor();
+		initializeExtensionPoint_codeSyncElementFeatureConverter();
 		initializeExtensionPoint_operationExtension();
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
 		codeSyncAlgorithmRunner = new ComposedCodeSyncAlgorithmRunner();
-		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncAlgorithmRunner");
+		IConfigurationElement[] configurationElements = 
+				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncAlgorithmRunner");
 		for (IConfigurationElement configurationElement : configurationElements) {
 			String id = configurationElement.getAttribute("id");
 			String technology = configurationElement.getAttribute("technology");
@@ -178,7 +183,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	private void initializeExtensionPoint_codeSyncElementDescriptor() throws CoreException {
 		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
-		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementDescriptor");
+		IConfigurationElement[] configurationElements = 
+				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementDescriptor");
 		for (IConfigurationElement configurationElement : configurationElements) {
 			String codeSyncType = configurationElement.getAttribute("codeSyncType");
 			String label = configurationElement.getAttribute("label");
@@ -196,7 +202,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			descriptor.setIconUrl(iconUrl);
 			descriptor.setCodeSyncTypeCategories(codeSyncTypeCategories);
 			descriptor.setChildrenCodeSyncTypeCategories(childrenCodeSyncTypeCategories);
-			descriptor.setFeatures(features);
+			descriptor.getFeatures().addAll(features);
 			codeSyncElementDescriptors.add(descriptor);
 			logger.debug("Added CodeSyncElementDescriptor with type = {}", codeSyncType);
 		}
@@ -211,9 +217,20 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return result;
 	}
 	
+	private void initializeExtensionPoint_codeSyncElementFeatureConverter() throws CoreException {
+		codeSyncElementFeatureConverters = new ArrayList<CodeSyncElementFeatureConverter>();
+		IConfigurationElement[] configurationElements = 
+				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementFeatureConverter");
+		for (IConfigurationElement configurationElement : configurationElements) {
+			Object instance = configurationElement.createExecutableExtension("codeSyncElementFeatureConverter");
+			codeSyncElementFeatureConverters.add((CodeSyncElementFeatureConverter) instance);
+		}
+	}
+	
 	private void initializeExtensionPoint_operationExtension() throws CoreException {
 		addNewExtensions = new ArrayList<AddNewExtension>();
-		IConfigurationElement[] configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.addNewExtension");
+		IConfigurationElement[] configurationElements = 
+				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.addNewExtension");
 		for (IConfigurationElement configurationElement : configurationElements) {
 			Object instance = configurationElement.createExecutableExtension("addNewExtension");
 			addNewExtensions.add((AddNewExtension) instance);
@@ -329,173 +346,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			for (Resource resource : resources) {
 				resource.unload();
 			}
-		}
-	}
-	
-	/**
-	 * Returns the value of <code>feature</code> on the <code>codeSyncElement</code>, first from the
-	 * list of {@link org.eclipse.emf.ecore.change.FeatureChange}s, if it exists.
-	 */
-	public Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
-		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
-		if (featureChange != null) {
-			return featureChange.getNewValue();
-		}
-		
-		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
-			return codeSyncElement.eGet(feature);
-		} else {
-			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
-			if (astElement != null) {
-				return astElement.eGet(feature);
-			}
-		}
-	
-		return null;
-	}
-	
-	public Object getOldFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
-		FeatureChange featureChange = codeSyncElement.getFeatureChanges().get(feature);
-		if (featureChange != null) {
-			return featureChange.getOldValue();
-		} else {
-			return getFeatureValue(codeSyncElement, feature);
-		}
-	}
-	
-	public void setFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
-		Object oldValue = getOldFeatureValue(codeSyncElement, feature);
-		if (!codeSyncElement.isAdded()) {
-			createAndAddFeatureChange(codeSyncElement, feature, oldValue, newValue);
-		} else {
-			setFeatureValueDirectly(codeSyncElement, feature, newValue);
-		}
-	}
-	
-	/**
-	 * Creates and adds a {@link FeatureChange} if the <code>oldValue</code> and <code>newValue</code> are different. 
-	 * 
-	 * Important: we first remove, and then add a new feature change to trigger a change description on the {@link CodeSyncElement},
-	 * so the processors can update the views.
-	 * 
-	 * @author Sebastian Solomon
-	 */
-	protected void createAndAddFeatureChange(CodeSyncElement element,
-			EStructuralFeature feature, Object oldValue, Object newValue) {
-		element.getFeatureChanges().removeKey(feature);
-		if (!equal(newValue, oldValue)) {
-			FeatureChange featureChange = CodeSyncFactory.eINSTANCE
-					.createFeatureChange();
-			featureChange.setOldValue(oldValue);
-			featureChange.setNewValue(newValue);
-			element.getFeatureChanges().put(feature, featureChange);
-
-			if (element.isSynchronized()) {
-				element.setSynchronized(false);
-				propagateParentSyncFalse(element);
-			}
-
-		} else if (element.getFeatureChanges().size() == 0) {
-			propagateParentSyncTrue(element);
-		}
-
-	}
-	
-	/**
-	 * @author Sebastian Solomon
-	 */
-	public void propageteOnChildDelete(CodeSyncElement cse) {
-
-		for (CodeSyncElement child : cse.getChildren()) {
-			child.setDeleted(true);
-			propageteOnChildDelete(child);
-		}
-
-	}
-	
-	/**
-	 * @author Sebastian Solomon
-	 */
-	public void propagateParentSyncFalse(CodeSyncElement element) {
-		while (element.eContainer() != null) {
-
-			EObject parent = element.eContainer();
-			if (parent instanceof CodeSyncElement) {
-				element = (CodeSyncElement) parent;
-				if (element.isSynchronized()) {
-					element.setChildrenSynchronized(false);
-
-				}
-
-			} else
-				return;
-
-		}
-
-	}
-	
-
-	/**
-	 * @author Sebastian Solomon
-	 */
-	public void propagateParentSyncTrue(CodeSyncElement element) {
-		if (!element.isAdded() && !element.isDeleted()
-				&& element.getFeatureChanges().size() == 0) {
-			element.setSynchronized(true); // orange
-			if (allChildrenGreen(element)) // if all childs green =>become green
-				element.setChildrenSynchronized(true);
-			// * walk whole parent hierarchy; set childrenSync = true if all
-			// children are sync,not newly added not deleted
-			while (element.eContainer() != null) {
-				if (element.eContainer() instanceof CodeSyncElement) {
-					element = (CodeSyncElement) element.eContainer();
-					if (allChildrenGreen(element)) {
-						element.setChildrenSynchronized(true);
-					} else
-						return; // if one child is notSync, return
-				}
-			}
-		}
-	}
-	
-//	private boolean childsAreSync(CodeSyncElement element){ //orange or green
-//		
-//		for (CodeSyncElement childElem : element.getChildren()){
-//			if ( childElem.isAdded() || childElem.isDeleted() || !childElem.isSynchronized())
-//				return false;
-//		}
-//		return true;
-//	}
-	
-	
-	/**
-	 * @author Sebastian Solomon
-	 */
-	private boolean allChildrenGreen(CodeSyncElement element) {
-		for (CodeSyncElement cse : element.getChildren()) {
-			if (cse.isAdded() || cse.isDeleted() || !cse.isSynchronized()
-					|| !cse.isChildrenSynchronized())
-				return false;
-		}
-		return true;
-	}
-
-	protected void setFeatureValueDirectly(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
-		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
-			codeSyncElement.eSet(feature, newValue);
-		} else {
-			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
-			if (astElement != null) {
-				astElement.eSet(feature, newValue);
-			}
-		}
-	}
-	
-	protected boolean equal(Object a, Object b) {
-		if (a == null) {
-			return b == null;
-		} else {
-			return a.equals(b);
 		}
 	}
 	

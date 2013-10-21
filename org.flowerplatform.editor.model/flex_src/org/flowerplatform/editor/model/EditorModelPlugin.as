@@ -202,8 +202,5 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(ContentAssistItem);
 		}
 		
-		override protected function registerMessageBundle():void {
-			// do nothing; this plugin doesn't have a .resources (yet)
-		}
 	}
 }

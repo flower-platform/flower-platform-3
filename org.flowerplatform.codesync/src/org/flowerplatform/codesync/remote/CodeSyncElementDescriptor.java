@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.codesync.remote;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +38,12 @@ public class CodeSyncElementDescriptor {
 	
 	private List<String> features;
 
+	public CodeSyncElementDescriptor() {
+		features = new ArrayList<String>();
+		features.add("name");
+		features.add("isAdded");
+	}
+	
 	public String getCodeSyncType() {
 		return codeSyncType;
 	}

@@ -62,7 +62,10 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 				throw new RuntimeException("No location specified for new element");
 			}
 			CodeSyncElement parent = getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, location.split("/"));
-			parameters.put(PARENT_CODE_SYNC_ELEMENT, parent);
+			CodeSyncElement file = CodeSyncPlugin.getInstance().getCodeSyncOperationsService().create(CodeSyncPlugin.FILE);
+			file.setName("javaClass.java"); // TODO where do we get this?
+			CodeSyncPlugin.getInstance().getCodeSyncOperationsService().add(parent, file);
+			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
 		}
 		return null;
 	}
