@@ -81,5 +81,15 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		System.out.println("Changing the file with path " + file.getPath());
 		System.out.println("Setting the property: " + propertyName + " with the value " + propertyValue );
 	}
+	@Override
+	public List<String> getPropertyNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Property getProperty(SelectedItem selectedItem, String propertyName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

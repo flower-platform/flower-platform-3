@@ -68,4 +68,16 @@ public class JavaAttributePropertiesProvider implements IPropertiesProvider {
 		System.out.println("Setting the property: " + propertyName + " with the value " + propertyValue );
 	}
 
+	@Override
+	public List<String> getPropertyNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Property getProperty(SelectedItem selectedItem, String propertyName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

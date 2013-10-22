@@ -28,6 +28,8 @@ import org.flowerplatform.properties.remote.SelectedItem;
  */
 public interface IPropertiesProvider {
 	
+	public List<String> getPropertyNames();
+	public Property getProperty(SelectedItem selectedItem, String propertyName);
 	public List<Property> getProperties(SelectedItem selectedItem);
 	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue);
 	

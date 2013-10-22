@@ -44,4 +44,16 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 	private DiagramEditorStatefulService getDiagramEditorStatefulService(String diagramEditorStatefulServiceId) {
 		return (DiagramEditorStatefulService)CommunicationPlugin.getInstance().getServiceRegistry().getService(diagramEditorStatefulServiceId);
 	}
+
+	@Override
+	public List<String> getPropertyNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Property getProperty(SelectedItem selectedItem, String propertyName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
