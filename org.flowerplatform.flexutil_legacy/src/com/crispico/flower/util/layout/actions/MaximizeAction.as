@@ -16,52 +16,52 @@
  *
  * license-end
  */
-package  com.crispico.flower.util.layout.actions {
-	import com.crispico.flower.flexdiagram.action.BaseAction;
+package com.crispico.flower.util.layout.actions {
 	import com.crispico.flower.util.UtilAssets;
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
+	
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
-	import mx.collections.ArrayCollection;
-
 	/**
-	 * 
+	 * @author Cristina Constantinescu
+	 * @author Mircea Negreanu
 	 */
-	public class MaximizeAction extends BaseAction  {
-		
-		/**
-		 * 
-		 */
-		private var workbench:Workbench;
-		
-		/**
-		 * 
-		 */
-		public function MaximizeAction(workbench:Workbench) {
-			this.workbench = workbench;
+	public class MaximizeAction extends WorkbenchAction {
+		public function MaximizeAction(bench:Workbench) {
+			super(bench);
+			
 			label = UtilAssets.INSTANCE.getMessage("layout.action.maximize");
-			image = UtilAssets.INSTANCE._maximizeViewIcon;
-			sortIndex = 40;
+			icon = UtilAssets.INSTANCE._maximizeViewIcon;
+			orderIndex = 40;
 		}
 		
 		/**
-		 * 
+		 * @author Cristina Constantinescu
+		 * @author Mircea Negreanu
 		 */
-		public override function isVisible(selectedEditParts:ArrayCollection):Boolean {	
-			var viewLayoutData:ViewLayoutData = selectedEditParts[0];
-			if (StackLayoutData(viewLayoutData.parent).mrmState == StackLayoutData.MAXIMIZED) {
-				return false;
+		override public function get visible():Boolean {
+			if (selection != null && selection.length > 0) {
+				var viewLayoutData:ViewLayoutData = selection[0];
+				if (StackLayoutData(viewLayoutData.parent).mrmState == StackLayoutData.MAXIMIZED) {
+					return false;
+				}
+				return true;
 			}
-			return true;
+			
+			return false;
 		}
 		
 		/**
-		 * 
+		 * @author Cristina Constantinescu
+		 * @author Mircea Negreanu
 		 */
-		public override function run(selectedEditParts:ArrayCollection):void {	
-			var viewLayoutData:ViewLayoutData = selectedEditParts[0];
-			workbench.maximize(StackLayoutData(viewLayoutData.parent));			
+		override public function run():void {
+			if (selection != null && selection.length > 0) {
+				var viewLayoutData:ViewLayoutData = selection[0];
+				workbench.maximize(StackLayoutData(viewLayoutData.parent));	
+			}
 		}
+
 	}
 }

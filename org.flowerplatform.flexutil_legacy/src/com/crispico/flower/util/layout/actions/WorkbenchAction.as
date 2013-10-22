@@ -17,34 +17,30 @@
  * license-end
  */
 package com.crispico.flower.util.layout.actions {
-	import com.crispico.flower.util.UtilAssets;
 	import com.crispico.flower.util.layout.Workbench;
-	import com.crispico.flower.util.layout.persistence.StackLayoutData;
 	
-	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
-	 * @author Cristina Constantinescu
+	 * Base class for actions that affects/use the workbench
+	 * 
 	 * @author Mircea Negreanu
-	 */ 
-	public class MinimizeAction extends WorkbenchAction {
-		public function MinimizeAction(bench:Workbench) {
-			super(bench);
+	 */
+	public class WorkbenchAction extends ActionBase {
+		private var _workbench:Workbench;
+		
+		public function WorkbenchAction(bench:Workbench) {
+			super();
 			
-			label = UtilAssets.INSTANCE.getMessage("layout.action.minimize");
-			icon = UtilAssets.INSTANCE._minimizeViewIcon;
-			orderIndex = 30;
+			this.workbench = bench;
 		}
 		
-		/**
-		 * @author Cristina Constantinescu
-		 * @author Mircea Negreanu
-		 */
-		override public function run():void {
-			if (selection != null && selection.length > 0) {
-				var viewLayoutData:ViewLayoutData = selection[0];
-				workbench.minimize(StackLayoutData(viewLayoutData.parent));
-			}
+		public function get workbench():Workbench {
+			return _workbench;
+		}
+		
+		public function set workbench(bench:Workbench):void {
+			_workbench = bench;
 		}
 	}
 }
