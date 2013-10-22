@@ -3,7 +3,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
-	import org.flowerplatform.properties.ui.PropertiesViewProvider;
+	import org.flowerplatform.properties.PropertiesViewProvider;
 	
 	/**
 	 * @author Cristina Constantinescu

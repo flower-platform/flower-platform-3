@@ -32,6 +32,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.CreateModelEvent;
@@ -143,6 +144,7 @@ package org.flowerplatform.editor.model {
 		public function set viewHost(value:IViewHost):void {
 			_viewHost = value;
 		}
+		
 		/**
 		 * @author Razvan Tache
 		 */
@@ -158,7 +160,12 @@ package org.flowerplatform.editor.model {
 				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
 				var diagramViewType:String = node.viewType;
 				
-				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
+				var diagramSelectedItem:DiagramSelectedItem = new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType);
+				
+				if (node is Diagram) { // for diagram consider its viewType as diagramSelectedItem.itemType
+					diagramSelectedItem.itemType = diagramViewType;
+				}
+				selectedItems.addItem(diagramSelectedItem);
 			}			
 			
 			return selectedItems;
