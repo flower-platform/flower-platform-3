@@ -75,11 +75,7 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 
 	@Override
 	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		List<PathFragment> pathWithRoot = ((FileSelectedItem)selectedItem).getPathWithRoot();
-		File file = getFile(pathWithRoot);
-		
-		System.out.println("Changing the file with path " + file.getPath());
-		System.out.println("Setting the property: " + propertyName + " with the value " + propertyValue );
+
 	}
 	@Override
 	public List<String> getPropertyNames() {
