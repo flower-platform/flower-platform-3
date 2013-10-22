@@ -17,69 +17,45 @@
  * license-end
  */
 package com.crispico.flower.util.popup {
+	import com.crispico.flower.util.layout.Workbench;
+	import com.crispico.flower.util.layout.WorkbenchViewHost;
+	import com.crispico.flower.util.layout.view.ViewPopupWindow;
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	
 	import flash.display.DisplayObject;
 	
 	import mx.collections.IList;
 	import mx.containers.ControlBar;
+	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
 	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
-	public class ResizablePopupWindowPopupHandlerAndViewHost extends ResizablePopupWindow implements IPopupHandler, IViewHost	{
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */ 
+	public class ResizablePopupWindowViewHost extends ResizablePopupWindow implements IViewHost	{
 		
-		protected var viewContent:IViewContent;
+		protected var _viewContent:IViewContent;
 		
-		public function ResizablePopupWindowPopupHandlerAndViewHost() {
-			super();		
+		public function ResizablePopupWindowViewHost(viewContent:IViewContent = null) {
+			super();			
+			_viewContent = viewContent;
+			_viewContent.percentHeight = 100;
+			_viewContent.percentWidth = 100;
 		}
-		
-		public function setHeight(value:int):IPopupHandler	{
-			height = value;
-			return this;
-		}
-		
-		public function setTitle(value:String):IPopupHandler {
-			title = value;
-			return this;
-		}
-		
-		public function setViewContent(value:IViewContent):IPopupHandler {
-			viewContent = value;
-			viewContent.percentHeight = 100;
-			viewContent.percentWidth = 100;
-			return this;
-		}
-		
+	
 		public function get activeViewContent():IViewContent {
-			return viewContent;
+			return _viewContent;
 		}
 		
 		public function setActiveViewContent(value:IViewContent, viaFocusIn:Boolean = false):void {
 		}
-		
-		public function setWidth(value:int):IPopupHandler {
-			width = value;
-			return this;
-		}
-		
-		public function show(modal:Boolean = true):void {
-			IViewContent(viewContent).viewHost = this;
-			addElement(viewContent);
-			showPopup(NaN, NaN, null, modal);
-		}
-		
-		/**
-		 * In this case, this class, ResizablePopupWindow is not used any more.
-		 * The existing ModalSpinner mechanism is used for displaying the popup content.
-		 */
-		public function showModalOverAllApplication():void {
-			var modalSpinner:ModalSpinner = new ModalSpinnerViewHost(viewContent);
-			ModalSpinner.addGlobalModalSpinner(null, modalSpinner);
-		}
-		
+
 		public function selectionChanged():IList {
 			// not supported		
 			return null;
@@ -118,26 +94,27 @@ package com.crispico.flower.util.popup {
 			ControlBar(controlBar).addChild(DisplayObject(value));
 		}
 		
-		/**
-		 * @author Cristina Constantinescu
-		 */
 		public function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean {
 			// doesn't support this	
 			return false;
 		}	
 		
-		/**
-		 * @author Cristina Constantinescu
-		 */
 		public function showSpinner(text:String):void {	
 			ModalSpinner.addModalSpinner(this, text);
 		}
-		
-		/**
-		 * @author Cristina Constantinescu
-		 */
+	
 		public function hideSpinner():void {		
 			ModalSpinner.removeModalSpinner(this);
+		}
+		
+		override protected function createChildren():void {
+			if (activeViewContent == null) {
+				throw new Error("Illegal state. The viewContent shouldn't be null.");
+			}
+			super.createChildren();		
+			
+			activeViewContent.viewHost = this;
+			addElement(activeViewContent);
 		}
 		
 	}

@@ -30,9 +30,16 @@ package com.crispico.flower.util.popup {
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.popup.IPopupHandlerFactory;
 	
-	public class ResizablePopupWindowPopupHandlerFactory implements IPopupHandlerFactory {
+	/**
+	 * @author Cristian Spiescu	
+	 */ 
+	public class PopupHandlerFactory implements IPopupHandlerFactory {
+		
+		/**		 
+		 * @author Cristina Constantinescu
+		 */ 
 		public function createPopupHandler():IPopupHandler {
-			return new ResizablePopupWindowPopupHandlerAndViewHost();
+			return new PopupHandler();
 		}
 		
 		public function removePopup(viewContent:IVisualElement):void {
@@ -47,13 +54,16 @@ package com.crispico.flower.util.popup {
 			}
 		}
 		
+		/**		 
+		 * @author Cristina Constantinescu
+		 */
 		private function iteratePopups(childList:IChildList, viewContent:IVisualElement):UIComponent {
 			for (var i:int = 0; i < childList.numChildren; i++) {
 				var child:DisplayObject = childList.getChildAt(i);
-				if (!(child is ResizablePopupWindowPopupHandlerAndViewHost || child is ModalSpinner) || !UIComponent(child).isPopUp) {
+				if (!(child is ResizablePopupWindowViewHost || child is ModalSpinner || child is ViewPopupWindowViewHost) || !UIComponent(child).isPopUp) {
 					continue;
 				}
-				if (child is ResizablePopupWindowPopupHandlerAndViewHost) {
+				if (child is ResizablePopupWindowViewHost || child is ViewPopupWindowViewHost) {
 					var d:UIComponent = UIComponent(child);
 					if (d.numChildren == 0 || !(d.getChildAt(0) == viewContent)) {
 						continue;

@@ -338,14 +338,6 @@
       </service>
    </extension>
    <extension
-         point="org.flowerplatform.properties.propertiesProvider">
-      <propertiesProvider
-            id="org.flowerplatform.web.propertiesProvider1"
-            itemType="file"
-            propertiesProviderClass="org.flowerplatform.web.properties.FilePropertiesProvider">
-      </propertiesProvider>
-   </extension>
-   <extension
          point="org.flowerplatform.communication.service">
       <service
             id="propertiesProviderService"
@@ -372,5 +364,12 @@
             id="heartbeatStatefulService"
             serviceClass="org.flowerplatform.blazeds.heartbeat.HeartbeatStatefulService">
       </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="file"
+            propertiesProviderClass="org.flowerplatform.web.properties.FilePropertiesProvider">
+      </propertiesProvider>
    </extension>
 </plugin>

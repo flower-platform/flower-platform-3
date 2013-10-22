@@ -19,23 +19,34 @@
 package org.flowerplatform.flexutil.mobile.view_content_host {
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElement;
+	import mx.core.UIComponent;
 	
-	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 		
+	/**
+	 * @author Cristian Spiescu
+	 */ 
 	public class MobileViewHostPopupHandler implements IPopupHandler {
 		
 		protected var _viewContent:IViewContent;
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		protected var _viewIdInWorkbench:String;
 		
 		public function setTitle(value:String):IPopupHandler {
 			return this;
 		}
 		
-		public function setWidth(value:int):IPopupHandler {
+		public function setWidth(value:Number):IPopupHandler {
 			return this;
 		}
 		
-		public function setHeight(value:int):IPopupHandler {
+		public function setHeight(value:Number):IPopupHandler {
 			return this;
 		}
 		
@@ -43,6 +54,14 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			_viewContent = value;
 			return this;
 		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public function setViewIdInWorkbench(value:String):IPopupHandler {
+			_viewIdInWorkbench = value;
+			return this;
+		}	
 		
 		public function show(modal:Boolean=true):void {
 			showInternal(false);
@@ -52,7 +71,20 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			showInternal(true);		
 		}
 		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Cristina Constantinescu
+		 */ 
 		private function showInternal(modalOverAllApplication:Boolean):void {
+			if (_viewIdInWorkbench) {
+				// create view content from viewId
+				var component:UIComponent = FlexUtilGlobals.getInstance().composedViewProvider.createView(new ViewLayoutData(_viewIdInWorkbench));
+				if (!(component is IViewContent)) {
+					throw new Error("The view graphical component should be an IViewContent!");
+				}
+				_viewContent = IViewContent(component);
+			}
+			
 			FlexGlobals.topLevelApplication.navigator.pushView(MobileViewHost, { 
 				viewContent: _viewContent,
 				popupHandler: this, 

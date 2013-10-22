@@ -77,6 +77,8 @@
 			import org.flowerplatform.blazeds.BlazeDSBridge;
 			import org.flowerplatform.blazeds.BridgeEvent;
 			import org.flowerplatform.codesync.CodeSyncPlugin;
+			import org.flowerplatform.codesync.code.java.CodeSyncCodeJavaPlugin;
+			import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.EditorPlugin;
@@ -91,6 +93,7 @@
 			import org.flowerplatform.flexutil.plugin.AbstractFlexPlugin;
 			import org.flowerplatform.flexutil.plugin.FlexPluginDescriptor;
 			import org.flowerplatform.flexutil.popup.AlertPopupMessageBoxFactory;
+			import org.flowerplatform.properties.PropertiesPlugin;
 			import org.flowerplatform.web.common.WebCommonPlugin;
 			import org.flowerplatform.web.git.common.GitCommonPlugin;
 			import org.flowerplatform.web.mobile.RecentActivityView;
@@ -121,6 +124,9 @@
 				setDescriptorWithUrl(new WebCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web/swc/org.flowerplatform.web.swc|library.swf'),
 				setDescriptorWithUrl(new GitCommonPlugin(), 'servlet/public-resources/org.flowerplatform.web.git/swc/org.flowerplatform.web.git.swc|library.swf'),
 				setDescriptorWithUrl(new CodeSyncPlugin(), 'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin'),
+				setDescriptorWithUrl(new CodeSyncCodeJavaPlugin(), 'servlet/public-resources/org.flowerplatform.codesync.code.java/swc/org.flowerplatform.codesync.code.java.swc|library.swf?pluginClass=CodeSyncCodeJavaPlugin'),
+				setDescriptorWithUrl(new CodeSyncCodeJavascriptPlugin(), 'servlet/public-resources/org.flowerplatform.codesync.code.javascript/swc/org.flowerplatform.codesync.code.javascript.swc|library.swf?pluginClass=CodeSyncCodeJavascriptPlugin'),
+				setDescriptorWithUrl(new PropertiesPlugin(), 'servlet/public-resources/org.flowerplatform.properties/swc/org.flowerplatform.properties.swc|library.swf?pluginClass=PropertiesPlugin'),
 				setDescriptorWithUrl(new MindMapModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.mindmap/swc/org.flowerplatform.editor.mindmap.swc|library.swf?pluginClass=MindMapModelPlugin')
 			];
 			

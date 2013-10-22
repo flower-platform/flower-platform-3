@@ -26,6 +26,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
 	import spark.components.Button;
+	import spark.components.Group;
 	import spark.components.Label;
 	import spark.components.Scroller;
 	import spark.components.View;
@@ -34,6 +35,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	
 	/**
 	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
 	public class MobileViewHost extends MobileViewHostBase {
 		
@@ -49,7 +51,16 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			activeViewContent.viewHost = this;
 			activeViewContent.percentHeight = 100;
 			activeViewContent.percentWidth = 100;
-			scroller.viewport = IViewport(activeViewContent);
+			
+			if (activeViewContent is IViewport) {
+				scroller.viewport = IViewport(activeViewContent);
+			} else { // the content cannot be set as scroller's viewport, so wrap it around a group
+				var wrapper:Group = new Group();
+				wrapper.percentHeight = 100;
+				wrapper.percentWidth = 100;
+				wrapper.addElement(activeViewContent);
+				scroller.viewport = wrapper;
+			}
 			
 			if (data.modalOverAllApplication) {
 				navigationContent = [];

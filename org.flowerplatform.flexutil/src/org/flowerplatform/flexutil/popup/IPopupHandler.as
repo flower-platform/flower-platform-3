@@ -18,15 +18,26 @@
  */
 package org.flowerplatform.flexutil.popup {
 	import mx.core.IVisualElement;
+	
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 
+	/**
+	 * @author Cristina Constantinescu
+	 */ 
 	public interface IPopupHandler {
 		function setTitle(value:String):IPopupHandler;
-		function setWidth(value:int):IPopupHandler;
-		function setHeight(value:int):IPopupHandler;
+		function setWidth(value:Number):IPopupHandler;
+		function setHeight(value:Number):IPopupHandler;
 		function setViewContent(value:IViewContent):IPopupHandler;
+		
+		/**
+		 * Represents the view id from workbench layout to be shown in a popup.
+		 * @author Cristina Constantinescu
+		 */ 
+		function setViewIdInWorkbench(value:String):IPopupHandler;
 		
 		function show(modal:Boolean = true):void;
 		function showModalOverAllApplication():void;
+		
 	}
 }

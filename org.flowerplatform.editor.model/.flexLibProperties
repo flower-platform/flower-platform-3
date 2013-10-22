@@ -20,7 +20,9 @@
     <classEntry path="org.flowerplatform.editor.model.action.ContentAssistAction"/>
     <classEntry path="org.flowerplatform.editor.model.controller.InplaceEditorController"/>
     <classEntry path="org.flowerplatform.editor.model.action.AddRelationAction"/>
+    <classEntry path="org.flowerplatform.editor.model.renderer.ShapeDrawer"/>
     <classEntry path="org.flowerplatform.editor.model.action.AddRelatedElementsAction"/>
+    <classEntry path="org.flowerplatform.editor.model.action.ShowPropertiesAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
