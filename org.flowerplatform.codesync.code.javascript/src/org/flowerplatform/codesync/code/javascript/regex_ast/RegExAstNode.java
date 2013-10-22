@@ -28,7 +28,6 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getLength <em>Length</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isAdded <em>Added</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isDeleted <em>Deleted</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getTemplate <em>Template</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildrenInsertPoints <em>Children Insert Points</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingSeparator <em>Next Sibling Separator</em>}</li>
@@ -254,32 +253,6 @@ public interface RegExAstNode extends EObject {
 	 * @generated
 	 */
 	void setDeleted(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Template</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Template</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Template</em>' attribute.
-	 * @see #setTemplate(String)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNode_Template()
-	 * @model
-	 * @generated
-	 */
-	String getTemplate();
-
-	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getTemplate <em>Template</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Template</em>' attribute.
-	 * @see #getTemplate()
-	 * @generated
-	 */
-	void setTemplate(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Children Insert Points</b></em>' map.

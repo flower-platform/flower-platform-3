@@ -85,7 +85,7 @@
 
     <logging>
         <!-- You may also use flex.messaging.log.ServletLogTarget -->
-        <target class="org.flowerplatform.blazeds.FlowerConsoleTarget" level="All"> <!-- Other options : Debug, All, Warn -->
+        <target class="org.flowerplatform.blazeds.FlowerConsoleTarget" level="Warn"> <!-- Other options : Debug, All, Warn -->
             <properties>
                 <prefix>[BlazeDS Flower Web] </prefix>
                 <includeDate>false</includeDate>

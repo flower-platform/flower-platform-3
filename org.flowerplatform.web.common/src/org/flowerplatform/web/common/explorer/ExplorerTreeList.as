@@ -117,11 +117,13 @@ package org.flowerplatform.web.common.explorer {
 				doubleClickHandler(null);
 			}
 		}
-		
+		/**
+		 * @author Razvan Tache
+		 */
 		public function convertSelectionToSelectionForServer(selection:IList):IList {
 			if (selection == null) return selection;
 			var itemsOfSelection:Array = selection.toArray();
-			var selectedItems = new ArrayCollection();
+			var selectedItems:ArrayCollection = new ArrayCollection();
 			for each (var itemOfSelection:TreeNode in itemsOfSelection) {
 				selectedItems.addItem(new FileSelectedItem(itemOfSelection.getPathForNode(true)));
 			}

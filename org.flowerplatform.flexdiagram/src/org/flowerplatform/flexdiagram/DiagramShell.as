@@ -125,14 +125,16 @@ package org.flowerplatform.flexdiagram {
 		
 		public function set mainSelectedItem(value:Object):void {
 			if (_mainSelectedItem != value) {			
-				if (_mainSelectedItem != null) {				
+				if (_mainSelectedItem != null &&
+					getControllerProvider(_mainSelectedItem).getSelectionController(_mainSelectedItem) != null) {				
 					getControllerProvider(_mainSelectedItem).getSelectionController(_mainSelectedItem).
 						setSelectedState(_mainSelectedItem, getRendererForModel(_mainSelectedItem), true, false);
 				}
 				// mark the new main selection 
 				_mainSelectedItem = value;
 							
-				if (_mainSelectedItem != null) {
+				if (_mainSelectedItem != null &&
+					getControllerProvider(_mainSelectedItem).getSelectionController(_mainSelectedItem) != null) {
 					getControllerProvider(_mainSelectedItem).getSelectionController(_mainSelectedItem).
 						setSelectedState(_mainSelectedItem, getRendererForModel(_mainSelectedItem), true, true);			
 				}

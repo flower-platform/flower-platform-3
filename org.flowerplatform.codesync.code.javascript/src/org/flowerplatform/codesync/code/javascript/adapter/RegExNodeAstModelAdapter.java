@@ -73,9 +73,6 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter().equals(feature)) {
 			return getRegExAstNode(element).getKeyParameter();
 		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template().equals(feature)) {
-			return getRegExAstNode(element).getTemplate();
-		}
 		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_ChildType().equals(feature)) {
 			return getRegExAstNode(element).getChildType();
 		}
@@ -98,9 +95,6 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 		}
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter().equals(feature)) {
 			getRegExAstNode(element).setKeyParameter((String) value);
-		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template().equals(feature)) {
-			getRegExAstNode(element).setTemplate((String) value);
 		}
 		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_ChildType().equals(feature)) {
 			getRegExAstNode(element).setChildType((String) value);

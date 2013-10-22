@@ -41,13 +41,13 @@ import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.code.CodeSyncModelAdapterFactory;
 import com.crispico.flower.mp.codesync.code.adapter.AnnotationMemberModelAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.AnnotationModelAdapter;
-import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.AttributeModelAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.ClassModelAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapter;
@@ -125,9 +125,9 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 		// feature providers
 		CodeSyncElementFeatureProvider featureProvider = new CodeSyncElementFeatureProvider();
 		addFeatureProvider(File.class, featureProvider);
-		addFeatureProvider(AstModelElementAdapter.FOLDER, featureProvider);
+		addFeatureProvider(CodeSyncPlugin.FOLDER, featureProvider);
 		addFeatureProvider(File.class, featureProvider);
-		addFeatureProvider(AstModelElementAdapter.FILE, featureProvider);
+		addFeatureProvider(CodeSyncPlugin.FILE, featureProvider);
 		
 		JavaTypeFeatureProvider typeFeatureProvider = new JavaTypeFeatureProvider();
 		addFeatureProvider(AbstractTypeDeclaration.class, typeFeatureProvider);

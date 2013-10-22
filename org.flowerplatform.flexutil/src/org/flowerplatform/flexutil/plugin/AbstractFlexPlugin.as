@@ -31,6 +31,11 @@ package org.flowerplatform.flexutil.plugin {
 	
 		protected var _flexPluginDescriptor:FlexPluginDescriptor;
 		
+		/**
+		 * @see handleConnectedToServer()
+		 */
+		protected var serverParameters:Object;
+		
 		public function get flexPluginDescriptor():FlexPluginDescriptor {
 			return _flexPluginDescriptor;
 		}
@@ -97,6 +102,16 @@ package org.flowerplatform.flexutil.plugin {
 				alias = Utils.getClassNameForObject(flexClass, true).replace("::", ".");
 			}
 			registerClassAlias(alias, flexClass);
+		}
+		
+		/**
+		 * Called when the client is connected to the server.
+		 * Extending plugins should override if they need
+		 * any initial server parameters.
+		 * 
+		 * @author Mariana Gheorghe
+		 */
+		public function handleConnectedToServer():void {
 		}
 	}
 }

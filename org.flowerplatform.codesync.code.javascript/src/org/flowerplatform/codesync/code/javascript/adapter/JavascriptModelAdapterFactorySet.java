@@ -28,11 +28,11 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.code.CodeSyncModelAdapterFactory;
-import com.crispico.flower.mp.codesync.code.adapter.AstModelElementAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapter;
 import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterAncestor;
 import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterLeft;
@@ -72,8 +72,8 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		// feature providers
 		CodeSyncElementFeatureProvider featureProvider = new CodeSyncElementFeatureProvider();
 		addFeatureProvider(File.class, featureProvider);
-		addFeatureProvider(AstModelElementAdapter.FOLDER, featureProvider);
-		addFeatureProvider(AstModelElementAdapter.FILE, featureProvider);
+		addFeatureProvider(CodeSyncPlugin.FOLDER, featureProvider);
+		addFeatureProvider(CodeSyncPlugin.FILE, featureProvider);
 		
 		RegExNodeFeatureProvider regexRegExAstNodeFeatureProvider = new RegExNodeFeatureProvider();
 		addFeatureProvider(CodeSyncElement.class, regexRegExAstNodeFeatureProvider);

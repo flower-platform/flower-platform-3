@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -75,7 +76,7 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) 
 				CommunicationPlugin.getInstance().getServiceRegistry().getService(getServiceId());
-		service.subscribeClientForcefully(getCommunicationChannel(), CommonPlugin.getInstance().getWorkspaceRoot().toURI().relativize(diagram.toURI()).toString());
+		service.subscribeClientForcefully(getCommunicationChannel(), CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(diagram));
 	}
 	
 	protected String getNextDiagram(File parent, String name) {

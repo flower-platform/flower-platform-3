@@ -1,5 +1,7 @@
 package org.flowerplatform.editor.remote;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,6 +17,15 @@ import org.slf4j.LoggerFactory;
 public class EditorOperationsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EditorOperationsService.class);
+	
+	public String getFriendlyNameDecoded(String friendlyName) {
+		try {
+			friendlyName = URLDecoder.decode(friendlyName, "UTF-8");		
+		} catch (UnsupportedEncodingException e) {
+			logger.error("Could not decode using UTF-8 charset : " + friendlyName);
+		}
+		return friendlyName;
+	}
 	
 	/**
 	 * An <em>external editableResourcePath</em> is either a <em>canonical editableResourcePath</em or a <em>friendly editableResourcePath</em>.
@@ -111,7 +122,7 @@ public class EditorOperationsService {
 					continue;
 				}
 
-				EditableResource editableResource = editorStatefulService.subscribeClientForcefully(context.getCommunicationChannel(), getResourcePathFromLink(canonicalEditableResourcePath), true);
+				EditableResource editableResource = editorStatefulService.subscribeClientForcefully(context.getCommunicationChannel(), getResourcePath(decodedLink.resourcePath), true);
 				if (editableResource == null) { // Validation
 					validationProblems.append("Could not find '" + decodedLink.resourcePath + "' . Either it doesn't exist, or it failed during load.").append("\n");
 					continue;
@@ -162,7 +173,7 @@ public class EditorOperationsService {
 		return friendlyEditableResourcePathList;
 	}	
 	
-	protected String getResourcePathFromLink(String path) {
+	protected String getResourcePath(String path) {
 		return path;
 	}
 	

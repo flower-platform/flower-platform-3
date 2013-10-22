@@ -20,6 +20,7 @@ package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexutil.action.ActionBase;
 
@@ -38,7 +39,8 @@ package org.flowerplatform.editor.model.action {
 		
 		override public function get visible():Boolean {
 			if (selection != null && selection.length == 1) {
-				if (selection.getItemAt(0) is View) {
+				var selectedItem:Object = selection.getItemAt(0);
+				if (selectedItem is View && !(selectedItem is Diagram)) {
 					return true;
 				}
 			}

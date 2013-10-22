@@ -21,7 +21,6 @@ package org.flowerplatform.editor.model {
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.model.action.AddElementAction;
 	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
 	import org.flowerplatform.editor.model.action.AddRelationAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
@@ -43,6 +42,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
@@ -61,7 +61,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
-	import org.flowerplatform.flexdiagram.controller.model_extra_info.LightweightModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
@@ -75,6 +74,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
+
+
 	
 	/**
 	 * @author Cristi
@@ -86,6 +87,8 @@ package org.flowerplatform.editor.model {
 		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
+		
+		public var locationForNewElementsDialogClass:Class;
 		
 		public static function getInstance():EditorModelPlugin {
 			return INSTANCE;
@@ -129,7 +132,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);			
-			composedControllerProviderFactories["class"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.javaClass"] = composedControllerProviderFactory;
 			
 			// class members
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
@@ -141,12 +144,13 @@ package org.flowerplatform.editor.model {
 			if (!FlexUtilGlobals.getInstance().isMobile) {
 				composedControllerProviderFactory.inplaceEditorControllerClass = new ControllerFactory(InplaceEditorController);
 			}
-			composedControllerProviderFactories["classAttribute"] = composedControllerProviderFactory;
-			composedControllerProviderFactories["classOperation"] = composedControllerProviderFactory;
-			
+			composedControllerProviderFactories["classDiagram.javaClass.javaAttribute"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.javaClass.javaOperation"] = composedControllerProviderFactory;
+				
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
+			composedControllerProviderFactories["classDiagram.javaClass.title"] = composedControllerProviderFactory;
 			
 			// class separators
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
@@ -180,7 +184,6 @@ package org.flowerplatform.editor.model {
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
-			notationDiagramClassFactoryActionProvider.actionClasses.push(AddElementAction);
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ShowPropertiesAction);
@@ -201,6 +204,20 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(DiagramSelectedItem);
 
 			registerClassAliasFromAnnotation(ContentAssistItem);
+		}	
+				
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public function getLocationForNewElementsDialogNewInstance():ILocationForNewElementsDialog {
+			if (locationForNewElementsDialogClass == null) {
+				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must be set!");
+			}
+			var dialog:Object = new locationForNewElementsDialogClass();
+			if (!(dialog is ILocationForNewElementsDialog)) {
+				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must implement ILocationForNewElementsDialog!");
+			}
+			return ILocationForNewElementsDialog(dialog);
 		}
 		
 	}

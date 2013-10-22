@@ -22,5 +22,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: com.crispico.flower.mp.codesync.code.java,
- org.flowerplatform.editor.model.java
+ org.flowerplatform.editor.model.java,
+ org.flowerplatform.editor.model.java.remote
 Bundle-ActivationPolicy: lazy

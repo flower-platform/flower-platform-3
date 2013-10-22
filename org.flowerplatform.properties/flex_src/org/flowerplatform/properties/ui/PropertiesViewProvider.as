@@ -26,6 +26,7 @@ package org.flowerplatform.properties.ui {
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesPlugin;
 	
 	import spark.components.Button;

@@ -1,11 +1,8 @@
 package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
-	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
-	import org.flowerplatform.properties.PropertiesPlugin;
-	import org.flowerplatform.properties.ui.PropertiesList;
 	import org.flowerplatform.properties.ui.PropertiesViewProvider;
 	
 	/**

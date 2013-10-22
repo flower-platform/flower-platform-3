@@ -106,7 +106,7 @@ public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
 		String template = null;
 		// first find the template to use
 		try {
-			URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("public-resources/templates/" + node.getTemplate() + ".tpl");
+			URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("templates/" + node.getType() + ".tpl");
 			File file = new File(FileLocator.resolve(url).toURI());
 			template = FileUtils.readFileToString(file);
 		} catch (IOException | URISyntaxException e) {

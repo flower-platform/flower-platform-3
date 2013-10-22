@@ -29,10 +29,6 @@ import com.crispico.flower.mp.codesync.base.action.ActionResult;
  */
 public abstract class AstModelElementAdapter implements IModelAdapter {
 
-	public static final String FOLDER = "Folder";
-	
-	public static final String FILE = "File";
-	
 	private ModelAdapterFactorySet modelAdapterFactorySet;
 	
 	@Override

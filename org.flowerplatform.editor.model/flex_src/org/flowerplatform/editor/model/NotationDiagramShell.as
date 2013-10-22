@@ -35,6 +35,11 @@ package org.flowerplatform.editor.model {
 		
 		public var editorStatefulClient:DiagramEditorStatefulClient;
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public var diagramFrontend:DiagramEditorFrontend;
+		
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			var viewType:String = View(model).viewType;
 			var result:ComposedControllerProvider = composedControllerProviders[viewType];
@@ -42,7 +47,7 @@ package org.flowerplatform.editor.model {
 			if (result == null) {
 				var factory:ComposedControllerProviderFactory = EditorModelPlugin.getInstance().composedControllerProviderFactories[viewType];
 				if (factory == null) {
-					throw new Error("Couldn't find ComposedControllerProviderFactory for viewType = ", viewType);
+					throw new Error("Couldn't find ComposedControllerProviderFactory for viewType = " + viewType);
 				}
 				result = factory.createComposedControllerProvider(this);
 				composedControllerProviders[viewType] = result;

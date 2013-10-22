@@ -17,8 +17,7 @@ public class OrionFileAccessController extends FileAccessController {
 
 	@Override
 	public Object getFile(String path) {
-		// TODO: implement
-		return null;
+		return new File(CommonPlugin.getInstance().getWorkspaceRoot(), path);
 	}
 
 }

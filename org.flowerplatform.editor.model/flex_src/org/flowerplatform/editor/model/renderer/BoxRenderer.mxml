@@ -178,7 +178,7 @@
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
-				
+
 				addEffects();
 				addShadow();
 				

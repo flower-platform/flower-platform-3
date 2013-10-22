@@ -18,57 +18,34 @@
  */
 package org.flowerplatform.codesync.code.javascript.processor;
 
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCodeSyncElement;
-import org.flowerplatform.codesync.processor.CodeSyncElementFeatureChangesProcessor;
-import org.flowerplatform.emf_model.notation.ExpandableNode;
-import org.flowerplatform.emf_model.notation.Node;
-import org.flowerplatform.emf_model.notation.NotationFactory;
-import org.flowerplatform.emf_model.notation.View;
+import org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavascriptElementProcessor extends CodeSyncElementFeatureChangesProcessor {
+public class JavascriptElementProcessor extends CodeSyncDecoratorsProcessor {
 
 	@Override
-	protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram) {
-		if (associatedViewOnOpenDiagram instanceof ExpandableNode && !((ExpandableNode) associatedViewOnOpenDiagram).isExpanded()) {
-			return -1;
-		}
-		return 0;
+	public String getLabel(EObject object, boolean forEditing) {
+		CodeSyncElement cse = (CodeSyncElement) object;
+		String name = (String) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				.getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		return name;
 	}
 
 	@Override
-	protected boolean canAddChildView(View view, EObject candidate) {
-		if (view instanceof ExpandableNode && !((ExpandableNode) view).isExpanded()) {
-			return false;
-		}
-		return super.canAddChildView(view, candidate);
+	public String getIconBeforeCodeSyncDecoration(EObject object) {
+		CodeSyncElement element = getCodeSyncElement(object);
+		return CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(element.getType()).getIconUrl();
 	}
-
-	@Override
-	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {
-		CodeSyncElement cse = getCodeSyncElement(child);
-		ExpandableNode container = NotationFactory.eINSTANCE.createExpandableNode();
-		container.setExpanded(false);
-		container.setHasChildren(cse.getChildren().size() > 0);
-		if (cse instanceof RegExAstCodeSyncElement) {
-			container.setTemplate(((RegExAstCodeSyncElement) cse).getTemplate());
-		}
-		container.setViewType("fileElementContainer");
-		return container;
-	}
-
-	@Override
-	protected CodeSyncElement createModelElementChild(EObject object, View child) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	protected CodeSyncElement getCodeSyncElement(EObject object) {
+		return (CodeSyncElement) object;
 	}
 
 }

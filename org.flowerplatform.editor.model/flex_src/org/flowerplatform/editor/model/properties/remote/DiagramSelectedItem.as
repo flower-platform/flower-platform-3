@@ -20,6 +20,9 @@ package org.flowerplatform.editor.model.properties.remote {
 	[Bindable]
 	[RemoteClass]
 	[SecureSWF(rename="off")]
+	/**
+	 * @author Razvan Tache
+	 */
 	public class DiagramSelectedItem {
 		/**
 		 * 
@@ -49,7 +52,7 @@ package org.flowerplatform.editor.model.properties.remote {
 			this.diagramEditableResourcePath = diagramEditableResourcePath;
 			this.xmiID = xmiID;
 			this.editorStatefulServiceId = editorStatefulServiceId;
-			this.itemType = itemType;
+			this.itemType = "codeSyncElement";
 		}
 	}
 }

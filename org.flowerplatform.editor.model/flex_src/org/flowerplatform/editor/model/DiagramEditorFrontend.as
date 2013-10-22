@@ -28,26 +28,28 @@ package org.flowerplatform.editor.model {
 	import mx.events.FlexEvent;
 	import mx.managers.IFocusManagerComponent;
 	
-	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorFrontend;
-	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
+	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
-	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.action.MenuClosedEvent;
+	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
-	import org.flowerplatform.properties.PropertiesPlugin;
-
+	
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */	
 	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider, ISelectionForServerProvider {
 	
 	/**
@@ -141,14 +143,16 @@ package org.flowerplatform.editor.model {
 		public function set viewHost(value:IViewHost):void {
 			_viewHost = value;
 		}
-		
+		/**
+		 * @author Razvan Tache
+		 */
 		public function convertSelectionToSelectionForServer(selection:IList):IList {
 			if (selection == null) 
 				return selection;
 			
 			var selectedItems:ArrayCollection = new ArrayCollection();
 			for (var i:int = 0; i < selection.length; i++) {
-				var node:Node = Node(selection.getItemAt(i));//.id / 
+				var node:View = View(selection.getItemAt(i));//.id / 
 				var diagramEditableResourcePath:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).editableResourcePath;
 				var xmiID:String = node.idAsString;
 				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
