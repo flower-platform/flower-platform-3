@@ -17,13 +17,15 @@
 * license-end
 */
 package org.flowerplatform.editor.model.properties.remote {
+	import org.flowerplatform.properties.remote.SelectedItem;
+
 	[Bindable]
 	[RemoteClass]
 	[SecureSWF(rename="off")]
 	/**
 	 * @author Razvan Tache
 	 */
-	public class DiagramSelectedItem {
+	public class DiagramSelectedItem extends SelectedItem {
 		/**
 		 * 
 		 */
@@ -41,12 +43,6 @@ package org.flowerplatform.editor.model.properties.remote {
 		 */
 		[SecureSWF(rename="off")]
 		public var editorStatefulServiceId:String;
-		
-		/** 
-		 * 
-		 */
-		[SecureSWF(rename="off")]
-		public var itemType:String;
 		
 		public function DiagramSelectedItem(xmiID:String, diagramEditableResourcePath:String, editorStatefulServiceId:String, itemType:String) {
 			this.diagramEditableResourcePath = diagramEditableResourcePath;
