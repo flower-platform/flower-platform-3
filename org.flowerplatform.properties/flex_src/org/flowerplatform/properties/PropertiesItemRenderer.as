@@ -43,7 +43,7 @@ package org.flowerplatform.properties {
 			}
 			
 			// TODO create data.type
-			itemRenderer = PropertiesPlugin.getInstance().propertyRendererClasses[getQualifiedClassName(data.value)];
+			itemRenderer = PropertiesPlugin.getInstance().propertyRendererClasses[data.type];
 			if (itemRenderer == null) {
 				// TODO create default item renderer
 				itemRenderer = PropertiesPlugin.getInstance().propertyRendererClasses["String"];

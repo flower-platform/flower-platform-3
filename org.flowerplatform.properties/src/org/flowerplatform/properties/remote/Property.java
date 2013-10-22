@@ -25,6 +25,7 @@ public class Property {
 	private String name;
 	private Object value;
 	private boolean readOnly;
+	private String type;
 	
 	/**
 	 * This constructor is used for deserialisation and should not be used otherwise
@@ -33,25 +34,43 @@ public class Property {
 		// used for deserialisation
 	}
 	/**
-	 * The constructor creates a property with the parameters name and value, provided by user 
-	 * And sets the readOnly attribute to the default : true
+	 * The constructor creates a property with the parameters name and value, provided by user.
+	 * And sets the readOnly attribute to the default : true, and the type attribute to String.
+	 * Basically it calls new property(name, value, "String", true)
 	 * @param name
 	 * @param value 
-	 * @return
 	 */
 	public Property(String name, Object value) {	
-		this(name, value, true);
+		this(name, value, null, true);
+	}
+	
+	/**
+	 * 
+	 * 
+	 */
+	public Property(String name, Object value, String type) {	
+		this(name, value, type, true);
+	}
+	
+	/**
+	 * 
+	 * 
+	 */
+	public Property(String name, Object value, boolean readOnly) {
+		this(name, value, null, readOnly);
 	}
 	/**
 	 * The constructor creates a property with the name, value, and readOnly(true|false) provided by user
 	 * @param name
 	 * @param value 
+	 * @param type
 	 * @param readOnly
 	 */
-	public Property(String name, Object value, boolean readOnly) {
+	public Property(String name, Object value, String type, boolean readOnly) {
 		super();
 		this.name = name;
 		this.value = value;
+		this.type = type;
 		this.readOnly = readOnly;
 	}
 	
@@ -77,5 +96,12 @@ public class Property {
 	
 	public void setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 }
