@@ -24,8 +24,7 @@ package org.flowerplatform.codesync {
 	
 	import mx.collections.ArrayCollection;
 	
-	import org.flowerplatform.codesync.action.AddElementActionProvider;
-	import org.flowerplatform.codesync.new_elements_path.LocationForNewElementsDialog;
+	import org.flowerplatform.codesync.action.AddNewCodeSyncElementActionProvider;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
@@ -73,8 +72,7 @@ package org.flowerplatform.codesync {
 		override public function start():void {
 			super.start();
 			
-			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddElementActionProvider());
-			EditorModelPlugin.getInstance().locationForNewElementsDialogClass = LocationForNewElementsDialog;
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddNewCodeSyncElementActionProvider());
 		}
 		
 		

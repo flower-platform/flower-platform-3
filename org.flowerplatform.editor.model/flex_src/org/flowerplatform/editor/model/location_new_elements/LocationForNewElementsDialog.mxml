@@ -4,35 +4,36 @@
 -->
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx"
-		 implements="org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"		 
 		 xmlns:tree="org.flowerplatform.communication.tree.*"
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.dialog.IDialog"		 
 		 creationComplete="creationCompleteHandler(event)">
 	<fx:Script>
 		<![CDATA[
-			import mx.collections.ArrayCollection;
 			import mx.collections.IList;
 			import mx.events.FlexEvent;
+			import mx.validators.Validator;
 			
-			import org.flowerplatform.codesync.CodeSyncPlugin;
-			import org.flowerplatform.codesync.new_elements_path.remote.LocationForNewElementsStatefulClient;
 			import org.flowerplatform.common.CommonPlugin;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-			import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
-			import org.flowerplatform.communication.tree.remote.PathFragment;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.editor.model.EditorModelPlugin;
+			import org.flowerplatform.editor.model.location_new_elements.remote.LocationForNewElementsStatefulClient;
 			import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-			import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 			import org.flowerplatform.flexutil.view_content_host.IViewHost;
+			
+			import spark.events.IndexChangeEvent;
 			
 			private var _viewHost:IViewHost;
 			
 			private var _selectionOfItems:IList;
+			private var _options:Object;
 			
+			[Bindable]
 			private var _currentLocationForNewElements:String;
 			
 			[Bindable]
@@ -45,6 +46,7 @@
 			
 			public function set viewHost(viewHost:IViewHost):void {
 				_viewHost = viewHost; 
+				_viewHost.setLabel(EditorModelPlugin.getInstance().getMessage("locationNewElements.title"));
 			}
 			
 			public function set selectionOfItems(value:IList):void {
@@ -59,6 +61,10 @@
 				_currentShowNewElementsPathDialog = value;
 				showNewElementsPathDialogCheckBox = true;
 			}
+			
+			public function set options(value:Object):void {
+				_options = value;
+			}			
 			
 			public function getActions(selection:IList):Vector.<IAction> {
 				// doesn't support this
@@ -87,15 +93,18 @@
 				statefulClient.openNode(null);
 			}			
 						
-			private function okHandler():void {			
-				var location:String = TreeNode(treeList.getSelection().getItemAt(0)).getPath();
-				location += "/" + additionalPath.text;
-								
+			private function okHandler():void {				
+				// validate form
+				if (Validator.validateAll(validators).length > 0) {
+					return;
+				}
+				
+				var location:String = locationTxt.text;
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
 						"propertiesService",
 						"setProperties",
-						[_selectionOfItems, "newElementsPath", location]
+						[_selectionOfItems, "locationForNewElements", location]
 					)
 				);
 				if (showDialog.visible) {
@@ -103,11 +112,14 @@
 						new InvokeServiceMethodServerCommand(
 							"propertiesService",
 							"setProperties",
-							[_selectionOfItems, "showNewElementsPathDialog", showDialog.selected]
+							[_selectionOfItems, "showLocationForNewElementsDialog", showDialog.selected]
 						)
 					);
 				}
-				_resultHandler.handleDialogResult(location);
+				var result:Object = new Object();
+				result.location = location;
+				result.options = _options;
+				_resultHandler.handleDialogResult(result);
 				cancelHandler();
 			}
 			
@@ -116,25 +128,42 @@
 				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
 			}
 			
+			protected function treeList_changeHandler(event:IndexChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="right" verticalAlign="middle">
-			<s:CheckBox label="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.showDialog')}" id="showDialog" 
-						visible="{showNewElementsPathDialogCheckBox}"
-						selected="{_currentShowNewElementsPathDialog}" width="100%"/>
-			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="80"/>
-			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="80"/>			
+			<s:VGroup height="100%" width="100%">
+				<s:CheckBox label="{EditorModelPlugin.getInstance().getMessage('locationNewElements.showDialog')}" 
+							id="showDialog" 
+							visible="{showNewElementsPathDialogCheckBox}"
+							selected="{_currentShowNewElementsPathDialog}" width="100%"/>
+				<s:Label color="0x808080" text="{EditorModelPlugin.getInstance().getMessage('locationNewElements.showDialogInfo')}" />
+			</s:VGroup>			
+			<s:Button id="ok" label="{CommonPlugin.getInstance().getMessage('ok')}" click="okHandler()" width="70"/>
+			<s:Button id="cancel" label="{CommonPlugin.getInstance().getMessage('cancel')}" click="cancelHandler()" width="70"/>			
 		</s:HGroup>		
+		<fx:Array id="validators">
+			<mx:StringValidator source="{locationTxt}" property="text" minLength="1"/>			
+		</fx:Array>	
 	</fx:Declarations>
 	
 	<s:layout>
 		<s:VerticalLayout verticalAlign="middle" horizontalAlign="left"/>
 	</s:layout>
 	
-	<s:Label text="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.chooseParent')}" />
-	<tree:GenericTreeList id="treeList" width="100%" height="100%" />
-	<s:Label text="{CodeSyncPlugin.getInstance().getMessage('newElementsPath.additionalPath')}" />
-	<s:TextInput width="100%" id="additionalPath" />
+	<s:HGroup gap="0" width="100%">
+		<s:Label text="{EditorModelPlugin.getInstance().getMessage('locationNewElements.location')}" />
+		<s:Label text="{EditorModelPlugin.getInstance().getMessage('locationNewElements.locationInfo')}" color="0x808080"/>
+	</s:HGroup>
+	
+	<tree:GenericTreeList id="treeList" width="100%" height="100%" change="{_currentLocationForNewElements=TreeNode(treeList.getSelection().getItemAt(0)).getPath()}"/>
+	
+	<s:TextInput width="100%" id="locationTxt" text="{_currentLocationForNewElements}" />
 	
 </s:Group>

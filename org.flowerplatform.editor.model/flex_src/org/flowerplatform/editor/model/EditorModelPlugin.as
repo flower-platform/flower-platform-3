@@ -41,6 +41,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
@@ -74,7 +75,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
-	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	
 	/**
 	 * @author Cristi
@@ -86,8 +86,6 @@ package org.flowerplatform.editor.model {
 		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
-		
-		public var locationForNewElementsDialogClass:Class;
 		
 		public static function getInstance():EditorModelPlugin {
 			return INSTANCE;
@@ -184,7 +182,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
 
-			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);			
 		}
 		
 		override protected function registerClassAliases():void {
@@ -203,19 +201,6 @@ package org.flowerplatform.editor.model {
 
 			registerClassAliasFromAnnotation(ContentAssistItem);
 		}	
-				
-		/**
-		 * @author Cristina Constantinescu
-		 */ 
-		public function getLocationForNewElementsDialogNewInstance():ILocationForNewElementsDialog {
-			if (locationForNewElementsDialogClass == null) {
-				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must be set!");
-			}
-			var dialog:Object = new locationForNewElementsDialogClass();
-			if (!(dialog is ILocationForNewElementsDialog)) {
-				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must implement ILocationForNewElementsDialog!");
-			}
-			return ILocationForNewElementsDialog(dialog);
-		}
+		
 	}
 }

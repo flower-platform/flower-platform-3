@@ -5,6 +5,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.editor.model.DiagramEditorFrontend;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
+	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
@@ -20,10 +21,7 @@ package org.flowerplatform.editor.model.action {
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class NewModelAction extends ActionBase implements IDialogResultHandler, IDiagramShellAware {
-		
-		protected var storedSelection:IList;
-		protected var storedContext:Object;
+	public class AddNewElementAction extends ActionBase implements IDialogResultHandler, IDiagramShellAware {
 		
 		private var _diagramShell:DiagramShell;
 				
@@ -39,35 +37,38 @@ package org.flowerplatform.editor.model.action {
 			return Diagram(NotationDiagramShell(diagramShell).rootModel);
 		}
 		
-		protected function createNewModelElement(location:String):void {
+		protected function createNewModelElement(location:String, selection:IList, context:Object):void {
 			throw new Error("This method must be implemented!");
 		}
 		
-		override public function run():void {
-			storedSelection = selection;
-			storedContext = context;
-			
-			if (diagram.viewDetails.showNewElementsPathDialog) {
-				var dialog:ILocationForNewElementsDialog = EditorModelPlugin.getInstance().getLocationForNewElementsDialogNewInstance();
+		override public function run():void {		
+			if (selection.getItemAt(0) is Diagram && diagram.viewDetails.showLocationForNewElementsDialog) {
+				var dialog:LocationForNewElementsDialog = new LocationForNewElementsDialog();
 				dialog.selectionOfItems = NotationDiagramShell(diagramShell).diagramFrontend.convertSelectionToSelectionForServer(selection);
-				dialog.currentLocationForNewElements = diagram.viewDetails.newElementsPath;
-				dialog.currentShowNewElementsPathDialog = diagram.viewDetails.showNewElementsPathDialog;
+				dialog.currentLocationForNewElements = diagram.viewDetails.locationForNewElements;
+				dialog.currentShowNewElementsPathDialog = diagram.viewDetails.showLocationForNewElementsDialog;
+			
+				var options:Object = new Object();
+				options.selection = selection;
+				options.context = context;				
+				dialog.options = options;
+				
 				dialog.setResultHandler(this);
 				
 				FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setViewContent(dialog)
-				.setTitle(EditorModelPlugin.getInstance().getMessage("newElementsPath.title"))
-				.setWidth(400)
+				.setViewContent(dialog)				
+				.setWidth(470)
 				.setHeight(450)
 				.show();
-			} else {				
-				createNewModelElement(diagram.viewDetails.newElementsPath);
+			} else {
+				createNewModelElement(diagram.viewDetails.locationForNewElements, selection, context);
 			}
 		}
 		
-		public function handleDialogResult(result:Object):void {		
-			createNewModelElement(String(result));
-		}		
+		public function handleDialogResult(result:Object):void {	
+			var storedOptions:Object = result.options;
+			createNewModelElement(String(result.location), IList(storedOptions.selection), storedOptions.context);
+		}		 
 	}
 	
 }

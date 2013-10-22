@@ -19,6 +19,8 @@
 package org.flowerplatform.flexdiagram {
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import flash.utils.Dictionary;
@@ -414,5 +416,18 @@ package org.flowerplatform.flexdiagram {
 			}
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */  
+		public function convertCoordinates(rectangle:Rectangle, fromComponent:UIComponent, toComponent:UIComponent):Rectangle {					
+			var fromGlobalPoint:Point = fromComponent.contentToGlobal(rectangle.topLeft);
+			
+			var localPoint:Point = toComponent.globalToLocal(fromGlobalPoint);
+			var contentPoint:Point = toComponent.localToContent(localPoint);
+			
+			return new Rectangle(
+				contentPoint.x, contentPoint.y, 
+				rectangle.width * toComponent.scaleX, rectangle.height * toComponent.scaleY);
+		}
 	}
 }

@@ -19,10 +19,14 @@
 package com.crispico.flower.util.layout {
 	import com.crispico.flower.util.layout.event.ActiveViewChangedEvent;
 	
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.containers.Canvas;
 	import mx.containers.VBox;
+	import mx.core.FlexGlobals;
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -126,11 +130,11 @@ package com.crispico.flower.util.layout {
 			event.selection = selection;
 			event.rootActionsAlreadyCalculated = rootActionsAlreadyCalculated;
 						
-			// TODO CC: get coordonates relative to viewContent
-			contextForActions = new Object();
-			contextForActions.x = UIComponent(_viewContent).mouseX;
-			contextForActions.y = UIComponent(_viewContent).mouseY;
-			
+			contextForActions = new Object();			
+			contextForActions.rectangle = new Rectangle(
+				UIComponent(FlexGlobals.topLevelApplication).mouseX, 
+				UIComponent(FlexGlobals.topLevelApplication).mouseY, 
+				NaN, NaN);
 			event.context = contextForActions;
 		}
 		
@@ -200,9 +204,7 @@ package com.crispico.flower.util.layout {
 					contextForActions[key] = context[key];
 				}
 			}	
-			// set menu location
-			contextForActions.x = x;
-			contextForActions.y = y;
+			
 			// open menu
 			return FlexUtilGlobals.getInstance().contextMenuManager.openContextMenu(x, y, allActions, null, parentActionId, selection, contextForActions);
 		}	

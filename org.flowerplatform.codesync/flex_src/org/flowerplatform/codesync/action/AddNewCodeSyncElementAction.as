@@ -18,10 +18,17 @@
 */
 package org.flowerplatform.codesync.action {
 	
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.sampler.stopSampling;
 	
+	import mx.collections.IList;
+	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
+	
+	import org.flowerplatform.common.link.ILinkHandler;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
-	import org.flowerplatform.editor.model.action.NewModelAction;
+	import org.flowerplatform.editor.model.action.AddNewElementAction;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
@@ -33,11 +40,11 @@ package org.flowerplatform.codesync.action {
 	 * @author Mariana Gheorghe
 	 * @author Cristina Constantinescu
 	 */
-	public class AddElementAction extends NewModelAction {
+	public class AddNewCodeSyncElementAction extends AddNewElementAction {
 		
 		protected var codeSyncType:String;
 		
-		public function AddElementAction(codeSyncType:String, label:String, iconUrl:String) {
+		public function AddNewCodeSyncElementAction(codeSyncType:String, label:String, iconUrl:String) {
 			super();
 			parentId = "new";
 			this.codeSyncType = codeSyncType;
@@ -48,7 +55,7 @@ package org.flowerplatform.codesync.action {
 			}
 		}
 		
-		override protected function createNewModelElement(location:String):void {
+		override protected function createNewModelElement(location:String, selection:IList, context:Object):void {
 			//			var type:String, keyParameter:String, isCategory:Boolean, parameters:Object, childType:String = template, nextSiblingSeparator:String, parentCategory:String;
 			//			
 			//			// test
@@ -188,7 +195,7 @@ package org.flowerplatform.codesync.action {
 			//			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
 			//					.service_addElement(type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory);
 			
-			var selectedParentView:View = View(storedSelection.getItemAt(0));
+			var selectedParentView:View = View(selection.getItemAt(0));
 			var parentViewId:Object = null;
 			if (selectedParentView is Node) {
 				parentViewId = selectedParentView.id;
@@ -196,14 +203,16 @@ package org.flowerplatform.codesync.action {
 			
 			var parameters:Object = new Object();
 			parameters.location = location;
-			if (storedContext.rectangle) { // from drag to create tool
-				parameters.x = storedContext.rectangle.x;
-				parameters.y = storedContext.rectangle.y;
-				parameters.width = storedContext.rectangle.width;
-				parameters.height = storedContext.rectangle.height;
-			} else {
-				parameters.x = storedContext.x;
-				parameters.y = storedContext.y;				
+			if (context.rectangle) {
+				var rectangle:Rectangle = diagramShell.convertCoordinates(context.rectangle, UIComponent(FlexGlobals.topLevelApplication), UIComponent(diagramShell.diagramRenderer));
+				parameters.x = rectangle.x;
+				parameters.y = rectangle.y;
+				if (!isNaN(rectangle.width)) {
+					parameters.width = context.rectangle.width;
+				}
+				if (!isNaN(rectangle.height)) {
+					parameters.height = context.rectangle.height;
+				}				
 			}
 			
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)

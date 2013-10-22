@@ -17,13 +17,16 @@ import org.flowerplatform.properties.remote.SelectedItem;
  */
 public class DiagramPropertiesProvider implements IPropertiesProvider {
 
+	public static final String LOCATION_FOR_NEW_ELEMENTS_PROPERTY = "locationForNewElements";
+	public static final String SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY = "showLocationForNewElementsDialog";
+	
 	@Override
 	public List<Property> getProperties(SelectedItem selectedItem) {
 		List<Property> properties = new ArrayList<Property>();	
 		Diagram diagram = getDiagram(selectedItem);
 				
-		properties.add(new Property("newElementsPath", diagram.getNewElementsPath(), false));
-		properties.add(new Property("showNewElementsPathDialog", diagram.isShowNewElementsPathDialog(), false));
+		properties.add(new Property(LOCATION_FOR_NEW_ELEMENTS_PROPERTY, diagram.getLocationForNewElements(), false));
+		properties.add(new Property(SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY, diagram.isShowLocationForNewElementsDialog(), false));
 		
 		return properties;
 	}
@@ -32,10 +35,10 @@ public class DiagramPropertiesProvider implements IPropertiesProvider {
 	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
 		Diagram diagram = getDiagram(selectedItem);
 		
-		if (propertyName.equals("newElementsPath")) {
-			diagram.setNewElementsPath((String) propertyValue);
-		} else if (propertyName.equals("showNewElementsPathDialog")) {
-			diagram.setShowNewElementsPathDialog((boolean) propertyValue);
+		if (propertyName.equals(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)) {
+			diagram.setLocationForNewElements((String) propertyValue);
+		} else if (propertyName.equals(SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY)) {
+			diagram.setShowLocationForNewElementsDialog((boolean) propertyValue);
 		}
 	}
 	

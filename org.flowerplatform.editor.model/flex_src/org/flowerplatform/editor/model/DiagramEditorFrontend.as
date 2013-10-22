@@ -32,6 +32,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.CreateModelEvent;
@@ -145,6 +146,7 @@ package org.flowerplatform.editor.model {
 		}
 		/**
 		 * @author Razvan Tache
+		 * @author Cristina Constantinescu
 		 */
 		public function convertSelectionToSelectionForServer(selection:IList):IList {
 			if (selection == null) 
@@ -156,9 +158,12 @@ package org.flowerplatform.editor.model {
 				var diagramEditableResourcePath:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).editableResourcePath;
 				var xmiID:String = node.idAsString;
 				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
-				var diagramViewType:String = node.viewType;
 				
-				selectedItems.addItem(new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType));
+				var diagramSelectedItem:DiagramSelectedItem = new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID);
+				if (node is Diagram) { // for diagram, itemType = diagram's viewType -> different property providers on server side 
+					diagramSelectedItem.itemType = node.viewType;
+				}
+				selectedItems.addItem(diagramSelectedItem);
 			}			
 			
 			return selectedItems;

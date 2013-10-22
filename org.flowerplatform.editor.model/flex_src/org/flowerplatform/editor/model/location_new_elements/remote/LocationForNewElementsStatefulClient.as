@@ -1,10 +1,10 @@
-package org.flowerplatform.codesync.new_elements_path.remote {
+package org.flowerplatform.editor.model.location_new_elements.remote {
 	
 	import mx.collections.ArrayCollection;
 	
-	import org.flowerplatform.codesync.new_elements_path.LocationForNewElementsDialog;
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	
 	/**
@@ -19,7 +19,7 @@ package org.flowerplatform.codesync.new_elements_path.remote {
 			super();
 			
 			statefulServiceId = "locationForNewElementsStatefulService";
-			clientIdPrefix = "Location For New Elements Tree";
+			clientIdPrefix = "locationForNewElementsTreeId";
 		
 			requestDataOnSubscribe = false;
 			requestDataOnServer = false;	
@@ -28,8 +28,7 @@ package org.flowerplatform.codesync.new_elements_path.remote {
 		}
 				
 		[RemoteInvocation]
-		public function setAdditionalInfo(additionalPath:String, pathsToOpen:ArrayCollection):void {
-			LocationForNewElementsDialog(treeList.parent).additionalPath.text = additionalPath;
+		public function setAdditionalInfo(pathsToOpen:ArrayCollection):void {			
 			if (pathsToOpen != null) {				
 				for each (var pathToOpen:Object in pathsToOpen) {
 					treeList.refreshLinearizedDataProvider();
