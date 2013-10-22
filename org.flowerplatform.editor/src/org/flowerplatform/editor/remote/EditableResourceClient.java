@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.editor.remote;
 
+import org.flowerplatform.communication.IPrincipal;
+import org.flowerplatform.communication.IUser;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 
 /**
@@ -34,10 +36,10 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
 public class EditableResourceClient {
 	
 //	private String cachedClientId;
-//	
-//	private String cachedLogin;
-//	
-//	private String cachedName;
+	
+	private String cachedLogin;
+	
+	private String cachedName;
 	
 	/**
 	 * 
@@ -51,12 +53,12 @@ public class EditableResourceClient {
 		
 //		cachedClientId = communicationChannel.getClientId();
 //		
-//		IPrincipal principal = communicationChannel.getPrincipal();
-//		if (principal != null) {
-//			IUser user = communicationChannel.getPrincipal().getUser();
-//			cachedLogin = user.getLogin();
-//			cachedName = user.getName();
-//		}
+		IPrincipal principal = communicationChannel.getPrincipal();
+		if (principal != null) {
+			IUser user = communicationChannel.getPrincipal().getUser();
+			cachedLogin = user.getLogin();
+			cachedName = user.getName();
+		}
 	}
 	
 	public CommunicationChannel getCommunicationChannel() {
@@ -74,19 +76,19 @@ public class EditableResourceClient {
 		return (String) communicationChannel.getId();
 	}
 	
-//	/**
-//	 * 
-//	 */
-//	public String getLogin() {
-//		return cachedLogin;
-//	}
-//	
-//	/**
-//	 * 
-//	 */
-//	public String getName() {
-//		return cachedName;
-//	}
+	/**
+	 * 
+	 */
+	public String getLogin() {
+		return cachedLogin;
+	}
+	
+	/**
+	 * 
+	 */
+	public String getName() {
+		return cachedName;
+	}
 
 	public String getStatefulClientId() {
 		return statefulClientId;

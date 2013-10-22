@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.remote.FileBasedEditableResource;
 
 public class DiagramEditableResource extends FileBasedEditableResource {
@@ -63,10 +64,12 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 		this.mainResource = mainResource;
 	}
 
+	/**
+	 * @author Sebastian Solomon
+	 */
 	@Override
 	public String getLabel() {
-		// TODO Auto-generated method stub
-		return "hey, I'm a diagram!";
+		return EditorPlugin.getInstance().getFileAccessController().getName(getFile());
 	}
 
 	@Override

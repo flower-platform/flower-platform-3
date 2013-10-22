@@ -29,6 +29,7 @@ package org.flowerplatform.flexutil {
 	import org.flowerplatform.flexutil.popup.IPopupHandlerFactory;
 	import org.flowerplatform.flexutil.popup.IProgressMonitorFactory;
 	import org.flowerplatform.flexutil.selection.SelectionManager;
+	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
 
 	public class FlexUtilGlobals {
 
@@ -39,6 +40,8 @@ package org.flowerplatform.flexutil {
 		}
 		
 		public var workbench:IWorkbench;
+		
+		public var keyBindings:KeyBindings;
 		
 		public var composedViewProvider:ComposedViewProvider = new ComposedViewProvider();
 		

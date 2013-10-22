@@ -50,8 +50,6 @@ package  com.crispico.flower.util.layout {
 	import com.crispico.flower.util.layout.view.MinimizedStackBar;
 	import com.crispico.flower.util.layout.view.ViewPopupWindow;
 	import com.crispico.flower.util.layout.view.activeview.ActiveViewList;
-	import com.crispico.flower.util.shortcuts.KeyBindings;
-	import com.crispico.flower.util.shortcuts.Shortcut;
 	
 	import flash.display.DisplayObject;
 	import flash.events.IEventDispatcher;
@@ -81,6 +79,7 @@ package  com.crispico.flower.util.layout {
 	import mx.events.FlexEvent;
 	import mx.styles.IStyleClient;
 	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.LayoutData;
@@ -89,6 +88,8 @@ package  com.crispico.flower.util.layout {
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
+	import org.flowerplatform.flexutil.shortcuts.Shortcut;
 	
 	import spark.components.NavigatorContent;
 
@@ -220,7 +221,7 @@ package  com.crispico.flower.util.layout {
 						
 		/**		
 		 * Initializes the objects and adds required listeners.	  
-		 * 
+		 * @author Sebastian Solomon
 		 */
 		public function Workbench() {			
 			_componentToLayoutData = new Dictionary();
@@ -235,7 +236,8 @@ package  com.crispico.flower.util.layout {
 			addEventListener(DockHandlerEvent.CLICK, viewPopup_dockClickHandler, false, EventPriority.DEFAULT_HANDLER);
 			
 			// Adds CTRL+M as shortcut to maximize/minimize the active view layout data.
-			(new KeyBindings()).registerBinding(new Shortcut(true, false, "m"), maximizeRestoreActiveStackLayoutData); // CTRL + M
+			//(new KeyBindings()).registerBinding(new Shortcut(true, false, "m"), maximizeRestoreActiveStackLayoutData);
+			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "m"), maximizeRestoreActiveStackLayoutData); // CTRL + M
 		}
 				
 		/**

@@ -2,6 +2,9 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.editor.action.EditorTreeActionProvider"/>
+    <classEntry path="org.flowerplatform.editor.open_resources_view.EditableResourceHierachicalModelAdapter"/>
+    <classEntry path="org.flowerplatform.editor.action.SaveAction"/>
+    <classEntry path="org.flowerplatform.editor.action.SaveAllAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

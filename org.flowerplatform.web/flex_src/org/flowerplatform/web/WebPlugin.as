@@ -35,12 +35,16 @@ package org.flowerplatform.web {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.GlobalEditorOperationsManager;
+	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
@@ -83,8 +87,11 @@ package org.flowerplatform.web {
 			perspectives.push(new DefaultPerspective());
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
+			
+			FlexUtilGlobals.getInstance().keyBindings = new KeyBindings();
 		}
-		
+			
 		override public function start():void {
 			super.start();
 			// pass the same descriptor; to be used for images (that need the descriptor for the URL)
@@ -126,7 +133,12 @@ package org.flowerplatform.web {
 			
 			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
 			
+			// is needed from other plugins
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
+
+			// Init for EditorSupport
+			//GlobalEditorOperationsManager.INSTANCE = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));
+
 			FlexUtilGlobals.getInstance().selectionManager.addEventListener(SelectionChangedEvent.SELECTION_CHANGED, function (event:SelectionChangedEvent):void {
 				trace("Selection changed: " + event.selection);
 			});

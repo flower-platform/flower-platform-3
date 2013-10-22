@@ -62,6 +62,7 @@ package org.flowerplatform.communication.tree {
 		}
 		
 		override public function expandCollapseNode(modelWrapper:HierarchicalModelWrapper):void	{
+		if (statefulClient != null){			
 			if (statefulClient.requestDataOnServer) {
 				if (!modelWrapper.expanded) {
 					// i.e. state = collapsed				
@@ -71,7 +72,9 @@ package org.flowerplatform.communication.tree {
 					statefulClient.closeNode(modelWrapper.treeNode);
 				}
 			}
+		}
 			super.expandCollapseNode(modelWrapper);
+		
 		}
 		
 	}

@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.editor {
 	import com.crispico.flower.util.layout.WorkbenchViewHost;
+	import com.crispico.flower.util.layout.Workbench;
 	
 	import flash.utils.Dictionary;
 	
@@ -30,6 +31,8 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
+	import org.flowerplatform.editor.action.SaveAction;
+	import org.flowerplatform.editor.action.SaveAllAction;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.editor.remote.CreateEditorStatefulClientCommand;
 	import org.flowerplatform.editor.remote.EditableResource;
@@ -37,8 +40,12 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 	import org.flowerplatform.editor.remote.InitializeEditorPluginClientCommand;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
+	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
+	import org.flowerplatform.flexutil.shortcuts.Shortcut;
 	
 	/**
 	 * @author Cristi
@@ -68,6 +75,8 @@ package org.flowerplatform.editor {
 		
 		public var editorDescriptors:Vector.<BasicEditorDescriptor> = new Vector.<BasicEditorDescriptor>();
 		
+		public var globalEditorOperationsManager:GlobalEditorOperationsManager;
+		
 		override public function preStart():void {
 			super.preStart();
 			if (INSTANCE != null) {
@@ -77,6 +86,22 @@ package org.flowerplatform.editor {
 			
 			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;			
 		}
+		
+		/**
+		 * @author Sebastian Solomon
+		 */
+		override public function start():void
+		{
+			// TODO Auto Generated method stub
+			super.start();
+			globalEditorOperationsManager  = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));	
+			globalEditorOperationsManager.saveAction = new SaveAction();
+			globalEditorOperationsManager.saveAllAction = new SaveAllAction();
+			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "s"), globalEditorOperationsManager.saveAction); // Ctrl + S
+			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, true, "s"), globalEditorOperationsManager.saveAllAction); // Ctrl + Shift + S
+			
+		}
+		
 		
 		override protected function registerClassAliases():void	{
 			registerClassAliasFromAnnotation(ContentTypeDescriptor);
@@ -121,12 +146,6 @@ package org.flowerplatform.editor {
 				if (view is WorkbenchViewHost) {
 					if (WorkbenchViewHost(view).activeViewContent is EditorFrontend) {
 						editorStatefulClient = EditorFrontend(WorkbenchViewHost(view).activeViewContent).editorStatefulClient;
-					}
-				}
-				if (editorStatefulClient != null) {
-					if (editorStatefulClients[editorStatefulClient.editableResourcePath] == null) {
-						CommunicationPlugin.getInstance().statefulClientRegistry.unregister(editorStatefulClient, null);
-						editorStatefulClients[editorStatefulClient.editableResourcePath] = editorStatefulClient;
 					}
 				}
 			}

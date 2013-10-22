@@ -20,8 +20,10 @@ package  org.flowerplatform.flexutil.layout {
 	import mx.collections.ArrayCollection;
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	
 	
 	/**
 	 * Singleton class representing a registry that stores data about
@@ -117,18 +119,19 @@ package  org.flowerplatform.flexutil.layout {
 		 * If the component this view provides implements the <code>IDirtyStateProvider</code>
 		 * interface, and it is dirty, then a "*" is appended to the original title
 		 * 
+		 * @author Sebastian Solomon
 		 * 
 		 */
 		public function getTitle(viewLayoutData:ViewLayoutData = null):String {	
 			for each (var viewProvider:IViewProvider in viewProviders) {
 				if (viewLayoutData.viewId == viewProvider.getId()) {			
 					var title:String = viewProvider.getTitle(viewLayoutData);
-//					var component:UIComponent = SingletonRefsFromPrePluginEra.workbench.layoutDataToComponent[viewLayoutData];
-//					if (component is IDirtyStateProvider) {
-//						if (IDirtyStateProvider(component).isDirty()) {
-//							title = "*" + title;
-//						}
-//					}
+					var component:UIComponent = FlexUtilGlobals.getInstance().workbench.getComponent(viewLayoutData.viewId, viewLayoutData.customData);
+					if (component is IDirtyStateProvider) {
+						if (IDirtyStateProvider(component).isDirty()) {
+							title = "*" + title;
+						}
+					}
 					return title;
 				}			
 			}
