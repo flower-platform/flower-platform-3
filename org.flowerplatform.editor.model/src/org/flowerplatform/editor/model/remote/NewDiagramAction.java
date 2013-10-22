@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.editor.model.remote;
 
+//import java.io.File;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,6 +32,9 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.AbstractServerCommand;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.FileAccessController;
+import org.flowerplatform.editor.file.IFileAccessController;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.emf_model.notation.Diagram;
 
@@ -41,23 +45,32 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 
 	public String parentPath;
 	public String name;
-	
+
 	@Override
 	public void executeCommand() {
-		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), parentPath);
+		Object diagram = createDiagram();
+		if (diagram instanceof File) {
+			openDiagram((File) diagram);
+		}
+	}
+
+	protected Object createDiagram() {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance()
+				.getFileAccessController();
+		Object file = fileAccessController.getFile(parentPath);
 		// go to parent dir if actions was executed on a file
-		if (!file.isDirectory()) {
-			file = file.getParentFile();
+		if (!EditorPlugin.getInstance().getFileAccessController()
+				.isDirectory(file)) {
+
+			file = EditorPlugin.getInstance().getFileAccessController()
+					.getParentFile(file);
 		}
-		
-		File diagram = new File(file, getNextDiagram(file, name));
-		try {
-			diagram.createNewFile();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		
-		URI resourceURI = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(diagram);
+
+		Object diagram = fileAccessController.createNewFile(file,
+				getNextDiagram(file, name));
+		fileAccessController.createNewFile(diagram);
+		URI resourceURI = EditorModelPlugin.getInstance()
+				.getModelAccessController().getURIFromFile(diagram);
 		ResourceSet resourceSet = new ResourceSetImpl();
 		Resource resource = resourceSet.createResource(resourceURI);
 		resource.getContents().clear();
@@ -72,27 +85,42 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
-		DiagramEditorStatefulService service = (DiagramEditorStatefulService) 
-				CommunicationPlugin.getInstance().getServiceRegistry().getService(getServiceId());
-		service.subscribeClientForcefully(getCommunicationChannel(), CommonPlugin.getInstance().getWorkspaceRoot().toURI().relativize(diagram.toURI()).toString());
+		return diagram;
 	}
-	
-	protected String getNextDiagram(File parent, String name) {
+
+	public void openDiagram(File diagram) {
+		DiagramEditorStatefulService service = (DiagramEditorStatefulService) CommunicationPlugin
+				.getInstance().getServiceRegistry().getService(getServiceId());
+		service.subscribeClientForcefully(getCommunicationChannel(),
+				CommonPlugin.getInstance().getWorkspaceRoot().toURI()
+						.relativize(diagram.toURI()).toString());
+	}
+
+	protected String getNextDiagram(Object parent, String name) {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance()
+				.getFileAccessController();
 		int i = 0;
 		boolean exists = true;
-		StringBuilder builder = null;
+		StringBuilder sbName = null;
 		while (exists) {
 			i++;
-			builder = new StringBuilder(name);
-			builder.insert(builder.indexOf("."), i);
-			if (!new File(parent, builder.toString()).exists()) {
+			sbName = new StringBuilder(name);
+			int index = sbName.indexOf(".");
+			if (index > 0) {
+				sbName.insert(index, i);
+			} else {
+				sbName.append(i);
+			}
+			Object newFile = fileAccessController.createNewFile(parent,
+					sbName.toString());
+			if (!fileAccessController.exists(newFile)) {
 				exists = false;
 			}
 		}
-		return builder.toString();
+		return sbName.toString();
 	}
 
-	abstract protected Diagram createDiagram(File file, ResourceSet resourceSet);
+	abstract protected Diagram createDiagram(Object file, ResourceSet resourceSet);
+
 	abstract protected String getServiceId();
 }

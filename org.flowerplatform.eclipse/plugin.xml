@@ -8,7 +8,7 @@
             default="false"
             extensions="notation"
             id="org.flowerplatform.eclipse.editor.FlowerDiagramEditor"
-            name="Flower Diagram Editor">
+            name="%editor.name">
       </editor>
    </extension>
     <extension
@@ -72,20 +72,33 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="popup:org.eclipse.ui.popup.any?before=group.new">
+            locationURI="popup:org.eclipse.ui.popup.any?endof=group.new">
          <command
-               commandId="org.flowerplatform.eclipse.command1"
-               label="New Diagram!!!"
+               commandId="NewDiagramCommand"
+               label="%command.label"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
          </command>
       </menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.commands">
       <command
-            defaultHandler="org.flowerplatform.eclipse.action.NewDiagramHandler"
-            id="org.flowerplatform.eclipse.command1"
-            name="addDiagram!!!">
+            defaultHandler="org.flowerplatform.eclipse.action.CreateNewDiagramHandler"
+            id="NewDiagramCommand"
+            name="%command.name">
       </command>
    </extension>
 

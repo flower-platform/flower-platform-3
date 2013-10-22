@@ -2,6 +2,7 @@ package org.flowerplatform.editor.file;
 
 /**
  * @author Cristina Constantinescu
+ * @author Sebastian Solomon
  */
 public interface IFileAccessController {
 
@@ -19,5 +20,15 @@ public interface IFileAccessController {
 	StringBuffer getContent(Object file);
 	
 	void setContent(Object file, StringBuffer content);
+
+	boolean isDirectory(Object file);
+	
+	Object getParentFile(Object file);
+	
+	boolean createNewFile(Object file);
+	
+	Object createNewFile(Object file, String name);
+	
+	boolean exists(Object file);
 	
 }
