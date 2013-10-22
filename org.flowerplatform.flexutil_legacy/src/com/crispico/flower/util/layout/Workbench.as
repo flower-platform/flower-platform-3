@@ -102,7 +102,7 @@ package  com.crispico.flower.util.layout {
 	 * 
 	 */
 	[SecureSWF(rename="off")]
-	public class Workbench extends Canvas implements /*IContextMenuLogicProvider, IActionProvider2, */IWorkbench {
+	public class Workbench extends Canvas implements IWorkbench {
 		
 		/**
 		 * Represents the percent applied to newly added child on workbench.
