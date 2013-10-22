@@ -28,10 +28,7 @@ package org.flowerplatform.web.common.explorer.properties {
 	 * @author Razvan Tache
 	 */
 	public class FileSelectedItem extends SelectedItem {
-		/** 
-		 * 
-		 */
-		[SecureSWF(rename="off")]
+
 		public var pathWithRoot:ArrayCollection;
 		
 		public function FileSelectedItem(pathWithRoot:ArrayCollection) {

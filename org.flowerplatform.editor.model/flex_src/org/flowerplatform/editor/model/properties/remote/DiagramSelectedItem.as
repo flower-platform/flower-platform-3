@@ -26,22 +26,11 @@ package org.flowerplatform.editor.model.properties.remote {
 	 * @author Razvan Tache
 	 */
 	public class DiagramSelectedItem extends SelectedItem {
-		/**
-		 * 
-		 */
-		[SecureSWF(rename="off")]
+
 		public var xmiID:String;
 		
-		/** 
-		 * 
-		 */
-		[SecureSWF(rename="off")]
 		public var diagramEditableResourcePath:String;
 		
-		/** 
-		 * 
-		 */
-		[SecureSWF(rename="off")]
 		public var editorStatefulServiceId:String;
 		
 		public function DiagramSelectedItem(xmiID:String, diagramEditableResourcePath:String, editorStatefulServiceId:String, itemType:String) {
