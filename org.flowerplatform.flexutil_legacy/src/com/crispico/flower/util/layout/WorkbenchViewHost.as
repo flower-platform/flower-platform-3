@@ -23,6 +23,7 @@ package com.crispico.flower.util.layout {
 	import mx.collections.IList;
 	import mx.containers.Canvas;
 	import mx.containers.VBox;
+	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionUtil;
@@ -124,6 +125,12 @@ package com.crispico.flower.util.layout {
 			event.allActions = allActions;
 			event.selection = selection;
 			event.rootActionsAlreadyCalculated = rootActionsAlreadyCalculated;
+						
+			// TODO CC: get coordonates relative to viewContent
+			contextForActions = new Object();
+			contextForActions.x = UIComponent(_viewContent).mouseX;
+			contextForActions.y = UIComponent(_viewContent).mouseY;
+			
 			event.context = contextForActions;
 		}
 		

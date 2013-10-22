@@ -25,6 +25,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.AbstractFeatureChangesProcessor;
 import org.flowerplatform.editor.model.change_processor.DependentFeature;
+import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.java.JavaClassAttributeProcessor;
 import org.flowerplatform.editor.model.java.JavaClassOperationProcessor;
 import org.flowerplatform.editor.model.java.JavaClassProcessor;
@@ -72,6 +73,8 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass", relationsProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass.javaAttribute", relationsProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass.javaOperation", relationsProcessor);
+
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());
 		
 		AbstractFeatureChangesProcessor processor = new AbstractFeatureChangesProcessor();
 		// if model element removed => remove view

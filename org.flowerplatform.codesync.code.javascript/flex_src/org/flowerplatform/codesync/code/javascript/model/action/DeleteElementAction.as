@@ -21,6 +21,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
 	
 	/**
@@ -35,7 +36,7 @@ package org.flowerplatform.codesync.code.javascript.model.action {
 		}
 		
 		override public function get visible():Boolean {
-			return selection.length == 1;
+			return selection.length == 1 && !(selection.getItemAt(0) is Diagram);
 		}
 		
 		override public function run():void {

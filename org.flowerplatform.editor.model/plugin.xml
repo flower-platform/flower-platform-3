@@ -40,5 +40,12 @@
             propertiesProviderClass="org.flowerplatform.editor.model.properties.JavaAttributePropertiesProvider">
       </propertiesProvider>
    </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="classDiagram"
+            propertiesProviderClass="org.flowerplatform.editor.model.properties.DiagramPropertiesProvider">
+      </propertiesProvider>
+   </extension>
 
 </plugin>

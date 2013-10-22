@@ -19,8 +19,6 @@
 package org.flowerplatform.codesync.code.javascript {
 	
 	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
-	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxRenderer;
-	import org.flowerplatform.codesync.code.javascript.model.renderer.ExpandableBoxVisualChildrenController;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
@@ -85,6 +83,7 @@ package org.flowerplatform.codesync.code.javascript {
 			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
 			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
+
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
 			if (!FlexUtilGlobals.getInstance().isMobile) {
 				composedControllerProviderFactory.inplaceEditorControllerClass = new ControllerFactory(InplaceEditorController);

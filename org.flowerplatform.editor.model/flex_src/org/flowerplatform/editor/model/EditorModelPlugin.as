@@ -41,8 +41,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
-	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
@@ -86,6 +86,8 @@ package org.flowerplatform.editor.model {
 		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
+		
+		public var locationForNewElementsDialogClass:Class;
 		
 		public static function getInstance():EditorModelPlugin {
 			return INSTANCE;
@@ -200,7 +202,20 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(DiagramSelectedItem);
 
 			registerClassAliasFromAnnotation(ContentAssistItem);
+		}	
+				
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public function getLocationForNewElementsDialogNewInstance():ILocationForNewElementsDialog {
+			if (locationForNewElementsDialogClass == null) {
+				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must be set!");
+			}
+			var dialog:Object = new locationForNewElementsDialogClass();
+			if (!(dialog is ILocationForNewElementsDialog)) {
+				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must implement ILocationForNewElementsDialog!");
+			}
+			return ILocationForNewElementsDialog(dialog);
 		}
-		
 	}
 }

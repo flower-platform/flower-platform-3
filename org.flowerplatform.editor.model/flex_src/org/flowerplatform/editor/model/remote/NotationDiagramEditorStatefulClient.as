@@ -126,5 +126,10 @@ package org.flowerplatform.editor.model.remote {
 		public function service_deleteElement(viewId:Object):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "deleteElement", [viewId]));
 		}
+		
+		public function service_updateNewElementsPathProperties(newElementsPath:String, showNewElementsPathDialog:Boolean):void {
+			attemptUpdateContent(null, invokeServiceMethod("updateNewElementsPathProperties", [editableResourcePath, diagramId, newElementsPath, showNewElementsPathDialog], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+			
+		}
 	}
 }

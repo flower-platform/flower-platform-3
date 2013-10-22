@@ -34,16 +34,12 @@ package org.flowerplatform.editor.model.action {
 		override public function get visible():Boolean {	
 			// single model selected, diagram excluded, and context not null 
 			// (the action must be visible when dragToCreateRelationTool active)
-			return selection.length == 1 && !(selection.getItemAt(0) is DiagramRenderer) && context != null;
+			return selection.length == 1 && !(selection.getItemAt(0) is DiagramRenderer) && context != null 
+				&& context.hasOwnProperty("sourceId")
+				&& context.hasOwnProperty("targetId");
 		}
 		
-		override public function run():void {
-			if (!context.hasOwnProperty("sourceId")) {
-				throw new Error("Source model id hasn't been set!");	
-			}
-			if (!context.hasOwnProperty("targetId")) {
-				throw new Error("Target model id hasn't been set!");	
-			}
+		override public function run():void {			
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(_diagramShell).editorStatefulClient)
 				.service_addNewRelation(context.sourceId, context.targetId);
 		}
