@@ -73,6 +73,12 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 
+	
+	@Override
+	public void registerMessageBundle() throws Exception {
+
+	}
+
 	public void stop(BundleContext bundleContext) throws Exception {
 		super.stop(bundleContext);
 		INSTANCE = null;
