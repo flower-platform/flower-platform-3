@@ -17,16 +17,7 @@ import org.slf4j.LoggerFactory;
 public class EditorOperationsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EditorOperationsService.class);
-	
-	public String getFriendlyNameDecoded(String friendlyName) {
-		try {
-			friendlyName = URLDecoder.decode(friendlyName, "UTF-8");		
-		} catch (UnsupportedEncodingException e) {
-			logger.error("Could not decode using UTF-8 charset : " + friendlyName);
-		}
-		return friendlyName;
-	}
-	
+		
 	/**
 	 * An <em>external editableResourcePath</em> is either a <em>canonical editableResourcePath</em or a <em>friendly editableResourcePath</em>.
 	 * It's format is <b>editor_name :/ openable_resource # fragment </b>
@@ -174,13 +165,13 @@ public class EditorOperationsService {
 	}	
 	
 	protected String getResourcePath(String path) {
-		return path;
+		return EditorPlugin.getInstance().getFriendlyNameDecoded(path);
 	}
 	
 	/**
 	 * @author Cristi
 	 */
-	public static class DecodedLink {
+	private static class DecodedLink {
 		public String editorName;
 		public String resourcePath;
 		public String fragment;
