@@ -17,20 +17,16 @@
  * license-end
  */
 package org.flowerplatform.flexdiagram.renderer {
-	import flash.display.DisplayObject;
 	import flash.events.FocusEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
-	import mx.core.EdgeMetrics;
-	import mx.core.UIComponent;
 	import mx.managers.IFocusManagerComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+	import org.flowerplatform.flexdiagram.util.RectangularGrid;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteDataRenderer;
-	
-	import spark.components.Application;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -43,7 +39,19 @@ package org.flowerplatform.flexdiagram.renderer {
 		private var _noNeedToRefreshRect:Rectangle;
 		
 		public var viewPortRectOffsetTowardOutside:int = 0;
-								
+		
+		/**
+		 * @author Mircea Negreanu
+		 */
+		private var _grid:RectangularGrid;
+		
+		/**
+		 * If we want grid or not
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		protected var useGrid:Boolean = true;
+		
 		public function get diagramShell():DiagramShell {
 			return _diagramShell;
 		}
@@ -68,6 +76,18 @@ package org.flowerplatform.flexdiagram.renderer {
 			_noNeedToRefreshRect = value; 
 		}
 
+		/**
+		 * Get the grid used by this component.
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		public function get grid():RectangularGrid {
+			if (useGrid && _grid == null) {
+				_grid = new RectangularGrid();
+			}
+			return _grid;
+		}
+		
 		override public function set data(value:Object):void {
 			super.data = value;
 			if (data == null) {
@@ -85,16 +105,26 @@ package org.flowerplatform.flexdiagram.renderer {
 			contentRect = rect;
 		}
 		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mircea Negreanu
+		 */
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			if (visualChildrenController != null) {
 				visualChildrenController.refreshVisualChildren(data);
 			}
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
+
+			// in case we have grid -> sizeGrid
+			sizeGrid();
 			
-			graphics.clear();
-			graphics.lineStyle(1);
-			graphics.beginFill(0xCCCCCC, 0);
-			graphics.drawRect(horizontalScrollPosition, verticalScrollPosition, width, height);
+			// if the grid is not visible show the border
+			if (!useGrid || !grid.visible) {
+				graphics.clear();
+				graphics.lineStyle(1);
+				graphics.beginFill(0xCCCCCC, 0);
+				graphics.drawRect(horizontalScrollPosition, verticalScrollPosition, width, height);
+			}
 		}
 		
 		override protected function focusInHandler(event:FocusEvent):void {
@@ -114,6 +144,45 @@ package org.flowerplatform.flexdiagram.renderer {
 			if (!getViewportRect().containsPoint(point)) { // if outside diagram area
 				diagramShell.deactivateTools();	
 			}							
-		}			
+		}		
+		
+		/**
+		 * In case we want grid, add it to the container
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		override protected function createChildren():void {
+			super.createChildren();
+			
+			if (useGrid) {
+				grid.name = "grid";
+				grid.x = grid.y = 0;
+				grid.dashSize = 1;
+				
+				addElement(grid);
+			}
+		}
+		
+		/**
+		 * Size the grid based on scroll position and width/height
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		protected function sizeGrid():void {
+			if (useGrid) {
+				if (this.scaleX < 0.75) {
+					grid.visible = false;
+				} else {
+					grid.visible = true;
+				}
+				
+				if (grid.visible) {
+					grid.x = horizontalScrollPosition;
+					grid.y = verticalScrollPosition;
+					grid.width = width;
+					grid.height = height;
+				}
+			}
+		}
 	}
 }
