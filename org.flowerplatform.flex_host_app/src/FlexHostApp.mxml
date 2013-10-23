@@ -45,12 +45,11 @@ license-end
 	</s:layout>
 	<fx:Script>
 		<![CDATA[
+			import com.crispico.flower.util.popup.PopupHandlerFactory;
 			import com.crispico.flower.util.popup.ProgressMonitorDialogHandlerFactory;
-			import com.crispico.flower.util.popup.ResizablePopupWindowPopupHandlerFactory;
 			
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
-			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			import mx.graphics.ImageSnapshot;
@@ -141,7 +140,7 @@ license-end
 				workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
 	
 				FlexUtilGlobals.getInstance().messageBoxFactory = new AlertPopupMessageBoxFactory();
-				FlexUtilGlobals.getInstance().popupHandlerFactory = new ResizablePopupWindowPopupHandlerFactory();
+				FlexUtilGlobals.getInstance().popupHandlerFactory = new PopupHandlerFactory();
 				FlexUtilGlobals.getInstance().progressMonitorHandlerFactory = new ProgressMonitorDialogHandlerFactory();
 				FlexUtilGlobals.getInstance().contextMenuManager = new ContextMenuManager();
 				

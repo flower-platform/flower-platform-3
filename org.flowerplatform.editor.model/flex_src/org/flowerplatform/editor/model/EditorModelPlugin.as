@@ -34,6 +34,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.action.SearchAction;
+	import org.flowerplatform.editor.model.action.ShowPropertiesAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
@@ -60,7 +61,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
-	import org.flowerplatform.flexdiagram.controller.model_extra_info.LightweightModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
@@ -74,7 +74,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
-	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
+
+
 	
 	/**
 	 * @author Cristi
@@ -185,6 +186,7 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(ShowPropertiesAction);
 		}
 		
 		override protected function registerClassAliases():void {
@@ -217,5 +219,6 @@ package org.flowerplatform.editor.model {
 			}
 			return ILocationForNewElementsDialog(dialog);
 		}
+		
 	}
 }
