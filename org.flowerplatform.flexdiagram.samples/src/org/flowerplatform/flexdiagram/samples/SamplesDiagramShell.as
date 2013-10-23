@@ -34,7 +34,7 @@ package org.flowerplatform.flexdiagram.samples {
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
-	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicConnectionRendererController;
 	import org.flowerplatform.flexdiagram.samples.controller.BasicModelAbsoluteLayoutRectangleController;
@@ -113,7 +113,7 @@ package org.flowerplatform.flexdiagram.samples {
 			selectOrgDragToCreateElementgController = new SelectOrDragToCreateElementController(this);
 			
 			// connections
-			connectionModelRendererController = new BasicConnectionRendererController(this, ConnectionFigure);
+			connectionModelRendererController = new BasicConnectionRendererController(this, ConnectionRenderer);
 		}
 		
 		public function getAbsoluteLayoutRectangleController(model:Object):IAbsoluteLayoutRectangleController {

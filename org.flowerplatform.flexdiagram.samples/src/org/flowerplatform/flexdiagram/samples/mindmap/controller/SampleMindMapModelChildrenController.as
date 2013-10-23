@@ -22,10 +22,10 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
-	import org.flowerplatform.flexdiagram.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
+	import org.flowerplatform.flexdiagram.event.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapModelRendererController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.model.SampleMindMapModel;

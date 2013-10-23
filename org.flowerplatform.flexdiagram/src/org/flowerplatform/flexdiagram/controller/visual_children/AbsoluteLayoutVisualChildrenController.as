@@ -17,27 +17,23 @@
  * license-end
  */
 package org.flowerplatform.flexdiagram.controller.visual_children {
-	import flash.display.Graphics;
-	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import mx.collections.IList;
 	import mx.core.IDataRenderer;
-	import mx.core.IUIComponent;
 	import mx.core.IVisualElement;
 	import mx.core.IVisualElementContainer;
 	import mx.core.UIComponent;
-	import mx.messaging.errors.NoChannelAvailableError;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
+	import org.flowerplatform.flexdiagram.event.ZoomPerformedEvent;
 	import org.flowerplatform.flexdiagram.renderer.IAbsoluteLayoutRenderer;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
-	import org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent;
 	
 	/**
 	 * @author Cristian Spiescu

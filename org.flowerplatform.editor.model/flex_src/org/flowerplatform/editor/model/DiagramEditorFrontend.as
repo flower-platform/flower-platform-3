@@ -32,10 +32,9 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
-	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
-	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.event.ExecuteDragToCreateEvent;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -63,7 +62,7 @@ package org.flowerplatform.editor.model {
 		override protected function creationCompleteHandler(event:FlexEvent):void {
 			diagramShell.selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangedHandler);
 			// this event will be dispatched by dragToCreate tools to show create options to client
-			UIComponent(diagramShell.diagramRenderer).addEventListener(CreateModelEvent.SHOW_CREATE_OPTIONS, openMenuHandler);
+			diagramShell.addEventListener(ExecuteDragToCreateEvent.DRAG_TO_CREATE_EVENT, openMenuHandler);
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
@@ -75,10 +74,10 @@ package org.flowerplatform.editor.model {
 		/**		
 		 * @author Cristina Constantinescu
 		 */ 
-		protected function openMenuHandler(e:CreateModelEvent):void {			
+		protected function openMenuHandler(e:ExecuteDragToCreateEvent):void {			
 			if (!viewHost.openMenu(stage.mouseX, stage.mouseY, e.context, "new")) { // no actions, call close logic
 				menuClosedHandler();
-			} else if (e.finishToolJobAfter) { // the tool must be deactivated after closing the menu
+			} else if (e.shouldFinishToolJobAfterExecution) { // the tool must be deactivated after closing the menu
 				FlexGlobals.topLevelApplication.addEventListener(MenuClosedEvent.MENU_CLOSED, menuClosedHandler);
 			}
 		}

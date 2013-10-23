@@ -77,14 +77,18 @@ package org.flowerplatform.flexutil.view_content_host {
 		function addToControlBar(value:Object):void;
 		
 		/**		
+		 * The view host should use this method to open a menu
+		 * at given coordinates, populated with actions having <code>parentActionId</code>
+		 * as their parent.
+		 * 
 		 * @param x, y - the coordinates where the menu must be open.
-		 * @param context - context used by actions (IAction.context)
+		 * @param contextToMerge - context used by actions (IAction.context)
 		 * @param parentActionId - if not null, the actions having this id as parentId will be displayed; 
 		 * 							if null, all actions structure will be displayed.
 		 * 
 		 * @author Cristina Constantinescu
 		 */ 
-		function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean;
+		function openMenu(x:Number, y:Number, contextToMerge:Object, parentActionId:String = null):Boolean;
 		
 		/**
 		 * @author Cristina Constantinescu

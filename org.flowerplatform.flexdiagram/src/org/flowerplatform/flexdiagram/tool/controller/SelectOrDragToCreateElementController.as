@@ -20,18 +20,15 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
-	import flash.system.System;
 	
-	import mx.charts.chartClasses.DualStyleObject;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.core.UIComponent;
 	
-	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
-	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
+	import org.flowerplatform.flexdiagram.event.ExecuteDragToCreateEvent;
 	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 	import org.flowerplatform.flexdiagram.ui.MoveResizePlaceHolder;
 	
@@ -160,7 +157,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				var context:Object = new Object();
 				context.rectangle = selectDragToCreatePlaceHolder.getRect(DisplayObject(diagramShell.diagramRenderer));				
 				// dispatch event in order to let others implement the creation behavior
-				UIComponent(diagramShell.diagramRenderer).dispatchEvent(new CreateModelEvent(context, true));
+				diagramShell.dispatchEvent(new ExecuteDragToCreateEvent(context, true));
 			} else {
 				// select/deselect models
 				for (var i:int = 0; i < models.length; i++) {
