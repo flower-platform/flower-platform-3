@@ -39,6 +39,14 @@ package  org.flowerplatform.editor.action {
 		
 		public static const ICON_URL:String = EditorPlugin.getInstance().getResourceUrl("images/open_resource.png");
 		
+		/**
+		 * This id set to the default open action (the top level action).
+		 * Used to execute action at ENTER or double click event.
+		 * 
+		 * @author Cristina Constantinescu
+		 */ 
+		public static const DEFAULT_OPEN_ACTION_ID:String = "defaultOpenActionId";
+		
 		private var editorDescriptor:BasicEditorDescriptor;
 		
 		public var forceNewEditor:Boolean;
@@ -50,6 +58,7 @@ package  org.flowerplatform.editor.action {
 		public function OpenAction(editorDescriptor:BasicEditorDescriptor, forceNewEditor:Boolean):void {
 			if (editorDescriptor == null) {
 				// top level action: Open
+				id = DEFAULT_OPEN_ACTION_ID;
 				label = EditorPlugin.getInstance().getMessage("editor.open");
 				icon = ICON_URL;
 				preferShowOnActionBar = true;

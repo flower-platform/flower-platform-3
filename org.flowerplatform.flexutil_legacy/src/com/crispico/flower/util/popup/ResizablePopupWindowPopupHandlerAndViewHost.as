@@ -24,6 +24,7 @@ package com.crispico.flower.util.popup {
 	import mx.collections.IList;
 	import mx.containers.ControlBar;
 	
+	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
@@ -139,6 +140,22 @@ package com.crispico.flower.util.popup {
 		public function hideSpinner():void {		
 			ModalSpinner.removeModalSpinner(this);
 		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function getCachedActions():Vector.<IAction> {	
+			// doesn't support this	
+			return null;
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function getCachedSelection():IList {
+			// doesn't support this	
+			return null;
+		}	
 		
 	}
 }

@@ -19,29 +19,30 @@
 package org.flowerplatform.editor {
 	
 	import com.crispico.flower.util.layout.Workbench;
+	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	import com.crispico.flower.util.layout.event.ActiveViewChangedEvent;
 	
 	import flash.events.EventDispatcher;
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
+	import mx.core.UIComponent;
 	import mx.core.mx_internal;
 	
-	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.flextojava.FlexToJavaCompoundCommand;
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
-	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
-	import org.flowerplatform.editor.EditorFrontend;
 	import org.flowerplatform.editor.action.SaveAction;
 	import org.flowerplatform.editor.action.SaveAllAction;
-	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IDirtyStateProvider;
 	import org.flowerplatform.flexutil.layout.event.*;
 
+	/**
+	 * @author Sebastian Solomon
+	 */  
 	public class GlobalEditorOperationsManager extends EventDispatcher {
 		
 		//use EditorPlugin.getInstance.globalEditorOperationsManager
@@ -131,14 +132,22 @@ package org.flowerplatform.editor {
 			this.workbench = workbench;
 		}
 		
-		
+		/**
+		 * @author Sebastian Solomon
+		 * @author Cristina Constantinescu
+		 */  
 		private function viewsRemovedHandler(e:ViewsRemovedEvent):void {
 			var editorFrontends:ArrayCollection = new ArrayCollection();
 			for each (var view:Object in e.removedViews) {
-				if (view is EditorFrontend) {
-					editorFrontends.addItem(view);
-					
-					e.dontRemoveViews.addItem(view);
+				var viewComponent:UIComponent = UIComponent(view);
+				// diagram's view graphical component is a WorkbenchViewHost
+				// so get editorFrontend from it
+				if (viewComponent is WorkbenchViewHost) {
+					viewComponent = UIComponent(WorkbenchViewHost(viewComponent).activeViewContent);
+				}
+				if (viewComponent is EditorFrontend) {
+					editorFrontends.addItem(viewComponent);					
+					e.dontRemoveViews.addItem(viewComponent);
 				}
 			}
 			if (editorFrontends.length > 0) {
