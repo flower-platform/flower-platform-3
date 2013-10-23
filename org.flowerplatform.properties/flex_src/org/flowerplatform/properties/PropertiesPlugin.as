@@ -51,6 +51,8 @@ package org.flowerplatform.properties {
 		}
 		
 		private function registerPropertyProviders():void {
+			propertyRendererClasses[null] = new FactoryWithInitialization
+				(StringPropertyRenderer);
 			propertyRendererClasses["String"] = new FactoryWithInitialization
 				(StringPropertyRenderer);
 			propertyRendererClasses["Boolean"] = new FactoryWithInitialization

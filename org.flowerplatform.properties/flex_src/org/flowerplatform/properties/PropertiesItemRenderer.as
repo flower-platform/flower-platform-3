@@ -34,9 +34,12 @@ package org.flowerplatform.properties {
 		}	
 		
 		override public function set data(value:Object):void {
+			// data being bindable, whenenver it changes it enters here and loses all past informations
+			// by checkig this, we make sure that the past event doesn't happen
 			if (super.data == value) {
 				return;
 			}
+			
 			super.data = value;
 			nameOfProperty.text = data.name;
 			
@@ -45,8 +48,7 @@ package org.flowerplatform.properties {
 			}
 			var factory:FactoryWithInitialization = FactoryWithInitialization(PropertiesPlugin.getInstance().propertyRendererClasses[data.type]);
 			if (factory == null) {
-				// TODO create default item renderer
-				factory = PropertiesPlugin.getInstance().propertyRendererClasses["String"];
+				factory = PropertiesPlugin.getInstance().propertyRendererClasses[null];
 			}
 			if (factory != null) {
 				itemRenderedInstance = factory.newInstance(false);

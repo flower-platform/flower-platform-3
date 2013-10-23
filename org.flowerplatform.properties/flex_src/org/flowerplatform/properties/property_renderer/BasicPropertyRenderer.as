@@ -17,6 +17,9 @@ package org.flowerplatform.properties.property_renderer {
 						
 		public function BasicPropertyRenderer() {
 			super();
+			layout = new HorizontalLayout;
+			percentWidth = 50;
+			percentHeight = 100;
 		}
 		
 		override protected function focusOutHandler(event:FocusEvent):void {
@@ -38,9 +41,6 @@ package org.flowerplatform.properties.property_renderer {
 		
 		override protected function createChildren():void {
 			super.createChildren();
-			layout = new HorizontalLayout;
-			percentWidth = 50;
-			percentHeight = 100;
 		}
 		
 		

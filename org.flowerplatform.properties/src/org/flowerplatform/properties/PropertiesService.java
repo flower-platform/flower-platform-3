@@ -35,11 +35,13 @@ public class PropertiesService {
 	private final static Logger logger = LoggerFactory.getLogger(PropertiesService.class);
 
 	public List<Property> getProperties(List<SelectedItem> selection) {
-		logger.debug("Getting the property list for the selection");
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
 		
 		for (SelectedItem selectedItem : selection) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Getting the property list for the selection: {}", selectedItem);
+			}
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
@@ -60,7 +62,9 @@ public class PropertiesService {
 	}
 	
 	public void setProperties(List<SelectedItem> selection, String propertyName, Object propertyValue) {
-		logger.debug("Changing property {}. Giving it the value of: {}", propertyName, propertyValue);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Changing property {}. Giving it the value of: {}", propertyName, propertyValue);
+		}
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
