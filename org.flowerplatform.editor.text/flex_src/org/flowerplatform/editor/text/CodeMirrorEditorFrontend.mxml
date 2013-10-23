@@ -66,7 +66,7 @@ license-end
 					codeMirrorEditor.callIFrameFunction("setContent", [escape(content)]);
 					codeMirrorEditor.callIFrameFunction(readOnly ? "disableEditing" : "enableEditing");
 					
-					ExternalInterface.addCallback("codeMirrorEditorChangedHandler",textEditorChangedHandler);
+					ExternalInterface.addCallback("codeMirrorEditorChangedHandler", textEditorChangedHandler);
 				}
 			}
 			
@@ -120,7 +120,7 @@ license-end
 	</mx:Script>
 	
 	<editorsupport:editor>		
-		<iframe:IFrameView id="codeMirrorEditor" frameLoad="orionEditor_frameLoadHandler(event)"  />
+		<iframe:FlowerIFrame id="codeMirrorEditor" frameLoad="orionEditor_frameLoadHandler(event)"  />
 	</editorsupport:editor>
 	
 </editorsupport:EditorFrontend>

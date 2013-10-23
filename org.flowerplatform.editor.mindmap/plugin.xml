@@ -20,6 +20,7 @@
             compatibleEditor="mindmap"
             contentType="mindmap"
             editorStatefulService="org.flowerplatform.editor.model.remote.DiagramEditorStatefulService"
+            priority="110"
             serviceId="mindmapEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>
