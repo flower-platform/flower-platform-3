@@ -44,18 +44,10 @@ public class Property {
 		this(name, value, null, true);
 	}
 	
-	/**
-	 * 
-	 * 
-	 */
 	public Property(String name, Object value, String type) {	
 		this(name, value, type, true);
 	}
 	
-	/**
-	 * 
-	 * 
-	 */
 	public Property(String name, Object value, boolean readOnly) {
 		this(name, value, null, readOnly);
 	}
@@ -78,30 +70,34 @@ public class Property {
 		return name;
 	}
 
-	public void setName(String name) {
+	public Property setName(String name) {
 		this.name = name;
+		return this;
 	}
 
 	public Object getValue() {
 		return value;
 	}
 
-	public void setValue(Object value) {
+	public Property setValue(Object value) {
 		this.value = value;
+		return this;
 	}
 
 	public boolean getReadOnly() {
 		return readOnly;
 	}
 	
-	public void setReadOnly(boolean readOnly) {
+	public Property setReadOnly(boolean readOnly) {
 		this.readOnly = readOnly;
+		return this;
 	}
 	
 	public String getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public Property setType(String type) {
 		this.type = type;
+		return this;
 	}
 }

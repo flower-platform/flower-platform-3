@@ -8,6 +8,7 @@ package org.flowerplatform.properties {
 	import mx.core.IDataRenderer;
 	import mx.states.AddChild;
 	
+	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
 	
@@ -17,6 +18,7 @@ package org.flowerplatform.properties {
 	import spark.components.RadioButton;
 	import spark.components.supportClasses.ItemRenderer;
 	import spark.layouts.HorizontalLayout;
+
 	/**
 	 * @author Razvan Tache
 	 */
@@ -41,15 +43,13 @@ package org.flowerplatform.properties {
 			if (itemRenderedInstance != null) {
 				removeElement(itemRenderedInstance);
 			}
-			
-			// TODO create data.type
-			itemRenderer = PropertiesPlugin.getInstance().propertyRendererClasses[data.type];
-			if (itemRenderer == null) {
+			var factory:FactoryWithInitialization = FactoryWithInitialization(PropertiesPlugin.getInstance().propertyRendererClasses[data.type]);
+			if (factory == null) {
 				// TODO create default item renderer
-				itemRenderer = PropertiesPlugin.getInstance().propertyRendererClasses["String"];
+				factory = PropertiesPlugin.getInstance().propertyRendererClasses["String"];
 			}
-			if (itemRenderer != null) {
-				itemRenderedInstance = new itemRenderer(value);
+			if (factory != null) {
+				itemRenderedInstance = factory.newInstance(false);
 			}
 			addElement(itemRenderedInstance);
 			

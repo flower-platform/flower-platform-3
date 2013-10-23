@@ -38,7 +38,7 @@ package org.flowerplatform.properties.property_renderer {
 		
 		override protected function createChildren():void {
 			super.createChildren();
-			
+			layout = new HorizontalLayout;
 			percentWidth = 50;
 			percentHeight = 100;
 		}

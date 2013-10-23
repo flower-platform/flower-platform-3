@@ -10,6 +10,7 @@ Require-Bundle: org.eclipse.osgi,
  org.flowerplatform.editor,
  org.eclipse.core.runtime,
  org.flowerplatform.common,
- org.flowerplatform.communication
+ org.flowerplatform.communication,
+ org.flowerplatform.blazeds
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.flowerplatform.properties.PropertiesPlugin

@@ -23,65 +23,66 @@ package org.flowerplatform.flexdiagram.controller {
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
-	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
 	import org.flowerplatform.flexdiagram.tool.controller.IDragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	import org.flowerplatform.flexdiagram.tool.controller.IResizeController;
 	import org.flowerplatform.flexdiagram.tool.controller.ISelectOrDragToCreateElementController;
+	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
+	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	
 	/**
 	 * @author Cristian Spiescu
 	 */
 	public class ComposedControllerProviderFactory {
 		
-		public var visualChildrenControllerClass:ControllerFactory;
-		public var modelExtraInfoControllerClass:ControllerFactory;
-		public var modelChildrenControllerClass:ControllerFactory;
-		public var absoluteLayoutRectangleControllerClass:ControllerFactory;
-		public var rendererControllerClass:ControllerFactory;
-		public var selectionControllerClass:ControllerFactory;
+		public var visualChildrenControllerClass:FactoryWithInitialization;
+		public var modelExtraInfoControllerClass:FactoryWithInitialization;
+		public var modelChildrenControllerClass:FactoryWithInitialization;
+		public var absoluteLayoutRectangleControllerClass:FactoryWithInitialization;
+		public var rendererControllerClass:FactoryWithInitialization;
+		public var selectionControllerClass:FactoryWithInitialization;
 		
-		public var inplaceEditorControllerClass:ControllerFactory;
-		public var resizeControllerClass:ControllerFactory;
-		public var dragToCreateRelationControllerClass:ControllerFactory;
-		public var dragControllerClass:ControllerFactory;
-		public var selectOrDragToCreateElementControllerClass:ControllerFactory;
+		public var inplaceEditorControllerClass:FactoryWithInitialization;
+		public var resizeControllerClass:FactoryWithInitialization;
+		public var dragToCreateRelationControllerClass:FactoryWithInitialization;
+		public var dragControllerClass:FactoryWithInitialization;
+		public var selectOrDragToCreateElementControllerClass:FactoryWithInitialization;
 		
 		public function createComposedControllerProvider(shell:DiagramShell):ComposedControllerProvider {
 			var result:ComposedControllerProvider = new ComposedControllerProvider();
 			if (visualChildrenControllerClass != null) {
-				result.visualChildrenController = visualChildrenControllerClass.newInstance(shell);
+				result.visualChildrenController = visualChildrenControllerClass.newInstance(true, shell);
 			}
 			if (modelExtraInfoControllerClass != null) {
-				result.modelExtraInfoController = modelExtraInfoControllerClass.newInstance(shell);
+				result.modelExtraInfoController = modelExtraInfoControllerClass.newInstance(true, shell);
 			}
 			if (modelChildrenControllerClass != null) {
-				result.modelChildrenController = modelChildrenControllerClass.newInstance(shell);
+				result.modelChildrenController = modelChildrenControllerClass.newInstance(true, shell);
 			}
 			if (absoluteLayoutRectangleControllerClass != null) {
-				result.absoluteLayoutRectangleController = absoluteLayoutRectangleControllerClass.newInstance(shell);
+				result.absoluteLayoutRectangleController = absoluteLayoutRectangleControllerClass.newInstance(true, shell);
 			}
 			if (rendererControllerClass != null) {
-				result.rendererController = rendererControllerClass.newInstance(shell);
+				result.rendererController = rendererControllerClass.newInstance(true, shell);
 			}
 			if (selectionControllerClass != null) {
-				result.selectionController = selectionControllerClass.newInstance(shell);
+				result.selectionController = selectionControllerClass.newInstance(true, shell);
 			}
 			
 			if (inplaceEditorControllerClass != null) {
-				result.inplaceEditorController = inplaceEditorControllerClass.newInstance(shell);
+				result.inplaceEditorController = inplaceEditorControllerClass.newInstance(true, shell);
 			}
 			if (resizeControllerClass != null) {
-				result.resizeController = resizeControllerClass.newInstance(shell);
+				result.resizeController = resizeControllerClass.newInstance(true, shell);
 			}
 			if (dragToCreateRelationControllerClass != null) {
-				result.dragToCreateRelationController = dragToCreateRelationControllerClass.newInstance(shell);
+				result.dragToCreateRelationController = dragToCreateRelationControllerClass.newInstance(true, shell);
 			}
 			if (dragControllerClass != null) {
-				result.dragController = dragControllerClass.newInstance(shell);
+				result.dragController = dragControllerClass.newInstance(true, shell);
 			}
 			if (selectOrDragToCreateElementControllerClass != null) {
-				result.selectOrDragToCreateElementController = selectOrDragToCreateElementControllerClass.newInstance(shell);
+				result.selectOrDragToCreateElementController = selectOrDragToCreateElementControllerClass.newInstance(true, shell);
 			}
 			return result;
 		}

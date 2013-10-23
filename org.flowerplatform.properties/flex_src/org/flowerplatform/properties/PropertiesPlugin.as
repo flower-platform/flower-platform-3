@@ -2,13 +2,16 @@ package org.flowerplatform.properties {
 	import flash.utils.Dictionary;
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesViewProvider;
-	import org.flowerplatform.properties.remote.Property;
 	import org.flowerplatform.properties.property_renderer.BooleanPropertyRenderer;
 	import org.flowerplatform.properties.property_renderer.StringPropertyRenderer;
+	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
+	import org.flowerplatform.properties.remote.Property;
+
 	/**
 	 * @author Razvan Tache
 	 */
@@ -48,8 +51,16 @@ package org.flowerplatform.properties {
 		}
 		
 		private function registerPropertyProviders():void {
-			propertyRendererClasses["String"] = StringPropertyRenderer;
-			propertyRendererClasses["Boolean"] = BooleanPropertyRenderer;
+			propertyRendererClasses["String"] = new FactoryWithInitialization
+				(StringPropertyRenderer);
+			propertyRendererClasses["Boolean"] = new FactoryWithInitialization
+				(BooleanPropertyRenderer);
+			propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
+				(StringWithButtonPropertyRenderer, {
+					clickHandler: function(propertyList:PropertiesList, propertyName:String, propertyValue:Object):void {
+						trace("List is " + propertyList + "\n" + "The attribute is " + propertyName + " with the value: " + propertyValue);
+					}
+				});
 		}
 	}
 }

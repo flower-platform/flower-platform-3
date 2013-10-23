@@ -65,7 +65,7 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		// TODO decide what properties are needed
 		properties.add(new Property("Name", file.getName(), false));
 		properties.add(new Property("Location", file.getAbsolutePath()));
-		properties.add(new Property("Size", file.length()));
+		properties.add(new Property("Size", file.length(), "StringWithDialog"));
 		properties.add(new Property("Last modified", new Date(file.lastModified())));
 		properties.add(new Property("testEnabled", true, "Boolean", false));
 		properties.add(new Property("testDisabled", true, "Boolean"));
