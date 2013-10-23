@@ -2269,12 +2269,12 @@ package  com.crispico.flower.util.layout {
 		 * @param height 
 		 * @param isModal
 		 * @param existingComponent - if not null, adds it as view's graphical component.
-		 * 
+		 * @param existingViewPopupWindowInstance - if not null, use this instance as <code>ViewPopupWindow</code>.
 		 * @return - the popup window
 		 * 
 		 * @author Cristina
 		 */ 
-		public function addViewInPopupWindow(view:Object, x:Number= NaN, y:Number=NaN, width:Number=NaN, height:Number=NaN, isModal:Boolean = false, existingComponent:UIComponent = null):ViewPopupWindow {
+		public function addViewInPopupWindow(view:Object, x:Number= NaN, y:Number=NaN, width:Number=NaN, height:Number=NaN, isModal:Boolean = false, existingComponent:UIComponent = null, existingViewPopupWindowInstance:ViewPopupWindow = null):ViewPopupWindow {
 			// get viewLayoutData
 			var viewLayoutData:ViewLayoutData;
 			if (view is String) {
@@ -2290,12 +2290,17 @@ package  com.crispico.flower.util.layout {
 			}
 				
 			// get a popupWindow instance
-			var popup:ViewPopupWindow = ViewPopupWindow(_viewProvider.getViewPopupWindow(viewLayoutData));
-			if (popup == null) { // set default instance
-				popup = new ViewPopupWindow();				
+			var popup:ViewPopupWindow;
+			if (existingViewPopupWindowInstance != null) {
+				popup = existingViewPopupWindowInstance;
+			} else {			
+				popup = ViewPopupWindow(_viewProvider.getViewPopupWindow(viewLayoutData));
+				if (popup == null) { // set default instance
+					popup = new ViewPopupWindow();				
+				}
 			}
 			// add view's graphical component as child			
-			var component:UIComponent = existingComponent != null ? existingComponent : _viewProvider.createView(viewLayoutData);
+			var component:UIComponent = existingComponent != null ? existingComponent : getNewViewComponentInstance(viewLayoutData);
 			component.percentWidth = 100;
 			component.percentHeight = 100;
 			popup.addChild(component);
@@ -2316,11 +2321,11 @@ package  com.crispico.flower.util.layout {
 				}							
 			} else {
 				// if component width too small, set width to viewPopup_initialMinWidth
-				if (viewPopup_initialMinWidth > component.getExplicitOrMeasuredWidth()) {
+				if (isNaN(width) && viewPopup_initialMinWidth > component.getExplicitOrMeasuredWidth()) {
 					width = viewPopup_initialMinWidth;
 				}
 				// if component height too small, set width to viewPopup_initialMinHeight
-				if (viewPopup_initialMinHeight > component.getExplicitOrMeasuredHeight()) {
+				if (isNaN(height) && viewPopup_initialMinHeight > component.getExplicitOrMeasuredHeight()) {
 					height = viewPopup_initialMinHeight;
 				}
 			}			

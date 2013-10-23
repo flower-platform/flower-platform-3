@@ -17,15 +17,6 @@
     <classEntry path="org.flowerplatform.editor.model.controller.EdgeRendererController"/>
     <classEntry path="org.flowerplatform.editor.model.action.DeleteScenarioElementAction"/>
     <classEntry path="org.flowerplatform.editor.model.content_assist.NotationDiagramContentAssistProvider"/>
-    <classEntry path="org.flowerplatform.editor.model.action.ContentAssistAction"/>
-    <classEntry path="org.flowerplatform.editor.model.controller.InplaceEditorController"/>    
-    <classEntry path="org.flowerplatform.editor.model.action.AddRelationAction"/>
-    <classEntry path="org.flowerplatform.editor.model.renderer.ShapeDrawer"/>
-    <classEntry path="org.flowerplatform.editor.model.action.AddRelatedElementsAction"/>
-    <classEntry path="org.flowerplatform.editor.model.action.NewModelAction"/>
-    <classEntry path="org.flowerplatform.editor.model.controller.InplaceEditorController"/>
-    <classEntry path="org.flowerplatform.editor.model.action.AddRelationAction"/>
-    <classEntry path="org.flowerplatform.editor.model.action.AddRelatedElementsAction"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
