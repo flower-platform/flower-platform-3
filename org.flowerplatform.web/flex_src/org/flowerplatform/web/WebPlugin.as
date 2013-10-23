@@ -88,8 +88,6 @@ package org.flowerplatform.web {
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
-			
-			FlexUtilGlobals.getInstance().keyBindings = new KeyBindings();
 		}
 			
 		override public function start():void {

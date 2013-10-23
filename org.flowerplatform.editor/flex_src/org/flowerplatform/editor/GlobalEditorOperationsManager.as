@@ -150,7 +150,6 @@ package org.flowerplatform.editor {
 		
 		/**
 		 * Delegates to <code>editorInputChangedForComponent</code>.
-		 * 
 		 */
 		private function activeViewChangedHandler(evt:ActiveViewChangedEvent):void {
 			if (evt.newView is IDirtyStateProvider) {
@@ -166,7 +165,6 @@ package org.flowerplatform.editor {
 		 * given component, if it is the current active view.
 		 * 
 		 */
-		
 		public function editorInputChangedForComponent(component:IDirtyStateProvider):void {
 			/*FlexUtilGlobals.getInstance().workbench*/
 		if(true){	//if (workbench.activeViewList.getActiveView() == component) {
@@ -220,7 +218,7 @@ package org.flowerplatform.editor {
 					
 					var dirtyERFound:Boolean = false;
 					var count:int = 0;
-					var statefulClientsList:ArrayCollection= CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList;
+					var statefulClientsList:ArrayCollection = CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList;
 				  //for each (var sc:StatefulClient in StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList) {
 					for each (var sc:StatefulClient in statefulClientsList) {
 						if (!(sc is EditorStatefulClient)) {

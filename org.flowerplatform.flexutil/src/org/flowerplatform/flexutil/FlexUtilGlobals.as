@@ -41,7 +41,15 @@ package org.flowerplatform.flexutil {
 		
 		public var workbench:IWorkbench;
 		
-		public var keyBindings:KeyBindings;
+		private var _keyBindings:KeyBindings;
+
+		public function get keyBindings():KeyBindings {
+			if (_keyBindings == null) {
+				_keyBindings = new KeyBindings();
+			}
+			return _keyBindings;
+		}
+
 		
 		public var composedViewProvider:ComposedViewProvider = new ComposedViewProvider();
 		
