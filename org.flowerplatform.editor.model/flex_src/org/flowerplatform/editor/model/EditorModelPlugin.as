@@ -59,7 +59,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
-	import org.flowerplatform.flexdiagram.controller.ControllerFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
@@ -69,6 +68,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.tool.controller.SelectOrDragToCreateElementController;
+	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
@@ -116,57 +116,57 @@ package org.flowerplatform.editor.model {
 			
 			// classDiagram
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(DiagramModelChildrenController);
-			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(AbsoluteLayoutVisualChildrenController);
-			composedControllerProviderFactory.selectOrDragToCreateElementControllerClass = new ControllerFactory(SelectOrDragToCreateElementController);
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(DiagramModelChildrenController);
+			composedControllerProviderFactory.visualChildrenControllerClass = new FactoryWithInitialization(AbsoluteLayoutVisualChildrenController);
+			composedControllerProviderFactory.selectOrDragToCreateElementControllerClass = new FactoryWithInitialization(SelectOrDragToCreateElementController);
 			composedControllerProviderFactories["classDiagram"] = composedControllerProviderFactory;
 			
 			// class
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new ControllerFactory(NodeAbsoluteLayoutRectangleController);
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(BoxRendererController, { removeRendererIfModelIsDisposed: true });
-			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
-			composedControllerProviderFactory.dragControllerClass = new ControllerFactory(AbsoluteNodePlaceHolderDragController);
-			composedControllerProviderFactory.visualChildrenControllerClass = new ControllerFactory(SequentialLayoutVisualChildrenController);
-			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);			
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new FactoryWithInitialization(NodeAbsoluteLayoutRectangleController);
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(BoxRendererController, { removeRendererIfModelIsDisposed: true });
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
+			composedControllerProviderFactory.dragControllerClass = new FactoryWithInitialization(AbsoluteNodePlaceHolderDragController);
+			composedControllerProviderFactory.visualChildrenControllerClass = new FactoryWithInitialization(SequentialLayoutVisualChildrenController);
+			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);			
 			composedControllerProviderFactories["classDiagram.javaClass"] = composedControllerProviderFactory;
 			
 			// class members
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
-			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
-			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
+			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
 			if (!FlexUtilGlobals.getInstance().isMobile) {
-				composedControllerProviderFactory.inplaceEditorControllerClass = new ControllerFactory(InplaceEditorController);
+				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController);
 			}
 			composedControllerProviderFactories["classDiagram.javaClass.javaAttribute"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classDiagram.javaClass.javaOperation"] = composedControllerProviderFactory;
 				
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classDiagram.javaClass.title"] = composedControllerProviderFactory;
 			
 			// class separators
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: AttributesSeparatorRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: AttributesSeparatorRenderer});
 			composedControllerProviderFactories["classAttributesCompartmentSeparator"] = composedControllerProviderFactory;
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(ClassReferenceRendererController, { rendererClass: OperationsSeparatorRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: OperationsSeparatorRenderer});
 			composedControllerProviderFactories["classOperationsCompartmentSeparator"] = composedControllerProviderFactory;
 
 			// scenario interaction
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new ControllerFactory(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new ControllerFactory(EdgeRendererController, { removeRendererIfModelIsDisposed: true });
-			composedControllerProviderFactory.selectionControllerClass = new ControllerFactory(SelectionController, { selectionRendererClass: ConnectionAnchorsSelectionRenderer });
-			composedControllerProviderFactory.modelChildrenControllerClass = new ControllerFactory(ViewModelChildrenController);
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(EdgeRendererController, { removeRendererIfModelIsDisposed: true });
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ConnectionAnchorsSelectionRenderer });
+			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
 			composedControllerProviderFactories["edge"] = composedControllerProviderFactory;
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);

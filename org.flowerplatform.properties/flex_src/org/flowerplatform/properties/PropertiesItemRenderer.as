@@ -1,13 +1,18 @@
 package org.flowerplatform.properties {
+	import flash.display.GradientType;
+	import flash.display.LineScaleMode;
 	import flash.events.FocusEvent;
+	import flash.geom.Matrix;
 	import flash.utils.getQualifiedClassName;
 	
 	import mx.controls.TextInput;
 	import mx.controls.listClasses.IListItemRenderer;
 	import mx.core.ClassFactory;
 	import mx.core.IDataRenderer;
+	import mx.graphics.SolidColorStroke;
 	import mx.states.AddChild;
 	
+	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
 	
@@ -17,6 +22,8 @@ package org.flowerplatform.properties {
 	import spark.components.RadioButton;
 	import spark.components.supportClasses.ItemRenderer;
 	import spark.layouts.HorizontalLayout;
+	import spark.primitives.Line;
+
 	/**
 	 * @author Razvan Tache
 	 */
@@ -27,29 +34,38 @@ package org.flowerplatform.properties {
 		
 		public var itemRenderedInstance:BasicPropertyRenderer;
 		
+		public var colors:Array = new Array();
+		public var alphas:Array = new Array();
+		
+		public var ratios:Array = new Array();
+		public var gradientBoxRotation:Number = 0;
+		
 		public function PropertiesItemRenderer() {
-			super();					
+			super();	
+			
+			colors.push(0xCCCCCC);
+			alphas.push(0.4);
 		}	
 		
 		override public function set data(value:Object):void {
+			// data being bindable, whenenver it changes it enters here and loses all past informations
+			// by checkig this, we make sure that the past event doesn't happen
 			if (super.data == value) {
 				return;
 			}
+			
 			super.data = value;
 			nameOfProperty.text = data.name;
 			
 			if (itemRenderedInstance != null) {
 				removeElement(itemRenderedInstance);
 			}
-			
-			// TODO create data.type
-			itemRenderer = PropertiesPlugin.getInstance().propertyRendererClasses[getQualifiedClassName(data.value)];
-			if (itemRenderer == null) {
-				// TODO create default item renderer
-				itemRenderer = PropertiesPlugin.getInstance().propertyRendererClasses["String"];
+			var factory:FactoryWithInitialization = FactoryWithInitialization(PropertiesPlugin.getInstance().propertyRendererClasses[data.type]);
+			if (factory == null) {
+				factory = PropertiesPlugin.getInstance().propertyRendererClasses[null];
 			}
-			if (itemRenderer != null) {
-				itemRenderedInstance = new itemRenderer(value);
+			if (factory != null) {
+				itemRenderedInstance = factory.newInstance(false);
 			}
 			addElement(itemRenderedInstance);
 			
@@ -58,18 +74,40 @@ package org.flowerplatform.properties {
 		override protected function createChildren():void {
 			super.createChildren();		
 			
-			layout = new HorizontalLayout;		
+			var horizLayout:HorizontalLayout = new HorizontalLayout;
+			horizLayout.gap = 0;
+			layout = horizLayout;
 			nameOfProperty = new Label;
-
+			
 			nameOfProperty.percentWidth = 50;
 			nameOfProperty.percentHeight = 100;
+			nameOfProperty.setStyle("paddingTop", "5");
+			nameOfProperty.setStyle("paddingLeft", "3");
+				
+			var line:Line = new Line;
+			line.percentHeight = 100;
+			line.stroke = new SolidColorStroke();
 			
 			addElement(nameOfProperty);
+			addElement(line);
 		}
 		
 		
 		override protected function focusOutHandler(event:FocusEvent):void {
 			super.focusOutHandler(event);
+		}
+		
+		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+			graphics.clear();	
+			
+			graphics.lineStyle(1);
+			
+			drawPlaceHolder(unscaledWidth, unscaledHeight);
+		}
+		
+		protected function drawPlaceHolder(width:Number, height:Number):void {
+			graphics.drawRect(0, 0, nameOfProperty.width, height);
 		}
 		
 	}

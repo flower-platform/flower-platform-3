@@ -337,13 +337,6 @@
             serviceClass="org.flowerplatform.web.explorer.remote.ExplorerTreeStatefulService">
       </service>
    </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
-      <service
-            id="propertiesService"
-            serviceClass="org.flowerplatform.properties.PropertiesService">
-      </service>
-    </extension>
 	<extension
          point="org.flowerplatform.communication.servlet">
       <servlet

@@ -2,5 +2,12 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="propertiesProvider" name="propertiesProvider" schema="schema/propertiesProvider.exsd"/>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="propertiesService"
+            serviceClass="org.flowerplatform.properties.PropertiesService">
+      </service>
+   </extension>
 
 </plugin>
