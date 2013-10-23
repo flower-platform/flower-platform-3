@@ -26,7 +26,6 @@ package org.flowerplatform.properties {
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
-	
 	import org.flowerplatform.properties.PropertiesPlugin;
 	
 	import spark.components.Button;
@@ -55,7 +54,10 @@ package org.flowerplatform.properties {
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return null;
+			if (viewLayoutData == null) {
+				return null;
+			}
+			return PropertiesPlugin.getInstance().getResourceUrl("images/properties_view.png");
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {
