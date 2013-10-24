@@ -164,6 +164,8 @@ package org.flowerplatform.editor.model {
 				
 				if (node is Diagram) { // for diagram consider its viewType as diagramSelectedItem.itemType
 					diagramSelectedItem.itemType = diagramViewType;
+				} else {
+					diagramSelectedItem.itemType = "codeSyncElement";
 				}
 				selectedItems.addItem(diagramSelectedItem);
 			}			

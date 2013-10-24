@@ -36,8 +36,7 @@ package org.flowerplatform.editor.model.properties.remote {
 		public function DiagramSelectedItem(xmiID:String, diagramEditableResourcePath:String, editorStatefulServiceId:String) {
 			this.diagramEditableResourcePath = diagramEditableResourcePath;
 			this.xmiID = xmiID;
-			this.editorStatefulServiceId = editorStatefulServiceId;
-			this.itemType = "codeSyncElement";
+			this.editorStatefulServiceId = editorStatefulServiceId;			
 		}
 	}
 }

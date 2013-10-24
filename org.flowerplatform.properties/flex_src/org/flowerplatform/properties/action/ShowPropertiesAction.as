@@ -1,8 +1,8 @@
-package org.flowerplatform.editor.model.action {
+package org.flowerplatform.properties.action {
 	
-	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
+	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.properties.PropertiesViewProvider;
 	
 	/**
@@ -12,8 +12,8 @@ package org.flowerplatform.editor.model.action {
 		
 		public function ShowPropertiesAction(){
 			super();
-			label = EditorModelPlugin.getInstance().getMessage("action.properties");
-			icon = EditorModelPlugin.getInstance().getResourceUrl("images/properties.gif");
+			label = PropertiesPlugin.getInstance().getMessage("action.properties");
+			icon = PropertiesPlugin.getInstance().getResourceUrl("images/properties.gif");
 			orderIndex = 500;
 		}
 			

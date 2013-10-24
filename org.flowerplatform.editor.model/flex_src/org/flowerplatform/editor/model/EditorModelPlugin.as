@@ -34,7 +34,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.action.SearchAction;
-	import org.flowerplatform.editor.model.action.ShowPropertiesAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
@@ -74,6 +73,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
+	import org.flowerplatform.properties.action.ShowPropertiesAction;
 
 
 	
