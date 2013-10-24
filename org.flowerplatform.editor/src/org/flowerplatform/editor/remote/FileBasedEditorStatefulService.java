@@ -57,7 +57,7 @@ public abstract class FileBasedEditorStatefulService extends EditorStatefulServi
 	@Override
 	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
 		FileBasedEditableResource er = (FileBasedEditableResource) editableResource;
-		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), er.getEditableResourcePath());
+		File file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(er.getEditableResourcePath());
 		er.setFile(file);
 		if (!file.exists()) {
 			throw new FileNotFoundException(editableResource.getEditableResourcePath());

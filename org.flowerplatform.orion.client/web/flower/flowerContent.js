@@ -98,7 +98,11 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 			if (evt.input === null || evt.input === undefined) {
 				return;
 			}
-			openEditor(metadata);				
+			if (metadata && metadata.Directory) {
+				return;
+			}	
+			var link = "openResources=" + metadata.Location;
+			openEditor(link);				
 		});
 	
 		// Sidebar
@@ -187,14 +191,8 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		};
 			
 		var orionHome = PageLinks.getOrionHome();
-		var fileMetadata = null;
-		 			
-		function openEditor(metadata) {
-			if (metadata && metadata.Directory) {
-				return;
-			}	
-			fileMetadata = metadata;
-			
+					
+		function openEditor(link) {			
 			var foundContent = false;
 			var params = PageUtil.matchResourceParameters(window.location.href);	
 			var locationObject = {OrionHome: orionHome, Location: params.resource};
@@ -206,7 +204,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 					if (id === params.contentProvider) {
 						// iFrame exists, only open selected resource
 						if (lib.node(id)) {
-							getFlowerPlatformApp().handleLink("orionOpenResources=" + metadata.Location);
+							getFlowerPlatformApp().handleLink(link);
 							return;
 						}						
 						// open iFrame						
@@ -220,6 +218,9 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 						var parent = lib.node("flowerEditor"); //$NON-NLS-0$
 						var uriTemplate = new URITemplate(info.uriTemplate);
 						var href = uriTemplate.expand(locationObject);
+						if (link) {
+							href = href + "?" + link;
+						}
 						var iframe = document.createElement("iframe"); //$NON-NLS-0$
 						iframe.id = id; //$NON-NLS-0$
 						iframe.type = "text/html"; //$NON-NLS-0$
@@ -229,17 +230,8 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 						iframe.frameborder= 0; //$NON-NLS-0$
 						iframe.src = href;
 						lib.empty(parent);
-						parent.appendChild(iframe); 
+						parent.appendChild(iframe);
 
-						window.addEventListener("message", function(event) {
-							// listen for flower platform application complete handler to open selected item
-							// for potentially dangerous actions, we will force the content to be from our domain
-							if (orionHome && fileMetadata && event.source.parent === window && event.origin === new URL(window.location.href).origin) {								
-								if (event.data === "flowerApplicationCompleteHandler") {								
-									openEditor(fileMetadata);
-								}
-							}
-						}, false);
 						break;
 					}
 				}
@@ -254,7 +246,10 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 		}
 			
 		function getFlowerPlatformApp() {
-        	var iframe = document.getElementById('orion.flower.content');  
+        	var iframe = document.getElementById('orion.flower.content'); 
+        	if (iframe == undefined) {
+        		return undefined;
+        	}
         	var contDoc = iframe.contentDocument || iframe.contentWindow.document;
         	        	
         	return contDoc.getElementById("FlexHostApp");        	
@@ -273,15 +268,30 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 			}
 			return item;
 		}    
-      
+   
         var newDiagramCommand = new mCommands.Command({
 			   name: "New Diagram",
 			   tooltip: "Create a new flower diagram",
 			   imageClass: "core-sprite-new_folder",
 			   id: "flower.newDiagram",			  
-			   callback: function(data) {				  
+			   callback: function(data) {	
 				   var parentFolder = forceSingleItem(data.items);
-				   getFlowerPlatformApp().handleLink("orionCreateDiagram=" + parentFolder.Location);
+				  
+				   var createFunction = function(name) {
+						if (name) {
+							var link = "orionCreateDiagram=" + parentFolder.Location + "," + name;
+							if (getFlowerPlatformApp() == undefined) {
+								openEditor(link);
+							} else {
+								getFlowerPlatformApp().handleLink(link);
+							}	
+						
+						}
+					};
+					name = window.prompt("Name:");
+	    			if (name) {
+	    				createFunction(name);
+	    			}					   	   
 			   },
 			   visibleWhen: function(item) {
 				   item = forceSingleItem(item);
