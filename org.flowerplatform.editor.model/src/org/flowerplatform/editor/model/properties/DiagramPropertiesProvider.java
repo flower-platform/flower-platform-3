@@ -35,8 +35,8 @@ public class DiagramPropertiesProvider implements IPropertiesProvider {
 		Diagram diagram = getDiagram(selectedItem);
 				
 		properties.add(new Property("newElementsPath", diagram.getNewElementsPath(), false));
-		properties.add(new Property("showNewElementsPathDialog", diagram.isShowNewElementsPathDialog(), false));
-		
+		properties.add(new Property("showNewElementsPathDialog", diagram.isShowNewElementsPathDialog(), "boolean", false));
+		properties.add(new Property("Testing", "SomeValue", "StringWithDialog", false));
 		return properties;
 	}
 
