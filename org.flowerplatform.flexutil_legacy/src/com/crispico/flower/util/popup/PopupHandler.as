@@ -2,11 +2,14 @@ package com.crispico.flower.util.popup {
 	
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.WorkbenchViewHost;
+	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	
+	import mx.collections.ArrayCollection;
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 
@@ -49,6 +52,13 @@ package com.crispico.flower.util.popup {
 		public function show(modal:Boolean=true):void {
 			if (_viewIdInWorkbench != null) {			
 				var workbench:Workbench = Workbench(FlexUtilGlobals.getInstance().workbench);
+				var undockedViews:ArrayCollection = WorkbenchLayoutData(workbench.rootLayout).undockedViews;
+				for each (var view:Object in undockedViews) {
+					if (ViewLayoutData(view).viewId == _viewIdInWorkbench) {
+						// view already open as undocked
+						return;
+					}
+				}
 				// verify if viewId component already exists on workbench; if true, reuse component
 				var component:UIComponent = workbench.getComponent(String(_viewIdInWorkbench));
 				if (component != null) {

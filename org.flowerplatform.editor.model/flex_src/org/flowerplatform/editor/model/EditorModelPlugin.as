@@ -34,7 +34,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.action.SearchAction;
-	import org.flowerplatform.editor.model.action.ShowPropertiesAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
 	import org.flowerplatform.editor.model.controller.BoxRendererController;
 	import org.flowerplatform.editor.model.controller.DiagramModelChildrenController;
@@ -79,9 +78,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.properties.PropertiesItemRenderer;
 	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesPlugin;
+	import org.flowerplatform.properties.action.ShowPropertiesAction;
 	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
-	import org.flowerplatform.properties.remote.Property;
-
 	
 	/**
 	 * @author Cristi

@@ -161,8 +161,11 @@ package org.flowerplatform.editor.model {
 				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
 		
 				var diagramSelectedItem:DiagramSelectedItem = new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID);
-				if (node is Diagram) { // for diagram, itemType = diagram's viewType -> different property providers on server side 
+			
+				if (node is Diagram) { // for diagram consider its viewType as diagramSelectedItem.itemType
 					diagramSelectedItem.itemType = node.viewType;
+				} else {
+					diagramSelectedItem.itemType = "codeSyncElement";
 				}
 				selectedItems.addItem(diagramSelectedItem);
 			}			
