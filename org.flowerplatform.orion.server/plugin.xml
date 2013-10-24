@@ -70,12 +70,5 @@
             filter="(other.info=org.eclipse.orion)">
       </serviceSelector>
    </extension>
-   <extension
-         point="org.flowerplatform.communication.service">
-      <service
-            id="orionOperationsService"
-            serviceClass="org.flowerplatform.orion.server.OrionOperationsService">
-      </service>
-   </extension>
 
 </plugin>

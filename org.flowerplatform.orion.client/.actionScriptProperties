@@ -15,7 +15,7 @@
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor/public-resources/swc/org.flowerplatform.editor.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.flexutil_legacy/bin/org.flowerplatform.flexutil_legacy.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.editor.model/public-resources/swc/org.flowerplatform.editor.model.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.codesync.code.java/public-resources/swc/org.flowerplatform.codesync.code.java.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.codesync.code.java/public-resources/swc/org.flowerplatform.codesync.code.java.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>
