@@ -20,14 +20,15 @@ package org.flowerplatform.codesync.code.javascript;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.IDragOnDiagramHandler;
-import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
-import org.flowerplatform.emf_model.notation.Node;
-import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -40,7 +41,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 
 	@Override
-	public boolean handleDragOnDiagram(Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
+	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
 		for (Object object : draggedObjects) {
 			File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
@@ -49,26 +50,23 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 				return false;
 			}
 			
-			CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, resource, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, communicationChannel, false);
+			CodeSyncElement codeSyncElement = CodeSyncCodePlugin.getInstance().getCodeSyncElement(
+					project, resource, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, communicationChannel, false);
+			codeSyncElement = codeSyncElement.getChildren().get(0);
 			
-			Node node = NotationFactory.eINSTANCE.createNode();
-			node.setViewType("file");
-			node.setDiagrammableElement(cse);
-			
-			Bounds bounds = NotationFactory.eINSTANCE.createBounds();
-			bounds.setX(200);
-			bounds.setY(200);
-			bounds.setHeight(100);
-			bounds.setWidth(100);
-			node.setLayoutConstraint(bounds);
-			diagram.getPersistentChildren().add(node);
-			
+			CodeSyncDiagramOperationsService1 service = (CodeSyncDiagramOperationsService1) 
+					CommunicationPlugin.getInstance().getServiceRegistry().getService("codeSyncDiagramOperationsService");
+			service.addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, codeSyncElement, new HashMap<String, Object>());
 		}
 		return true;
 	}
 	
 	private boolean acceptDraggedObject(Object object) {
-		return (object instanceof File && (CodeSyncPlugin.getInstance().getFileExtension((File) object).equals(CodeSyncCodeJavascriptPlugin.TECHNOLOGY)));
+		if (!(object instanceof File)) {
+			return false;
+		}
+		String extension = CodeSyncPlugin.getInstance().getFileExtension((File) object);
+		return (CodeSyncCodeJavascriptPlugin.TECHNOLOGY.equals(extension) || "html".equals(extension));
 	}
 
 }

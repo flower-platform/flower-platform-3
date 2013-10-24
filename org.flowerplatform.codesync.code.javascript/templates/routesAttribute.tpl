@@ -1,3 +1,3 @@
 routes : {
-	// children-insert-point RoutesAttributeEntry
+	// children-insert-point routesAttributeEntry
 }

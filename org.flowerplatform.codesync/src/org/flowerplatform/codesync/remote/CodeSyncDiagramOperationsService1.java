@@ -55,34 +55,43 @@ public class CodeSyncDiagramOperationsService1 {
 	@RemoteInvocation
 	public String addNew(ServiceInvocationContext context, String diagramId, String viewIdOfParent, String codeSyncType, Map<String, Object> parameters) {
 		// create new CodeSyncElement
-		CodeSyncElement codeSyncElement = CodeSyncPlugin.getInstance().getCodeSyncOperationsService().create(codeSyncType);
-		
+		CodeSyncElement codeSyncElement = CodeSyncOperationsService.getInstance().create(
+				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType));
+		return addOnDiagram(context, diagramId, viewIdOfParent, codeSyncElement, parameters);
+	}
+
+	public String addOnDiagram(ServiceInvocationContext context, String diagramId, String viewIdOfParent, CodeSyncElement codeSyncElement, Map<String, Object> parameters) {
 		// create view
 		Node view = NotationFactory.eINSTANCE.createNode();
 		view.setDiagrammableElement(codeSyncElement);
+		View parentView = viewIdOfParent == null ? null : getViewById(context.getAdditionalData(), viewIdOfParent);
 		
 		// run all AddNewExtensions
 		Resource codeSyncMappingResource = getCodeSyncMappingResource(getEditableResource(context.getAdditionalData()));
 		for (AddNewExtension addNewExtension : CodeSyncPlugin.getInstance().getAddNewExtensions()) {
-			addNewExtension.addNew(codeSyncElement, view, codeSyncMappingResource, parameters);
+			addNewExtension.addNew(codeSyncElement, view, parentView, codeSyncMappingResource, parameters);
 		}
-		
-		// add to parent
-		View parentView = getViewById(context.getAdditionalData(), viewIdOfParent != null ? viewIdOfParent : diagramId);
-		CodeSyncElement parentCodeSyncElement = null;
-		if (parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
-			parentCodeSyncElement = (CodeSyncElement) parameters.get(PARENT_CODE_SYNC_ELEMENT);
-		} else {
-			parentCodeSyncElement = (CodeSyncElement) parentView.getDiagrammableElement();
-		}
-		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().add(parentCodeSyncElement, codeSyncElement);
 		
 		// add to diagram
 		if (parameters.containsKey(PARENT_VIEW)) {
 			parentView = (View) parameters.get(PARENT_VIEW);
 		}
+		if (parentView == null && viewIdOfParent == null) {
+			parentView = getViewById(context.getAdditionalData(), diagramId);
+		}
 		parentView.getPersistentChildren().add(view);
-		view.setViewType(parentView.getViewType() + "." + codeSyncType);
+		view.setViewType(parentView.getViewType() + "." + codeSyncElement.getType());
+		
+		// add to parent
+		if (codeSyncElement.eContainer() == null) {
+			CodeSyncElement parentCodeSyncElement = null;
+			if (parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
+				parentCodeSyncElement = (CodeSyncElement) parameters.get(PARENT_CODE_SYNC_ELEMENT);
+			} else {
+				parentCodeSyncElement = (CodeSyncElement) parentView.getDiagrammableElement();
+			}
+			CodeSyncOperationsService.getInstance().add(parentCodeSyncElement, codeSyncElement);
+		}
 		
 		// return ID of the view
 		return view.getIdBeforeRemoval();

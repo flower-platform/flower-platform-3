@@ -23,9 +23,9 @@ import java.util.Collection;
 
 import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.IDragOnDiagramHandler;
-import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Node;
@@ -43,7 +43,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 
 	@Override
-	public boolean handleDragOnDiagram(Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
+	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
 //		for (Object object : draggedObjects) {
 //			if (!acceptDraggedObject(object)) {
 //				return false;
@@ -77,11 +77,11 @@ public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 			node.getPersistentChildren().add(classTitle);
 			
 			Node classAttrSeparator = NotationFactory.eINSTANCE.createNode();
-			classAttrSeparator.setViewType(JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR);
+//			classAttrSeparator.setViewType(JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR);
 			node.getPersistentChildren().add(classAttrSeparator);
 			
 			Node classOperationSeparator = NotationFactory.eINSTANCE.createNode();
-			classOperationSeparator.setViewType(JavaClassDiagramOperationsService.OPERATIONS_SEPARATOR);
+//			classOperationSeparator.setViewType(JavaClassDiagramOperationsService.OPERATIONS_SEPARATOR);
 			node.getPersistentChildren().add(classOperationSeparator);
 			
 			Bounds bounds = NotationFactory.eINSTANCE.createBounds();

@@ -305,7 +305,7 @@ public class RegExAstNodeParameterImpl extends EObjectImpl implements RegExAstNo
 	}
 
 	/**
-	 * Parameters are equal if they have the same name and value;
+	 * Parameters are equal if they have the same name and value.
 	 * 
 	 * @author Mariana Gheorghe
 	 * 
@@ -317,12 +317,12 @@ public class RegExAstNodeParameterImpl extends EObjectImpl implements RegExAstNo
 			return false;
 		}
 		RegExAstNodeParameter parameter = (RegExAstNodeParameter) obj;
-		boolean sameName = equal(name, parameter.getName());
-		boolean sameValue = equal(value, parameter.getValue());
+		boolean sameName = safeEquals(name, parameter.getName());
+		boolean sameValue = safeEquals(value, parameter.getValue());
 		return sameName && sameValue;
 	}
 	
-	protected boolean equal(Object a, Object b) {
+	protected boolean safeEquals(Object a, Object b) {
 		if (a == null) {
 			return b == null;
 		} else {

@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.code.java.feature_converter;
+package org.flowerplatform.codesync.code.java.operation_extension;
 
 import static org.eclipse.jdt.core.dom.Modifier.ABSTRACT;
 import static org.eclipse.jdt.core.dom.Modifier.FINAL;
@@ -32,7 +32,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
+import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodeFactory;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
@@ -43,29 +43,29 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
  * @author Mariana Gheorghe
  */
-public class JavaElementFeatureValueConverter extends CodeSyncElementFeatureValueConverter {
+public class JavaFeatureAccessExtension extends FeatureAccessExtension {
 
 	// for DocumentableElements
-	protected final String DOCUMENTATION 	= "documentation";
+	public final static String DOCUMENTATION 	= "documentation";
 	
 	// for TypedElements
-	protected final String TYPE				= "type";
+	public final static String TYPE				= "type";
 	
 	// for ModifiableElements
-	protected final String VISIBILITY 		= "visibility";
-	protected final String IS_ABSTRACT 		= "isAbstract";
-	protected final String IS_FINAL			= "isFinal";
-	protected final String IS_STATIC		= "isStatic";
+	public final static String VISIBILITY 		= "visibility";
+	public final static String IS_ABSTRACT 		= "isAbstract";
+	public final static String IS_FINAL			= "isFinal";
+	public final static String IS_STATIC		= "isStatic";
 	// TODO add all from jdt Modifier
 	
 	// for Classes
-	protected final String SUPER_CLASS 		= "superClass";
-	protected final String SUPER_INTERFACES = "superInterfaces";
+	public final static String SUPER_CLASS 	 	= "superClass";
+	public final static String SUPER_INTERFACES = "superInterfaces";
 	
 	// for Attributes
-	protected final String INITIALIZER		= "initializer";
+	public final static String INITIALIZER		= "initializer";
 	
-	public JavaElementFeatureValueConverter() {
+	public JavaFeatureAccessExtension() {
 		super();
 		
 		addFeature(DOCUMENTATION, 	 AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());

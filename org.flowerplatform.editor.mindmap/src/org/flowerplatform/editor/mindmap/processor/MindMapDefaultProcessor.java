@@ -24,12 +24,12 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 import org.flowerplatform.emf_model.notation.View;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.MindMapElement;
@@ -72,28 +72,28 @@ public class MindMapDefaultProcessor implements IDiagrammableElementFeatureChang
 			if (object instanceof MindMapRoot) {
 				viewDetails.put("text", "Root");
 			} else {
-				viewDetails.put("text", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+				viewDetails.put("text", CodeSyncOperationsService.getInstance()
 						.getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
 			}
 		}		
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_Expanded().equals(featureChange.getFeature())) {
-			viewDetails.put("expanded", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+			viewDetails.put("expanded", CodeSyncOperationsService.getInstance()
 					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Expanded()));
 		}		
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_Icons().equals(featureChange.getFeature())) {
-			viewDetails.put("icons", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+			viewDetails.put("icons", CodeSyncOperationsService.getInstance()
 					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Icons()));
 		} 
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_MinWidth().equals(featureChange.getFeature())) {
-			viewDetails.put("minWidth", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+			viewDetails.put("minWidth", CodeSyncOperationsService.getInstance()
 					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MinWidth()));
 		}
 		if (featureChange == null ||CodeSyncPackage.eINSTANCE.getMindMapElement_MaxWidth().equals(featureChange.getFeature())) {
-			viewDetails.put("maxWidth", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+			viewDetails.put("maxWidth", CodeSyncOperationsService.getInstance()
 					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_MaxWidth()));
 		}	
 		if (featureChange == null || CodeSyncPackage.eINSTANCE.getMindMapElement_Side().equals(featureChange.getFeature())) {
-			int side = (int) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+			int side = (int) CodeSyncOperationsService.getInstance()
 					.getFeatureValue((MindMapElement) object, CodeSyncPackage.eINSTANCE.getMindMapElement_Side());
 			if (featureChange == null && side == 0 && !(object instanceof MindMapRoot)) {
 				side = 1;

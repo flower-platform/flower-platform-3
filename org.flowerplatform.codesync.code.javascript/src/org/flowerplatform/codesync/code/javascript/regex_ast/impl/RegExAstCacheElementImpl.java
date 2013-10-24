@@ -36,7 +36,6 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  * <ul>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl#getKeyParameter <em>Key Parameter</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstCacheElementImpl#isCategoryNode <em>Category Node</em>}</li>
  * </ul>
  * </p>
  *
@@ -79,26 +78,6 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 	 * @ordered
 	 */
 	protected String keyParameter = KEY_PARAMETER_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isCategoryNode() <em>Category Node</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isCategoryNode()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean CATEGORY_NODE_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isCategoryNode() <em>Category Node</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isCategoryNode()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean categoryNode = CATEGORY_NODE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -157,27 +136,6 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isCategoryNode() {
-		return categoryNode;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCategoryNode(boolean newCategoryNode) {
-		boolean oldCategoryNode = categoryNode;
-		categoryNode = newCategoryNode;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__CATEGORY_NODE, oldCategoryNode, categoryNode));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -199,8 +157,6 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 				return getParameters();
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__KEY_PARAMETER:
 				return getKeyParameter();
-			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__CATEGORY_NODE:
-				return isCategoryNode();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -221,9 +177,6 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__KEY_PARAMETER:
 				setKeyParameter((String)newValue);
 				return;
-			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__CATEGORY_NODE:
-				setCategoryNode((Boolean)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -242,9 +195,6 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__KEY_PARAMETER:
 				setKeyParameter(KEY_PARAMETER_EDEFAULT);
 				return;
-			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__CATEGORY_NODE:
-				setCategoryNode(CATEGORY_NODE_EDEFAULT);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -261,8 +211,6 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 				return parameters != null && !parameters.isEmpty();
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__KEY_PARAMETER:
 				return KEY_PARAMETER_EDEFAULT == null ? keyParameter != null : !KEY_PARAMETER_EDEFAULT.equals(keyParameter);
-			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT__CATEGORY_NODE:
-				return categoryNode != CATEGORY_NODE_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -279,8 +227,6 @@ public class RegExAstCacheElementImpl extends AstCacheElementImpl implements Reg
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (keyParameter: ");
 		result.append(keyParameter);
-		result.append(", categoryNode: ");
-		result.append(categoryNode);
 		result.append(')');
 		return result.toString();
 	}

@@ -23,6 +23,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
 import org.flowerplatform.emf_model.notation.Node;
+import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
@@ -31,12 +32,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public interface AddNewExtension {
 	
-	public static final String X = "x";
-	public static final String Y = "y";
-	public static final String WIDTH = "width";
-	public static final String HEIGHT = "height";
-	public static final String LOCATION = "location";
-	
 	/**
 	 * May populate the {@code parameters} map with values for:
 	 * <ul>
@@ -44,6 +39,6 @@ public interface AddNewExtension {
 	 * 		<li>{@link CodeSyncDiagramOperationsService1#PARENT_VIEW}
 	 * </ul>
 	 */
-	String addNew(CodeSyncElement codeSyncElement, Node view, Resource codeSyncMappingResource, Map<String, Object> parameters);
+	String addNew(CodeSyncElement codeSyncElement, Node node, View parent, Resource codeSyncMappingResource, Map<String, Object> parameters);
 	
 }

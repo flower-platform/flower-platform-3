@@ -146,14 +146,14 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		rightAdapter.setEObjectConverter(rightFactory);
 		rightAdapter.setResource(getAstCacheResource(project, resourceSet));
 		rightAdapter.setTechnology(technology);
-		rightFactory.addModelAdapter(CodeSyncElement.class, rightAdapter);
+		rightFactory.addModelAdapter(CodeSyncElement.class, rightAdapter, "");
 		
 		ModelAdapterFactory ancestorFactory = new ModelAdapterFactory();
 		WikiNodeModelAdapter ancestorAdapter = new WikiNodeModelAdapter();
 		ancestorAdapter.setModelAdapterFactory(ancestorFactory);
 		ancestorAdapter.setEObjectConverter(ancestorFactory);
 		ancestorAdapter.setTechnology(technology);
-		ancestorFactory.addModelAdapter(CodeSyncElement.class, ancestorAdapter);
+		ancestorFactory.addModelAdapter(CodeSyncElement.class, ancestorAdapter, "");
 		
 		ModelAdapterFactory leftFactory = new ModelAdapterFactory();
 		WikiNodeModelAdapter leftAdapter = new WikiNodeModelAdapter();
@@ -161,7 +161,7 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		leftAdapter.setEObjectConverter(leftFactory);
 		leftAdapter.setResource(getAstCacheResource(left));
 		leftAdapter.setTechnology(technology);
-		leftFactory.addModelAdapter(CodeSyncElement.class, leftAdapter);
+		leftFactory.addModelAdapter(CodeSyncElement.class, leftAdapter, "");
 		
 		ModelAdapterFactorySet factorySet = new ModelAdapterFactorySet(ancestorFactory, leftFactory, rightFactory);
 		factorySet.addFeatureProvider(CodeSyncElement.class, new CodeSyncElementFeatureProvider());

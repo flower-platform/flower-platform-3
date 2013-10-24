@@ -29,6 +29,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -85,8 +86,7 @@ public class JavaClassDiagramOperationsService extends CodeSyncDiagramOperations
 			processOperation(cse, (Operation) cse.getAstCacheElement(), text);
 		}
 		if (cse.getType().equals(JavaTypeModelAdapter.CLASS)) {
-			CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
-				.setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
+			CodeSyncOperationsService.getInstance().setFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name(), text);
 		}
 	}
 	

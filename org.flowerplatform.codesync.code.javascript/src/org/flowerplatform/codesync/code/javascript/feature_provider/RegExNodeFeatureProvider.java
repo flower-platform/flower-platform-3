@@ -38,11 +38,6 @@ public class RegExNodeFeatureProvider extends CodeSyncElementFeatureProvider {
 	public List<?> getFeatures(Object element) {
 		List features = super.getFeatures(element);
 		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
-//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode());
-//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter());
-//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_Template());
-//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_ChildType());
-//		features.add(RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_NextSiblingSeparator());
 		return features;
 	}
 
@@ -50,12 +45,6 @@ public class RegExNodeFeatureProvider extends CodeSyncElementFeatureProvider {
 	public int getFeatureType(Object feature) {
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters().equals(feature)) {
 			return IModelAdapter.FEATURE_TYPE_CONTAINMENT;
-		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode().equals(feature)) {
-			return IModelAdapter.FEATURE_TYPE_VALUE;
-		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter().equals(feature)) {
-			return IModelAdapter.FEATURE_TYPE_VALUE;
 		}
 		return super.getFeatureType(feature);
 	}

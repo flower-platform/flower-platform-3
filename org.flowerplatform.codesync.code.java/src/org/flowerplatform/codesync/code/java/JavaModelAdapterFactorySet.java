@@ -83,7 +83,6 @@ import com.crispico.flower.mp.codesync.code.java.featureprovider.JavaParameterFe
 import com.crispico.flower.mp.codesync.code.java.featureprovider.JavaTypeFeatureProvider;
 import com.crispico.flower.mp.model.astcache.code.AnnotationValue;
 import com.crispico.flower.mp.model.astcache.code.Parameter;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana
@@ -100,21 +99,21 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
 		folderModelAdapter.setLimitedPath(limitedPath);
-		rightFactory.addModelAdapter(File.class, folderModelAdapter, "");
+		rightFactory.addModelAdapter(File.class, folderModelAdapter, "", CodeSyncPlugin.FOLDER);
 		
 		// java specific adapters
 		JavaFileModelAdapter fileModelAdapter = (JavaFileModelAdapter) createAstModelAdapter(new JavaFileModelAdapter());
-		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavaPlugin.TECHNOLOGY);
-		rightFactory.addModelAdapter(AbstractTypeDeclaration.class, createAstModelAdapter(new JavaTypeModelAdapter()));
-		rightFactory.addModelAdapter(FieldDeclaration.class, createAstModelAdapter(new JavaAttributeModelAdapter()));
-		rightFactory.addModelAdapter(MethodDeclaration.class, createAstModelAdapter(new JavaOperationModelAdapter()));
-		rightFactory.addModelAdapter(SingleVariableDeclaration.class, createAstModelAdapter(new JavaParameterModelAdapter()));
-		rightFactory.addModelAdapter(Annotation.class, createAstModelAdapter(new JavaAnnotationModelAdapter()));
-		rightFactory.addModelAdapter(Modifier.class, createAstModelAdapter(new JavaModifierModelAdapter()));
-		rightFactory.addModelAdapter(MemberValuePair.class, createAstModelAdapter(new JavaMemberValuePairModelAdapter()));
-		rightFactory.addModelAdapter(EnumConstantDeclaration.class, createAstModelAdapter(new JavaEnumConstantDeclarationModelAdapter()));
-		rightFactory.addModelAdapter(AnnotationTypeMemberDeclaration.class, createAstModelAdapter(new JavaAnnotationTypeMemberDeclarationModelAdapter()));
-		rightFactory.addModelAdapter(String.class, createAstModelAdapter(new StringModelAdapter()));
+		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavaPlugin.TECHNOLOGY, CodeSyncPlugin.FILE);
+		rightFactory.addModelAdapter(AbstractTypeDeclaration.class, createAstModelAdapter(new JavaTypeModelAdapter()), JavaTypeModelAdapter.CLASS);
+		rightFactory.addModelAdapter(FieldDeclaration.class, createAstModelAdapter(new JavaAttributeModelAdapter()), JavaAttributeModelAdapter.ATTRIBUTE);
+		rightFactory.addModelAdapter(MethodDeclaration.class, createAstModelAdapter(new JavaOperationModelAdapter()), JavaOperationModelAdapter.OPERATION);
+		rightFactory.addModelAdapter(SingleVariableDeclaration.class, createAstModelAdapter(new JavaParameterModelAdapter()), JavaParameterModelAdapter.PARAMETER);
+		rightFactory.addModelAdapter(Annotation.class, createAstModelAdapter(new JavaAnnotationModelAdapter()), JavaAnnotationModelAdapter.ANNOTATION);
+		rightFactory.addModelAdapter(Modifier.class, createAstModelAdapter(new JavaModifierModelAdapter()), JavaModifierModelAdapter.MODIFIER);
+		rightFactory.addModelAdapter(MemberValuePair.class, createAstModelAdapter(new JavaMemberValuePairModelAdapter()), JavaMemberValuePairModelAdapter.MEMBER_VALUE_PAIR);
+		rightFactory.addModelAdapter(EnumConstantDeclaration.class, createAstModelAdapter(new JavaEnumConstantDeclarationModelAdapter()), JavaEnumConstantDeclarationModelAdapter.ENUM_CONSTANT);
+		rightFactory.addModelAdapter(AnnotationTypeMemberDeclaration.class, createAstModelAdapter(new JavaAnnotationTypeMemberDeclarationModelAdapter()), JavaAnnotationTypeMemberDeclarationModelAdapter.ANNOTATION_MEMBER);
+		rightFactory.addModelAdapter(String.class, createAstModelAdapter(new StringModelAdapter()), "String");
 		
 		// ancestor - CodeSyncElements
 		this.ancestorFactory = createCodeSyncModelAdapterFactory(null, false);
@@ -174,21 +173,21 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 	private CodeSyncModelAdapterFactory createCodeSyncModelAdapterFactory(Resource resource, boolean isLeft) {
 		CodeSyncModelAdapterFactory factory = new CodeSyncModelAdapterFactory(this, rightFactory, resource, isLeft);
 		ClassModelAdapter typeModelAdapter = new ClassModelAdapter();
-		factory.addModelAdapter(CLASS, typeModelAdapter);
-		factory.addModelAdapter(INTERFACE, typeModelAdapter);
-		factory.addModelAdapter(ENUM, typeModelAdapter);
-		factory.addModelAdapter(ANNOTATION, typeModelAdapter);
+		factory.addModelAdapter(CLASS, typeModelAdapter, CLASS);
+		factory.addModelAdapter(INTERFACE, typeModelAdapter, INTERFACE);
+		factory.addModelAdapter(ENUM, typeModelAdapter, ENUM);
+		factory.addModelAdapter(ANNOTATION, typeModelAdapter, ANNOTATION);
 		
-		factory.addModelAdapter(ATTRIBUTE, new AttributeModelAdapter());
-		factory.addModelAdapter(OPERATION, new OperationModelAdapter());
-		factory.addModelAdapter(ENUM_CONSTANT, new EnumConstantModelAdapter());
-		factory.addModelAdapter(ANNOTATION_MEMBER, new AnnotationMemberModelAdapter());
+		factory.addModelAdapter(ATTRIBUTE, new AttributeModelAdapter(), ATTRIBUTE);
+		factory.addModelAdapter(OPERATION, new OperationModelAdapter(), OPERATION);
+		factory.addModelAdapter(ENUM_CONSTANT, new EnumConstantModelAdapter(), ENUM_CONSTANT);
+		factory.addModelAdapter(ANNOTATION_MEMBER, new AnnotationMemberModelAdapter(), ANNOTATION_MEMBER);
 		
-		factory.addModelAdapter(com.crispico.flower.mp.model.astcache.code.Annotation.class, new AnnotationModelAdapter());
-		factory.addModelAdapter(AnnotationValue.class, new AnnotationValueModelAdapter());
-		factory.addModelAdapter(com.crispico.flower.mp.model.astcache.code.Modifier.class, new ModifierModelAdapter());
-		factory.addModelAdapter(Parameter.class, new ParameterModelAdapter());
-		factory.addModelAdapter(String.class, new StringModelAdapter());
+		factory.addModelAdapter(com.crispico.flower.mp.model.astcache.code.Annotation.class, new AnnotationModelAdapter(), JavaAnnotationModelAdapter.ANNOTATION);
+		factory.addModelAdapter(AnnotationValue.class, new AnnotationValueModelAdapter(), JavaMemberValuePairModelAdapter.MEMBER_VALUE_PAIR);
+		factory.addModelAdapter(com.crispico.flower.mp.model.astcache.code.Modifier.class, new ModifierModelAdapter(), JavaModifierModelAdapter.MODIFIER);
+		factory.addModelAdapter(Parameter.class, new ParameterModelAdapter(), JavaParameterModelAdapter.PARAMETER);
+		factory.addModelAdapter(String.class, new StringModelAdapter(), "String");
 		
 		CodeSyncElementModelAdapter cseAdapter = isLeft 
 				? new CodeSyncElementModelAdapterLeft()
@@ -196,7 +195,8 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 		cseAdapter.setModelAdapterFactory(factory);
 		cseAdapter.setEObjectConverter(rightFactory);
 		
-		factory.addModelAdapter(CodeSyncElement.class, cseAdapter);
+		// TODO fix this; all the adapters above should be wrapped in a left/ancestor
+//		factory.addModelAdapter(CodeSyncElement.class, cseAdapter);
 		
 		return factory;
 	}
