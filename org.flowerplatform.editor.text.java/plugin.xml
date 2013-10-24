@@ -13,6 +13,7 @@
             compatibleEditor="java"
             contentType="java"
             editorStatefulService="org.flowerplatform.editor.text.remote.TextEditorStatefulService"
+            priority="250"
             serviceId="javaTextEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>

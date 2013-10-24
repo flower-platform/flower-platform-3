@@ -2,14 +2,12 @@ package org.flowerplatform.editor.text {
 	
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorFrontend;
-	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
-	import org.flowerplatform.editor.text.remote.CodeMirrorEditorStatefulClient;
 	import org.flowerplatform.editor.text.remote.TextEditorStatefulClient;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 
 	/**
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */
 	public class CodeMirrorEditorDescriptor extends EditorDescriptor {
 		
@@ -22,7 +20,7 @@ package org.flowerplatform.editor.text {
 		}
 		
 		override protected function createEditorStatefulClient():EditorStatefulClient {
-			return new CodeMirrorEditorStatefulClient("codeMirrorEditorStatefulService");
+			return new TextEditorStatefulClient("codeMirrorEditorStatefulService");
 		}
 		
 		public override function getId():String {	

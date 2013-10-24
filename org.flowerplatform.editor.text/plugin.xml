@@ -11,8 +11,9 @@
          point="org.flowerplatform.editor.contentTypeToEditorMapping">
       <contentTypeToEditorMapping
             compatibleEditor="text"
-            contentType="text"
             editorStatefulService="org.flowerplatform.editor.text.remote.TextEditorStatefulService"
+            isDefaultEditor="true"
+            priority="300"
             serviceId="textEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>
@@ -20,9 +21,9 @@
          point="org.flowerplatform.editor.contentTypeToEditorMapping">
       <contentTypeToEditorMapping
             compatibleEditor="codeMirrorEditor"
-            contentType="text"
-            editorStatefulService="org.flowerplatform.editor.text.remote.CodeMirrorEditorStatefulService"
+            editorStatefulService="org.flowerplatform.editor.text.remote.TextEditorStatefulService"
             isDefaultEditor="true"
+            priority="200"
             serviceId="codeMirrorEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>

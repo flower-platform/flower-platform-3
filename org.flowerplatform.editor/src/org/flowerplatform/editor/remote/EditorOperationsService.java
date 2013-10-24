@@ -97,8 +97,7 @@ public class EditorOperationsService {
 				if (decodedLink.editorName == null) {
 					// the link doesn't contain the editor name; so we try to find the default
 					// editor, based on its extension
-					List<String> contentTypes = EditorPlugin.getInstance().getContentTypeFromFileName(decodedLink.resourcePath); 
-					String contentType = contentTypes.size() >= 1 ? contentTypes.get(0) : null;
+					String contentType = EditorPlugin.getInstance().getContentTypeFromFileName(decodedLink.resourcePath); 					
 					ContentTypeDescriptor descriptor = EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType);
 					if (descriptor == null) {
 						validationProblems.append("Could not determine content type for path '" + friendlyEditableResourcePath + "' .").append("\n");

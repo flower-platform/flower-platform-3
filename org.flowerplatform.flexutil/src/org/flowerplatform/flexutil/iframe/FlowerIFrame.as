@@ -22,11 +22,16 @@ package org.flowerplatform.flexutil.iframe {
 	import mx.events.FlexEvent;
 	
 	/**
-	 * @author Cristina Constatinescu
+	 * <code>IFrame</code> code was copied from here:
+	 * http://code.google.com/p/flex-iframe
+	 * 
+	 * <p>
+	 * This class adds specific flower behavior and styles.
+	 * @author Cristina Constantinescu
 	 */
-	public class IFrameView extends IFrame {
+	public class FlowerIFrame extends IFrame {
 		
-		public function IFrameView(id:String = null) {
+		public function FlowerIFrame(id:String = null) {
 			super(id);
 			
 			setStyle("paddingLeft", 0);
