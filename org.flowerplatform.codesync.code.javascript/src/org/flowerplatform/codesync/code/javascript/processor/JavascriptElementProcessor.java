@@ -20,6 +20,7 @@ package org.flowerplatform.codesync.code.javascript.processor;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -33,7 +34,7 @@ public class JavascriptElementProcessor extends CodeSyncDecoratorsProcessor {
 	@Override
 	public String getLabel(EObject object, boolean forEditing) {
 		CodeSyncElement cse = (CodeSyncElement) object;
-		String name = (String) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+		String name = (String) CodeSyncOperationsService.getInstance()
 				.getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 		return name;
 	}

@@ -118,6 +118,15 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 	@Override
 	public boolean save(Object element) {
 		File file = getFile(element);
+		File initialFile = file;
+		
+		String newName = filesToRename.get(file);
+		if (newName != null) {
+			File dest = new File(file.getParent(), newName);
+			file.renameTo(dest);
+			file = dest;
+		}
+		
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -126,13 +135,8 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 			}
 		}
 		
-		String newName = filesToRename.get(file);
-		if (newName != null) {
-			File dest = new File(file.getParent(), newName);
-			file.renameTo(dest);
-		}
 		if (file.exists()) {
-			Object fileInfo = fileInfos.get(file);
+			Object fileInfo = fileInfos.get(initialFile);
 			if (fileInfo != null) {
 				Document document;
 				try {
@@ -145,7 +149,7 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 				}
 			}
 		}
-		fileInfos.remove(file);
+		fileInfos.remove(initialFile);
 		
 		// no need to call save for the AST
 		return false;

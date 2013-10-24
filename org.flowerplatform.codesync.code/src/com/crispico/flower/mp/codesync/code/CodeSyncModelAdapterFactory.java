@@ -66,21 +66,24 @@ public class CodeSyncModelAdapterFactory extends ModelAdapterFactory {
 		return super.getModelAdapter(modelElement);
 	}
 
-	public ModelAdapterEntry addModelAdapter(String type, SyncElementModelAdapter modelAdapter) {
+	public ModelAdapterEntry addModelAdapter(String type, SyncElementModelAdapter modelAdapter, String adapterType) {
 		ModelAdapterEntry e = new ModelAdapterEntry();
 		e.type = type;
 		e.modelAdapter = isLeft 
 							? new CodeSyncElementModelAdapterLeft(createModelAdapter(modelAdapter)) 
 							: new CodeSyncElementModelAdapterAncestor(createModelAdapter(modelAdapter));
+		modelAdapter.setType(adapterType);
 		modelAdapters.add(e);
 		return e;
 	}
 	
-	public ModelAdapterEntry addModelAdapter(Class<?> clazz, SyncElementModelAdapter modelAdapter) {
+	public ModelAdapterEntry addModelAdapter(Class<?> clazz, SyncElementModelAdapter modelAdapter, String adapterType) {
+		modelAdapter.setType(adapterType);
 		return super.addModelAdapter(clazz,
 				isLeft 
-					? createModelAdapter(modelAdapter)
-					: createModelAdapter(modelAdapter));
+					? new CodeSyncElementModelAdapterLeft(createModelAdapter(modelAdapter))
+					: new CodeSyncElementModelAdapterAncestor(createModelAdapter(modelAdapter)),
+				adapterType);
 	}
 	
 }

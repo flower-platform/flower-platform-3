@@ -23,10 +23,10 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.common.ied.InplaceEditorLabelParser;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.astcache.code.ExtendedModifier;
 import com.crispico.flower.mp.model.astcache.code.Modifier;
@@ -55,7 +55,7 @@ public abstract class JavaClassChildProcessor extends CodeSyncDecoratorsProcesso
 	}
 	
 	protected Object getFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature) {
-		return CodeSyncPlugin.getInstance().getCodeSyncOperationsService().getFeatureValue(codeSyncElement, feature);
+		return CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, feature);
 	}
 	
 	protected String encodeVisibility(CodeSyncElement object) {
@@ -86,7 +86,7 @@ public abstract class JavaClassChildProcessor extends CodeSyncDecoratorsProcesso
 				.getBundleContext().getBundle().getSymbolicName();
 
 		// decorate for visibility
-		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+		List<ExtendedModifier> modifiers = (List<ExtendedModifier>) CodeSyncOperationsService.getInstance()
 				.getFeatureValue(
 						object,
 						AstCacheCodePackage.eINSTANCE

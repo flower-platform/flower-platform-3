@@ -42,6 +42,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class JavaAnnotationModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
+	public static final String ANNOTATION = "annotation";
+	
 	@Override
 	public Object getMatchKey(Object modelElement) {
 		Annotation annotation = (Annotation) modelElement;

@@ -67,17 +67,8 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
 			return getRegExAstNode(element).getType();
 		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode().equals(feature)) {
-			return getRegExAstNode(element).isCategoryNode();
-		}
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter().equals(feature)) {
 			return getRegExAstNode(element).getKeyParameter();
-		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_ChildType().equals(feature)) {
-			return getRegExAstNode(element).getChildType();
-		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_NextSiblingSeparator().equals(feature)) {
-			return getRegExAstNode(element).getNextSiblingSeparator();
 		}
 		return super.getValueFeatureValue(element, feature, correspondingValue);
 	}
@@ -90,17 +81,8 @@ public class RegExNodeAstModelAdapter extends AstModelElementAdapter {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type().equals(feature)) {
 			getRegExAstNode(element).setType((String) value);
 		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_CategoryNode().equals(feature)) {
-			getRegExAstNode(element).setCategoryNode((boolean) value);
-		}
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_KeyParameter().equals(feature)) {
 			getRegExAstNode(element).setKeyParameter((String) value);
-		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_ChildType().equals(feature)) {
-			getRegExAstNode(element).setChildType((String) value);
-		}
-		if (RegExAstPackage.eINSTANCE.getRegExAstCodeSyncElement_NextSiblingSeparator().equals(feature)) {
-			getRegExAstNode(element).setNextSiblingSeparator((String) value);
 		}
 	}
 

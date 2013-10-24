@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.crispico.flower.mp.codesync.base.AbstractModelAdapter;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
@@ -31,7 +32,7 @@ import com.crispico.flower.mp.codesync.base.action.ActionResult;
 /**
  * @author Mariana
  */
-public class StringModelAdapter implements IModelAdapter {
+public class StringModelAdapter extends AbstractModelAdapter {
 	
 	private ModelAdapterFactorySet modelAdapterFactorySet;
 	

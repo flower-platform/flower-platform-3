@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
 
+import com.crispico.flower.mp.codesync.base.AbstractModelAdapter;
 import com.crispico.flower.mp.codesync.base.CodeSyncAlgorithm;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
@@ -36,7 +37,7 @@ import com.crispico.flower.mp.codesync.base.action.ActionResult;
 /**
  * 
  */
-public class EObjectModelAdapter implements IModelAdapter {
+public class EObjectModelAdapter extends AbstractModelAdapter {
 
 	private ModelAdapterFactorySet modelAdapterFactorySet;
 	
@@ -312,9 +313,9 @@ public class EObjectModelAdapter implements IModelAdapter {
 	@Override
 	public void allActionsPerformed(Object element, Object correspondingElement) {
 		for (Object feature : getModelAdapterFactorySet().getFeatureProvider(element).getFeatures(element)) {
-			if (getModelAdapterFactorySet().getFeatureProvider(element).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
+//			if (getModelAdapterFactorySet().getFeatureProvider(element).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
 				allActionsPerformedForFeature(element, correspondingElement, feature);
-			}
+//			}
 		}
 	}
 

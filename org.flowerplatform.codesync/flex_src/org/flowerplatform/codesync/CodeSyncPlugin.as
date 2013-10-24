@@ -22,6 +22,8 @@ package org.flowerplatform.codesync {
 	import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorDescriptor;
 	
+	import flash.utils.Dictionary;
+	
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.codesync.action.AddElementActionProvider;
@@ -48,9 +50,11 @@ package org.flowerplatform.codesync {
 		protected var codeSyncElementDescriptors:ArrayCollection;
 		
 		/**
+		 * String (CodeSync type) to CodeSyncElementDescriptor.
+		 * 
 		 * @see computeAvailableChildrenForCodeSyncType()
 		 */
-		public var availableChildrenForCodeSyncType:Object;
+		public var availableChildrenForCodeSyncType:Dictionary;
 		
 		protected static var INSTANCE:CodeSyncPlugin;
 		
@@ -91,18 +95,20 @@ package org.flowerplatform.codesync {
 		 * @author Mariana Gheorghe
 		 */
 		override public function handleConnectedToServer():void {
-			if (!CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived) {
-				var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
-					"codeSyncDiagramOperationsService",
-					"getCodeSyncElementDescriptors", 
-					null,
-					this,
-					setCodeSyncElementDescriptors);
-				CommunicationPlugin.getInstance().bridge.sendObject(command);
+			if (CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived) {
+				return;
 			}
+			
+			var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+				"codeSyncDiagramOperationsService",
+				"getCodeSyncElementDescriptors", 
+				null,
+				this,
+				setCodeSyncElementDescriptorsCallback);
+			CommunicationPlugin.getInstance().bridge.sendObject(command);
 		}
 		
-		protected function setCodeSyncElementDescriptors(codeSyncElementDescriptors:ArrayCollection):void {
+		protected function setCodeSyncElementDescriptorsCallback(codeSyncElementDescriptors:ArrayCollection):void {
 			this.codeSyncElementDescriptors = codeSyncElementDescriptors;
 			
 			computeAvailableChildrenForCodeSyncType();
@@ -113,7 +119,7 @@ package org.flowerplatform.codesync {
 		 * codeSyncType -> available children codeSyncTypes.
 		 */
 		private function computeAvailableChildrenForCodeSyncType():void {
-			availableChildrenForCodeSyncType = new Object();
+			availableChildrenForCodeSyncType = new Dictionary();
 			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
 				if (descriptor.codeSyncTypeCategories.length == 0) {
 					// top level elements
