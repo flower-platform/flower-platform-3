@@ -2,9 +2,6 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="codeSyncAlgorithmRunner" name="codeSyncAlgorithmRunner" schema="schema/codeSyncAlgorithmRunner.exsd"/>
-   <extension-point id="codeSyncElementDescriptor" name="codeSyncElementDescriptor" schema="schema/codeSyncElementDescriptor.exsd"/>
-   <extension-point id="addNewExtension" name="addNewExtension" schema="schema/addNewExtension.exsd"/>
-   <extension-point id="codeSyncElementFeatureConverter" name="codeSyncElementFeatureConverter" schema="schema/codeSyncElementFeatureConverter.exsd"/>
    <extension
          point="org.flowerplatform.editor.contentType">
       <contentType
@@ -28,10 +25,11 @@
       </service>
    </extension>
    <extension
-         point="org.flowerplatform.codesync.addNewExtension">
-      <addNewExtension
-            addNewExtension="org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension">
-      </addNewExtension>
+         point="org.flowerplatform.communication.service">
+      <service
+            id="codeSyncOperationsService"
+            serviceClass="org.flowerplatform.codesync.remote.CodeSyncOperationsService">
+      </service>
    </extension>
    <extension
          point="org.flowerplatform.properties.propertiesProvider">

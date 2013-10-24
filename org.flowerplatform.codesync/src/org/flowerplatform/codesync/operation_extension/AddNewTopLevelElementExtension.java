@@ -25,9 +25,12 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
+import org.flowerplatform.emf_model.notation.View;
+
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
@@ -38,33 +41,44 @@ import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
  */
 public class AddNewTopLevelElementExtension implements AddNewExtension {
 
+	public static final String X = "x";
+	public static final String Y = "y";
+	public static final String WIDTH = "width";
+	public static final String HEIGHT = "height";
+	public static final String LOCATION = "location";
+	
 	@Override
-	public String addNew(CodeSyncElement codeSyncElement, Node view, Resource codeSyncMappingResource, Map<String, Object> parameters) {
-		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
+	public String addNew(CodeSyncElement codeSyncElement, Node node, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		// check if top-level element
-		if (descriptor.getCodeSyncTypeCategories().isEmpty()) {
-			// set layout constraints
-			Bounds bounds = NotationFactory.eINSTANCE.createBounds();
-			bounds.setX(getParameterValue(parameters, X, 100));
-			bounds.setY(getParameterValue(parameters, Y, 100));
-			bounds.setWidth(getParameterValue(parameters, WIDTH, 100));
-			bounds.setHeight(getParameterValue(parameters, HEIGHT, 100));
-			view.setLayoutConstraint(bounds);
-			
-			Node title = NotationFactory.eINSTANCE.createNode();
-			title.setDiagrammableElement(codeSyncElement);
-			title.setViewType("classDiagram." + codeSyncElement.getType() + ".title");
-			view.getPersistentChildren().add(title);
-			
-			// populate PARENT_CODE_SYNC_ELEMENT
+		if (parentView != null) {
+			return null;
+		}
+		
+		// set layout constraints
+		Bounds bounds = NotationFactory.eINSTANCE.createBounds();
+		bounds.setX(getParameterValue(parameters, X, 100));
+		bounds.setY(getParameterValue(parameters, Y, 100));
+		bounds.setWidth(getParameterValue(parameters, WIDTH, 100));
+		bounds.setHeight(getParameterValue(parameters, HEIGHT, 100));
+		node.setLayoutConstraint(bounds);
+		
+		Node title = NotationFactory.eINSTANCE.createNode();
+		title.setDiagrammableElement(codeSyncElement);
+		title.setViewType("classDiagram." + codeSyncElement.getType() + ".title");
+		node.getPersistentChildren().add(title);
+		
+		// populate PARENT_CODE_SYNC_ELEMENT
+		if (codeSyncElement.eContainer() == null) {
 			String location = (String) parameters.get(LOCATION);
 			if (location == null) {
 				throw new RuntimeException("No location specified for new element");
 			}
 			CodeSyncElement parent = getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, location.split("/"));
-			CodeSyncElement file = CodeSyncPlugin.getInstance().getCodeSyncOperationsService().create(CodeSyncPlugin.FILE);
-			file.setName("backboneClass.js"); // TODO where do we get this?
-			CodeSyncPlugin.getInstance().getCodeSyncOperationsService().add(parent, file);
+			CodeSyncElement file = CodeSyncOperationsService.getInstance().create(
+					CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(CodeSyncPlugin.FILE));
+			CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
+			file.setName(descriptor.getDefaultName() + "." + descriptor.getExtension()); // TODO numbering logic
+			CodeSyncOperationsService.getInstance().add(parent, file);
 			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
 		}
 		return null;
@@ -109,9 +123,10 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 				}
 			}
 			if (!foundElement) {
-				CodeSyncElement child = CodeSyncPlugin.getInstance().getCodeSyncOperationsService().create(CodeSyncPlugin.FOLDER);
+				CodeSyncElement child = CodeSyncOperationsService.getInstance().create(
+						CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(CodeSyncPlugin.FOLDER));
 				child.setName(path[i]);
-				CodeSyncPlugin.getInstance().getCodeSyncOperationsService().add(codeSyncElement, child);
+				CodeSyncOperationsService.getInstance().add(codeSyncElement, child);
 				codeSyncElement = child;
 			}
 		}

@@ -18,6 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.code.adapter;
 
+import java.util.Collections;
 import java.util.Iterator;
 
 import com.crispico.flower.mp.codesync.base.FilteredIterable;

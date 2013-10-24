@@ -40,15 +40,12 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getKeyParameter <em>Key Parameter</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getType <em>Type</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#isCategoryNode <em>Category Node</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getLength <em>Length</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#isAdded <em>Added</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#isDeleted <em>Deleted</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getChildrenInsertPoints <em>Children Insert Points</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getNextSiblingSeparator <em>Next Sibling Separator</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.impl.RegExAstNodeImpl#getChildType <em>Child Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -114,26 +111,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 	 * @ordered
 	 */
 	protected String type = TYPE_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isCategoryNode() <em>Category Node</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isCategoryNode()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean CATEGORY_NODE_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isCategoryNode() <em>Category Node</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isCategoryNode()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean categoryNode = CATEGORY_NODE_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getOffset() <em>Offset</em>}' attribute.
@@ -246,46 +223,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 	protected int nextSiblingInsertPoint = NEXT_SIBLING_INSERT_POINT_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getNextSiblingSeparator() <em>Next Sibling Separator</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getNextSiblingSeparator()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String NEXT_SIBLING_SEPARATOR_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getNextSiblingSeparator() <em>Next Sibling Separator</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getNextSiblingSeparator()
-	 * @generated
-	 * @ordered
-	 */
-	protected String nextSiblingSeparator = NEXT_SIBLING_SEPARATOR_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getChildType() <em>Child Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getChildType()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String CHILD_TYPE_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getChildType() <em>Child Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getChildType()
-	 * @generated
-	 * @ordered
-	 */
-	protected String childType = CHILD_TYPE_EDEFAULT;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -368,27 +305,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 		type = newType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE__TYPE, oldType, type));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isCategoryNode() {
-		return categoryNode;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setCategoryNode(boolean newCategoryNode) {
-		boolean oldCategoryNode = categoryNode;
-		categoryNode = newCategoryNode;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE__CATEGORY_NODE, oldCategoryNode, categoryNode));
 	}
 
 	/**
@@ -513,48 +429,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getNextSiblingSeparator() {
-		return nextSiblingSeparator;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setNextSiblingSeparator(String newNextSiblingSeparator) {
-		String oldNextSiblingSeparator = nextSiblingSeparator;
-		nextSiblingSeparator = newNextSiblingSeparator;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR, oldNextSiblingSeparator, nextSiblingSeparator));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public String getChildType() {
-		return childType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setChildType(String newChildType) {
-		String oldChildType = childType;
-		childType = newChildType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE, oldChildType, childType));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -584,8 +458,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				return getKeyParameter();
 			case RegExAstPackage.REG_EX_AST_NODE__TYPE:
 				return getType();
-			case RegExAstPackage.REG_EX_AST_NODE__CATEGORY_NODE:
-				return isCategoryNode();
 			case RegExAstPackage.REG_EX_AST_NODE__OFFSET:
 				return getOffset();
 			case RegExAstPackage.REG_EX_AST_NODE__LENGTH:
@@ -599,10 +471,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				else return getChildrenInsertPoints().map();
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				return getNextSiblingInsertPoint();
-			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
-				return getNextSiblingSeparator();
-			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
-				return getChildType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -630,9 +498,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 			case RegExAstPackage.REG_EX_AST_NODE__TYPE:
 				setType((String)newValue);
 				return;
-			case RegExAstPackage.REG_EX_AST_NODE__CATEGORY_NODE:
-				setCategoryNode((Boolean)newValue);
-				return;
 			case RegExAstPackage.REG_EX_AST_NODE__OFFSET:
 				setOffset((Integer)newValue);
 				return;
@@ -650,12 +515,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				return;
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				setNextSiblingInsertPoint((Integer)newValue);
-				return;
-			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
-				setNextSiblingSeparator((String)newValue);
-				return;
-			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
-				setChildType((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -681,9 +540,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 			case RegExAstPackage.REG_EX_AST_NODE__TYPE:
 				setType(TYPE_EDEFAULT);
 				return;
-			case RegExAstPackage.REG_EX_AST_NODE__CATEGORY_NODE:
-				setCategoryNode(CATEGORY_NODE_EDEFAULT);
-				return;
 			case RegExAstPackage.REG_EX_AST_NODE__OFFSET:
 				setOffset(OFFSET_EDEFAULT);
 				return;
@@ -701,12 +557,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				return;
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				setNextSiblingInsertPoint(NEXT_SIBLING_INSERT_POINT_EDEFAULT);
-				return;
-			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
-				setNextSiblingSeparator(NEXT_SIBLING_SEPARATOR_EDEFAULT);
-				return;
-			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
-				setChildType(CHILD_TYPE_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -728,8 +578,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				return KEY_PARAMETER_EDEFAULT == null ? keyParameter != null : !KEY_PARAMETER_EDEFAULT.equals(keyParameter);
 			case RegExAstPackage.REG_EX_AST_NODE__TYPE:
 				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
-			case RegExAstPackage.REG_EX_AST_NODE__CATEGORY_NODE:
-				return categoryNode != CATEGORY_NODE_EDEFAULT;
 			case RegExAstPackage.REG_EX_AST_NODE__OFFSET:
 				return offset != OFFSET_EDEFAULT;
 			case RegExAstPackage.REG_EX_AST_NODE__LENGTH:
@@ -742,10 +590,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 				return childrenInsertPoints != null && !childrenInsertPoints.isEmpty();
 			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_INSERT_POINT:
 				return nextSiblingInsertPoint != NEXT_SIBLING_INSERT_POINT_EDEFAULT;
-			case RegExAstPackage.REG_EX_AST_NODE__NEXT_SIBLING_SEPARATOR:
-				return NEXT_SIBLING_SEPARATOR_EDEFAULT == null ? nextSiblingSeparator != null : !NEXT_SIBLING_SEPARATOR_EDEFAULT.equals(nextSiblingSeparator);
-			case RegExAstPackage.REG_EX_AST_NODE__CHILD_TYPE:
-				return CHILD_TYPE_EDEFAULT == null ? childType != null : !CHILD_TYPE_EDEFAULT.equals(childType);
 		}
 		return super.eIsSet(featureID);
 	}
@@ -764,8 +608,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 		result.append(keyParameter);
 		result.append(", type: ");
 		result.append(type);
-		result.append(", categoryNode: ");
-		result.append(categoryNode);
 		result.append(", offset: ");
 		result.append(offset);
 		result.append(", length: ");
@@ -776,10 +618,6 @@ public class RegExAstNodeImpl extends EObjectImpl implements RegExAstNode {
 		result.append(deleted);
 		result.append(", nextSiblingInsertPoint: ");
 		result.append(nextSiblingInsertPoint);
-		result.append(", nextSiblingSeparator: ");
-		result.append(nextSiblingSeparator);
-		result.append(", childType: ");
-		result.append(childType);
 		result.append(')');
 		return result.toString();
 	}

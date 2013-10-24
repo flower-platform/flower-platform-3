@@ -1,4 +1,4 @@
-<!-- template Form -->
+<!-- template form -->
 <table class="table table-striped">
-	<!-- children-insert-point FormItem -->
+	<!-- children-insert-point formItem -->
 </table>

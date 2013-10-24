@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement#getKeyParameter <em>Key Parameter</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement#isCategoryNode <em>Category Node</em>}</li>
  * </ul>
  * </p>
  *
@@ -70,31 +69,5 @@ public interface RegExAstCacheElement extends AstCacheElement {
 	 * @generated
 	 */
 	void setKeyParameter(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Category Node</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Category Node</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Category Node</em>' attribute.
-	 * @see #setCategoryNode(boolean)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstCacheElement_CategoryNode()
-	 * @model
-	 * @generated
-	 */
-	boolean isCategoryNode();
-
-	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstCacheElement#isCategoryNode <em>Category Node</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Category Node</em>' attribute.
-	 * @see #isCategoryNode()
-	 * @generated
-	 */
-	void setCategoryNode(boolean value);
 
 } // RegExAstCacheElement

@@ -18,10 +18,13 @@
  */
 package com.crispico.flower.mp.codesync.code.java;
 
+import static org.flowerplatform.codesync.code.java.operation_extension.JavaFeatureAccessExtension.*;
+
 import org.eclipse.emf.ecore.EObject;
+import org.flowerplatform.codesync.code.java.operation_extension.JavaFeatureAccessExtension;
 import org.flowerplatform.codesync.processor.CodeSyncElementRelationsChangesProcessor;
+import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
-import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.AbstractFeatureChangesProcessor;
 import org.flowerplatform.editor.model.change_processor.DependentFeature;
@@ -31,7 +34,6 @@ import org.flowerplatform.editor.model.java.JavaClassOperationProcessor;
 import org.flowerplatform.editor.model.java.JavaClassProcessor;
 import org.flowerplatform.editor.model.java.JavaClassTitleProcessor;
 import org.flowerplatform.editor.model.java.JavaScenarioElementProcessor;
-import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 import org.osgi.framework.BundleContext;
@@ -63,6 +65,52 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		
 		CodeSyncPlugin.getInstance().addSrcDir("src");
 		
+		// TODO reactivate java later
+//		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+//				new CodeSyncElementDescriptor()
+//				.setCodeSyncType("javaClass")
+//				.setLabel("Class")
+//				.setIconUrl("images/obj16/SyncClass.gif")
+//				.setDefaultName("NewJavaClass")
+//				.setExtension("java")
+//				.addChildrenCodeSyncTypeCategory("javaClassMember")
+//				.addFeature(DOCUMENTATION)
+//				.addFeature(VISIBILITY)
+//				.addFeature(IS_ABSTRACT)
+//				.addFeature(IS_STATIC)
+//				.addFeature(IS_FINAL)
+//				.addFeature(SUPER_CLASS)
+//				.addFeature(SUPER_INTERFACES));
+//		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+//				new CodeSyncElementDescriptor()
+//				.setCodeSyncType("javaOperation")
+//				.setLabel("Operation")
+//				.setIconUrl("images/obj16/SyncOperation_public.gif")
+//				.setDefaultName("newOperation")
+//				.addCodeSyncTypeCategory("javaClassMember")
+//				.addFeature(DOCUMENTATION)
+//				.addFeature(VISIBILITY)
+//				.addFeature(IS_ABSTRACT)
+//				.addFeature(IS_STATIC)
+//				.addFeature(IS_FINAL)
+//				.addFeature(TYPE));
+//		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+//				new CodeSyncElementDescriptor()
+//				.setCodeSyncType("javaAttribute")
+//				.setLabel("Attribute")
+//				.setIconUrl("images/obj16/SyncProperty_public.gif")
+//				.setDefaultName("newAttribute")
+//				.addCodeSyncTypeCategory("javaClassMember")
+//				.addFeature(DOCUMENTATION)
+//				.addFeature(VISIBILITY)
+//				.addFeature(IS_ABSTRACT)
+//				.addFeature(IS_STATIC)
+//				.addFeature(IS_FINAL)
+//				.addFeature(TYPE)
+//				.addFeature(INITIALIZER));
+//		
+//		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaFeatureAccessExtension());
+		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass", new JavaClassProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass.title", new JavaClassTitleProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass.javaAttribute", new JavaClassAttributeProcessor());
@@ -93,8 +141,6 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncPlugin.getInstance().getFullyQualifiedNameProvider().addDelegateProvider(new JavaFullyQualifiedNameProvider());
 //		ResourcesPlugin.getWorkspace().addResourceChangeListener(new JavaResourceChangeListener());
 //		JavaCore.addElementChangedListener(new JavaElementChangedListener(), ElementChangedEvent.POST_RECONCILE);
-		
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(JavaClassDiagramOperationsService.SERVICE_ID, new JavaClassDiagramOperationsService());
 	}
 
 	public FolderModelAdapter getFolderModelAdapter() {

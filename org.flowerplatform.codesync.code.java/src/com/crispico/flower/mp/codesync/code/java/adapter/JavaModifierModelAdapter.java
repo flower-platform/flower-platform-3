@@ -33,6 +33,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class JavaModifierModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
+	public static final String MODIFIER = "modifier";
+	
 	@Override
 	public Object getMatchKey(Object element) {
 		return String.valueOf(getModifierType(element));

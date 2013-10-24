@@ -18,10 +18,10 @@
  */
 package org.flowerplatform.codesync.code.javascript;
 
+import org.flowerplatform.codesync.code.javascript.operation_extension.JavaScriptFeatureAccessExtension;
 import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
-import org.flowerplatform.codesync.code.javascript.remote.JavascriptClassDiagramOperationsService;
+import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
-import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.osgi.framework.BundleContext;
@@ -48,7 +48,141 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		CodeSyncPlugin.getInstance().addSrcDir("js");
 		
-		CommunicationPlugin.getInstance().getServiceRegistry().registerService(JavascriptClassDiagramOperationsService.SERVICE_ID, new JavascriptClassDiagramOperationsService());
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("backboneClass")
+				.setLabel("Backbone Class")
+				.setDefaultName("NewBackboneClass")
+				.setExtension("js")
+				.addChildrenCodeSyncTypeCategory("backboneClassMember")
+				.addChildrenCodeSyncTypeCategory("requireEntry")
+				.addFeature("superClass")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("javaScriptOperation")
+				.setLabel("Operation")
+				.setDefaultName("newOperation")
+				.addCodeSyncTypeCategory("backboneClassMember")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("javaScriptAttribute")
+				.setLabel("Attribute")
+				.setDefaultName("newAttribute")
+				.addCodeSyncTypeCategory("backboneClassMember")
+				.addFeature("defaultValue")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("requireEntry")
+				.setLabel("RequireEntry")
+				.setDefaultName("newRequireEntry")
+				.addCodeSyncTypeCategory("requireEntry")
+				.addFeature("varName")
+				.addFeature("dependencyPath")
+				.setKeyFeature("varName"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("eventsAttribute")
+				.setLabel("Events")
+				.setDefaultName("events")
+				.addCodeSyncTypeCategory("backboneClassMember")
+				.addChildrenCodeSyncTypeCategory("eventsAttributeEntry")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("routesAttribute")
+				.setLabel("Routes")
+				.setDefaultName("routes")
+				.addCodeSyncTypeCategory("backboneClassMember")
+				.addChildrenCodeSyncTypeCategory("routesAttributeEntry")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("eventsAttributeEntry")
+				.setLabel("Event")
+				.setDefaultName("event")
+				.addCodeSyncTypeCategory("eventsAttributeEntry")
+				.addFeature("event")
+				.addFeature("selector")
+				.addFeature("function")
+				.setKeyFeature("event"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("routesAttributeEntry")
+				.setLabel("Route")
+				.setDefaultName("route")
+				.addCodeSyncTypeCategory("routesAttributeEntry")
+				.addFeature("path")
+				.addFeature("function")
+				.setKeyFeature("path"));
+		
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("table")
+				.setLabel("Table")
+				.setDefaultName("NewTable")
+				.setExtension("html")
+				.addChildrenCodeSyncTypeCategory("tableHeaderEntry")
+				.addFeature("tableId")
+				.addFeature("headerRowId")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("tableHeaderEntry")
+				.setLabel("Table Header Entry")
+				.setDefaultName("newHeaderEntry")
+				.addCodeSyncTypeCategory("tableHeaderEntry")
+				.addFeature("title")
+				.setKeyFeature("title"));
+		
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("tableItem")
+				.setLabel("Table Item")
+				.setDefaultName("NewTableItem")
+				.setExtension("html")
+				.addChildrenCodeSyncTypeCategory("tableItemEntry")
+				.addFeature("itemUrl")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("tableItemEntry")
+				.setLabel("Table Item Entry")
+				.setDefaultName("newTableItemEntry")
+				.addCodeSyncTypeCategory("tableItemEntry")
+				.addFeature("valueExpression")
+				.setKeyFeature("valueExpression"));
+		
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("form")
+				.setLabel("Form")
+				.setDefaultName("NewForm")
+				.setExtension("html")
+				.addChildrenCodeSyncTypeCategory("formItem")
+				.addFeature("name")
+				.setKeyFeature("name"));
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("formItem")
+				.setLabel("Form Item")
+				.setDefaultName("newFormItem")
+				.addCodeSyncTypeCategory("formItem")
+				.addFeature("valueExpression")
+				.addFeature("editId")
+				.addFeature("title")
+				.setKeyFeature("title"));
+		
+		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension());
 		
 		JavascriptElementProcessor processor = new JavascriptElementProcessor();
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.title", processor);

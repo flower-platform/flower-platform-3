@@ -160,7 +160,7 @@ package org.flowerplatform.editor.model {
 				var serviceID:String = NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).getStatefulServiceId();
 				var diagramViewType:String = node.viewType;
 				
-				var diagramSelectedItem:DiagramSelectedItem = new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID, diagramViewType);
+				var diagramSelectedItem:DiagramSelectedItem = new DiagramSelectedItem(xmiID, diagramEditableResourcePath, serviceID);
 				
 				if (node is Diagram) { // for diagram consider its viewType as diagramSelectedItem.itemType
 					diagramSelectedItem.itemType = diagramViewType;

@@ -84,8 +84,9 @@ public class CodeSyncMergePlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncEditableResource editableResource = (CodeSyncEditableResource) service.subscribeClientForcefully(communicationChannel, projectPath);
 		
 		ModelAdapterFactory codeSyncModelAdapterFactory = new ModelAdapterFactory();
-		codeSyncModelAdapterFactory.addModelAdapter(CodeSyncElement.class, new SyncElementModelAdapter());
-		codeSyncModelAdapterFactory.addModelAdapter(EObject.class, new EObjectModelAdapter());
+		// TODO fix this; add correct types
+		codeSyncModelAdapterFactory.addModelAdapter(CodeSyncElement.class, new SyncElementModelAdapter(), "");
+		codeSyncModelAdapterFactory.addModelAdapter(EObject.class, new EObjectModelAdapter(), "");
 		
 		match.setEditableResource(editableResource);
 		editableResource.setMatch(match);

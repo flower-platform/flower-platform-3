@@ -29,9 +29,12 @@ package org.flowerplatform.codesync.remote {
 		public var codeSyncType:String;
 		public var label:String;
 		public var iconUrl:String;
+		public var defaultName:String;
+		public var extension:String;
 		public var codeSyncTypeCategories:ArrayCollection;
 		public var childrenCodeSyncTypeCategories:ArrayCollection;
 		public var features:ArrayCollection;
+		public var keyFeature:String;
 		
 	}
 }

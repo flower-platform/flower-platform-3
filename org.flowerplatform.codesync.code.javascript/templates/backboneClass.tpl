@@ -1,13 +1,13 @@
-// template BackboneClass
+// template backboneClass
 define(function (require) {
     
     "use strict";
     
-    // children-insert-point RequireEntry
+    // children-insert-point requireEntry
     
     return @superClass.extend({
     
-    	// children-insert-point ClassMember
+    	// children-insert-point backboneClassMember
     
     })
 

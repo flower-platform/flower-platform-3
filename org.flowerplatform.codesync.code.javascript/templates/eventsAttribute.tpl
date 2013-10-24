@@ -1,3 +1,3 @@
 events : {
-	// children-insert-point EventsAttributeEntry
+	// children-insert-point eventsAttributeEntry
 }

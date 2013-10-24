@@ -5,12 +5,13 @@ package org.flowerplatform.properties.property_renderer {
 	
 	import mx.binding.utils.BindingUtils;
 	
+	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.properties.PropertiesItemRenderer;
 	
 	import spark.components.Button;
 	import spark.components.TextInput;
 
-	public class StringWithButtonPropertyRenderer extends BasicPropertyRenderer {
+	public class StringWithButtonPropertyRenderer extends BasicPropertyRenderer implements IDialogResultHandler {
 		
 		[Bindable]
 		public var propertyValue:TextInput;
@@ -49,7 +50,13 @@ package org.flowerplatform.properties.property_renderer {
 		}
 		
 		private function clickHandlerInternal(event:MouseEvent):void {
-			clickHandler(PropertiesItemRenderer(parent).owner, data.name, data.value);
+			clickHandler(this, data.name, data.value);
 		}
+		
+		public function handleDialogResult(result:Object):void {
+			trace("aici");
+		}
+		
+		
 	}
 }

@@ -23,15 +23,12 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getKeyParameter <em>Key Parameter</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getType <em>Type</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isCategoryNode <em>Category Node</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getOffset <em>Offset</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getLength <em>Length</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isAdded <em>Added</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isDeleted <em>Deleted</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildrenInsertPoints <em>Children Insert Points</em>}</li>
  *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingInsertPoint <em>Next Sibling Insert Point</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingSeparator <em>Next Sibling Separator</em>}</li>
- *   <li>{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildType <em>Child Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -123,32 +120,6 @@ public interface RegExAstNode extends EObject {
 	 * @generated
 	 */
 	void setType(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Category Node</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Category Node</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Category Node</em>' attribute.
-	 * @see #setCategoryNode(boolean)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNode_CategoryNode()
-	 * @model
-	 * @generated
-	 */
-	boolean isCategoryNode();
-
-	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#isCategoryNode <em>Category Node</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Category Node</em>' attribute.
-	 * @see #isCategoryNode()
-	 * @generated
-	 */
-	void setCategoryNode(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Offset</b></em>' attribute.
@@ -296,57 +267,5 @@ public interface RegExAstNode extends EObject {
 	 * @generated
 	 */
 	void setNextSiblingInsertPoint(int value);
-
-	/**
-	 * Returns the value of the '<em><b>Next Sibling Separator</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Next Sibling Separator</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Next Sibling Separator</em>' attribute.
-	 * @see #setNextSiblingSeparator(String)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNode_NextSiblingSeparator()
-	 * @model
-	 * @generated
-	 */
-	String getNextSiblingSeparator();
-
-	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getNextSiblingSeparator <em>Next Sibling Separator</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Next Sibling Separator</em>' attribute.
-	 * @see #getNextSiblingSeparator()
-	 * @generated
-	 */
-	void setNextSiblingSeparator(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Child Type</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Child Type</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Child Type</em>' attribute.
-	 * @see #setChildType(String)
-	 * @see org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage#getRegExAstNode_ChildType()
-	 * @model
-	 * @generated
-	 */
-	String getChildType();
-
-	/**
-	 * Sets the value of the '{@link org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode#getChildType <em>Child Type</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Child Type</em>' attribute.
-	 * @see #getChildType()
-	 * @generated
-	 */
-	void setChildType(String value);
 
 } // RegExAstNode

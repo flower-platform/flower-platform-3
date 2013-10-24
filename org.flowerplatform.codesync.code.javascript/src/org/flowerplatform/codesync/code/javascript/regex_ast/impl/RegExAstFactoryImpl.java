@@ -64,7 +64,6 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 			case RegExAstPackage.REG_EX_AST_NODE: return createRegExAstNode();
 			case RegExAstPackage.STRING_TO_INTEGER_ENTRY: return (EObject)createStringToIntegerEntry();
 			case RegExAstPackage.REG_EX_AST_NODE_PARAMETER: return createRegExAstNodeParameter();
-			case RegExAstPackage.REG_EX_AST_CODE_SYNC_ELEMENT: return createRegExAstCodeSyncElement();
 			case RegExAstPackage.REG_EX_AST_CACHE_ELEMENT: return createRegExAstCacheElement();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -99,16 +98,6 @@ public class RegExAstFactoryImpl extends EFactoryImpl implements RegExAstFactory
 	public RegExAstNodeParameter createRegExAstNodeParameter() {
 		RegExAstNodeParameterImpl regExAstNodeParameter = new RegExAstNodeParameterImpl();
 		return regExAstNodeParameter;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public RegExAstCodeSyncElement createRegExAstCodeSyncElement() {
-		RegExAstCodeSyncElementImpl regExAstCodeSyncElement = new RegExAstCodeSyncElementImpl();
-		return regExAstCodeSyncElement;
 	}
 
 	/**

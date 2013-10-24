@@ -16,28 +16,23 @@
  *
  * license-end
  */
-package org.flowerplatform.editor.model.java;
-
-import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
-
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
+package com.crispico.flower.mp.codesync.base;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavaClassTitleProcessor extends JavaClassChildProcessor {
+public abstract class AbstractModelAdapter implements IModelAdapter {
 
+	protected String type;
+	
 	@Override
-	public String getLabel(EObject object, boolean forEditing) {
-		return (String) CodeSyncOperationsService.getInstance()
-				.getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+	public String getType() {
+		return type;
 	}
 
 	@Override
-	protected String getImageForVisibility(int type) {
-		return "images/obj16/SyncClass.gif";
+	public void setType(String type) {
+		this.type = type;
 	}
-
+	
 }
