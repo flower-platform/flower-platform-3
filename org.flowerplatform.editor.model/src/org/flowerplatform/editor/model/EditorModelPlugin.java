@@ -25,6 +25,8 @@ import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescri
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
+import org.flowerplatform.editor.model.changes_processor.ClassCriterionDispatcherProcessor;
+import org.flowerplatform.editor.model.changes_processor.MainChangesDispatcher;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
@@ -43,6 +45,10 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 	
+	protected MainChangesDispatcher mainChangesDispatcher;
+	
+	protected ClassCriterionDispatcherProcessor classCriterionDispatcherProcessor;
+	
 	protected ComposedChangeProcessor composedChangeProcessor;
 	
 	protected DiagramUpdaterChangeProcessor diagramUpdaterChangeProcessor;
@@ -52,6 +58,14 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	private IModelAccessController modelAccessController;
 
 	protected ComposedContentAssist composedContentAssist;
+
+	public MainChangesDispatcher getMainChangesDispatcher() {
+		return mainChangesDispatcher;
+	}
+
+	public ClassCriterionDispatcherProcessor getClassCriterionDispatcherProcessor() {
+		return classCriterionDispatcherProcessor;
+	}
 
 	public ComposedChangeProcessor getComposedChangeProcessor() {
 		return composedChangeProcessor;
@@ -72,6 +86,10 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
+		
+		mainChangesDispatcher = new MainChangesDispatcher();
+		classCriterionDispatcherProcessor = new ClassCriterionDispatcherProcessor();
+		mainChangesDispatcher.addProcessor(classCriterionDispatcherProcessor);
 		
 		composedChangeProcessor = new ComposedChangeProcessor();
 		diagramUpdaterChangeProcessor = new DiagramUpdaterChangeProcessor();

@@ -74,8 +74,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 				throw new RuntimeException("No location specified for new element");
 			}
 			CodeSyncElement parent = getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, location.split("/"));
-			CodeSyncElement file = CodeSyncOperationsService.getInstance().create(
-					CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(CodeSyncPlugin.FILE));
+			CodeSyncElement file = CodeSyncOperationsService.getInstance().create(CodeSyncPlugin.FILE);
 			CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
 			file.setName(descriptor.getDefaultName() + "." + descriptor.getExtension()); // TODO numbering logic
 			CodeSyncOperationsService.getInstance().add(parent, file);
@@ -96,7 +95,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 	 * Finds the {@link CodeSyncElement} corresponding to {@code path}; if it does not exist, create it and
 	 * any necessary parents.
 	 */
-	protected CodeSyncElement getOrCreateCodeSyncElementForLocation(Resource codeSyncMappingResource, String[] path) {
+	public static CodeSyncElement getOrCreateCodeSyncElementForLocation(Resource codeSyncMappingResource, String[] path) {
 		CodeSyncRoot root = null;
 		for (EObject eObject : codeSyncMappingResource.getContents()) {
 			if (((CodeSyncRoot) eObject).getName().equals(path[0])) {
@@ -123,8 +122,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 				}
 			}
 			if (!foundElement) {
-				CodeSyncElement child = CodeSyncOperationsService.getInstance().create(
-						CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(CodeSyncPlugin.FOLDER));
+				CodeSyncElement child = CodeSyncOperationsService.getInstance().create(CodeSyncPlugin.FOLDER);
 				child.setName(path[i]);
 				CodeSyncOperationsService.getInstance().add(codeSyncElement, child);
 				codeSyncElement = child;

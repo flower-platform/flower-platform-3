@@ -268,6 +268,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			// sa nu mai facem viewdetails ca camp, si sa facem comanda speciala?
 			// de asemenea, tr. si un map, pentru a evita adaugarea de 2 ori in timpul celor 2 inregistrari
 			EditorModelPlugin.getInstance().getComposedChangeProcessor().processChangeDescription(changeDescription, processingContext);
+			EditorModelPlugin.getInstance().getMainChangesDispatcher().processChangeDescription(processingContext, changeDescription);
 			changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			
 			diagramEditableResource.getChangeRecorder().dispose();

@@ -1,4 +1,4 @@
-package org.flowerplatform.editor.model.change_processor2;
+package org.flowerplatform.editor.model.changes_processor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
