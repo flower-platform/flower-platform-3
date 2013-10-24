@@ -1,3 +1,21 @@
+/* license-start
+* 
+* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation version 3.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+* 
+* Contributors:
+*   Crispico - Initial API and implementation
+*
+* license-end
+*/
 package org.flowerplatform.orion.client {
 	
 	import com.crispico.flower.util.layout.Workbench;
@@ -28,6 +46,9 @@ package org.flowerplatform.orion.client {
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 
+	/**
+	 * @author Cristina Constantinescu
+	 */ 
 	public class OrionPlugin extends AbstractFlowerFlexPlugin implements ILinkHandler {
 		
 		protected static var INSTANCE:OrionPlugin;
@@ -99,18 +120,14 @@ package org.flowerplatform.orion.client {
 		public function handleLink(command:String, parameters:String):void {
 			if (command == CREATE_DIAGRAM) {
 				var cmd:NewJavaClassDiagramAction = new NewJavaClassDiagramAction();
-				cmd.parentPath = parameters;
+				var array:Array = parameters.split(",");
+				cmd.parentPath = array[0];
+				cmd.name = array[1] + ".notation";
 				CommunicationPlugin.getInstance().bridge.sendObject(cmd);				
 			} else if (command == ADD_TO_DIAGRAM) {
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand(
-						"orionOperationsService", "getPaths", 
-						[parameters], this, addToDiagram));
+				NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
+				.service_handleDragOnDiagram(new ArrayCollection(parameters.split(",")));				
 			}
-		}
-		
-		public function addToDiagram(paths:ArrayCollection):void {
-			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_handleDragOnDiagram(paths);
-		}
+		}		
 	}
 }
