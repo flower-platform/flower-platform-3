@@ -27,7 +27,7 @@ package org.flowerplatform.properties {
 		
 		public var propertyList:PropertiesList;
 		
-		public var selectionForServer:Object;
+		public var selectionForServer:IList;
 		
 		public function PropertiesList() {
 			super();
@@ -53,7 +53,7 @@ package org.flowerplatform.properties {
 			});
 		}
 		
-		public function getSelectionForServer():Object {
+		public function getSelectionForServer():IList {
 			return selectionForServer;	
 		}
 		

@@ -20,6 +20,12 @@ package org.flowerplatform.properties.property_renderer {
 		
 		public var clickHandler:Function;
 		
+		/**
+		 * Signature: function getNewPropertyValueHandler(dialogResult:Object):String
+		 * @author Cristina Constantinescu
+		 */ 
+		public var getNewPropertyValueHandler:Function;
+		
 		public function StringWithButtonPropertyRenderer() {
 			super();
 		}
@@ -54,7 +60,8 @@ package org.flowerplatform.properties.property_renderer {
 		}
 		
 		public function handleDialogResult(result:Object):void {
-			trace("aici");
+			// set new value after closing dialog
+			propertyValue.text = getNewPropertyValueHandler(result);
 		}
 		
 		

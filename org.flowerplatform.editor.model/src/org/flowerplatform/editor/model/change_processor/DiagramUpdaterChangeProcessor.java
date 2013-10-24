@@ -34,14 +34,10 @@ import org.eclipse.emf.ecore.change.ListChange;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.emf_model.notation.NotationElement;
-import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 
@@ -142,7 +138,9 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		}
 	}
 
-	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	protected void processFeatureChangesForNotationElement(Map.Entry<EObject, EList<FeatureChange>> entry, Map<String, Object> context) {
 		if (!(entry.getKey() instanceof NotationElement)) {
 			return;
@@ -223,9 +221,10 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
 				if (processors != null) {
 					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-//						if (view.getDiagrammableElement() != null) {
-							processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);	
-//						}
+						// view.getDiagrammableElement() is null for diagram, so the if was removed
+						// be aware: there were cases when processFeatureChanges had crashed if null was sent
+						// as view.getDiagrammableElement()
+						processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);	
 					}
 				}
 			}			

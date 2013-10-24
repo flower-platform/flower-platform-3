@@ -16,5 +16,7 @@ package org.flowerplatform.editor.model.properties {
 		
 		function set currentShowNewElementsPathDialog(value:Boolean):void;
 		
+		// these options will be returned to result handler when ok pressed
+		function set options(value:Object):void;
 	}
 }
