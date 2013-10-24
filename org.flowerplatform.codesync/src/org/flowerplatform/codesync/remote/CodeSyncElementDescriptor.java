@@ -47,6 +47,8 @@ public class CodeSyncElementDescriptor {
 	
 	private String keyFeature;
 	
+	private String nextSiblingSeparator;
+	
 	public CodeSyncElementDescriptor() {
 		codeSyncTypeCategories = new ArrayList<String>();
 		childrenCodeSyncTypeCategories = new ArrayList<String>();
@@ -148,6 +150,15 @@ public class CodeSyncElementDescriptor {
 	
 	public CodeSyncElementDescriptor setKeyFeature(String keyFeature) {
 		this.keyFeature = keyFeature;
+		return this;
+	}
+
+	public String getNextSiblingSeparator() {
+		return nextSiblingSeparator;
+	}
+
+	public CodeSyncElementDescriptor setNextSiblingSeparator(String nextSiblingSeparator) {
+		this.nextSiblingSeparator = nextSiblingSeparator;
 		return this;
 	}
 	

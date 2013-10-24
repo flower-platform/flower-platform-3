@@ -77,9 +77,9 @@ public class JavaScriptFeatureAccessExtension extends FeatureAccessExtension {
 	public void setValue(CodeSyncElement codeSyncElement, String featureName, Object newValue) {
 		Object fromClient = newValue;
 		Object value = super.getValue(codeSyncElement, featureName);
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
 		if (CODE_SYNC_NAME.equals(featureName)) {
 			// set the value of the key parameter too
-			CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
 			setValue(codeSyncElement, descriptor.getKeyFeature(), fromClient);
 			
 			// change the file name
