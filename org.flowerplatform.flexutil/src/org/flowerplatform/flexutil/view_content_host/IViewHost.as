@@ -41,7 +41,7 @@ package org.flowerplatform.flexutil.view_content_host {
 	 * 
 	 * @author Cristian Spiescu
 	 */
-	public interface IViewHost {
+	public interface IViewHost extends ICachedActionsAndSelectionProvider {
 		
 		/**
 		 * Should not be called directly. This method is

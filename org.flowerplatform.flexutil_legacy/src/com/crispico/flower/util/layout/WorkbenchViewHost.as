@@ -220,5 +220,13 @@ package com.crispico.flower.util.layout {
 		 */
 		public function hideSpinner():void {			
 		}
+		
+		public function getCachedActions():Vector.<IAction> {		
+			return allActions;
+		}
+		
+		public function getCachedSelection():IList {			
+			return selection;
+		}
 	}
 }

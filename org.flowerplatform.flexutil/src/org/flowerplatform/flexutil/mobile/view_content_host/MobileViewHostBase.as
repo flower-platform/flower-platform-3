@@ -328,5 +328,13 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			spinner = null;
 		}
 		
+		public function getCachedActions():Vector.<IAction> {		
+			return allActionsForActiveViewContent;
+		}
+		
+		public function getCachedSelection():IList {			
+			return selectionForActiveViewContent;
+		}	
+		
 	}
 }
