@@ -25,12 +25,12 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	import mx.core.UIComponent;
 	import mx.events.PropertyChangeEvent;
 	
-	import spark.components.Label;
-	
 	import org.flowerplatform.flexdiagram.DiagramShell;
-	import org.flowerplatform.flexdiagram.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController;
+	import org.flowerplatform.flexdiagram.event.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
+	
+	import spark.components.Label;
 	
 	/**
 	 * The figure class for a connection. 
@@ -51,7 +51,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	 * @author Georgi
 	 * 
 	 */
-	public class ConnectionFigure extends UIComponent implements IDataRenderer, IDiagramShellAware {
+	public class ConnectionRenderer extends UIComponent implements IDataRenderer, IDiagramShellAware {
 		
 		private var _diagramShell:DiagramShell;
 		
@@ -138,7 +138,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * represent the ends (e.g. arrow figure for an association's navigable
 		 * end).
 		 */
-		public function ConnectionFigure() {
+		public function ConnectionRenderer() {
 			super();
 			super.setStyle(LINE_THICKNESS, 1);
 			super.setStyle(LINE_COLOR, "#000000");

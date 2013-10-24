@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
+import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
 import org.flowerplatform.editor.model.changes_processor.ClassCriterionDispatcherProcessor;
 import org.flowerplatform.editor.model.changes_processor.MainChangesDispatcher;
@@ -145,6 +146,8 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("width")
 		.addDeclaredProperty("height")
 		.register();
+		
+		getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());
 	}
 
 	protected void initExtensionPoint_dragOnDiagramHandler() throws CoreException {

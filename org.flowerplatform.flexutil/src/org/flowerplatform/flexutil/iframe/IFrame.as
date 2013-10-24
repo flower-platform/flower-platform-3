@@ -46,7 +46,6 @@ package org.flowerplatform.flexutil.iframe {
     import org.flowerplatform.flexutil.FlexUtilGlobals;
 
     /**
-	 * Initial code: https://github.com/flex-users/flex-iframe.
 	 * 
      * The event dispatched when the IFrame is loaded.
      *
@@ -62,6 +61,8 @@ package org.flowerplatform.flexutil.iframe {
 //    [IconFile("assets/flex-iframe-logo-16.png")]
 
     /**
+	 * Initial code: https://github.com/flex-users/flex-iframe.
+	 * 
      * An IFrame which you can embed into Flex applications to show an HTML page.
      *
      * <p><b>Usage:</b><br/>

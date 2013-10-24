@@ -18,10 +18,9 @@
 */
 package org.flowerplatform.editor.model.renderer {
 	
-	import flash.events.Event;
 	import flash.events.MouseEvent;
 	
-	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.AnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.ui.ResizeAnchor;
 	
@@ -41,7 +40,7 @@ package org.flowerplatform.editor.model.renderer {
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
-			var connectionFigure:ConnectionFigure = ConnectionFigure(target);
+			var connectionFigure:ConnectionRenderer = ConnectionRenderer(target);
 			sourceAnchor.x = connectionFigure._sourcePoint.x;
 			sourceAnchor.y = connectionFigure._sourcePoint.y;
 			targetAnchor.x = connectionFigure._targetPoint.x;

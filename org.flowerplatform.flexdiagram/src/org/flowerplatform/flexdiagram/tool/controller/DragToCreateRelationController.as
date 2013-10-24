@@ -22,12 +22,11 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	import flash.geom.Rectangle;
 	
 	import mx.core.IVisualElement;
-	import mx.core.UIComponent;
 	
-	import org.flowerplatform.flexdiagram.CreateModelEvent;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
-	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
+	import org.flowerplatform.flexdiagram.event.ExecuteDragToCreateEvent;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionRenderer;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -41,7 +40,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		
 		public function activate(model:Object):void {
 			// create temp connection
-			var connection:ConnectionFigure = new ConnectionFigure();
+			var connection:ConnectionRenderer = new ConnectionRenderer();
 			var modelRenderer:IVisualElement = diagramShell.getRendererForModel(model);
 			var rect:Rectangle = DisplayObject(modelRenderer).getBounds(DisplayObject(diagramShell.diagramRenderer));
 			var x:int = rect.x + rect.width / 2;
@@ -57,7 +56,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		}
 		
 		public function drag(model:Object, deltaX:Number, deltaY:Number):void {
-			var connection:ConnectionFigure = diagramShell.modelToExtraInfoMap[model].tempConnection;
+			var connection:ConnectionRenderer = diagramShell.modelToExtraInfoMap[model].tempConnection;
 			
 			connection._targetPoint.x = deltaX; 
 			connection._targetPoint.y = deltaY;
@@ -73,14 +72,14 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				context.sourceId = sourceModel.id;
 				context.targetId =  targetModel.id;	
 				// dispatch event in order to let others implement the creation behavior
-				UIComponent(diagramShell.diagramRenderer).dispatchEvent(new CreateModelEvent(context, true));
+				diagramShell.dispatchEvent(new ExecuteDragToCreateEvent(context, true));
 			} else {
 				diagramShell.mainToolFinishedItsJob();
 			}
 		}
 		
 		public function deactivate(model:Object):void {
-			var connection:ConnectionFigure = diagramShell.modelToExtraInfoMap[model].tempConnection;
+			var connection:ConnectionRenderer = diagramShell.modelToExtraInfoMap[model].tempConnection;
 			diagramShell.diagramRenderer.removeElement(connection);
 			
 			delete diagramShell.modelToExtraInfoMap[model].tempConnection;

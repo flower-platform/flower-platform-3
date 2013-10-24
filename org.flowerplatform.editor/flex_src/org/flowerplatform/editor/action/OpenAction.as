@@ -39,6 +39,14 @@ package  org.flowerplatform.editor.action {
 		
 		public static const ICON_URL:String = EditorPlugin.getInstance().getResourceUrl("images/open_resource.png");
 		
+		/**
+		 * This id set to the default open action (the top level action).
+		 * Used to execute action at ENTER or double click event.
+		 * 
+		 * @author Cristina Constantinescu
+		 */ 
+		public static const DEFAULT_OPEN_ACTION_ID:String = "defaultOpenActionId";
+		
 		private var editorDescriptor:BasicEditorDescriptor;
 		
 		public var forceNewEditor:Boolean;
@@ -50,6 +58,7 @@ package  org.flowerplatform.editor.action {
 		public function OpenAction(editorDescriptor:BasicEditorDescriptor, forceNewEditor:Boolean):void {
 			if (editorDescriptor == null) {
 				// top level action: Open
+				id = DEFAULT_OPEN_ACTION_ID;
 				label = EditorPlugin.getInstance().getMessage("editor.open");
 				icon = ICON_URL;
 				preferShowOnActionBar = true;
@@ -65,7 +74,7 @@ package  org.flowerplatform.editor.action {
 		}
 		
 		/**
-		 * @author Cristina Constatinescu
+		 * @author Cristina Constantinescu
 		 */
 		override public function run():void {
 			var currentEditorDescriptor:BasicEditorDescriptor = editorDescriptor;
@@ -73,17 +82,9 @@ package  org.flowerplatform.editor.action {
 				if (currentEditorDescriptor == null) {
 					// top level action: Open => search for the first editorDescriptor
 					var treeNode:TreeNode = TreeNode(selection.getItemAt(0));
-					var indexes:ArrayCollection = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
-					for (var j:int = 0; j < indexes.length; j++) {
-						var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[indexes.getItemAt(j)];
-						if (ctDescriptor.defaultEditor != null) {
-							currentEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(ctDescriptor.defaultEditor);
-							break;
-						}
-					}
-					if (currentEditorDescriptor == null) {
-						currentEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(String(ctDescriptor.compatibleEditors.getItemAt(0)));
-					}
+					var index:int = int(treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE]);					
+					var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[index];
+					currentEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(String(ctDescriptor.compatibleEditors.getItemAt(0)));
 				}
 				var editableResourcePath:String = EditorPlugin.getInstance().getEditableResourcePathFromTreeNode(TreeNode(selection.getItemAt(i)));
 				currentEditorDescriptor.openEditor(editableResourcePath, forceNewEditor);

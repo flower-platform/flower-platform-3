@@ -65,7 +65,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setLabel("Operation")
 				.setDefaultName("newOperation")
 				.addCodeSyncTypeCategory("backboneClassMember")
+				.setNextSiblingSeparator(", ")
 				.addFeature("name")
+				.addFeature("parameters")
 				.setKeyFeature("name"));
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
@@ -73,6 +75,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setLabel("Attribute")
 				.setDefaultName("newAttribute")
 				.addCodeSyncTypeCategory("backboneClassMember")
+				.setNextSiblingSeparator(", ")
 				.addFeature("defaultValue")
 				.addFeature("name")
 				.setKeyFeature("name"));
@@ -92,6 +95,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setDefaultName("events")
 				.addCodeSyncTypeCategory("backboneClassMember")
 				.addChildrenCodeSyncTypeCategory("eventsAttributeEntry")
+				.setNextSiblingSeparator(", ")
 				.addFeature("name")
 				.setKeyFeature("name"));
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
@@ -101,6 +105,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setDefaultName("routes")
 				.addCodeSyncTypeCategory("backboneClassMember")
 				.addChildrenCodeSyncTypeCategory("routesAttributeEntry")
+				.setNextSiblingSeparator(", ")
 				.addFeature("name")
 				.setKeyFeature("name"));
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
@@ -109,6 +114,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setLabel("Event")
 				.setDefaultName("event")
 				.addCodeSyncTypeCategory("eventsAttributeEntry")
+				.setNextSiblingSeparator(", ")
 				.addFeature("event")
 				.addFeature("selector")
 				.addFeature("function")
@@ -119,6 +125,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setLabel("Route")
 				.setDefaultName("route")
 				.addCodeSyncTypeCategory("routesAttributeEntry")
+				.setNextSiblingSeparator(", ")
 				.addFeature("path")
 				.addFeature("function")
 				.setKeyFeature("path"));
@@ -202,8 +209,6 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.title", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", processor);
-		
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());	
 	}
 	
 }

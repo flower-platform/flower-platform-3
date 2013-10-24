@@ -19,8 +19,6 @@
 package org.flowerplatform.editor.file;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.tree.GenericTreeContext;
@@ -41,18 +39,10 @@ public class FileContentTypeNodePopulator implements INodePopulator {
 			return false;
 		}
 		
-//		String contentType = EditorPlugin.getInstance().getContentTypeFromFileName(file.getName());
-//		if (contentType != null) {
-//			destination.getOrCreateCustomData().put(EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE, EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType).getIndex());
-//		}
-		List<String> contentTypes = EditorPlugin.getInstance().getContentTypeFromFileName(file.getName());
-		if (!contentTypes.isEmpty()) {
-			List<Integer> indexes = new ArrayList<Integer>(2);
-			for (String contentType : contentTypes) {
-				indexes.add(EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType).getIndex());
-			}
-			destination.getOrCreateCustomData().put(EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE, indexes);
-		}
+		String contentType = EditorPlugin.getInstance().getContentTypeFromFileName(file.getName());
+		if (contentType != null) {
+			destination.getOrCreateCustomData().put(EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE, EditorPlugin.getInstance().getContentTypeDescriptorsMap().get(contentType).getIndex());
+		}	
 		return true;
 	}
 

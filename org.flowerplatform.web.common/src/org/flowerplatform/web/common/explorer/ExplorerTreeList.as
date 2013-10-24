@@ -95,18 +95,15 @@ package org.flowerplatform.web.common.explorer {
 		 * @author Cristina Constantinescu
 		 */ 
 		private function doubleClickHandler(event:MouseEvent):void {
-			var selection:IList = getSelection();	
-			for (var i:int = 0; i < selection.length; i++) {
-				var node:TreeNode = TreeNode(selection.getItemAt(i));
-				if (node.customData == null || node.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE] == null) {
-					// found at least one node not openable
-					return;
+			var cachedActions:Vector.<IAction> = _viewHost.getCachedActions();
+			for (var i:int = 0; i < cachedActions.length; i++) {
+				var action:IAction = cachedActions[i];
+				if (action.id == OpenAction.DEFAULT_OPEN_ACTION_ID) {
+					action.selection = _viewHost.getCachedSelection();
+					action.run();	
+					action.selection = null;
 				}
-			}
-			// run action
-			var action:OpenAction = new OpenAction(null, false);
-			action.selection = selection;
-			action.run();
+			}			
 		}
 		
 		/**

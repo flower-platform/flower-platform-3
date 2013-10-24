@@ -85,8 +85,8 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 			super();
 		}
 		
-		private function getParent():ConnectionFigure {
-			return ConnectionFigure(parent);
+		private function getParent():ConnectionRenderer {
+			return ConnectionRenderer(parent);
 		}
 		
 		/**

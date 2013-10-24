@@ -135,12 +135,13 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 				if (childInsertPoint == -1) {
 					throw new RuntimeException("RegExAstNode does not accept children of type " + childType);
 				}
-				// TODO add nextSiblingSeparator to descriptor
-//				if (!firstChild) {
-//					if (child.getNextSiblingSeparator() != null) {
-//						childTemplate = child.getNextSiblingSeparator() + childTemplate;
-//					}
-//				}
+				if (!firstChild) {
+					String codeSyncType = child.getType();
+					CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
+					if (descriptor.getNextSiblingSeparator() != null) {
+						childTemplate = descriptor.getNextSiblingSeparator() + childTemplate;
+					}
+				}
 				template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 				
 				firstChild = false;

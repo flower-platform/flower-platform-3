@@ -18,7 +18,11 @@
  */
 package org.flowerplatform.editor;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +67,10 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 		
 	private IFileAccessController fileAccessController;
 	
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		INSTANCE = this;
@@ -83,26 +91,46 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 			contentTypeDescriptorsList.add(descriptor);
 		}
 		
+		List<Editor> editors = new ArrayList<Editor>();
+		
 		// content types to editor mappings
 		configurationElements = Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.editor.contentTypeToEditorMapping");
 		for (IConfigurationElement configurationElement : configurationElements) {
 			String contentType = configurationElement.getAttribute("contentType");
 			String compatibleEditor = configurationElement.getAttribute("compatibleEditor");
 			String serviceId = configurationElement.getAttribute("serviceId");
+					
 			boolean isDefaultEditor = Boolean.parseBoolean(configurationElement.getAttribute("isDefaultEditor"));
+			
+			int priorityEditor;
+			if (configurationElement.getAttribute("priority") != null) {
+				priorityEditor = Integer.parseInt(configurationElement.getAttribute("priority"));
+			} else { // no priority, consider it the latest
+				priorityEditor = Integer.MAX_VALUE;
+			}
+			editors.add(new Editor(compatibleEditor, contentType, isDefaultEditor, priorityEditor));
+			
 			EditorStatefulService editorStatefulService = (EditorStatefulService) configurationElement.createExecutableExtension("editorStatefulService");
 			editorStatefulService.setEditorName(compatibleEditor);
 			CommunicationPlugin.getInstance().getServiceRegistry().registerService(serviceId, editorStatefulService);
-			editorStatefulServices.add(editorStatefulService);
-			
-			ContentTypeDescriptor descriptor = contentTypeDescriptorsMap.get(contentType);
-			if (descriptor == null) {
-				throw new IllegalArgumentException("Cannot find contentType = " + contentType + 
-						" to register the compatible editor = " + compatibleEditor);
-			}
-			descriptor.getCompatibleEditors().add(compatibleEditor);	
-			if (isDefaultEditor) {
-				 descriptor.setDefaultEditor(compatibleEditor);
+			editorStatefulServices.add(editorStatefulService);						
+		}
+		// sort editors based on priority (smallest priority -> editor is shown first in Open With menu)
+		Collections.sort(editors, new Comparator<Editor>() {
+
+			@Override
+			public int compare(Editor editor1, Editor editor2) {				
+				return Integer.compare(editor1.priority, editor2.priority);
+			}			
+		});
+		
+		for (Editor editor : editors) {
+			if (editor.isDefault) { // default editors are added to all registered content types
+				for (String contentType : contentTypeDescriptorsMap.keySet()) {
+					addEditorToContentTypeDescriptor(editor.name, contentType);
+				}
+			} else {
+				addEditorToContentTypeDescriptor(editor.name, editor.contentType);
 			}
 		}
 		
@@ -185,24 +213,58 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 		return null;
 	}
 	
-	public List<String> getContentTypeFromFileName(String fileName) {
-		List<String> contentTypes = new ArrayList<String>(2);
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */
+	public String getContentTypeFromFileName(String fileName) {		
 		String contentType = null;
 		int lastDotIndex = fileName.lastIndexOf('.');
 		if (lastDotIndex >= 0) {
 			// has an extension
 			String extension = fileName.substring(lastDotIndex + 1);
-			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get(extension);
-			if (contentType != null) {
-				contentTypes.add(contentType);
+			contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get(extension);	
+			if (contentType == null) { // not registered as extension, search it using *
+				contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");				
 			}
 		}
-//		if (contentType == null) {
-//			// not found; revert to default
-		contentType = EditorPlugin.getInstance().getFileExtensionToContentTypeMap().get("*");
-		if (contentType != null) {
-			contentTypes.add(contentType);
-		}
-		return contentTypes;
+		return contentType;
 	}
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	private void addEditorToContentTypeDescriptor(String editorName, String contentType) {
+		ContentTypeDescriptor descriptor = contentTypeDescriptorsMap.get(contentType);
+		if (descriptor == null) {
+			throw new IllegalArgumentException("Cannot find contentType = " + contentType + 
+					" to register the compatible editor = " + editorName);
+		}
+		descriptor.getCompatibleEditors().add(editorName);
+	}
+	
+	public String getFriendlyNameDecoded(String friendlyName) {
+		try {
+			friendlyName = URLDecoder.decode(friendlyName, "UTF-8");		
+		} catch (UnsupportedEncodingException e) {
+			logger.error("Could not decode using UTF-8 charset : " + friendlyName);
+		}
+		return friendlyName;
+	}
+	
+	private class Editor {
+		
+		public String name;
+		public String contentType;
+		public boolean isDefault;
+		public int priority;
+		
+		public Editor(String name, String contentType, boolean isDefault, int priority) {			
+			this.name = name;
+			this.contentType = contentType;
+			this.isDefault = isDefault;
+			this.priority = priority;
+		}		
+	}
+
 }

@@ -18,17 +18,11 @@
  */
 package org.flowerplatform.web.git.layout {
 	
-	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	import com.crispico.flower.util.spinner.ModalSpinnerSupport;
 	
-	import mx.collections.IList;
 	import mx.containers.VBox;
-	import mx.core.UIComponent;
 	
-	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.web.git.GitPlugin;
 	import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 

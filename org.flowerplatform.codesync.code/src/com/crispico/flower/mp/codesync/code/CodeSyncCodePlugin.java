@@ -174,6 +174,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		// STEP 2 : find the SrcDir corresponding to the 2nd path fragment
 //		CodeSyncElement srcDir = getSrcDir(cseResource, pathFragments[1]);
 		String path = CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject(file);
+		// there are cases when path format is a\b\c and the split method will not return correctly.
+		// so replace \ with /
 		path = path.replaceAll("\\\\", "/");
 		if (path.startsWith("/")) {
 			path = path.substring(1);

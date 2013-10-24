@@ -1,4 +1,4 @@
-package org.flowerplatform.flexdiagram.tool.event {
+package org.flowerplatform.flexdiagram.event {
 	import flash.events.Event;
 	
 	/**

@@ -18,12 +18,14 @@
  */
 package org.flowerplatform.flexdiagram {
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	import flash.ui.Multitouch;
 	import flash.ui.MultitouchInputMode;
 	import flash.utils.Dictionary;
 	
-	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	import mx.core.IDataRenderer;
 	import mx.core.IInvalidating;
@@ -40,26 +42,18 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
-	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
+	import org.flowerplatform.flexdiagram.event.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
-	import org.flowerplatform.flexdiagram.tool.DragToCreateRelationTool;
-	import org.flowerplatform.flexdiagram.tool.DragTool;
 	import org.flowerplatform.flexdiagram.tool.IWakeUpableTool;
-	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
-	import org.flowerplatform.flexdiagram.tool.ResizeTool;
-	import org.flowerplatform.flexdiagram.tool.ScrollTool;
-	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
-	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 	import org.flowerplatform.flexdiagram.tool.Tool;
 	import org.flowerplatform.flexdiagram.tool.WakeUpTool;
-	import org.flowerplatform.flexdiagram.tool.ZoomTool;
 	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
 	
 	/**
 	 * @author Cristian Spiescu
 	 */
-	public class DiagramShell {
+	public class DiagramShell extends EventDispatcher {
 		
 		private var _modelToExtraInfoMap:Dictionary = new Dictionary();
 		
@@ -414,5 +408,18 @@ package org.flowerplatform.flexdiagram {
 			}
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */  
+		public function convertCoordinates(rectangle:Rectangle, fromComponent:UIComponent, toComponent:UIComponent):Rectangle {					
+			var fromGlobalPoint:Point = fromComponent.contentToGlobal(rectangle.topLeft);
+			
+			var localPoint:Point = toComponent.globalToLocal(fromGlobalPoint);
+			var contentPoint:Point = toComponent.localToContent(localPoint);
+			
+			return new Rectangle(
+				contentPoint.x, contentPoint.y, 
+				rectangle.width * toComponent.scaleX, rectangle.height * toComponent.scaleY);
+		}
 	}
 }

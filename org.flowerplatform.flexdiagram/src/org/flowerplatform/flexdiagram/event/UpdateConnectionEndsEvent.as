@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.flexdiagram {
+package org.flowerplatform.flexdiagram.event {
 	import flash.events.Event;
 
 	/**

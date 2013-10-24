@@ -21,17 +21,10 @@ package org.flowerplatform.flexdiagram.renderer {
 	import flash.display.Graphics;
 	import flash.display.InterpolationMethod;
 	import flash.display.SpreadMethod;
-	import flash.events.Event;
 	import flash.geom.Matrix;
-	import flash.text.TextFieldAutoSize;
 	
-	import org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent;
+	import org.flowerplatform.flexdiagram.event.ZoomPerformedEvent;
 	import org.flowerplatform.flexdiagram.util.MultilineLabelItemRenderer;
-	
-	import spark.components.DataRenderer;
-	import spark.components.IconItemRenderer;
-	import spark.components.LabelItemRenderer;
-	import spark.components.supportClasses.StyleableTextField;
 	
 	/**
 	 * @author Cristina Constantinescu

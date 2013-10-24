@@ -515,22 +515,22 @@ public interface NotationPackage extends EPackage {
 	int DIAGRAM__PERSISTENT_EDGES = VIEW_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>New Elements Path</b></em>' attribute.
+	 * The feature id for the '<em><b>Location For New Elements</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM__NEW_ELEMENTS_PATH = VIEW_FEATURE_COUNT + 2;
+	int DIAGRAM__LOCATION_FOR_NEW_ELEMENTS = VIEW_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Show New Elements Path Dialog</b></em>' attribute.
+	 * The feature id for the '<em><b>Show Location For New Elements Dialog</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG = VIEW_FEATURE_COUNT + 3;
+	int DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG = VIEW_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Diagram</em>' class.
@@ -1221,26 +1221,26 @@ public interface NotationPackage extends EPackage {
 	EReference getDiagram_PersistentEdges();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.Diagram#getNewElementsPath <em>New Elements Path</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.Diagram#getLocationForNewElements <em>Location For New Elements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>New Elements Path</em>'.
-	 * @see org.flowerplatform.emf_model.notation.Diagram#getNewElementsPath()
+	 * @return the meta object for the attribute '<em>Location For New Elements</em>'.
+	 * @see org.flowerplatform.emf_model.notation.Diagram#getLocationForNewElements()
 	 * @see #getDiagram()
 	 * @generated
 	 */
-	EAttribute getDiagram_NewElementsPath();
+	EAttribute getDiagram_LocationForNewElements();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.Diagram#isShowNewElementsPathDialog <em>Show New Elements Path Dialog</em>}'.
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.Diagram#isShowLocationForNewElementsDialog <em>Show Location For New Elements Dialog</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Show New Elements Path Dialog</em>'.
-	 * @see org.flowerplatform.emf_model.notation.Diagram#isShowNewElementsPathDialog()
+	 * @return the meta object for the attribute '<em>Show Location For New Elements Dialog</em>'.
+	 * @see org.flowerplatform.emf_model.notation.Diagram#isShowLocationForNewElementsDialog()
 	 * @see #getDiagram()
 	 * @generated
 	 */
-	EAttribute getDiagram_ShowNewElementsPathDialog();
+	EAttribute getDiagram_ShowLocationForNewElementsDialog();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.LayoutConstraint <em>Layout Constraint</em>}'.
@@ -1567,20 +1567,20 @@ public interface NotationPackage extends EPackage {
 		EReference DIAGRAM__PERSISTENT_EDGES = eINSTANCE.getDiagram_PersistentEdges();
 
 		/**
-		 * The meta object literal for the '<em><b>New Elements Path</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Location For New Elements</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DIAGRAM__NEW_ELEMENTS_PATH = eINSTANCE.getDiagram_NewElementsPath();
+		EAttribute DIAGRAM__LOCATION_FOR_NEW_ELEMENTS = eINSTANCE.getDiagram_LocationForNewElements();
 
 		/**
-		 * The meta object literal for the '<em><b>Show New Elements Path Dialog</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Show Location For New Elements Dialog</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG = eINSTANCE.getDiagram_ShowNewElementsPathDialog();
+		EAttribute DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG = eINSTANCE.getDiagram_ShowLocationForNewElementsDialog();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.LayoutConstraintImpl <em>Layout Constraint</em>}' class.

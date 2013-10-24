@@ -17,20 +17,15 @@
  * license-end
  */
 package com.crispico.flower.util.popup {
-	import com.crispico.flower.util.layout.Workbench;
-	import com.crispico.flower.util.layout.WorkbenchViewHost;
-	import com.crispico.flower.util.layout.view.ViewPopupWindow;
+	
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	
 	import flash.display.DisplayObject;
 	
 	import mx.collections.IList;
 	import mx.containers.ControlBar;
-	import mx.core.FlexGlobals;
-	import mx.core.UIComponent;
 	
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.popup.IPopupHandler;
+	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
@@ -106,6 +101,22 @@ package com.crispico.flower.util.popup {
 		public function hideSpinner():void {		
 			ModalSpinner.removeModalSpinner(this);
 		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function getCachedActions():Vector.<IAction> {	
+			// doesn't support this	
+			return null;
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public function getCachedSelection():IList {
+			// doesn't support this	
+			return null;
+		}	
 		
 		override protected function createChildren():void {
 			if (activeViewContent == null) {

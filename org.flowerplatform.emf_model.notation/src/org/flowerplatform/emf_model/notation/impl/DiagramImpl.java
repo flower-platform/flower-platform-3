@@ -49,8 +49,8 @@ import org.flowerplatform.emf_model.notation.NotationPackage;
  * <ul>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getPersistentEdges <em>Persistent Edges</em>}</li>
- *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getNewElementsPath <em>New Elements Path</em>}</li>
- *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#isShowNewElementsPathDialog <em>Show New Elements Path Dialog</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#getLocationForNewElements <em>Location For New Elements</em>}</li>
+ *   <li>{@link org.flowerplatform.emf_model.notation.impl.DiagramImpl#isShowLocationForNewElementsDialog <em>Show Location For New Elements Dialog</em>}</li>
  * </ul>
  * </p>
  *
@@ -88,44 +88,44 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	protected EList<Edge> persistentEdges;
 
 	/**
-	 * The default value of the '{@link #getNewElementsPath() <em>New Elements Path</em>}' attribute.
+	 * The default value of the '{@link #getLocationForNewElements() <em>Location For New Elements</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNewElementsPath()
+	 * @see #getLocationForNewElements()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String NEW_ELEMENTS_PATH_EDEFAULT = null;
+	protected static final String LOCATION_FOR_NEW_ELEMENTS_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getNewElementsPath() <em>New Elements Path</em>}' attribute.
+	 * The cached value of the '{@link #getLocationForNewElements() <em>Location For New Elements</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNewElementsPath()
+	 * @see #getLocationForNewElements()
 	 * @generated
 	 * @ordered
 	 */
-	protected String newElementsPath = NEW_ELEMENTS_PATH_EDEFAULT;
+	protected String locationForNewElements = LOCATION_FOR_NEW_ELEMENTS_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isShowNewElementsPathDialog() <em>Show New Elements Path Dialog</em>}' attribute.
+	 * The default value of the '{@link #isShowLocationForNewElementsDialog() <em>Show Location For New Elements Dialog</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isShowNewElementsPathDialog()
+	 * @see #isShowLocationForNewElementsDialog()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT = true;
+	protected static final boolean SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_EDEFAULT = true;
 
 	/**
-	 * The cached value of the '{@link #isShowNewElementsPathDialog() <em>Show New Elements Path Dialog</em>}' attribute.
+	 * The cached value of the '{@link #isShowLocationForNewElementsDialog() <em>Show Location For New Elements Dialog</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isShowNewElementsPathDialog()
+	 * @see #isShowLocationForNewElementsDialog()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean showNewElementsPathDialog = SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT;
+	protected boolean showLocationForNewElementsDialog = SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -184,8 +184,8 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getNewElementsPath() {
-		return newElementsPath;
+	public String getLocationForNewElements() {
+		return locationForNewElements;
 	}
 
 	/**
@@ -193,11 +193,11 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setNewElementsPath(String newNewElementsPath) {
-		String oldNewElementsPath = newElementsPath;
-		newElementsPath = newNewElementsPath;
+	public void setLocationForNewElements(String newLocationForNewElements) {
+		String oldLocationForNewElements = locationForNewElements;
+		locationForNewElements = newLocationForNewElements;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH, oldNewElementsPath, newElementsPath));
+			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.DIAGRAM__LOCATION_FOR_NEW_ELEMENTS, oldLocationForNewElements, locationForNewElements));
 	}
 
 	/**
@@ -205,8 +205,8 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isShowNewElementsPathDialog() {
-		return showNewElementsPathDialog;
+	public boolean isShowLocationForNewElementsDialog() {
+		return showLocationForNewElementsDialog;
 	}
 
 	/**
@@ -214,11 +214,11 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public void setShowNewElementsPathDialog(boolean newShowNewElementsPathDialog) {
-		boolean oldShowNewElementsPathDialog = showNewElementsPathDialog;
-		showNewElementsPathDialog = newShowNewElementsPathDialog;
+	public void setShowLocationForNewElementsDialog(boolean newShowLocationForNewElementsDialog) {
+		boolean oldShowLocationForNewElementsDialog = showLocationForNewElementsDialog;
+		showLocationForNewElementsDialog = newShowLocationForNewElementsDialog;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG, oldShowNewElementsPathDialog, showNewElementsPathDialog));
+			eNotify(new ENotificationImpl(this, Notification.SET, NotationPackage.DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG, oldShowLocationForNewElementsDialog, showLocationForNewElementsDialog));
 	}
 
 	/**
@@ -247,10 +247,10 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 				return getName();
 			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
 				return getPersistentEdges();
-			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
-				return getNewElementsPath();
-			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
-				return isShowNewElementsPathDialog();
+			case NotationPackage.DIAGRAM__LOCATION_FOR_NEW_ELEMENTS:
+				return getLocationForNewElements();
+			case NotationPackage.DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG:
+				return isShowLocationForNewElementsDialog();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -271,11 +271,11 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 				getPersistentEdges().clear();
 				getPersistentEdges().addAll((Collection<? extends Edge>)newValue);
 				return;
-			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
-				setNewElementsPath((String)newValue);
+			case NotationPackage.DIAGRAM__LOCATION_FOR_NEW_ELEMENTS:
+				setLocationForNewElements((String)newValue);
 				return;
-			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
-				setShowNewElementsPathDialog((Boolean)newValue);
+			case NotationPackage.DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG:
+				setShowLocationForNewElementsDialog((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -295,11 +295,11 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
 				getPersistentEdges().clear();
 				return;
-			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
-				setNewElementsPath(NEW_ELEMENTS_PATH_EDEFAULT);
+			case NotationPackage.DIAGRAM__LOCATION_FOR_NEW_ELEMENTS:
+				setLocationForNewElements(LOCATION_FOR_NEW_ELEMENTS_EDEFAULT);
 				return;
-			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
-				setShowNewElementsPathDialog(SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT);
+			case NotationPackage.DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG:
+				setShowLocationForNewElementsDialog(SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -317,10 +317,10 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case NotationPackage.DIAGRAM__PERSISTENT_EDGES:
 				return persistentEdges != null && !persistentEdges.isEmpty();
-			case NotationPackage.DIAGRAM__NEW_ELEMENTS_PATH:
-				return NEW_ELEMENTS_PATH_EDEFAULT == null ? newElementsPath != null : !NEW_ELEMENTS_PATH_EDEFAULT.equals(newElementsPath);
-			case NotationPackage.DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG:
-				return showNewElementsPathDialog != SHOW_NEW_ELEMENTS_PATH_DIALOG_EDEFAULT;
+			case NotationPackage.DIAGRAM__LOCATION_FOR_NEW_ELEMENTS:
+				return LOCATION_FOR_NEW_ELEMENTS_EDEFAULT == null ? locationForNewElements != null : !LOCATION_FOR_NEW_ELEMENTS_EDEFAULT.equals(locationForNewElements);
+			case NotationPackage.DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG:
+				return showLocationForNewElementsDialog != SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -337,10 +337,10 @@ public class DiagramImpl extends ViewImpl implements Diagram {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (name: ");
 		result.append(name);
-		result.append(", newElementsPath: ");
-		result.append(newElementsPath);
-		result.append(", showNewElementsPathDialog: ");
-		result.append(showNewElementsPathDialog);
+		result.append(", locationForNewElements: ");
+		result.append(locationForNewElements);
+		result.append(", showLocationForNewElementsDialog: ");
+		result.append(showLocationForNewElementsDialog);
 		result.append(')');
 		return result.toString();
 	}

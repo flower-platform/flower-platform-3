@@ -43,11 +43,7 @@ package org.flowerplatform.properties {
 			super.start();
 			registerPropertyProviders();
 		}
-		
-		override protected function registerMessageBundle():void {
-			// do nothing, as we don't have a .resources(yet)
-		}
-		
+				
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(Property);
 		}
