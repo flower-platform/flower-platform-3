@@ -26,14 +26,13 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.codesync.processor.CodeSyncElementFeatureChangesProcessor;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
-import org.flowerplatform.editor.model.java.remote.JavaClassDiagramOperationsService;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaAttributeModelAdapter;
 import com.crispico.flower.mp.codesync.code.java.adapter.JavaOperationModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -73,7 +72,7 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 	
 	protected void processFeatureChangeForViewDetails(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		if (featureChange == null || featureChange.getFeature().equals(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name())) {
-			viewDetails.put("label", CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+			viewDetails.put("label", CodeSyncOperationsService.getInstance()
 					.getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name()));
 		}
 	}
@@ -115,8 +114,8 @@ public class JavaClassProcessor extends CodeSyncElementFeatureChangesProcessor {
 		}
 		CodeSyncElement child = getCodeSyncElement(childModelElements.get(0));
 		String separatorViewType = child.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE) 
-				? JavaClassDiagramOperationsService.ATTRIBUTE_SEPARATOR
-				: JavaClassDiagramOperationsService.OPERATIONS_SEPARATOR;
+				? "classAttributesCompartmentSeparator"
+				: "classOperationsCompartmentSeparator";
 		String childViewType = child.getType().equals(JavaAttributeModelAdapter.ATTRIBUTE)
 				? "classAttribute"
 				: "classOperation";

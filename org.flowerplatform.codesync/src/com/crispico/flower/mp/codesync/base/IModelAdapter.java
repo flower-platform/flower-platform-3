@@ -38,6 +38,15 @@ public interface IModelAdapter extends IModelAdapterUI {
 	
 	public static final String FLOWER_UID = "@flowerUID";
 	
+	/**
+	 * Same type must be set on a pair of adapters.
+	 * 
+	 * @author Mariana Gheorghe
+	 */
+	public String getType();
+	
+	public void setType(String type);
+	
 	public ModelAdapterFactorySet getModelAdapterFactorySet();
 	
 	public IModelAdapter setModelAdapterFactorySet(ModelAdapterFactorySet modelAdapterFactorySet);

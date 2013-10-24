@@ -33,7 +33,7 @@ package org.flowerplatform.editor.model.properties.remote {
 		
 		public var editorStatefulServiceId:String;
 		
-		public function DiagramSelectedItem(xmiID:String, diagramEditableResourcePath:String, editorStatefulServiceId:String, itemType:String) {
+		public function DiagramSelectedItem(xmiID:String, diagramEditableResourcePath:String, editorStatefulServiceId:String) {
 			this.diagramEditableResourcePath = diagramEditableResourcePath;
 			this.xmiID = xmiID;
 			this.editorStatefulServiceId = editorStatefulServiceId;

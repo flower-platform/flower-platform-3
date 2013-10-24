@@ -19,8 +19,10 @@
 package org.flowerplatform.codesync;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -29,7 +31,6 @@ import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
@@ -43,11 +44,14 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 		List<Property> properties = new ArrayList<Property>();	
 
 		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
-		List<String> features = CodeSyncPlugin.getInstance().getCodeSyncOperationsService().getFeatures(codeSyncElement.getType());
+		if (codeSyncElement == null) {
+			return Collections.emptyList();
+		}
+		List<String> features = CodeSyncOperationsService.getInstance().getFeatures(codeSyncElement.getType());
 		
 		for (String feature : features) {
 			properties.add(new Property(feature, 
-					CodeSyncPlugin.getInstance().getCodeSyncOperationsService().getFeatureValue(codeSyncElement, feature), false));
+					CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, feature), false));
 		}
 		
 		return properties;
@@ -56,7 +60,10 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 	@Override
 	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
 		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
-		CodeSyncPlugin.getInstance().getCodeSyncOperationsService().setFeatureValue(codeSyncElement, propertyName, propertyValue);
+		if (codeSyncElement == null) {
+			return;
+		}
+		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, propertyName, propertyValue);
 	}
 	
 	protected CodeSyncElement getCodeSyncElement(SelectedItem selectedItem) {

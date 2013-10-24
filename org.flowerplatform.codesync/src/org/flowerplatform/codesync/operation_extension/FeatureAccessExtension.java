@@ -16,15 +16,16 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.feature_converter;
+package org.flowerplatform.codesync.operation_extension;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
@@ -39,40 +40,50 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  * 
  * @author Mariana Gheorghe
  */
-public abstract class CodeSyncElementFeatureValueConverter {
+public abstract class FeatureAccessExtension {
 
-	Map<String, EStructuralFeature> features;
+	protected List<String> codeSyncTypes;
 	
-	public CodeSyncElementFeatureValueConverter() {
+	protected Map<String, EStructuralFeature> features;
+	
+	public static final String CODE_SYNC_NAME = "codeSyncName";
+	
+	public FeatureAccessExtension() {
+		codeSyncTypes = new ArrayList<String>();
 		features = new HashMap<String, EStructuralFeature>();
 		
-		addFeature("name", CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		addFeature("isAdded", CodeSyncPackage.eINSTANCE.getCodeSyncElement_Added());
+		addFeature(CODE_SYNC_NAME, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 	}
 	
-	public void addFeature(String name, EStructuralFeature feature) {
-		features.put(name, feature);
+	public boolean hasCodeSyncType(String codeSyncType) {
+		return codeSyncTypes.contains(codeSyncType);
 	}
 	
-	public EStructuralFeature getFeature(String name) {
-		return features.get(name);
-	}
-	
-	public Object getValue(CodeSyncElement codeSyncElement, String name) {
-		EStructuralFeature feature = getFeature(name);
+	public Object getValue(CodeSyncElement codeSyncElement, String featureName) {
+		EStructuralFeature feature = getFeature(featureName);
 		if (feature != null) {
-			return CodeSyncPlugin.getInstance()
-					.getCodeSyncOperationsService().getFeatureValue(codeSyncElement, feature);
+			return CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, feature);
 		}
 		return null;
 	}
 	
-	public void setValue(CodeSyncElement codeSyncElement, String name, Object newValue) {
-		EStructuralFeature feature = getFeature(name);
+	public void setValue(CodeSyncElement codeSyncElement, String featureName, Object newValue) {
+		EStructuralFeature feature = getFeature(featureName);
 		if (feature != null) {
-			CodeSyncPlugin.getInstance()
-					.getCodeSyncOperationsService().setFeatureValue(codeSyncElement, feature, newValue);
+			CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, feature, newValue);
 		}
+	}
+	
+	protected void addCodeSyncType(String codeSyncType) {
+		codeSyncTypes.add(codeSyncType);
+	}
+	
+	protected EStructuralFeature getFeature(String featureName) {
+		return features.get(featureName);
+	}
+	
+	protected void addFeature(String featureName, EStructuralFeature feature) {
+		features.put(featureName, feature);
 	}
 	
 }

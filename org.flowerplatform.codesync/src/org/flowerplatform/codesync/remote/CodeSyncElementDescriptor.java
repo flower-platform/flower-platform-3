@@ -21,6 +21,8 @@ package org.flowerplatform.codesync.remote;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+
 /**
  * @author Mariana Gheorghe
  */
@@ -32,64 +34,121 @@ public class CodeSyncElementDescriptor {
 	
 	private String iconUrl;
 	
+	private String defaultName;
+	
+	// temp
+	private String extension;
+	
 	private List<String> codeSyncTypeCategories;
 	
 	private List<String> childrenCodeSyncTypeCategories;
 	
 	private List<String> features;
-
+	
+	private String keyFeature;
+	
 	public CodeSyncElementDescriptor() {
+		codeSyncTypeCategories = new ArrayList<String>();
+		childrenCodeSyncTypeCategories = new ArrayList<String>();
 		features = new ArrayList<String>();
-		features.add("name");
-		features.add("isAdded");
+		features.add(FeatureAccessExtension.CODE_SYNC_NAME);
 	}
 	
 	public String getCodeSyncType() {
 		return codeSyncType;
 	}
 
-	public void setCodeSyncType(String codeSyncType) {
+	public CodeSyncElementDescriptor setCodeSyncType(String codeSyncType) {
 		this.codeSyncType = codeSyncType;
+		return this;
+	}
+	
+	public String getLabel() {
+		return label;
+	}
+
+	public CodeSyncElementDescriptor setLabel(String label) {
+		this.label = label;
+		return this;
 	}
 
 	public String getIconUrl() {
 		return iconUrl;
 	}
 
-	public void setIconUrl(String iconUrl) {
+	public CodeSyncElementDescriptor setIconUrl(String iconUrl) {
 		this.iconUrl = iconUrl;
+		return this;
+	}
+
+	public String getDefaultName() {
+		return defaultName;
+	}
+
+	public CodeSyncElementDescriptor setDefaultName(String defaultName) {
+		this.defaultName = defaultName;
+		return this;
+	}
+
+	public String getExtension() {
+		return extension;
+	}
+
+	public CodeSyncElementDescriptor setExtension(String extension) {
+		this.extension = extension;
+		return this;
 	}
 
 	public List<String> getCodeSyncTypeCategories() {
 		return codeSyncTypeCategories;
 	}
 
-	public void setCodeSyncTypeCategories(List<String> codeSyncTypeCategories) {
+	public CodeSyncElementDescriptor setCodeSyncTypeCategories(List<String> codeSyncTypeCategories) {
 		this.codeSyncTypeCategories = codeSyncTypeCategories;
+		return this;
 	}
-
-	public List<String> getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(List<String> features) {
-		this.features = features;
+	
+	public CodeSyncElementDescriptor addCodeSyncTypeCategory(String codeSyncTypeCategory) {
+		codeSyncTypeCategories.add(codeSyncTypeCategory);
+		return this;
 	}
 
 	public List<String> getChildrenCodeSyncTypeCategories() {
 		return childrenCodeSyncTypeCategories;
 	}
 
-	public void setChildrenCodeSyncTypeCategories(
+	public CodeSyncElementDescriptor setChildrenCodeSyncTypeCategories(
 			List<String> childrenCodeSyncTypeCategories) {
 		this.childrenCodeSyncTypeCategories = childrenCodeSyncTypeCategories;
+		return this;
+	}
+	
+	public CodeSyncElementDescriptor addChildrenCodeSyncTypeCategory(String childrenCodeSyncTypeCategory) {
+		childrenCodeSyncTypeCategories.add(childrenCodeSyncTypeCategory);
+		return this;
+	}
+	
+	public List<String> getFeatures() {
+		return features;
 	}
 
-	public String getLabel() {
-		return label;
+	public CodeSyncElementDescriptor setFeatures(List<String> features) {
+		this.features = features;
+		return this;
 	}
-
-	public void setLabel(String label) {
-		this.label = label;
+	
+	public CodeSyncElementDescriptor addFeature(String feature) {
+		features.add(feature);
+		return this;
 	}
+	
+	public String getKeyFeature() {
+		return keyFeature;
+	}
+	
+	public CodeSyncElementDescriptor setKeyFeature(String keyFeature) {
+		this.keyFeature = keyFeature;
+		return this;
+	}
+	
 }

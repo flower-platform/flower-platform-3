@@ -18,7 +18,7 @@
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.codesync/public-resources/swc/org.flowerplatform.codesync.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.editor.model/public-resources/swc/org.flowerplatform.editor.model.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="2" path="D:/data/java_work/git_repo_fp/org.flowerplatform.flexutil/lib/MobileComponents45.swc" useDefaultLinkType="false"/>
-      <libraryPathEntry kind="3" linkType="1" path="D:/data/java_work/git_repo_fp/org.flowerplatform.codesync.code.java/public-resources/swc/org.flowerplatform.codesync.code.java.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="2" path="/org.flowerplatform.codesync.code.java/public-resources/swc/org.flowerplatform.codesync.code.java.swc" useDefaultLinkType="false"/>
     </libraryPath>
     <sourceAttachmentPath/>
   </compiler>

@@ -18,7 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.merge;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
@@ -86,10 +86,12 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 	
 	@Override
 	public Object createCorrespondingModelElement(Object element) {
+		IModelAdapter adapter = null;
 		if (element == null) {
-			return null;
+			adapter = codeSyncElementConverter.getModelAdapterByType(getType());
+		} else {
+			adapter = codeSyncElementConverter.getModelAdapter(element);
 		}
-		IModelAdapter adapter = codeSyncElementConverter.getModelAdapter(element);
 		if (adapter != null) {
 			return adapter.createCorrespondingModelElement(element);
 		} else {
@@ -103,7 +105,7 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 		if (eObject != null) {
 			return super.getContainmentFeatureIterable(eObject, feature, correspondingIterable);
 		}
-		return Collections.emptyList();
+		return new ArrayList<>();
 	}
 
 	@Override

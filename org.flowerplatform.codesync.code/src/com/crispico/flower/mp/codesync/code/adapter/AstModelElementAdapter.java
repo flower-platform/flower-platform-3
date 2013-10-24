@@ -20,6 +20,7 @@ package com.crispico.flower.mp.codesync.code.adapter;
 
 import java.util.Map;
 
+import com.crispico.flower.mp.codesync.base.AbstractModelAdapter;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
@@ -27,7 +28,7 @@ import com.crispico.flower.mp.codesync.base.action.ActionResult;
 /**
  * 
  */
-public abstract class AstModelElementAdapter implements IModelAdapter {
+public abstract class AstModelElementAdapter extends AbstractModelAdapter {
 
 	private ModelAdapterFactorySet modelAdapterFactorySet;
 	

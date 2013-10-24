@@ -59,11 +59,31 @@ public class ModelAdapterFactory {
 			}
 		return null;
 	}
+	
+	/**
+	 * Finds an adapter based on a type, not on the element
+	 * it adapts; used to retrieve the adapter that will 
+	 * create the left-side cache when the element on the
+	 * right-side does not exist.
+	 * 
+	 * @param type set on the {@link IModelAdapter}
+	 * 
+	 * @author Mariana Gheorghe
+	 */
+	public IModelAdapter getModelAdapterByType(String type) {
+		for (ModelAdapterEntry entry : modelAdapters) {
+			if (entry.modelAdapter.getType().equals(type)) {
+				return entry.modelAdapter;
+			}
+		}
+		return null;
+	}
 
-	public ModelAdapterEntry addModelAdapter(Class<?> clazz, IModelAdapter modelAdapter) {
+	public ModelAdapterEntry addModelAdapter(Class<?> clazz, IModelAdapter modelAdapter, String adapterType) {
 		ModelAdapterEntry e = new ModelAdapterEntry();
 		e.clazz = clazz;
 		e.modelAdapter = modelAdapter;
+		modelAdapter.setType(adapterType);
 		modelAdapters.add(e);
 		return e;
 	}
@@ -71,8 +91,8 @@ public class ModelAdapterFactory {
 	/**
 	 * @author Mariana
 	 */
-	public ModelAdapterEntry addModelAdapter(Class<?> clazz, IModelAdapter modelAdapter, String extension) {
-		ModelAdapterEntry e = addModelAdapter(clazz, modelAdapter);
+	public ModelAdapterEntry addModelAdapter(Class<?> clazz, IModelAdapter modelAdapter, String extension, String adapterType) {
+		ModelAdapterEntry e = addModelAdapter(clazz, modelAdapter, adapterType);
 		e.extension = extension;
 		return e;
 	}

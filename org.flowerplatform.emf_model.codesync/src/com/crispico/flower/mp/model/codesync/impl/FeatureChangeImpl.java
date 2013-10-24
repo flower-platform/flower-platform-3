@@ -51,6 +51,7 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * <!-- begin-user-doc -->
@@ -279,8 +280,8 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 		if (eDataTypeOfFeature != null && !isMany()) {
 			setOldValueAsString(EcoreUtil.convertToString(eDataTypeOfFeature, oldValue));
 		} else {
-			if (newOldValue instanceof Collection) {
-				Collection<EObject> collection = (Collection<EObject>) newOldValue;
+			if (isMany()) {
+				Collection<EObject> collection = (Collection<EObject>) (newOldValue == null ? Collections.emptyList() : newOldValue);
 				getOldValueAsContainmentList().clear();
 				for (EObject value : collection) {
 					getOldValueAsContainmentList().add(EcoreUtil.copy(value));
@@ -383,8 +384,8 @@ public class FeatureChangeImpl extends EObjectImpl implements FeatureChange {
 		if (eDataTypeOfFeature != null && !isMany()) {
 			setNewValueAsString(EcoreUtil.convertToString(eDataTypeOfFeature, newValue));
 		} else {
-			if (newNewValue instanceof Collection) {
-				Collection<EObject> collection = (Collection<EObject>) newNewValue;
+			if (isMany()) {
+				Collection<EObject> collection = (Collection<EObject>) (newNewValue == null ? Collections.emptyList() : newNewValue);
 				getNewValueAsContainmentList().clear();
 				for (EObject value : collection) {
 					getNewValueAsContainmentList().add(EcoreUtil.copy(value));
