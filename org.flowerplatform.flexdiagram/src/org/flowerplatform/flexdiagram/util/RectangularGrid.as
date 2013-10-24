@@ -1,3 +1,21 @@
+/* license-start
+ * 
+ * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation version 3.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *   Crispico - Initial API and implementation
+ *
+ * license-end
+ */
 package org.flowerplatform.flexdiagram.util {
 	
 	import flash.display.CapsStyle;
@@ -6,8 +24,7 @@ package org.flowerplatform.flexdiagram.util {
 	import flash.display.SpreadMethod;
 	import flash.geom.Matrix;
 	
-	import mx.containers.Canvas;
-	import mx.core.ScrollPolicy;
+	import mx.core.UIComponent;
 		
 	/**
 	 * Graphical component that fills the surface with horizontal and/or vertical lines or bars.
@@ -15,7 +32,7 @@ package org.flowerplatform.flexdiagram.util {
 	 * @author Luiza
 	 */ 
 	[SecureSWF(rename="off")]
-	public class RectangularGrid extends Canvas {
+	public class RectangularGrid extends UIComponent {
 		
 		protected var _drawHorizontalLines:Boolean = true;
 		
@@ -30,12 +47,6 @@ package org.flowerplatform.flexdiagram.util {
 		protected var _alternatingColors:Array;
 		
 		protected var _colorAlpha:Number = 1;
-		
-		public function RectangularGrid() {
-			horizontalScrollPolicy = ScrollPolicy.OFF;
-			verticalScrollPolicy = ScrollPolicy.OFF;
-			setStyle("backgroundAlpha", 0);
-		}
 		
 		/**
 		 * When <code>true</code> the grid draws horizontal lines spaced by <code>size</code>.
@@ -229,10 +240,20 @@ package org.flowerplatform.flexdiagram.util {
 		 * 
 		 * Subclasses may call this function instead of calling <code>invalidateDisplayList()</code>
 		 * whenever repainting is necessary.
+		 * 
+		 * @author Luiza
+		 * @author Mircea Negreanu
 		 */ 
 		protected function paintGrid():void {
-			graphics.clear();	
+			graphics.clear();
+			
+			// fills the background so that the events are dispatched correctly
+			graphics.lineStyle(0, 0xFFFFFF, 0);
+			graphics.beginFill(0xFFFFFF, 0);
+			graphics.drawRect(0, 0, width, height);
+			graphics.endFill();
 			 
+			// now draw the lines
 			if (drawHorizontalLines) {
 				var rows:int = height / size;
 				var colorIndex:int = 0;

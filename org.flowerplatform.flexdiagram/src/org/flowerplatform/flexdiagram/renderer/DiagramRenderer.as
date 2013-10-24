@@ -21,6 +21,7 @@ package org.flowerplatform.flexdiagram.renderer {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	
+	import mx.core.IVisualElement;
 	import mx.managers.IFocusManagerComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -42,8 +43,10 @@ package org.flowerplatform.flexdiagram.renderer {
 		
 		/**
 		 * @author Mircea Negreanu
+		 * 
+		 * The background grid
 		 */
-		private var _grid:RectangularGrid;
+		private var _grid:IVisualElement;
 		
 		/**
 		 * If we want grid or not
@@ -81,7 +84,7 @@ package org.flowerplatform.flexdiagram.renderer {
 		 * 
 		 * @author Mircea Negreanu
 		 */
-		public function get grid():RectangularGrid {
+		public function get grid():IVisualElement {
 			if (useGrid && _grid == null) {
 				_grid = new RectangularGrid();
 			}
@@ -113,18 +116,16 @@ package org.flowerplatform.flexdiagram.renderer {
 			if (visualChildrenController != null) {
 				visualChildrenController.refreshVisualChildren(data);
 			}
-			super.updateDisplayList(unscaledWidth, unscaledHeight);
-
-			// in case we have grid -> sizeGrid
+			
+			// resize/move the grid (depending on the viewport dimensions)
 			sizeGrid();
 			
-			// if the grid is not visible show the border
-			if (!useGrid || !grid.visible) {
-				graphics.clear();
-				graphics.lineStyle(1);
-				graphics.beginFill(0xCCCCCC, 0);
-				graphics.drawRect(horizontalScrollPosition, verticalScrollPosition, width, height);
-			}
+			super.updateDisplayList(unscaledWidth, unscaledHeight);
+
+			graphics.clear();
+			graphics.lineStyle(1);
+			graphics.beginFill(0xCCCCCC, 0);
+			graphics.drawRect(horizontalScrollPosition, verticalScrollPosition, width, height);
 		}
 		
 		override protected function focusInHandler(event:FocusEvent):void {
@@ -155,16 +156,20 @@ package org.flowerplatform.flexdiagram.renderer {
 			super.createChildren();
 			
 			if (useGrid) {
-				grid.name = "grid";
 				grid.x = grid.y = 0;
-				grid.dashSize = 1;
-				
+				// we want dash
+				RectangularGrid(grid).dashSize = 1;
+			
+				// add it
 				addElement(grid);
 			}
 		}
 		
 		/**
-		 * Size the grid based on scroll position and width/height
+		 * Size the grid based on scroll position and width/height.
+		 * <p>
+		 * 	Make the grid invisible when the scale is lower the 0.75
+		 * </p>
 		 * 
 		 * @author Mircea Negreanu
 		 */
@@ -176,7 +181,12 @@ package org.flowerplatform.flexdiagram.renderer {
 					grid.visible = true;
 				}
 				
-				if (grid.visible) {
+				// resize/move the grid, only if its dimensions or position were changed
+				if (grid.visible &&
+					(grid.x != horizontalScrollPosition
+						|| grid.y != verticalScrollPosition
+						|| grid.width != width
+						|| grid.height != height)) {
 					grid.x = horizontalScrollPosition;
 					grid.y = verticalScrollPosition;
 					grid.width = width;
