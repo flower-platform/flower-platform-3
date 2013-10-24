@@ -15,7 +15,7 @@
             compatibleEditor="diagram"
             contentType="diagram"
             editorStatefulService="org.flowerplatform.editor.model.remote.DiagramEditorStatefulService"
-            isDefaultEditor="true"
+            priority="100"
             serviceId="diagramEditorStatefulService">
       </contentTypeToEditorMapping>
    </extension>
