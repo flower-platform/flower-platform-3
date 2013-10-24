@@ -74,6 +74,11 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
+	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+	import org.flowerplatform.properties.PropertiesItemRenderer;
+	import org.flowerplatform.properties.PropertiesList;
+	import org.flowerplatform.properties.PropertiesPlugin;
+	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
 
 
 	
@@ -187,6 +192,24 @@ package org.flowerplatform.editor.model {
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ShowPropertiesAction);
+			
+			// register PropertiesPlugin Renderer
+			PropertiesPlugin.getInstance().propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
+				(StringWithButtonPropertyRenderer, {
+					clickHandler: function(itemRendererHandler:IDialogResultHandler, propertyName:String, propertyValue:Object):void {
+						// access to dataProvider ( list of Property) here :
+						// PropertiesList(PropertiesItemRenderer(StringWithButtonPropertyRenderer(itemRendererHandler).parent).owner).dataProvider;
+						var dialog:ILocationForNewElementsDialog = EditorModelPlugin.getInstance().getLocationForNewElementsDialogNewInstance();
+						dialog.setResultHandler(itemRendererHandler);
+						
+						FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
+						.setViewContent(dialog)
+						.setTitle("Dialog")
+						.setWidth(400)
+						.setHeight(450)
+						.show();
+					}
+				});
 		}
 		
 		override protected function registerClassAliases():void {

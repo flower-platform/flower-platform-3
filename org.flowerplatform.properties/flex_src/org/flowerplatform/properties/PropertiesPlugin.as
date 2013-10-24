@@ -5,6 +5,8 @@ package org.flowerplatform.properties {
 	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.dialog.IDialog;
+	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesViewProvider;
 	import org.flowerplatform.properties.property_renderer.BooleanPropertyRenderer;
@@ -57,12 +59,7 @@ package org.flowerplatform.properties {
 				(StringPropertyRenderer);
 			propertyRendererClasses["Boolean"] = new FactoryWithInitialization
 				(BooleanPropertyRenderer);
-			propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
-				(StringWithButtonPropertyRenderer, {
-					clickHandler: function(propertyList:PropertiesList, propertyName:String, propertyValue:Object):void {
-						trace("List is " + propertyList + "\n" + "The attribute is " + propertyName + " with the value: " + propertyValue);
-					}
-				});
+			
 		}
 	}
 }
