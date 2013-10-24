@@ -10,6 +10,7 @@ package org.flowerplatform.orion.client {
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
+	import mx.core.FlexGlobals;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.CommonPlugin;
@@ -20,6 +21,7 @@ package org.flowerplatform.orion.client {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -34,7 +36,6 @@ package org.flowerplatform.orion.client {
 			return INSTANCE;
 		}
 		
-		public static const OPEN_RESOURCES:String = "orionOpenResources";
 		public static const CREATE_DIAGRAM:String = "orionCreateDiagram";
 		public static const ADD_TO_DIAGRAM:String = "orionAddToDiagram";
 		
@@ -45,7 +46,7 @@ package org.flowerplatform.orion.client {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
-			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;
+//			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;
 			CommonPlugin.getInstance().linkHandlers[CREATE_DIAGRAM] = this;
 			CommonPlugin.getInstance().linkHandlers[ADD_TO_DIAGRAM] = this;
 		}
@@ -70,8 +71,8 @@ package org.flowerplatform.orion.client {
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
 			loadWorkbenchLayoutData();
 			
-			// tell js that the app has finished loading
-			ExternalInterface.call("flowerApplicationCompleteHandler");
+			// handle browser url
+			CommonPlugin.getInstance().handleLinkWithQueryStringDecoded(FlexGlobals.topLevelApplication.parameters);
 		}
 				
 		private function loadWorkbenchLayoutData():void {		
@@ -96,16 +97,10 @@ package org.flowerplatform.orion.client {
 		}
 		
 		public function handleLink(command:String, parameters:String):void {
-			if (command == OPEN_RESOURCES) {				
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand(
-						"orionOperationsService", "navigateFriendlyEditableResourcePathList", 
-						[parameters, 0]));
-			} else if (command == CREATE_DIAGRAM) {
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand(
-						"orionOperationsService", "createDiagram", 
-						[parameters]));
+			if (command == CREATE_DIAGRAM) {
+				var cmd:NewJavaClassDiagramAction = new NewJavaClassDiagramAction();
+				cmd.parentPath = parameters;
+				CommunicationPlugin.getInstance().bridge.sendObject(cmd);				
 			} else if (command == ADD_TO_DIAGRAM) {
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
