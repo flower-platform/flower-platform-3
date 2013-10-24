@@ -16,21 +16,25 @@
  *
  * license-end
  */
-package org.flowerplatform.flexdiagram.controller {
-	import org.flowerplatform.flexdiagram.DiagramShell;
+package org.flowerplatform.flexutil {
 	
-	public class ControllerFactory {
+	public class FactoryWithInitialization {
 		
 		public var generator:Class;
 		public var properties:Object = null;
 		
-		public function ControllerFactory(generator:Class, properties:Object = null) {
+		public function FactoryWithInitialization(generator:Class, properties:Object = null) {
 			this.generator = generator;
 			this.properties = properties;
 		}
 		
-		public function newInstance(diagramShel:DiagramShell):* {
-			var instance:Object = new generator(diagramShel);
+		public function newInstance(constructorHasParameter:Boolean = false, construtorParameter:Object = null):* {
+			var instance:Object;
+			if (constructorHasParameter) {
+				instance = new generator(construtorParameter);
+			} else {
+				instance = new generator();
+			}
 			
 			if (properties != null)
 			{

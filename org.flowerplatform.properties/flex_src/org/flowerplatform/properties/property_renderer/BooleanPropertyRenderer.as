@@ -3,7 +3,11 @@ package org.flowerplatform.properties.property_renderer {
 	
 	import mx.binding.utils.BindingUtils;
 	
+	import org.flowerplatform.properties.PropertiesItemRenderer;
+	
 	import spark.components.CheckBox;
+	import spark.components.HGroup;
+
 	/**
 	 * @author Razvan Tache
 	 */
@@ -12,18 +16,23 @@ package org.flowerplatform.properties.property_renderer {
 		[Bindable]
 		public var checkBox:CheckBox;
 		
-		public function BooleanPropertyRenderer(data:Object) {
+		public var checkBoxContainer:HGroup;
+		
+		public function BooleanPropertyRenderer() {
 			super();	
-			super.data = data;	
 		}
 		
 		override protected function createChildren():void {
+			super.data = PropertiesItemRenderer(parent).data;
 			super.createChildren();
 
 			checkBox = new CheckBox();
+			checkBoxContainer =  new HGroup();
 			
-			checkBox.percentHeight = 100;
-			checkBox.percentWidth = 100;
+			checkBoxContainer.percentHeight = 100;
+			checkBoxContainer.percentWidth = 100;
+			checkBoxContainer.horizontalAlign = "center";
+			
 			checkBox.selected = data.value;
 			checkBox.enabled = !data.readOnly;
 			
@@ -32,7 +41,8 @@ package org.flowerplatform.properties.property_renderer {
 				BindingUtils.bindProperty(data, "value", checkBox, "selected");
 			}
 			
-			addElement(checkBox);
+			checkBoxContainer.addElement(checkBox);
+			addElement(checkBoxContainer);
 		}
 	}
 }

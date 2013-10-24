@@ -18,6 +18,8 @@
 */
 package org.flowerplatform.web.common.explorer.properties {
 	import mx.collections.ArrayCollection;
+	
+	import org.flowerplatform.properties.remote.SelectedItem;
 
 	[Bindable]
 	[RemoteClass(alias="org.flowerplatform.web.properties.remote.FileSelectedItem")]
@@ -25,18 +27,9 @@ package org.flowerplatform.web.common.explorer.properties {
 	/**
 	 * @author Razvan Tache
 	 */
-	public class FileSelectedItem {
-		/** 
-		 * 
-		 */
-		[SecureSWF(rename="off")]
+	public class FileSelectedItem extends SelectedItem {
+
 		public var pathWithRoot:ArrayCollection;
-		
-		/** 
-		 * 
-		 */
-		[SecureSWF(rename="off")]
-		public var itemType:String;
 		
 		public function FileSelectedItem(pathWithRoot:ArrayCollection) {
 			this.pathWithRoot = pathWithRoot;	

@@ -23,8 +23,11 @@ import java.util.HashMap;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Property;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +59,12 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		initExtensionPoint_propertiesProvider();
+		new CustomSerializationDescriptor(Property.class)
+		.addDeclaredProperty("name")
+		.addDeclaredProperty("value")
+		.addDeclaredProperty("readOnly")
+		.addDeclaredProperty("type")
+		.register();
 		INSTANCE = this;
 	}
 
@@ -71,6 +80,12 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 			logger.debug("Added property provider mapping with itemType = {} for class = {}", itemType,
 					propertiesProvider.getClass());
 		}
+	}
+
+	
+	@Override
+	public void registerMessageBundle() throws Exception {
+
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

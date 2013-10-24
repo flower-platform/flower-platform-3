@@ -65,21 +65,27 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		// TODO decide what properties are needed
 		properties.add(new Property("Name", file.getName(), false));
 		properties.add(new Property("Location", file.getAbsolutePath()));
-		properties.add(new Property("Size", file.length()));
+		properties.add(new Property("Size", file.length(), "StringWithDialog"));
 		properties.add(new Property("Last modified", new Date(file.lastModified())));
-		properties.add(new Property("testEnabled", true, false));
-		properties.add(new Property("testDisabled", true));
+		properties.add(new Property("testEnabled", true, "Boolean", false));
+		properties.add(new Property("testDisabled", true, "Boolean"));
 		
 		return properties;
 	}
 
 	@Override
 	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		List<PathFragment> pathWithRoot = ((FileSelectedItem)selectedItem).getPathWithRoot();
-		File file = getFile(pathWithRoot);
-		
-		System.out.println("Changing the file with path " + file.getPath());
-		System.out.println("Setting the property: " + propertyName + " with the value " + propertyValue );
+
+	}
+	@Override
+	public List<String> getPropertyNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Property getProperty(SelectedItem selectedItem, String propertyName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -31,14 +31,7 @@ import org.flowerplatform.properties.remote.SelectedItem;
  */
 public class FileSelectedItem extends SelectedItem {
 	
-	private final String TYPE_FILE = "File";
-	
 	private List<PathFragment> pathWithRoot = new ArrayList<PathFragment>();
-	
-	public FileSelectedItem(String fileName, File file) {
-		super();
-		this.setItemType(TYPE_FILE);
-	}
 	
 	public FileSelectedItem() {
 		

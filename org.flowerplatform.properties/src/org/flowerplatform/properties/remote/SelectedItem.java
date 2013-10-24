@@ -25,6 +25,10 @@ public abstract class SelectedItem {
 
 	private String itemType;
 
+	public SelectedItem() {
+		
+	}
+	
 	public String getItemType() {
 		return itemType;
 	}

@@ -18,6 +18,18 @@ import org.flowerplatform.properties.remote.SelectedItem;
 public class DiagramPropertiesProvider implements IPropertiesProvider {
 
 	@Override
+	public List<String> getPropertyNames() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Property getProperty(SelectedItem selectedItem, String propertyName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public List<Property> getProperties(SelectedItem selectedItem) {
 		List<Property> properties = new ArrayList<Property>();	
 		Diagram diagram = getDiagram(selectedItem);

@@ -24,23 +24,14 @@ package org.flowerplatform.properties.remote {
 	 * @author Razvan Tache
 	 */
 	public class Property {
-		/**
-		 * 
-		 */
-		[SecureSWF(rename="off")]
+
 		public var name:String;
 		
-		/**
-		 * 
-		 */
-		[SecureSWF(rename="off")]
 		public var value:Object;
 		
-		/**
-		 * 
-		 */
-		[SecureSWF(rename="off")]
 		public var readOnly:Boolean;
+		
+		public var type:String;
 		
 		public function Property() {
 			
