@@ -353,7 +353,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		DiagramEditableResource editableResource = getDiagramEditableResource(context);
 		Diagram diagram = (Diagram) editableResource.getEObjectById(diagramId);
 		
-		EditorModelPlugin.getInstance().getComposedDragOnDiagramHandler().handleDragOnDiagram(paths, diagram, null, null, context.getCommunicationChannel());
+		EditorModelPlugin.getInstance().getComposedDragOnDiagramHandler().handleDragOnDiagram(context, paths, diagram, null, null, context.getCommunicationChannel());
 	}
 	
 	/**

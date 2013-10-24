@@ -35,6 +35,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class JavaParameterModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
+	public static final String PARAMETER = "parameter";
+	
 	@Override
 	public List<?> getChildren(Object modelElement) {
 		return Collections.emptyList();

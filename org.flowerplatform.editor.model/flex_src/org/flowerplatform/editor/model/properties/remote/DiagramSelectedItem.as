@@ -48,7 +48,7 @@ package org.flowerplatform.editor.model.properties.remote {
 		[SecureSWF(rename="off")]
 		public var itemType:String;
 		
-		public function DiagramSelectedItem(xmiID:String, diagramEditableResourcePath:String, editorStatefulServiceId:String, itemType:String) {
+		public function DiagramSelectedItem(xmiID:String, diagramEditableResourcePath:String, editorStatefulServiceId:String) {
 			this.diagramEditableResourcePath = diagramEditableResourcePath;
 			this.xmiID = xmiID;
 			this.editorStatefulServiceId = editorStatefulServiceId;

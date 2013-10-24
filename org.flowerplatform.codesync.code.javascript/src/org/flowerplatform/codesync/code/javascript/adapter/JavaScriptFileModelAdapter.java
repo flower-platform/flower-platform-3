@@ -40,12 +40,15 @@ import org.flowerplatform.codesync.code.javascript.parser.Parser;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
+import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.adapter.AbstractFileModelAdapter;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
+public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 	
 	@Override
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
@@ -86,9 +89,10 @@ public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
 	private void rewrite(IDocument document, RegExAstNode node, MultiTextEdit edit) {
 		if (node.isAdded()) {
 			String template = loadTemplate(node);
-			if (node.getNextSiblingSeparator() != null) {
-				template = node.getNextSiblingSeparator() + template;
-			}
+			// TODO add nextSiblingSeparator to descriptor
+//			if (node.getNextSiblingSeparator() != null) {
+//				template = node.getNextSiblingSeparator() + template;
+//			}
 			edit.addChild(new InsertEdit(getInsertPoint(node), template));
 		} else if (node.isDeleted()) {
 			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));
@@ -122,19 +126,21 @@ public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
 		boolean firstChild = true;
 		for (RegExAstNode child : getChildrenWithTemplate(node, new ArrayList<RegExAstNode>())) {
 			String childTemplate = loadTemplate(child);
-			if (child.getChildType() != null) {
-				int childInsertPoint = template.indexOf("<!-- children-insert-point " + child.getChildType() + " -->");
+			String childType = getChildType(child);
+			if (childType != null) {
+				int childInsertPoint = template.indexOf("<!-- children-insert-point " + childType + " -->");
 				if (childInsertPoint == -1) {
-					childInsertPoint = template.indexOf("// children-insert-point " + child.getChildType());
+					childInsertPoint = template.indexOf("// children-insert-point " + childType);
 				}
 				if (childInsertPoint == -1) {
-					throw new RuntimeException("RegExAstNode does not accept children of type " + child.getChildType());
+					throw new RuntimeException("RegExAstNode does not accept children of type " + childType);
 				}
-				if (!firstChild) {
-					if (child.getNextSiblingSeparator() != null) {
-						childTemplate = child.getNextSiblingSeparator() + childTemplate;
-					}
-				}
+				// TODO add nextSiblingSeparator to descriptor
+//				if (!firstChild) {
+//					if (child.getNextSiblingSeparator() != null) {
+//						childTemplate = child.getNextSiblingSeparator() + childTemplate;
+//					}
+//				}
 				template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 				
 				firstChild = false;
@@ -144,13 +150,19 @@ public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
 		return template;
 	}
 	
+	private String getChildType(RegExAstNode child) {
+		String codeSyncType = child.getType();
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
+		return descriptor.getCodeSyncTypeCategories().get(0);
+	}
+	
 	private List<RegExAstNode> getChildrenWithTemplate(RegExAstNode parent, List<RegExAstNode> children) {
 		for (RegExAstNode child : parent.getChildren()) {
-			if (child.isCategoryNode()) {
-				getChildrenWithTemplate(child, children);
-			} else {
+//			if (child.isCategoryNode()) {
+//				getChildrenWithTemplate(child, children);
+//			} else {
 				children.add(child);
-			}
+//			}
 		}
 		return children;
 	}
@@ -171,10 +183,10 @@ public class JavascriptFileModelAdapter extends AbstractFileModelAdapter {
 				return sibling.getNextSiblingInsertPoint();
 			}
 		}
-		if (parent.getChildrenInsertPoints().contains(node.getChildType())) {
-			return parent.getChildrenInsertPoints().get(node.getChildType());
+		if (parent.getChildrenInsertPoints().contains(getChildType(node))) {
+			return parent.getChildrenInsertPoints().get(getChildType(node));
 		} else {
-			throw new RuntimeException("RegExAstNode does not accept children of type " + node.getChildType());
+			throw new RuntimeException("RegExAstNode does not accept children of type " + getChildType(node));
 		}
 	}
 

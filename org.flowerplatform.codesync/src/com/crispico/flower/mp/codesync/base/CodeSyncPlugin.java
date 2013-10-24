@@ -37,17 +37,17 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
+import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
+import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
+import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
-import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
-import org.flowerplatform.properties.PropertiesPlugin;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,8 +85,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static final String FILE = "File";
 	
-	protected CodeSyncOperationsService codeSyncOperationService;
-	
 	private final static Logger logger = LoggerFactory.getLogger(CodeSyncPlugin.class);
 
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
@@ -95,7 +93,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
 
-	protected List<CodeSyncElementFeatureValueConverter> codeSyncElementFeatureConverters;
+	protected List<FeatureAccessExtension> featureAccessExtensions;
 	
 	protected List<AddNewExtension> addNewExtensions;
 	
@@ -108,10 +106,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static CodeSyncPlugin getInstance() {
 		return INSTANCE;
-	}
-	
-	public CodeSyncOperationsService getCodeSyncOperationsService() {
-		return codeSyncOperationService;
 	}
 	
 	public ComposedFullyQualifiedNameProvider getFullyQualifiedNameProvider() {
@@ -148,8 +142,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return null;
 	}
 	
-	public List<CodeSyncElementFeatureValueConverter> getCodeSyncElementFeatureConverters() {
-		return codeSyncElementFeatureConverters;
+	public List<FeatureAccessExtension> getFeatureAccessExtensions() {
+		return featureAccessExtensions;
 	}
 	
 	public List<AddNewExtension> getAddNewExtensions() {
@@ -165,12 +159,38 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		super.start(context);
 		INSTANCE = this;
 		
-		codeSyncOperationService = new CodeSyncOperationsService();
+		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
+		
+		addNewExtensions = new ArrayList<AddNewExtension>();
+		addNewExtensions.add(new AddNewTopLevelElementExtension());
+		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
+		
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
-		initializeExtensionPoint_codeSyncElementDescriptor();
-		initializeExtensionPoint_codeSyncElementFeatureConverter();
-		initializeExtensionPoint_operationExtension();
+		
+		getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType(FOLDER)
+				.setLabel(FOLDER)
+				.addChildrenCodeSyncTypeCategory(FILE));
+		getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType(FILE)
+				.setLabel(FILE)
+				.addCodeSyncTypeCategory(FILE));
+		
+		// needs custom descriptor because it uses the builder template (i.e. setters return the instance)
+		new CustomSerializationDescriptor(CodeSyncElementDescriptor.class)
+			.addDeclaredProperty("codeSyncType")
+			.addDeclaredProperty("label")
+			.addDeclaredProperty("iconUrl")
+			.addDeclaredProperty("defaultName")
+			.addDeclaredProperty("extension")
+			.addDeclaredProperty("codeSyncTypeCategories")
+			.addDeclaredProperty("childrenCodeSyncTypeCategories")
+			.addDeclaredProperty("features")
+			.addDeclaredProperty("keyFeature")
+			.register();
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -183,62 +203,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			Object instance = configurationElement.createExecutableExtension("codeSyncAlgorithmRunnerClass");
 			codeSyncAlgorithmRunner.addRunner(technology, (ICodeSyncAlgorithmRunner) instance);
 			logger.debug("Added CodeSync algorithm runner with id = {} with class = {}", id, instance.getClass());
-		}
-	}
-	
-	private void initializeExtensionPoint_codeSyncElementDescriptor() throws CoreException {
-		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
-		IConfigurationElement[] configurationElements = 
-				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementDescriptor");
-		for (IConfigurationElement configurationElement : configurationElements) {
-			String codeSyncType = configurationElement.getAttribute("codeSyncType");
-			String label = configurationElement.getAttribute("label");
-			String iconUrl = configurationElement.getAttribute("iconUrl");
-			List<String> codeSyncTypeCategories = getAttributes(configurationElement, "codeSyncTypeCategory");
-			List<String> childrenCodeSyncTypeCategories = getAttributes(configurationElement, "childrenCodeSyncTypeCategory");
-			List<String> features = getAttributes(configurationElement, "feature");
-			CodeSyncElementDescriptor descriptor = new CodeSyncElementDescriptor();
-			descriptor.setCodeSyncType(codeSyncType);
-			descriptor.setLabel(label);
-			if (iconUrl != null) {
-				String contributorName = configurationElement.getContributor().getName();
-				iconUrl = contributorName + "/" + iconUrl;
-			}
-			descriptor.setIconUrl(iconUrl);
-			descriptor.setCodeSyncTypeCategories(codeSyncTypeCategories);
-			descriptor.setChildrenCodeSyncTypeCategories(childrenCodeSyncTypeCategories);
-			descriptor.getFeatures().addAll(features);
-			codeSyncElementDescriptors.add(descriptor);
-			logger.debug("Added CodeSyncElementDescriptor with type = {}", codeSyncType);
-		}
-	}
-	
-	private List<String> getAttributes(IConfigurationElement parentConfigurationElement, String id) {
-		List<String> result = new ArrayList<String>();
-		IConfigurationElement[] configurationElements = parentConfigurationElement.getChildren(id);
-		for (IConfigurationElement configurationElement : configurationElements) {
-			result.add(configurationElement.getAttribute("name"));
-		}
-		return result;
-	}
-	
-	private void initializeExtensionPoint_codeSyncElementFeatureConverter() throws CoreException {
-		codeSyncElementFeatureConverters = new ArrayList<CodeSyncElementFeatureValueConverter>();
-		IConfigurationElement[] configurationElements = 
-				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.codeSyncElementFeatureConverter");
-		for (IConfigurationElement configurationElement : configurationElements) {
-			Object instance = configurationElement.createExecutableExtension("codeSyncElementFeatureConverter");
-			codeSyncElementFeatureConverters.add((CodeSyncElementFeatureValueConverter) instance);
-		}
-	}
-	
-	private void initializeExtensionPoint_operationExtension() throws CoreException {
-		addNewExtensions = new ArrayList<AddNewExtension>();
-		IConfigurationElement[] configurationElements = 
-				Platform.getExtensionRegistry().getConfigurationElementsFor("org.flowerplatform.codesync.addNewExtension");
-		for (IConfigurationElement configurationElement : configurationElements) {
-			Object instance = configurationElement.createExecutableExtension("addNewExtension");
-			addNewExtensions.add((AddNewExtension) instance);
 		}
 	}
 	

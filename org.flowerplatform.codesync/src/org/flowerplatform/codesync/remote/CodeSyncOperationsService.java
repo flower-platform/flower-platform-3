@@ -22,7 +22,8 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
-import org.flowerplatform.codesync.feature_converter.CodeSyncElementFeatureValueConverter;
+import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.communication.CommunicationPlugin;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
@@ -35,11 +36,17 @@ import com.crispico.flower.mp.model.codesync.FeatureChange;
  */
 public class CodeSyncOperationsService {
 
-	public CodeSyncElement create(String codeSyncType) {
+	public static final String ID = "codeSyncOperationsService";
+
+	public static CodeSyncOperationsService getInstance() {
+		return (CodeSyncOperationsService) CommunicationPlugin.getInstance()
+				.getServiceRegistry().getService(ID);
+	}
+	
+	public CodeSyncElement create(CodeSyncElementDescriptor descriptor) {
 		CodeSyncElement codeSyncElement = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
-		codeSyncElement.setType(codeSyncType);
-		// test name
-		codeSyncElement.setName(codeSyncType);
+		codeSyncElement.setType(descriptor.getCodeSyncType());
+		codeSyncElement.setName(descriptor.getDefaultName());
 		return codeSyncElement;
 	}
 	
@@ -50,13 +57,13 @@ public class CodeSyncOperationsService {
 	}
 	
 	/**
-	 * Delegates to registered {@link CodeSyncElementFeatureValueConverter}s.
+	 * Delegates to registered {@link FeatureAccessExtension}s.
 	 */
 	public Object getFeatureValue(CodeSyncElement codeSyncElement, String feature) {
-		List<CodeSyncElementFeatureValueConverter> converters = 
-				CodeSyncPlugin.getInstance().getCodeSyncElementFeatureConverters();
-		for (CodeSyncElementFeatureValueConverter converter : converters) {
-			if (converter.getFeature(feature) != null) {
+		List<FeatureAccessExtension> converters = 
+				CodeSyncPlugin.getInstance().getFeatureAccessExtensions();
+		for (FeatureAccessExtension converter : converters) {
+			if (converter.hasCodeSyncType(codeSyncElement.getType())) {
 				return converter.getValue(codeSyncElement, feature);
 			}
 		}
@@ -95,13 +102,13 @@ public class CodeSyncOperationsService {
 	}
 	
 	/**
-	 * Delegates to registered {@link CodeSyncElementFeatureValueConverter}s.
+	 * Delegates to registered {@link FeatureAccessExtension}s.
 	 */
 	public void setFeatureValue(CodeSyncElement codeSyncElement, String feature, Object newValue) {
-		List<CodeSyncElementFeatureValueConverter> converters = 
-				CodeSyncPlugin.getInstance().getCodeSyncElementFeatureConverters();
-		for (CodeSyncElementFeatureValueConverter converter : converters) {
-			if (converter.getFeature(feature) != null) {
+		List<FeatureAccessExtension> converters = 
+				CodeSyncPlugin.getInstance().getFeatureAccessExtensions();
+		for (FeatureAccessExtension converter : converters) {
+			if (converter.hasCodeSyncType(codeSyncElement.getType())) {
 				converter.setValue(codeSyncElement, feature, newValue);
 			}
 		}
@@ -109,11 +116,7 @@ public class CodeSyncOperationsService {
 	
 	public void setFeatureValue(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
 		Object oldValue = getOldFeatureValue(codeSyncElement, feature);
-		if (!codeSyncElement.isAdded()) {
-			createAndAddFeatureChange(codeSyncElement, feature, oldValue, newValue);
-		} else {
-			setFeatureValueDirectly(codeSyncElement, feature, newValue);
-		}
+		createAndAddFeatureChange(codeSyncElement, feature, oldValue, newValue);
 	}
 	
 	/**
@@ -127,12 +130,14 @@ public class CodeSyncOperationsService {
 	protected void createAndAddFeatureChange(CodeSyncElement element,
 			EStructuralFeature feature, Object oldValue, Object newValue) {
 		element.getFeatureChanges().removeKey(feature);
-		if (!equal(newValue, oldValue)) {
+		if (!safeEquals(newValue, oldValue)) {
 			FeatureChange featureChange = CodeSyncFactory.eINSTANCE
 					.createFeatureChange();
+			// first add the FC to the map
+			// so the feature will be available when setting old and new value
+			element.getFeatureChanges().put(feature, featureChange);
 			featureChange.setOldValue(oldValue);
 			featureChange.setNewValue(newValue);
-			element.getFeatureChanges().put(feature, featureChange);
 
 			if (element.isSynchronized()) {
 				element.setSynchronized(false);
@@ -147,7 +152,7 @@ public class CodeSyncOperationsService {
 	/**
 	 * @author Sebastian Solomon
 	 */
-	public void propagateParentSyncFalse(CodeSyncElement element) {
+	protected void propagateParentSyncFalse(CodeSyncElement element) {
 		while (element.eContainer() != null) {
 
 			EObject parent = element.eContainer();
@@ -166,7 +171,7 @@ public class CodeSyncOperationsService {
 	/**
 	 * @author Sebastian Solomon
 	 */
-	public void propagateParentSyncTrue(CodeSyncElement element) {
+	protected void propagateParentSyncTrue(CodeSyncElement element) {
 		if (!element.isAdded() && !element.isDeleted()
 				&& element.getFeatureChanges().size() == 0) {
 			element.setSynchronized(true); // orange
@@ -198,18 +203,7 @@ public class CodeSyncOperationsService {
 		return true;
 	}
 	
-	protected void setFeatureValueDirectly(CodeSyncElement codeSyncElement, EStructuralFeature feature, Object newValue) {
-		if (feature.getEContainingClass().isSuperTypeOf(codeSyncElement.eClass())) {
-			codeSyncElement.eSet(feature, newValue);
-		} else {
-			AstCacheElement astElement = codeSyncElement.getAstCacheElement();
-			if (astElement != null) {
-				astElement.eSet(feature, newValue);
-			}
-		}
-	}
-	
-	protected boolean equal(Object a, Object b) {
+	protected boolean safeEquals(Object a, Object b) {
 		if (a == null) {
 			return b == null;
 		} else {
@@ -224,7 +218,7 @@ public class CodeSyncOperationsService {
 	/**
 	 * @author Sebastian Solomon
 	 */
-	public void propagateOnChildDelete(CodeSyncElement cse) {
+	protected void propagateOnChildDelete(CodeSyncElement cse) {
 
 		for (CodeSyncElement child : cse.getChildren()) {
 			child.setDeleted(true);

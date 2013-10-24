@@ -34,6 +34,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class JavaMemberValuePairModelAdapter extends JavaAbstractAstNodeModelAdapter {
 
+	public static final String MEMBER_VALUE_PAIR = "memberValuePair";
+	
 	@Override
 	public List<?> getChildren(Object modelElement) {
 		return Collections.emptyList();

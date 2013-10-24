@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.View;
 
@@ -38,9 +39,9 @@ public class ComposedDragOnDiagramHandler implements IDragOnDiagramHandler {
 	}
 	
 	@Override
-	public boolean handleDragOnDiagram(Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
+	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
 		for (IDragOnDiagramHandler delegate : delegateHandlers) {
-			if (delegate.handleDragOnDiagram(draggedObjects, diagram, viewUnderMouse, layoutHint, communicationChannel)) {
+			if (delegate.handleDragOnDiagram(context, draggedObjects, diagram, viewUnderMouse, layoutHint, communicationChannel)) {
 				return true;
 			}
 		}

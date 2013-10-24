@@ -33,17 +33,18 @@ import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
 import com.crispico.flower.mp.codesync.code.CodeSyncModelAdapterFactory;
-import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapter;
-import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterAncestor;
-import com.crispico.flower.mp.codesync.code.adapter.CodeSyncElementModelAdapterLeft;
 import com.crispico.flower.mp.codesync.code.adapter.FolderModelAdapter;
+import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana Gheorghe
  */
-public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
+public class JavaScriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 
+	public static final String MODEL_ELEMENT = "modelElement";
+	public static final String PARAMETER = "parameter";
+	
 	@Override
 	public void initialize(Resource cache, String limitedPath, boolean useUIDs) {
 		super.initialize(cache, limitedPath, useUIDs);
@@ -54,14 +55,14 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
 		folderModelAdapter.setLimitedPath(limitedPath);
-		rightFactory.addModelAdapter(File.class, folderModelAdapter, "");
+		rightFactory.addModelAdapter(File.class, folderModelAdapter, "", CodeSyncPlugin.FOLDER);
 		
 		// javascript specific adapter
-		IModelAdapter fileModelAdapter = createAstModelAdapter(new JavascriptFileModelAdapter());
-		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavascriptPlugin.TECHNOLOGY);
-		rightFactory.addModelAdapter(File.class, fileModelAdapter, "html");
-		rightFactory.addModelAdapter(RegExAstNode.class, createAstModelAdapter(new RegExNodeAstModelAdapter()));
-		rightFactory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
+		IModelAdapter fileModelAdapter = createAstModelAdapter(new JavaScriptFileModelAdapter());
+		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, CodeSyncPlugin.FILE);
+		rightFactory.addModelAdapter(File.class, fileModelAdapter, "html", CodeSyncPlugin.FILE);
+		rightFactory.addModelAdapter(RegExAstNode.class, createAstModelAdapter(new RegExNodeAstModelAdapter()), MODEL_ELEMENT);
+		rightFactory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()), PARAMETER);
 		
 		// ancestor - CSE
 		ancestorFactory = createCodeSyncModelAdapterFactory(cache, false);
@@ -84,14 +85,13 @@ public class JavascriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 	
 	private CodeSyncModelAdapterFactory createCodeSyncModelAdapterFactory(Resource resource, boolean isLeft) {
 		CodeSyncModelAdapterFactory factory = new CodeSyncModelAdapterFactory(this, rightFactory, resource, isLeft);
-		CodeSyncElementModelAdapter cseAdapter = (CodeSyncElementModelAdapter) createAstModelAdapter(
-				isLeft ? new CodeSyncElementModelAdapterLeft() : new CodeSyncElementModelAdapterAncestor());
-		cseAdapter.setEObjectConverter(rightFactory);
-		factory.addModelAdapter(CodeSyncElement.class, cseAdapter);
-		factory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()));
+		factory.addModelAdapter(CodeSyncPlugin.FOLDER, new SyncElementModelAdapter(), CodeSyncPlugin.FOLDER);
+		factory.addModelAdapter(CodeSyncPlugin.FILE, new SyncElementModelAdapter(), CodeSyncPlugin.FILE);
+		factory.addModelAdapter(CodeSyncElement.class, new SyncElementModelAdapter(), MODEL_ELEMENT);
+		factory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()), PARAMETER);
 		return factory;
 	}
-
+	
 	private IModelAdapter createAstModelAdapter(IModelAdapter adapter) {
 		return adapter.setModelAdapterFactorySet(this);
 	}

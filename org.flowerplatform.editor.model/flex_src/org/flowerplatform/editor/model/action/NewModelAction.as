@@ -9,6 +9,8 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
+	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
@@ -47,7 +49,7 @@ package org.flowerplatform.editor.model.action {
 			storedSelection = selection;
 			storedContext = context;
 			
-			if (diagram.viewDetails.showNewElementsPathDialog) {
+			if (diagram.viewDetails.showNewElementsPathDialog && (!(storedSelection.getItemAt(0) is Node))) {
 				var dialog:ILocationForNewElementsDialog = EditorModelPlugin.getInstance().getLocationForNewElementsDialogNewInstance();
 				dialog.selectionOfItems = NotationDiagramShell(diagramShell).diagramFrontend.convertSelectionToSelectionForServer(selection);
 				dialog.currentLocationForNewElements = diagram.viewDetails.newElementsPath;

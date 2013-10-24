@@ -25,6 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.View;
@@ -121,7 +122,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	}
 	
 	protected List<EObject> getChildrenForCodeSyncElement(EObject object) {
-		return (List<EObject>) CodeSyncPlugin.getInstance().getCodeSyncOperationsService()
+		return (List<EObject>) CodeSyncOperationsService.getInstance()
 				.getFeatureValue(getCodeSyncElement(object), CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
 	}
 	

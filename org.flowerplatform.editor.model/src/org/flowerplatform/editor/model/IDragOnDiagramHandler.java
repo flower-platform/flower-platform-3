@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model;
 import java.util.Collection;
 
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.View;
 
@@ -29,6 +30,6 @@ import org.flowerplatform.emf_model.notation.View;
  */
 public interface IDragOnDiagramHandler {
 
-	public boolean handleDragOnDiagram(Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel);
+	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel);
 	
 }
