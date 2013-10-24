@@ -355,7 +355,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDiagram_NewElementsPath() {
+	public EAttribute getDiagram_LocationForNewElements() {
 		return (EAttribute)diagramEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -364,7 +364,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getDiagram_ShowNewElementsPathDialog() {
+	public EAttribute getDiagram_ShowLocationForNewElementsDialog() {
 		return (EAttribute)diagramEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -546,8 +546,8 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		diagramEClass = createEClass(DIAGRAM);
 		createEAttribute(diagramEClass, DIAGRAM__NAME);
 		createEReference(diagramEClass, DIAGRAM__PERSISTENT_EDGES);
-		createEAttribute(diagramEClass, DIAGRAM__NEW_ELEMENTS_PATH);
-		createEAttribute(diagramEClass, DIAGRAM__SHOW_NEW_ELEMENTS_PATH_DIALOG);
+		createEAttribute(diagramEClass, DIAGRAM__LOCATION_FOR_NEW_ELEMENTS);
+		createEAttribute(diagramEClass, DIAGRAM__SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG);
 
 		layoutConstraintEClass = createEClass(LAYOUT_CONSTRAINT);
 
@@ -634,8 +634,8 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		initEClass(diagramEClass, Diagram.class, "Diagram", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getDiagram_Name(), ecorePackage.getEString(), "name", null, 1, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getDiagram_PersistentEdges(), this.getEdge(), null, "persistentEdges", null, 0, -1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDiagram_NewElementsPath(), ecorePackage.getEString(), "newElementsPath", null, 0, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getDiagram_ShowNewElementsPathDialog(), ecorePackage.getEBoolean(), "showNewElementsPathDialog", "true", 0, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagram_LocationForNewElements(), ecorePackage.getEString(), "locationForNewElements", null, 0, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getDiagram_ShowLocationForNewElementsDialog(), ecorePackage.getEBoolean(), "showLocationForNewElementsDialog", "true", 0, 1, Diagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(layoutConstraintEClass, LayoutConstraint.class, "LayoutConstraint", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

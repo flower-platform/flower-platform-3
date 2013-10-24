@@ -8,6 +8,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
+import org.flowerplatform.editor.model.properties.DiagramPropertiesProvider;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.NotationPackage;
@@ -43,11 +44,11 @@ public class DiagramPropertiesChangeProcessor implements IDiagrammableElementFea
 	}
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
-		if (featureChange == null || NotationPackage.eINSTANCE.getDiagram_ShowNewElementsPathDialog().equals(featureChange.getFeature())) {
-			viewDetails.put("showNewElementsPathDialog", ((Diagram) associatedViewOnOpenDiagram).isShowNewElementsPathDialog());
+		if (featureChange == null || NotationPackage.eINSTANCE.getDiagram_ShowLocationForNewElementsDialog().equals(featureChange.getFeature())) {
+			viewDetails.put(DiagramPropertiesProvider.SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY, ((Diagram) associatedViewOnOpenDiagram).isShowLocationForNewElementsDialog());
 		}		
-		if (featureChange == null || NotationPackage.eINSTANCE.getDiagram_NewElementsPath().equals(featureChange.getFeature())) {
-			viewDetails.put("newElementsPath", ((Diagram) associatedViewOnOpenDiagram).getNewElementsPath());
+		if (featureChange == null || NotationPackage.eINSTANCE.getDiagram_LocationForNewElements().equals(featureChange.getFeature())) {
+			viewDetails.put(DiagramPropertiesProvider.LOCATION_FOR_NEW_ELEMENTS_PROPERTY, ((Diagram) associatedViewOnOpenDiagram).getLocationForNewElements());
 		} 
 	}
 

@@ -42,6 +42,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
+	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
@@ -79,7 +80,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
-
+	import org.flowerplatform.properties.remote.Property;
 
 	
 	/**
@@ -92,8 +93,6 @@ package org.flowerplatform.editor.model {
 		public var notationDiagramActionProviders:Vector.<IActionProvider> = new Vector.<IActionProvider>();
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
-		
-		public var locationForNewElementsDialogClass:Class;
 		
 		public static function getInstance():EditorModelPlugin {
 			return INSTANCE;
@@ -197,17 +196,22 @@ package org.flowerplatform.editor.model {
 			PropertiesPlugin.getInstance().propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
 				(StringWithButtonPropertyRenderer, {
 					clickHandler: function(itemRendererHandler:IDialogResultHandler, propertyName:String, propertyValue:Object):void {
-						// access to dataProvider ( list of Property) here :
-						// PropertiesList(PropertiesItemRenderer(StringWithButtonPropertyRenderer(itemRendererHandler).parent).owner).dataProvider;
-						var dialog:ILocationForNewElementsDialog = EditorModelPlugin.getInstance().getLocationForNewElementsDialogNewInstance();
+						var propertiesList:PropertiesList =PropertiesList(PropertiesItemRenderer(StringWithButtonPropertyRenderer(itemRendererHandler).parent).owner);
+						
+						var dialog:ILocationForNewElementsDialog = new LocationForNewElementsDialog();
 						dialog.setResultHandler(itemRendererHandler);
+						dialog.selectionOfItems = propertiesList.selectionForServer;
+						dialog.currentLocationForNewElements = propertyValue;
 						
 						FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-						.setViewContent(dialog)
-						.setTitle("Dialog")
-						.setWidth(400)
+						.setViewContent(dialog)						
+						.setWidth(470)
 						.setHeight(450)
 						.show();
+					},
+					
+					getNewPropertyValueHandler: function (dialogResult:Object):String {
+						return dialogResult.location;
 					}
 				});
 		}
@@ -228,20 +232,6 @@ package org.flowerplatform.editor.model {
 
 			registerClassAliasFromAnnotation(ContentAssistItem);
 		}	
-				
-		/**
-		 * @author Cristina Constantinescu
-		 */ 
-		public function getLocationForNewElementsDialogNewInstance():ILocationForNewElementsDialog {
-			if (locationForNewElementsDialogClass == null) {
-				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must be set!");
-			}
-			var dialog:Object = new locationForNewElementsDialogClass();
-			if (!(dialog is ILocationForNewElementsDialog)) {
-				throw new Error("EditorModelPlugin.locationForNewElementsDialogClass must implement ILocationForNewElementsDialog!");
-			}
-			return ILocationForNewElementsDialog(dialog);
-		}
 		
 	}
 }

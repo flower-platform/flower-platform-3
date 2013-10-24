@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.flexutil.mobile.view_content_host {
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 	
 	import mx.collections.IList;
 	import mx.core.FlexGlobals;
@@ -28,10 +29,10 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IComposedAction;
+	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
 	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
-	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
@@ -123,8 +124,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			}
 			contextForActions = new Object();
 			// append to context some hardcoded coords
-			contextForActions.x = 100;
-			contextForActions.y = 100;
+			contextForActions.rectangle = new Rectangle(100, 100, NaN, NaN);			
 		}
 		
 		override protected function createChildren():void {

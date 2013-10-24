@@ -35,7 +35,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 	
 	@Override
 	public String getStatefulClientPrefixId() {		
-		return "Location For New Elements Tree";
+		return "locationForNewElementsTreeId";
 	}
 
 	private DiagramEditorStatefulService getDiagramEditorStatefulService() {
@@ -50,7 +50,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 				context.getCommunicationChannel(), 
 				context.getStatefulClientId(), 
 				"setAdditionalInfo", 
-				new Object[] {clientContext.get(ADDITIONAL_PATH_KEY), clientContext.get(PATHS_TO_OPEN_KEY)});
+				new Object[] {clientContext.get(PATHS_TO_OPEN_KEY)});
 	}
 
 	@Override
@@ -61,8 +61,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 		if (newElementsPath != null) {
 			String[] tokens = newElementsPath.split("/");
 			int i = 0;
-			TreeNode startNode = node;
-			String additionalPath = "";		
+			TreeNode startNode = node;				
 			List<List<PathFragment>> pathsToOpen = new ArrayList<List<PathFragment>>();
 			while (i < tokens.length) {
 				TreeNode tokenNode = pathFragmentExistsInTreeNode(startNode, new PathFragment(tokens[i], CodeSyncPlugin.FOLDER));
@@ -71,18 +70,13 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 					computePathForNode(tokenNode, path);	
 					pathsToOpen.add(path);
 					startNode = tokenNode;
-				} else {
-					additionalPath += tokens[i] + "/";
 				}
 				i++;
-			}
-			context.put(ADDITIONAL_PATH_KEY, additionalPath);
+			}			
 			context.put(PATHS_TO_OPEN_KEY, pathsToOpen);			
 		}
 		return node;
-	}
-	
-	
+	}	
 	
 	private void computePathForNode(TreeNode node, List<PathFragment> path) {
 		if (node.getPathFragment() != null) {

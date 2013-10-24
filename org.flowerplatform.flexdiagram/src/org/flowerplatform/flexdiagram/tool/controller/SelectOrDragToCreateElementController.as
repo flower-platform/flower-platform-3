@@ -25,6 +25,7 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	import mx.charts.chartClasses.DualStyleObject;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.core.FlexGlobals;
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexdiagram.CreateModelEvent;
@@ -159,6 +160,8 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				// create context
 				var context:Object = new Object();
 				context.rectangle = selectDragToCreatePlaceHolder.getRect(DisplayObject(diagramShell.diagramRenderer));				
+				// get rectangle relative to application
+				context.rectangle = diagramShell.convertCoordinates(context.rectangle, UIComponent(diagramShell.diagramRenderer), UIComponent(FlexGlobals.topLevelApplication));
 				// dispatch event in order to let others implement the creation behavior
 				UIComponent(diagramShell.diagramRenderer).dispatchEvent(new CreateModelEvent(context, true));
 			} else {

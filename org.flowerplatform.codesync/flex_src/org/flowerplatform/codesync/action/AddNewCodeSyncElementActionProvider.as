@@ -32,12 +32,11 @@ package org.flowerplatform.codesync.action {
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class AddElementActionProvider implements IActionProvider {
+	public class AddNewCodeSyncElementActionProvider implements IActionProvider {
 		
 		public static var ADD_ELEMENT_PARENT_ID:String = "addElement";
 		
-		public function AddElementActionProvider() {
-			
+		public function AddNewCodeSyncElementActionProvider() {			
 		}
 		
 		public function getActions(selection:IList):Vector.<IAction> {
@@ -58,7 +57,7 @@ package org.flowerplatform.codesync.action {
 			}
 			
 			for each (var availableCodeSyncElement:CodeSyncElementDescriptor in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedCodeSyncElementType]) {
-				result.push(new AddElementAction(availableCodeSyncElement.codeSyncType, availableCodeSyncElement.label, availableCodeSyncElement.iconUrl));
+				result.push(new AddNewCodeSyncElementAction(availableCodeSyncElement.codeSyncType, availableCodeSyncElement.label, availableCodeSyncElement.iconUrl));
 			}
 			
 			return result;

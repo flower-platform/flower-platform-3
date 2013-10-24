@@ -71,6 +71,10 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.ScenarioElement;
 
+/**
+ * @author Cristian Spiescu
+ * @author Mariana Gheorghe
+ */
 public class DiagramEditorStatefulService extends FileBasedEditorStatefulService {
 
 	public static final String ADDITIONAL_DATA_EDITABLE_RESOURCE = "editableResource";
@@ -198,7 +202,12 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //		hbResource.unload();
 	}
 	
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */	
 	private void iterateContents(View view, List<EObject> list, Map<String, Object> processingContext) {
+		// feature changes are processed here because we want this to be done for the diagram also
 		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
 		if (processors != null) {
 			for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
@@ -511,12 +520,4 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		updateLabelsAfterIndex(parent, index);
 	}
 	
-	@RemoteInvocation
-	public void updateNewElementsPathProperties(StatefulServiceInvocationContext context, String diagramEditableResourcePath, String diagramId, String newElementsPath, boolean showNewElementsPathDialog) {
-		DiagramEditableResource editableResource = (DiagramEditableResource) getEditableResource(diagramEditableResourcePath);
-		Diagram diagram = (Diagram) editableResource.getEObjectById(diagramId);
-		
-		diagram.setShowNewElementsPathDialog(showNewElementsPathDialog);
-		diagram.setNewElementsPath(newElementsPath);
-	}
 }
