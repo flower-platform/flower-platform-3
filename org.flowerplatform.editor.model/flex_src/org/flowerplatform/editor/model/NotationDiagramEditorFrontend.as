@@ -49,29 +49,30 @@ package org.flowerplatform.editor.model
 	 */
 	public class NotationDiagramEditorFrontend extends DiagramEditorFrontend {
 				
-		protected var scenarioTree:GenericTreeList;
+		// TODO Mariana : reactivate at a later time
+//		protected var scenarioTree:GenericTreeList;
 		
 		protected var activeView:Object;
 		
 		override protected function createChildren():void {			
 			super.createChildren();
 			
-			scenarioTree = new GenericTreeList();
-			scenarioTree.percentHeight = 100;
-			scenarioTree.right = 0;
-			var treeClient:ScenarioTreeStatefulClient = new ScenarioTreeStatefulClient();
-			treeClient.diagramStatefulClient = NotationDiagramEditorStatefulClient(editorStatefulClient);
-			treeClient.diagramStatefulClient.scenarioTreeStatefulClient = treeClient;
-			scenarioTree.statefulClient = treeClient;
-			treeClient.treeList = scenarioTree;
-			editor.addChild(scenarioTree);
-			
-			var root:TreeNode = new TreeNode();
-			root.children = new ArrayCollection();
-			root.hasChildren = true;
-			scenarioTree.rootNode = root;
-			scenarioTree.statefulClient.openNode(root);
-			scenarioTree.addEventListener(Event.CHANGE, selectionChangedHandler);
+//			scenarioTree = new GenericTreeList();
+//			scenarioTree.percentHeight = 100;
+//			scenarioTree.right = 0;
+//			var treeClient:ScenarioTreeStatefulClient = new ScenarioTreeStatefulClient();
+//			treeClient.diagramStatefulClient = NotationDiagramEditorStatefulClient(editorStatefulClient);
+//			treeClient.diagramStatefulClient.scenarioTreeStatefulClient = treeClient;
+//			scenarioTree.statefulClient = treeClient;
+//			treeClient.treeList = scenarioTree;
+//			editor.addChild(scenarioTree);
+//			
+//			var root:TreeNode = new TreeNode();
+//			root.children = new ArrayCollection();
+//			root.hasChildren = true;
+//			scenarioTree.rootNode = root;
+//			scenarioTree.statefulClient.openNode(root);
+//			scenarioTree.addEventListener(Event.CHANGE, selectionChangedHandler);
 		}
 		
 		override protected function getDiagramShellInstance():DiagramShell {
@@ -89,12 +90,12 @@ package org.flowerplatform.editor.model
 		 * @author Mariana Gheorghe
 		 */
 		override protected function selectionChangedHandler(e:Event):void {
-			if (e.target == scenarioTree) {
-				activeView = scenarioTree;
-			} else {
-				activeView = diagramShell;
-				scenarioTree.selectedItems = null;
-			}
+//			if (e.target == scenarioTree) {
+//				activeView = scenarioTree;
+//			} else {
+//				activeView = diagramShell;
+//				scenarioTree.selectedItems = null;
+//			}
 			super.selectionChangedHandler(e);
 		}
 		
