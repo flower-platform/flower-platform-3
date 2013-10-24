@@ -93,7 +93,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			addEventListener(ViewNavigatorEvent.VIEW_DEACTIVATE, viewDeactivateHandler);
 			addEventListener("viewMenuClose", viewMenuClosedHandler);
 			
-			resetContextForActions();
+			initializeContextForActions();
 		}
 		
 		protected function menuKeyPressedEvent(event:FlexEvent):void {
@@ -118,10 +118,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			FlexUtilGlobals.getInstance().selectionManager.viewContentRemoved(this, activeViewContent); 
 		}
 		
-		private function resetContextForActions():void {
-			if (contextForActions != null) {
-				contextForActions = null;
-			}
+		private function initializeContextForActions():void {		
 			contextForActions = new Object();
 			// append to context some hardcoded coords
 			contextForActions.rectangle = new Rectangle(100, 100, NaN, NaN);			
@@ -193,7 +190,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 			}
 			
 			allActionsForActiveViewContent = getActionsFromViewContent(viewContent, selectionForActiveViewContent);
-			resetContextForActions();
+			initializeContextForActions();
 			
 			populateViewWithActions();
 			
@@ -220,21 +217,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 				actionViewMenuItem.view = this;
 			}
 		}
-		
-		/**
-		 * For a ComposedAction, fills the current view menu.
-		 */
-		protected function populateViewMenuWithActions(composedAction:IComposedAction):void {
-			var newViewMenuItems:Vector.<ViewMenuItem> = new Vector.<ViewMenuItem>();
-			ActionUtil.processAndIterateActions(composedAction.id, allActionsForActiveViewContent, selectionForActiveViewContent, null, this, function (action:IAction):void {
-				var actionViewMenuItem:ActionViewMenuItem = new ActionViewMenuItem();
-				populateButtonWithAction(actionViewMenuItem, action);				
-				newViewMenuItems.push(actionViewMenuItem);
-			});
-			
-			viewMenuItems = newViewMenuItems;
-		}
-		
+				
 		/**		
 		 * @author Cristina Constantinescu
 		 */
@@ -253,12 +236,13 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 				}
 			});
 			
-			// give the viewMenuItems to the actions so that it can calculate it's enablement
-			openMenuAction.viewMenuItems = newViewMenuItems;
-			viewMenuItems = newViewMenuItems; 
-			
-			appendToActionContent(newActionContent);			
-			actionContent = newActionContent;	
+			if (parentActionId == null) {
+				// give the viewMenuItems to the actions so that it can calculate it's enablement
+				openMenuAction.viewMenuItems = newViewMenuItems;
+				viewMenuItems = newViewMenuItems; 
+				
+				appendToActionContent(newActionContent);
+			}
 		}
 		
 		/**
@@ -270,7 +254,7 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 				var runnable:Function = function (event:Event):void {
 					removeEventListener("viewMenuClose", runnable);
 					callLater(function ():void {
-						populateViewMenuWithActions(IComposedAction(action));
+						populateViewWithActions(IComposedAction(action).id);
 						FlexGlobals.topLevelApplication.viewMenuOpen = true;
 					});
 				};			
@@ -305,13 +289,13 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 		/**		
 		 * @author Cristina Constantinescu
 		 */ 
-		public function openMenu(x:Number, y:Number, context:Object, parentActionId:String = null):Boolean {			
+		public function openMenu(x:Number, y:Number, contextToMerge:Object, parentActionId:String = null):Boolean {			
 			// merge with viewhost contextForActions
 			if (contextForActions == null) {
-				contextForActions = context;
+				contextForActions = contextToMerge;
 			} else {				
-				for (var key:String in context) {
-					contextForActions[key] = context[key];
+				for (var key:String in contextToMerge) {
+					contextForActions[key] = contextToMerge[key];
 				}
 			}			
 			populateViewWithActions(parentActionId);

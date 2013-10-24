@@ -18,14 +18,14 @@
  */
 package org.flowerplatform.editor.model.controller {
 	
-	import org.flowerplatform.editor.model.renderer.ConnectionRenderer;
+	import org.flowerplatform.editor.model.renderer.EdgeRenderer;
 	import org.flowerplatform.emf_model.notation.Edge;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController;
 	
 	public class EdgeRendererController extends ConnectionRendererController {
 		public function EdgeRendererController(diagramShell:DiagramShell) {
-			super(diagramShell, ConnectionRenderer);
+			super(diagramShell, EdgeRenderer);
 		}
 		
 		override public function getSourceModel(connectionModel:Object):Object {

@@ -18,24 +18,17 @@
  */
 package org.flowerplatform.editor.mindmap.controller {
 	
-	import flash.events.Event;
-	
-	import flashx.textLayout.events.UpdateCompleteEvent;
-	
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	
-	import org.flowerplatform.communication.transferable_object.ReferenceHolderList;
 	import org.flowerplatform.communication.transferable_object.TransferableObjectDisposedEvent;
-	import org.flowerplatform.communication.transferable_object.TransferableObjectUpdatedEvent;
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
-	import org.flowerplatform.flexdiagram.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
+	import org.flowerplatform.flexdiagram.event.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapModelRendererController;
 	

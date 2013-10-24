@@ -23,12 +23,13 @@ package org.flowerplatform.editor.model.renderer {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController;
-	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionRenderer;
 	
 	/**
 	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
 	 */
-	public class ConnectionRenderer extends ConnectionFigure {
+	public class EdgeRenderer extends ConnectionRenderer {
 		
 		override public function set data(value:Object):void {
 			if (data != null) {

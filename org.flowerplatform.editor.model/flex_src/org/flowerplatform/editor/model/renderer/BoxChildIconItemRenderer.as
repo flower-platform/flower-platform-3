@@ -19,16 +19,13 @@
 package org.flowerplatform.editor.model.renderer {
 	import flash.events.Event;
 	
-	import flashx.textLayout.factory.TruncationOptions;
-	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.View;
-	import org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent;
+	import org.flowerplatform.flexdiagram.event.ZoomPerformedEvent;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	
 	import spark.components.IconItemRenderer;
-	import spark.components.supportClasses.StyleableTextField;
 	
 	/**
 	 * @author Cristian Spiescu
