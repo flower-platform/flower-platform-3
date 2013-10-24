@@ -66,6 +66,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setDefaultName("newOperation")
 				.addCodeSyncTypeCategory("backboneClassMember")
 				.addFeature("name")
+				.addFeature("parameters")
 				.setKeyFeature("name"));
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()

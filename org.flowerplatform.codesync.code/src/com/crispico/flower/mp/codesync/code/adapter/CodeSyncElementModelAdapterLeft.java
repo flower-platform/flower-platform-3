@@ -35,6 +35,7 @@ import com.crispico.flower.mp.model.astcache.code.Operation;
 import com.crispico.flower.mp.model.astcache.code.Parameter;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
 
 /**
@@ -48,6 +49,16 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	
 	public CodeSyncElementModelAdapterLeft(SyncElementModelAdapter modelAdapter) {
 		super(modelAdapter);
+	}
+
+	@Override
+	public Object getMatchKey(Object element) {
+		CodeSyncElement codeSyncElement = (CodeSyncElement) element;
+		FeatureChange change = codeSyncElement.getFeatureChanges().get(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		if (change != null) {
+			return change.getNewValue();
+		}
+		return super.getMatchKey(element);
 	}
 
 	/**
