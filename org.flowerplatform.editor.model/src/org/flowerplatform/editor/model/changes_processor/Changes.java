@@ -30,38 +30,60 @@ public class Changes {
 		this.featureChanges = featureChanges;
 	}
 	
-	/**
-	 * Has lazy initialization.
-	 */
 	public List<Pair<EObject, EReference>> getAddedTo() {
-		if (addedTo == null) {
-			addedTo = new ArrayList<Pair<EObject, EReference>>();
-		}
 		return addedTo;
+	}
+	
+	public EObject getAddedToContainer() {
+		if (addedTo == null) {
+			return null;
+		}
+		
+		for (Pair<EObject, EReference> pair : addedTo) {
+			if (pair.b.isContainment()) {
+				return pair.a;
+			}
+		}
+		
+		return null;
 	}
 	
 	public void addAndLogAddedTo(EObject who, EObject where, EStructuralFeature reference) {
 		if (logger.isTraceEnabled()) {
 			logger.trace("Pass1: {} was added to {} on feature {}", new Object[] { who, where, reference} );
 		}
-		getAddedTo().add(new Pair<EObject, EReference>(where, (EReference) reference));
+		if (addedTo == null) {
+			addedTo = new ArrayList<Pair<EObject, EReference>>();
+		}
+		addedTo.add(new Pair<EObject, EReference>(where, (EReference) reference));
 	}
 	
-	/**
-	 * Has lazy initialization.
-	 */
 	public List<Pair<EObject, EReference>> getRemovedFrom() {
-		if (removedFrom == null) {
-			removedFrom = new ArrayList<Pair<EObject, EReference>>();
-		}
 		return removedFrom;
+	}
+	
+	public EObject getRemovedFromContainer() {
+		if (removedFrom == null) {
+			return null;
+		}
+		
+		for (Pair<EObject, EReference> pair : removedFrom) {
+			if (pair.b.isContainment()) {
+				return pair.a;
+			}
+		}
+		
+		return null;
 	}
 	
 	public void addAndLogRemovedFrom(EObject who, EObject where, EStructuralFeature reference) {
 		if (logger.isTraceEnabled()) {
 			logger.trace("Pass1: {} was removed from {} on feature {}", new Object[] { who, where, reference} );
 		}
-		getRemovedFrom().add(new Pair<EObject, EReference>(where, (EReference) reference));
+		if (removedFrom == null) {
+			removedFrom = new ArrayList<Pair<EObject, EReference>>();
+		}
+		removedFrom.add(new Pair<EObject, EReference>(where, (EReference) reference));
 	}
 	
 	public static String printFeatureChanges(List<FeatureChange> list) {

@@ -109,6 +109,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 			root.setName(path[0]);
 			root.setAdded(true);
 			root.setType(CodeSyncPlugin.FOLDER);
+			codeSyncMappingResource.getContents().add(root);
 		}
 		
 		CodeSyncElement codeSyncElement = root;

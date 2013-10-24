@@ -36,7 +36,7 @@ public class ChangesProcessorTest {
 	public static final String PROJECT = "editor.model.changes_descriptor";
 	
 	// TODO CS: here without /; in other places with /
-	private static final String ER_PATH = "org/ws_trunk/" + PROJECT + "/changesDescriptionDiagram1.notation";
+	private static final String ER_PATH = "org/ws_trunk/" + PROJECT + "/changesDescriptionDiagram.notation";
 	
 	private static CommunicationChannel communicationChannel = new RecordingTestWebCommunicationChannel();
 	private static DiagramEditorStatefulService diagramEditorStatefulService;
@@ -116,19 +116,19 @@ public class ChangesProcessorTest {
 			changes = observedChanges.remove(a);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(b);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(c);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 			
 			observedChanges.remove(srcDir);
@@ -155,19 +155,19 @@ public class ChangesProcessorTest {
 			changes = observedChanges.remove(a);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(b);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(c);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 			
 			observedChanges.remove(srcDir);
@@ -195,19 +195,19 @@ public class ChangesProcessorTest {
 			changes = observedChanges.remove(a);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(b);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(c);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 			
 			observedChanges.remove(srcDir);
@@ -236,25 +236,25 @@ public class ChangesProcessorTest {
 			Changes changes;
 			changes = observedChanges.remove(a);
 			assertNotNull("Changes expected", changes);
-			assertEquals("0 addedTo item", 0, changes.getAddedTo().size());
+			assertNull("No addedItems", changes.getAddedTo());
 			assertEquals("1 removedFrom items", 1, changes.getRemovedFrom().size());
 			assertSame("removedFrom item", srcDir, changes.getRemovedFrom().get(0).a);
 
 			changes = observedChanges.remove(b);
 			assertNotNull("Changes expected", changes);
-			assertEquals("0 addedTo item", 0, changes.getAddedTo().size());
+			assertNull("No addedItems", changes.getAddedTo());
 			assertEquals("1 removedFrom items", 1, changes.getRemovedFrom().size());
 			assertSame("removedFrom item", srcDir, changes.getRemovedFrom().get(0).a);
 
 			changes = observedChanges.remove(c);
 			assertNotNull("Changes expected", changes);
-			assertEquals("0 addedTo item", 0, changes.getAddedTo().size());
+			assertNull("No addedItems", changes.getAddedTo());
 			assertEquals("1 removedFrom items", 1, changes.getRemovedFrom().size());
 			assertSame("removedFrom item", srcDir, changes.getRemovedFrom().get(0).a);
 
 			changes = observedChanges.remove(d);
 			assertNotNull("Changes expected", changes);
-			assertEquals("0 addedTo item", 0, changes.getAddedTo().size());
+			assertNull("No addedItems", changes.getAddedTo());
 			assertEquals("1 removedFrom items", 1, changes.getRemovedFrom().size());
 			assertSame("removedFrom item", srcDir, changes.getRemovedFrom().get(0).a);
 
@@ -287,30 +287,30 @@ public class ChangesProcessorTest {
 			changes = observedChanges.remove(a);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(b);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(c);
 			assertNotNull("Changes expected", changes);
 			assertEquals("1 addedTo item", 1, changes.getAddedTo().size());
-			assertEquals("0 removedFrom items", 0, changes.getRemovedFrom().size());
+			assertNull("No removedItems", changes.getRemovedFrom());
 			assertSame("addedTo item", srcDir, changes.getAddedTo().get(0).a);
 
 			changes = observedChanges.remove(d);
 			assertNotNull("Changes expected", changes);
-			assertEquals("0 addedTo item", 0, changes.getAddedTo().size());
+			assertNull("No addedItems", changes.getAddedTo());
 			assertEquals("1 removedFrom items", 1, changes.getRemovedFrom().size());
 			assertSame("removedFrom item", srcDir, changes.getRemovedFrom().get(0).a);
 
 			changes = observedChanges.remove(e);
 			assertNotNull("Changes expected", changes);
-			assertEquals("0 addedTo item", 0, changes.getAddedTo().size());
+			assertNull("No addedItems", changes.getAddedTo());
 			assertEquals("1 removedFrom items", 1, changes.getRemovedFrom().size());
 			assertSame("removedFrom item", srcDir, changes.getRemovedFrom().get(0).a);
 			

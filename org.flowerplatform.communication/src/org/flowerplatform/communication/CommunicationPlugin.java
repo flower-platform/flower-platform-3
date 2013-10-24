@@ -117,23 +117,24 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 
 		initExtensionPoint_servlet();
 		initExtensionPoint_authenticator();
-		
+
 		if (bundleContext.getBundle(0).getState() == Bundle.ACTIVE) {
-			// If Eclipse is already started before this plugin is activated (happens during testing or
+			// If Eclipse is already started before this plugin is activated
+			// (happens during testing or
 			// running the app from the IDE), it's safe to start the services.
 			initializeServicesAndNotifyServicesStartedListeners();
 		} else {
 			// Wait until Eclipse is started (see comment below).
 			bundleContext.addFrameworkListener(new FrameworkListener() {
-			@Override
-			public void frameworkEvent(FrameworkEvent event) {
-				if (event.getType() != FrameworkEvent.STARTLEVEL_CHANGED) {
-					return;
+				@Override
+				public void frameworkEvent(FrameworkEvent event) {
+					if (event.getType() != FrameworkEvent.STARTLEVEL_CHANGED) {
+						return;
+					}
+
+					CommunicationPlugin.this.initializeServicesAndNotifyServicesStartedListeners();
 				}
-				
-				CommunicationPlugin.this.initializeServicesAndNotifyServicesStartedListeners();
-			}
-		});
+			});
 		}
 	}
 	
