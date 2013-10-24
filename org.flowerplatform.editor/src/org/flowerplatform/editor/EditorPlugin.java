@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.editor;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -241,6 +243,15 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 		descriptor.getCompatibleEditors().add(editorName);
 	}
 	
+	public String getFriendlyNameDecoded(String friendlyName) {
+		try {
+			friendlyName = URLDecoder.decode(friendlyName, "UTF-8");		
+		} catch (UnsupportedEncodingException e) {
+			logger.error("Could not decode using UTF-8 charset : " + friendlyName);
+		}
+		return friendlyName;
+	}
+	
 	private class Editor {
 		
 		public String name;
@@ -255,5 +266,5 @@ public class EditorPlugin extends AbstractFlowerJavaPlugin {
 			this.priority = priority;
 		}		
 	}
-	
+
 }

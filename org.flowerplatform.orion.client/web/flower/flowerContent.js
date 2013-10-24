@@ -206,7 +206,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 					if (id === params.contentProvider) {
 						// iFrame exists, only open selected resource
 						if (lib.node(id)) {
-							getFlowerPlatformApp().handleLink("orionOpenResources=" + metadata.Location);
+							getFlowerPlatformApp().handleLink("openResources=" + metadata.Location);
 							return;
 						}						
 						// open iFrame						
@@ -227,19 +227,10 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 						iframe.width = "100%"; //$NON-NLS-0$
 						iframe.height = "100%"; //$NON-NLS-0$
 						iframe.frameborder= 0; //$NON-NLS-0$
-						iframe.src = href;
+						iframe.src = href + "?openResources=" + metadata.Location;
 						lib.empty(parent);
-						parent.appendChild(iframe); 
+						parent.appendChild(iframe);
 
-						window.addEventListener("message", function(event) {
-							// listen for flower platform application complete handler to open selected item
-							// for potentially dangerous actions, we will force the content to be from our domain
-							if (orionHome && fileMetadata && event.source.parent === window && event.origin === new URL(window.location.href).origin) {								
-								if (event.data === "flowerApplicationCompleteHandler") {								
-									openEditor(fileMetadata);
-								}
-							}
-						}, false);
 						break;
 					}
 				}

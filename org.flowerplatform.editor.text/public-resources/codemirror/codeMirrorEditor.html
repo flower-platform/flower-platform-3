@@ -89,16 +89,27 @@
 			}	
 			
 			var myCodeMirror;
-								
-			function setContent(args) {
+			var editorStatefulClientId;
+			
+			function initialize(args) {
 				myCodeMirror.setValue(unescape(args[0]));
+				editorStatefulClientId = args[1];
+				if (args[2]) { // readOnly = true
+					disableEditing();
+				}
 				
-				// theoretically, this must be registered only once
-				// if problems, verify if the event is already set.
 				myCodeMirror.on("change", function (instance, changeObj) {
 					var app = parent.getFlexApp();				
-					app.codeMirrorEditorChangedHandler(myCodeMirror.indexFromPos(changeObj.from), changeObj.removed.join('\n'), changeObj.text.join('\n'));
+					app.codeMirrorEditorChangedHandler(editorStatefulClientId, myCodeMirror.indexFromPos(changeObj.from), changeObj.removed.join('\n'), changeObj.text.join('\n'));
 				});
+			}
+			
+			function setContent(args) {
+				myCodeMirror.setValue(unescape(args[0]));		
+			}
+			
+			function getContent() {
+				return myCodeMirror.getValue();		
 			}
 			
 			function disableEditing() {

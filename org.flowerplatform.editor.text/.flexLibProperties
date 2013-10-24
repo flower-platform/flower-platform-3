@@ -2,6 +2,7 @@
 <flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
   <includeClasses>
     <classEntry path="org.flowerplatform.editor.text.OrionEditorFrontend"/>
+    <classEntry path="org.flowerplatform.editor.text.remote.CodeMirrorEditorStatefulClient"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

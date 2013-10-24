@@ -31,10 +31,14 @@ license-end
 	
 	<mx:Script>	
 		<![CDATA[
+			import com.crispico.flower.texteditor.rules.WordRule;
+			
 			import mx.collections.ArrayCollection;
 			import mx.core.FlexGlobals;
 			import mx.events.FlexEvent;
 			
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.editor.remote.EditorStatefulClient;
 			import org.flowerplatform.editor.text.remote.TextEditorUpdate;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
@@ -62,12 +66,20 @@ license-end
 			}
 			
 			protected function orionEditor_frameLoadHandler(event:Event):void {
-				if (content != null) {					
-					codeMirrorEditor.callIFrameFunction("setContent", [escape(content)]);
-					codeMirrorEditor.callIFrameFunction(readOnly ? "disableEditing" : "enableEditing");
-					
+				if (content != null) {	
+					// initialize code mirror editor
+					codeMirrorEditor.callIFrameFunction("initialize", [escape(content), editorStatefulClient.getStatefulClientId(), readOnly])
+					// listen for text changes
 					ExternalInterface.addCallback("codeMirrorEditorChangedHandler", textEditorChangedHandler);
 				}
+			}
+			
+			public function setContent(content:String):void {
+				codeMirrorEditor.callIFrameFunction("setContent", [escape(content)]);
+			}
+			
+			public function getContent(callback:Function):void {
+				codeMirrorEditor.callIFrameFunction("getContent", null, callback);
 			}
 			
 			override public function disableEditing():void {
@@ -104,7 +116,7 @@ license-end
 				}
 			}	
 				
-			protected function textEditorChangedHandler(offset:String, oldText:String, newText:String):void {
+			protected function textEditorChangedHandler(statefulClientId:String, offset:String, oldText:String, newText:String):void {
 				var updates:ArrayCollection = new ArrayCollection();
 				
 				var update:TextEditorUpdate = new TextEditorUpdate();
@@ -112,8 +124,16 @@ license-end
 				update.oldTextLength = oldText.length;
 				update.newText = newText;
 				updates.addItem(update);
-								
-				editorStatefulClient.attemptUpdateContent(this, updates);
+						
+				// here we must know where to send those updates
+				// ind the statefulClient based on the id sent at code mirror initialisation
+				var editorStatefulClient:EditorStatefulClient = 
+					EditorStatefulClient(CommunicationPlugin.getInstance().statefulClientRegistry.getStatefulClientById(statefulClientId));
+				
+				// for the moment the last editorFontend is used -> problems when using multiple editorFrontends
+				// TO DISCUSS: how can we know the exact editorFrontend
+				editorStatefulClient.attemptUpdateContent(
+					editorStatefulClient.editorFrontends[editorStatefulClient.editorFrontends.length - 1], updates);
 			}
 			
 		]]>
