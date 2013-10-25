@@ -22,7 +22,6 @@ package com.crispico.flower.util.layout.view
 	import com.crispico.flower.util.UtilAssets;
 	import com.crispico.flower.util.layout.ArrangeTool;
 	import com.crispico.flower.util.layout.Workbench;
-	import com.crispico.flower.util.layout.actions.MoveAction;
 	import com.crispico.flower.util.layout.event.DockHandlerEvent;
 	import com.crispico.flower.util.layout.event.LayoutDataChangedEvent;
 	import com.crispico.flower.util.layout.event.ViewAddedEvent;

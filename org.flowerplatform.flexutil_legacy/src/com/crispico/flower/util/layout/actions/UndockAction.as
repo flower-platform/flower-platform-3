@@ -16,40 +16,41 @@
  *
  * license-end
  */
-package com.crispico.flower.util.layout.actions
-{
-	import com.crispico.flower.flexdiagram.action.BaseAction;
+package com.crispico.flower.util.layout.actions {
 	import com.crispico.flower.util.UtilAssets;
 	import com.crispico.flower.util.layout.Workbench;
+	
+	import mx.core.UIComponent;
+	
+	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
-	import mx.collections.ArrayCollection;
-	import mx.core.UIComponent;
-
 	/**
-	 * @author Cristina
-	 */ 
-	public class UndockAction extends BaseAction {
-			
-		private var workbench:Workbench;
-		
-		public function UndockAction(workbench:Workbench) {
-			this.workbench = workbench;
+	 * @author Cristina Constantinescu
+	 * @author Mircea Negreanu
+	 */
+	public class UndockAction extends WorkbenchAction {
+		public function UndockAction(bench:Workbench) {
+			super(bench);
 			label = UtilAssets.INSTANCE.getMessage("layout.action.undock");
-			image = UtilAssets.INSTANCE._dockIcon;
-			sortIndex = 15;
+			icon = UtilAssets.INSTANCE._dockIcon;
+			orderIndex = 15;
 		}
 		
-		public override function run(selectedEditParts:ArrayCollection):void {	
-			var viewLayoutData:ViewLayoutData = selectedEditParts[0];
-			
-			// get graphic component
-			var component:UIComponent = workbench.layoutDataToComponent[viewLayoutData];			
-			// close the view from workbench
-			workbench.closeView(component, false);
-			
-			workbench.addViewInPopupWindow(viewLayoutData, NaN, NaN, NaN, NaN, false, component);				
+		/**
+		 * @author Cristina
+		 * @author Mircea Negreanu
+		 */
+		override public function run():void {
+			if (selection != null && selection.length > 0) {
+				var viewLayoutData:ViewLayoutData = selection[0];
+				
+				// get graphic component
+				var component:UIComponent = workbench.layoutDataToComponent[viewLayoutData];			
+				// close the view from workbench
+				workbench.closeView(component, false);
+				
+				workbench.addViewInPopupWindow(viewLayoutData, NaN, NaN, NaN, NaN, false, component);			}
 		}
-		
-	}	
+	}
 }

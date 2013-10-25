@@ -148,14 +148,16 @@ package  com.crispico.flower.util.layout.view {
 		}
 		
 		/**
-		 * Refreshes the context menu and sets its current selection.
+		 * Refreshes the current selection for the workbench (which will use it for the context menu)
+		 * 
+		 * @author Cristina Constantinescu
+		 * @author Mircea Negreanu
 		 */ 
 		private function tabClickHadler(event:MouseEvent):void {
 			if (event.target.parent is SuperTabBar) {
 				var viewLayoutData:ViewLayoutData = ViewLayoutData(stackLayoutData.children.getItemAt(SuperTabBar(event.target.parent).getChildIndex(DisplayObject(event.target))));
 				
 				workbench.selectedViewLayoutData = viewLayoutData;
-				ContextMenuManager.INSTANCE.refresh(workbench);				
 			}			
 		}
 		

@@ -16,38 +16,49 @@
  *
  * license-end
  */
-package com.crispico.flower.util.layout.actions
-{
-	import com.crispico.flower.flexdiagram.action.BaseAction;
+package com.crispico.flower.util.layout.actions {
 	import com.crispico.flower.util.UtilAssets;
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
-	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
-	import mx.collections.ArrayCollection;
+	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 
-	public class RestoreAction extends BaseAction {
-		
-		private var workbench:Workbench;
-		
-		public function RestoreAction(workbench:Workbench) {
-			this.workbench = workbench;
-			label = UtilAssets.INSTANCE.getMessage("layout.action.restore");
-			image = UtilAssets.INSTANCE._restoreViewIcon;
-			sortIndex = 10;
-		}
+	/**
+	 * @author Cristina Constantinescu
+	 * @author Mircea Negreanu
+	 */
+	public class RestoreAction extends WorkbenchAction {
+		public function RestoreAction(bench:Workbench) {
+			super(bench);
 			
-		public override function isVisible(selectedEditParts:ArrayCollection):Boolean {	
-			var viewLayoutData:ViewLayoutData = selectedEditParts[0];
-			if (StackLayoutData(viewLayoutData.parent).mrmState == StackLayoutData.MAXIMIZED) {
-				return true;
+			label = UtilAssets.INSTANCE.getMessage("layout.action.restore");
+			icon = UtilAssets.INSTANCE._restoreViewIcon;
+			orderIndex = 10;
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 * @author Mircea Negreanu
+		 */
+		override public function get visible():Boolean {
+			if (selection != null && selection.length > 0) {
+				var viewLayoutData:ViewLayoutData = selection[0];
+				if (StackLayoutData(viewLayoutData.parent).mrmState == StackLayoutData.MAXIMIZED) {
+					return true;
+				}
 			}
 			return false;
 		}
 		
-		public override function run(selectedEditParts:ArrayCollection):void {	
-			var viewLayoutData:ViewLayoutData = selectedEditParts[0];
-			workbench.restore(StackLayoutData(viewLayoutData.parent));			
+		/**
+		 * @author Cristina Constantinescu
+		 * @author Mircea Negreanu
+		 */
+		override public function run():void {
+			if (selection != null && selection.length > 0) {
+				var viewLayoutData:ViewLayoutData = selection[0];
+				workbench.restore(StackLayoutData(viewLayoutData.parent));
+			}
 		}
 	}
 }

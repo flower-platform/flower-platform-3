@@ -18,16 +18,6 @@
  */
 package  com.crispico.flower.util.layout {
 		
-	import com.crispico.flower.flexdiagram.action.ActionContext;
-	import com.crispico.flower.flexdiagram.action.HRuleContextMenuEntry;
-	import com.crispico.flower.flexdiagram.action.IAction;
-	import com.crispico.flower.flexdiagram.action.IActionProvider2;
-	import com.crispico.flower.flexdiagram.contextmenu.ActionEntry;
-	import com.crispico.flower.flexdiagram.contextmenu.ContextMenuManager;
-	import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
-	import com.crispico.flower.flexdiagram.contextmenu.IContextMenuLogicProvider;
-	import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntry;
-	import com.crispico.flower.flexdiagram.contextmenu.SubMenuEntryModel;
 	import com.crispico.flower.flexdiagram.util.tabNavigator.FlowerSuperTab;
 	import com.crispico.flower.util.UtilAssets;
 	import com.crispico.flower.util.layout.actions.CloseAction;
@@ -44,7 +34,6 @@ package  com.crispico.flower.util.layout {
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
 	import com.crispico.flower.util.layout.persistence.XMLStringLayoutSerializer;
-	import com.crispico.flower.util.layout.view.ITabCustomizer;
 	import com.crispico.flower.util.layout.view.LayoutDividedBox;
 	import com.crispico.flower.util.layout.view.LayoutTabNavigator;
 	import com.crispico.flower.util.layout.view.MinimizedStackBar;
@@ -55,7 +44,6 @@ package  com.crispico.flower.util.layout {
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-	import flash.geom.Rectangle;
 	import flash.utils.Dictionary;
 	
 	import flexlib.containers.SuperTabNavigator;
@@ -68,30 +56,29 @@ package  com.crispico.flower.util.layout {
 	import mx.containers.HDividedBox;
 	import mx.containers.VBox;
 	import mx.containers.VDividedBox;
-	import mx.controls.Button;
 	import mx.core.Container;
 	import mx.core.EventPriority;
 	import mx.core.FlexGlobals;
 	import mx.core.IChildList;
-	import mx.core.INavigatorContent;
 	import mx.core.UIComponent;
 	import mx.core.mx_internal;
 	import mx.events.FlexEvent;
-	import mx.styles.IStyleClient;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.action.ActionBase;
+	import org.flowerplatform.flexutil.action.ComposedAction;
+	import org.flowerplatform.flexutil.action.IAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.context_menu.FillContextMenuEvent;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.LayoutData;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.view_content_host.IViewContent;
-	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
 	import org.flowerplatform.flexutil.shortcuts.Shortcut;
-	
-	import spark.components.NavigatorContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 
 	use namespace mx_internal;
 	
@@ -116,7 +103,7 @@ package  com.crispico.flower.util.layout {
 	 * 
 	 */
 	[SecureSWF(rename="off")]
-	public class Workbench extends Canvas implements IContextMenuLogicProvider, IActionProvider2, IWorkbench {
+	public class Workbench extends Canvas implements IWorkbench {
 		
 		/**
 		 * Represents the percent applied to newly added child on workbench.
@@ -218,10 +205,20 @@ package  com.crispico.flower.util.layout {
 		public var selectedViewLayoutData:ViewLayoutData;
 		
 		private var _workbenchChildPercent:Number = DEFAULT_WORKBENCH_CHILD_PERCENT;
-						
+
+		/**
+		 * Default actions for the right click menu on a tab name
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		private var _actions:Vector.<IAction> = new Vector.<IAction>();
+		
 		/**		
-		 * Initializes the objects and adds required listeners.	  
+		 * Initializes the objects and adds required listeners.
+		 * 	  
 		 * @author Sebastian Solomon
+		 * @author Cristina
+		 * @author Mircea Negreanu
 		 */
 		public function Workbench() {			
 			_componentToLayoutData = new Dictionary();
@@ -229,24 +226,96 @@ package  com.crispico.flower.util.layout {
 			
 			_activeViewList = new ActiveViewList(this);
 						
-			addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
-			
 			addEventListener("rightClick", rightClickHandler);			
 		
 			addEventListener(DockHandlerEvent.CLICK, viewPopup_dockClickHandler, false, EventPriority.DEFAULT_HANDLER);
+
+			addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU, fillContextMenuHandler);
 			
 			// Adds CTRL+M as shortcut to maximize/minimize the active view layout data.
 			//(new KeyBindings()).registerBinding(new Shortcut(true, false, "m"), maximizeRestoreActiveStackLayoutData);
 			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "m"), maximizeRestoreActiveStackLayoutData); // CTRL + M
-		}
-				
-		/**
-		 * Registers the workbench to use context menu mechanism. 
-		 */ 
-		private function creationCompleteHandler(event:FlexEvent):void {
-			ContextMenuManager.INSTANCE.registerClient(this, true, this, this, null, null, null, this, true);			
+			
+			// prepare default actions for the right click menu on a tab name
+			fillActions();
 		}
 		
+		/**
+		 * Fills data for context menu (actions and selection).
+		 * <p>
+		 * If the viewProvider wants to add something it needs to return an actionProvider for viewProvider.getTabCustomizer()</p>
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		private function fillContextMenuHandler(event:FillContextMenuEvent):void {
+			if (selectedViewLayoutData != null) {
+				var actions:Vector.<IAction>;
+				
+				// interogate the tabCustomizer
+				var tabCustomizer:Object = _viewProvider.getTabCustomizer(selectedViewLayoutData);
+				
+				var tabCustomizerActions:Vector.<org.flowerplatform.flexutil.action.IAction>;
+				if (tabCustomizer != null && tabCustomizer is IActionProvider) {
+					tabCustomizerActions = IActionProvider(tabCustomizer).getActions(new ArrayCollection([selectedViewLayoutData]));
+				}
+				
+				if (tabCustomizerActions != null && tabCustomizerActions.length > 0) {
+					// comasate with our actions
+					actions = new Vector.<IAction>();
+					actions.concat(_actions);
+					actions.concat(tabCustomizerActions);
+				} else { 
+					// only ours
+					actions = _actions;
+				}
+				
+				event.allActions = actions;
+				event.selection = new ArrayCollection([selectedViewLayoutData]);
+			} else {
+				event.allActions = null;
+			}
+		}
+		
+		/**
+		 * Just add actions from the right click on a tab
+		 * <ul>
+		 * <li>Undock</li> 
+		 * <li>Move</li>
+		 * <li>Minimize</li> 
+		 * <li>Maximize</li>
+		 * <li>Close</li>
+		 * <li>Close All</li> 
+		 * <li>Close Others</li>
+		 * </ul>
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		private function fillActions():void {
+			_actions.push(new UndockAction(this));
+			
+			var action:ActionBase = new ComposedAction();
+			action.label = UtilAssets.INSTANCE.getMessage("layout.action.move");
+			action.icon = UtilAssets.INSTANCE._moveViewIcon;
+			action.orderIndex = 20;
+			action.id = "layout.action.move";
+			_actions.push(action);
+			
+			action = new MoveAction(this, MoveAction.VIEW);
+			action.parentId = "layout.action.move";
+			_actions.push(action);
+			
+			action = new MoveAction(this, MoveAction.GROUP);
+			action.parentId = "layout.action.move";
+			_actions.push(action);
+			
+			_actions.push(new MinimizeAction(this));
+			_actions.push(new MaximizeAction(this));
+			_actions.push(new RestoreAction(this));
+			_actions.push(new CloseAction(this, CloseAction.CLOSE));
+			_actions.push(new CloseAction(this, CloseAction.CLOSE_OTHERS));
+			_actions.push(new CloseAction(this, CloseAction.CLOSE_ALL));
+		}
+
 		/**
 		 * Workbench has the following structure:
 		 * <ul>
@@ -1764,107 +1833,6 @@ package  com.crispico.flower.util.layout {
 			arrangeTool.startDraggingView(event.viewLayoutData);
 		}
 				
-		/**
-		 * Based on the selection provided, fills the context menu with default actions
-		 * and delegates filling to view's tab customizer to add specific actions.
-		 * 
-		 * 
-		 */
-		public function fillContextMenu(contextMenu:FlowerContextMenu):void {	
-			if (selectedViewLayoutData == null) {
-				return;
-			}
-			contextMenu.setTitle(layoutDataToComponent[selectedViewLayoutData].label);
-			
-			contextMenu.addChild(new ActionEntry(new UndockAction(this)));
-			
-			contextMenu.addChild(new HRuleContextMenuEntry(19)); // before Move
-			
-			var moveMenu:SubMenuEntry = new SubMenuEntry(new SubMenuEntryModel(UtilAssets.INSTANCE._moveViewIcon, UtilAssets.INSTANCE.getMessage("layout.action.move"), 20), contextMenu);
-			moveMenu.getSubMenu().addChild(new ActionEntry(new MoveAction(this, MoveAction.VIEW)));
-			moveMenu.getSubMenu().addChild(new ActionEntry(new MoveAction(this, MoveAction.GROUP)));
-			contextMenu.addChild(moveMenu);
-			
-			var action:IAction;
-			action = new MaximizeAction(this);
-			if (action.isVisible(getSelection())) {
-				contextMenu.addChild(new ActionEntry(action));
-			}
-			
-			action = new RestoreAction(this);
-			if (action.isVisible(getSelection())) {
-				contextMenu.addChild(new ActionEntry(action));
-			}
-			
-			contextMenu.addChild(new HRuleContextMenuEntry(49)); // before Close
-			
-			contextMenu.addChild(new ActionEntry(new CloseAction(this, CloseAction.CLOSE)));
-			contextMenu.addChild(new ActionEntry(new CloseAction(this, CloseAction.CLOSE_OTHERS)));
-			contextMenu.addChild(new ActionEntry(new CloseAction(this, CloseAction.CLOSE_ALL)));
-			
-			contextMenu.addChild(new ActionEntry(new MinimizeAction(this)));
-														
-			var tabCustomizer:ITabCustomizer = ITabCustomizer(_viewProvider.getTabCustomizer(selectedViewLayoutData));
-			if (tabCustomizer != null) {
-				tabCustomizer.fillContextMenu(contextMenu);
-			}
-			
-			contextMenu.removeMultipleHRuleMenuEntries();
-		}
-		
-		/**
-		 * 
-		 */
-		public function get displayAreaOfSelection():Rectangle {	
-			if (selectedViewLayoutData == null || selectedViewLayoutData.parent == null) {
-				return null;
-			}
-			var tab:Button = Button(SuperTabNavigator(_layoutDataToComponent[selectedViewLayoutData.parent]).getTabAt(selectedViewLayoutData.parent.children.getItemIndex(selectedViewLayoutData)));
-		
-			var point:Point = tab.contentToGlobal(new Point(tab.stage.x, tab.stage.y));
-			
-			return new Rectangle(point.x, point.y, tab.width, tab.height);  
-		}
-		
-		/**
-		 * 
-		 */		
-		public function getSelection():ArrayCollection {	
-			return new ArrayCollection([selectedViewLayoutData]);
-		}
-		
-		/**
-		 * 
-		 */
-		public function isOverSelection(event:MouseEvent):Boolean {	
-			if (selectedViewLayoutData == null || selectedViewLayoutData.parent == null) {
-				return false;
-			}
-			var tab:Button = Button(SuperTabNavigator(_layoutDataToComponent[selectedViewLayoutData.parent]).getTabAt(selectedViewLayoutData.parent.children.getItemIndex(selectedViewLayoutData)));
-			
-			var mousePoint:Point = new Point(event.stageX, event.stageY);
-			
-			var point:Point = globalToContent(tab.localToGlobal(new Point(tab.stage.x, tab.stage.y)));
-		
-			if (mousePoint.x >= point.x 
-				&& mousePoint.y >= point.y 
-				&& mousePoint.x <= point.x + tab.width
-				&& mousePoint.y <= point.y +tab.height) {
-				return true;
-			}
-			return false;
-		}
-		
-		/**
-		 * 
-		 */
-		public function getContext():ActionContext {
-			return null;
-		}
-		
-		public function setFocusOnMainSelectedObject():void {			
-		}
-		
 		/**
 		 * Finds all <code>ViewLayoutData</code> having view id the one given as parameter.
 		 */ 
