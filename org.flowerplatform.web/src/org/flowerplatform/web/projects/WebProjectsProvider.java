@@ -32,7 +32,7 @@ import org.flowerplatform.web.projects.remote.ProjectsService;
 public class WebProjectsProvider implements IProjectsProvider {
 
 	/**
-	 * @param path relative to project, i.e. contains {@link ProjectsService#LINK_TO_PROJECT}
+	 * @param path relative to project
 	 */
 	@Override
 	public File getFile(File project, String path) {
@@ -40,7 +40,7 @@ public class WebProjectsProvider implements IProjectsProvider {
 		if (wrapper == null) {
 			return null;
 		}
-		IResource resource = wrapper.getFile(new Path(path));
+		IResource resource = wrapper.getFile(new Path(ProjectsService.LINK_TO_PROJECT + "/" + path));
 		if (resource == null) {
 			return null;
 		}

@@ -35,6 +35,7 @@ package org.flowerplatform.editor.model.remote {
 		
 		public var scenarioTreeStatefulClient:ScenarioTreeStatefulClient;
 		
+		public const codeSyncOperationsServiceId:String = "codeSyncOperationsService";
 		public const codeSyncDiagramOperationsServiceId:String = "codeSyncDiagramOperationsService";
 		
 		[RemoteInvocation]
@@ -53,29 +54,36 @@ package org.flowerplatform.editor.model.remote {
 				[diagramId, viewIdOfParent, codeSyncType, parameters]));
 		}
 		
+		public function service_synchronize(path:String, technology:String):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"synchronize",
+				[path, technology]));
+		}
+		
 		public function service_handleDragOnDiagram(pathsWithRoot:IList):void {
 			attemptUpdateContent(null, invokeServiceMethod("handleDragOnDiagram", [pathsWithRoot, diagramId], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 		
 		public function service_setInplaceEditorText(viewId:Object, text:String):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "setInplaceEditorText", [viewId, text]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "setInplaceEditorText", [viewId, text]));
 			//			attemptUpdateContent(null, invokeServiceMethod("setInplaceEditorText", [viewId, text], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 		
 		public function service_getInplaceEditorText(viewId:Object, callbackFunction:Function):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "getInplaceEditorText", [viewId], null, callbackFunction));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "getInplaceEditorText", [viewId], null, callbackFunction));
 		}
 		
 		public function service_collapseCompartment(viewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "collapseCompartment", [viewId]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "collapseCompartment", [viewId]));
 		}
 		
 		public function service_expandCompartment_attributes(viewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_attributes", [viewId]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_attributes", [viewId]));
 		}
 		
 		public function service_expandCompartment_operations(viewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_operations", [viewId]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_operations", [viewId]));
 		}
 		
 //		public function service_addNew(method:String, viewId:Object, label:String):void {
@@ -83,11 +91,11 @@ package org.flowerplatform.editor.model.remote {
 //		}
 		
 		public function service_deleteView(viewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
 		}
 		
 		public function service_displayMissingRelations(viewId:Object, addMissingElements:Boolean):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "displayMissingRelations", [viewId, addMissingElements]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "displayMissingRelations", [viewId, addMissingElements]));
 		}
 		
 		public function service_contentAssist(viewId:Object, pattern:String, callbackFunction:Function):void {
@@ -96,7 +104,7 @@ package org.flowerplatform.editor.model.remote {
 		}
 		
 		public function service_addNewRelation(sourceViewId:Object, targetViewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewRelation", [sourceViewId, targetViewId]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewRelation", [sourceViewId, targetViewId]));
 		}
 
 		public function service_addNewScenario(name:String):void {
@@ -116,15 +124,15 @@ package org.flowerplatform.editor.model.remote {
 		}
 		
 		public function service_expandCollapseCompartment(viewId:Object, expand:Boolean):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "expandCollapseCompartment", [viewId, expand]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "expandCollapseCompartment", [viewId, expand]));
 		}
 		
 		public function service_addElement(type:String, keyParameter:String, isCategory:Boolean, parameters:Object, template:String, childType:String, nextSiblingSeparator:String, parentViewId:Object, parentCategory:String):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "addElement", [type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "addElement", [type, keyParameter, isCategory, parameters, template, childType, nextSiblingSeparator, parentViewId, parentCategory], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
 		
 		public function service_deleteElement(viewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "deleteElement", [viewId]));
+//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "deleteElement", [viewId]));
 		}
 		
 	}
