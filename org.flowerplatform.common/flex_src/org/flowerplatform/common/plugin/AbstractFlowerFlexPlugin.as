@@ -53,7 +53,9 @@ package org.flowerplatform.common.plugin {
 		 */
 		public function get composedImagesUrl():String {
 			if (_composedImagesUrl == null) {
-				_composedImagesUrl = resourcesUrl.replace("public-resources", "image-composer");				
+				var index:int = resourcesUrl.indexOf("public-resources");
+				_composedImagesUrl = resourcesUrl.substr(0, index) + "image-composer/";
+//				_composedImagesUrl = resourcesUrl.replace("public-resources", "image-composer");				
 			}
 			return _composedImagesUrl;
 		}
