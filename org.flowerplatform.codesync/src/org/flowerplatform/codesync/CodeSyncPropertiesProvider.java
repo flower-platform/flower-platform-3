@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
@@ -31,6 +32,7 @@ import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
@@ -47,7 +49,12 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 		if (codeSyncElement == null) {
 			return Collections.emptyList();
 		}
+		
 		List<String> features = CodeSyncOperationsService.getInstance().getFeatures(codeSyncElement.getType());
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
+		if (descriptor.getKeyFeature() != null) {
+			features.remove(descriptor.getKeyFeature());
+		}
 		
 		for (String feature : features) {
 			properties.add(new Property(feature, 

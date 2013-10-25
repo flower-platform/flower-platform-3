@@ -83,11 +83,7 @@ The graphical component that displays a list of actions, for one level.
 						stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 					});
 				}
-				if (actions != null && actions.length > 0) {
-					var source:Array = actions.toArray();
-					source.sortOn("orderIndex");
-					actions = new ArrayList(source);
-				}	
+			
 				PopUpManager.addPopUp(this, DisplayObject(FlexGlobals.topLevelApplication));
 				return true;
 			}

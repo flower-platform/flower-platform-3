@@ -45,6 +45,7 @@ import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulService;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.UnlockEditableResourceRunnable;
 import org.flowerplatform.editor.collaboration.CollaborativeFigureModel;
 import org.slf4j.Logger;
@@ -924,8 +925,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * @author Cristina
 	 */
 	public String getFriendlyNameDecoded(String friendlyName) {
-		return ((EditorOperationsService) CommunicationPlugin.getInstance().getServiceRegistry().getService("editorOperationsService"))
-				.getFriendlyNameDecoded(friendlyName);
+		return EditorPlugin.getInstance().getFriendlyNameDecoded(friendlyName);
 	}
 	
 	/**

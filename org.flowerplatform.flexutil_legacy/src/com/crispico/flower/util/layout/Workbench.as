@@ -76,7 +76,6 @@ package  com.crispico.flower.util.layout {
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
 	import org.flowerplatform.flexutil.shortcuts.Shortcut;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 
@@ -1979,7 +1978,8 @@ package  com.crispico.flower.util.layout {
 			tabNavigator.addChild(component);
 			
 			if (setFocusOnView) {
-				callLater(activeViewList.setActiveView, [component]);
+				// at the "very end" when everything has finished updating, set it as active view
+				UIComponent(FlexGlobals.topLevelApplication).callLater(activeViewList.setActiveView, [component]);
 			}
 			
 			dispatchEvent(new LayoutDataChangedEvent());

@@ -36,7 +36,7 @@ package org.flowerplatform.editor.action {
 		}
 		
 		/**
-		 * @author Cristina Constatinescu
+		 * @author Cristina Constantinescu
 		 */
 		public function getActions(selection:IList):Vector.<IAction> {
 			if (selection.length == 0) {
@@ -60,24 +60,22 @@ package org.flowerplatform.editor.action {
 				openWithAction.orderIndex = 151;
 				result.push(openWithAction);
 				
-				var indexes:ArrayCollection = treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE];
+				var ctIndex:int = int(treeNode.customData[EditorPlugin.TREE_NODE_KEY_CONTENT_TYPE]);
 				var defaultEditorDescriptorProcessed:Boolean = false;
-				for (var i:int = 0; i < indexes.length; i++) {
-					var ctIndex:int = int(indexes.getItemAt(i));
-					var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
+			
+				var ctDescriptor:ContentTypeDescriptor = EditorPlugin.getInstance().contentTypeDescriptors[ctIndex];
 					
-					for each (var editorName:String in ctDescriptor.compatibleEditors) {
-						var descriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(editorName);
-						if (descriptor == null) {
-							throw new Error("Cannot find editor descriptor for editor name = " + editorName);
-						}
-						result.push(new OpenAction(descriptor, !defaultEditorDescriptorProcessed));
-						if (!defaultEditorDescriptorProcessed) {
-							// i.e. for index == 0; this ensures that the first item will have an action with "force..."
-							defaultEditorDescriptorProcessed = true;
-						}
+				for each (var editorName:String in ctDescriptor.compatibleEditors) {
+					var descriptor:BasicEditorDescriptor = EditorPlugin.getInstance().getEditorDescriptorByName(editorName);
+					if (descriptor == null) {
+						throw new Error("Cannot find editor descriptor for editor name = " + editorName);
 					}
-				}
+					result.push(new OpenAction(descriptor, !defaultEditorDescriptorProcessed));
+					if (!defaultEditorDescriptorProcessed) {
+						// i.e. for index == 0; this ensures that the first item will have an action with "force..."
+						defaultEditorDescriptorProcessed = true;
+					}
+				}				
 			} else {
 				for (var i:int = 0; i < selection.length; i++) {
 					treeNode = TreeNode(selection.getItemAt(i));

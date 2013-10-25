@@ -22,7 +22,7 @@ package org.flowerplatform.flexdiagram.samples.controller {
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController;
-	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionRenderer;
 	import org.flowerplatform.flexdiagram.samples.model.BasicConnection;
 	
 	public class BasicConnectionRendererController extends ConnectionRendererController {
@@ -32,7 +32,7 @@ package org.flowerplatform.flexdiagram.samples.controller {
 		
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 			super.associatedModelToRenderer(model, renderer);
-			ConnectionFigure(renderer).middleConnectionLabel.text = "Connection Label";
+			ConnectionRenderer(renderer).middleConnectionLabel.text = "Connection Label";
 		}
 		
 		override public function unassociatedModelFromRenderer(model:Object, renderer:IVisualElement, isModelDisposed:Boolean):void {

@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.AbstractServerCommand;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.emf_model.notation.Diagram;
 
@@ -42,10 +43,12 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 
 	public String parentPath;
 	public String name;
+	// TODO CS temp for tests
+	public boolean openAutomatically = true;
 	
 	@Override
 	public void executeCommand() {
-		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), parentPath);
+		File file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(parentPath);
 		// go to parent dir if actions was executed on a file
 		if (!file.isDirectory()) {
 			file = file.getParentFile();
@@ -74,12 +77,26 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 			throw new RuntimeException(e);
 		}
 		
+		if (!openAutomatically) {
+			return;
+		}
+		
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) 
 				CommunicationPlugin.getInstance().getServiceRegistry().getService(getServiceId());
-		service.subscribeClientForcefully(getCommunicationChannel(), CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(diagram));
+		service.subscribeClientForcefully(
+				getCommunicationChannel(), 
+				EditorPlugin.getInstance().getFileAccessController().getPath(diagram));
 	}
 	
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	protected String getNextDiagram(File parent, String name) {
+		// before changing name, verify if the current one exists
+		if (!new File(parent, name).exists()) {
+			return name;
+		}
 		int i = 0;
 		boolean exists = true;
 		StringBuilder builder = null;

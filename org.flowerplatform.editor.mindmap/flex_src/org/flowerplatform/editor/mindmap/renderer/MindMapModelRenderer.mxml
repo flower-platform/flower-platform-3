@@ -34,7 +34,6 @@ license-end
 			import mx.collections.IList;
 			import mx.core.DPIClassification;
 			import mx.core.FlexGlobals;
-			import mx.core.mx_internal;
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
 			import mx.events.ResizeEvent;
@@ -44,14 +43,12 @@ license-end
 			import org.flowerplatform.emf_model.notation.MindMapNode;
 			import org.flowerplatform.emf_model.notation.View;
 			import org.flowerplatform.flexdiagram.DiagramShell;
-			import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
+			import org.flowerplatform.flexdiagram.event.ZoomPerformedEvent;
 			import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
-			import org.flowerplatform.flexdiagram.tool.event.ZoomPerformedEvent;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.FlowerArrayList;
 			
 			import spark.core.ContentCache;
-			import spark.core.IContentLoader;
 			import spark.primitives.BitmapImage;
 			
 			private static const circleRadius:int = 3;

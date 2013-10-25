@@ -1,15 +1,32 @@
+/* license-start
+* 
+* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation version 3.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+* 
+* Contributors:
+*   Crispico - Initial API and implementation
+*
+* license-end
+*/
 package org.flowerplatform.editor.text {
 	
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorFrontend;
-	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.editor.text.remote.CodeMirrorEditorStatefulClient;
 	import org.flowerplatform.editor.text.remote.TextEditorStatefulClient;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 
 	/**
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */
 	public class CodeMirrorEditorDescriptor extends EditorDescriptor {
 		

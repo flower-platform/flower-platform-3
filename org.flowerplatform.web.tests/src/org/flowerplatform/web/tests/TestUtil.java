@@ -73,6 +73,8 @@ public class TestUtil {
 	/**
 	 * Copies the files from the specified folder into ws/root/projectName, and imports this as a project.
 	 * projectName may contain a leading /.
+	 * 
+	 * @from Can be null; an empty project will be created.
 	 */
 	public static final void copyFilesAndCreateProject(ServiceInvocationContext context, String from, String projectName) {
 		try {
@@ -89,7 +91,11 @@ public class TestUtil {
 			}
 			
 			File to = new File(getWorkspaceResourceAbsolutePath("") + "/org/ws_trunk/" + projectName);
-			FileUtils.copyDirectory(new File(from), to);
+			if (from != null) {
+				FileUtils.copyDirectory(new File(from), to);
+			} else {
+				to.mkdirs();
+			}
 //			, new FileFilter() {
 //				
 //				@Override

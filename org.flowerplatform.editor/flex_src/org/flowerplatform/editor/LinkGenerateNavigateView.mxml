@@ -207,10 +207,10 @@ license-end
 				var workbench:Workbench = Workbench(FlexUtilGlobals.getInstance().workbench);
 				var component:Object = workbench.layoutDataToComponent[editorLayoutData];
 				if (component is WorkbenchViewHost) {
-					component = WorkbenchViewHost(component).activeViewContent;
-					if (!(component is EditorFrontend)) {
-						throw new Error("This isn't an editor!");
-					}
+					component = WorkbenchViewHost(component).activeViewContent;					
+				}
+				if (!(component is EditorFrontend)) {
+					throw new Error("This isn't an editor!");
 				}
 				var editorFrontend:EditorFrontend = EditorFrontend(component);
 				

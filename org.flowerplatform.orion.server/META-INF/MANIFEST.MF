@@ -13,7 +13,6 @@ Require-Bundle: org.eclipse.equinox.http.registry,
  org.eclipse.osgi,
  org.flowerplatform.orion.client,
  org.eclipse.orion.server.configurator,
- javax.servlet;bundle-version="3.0.0",
  org.flowerplatform.editor,
  org.eclipse.orion.server.servlets,
  org.eclipse.core.runtime,
@@ -24,3 +23,5 @@ Require-Bundle: org.eclipse.equinox.http.registry,
  org.flowerplatform.codesync.code.java,
  org.flowerplatform.codesync
 Bundle-Activator: org.flowerplatform.orion.server.OrionPlugin
+Import-Package: javax.servlet,
+ javax.servlet.http

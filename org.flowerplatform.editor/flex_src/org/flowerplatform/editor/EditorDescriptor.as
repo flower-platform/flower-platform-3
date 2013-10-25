@@ -79,7 +79,9 @@ package  org.flowerplatform.editor {
 		 * Adds a new view in the global <code>Workbench</code>, which will then
 		 * trigger the creation of the view (i.e. <code>EditorFrontend</code>).
 		 * 
-		 * 
+		 * @author Cristian Spiescu
+		 * @author Mariana Gheorghe
+		 * @author Cristina Constantinescu
 		 */
 		override public function openEditor(editableResourcePath:String, forceNewEditor:Boolean = false, openForcedByServer:Boolean = false, handleAsClientSubscription:Boolean = false):UIComponent {
 			var viewLayoutData:ViewLayoutData = new ViewLayoutData();
@@ -108,11 +110,13 @@ package  org.flowerplatform.editor {
 									// bring it to front
 									var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
 									
-									var editorFrontend:EditorFrontend = EditorFrontend(existingEditorStatefulClient.editorFrontends[0]);
+									// get graphical component for this editorFrontend
+									var editorComponent:UIComponent = workbench.getComponent(viewLayoutData.viewId, viewLayoutData.customData);
+									
 									// normally if the ESC exists => it has at least 1 EditorFrontend; if abnormally this is not true => exception here
-									workbench.setActiveView(editorFrontend);
+									workbench.setActiveView(editorComponent);
 									// and exit
-									return editorFrontend;
+									return editorComponent;
 								}
 							}
 						}

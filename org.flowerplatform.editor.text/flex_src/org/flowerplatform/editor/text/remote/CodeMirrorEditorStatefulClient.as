@@ -1,42 +1,44 @@
+/* license-start
+* 
+* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation version 3.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+* 
+* Contributors:
+*   Crispico - Initial API and implementation
+*
+* license-end
+*/
 package org.flowerplatform.editor.text.remote {
+	
 	import org.flowerplatform.editor.EditorFrontend;
-	import org.flowerplatform.editor.remote.EditorStatefulClient;
+	import org.flowerplatform.editor.text.CodeMirrorEditorFrontend;
 
 	/**
-	 * @author Cristina Constatinescu
-	 */
-	public class CodeMirrorEditorStatefulClient extends EditorStatefulClient {
-			
-		protected var statefulServiceId:String;
-		
-		public override function getStatefulServiceId():String {	
-			return statefulServiceId;
-		}
+	 * @author Cristina Constantinescu
+	 */ 
+	public class CodeMirrorEditorStatefulClient extends TextEditorStatefulClient {
 		
 		public function CodeMirrorEditorStatefulClient(statefulServiceId:String) {
-			this.statefulServiceId = statefulServiceId;
+			super(statefulServiceId);
 		}
 		
 		override protected function copyLocalDataFromExistingEditorToNewEditor(existingEditor:EditorFrontend, newEditor:EditorFrontend):void	{
-//			super.copyLocalDataFromExistingEditorToNewEditor(existingEditor, newEditor);
-//			OrionEditorFrontend(newEditor).setContent(
-//				OrionEditorFrontend(existingEditor).orionEditor.);
+			if (editableResourceStatus)
+				newEditor.editableResourceStatusUpdated();
+			CodeMirrorEditorFrontend(existingEditor).getContent(function(value:String):void {
+				CodeMirrorEditorFrontend(newEditor).setContent(value);
+			});
 		}
 		
-		override protected function areLocalUpdatesAppliedImmediately():Boolean	{
-			return true;
-		}
-		
-		///////////////////////////////////////////////////////////////
-		// Wrappers for service methods
-		///////////////////////////////////////////////////////////////
-		
-		/**
-		 * 
-		 * @author Daniela
-		 */
-		public function service_selectRangeFor(category:String, searchString:String):void {
-			invokeServiceMethod("selectRangeFor", [editableResourcePath, category, searchString]);
+		override public function updateDirtyState(editorInput:Object, dirtyState:Boolean):void {			
 		}
 		
 	}

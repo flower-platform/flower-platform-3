@@ -2,7 +2,10 @@ package org.flowerplatform.flexutil.action {
 	import flash.events.Event;
 	
 	/**
-	 * Dispatched by application when the menu is closed.
+	 * Dispatched when the menu is closed, 
+	 * by the menu system specific to the platform (web: ContextMenu; mobile: MobileHostBase). 
+	 * 
+	 * The event is dispatched on the top level app.
 	 * 
 	 * @author Cristina Constantinescu
 	 */ 

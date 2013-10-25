@@ -30,6 +30,9 @@ package org.flowerplatform.flexutil.action {
 		 * Selects all the visible actions from the <code>actions</code> list, for a give
 		 * <code>parentActionId</code> (or level, which can be <code>null</code> for the root level). For each
 		 * visible action, the callback is invoked (which probably does UI related stuff).
+		 * 
+		 * @author Cristian Spiescu
+		 * @author Cristina Constantinescu
 		 */
 		public static function processAndIterateActions(parentActionId:String, actions:Vector.<IAction>, selection:IList, context:Object, forEachCallbackObject:Object, forEachCallbackFunction:Function):void {
 			if (actions == null) {
@@ -51,6 +54,18 @@ package org.flowerplatform.flexutil.action {
 			if (actionsForCurrentParentActionId == null) {
 				return;
 			}
+			
+			// order actions
+			var array:Array = new Array(actionsForCurrentParentActionId.length);
+			var i:int;
+			for (i = 0; i < actionsForCurrentParentActionId.length; i++) {
+				array[i] = actionsForCurrentParentActionId[i];
+			}			
+			array.sortOn("orderIndex");
+			actionsForCurrentParentActionId = new Vector.<IAction>();
+			for (i = 0; i < array.length; i++) {
+				actionsForCurrentParentActionId.push(array[i]);
+			}	
 			
 			for (i = 0; i < actionsForCurrentParentActionId.length; i++) {
 				action = actionsForCurrentParentActionId[i];

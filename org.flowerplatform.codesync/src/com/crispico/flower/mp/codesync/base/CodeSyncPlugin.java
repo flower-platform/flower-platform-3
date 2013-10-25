@@ -38,6 +38,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
+import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
@@ -97,6 +98,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected List<AddNewExtension> addNewExtensions;
 	
+	protected CodeSyncTypeCriterionDispatcherProcessor codeSyncTypeCriterionDispatcherProcessor;
+	
 	/**
 	 * @see #getProjectsProvider()
 	 */
@@ -108,6 +111,10 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 	
+	public CodeSyncTypeCriterionDispatcherProcessor getCodeSyncTypeCriterionDispatcherProcessor() {
+		return codeSyncTypeCriterionDispatcherProcessor;
+	}
+
 	public ComposedFullyQualifiedNameProvider getFullyQualifiedNameProvider() {
 		return fullyQualifiedNameProvider;
 	}
@@ -158,6 +165,9 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
+		
+		codeSyncTypeCriterionDispatcherProcessor = new CodeSyncTypeCriterionDispatcherProcessor();
+		EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 		
 		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
 		

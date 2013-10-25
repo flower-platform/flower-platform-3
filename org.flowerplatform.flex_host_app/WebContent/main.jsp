@@ -35,15 +35,7 @@
         <! END Browser History required section -->  
         
         <script type="text/javascript">
-            var flashvars = {};
-            
-            // called when flex app finished loading (user logged in & workbench set)
-            function flowerApplicationCompleteHandler() {
-            	var nonHash = window.location.href.split('#')[0];				
-				var hostName = nonHash.substring(0, nonHash.length - window.location.pathname.length);
-            	window.parent.postMessage("flowerApplicationCompleteHandler", hostName);
-            }
-            
+            var flashvars = {};            
         </script>
         
         <script type="text/javascript" src="commons.js"></script> 

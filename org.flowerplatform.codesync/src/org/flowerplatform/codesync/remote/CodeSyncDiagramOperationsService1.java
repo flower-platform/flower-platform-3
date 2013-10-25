@@ -55,8 +55,7 @@ public class CodeSyncDiagramOperationsService1 {
 	@RemoteInvocation
 	public String addNew(ServiceInvocationContext context, String diagramId, String viewIdOfParent, String codeSyncType, Map<String, Object> parameters) {
 		// create new CodeSyncElement
-		CodeSyncElement codeSyncElement = CodeSyncOperationsService.getInstance().create(
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType));
+		CodeSyncElement codeSyncElement = CodeSyncOperationsService.getInstance().create(codeSyncType);
 		return addOnDiagram(context, diagramId, viewIdOfParent, codeSyncElement, parameters);
 	}
 
@@ -116,11 +115,11 @@ public class CodeSyncDiagramOperationsService1 {
 		return (View) getEditableResource(context).getEObjectById(viewId);
 	}
 	
-	protected DiagramEditableResource getEditableResource(Map<String, Object> context) {
+	public DiagramEditableResource getEditableResource(Map<String, Object> context) {
 		return (DiagramEditableResource) context.get(DiagramEditorStatefulService.ADDITIONAL_DATA_EDITABLE_RESOURCE);
 	}
 	
-	protected Resource getCodeSyncMappingResource(DiagramEditableResource diagramEditableResource) {
+	public static Resource getCodeSyncMappingResource(DiagramEditableResource diagramEditableResource) {
 		ResourceSet resourceSet = diagramEditableResource.getResourceSet();
 		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) diagramEditableResource.getFile());
 		return CodeSyncPlugin.getInstance().getCodeSyncMapping(project, resourceSet);

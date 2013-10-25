@@ -343,7 +343,9 @@ package  com.crispico.flower.util.layout.view {
 		}
   		
 		public function setStyles():void {
-			if (contentPane == null) {
+			if (tabBar.contentPane == null) {
+				// try to execute after contentPane set
+				callLater(setStyles);
 				return;
 			}
 			clearAllActiveViewStyles(workbench);

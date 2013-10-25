@@ -18,22 +18,19 @@
  */
 package org.flowerplatform.flexdiagram.controller.renderer {
 	import flash.display.DisplayObject;
-	import flash.events.IEventDispatcher;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.utils.getDefinitionByName;
 	
 	import mx.core.IVisualElement;
 	
-	import spark.components.Label;
-	
 	import org.flowerplatform.flexdiagram.DiagramShell;
-	import org.flowerplatform.flexdiagram.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.renderer.connection.BindablePoint;
 	import org.flowerplatform.flexdiagram.renderer.connection.ClipUtils;
-	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionFigure;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionRenderer;
+	
+	import spark.components.Label;
 	
 	public class ConnectionRendererController extends ClassReferenceRendererController {
 		protected static const SOURCE_UP:int = 0;
@@ -66,7 +63,7 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 		 * This is invoked by the renderer. See comment there to see why.
 		 */
 		public function updateConnectionEnds(connectionModel:Object, modifiedEnd:Object):void {
-			var connectionRenderer:ConnectionFigure = ConnectionFigure(diagramShell.getRendererForModel(connectionModel));
+			var connectionRenderer:ConnectionRenderer = ConnectionRenderer(diagramShell.getRendererForModel(connectionModel));
 			var sourceRect:Array;
 			var targetRect:Array;
 			var sourceModel:Object = getSourceModel(connectionModel);
@@ -179,7 +176,7 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 		 * </ul>
 		 * 
 		 */
-		protected function updateLabelPosition(connectionModel:Object, connectionRenderer:ConnectionFigure, connectionLabel:Label, posType:int):void {
+		protected function updateLabelPosition(connectionModel:Object, connectionRenderer:ConnectionRenderer, connectionLabel:Label, posType:int):void {
 			if (connectionLabel == null || getSourceModel(connectionModel) == null || getTargetModel(connectionModel) == null) {
 				return;
 			}

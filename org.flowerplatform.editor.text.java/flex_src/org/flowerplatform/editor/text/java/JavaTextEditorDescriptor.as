@@ -38,7 +38,7 @@ package org.flowerplatform.editor.text.java {
 		}
 		
 		override protected function createEditorStatefulClient():EditorStatefulClient {
-			return new TextEditorStatefulClient("textEditorStatefulService");
+			return new TextEditorStatefulClient("javaTextEditorStatefulService");
 		}
 		
 		override public function getId():String {	
