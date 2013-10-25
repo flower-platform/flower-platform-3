@@ -43,7 +43,11 @@ public class CodeSyncOperationsService {
 				.getServiceRegistry().getService(ID);
 	}
 	
-	public CodeSyncElement create(CodeSyncElementDescriptor descriptor) {
+	public CodeSyncElement create(String codeSyncType) {
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
+		if (descriptor == null) {
+			throw new RuntimeException("Cannot find descriptor for codeSyncType = " + codeSyncType);
+		}
 		CodeSyncElement codeSyncElement = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 		codeSyncElement.setType(descriptor.getCodeSyncType());
 		codeSyncElement.setName(descriptor.getDefaultName());

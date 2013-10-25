@@ -23,9 +23,12 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
+import org.flowerplatform.editor.model.changes_processor.ClassCriterionDispatcherProcessor;
+import org.flowerplatform.editor.model.changes_processor.MainChangesDispatcher;
 import org.flowerplatform.emf_model.notation.Bounds;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
@@ -44,6 +47,10 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 	
+	protected MainChangesDispatcher mainChangesDispatcher;
+	
+	protected ClassCriterionDispatcherProcessor classCriterionDispatcherProcessor;
+	
 	protected ComposedChangeProcessor composedChangeProcessor;
 	
 	protected DiagramUpdaterChangeProcessor diagramUpdaterChangeProcessor;
@@ -53,6 +60,14 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 	private IModelAccessController modelAccessController;
 
 	protected ComposedContentAssist composedContentAssist;
+
+	public MainChangesDispatcher getMainChangesDispatcher() {
+		return mainChangesDispatcher;
+	}
+
+	public ClassCriterionDispatcherProcessor getClassCriterionDispatcherProcessor() {
+		return classCriterionDispatcherProcessor;
+	}
 
 	public ComposedChangeProcessor getComposedChangeProcessor() {
 		return composedChangeProcessor;
@@ -74,12 +89,25 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 		
+		mainChangesDispatcher = new MainChangesDispatcher();
+		classCriterionDispatcherProcessor = new ClassCriterionDispatcherProcessor();
+		mainChangesDispatcher.addProcessor(classCriterionDispatcherProcessor);
+		
 		composedChangeProcessor = new ComposedChangeProcessor();
 		diagramUpdaterChangeProcessor = new DiagramUpdaterChangeProcessor();
 		composedChangeProcessor.addChangeDescriptionProcessor(diagramUpdaterChangeProcessor);
 		
-		initExtensionPoint_dragOnDiagramHandler();
-		initExtensionPoint_contentAssist();
+		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					initExtensionPoint_dragOnDiagramHandler();
+					initExtensionPoint_contentAssist();
+				} catch (CoreException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 		
 		CustomSerializationDescriptor viewSD = new CustomSerializationDescriptor(View.class)
 		.addDeclaredProperty("id")

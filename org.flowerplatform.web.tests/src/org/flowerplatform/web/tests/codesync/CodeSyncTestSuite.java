@@ -37,7 +37,8 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 	CodeSyncJavascriptTest.class,
 	CodeSyncWikiTest.class })
 public class CodeSyncTestSuite extends EclipseDependentTestSuiteBase {
-
+	
+	// TODO CS/need centralized project get/set/copy/etc
 	public static File getProject(String project) {
 		String absolutePath = "/org/ws_trunk/" + project;
 		File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile(absolutePath);

@@ -276,6 +276,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			// oricum, cred ca ar trebui inca un try/finally; sa facem un mecanism multiplu, ca la MDA? dar cum ne dam seama ca nu e infinit?
 			// sa nu mai facem viewdetails ca camp, si sa facem comanda speciala?
 			// de asemenea, tr. si un map, pentru a evita adaugarea de 2 ori in timpul celor 2 inregistrari
+			EditorModelPlugin.getInstance().getMainChangesDispatcher().processChangeDescription(processingContext, changeDescription);
 			EditorModelPlugin.getInstance().getComposedChangeProcessor().processChangeDescription(changeDescription, processingContext);
 			changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			

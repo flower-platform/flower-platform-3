@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.web.tests;
 
+import org.flowerplatform.editor.model.changes_processor.ChangesProcessorTest;
 import org.flowerplatform.web.tests.codesync.CodeSyncTestSuite;
 import org.flowerplatform.web.tests.security.sandbox.SecurityPermissionsTests;
 import org.flowerplatform.web.tests.listener.ListenerTestSuite;
@@ -29,7 +30,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({ 
 	SecurityPermissionsTests.class,
 	CodeSyncTestSuite.class,
-	ListenerTestSuite.class
+	ListenerTestSuite.class,
+	ChangesProcessorTest.class
 })
 public class EclipseDependentTestSuite extends EclipseDependentTestSuiteBase {
 }

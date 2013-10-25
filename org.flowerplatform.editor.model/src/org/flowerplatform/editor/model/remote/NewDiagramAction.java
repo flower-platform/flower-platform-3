@@ -43,6 +43,8 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 
 	public String parentPath;
 	public String name;
+	// TODO CS temp for tests
+	public boolean openAutomatically = true;
 	
 	@Override
 	public void executeCommand() {
@@ -73,6 +75,10 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+		
+		if (!openAutomatically) {
+			return;
 		}
 		
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) 
