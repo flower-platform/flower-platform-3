@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
@@ -96,8 +97,17 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		diagramUpdaterChangeProcessor = new DiagramUpdaterChangeProcessor();
 		composedChangeProcessor.addChangeDescriptionProcessor(diagramUpdaterChangeProcessor);
 		
-		initExtensionPoint_dragOnDiagramHandler();
-		initExtensionPoint_contentAssist();
+		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					initExtensionPoint_dragOnDiagramHandler();
+					initExtensionPoint_contentAssist();
+				} catch (CoreException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
 		
 		CustomSerializationDescriptor viewSD = new CustomSerializationDescriptor(View.class)
 		.addDeclaredProperty("id")
