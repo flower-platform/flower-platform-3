@@ -59,54 +59,6 @@ package org.flowerplatform.codesync.code.javascript {
 			INSTANCE = this;
 			
 			EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteElementAction);
-			
-			var composedControllerProviderFactory:ComposedControllerProviderFactory;
-			
-			// parent box - set as a direct diagram child, positioned absolutely
-			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new FactoryWithInitialization(NodeAbsoluteLayoutRectangleController);
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(BoxRendererController, { removeRendererIfModelIsDisposed: true });
-			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
-			composedControllerProviderFactory.dragControllerClass = new FactoryWithInitialization(AbsoluteNodePlaceHolderDragController);
-			composedControllerProviderFactory.visualChildrenControllerClass = new FactoryWithInitialization(SequentialLayoutVisualChildrenController);
-			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
-//			composedControllerProviderFactory.dragToCreateRelationControllerClass = new ControllerFactory(DragToCreateRelationController);
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form"] = composedControllerProviderFactory;
-			
-			// class members
-			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
-			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
-			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
-
-			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
-			if (!FlexUtilGlobals.getInstance().isMobile) {
-				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController);
-			}
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.javaScriptOperation"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.javaScriptAttribute"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.requireEntry"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.eventsAttribute"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.routesAttribute"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.routesAttribute.routesAttributeEntry"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table.tableHeaderEntry"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem.tableItemEntry"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form.formItem"] = composedControllerProviderFactory;
-			
-			// title
-			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.title"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table.title"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem.title"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form.title"] = composedControllerProviderFactory;
-			
 		}
 		
 		override protected function registerMessageBundle():void {

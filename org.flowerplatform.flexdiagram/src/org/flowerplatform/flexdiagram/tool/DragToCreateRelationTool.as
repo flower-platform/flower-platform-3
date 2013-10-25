@@ -55,8 +55,12 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
-			diagramShell.getControllerProvider(context.model).
-				getDragToCreateRelationController(context.model).activate(context.model);
+			var controller:IDragToCreateRelationController = diagramShell.getControllerProvider(context.model).getDragToCreateRelationController(context.model);
+			if (controller == null) {
+				diagramShell.mainToolFinishedItsJob();
+				return;
+			}
+			controller.activate(context.model);
 			
 			super.activateAsMainTool();
 		}
@@ -65,9 +69,10 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			
-			diagramShell.getControllerProvider(context.model).
-				getDragToCreateRelationController(context.model).deactivate(context.model);
-			
+			var controller:IDragToCreateRelationController = diagramShell.getControllerProvider(context.model).getDragToCreateRelationController(context.model);
+			if (controller != null) {
+				controller.deactivate(context.model);
+			}
 			delete context.model;
 			
 			super.deactivateAsMainTool();

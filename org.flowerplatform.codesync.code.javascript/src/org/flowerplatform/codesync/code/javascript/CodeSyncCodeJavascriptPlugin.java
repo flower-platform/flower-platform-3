@@ -59,7 +59,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addChildrenCodeSyncTypeCategory("requireEntry")
 				.addFeature("superClass")
 				.addFeature("name")
-				.setKeyFeature("name"));
+				.setKeyFeature("name")
+				.setStandardDiagramControllerProviderFactory("topLevelBox")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("javaScriptOperation")
@@ -70,7 +72,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setNextSiblingSeparator(", ")
 				.addFeature("name")
 				.addFeature("parameters")
-				.setKeyFeature("name"));
+				.setKeyFeature("name")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("javaScriptAttribute")
@@ -81,7 +85,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setNextSiblingSeparator(", ")
 				.addFeature("defaultValue")
 				.addFeature("name")
-				.setKeyFeature("name"));
+				.setKeyFeature("name").setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("requireEntry")
@@ -91,7 +96,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addCodeSyncTypeCategory("requireEntry")
 				.addFeature("varName")
 				.addFeature("dependencyPath")
-				.setKeyFeature("varName"));
+				.setKeyFeature("varName")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("eventsAttribute")
@@ -102,7 +109,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addChildrenCodeSyncTypeCategory("eventsAttributeEntry")
 				.setNextSiblingSeparator(", ")
 				.addFeature("name")
-				.setKeyFeature("name"));
+				.setKeyFeature("name")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("routesAttribute")
@@ -113,7 +122,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addChildrenCodeSyncTypeCategory("routesAttributeEntry")
 				.setNextSiblingSeparator(", ")
 				.addFeature("name")
-				.setKeyFeature("name"));
+				.setKeyFeature("name")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("eventsAttributeEntry")
@@ -125,7 +136,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addFeature("event")
 				.addFeature("selector")
 				.addFeature("function")
-				.setKeyFeature("event"));
+				.setKeyFeature("event")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("routesAttributeEntry")
@@ -136,7 +149,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setNextSiblingSeparator(", ")
 				.addFeature("path")
 				.addFeature("function")
-				.setKeyFeature("path"));
+				.setKeyFeature("path")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
@@ -149,7 +164,10 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addFeature("tableId")
 				.addFeature("headerRowId")
 				.addFeature("name")
-				.setKeyFeature("name"));
+				.setKeyFeature("name")
+				.setStandardDiagramControllerProviderFactory("topLevelBox")
+		);
+
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableHeaderEntry")
@@ -158,7 +176,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setDefaultName("newHeaderEntry")
 				.addCodeSyncTypeCategory("tableHeaderEntry")
 				.addFeature("title")
-				.setKeyFeature("title"));
+				.setKeyFeature("title")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
@@ -170,7 +190,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addChildrenCodeSyncTypeCategory("tableItemEntry")
 				.addFeature("itemUrl")
 				.addFeature("name")
-				.setKeyFeature("name"));
+				.setKeyFeature("name")
+				.setStandardDiagramControllerProviderFactory("topLevelBox")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItemEntry")
@@ -179,7 +201,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setDefaultName("newTableItemEntry")
 				.addCodeSyncTypeCategory("tableItemEntry")
 				.addFeature("valueExpression")
-				.setKeyFeature("valueExpression"));
+				.setKeyFeature("valueExpression")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
@@ -190,7 +214,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("formItem")
 				.addFeature("name")
-				.setKeyFeature("name"));
+				.setKeyFeature("name")
+				.setStandardDiagramControllerProviderFactory("topLevelBox")
+		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("formItem")
@@ -201,12 +227,14 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.addFeature("valueExpression")
 				.addFeature("editId")
 				.addFeature("title")
-				.setKeyFeature("title"));
+				.setKeyFeature("title")
+				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
 		
 		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension());
 		
 		JavascriptElementProcessor processor = new JavascriptElementProcessor();
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.title", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("topLevelBoxTitle", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", processor);

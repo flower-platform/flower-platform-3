@@ -64,7 +64,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 		
 		Node title = NotationFactory.eINSTANCE.createNode();
 		title.setDiagrammableElement(codeSyncElement);
-		title.setViewType("classDiagram." + codeSyncElement.getType() + ".title");
+		title.setViewType("topLevelBoxTitle");
 		node.getPersistentChildren().add(title);
 		
 		// populate PARENT_CODE_SYNC_ELEMENT

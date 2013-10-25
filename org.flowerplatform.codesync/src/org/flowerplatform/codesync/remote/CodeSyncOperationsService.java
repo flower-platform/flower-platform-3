@@ -242,7 +242,12 @@ public class CodeSyncOperationsService {
 	
 	@RemoteInvocation
 	public void synchronize(ServiceInvocationContext context, String path, String technology) {
-		File diagram = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
+		File diagram;
+		try {
+			diagram = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
+		} catch (Exception e) {
+			throw new RuntimeException(path);
+		}
 		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(diagram);
 		File srcDir = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, "js");
 		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, srcDir, technology, context.getCommunicationChannel(), true);
