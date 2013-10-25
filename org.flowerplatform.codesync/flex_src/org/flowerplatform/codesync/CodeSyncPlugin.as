@@ -77,6 +77,7 @@ package org.flowerplatform.codesync {
 			super.start();
 			
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddNewCodeSyncElementActionProvider());
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(codeSyncTreeActionProvider);
 		}
 		
 		

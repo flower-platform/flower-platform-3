@@ -24,13 +24,18 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	
+	/**
+	 * @author Mariana Gheorghe
+	 */
 	public class CodeSyncTreeActionProvider implements IActionProvider {
 		
 		public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
-			result.push(new CodeSyncAction("Code Sync - java", "java"));
-			result.push(new CodeSyncAction("Code Sync - js", "js"));
-			result.push(new CodeSyncAction("Wiki Sync", "github"));
+			// TODO temp; reactivate other technologies at a later time
+//			result.push(new CodeSyncAction("Code Sync - java", "java"));
+//			result.push(new CodeSyncAction("Code Sync - js", "js"));
+//			result.push(new CodeSyncAction("Wiki Sync", "github"));
+			result.push(new CodeSyncAction("Synchronize", "js"));
 			return result;
 		}
 	}

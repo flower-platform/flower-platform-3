@@ -43,6 +43,7 @@ import org.flowerplatform.codesync.operation_extension.AddNewExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
+import org.flowerplatform.codesync.remote.CodeSyncAction;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -404,9 +405,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				srcDir = (CodeSyncElement) member;
 				break;
 			}
-		}
-		if (srcDir == null) {
-			throw new RuntimeException("SrcDir " + name + " is not mapped to a CSE!");
 		}
 		return srcDir;
 	}

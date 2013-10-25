@@ -86,9 +86,6 @@ public class CodeSyncJavascriptTest {
 		codeSyncEditorStatefulService = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry()
 				.getService("codeSyncEditorStatefulService");
 		assertNotNull("CodeSyncEditorStatefulService was not registered", codeSyncEditorStatefulService);
-		
-		CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/CSE.notation";
-		CodeSyncPlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/ACE.notation";
 	}
 
 	@AfterClass

@@ -59,9 +59,6 @@ public class ChangesProcessorTest {
 				.getService("codeSyncEditorStatefulService");
 		assertNotNull("CodeSyncEditorStatefulService was not registered", codeSyncEditorStatefulService);
 		
-		CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/CSE.notation";
-		CodeSyncPlugin.getInstance().ACE_FILE_LOCATION = "/" + ProjectsService.LINK_TO_PROJECT + "/ACE.notation";
-		
 		NewJavaClassDiagramAction action = new NewJavaClassDiagramAction();
 		action.parentPath = "/org/ws_trunk/" + PROJECT;
 		action.name = "changesDescriptionDiagram.notation";
