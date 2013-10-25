@@ -21,9 +21,9 @@ package org.flowerplatform.web {
 	import com.crispico.flower.util.layout.Workbench;
 	
 	import flash.events.MouseEvent;
+	import flash.net.URLRequest;
+	import flash.net.navigateToURL;
 	
-	import mx.collections.ArrayCollection;
-	import mx.collections.IList;
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
@@ -32,19 +32,19 @@ package org.flowerplatform.web {
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.GlobalEditorOperationsManager;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
-	import org.flowerplatform.flexutil.layout.IViewProvider;
+	import org.flowerplatform.flexutil.action.ActionBase;
+	import org.flowerplatform.flexutil.action.ComposedAction;
+	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.action.VectorActionProvider;
+	import org.flowerplatform.flexutil.global_menu.WebMenuBar;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
-	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
@@ -54,8 +54,6 @@ package org.flowerplatform.web {
 	import org.flowerplatform.web.security.ui.UserForm;
 	import org.flowerplatform.web.security.ui.UserFormViewProvider;
 	import org.flowerplatform.web.security.ui.UsersScreen;
-	
-	import org.flowerplatform.properties.PropertiesPlugin;
 	
 	import spark.components.Button;
 	
@@ -89,7 +87,11 @@ package org.flowerplatform.web {
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
 		}
-			
+		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mircea Negreanu
+		 */
 		override public function start():void {
 			super.start();
 			// pass the same descriptor; to be used for images (that need the descriptor for the URL)
@@ -99,34 +101,72 @@ package org.flowerplatform.web {
 			ToolTipManager.showDelay = 0;
 			ToolTipManager.toolTipClass = HTMLToolTip;
 			
-			var hBox:HBox = new HBox();
-			test_addButton("User Form", UserForm, hBox);
-			test_addButton("Users Screen", UsersScreen, hBox);
-			test_addButton("Organizations Screen", OrganizationsScreen, hBox);
-			test_addButton("Groups Screen", GroupsScreen, hBox);
-			test_addButton("Permissions Screen", PermissionsScreen, hBox);
+			// create the actionProvider from menu
+			var menuActionProvider:VectorActionProvider = new VectorActionProvider();
+			
+			createAndAddAction("Administration", "administration", null, null, null,
+				menuActionProvider);
 
-			var btn:Button = new Button();
-			btn.label = "Logout";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
-			});
-			hBox.addChild(btn);
+			createAndAddAction("Organizations", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"), function():void {
+					showScreen(OrganizationsScreen);
+				}, menuActionProvider);
+
+			createAndAddAction("Groups", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/group.png"), function():void {
+					showScreen(GroupsScreen);
+				}, menuActionProvider);
+
+			createAndAddAction("Users", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
+					showScreen(UsersScreen);
+				}, menuActionProvider);
+
+			createAndAddAction("Permissions", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/permission.png"), function():void {
+					showScreen(PermissionsScreen);
+				}, menuActionProvider);
+
+			createAndAddAction("User", "user", null,  
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), 
+				null, menuActionProvider);
 			
-			btn = new Button();
-			btn.label = "Switch";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+			createAndAddAction("My Account", null, "user", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
+					showScreen(UserForm);
+				},menuActionProvider);
+			
+			createAndAddAction("Switch User", null, "user", null, function():void {
 				WebCommonPlugin.getInstance().authenticationManager.showAuthenticationView(true);
-			});
-			hBox.addChild(btn);
+			}, menuActionProvider);
+
+			createAndAddAction("Logout", null, "user", null, function():void {
+				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
+			}, menuActionProvider);
+	
+			createAndAddAction("Help", "help", null, null, null, menuActionProvider);
+
+			createAndAddAction("Lean and Discuss (opens a new window)", null, "help",  null, function():void {
+				navigateToURL(new URLRequest("http://learn-discuss.flower-platform.com/flower_dev_center"), "_blank");
+			}, menuActionProvider);
 			
-			btn = new Button();
+			var hBox:HBox = new HBox();
+			hBox.percentWidth = 100;
+			
+			// create the menu
+			var menuBar:WebMenuBar = new WebMenuBar(menuActionProvider);
+			menuBar.percentWidth = 100;
+			hBox.addChild(menuBar);
+			
+			// removed all the other buttons (were replaced by the menu)
+			// this is the only one left
+			var btn:Button = new Button();
 			btn.label = "Get Current User";
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
 			});
 			hBox.addChild(btn);
-						
+			
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
 			
 			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
@@ -143,20 +183,37 @@ package org.flowerplatform.web {
 		}
 		
 		/**
-		 * @author Mariana
+		 * Creates and adds an action to the the actionProvider
+		 * 
+		 * @author Mircea Negreanu
 		 */
-		private function test_addButton(label:String, cls:Class, hBox:HBox):void {
-			var btn:Button = new Button();
-			btn.label = label;
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
-				var content:IViewContent = new cls();
-				handler.setViewContent(content).show();
-				if (Object(content).hasOwnProperty("entityId")) {
-					Object(content).entityId = WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id;
-				}
-			});
-			hBox.addElement(btn);
+		private function createAndAddAction(label:String, id:String, parentId:String, icon:String, functionDelegate:Function, actionProvider:IActionProvider):void {
+			var action:ActionBase;
+			if (id != null) {
+				action = new ComposedAction();
+			} else {
+				action = new ActionBase();
+			}
+			
+			action.label = label;
+			action.id = id;
+			action.parentId = parentId;
+			action.icon = icon;
+			action.functionDelegate = functionDelegate;
+			actionProvider.getActions(null).push(action);
+		}
+
+		/**
+		 * @author Mariana
+		 * @author Mircea Negreanu
+		 */
+		private function showScreen(cls:Class):void {
+			var handler:IPopupHandler = FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler();
+			var content:IViewContent = new cls();
+			handler.setViewContent(content).show();
+			if (Object(content).hasOwnProperty("entityId")) {
+				Object(content).entityId = WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.id;
+			}
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {

@@ -38,6 +38,10 @@ package org.flowerplatform.flexutil.action {
 		 * @author Cristina Constantinescu
 		 */
 		private var _context:Object;
+		/**
+		 * @author Mircea Negreanu
+		 */
+		private var _functionDelegate:Function;
 		
 		public function get id():String
 		{
@@ -145,7 +149,32 @@ package org.flowerplatform.flexutil.action {
 			_context = value;
 		}
 		
+		/**
+		 * @author Mircea Negreanu
+		 */
+		public function get functionDelegate():Function 
+		{
+			return _functionDelegate;
+		}
+		
+		/**
+		 * @author Mircea Negreanu
+		 */
+		public function set functionDelegate(value:Function):void {
+			_functionDelegate = value;
+		}
+		
+		/**
+		 * Use functionDelegate, if any exists.
+		 * 
+		 * @author Cristian Spiescu
+		 * @author Mircea Negreanu
+		 */
 		public function run():void {
+			// if we have a functionDelegate than execute that
+			if (functionDelegate != null) {
+				functionDelegate();
+			}
 		}
 		
 	}
