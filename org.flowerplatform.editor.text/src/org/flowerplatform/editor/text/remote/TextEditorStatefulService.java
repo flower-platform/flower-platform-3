@@ -19,11 +19,14 @@
 package org.flowerplatform.editor.text.remote;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
@@ -94,11 +97,15 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	 * 
 	 */
 	@Override
-	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) {
 		super.loadEditableResource(context, editableResource);
 		TextEditableResource er = (TextEditableResource) editableResource;
 				
-		er.setFileContent(EditorPlugin.getInstance().getFileAccessController().getContent(er.getFile()));
+		try {
+			er.setFileContent(new StringBuffer(IOUtils.toString(EditorPlugin.getInstance().getFileAccessController().getContent(er.getFile()))));
+		} catch (IOException e) {
+			logger.error("Could not set file content for " + er);
+		}
 				
 		// See class comment for purpose of eoln delimiter converting.
 		String replacedEolnDelimiter = Utilities.makeFlexCompatibleDelimiters(er.getFileContent()); // Inplace replacement of delimiters.
@@ -137,7 +144,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 		String replacedEolnDelimiter = er.getReplacedEolnDelimiter();
 
 		content = Utilities.revertFlexCompatibleDelimiters(content, replacedEolnDelimiter); // Creates a new copy does not affect the editableResource content.
-		EditorPlugin.getInstance().getFileAccessController().setContent(er.getFile(), content);
+		EditorPlugin.getInstance().getFileAccessController().setContent(er.getFile(), content.toString());
 		er.setDirty(false);
 	}
 	

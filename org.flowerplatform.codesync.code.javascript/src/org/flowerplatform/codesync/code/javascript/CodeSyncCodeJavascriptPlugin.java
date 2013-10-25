@@ -24,7 +24,6 @@ import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementPr
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
-import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;

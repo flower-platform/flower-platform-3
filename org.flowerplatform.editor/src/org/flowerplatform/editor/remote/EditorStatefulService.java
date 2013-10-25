@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.editor.remote;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -146,6 +145,10 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		}
 		
 		return result;
+	}
+	
+	public Map<String, EditableResource> getEditableResources() {
+		return Collections.unmodifiableMap(editableResources);
 	}
 	
 	/**
@@ -353,20 +356,9 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		// TODO CS/STFL de reactivat logica de stergere lista cand nu mai avem slave: cand vom face lock si la Master cand operam pe slave
 //		if (editableResource.getMasterEditableResource().getSlaveEditableResources() == null) {
 //			editableResource.getMasterEditableResource().setSlaveEditableResources(new ArrayList<EditableResource>());
-//		}
-		
+//		}		
 		try {
-			loadEditableResource(context, editableResource);
-		} catch (FileNotFoundException e) {
-			// Mariana: context may be null if the resource was reloaded by the resource changed listener
-			if (context != null) {
-				context.getCommunicationChannel().appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
-						"Resource not Found", String.format("The resource %s was not found", editableResource.getEditableResourcePath()), DisplaySimpleMessageClientCommand.ICON_WARNING));
-			}
-			// TODO CS/FP2 dezactivat act listener
-//			SingletonRefsInEditorPluginFromWebPlugin.INSTANCE_ACTIVITY_LISTENER.removeFromRecentResources(getFriendlyEditableResourcePath(calculateStatefulClientId(editableResource.getEditableResourcePath())));
-			logger.error(String.format("Error while loading resource %s", editableResource.getEditableResourcePath()), e);
-			return false;
+			loadEditableResource(context, editableResource);		
 		} catch (Throwable e) {
 			if (context != null) {
 				context.getCommunicationChannel().appendCommandToCurrentHttpResponse(new DisplaySimpleMessageClientCommand(
@@ -389,12 +381,12 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * it in the {@link EditableResource} object.
 	 * 
 	 * <p>
-	 * Should throw {@link FileNotFoundException} if the resource (file, diagram, etc) is not found. 
+	 * Should throw {@link Exception} if the resource (file, diagram, etc) is not found. 
 	 * If it encounters issues while loading, it should throw another type of exception.
 	 * 
 	 * 
 	 */
-	protected abstract void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException;
+	protected abstract void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource);
 	
 	/**
 	 * Invokes {@link #disposeEditableResource()}, being exception proof. If the resource is slave => we remove

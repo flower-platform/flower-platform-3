@@ -42,6 +42,7 @@ package  org.flowerplatform.editor.remote {
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	
 	/**
 	 * 

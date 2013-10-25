@@ -127,8 +127,8 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	}
 	
 	@Override
-	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
-		super.loadEditableResource(context, editableResource);		
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) {
+		super.loadEditableResource(context, editableResource);
 		DiagramEditableResource er = (DiagramEditableResource) editableResource;
 		URI resourceURI = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(er.getFile());
 		er.setChangeRecorder(new ChangeRecorder());
@@ -305,20 +305,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	public ScenarioTreeStatefulService getScenarioTreeStatefulService() {
 		return scenarioTree;
 	}
-	
-	public DiagramEditableResource getDiagramEditableResource(File project) {
-		if (project != null) {
-			String path = project.getAbsolutePath();
-			for (EditableResource er : editableResources.values()) {
-				DiagramEditableResource der = (DiagramEditableResource) er;				
-				if (EditorPlugin.getInstance().getFileAccessController().getAbsolutePath(der.getFile()).startsWith(path)) {
-					return der;
-				}
-			}
-		}
-		return null;
-	}
-	
+		
 	private DiagramEditableResource getDiagramEditableResource(ServiceInvocationContext context) {
 		return (DiagramEditableResource) context.getAdditionalData().get(ADDITIONAL_DATA_EDITABLE_RESOURCE);
 	}

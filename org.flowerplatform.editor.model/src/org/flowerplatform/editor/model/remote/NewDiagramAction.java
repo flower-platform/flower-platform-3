@@ -48,16 +48,17 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 	
 	@Override
 	public void executeCommand() {
-		File file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(parentPath);
-		// go to parent dir if actions was executed on a file
-		if (!file.isDirectory()) {
-			file = file.getParentFile();
-		}
-		
-		File diagram = new File(file, getNextDiagram(file, name));
+		File file;
+		File diagram;
 		try {
+			file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(parentPath);
+			// go to parent dir if actions was executed on a file
+			if (!file.isDirectory()) {
+				file = file.getParentFile();
+			}			
+			diagram = new File(file, getNextDiagram(file, name));
 			diagram.createNewFile();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 		

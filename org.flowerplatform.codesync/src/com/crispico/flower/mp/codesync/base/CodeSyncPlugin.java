@@ -49,6 +49,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.editor.remote.EditableResource;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,7 +241,18 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		File project = getProjectsProvider().getContainingProjectForFile(file);
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) CommunicationPlugin.getInstance()
 				.getServiceRegistry().getService(diagramEditorStatefulServiceId);
-		DiagramEditableResource diagramEditableResource = service.getDiagramEditableResource(project);
+
+		DiagramEditableResource diagramEditableResource = null;		
+		if (project != null) {
+			String path = project.getAbsolutePath();
+			for (EditableResource er : service.getEditableResources().values()) {
+				DiagramEditableResource der = (DiagramEditableResource) er;				
+				if (((File)der.getFile()).getAbsolutePath().startsWith(path)) {
+					diagramEditableResource = der;
+					break;
+				}
+			}
+		}
 		if (diagramEditableResource != null) {
 			return diagramEditableResource.getResourceSet();
 		}
@@ -259,7 +271,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		});
 		return resourceSet;
 	}
-	
+
 	/**
 	 * @author Mariana
 	 */

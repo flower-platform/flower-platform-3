@@ -43,7 +43,12 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 	@Override
 	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
 		for (Object object : draggedObjects) {
-			File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
+			File resource;
+			try {
+				resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
 			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
 			
 			if (!acceptDraggedObject(resource)) {
