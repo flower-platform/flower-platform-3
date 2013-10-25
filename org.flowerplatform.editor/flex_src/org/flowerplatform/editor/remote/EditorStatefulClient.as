@@ -43,6 +43,8 @@ package  org.flowerplatform.editor.remote {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+	import org.flowerplatform.flexutil.view_content_host.IViewHostAware;
 	
 	/**
 	 * 
@@ -224,7 +226,13 @@ package  org.flowerplatform.editor.remote {
 		protected function unsubscribeFromStatefulService_removeEditorFrontend(editorFrontend:EditorFrontend, editorFrontendIndex:int):void {
 			editorFrontends.removeItemAt(editorFrontendIndex);
 //			editorFrontend.resourceStatusBar.collaborativeDiagramViewer.setRootModel(null);
-			FlexUtilGlobals.getInstance().workbench.closeView(editorFrontend, false);			
+			
+			var component:UIComponent = editorFrontend;
+			if (component is IViewContent && component is IViewHostAware) {
+				// diagram case: viewContent is wrapped in WorkbenchViewHost, so get the exact component registered in layout
+				component = UIComponent(IViewHostAware(component).viewHost);
+			}
+			FlexUtilGlobals.getInstance().workbench.closeView(component, false);			
 		}
 		
 		protected function unsubscribeFromStatefulService_beforeUnsubscribeFromStatefulService(dataFromUnregistrator:Object):void {

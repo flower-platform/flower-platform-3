@@ -147,7 +147,7 @@ package org.flowerplatform.editor {
 				}
 				if (viewComponent is EditorFrontend) {
 					editorFrontends.addItem(viewComponent);					
-					e.dontRemoveViews.addItem(viewComponent);
+					e.dontRemoveViews.addItem(view);
 				}
 			}
 			if (editorFrontends.length > 0) {

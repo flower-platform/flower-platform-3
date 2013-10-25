@@ -24,6 +24,7 @@
     <classEntry path="org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup"/>
     <classEntry path="org.flowerplatform.flexutil.search.SearchView"/>
     <classEntry path="org.flowerplatform.flexutil.view_content_host.ICachedActionsAndSelectionProvider"/>
+    <classEntry path="org.flowerplatform.flexutil.view_content_host.IViewHostAware"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

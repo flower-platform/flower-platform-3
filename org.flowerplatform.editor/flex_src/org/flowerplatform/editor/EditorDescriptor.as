@@ -31,6 +31,8 @@ package  org.flowerplatform.editor {
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHostAware;
 
 	/**
 	 * Abstract class; should be subclassed.
@@ -110,13 +112,18 @@ package  org.flowerplatform.editor {
 									// bring it to front
 									var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
 									
-									// get graphical component for this editorFrontend
-									var editorComponent:UIComponent = workbench.getComponent(viewLayoutData.viewId, viewLayoutData.customData);
+									var editorFrontend:EditorFrontend = EditorFrontend(existingEditorStatefulClient.editorFrontends[0]);
+									
+									var component:UIComponent = editorFrontend;
+									if (component is IViewContent && component is IViewHostAware) {
+										// diagram case: viewContent is wrapped in WorkbenchViewHost, so get the exact component registered in layout
+										component = UIComponent(IViewHostAware(component).viewHost);
+									}
 									
 									// normally if the ESC exists => it has at least 1 EditorFrontend; if abnormally this is not true => exception here
-									workbench.setActiveView(editorComponent);
+									workbench.setActiveView(editorFrontend);
 									// and exit
-									return editorComponent;
+									return editorFrontend;									
 								}
 							}
 						}

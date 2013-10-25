@@ -44,17 +44,18 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
+	import org.flowerplatform.flexutil.view_content_host.IViewHostAware;
 	
 	/**
 	 * @author Cristian Spiescu
 	 * @author Cristina Constantinescu
 	 */	
-	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider, ISelectionForServerProvider {
+	public class DiagramEditorFrontend extends EditorFrontend implements IViewContent, IFocusManagerComponent, ISelectionProvider, ISelectionForServerProvider, IViewHostAware {
 	
-	/**
-	 * @author Cristian Spiescu
-	 * @author Cristina Constantinescu
-	 */ 
+		/**
+		 * @author Cristian Spiescu
+		 * @author Cristina Constantinescu
+		 */ 
 		public var diagramShell:DiagramShell;
 		
 		protected var _viewHost:IViewHost;
