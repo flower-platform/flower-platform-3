@@ -75,6 +75,13 @@
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
             swfobject.createCSS("#flashContent", "display:block;text-align:left;");
         </script>
+        <script type="text/javascript">
+	        window.onbeforeunload = function () {
+	        	if (window["FlexHostApp"].invokeSaveResourcesDialog()) {
+	        		return "There are unsaved changes, which might be lost. Are you sure you want to leave the page?" ;
+	        	}
+        };
+        </script>
     </head>
     <body>
         <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 

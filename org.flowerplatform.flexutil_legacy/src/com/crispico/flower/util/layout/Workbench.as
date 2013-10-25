@@ -88,8 +88,8 @@ package  com.crispico.flower.util.layout {
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
-	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
-	import org.flowerplatform.flexutil.shortcuts.Shortcut;
+	import org.flowerplatform.flexutil.shortcut.KeyBindings;
+	import org.flowerplatform.flexutil.shortcut.Shortcut;
 	
 	import spark.components.NavigatorContent;
 
