@@ -46,11 +46,9 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
-	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer;
-	import org.flowerplatform.editor.model.renderer.OperationsSeparatorRenderer;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Edge;
@@ -154,15 +152,6 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classDiagram.javaClass.title"] = composedControllerProviderFactory;
 			
-			// class separators
-			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: AttributesSeparatorRenderer});
-			composedControllerProviderFactories["classAttributesCompartmentSeparator"] = composedControllerProviderFactory;
-			
-			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: OperationsSeparatorRenderer});
-			composedControllerProviderFactories["classOperationsCompartmentSeparator"] = composedControllerProviderFactory;
-
 			// scenario interaction
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);

@@ -21,6 +21,7 @@ package org.flowerplatform.codesync.code.javascript;
 import org.flowerplatform.codesync.code.javascript.changes_processor.TableViewProcessor;
 import org.flowerplatform.codesync.code.javascript.operation_extension.JavaScriptFeatureAccessExtension;
 import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncCategorySeparatorProcessor;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -67,6 +68,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setIconUrl("images/full/obj16/methpub_obj.gif")
 				.setDefaultName("newOperation")
 				.addCodeSyncTypeCategory("backboneClassMember")
+				.setCategory("operations")
 				.setNextSiblingSeparator(", ")
 				.addFeature("name")
 				.addFeature("parameters")
@@ -78,6 +80,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setIconUrl("images/full/obj16/field_public_obj.gif")
 				.setDefaultName("newAttribute")
 				.addCodeSyncTypeCategory("backboneClassMember")
+				.setCategory("attributes")
 				.setNextSiblingSeparator(", ")
 				.addFeature("defaultValue")
 				.addFeature("name")
@@ -89,6 +92,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setIconUrl("images/full/obj16/imp_obj.gif")
 				.setDefaultName("newRequireEntry")
 				.addCodeSyncTypeCategory("requireEntry")
+				.setCategory("require")
 				.addFeature("varName")
 				.addFeature("dependencyPath")
 				.setKeyFeature("varName"));
@@ -100,6 +104,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setDefaultName("events")
 				.addCodeSyncTypeCategory("backboneClassMember")
 				.addChildrenCodeSyncTypeCategory("eventsAttributeEntry")
+				.setCategory("attributes")
 				.setNextSiblingSeparator(", ")
 				.addFeature("name")
 				.setKeyFeature("name"));
@@ -111,6 +116,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setDefaultName("routes")
 				.addCodeSyncTypeCategory("backboneClassMember")
 				.addChildrenCodeSyncTypeCategory("routesAttributeEntry")
+				.setCategory("attributes")
 				.setNextSiblingSeparator(", ")
 				.addFeature("name")
 				.setKeyFeature("name"));
@@ -206,7 +212,6 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension());
 		
 		JavascriptElementProcessor processor = new JavascriptElementProcessor();
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.title", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", processor);
@@ -215,14 +220,14 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", processor);
 		
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.title", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", processor);
 		
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.title", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", processor);
 		
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.title", processor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", processor);
+		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("title", processor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("categorySeparator", new CodeSyncCategorySeparatorProcessor());
 		
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("backboneClass", new TableViewProcessor());
 	}

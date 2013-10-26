@@ -19,6 +19,7 @@
 package org.flowerplatform.codesync.remote;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -64,6 +65,10 @@ public class CodeSyncDiagramOperationsService1 {
 		Node view = NotationFactory.eINSTANCE.createNode();
 		view.setDiagrammableElement(codeSyncElement);
 		View parentView = viewIdOfParent == null ? null : getViewById(context.getAdditionalData(), viewIdOfParent);
+		
+		if (parameters == null) {
+			parameters = new HashMap<String, Object>();
+		}
 		
 		// run all AddNewExtensions
 		Resource codeSyncMappingResource = getCodeSyncMappingResource(getEditableResource(context.getAdditionalData()));

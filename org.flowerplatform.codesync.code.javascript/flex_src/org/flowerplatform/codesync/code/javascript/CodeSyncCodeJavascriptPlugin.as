@@ -28,6 +28,7 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
@@ -102,11 +103,12 @@ package org.flowerplatform.codesync.code.javascript {
 			// title
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.backboneClass.title"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.table.title"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.tableItem.title"] = composedControllerProviderFactory;
-			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.form.title"] = composedControllerProviderFactory;
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["title"] = composedControllerProviderFactory;
 			
+			// category separator
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: SeparatorRenderer });
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["categorySeparator"] = composedControllerProviderFactory;
 		}
 		
 		override protected function registerMessageBundle():void {

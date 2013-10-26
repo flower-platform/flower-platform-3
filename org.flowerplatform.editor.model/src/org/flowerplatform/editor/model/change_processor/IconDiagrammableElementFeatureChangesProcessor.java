@@ -27,8 +27,6 @@ import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 import org.flowerplatform.emf_model.notation.View;
 
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-
 /**
  * @author Mariana Gheorghe
  */
