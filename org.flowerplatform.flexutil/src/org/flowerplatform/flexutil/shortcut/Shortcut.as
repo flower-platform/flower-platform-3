@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.flexutil.shortcuts {
+package org.flowerplatform.flexutil.shortcut {
 	
 	import mx.controls.Alert;
 

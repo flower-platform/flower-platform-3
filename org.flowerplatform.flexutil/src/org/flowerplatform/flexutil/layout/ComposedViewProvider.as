@@ -127,9 +127,9 @@ package  org.flowerplatform.flexutil.layout {
 				if (viewLayoutData.viewId == viewProvider.getId()) {			
 					var title:String = viewProvider.getTitle(viewLayoutData);
 					var component:UIComponent = FlexUtilGlobals.getInstance().workbench.getComponent(viewLayoutData.viewId, viewLayoutData.customData);
-					if (component is IDirtyStateProvider) {
-						if (IDirtyStateProvider(component).isDirty()) {
-							title = "*" + title;
+					if (component is ITitleDecorator) {
+						if (component is ITitleDecorator) {
+							title = ITitleDecorator(component).decorateTitle(title); 
 						}
 					}
 					return title;

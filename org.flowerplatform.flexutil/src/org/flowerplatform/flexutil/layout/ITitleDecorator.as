@@ -17,16 +17,8 @@
 * license-end
 */
 package org.flowerplatform.flexutil.layout {
-
-	public interface IDirtyStateProvider {
+	public interface ITitleDecorator {
+		function decorateTitle(title:String):String;
 		
-		/**
-		 * Should return the dirty state of the current component (used
-		 * when calculating the tab label, i.e. to show or not the "*" sign).
-		 * 
-		 */
-		function isDirty():Boolean;
-		
-		function getEditorStatefulClientForSelectedElement():Object;
 	}
 }

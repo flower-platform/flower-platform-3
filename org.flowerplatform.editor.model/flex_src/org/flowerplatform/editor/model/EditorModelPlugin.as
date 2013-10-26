@@ -39,6 +39,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
+	import org.flowerplatform.editor.model.controller.ResizeController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
@@ -130,6 +131,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.visualChildrenControllerClass = new FactoryWithInitialization(SequentialLayoutVisualChildrenController);
 			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
+			composedControllerProviderFactory.resizeControllerClass = new FactoryWithInitialization(ResizeController);
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			standardControllerProviderFactories["topLevelBoxChild"] = composedControllerProviderFactory;

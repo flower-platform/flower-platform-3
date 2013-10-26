@@ -112,7 +112,9 @@ package org.flowerplatform.flexutil.tree {
 				modelWrapper.nestingLevel = nestingLevel;
 				modelWrapper.treeNode = treeNode;
 				newLinearizedArray.push(modelWrapper);
-				hierarchicalModelAdapter.getChildren(modelWrapper.treeNode).addEventListener(CollectionEvent.COLLECTION_CHANGE, hierarchicalModelChangedHandler);
+				if (hierarchicalModelAdapter.getChildren(modelWrapper.treeNode) != null) {
+					hierarchicalModelAdapter.getChildren(modelWrapper.treeNode).addEventListener(CollectionEvent.COLLECTION_CHANGE, hierarchicalModelChangedHandler);
+				}
 			}
 			
 			var value:int = expandedNodesMap[treeNode];
@@ -122,8 +124,10 @@ package org.flowerplatform.flexutil.tree {
 			if ((value & EXPANDED) == EXPANDED) {
 				modelWrapper.expanded = true;
 				var childrenList:IList = hierarchicalModelAdapter.getChildren(treeNode);
-				for (var i:int = 0; i < childrenList.length; i++) {
-					addNodeToNewLinearizedArray(nestingLevel + 1, IEventDispatcher(childrenList.getItemAt(i)), newLinearizedArray, expandedNodesMap, newSelectionIndices);					
+				if (childrenList != null) {
+					for (var i:int = 0; i < childrenList.length; i++) {
+						addNodeToNewLinearizedArray(nestingLevel + 1, IEventDispatcher(childrenList.getItemAt(i)), newLinearizedArray, expandedNodesMap, newSelectionIndices);					
+					}
 				}
 			}
 		}
@@ -132,7 +136,9 @@ package org.flowerplatform.flexutil.tree {
 			var result:Dictionary = new Dictionary();
 			for (var i:int = 0; i < dataProvider.length; i++) {
 				var current:HierarchicalModelWrapper = HierarchicalModelWrapper(IList(dataProvider).getItemAt(i));
-				hierarchicalModelAdapter.getChildren(current.treeNode).removeEventListener(CollectionEvent.COLLECTION_CHANGE, hierarchicalModelChangedHandler);
+				if (hierarchicalModelAdapter.getChildren(current.treeNode) != null) {
+					hierarchicalModelAdapter.getChildren(current.treeNode).removeEventListener(CollectionEvent.COLLECTION_CHANGE, hierarchicalModelChangedHandler);
+				}
 				var value:int = 0;
 				if (current.expanded) {
 					value = value | EXPANDED;

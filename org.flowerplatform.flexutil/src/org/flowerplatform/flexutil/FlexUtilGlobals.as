@@ -29,7 +29,7 @@ package org.flowerplatform.flexutil {
 	import org.flowerplatform.flexutil.popup.IPopupHandlerFactory;
 	import org.flowerplatform.flexutil.popup.IProgressMonitorFactory;
 	import org.flowerplatform.flexutil.selection.SelectionManager;
-	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
+	import org.flowerplatform.flexutil.shortcut.KeyBindings;
 
 	public class FlexUtilGlobals {
 
