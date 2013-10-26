@@ -1,6 +1,7 @@
 // Adding a new descriptor
 
 importClass(org.flowerplatform.codesync.remote.CodeSyncElementDescriptor);
+importClass(com.crispico.flower.mp.codesync.base.CodeSyncPlugin);
 
 var descriptor = new CodeSyncElementDescriptor();
 descriptor.codeSyncType = "backboneClass1";
@@ -14,13 +15,11 @@ descriptor.addFeature("superClass1");
 descriptor.addFeature("name");
 descriptor.keyFeature = "name";
 descriptor.standardDiagramControllerProviderFactory = "topLevelBox";
-
-importClass(com.crispico.flower.mp.codesync.base.CodeSyncPlugin);
 CodeSyncPlugin.instance.codeSyncElementDescriptors.add(descriptor);
 
 descriptor = new CodeSyncElementDescriptor();
-descriptor.codeSyncType = "javaScriptOperation";
-descriptor.label = "Operation";
+descriptor.codeSyncType = "javaScriptOperation1";
+descriptor.label = "Operation (js)";
 descriptor.iconUrl = "images/full/obj16/methpub_obj.gif";
 descriptor.defaultName = "newOperation (from js)";
 descriptor.addCodeSyncTypeCategory("backboneClassMember1");
@@ -32,8 +31,8 @@ descriptor.standardDiagramControllerProviderFactory = "topLevelBoxChild";
 CodeSyncPlugin.instance.codeSyncElementDescriptors.add(descriptor);
 
 descriptor = new CodeSyncElementDescriptor();
-descriptor.codeSyncType = "javaScriptAttribute";
-descriptor.label = "Attribute";
+descriptor.codeSyncType = "javaScriptAttribute1";
+descriptor.label = "Attribute (js)";
 descriptor.iconUrl = "images/full/obj16/field_public_obj.gif";
 descriptor.defaultName = "newAttribute (from js)";
 descriptor.addCodeSyncTypeCategory("backboneClassMember1");
@@ -72,9 +71,9 @@ var proc = new JavaAdapter(JavascriptElementProcessor, {
 	getLabel: function(object, forEditing) {
 		var name = CodeSyncOperationsService.instance
 				.getFeatureValue(object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		return name + "(from js)";
+		return name + "-js";
 	}
 });
 
-EditorModelPlugin.instance.diagramUpdaterChangeProcessor.addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass1.javaScriptOperation", proc);
-EditorModelPlugin.instance.diagramUpdaterChangeProcessor.addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass1.javaScriptAttribute", proc);
+EditorModelPlugin.instance.diagramUpdaterChangeProcessor.addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass1.javaScriptOperation1", proc);
+EditorModelPlugin.instance.diagramUpdaterChangeProcessor.addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass1.javaScriptAttribute1", proc);
