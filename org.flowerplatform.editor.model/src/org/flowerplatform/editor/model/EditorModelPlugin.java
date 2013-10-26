@@ -27,6 +27,7 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
+import org.flowerplatform.editor.model.change_processor.NoteChangeProcessor;
 import org.flowerplatform.editor.model.changes_processor.ClassCriterionDispatcherProcessor;
 import org.flowerplatform.editor.model.changes_processor.MainChangesDispatcher;
 import org.flowerplatform.emf_model.notation.Bounds;
@@ -36,6 +37,7 @@ import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
+import org.flowerplatform.emf_model.notation.Note;
 import org.flowerplatform.emf_model.notation.View;
 import org.osgi.framework.BundleContext;
 
@@ -145,6 +147,11 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("persistentEdges_RH")
 		.register();
 		
+		new CustomSerializationDescriptor(Note.class)
+		.addDeclaredProperties(viewSD.getDeclaredProperties())
+		.addDeclaredProperty("text")		
+		.register();
+		
 		CustomSerializationDescriptor superClassSD = new CustomSerializationDescriptor(Location.class)
 		.addDeclaredProperty("id")
 		.addDeclaredProperty("y")
@@ -156,8 +163,9 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("width")
 		.addDeclaredProperty("height")
 		.register();
-		
+				
 		getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());
+		getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.note", new NoteChangeProcessor());
 	}
 
 	protected void initExtensionPoint_dragOnDiagramHandler() throws CoreException {

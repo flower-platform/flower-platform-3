@@ -23,6 +23,7 @@
     <classEntry path="org.flowerplatform.editor.model.renderer.ShapeDrawer"/>
     <classEntry path="org.flowerplatform.editor.model.action.AddRelatedElementsAction"/>
     <classEntry path="org.flowerplatform.editor.model.BoxRendererLayout"/>
+    <classEntry path="org.flowerplatform.emf_model.notation.Note"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
