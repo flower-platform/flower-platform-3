@@ -34,14 +34,14 @@ import org.eclipse.orion.internal.server.servlets.workspace.WebWorkspace;
 import org.eclipse.orion.server.core.users.OrionScope;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.editor.EditorPlugin;
-import org.flowerplatform.editor.file.FileAccessController;
+import org.flowerplatform.editor.file.PlainFileAccessController;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * @author Cristina Constantinescu
  */
 @SuppressWarnings({ "deprecation", "restriction" })
-public class OrionFileAccessController extends FileAccessController {
+public class OrionFileAccessController extends PlainFileAccessController {
 	
 	@Override
 	public String getPath(Object file) {

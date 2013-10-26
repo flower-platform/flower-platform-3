@@ -51,7 +51,7 @@ public class MainChangesDispatcher {
 			if (featureChange.getFeature() instanceof EReference) {
 				if (!featureChange.getFeature().isMany()) {
 					// TODO CS/CS3 LOW de prelucrat si cazul in care avem containment pe feature care nu e many
-					throw new UnsupportedOperationException("Reference feature that is not many is not yet supported; feature = " + featureChange.getFeatureName());
+//					throw new UnsupportedOperationException("Reference feature that is not many is not yet supported; feature = " + featureChange.getFeatureName());
 				} else {
 					// many
 					if (featureChange.getListChanges().isEmpty()) {

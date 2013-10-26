@@ -115,8 +115,11 @@ package org.flowerplatform.common {
 		}
 			
 		public function getBrowserURLWithoutQuery():String {
-			var browserURL:String = FlexGlobals.topLevelApplication.url;
-			return browserURL.split("?")[0];
+			if (ExternalInterface.available) {
+				var browserURL:String = ExternalInterface.call("getURL");
+				return browserURL.split("?")[0];
+			}
+			 return null;
 		}
 	
 	}

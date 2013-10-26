@@ -18,12 +18,16 @@
  */
 package org.flowerplatform.codesync.remote;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
+import org.flowerplatform.communication.stateful_service.RemoteInvocation;
+import org.flowerplatform.editor.EditorPlugin;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
@@ -234,6 +238,19 @@ public class CodeSyncOperationsService {
 	public List<String> getFeatures(String codeSyncType) {
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
 		return descriptor.getFeatures();
+	}
+	
+	@RemoteInvocation
+	public void synchronize(ServiceInvocationContext context, String path, String technology) {
+		File diagram;
+		try {
+			diagram = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
+		} catch (Exception e) {
+			throw new RuntimeException(path);
+		}
+		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(diagram);
+		File srcDir = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, "js");
+		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, srcDir, technology, context.getCommunicationChannel(), true);
 	}
 	
 }

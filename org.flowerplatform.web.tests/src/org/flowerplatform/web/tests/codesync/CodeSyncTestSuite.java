@@ -41,13 +41,22 @@ public class CodeSyncTestSuite extends EclipseDependentTestSuiteBase {
 	// TODO CS/need centralized project get/set/copy/etc
 	public static File getProject(String project) {
 		String absolutePath = "/org/ws_trunk/" + project;
-		File resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile(absolutePath);
+		File resource = null;
+		try {
+			resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile(absolutePath);
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("Error while getting resource %s", absolutePath), e);
+		}
 		return CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
 	}
 	
 	public static File getFile(String path) {
 		String absolutePath = "/org/ws_trunk/" + path;
-		return (File) EditorPlugin.getInstance().getFileAccessController().getFile(absolutePath);
+		try {
+			return (File) EditorPlugin.getInstance().getFileAccessController().getFile(absolutePath);
+		} catch (Exception e) {			
+			throw new RuntimeException(String.format("Error while getting resource %s", absolutePath), e);
+		}
 	}
 	
 }

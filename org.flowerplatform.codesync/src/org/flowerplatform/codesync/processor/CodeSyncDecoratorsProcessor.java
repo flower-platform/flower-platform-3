@@ -26,45 +26,53 @@ import com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl;
 
 /**
  * @author Sebastian Solomon
+ * @author Mariana Gheorghe
  */
 public abstract class CodeSyncDecoratorsProcessor extends
 		IconDiagrammableElementFeatureChangesProcessor {
 
 	@Override
 	protected String getIconUrls(EObject object) {
-		String codeSyncPackage = CodeSyncPlugin.getInstance()
-				.getBundleContext().getBundle().getSymbolicName();
-		String url = getIconBeforeCodeSyncDecoration(object);
+		String url = prefixWithCodeSyncBundleName(getIconBeforeCodeSyncDecoration(object));
 
 		if (object instanceof CodeSyncElementImpl) {
 
 			CodeSyncElementImpl codeSyncElement = (CodeSyncElementImpl) object;
 			if (codeSyncElement.isDeleted()) {
-				url += "|" + codeSyncPackage
-						+ "/images/full/ovr16/syncMarker_deleted.gif";
+				url += "|"
+						+ prefixWithCodeSyncBundleName("/images/full/ovr16/syncMarker_deleted.gif");
 				return url;
 			}
 
 			if (codeSyncElement.isAdded()) {
-				url += "|" + codeSyncPackage
-						+ "/images/full/ovr16/syncMarker_added.gif";
+				url += "|" 
+						+ prefixWithCodeSyncBundleName("/images/full/ovr16/syncMarker_added.gif");
 				return url;
 			}
 
 			if (!codeSyncElement.isSynchronized()) {
-				url += "|" + codeSyncPackage
-						+ "/images/full/ovr16/syncMarker_red.gif";
+				url += "|" 
+						+ prefixWithCodeSyncBundleName("/images/full/ovr16/syncMarker_red.gif");
 			} else if (codeSyncElement.isChildrenSynchronized()) {
-				url += "|" + codeSyncPackage
-						+ "/images/full/ovr16/syncMarker_green.gif";
+				url += "|"
+						+ prefixWithCodeSyncBundleName("/images/full/ovr16/syncMarker_green.gif");
 			} else
-				url += "|" + codeSyncPackage
-						+ "/images/full/ovr16/syncMarker_orange.gif";
+				url += "|"
+						+ prefixWithCodeSyncBundleName("/images/full/ovr16/syncMarker_orange.gif");
 		}
 
 		return url;
 	}
 
+	private String prefixWithCodeSyncBundleName(String image) {
+		String codeSyncPackage = CodeSyncPlugin.getInstance()
+				.getBundleContext().getBundle().getSymbolicName();
+		if (!image.startsWith("/")) {
+			image = "/" + image;
+		}
+		return codeSyncPackage + image;
+	}
+	
 	abstract public String getIconBeforeCodeSyncDecoration(EObject object);
 
 }

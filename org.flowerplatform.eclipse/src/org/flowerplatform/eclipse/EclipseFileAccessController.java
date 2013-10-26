@@ -1,5 +1,7 @@
 package org.flowerplatform.eclipse;
 
+import java.io.InputStream;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.editor.file.IFileAccessController;
@@ -20,17 +22,13 @@ public class EclipseFileAccessController implements IFileAccessController {
 	}
 
 	@Override
-	public StringBuffer getContent(Object file) {
-		return null;
+	public InputStream getContent(Object file) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public void setContent(Object file, StringBuffer content) {		
-	}
-
-	@Override
-	public String getAbsolutePath(Object file) {
-		return ((IFile) file).getFullPath().toFile().getAbsolutePath();
+	public void setContent(Object file, String content) {		
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

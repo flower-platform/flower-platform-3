@@ -71,7 +71,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	}
 
 	@Override
-	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) throws FileNotFoundException {
+	protected void loadEditableResource(StatefulServiceInvocationContext context, EditableResource editableResource) {
 	}
 
 	@Override

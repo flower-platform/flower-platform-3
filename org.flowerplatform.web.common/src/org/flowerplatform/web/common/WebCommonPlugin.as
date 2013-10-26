@@ -162,7 +162,7 @@ package org.flowerplatform.web.common {
 			});
 			heartbeatStatefulClient = new HeartbeatStatefulClient();
 			
-			explorerTreeActionProviders.push(CodeSyncPlugin.getInstance().codeSyncTreeActionProvider);
+//			explorerTreeActionProviders.push(CodeSyncPlugin.getInstance().codeSyncTreeActionProvider);
 		}
 		
 		/**

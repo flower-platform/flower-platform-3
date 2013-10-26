@@ -51,7 +51,7 @@ package org.flowerplatform.flexdiagram.ui {
 			
 			if (colors.length == 1) {
 				graphics.lineStyle(1);
-				graphics.beginFill(colors.pop(), alphas.pop());
+				graphics.beginFill(colors[0], alphas[0]);
 			} else {
 				var matrix:Matrix = new Matrix();
 				matrix.createGradientBox(unscaledWidth, unscaledHeight, gradientBoxRotation);

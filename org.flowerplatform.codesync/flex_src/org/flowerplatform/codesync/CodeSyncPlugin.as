@@ -35,6 +35,7 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
+	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
@@ -50,6 +51,7 @@ package org.flowerplatform.codesync {
 		
 		/**
 		 * String (CodeSync type) to CodeSyncElementDescriptor.
+		 * "" -> top level elements.
 		 * 
 		 * @see computeAvailableChildrenForCodeSyncType()
 		 */
@@ -77,6 +79,7 @@ package org.flowerplatform.codesync {
 			super.start();
 			
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddNewCodeSyncElementActionProvider());
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(codeSyncTreeActionProvider);
 		}
 		
 		
@@ -110,6 +113,13 @@ package org.flowerplatform.codesync {
 			this.codeSyncElementDescriptors = codeSyncElementDescriptors;
 			
 			computeAvailableChildrenForCodeSyncType();
+			// TODO CS/JS: we could add a new field in the descriptor (to get rid of the map)? or do the processing in the
+			// constructor?
+			var topLevelDescriptors:ArrayCollection = availableChildrenForCodeSyncType[""];
+			if (topLevelDescriptors != null) {
+				// TODO CS/JS: hardcoded diagram type
+				registerControllerProviderFactories("classDiagram", topLevelDescriptors);				
+			}
 		}
 		
 		/**
@@ -147,6 +157,22 @@ package org.flowerplatform.codesync {
 				}
 			}
 			return parents;
+		}
+		
+		// TODO CS/JS in web mode: would it make sens that users can have their own?
+		private function registerControllerProviderFactories(viewTypePrefix:String, childDescriptorsForCurrentLevel:ArrayCollection):void  {
+			for each (var childDescriptor:CodeSyncElementDescriptor in childDescriptorsForCurrentLevel) {
+				var standardControllerProviderFactory:ComposedControllerProviderFactory = EditorModelPlugin.getInstance().standardControllerProviderFactories[childDescriptor.standardDiagramControllerProviderFactory];
+				var viewType:String = viewTypePrefix + "." + childDescriptor.codeSyncType;
+				if (standardControllerProviderFactory != null) {
+					// the current descriptor wants a standard ContrProvFact
+					EditorModelPlugin.getInstance().composedControllerProviderFactories[viewType] = standardControllerProviderFactory;
+				}
+				var children:ArrayCollection = availableChildrenForCodeSyncType[childDescriptor.codeSyncType];
+				if (children != null) {
+					registerControllerProviderFactories(viewType, children);
+				}
+			}
 		}
 		
 	}

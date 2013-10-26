@@ -1,14 +1,15 @@
 package org.flowerplatform.web;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.editor.file.FileAccessController;
+import org.flowerplatform.editor.file.PlainFileAccessController;
 
 /**
  * @author Cristina Constantinescu
  */
-public class WebFileAccessController extends FileAccessController {
+public class WebFileAccessController extends PlainFileAccessController {
 
 	@Override
 	public String getPath(Object file) {		
@@ -16,8 +17,12 @@ public class WebFileAccessController extends FileAccessController {
 	}
 
 	@Override
-	public Object getFile(String path) {
-		return new File(CommonPlugin.getInstance().getWorkspaceRoot(), path);
+	public Object getFile(String path) throws FileNotFoundException {
+		File file = new File(CommonPlugin.getInstance().getWorkspaceRoot(), path);
+		if (!file.exists()) {
+			throw new FileNotFoundException(path);
+		}
+		return file;
 	}
 
 }

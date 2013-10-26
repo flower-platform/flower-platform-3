@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
@@ -90,6 +91,9 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 	public WebPlugin() {
 		super();
 		INSTANCE = this;
+		
+		CommonPlugin.getInstance().initializeFlowerProperties(
+				this.getClass().getClassLoader().getResourceAsStream("META-INF/flower-web.properties"));
 
 		// Initially, this initialization was in the attribute initializer. But this lead to an issue:
 		// .communication was loaded, which processed the extension points, including services, 
@@ -150,19 +154,14 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 					CommunicationPlugin.getInstance().getServiceRegistry().registerService(ProjectsService.SERVICE_ID, new ProjectsService());
 				} catch (Exception e) {
 					throw new RuntimeException(e);
-				}				
+				}
 				EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
 				EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
+	
+				CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());		
 			}
-		});
-		
-		EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
-		EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());
-		
-		CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());
-		CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION;
-		CodeSyncPlugin.getInstance().ACE_FILE_LOCATION = ProjectsService.LINK_TO_PROJECT + CodeSyncPlugin.getInstance().ACE_FILE_LOCATION;
-		
+		});	
+
 	}
 	 
 	private void initExtensionPoint_nodeTypeToCategoriesMapping() {

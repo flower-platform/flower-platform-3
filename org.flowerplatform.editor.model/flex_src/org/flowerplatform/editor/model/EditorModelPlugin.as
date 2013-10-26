@@ -40,6 +40,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.controller.EdgeRendererController;
 	import org.flowerplatform.editor.model.controller.InplaceEditorController;
 	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
+	import org.flowerplatform.editor.model.controller.ResizeController;
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
@@ -92,6 +93,16 @@ package org.flowerplatform.editor.model {
 		
 		public var notationDiagramClassFactoryActionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider();
 		
+		/**
+		 * Map[String] -> ComposedControllerProviderFactory.
+		 * 
+		 * <p>
+		 * Holds controllerProviderFactories for standard/common figure types. E.g. topLevelBox, topLevelBoxChild, etc.
+		 * Registrations should be made during <code>preStart()</code>. The entries can be consumed starting form <code>
+		 * start()</code>.
+		 */
+		public var standardControllerProviderFactories:Dictionary = new Dictionary();
+		
 		public static function getInstance():EditorModelPlugin {
 			return INSTANCE;
 		}
@@ -108,14 +119,45 @@ package org.flowerplatform.editor.model {
 			}
 			INSTANCE = this;
 			
+			var composedControllerProviderFactory:ComposedControllerProviderFactory; 
+			
+			// some standard standardControllerProviderFactories
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			standardControllerProviderFactories["topLevelBox"] = composedControllerProviderFactory;
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new FactoryWithInitialization(NodeAbsoluteLayoutRectangleController);
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(BoxRendererController, { removeRendererIfModelIsDisposed: true });
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
+			composedControllerProviderFactory.dragControllerClass = new FactoryWithInitialization(AbsoluteNodePlaceHolderDragController);
+			composedControllerProviderFactory.visualChildrenControllerClass = new FactoryWithInitialization(SequentialLayoutVisualChildrenController);
+			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
+			composedControllerProviderFactory.resizeControllerClass = new FactoryWithInitialization(ResizeController);
+			
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			standardControllerProviderFactories["topLevelBoxChild"] = composedControllerProviderFactory;
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
+			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
+			if (!FlexUtilGlobals.getInstance().isMobile) {
+				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController);
+			}
+			
+			// these controllerProvFactories are registered directly in composedControllerProviderFactories; not in standardControllerProviderFactories
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["topLevelBoxTitle"] = composedControllerProviderFactory;
+			
+			// other initializations
 			notationDiagramActionProviders.push(notationDiagramClassFactoryActionProvider);
 			
 			var editorDescriptor:NotationDiagramEditorDescriptor = new NotationDiagramEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 			
-			var composedControllerProviderFactory:ComposedControllerProviderFactory; 
-			
+			// TODO CS/JS to delete, and change to model desc
 			// classDiagram
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);

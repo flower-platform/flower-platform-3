@@ -35,6 +35,7 @@ package org.flowerplatform.codesync.remote {
 		public var childrenCodeSyncTypeCategories:ArrayCollection;
 		public var features:ArrayCollection;
 		public var keyFeature:String;
+		public var standardDiagramControllerProviderFactory:String;
 		
 	}
 }

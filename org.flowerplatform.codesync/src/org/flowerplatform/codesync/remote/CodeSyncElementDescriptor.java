@@ -49,6 +49,8 @@ public class CodeSyncElementDescriptor {
 	
 	private String nextSiblingSeparator;
 	
+	private String standardDiagramControllerProviderFactory;
+	
 	public CodeSyncElementDescriptor() {
 		codeSyncTypeCategories = new ArrayList<String>();
 		childrenCodeSyncTypeCategories = new ArrayList<String>();
@@ -159,6 +161,16 @@ public class CodeSyncElementDescriptor {
 
 	public CodeSyncElementDescriptor setNextSiblingSeparator(String nextSiblingSeparator) {
 		this.nextSiblingSeparator = nextSiblingSeparator;
+		return this;
+	}
+
+	public String getStandardDiagramControllerProviderFactory() {
+		return standardDiagramControllerProviderFactory;
+	}
+
+	public CodeSyncElementDescriptor setStandardDiagramControllerProviderFactory(
+			String standardDiagramControllerProviderFactory) {
+		this.standardDiagramControllerProviderFactory = standardDiagramControllerProviderFactory;
 		return this;
 	}
 	
