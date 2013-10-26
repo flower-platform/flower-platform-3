@@ -69,8 +69,8 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				
 				// create context
 				var context:Object = new Object();
-				context.sourceId = sourceModel.id;
-				context.targetId =  targetModel.id;	
+				context.sourceModel = sourceModel;
+				context.targetModel =  targetModel;	
 				// dispatch event in order to let others implement the creation behavior
 				diagramShell.dispatchEvent(new ExecuteDragToCreateEvent(context, true));
 			} else {

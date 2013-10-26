@@ -42,9 +42,11 @@ import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispat
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncAction;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -95,6 +97,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
+	
+	protected List<RelationDescriptor> relationDescriptors;
 
 	protected List<FeatureAccessExtension> featureAccessExtensions;
 	
@@ -142,6 +146,10 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return codeSyncElementDescriptors;
 	}
 	
+	public List<RelationDescriptor> getRelationDescriptors() {
+		return relationDescriptors;
+	}
+
 	public CodeSyncElementDescriptor getCodeSyncElementDescriptor(String codeSyncType) {
 		for (CodeSyncElementDescriptor descriptor : getCodeSyncElementDescriptors()) {
 			if (descriptor.getCodeSyncType().equals(codeSyncType)) {
@@ -172,6 +180,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 		
 		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
+		relationDescriptors = new ArrayList<RelationDescriptor>();
 		
 		addNewExtensions = new ArrayList<AddNewExtension>();
 		addNewExtensions.add(new AddNewTopLevelElementExtension());
@@ -204,6 +213,18 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("keyFeature")
 			.addDeclaredProperty("standardDiagramControllerProviderFactory")
 			.register();
+		
+		new CustomSerializationDescriptor(RelationDescriptor.class)
+			.addDeclaredProperty("type")
+			.addDeclaredProperty("label")
+			.addDeclaredProperty("iconUrl")
+			.addDeclaredProperty("sourceCodeSyncTypes")
+			.addDeclaredProperty("targetCodeSyncTypes")
+			.addDeclaredProperty("sourceCodeSyncTypeCategories")
+			.addDeclaredProperty("targetCodeSyncTypeCategories")
+			.register();
+		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {

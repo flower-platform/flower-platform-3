@@ -27,17 +27,23 @@ package org.flowerplatform.codesync {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.codesync.action.AddNewCodeSyncElementActionProvider;
+	import org.flowerplatform.codesync.action.AddNewRelationAction;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+	import org.flowerplatform.codesync.remote.RelationDescriptor;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.command.CompoundServerCommand;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.editor.EditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
+	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
+	import org.flowerplatform.flexdiagram.ui.RelationAnchor;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
+	import org.flowerplatform.flexutil.action.VectorActionProvider;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -45,9 +51,13 @@ package org.flowerplatform.codesync {
 	 */
 	public class CodeSyncPlugin extends AbstractFlowerFlexPlugin {
 		
+		public static const CODE_SYNC_TYPE_CATEGORY_TOP_LEVEL:String = "topLevel";
+		
 		public var codeSyncTreeActionProvider:CodeSyncTreeActionProvider = new CodeSyncTreeActionProvider();
 		
 		protected var codeSyncElementDescriptors:ArrayCollection;
+		
+		protected var relationDescriptors:ArrayCollection;
 		
 		/**
 		 * String (CodeSync type) to CodeSyncElementDescriptor.
@@ -85,6 +95,7 @@ package org.flowerplatform.codesync {
 		
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CodeSyncElementDescriptor);
+			registerClassAliasFromAnnotation(RelationDescriptor);
 			
 			registerClassAliasFromAnnotation(CodeSyncAction);
 			registerClassAliasFromAnnotation(DiffTreeNode);
@@ -100,12 +111,19 @@ package org.flowerplatform.codesync {
 				return;
 			}
 			
-			var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand(
+			var command:CompoundServerCommand = new CompoundServerCommand();
+			command.append(new InvokeServiceMethodServerCommand(
 				"codeSyncDiagramOperationsService",
 				"getCodeSyncElementDescriptors", 
 				null,
 				this,
-				setCodeSyncElementDescriptorsCallback);
+				setCodeSyncElementDescriptorsCallback));
+			command.append(new InvokeServiceMethodServerCommand(
+				"codeSyncDiagramOperationsService",
+				"getRelationDescriptors", 
+				null,
+				this,
+				setRelationDescriptorsCallback));
 			CommunicationPlugin.getInstance().bridge.sendObject(command);
 		}
 		
@@ -129,16 +147,21 @@ package org.flowerplatform.codesync {
 		private function computeAvailableChildrenForCodeSyncType():void {
 			availableChildrenForCodeSyncType = new Dictionary();
 			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
-				if (descriptor.codeSyncTypeCategories.length == 0) {
-					// top level elements
-					addChildCodeSyncTypeCategoryForParent("", descriptor);
-				} else {
+//				if (descriptor.codeSyncTypeCategories.length == 0) {
+//					// top level elements
+//					addChildCodeSyncTypeCategoryForParent("", descriptor);
+//				} else {
 					for each (var codeSyncTypeCategory:String in descriptor.codeSyncTypeCategories) {
-						for each (var parentCodeSyncType:String in getParentsForChildCodeSyncTypeCategory(codeSyncTypeCategory)) {
-							addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor);	
+						if (codeSyncTypeCategory == CODE_SYNC_TYPE_CATEGORY_TOP_LEVEL) {
+							// top level elements
+							addChildCodeSyncTypeCategoryForParent("", descriptor);
+						} else {
+							for each (var parentCodeSyncType:String in getParentsForChildCodeSyncTypeCategory(codeSyncTypeCategory)) {
+								addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor);	
+							}
 						}
 					}
-				}
+//				}
 			}
 		}
 		
@@ -159,6 +182,15 @@ package org.flowerplatform.codesync {
 			return parents;
 		}
 		
+		public function getCodeSyncElementDescriptor(codeSyncType:String):CodeSyncElementDescriptor {
+			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
+				if (descriptor.codeSyncType == codeSyncType) {
+					return descriptor;
+				}
+			}
+			return null;
+		}
+		
 		// TODO CS/JS in web mode: would it make sens that users can have their own?
 		private function registerControllerProviderFactories(viewTypePrefix:String, childDescriptorsForCurrentLevel:ArrayCollection):void  {
 			for each (var childDescriptor:CodeSyncElementDescriptor in childDescriptorsForCurrentLevel) {
@@ -175,5 +207,28 @@ package org.flowerplatform.codesync {
 			}
 		}
 		
+		protected function setRelationDescriptorsCallback(result:ArrayCollection):void {
+			relationDescriptors = result;
+			var addNewRelationActionProvider:VectorActionProvider = new VectorActionProvider();
+			for each (var d:RelationDescriptor in relationDescriptors) {
+				var a:AddNewRelationAction = new AddNewRelationAction(d);
+				addNewRelationActionProvider.getActions(null).push(a);
+			}
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(addNewRelationActionProvider);
+		}	
+		
+		public function getCodeSyncTypeFromView(potentialView:Object):String {
+			if (!(potentialView is View)) {
+				return null;
+			}
+			var view:View = View(potentialView);
+			var lastIndexOfDot:int = view.viewType.lastIndexOf(".");
+			if (lastIndexOfDot <= 0) {
+				// a view without . => not coming from a codesync element
+				return null;
+			}
+			return view.viewType.substr(lastIndexOfDot + 1);
+		}
+
 	}
 }

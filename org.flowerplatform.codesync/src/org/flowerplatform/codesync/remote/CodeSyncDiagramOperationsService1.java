@@ -22,6 +22,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
@@ -29,12 +30,16 @@ import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
  * @author Mariana Gheorghe
@@ -49,6 +54,10 @@ public class CodeSyncDiagramOperationsService1 {
 		return CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors();
 	}
 	
+	@RemoteInvocation
+	public List<RelationDescriptor> getRelationDescriptors() {
+		return CodeSyncPlugin.getInstance().getRelationDescriptors();
+	}
 	/**
 	 * @return ID of the view pointing to the newly added element.
 	 */
@@ -105,6 +114,38 @@ public class CodeSyncDiagramOperationsService1 {
 	@RemoteInvocation
 	public void setInplaceEditorText(String viewId, String text) {
 		// TODO
+	}
+	
+	public void addNewRelation(ServiceInvocationContext context, String sourceViewId, String targetViewId) {
+		View sourceView = getViewById(context.getAdditionalData(), sourceViewId);
+		View targetView = getViewById(context.getAdditionalData(), targetViewId);
+		CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
+		CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
+		Relation relation = CodeSyncFactory.eINSTANCE.createRelation();
+		relation.setSource(source);
+		relation.setTarget(target);
+		source.getRelations().add(relation);
+		
+		EObject currentObject = sourceView;
+		Diagram diagram = null;
+		while (currentObject != null) {
+			if (currentObject instanceof Diagram) {
+				diagram = (Diagram) currentObject;
+				break;
+			}
+			currentObject = currentObject.eContainer();
+		}
+		createEdge(relation, sourceView, targetView, diagram);
+	}
+	
+	protected Edge createEdge(Relation relation, View source, View target, Diagram diagram) {
+		Edge edge = NotationFactory.eINSTANCE.createEdge();
+		edge.setDiagrammableElement(relation);
+		edge.setSource(source);
+		edge.setTarget(target);
+		edge.setViewType("edge");
+		diagram.getPersistentEdges().add(edge);
+		return edge;
 	}
 	
 	///////////////////////

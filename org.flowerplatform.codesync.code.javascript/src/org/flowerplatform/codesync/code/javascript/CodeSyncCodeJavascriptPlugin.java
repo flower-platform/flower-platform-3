@@ -22,6 +22,7 @@ import org.flowerplatform.codesync.code.javascript.changes_processor.TableViewPr
 import org.flowerplatform.codesync.code.javascript.operation_extension.JavaScriptFeatureAccessExtension;
 import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.osgi.framework.BundleContext;
@@ -51,6 +52,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("backboneClass")
+				.addCodeSyncTypeCategory("topLevel")
 				.setLabel("Backbone Class")
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewBackboneClass")
@@ -156,6 +158,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("table")
+				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table")
 				.setIconUrl("images/full/obj16/table.png")
 				.setDefaultName("NewTable")
@@ -183,6 +187,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItem")
+				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table Item")
 				.setIconUrl("images/full/obj16/table_select_row.png")
 				.setDefaultName("NewTableItem")
@@ -207,7 +213,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
+				.addCodeSyncTypeCategory("topLevel")
 				.setCodeSyncType("form")
+				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Form")
 				.setIconUrl("images/full/obj16/application_form.png")
 				.setDefaultName("NewForm")
@@ -231,6 +239,23 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
 		
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new RelationDescriptor()
+				.setType("templateDependency")
+				.setLabel("Template Dependency")
+				.addSourceCodeSyncType("javaScriptAttribute")
+				.addTargetCodeSyncTypeCategory("htmlTemplate")
+		);
+
+		
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new RelationDescriptor()
+				.setType("classDependency")
+				.setLabel("Class Dependency")
+				.addSourceCodeSyncType("javaScriptAttribute")
+				.addTargetCodeSyncType("backboneClass")
+		);
+
 		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension());
 		
 		JavascriptElementProcessor processor = new JavascriptElementProcessor();

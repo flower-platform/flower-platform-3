@@ -18,17 +18,11 @@
  */
 package com.crispico.flower.mp.codesync.code.java;
 
-import static org.flowerplatform.codesync.code.java.operation_extension.JavaFeatureAccessExtension.*;
-
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.code.java.operation_extension.JavaFeatureAccessExtension;
-import org.flowerplatform.codesync.processor.CodeSyncElementRelationsChangesProcessor;
-import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.change_processor.AbstractFeatureChangesProcessor;
 import org.flowerplatform.editor.model.change_processor.DependentFeature;
-import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.java.JavaClassAttributeProcessor;
 import org.flowerplatform.editor.model.java.JavaClassOperationProcessor;
 import org.flowerplatform.editor.model.java.JavaClassProcessor;
@@ -117,11 +111,6 @@ public class CodeSyncCodeJavaPlugin extends AbstractFlowerJavaPlugin {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass.javaOperation", new JavaClassOperationProcessor());
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("scenarioInterraction", new JavaScenarioElementProcessor());
 		
-		CodeSyncElementRelationsChangesProcessor relationsProcessor = new CodeSyncElementRelationsChangesProcessor();
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass", relationsProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass.javaAttribute", relationsProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaClass.javaOperation", relationsProcessor);
-
 		AbstractFeatureChangesProcessor processor = new AbstractFeatureChangesProcessor();
 		// if model element removed => remove view
 		processor.getDependentFeatures().add(new DependentFeature(EObject.class, NotationPackage.eINSTANCE.getView_DiagrammableElement()));

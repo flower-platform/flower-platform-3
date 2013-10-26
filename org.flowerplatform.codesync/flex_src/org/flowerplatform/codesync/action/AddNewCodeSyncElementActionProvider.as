@@ -36,9 +36,6 @@ package org.flowerplatform.codesync.action {
 		
 		public static var ADD_ELEMENT_PARENT_ID:String = "addElement";
 		
-		public function AddNewCodeSyncElementActionProvider() {			
-		}
-		
 		public function getActions(selection:IList):Vector.<IAction> {
 			if (selection.length > 1) {
 				return null;
@@ -46,6 +43,7 @@ package org.flowerplatform.codesync.action {
 			
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			
+			// by default topLevel
 			var selectedCodeSyncElementType:String = "";
 			if (selection.length == 1) {
 				var view:View = View(selection.getItemAt(0));

@@ -104,7 +104,7 @@ package org.flowerplatform.editor.model.remote {
 		}
 		
 		public function service_addNewRelation(sourceViewId:Object, targetViewId:Object):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewRelation", [sourceViewId, targetViewId]));
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(codeSyncDiagramOperationsServiceId, "addNewRelation", [sourceViewId, targetViewId]));
 		}
 
 		public function service_addNewScenario(name:String):void {
