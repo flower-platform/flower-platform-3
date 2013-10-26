@@ -28,10 +28,8 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
-	import org.flowerplatform.flexutil.action.IComposedAction;
 	import org.flowerplatform.flexutil.action.MenuClosedEvent;
 	import org.flowerplatform.flexutil.mobile.spinner.MobileSpinner;
-	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.flexutil.view_content_host.IViewHost;
@@ -249,12 +247,12 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 		 * The click handler for ActionButton and ActionViewMenuItem.
 		 */
 		public function actionClickHandler(action:IAction):void {
-			if (action is IComposedAction) {
+			if (ActionUtil.isComposedAction(action)) {
 				
 				var runnable:Function = function (event:Event):void {
 					removeEventListener("viewMenuClose", runnable);
 					callLater(function ():void {
-						populateViewWithActions(IComposedAction(action).id);
+						populateViewWithActions(action.id);
 						FlexGlobals.topLevelApplication.viewMenuOpen = true;
 					});
 				};			

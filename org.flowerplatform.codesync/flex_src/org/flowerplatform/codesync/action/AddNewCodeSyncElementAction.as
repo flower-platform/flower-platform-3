@@ -43,6 +43,7 @@ package org.flowerplatform.codesync.action {
 			super();
 			parentId = "new";
 			this.codeSyncType = codeSyncType;
+			this.id = codeSyncType;
 			this.label = label;
 			this.icon = CodeSyncPlugin.getInstance().getResourceUrl(iconUrl);
 		}

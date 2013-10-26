@@ -42,7 +42,6 @@ package org.flowerplatform.flexutil.global_menu {
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
-	import org.flowerplatform.flexutil.action.IComposedAction;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
 	
 	/**
@@ -221,7 +220,7 @@ package org.flowerplatform.flexutil.global_menu {
 				var menuBarAction:IAction = item.data as IAction;
 				
 				// Only a composed action can have children
-				if (menuBarAction is IComposedAction) {
+				if (ActionUtil.isComposedAction(menuBarAction)) {
 					// get the current selection
 					var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
 					
@@ -372,7 +371,7 @@ package org.flowerplatform.flexutil.global_menu {
 				// dont notify parent if RIGHT and we are on an expandable menu
 				// so that the menu has a chance to expand itself
 				if (!(keyCode == Keyboard.RIGHT 
-					&& Menu(event.target).selectedItem is IComposedAction)) {
+					&& ActionUtil.isComposedAction(IAction(Menu(event.target).selectedItem)))) {
 					dispatchEvent(event);
 				}
 			}

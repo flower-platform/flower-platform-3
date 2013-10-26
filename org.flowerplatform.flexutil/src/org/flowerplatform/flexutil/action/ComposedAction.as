@@ -26,6 +26,8 @@ package org.flowerplatform.flexutil.action {
 
 		private var _childActions:Vector.<IAction>;
 
+		private var _actAsNormalAction:Boolean;
+
 		public function get childActions():Vector.<IAction> {
 			return _childActions;
 		}
@@ -35,6 +37,9 @@ package org.flowerplatform.flexutil.action {
 		}
 		
 		override public function get visible():Boolean {
+			if (actAsNormalAction) {
+				return super.visible;
+			}
 			if (childActions == null) {
 				return false;
 			} else {
@@ -56,6 +61,13 @@ package org.flowerplatform.flexutil.action {
 			}
 		}
 		
+		public function get actAsNormalAction():Boolean {
+			return _actAsNormalAction;
+		}
+		
+		public function set actAsNormalAction(value:Boolean):void {
+			_actAsNormalAction = value;
+		}
 		
 	}
 }

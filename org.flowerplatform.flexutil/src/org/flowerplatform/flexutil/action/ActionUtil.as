@@ -57,7 +57,6 @@ package org.flowerplatform.flexutil.action {
 			
 			// order actions
 			var array:Array = new Array(actionsForCurrentParentActionId.length);
-			var i:int;
 			for (i = 0; i < actionsForCurrentParentActionId.length; i++) {
 				array[i] = actionsForCurrentParentActionId[i];
 			}			
@@ -69,7 +68,7 @@ package org.flowerplatform.flexutil.action {
 			
 			for (i = 0; i < actionsForCurrentParentActionId.length; i++) {
 				action = actionsForCurrentParentActionId[i];
-				if (action is IComposedAction) {
+				if (isComposedAction(action)) {
 					// we do this only when processing the main list of actions
 					IComposedAction(action).childActions = parentActionIdToActions[action.id];
 				}
@@ -87,5 +86,8 @@ package org.flowerplatform.flexutil.action {
 
 		}
 		
+		public static function isComposedAction(action:IAction):Boolean {
+			return action is IComposedAction && !IComposedAction(action).actAsNormalAction;
+		}
 	}
 }

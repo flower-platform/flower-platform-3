@@ -25,7 +25,6 @@ package org.flowerplatform.flexutil.global_menu {
 	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
-	import org.flowerplatform.flexutil.action.IComposedAction;
 	
 	/**
 	 * IMenuDataDescriptor that know how to work with actions
@@ -114,7 +113,7 @@ package org.flowerplatform.flexutil.global_menu {
 		 */
 		public function hasChildren(node:Object, model:Object=null):Boolean {
 			if (node is IAction) {
-				return (node is IComposedAction);
+				return (ActionUtil.isComposedAction(IAction(node)));
 			}
 			return false;
 		}
@@ -128,7 +127,7 @@ package org.flowerplatform.flexutil.global_menu {
 		 */
 		public function isBranch(node:Object, model:Object=null):Boolean {
 			if (node is IAction) {
-				return (node is IComposedAction);
+				return (ActionUtil.isComposedAction(IAction(node)));
 			}
 			return false;
 		}

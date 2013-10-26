@@ -26,8 +26,8 @@
 		<![CDATA[
 			import mx.core.mx_internal;
 			
+			import org.flowerplatform.flexutil.action.ActionUtil;
 			import org.flowerplatform.flexutil.action.IAction;
-			import org.flowerplatform.flexutil.action.IComposedAction;
 			
 			public static const HEIGHT:int = 22;
 			
@@ -45,7 +45,7 @@
 				// I do it here instead of binding, to avoid the runtime warning "cannot bind to..."
 				labelComponent.text = IAction(value).label;
 				iconComponent.source = IAction(value).icon;
-				if (data is IComposedAction) {
+				if (ActionUtil.isComposedAction(IAction(value))) {
 					if (!hasSubActions.visible) {
 						hasSubActions.visible = true;
 						hasSubActions.includeInLayout = true;
@@ -60,7 +60,7 @@
 			}
 			
 			protected function clickHandler(event:MouseEvent):void {
-				if (!(data is IComposedAction)) {
+				if (!ActionUtil.isComposedAction(IAction(data))) {
 					var contextMenu:org.flowerplatform.flexutil.context_menu.ContextMenu = getContextMenu();
 					try {
 						IAction(data).selection = contextMenu.contextMenuManager.selection; 
@@ -94,7 +94,7 @@
 						executeAftedHoverTimer.repeatCount = 1;
 						executeAftedHoverTimer.addEventListener(TimerEvent.TIMER_COMPLETE, executeAftedHoverTimerHandler);
 					}
-					if (data is IComposedAction) {
+					if (ActionUtil.isComposedAction(IAction(data))) {
 						executeAftedHoverTimer.delay = HOVER_DELAY_COMPOSED_ACTION;
 					} else {
 						executeAftedHoverTimer.delay = HOVER_DELAY_NORMAL_ACTION;
@@ -113,7 +113,7 @@
 					return;
 				}
 				var contextMenu:org.flowerplatform.flexutil.context_menu.ContextMenu = getContextMenu();
-				if (data is IComposedAction) {
+				if (ActionUtil.isComposedAction(IAction(data))) {
 					contextMenu.list.mx_internal::setSelectedIndex(contextMenu.actions.getItemIndex(data), true);
 				} else {
 					contextMenu.list.mx_internal::setSelectedIndex(-1, true);

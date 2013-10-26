@@ -15,13 +15,14 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
+	import org.flowerplatform.flexutil.action.ComposedAction;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class AddNewElementAction extends ActionBase implements IDialogResultHandler, IDiagramShellAware {
+	public class AddNewElementAction extends ComposedAction implements IDialogResultHandler, IDiagramShellAware {
 		
 		private var _diagramShell:DiagramShell;
 				
@@ -35,6 +36,10 @@ package org.flowerplatform.editor.model.action {
 		
 		private function get diagram():Diagram {
 			return Diagram(NotationDiagramShell(diagramShell).rootModel);
+		}
+		
+		public function AddNewElementAction() {
+			actAsNormalAction = true;
 		}
 		
 		protected function createNewModelElement(location:String, selection:IList, context:Object):void {

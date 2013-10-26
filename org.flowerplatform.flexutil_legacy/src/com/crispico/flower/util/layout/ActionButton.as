@@ -19,12 +19,8 @@
 package com.crispico.flower.util.layout {
 	import flash.events.MouseEvent;
 	
-	import mx.collections.IList;
-	
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.context_menu.ContextMenu;
+	import org.flowerplatform.flexutil.action.ActionUtil;
 	import org.flowerplatform.flexutil.action.IAction;
-	import org.flowerplatform.flexutil.action.IComposedAction;
 	
 	import spark.components.Button;
 	
@@ -40,8 +36,8 @@ package com.crispico.flower.util.layout {
 		
 		protected override function clickHandler(event:MouseEvent):void {
 			super.clickHandler(event);
-			if (action is IComposedAction) {
-				viewWrapper.openMenu(event.stageX, event.stageY, viewWrapper.contextForActions, IComposedAction(action).id);
+			if (ActionUtil.isComposedAction(action)) {
+				viewWrapper.openMenu(event.stageX, event.stageY, viewWrapper.contextForActions, action.id);
 			} else {
 				try {
 					action.selection = viewWrapper.selection;

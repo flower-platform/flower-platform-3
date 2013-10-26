@@ -29,5 +29,16 @@ package org.flowerplatform.flexutil.action {
 	public interface IComposedAction extends IAction {
 		function get childActions():Vector.<IAction>;
 		function set childActions(value:Vector.<IAction>):void;
+		
+		/**
+		 * There may be cases where an action is composed but it wants to act, at a given time,
+		 * as a normal (i.e. not composed action => has run behavior). If this is the case,
+		 * then this property must be set to <code>true</code>. 
+		 * 
+		 * <p>
+		 * It's recommended to set this property when the action is being provided by the provider,
+		 * and not later. This way, the property will be available when the actions will be processed.
+		 */ 
+		function get actAsNormalAction():Boolean;
 	}
 }

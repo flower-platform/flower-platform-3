@@ -140,7 +140,7 @@ The graphical component that displays a list of actions, for one level.
 			 */
 			protected function listSelectionChangeHandler(event:IndexChangeEvent):void {
 				closeContextMenuStack(indexInStack + 1);
-				if (list.selectedItem is IComposedAction) {
+				if (ActionUtil.isComposedAction(IAction(list.selectedItem))) {
 					new org.flowerplatform.flexutil.context_menu.ContextMenu().openContextMenu(
 						contextMenuManager,
 						x + width + GAP_BETWEEN_MENUS,
