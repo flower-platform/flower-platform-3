@@ -44,8 +44,8 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
-	import org.flowerplatform.flexutil.shortcuts.Shortcut;
+	import org.flowerplatform.flexutil.shortcut.KeyBindings;
+	import org.flowerplatform.flexutil.shortcut.Shortcut;
 	
 	/**
 	 * @author Cristi
@@ -90,8 +90,7 @@ package org.flowerplatform.editor {
 		/**
 		 * @author Sebastian Solomon
 		 */
-		override public function start():void
-		{
+		override public function start():void {
 			// TODO Auto Generated method stub
 			super.start();
 			globalEditorOperationsManager  = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));	
