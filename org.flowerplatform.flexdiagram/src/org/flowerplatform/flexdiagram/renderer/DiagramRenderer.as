@@ -128,9 +128,14 @@ package org.flowerplatform.flexdiagram.renderer {
 			graphics.drawRect(horizontalScrollPosition, verticalScrollPosition, width, height);
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
 		override protected function focusInHandler(event:FocusEvent):void {
 			super.focusInHandler(event);		
-			if (diagramShell != null) {
+			if (diagramShell != null && stage != null) { 
+				// stage == null -> save dialog closes, the focusManager tries to put focus on diagram,
+				// but it will be removed shortly, so don't take this in consideration
 				diagramShell.activateTools();
 			}
 		}

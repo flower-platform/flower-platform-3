@@ -50,6 +50,7 @@ import com.crispico.flower.mp.model.codesync.Relation;
  */
 public class CodeSyncDiagramOperationsService1 {
 
+	public static final String VIEW = "view";
 	public static final String PARENT_CODE_SYNC_ELEMENT = "parentCodeSyncElement";
 	public static final String PARENT_VIEW = "parentView";
 
@@ -80,10 +81,12 @@ public class CodeSyncDiagramOperationsService1 {
 		return addOnDiagram(context, diagramId, viewIdOfParent, codeSyncElement, parameters);
 	}
 
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	public String addOnDiagram(ServiceInvocationContext context, String diagramId, String viewIdOfParent, CodeSyncElement codeSyncElement, Map<String, Object> parameters) {
-		// create view
-		Node view = NotationFactory.eINSTANCE.createNode();
-		view.setDiagrammableElement(codeSyncElement);
+		// create view			
 		View parentView = viewIdOfParent == null ? null : getViewById(context.getAdditionalData(), viewIdOfParent);
 		
 		if (parameters == null) {
@@ -93,8 +96,15 @@ public class CodeSyncDiagramOperationsService1 {
 		// run all AddNewExtensions
 		Resource codeSyncMappingResource = getCodeSyncMappingResource(getEditableResource(context.getAdditionalData()));
 		for (AddNewExtension addNewExtension : CodeSyncPlugin.getInstance().getAddNewExtensions()) {
-			addNewExtension.addNew(codeSyncElement, view, parentView, codeSyncMappingResource, parameters);
-		}
+			if (!addNewExtension.addNew(codeSyncElement, parentView, codeSyncMappingResource, parameters)) {
+				// element created, don't allow other extensions to perform add logic
+				break;
+			}
+		}	
+			
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
+		
+		Node view = (Node) parameters.get(VIEW);
 		
 		// add to diagram
 		if (parameters.containsKey(PARENT_VIEW)) {
@@ -105,20 +115,22 @@ public class CodeSyncDiagramOperationsService1 {
 		}
 		parentView.getPersistentChildren().add(view);
 		view.setViewType(parentView.getViewType() + "." + codeSyncElement.getType());
-		
+				
 		// add to parent
-		if (codeSyncElement.eContainer() == null) {
-			CodeSyncElement parentCodeSyncElement = null;
-			if (parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
-				parentCodeSyncElement = (CodeSyncElement) parameters.get(PARENT_CODE_SYNC_ELEMENT);
-			} else {
-				parentCodeSyncElement = (CodeSyncElement) parentView.getDiagrammableElement();
+		if (descriptor.getCreateCodeSyncElement()) { // can create and add codeSyncElement to resource	
+			view.setDiagrammableElement(codeSyncElement);
+			if (codeSyncElement.eContainer() == null) {
+				CodeSyncElement parentCodeSyncElement = null;
+				if (parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
+					parentCodeSyncElement = (CodeSyncElement) parameters.get(PARENT_CODE_SYNC_ELEMENT);
+				} else {
+					parentCodeSyncElement = (CodeSyncElement) parentView.getDiagrammableElement();
+				}
+				CodeSyncOperationsService.getInstance().add(parentCodeSyncElement, codeSyncElement);
 			}
-			CodeSyncOperationsService.getInstance().add(parentCodeSyncElement, codeSyncElement);
-		}
-		
+		}		
 		// return ID of the view
-		return view.getIdBeforeRemoval();
+		return view.getIdBeforeRemoval();		
 	}
 	
 	public List<CodeSyncElementDescriptor> getChildrenCategories(String codeSyncType) {

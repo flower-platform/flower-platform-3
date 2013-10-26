@@ -41,8 +41,12 @@ package org.flowerplatform.editor.model.action {
 			throw new Error("This method must be implemented!");
 		}
 		
+		protected function showLocationForNewElementsDialog():Boolean {
+			return true;
+		}
+		
 		override public function run():void {		
-			if (selection.getItemAt(0) is Diagram && diagram.viewDetails.showLocationForNewElementsDialog) {
+			if (showLocationForNewElementsDialog() && diagram.viewDetails.showLocationForNewElementsDialog) {
 				var dialog:LocationForNewElementsDialog = new LocationForNewElementsDialog();
 				dialog.selectionOfItems = NotationDiagramShell(diagramShell).diagramFrontend.convertSelectionToSelectionForServer(selection);
 				dialog.currentLocationForNewElements = diagram.viewDetails.locationForNewElements;

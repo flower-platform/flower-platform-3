@@ -40,6 +40,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
+import org.flowerplatform.codesync.operation_extension.AddNewNoteExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
@@ -207,6 +208,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		relationDescriptors = new ArrayList<RelationDescriptor>();
 		
 		addNewExtensions = new ArrayList<AddNewExtension>();
+		
 		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
 		
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
@@ -217,7 +219,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			public void run() {
 				EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 
-				addNewExtensions.add(new AddNewTopLevelElementExtension());
+				addNewExtensions.add(new AddNewNoteExtension());	
+				addNewExtensions.add(new AddNewTopLevelElementExtension());							
 			}
 		};
 		addRunnablesForReloadDescriptors(codeSyncMainDescriptors);
@@ -253,6 +256,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 					.addDeclaredProperty("features")
 					.addDeclaredProperty("keyFeature")
 					.addDeclaredProperty("standardDiagramControllerProviderFactory")
+					.addDeclaredProperty("createCodeSyncElement")
 					.register();
 				
 				new CustomSerializationDescriptor(RelationDescriptor.class)

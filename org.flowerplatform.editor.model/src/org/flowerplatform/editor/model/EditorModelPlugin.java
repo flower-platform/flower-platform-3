@@ -36,6 +36,7 @@ import org.flowerplatform.emf_model.notation.ExpandableNode;
 import org.flowerplatform.emf_model.notation.Location;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
+import org.flowerplatform.emf_model.notation.Note;
 import org.flowerplatform.emf_model.notation.View;
 import org.osgi.framework.BundleContext;
 
@@ -116,7 +117,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("parentView_RH")
 		.register();
 
-		new CustomSerializationDescriptor(Node.class)
+		CustomSerializationDescriptor nodeSD = new CustomSerializationDescriptor(Node.class)
 		.addDeclaredProperties(viewSD.getDeclaredProperties())
 		.addDeclaredProperty("layoutConstraint_RH")
 		.register();
@@ -145,6 +146,11 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("persistentEdges_RH")
 		.register();
 		
+		new CustomSerializationDescriptor(Note.class)
+		.addDeclaredProperties(nodeSD.getDeclaredProperties())
+		.addDeclaredProperty("text")		
+		.register();
+		
 		CustomSerializationDescriptor superClassSD = new CustomSerializationDescriptor(Location.class)
 		.addDeclaredProperty("id")
 		.addDeclaredProperty("y")
@@ -156,7 +162,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("width")
 		.addDeclaredProperty("height")
 		.register();
-		
+				
 		getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());
 	}
 

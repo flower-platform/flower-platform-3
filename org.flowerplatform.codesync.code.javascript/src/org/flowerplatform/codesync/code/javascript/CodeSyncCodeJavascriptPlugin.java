@@ -54,6 +54,10 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -263,6 +267,16 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 				);
 				
+				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+						new CodeSyncElementDescriptor()
+						.addCodeSyncTypeCategory("topLevel")
+						.setCodeSyncType("note")
+						.setLabel("Note")
+						.setIconUrl("images/full/obj16/note.png")
+						.setDefaultName("NewNote")				
+						.setCreateCodeSyncElement(false)				
+				);
+				
 				CodeSyncPlugin.getInstance().getRelationDescriptors().add(
 						new RelationDescriptor()
 						.setType("templateDependency")
@@ -270,8 +284,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 						.addSourceCodeSyncType("javaScriptAttribute")
 						.addTargetCodeSyncTypeCategory("htmlTemplate")
 				);
-		
-				
+					
 				CodeSyncPlugin.getInstance().getRelationDescriptors().add(
 						new RelationDescriptor()
 						.setType("classDependency")
@@ -309,7 +322,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		};
 		// run and register the javaScript descriptors runnable
 		CodeSyncPlugin.getInstance().addRunnablesForReloadDescriptors(codeSyncJavScript);
-		
+	
 		// descriptors registered from sripts
 		Runnable jsScripts = new Runnable() {
 			@Override
@@ -317,8 +330,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				// search for js files and register them
 				jsScriptExtensions();
 			}
-		};
-		
+		};		
+	
 		// run and register the javaScript descriptors runnable
 		CodeSyncPlugin.getInstance().addRunnablesForReloadDescriptors(jsScripts);
 	}

@@ -29,6 +29,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana Gheorghe
+ * @author Cristina Constantinescu
  */
 public interface AddNewExtension {
 	
@@ -38,7 +39,9 @@ public interface AddNewExtension {
 	 * 		<li>{@link CodeSyncDiagramOperationsService1#PARENT_CODE_SYNC_ELEMENT}
 	 * 		<li>{@link CodeSyncDiagramOperationsService1#PARENT_VIEW}
 	 * </ul>
+	 * 
+	 * @return <code>true</code> if other extensions can add new elements
 	 */
-	String addNew(CodeSyncElement codeSyncElement, Node node, View parent, Resource codeSyncMappingResource, Map<String, Object> parameters);
+	boolean addNew(CodeSyncElement codeSyncElement, View parent, Resource codeSyncMappingResource, Map<String, Object> parameters);
 	
 }
