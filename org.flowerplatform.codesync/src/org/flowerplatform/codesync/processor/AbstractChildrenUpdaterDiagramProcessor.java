@@ -97,7 +97,7 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 			} else {
 				int currentViewIndex = associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child);
 				int moveToViewIndex = getNewViewsIndex(object, Arrays.asList(child.getDiagrammableElement()), associatedViewOnOpenDiagram);
-				if (currentViewIndex != moveToViewIndex) {
+				if (moveToViewIndex != -1 && currentViewIndex != moveToViewIndex) {
 					associatedViewOnOpenDiagram.getPersistentChildren().move(moveToViewIndex, (Node) child);
 				}
 			}

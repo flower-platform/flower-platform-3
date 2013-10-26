@@ -21,9 +21,9 @@ package org.flowerplatform.codesync.processor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.EObject;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
@@ -40,27 +40,16 @@ public class ChildrenUpdaterDiagramProcessor extends AbstractChildrenUpdaterDiag
 	@Override
 	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram,
 			List<Node> childViews, Map<String, Object> viewDetails) {
-		CopyOnWriteArrayList<Node> copyOfChildViews = new CopyOnWriteArrayList<Node>(childViews);
-		for (Node childView : copyOfChildViews) {
-			String category = getCategoryForSeparator(childView);
-			if (category == null) {
-				continue;
-			}
+		CodeSyncElement codeSyncElement = getCodeSyncElement(object);
+		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService1.getInstance().getChildrenCategories(codeSyncElement.getType())) {
+			String category = childDescriptor.getCategory();
 			super.processChildren(
 					object, filterChildModelElements(childModelElements, category), 
-					associatedViewOnOpenDiagram, filterChildViews(copyOfChildViews, category), 
+					associatedViewOnOpenDiagram, filterChildViews(childViews, category), 
 					viewDetails);
 		}
 	}
 
-	private String getCategoryForSeparator(Node node) {
-		if (!node.getViewType().equals("categorySeparator")) {
-			return null;
-		}
-		Map<String, String> childViewDetails = (Map<String, String>) node.getViewDetails();
-		return childViewDetails.get("title");
-	}
-	
 	protected List<EObject> filterChildModelElements(List<EObject> list, String category) {
 		List<EObject> result = new ArrayList<EObject>();
 		for (EObject child : list) {
@@ -115,6 +104,14 @@ public class ChildrenUpdaterDiagramProcessor extends AbstractChildrenUpdaterDiag
 		return -1;
 	}
 
+	private String getCategoryForSeparator(Node node) {
+		if (!node.getViewType().equals("categorySeparator")) {
+			return null;
+		}
+		Map<String, String> childViewDetails = (Map<String, String>) node.getViewDetails();
+		return childViewDetails.get("title");
+	}
+	
 	@Override
 	protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {
 		return NotationFactory.eINSTANCE.createNode();

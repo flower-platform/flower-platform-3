@@ -20,13 +20,11 @@ package org.flowerplatform.codesync.operation_extension;
 
 import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.PARENT_CODE_SYNC_ELEMENT;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
@@ -70,27 +68,10 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 		title.setViewType("title");
 		node.getPersistentChildren().add(title);
 		
-		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
-		for (CodeSyncElementDescriptor childDescriptor : getChildrenForDescriptor(descriptor)) {
+		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService1.getInstance().getChildrenCategories(codeSyncElement.getType())) {
 			String category = childDescriptor.getCategory();
 			if (category != null) {
-				Node categorySeparator = NotationFactory.eINSTANCE.createNode();
-				categorySeparator.setViewType("categorySeparator");
-				Map<String, String> viewDetails = new HashMap<String, String>();
-				viewDetails.put("codeSyncType", childDescriptor.getCodeSyncType());
-				viewDetails.put("title", category);
-				String image = childDescriptor.getIconUrl();
-				if (image != null) {
-					String codeSyncPackage = CodeSyncPlugin.getInstance()
-							.getBundleContext().getBundle().getSymbolicName();
-					if (!image.startsWith("/")) {
-						image = "/" + image;
-					}
-					image = codeSyncPackage + image;
-				}
-				viewDetails.put("newChildIcon", image);
-				categorySeparator.setViewDetails(viewDetails);
-				node.getPersistentChildren().add(categorySeparator);
+				CodeSyncDiagramOperationsService1.getInstance().addCategorySeparator(node, childDescriptor);
 			}
 		}
 		
@@ -102,6 +83,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 			}
 			CodeSyncElement parent = getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, location.split("/"));
 			CodeSyncElement file = CodeSyncOperationsService.getInstance().create(CodeSyncPlugin.FILE);
+			CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
 			file.setName(descriptor.getDefaultName() + "." + descriptor.getExtension()); // TODO numbering logic
 			CodeSyncOperationsService.getInstance().add(parent, file);
 			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
@@ -109,28 +91,6 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 		return null;
 	}
 
-	protected List<CodeSyncElementDescriptor> getChildrenForDescriptor(CodeSyncElementDescriptor parentDescriptor) {
-		List<CodeSyncElementDescriptor> result = new ArrayList<CodeSyncElementDescriptor>();
-		for (CodeSyncElementDescriptor descriptor : CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors()) {
-			for (String codeSyncTypeCategory : descriptor.getCodeSyncTypeCategories()) {
-				if (parentDescriptor.getChildrenCodeSyncTypeCategories().contains(codeSyncTypeCategory)) {
-					boolean alreadyAdded = false;
-					for (CodeSyncElementDescriptor addedDescriptor : result) {
-						if (addedDescriptor.getCategory().equals(descriptor.getCategory())) {
-							alreadyAdded = true;
-							break;
-						}
-					}
-					if (!alreadyAdded) {
-						result.add(descriptor);
-					}
-					break;
-				}
-			}
-		}
-		return result;
-	}
-	
 	protected int getParameterValue(Map<String, Object> parameters, String name, int defaultValue) {
 		if (parameters.containsKey(name)) {
 			return (int) parameters.get(name);

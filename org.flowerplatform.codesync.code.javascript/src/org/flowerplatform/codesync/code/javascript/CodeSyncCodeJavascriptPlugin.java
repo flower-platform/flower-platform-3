@@ -93,7 +93,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setIconUrl("images/full/obj16/imp_obj.gif")
 				.setDefaultName("newRequireEntry")
 				.addCodeSyncTypeCategory("requireEntry")
-				.setCategory("require")
+				.setCategory("require entries")
 				.addFeature("varName")
 				.addFeature("dependencyPath")
 				.setKeyFeature("varName"));

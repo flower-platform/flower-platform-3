@@ -29,8 +29,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
-	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
-	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.action.SearchAction;
@@ -162,8 +160,6 @@ package org.flowerplatform.editor.model {
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandAttributesCompartmentAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DisplayMissingRelationsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelatedElementsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
