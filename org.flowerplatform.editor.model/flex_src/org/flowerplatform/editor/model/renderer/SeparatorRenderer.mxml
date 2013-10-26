@@ -35,17 +35,19 @@
 			import org.flowerplatform.editor.model.NotationDiagramShell;
 			import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 			import org.flowerplatform.emf_model.notation.Node;
+			import org.flowerplatform.emf_model.notation.View;
 			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
 			private var _diagramShell:DiagramShell;
 			
+			public var codeSyncType:String;
+			
 			[Bindable]
 			public var title:String;
-			public var serviceMethod:String;
+			
 			[Bindable]
 			public var newChildIcon:String;
-			public var newChildLabel:String;
 			
 			public function get diagramShell():DiagramShell {
 				return _diagramShell;
@@ -55,12 +57,25 @@
 				_diagramShell = value;
 			}
 			
+			override public function set data(value:Object):void {
+				super.data = value;
+				if (data != null) {
+					var viewDetails:Object = View(data).viewDetails;
+					if (viewDetails != null) {
+						codeSyncType = viewDetails["codeSyncType"];
+						title = viewDetails["title"];
+						newChildIcon = viewDetails["newChildIcon"];
+					}
+				}
+			}
+			
 			protected function collapse():void {
 				NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_collapseCompartment(Node(data).id);
 			}
 			
 			protected function addNew():void {
-//				NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_addNew(serviceMethod, Node(data).id, newChildLabel);
+				var parentView:View = View(DataRenderer(parent).data);
+				NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient).service_addNew(parentView.id, codeSyncType, null);
 			}
 			
 			protected function getResourceUrl(resource:String):String {
@@ -89,7 +104,7 @@
 					  width="16" height="16"
 					  styleName="borderlessButton"/>
 			<s:Label text="{title}" width="100%" textAlign="center"/>
-			<s:Button icon="{getResourceUrl(newChildIcon)}" 
+			<s:Button icon="{EditorModelPlugin.getInstance().getComposedImageUrl(newChildIcon)}" 
 					  click="{addNew()}"
 					  width="16" height="16"
 					  styleName="borderlessButton"/>
