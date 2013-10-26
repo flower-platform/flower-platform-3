@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.codesync.processor;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
+import org.flowerplatform.emf_model.notation.CategorySeparator;
 import org.flowerplatform.emf_model.notation.View;
 
 /**
@@ -38,7 +40,13 @@ public class CodeSyncCategorySeparatorProcessor implements IDiagrammableElementF
 			View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		ViewDetailsUpdate update = new ViewDetailsUpdate();
 		update.setViewId(associatedViewOnOpenDiagram.eResource().getURIFragment(associatedViewOnOpenDiagram));
-		update.setViewDetails((Map<String, Object>) associatedViewOnOpenDiagram.getViewDetails());
+		
+		CategorySeparator separator = (CategorySeparator) associatedViewOnOpenDiagram;
+		Map<String, Object> viewDetails = new HashMap<String, Object>();
+		viewDetails.put("title", separator.getCategory());
+		viewDetails.put("codeSyncType", separator.getNewChildCodeSyncType());
+		viewDetails.put("newChildIcon", separator.getNewChildIcon());
+		update.setViewDetails(viewDetails);
 	
 		DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(context, true).
 			getViewDetailsUpdates().add(update);

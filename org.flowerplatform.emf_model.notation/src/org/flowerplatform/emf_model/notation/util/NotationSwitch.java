@@ -109,6 +109,15 @@ public class NotationSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case NotationPackage.CATEGORY_SEPARATOR: {
+				CategorySeparator categorySeparator = (CategorySeparator)theEObject;
+				T result = caseCategorySeparator(categorySeparator);
+				if (result == null) result = caseNode(categorySeparator);
+				if (result == null) result = caseView(categorySeparator);
+				if (result == null) result = caseNotationElement(categorySeparator);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case NotationPackage.EDGE: {
 				Edge edge = (Edge)theEObject;
 				T result = caseEdge(edge);
@@ -221,6 +230,21 @@ public class NotationSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseNode(Node object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Category Separator</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Category Separator</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseCategorySeparator(CategorySeparator object) {
 		return null;
 	}
 

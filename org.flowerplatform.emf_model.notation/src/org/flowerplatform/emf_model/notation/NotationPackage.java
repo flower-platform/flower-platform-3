@@ -306,6 +306,133 @@ public interface NotationPackage extends EPackage {
 	int NODE_FEATURE_COUNT = VIEW_FEATURE_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.CategorySeparatorImpl <em>Category Separator</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.flowerplatform.emf_model.notation.impl.CategorySeparatorImpl
+	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getCategorySeparator()
+	 * @generated
+	 */
+	int CATEGORY_SEPARATOR = 3;
+
+	/**
+	 * The feature id for the '<em><b>Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__ID = NODE__ID;
+
+	/**
+	 * The feature id for the '<em><b>Id Before Removal</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__ID_BEFORE_REMOVAL = NODE__ID_BEFORE_REMOVAL;
+
+	/**
+	 * The feature id for the '<em><b>View Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__VIEW_TYPE = NODE__VIEW_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Persistent Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__PERSISTENT_CHILDREN = NODE__PERSISTENT_CHILDREN;
+
+	/**
+	 * The feature id for the '<em><b>View Details</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__VIEW_DETAILS = NODE__VIEW_DETAILS;
+
+	/**
+	 * The feature id for the '<em><b>Diagrammable Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__DIAGRAMMABLE_ELEMENT = NODE__DIAGRAMMABLE_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Source Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__SOURCE_EDGES = NODE__SOURCE_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Target Edges</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__TARGET_EDGES = NODE__TARGET_EDGES;
+
+	/**
+	 * The feature id for the '<em><b>Layout Constraint</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__LAYOUT_CONSTRAINT = NODE__LAYOUT_CONSTRAINT;
+
+	/**
+	 * The feature id for the '<em><b>Category</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__CATEGORY = NODE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>New Child Code Sync Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__NEW_CHILD_CODE_SYNC_TYPE = NODE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>New Child Icon</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR__NEW_CHILD_ICON = NODE_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Category Separator</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATEGORY_SEPARATOR_FEATURE_COUNT = NODE_FEATURE_COUNT + 3;
+
+	/**
 	 * The meta object id for the '{@link org.flowerplatform.emf_model.notation.impl.EdgeImpl <em>Edge</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -313,7 +440,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getEdge()
 	 * @generated
 	 */
-	int EDGE = 3;
+	int EDGE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -422,7 +549,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getDiagram()
 	 * @generated
 	 */
-	int DIAGRAM = 4;
+	int DIAGRAM = 5;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -549,7 +676,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getLayoutConstraint()
 	 * @generated
 	 */
-	int LAYOUT_CONSTRAINT = 5;
+	int LAYOUT_CONSTRAINT = 6;
 
 	/**
 	 * The number of structural features of the '<em>Layout Constraint</em>' class.
@@ -568,7 +695,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getLocation()
 	 * @generated
 	 */
-	int LOCATION = 6;
+	int LOCATION = 7;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -623,7 +750,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getBounds()
 	 * @generated
 	 */
-	int BOUNDS = 7;
+	int BOUNDS = 8;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -696,7 +823,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getNote()
 	 * @generated
 	 */
-	int NOTE = 8;
+	int NOTE = 9;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -806,7 +933,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getMindMapNode()
 	 * @generated
 	 */
-	int MIND_MAP_NODE = 9;
+	int MIND_MAP_NODE = 10;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -906,7 +1033,7 @@ public interface NotationPackage extends EPackage {
 	 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getExpandableNode()
 	 * @generated
 	 */
-	int EXPANDABLE_NODE = 10;
+	int EXPANDABLE_NODE = 11;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -1155,6 +1282,49 @@ public interface NotationPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getNode_LayoutConstraint();
+
+	/**
+	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.CategorySeparator <em>Category Separator</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Category Separator</em>'.
+	 * @see org.flowerplatform.emf_model.notation.CategorySeparator
+	 * @generated
+	 */
+	EClass getCategorySeparator();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.CategorySeparator#getCategory <em>Category</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Category</em>'.
+	 * @see org.flowerplatform.emf_model.notation.CategorySeparator#getCategory()
+	 * @see #getCategorySeparator()
+	 * @generated
+	 */
+	EAttribute getCategorySeparator_Category();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.CategorySeparator#getNewChildCodeSyncType <em>New Child Code Sync Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>New Child Code Sync Type</em>'.
+	 * @see org.flowerplatform.emf_model.notation.CategorySeparator#getNewChildCodeSyncType()
+	 * @see #getCategorySeparator()
+	 * @generated
+	 */
+	EAttribute getCategorySeparator_NewChildCodeSyncType();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.emf_model.notation.CategorySeparator#getNewChildIcon <em>New Child Icon</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>New Child Icon</em>'.
+	 * @see org.flowerplatform.emf_model.notation.CategorySeparator#getNewChildIcon()
+	 * @see #getCategorySeparator()
+	 * @generated
+	 */
+	EAttribute getCategorySeparator_NewChildIcon();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.emf_model.notation.Edge <em>Edge</em>}'.
@@ -1513,6 +1683,40 @@ public interface NotationPackage extends EPackage {
 		 * @generated
 		 */
 		EReference NODE__LAYOUT_CONSTRAINT = eINSTANCE.getNode_LayoutConstraint();
+
+		/**
+		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.CategorySeparatorImpl <em>Category Separator</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.emf_model.notation.impl.CategorySeparatorImpl
+		 * @see org.flowerplatform.emf_model.notation.impl.NotationPackageImpl#getCategorySeparator()
+		 * @generated
+		 */
+		EClass CATEGORY_SEPARATOR = eINSTANCE.getCategorySeparator();
+
+		/**
+		 * The meta object literal for the '<em><b>Category</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CATEGORY_SEPARATOR__CATEGORY = eINSTANCE.getCategorySeparator_Category();
+
+		/**
+		 * The meta object literal for the '<em><b>New Child Code Sync Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CATEGORY_SEPARATOR__NEW_CHILD_CODE_SYNC_TYPE = eINSTANCE.getCategorySeparator_NewChildCodeSyncType();
+
+		/**
+		 * The meta object literal for the '<em><b>New Child Icon</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute CATEGORY_SEPARATOR__NEW_CHILD_ICON = eINSTANCE.getCategorySeparator_NewChildIcon();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.emf_model.notation.impl.EdgeImpl <em>Edge</em>}' class.
