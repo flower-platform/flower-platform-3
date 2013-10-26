@@ -22,9 +22,6 @@ package org.flowerplatform.editor.editorsupport {
 	
 	import mx.collections.ArrayCollection;
 	
-	/*import plugin_migration.SingletonRefsFromPrePluginEra;
-	import plugin_migration.SingletonRefsFromPrePluginEra;*/
-	
 	/**
 	 * Support for content types; holds mappings from content types to content types ids
  	 * and compatible editors, and also from editors to {@link EditorEntry}s. 

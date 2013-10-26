@@ -42,6 +42,7 @@
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 			import org.flowerplatform.editor.remote.EditableResource;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
@@ -133,7 +134,6 @@
 				this.editableResource = editableResource;	
 				// dirty info
 				saveButton.enabled = editableResource.dirty;
-				
 				
 				// lock info
 				var state:int = getState();
@@ -272,6 +272,14 @@
 					.show();
 			}
 			
+			protected function openResources_clickHandler(event:MouseEvent):void {
+			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()				
+				.setViewIdInWorkbench(OpenResourcesViewProvider.ID)
+				.setWidth(500)
+				.setHeight(300)
+				.show();
+			}
+			
 //			///////////////////////////////////////////////////////
 //			// Collaboration related logic
 //			///////////////////////////////////////////////////////
@@ -347,9 +355,11 @@
 	<mx:DateFormatter id="timeFormatter" formatString="HH:NN:SS"/>
 	<mx:DateFormatter id="durationFormatter" formatString="NN':SS''" />  
 	
-	<s:Button id="saveButton" label="Save" click="saveButtonClickHandler()"/>
-<!--	<common:FlowerButton id="saveButton" label="Save" fontWeight="normal" iconURL="{SWTImageUtil.INSTANCE.getImageURLFromAlias('save_img')}" enabled="false" click="saveButtonClickHandler()"/>
--->	
+	<!--	<s:Button id="saveButton" label="Save" click="saveButtonClickHandler()"/>
+	EditorPlugin.getInstance().getResourceUrl('images/user.png')
+	-->	
+	<common:FlowerButton id="saveButton" label="Save" fontWeight="normal" iconURL="{EditorPlugin.getInstance().getResourceUrl('images/save_edit.gif')}" enabled="false" click="saveButtonClickHandler()"/>
+
 	<mx:HBox id="lockStatusBox" paddingTop="1" paddingBottom="1" paddingLeft="2" paddingRight="2" verticalAlign="middle" horizontalGap="3">
 		<mx:Label text="Lock:"/>
 		<common:FlowerButton id="lockButton" label="Loading..." enabled="false" click="lockClick()" fontWeight="normal" 
@@ -421,6 +431,13 @@
 						 fontWeight="normal" 
 						 icon="{FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorPlugin.getInstance().getResourceUrl('images/external_link.png'))}" 
 						 click="urlGenerateNavigate_clickHandler(event)"/>
+	
+	<s:Button id="openResources" 
+			  label="{EditorPlugin.getInstance().getMessage('open.resources')}" 
+			  toolTip="{EditorPlugin.getInstance().getMessage('open.resources.current')}" 
+			  fontWeight="normal" 
+			  icon="{FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorPlugin.getInstance().getResourceUrl('images/open_resources_view.png'))}" 
+			  click="openResources_clickHandler(event)"/>
 
 	
 	<effects:FadeColor

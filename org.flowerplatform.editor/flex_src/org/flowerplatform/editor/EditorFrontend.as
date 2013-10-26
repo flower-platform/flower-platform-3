@@ -23,7 +23,7 @@ package org.flowerplatform.editor {
 	
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
-	import org.flowerplatform.flexutil.layout.IDirtyStateProvider;
+	import org.flowerplatform.flexutil.layout.ITitleDecorator;
 	
 	import spark.components.HGroup;
 	import spark.components.RichEditableText;
@@ -44,7 +44,7 @@ package org.flowerplatform.editor {
 	 * @author Cristi
 	 * 
 	 */
-	public class EditorFrontend extends VBox implements IDirtyStateProvider/*, ModalSpinnerSupport */ {
+	public class EditorFrontend extends VBox implements IDirtyStateProvider, ITitleDecorator/*, ModalSpinnerSupport */ {
 	
 		/**
 		 * 
@@ -100,7 +100,7 @@ package org.flowerplatform.editor {
 
 		public var editorStatefulClient:EditorStatefulClient;
 		
-		public function getEditorStatefulClientForSelectedElement():Object {
+		public function getEditorStatefulClientForSelectedElement():EditorStatefulClient {
 			return editorStatefulClient;
 		}
 		
@@ -339,6 +339,13 @@ package org.flowerplatform.editor {
 			} else {
 				return false;
 			}
+		}
+		
+		 public function decorateTitle(title:String):String {
+			if (this.isDirty()) { 
+				return "* " +title ;
+			}
+			return title;
 		}
 		
 //		private var _modalSpinner:ModalSpinner;

@@ -38,27 +38,23 @@ package org.flowerplatform.editor.open_resources_view
 		 */	
 		public function getChildren(treeNode:Object):IList
 		{					
-			if (treeNode is TreeNode)
+			if (treeNode is TreeNode) {
 				return TreeNode(treeNode).children;
-			
-			if (treeNode is ArrayCollection) {
-				return ArrayCollection(treeNode);
 			} else if (treeNode is EditableResource) {
 				return EditableResource(treeNode).clients;
-			}else if(treeNode is EditableResourceClient){				
-				return new ArrayCollection(); 
+			}else if(treeNode is EditableResourceClient) {				
+				return null; 
 			}else {
 				return null;
 			}
 		}
 		
-		public function hasChildren(treeNode:Object):Boolean
-		{
+		public function hasChildren(treeNode:Object):Boolean {
 			if (treeNode is TreeNode) {
 				return TreeNode(treeNode).hasChildren;
 			}
-			return (treeNode is ArrayCollection) || 
-				( (treeNode is EditableResource) && (EditableResource(treeNode).clients.length > 0) );
+			return ( (treeNode is EditableResource) && (EditableResource(treeNode).clients.length > 0) );
 		}
+		
 	}
 }

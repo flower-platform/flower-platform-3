@@ -23,6 +23,7 @@ package org.flowerplatform.web {
 	import flash.events.MouseEvent;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
+	import flash.external.ExternalInterface;
 	
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
@@ -33,6 +34,7 @@ package org.flowerplatform.web {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -44,8 +46,10 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
+	import org.flowerplatform.flexutil.shortcut.KeyBindings;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
 	import org.flowerplatform.web.common.WebCommonPlugin;
+	import org.flowerplatform.web.common.communication.AuthenticationManager;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
@@ -73,7 +77,7 @@ package org.flowerplatform.web {
 		public var currentPerspective:Perspective;
 		
 		public var perspectives:Vector.<Perspective> = new Vector.<Perspective>();
-	
+		
 		override public function preStart():void {
 			super.preStart();
 			webCommonPlugin.preStart();
@@ -180,6 +184,29 @@ package org.flowerplatform.web {
 			FlexUtilGlobals.getInstance().selectionManager.addEventListener(SelectionChangedEvent.SELECTION_CHANGED, function (event:SelectionChangedEvent):void {
 				trace("Selection changed: " + event.selection);
 			});
+			
+			if (ExternalInterface.available) { 
+				ExternalInterface.addCallback("invokeSaveResourcesDialog", invokeSaveResourcesDialog); 
+			}
+		}
+		
+		/**
+		 * Accessed by JavaScript code in order to prevent closing the browser if there
+		 * are resources that are not saved.
+		 * 
+		 * @return true if the close of the browser window needs to be prevented.
+		 */
+		public function invokeSaveResourcesDialog():Boolean {
+			if (!WebCommonPlugin.getInstance().authenticationManager.bridge.connectionEstablished){
+				// this happens when the user was loggout by server (for inactivity); in this
+				// case, no need to care about dirty resources any more
+				return false;
+			}
+			
+			// we invoke the dialog, so that the user has it open already when returning to the app
+			// (from the JS Alert that he has just closed)
+			EditorPlugin.getInstance().globalEditorOperationsManager.invokeSaveResourcesDialogAndInvoke(null, null, null);
+			return EditorPlugin.getInstance().globalEditorOperationsManager.getGlobalDirtyState();
 		}
 		
 		/**
