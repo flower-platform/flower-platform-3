@@ -28,6 +28,7 @@ package org.flowerplatform.codesync.action {
 	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.action.AddNewElementAction;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
 	
@@ -39,12 +40,21 @@ package org.flowerplatform.codesync.action {
 		
 		protected var codeSyncType:String;
 		
-		public function AddNewCodeSyncElementAction(codeSyncType:String, label:String, iconUrl:String) {
+		protected var createCodeSyncElement:Boolean;
+		
+		public function AddNewCodeSyncElementAction(codeSyncType:String, label:String, iconUrl:String, createCodeSyncElement:Boolean) {
 			super();
 			parentId = "new";
 			this.codeSyncType = codeSyncType;
 			this.label = label;
 			this.icon = CodeSyncPlugin.getInstance().getResourceUrl(iconUrl);
+			this.createCodeSyncElement = createCodeSyncElement;
+		}
+		
+		override protected function showLocationForNewElementsDialog():Boolean {
+			// show dialog only if diagram selected (actions for top level elements)
+			// and if the codeSyncElement can be created on server side
+			return createCodeSyncElement && selection.getItemAt(0) is Diagram;
 		}
 		
 		override protected function createNewModelElement(location:String, selection:IList, context:Object):void {

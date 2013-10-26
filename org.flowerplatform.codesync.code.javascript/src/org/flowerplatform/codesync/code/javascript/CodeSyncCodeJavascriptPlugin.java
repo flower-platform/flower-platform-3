@@ -41,6 +41,10 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -222,13 +226,22 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				.setCodeSyncType("formItem")
 				.setLabel("Form Item")
 				.setIconUrl("images/full/obj16/bullet_textfield.png")
-				.setDefaultName("newFormItem")
+				.setDefaultName("newFormItem")				
 				.addCodeSyncTypeCategory("formItem")
 				.addFeature("valueExpression")
 				.addFeature("editId")
 				.addFeature("title")
 				.setKeyFeature("title")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+		);
+		
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType("note")
+				.setLabel("Note")
+				.setIconUrl("images/full/obj16/note.png")
+				.setDefaultName("NewNote")				
+				.setCreateCodeSyncElement(false)				
 		);
 		
 		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension());

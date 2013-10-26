@@ -27,7 +27,6 @@ import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.change_processor.ComposedChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessor;
-import org.flowerplatform.editor.model.change_processor.NoteChangeProcessor;
 import org.flowerplatform.editor.model.changes_processor.ClassCriterionDispatcherProcessor;
 import org.flowerplatform.editor.model.changes_processor.MainChangesDispatcher;
 import org.flowerplatform.emf_model.notation.Bounds;
@@ -118,7 +117,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.addDeclaredProperty("parentView_RH")
 		.register();
 
-		new CustomSerializationDescriptor(Node.class)
+		CustomSerializationDescriptor nodeSD = new CustomSerializationDescriptor(Node.class)
 		.addDeclaredProperties(viewSD.getDeclaredProperties())
 		.addDeclaredProperty("layoutConstraint_RH")
 		.register();
@@ -148,7 +147,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.register();
 		
 		new CustomSerializationDescriptor(Note.class)
-		.addDeclaredProperties(viewSD.getDeclaredProperties())
+		.addDeclaredProperties(nodeSD.getDeclaredProperties())
 		.addDeclaredProperty("text")		
 		.register();
 		
@@ -165,7 +164,6 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		.register();
 				
 		getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());
-		getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.note", new NoteChangeProcessor());
 	}
 
 	protected void initExtensionPoint_dragOnDiagramHandler() throws CoreException {

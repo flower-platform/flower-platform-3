@@ -40,10 +40,10 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
+import org.flowerplatform.codesync.operation_extension.AddNewNoteExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
-import org.flowerplatform.codesync.remote.CodeSyncAction;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -174,6 +174,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
 		
 		addNewExtensions = new ArrayList<AddNewExtension>();
+		addNewExtensions.add(new AddNewNoteExtension());
 		addNewExtensions.add(new AddNewTopLevelElementExtension());
 		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
 		

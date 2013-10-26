@@ -23,6 +23,8 @@ import java.util.List;
 
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 
+import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+
 /**
  * @author Mariana Gheorghe
  */
@@ -51,11 +53,26 @@ public class CodeSyncElementDescriptor {
 	
 	private String standardDiagramControllerProviderFactory;
 	
+	/**
+	 * If <code>true</code>, a corresponding {@link CodeSyncElement} 
+	 * will be created in resource.
+	 * 
+	 * <p>
+	 * For notes, the value is <code>false</code>
+	 * ("use the create new element general logic, but don't create 
+	 * {@link CodeSyncElement} in model").
+	 * 
+	 * @author Cristina Constantinescu
+	 */
+	private boolean createCodeSyncElement;
+	
 	public CodeSyncElementDescriptor() {
 		codeSyncTypeCategories = new ArrayList<String>();
 		childrenCodeSyncTypeCategories = new ArrayList<String>();
 		features = new ArrayList<String>();
 		features.add(FeatureAccessExtension.CODE_SYNC_NAME);
+		
+		createCodeSyncElement = true;
 	}
 	
 	public String getCodeSyncType() {
@@ -171,6 +188,21 @@ public class CodeSyncElementDescriptor {
 	public CodeSyncElementDescriptor setStandardDiagramControllerProviderFactory(
 			String standardDiagramControllerProviderFactory) {
 		this.standardDiagramControllerProviderFactory = standardDiagramControllerProviderFactory;
+		return this;
+	}
+
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	public boolean getCreateCodeSyncElement() {
+		return createCodeSyncElement;
+	}
+
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	public CodeSyncElementDescriptor setCreateCodeSyncElement(boolean createCodeSyncElement) {
+		this.createCodeSyncElement = createCodeSyncElement;
 		return this;
 	}
 	
