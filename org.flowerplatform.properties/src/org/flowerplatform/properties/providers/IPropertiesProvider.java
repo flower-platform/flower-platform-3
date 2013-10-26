@@ -26,11 +26,11 @@ import org.flowerplatform.properties.remote.SelectedItem;
 /**
  * @author Razvan Tache
  */
-public interface IPropertiesProvider {
+public interface IPropertiesProvider<SEL_ITEM extends SelectedItem, RES_SEL_ITEM> {
 	
-	public List<String> getPropertyNames();
-	public Property getProperty(SelectedItem selectedItem, String propertyName);
-	public List<Property> getProperties(SelectedItem selectedItem);
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue);
+	public List<String> getPropertyNames(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem);
+	public Property getProperty(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem, String propertyName);
+	public RES_SEL_ITEM resolveSelectedItem(SEL_ITEM selectedItem);
+	public void setProperty(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem, String propertyName, Object propertyValue);
 	
 }

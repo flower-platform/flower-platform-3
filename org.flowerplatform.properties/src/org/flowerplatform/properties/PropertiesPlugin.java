@@ -28,6 +28,7 @@ import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
+import org.flowerplatform.properties.remote.SelectedItem;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,7 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 
 	private final static Logger logger = LoggerFactory.getLogger(PropertiesPlugin.class);
 
-	private HashMap<String, IPropertiesProvider> propertiesProviders;
+	private HashMap<String, IPropertiesProvider<SelectedItem, Object>> propertiesProviders;
 
 	public static final String PROVIDER_EXTENSION_POINT = "org.flowerplatform.properties.propertiesProvider";
 
@@ -48,11 +49,11 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 		return INSTANCE;
 	}
 
-	public void addPropertiesProvider(String itemType, IPropertiesProvider provider) {
+	public void addPropertiesProvider(String itemType, IPropertiesProvider<SelectedItem, Object> provider) {
 		propertiesProviders.put(itemType, provider);
 	}
 
-	public HashMap<String, IPropertiesProvider> getPropertiesProviders() {
+	public HashMap<String, IPropertiesProvider<SelectedItem, Object>> getPropertiesProviders() {
 		return propertiesProviders;
 	}
 
@@ -75,7 +76,7 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 				PROVIDER_EXTENSION_POINT);
 		for (IConfigurationElement configurationElement : configurationElements) {
 			String itemType = configurationElement.getAttribute("itemType");
-			IPropertiesProvider propertiesProvider = (IPropertiesProvider) configurationElement
+			IPropertiesProvider<SelectedItem, Object> propertiesProvider = (IPropertiesProvider<SelectedItem, Object>) configurationElement
 					.createExecutableExtension("propertiesProviderClass");
 			propertiesProviders.put(itemType, propertiesProvider);
 			logger.debug("Added property provider mapping with itemType = {} for class = {}", itemType,

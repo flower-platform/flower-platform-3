@@ -10,55 +10,54 @@ import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
-import org.flowerplatform.properties.remote.SelectedItem;
 
 /**
  * @author Cristina Constantinescu
  */
-public class DiagramPropertiesProvider implements IPropertiesProvider {
+public class DiagramPropertiesProvider implements IPropertiesProvider<DiagramSelectedItem, Diagram> {
 
 	public static final String LOCATION_FOR_NEW_ELEMENTS_PROPERTY = "locationForNewElements";
-	public static final String SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY = "showLocationForNewElementsDialog";
+	public static final String SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY = "showLocationForNewElementsDialog";
 	
 	@Override
-	public List<String> getPropertyNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Property getProperty(SelectedItem selectedItem, String propertyName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Property> getProperties(SelectedItem selectedItem) {
-		List<Property> properties = new ArrayList<Property>();	
-		Diagram diagram = getDiagram(selectedItem);
-
-		properties.add(new Property()
-					.setName(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)
-					.setValue(diagram.getLocationForNewElements())
-					.setType("StringWithDialog")
-					.setReadOnly(true));
-
-		properties.add(new Property()
-					.setName(SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY)
-					.setValue(diagram.isShowLocationForNewElementsDialog())
-					.setType("Boolean")
-					.setReadOnly(false));
+	public List<String> getPropertyNames(DiagramSelectedItem selectedItem, Diagram resolvedSelectedItem) {
+		List<String> propertiesNames = new ArrayList<String>();
 		
-		return properties;
+		propertiesNames.add(LOCATION_FOR_NEW_ELEMENTS_PROPERTY);
+		propertiesNames.add(SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY);
+
+		return propertiesNames;
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		Diagram diagram = getDiagram(selectedItem);
+	public Property getProperty(DiagramSelectedItem selectedItem, Diagram diagram, String propertyName) {
+		
+		switch (propertyName) {
+			case LOCATION_FOR_NEW_ELEMENTS_PROPERTY: {
+				return new Property()
+						.setName(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)
+						.setValue(diagram.getLocationForNewElements())
+						.setType("StringWithDialog")
+						.setReadOnly(true);
+			}
+			case SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY: {
+				return new Property()
+						.setName(SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY)
+						.setValue(diagram.isShowLocationForNewElementsDialog())
+						.setType("Boolean")
+						.setReadOnly(false);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public void setProperty(DiagramSelectedItem selectedItem, Diagram diagram, String propertyName,
+			Object propertyValue) {
 		
 		if (propertyName.equals(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)) {
 			diagram.setLocationForNewElements((String) propertyValue);
-		} else if (propertyName.equals(SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY)) {
+		} else if (propertyName.equals(SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY)) {
 			diagram.setShowLocationForNewElementsDialog((Boolean) propertyValue);
 		}
 	}
@@ -67,13 +66,15 @@ public class DiagramPropertiesProvider implements IPropertiesProvider {
 		return (DiagramEditorStatefulService)CommunicationPlugin.getInstance().getServiceRegistry().getService(diagramEditorStatefulServiceId);
 	}
 	
-	private Diagram getDiagram(SelectedItem selectedItem) {
-		String diagramEditorStatefulServiceId = ((DiagramSelectedItem) selectedItem).getEditorStatefulServiceId();
+	@Override
+	public Diagram resolveSelectedItem(DiagramSelectedItem selectedItem) {
+		String diagramEditorStatefulServiceId = selectedItem.getEditorStatefulServiceId();
 		DiagramEditorStatefulService diagramEditorStatefulService = getDiagramEditorStatefulService(diagramEditorStatefulServiceId);	
-		String diagramEditableResourcePath = ((DiagramSelectedItem) selectedItem).getDiagramEditableResourcePath();
-		String id = ((DiagramSelectedItem) selectedItem).getXmiID();
+		String diagramEditableResourcePath = selectedItem.getDiagramEditableResourcePath();
+		String id = selectedItem.getXmiID();
 		
 		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) diagramEditorStatefulService.getEditableResource(diagramEditableResourcePath);
-		return (Diagram) diagramEditableResource.getEObjectById(id);		
+		return (Diagram) diagramEditableResource.getEObjectById(id);
 	}
+
 }

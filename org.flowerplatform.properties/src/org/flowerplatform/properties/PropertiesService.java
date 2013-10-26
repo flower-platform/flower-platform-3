@@ -36,18 +36,23 @@ public class PropertiesService {
 
 	public List<Property> getProperties(List<SelectedItem> selection) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Getting the property list for the selection: {}", selection);
+			logger.debug("Getting the property list for the selection: {}", selection.toString());
 		}
-		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
+		HashMap<String, IPropertiesProvider<SelectedItem, Object>> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
-		
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
-			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
+			IPropertiesProvider<SelectedItem, Object> itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// retrieve properties by providers
 			if (itemProvider != null) {
-				newProperties = itemProvider.getProperties(selectedItem);
+				// 
+				List<String> propertiesNames = new ArrayList<String>();
+				Object resolvedSelectedItem = itemProvider.resolveSelectedItem(selectedItem);
+				propertiesNames = itemProvider.getPropertyNames(selectedItem, resolvedSelectedItem);
+				for (String propertyName:propertiesNames) {
+					newProperties.add(itemProvider.getProperty(selectedItem, resolvedSelectedItem, propertyName));
+				}
 			}
 			// merge with the previous results
 			if (properties.isEmpty()) {
@@ -65,13 +70,14 @@ public class PropertiesService {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Changing property {}. Giving it the value of: {}", propertyName, propertyValue);
 		}
-		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
+		HashMap<String, IPropertiesProvider<SelectedItem, Object>> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
+		
 		for (SelectedItem selectedItem : selection) {
-			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
-			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
+			IPropertiesProvider<SelectedItem, Object> itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// set the property
-			itemProvider.setProperty(selectedItem, propertyName, propertyValue);
+			Object resolvedSelectedItem = itemProvider.resolveSelectedItem(selectedItem);
+			itemProvider.setProperty(selectedItem, resolvedSelectedItem, propertyName, propertyValue);
 		}	
 	}
 }

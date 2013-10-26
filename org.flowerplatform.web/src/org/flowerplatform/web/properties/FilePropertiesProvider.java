@@ -36,9 +36,81 @@ import org.flowerplatform.web.properties.remote.FileSelectedItem;
 /**
  * @author Razvan Tache
  */
-public class FilePropertiesProvider implements IPropertiesProvider {
+public class FilePropertiesProvider implements IPropertiesProvider<FileSelectedItem, File> {
+	
+	public static final String PROPERTY_NAME = "Name";
+	public static final String PROPERTY_LOCATION = "Location";
+	public static final String PROPERTY_SIZE = "Size";
+	public static final String PROPERTY_LAST_MODIFIED = "Last Modified";
+	public static final String PROPERTY_TEST_ENABLED = "Test Enabled";
+	public static final String PROPERTY_TEST_DISABLED = "Test Disabled";
 
-	private File getFile(List<PathFragment> pathWithRoot) {
+	@Override
+	public void setProperty(FileSelectedItem selectedItem, File file, String propertyName, Object propertyValue) {
+
+	}
+	
+	@Override
+	public List<String> getPropertyNames(FileSelectedItem selectedItem, File resolvedSelectedItem) {
+		List<String> propertiesNames = new ArrayList<String>();
+		
+		propertiesNames.add(PROPERTY_NAME);
+		propertiesNames.add(PROPERTY_LOCATION);
+		propertiesNames.add(PROPERTY_SIZE);
+		propertiesNames.add(PROPERTY_LAST_MODIFIED);
+		propertiesNames.add(PROPERTY_TEST_ENABLED);
+		propertiesNames.add(PROPERTY_TEST_DISABLED);
+		
+		return propertiesNames;
+	}
+	@Override
+	public Property getProperty(FileSelectedItem selectedItem, File file, String propertyName) {
+//		
+
+//		File file = getFile(pathWithRoot);
+		
+		switch (propertyName) {
+			case PROPERTY_NAME: {
+				return new Property()
+						.setName(PROPERTY_NAME)
+						.setValue(file.getName())
+						.setReadOnly(false);
+			}
+			case PROPERTY_LOCATION: {
+				return new Property()
+					.setName(PROPERTY_LOCATION)
+					.setValue(file.getAbsolutePath());
+			}
+			case PROPERTY_SIZE: {
+				return new Property()
+					.setName(PROPERTY_SIZE)
+					.setValue(file.length());
+			}
+			case PROPERTY_LAST_MODIFIED: {
+				return new Property()
+					.setName(PROPERTY_LAST_MODIFIED)
+					.setValue(new Date(file.lastModified()));
+			}
+			case PROPERTY_TEST_ENABLED: {
+				return new Property()
+					.setName(PROPERTY_TEST_ENABLED)
+					.setValue(true)
+					.setType("Boolean")
+					.setReadOnly(false);
+			}
+			case PROPERTY_TEST_DISABLED: {
+				return new Property()
+					.setName(PROPERTY_TEST_DISABLED)
+					.setValue(true)
+					.setType("Boolean");
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public File resolveSelectedItem(FileSelectedItem selectedItem) {
+		List<PathFragment> pathWithRoot = selectedItem.getPathWithRoot();
 		
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
@@ -53,55 +125,7 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		} else {
 			return ((Pair<File, Object>) object).a;
 		}
-	}
-	@Override
-	public List<Property> getProperties(SelectedItem selectedItem) {
-		// proccessing step;
-		List<PathFragment> pathWithRoot = ((FileSelectedItem)selectedItem).getPathWithRoot();
-
-		File file = getFile(pathWithRoot);
 		
-		List<Property> properties = new ArrayList<Property>();	
-		// TODO decide what properties are needed
-		properties.add(new Property()
-				.setName("Name")
-				.setValue(file.getName())
-				.setReadOnly(false));
-		properties.add(new Property()
-				.setName("Location")
-				.setValue(file.getAbsolutePath()));
-		properties.add(new Property()
-				.setName("Size")
-				.setValue(file.length()));
-		properties.add(new Property()
-				.setName("Last modified")
-				.setValue(new Date(file.lastModified())));
-		properties.add(new Property()
-				.setName("testEnabled")
-				.setValue(true)
-				.setType("Boolean")
-				.setReadOnly(false));
-		properties.add(new Property()
-				.setName("testDisabled")
-				.setValue(true)
-				.setType("Boolean"));
-		
-		return properties;
-	}
-
-	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-
-	}
-	@Override
-	public List<String> getPropertyNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Property getProperty(SelectedItem selectedItem, String propertyName) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 }

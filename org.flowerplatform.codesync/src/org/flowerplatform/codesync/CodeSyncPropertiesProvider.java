@@ -39,16 +39,19 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  * @author Tache Razvan Mihai
  * @author Mariana Gheorghe
  */
-public class CodeSyncPropertiesProvider implements IPropertiesProvider {
+public class CodeSyncPropertiesProvider implements IPropertiesProvider<DiagramSelectedItem, CodeSyncElement> {
 
 	@Override
-	public List<Property> getProperties(SelectedItem selectedItem) {
-		List<Property> properties = new ArrayList<Property>();	
-
-		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
+	public void setProperty(DiagramSelectedItem selectedItem, CodeSyncElement codeSyncElement,
+			String propertyName, Object propertyValue) {
 		if (codeSyncElement == null) {
-			return Collections.emptyList();
+			return;
 		}
+		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, propertyName, propertyValue);
+	}
+
+	@Override
+	public List<String> getPropertyNames(DiagramSelectedItem selectedItem, CodeSyncElement codeSyncElement) {
 		
 		List<String> features = CodeSyncOperationsService.getInstance().getFeatures(codeSyncElement.getType());
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
@@ -56,27 +59,21 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 			features.remove(descriptor.getKeyFeature());
 		}
 		
-		for (String feature : features) {
-			properties.add(new Property()
-					.setName(feature)
-					.setValue(CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, feature))
-					.setReadOnly(false)
-			);
-		}
-		
-		return properties;
+		return features;
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
-		if (codeSyncElement == null) {
-			return;
-		}
-		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, propertyName, propertyValue);
+	public Property getProperty(DiagramSelectedItem selectedItem, CodeSyncElement codeSyncElement,
+			String propertyName) {
+		return new Property()
+				.setName(propertyName)
+				.setValue(CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, propertyName))
+				.setReadOnly(false);
 	}
-	
-	protected CodeSyncElement getCodeSyncElement(SelectedItem selectedItem) {
+
+
+	@Override
+	public CodeSyncElement resolveSelectedItem(DiagramSelectedItem selectedItem) {
 		DiagramEditorStatefulService diagramEditorStatefulService = ((DiagramSelectedItem) selectedItem).getEditorStatefulService();		
 		String diagramEditableResourcePath = ((DiagramSelectedItem) selectedItem).getDiagramEditableResourcePath();
 		String id = ((DiagramSelectedItem) selectedItem).getXmiID();
@@ -86,16 +83,4 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 		return (CodeSyncElement) view.getDiagrammableElement();
 	}
 
-
-	@Override
-	public List<String> getPropertyNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Property getProperty(SelectedItem selectedItem, String propertyName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }
