@@ -220,6 +220,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("extension")
 			.addDeclaredProperty("codeSyncTypeCategories")
 			.addDeclaredProperty("childrenCodeSyncTypeCategories")
+			.addDeclaredProperty("category")
 			.addDeclaredProperty("features")
 			.addDeclaredProperty("keyFeature")
 			.addDeclaredProperty("standardDiagramControllerProviderFactory")

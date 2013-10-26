@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
@@ -66,6 +67,13 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 		title.setDiagrammableElement(codeSyncElement);
 		title.setViewType("topLevelBoxTitle");
 		node.getPersistentChildren().add(title);
+		
+		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService1.getInstance().getChildrenCategories(codeSyncElement.getType())) {
+			String category = childDescriptor.getCategory();
+			if (category != null) {
+				CodeSyncDiagramOperationsService1.getInstance().addCategorySeparator(node, childDescriptor);
+			}
+		}
 		
 		// populate PARENT_CODE_SYNC_ELEMENT
 		if (codeSyncElement.eContainer() == null) {

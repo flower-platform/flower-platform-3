@@ -28,6 +28,7 @@ package org.flowerplatform.codesync {
 	
 	import org.flowerplatform.codesync.action.AddNewCodeSyncElementActionProvider;
 	import org.flowerplatform.codesync.action.AddNewRelationAction;
+	import org.flowerplatform.codesync.action.ExpandCompartmentActionProvider;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -60,7 +61,7 @@ package org.flowerplatform.codesync {
 		protected var relationDescriptors:ArrayCollection;
 		
 		/**
-		 * String (CodeSync type) to CodeSyncElementDescriptor.
+		 * String (CodeSync type) to ArrayCollection of CodeSyncElementDescriptor.
 		 * "" -> top level elements.
 		 * 
 		 * @see computeAvailableChildrenForCodeSyncType()
@@ -90,6 +91,7 @@ package org.flowerplatform.codesync {
 			
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new AddNewCodeSyncElementActionProvider());
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(codeSyncTreeActionProvider);
+			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new ExpandCompartmentActionProvider());
 		}
 		
 		

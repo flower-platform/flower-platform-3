@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.codesync.processor;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,30 +27,29 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
-import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
+import org.flowerplatform.editor.model.change_processor.AbstractDiagramProcessor;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.View;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @author Mariana Gheorghe
  */
-public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagrammableElementFeatureChangesProcessor {
+public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDiagramProcessor {
 
 	@Override
-	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> context) {
+	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		if (object == null) {
 			return;
 		}		
 		if (featureChanges == null) {
 			// full content
-			processFeatureChange(object, null, associatedViewOnOpenDiagram, context);
+			processFeatureChange(object, null, associatedViewOnOpenDiagram, viewDetails);
 		} else {
 			for (FeatureChange featureChange : featureChanges) {
-				processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, context);
+				processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
 			}
 		}
 	}
@@ -64,7 +64,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 		}
 	}
 
-	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram, List<Node> childViews, Map<String, Object> context) {
+	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram, List<Node> childViews, Map<String, Object> viewDetails) {
 		int newViewsIndex = getNewViewsIndex(object, childModelElements, associatedViewOnOpenDiagram);
 		
 		if (newViewsIndex >= 0) {
@@ -74,7 +74,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 //					Node newView = createChildView(associatedViewOnOpenDiagram, child);
 //					newView.setDiagrammableElement(child);
 //					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
-					addChildView(associatedViewOnOpenDiagram, child, newViewsIndex, context);					
+					addChildView(associatedViewOnOpenDiagram, child, newViewsIndex, viewDetails);					
 
 				}
 				newViewsIndex++;
@@ -91,13 +91,14 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 					getChildrenForCodeSyncElement(object).add(associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child), newChild);
 				} else {
 //					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
-					removeChildView(child, child.getDiagrammableElement(), context);					
+					removeChildView(child, child.getDiagrammableElement(), viewDetails);					
 					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 				}
 			} else {
-				int modelIndex = childModelElements.indexOf(child.getDiagrammableElement());
-				if (modelIndex != childViews.indexOf(child)) {
-					associatedViewOnOpenDiagram.getPersistentChildren().move(modelIndex, (Node) child);
+				int currentViewIndex = associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child);
+				int moveToViewIndex = getNewViewsIndex(object, Arrays.asList(child.getDiagrammableElement()), associatedViewOnOpenDiagram);
+				if (moveToViewIndex != -1 && currentViewIndex != moveToViewIndex) {
+					associatedViewOnOpenDiagram.getPersistentChildren().move(moveToViewIndex, (Node) child);
 				}
 			}
 		}
@@ -110,7 +111,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 			for (Iterator<Node> it = persistentChildren.iterator(); it.hasNext();) {
 				View child = it.next();
 				if (childViews.contains(child)) {
-					removeChildView(child, child.getDiagrammableElement(), context);
+					removeChildView(child, child.getDiagrammableElement(), viewDetails);
 					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 				}
 			}			
@@ -145,6 +146,7 @@ public abstract class CodeSyncElementFeatureChangesProcessor implements IDiagram
 	protected Node addChildView(View associatedViewOnOpenDiagram, EObject child, int newViewsIndex, Map<String, Object> context) {
 		Node newView = createChildView(associatedViewOnOpenDiagram, child, context);
 		newView.setDiagrammableElement(child);
+		newView.setViewType(associatedViewOnOpenDiagram.getViewType() + "." + getCodeSyncElement(child).getType());
 		associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
 		
 		return newView;
