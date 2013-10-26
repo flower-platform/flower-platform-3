@@ -5,6 +5,7 @@ importClass(com.crispico.flower.mp.codesync.base.CodeSyncPlugin);
 
 var descriptor = new CodeSyncElementDescriptor();
 descriptor.codeSyncType = "backboneClass1";
+descriptor.addCodeSyncTypeCategory("topLevel")
 descriptor.label = "Backbone Class (js)";
 descriptor.iconUrl = "images/full/obj16/jcu_obj.gif";
 descriptor.defaultName = "NewBackboxClass (from js)";
