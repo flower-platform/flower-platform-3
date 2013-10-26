@@ -24,12 +24,14 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 import org.flowerplatform.emf_model.notation.View;
 
-import com.crispico.flower.mp.model.codesync.ScenarioElement;
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
  * @author Mariana Gheorghe
@@ -45,7 +47,8 @@ public class RelationDiagramProcessor implements IDiagrammableElementFeatureChan
 			return;
 		}
 		
-		viewDetails.put("label", "MyLabel");
+		RelationDescriptor descriptor = CodeSyncPlugin.getInstance().getRelationDescriptor(((Relation) object).getType());
+		viewDetails.put("label", descriptor.getLabel());
 
 		if (!viewDetails.isEmpty()) {
 			ViewDetailsUpdate update = new ViewDetailsUpdate();

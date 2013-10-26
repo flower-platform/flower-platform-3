@@ -151,8 +151,19 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	}
 
 	public CodeSyncElementDescriptor getCodeSyncElementDescriptor(String codeSyncType) {
+		// TODO CS/JS we should have a mapping; maybe send it to flex as a map; for quick access; idem for relations
 		for (CodeSyncElementDescriptor descriptor : getCodeSyncElementDescriptors()) {
 			if (descriptor.getCodeSyncType().equals(codeSyncType)) {
+				return descriptor;
+			}
+		}
+		return null;
+	}
+	
+	// TODO CS/JS we should unify the descriptors. And have them in Model?
+	public RelationDescriptor getRelationDescriptor(String type) {
+		for (RelationDescriptor descriptor : getRelationDescriptors()) {
+			if (descriptor.getType().equals(type)) {
 				return descriptor;
 			}
 		}

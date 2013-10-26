@@ -108,7 +108,7 @@ package org.flowerplatform.codesync.action {
 		
 		override public function run():void {			
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(_diagramShell).editorStatefulClient)
-				.service_addNewRelation(View(context.sourceModel).id, View(context.targetModel).id);
+				.service_addNewRelation(relationDescriptor.type, View(context.sourceModel).id, View(context.targetModel).id);
 		}
 		
 	}

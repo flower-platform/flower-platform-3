@@ -116,12 +116,13 @@ public class CodeSyncDiagramOperationsService1 {
 		// TODO
 	}
 	
-	public void addNewRelation(ServiceInvocationContext context, String sourceViewId, String targetViewId) {
+	public void addNewRelation(ServiceInvocationContext context, String type, String sourceViewId, String targetViewId) {
 		View sourceView = getViewById(context.getAdditionalData(), sourceViewId);
 		View targetView = getViewById(context.getAdditionalData(), targetViewId);
 		CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
 		CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
 		Relation relation = CodeSyncFactory.eINSTANCE.createRelation();
+		relation.setType(type);
 		relation.setSource(source);
 		relation.setTarget(target);
 		source.getRelations().add(relation);

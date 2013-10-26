@@ -551,6 +551,15 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EAttribute getRelation_Type() {
+		return (EAttribute)relationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public CodeSyncFactory getCodeSyncFactory() {
 		return (CodeSyncFactory)getEFactoryInstance();
 	}
@@ -623,6 +632,7 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		relationEClass = createEClass(RELATION);
 		createEReference(relationEClass, RELATION__SOURCE);
 		createEReference(relationEClass, RELATION__TARGET);
+		createEAttribute(relationEClass, RELATION__TYPE);
 	}
 
 	/**
@@ -713,6 +723,7 @@ public class CodeSyncPackageImpl extends EPackageImpl implements CodeSyncPackage
 		initEClass(relationEClass, Relation.class, "Relation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRelation_Source(), this.getCodeSyncElement(), this.getCodeSyncElement_Relations(), "source", null, 0, 1, Relation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getRelation_Target(), this.getCodeSyncElement(), null, "target", null, 0, 1, Relation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRelation_Type(), theEcorePackage.getEString(), "type", null, 0, 1, Relation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource
 		createResource(eNS_URI);
