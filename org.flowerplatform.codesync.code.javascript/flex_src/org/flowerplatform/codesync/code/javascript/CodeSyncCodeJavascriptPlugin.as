@@ -29,6 +29,7 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
 	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
