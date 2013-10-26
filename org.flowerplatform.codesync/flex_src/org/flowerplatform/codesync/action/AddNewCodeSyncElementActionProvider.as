@@ -55,7 +55,12 @@ package org.flowerplatform.codesync.action {
 			}
 			
 			for each (var availableCodeSyncElement:CodeSyncElementDescriptor in CodeSyncPlugin.getInstance().availableChildrenForCodeSyncType[selectedCodeSyncElementType]) {
-				result.push(new AddNewCodeSyncElementAction(availableCodeSyncElement.codeSyncType, availableCodeSyncElement.label, availableCodeSyncElement.iconUrl));
+				result.push(new AddNewCodeSyncElementAction(availableCodeSyncElement, null));
+				if (availableCodeSyncElement.initializationTypes != null) {
+					for each (var initializationType:String in availableCodeSyncElement.initializationTypes) {
+						result.push(new AddNewCodeSyncElementAction(availableCodeSyncElement, initializationType));
+					}
+				}
 			}
 			
 			return result;

@@ -149,21 +149,16 @@ package org.flowerplatform.codesync {
 		private function computeAvailableChildrenForCodeSyncType():void {
 			availableChildrenForCodeSyncType = new Dictionary();
 			for each (var descriptor:CodeSyncElementDescriptor in codeSyncElementDescriptors) {
-//				if (descriptor.codeSyncTypeCategories.length == 0) {
-//					// top level elements
-//					addChildCodeSyncTypeCategoryForParent("", descriptor);
-//				} else {
-					for each (var codeSyncTypeCategory:String in descriptor.codeSyncTypeCategories) {
-						if (codeSyncTypeCategory == CODE_SYNC_TYPE_CATEGORY_TOP_LEVEL) {
-							// top level elements
-							addChildCodeSyncTypeCategoryForParent("", descriptor);
-						} else {
-							for each (var parentCodeSyncType:String in getParentsForChildCodeSyncTypeCategory(codeSyncTypeCategory)) {
-								addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor);	
-							}
+				for each (var codeSyncTypeCategory:String in descriptor.codeSyncTypeCategories) {
+					if (codeSyncTypeCategory == CODE_SYNC_TYPE_CATEGORY_TOP_LEVEL) {
+						// top level elements
+						addChildCodeSyncTypeCategoryForParent("", descriptor);
+					} else {
+						for each (var parentCodeSyncType:String in getParentsForChildCodeSyncTypeCategory(codeSyncTypeCategory)) {
+							addChildCodeSyncTypeCategoryForParent(parentCodeSyncType, descriptor);	
 						}
 					}
-//				}
+				}
 			}
 		}
 		

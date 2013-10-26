@@ -53,9 +53,12 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
-				.setCodeSyncType("backboneClass")
+				.setCodeSyncType("backboneClass").setLabel("Backbone Class")
 				.addCodeSyncTypeCategory("topLevel")
-				.setLabel("Backbone Class")
+				.addInitializationType("").addInitializationTypeLabel("Plain Backbone Class")
+				.addInitializationType("backboneTableView").addInitializationTypeLabel("Table View")
+				.addInitializationType("backboneTableItemView").addInitializationTypeLabel("Table Item View")
+				.addInitializationType("backboneFormView").addInitializationTypeLabel("Form View")
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewBackboneClass")
 				.setExtension("js")

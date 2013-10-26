@@ -18,6 +18,8 @@
 */
 package org.flowerplatform.codesync.action {
 	
+	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorDescriptor;
+	
 	import flash.geom.Rectangle;
 	
 	import mx.collections.IList;
@@ -25,6 +27,7 @@ package org.flowerplatform.codesync.action {
 	import mx.core.UIComponent;
 	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.action.AddNewElementAction;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
@@ -39,14 +42,31 @@ package org.flowerplatform.codesync.action {
 		
 		protected var codeSyncType:String;
 		
-		public function AddNewCodeSyncElementAction(codeSyncType:String, label:String, iconUrl:String) {
+		protected var initializationType:String;
+		
+		public function AddNewCodeSyncElementAction(descriptor:CodeSyncElementDescriptor, initializationType:String) {
 			super();
-			parentId = "new";
-			this.codeSyncType = codeSyncType;
-			this.id = codeSyncType;
-			this.label = label;
-			this.icon = CodeSyncPlugin.getInstance().getResourceUrl(iconUrl);
+			this.codeSyncType = descriptor.codeSyncType;
+			this.initializationType = initializationType;
+			this.icon = CodeSyncPlugin.getInstance().getResourceUrl(descriptor.iconUrl);
+			if (initializationType == null) {
+				// either composed (if has subtypes), or executable (if no subtypes possible)
+				parentId = "new";
+				label = descriptor.label;
+				id = descriptor.codeSyncType; // so that the subactions recognize it
+				actAsNormalAction = descriptor.initializationTypes == null;
+			} else {
+				// executable for sure; set the right parentId; don't set id
+				parentId = descriptor.codeSyncType;
+				label = descriptor.initializationTypesLabels[descriptor.initializationTypes.getItemIndex(initializationType)];
+				actAsNormalAction = true;
+			}
 		}
+		
+		override public function get visible():Boolean {
+			return true;
+		}
+		
 		
 		override protected function createNewModelElement(location:String, selection:IList, context:Object):void {
 			var selectedParentView:View = View(selection.getItemAt(0));
@@ -70,7 +90,7 @@ package org.flowerplatform.codesync.action {
 			}
 			
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
-			.service_addNew(parentViewId, codeSyncType, parameters);			
+				.service_addNew(parentViewId, codeSyncType, parameters);			
 		}			
 	}
 	

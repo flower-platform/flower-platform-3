@@ -25,10 +25,15 @@ import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 
 /**
  * @author Mariana Gheorghe
+ * @author Cristian Spiescu
  */
 public class CodeSyncElementDescriptor {
 
 	private String codeSyncType;
+	
+	private List<String> initializationTypes;
+	
+	private List<String> initializationTypesLabels;
 	
 	private String label;
 	
@@ -54,6 +59,7 @@ public class CodeSyncElementDescriptor {
 	private String standardDiagramControllerProviderFactory;
 	
 	public CodeSyncElementDescriptor() {
+		// TODO CS/JS I'd recommend some lists lazy, cf. initializationTypes;
 		codeSyncTypeCategories = new ArrayList<String>();
 		childrenCodeSyncTypeCategories = new ArrayList<String>();
 		features = new ArrayList<String>();
@@ -66,6 +72,40 @@ public class CodeSyncElementDescriptor {
 
 	public CodeSyncElementDescriptor setCodeSyncType(String codeSyncType) {
 		this.codeSyncType = codeSyncType;
+		return this;
+	}
+	
+	public List<String> getInitializationTypes() {
+		return initializationTypes;
+	}
+
+	public CodeSyncElementDescriptor setInitializationTypes(List<String> initializationTypes) {
+		this.initializationTypes = initializationTypes;
+		return this;
+	}
+
+	public CodeSyncElementDescriptor addInitializationType(String value) {
+		if (initializationTypes == null) {
+			initializationTypes = new ArrayList<String>();
+		}
+		initializationTypes.add(value);
+		return this;
+	}
+	
+	public List<String> getInitializationTypesLabels() {
+		return initializationTypesLabels;
+	}
+
+	public CodeSyncElementDescriptor setInitializationTypesLabels(List<String> initializationTypesLabels) {
+		this.initializationTypesLabels = initializationTypesLabels;
+		return this;
+	}
+
+	public CodeSyncElementDescriptor addInitializationTypeLabel(String value) {
+		if (initializationTypesLabels == null) {
+			initializationTypesLabels = new ArrayList<String>();
+		}
+		initializationTypesLabels.add(value);
 		return this;
 	}
 	

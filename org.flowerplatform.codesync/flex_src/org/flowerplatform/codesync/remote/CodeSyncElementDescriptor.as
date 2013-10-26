@@ -22,11 +22,14 @@ package org.flowerplatform.codesync.remote {
 	
 	/**
 	 * @author Mariana Gheorghe
+	 * @author Cristian Spiescu
 	 */
 	[RemoteClass]
 	public class CodeSyncElementDescriptor {
 	
 		public var codeSyncType:String;
+		public var initializationTypes:ArrayCollection;
+		public var initializationTypesLabels:ArrayCollection;
 		public var label:String;
 		public var iconUrl:String;
 		public var defaultName:String;

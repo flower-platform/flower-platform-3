@@ -214,6 +214,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		// needs custom descriptor because it uses the builder template (i.e. setters return the instance)
 		new CustomSerializationDescriptor(CodeSyncElementDescriptor.class)
 			.addDeclaredProperty("codeSyncType")
+			.addDeclaredProperty("initializationTypes")
+			.addDeclaredProperty("initializationTypesLabels")
 			.addDeclaredProperty("label")
 			.addDeclaredProperty("iconUrl")
 			.addDeclaredProperty("defaultName")
