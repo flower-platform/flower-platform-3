@@ -34,7 +34,7 @@ import org.flowerplatform.emf_model.notation.View;
 public class CodeSyncCategorySeparatorProcessor implements IDiagrammableElementFeatureChangesProcessor {
 
 	@Override
-	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges,
+	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, 
 			View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		ViewDetailsUpdate update = new ViewDetailsUpdate();
 		update.setViewId(associatedViewOnOpenDiagram.eResource().getURIFragment(associatedViewOnOpenDiagram));
