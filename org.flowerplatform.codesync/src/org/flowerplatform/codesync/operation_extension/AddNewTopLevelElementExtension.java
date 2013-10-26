@@ -19,6 +19,7 @@
 package org.flowerplatform.codesync.operation_extension;
 
 import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.PARENT_CODE_SYNC_ELEMENT;
+import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.VIEW;
 
 import java.util.Map;
 
@@ -49,11 +50,14 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 	public static final String LOCATION = "location";
 	
 	@Override
-	public String addNew(CodeSyncElement codeSyncElement, Node node, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+	public boolean addNew(CodeSyncElement codeSyncElement, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+		Node node = NotationFactory.eINSTANCE.createNode();
+		parameters.put(VIEW, node);
+		
 		// check if top-level element
 		if (parentView != null) {
-			return null;
-		}
+			return true;
+		}	
 		
 		// set layout constraints
 		Bounds bounds = NotationFactory.eINSTANCE.createBounds();
@@ -88,7 +92,8 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 			CodeSyncOperationsService.getInstance().add(parent, file);
 			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
 		}
-		return null;
+				
+		return true;
 	}
 
 	protected int getParameterValue(Map<String, Object> parameters, String name, int defaultValue) {

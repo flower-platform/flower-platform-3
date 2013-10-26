@@ -38,8 +38,12 @@ package org.flowerplatform.codesync.remote {
 		public var childrenCodeSyncTypeCategories:ArrayCollection;
 		public var category:String;
 		public var features:ArrayCollection;
-		public var keyFeature:String;
+		public var keyFeature:String;		
 		public var standardDiagramControllerProviderFactory:String;
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */
+		public var createCodeSyncElement:Boolean;
 	}
 }

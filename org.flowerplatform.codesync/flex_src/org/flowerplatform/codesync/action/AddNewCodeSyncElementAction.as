@@ -31,22 +31,24 @@ package org.flowerplatform.codesync.action {
 	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.action.AddNewElementAction;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 * @author Cristina Constantinescu
+	 * @author Cristian Spiescu
 	 */
 	public class AddNewCodeSyncElementAction extends AddNewElementAction {
 		
-		protected var codeSyncType:String;
+		protected var descriptor:CodeSyncElementDescriptor
 		
 		protected var initializationType:String;
 		
 		public function AddNewCodeSyncElementAction(descriptor:CodeSyncElementDescriptor, initializationType:String) {
 			super();
-			this.codeSyncType = descriptor.codeSyncType;
+			this.descriptor = descriptor;
 			this.initializationType = initializationType;
 			this.icon = CodeSyncPlugin.getInstance().getResourceUrl(descriptor.iconUrl);
 			if (initializationType == null) {
@@ -65,6 +67,13 @@ package org.flowerplatform.codesync.action {
 		
 		override public function get visible():Boolean {
 			return true;
+		}
+		
+		override protected function showLocationForNewElementsDialog():Boolean {
+			// show dialog only if diagram selected (actions for top level elements)
+			// and if the codeSyncElement can be created on server side
+			return selection.length == 1 && selection.getItemAt(0) is Diagram && 
+				descriptor.codeSyncTypeCategories.getItemIndex(CodeSyncPlugin.CODE_SYNC_TYPE_CATEGORY_DONT_NEED_LOCATION) < 0;
 		}
 		
 		
@@ -89,8 +98,10 @@ package org.flowerplatform.codesync.action {
 				}				
 			}
 			
+			parameters[CodeSyncPlugin.CONTEXT_INITIALIZATION_TYPE] = initializationType;
+			
 			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
-				.service_addNew(parentViewId, codeSyncType, parameters);			
+				.service_addNew(parentViewId, descriptor.codeSyncType, parameters);			
 		}			
 	}
 	

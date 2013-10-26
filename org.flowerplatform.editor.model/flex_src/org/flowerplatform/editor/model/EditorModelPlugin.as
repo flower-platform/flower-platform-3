@@ -47,13 +47,16 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer;
+	import org.flowerplatform.editor.model.renderer.DiagramNoteRenderer;
 	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
+
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Edge;
 	import org.flowerplatform.emf_model.notation.ExpandableNode;
 	import org.flowerplatform.emf_model.notation.Location;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.emf_model.notation.Note;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
@@ -61,6 +64,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
+	import org.flowerplatform.flexdiagram.renderer.NoteRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
@@ -145,6 +149,17 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["topLevelBoxTitle"] = composedControllerProviderFactory;
+			
+			// TODO CC/JS to delete, and change to model desc			
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();			
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
+			composedControllerProviderFactory.absoluteLayoutRectangleControllerClass = new FactoryWithInitialization(NodeAbsoluteLayoutRectangleController);
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
+			composedControllerProviderFactory.dragControllerClass = new FactoryWithInitialization(AbsoluteNodePlaceHolderDragController);
+			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
+			composedControllerProviderFactory.resizeControllerClass = new FactoryWithInitialization(ResizeController);			
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: DiagramNoteRenderer});
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.note"] = composedControllerProviderFactory;
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: SeparatorRenderer });
@@ -248,10 +263,11 @@ package org.flowerplatform.editor.model {
 			registerClassAliasFromAnnotation(View);
 			registerClassAliasFromAnnotation(Node);
 			registerClassAliasFromAnnotation(Edge);
+			registerClassAliasFromAnnotation(Note);
 			registerClassAliasFromAnnotation(Diagram);
 			registerClassAliasFromAnnotation(Location);
-			registerClassAliasFromAnnotation(Bounds);
-
+			registerClassAliasFromAnnotation(Bounds);			
+			
 			registerClassAliasFromAnnotation(ExpandableNode);
 			registerClassAliasFromAnnotation(MoveResizeServerCommand);			
 			registerClassAliasFromAnnotation(ViewDetailsUpdate);

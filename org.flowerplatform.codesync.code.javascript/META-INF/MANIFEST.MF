@@ -25,3 +25,5 @@ Export-Package: org.flowerplatform.codesync.code.javascript,
  org.flowerplatform.codesync.code.javascript.adapter,
  org.flowerplatform.codesync.code.javascript.parser,
  org.flowerplatform.codesync.code.javascript.regex_ast
+Bundle-ClassPath: lib/js.jar,
+ .

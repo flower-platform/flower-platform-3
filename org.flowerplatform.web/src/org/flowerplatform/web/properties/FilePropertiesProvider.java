@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.flowerplatform.common.util.Pair;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
@@ -74,10 +75,6 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-
-	}
-	@Override
 	public List<String> getPropertyNames() {
 		// TODO Auto-generated method stub
 		return null;
@@ -86,6 +83,12 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 	public Property getProperty(SelectedItem selectedItem, String propertyName) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public boolean setProperty(ServiceInvocationContext context, SelectedItem selectedItem, String propertyName, Object propertyValue) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

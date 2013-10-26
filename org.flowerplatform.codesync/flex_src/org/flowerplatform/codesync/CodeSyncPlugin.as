@@ -53,6 +53,9 @@ package org.flowerplatform.codesync {
 	public class CodeSyncPlugin extends AbstractFlowerFlexPlugin {
 		
 		public static const CODE_SYNC_TYPE_CATEGORY_TOP_LEVEL:String = "topLevel";
+		public static const CODE_SYNC_TYPE_CATEGORY_DONT_NEED_LOCATION:String = "dontNeedLocation";
+		
+		public static const CONTEXT_INITIALIZATION_TYPE:String = "initializationType";
 		
 		public var codeSyncTreeActionProvider:CodeSyncTreeActionProvider = new CodeSyncTreeActionProvider();
 		

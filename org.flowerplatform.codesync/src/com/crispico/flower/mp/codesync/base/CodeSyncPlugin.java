@@ -40,11 +40,11 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
+import org.flowerplatform.codesync.operation_extension.AddNewNoteExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
-import org.flowerplatform.codesync.remote.CodeSyncAction;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
@@ -63,10 +63,13 @@ import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 
 /**
  * @author Mariana Gheorghe
+ * @author Cristian Spiescu
  */
 public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	protected static CodeSyncPlugin INSTANCE;
+	
+	public static final String CONTEXT_INITIALIZATION_TYPE = "initializationType";
 	
 	/**
 	 * The location of the CSE mapping file, relative to the project. May be
@@ -105,6 +108,13 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected List<AddNewExtension> addNewExtensions;
 	
 	protected CodeSyncTypeCriterionDispatcherProcessor codeSyncTypeCriterionDispatcherProcessor;
+	
+	/**
+	 * Runnables that create and add descriptors.
+	 * 
+	 * @author Mircea Negreanu
+	 */
+	protected List<Runnable> runnablesThatLoadDescriptors;
 	
 	/**
 	 * @see #getProjectsProvider()
@@ -182,34 +192,58 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return useUIDs;
 	}
 	
+	/**
+	 * @author Mariana Gheorge
+	 * @author Mircea Negreanu
+	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
-		
+
+		// initialize the list of code that will regenerate the descriptors
+		runnablesThatLoadDescriptors = new ArrayList<>();
+
+		// initialize codesyncplugin internals
 		codeSyncTypeCriterionDispatcherProcessor = new CodeSyncTypeCriterionDispatcherProcessor();
-		EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 		
 		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
 		relationDescriptors = new ArrayList<RelationDescriptor>();
 		
 		addNewExtensions = new ArrayList<AddNewExtension>();
-		addNewExtensions.add(new AddNewTopLevelElementExtension());
+		
 		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
 		
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
+
+		// main list of code sync descriptors
+		addRunnablesForLoadDescriptors(new Runnable() {
+			@Override
+			public void run() {
+				// descriptors
+				getCodeSyncElementDescriptors().add(
+						new CodeSyncElementDescriptor()
+						.setCodeSyncType(FOLDER)
+						.setLabel(FOLDER)
+						.addChildrenCodeSyncTypeCategory(FILE));
+				getCodeSyncElementDescriptors().add(
+						new CodeSyncElementDescriptor()
+						.setCodeSyncType(FILE)
+						.setLabel(FILE)
+						.addCodeSyncTypeCategory(FILE));
+				EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
+
+				// extensions
+				addNewExtensions.add(new AddNewNoteExtension());	
+				addNewExtensions.add(new AddNewTopLevelElementExtension());							
+				
+				// processors
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
+			}
+		});
+
+		// give the codeSyncExtension the signal to register their own runnable descriptors
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
-		
-		getCodeSyncElementDescriptors().add(
-				new CodeSyncElementDescriptor()
-				.setCodeSyncType(FOLDER)
-				.setLabel(FOLDER)
-				.addChildrenCodeSyncTypeCategory(FILE));
-		getCodeSyncElementDescriptors().add(
-				new CodeSyncElementDescriptor()
-				.setCodeSyncType(FILE)
-				.setLabel(FILE)
-				.addCodeSyncTypeCategory(FILE));
 		
 		// needs custom descriptor because it uses the builder template (i.e. setters return the instance)
 		new CustomSerializationDescriptor(CodeSyncElementDescriptor.class)
@@ -226,6 +260,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("features")
 			.addDeclaredProperty("keyFeature")
 			.addDeclaredProperty("standardDiagramControllerProviderFactory")
+			.addDeclaredProperty("createCodeSyncElement")
 			.register();
 		
 		new CustomSerializationDescriptor(RelationDescriptor.class)
@@ -238,7 +273,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("targetCodeSyncTypeCategories")
 			.register();
 		
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -463,6 +497,20 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		if (!srcDirs.contains(srcDir)) {
 			srcDirs.add(srcDir);
 		}
+	}
+	
+	/**
+	 * Executes the runnable and keeps it around to be executed
+	 * when the descriptors need to be refreshed.
+	 * 
+	 * @param runnable
+	 * 
+	 * @author Mircea Negreanu
+	 */
+	public void addRunnablesForLoadDescriptors(Runnable runnable) {
+		runnable.run();
+		
+		runnablesThatLoadDescriptors.add(runnable);
 	}
 	
 }
