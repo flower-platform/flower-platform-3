@@ -60,15 +60,10 @@ package org.flowerplatform.properties {
 			if (itemRenderedInstance != null) {
 				removeElement(itemRenderedInstance);
 			}
-			var factory:FactoryWithInitialization = FactoryWithInitialization(PropertiesPlugin.getInstance().propertyRendererClasses[data.type]);
-			if (factory == null) {
-				factory = PropertiesPlugin.getInstance().propertyRendererClasses[null];
-			}
-			if (factory != null) {
-				itemRenderedInstance = factory.newInstance(false);
-			}
-			addElement(itemRenderedInstance);
+			var factory:FactoryWithInitialization = FactoryWithInitialization(PropertiesPlugin.getInstance().propertyRendererClasses[data.type]);			
+			itemRenderedInstance = factory.newInstance(false);
 			
+			addElement(itemRenderedInstance);
 		}
 		
 		override protected function createChildren():void {
@@ -103,11 +98,7 @@ package org.flowerplatform.properties {
 			
 			graphics.lineStyle(1);
 			
-			drawPlaceHolder(unscaledWidth, unscaledHeight);
-		}
-		
-		protected function drawPlaceHolder(width:Number, height:Number):void {
-			graphics.drawRect(0, 0, nameOfProperty.width, height);
+			graphics.drawRect(0, 0, nameOfProperty.width, unscaledHeight);
 		}
 		
 	}

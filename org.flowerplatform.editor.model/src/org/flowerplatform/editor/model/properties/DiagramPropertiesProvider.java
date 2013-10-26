@@ -37,10 +37,17 @@ public class DiagramPropertiesProvider implements IPropertiesProvider {
 		List<Property> properties = new ArrayList<Property>();	
 		Diagram diagram = getDiagram(selectedItem);
 
-		properties.add(new Property(LOCATION_FOR_NEW_ELEMENTS_PROPERTY, 
-				diagram.getLocationForNewElements(), "StringWithDialog", true));
-		properties.add(new Property(SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY, 
-				diagram.isShowLocationForNewElementsDialog(), "Boolean", false));
+		properties.add(new Property()
+					.setName(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)
+					.setValue(diagram.getLocationForNewElements())
+					.setType("StringWithDialog")
+					.setReadOnly(true));
+
+		properties.add(new Property()
+					.setName(SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY)
+					.setValue(diagram.isShowLocationForNewElementsDialog())
+					.setType("Boolean")
+					.setReadOnly(false));
 		
 		return properties;
 	}

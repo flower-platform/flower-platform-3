@@ -54,7 +54,7 @@ package org.flowerplatform.properties {
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return PropertiesPlugin.getInstance().getResourceUrl("images/properties.gif");
+			return PropertiesPlugin.getInstance().getResourceUrl(PropertiesPlugin.getInstance().getMessage("icon.location"));
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {

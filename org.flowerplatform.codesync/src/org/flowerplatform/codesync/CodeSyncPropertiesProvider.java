@@ -57,8 +57,11 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 		}
 		
 		for (String feature : features) {
-			properties.add(new Property(feature, 
-					CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, feature), false));
+			properties.add(new Property()
+					.setName(feature)
+					.setValue(CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, feature))
+					.setReadOnly(false)
+			);
 		}
 		
 		return properties;

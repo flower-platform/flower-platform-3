@@ -59,6 +59,7 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		initExtensionPoint_propertiesProvider();
+		// We do this, so you can use the builder pattern
 		new CustomSerializationDescriptor(Property.class)
 		.addDeclaredProperty("name")
 		.addDeclaredProperty("value")
@@ -85,7 +86,7 @@ public class PropertiesPlugin extends AbstractFlowerJavaPlugin {
 	
 	@Override
 	public void registerMessageBundle() throws Exception {
-
+		// no messages yet for java
 	}
 
 	public void stop(BundleContext bundleContext) throws Exception {

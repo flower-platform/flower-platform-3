@@ -35,13 +35,13 @@ public class PropertiesService {
 	private final static Logger logger = LoggerFactory.getLogger(PropertiesService.class);
 
 	public List<Property> getProperties(List<SelectedItem> selection) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("Getting the property list for the selection: {}", selection);
+		}
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
 		
 		for (SelectedItem selectedItem : selection) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Getting the property list for the selection: {}", selectedItem);
-			}
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
