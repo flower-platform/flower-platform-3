@@ -41,6 +41,7 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
+import org.flowerplatform.communication.command.IServerCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
@@ -76,7 +77,7 @@ import com.crispico.flower.mp.model.codesync.ScenarioElement;
  * @author Mariana Gheorghe
  */
 public class DiagramEditorStatefulService extends FileBasedEditorStatefulService {
-
+	
 	public static final String ADDITIONAL_DATA_EDITABLE_RESOURCE = "editableResource";
 
 	public static final String ADDITIONAL_DATA_EDITABLE_RESOURCE_CLIENT = "editableResourceClient";
@@ -251,8 +252,8 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 				command.setEditableResource(diagramEditableResource);
 				
 				command.executeCommand();
-			} else if (updatesToApply instanceof AbstractServerCommand) {
-				AbstractServerCommand command = (AbstractServerCommand) updatesToApply;
+			} else if (updatesToApply instanceof IServerCommand) {
+				IServerCommand command = (IServerCommand) updatesToApply;
 				if (command instanceof InvokeServiceMethodServerCommand) {
 					Map<String, Object> additionalData = new HashMap<String, Object>();
 					additionalData.put(ADDITIONAL_DATA_EDITABLE_RESOURCE_CLIENT, client);

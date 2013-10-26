@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.editor.model.properties.AbstractModelPropertiesProvider;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -39,13 +40,13 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  * @author Tache Razvan Mihai
  * @author Mariana Gheorghe
  */
-public class CodeSyncPropertiesProvider implements IPropertiesProvider {
+public class CodeSyncPropertiesProvider extends AbstractModelPropertiesProvider<CodeSyncElement> {
 
 	@Override
 	public List<Property> getProperties(SelectedItem selectedItem) {
 		List<Property> properties = new ArrayList<Property>();	
 
-		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
+		CodeSyncElement codeSyncElement = resolveSelectedItem((DiagramSelectedItem) selectedItem);
 		if (codeSyncElement == null) {
 			return Collections.emptyList();
 		}
@@ -64,13 +65,21 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider {
 		return properties;
 	}
 
+
+	/**
+	 * @author Cristian Spiescu
+	 */
 	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		CodeSyncElement codeSyncElement = getCodeSyncElement(selectedItem);
-		if (codeSyncElement == null) {
-			return;
-		}
-		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, propertyName, propertyValue);
+	public CodeSyncElement resolveSelectedItem(DiagramSelectedItem selectedItem) {
+		return (CodeSyncElement) getViewById(selectedItem).getDiagrammableElement();
+	}
+
+	/**
+	 * @author Cristian Spiescu
+	 */
+	@Override
+	protected void doSetProperty(DiagramSelectedItem selectedItem, CodeSyncElement resolvedSelectedItem, String propertyName, Object propertyValue) {
+		CodeSyncOperationsService.getInstance().setFeatureValue(resolvedSelectedItem, propertyName, propertyValue);
 	}
 	
 	protected CodeSyncElement getCodeSyncElement(SelectedItem selectedItem) {

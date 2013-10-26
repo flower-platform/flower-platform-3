@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
@@ -61,17 +62,31 @@ public class PropertiesService {
 		return properties;
 	}
 	
-	public void setProperties(List<SelectedItem> selection, String propertyName, Object propertyValue) {
+	/**
+	 * @return Returns <code>true</code> if the operation was successful (i.e. changes applied for all selected items). 
+	 * 		<code>false</code> otherwise (e.g. for at least one selected item, if the underlying lock mechanism fails). 
+	 * 		In this case, the client will request the original value, to update the UI.
+	 * 
+	 * @author Razvan Tache
+	 * @author Cristian Spiescu
+	 */
+	public boolean setProperties(ServiceInvocationContext context, List<SelectedItem> selection, String propertyName, Object propertyValue) {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Changing property {}. Giving it the value of: {}", propertyName, propertyValue);
+			logger.debug("Setting property {} = {}, for selection = {}", new Object[] { propertyName, propertyValue, selection });
 		}
+		boolean result = true;
 		HashMap<String, IPropertiesProvider> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		for (SelectedItem selectedItem : selection) {
-			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
 			IPropertiesProvider itemProvider = propertiesProvidersMapped.get(selectedItem.getItemType());
 			// set the property
-			itemProvider.setProperty(selectedItem, propertyName, propertyValue);
+			if (!itemProvider.setProperty(context, selectedItem, propertyName, propertyValue)) {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Failed setting property {} = {}, for element {} / {}", new Object[] { propertyName, propertyValue, selectedItem, /*resovedSelectedItem*/ }); //TODO CS for Razvan: uncomment this
+				}
+				result = false;
+			}
 		}	
+		return result;
 	}
 }

@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -60,8 +61,9 @@ public class JavaClassPropertiesProvider implements IPropertiesProvider {
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-
+	public boolean setProperty(ServiceInvocationContext context,
+			SelectedItem selectedItem, String propertyName, Object propertyValue) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

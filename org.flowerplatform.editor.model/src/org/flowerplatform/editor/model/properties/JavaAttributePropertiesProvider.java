@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -62,8 +63,9 @@ public class JavaAttributePropertiesProvider implements IPropertiesProvider {
 	}
 
 	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-
+	public boolean setProperty(ServiceInvocationContext context,
+			SelectedItem selectedItem, String propertyName, Object propertyValue) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -15,7 +16,7 @@ import org.flowerplatform.properties.remote.SelectedItem;
 /**
  * @author Cristina Constantinescu
  */
-public class DiagramPropertiesProvider implements IPropertiesProvider {
+public class DiagramPropertiesProvider extends AbstractModelPropertiesProvider<Diagram> {
 
 	public static final String LOCATION_FOR_NEW_ELEMENTS_PROPERTY = "locationForNewElements";
 	public static final String SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY = "showLocationForNewElementsDialog";
@@ -35,7 +36,7 @@ public class DiagramPropertiesProvider implements IPropertiesProvider {
 	@Override
 	public List<Property> getProperties(SelectedItem selectedItem) {
 		List<Property> properties = new ArrayList<Property>();	
-		Diagram diagram = getDiagram(selectedItem);
+		Diagram diagram = resolveSelectedItem((DiagramSelectedItem) selectedItem);
 
 		properties.add(new Property(LOCATION_FOR_NEW_ELEMENTS_PROPERTY, 
 				diagram.getLocationForNewElements(), "StringWithDialog", true));
@@ -45,28 +46,20 @@ public class DiagramPropertiesProvider implements IPropertiesProvider {
 		return properties;
 	}
 
+	/**
+	 * @author Cristian Spiescu
+	 */
 	@Override
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		Diagram diagram = getDiagram(selectedItem);
-		
+	protected void doSetProperty(DiagramSelectedItem selectedItem,
+			Diagram resolvedSelectedItem, String propertyName,
+			Object propertyValue) {
 		if (propertyName.equals(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)) {
-			diagram.setLocationForNewElements((String) propertyValue);
+			resolvedSelectedItem.setLocationForNewElements((String) propertyValue);
 		} else if (propertyName.equals(SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY)) {
-			diagram.setShowLocationForNewElementsDialog((Boolean) propertyValue);
+			resolvedSelectedItem.setShowLocationForNewElementsDialog((Boolean) propertyValue);
 		}
-	}
-	
-	private DiagramEditorStatefulService getDiagramEditorStatefulService(String diagramEditorStatefulServiceId) {
-		return (DiagramEditorStatefulService)CommunicationPlugin.getInstance().getServiceRegistry().getService(diagramEditorStatefulServiceId);
-	}
-	
-	private Diagram getDiagram(SelectedItem selectedItem) {
-		String diagramEditorStatefulServiceId = ((DiagramSelectedItem) selectedItem).getEditorStatefulServiceId();
-		DiagramEditorStatefulService diagramEditorStatefulService = getDiagramEditorStatefulService(diagramEditorStatefulServiceId);	
-		String diagramEditableResourcePath = ((DiagramSelectedItem) selectedItem).getDiagramEditableResourcePath();
-		String id = ((DiagramSelectedItem) selectedItem).getXmiID();
 		
-		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) diagramEditorStatefulService.getEditableResource(diagramEditableResourcePath);
-		return (Diagram) diagramEditableResource.getEObjectById(id);		
 	}
+	
+	
 }
