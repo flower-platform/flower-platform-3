@@ -22,6 +22,7 @@
     <classEntry path="org.flowerplatform.editor.model.action.AddRelationAction"/>
     <classEntry path="org.flowerplatform.editor.model.renderer.ShapeDrawer"/>
     <classEntry path="org.flowerplatform.editor.model.action.AddRelatedElementsAction"/>
+    <classEntry path="org.flowerplatform.editor.model.BoxRendererLayout"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
