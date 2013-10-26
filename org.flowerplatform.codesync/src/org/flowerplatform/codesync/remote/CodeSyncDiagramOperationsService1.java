@@ -33,6 +33,7 @@ import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.emf_model.notation.CategorySeparator;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.Node;
@@ -162,11 +163,10 @@ public class CodeSyncDiagramOperationsService1 {
 	}
 	
 	public void addCategorySeparator(View view, CodeSyncElementDescriptor descriptor) {
-		Node categorySeparator = NotationFactory.eINSTANCE.createNode();
+		CategorySeparator categorySeparator = NotationFactory.eINSTANCE.createCategorySeparator();
 		categorySeparator.setViewType("categorySeparator");
-		Map<String, String> viewDetails = new HashMap<String, String>();
-		viewDetails.put("codeSyncType", descriptor.getCodeSyncType());
-		viewDetails.put("title", descriptor.getCategory());
+		categorySeparator.setCategory(descriptor.getCategory());
+		categorySeparator.setNewChildCodeSyncType(descriptor.getCodeSyncType());
 		String image = descriptor.getIconUrl();
 		if (image != null) {
 			String codeSyncPackage = CodeSyncPlugin.getInstance()
@@ -176,8 +176,7 @@ public class CodeSyncDiagramOperationsService1 {
 			}
 			image = codeSyncPackage + image;
 		}
-		viewDetails.put("newChildIcon", image);
-		categorySeparator.setViewDetails(viewDetails);
+		categorySeparator.setNewChildIcon(image);
 		view.getPersistentChildren().add(categorySeparator);
 	}
 	

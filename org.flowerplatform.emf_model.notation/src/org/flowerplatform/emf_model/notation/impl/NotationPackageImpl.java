@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.flowerplatform.emf_model.notation.Bounds;
+import org.flowerplatform.emf_model.notation.CategorySeparator;
 import org.flowerplatform.emf_model.notation.Diagram;
 import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.ExpandableNode;
@@ -70,6 +71,13 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 * @generated
 	 */
 	private EClass nodeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass categorySeparatorEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -294,6 +302,42 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 	 */
 	public EReference getNode_LayoutConstraint() {
 		return (EReference)nodeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getCategorySeparator() {
+		return categorySeparatorEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCategorySeparator_Category() {
+		return (EAttribute)categorySeparatorEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCategorySeparator_NewChildCodeSyncType() {
+		return (EAttribute)categorySeparatorEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getCategorySeparator_NewChildIcon() {
+		return (EAttribute)categorySeparatorEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -539,6 +583,11 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		nodeEClass = createEClass(NODE);
 		createEReference(nodeEClass, NODE__LAYOUT_CONSTRAINT);
 
+		categorySeparatorEClass = createEClass(CATEGORY_SEPARATOR);
+		createEAttribute(categorySeparatorEClass, CATEGORY_SEPARATOR__CATEGORY);
+		createEAttribute(categorySeparatorEClass, CATEGORY_SEPARATOR__NEW_CHILD_CODE_SYNC_TYPE);
+		createEAttribute(categorySeparatorEClass, CATEGORY_SEPARATOR__NEW_CHILD_ICON);
+
 		edgeEClass = createEClass(EDGE);
 		createEReference(edgeEClass, EDGE__SOURCE);
 		createEReference(edgeEClass, EDGE__TARGET);
@@ -600,6 +649,7 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 		// Add supertypes to classes
 		viewEClass.getESuperTypes().add(this.getNotationElement());
 		nodeEClass.getESuperTypes().add(this.getView());
+		categorySeparatorEClass.getESuperTypes().add(this.getNode());
 		edgeEClass.getESuperTypes().add(this.getView());
 		diagramEClass.getESuperTypes().add(this.getView());
 		locationEClass.getESuperTypes().add(this.getNotationElement());
@@ -626,6 +676,11 @@ public class NotationPackageImpl extends EPackageImpl implements NotationPackage
 
 		initEClass(nodeEClass, Node.class, "Node", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getNode_LayoutConstraint(), this.getBounds(), null, "layoutConstraint", null, 0, 1, Node.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(categorySeparatorEClass, CategorySeparator.class, "CategorySeparator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getCategorySeparator_Category(), ecorePackage.getEString(), "category", null, 0, 1, CategorySeparator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCategorySeparator_NewChildCodeSyncType(), ecorePackage.getEString(), "newChildCodeSyncType", null, 0, 1, CategorySeparator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCategorySeparator_NewChildIcon(), ecorePackage.getEString(), "newChildIcon", null, 0, 1, CategorySeparator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(edgeEClass, Edge.class, "Edge", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getEdge_Source(), this.getView(), this.getView_SourceEdges(), "source", null, 0, 1, Edge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

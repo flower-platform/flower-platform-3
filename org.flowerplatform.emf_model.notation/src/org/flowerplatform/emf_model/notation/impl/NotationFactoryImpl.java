@@ -79,6 +79,7 @@ public class NotationFactoryImpl extends EFactoryImpl implements NotationFactory
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case NotationPackage.NODE: return createNode();
+			case NotationPackage.CATEGORY_SEPARATOR: return createCategorySeparator();
 			case NotationPackage.EDGE: return createEdge();
 			case NotationPackage.DIAGRAM: return createDiagram();
 			case NotationPackage.LOCATION: return createLocation();
@@ -99,6 +100,16 @@ public class NotationFactoryImpl extends EFactoryImpl implements NotationFactory
 	public Node createNode() {
 		NodeImpl node = new NodeImpl();
 		return node;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public CategorySeparator createCategorySeparator() {
+		CategorySeparatorImpl categorySeparator = new CategorySeparatorImpl();
+		return categorySeparator;
 	}
 
 	/**

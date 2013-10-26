@@ -25,6 +25,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.emf_model.notation.CategorySeparator;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
@@ -105,11 +106,11 @@ public class ChildrenUpdaterDiagramProcessor extends AbstractChildrenUpdaterDiag
 	}
 
 	private String getCategoryForSeparator(Node node) {
-		if (!node.getViewType().equals("categorySeparator")) {
+		if (!(node instanceof CategorySeparator)) {
 			return null;
 		}
-		Map<String, String> childViewDetails = (Map<String, String>) node.getViewDetails();
-		return childViewDetails.get("title");
+		CategorySeparator separator = (CategorySeparator) node;
+		return separator.getCategory();
 	}
 	
 	@Override
