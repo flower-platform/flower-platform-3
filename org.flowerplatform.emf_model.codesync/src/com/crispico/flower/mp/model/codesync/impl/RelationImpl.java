@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
  * <ul>
  *   <li>{@link com.crispico.flower.mp.model.codesync.impl.RelationImpl#getSource <em>Source</em>}</li>
  *   <li>{@link com.crispico.flower.mp.model.codesync.impl.RelationImpl#getTarget <em>Target</em>}</li>
+ *   <li>{@link com.crispico.flower.mp.model.codesync.impl.RelationImpl#getType <em>Type</em>}</li>
  * </ul>
  * </p>
  *
@@ -45,6 +46,25 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	 * @ordered
 	 */
 	protected CodeSyncElement target;
+
+	/**
+	 * The default value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String TYPE_EDEFAULT = null;
+	/**
+	 * The cached value of the '{@link #getType() <em>Type</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getType()
+	 * @generated
+	 * @ordered
+	 */
+	protected String type = TYPE_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -149,6 +169,27 @@ public class RelationImpl extends EObjectImpl implements Relation {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setType(String newType) {
+		String oldType = type;
+		type = newType;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, CodeSyncPackage.RELATION__TYPE, oldType, type));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -201,6 +242,8 @@ public class RelationImpl extends EObjectImpl implements Relation {
 			case CodeSyncPackage.RELATION__TARGET:
 				if (resolve) return getTarget();
 				return basicGetTarget();
+			case CodeSyncPackage.RELATION__TYPE:
+				return getType();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -218,6 +261,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 				return;
 			case CodeSyncPackage.RELATION__TARGET:
 				setTarget((CodeSyncElement)newValue);
+				return;
+			case CodeSyncPackage.RELATION__TYPE:
+				setType((String)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -237,6 +283,9 @@ public class RelationImpl extends EObjectImpl implements Relation {
 			case CodeSyncPackage.RELATION__TARGET:
 				setTarget((CodeSyncElement)null);
 				return;
+			case CodeSyncPackage.RELATION__TYPE:
+				setType(TYPE_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -253,8 +302,26 @@ public class RelationImpl extends EObjectImpl implements Relation {
 				return getSource() != null;
 			case CodeSyncPackage.RELATION__TARGET:
 				return target != null;
+			case CodeSyncPackage.RELATION__TYPE:
+				return TYPE_EDEFAULT == null ? type != null : !TYPE_EDEFAULT.equals(type);
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (type: ");
+		result.append(type);
+		result.append(')');
+		return result.toString();
 	}
 
 } //RelationImpl

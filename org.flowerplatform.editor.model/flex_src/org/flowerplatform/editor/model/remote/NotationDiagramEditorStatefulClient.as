@@ -61,6 +61,20 @@ package org.flowerplatform.editor.model.remote {
 				[path, technology]));
 		}
 		
+		public function service_collapseCompartment(viewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId,
+				"collapseCompartment", 
+				[viewId]));
+		}
+		
+		public function service_expandCompartment(viewId:Object, category:String):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId,
+				"expandCompartment",
+				[viewId, category]));
+		}
+		
 		public function service_handleDragOnDiagram(pathsWithRoot:IList):void {
 			attemptUpdateContent(null, invokeServiceMethod("handleDragOnDiagram", [pathsWithRoot, diagramId], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
 		}
@@ -73,22 +87,6 @@ package org.flowerplatform.editor.model.remote {
 		public function service_getInplaceEditorText(viewId:Object, callbackFunction:Function):void {
 //			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "getInplaceEditorText", [viewId], null, callbackFunction));
 		}
-		
-		public function service_collapseCompartment(viewId:Object):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "collapseCompartment", [viewId]));
-		}
-		
-		public function service_expandCompartment_attributes(viewId:Object):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_attributes", [viewId]));
-		}
-		
-		public function service_expandCompartment_operations(viewId:Object):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "expandCompartment_operations", [viewId]));
-		}
-		
-//		public function service_addNew(method:String, viewId:Object, label:String):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", method, [viewId, label]));
-//		}
 		
 		public function service_deleteView(viewId:Object):void {
 //			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
@@ -103,8 +101,8 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, invokeServiceMethod("contentAssist", [viewId, pattern], options));
 		}
 		
-		public function service_addNewRelation(sourceViewId:Object, targetViewId:Object):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "addNewRelation", [sourceViewId, targetViewId]));
+		public function service_addNewRelation(type:String, sourceViewId:Object, targetViewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(codeSyncDiagramOperationsServiceId, "addNewRelation", [type, sourceViewId, targetViewId]));
 		}
 
 		public function service_addNewScenario(name:String):void {

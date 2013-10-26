@@ -23,20 +23,23 @@
 @author Cristi
 
 -->
-<mx:TabNavigator 
+<mx:VBox 
 	xmlns:mx="library://ns.adobe.com/flex/mx" 
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:openresourcesview="com.crispico.flower.mp.web.editorsupport.openresourcesview.*" 
 	xmlns:tree="org.flowerplatform.communication.tree.*"
-	creationComplete="creationCompleteHandler()" 
-	implements="org.flowerplatform.flexutil.layout.IDirtyStateProvider" >
-	
+	creationComplete="creationCompleteHandler()"
+	implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.editor.IDirtyStateProvider"
+	>
+	 
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
 			import mx.core.IDataRenderer;
 			
+			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.stateful_service.StatefulClient;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
@@ -47,6 +50,7 @@
 			import org.flowerplatform.editor.remote.EditorStatefulClient;
 			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 			import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			
 //			import mx.collections.ArrayCollection;
 			
@@ -56,6 +60,8 @@
 			 * 
 			 */
 			public static var INSTANCE:OpenResourcesView;
+			
+			private var _viewHost:IViewHost;
 			
 //			/**
 //			 * Populated directly by <code>UpdateEditableResourceClientCommand</code>. We know
@@ -101,6 +107,15 @@
 			private function viewRemovedHandler(event:ViewRemovedEvent):void {
 				INSTANCE = null;				
 			}
+			
+			public function set viewHost(value:IViewHost):void {
+				_viewHost = value;				
+				_viewHost.setLabel("Properties");
+				_viewHost.setIcon(EditorPlugin.getInstance().getMessage('open.resources.current'));
+			}
+			public function getActions(selection:IList):Vector.<IAction> {
+				return null;
+			}
 //			
 //			/**
 //			 * 
@@ -141,8 +156,8 @@
 				}
 				return false;
 			}
-//TODO			
-			public function getEditorStatefulClientForSelectedElement():Object {
+			
+			public function getEditorStatefulClientForSelectedElement():EditorStatefulClient {
 				if (!(tree.selectedItem is EditableResource)) {
 					return null;
 				}
@@ -180,6 +195,7 @@
 				TreeNode(tree.rootNode).children.removeItemAt(itemIndex);
 			}
 			
+			
 			public function editableResourceClientAddedOrRemoved():void {
 //				// inject a refresh, in order to force the refresh of the item renderer;
 //				// needed for: change state from "no children" <-> "has children"; and for the label
@@ -190,12 +206,9 @@
 		]]>
 		
 	</fx:Script>
-	<mx:VBox label="All Resources" width="100%" height="100%">
 		<tree:GenericTreeList id="tree"
 				width="100%" height="100%"
 				hierarchicalModelAdapter="{new EditableResourceHierachicalModelAdapter()}"
 				itemRenderer="org.flowerplatform.editor.open_resources_view.OpenResourcesTreeItemRenderer"
 				allowMultipleSelection="true"/>
 	</mx:VBox>
-		
-</mx:TabNavigator>

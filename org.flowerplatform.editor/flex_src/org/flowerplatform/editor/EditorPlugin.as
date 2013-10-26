@@ -17,8 +17,8 @@
  * license-end
  */
 package org.flowerplatform.editor {
-	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	import com.crispico.flower.util.layout.Workbench;
+	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	
 	import flash.utils.Dictionary;
 	
@@ -33,6 +33,7 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
 	import org.flowerplatform.editor.action.SaveAction;
 	import org.flowerplatform.editor.action.SaveAllAction;
+	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.editor.remote.ContentTypeDescriptor;
 	import org.flowerplatform.editor.remote.CreateEditorStatefulClientCommand;
 	import org.flowerplatform.editor.remote.EditableResource;
@@ -44,8 +45,8 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
-	import org.flowerplatform.flexutil.shortcuts.KeyBindings;
-	import org.flowerplatform.flexutil.shortcuts.Shortcut;
+	import org.flowerplatform.flexutil.shortcut.KeyBindings;
+	import org.flowerplatform.flexutil.shortcut.Shortcut;
 	
 	/**
 	 * @author Cristi
@@ -90,8 +91,7 @@ package org.flowerplatform.editor {
 		/**
 		 * @author Sebastian Solomon
 		 */
-		override public function start():void
-		{
+		override public function start():void {
 			// TODO Auto Generated method stub
 			super.start();
 			globalEditorOperationsManager  = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));	
@@ -99,6 +99,7 @@ package org.flowerplatform.editor {
 			globalEditorOperationsManager.saveAllAction = new SaveAllAction();
 			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "s"), globalEditorOperationsManager.saveAction); // Ctrl + S
 			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, true, "s"), globalEditorOperationsManager.saveAllAction); // Ctrl + Shift + S
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
 			
 		}
 		

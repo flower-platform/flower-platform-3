@@ -20,6 +20,7 @@ package org.flowerplatform.properties.providers;
 
 import java.util.List;
 
+import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
@@ -31,6 +32,14 @@ public interface IPropertiesProvider {
 	public List<String> getPropertyNames();
 	public Property getProperty(SelectedItem selectedItem, String propertyName);
 	public List<Property> getProperties(SelectedItem selectedItem);
-	public void setProperty(SelectedItem selectedItem, String propertyName, Object propertyValue);
+	
+	/**
+	 * @return Should return <code>true</code> if the operation was successful. <code>false</code> otherwise (e.g. if
+	 * 		the underlying lock mechanism fails). In this case, the client will request the original value, to update the UI.
+	 * 
+	 * @author Razvan Tache
+	 * @author Cristian Spiescu
+	 */
+	public boolean setProperty(ServiceInvocationContext context, SelectedItem selectedItem, String propertyName, Object propertyValue);
 	
 }

@@ -45,6 +45,8 @@ public class CodeSyncElementDescriptor {
 	
 	private List<String> childrenCodeSyncTypeCategories;
 	
+	private String category;
+	
 	private List<String> features;
 	
 	private String keyFeature;
@@ -149,6 +151,15 @@ public class CodeSyncElementDescriptor {
 		return this;
 	}
 	
+	public String getCategory() {
+		return category;
+	}
+
+	public CodeSyncElementDescriptor setCategory(String category) {
+		this.category = category;
+		return this;
+	}
+
 	public List<String> getFeatures() {
 		return features;
 	}
@@ -190,7 +201,7 @@ public class CodeSyncElementDescriptor {
 		this.standardDiagramControllerProviderFactory = standardDiagramControllerProviderFactory;
 		return this;
 	}
-
+	
 	/**
 	 * @author Cristina Constantinescu
 	 */

@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
@@ -50,12 +51,13 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 	
 	@Override
 	public boolean addNew(CodeSyncElement codeSyncElement, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+		Node node = NotationFactory.eINSTANCE.createNode();
+		parameters.put(VIEW, node);
+		
 		// check if top-level element
 		if (parentView != null) {
 			return true;
-		}
-		
-		Node node = NotationFactory.eINSTANCE.createNode();
+		}	
 		
 		// set layout constraints
 		Bounds bounds = NotationFactory.eINSTANCE.createBounds();
@@ -70,6 +72,13 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 		title.setViewType("topLevelBoxTitle");
 		node.getPersistentChildren().add(title);
 		
+		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService1.getInstance().getChildrenCategories(codeSyncElement.getType())) {
+			String category = childDescriptor.getCategory();
+			if (category != null) {
+				CodeSyncDiagramOperationsService1.getInstance().addCategorySeparator(node, childDescriptor);
+			}
+		}
+		
 		// populate PARENT_CODE_SYNC_ELEMENT
 		if (codeSyncElement.eContainer() == null) {
 			String location = (String) parameters.get(LOCATION);
@@ -83,8 +92,7 @@ public class AddNewTopLevelElementExtension implements AddNewExtension {
 			CodeSyncOperationsService.getInstance().add(parent, file);
 			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
 		}
-		parameters.put(VIEW, node);
-		
+				
 		return true;
 	}
 

@@ -27,10 +27,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
-import org.flowerplatform.codesync.processor.CodeSyncElementRelationsChangesProcessor;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
-import org.flowerplatform.editor.model.EditorModelPlugin;
-import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
@@ -140,14 +137,14 @@ public abstract class CodeSyncDiagramOperationsService {
 	 * Some views (e.g. class title) cannot have edges even though their diagrammable element can have relations.
 	 */
 	protected boolean acceptsEdges(View view) {
-		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance()
-				.getDiagramUpdaterChangeProcessor()
-				.getDiagrammableElementFeatureChangesProcessors(view.getViewType());
-		for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-			if (processor instanceof CodeSyncElementRelationsChangesProcessor) {
-				return true;
-			}
-		}
+//		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance()
+//				.getDiagramUpdaterChangeProcessor()
+//				.getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+//		for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+//			if (processor instanceof CodeSyncElementRelationsChangesProcessor) {
+//				return true;
+//			}
+//		}
 		return false;
 	}
 	

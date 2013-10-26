@@ -30,24 +30,22 @@ package org.flowerplatform.editor {
 	import mx.core.mx_internal;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.communication.command.flextojava.FlexToJavaCompoundCommand;
+	import org.flowerplatform.communication.command.CompoundServerCommand;
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
+	import org.flowerplatform.editor.IDirtyStateProvider;
 	import org.flowerplatform.editor.action.SaveAction;
 	import org.flowerplatform.editor.action.SaveAllAction;
+	import org.flowerplatform.editor.event.DirtyStateUpdatedEvent;
 	import org.flowerplatform.editor.remote.EditableResource;
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.layout.IDirtyStateProvider;
-	import org.flowerplatform.flexutil.layout.event.*;
+	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 
 	/**
 	 * @author Sebastian Solomon
 	 */  
 	public class GlobalEditorOperationsManager extends EventDispatcher {
 		
-		//use EditorPlugin.getInstance.globalEditorOperationsManager
-		public static var INSTANCE:GlobalEditorOperationsManager; 
-
 		private var workbench:Workbench;
 		
 		public var saveAction:SaveAction;
@@ -104,7 +102,7 @@ package org.flowerplatform.editor {
 		 * this method tries to be fair (i.e. returning the first that is dirty).
 		 */
 		public function getInterestingEditorStatefulClientForEditableResourcePath(editableResourcePath:String):EditorStatefulClient {
-			var editorStatefulClients:ArrayCollection = GlobalEditorOperationsManager.INSTANCE.getEditorStatefulClientsForEditableResourcePath(editableResourcePath);
+			var editorStatefulClients:ArrayCollection = this.getEditorStatefulClientsForEditableResourcePath(editableResourcePath);
 			if (editorStatefulClients == null || editorStatefulClients.length == 0) {
 				// second test is useless, in theory; I hope in practice to;
 				// I put it here to be sure that the .get(0) won't fail
@@ -175,8 +173,7 @@ package org.flowerplatform.editor {
 		 * 
 		 */
 		public function editorInputChangedForComponent(component:IDirtyStateProvider):void {
-			/*FlexUtilGlobals.getInstance().workbench*/
-		if(true){	//if (workbench.activeViewList.getActiveView() == component) {
+		if (workbench.activeViewList.getActiveView() == component) {
 				// we are only interested in the active view (i.e. who's "linked" to the save action)
 				var editorStatefulClient:EditorStatefulClient = EditorStatefulClient(component.getEditorStatefulClientForSelectedElement());
 				if (editorStatefulClient == null) {
@@ -189,7 +186,7 @@ package org.flowerplatform.editor {
 						saveAction.currentEditorStatefulClient = editorStatefulClient;
 //					}
 					// when the editor is just opening, the ER status is not yet on the client; that's why we check for null
-					/*saveAction.enabled = editorStatefulClient.editableResourceStatus != null && editorStatefulClient.editableResourceStatus.dirty;*/
+					saveAction.enabled = editorStatefulClient.editableResourceStatus != null && editorStatefulClient.editableResourceStatus.dirty;
 				}
 			}
 		}
@@ -199,26 +196,6 @@ package org.flowerplatform.editor {
 		 * labels of the Workbench.
 		 */ 
 		public function dirtyStateUpdated(editorStatefulClient:EditorStatefulClient):void {
-			
-//		if (editorStatefulClient == null) {
-//				// i.e. freshly unsubscribed from an ER
-//				if (saveAction.enabled) {
-//					if (editableResources[saveAction.currentEditorInput] == null) {
-//						// means that the save action was pointing to the freshly unsubscribed ER
-//						saveAction.currentEditorInput = null;
-//						saveAction.enabled = false;
-//					}
-//				}
-//			} else {
-//				// ER not null
-//				if (saveAction.currentEditorStatefulClient == editorStatefulClient) {
-//					saveAction.enabled = editorStatefulClient.editableResourceStatus.dirty;
-//				}
-//				var editorFrontendController:EditorFrontendController = EditorSupport.INSTANCE.editorFrontendControllers[editableResource.editorInput];
-//				if (editorFrontendController is TextEditorFrontendController)
-//					(editorFrontendController as TextEditorFrontendController).updateDirtyState(editableResource.editorInput, editableResource.dirty);
-//			}
-			
 			if (saveAllAction.enabled) {
 				// at least one dirty resource
 				if (editorStatefulClient == null || !editorStatefulClient.editableResourceStatus.dirty) {
@@ -228,7 +205,6 @@ package org.flowerplatform.editor {
 					var dirtyERFound:Boolean = false;
 					var count:int = 0;
 					var statefulClientsList:ArrayCollection = CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList;
-				  //for each (var sc:StatefulClient in StatefulClientRegistry.INSTANCE.mx_internal::statefulClientsList) {
 					for each (var sc:StatefulClient in statefulClientsList) {
 						if (!(sc is EditorStatefulClient)) {
 							continue;
@@ -240,7 +216,6 @@ package org.flowerplatform.editor {
 							break;
 						}
 					}
-//					
 					if (count == 0 || !dirtyERFound) {
 						saveAllAction.enabled = false;
 					}
@@ -305,8 +280,8 @@ package org.flowerplatform.editor {
 			return result;
 		}
 		
-		public function getSaveCommandForSelectedEntries(entriesToSave:ArrayCollection):FlexToJavaCompoundCommand {
-			var commandToSend:FlexToJavaCompoundCommand = new FlexToJavaCompoundCommand(false, true);
+		public function getSaveCommandForSelectedEntries(entriesToSave:ArrayCollection):CompoundServerCommand {
+			var commandToSend:CompoundServerCommand = new CompoundServerCommand();
 			for each (var entry:Object in entriesToSave) {
 				if (entry.selected) {
 					commandToSend.append(EditorStatefulClient(entry.editorStatefulClient).save(true));
@@ -315,12 +290,12 @@ package org.flowerplatform.editor {
 
 			return commandToSend;
 		}
-//
-//		/**
-//		 * Shows the label for an <code>EditableResource</code>, including the dirty sign, its
-//		 * slave ERs (if exist) and number of other clients.
-//		 * 
-//		 */
+
+		/**
+		 * Shows the label for an <code>EditableResource</code>, including the dirty sign, its
+		 * slave ERs (if exist) and number of other clients.
+		 * 
+		 */
 		public function getEditableResourceLabel(editableResource:EditableResource, showDirtyStatus:Boolean):String {
 			var result:String = String(editableResource.label);
 			
@@ -349,18 +324,18 @@ package org.flowerplatform.editor {
 			}
 			return result;
 		}
-//
-//		public function getGlobalDirtyState():Boolean {
-//			// currently this is used by the Project Explorer view; I saw that when the app is started with this view
-//			// minimized, this code is invoked earlier then the initialization of the menu bar (i.e. saveAll action as well) 
-//			return GlobalEditorOperationsManager.INSTANCE.saveAllAction != null ? GlobalEditorOperationsManager.INSTANCE.saveAllAction.enabled : false;
-//		}
-//		
+		
+		public function getGlobalDirtyState():Boolean {
+			// currently this is used by the Project Explorer view; I saw that when the app is started with this view
+			// minimized, this code is invoked earlier then the initialization of the menu bar (i.e. saveAll action as well) 
+			return this.saveAllAction != null ? this.saveAllAction.enabled : false;
+		}
+		
 		public function invokeSaveResourcesDialogAndInvoke(callbackObject:Object, callbackFunction:Function, callbackArguments:Array):void {
 			// it's safe to pass the whole list, because it's copied; so the fact that ESCs
 			// dissapear (i.e. list is modified) won't affect
 			new SaveResourcesDialog().show(CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList, null, null, callbackObject, callbackFunction, callbackArguments);
 		}
+		
 	}
-	
 }

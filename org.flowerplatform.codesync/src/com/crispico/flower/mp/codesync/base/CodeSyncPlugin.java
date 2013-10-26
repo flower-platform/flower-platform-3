@@ -43,8 +43,10 @@ import org.flowerplatform.codesync.operation_extension.AddNewExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewNoteExtension;
 import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -95,12 +97,21 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
+	
+	protected List<RelationDescriptor> relationDescriptors;
 
 	protected List<FeatureAccessExtension> featureAccessExtensions;
 	
 	protected List<AddNewExtension> addNewExtensions;
 	
 	protected CodeSyncTypeCriterionDispatcherProcessor codeSyncTypeCriterionDispatcherProcessor;
+	
+	/**
+	 * Runnables that create and add descriptors
+	 * 
+	 * @author Mircea Negreanu
+	 */
+	protected List<Runnable> runnablesForReloadDescriptors;
 	
 	/**
 	 * @see #getProjectsProvider()
@@ -142,9 +153,24 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return codeSyncElementDescriptors;
 	}
 	
+	public List<RelationDescriptor> getRelationDescriptors() {
+		return relationDescriptors;
+	}
+
 	public CodeSyncElementDescriptor getCodeSyncElementDescriptor(String codeSyncType) {
+		// TODO CS/JS we should have a mapping; maybe send it to flex as a map; for quick access; idem for relations
 		for (CodeSyncElementDescriptor descriptor : getCodeSyncElementDescriptors()) {
 			if (descriptor.getCodeSyncType().equals(codeSyncType)) {
+				return descriptor;
+			}
+		}
+		return null;
+	}
+	
+	// TODO CS/JS we should unify the descriptors. And have them in Model?
+	public RelationDescriptor getRelationDescriptor(String type) {
+		for (RelationDescriptor descriptor : getRelationDescriptors()) {
+			if (descriptor.getType().equals(type)) {
 				return descriptor;
 			}
 		}
@@ -163,48 +189,90 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return useUIDs;
 	}
 	
+	/**
+	 * @author Mariana Gheorge
+	 * @author Mircea Negreanu
+	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
-		
+
+		// initialize the list of code that will regenerate the descriptors
+		runnablesForReloadDescriptors = new ArrayList<>();
+
+		// initialize codesyncplugin internals
 		codeSyncTypeCriterionDispatcherProcessor = new CodeSyncTypeCriterionDispatcherProcessor();
-		EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 		
 		codeSyncElementDescriptors = new ArrayList<CodeSyncElementDescriptor>();
+		relationDescriptors = new ArrayList<RelationDescriptor>();
 		
 		addNewExtensions = new ArrayList<AddNewExtension>();
-		addNewExtensions.add(new AddNewNoteExtension());
-		addNewExtensions.add(new AddNewTopLevelElementExtension());
+		
 		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
 		
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
+
+		// main list of code sync descriptors
+		Runnable codeSyncMainDescriptors = new Runnable() {
+			@Override
+			public void run() {
+				EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
+
+				addNewExtensions.add(new AddNewNoteExtension());	
+				addNewExtensions.add(new AddNewTopLevelElementExtension());							
+			}
+		};
+		addRunnablesForReloadDescriptors(codeSyncMainDescriptors);
+
+		// give the codeSyncExtension the signal to register their own runnable descriptors
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
 		
-		getCodeSyncElementDescriptors().add(
-				new CodeSyncElementDescriptor()
-				.setCodeSyncType(FOLDER)
-				.setLabel(FOLDER)
-				.addChildrenCodeSyncTypeCategory(FILE));
-		getCodeSyncElementDescriptors().add(
-				new CodeSyncElementDescriptor()
-				.setCodeSyncType(FILE)
-				.setLabel(FILE)
-				.addCodeSyncTypeCategory(FILE));
-		
-		// needs custom descriptor because it uses the builder template (i.e. setters return the instance)
-		new CustomSerializationDescriptor(CodeSyncElementDescriptor.class)
-			.addDeclaredProperty("codeSyncType")
-			.addDeclaredProperty("label")
-			.addDeclaredProperty("iconUrl")
-			.addDeclaredProperty("defaultName")
-			.addDeclaredProperty("extension")
-			.addDeclaredProperty("codeSyncTypeCategories")
-			.addDeclaredProperty("childrenCodeSyncTypeCategories")
-			.addDeclaredProperty("features")
-			.addDeclaredProperty("keyFeature")
-			.addDeclaredProperty("standardDiagramControllerProviderFactory")
-			.register();
+		// now add our own descriptors
+		Runnable codeSyncRegisterDescriptorsRunnable = new Runnable() {
+			@Override
+			public void run() {	
+				getCodeSyncElementDescriptors().add(
+						new CodeSyncElementDescriptor()
+						.setCodeSyncType(FOLDER)
+						.setLabel(FOLDER)
+						.addChildrenCodeSyncTypeCategory(FILE));
+				getCodeSyncElementDescriptors().add(
+						new CodeSyncElementDescriptor()
+						.setCodeSyncType(FILE)
+						.setLabel(FILE)
+						.addCodeSyncTypeCategory(FILE));
+				
+				// needs custom descriptor because it uses the builder template (i.e. setters return the instance)
+				new CustomSerializationDescriptor(CodeSyncElementDescriptor.class)
+					.addDeclaredProperty("codeSyncType")
+					.addDeclaredProperty("label")
+					.addDeclaredProperty("iconUrl")
+					.addDeclaredProperty("defaultName")
+					.addDeclaredProperty("extension")
+					.addDeclaredProperty("codeSyncTypeCategories")
+					.addDeclaredProperty("childrenCodeSyncTypeCategories")
+					.addDeclaredProperty("category")
+					.addDeclaredProperty("features")
+					.addDeclaredProperty("keyFeature")
+					.addDeclaredProperty("standardDiagramControllerProviderFactory")
+					.addDeclaredProperty("createCodeSyncElement")
+					.register();
+				
+				new CustomSerializationDescriptor(RelationDescriptor.class)
+					.addDeclaredProperty("type")
+					.addDeclaredProperty("label")
+					.addDeclaredProperty("iconUrl")
+					.addDeclaredProperty("sourceCodeSyncTypes")
+					.addDeclaredProperty("targetCodeSyncTypes")
+					.addDeclaredProperty("sourceCodeSyncTypeCategories")
+					.addDeclaredProperty("targetCodeSyncTypeCategories")
+					.register();
+				
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
+			}
+		};
+		addRunnablesForReloadDescriptors(codeSyncRegisterDescriptorsRunnable);
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -429,6 +497,20 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		if (!srcDirs.contains(srcDir)) {
 			srcDirs.add(srcDir);
 		}
+	}
+	
+	/**
+	 * Executes the runnable and keeps it around to be executed
+	 * when the descriptors need to be refreshed.
+	 * 
+	 * @param runnable
+	 * 
+	 * @author Mircea Negreanu
+	 */
+	public void addRunnablesForReloadDescriptors(Runnable runnable) {
+		runnable.run();
+		
+		runnablesForReloadDescriptors.add(runnable);
 	}
 	
 }

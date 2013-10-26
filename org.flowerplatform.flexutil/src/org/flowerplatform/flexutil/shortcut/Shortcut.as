@@ -16,19 +16,34 @@
  *
  * license-end
  */
-package org.flowerplatform.editor.model.renderer {
-	import org.flowerplatform.editor.model.EditorModelPlugin;
+package org.flowerplatform.flexutil.shortcut {
 	
+	import mx.controls.Alert;
+
 	/**
-	 * @author Mariana Gheorghe
+	 * @author Florin
+	 * @author Cristi
 	 */
-	public class OperationsSeparatorRenderer extends SeparatorRenderer {
+	public class Shortcut {
+	
+		public var ctrl:Boolean; // 17 
 		
-		public function OperationsSeparatorRenderer() {
-			title = "operations";
-			serviceMethod = "addNew_operation";
-			newChildIcon = EditorModelPlugin.getInstance().getResourceUrl("images/obj16/SyncOperation.gif");
-			newChildLabel = "+getAttribute():int";
+		public var shift:Boolean; // 16
+		
+		public var lowerCaseCode:int;
+		
+		public var upperCaseCode:int;
+		
+		public function Shortcut(ctrl: Boolean, shift: Boolean, key:String) {
+			this.ctrl = ctrl;
+			this.shift = shift;
+			this.lowerCaseCode = key.charCodeAt(0);
+			this.upperCaseCode = key.toUpperCase().charCodeAt(0);
+		}   
+
+		public function equals(other:Shortcut):Boolean {
+			return this.ctrl == other.ctrl && this.shift == other.shift && this.lowerCaseCode == other.lowerCaseCode;
 		}
+		
 	}
 }

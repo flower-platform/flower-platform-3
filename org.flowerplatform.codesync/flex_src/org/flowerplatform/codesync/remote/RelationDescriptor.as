@@ -16,17 +16,23 @@
 *
 * license-end
 */
-package org.flowerplatform.flexutil.layout {
-
-	public interface IDirtyStateProvider {
+package org.flowerplatform.codesync.remote {
+	
+	import mx.collections.ArrayCollection;
+	
+	/**
+	 * @author Cristian Spiescu
+	 */
+	[RemoteClass]
+	public class RelationDescriptor {
+	
+		public var type:String;
+		public var label:String;
+		public var iconUrl:String;
+		public var sourceCodeSyncTypes:ArrayCollection;
+		public var targetCodeSyncTypes:ArrayCollection;
+		public var sourceCodeSyncTypeCategories:ArrayCollection;
+		public var targetCodeSyncTypeCategories:ArrayCollection;
 		
-		/**
-		 * Should return the dirty state of the current component (used
-		 * when calculating the tab label, i.e. to show or not the "*" sign).
-		 * 
-		 */
-		function isDirty():Boolean;
-		
-		function getEditorStatefulClientForSelectedElement():Object;
 	}
 }

@@ -66,13 +66,13 @@ package org.flowerplatform.editor.open_resources_view {
 //		}
 		
 
-		override protected function getIconFunction(data:HierarchicalModelWrapper):Object
-		{
-			if (data.treeNode is EditableResource){
-				var icon_URL:String = EditableResource(data.treeNode).iconUrl;
-				return icon_URL;
-			}else if (data.treeNode is EditableResourceClient)
-				return null;	
+		override protected function getIconFunction(data:HierarchicalModelWrapper):Object {
+			if (data.treeNode is EditableResource) {
+				var iconUrl:String = EditableResource(data.treeNode).iconUrl;
+				return iconUrl;
+			}else if (data.treeNode is EditableResourceClient) {
+				return EditorPlugin.getInstance().getResourceUrl('images/user.png');
+			}
 			return null;
 		}
 		
@@ -90,13 +90,18 @@ package org.flowerplatform.editor.open_resources_view {
 		}
 		
 		
-		override public function set data(value:Object):void
-		{
+		override public function set data(value:Object):void {
+			var initialData:Object = data;
+			if (data != null && value != initialData) {
+				HierarchicalModelWrapper(data).treeNode.removeEventListener(PropertyChangeEvent.PROPERTY_CHANGE, propertyChangeHandler, false);
+			}
 			super.data = value;
-			HierarchicalModelWrapper(data).treeNode.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, listener);				
+			if (data != null && value != initialData) {
+				HierarchicalModelWrapper(data).treeNode.addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, propertyChangeHandler);
+			}
 		}
 		
-		protected function listener(event:PropertyChangeEvent):void {			
+		protected function propertyChangeHandler(event:PropertyChangeEvent):void {			
 			data = data;
 			dispatchEvent(new Event(TreeList.UPDATE_TREE_RENDERER_EVENT));
 		}

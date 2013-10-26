@@ -41,8 +41,11 @@ package org.flowerplatform.editor.model.renderer {
 		
 		private var _useGlowOnHover:Boolean;
 		
-		public function BoxEffectsController(figure:DisplayObject, useGlowOnHover:Boolean=true) {
+		public var color:uint = 0x4682B4;
+		
+		public function BoxEffectsController(figure:DisplayObject, useGlowOnHover:Boolean=true, color:uint = 0x4682B4) {
 			_figure = figure;
+			this.color = color;
 			this.useGlowOnHover = useGlowOnHover;
 		}
 		
@@ -57,7 +60,7 @@ package org.flowerplatform.editor.model.renderer {
 				// instantiate glow
 				_glowEffect = new Glow();
 				// init with default values
-				glowEffect.color = 0x4682B4;
+				glowEffect.color = color;
 				glowEffect.blurXTo = glowEffect.blurYTo = 10;
 				glowEffect.alphaTo = 0.6;
 				glowEffect.easingFunction = Linear.easeIn;

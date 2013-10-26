@@ -51,7 +51,7 @@ package org.flowerplatform.editor.model.renderer {
 		
 		override protected function getConnectionLabel():String {
 			if (data && View(data).viewDetails) {
-				return View(data).viewDetails.scenarioInteractionLabel;
+				return View(data).viewDetails.label;
 			}
 			return null;
 		}
