@@ -26,22 +26,22 @@
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
-	creationComplete="creationCompleteHandler(event)">
+	creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.editor.model.*" >
 	
-	<s:layout>
-		<s:VerticalLayout
-			horizontalAlign="center" verticalAlign="middle"
-			paddingBottom="1" paddingLeft="1"
-			paddingRight="1" paddingTop="1"/>
-	</s:layout>
+		<s:layout>
+			<model:BoxRendererLayout />
+		</s:layout>
+		
 	<fx:Script>
 		<![CDATA[
 			import flash.filters.DropShadowFilter;
 			
 			import mx.core.FlexGlobals;
+			import mx.core.IVisualElement;
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
 			import mx.events.ResizeEvent;
+			import mx.states.OverrideBase;
 			
 			import org.flowerplatform.communication.transferable_object.ReferenceHolder;
 			import org.flowerplatform.editor.model.NotationDiagramShell;
@@ -102,8 +102,10 @@
 						x = bounds.x;
 						y = bounds.y;
 						
-						measuredMinWidth = bounds.width;
-						measuredMinHeight = bounds.height;
+						height = bounds.height;
+						width = bounds.width;
+						// make sure these sizes are greater than children's area, if not recalculate them
+						measure();
 					}
 				}
 			}
@@ -114,14 +116,14 @@
 					case "x":					
 						x = bounds.x;
 						break;
-					case "y":					
+					case "y":							
 						y = bounds.y;
 						break;
-					case "height":
-						measuredMinHeight = bounds.height;
+					case "height":	
+						height = bounds.height;		
 						break;
-					case "width":
-						measuredMinWidth = bounds.width;
+					case "width":	
+						width = bounds.width;	
 						break;
 				}
 			}
@@ -138,25 +140,11 @@
 				}
 			}
 			
-			/**
-			 * @author Mariana Gheorghe
-			 */
 			protected function resizeEventHandler(event:ResizeEvent):void {				
 				if (event.target is BoxChildIconItemRenderer && BoxChildIconItemRenderer(event.target).parent == this) {
 					event.stopPropagation();
-				
-					if (super.data != null) {
-						if (Node(data).layoutConstraint_RH != null) {
-								var bounds:Bounds = Bounds(ReferenceHolder(Node(data).layoutConstraint_RH).referencedObject);
-								var command:MoveResizeServerCommand = new MoveResizeServerCommand();
-								command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
-								command.newWidth = getLayoutBoundsWidth();
-								command.newHeight = getLayoutBoundsHeight();
-								command.newX = bounds.x;
-								command.newY = bounds.y;						
-								NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);
-						}
-					}
+					// recalculate parent's size if a child changes its size
+					measure();
 				}
 			}
 			
@@ -188,9 +176,4 @@
 			
 		]]>
 	</fx:Script>
-<!--	<s:Rect width="100%" height="100%">
-		<s:stroke>
-			<s:SolidColorStroke color="0x0000FF" weight="2"/>
-		</s:stroke>
-	</s:Rect>
---></s:DataRenderer>
+</s:DataRenderer>
