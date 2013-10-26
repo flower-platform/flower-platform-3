@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -81,6 +82,15 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider<DiagramSe
 		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) diagramEditorStatefulService.getEditableResource(diagramEditableResourcePath);
 		View view = (View) diagramEditableResource.getEObjectById(id);
 		return (CodeSyncElement) view.getDiagrammableElement();
+	}
+
+	@Override
+	public Pair<String, String> getIconAndLabel(DiagramSelectedItem selectedItem, CodeSyncElement codeSyncElement) {
+		
+		String icon = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType()).getIconUrl();
+		String label = codeSyncElement.getName();
+		
+		return new Pair<String, String>(icon, label);
 	}
 
 }

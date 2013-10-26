@@ -3,7 +3,9 @@ package org.flowerplatform.editor.model.properties;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
@@ -75,6 +77,13 @@ public class DiagramPropertiesProvider implements IPropertiesProvider<DiagramSel
 		
 		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) diagramEditorStatefulService.getEditableResource(diagramEditableResourcePath);
 		return (Diagram) diagramEditableResource.getEObjectById(id);
+	}
+
+	@Override
+	public Pair<String, String> getIconAndLabel(DiagramSelectedItem selectedItem, Diagram diagram) {
+		String icon = EditorModelPlugin.getInstance().getResourceUrl("images/icon_flower.gif");
+		String label = diagram.getName();
+		return new Pair<String, String>(icon, label);
 	}
 
 }

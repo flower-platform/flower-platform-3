@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
+import org.flowerplatform.properties.remote.Properties;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 import org.slf4j.Logger;
@@ -34,12 +36,14 @@ public class PropertiesService {
 	
 	private final static Logger logger = LoggerFactory.getLogger(PropertiesService.class);
 
-	public List<Property> getProperties(List<SelectedItem> selection) {
+	public Properties getProperties(List<SelectedItem> selection) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Getting the property list for the selection: {}", selection.toString());
 		}
+		Properties objectProperties = new Properties();
 		HashMap<String, IPropertiesProvider<SelectedItem, Object>> propertiesProvidersMapped = PropertiesPlugin.getInstance().getPropertiesProviders();
 		List<Property> properties = new ArrayList<Property>();
+		Pair<String, String> iconAndLabel = null;
 		for (SelectedItem selectedItem : selection) {
 			List<Property> newProperties = new ArrayList<Property>();
 			// get the right provider
@@ -53,6 +57,7 @@ public class PropertiesService {
 				for (String propertyName:propertiesNames) {
 					newProperties.add(itemProvider.getProperty(selectedItem, resolvedSelectedItem, propertyName));
 				}
+				iconAndLabel = itemProvider.getIconAndLabel(selectedItem, resolvedSelectedItem);
 			}
 			// merge with the previous results
 			if (properties.isEmpty()) {
@@ -63,7 +68,10 @@ public class PropertiesService {
 			}
 		}	
 		
-		return properties;
+		objectProperties.setPropertiesList(properties);
+		objectProperties.setIcon(iconAndLabel.a);
+		objectProperties.setLabel(iconAndLabel.b);
+		return objectProperties;
 	}
 	
 	public void setProperties(List<SelectedItem> selection, String propertyName, Object propertyValue) {

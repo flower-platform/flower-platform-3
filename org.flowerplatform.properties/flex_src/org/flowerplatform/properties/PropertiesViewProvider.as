@@ -44,9 +44,9 @@ package org.flowerplatform.properties {
 		}
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {
-			PropertiesPlugin.getInstance().propertyList = new PropertiesList();
+			PropertiesPlugin.getInstance().propertyView = new PropertiesView();
 			
-			return PropertiesPlugin.getInstance().propertyList;
+			return PropertiesPlugin.getInstance().propertyView;
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String	{

@@ -20,6 +20,7 @@ package org.flowerplatform.properties.providers;
 
 import java.util.List;
 
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
 
@@ -32,5 +33,6 @@ public interface IPropertiesProvider<SEL_ITEM extends SelectedItem, RES_SEL_ITEM
 	public Property getProperty(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem, String propertyName);
 	public RES_SEL_ITEM resolveSelectedItem(SEL_ITEM selectedItem);
 	public void setProperty(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem, String propertyName, Object propertyValue);
+	public Pair<String, String> getIconAndLabel(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem);
 	
 }

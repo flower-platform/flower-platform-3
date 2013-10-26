@@ -4,6 +4,8 @@
     <classEntry path="org.flowerplatform.properties.ui.PropertyRenderers.StringPropertyRenderer"/>
     <classEntry path="org.flowerplatform.properties.ui.PropertyRenderers.BasicPropertyRenderer"/>
     <classEntry path="org.flowerplatform.properties.remote.SelectedItem"/>
+    <classEntry path="org.flowerplatform.properties.remote.Properties"/>
+    <classEntry path="org.flowerplatform.properties.PropertiesView"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

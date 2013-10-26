@@ -29,6 +29,7 @@ import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
+import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
@@ -126,6 +127,20 @@ public class FilePropertiesProvider implements IPropertiesProvider<FileSelectedI
 			return ((Pair<File, Object>) object).a;
 		}
 		
+	}
+
+	@Override
+	public Pair<String, String> getIconAndLabel(FileSelectedItem selectedItem, File file) {
+		String label;
+		String icon;
+		if (file.isDirectory()) {
+			icon = WebPlugin.getInstance().getResourceUrl("images/folder.gif");
+		} else {
+			icon = WebPlugin.getInstance().getResourceUrl("images/file.gif");
+		}
+		label = file.getName();
+		
+		return new Pair<String, String>(icon, label);
 	}
 	
 }
