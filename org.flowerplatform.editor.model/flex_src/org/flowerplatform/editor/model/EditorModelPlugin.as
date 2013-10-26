@@ -22,15 +22,12 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
-	import org.flowerplatform.editor.model.action.AddRelationAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
 	import org.flowerplatform.editor.model.action.DeleteAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
-	import org.flowerplatform.editor.model.action.ExpandAttributesCompartmentAction;
-	import org.flowerplatform.editor.model.action.ExpandOperationsCompartmentAction;
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.action.SearchAction;
@@ -47,11 +44,10 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
-	import org.flowerplatform.editor.model.renderer.AttributesSeparatorRenderer;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
 	import org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer;
-	import org.flowerplatform.editor.model.renderer.OperationsSeparatorRenderer;
+	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Edge;
@@ -150,6 +146,10 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["topLevelBoxTitle"] = composedControllerProviderFactory;
 			
+			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: SeparatorRenderer });
+			EditorModelPlugin.getInstance().composedControllerProviderFactories["categorySeparator"] = composedControllerProviderFactory;
+			
 			// other initializations
 			notationDiagramActionProviders.push(notationDiagramClassFactoryActionProvider);
 			
@@ -196,15 +196,6 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classDiagram.javaClass.title"] = composedControllerProviderFactory;
 			
-			// class separators
-			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: AttributesSeparatorRenderer});
-			composedControllerProviderFactories["classAttributesCompartmentSeparator"] = composedControllerProviderFactory;
-			
-			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: OperationsSeparatorRenderer});
-			composedControllerProviderFactories["classOperationsCompartmentSeparator"] = composedControllerProviderFactory;
-
 			// scenario interaction
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
@@ -215,8 +206,6 @@ package org.flowerplatform.editor.model {
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandAttributesCompartmentAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(ExpandOperationsCompartmentAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DisplayMissingRelationsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelatedElementsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
@@ -227,7 +216,6 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ContentAssistAction);
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(NewModelComposedAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelationAction);	
 
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ShowPropertiesAction);

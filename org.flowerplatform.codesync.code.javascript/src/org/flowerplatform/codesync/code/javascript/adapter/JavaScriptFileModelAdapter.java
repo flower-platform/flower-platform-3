@@ -89,10 +89,11 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 	private void rewrite(IDocument document, RegExAstNode node, MultiTextEdit edit) {
 		if (node.isAdded()) {
 			String template = loadTemplate(node);
-			// TODO add nextSiblingSeparator to descriptor
-//			if (node.getNextSiblingSeparator() != null) {
-//				template = node.getNextSiblingSeparator() + template;
-//			}
+			CodeSyncElementDescriptor descriptor = 
+					CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(node.getType());
+			if (descriptor.getNextSiblingSeparator() != null) {
+				template = descriptor.getNextSiblingSeparator() + template;
+			}
 			edit.addChild(new InsertEdit(getInsertPoint(node), template));
 		} else if (node.isDeleted()) {
 			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));

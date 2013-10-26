@@ -1206,16 +1206,17 @@ public abstract class EditorStatefulService extends StatefulService implements I
 	 * If the {@link EditableResource} is slave, and the dirty state changes, the notification is
 	 * dispatched for the master {@link EditableResource}, not for the slave.
 	 * 
-	 * 
+	 * @return <code>true</code> if the updates were accepted. <code>false</code> otherwise.
 	 */
 	@RemoteInvocation
-	public void attemptUpdateEditableResourceContent(StatefulServiceInvocationContext context, String editableResourcePath, Object updatesToApply) {
+	public boolean attemptUpdateEditableResourceContent(StatefulServiceInvocationContext context, String editableResourcePath, Object updatesToApply) {
+		boolean lockAquired = false;
 		logger.trace("Attempting to update Editable Resource = {}, client = {}", editableResourcePath, context.getCommunicationChannel());
 		namedLockPool.lock(editableResourcePath);
 		try {
 			EditableResource editableResource = editableResources.get(editableResourcePath);
 			if (editableResource == null) {
-				return;
+				return false;
 			}
 			
 			// TODO CS/FP2 dezact permission check
@@ -1230,7 +1231,8 @@ public abstract class EditorStatefulService extends StatefulService implements I
 			boolean initialDirtyState = editableResource.isDirty();
 			boolean initialLockState = editableResource.isLocked();
 	
-			if (tryLock(editableResource, client)) {
+			lockAquired = tryLock(editableResource, client);
+			if (lockAquired) {
 				// lock acquired or renewed
 				updateEditableResourceContentAndDispatchUpdates(context, editableResource, updatesToApply);
 				
@@ -1262,6 +1264,7 @@ public abstract class EditorStatefulService extends StatefulService implements I
 		} finally {
 			namedLockPool.unlock(editableResourcePath);
 		}
+		return lockAquired;
 	}
 	
 //	protected boolean lock(EditableResource editableResource, EditableResourceClient client) {

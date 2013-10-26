@@ -21,22 +21,18 @@ package org.flowerplatform.codesync.remote {
 	import mx.collections.ArrayCollection;
 	
 	/**
-	 * @author Mariana Gheorghe
+	 * @author Cristian Spiescu
 	 */
 	[RemoteClass]
-	public class CodeSyncElementDescriptor {
+	public class RelationDescriptor {
 	
-		public var codeSyncType:String;
+		public var type:String;
 		public var label:String;
 		public var iconUrl:String;
-		public var defaultName:String;
-		public var extension:String;
-		public var codeSyncTypeCategories:ArrayCollection;
-		public var childrenCodeSyncTypeCategories:ArrayCollection;
-		public var category:String;
-		public var features:ArrayCollection;
-		public var keyFeature:String;
-		public var standardDiagramControllerProviderFactory:String;
+		public var sourceCodeSyncTypes:ArrayCollection;
+		public var targetCodeSyncTypes:ArrayCollection;
+		public var sourceCodeSyncTypeCategories:ArrayCollection;
+		public var targetCodeSyncTypeCategories:ArrayCollection;
 		
 	}
 }

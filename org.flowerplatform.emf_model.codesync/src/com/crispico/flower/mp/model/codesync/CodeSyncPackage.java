@@ -973,13 +973,22 @@ public interface CodeSyncPackage extends EPackage {
 	int RELATION__TARGET = 1;
 
 	/**
+	 * The feature id for the '<em><b>Type</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RELATION__TYPE = 2;
+
+	/**
 	 * The number of structural features of the '<em>Relation</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RELATION_FEATURE_COUNT = 2;
+	int RELATION_FEATURE_COUNT = 3;
 
 	/**
 	 * Returns the meta object for class '{@link com.crispico.flower.mp.model.codesync.CodeSyncElement <em>Element</em>}'.
@@ -1415,6 +1424,17 @@ public interface CodeSyncPackage extends EPackage {
 	EReference getRelation_Target();
 
 	/**
+	 * Returns the meta object for the attribute '{@link com.crispico.flower.mp.model.codesync.Relation#getType <em>Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Type</em>'.
+	 * @see com.crispico.flower.mp.model.codesync.Relation#getType()
+	 * @see #getRelation()
+	 * @generated
+	 */
+	EAttribute getRelation_Type();
+
+	/**
 	 * Returns the factory that creates the instances of the model.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1775,6 +1795,14 @@ public interface CodeSyncPackage extends EPackage {
 		 * @generated
 		 */
 		EReference RELATION__TARGET = eINSTANCE.getRelation_Target();
+
+		/**
+		 * The meta object literal for the '<em><b>Type</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute RELATION__TYPE = eINSTANCE.getRelation_Type();
 
 	}
 

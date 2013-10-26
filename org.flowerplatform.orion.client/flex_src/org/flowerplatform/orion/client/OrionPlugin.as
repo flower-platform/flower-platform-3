@@ -80,6 +80,28 @@ package org.flowerplatform.orion.client {
 			
 			CommunicationPlugin.getInstance().bridge.connect();
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
+			if (ExternalInterface.available) { 
+				ExternalInterface.addCallback("invokeSaveResourcesDialog", invokeSaveResourcesDialog); 
+			} 
+		}
+		
+		/**
+		 * Accessed by JavaScript code in order to prevent closing the browser if there
+		 * are resources that are not saved.
+		 * 
+		 * @return true if the close of the browser window needs to be prevented.
+		 */
+		public function invokeSaveResourcesDialog():Boolean {
+//			if (!WebCommonPlugin.getInstance().authenticationManager.bridge.connectionEstablished){
+//				// this happens when the user was loggout by server (for inactivity); in this
+//				// case, no need to care about dirty resources any more
+//				return false;
+//			}
+			
+			// we invoke the dialog, so that the user has it open already when returning to the app
+			// (from the JS Alert that he has just closed)
+			EditorPlugin.getInstance().globalEditorOperationsManager.invokeSaveResourcesDialogAndInvoke(null, null, null);
+			return EditorPlugin.getInstance().globalEditorOperationsManager.getGlobalDirtyState();
 		}
 		
 		public function handleConnected(event:BridgeEvent):void {			

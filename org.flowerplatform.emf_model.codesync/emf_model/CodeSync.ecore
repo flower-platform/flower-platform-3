@@ -72,5 +72,6 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//CodeSyncElement"
         eOpposite="#//CodeSyncElement/relations"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//CodeSyncElement"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
 </ecore:EPackage>

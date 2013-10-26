@@ -25,7 +25,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
-import org.flowerplatform.codesync.processor.CodeSyncElementFeatureChangesProcessor;
+import org.flowerplatform.codesync.processor.AbstractChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.emf_model.notation.MindMapNode;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
@@ -38,7 +38,7 @@ import com.crispico.flower.mp.model.codesync.MindMapElement;
 /**
  * @author Cristina Constantinescu
  */
-public class MindMapChildrenChangeProcessor extends CodeSyncElementFeatureChangesProcessor {
+public class MindMapChildrenChangeProcessor extends AbstractChildrenUpdaterDiagramProcessor {
 
 	@Override
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> context) {

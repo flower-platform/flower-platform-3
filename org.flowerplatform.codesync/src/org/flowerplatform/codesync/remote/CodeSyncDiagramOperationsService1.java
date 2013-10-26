@@ -19,22 +19,30 @@
 package org.flowerplatform.codesync.remote;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.Edge;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
+import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
  * @author Mariana Gheorghe
@@ -43,12 +51,24 @@ public class CodeSyncDiagramOperationsService1 {
 
 	public static final String PARENT_CODE_SYNC_ELEMENT = "parentCodeSyncElement";
 	public static final String PARENT_VIEW = "parentView";
+
+	public static final String ID = "codeSyncDiagramOperationsService";
+	
+	public static CodeSyncDiagramOperationsService1 getInstance() {
+		return (CodeSyncDiagramOperationsService1) CommunicationPlugin.getInstance()
+				.getServiceRegistry().getService(ID);
+	}
+	
 	
 	@RemoteInvocation
 	public List<CodeSyncElementDescriptor> getCodeSyncElementDescriptors() {
 		return CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors();
 	}
 	
+	@RemoteInvocation
+	public List<RelationDescriptor> getRelationDescriptors() {
+		return CodeSyncPlugin.getInstance().getRelationDescriptors();
+	}
 	/**
 	 * @return ID of the view pointing to the newly added element.
 	 */
@@ -64,6 +84,10 @@ public class CodeSyncDiagramOperationsService1 {
 		Node view = NotationFactory.eINSTANCE.createNode();
 		view.setDiagrammableElement(codeSyncElement);
 		View parentView = viewIdOfParent == null ? null : getViewById(context.getAdditionalData(), viewIdOfParent);
+		
+		if (parameters == null) {
+			parameters = new HashMap<String, Object>();
+		}
 		
 		// run all AddNewExtensions
 		Resource codeSyncMappingResource = getCodeSyncMappingResource(getEditableResource(context.getAdditionalData()));
@@ -96,6 +120,67 @@ public class CodeSyncDiagramOperationsService1 {
 		return view.getIdBeforeRemoval();
 	}
 	
+	public List<CodeSyncElementDescriptor> getChildrenCategories(String codeSyncType) {
+		CodeSyncElementDescriptor parentDescriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
+		List<CodeSyncElementDescriptor> result = new ArrayList<CodeSyncElementDescriptor>();
+		for (CodeSyncElementDescriptor descriptor : CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors()) {
+			for (String codeSyncTypeCategory : descriptor.getCodeSyncTypeCategories()) {
+				if (parentDescriptor.getChildrenCodeSyncTypeCategories().contains(codeSyncTypeCategory)) {
+					boolean alreadyAdded = false;
+					for (CodeSyncElementDescriptor addedDescriptor : result) {
+						if (addedDescriptor.getCategory().equals(descriptor.getCategory())) {
+							alreadyAdded = true;
+							break;
+						}
+					}
+					if (!alreadyAdded) {
+						result.add(descriptor);
+					}
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
+	@RemoteInvocation
+	public void collapseCompartment(ServiceInvocationContext context, String viewId) {
+		View view = getViewById(context.getAdditionalData(), viewId);
+		View parentCompartment = (View) view.eContainer();
+		parentCompartment.getPersistentChildren().remove(view);
+	}
+	
+	@RemoteInvocation
+	public void expandCompartment(ServiceInvocationContext context, String viewId, String category) {
+		View view = getViewById(context.getAdditionalData(), viewId);
+		for (CodeSyncElementDescriptor descriptor : getCodeSyncElementDescriptors()) {
+			if (category.equals(descriptor.getCategory())) {
+				addCategorySeparator(view, descriptor);
+				break;
+			}
+		}
+	}
+	
+	public void addCategorySeparator(View view, CodeSyncElementDescriptor descriptor) {
+		Node categorySeparator = NotationFactory.eINSTANCE.createNode();
+		categorySeparator.setViewType("categorySeparator");
+		Map<String, String> viewDetails = new HashMap<String, String>();
+		viewDetails.put("codeSyncType", descriptor.getCodeSyncType());
+		viewDetails.put("title", descriptor.getCategory());
+		String image = descriptor.getIconUrl();
+		if (image != null) {
+			String codeSyncPackage = CodeSyncPlugin.getInstance()
+					.getBundleContext().getBundle().getSymbolicName();
+			if (!image.startsWith("/")) {
+				image = "/" + image;
+			}
+			image = codeSyncPackage + image;
+		}
+		viewDetails.put("newChildIcon", image);
+		categorySeparator.setViewDetails(viewDetails);
+		view.getPersistentChildren().add(categorySeparator);
+	}
+	
 	@RemoteInvocation
 	public String getInplaceEditorText(String viewId) {
 		// TODO
@@ -105,6 +190,39 @@ public class CodeSyncDiagramOperationsService1 {
 	@RemoteInvocation
 	public void setInplaceEditorText(String viewId, String text) {
 		// TODO
+	}
+	
+	public void addNewRelation(ServiceInvocationContext context, String type, String sourceViewId, String targetViewId) {
+		View sourceView = getViewById(context.getAdditionalData(), sourceViewId);
+		View targetView = getViewById(context.getAdditionalData(), targetViewId);
+		CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
+		CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
+		Relation relation = CodeSyncFactory.eINSTANCE.createRelation();
+		relation.setType(type);
+		relation.setSource(source);
+		relation.setTarget(target);
+		source.getRelations().add(relation);
+		
+		EObject currentObject = sourceView;
+		Diagram diagram = null;
+		while (currentObject != null) {
+			if (currentObject instanceof Diagram) {
+				diagram = (Diagram) currentObject;
+				break;
+			}
+			currentObject = currentObject.eContainer();
+		}
+		createEdge(relation, sourceView, targetView, diagram);
+	}
+	
+	protected Edge createEdge(Relation relation, View source, View target, Diagram diagram) {
+		Edge edge = NotationFactory.eINSTANCE.createEdge();
+		edge.setDiagrammableElement(relation);
+		edge.setSource(source);
+		edge.setTarget(target);
+		edge.setViewType("edge");
+		diagram.getPersistentEdges().add(edge);
+		return edge;
 	}
 	
 	///////////////////////
