@@ -22,32 +22,30 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.flowerplatform.codesync.code.javascript.changes_processor.TableViewProcessor;
+import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
+import org.flowerplatform.codesync.code.javascript.config.changes_processor.AbstractDependencyProcessor;
+import org.flowerplatform.codesync.code.javascript.config.changes_processor.AttributeWithRequireEntryDependencyProcessor;
+import org.flowerplatform.codesync.code.javascript.config.changes_processor.RequireEntryDependencyProcessor;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneClass;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneFormView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableItemView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneView;
 import org.flowerplatform.codesync.code.javascript.operation_extension.JavaScriptFeatureAccessExtension;
 import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
-import org.flowerplatform.codesync.operation_extension.AddNewExtension;
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.codesync.processor.CodeSyncCategorySeparatorProcessor;
-import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
-import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
-import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
-import org.flowerplatform.common.util.Utils;
 import org.flowerplatform.editor.model.EditorModelPlugin;
-import org.flowerplatform.emf_model.notation.View;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana Gheorghe
@@ -72,263 +70,17 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		INSTANCE = this;
 		
 		// descriptors for js code
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new JavaScriptDescriptors());
 		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new Runnable() {
 			@Override
 			public void run() {
-				// descriptors
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("backboneClass").setLabel("Backbone Class")
-						.addCodeSyncTypeCategory("topLevel")
-						.addInitializationType("").addInitializationTypeLabel("Plain Backbone Class")
-						.addInitializationType("backboneTableView").addInitializationTypeLabel("Table View")
-						.addInitializationType("backboneTableItemView").addInitializationTypeLabel("Table Item View")
-						.addInitializationType("backboneFormView").addInitializationTypeLabel("Form View")
-						.setIconUrl("images/full/obj16/jcu_obj.gif")
-						.setDefaultName("NewBackboneClass")
-						.setExtension("js")
-						.addChildrenCodeSyncTypeCategory("backboneClassMember")
-						.addChildrenCodeSyncTypeCategory("requireEntry")
-						.addFeature("superClass")
-						.addFeature("name")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBox")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("javaScriptOperation")
-						.setLabel("Operation")
-						.setIconUrl("images/full/obj16/methpub_obj.gif")
-						.setDefaultName("newOperation")
-						.addCodeSyncTypeCategory("backboneClassMember")
-						.setCategory("operations")
-						.setNextSiblingSeparator(", ")
-						.addFeature("name")
-						.addFeature("parameters")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("javaScriptAttribute")
-						.setLabel("Attribute")
-						.setIconUrl("images/full/obj16/field_public_obj.gif")
-						.setDefaultName("newAttribute")
-						.addCodeSyncTypeCategory("backboneClassMember")
-						.setCategory("attributes")
-						.setNextSiblingSeparator(", ")
-						.addFeature("defaultValue")
-						.addFeature("name")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("requireEntry")
-						.setLabel("RequireEntry")
-						.setIconUrl("images/full/obj16/imp_obj.gif")
-						.setDefaultName("newRequireEntry")
-						.addCodeSyncTypeCategory("requireEntry")
-						.setCategory("require entries")
-						.addFeature("varName")
-						.addFeature("dependencyPath")
-						.setKeyFeature("varName")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("eventsAttribute")
-						.setLabel("Events")
-						.setIconUrl("images/full/obj16/time_go.png")
-						.setDefaultName("events")
-						.addCodeSyncTypeCategory("backboneClassMember")
-						.addChildrenCodeSyncTypeCategory("eventsAttributeEntry")
-						.setCategory("attributes")
-						.setNextSiblingSeparator(", ")
-						.addFeature("name")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("routesAttribute")
-						.setLabel("Routes")
-						.setIconUrl("images/full/obj16/arrow_right.png")
-						.setDefaultName("routes")
-						.addCodeSyncTypeCategory("backboneClassMember")
-						.addChildrenCodeSyncTypeCategory("routesAttributeEntry")
-						.setCategory("attributes")
-						.setNextSiblingSeparator(", ")
-						.addFeature("name")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("eventsAttributeEntry")
-						.setLabel("Event")
-						.setIconUrl("images/full/obj16/time_go.png")
-						.setDefaultName("event")
-						.addCodeSyncTypeCategory("eventsAttributeEntry")
-						.setNextSiblingSeparator(", ")
-						.addFeature("event")
-						.addFeature("selector")
-						.addFeature("function")
-						.setKeyFeature("event")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("routesAttributeEntry")
-						.setLabel("Route")
-						.setIconUrl("images/full/obj16/arrow_right.png")
-						.setDefaultName("route")
-						.addCodeSyncTypeCategory("routesAttributeEntry")
-						.setNextSiblingSeparator(", ")
-						.addFeature("path")
-						.addFeature("function")
-						.setKeyFeature("path")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("table")
-						.addCodeSyncTypeCategory("topLevel")
-						.addCodeSyncTypeCategory("htmlTemplate")
-						.setLabel("Table")
-						.setIconUrl("images/full/obj16/table.png")
-						.setDefaultName("NewTable")
-						.setExtension("html")
-						.addChildrenCodeSyncTypeCategory("tableHeaderEntry")
-						.addFeature("tableId")
-						.addFeature("headerRowId")
-						.addFeature("name")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBox")
-				);
-		
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("tableHeaderEntry")
-						.setLabel("Table Header Entry")
-						.setIconUrl("images/full/obj16/table_select_column.png")
-						.setDefaultName("newHeaderEntry")
-						.addCodeSyncTypeCategory("tableHeaderEntry")
-						.setCategory("header entries")
-						.addFeature("title")
-						.setKeyFeature("title")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("tableItem")
-						.addCodeSyncTypeCategory("topLevel")
-						.addCodeSyncTypeCategory("htmlTemplate")
-						.setLabel("Table Item")
-						.setIconUrl("images/full/obj16/table_select_row.png")
-						.setDefaultName("NewTableItem")
-						.setExtension("html")
-						.addChildrenCodeSyncTypeCategory("tableItemEntry")
-						.addFeature("itemUrl")
-						.addFeature("name")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBox")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("tableItemEntry")
-						.setLabel("Table Item Entry")
-						.setIconUrl("images/full/obj16/table_select.png")
-						.setDefaultName("newTableItemEntry")
-						.addCodeSyncTypeCategory("tableItemEntry")
-						.setCategory("item entries")
-						.addFeature("valueExpression")
-						.setKeyFeature("valueExpression")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.addCodeSyncTypeCategory("topLevel")
-						.setCodeSyncType("form")
-						.addCodeSyncTypeCategory("htmlTemplate")
-						.setLabel("Form")
-						.setIconUrl("images/full/obj16/application_form.png")
-						.setDefaultName("NewForm")
-						.setExtension("html")
-						.addChildrenCodeSyncTypeCategory("formItem")
-						.addFeature("name")
-						.setKeyFeature("name")
-						.setStandardDiagramControllerProviderFactory("topLevelBox")
-				);
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.setCodeSyncType("formItem")
-						.setLabel("Form Item")
-						.setIconUrl("images/full/obj16/bullet_textfield.png")
-						.setDefaultName("newFormItem")
-						.addCodeSyncTypeCategory("formItem")
-						.setCategory("items")
-						.addFeature("valueExpression")
-						.addFeature("editId")
-						.addFeature("title")
-						.setKeyFeature("title")
-						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
-				);
-				
-				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
-						new CodeSyncElementDescriptor()
-						.addCodeSyncTypeCategory("topLevel").addCodeSyncTypeCategory("dontNeedLocation")
-						.setCodeSyncType("note")
-						.setLabel("Note")
-						.setIconUrl("images/full/obj16/note.png")
-						.setDefaultName("NewNote")				
-						.setCreateCodeSyncElement(false)				
-				);
-				
-				CodeSyncPlugin.getInstance().getRelationDescriptors().add(
-						new RelationDescriptor()
-						.setType("templateDependency")
-						.setLabel("Template Dependency")
-						.addSourceCodeSyncType("javaScriptAttribute")
-						.addTargetCodeSyncTypeCategory("htmlTemplate")
-				);
-					
-				CodeSyncPlugin.getInstance().getRelationDescriptors().add(
-						new RelationDescriptor()
-						.setType("classDependency")
-						.setLabel("Class Dependency")
-						.addSourceCodeSyncType("javaScriptAttribute")
-						.addTargetCodeSyncType("backboneClass")
-				);
-		
 				// extensions
 				CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension());
-				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension() {
-					
-					@Override
-					public boolean addNew(CodeSyncElement codeSyncElement, View parent,
-							Resource codeSyncMappingResource, Map<String, Object> parameters) {
-						String initializationType = (String) Utils.getValueSafe(parameters, CodeSyncPlugin.CONTEXT_INITIALIZATION_TYPE);
-						if (!"backboneTableView".equals(initializationType)) {
-							return false;
-						}
-						
-//						CodeSyncElement attribute;
-//						
-//						attribute = CodeSyncOperationsService.getInstance().create("javaScriptAttribute");
-//						CodeSyncOperationsService.getInstance().setFeatureValue(attribute, FeatureAccessExtension.CODE_SYNC_NAME, "tableItemViewClass");
-//						CodeSyncOperationsService.getInstance().add(codeSyncElement, attribute);		
-//
-//						attribute = CodeSyncOperationsService.getInstance().create("javaScriptAttribute");
-//						CodeSyncOperationsService.getInstance().setFeatureValue(attribute, FeatureAccessExtension.CODE_SYNC_NAME, "test");
-//						CodeSyncOperationsService.getInstance().add(codeSyncElement, attribute);		
-						
-						return false;
-					}
-				});
+				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneClass());
+				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneView());
+				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableView());
+				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableItemView());
+				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneFormView());
 				
 				// processors
 				ChildrenUpdaterDiagramProcessor parentElementProcessor = new ChildrenUpdaterDiagramProcessor();
@@ -353,7 +105,10 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("categorySeparator", new CodeSyncCategorySeparatorProcessor());
 				
-				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("backboneClass", new TableViewProcessor());
+				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_CLASS_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor(null));
+				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!"));
+				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_CLASS_DEPENDENCY, new RequireEntryDependencyProcessor(null));
+				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY, new RequireEntryDependencyProcessor("text!"));
 			}
 		});
 	
