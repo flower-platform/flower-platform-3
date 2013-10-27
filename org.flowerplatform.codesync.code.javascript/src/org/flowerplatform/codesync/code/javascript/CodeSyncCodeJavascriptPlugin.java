@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.AbstractDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.AttributeWithRequireEntryDependencyProcessor;
+import org.flowerplatform.codesync.code.javascript.config.changes_processor.InheritanceProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.RequireEntryDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneClass;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneFormView;
@@ -109,6 +110,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!"));
 				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_CLASS_DEPENDENCY, new RequireEntryDependencyProcessor(null));
 				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY, new RequireEntryDependencyProcessor("text!"));
+				CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_INHERITANCE, new InheritanceProcessor());
 			}
 		});
 	

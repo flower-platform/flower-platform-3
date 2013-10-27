@@ -28,11 +28,14 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 			logger.debug("For attribute = {}, setting default value = {}", sourceAttribute, className);
 		}
 		CodeSyncOperationsService.getInstance().setFeatureValue(sourceAttribute, JavaScriptDescriptors.FEATURE_DEFAULT_VALUE, className);
-		
+		CodeSyncElement parentClassOfSourceAttribute = (CodeSyncElement) sourceAttribute.eContainer(); // TODO CS/JS: access parent through CSOS as well; children as well
+		addRequireEntryIfNeeded(parentClassOfSourceAttribute, targetClass, className);
+	}
+	
+	protected void addRequireEntryIfNeeded(CodeSyncElement hostForRequireEntry, CodeSyncElement targetClass, String className) {
 		// look for a require entry; if not found, create one
 		boolean foundCorrespondingRequiresEntry = false; 
-		CodeSyncElement parentClassOfSourceAttribute = (CodeSyncElement) sourceAttribute.eContainer(); // TODO CS/JS: access parent through CSOS as well; children as well
-		for (CodeSyncElement child : parentClassOfSourceAttribute.getChildren()) {
+		for (CodeSyncElement child : hostForRequireEntry.getChildren()) {
 			if (!JavaScriptDescriptors.TYPE_REQUIRE_ENTRY.equals(child.getType())) {
 				continue;
 			}
@@ -44,8 +47,9 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 		if (!foundCorrespondingRequiresEntry) {
 			CodeSyncElement requireEntry = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
 			updateRequireEntry(requireEntry, targetClass);
-			CodeSyncOperationsService.getInstance().add(parentClassOfSourceAttribute, requireEntry);
+			CodeSyncOperationsService.getInstance().add(hostForRequireEntry, requireEntry);
 		}
+		
 	}
 
 }
