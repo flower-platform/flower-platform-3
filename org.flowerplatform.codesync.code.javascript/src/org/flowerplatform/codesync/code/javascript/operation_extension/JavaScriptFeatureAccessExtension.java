@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;

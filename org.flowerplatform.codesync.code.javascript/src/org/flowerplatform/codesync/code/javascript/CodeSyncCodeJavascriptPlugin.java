@@ -22,22 +22,24 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Collections;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
-import org.flowerplatform.codesync.code.javascript.config.changes_processor.AbstractDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.AttributeWithRequireEntryDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.RequireEntryDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneClass;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneFormView;
-import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableItemView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneView;
 import org.flowerplatform.codesync.code.javascript.operation_extension.JavaScriptFeatureAccessExtension;
-import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
+import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_RegExFormat;
 import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.codesync.processor.CodeSyncCategorySeparatorProcessor;
+import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.mozilla.javascript.Context;
@@ -82,6 +84,22 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableItemView());
 				CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneFormView());
 				
+				InplaceEditorExtension_RegExFormat javascriptAttributeInplaceEditorExtension = 
+						new InplaceEditorExtension_RegExFormat(
+								"javaScriptAttribute", 
+								new String[] {JavaScriptFeatureAccessExtension.CODE_SYNC_NAME, "defaultValue"}, 
+								"%1$s=%2$s", 
+								"^(\\w*?)[=]*=(.*?)$");
+				CodeSyncPlugin.getInstance().getInplaceEditorExtensions().add(javascriptAttributeInplaceEditorExtension);
+				
+				InplaceEditorExtension_RegExFormat javascriptOperationInplaceEditorExtension = 
+						new InplaceEditorExtension_RegExFormat(
+								"javaScriptOperation", 
+								new String[] {JavaScriptFeatureAccessExtension.CODE_SYNC_NAME, "parameters"}, 
+								"%1$s(%2$s)", 
+								"(\\w*?)[\\(\\s]*\\([\\s]*(.*?)[\\s]*[\\)\\s]*\\)");
+				CodeSyncPlugin.getInstance().getInplaceEditorExtensions().add(javascriptOperationInplaceEditorExtension);
+				
 				// processors
 				ChildrenUpdaterDiagramProcessor parentElementProcessor = new ChildrenUpdaterDiagramProcessor();
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass", parentElementProcessor);
@@ -89,16 +107,17 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", parentElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);
 				
-				JavascriptElementProcessor childElementProcessor = new JavascriptElementProcessor();
+				TopLevelElementChildProcessor childElementProcessor = new TopLevelElementChildProcessor();
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("topLevelBoxTitle", childElementProcessor);
-				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", childElementProcessor);
-				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", childElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", childElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute", childElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute", childElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", childElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", childElementProcessor);
 				
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
+								
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", childElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", childElementProcessor);
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", childElementProcessor);

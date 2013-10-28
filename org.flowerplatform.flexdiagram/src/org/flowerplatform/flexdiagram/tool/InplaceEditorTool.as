@@ -125,7 +125,7 @@ package org.flowerplatform.flexdiagram.tool {
 					}
 					break;
 				case Keyboard.ENTER: // commit value			
-					if (this == diagramShell.mainTool) {
+					if (!event.ctrlKey && this == diagramShell.mainTool) {
 						diagramShell.getControllerProvider(context.model).
 							getInplaceEditorController(context.model).commit(context.model);
 					}					

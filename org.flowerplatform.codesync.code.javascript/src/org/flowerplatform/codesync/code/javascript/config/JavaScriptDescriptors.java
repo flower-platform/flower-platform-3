@@ -63,6 +63,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("parameters")
 				.setKeyFeature("name")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setInplaceEditorFeature("")
 		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
@@ -77,6 +78,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("name")
 				.setKeyFeature("name")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setInplaceEditorFeature("")
 		);
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
