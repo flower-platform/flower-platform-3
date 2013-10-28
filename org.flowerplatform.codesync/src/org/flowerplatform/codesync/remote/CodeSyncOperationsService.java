@@ -54,7 +54,8 @@ public class CodeSyncOperationsService {
 		}
 		CodeSyncElement codeSyncElement = CodeSyncFactory.eINSTANCE.createCodeSyncElement();
 		codeSyncElement.setType(descriptor.getCodeSyncType());
-		codeSyncElement.setName(descriptor.getDefaultName());
+		// set the key feature to the default value
+		setFeatureValue(codeSyncElement, descriptor.getKeyFeature(), descriptor.getDefaultName());
 		return codeSyncElement;
 	}
 	
@@ -217,6 +218,17 @@ public class CodeSyncOperationsService {
 		} else {
 			return a.equals(b);
 		}
+	}
+	
+	public Object getKeyFeatureValue(CodeSyncElement element) {
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(element.getType());
+		return getFeatureValue(element, descriptor.getKeyFeature());
+	}
+	
+	public void setKeyFeatureValue(CodeSyncElement element, Object newValue) {
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(element.getType());
+		String keyFeature = descriptor.getKeyFeature();
+		setFeatureValue(element, keyFeature, newValue);
 	}
 	
 	public void markDeleted(CodeSyncElement element) {

@@ -49,10 +49,15 @@ package org.flowerplatform.codesync.action {
 					if (!categories.contains(category)) {
 						var alreadyExpanded:Boolean = false;
 						for each (var ref:ReferenceHolder in node.persistentChildren_RH) {
-							var child:Node = Node(ref.referencedObject);
-							if (category == child.viewDetails["title"]) {
-								alreadyExpanded = true;
-								break;
+							// this action provider is called also when new info arrives from server
+							// because changing the list of children_RH triggers a selection change
+							// and at that time the RHs for the children have not been processed yet
+							if (ref.registry != null) {
+								var child:Node = Node(ref.referencedObject);
+								if (category == child.viewDetails["title"]) {
+									alreadyExpanded = true;
+									break;
+								}
 							}
 						}
 						if (!alreadyExpanded) {

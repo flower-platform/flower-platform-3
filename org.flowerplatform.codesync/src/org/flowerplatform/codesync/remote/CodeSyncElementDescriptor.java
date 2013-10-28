@@ -21,8 +21,6 @@ package org.flowerplatform.codesync.remote;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
-
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
@@ -78,7 +76,6 @@ public class CodeSyncElementDescriptor {
 		codeSyncTypeCategories = new ArrayList<String>();
 		childrenCodeSyncTypeCategories = new ArrayList<String>();
 		features = new ArrayList<String>();
-		features.add(FeatureAccessExtension.CODE_SYNC_NAME);
 		
 		createCodeSyncElement = true;
 	}

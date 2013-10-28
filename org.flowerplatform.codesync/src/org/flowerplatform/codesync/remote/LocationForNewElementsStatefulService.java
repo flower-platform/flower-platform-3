@@ -143,7 +143,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 	@Override
 	public boolean populateTreeNode(Object source, TreeNode destination, GenericTreeContext context) {
 		if (source instanceof CodeSyncElement) {
-			destination.setLabel(((CodeSyncElement) source).getName());		
+			destination.setLabel((String) CodeSyncOperationsService.getInstance().getKeyFeatureValue((CodeSyncElement) source));		
 			destination.setIcon(CodeSyncPlugin.getInstance().getResourceUrl("images/folder.gif"));		
 		}
 		return false;
@@ -151,7 +151,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 
 	@Override
 	public PathFragment getPathFragmentForNode(Object node, String nodeType, GenericTreeContext context) {
-		return new PathFragment(((CodeSyncElement) node).getName(), ((CodeSyncElement) node).getType());
+		return new PathFragment((String) CodeSyncOperationsService.getInstance().getKeyFeatureValue((CodeSyncElement) node), ((CodeSyncElement) node).getType());
 	}
 
 	@Override

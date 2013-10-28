@@ -20,13 +20,16 @@ package org.flowerplatform.codesync.code.javascript.operation_extension;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.operation_extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -36,26 +39,10 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class JavaScriptFeatureAccessExtension extends FeatureAccessExtension {
 
-	public JavaScriptFeatureAccessExtension() {
-		super();
+	public JavaScriptFeatureAccessExtension(List<CodeSyncElementDescriptor> descriptors) {
+		super(descriptors);
 		
-		addCodeSyncType("backboneClass");
-		addCodeSyncType("javaScriptOperation");
-		addCodeSyncType("javaScriptAttribute");
-		addCodeSyncType("requireEntry");
-		addCodeSyncType("eventsAttribute");
-		addCodeSyncType("routesAttribute");
-		addCodeSyncType("eventsAttributeEntry");
-		addCodeSyncType("routesAttributeEntry");
-		addCodeSyncType("table");
-		addCodeSyncType("tableHeaderEntry");
-		addCodeSyncType("tableItem");
-		addCodeSyncType("tableItemEntry");
-		addCodeSyncType("form");
-		addCodeSyncType("formItem");
-		
-		for (String codeSyncType : codeSyncTypes) {
-			CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
+		for (CodeSyncElementDescriptor descriptor : descriptors) {
 			for (String feature : descriptor.getFeatures()) {
 				if (getFeature(feature) == null) {
 					addFeature(feature, RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
@@ -78,14 +65,13 @@ public class JavaScriptFeatureAccessExtension extends FeatureAccessExtension {
 		Object fromClient = newValue;
 		Object value = super.getValue(codeSyncElement, featureName);
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
-		if (CODE_SYNC_NAME.equals(featureName)) {
-			// set the value of the key parameter too
-			setValue(codeSyncElement, descriptor.getKeyFeature(), fromClient);
-			
+		if (featureName.equals(descriptor.getKeyFeature())) {
 			// change the file name
 			CodeSyncElement parent = (CodeSyncElement) codeSyncElement.eContainer();
 			if (parent != null && parent.getType().equals(CodeSyncPlugin.FILE)) {
-				setValue(parent, featureName, parent.getName().replace((String) value, (String) newValue));
+				String fileName = newValue + "." + descriptor.getExtension();
+				CodeSyncOperationsService.getInstance().setFeatureValue(parent, 
+						NamedElementFeatureAccessExtension.NAME, fileName);
 			}
 		}
 		if (RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters().equals(getFeature(featureName))) {

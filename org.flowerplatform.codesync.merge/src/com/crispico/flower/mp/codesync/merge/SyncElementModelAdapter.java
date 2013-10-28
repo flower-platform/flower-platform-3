@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
@@ -127,7 +128,8 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 	
 	@Override
 	public Object getMatchKey(Object element) {
-		return ((CodeSyncElement) element).getName();
+		return CodeSyncOperationsService.getInstance()
+				.getKeyFeatureValue(((CodeSyncElement) element));
 	}
 	
 	@Override

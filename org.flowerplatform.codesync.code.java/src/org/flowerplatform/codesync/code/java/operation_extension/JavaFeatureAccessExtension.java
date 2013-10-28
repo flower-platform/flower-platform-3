@@ -66,7 +66,7 @@ public class JavaFeatureAccessExtension extends FeatureAccessExtension {
 	public final static String INITIALIZER		= "initializer";
 	
 	public JavaFeatureAccessExtension() {
-		super();
+		super(null);
 		
 		addFeature(DOCUMENTATION, 	 AstCacheCodePackage.eINSTANCE.getDocumentableElement_Documentation());
 		

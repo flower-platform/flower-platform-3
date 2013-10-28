@@ -1,7 +1,23 @@
 package org.flowerplatform.codesync.code.javascript.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.flowerplatform.codesync.code.javascript.config.changes_processor.AttributeWithRequireEntryDependencyProcessor;
+import org.flowerplatform.codesync.code.javascript.config.changes_processor.InheritanceProcessor;
+import org.flowerplatform.codesync.code.javascript.config.changes_processor.RequireEntryDependencyProcessor;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneClass;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneFormView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableItemView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneView;
+import org.flowerplatform.codesync.code.javascript.operation_extension.JavaScriptFeatureAccessExtension;
+import org.flowerplatform.codesync.code.javascript.processor.JavascriptElementProcessor;
+import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
+import org.flowerplatform.codesync.processor.CodeSyncCategorySeparatorProcessor;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
@@ -16,6 +32,7 @@ public class JavaScriptDescriptors implements Runnable {
 	public static final String TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY = "requireHtmlTemplateDependency";
 	public static final String TYPE_INHERITANCE = "inheritance";
 	
+	public static final String FEATURE_NAME = "name";
 	public static final String FEATURE_DEPENDENCY_PATH = "dependencyPath";
 	public static final String FEATURE_VAR_NAME = "varName";
 	public static final String FEATURE_DEFAULT_VALUE = "defaultValue";
@@ -32,10 +49,12 @@ public class JavaScriptDescriptors implements Runnable {
 	 */
 	@Override
 	public void run() {
+		List<CodeSyncElementDescriptor> descriptors = new ArrayList<CodeSyncElementDescriptor>();
+		
 		/////////////////////////////////////////
 		// TOP LEVEL
 		/////////////////////////////////////////
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_BACKBONE_CLASS).setLabel("Backbone Class")
 				.addCodeSyncTypeCategory("topLevel")
@@ -49,12 +68,12 @@ public class JavaScriptDescriptors implements Runnable {
 				.setExtension("js")
 				.addChildrenCodeSyncTypeCategory("backboneClassMember")
 				.addChildrenCodeSyncTypeCategory(TYPE_REQUIRE_ENTRY)
+				.addFeature(FEATURE_NAME)
 				.addFeature(FEATURE_SUPER_CLASS)
-				.addFeature("name")
-				.setKeyFeature("name")
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("javaScriptOperation")
 				.setLabel("Operation")
@@ -63,12 +82,12 @@ public class JavaScriptDescriptors implements Runnable {
 				.addCodeSyncTypeCategory("backboneClassMember")
 				.setCategory("operations")
 				.setNextSiblingSeparator(", ")
-				.addFeature("name")
+				.addFeature(FEATURE_NAME)
 				.addFeature("parameters")
-				.setKeyFeature("name")
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_JAVASCRIPT_ATTRIBUTE)
 				.setLabel("Attribute")
@@ -77,12 +96,12 @@ public class JavaScriptDescriptors implements Runnable {
 				.addCodeSyncTypeCategory("backboneClassMember")
 				.setCategory("attributes")
 				.setNextSiblingSeparator(", ")
+				.addFeature(FEATURE_NAME)
 				.addFeature(FEATURE_DEFAULT_VALUE)
-				.addFeature("name")
-				.setKeyFeature("name")
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY)
 				.setLabel("RequireEntry")
@@ -95,7 +114,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setKeyFeature(FEATURE_VAR_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("eventsAttribute")
 				.setLabel("Events")
@@ -105,11 +124,11 @@ public class JavaScriptDescriptors implements Runnable {
 				.addChildrenCodeSyncTypeCategory("eventsAttributeEntry")
 				.setCategory("attributes")
 				.setNextSiblingSeparator(", ")
-				.addFeature("name")
-				.setKeyFeature("name")
+				.addFeature(FEATURE_NAME)
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("routesAttribute")
 				.setLabel("Routes")
@@ -119,11 +138,11 @@ public class JavaScriptDescriptors implements Runnable {
 				.addChildrenCodeSyncTypeCategory("routesAttributeEntry")
 				.setCategory("attributes")
 				.setNextSiblingSeparator(", ")
-				.addFeature("name")
-				.setKeyFeature("name")
+				.addFeature(FEATURE_NAME)
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("eventsAttributeEntry")
 				.setLabel("Event")
@@ -137,7 +156,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setKeyFeature("event")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("routesAttributeEntry")
 				.setLabel("Route")
@@ -154,7 +173,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		// TOP LEVEL
 		/////////////////////////////////////////
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("table")
 				.addCodeSyncTypeCategory("topLevel")
@@ -164,14 +183,14 @@ public class JavaScriptDescriptors implements Runnable {
 				.setDefaultName("NewTableTemplate")
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("tableHeaderEntry")
+				.addFeature(FEATURE_NAME)
 				.addFeature("tableId")
 				.addFeature("headerRowId")
-				.addFeature("name")
-				.setKeyFeature("name")
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
 		);
 
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableHeaderEntry")
 				.setLabel("Table Header Entry")
@@ -187,7 +206,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		// TOP LEVEL
 		/////////////////////////////////////////
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItem")
 				.addCodeSyncTypeCategory("topLevel")
@@ -197,12 +216,12 @@ public class JavaScriptDescriptors implements Runnable {
 				.setDefaultName("NewTableItemTemplate")
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("tableItemEntry")
+				.addFeature(FEATURE_NAME)
 				.addFeature("itemUrl")
-				.addFeature("name")
-				.setKeyFeature("name")
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItemEntry")
 				.setLabel("Table Item Entry")
@@ -218,7 +237,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		// TOP LEVEL
 		/////////////////////////////////////////
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.addCodeSyncTypeCategory("topLevel")
 				.setCodeSyncType("form")
@@ -228,11 +247,11 @@ public class JavaScriptDescriptors implements Runnable {
 				.setDefaultName("NewFormTemplate")
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("formItem")
-				.addFeature("name")
-				.setKeyFeature("name")
+				.addFeature(FEATURE_NAME)
+				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
 		);
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("formItem")
 				.setLabel("Form Item")
@@ -250,7 +269,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		// TOP LEVEL
 		/////////////////////////////////////////
-		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
+		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.addCodeSyncTypeCategory("topLevel").addCodeSyncTypeCategory("dontNeedLocation")
 				.setCodeSyncType("note")
@@ -259,6 +278,8 @@ public class JavaScriptDescriptors implements Runnable {
 				.setDefaultName("NewNote")				
 				.setCreateCodeSyncElement(false)				
 		);
+		
+		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().addAll(descriptors);
 		
 		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
 				new RelationDescriptor()
@@ -296,6 +317,44 @@ public class JavaScriptDescriptors implements Runnable {
 				.addSourceCodeSyncType(TYPE_BACKBONE_CLASS)
 				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
 		);
+		
+		// extensions
+		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension(descriptors));
+		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneClass());
+		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneView());
+		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableView());
+		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableItemView());
+		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneFormView());
+		
+		// processors
+		ChildrenUpdaterDiagramProcessor parentElementProcessor = new ChildrenUpdaterDiagramProcessor();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass", parentElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", parentElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", parentElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);
+		
+		JavascriptElementProcessor childElementProcessor = new JavascriptElementProcessor();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("topLevelBoxTitle", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", childElementProcessor);
+		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", childElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", childElementProcessor);
+		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("categorySeparator", new CodeSyncCategorySeparatorProcessor());
+		
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_CLASS_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor(null));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_CLASS_DEPENDENCY, new RequireEntryDependencyProcessor(null));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY, new RequireEntryDependencyProcessor("text!"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_INHERITANCE, new InheritanceProcessor());
+	
 	}
 
 }

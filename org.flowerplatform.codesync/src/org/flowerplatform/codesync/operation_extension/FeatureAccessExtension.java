@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * Converts from a {@code name} to the corresponding {@link EStructuralFeature}, 
@@ -46,13 +46,13 @@ public abstract class FeatureAccessExtension {
 	
 	protected Map<String, EStructuralFeature> features;
 	
-	public static final String CODE_SYNC_NAME = "codeSyncName";
-	
-	public FeatureAccessExtension() {
+	public FeatureAccessExtension(List<CodeSyncElementDescriptor> descriptors) {
 		codeSyncTypes = new ArrayList<String>();
 		features = new HashMap<String, EStructuralFeature>();
 		
-		addFeature(CODE_SYNC_NAME, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		for (CodeSyncElementDescriptor descriptor : descriptors) {
+			codeSyncTypes.add(descriptor.getCodeSyncType());
+		}
 	}
 	
 	public boolean hasCodeSyncType(String codeSyncType) {

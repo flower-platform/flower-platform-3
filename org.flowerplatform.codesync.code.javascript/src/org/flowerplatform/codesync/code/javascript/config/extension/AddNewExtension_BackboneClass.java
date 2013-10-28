@@ -5,7 +5,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.operation_extension.AddNewExtension;
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.emf_model.notation.View;
 
@@ -21,13 +20,13 @@ public class AddNewExtension_BackboneClass implements AddNewExtension {
 			Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		{
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
-			CodeSyncOperationsService.getInstance().setFeatureValue(child, FeatureAccessExtension.CODE_SYNC_NAME, "$");
+			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_VAR_NAME, "$");
 			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_DEPENDENCY_PATH, "jQuery");
 			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
 		}
 		{
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
-			CodeSyncOperationsService.getInstance().setFeatureValue(child, FeatureAccessExtension.CODE_SYNC_NAME, "_");
+			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_VAR_NAME, "_");
 			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_DEPENDENCY_PATH, "underscore");
 			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
 		}
