@@ -23,13 +23,18 @@ package org.flowerplatform.flexdiagram.renderer {
 	import flash.display.SpreadMethod;
 	import flash.geom.Matrix;
 	
+	import mx.managers.IFocusManagerComponent;
+	
 	import org.flowerplatform.flexdiagram.event.ZoomPerformedEvent;
 	import org.flowerplatform.flexdiagram.util.MultilineLabelItemRenderer;
 	
 	/**
+	 * <code>IFocusManagerComponent</code> needed to set focus on diagram
+	 * when clicking on a note.
+	 * 
 	 * @author Cristina Constantinescu
 	 */
-	public class NoteRenderer extends MultilineLabelItemRenderer {
+	public class NoteRenderer extends MultilineLabelItemRenderer implements IFocusManagerComponent {
 				
 		public var gradientTx:Number = 0;
 		public var gradientTy:Number = 0;
