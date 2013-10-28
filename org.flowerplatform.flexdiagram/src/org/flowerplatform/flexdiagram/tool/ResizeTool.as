@@ -21,6 +21,10 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.display.Stage;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	
+	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.tool.controller.IResizeController;
@@ -43,9 +47,13 @@ package org.flowerplatform.flexdiagram.tool {
 			return getResizeAnchorFromDisplayCoordinates() != null;
 		}
 		
-		override public function activateAsMainTool():void {
-			context.initialMousePoint = globalToDiagram(Math.ceil(diagramRenderer.stage.mouseX), Math.ceil(diagramRenderer.stage.mouseY));
-			
+		override public function activateAsMainTool():void {			
+			context.initialMousePoint = diagramShell.convertCoordinates(
+				new Rectangle(
+					UIComponent(FlexGlobals.topLevelApplication).mouseX, 
+					UIComponent(FlexGlobals.topLevelApplication).mouseY),
+					UIComponent(FlexGlobals.topLevelApplication),
+					diagramRenderer).topLeft;
 			var resizeAnchor:ResizeAnchor = getResizeAnchorFromDisplayCoordinates();		
 			context.resizeType = resizeAnchor.type;
 			
@@ -81,11 +89,17 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 				
 		private function mouseMoveHandler(event:MouseEvent):void {
-			if (event.buttonDown) {		
-				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));
+			if (event.buttonDown) {
+				var mousePoint:Point = diagramShell.convertCoordinates(
+					new Rectangle(
+						event.stageX, 
+						event.stageY),
+						UIComponent(FlexGlobals.topLevelApplication),
+						diagramRenderer).topLeft;	
+								
 				var deltaX:int = mousePoint.x - context.initialMousePoint.x;
 				var deltaY:int = mousePoint.y - context.initialMousePoint.y;		
-
+				
 				for (var i:int = 0; i < diagramShell.selectedItems.length; i++) {
 					var model:Object = diagramShell.selectedItems.getItemAt(i);
 					var resizeController:IResizeController = diagramShell.getControllerProvider(model).getResizeController(model);

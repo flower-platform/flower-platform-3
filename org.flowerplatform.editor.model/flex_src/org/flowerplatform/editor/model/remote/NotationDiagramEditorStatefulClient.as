@@ -24,6 +24,7 @@ package org.flowerplatform.editor.model.remote {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.ServiceInvocationOptions;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.model.action.AddNewElementAction;
 	import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulClient;
 
 	/**
@@ -80,12 +81,17 @@ package org.flowerplatform.editor.model.remote {
 		}
 		
 		public function service_setInplaceEditorText(viewId:Object, text:String):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "setInplaceEditorText", [viewId, text]));
-			//			attemptUpdateContent(null, invokeServiceMethod("setInplaceEditorText", [viewId, text], new ServiceInvocationOptions().setReturnCommandWithoutSending(true)));
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId, 
+				"setInplaceEditorText",
+				[viewId, text]));
 		}
 		
 		public function service_getInplaceEditorText(viewId:Object, callbackFunction:Function):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "getInplaceEditorText", [viewId], null, callbackFunction));
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId, 
+				"getInplaceEditorText",
+				[viewId], null, callbackFunction));
 		}
 		
 		public function service_deleteView(viewId:Object):void {

@@ -21,12 +21,15 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
 	import mx.collections.IList;
+	import mx.core.FlexGlobals;
 	import mx.core.IDataRenderer;
 	import mx.core.IVisualElement;
+	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
@@ -52,7 +55,7 @@ package org.flowerplatform.flexdiagram.tool {
 				return false;
 			}
 			if (renderer is IDataRenderer) {
-				var model:Object = IDataRenderer(renderer).data;
+				var model:Object = getModelWithDragController(renderer);
 				return diagramShell.getControllerProvider(model).getDragController(model) != null &&
 					   (diagramShell.selectedItems.getItemIndex(model) != -1);						
 			}
@@ -63,8 +66,13 @@ package org.flowerplatform.flexdiagram.tool {
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 				
-			context.initialMousePoint = globalToDiagram(Math.ceil(diagramRenderer.stage.mouseX), Math.ceil(diagramRenderer.stage.mouseY));
-		
+			context.initialMousePoint = diagramShell.convertCoordinates(
+				new Rectangle(
+					UIComponent(FlexGlobals.topLevelApplication).mouseX, 
+					UIComponent(FlexGlobals.topLevelApplication).mouseY),
+				UIComponent(FlexGlobals.topLevelApplication),
+				diagramRenderer).topLeft;
+			
 			var acceptedDraggableModels:IList = getAcceptedDraggableModelsFromSelection(diagramShell.selectedItems);
 			for (var i:int = 0; i < acceptedDraggableModels.length; i++) {					
 				var model:Object = acceptedDraggableModels.getItemAt(i);				
@@ -92,8 +100,13 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		protected function mouseMoveHandler(event:MouseEvent):void {			
-			if (event.buttonDown) {		
-				var mousePoint:Point = globalToDiagram(Math.ceil(event.stageX), Math.ceil(event.stageY));
+			if (event.buttonDown) {				
+				 var mousePoint:Point = diagramShell.convertCoordinates(
+					new Rectangle(
+						event.stageX, 
+						event.stageY),
+					UIComponent(FlexGlobals.topLevelApplication),
+					diagramRenderer).topLeft;
 				var deltaX:int = mousePoint.x - context.initialMousePoint.x;
 				var deltaY:int = mousePoint.y - context.initialMousePoint.y;
 				
@@ -126,5 +139,17 @@ package org.flowerplatform.flexdiagram.tool {
 			return acceptedDraggableModels;
 		}
 		
+		private function getModelWithDragController(renderer:IVisualElement):Object {			
+			if (renderer is IDataRenderer) {	
+				var model:Object = IDataRenderer(renderer).data;
+				if (renderer is DiagramRenderer) {
+					return model;
+				}				
+				if (diagramShell.getControllerProvider(model).getDragController(model) != null) {
+					return model;
+				}				
+			}	
+			return getModelWithDragController(IVisualElement(renderer.parent));	
+		}
 	}
 }

@@ -21,7 +21,7 @@ package org.flowerplatform.codesync.remote;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
@@ -72,6 +72,11 @@ public class CodeSyncElementDescriptor {
 	 * @author Cristina Constantinescu
 	 */
 	private boolean createCodeSyncElement;
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	private String inplaceEditorFeature;
 	
 	public CodeSyncElementDescriptor() {
 		// TODO CS/JS I'd recommend some lists lazy, cf. initializationTypes; maybe categories: leave always init
@@ -256,5 +261,14 @@ public class CodeSyncElementDescriptor {
 		this.createCodeSyncElement = createCodeSyncElement;
 		return this;
 	}
-	
+
+	public String getInplaceEditorFeature() {
+		return inplaceEditorFeature;
+	}
+
+	public CodeSyncElementDescriptor setInplaceEditorFeature(String inplaceEditorFeature) {
+		this.inplaceEditorFeature = inplaceEditorFeature;
+		return this;
+	}
+
 }

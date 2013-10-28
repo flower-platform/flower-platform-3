@@ -31,13 +31,22 @@ package org.flowerplatform.editor.model.controller {
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.tool.controller.IInplaceEditorController;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin;
+	import org.flowerplatform.flexutil.text.AutoGrowSkinnableTextBaseSkin;
 	
 	import spark.components.TextArea;
+	import spark.components.supportClasses.SkinnableTextBase;
+	import spark.components.supportClasses.StyleableTextField;
 	
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	public class InplaceEditorController extends ControllerBase implements IInplaceEditorController {
 		
+		public var rendererClass:Class;
+		
 		public function InplaceEditorController(diagramShell:DiagramShell) {
-			super(diagramShell);
+			super(diagramShell);		
 		}
 		
 		public function canActivate(model:Object):Boolean	{		
@@ -46,7 +55,9 @@ package org.flowerplatform.editor.model.controller {
 		
 		public function activate(model:Object):void {
 			var renderer:DisplayObject = DisplayObject(diagramShell.getRendererForModel(model));
-			var textField:TextArea = new TextArea();
+			var textField:SkinnableTextBase = new rendererClass();
+			textField.setStyle("skinClass", AutoGrowSkinnableTextBaseSkin);
+			
 			var skinClassFactory:ClassFactory = new ClassFactory();
 			skinClassFactory.generator = ContentAssistListTextAreaSkin;
 			skinClassFactory.properties = new Object();
@@ -58,11 +69,15 @@ package org.flowerplatform.editor.model.controller {
 			var bounds:Rectangle = renderer.getBounds(DisplayObject(diagramShell.diagramRenderer));
 			textField.x = bounds.x + 2;
 			textField.y = bounds.y;
-			textField.minWidth = bounds.width;
-			textField.height = bounds.height;
+			
+			textField.width = bounds.width;
+			textField.minHeight = bounds.height;
+			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_getInplaceEditorText(Node(model).id, function(text:String):void {
-				textField.text = text;
-				textField.selectRange(text.length, text.length);
+				if (text != null) {
+					textField.text = text;
+					textField.selectRange(text.length, text.length);
+				}
 			});
 			textField.callLater(textField.setFocus);
 			
@@ -70,7 +85,7 @@ package org.flowerplatform.editor.model.controller {
 		}
 		
 		public function commit(model:Object):void {		
-			var textField:TextArea = diagramShell.modelToExtraInfoMap[model].inplaceEditor;
+			var textField:SkinnableTextBase = diagramShell.modelToExtraInfoMap[model].inplaceEditor;
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_setInplaceEditorText(Node(model).id, textField.text);
 			
 			diagramShell.mainToolFinishedItsJob();
@@ -82,7 +97,7 @@ package org.flowerplatform.editor.model.controller {
 		}
 		
 		public function deactivate(model:Object):void {
-			var textField:TextArea = diagramShell.modelToExtraInfoMap[model].inplaceEditor;
+			var textField:SkinnableTextBase = diagramShell.modelToExtraInfoMap[model].inplaceEditor;
 			diagramShell.diagramRenderer.removeElement(textField);
 			
 			delete diagramShell.modelToExtraInfoMap[model].inplaceEditor;			

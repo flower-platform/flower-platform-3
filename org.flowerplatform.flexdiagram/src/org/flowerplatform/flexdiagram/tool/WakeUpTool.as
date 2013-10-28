@@ -41,6 +41,7 @@ package org.flowerplatform.flexdiagram.tool {
 		public static const MOUSE_DRAG:String = "mouseDrag";
 		public static const MOUSE_DOWN:String = "mouseDown";
 		public static const MOUSE_UP:String = "mouseUp";
+		public static const MOUSE_RIGHT_CLICK:String = "mouseRightClick";
 		
 		public var listeners:ArrayList = new ArrayList();
 			
@@ -62,14 +63,16 @@ package org.flowerplatform.flexdiagram.tool {
 		override public function activateAsMainTool():void {			
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);			
-			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);		
+			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			diagramRenderer.addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 			super.activateAsMainTool();
 		}
 		
 		override public function deactivateAsMainTool():void {		
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			diagramRenderer.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);			
-			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);			
+			diagramRenderer.removeEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			diagramRenderer.removeEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
 			super.deactivateAsMainTool();
 		}
 				
@@ -88,6 +91,11 @@ package org.flowerplatform.flexdiagram.tool {
 				// if ESC or back button pressed, deactivates current tool
 				diagramShell.mainToolFinishedItsJob();
 			}
+		}
+		
+		private function rightClickHandler(event:MouseEvent):void {
+			myEventType = MOUSE_RIGHT_CLICK;			
+			dispatchMyEvent(myEventType, event);			
 		}
 		
 		private function mouseDownHandler(event:MouseEvent):void {

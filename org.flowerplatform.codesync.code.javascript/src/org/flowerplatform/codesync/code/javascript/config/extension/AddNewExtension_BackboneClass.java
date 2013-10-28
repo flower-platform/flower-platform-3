@@ -4,8 +4,8 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
-import org.flowerplatform.codesync.operation_extension.AddNewExtension;
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.config.extension.AddNewExtension;
+import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.emf_model.notation.View;
 

@@ -31,11 +31,11 @@ public abstract class IconDiagrammableElementFeatureChangesProcessor extends Abs
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		// TODO implement cf. convention
-		viewDetails.put("label", getLabel(object, false));
+		viewDetails.put("label", getLabel(object, associatedViewOnOpenDiagram, false));
 		viewDetails.put("iconUrls", getIconUrls(object));
 	}
 	
-	abstract public String getLabel(EObject object, boolean forEditing);
+	abstract public String getLabel(EObject object, View view, boolean forEditing);
 
 	abstract protected String getIconUrls(EObject object);
 	

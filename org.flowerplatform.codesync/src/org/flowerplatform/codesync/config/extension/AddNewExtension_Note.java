@@ -1,4 +1,4 @@
-package org.flowerplatform.codesync.operation_extension;
+package org.flowerplatform.codesync.config.extension;
 
 import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.VIEW;
 
@@ -12,7 +12,7 @@ import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
-public class AddNewNoteExtension extends AddNewTopLevelElementExtension {
+public class AddNewExtension_Note extends AddNewExtension_TopLevelElement {
 
 	@Override
 	public boolean addNew(CodeSyncElement codeSyncElement, View parent,

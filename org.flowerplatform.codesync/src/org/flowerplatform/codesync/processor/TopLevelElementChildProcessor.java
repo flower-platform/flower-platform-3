@@ -16,11 +16,15 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.code.javascript.processor;
+package org.flowerplatform.codesync.processor;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor;
+import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -29,11 +33,32 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 /**
  * @author Mariana Gheorghe
  */
-public class JavascriptElementProcessor extends CodeSyncDecoratorsProcessor {
+public class TopLevelElementChildProcessor extends CodeSyncDecoratorsProcessor {
+
+	private InplaceEditorExtension inplaceEditorExtension;
+		
+	public TopLevelElementChildProcessor() {
+		super();		
+	}
+	
+	public TopLevelElementChildProcessor(InplaceEditorExtension inplaceEditorExtension) {
+		super();
+		this.inplaceEditorExtension = inplaceEditorExtension;
+	}
 
 	@Override
-	public String getLabel(EObject object, boolean forEditing) {
+	public String getLabel(EObject object, View view, boolean forEditing) {
 		CodeSyncElement cse = (CodeSyncElement) object;
+		
+		if (inplaceEditorExtension != null) {
+			Map<String, Object> parameters = new HashMap<String, Object>();
+			try {
+				inplaceEditorExtension.getInplaceEditorText(view, parameters);
+			} catch (Exception e) {
+				
+			}
+			return (String) parameters.get(InplaceEditorExtension.VIEW_TEXT);
+		}
 		String name = (String) CodeSyncOperationsService.getInstance()
 				.getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 		return name;
