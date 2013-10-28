@@ -30,8 +30,8 @@ package org.flowerplatform.codesync.action {
 	 * 
 	 * @author Mircea Negreanu
 	 */
-	public class ViewCodeSyncDescriptorsAction extends ActionBase implements IAction {
-		public function ViewCodeSyncDescriptorsAction() {
+	public class ShowCodeSyncDescriptorsAction extends ActionBase implements IAction {
+		public function ShowCodeSyncDescriptorsAction() {
 			super();
 			
 			preferShowOnActionBar = true;

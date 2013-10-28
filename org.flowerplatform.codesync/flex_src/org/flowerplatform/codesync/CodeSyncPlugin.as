@@ -29,6 +29,7 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.action.AddNewCodeSyncElementActionProvider;
 	import org.flowerplatform.codesync.action.AddNewRelationAction;
 	import org.flowerplatform.codesync.action.ExpandCompartmentActionProvider;
+	import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -98,7 +99,10 @@ package org.flowerplatform.codesync {
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new ExpandCompartmentActionProvider());
 		}
 		
-		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mircea Negreanu
+		 */
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CodeSyncElementDescriptor);
 			registerClassAliasFromAnnotation(RelationDescriptor);
@@ -107,6 +111,9 @@ package org.flowerplatform.codesync {
 			registerClassAliasFromAnnotation(DiffTreeNode);
 			registerClassAliasFromAnnotation(DiffContextMenuEntry);
 			registerClassAliasFromAnnotation(DiffActionEntry);
+			
+			// add the Descriptor too
+			registerClassAliasFromAnnotation(StringSelectedItem);
 		}
 		
 		/**
