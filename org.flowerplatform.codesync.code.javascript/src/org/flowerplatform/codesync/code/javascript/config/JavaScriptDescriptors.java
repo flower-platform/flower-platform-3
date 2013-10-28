@@ -14,10 +14,12 @@ public class JavaScriptDescriptors implements Runnable {
 	public static final String TYPE_HTML_TEMPLATE_DEPENDENCY = "htmlTemplateDependency";
 	public static final String TYPE_REQUIRE_CLASS_DEPENDENCY = "requireClassDependency";
 	public static final String TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY = "requireHtmlTemplateDependency";
+	public static final String TYPE_INHERITANCE = "inheritance";
 	
 	public static final String FEATURE_DEPENDENCY_PATH = "dependencyPath";
 	public static final String FEATURE_VAR_NAME = "varName";
 	public static final String FEATURE_DEFAULT_VALUE = "defaultValue";
+	public static final String FEATURE_SUPER_CLASS = "superClass";
 
 	public static final String INIT_TYPE_NONE = "";
 	public static final String INIT_TYPE_BACKBONE_VIEW = "backboneView";
@@ -30,7 +32,9 @@ public class JavaScriptDescriptors implements Runnable {
 	 */
 	@Override
 	public void run() {
-		// descriptors
+		/////////////////////////////////////////
+		// TOP LEVEL
+		/////////////////////////////////////////
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_BACKBONE_CLASS).setLabel("Backbone Class")
@@ -45,7 +49,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setExtension("js")
 				.addChildrenCodeSyncTypeCategory("backboneClassMember")
 				.addChildrenCodeSyncTypeCategory(TYPE_REQUIRE_ENTRY)
-				.addFeature("superClass")
+				.addFeature(FEATURE_SUPER_CLASS)
 				.addFeature("name")
 				.setKeyFeature("name")
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
@@ -149,14 +153,17 @@ public class JavaScriptDescriptors implements Runnable {
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
 		
+		/////////////////////////////////////////
+		// TOP LEVEL
+		/////////////////////////////////////////
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("table")
 				.addCodeSyncTypeCategory("topLevel")
 				.addCodeSyncTypeCategory("htmlTemplate")
-				.setLabel("Table")
+				.setLabel("Table HTML Template")
 				.setIconUrl("images/full/obj16/table.png")
-				.setDefaultName("NewTable")
+				.setDefaultName("NewTableTemplate")
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("tableHeaderEntry")
 				.addFeature("tableId")
@@ -179,14 +186,17 @@ public class JavaScriptDescriptors implements Runnable {
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
 		
+		/////////////////////////////////////////
+		// TOP LEVEL
+		/////////////////////////////////////////
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItem")
 				.addCodeSyncTypeCategory("topLevel")
 				.addCodeSyncTypeCategory("htmlTemplate")
-				.setLabel("Table Item")
+				.setLabel("Table Item HTML Template")
 				.setIconUrl("images/full/obj16/table_select_row.png")
-				.setDefaultName("NewTableItem")
+				.setDefaultName("NewTableItemTemplate")
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("tableItemEntry")
 				.addFeature("itemUrl")
@@ -207,14 +217,17 @@ public class JavaScriptDescriptors implements Runnable {
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
 		
+		/////////////////////////////////////////
+		// TOP LEVEL
+		/////////////////////////////////////////
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.addCodeSyncTypeCategory("topLevel")
 				.setCodeSyncType("form")
 				.addCodeSyncTypeCategory("htmlTemplate")
-				.setLabel("Form")
+				.setLabel("Form HTML Template")
 				.setIconUrl("images/full/obj16/application_form.png")
-				.setDefaultName("NewForm")
+				.setDefaultName("NewFormTemplate")
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("formItem")
 				.addFeature("name")
@@ -236,6 +249,9 @@ public class JavaScriptDescriptors implements Runnable {
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
 		
+		/////////////////////////////////////////
+		// TOP LEVEL
+		/////////////////////////////////////////
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().add(
 				new CodeSyncElementDescriptor()
 				.addCodeSyncTypeCategory("topLevel").addCodeSyncTypeCategory("dontNeedLocation")
@@ -274,6 +290,13 @@ public class JavaScriptDescriptors implements Runnable {
 				.setLabel("Require HTML Template")
 				.addSourceCodeSyncType(TYPE_REQUIRE_ENTRY)
 				.addTargetCodeSyncTypeCategory("htmlTemplate")
+		);
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new RelationDescriptor()
+				.setType(TYPE_INHERITANCE)
+				.setLabel("Inherits")
+				.addSourceCodeSyncType(TYPE_BACKBONE_CLASS)
+				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
 		);
 	}
 
