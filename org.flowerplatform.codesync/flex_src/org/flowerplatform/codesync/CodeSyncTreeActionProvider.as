@@ -20,6 +20,7 @@ package org.flowerplatform.codesync {
 	
 	import mx.collections.IList;
 	
+	import org.flowerplatform.codesync.action.ViewCodeSyncDescriptorsAction;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
@@ -36,6 +37,7 @@ package org.flowerplatform.codesync {
 //			result.push(new CodeSyncAction("Code Sync - js", "js"));
 //			result.push(new CodeSyncAction("Wiki Sync", "github"));
 			result.push(new CodeSyncAction("Synchronize", "js"));
+			result.push(new ViewCodeSyncDescriptorsAction());
 			return result;
 		}
 	}

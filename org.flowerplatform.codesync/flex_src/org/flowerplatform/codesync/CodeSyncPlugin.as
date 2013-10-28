@@ -32,6 +32,7 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
+	import org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsViewProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.CompoundServerCommand;
@@ -41,7 +42,6 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
-	import org.flowerplatform.flexdiagram.ui.RelationAnchor;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
@@ -87,6 +87,7 @@ package org.flowerplatform.codesync {
 			var editorDescriptor:EditorDescriptor = new CodeSyncEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new LoadedDescriptorsViewProvider());
 		}
 		
 		override public function start():void {
@@ -228,6 +229,16 @@ package org.flowerplatform.codesync {
 				return null;
 			}
 			return view.viewType.substr(lastIndexOfDot + 1);
+		}
+		
+		/**
+		 * Returns all the codeSyncElementDescriptors.
+		 * <p>Needed by the Loaded Descriptors view</p>
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		public function getCodeSyncElementDescriptors():ArrayCollection {
+			return codeSyncElementDescriptors;
 		}
 
 	}
