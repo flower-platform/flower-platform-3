@@ -55,7 +55,7 @@ package org.flowerplatform.flexdiagram.tool {
 				return false;
 			}
 			if (renderer is IDataRenderer) {
-				var model:Object = IDataRenderer(renderer).data;
+				var model:Object = getModelWithDragController(renderer);
 				return diagramShell.getControllerProvider(model).getDragController(model) != null &&
 					   (diagramShell.selectedItems.getItemIndex(model) != -1);						
 			}
@@ -139,5 +139,17 @@ package org.flowerplatform.flexdiagram.tool {
 			return acceptedDraggableModels;
 		}
 		
+		private function getModelWithDragController(renderer:IVisualElement):Object {			
+			if (renderer is IDataRenderer) {	
+				var model:Object = IDataRenderer(renderer).data;
+				if (renderer is DiagramRenderer) {
+					return model;
+				}				
+				if (diagramShell.getControllerProvider(model).getDragController(model) != null) {
+					return model;
+				}				
+			}	
+			return getModelWithDragController(IVisualElement(renderer.parent));	
+		}
 	}
 }

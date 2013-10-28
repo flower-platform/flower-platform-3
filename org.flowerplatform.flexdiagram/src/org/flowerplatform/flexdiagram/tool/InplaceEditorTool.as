@@ -61,7 +61,7 @@ package org.flowerplatform.flexdiagram.tool {
 				if (renderer is IDataRenderer && !(renderer is DiagramRenderer)) {
 					var model:Object = IDataRenderer(renderer).data;
 					if (diagramShell.getControllerProvider(model).getInplaceEditorController(model) != null) {
-						var selected:Boolean = diagramShell.selectedItems.getItemIndex(model) != -1;
+						var selected:Boolean = isSelected(renderer);
 						if (!selected || (selected && diagramShell.selectedItems.length > 1)) {
 							// if not selected or multiple selection
 							return false;
@@ -158,6 +158,25 @@ package org.flowerplatform.flexdiagram.tool {
 			delete context.wakedByMouseDownEvent;
 			delete context.wakedByRightClickEvent;
 		}
+		
+		/**
+		 * Walking on parent hierarchy, verifies if a model with selection controller
+		 * is selected or not.
+		 */ 
+		private function isSelected(renderer:IVisualElement):Boolean {
+			if (renderer is IDataRenderer) {	
+				var model:Object = IDataRenderer(renderer).data;				
+				if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {
+					return diagramShell.selectedItems.getItemIndex(model) != -1;
+				}								
+			}			 	
+			var parent:IVisualElement = IVisualElement(renderer.parent);
+			if (parent is DiagramRenderer) {
+				return false;
+			}	
+			return isSelected(parent);			
+		}
+		
 	}
 	
 }
