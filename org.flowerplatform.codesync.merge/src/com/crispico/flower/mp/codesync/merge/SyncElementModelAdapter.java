@@ -74,8 +74,16 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 		resource.getContents().add(element);
 	}
 	
+	/**
+	 * Checks for a {@link FeatureChange} on the name feature first.
+	 */
 	@Override
 	public String getLabel(Object modelElement) {
+		CodeSyncElement codeSyncElement = (CodeSyncElement) modelElement;
+		FeatureChange change = codeSyncElement.getFeatureChanges().get(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		if (change != null) { 
+			return (String) change.getNewValue();
+		}
 		return (String) getMatchKey(modelElement);
 	}
 
