@@ -85,13 +85,28 @@ package org.flowerplatform.editor.model.renderer {
 		override protected function measure():void {
 			super.measure();
 			
-			var command:MoveResizeServerCommand = new MoveResizeServerCommand();
-			command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
-			command.newWidth = measuredWidth;
-			command.newHeight = measuredHeight;
-			command.newX = x;
-			command.newY = y;						
-			NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);	
+			var newWidth:Number = width;
+			var newHeight:Number = height;
+			var sizeChanged:Boolean = false;
+			
+			if (measuredWidth > newWidth) { 
+				newWidth = measuredWidth;
+				sizeChanged = true;
+			}
+			if (measuredHeight > newHeight) {
+				newHeight = measuredHeight;
+				sizeChanged = true;
+			}
+			if (sizeChanged) { 
+				// send new size to server only if measured width/height is greater than current size
+				var command:MoveResizeServerCommand = new MoveResizeServerCommand();
+				command.id = Node(data).layoutConstraint_RH.referenceIdAsString;
+				command.newWidth = newWidth;
+				command.newHeight = newHeight;
+				command.newX = x;
+				command.newY = y;						
+				NotationDiagramShell(diagramShell).editorStatefulClient.attemptUpdateContent(null, command);	
+			}
 		}
 		
 		private function modelChangedHandler(event:PropertyChangeEvent):void {			

@@ -31,7 +31,7 @@
 	creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.editor.model.*" >
 	
 		<s:layout>
-			<model:BoxRendererLayout />
+			<model:BoxRendererLayout gap="1" />
 		</s:layout>
 		
 	<fx:Script>

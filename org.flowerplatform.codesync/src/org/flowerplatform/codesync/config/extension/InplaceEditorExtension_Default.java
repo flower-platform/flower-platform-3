@@ -34,6 +34,9 @@ public class InplaceEditorExtension_Default implements InplaceEditorExtension {
 	@Override
 	public boolean setInplaceEditorText(View view, String text,	Map<String, Object> parameters) throws  InplaceEditorParseException {
 		CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
+		if (cse == null) {
+			return true;
+		}
 		String inplaceEditorFeature = getInplaceEditorFeature(cse);
 		if (inplaceEditorFeature  != "") {
 			// TODO CC: temporary code (to be replaced will the commented one
