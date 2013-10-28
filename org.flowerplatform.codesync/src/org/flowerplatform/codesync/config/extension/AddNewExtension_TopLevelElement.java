@@ -88,7 +88,8 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 			CodeSyncElement parent = getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, location.split("/"));
 			CodeSyncElement file = CodeSyncOperationsService.getInstance().create(CodeSyncPlugin.FILE);
 			CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
-			file.setName(descriptor.getDefaultName() + "." + descriptor.getExtension()); // TODO numbering logic
+			CodeSyncOperationsService.getInstance().setKeyFeatureValue(file,  
+					descriptor.getDefaultName() + "." + descriptor.getExtension()); // TODO numbering logic
 			CodeSyncOperationsService.getInstance().add(parent, file);
 			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
 		}
@@ -111,7 +112,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 	public static CodeSyncElement getOrCreateCodeSyncElementForLocation(Resource codeSyncMappingResource, String[] path) {
 		CodeSyncRoot root = null;
 		for (EObject eObject : codeSyncMappingResource.getContents()) {
-			if (((CodeSyncRoot) eObject).getName().equals(path[0])) {
+			if ((CodeSyncOperationsService.getInstance().getKeyFeatureValue((CodeSyncRoot) eObject)).equals(path[0])) {
 				root = (CodeSyncRoot) eObject;
 				break;
 			}
@@ -119,7 +120,8 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 		// no SrcDir => create it
 		if (root == null) {
 			root = CodeSyncFactory.eINSTANCE.createCodeSyncRoot();
-			root.setName(path[0]);
+			root.setType(CodeSyncPlugin.FOLDER);
+			CodeSyncOperationsService.getInstance().setKeyFeatureValue(root, path[0]);
 			root.setAdded(true);
 			root.setType(CodeSyncPlugin.FOLDER);
 			codeSyncMappingResource.getContents().add(root);
@@ -129,7 +131,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 		for (int i = 1; i < path.length; i++) {
 			boolean foundElement = false;
 			for (CodeSyncElement child : codeSyncElement.getChildren()) {
-				if (child.getName().equals(path[i])) {
+				if (CodeSyncOperationsService.getInstance().getKeyFeatureValue(child).equals(path[i])) {
 					codeSyncElement = child;
 					foundElement = true;
 					break;
@@ -137,7 +139,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 			}
 			if (!foundElement) {
 				CodeSyncElement child = CodeSyncOperationsService.getInstance().create(CodeSyncPlugin.FOLDER);
-				child.setName(path[i]);
+				CodeSyncOperationsService.getInstance().setKeyFeatureValue(child, path[i]);
 				CodeSyncOperationsService.getInstance().add(codeSyncElement, child);
 				codeSyncElement = child;
 			}

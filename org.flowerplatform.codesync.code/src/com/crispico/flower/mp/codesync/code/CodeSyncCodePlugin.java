@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -195,7 +196,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		for (int i = 0; i < path.length; i++) {
 			boolean foundChild = false;
 			for (CodeSyncElement cse : codeSyncElement.getChildren()) {
-				if (cse.getName().equals(path[i])) {
+				String name = (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(cse);
+				if (name.equals(path[i])) {
 					codeSyncElement = cse;
 					foundChild = true;
 					break;

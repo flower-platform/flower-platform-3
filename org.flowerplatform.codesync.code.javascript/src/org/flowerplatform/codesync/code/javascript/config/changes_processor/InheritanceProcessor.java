@@ -1,7 +1,6 @@
 package org.flowerplatform.codesync.code.javascript.config.changes_processor;
 
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
-import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class InheritanceProcessor extends AttributeWithRequireEntryDependencyPro
 	@Override
 	protected void updateSource(Relation relation, CodeSyncElement sourceClass, CodeSyncElement targetClass) {
 		// set the attribute value
-		String className = (String) CodeSyncOperationsService.getInstance().getFeatureValue(targetClass, FeatureAccessExtension.CODE_SYNC_NAME);
+		String className = (String) CodeSyncOperationsService.getInstance().getFeatureValue(targetClass, JavaScriptDescriptors.FEATURE_NAME);
 		if (logger.isDebugEnabled()) {
 			logger.debug("For class = {}, setting superClass = {}", sourceClass, className);
 		}

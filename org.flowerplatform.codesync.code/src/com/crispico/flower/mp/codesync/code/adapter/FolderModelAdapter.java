@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -76,7 +78,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
 			CodeSyncElement cse = (CodeSyncElement) correspondingChild;
-			return new File(getFolder(element), cse.getName());
+			return new File(getFolder(element), (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(cse));
 		}
 		return null;
 	}
