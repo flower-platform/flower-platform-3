@@ -25,6 +25,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -120,7 +122,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		
 		// replace the parameters with their values from the node
 		for (RegExAstNodeParameter parameter : node.getParameters()) {
-			template = template.replaceAll("@" + parameter.getName(), parameter.getValue());
+			template = template.replaceAll("@" + parameter.getName(), Matcher.quoteReplacement(parameter.getValue()));
 		}
 		
 		// load children templates
