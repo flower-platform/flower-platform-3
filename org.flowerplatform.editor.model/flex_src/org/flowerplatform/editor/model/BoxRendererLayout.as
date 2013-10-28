@@ -54,17 +54,18 @@ package org.flowerplatform.editor.model {
 			var sizeChanged:Boolean = false;
 			if (layoutTarget.measuredWidth > layoutTarget.width) {
 				// children calculated width greater than parent's width
-				layoutTarget.width = Math.ceil(layoutTarget.measuredWidth);
-				layoutTarget.minWidth = Math.ceil(layoutTarget.measuredMinWidth); 
+				layoutTarget.width = Math.ceil(layoutTarget.measuredWidth);				
 				sizeChanged = true;
 			}
+			layoutTarget.minWidth = Math.ceil(layoutTarget.measuredMinWidth);
+			
 			if (layoutTarget.measuredHeight > layoutTarget.height) {
 				// children calculated height greater than parent's height
-				layoutTarget.height = Math.ceil(layoutTarget.measuredHeight);  
-				layoutTarget.minHeight = Math.ceil(layoutTarget.measuredMinHeight); 
+				layoutTarget.height = Math.ceil(layoutTarget.measuredHeight);  				 
 				sizeChanged = true;
 			} 
-						
+			layoutTarget.minHeight = Math.ceil(layoutTarget.measuredMinHeight);
+			
 			if (sizeChanged) { // save size to server
 				var renderer:BoxRenderer = BoxRenderer(layoutTarget);						
 				var command:MoveResizeServerCommand = new MoveResizeServerCommand();

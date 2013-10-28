@@ -1,7 +1,7 @@
 package org.flowerplatform.codesync.code.javascript.config.changes_processor;
 
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
