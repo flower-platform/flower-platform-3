@@ -26,7 +26,7 @@
 				width="100%">
 	
 	<s:layout>
-		<s:HorizontalLayout/>
+		<s:VerticalLayout gap="1" />
 	</s:layout>
 	
 	<fx:Script>
@@ -89,26 +89,24 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<s:VGroup width="100%">
 		
-		<s:Line width="100%">
-			<s:stroke>
-				<s:SolidColorStroke color="#000000" weight="1" caps="square"/>
-			</s:stroke>
-		</s:Line>
+	<s:Line width="100%">
+		<s:stroke>
+			<s:SolidColorStroke color="#000000" weight="1" caps="square"/>
+		</s:stroke>
+	</s:Line>
 		
-		<s:HGroup width="100%" paddingLeft="2" paddingRight="2">
-			
-			<s:Button icon="{getResourceUrl(EditorModelPlugin.getInstance().getResourceUrl('images/obj16/collapseall.gif'))}" 
-					  click="{collapse()}"
-					  width="16" height="16"
-					  styleName="borderlessButton"/>
-			<s:Label text="{title}" width="100%" textAlign="center"/>
-			<s:Button icon="{EditorModelPlugin.getInstance().getComposedImageUrl(newChildIcon)}" 
-					  click="{addNew()}"
-					  width="16" height="16"
-					  styleName="borderlessButton"/>
-		</s:HGroup>
-	</s:VGroup>
+	<s:HGroup width="100%" paddingLeft="2" paddingRight="2" verticalAlign="middle">
+		
+		<s:Button icon="{getResourceUrl(EditorModelPlugin.getInstance().getResourceUrl('images/obj16/collapseall.gif'))}" 
+				  click="{collapse()}"
+				  width="16" height="16"
+				  styleName="borderlessButton"/>
+		<s:Label text="{title}" width="100%" textAlign="center"/>
+		<s:Button icon="{EditorModelPlugin.getInstance().getComposedImageUrl(newChildIcon)}" 
+				  click="{addNew()}"
+				  width="16" height="16"
+				  styleName="borderlessButton"/>
+	</s:HGroup>
 	
 </s:DataRenderer>
