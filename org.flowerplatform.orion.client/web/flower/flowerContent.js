@@ -289,7 +289,7 @@ define(['i18n!orion/navigate/nls/messages', 'require', 'orion/webui/littlelib', 
 						}
 					};
 					name = window.prompt("Name:");
-	    			if (name) {
+	    			if (name != "null") {
 	    				createFunction(name);
 	    			}					   	   
 			   },
