@@ -162,8 +162,8 @@ package org.flowerplatform.editor {
 			if (evt.newView is IDirtyStateProvider) {
 				editorInputChangedForComponent(IDirtyStateProvider(evt.newView));
 			} else {
-				/*saveAction.enabled = false;
-				saveAction.currentEditorStatefulClient = null;*/
+				saveAction.enabled = false;
+				saveAction.currentEditorStatefulClient = null;
 			}
 		}
 
