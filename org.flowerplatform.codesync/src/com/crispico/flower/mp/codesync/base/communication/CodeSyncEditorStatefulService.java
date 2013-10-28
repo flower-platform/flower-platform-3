@@ -18,7 +18,6 @@
  */
 package com.crispico.flower.mp.codesync.base.communication;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
 
 import org.flowerplatform.communication.CommunicationPlugin;

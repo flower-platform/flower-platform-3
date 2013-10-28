@@ -59,8 +59,7 @@ public class TopLevelElementChildProcessor extends CodeSyncDecoratorsProcessor {
 			}
 			return (String) parameters.get(InplaceEditorExtension.VIEW_TEXT);
 		}
-		String name = (String) CodeSyncOperationsService.getInstance()
-				.getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		String name = (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(cse);
 		return name;
 	}
 

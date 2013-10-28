@@ -23,9 +23,7 @@ public class InplaceEditorExtension_Default implements InplaceEditorExtension {
 		
 		String inplaceEditorFeature = getInplaceEditorFeature(cse);
 		if (inplaceEditorFeature != "") {
-			// TODO CC: temporary code (to be replaced will the commented one
-			parameters.put(VIEW_TEXT, CodeSyncOperationsService.getInstance().getFeatureValue(cse, FeatureAccessExtension.CODE_SYNC_NAME));
-//			parameters.put(VIEW_TEXT, CodeSyncOperationsService.getInstance().getFeatureValue(cse, inplaceEditorFeature));
+			parameters.put(VIEW_TEXT, CodeSyncOperationsService.getInstance().getFeatureValue(cse, inplaceEditorFeature));
 			return false;
 		}
 		return true;
@@ -39,9 +37,7 @@ public class InplaceEditorExtension_Default implements InplaceEditorExtension {
 		}
 		String inplaceEditorFeature = getInplaceEditorFeature(cse);
 		if (inplaceEditorFeature  != "") {
-			// TODO CC: temporary code (to be replaced will the commented one
-			CodeSyncOperationsService.getInstance().setFeatureValue(cse, FeatureAccessExtension.CODE_SYNC_NAME, text);
-//			CodeSyncOperationsService.getInstance().setFeatureValue(cse, inplaceEditorFeature, text);
+			CodeSyncOperationsService.getInstance().setFeatureValue(cse, inplaceEditorFeature, text);
 			return false;
 		}
 		return true;

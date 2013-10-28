@@ -1,7 +1,6 @@
 package org.flowerplatform.codesync.code.javascript.config.changes_processor;
 
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
-import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 	@Override
 	protected void updateSource(Relation relation, CodeSyncElement sourceAttribute, CodeSyncElement targetClass) {
 		// set the attribute value
-		String className = (String) CodeSyncOperationsService.getInstance().getFeatureValue(targetClass, FeatureAccessExtension.CODE_SYNC_NAME);
+		String className = (String) CodeSyncOperationsService.getInstance().getFeatureValue(targetClass, JavaScriptDescriptors.FEATURE_NAME);
 		if (logger.isDebugEnabled()) {
 			logger.debug("For attribute = {}, setting default value = {}", sourceAttribute, className);
 		}
@@ -39,7 +38,7 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 			if (!JavaScriptDescriptors.TYPE_REQUIRE_ENTRY.equals(child.getType())) {
 				continue;
 			}
-			if (className.equals(CodeSyncOperationsService.getInstance().getFeatureValue(child, FeatureAccessExtension.CODE_SYNC_NAME))) {
+			if (className.equals(CodeSyncOperationsService.getInstance().getFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME))) {
 				foundCorrespondingRequiresEntry = true;
 				break;
 			}
