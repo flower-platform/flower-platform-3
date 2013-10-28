@@ -20,16 +20,18 @@
 -->
 <!--- 
 @author Cristian Spiescu
+@author Cristina Constantinescu
 -->
 <s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware, mx.managers.IFocusManagerComponent"
 	cacheAsBitmap="true"  
 	xmlns:fx="http://ns.adobe.com/mxml/2009" 
 	xmlns:s="library://ns.adobe.com/flex/spark" 
 	xmlns:mx="library://ns.adobe.com/flex/mx"
+	initialize="initializeHandler(event)"
 	creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.editor.model.*" >
 	
 		<s:layout>
-			<model:BoxRendererLayout />
+			<model:BoxRendererLayout gap="1" />
 		</s:layout>
 		
 	<fx:Script>
@@ -165,14 +167,17 @@
 			}
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
-				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
-
 				addEffects();
 				addShadow();
 				
 				shapeDrawer = new ShapeDrawer(ShapeDrawer.RECTANGLE, this, true, true);
 			}
-			
+						
+			protected function initializeHandler(event:FlexEvent):void {
+				// add event at initialization because the resize handler must be notified also
+				// when a child initial size is greater than its parent (the box renderer)
+				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
+			}
 			
 		]]>
 	</fx:Script>

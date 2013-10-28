@@ -78,9 +78,9 @@ CodeSyncPlugin.instance.codeSyncTypeCriterionDispatcherProcessor.addProcessor("b
 // and another processor by extending an existing one
 importClass(org.flowerplatform.codesync.remote.CodeSyncOperationsService);
 importClass(com.crispico.flower.mp.model.codesync.CodeSyncPackage);
-importClass(org.flowerplatform.codesync.processor.CodeSyncDecoratorsProcessor);
+importClass(org.flowerplatform.codesync.processor.TopLevelElementChildProcessor);
 
-var proc = new JavaAdapter(CodeSyncDecoratorsProcessor, {
+var proc = new JavaAdapter(TopLevelElementChildProcessor, {
 	getLabel: function(object, forEditing) {
 		var name = CodeSyncOperationsService.instance
 				.getFeatureValue(object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());

@@ -20,6 +20,7 @@ package org.flowerplatform.editor.model.java;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.common.ied.InplaceEditorLabelParseResult;
+import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -31,7 +32,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavaClassAttributeProcessor extends JavaClassChildProcessor {
 
 	@Override
-	public String getLabel(EObject object, boolean forEditing) {
+	public String getLabel(EObject object, View view, boolean forEditing) {
 		CodeSyncElement cse = getCodeSyncElement(object);
 		// temp comment
 //		return labelParser.createAttributeLabel(

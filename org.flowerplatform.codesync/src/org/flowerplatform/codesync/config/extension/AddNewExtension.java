@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.operation_extension;
+package org.flowerplatform.codesync.config.extension;
 
 import java.util.Map;
 

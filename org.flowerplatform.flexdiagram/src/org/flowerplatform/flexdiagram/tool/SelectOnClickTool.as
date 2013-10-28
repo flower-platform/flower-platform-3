@@ -22,6 +22,7 @@ package org.flowerplatform.flexdiagram.tool {
 	import flash.events.MouseEvent;
 	import flash.ui.Keyboard;
 	
+	import mx.charts.renderers.DiamondItemRenderer;
 	import mx.core.Application;
 	import mx.core.FlexGlobals;
 	import mx.core.IDataRenderer;
@@ -66,9 +67,8 @@ package org.flowerplatform.flexdiagram.tool {
 				}
 				
 				if (renderer is IDataRenderer) {
-					var model:Object;
-					model = IDataRenderer(renderer).data;
-					if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {						
+					var model:Object = getModelWithSelectionController(renderer);
+					if (!(diagramShell.getRendererForModel(model) is DiagramRenderer)) {						
 						context.wakedByMouseDownEvent = (diagramShell.selectedItems.length > 1 || diagramShell.selectedItems.getItemIndex(model) == -1) || context.ctrlPressed || context.shiftPressed;
 					}				
 				}				
@@ -84,8 +84,8 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 			
 		override public function activateAsMainTool():void {			
-			var renderer:IDataRenderer = IDataRenderer(getRendererFromDisplayCoordinates());
-			var model:Object = renderer.data;
+			var renderer:IVisualElement = getRendererFromDisplayCoordinates();
+			var model:Object = getModelWithSelectionController(renderer);
 			if (renderer is DiagramRenderer) {
 				addModelByResettingSelection(model);
 			} else {				
@@ -137,6 +137,19 @@ package org.flowerplatform.flexdiagram.tool {
 		
 		override public function reset():void {				
 			delete context.wakedByMouseDownEvent;
+		}
+		
+		private function getModelWithSelectionController(renderer:IVisualElement):Object {			
+			if (renderer is IDataRenderer) {	
+				var model:Object = IDataRenderer(renderer).data;
+				if (renderer is DiagramRenderer) {
+					return model;
+				}				
+				if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {
+					return model;
+				}				
+			}	
+			return getModelWithSelectionController(IVisualElement(renderer.parent));	
 		}
 	}	
 }

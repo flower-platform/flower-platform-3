@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.operation_extension;
+package org.flowerplatform.codesync.config.extension;
 
 import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.PARENT_CODE_SYNC_ELEMENT;
 import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.VIEW;
@@ -41,7 +41,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 /**
  * @author Mariana Gheorghe
  */
-public class AddNewTopLevelElementExtension implements AddNewExtension {
+public class AddNewExtension_TopLevelElement implements AddNewExtension {
 
 	public static final String X = "x";
 	public static final String Y = "y";

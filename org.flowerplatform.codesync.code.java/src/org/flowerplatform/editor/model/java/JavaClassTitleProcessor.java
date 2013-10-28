@@ -20,6 +20,7 @@ package org.flowerplatform.editor.model.java;
 
 import org.eclipse.emf.ecore.EObject;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -30,7 +31,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public class JavaClassTitleProcessor extends JavaClassChildProcessor {
 
 	@Override
-	public String getLabel(EObject object, boolean forEditing) {
+	public String getLabel(EObject object, View view, boolean forEditing) {
 		return (String) CodeSyncOperationsService.getInstance()
 				.getFeatureValue((CodeSyncElement) object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
 	}

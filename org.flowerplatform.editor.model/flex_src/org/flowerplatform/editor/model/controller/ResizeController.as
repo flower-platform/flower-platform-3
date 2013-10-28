@@ -103,16 +103,6 @@ package org.flowerplatform.editor.model.controller {
 					break;
 			}
 
-			// correction needed when x and y values are negative
-			if (newX < 0) {
-				newWidth += newX;
-				newX = 0; 
-			}
-			if (newY < 0) {
-				newHeight += newY;
-				newY = 0;
-			}
-			
 			var renderer:IVisualElement = diagramShell.getRendererForModel(model);
 			resizePlaceHolder.x = newX;
 			resizePlaceHolder.y = newY;

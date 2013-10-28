@@ -49,7 +49,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer;
 	import org.flowerplatform.editor.model.renderer.DiagramNoteRenderer;
 	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
-
 	import org.flowerplatform.emf_model.notation.Bounds;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Edge;
@@ -76,11 +75,14 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
+	import org.flowerplatform.flexutil.text.AutoGrowTextArea;
 	import org.flowerplatform.properties.PropertiesItemRenderer;
 	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.properties.action.ShowPropertiesAction;
 	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
+	
+	import spark.components.TextInput;
 	
 	/**
 	 * @author Cristi
@@ -142,12 +144,16 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
 			if (!FlexUtilGlobals.getInstance().isMobile) {
-				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController);
+				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController, {rendererClass : TextInput});
 			}
 			
 			// these controllerProvFactories are registered directly in composedControllerProviderFactories; not in standardControllerProviderFactories
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
+			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			if (!FlexUtilGlobals.getInstance().isMobile) {
+				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController, {rendererClass : TextInput});
+			}
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["topLevelBoxTitle"] = composedControllerProviderFactory;
 			
 			// TODO CC/JS to delete, and change to model desc			
@@ -159,6 +165,9 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
 			composedControllerProviderFactory.resizeControllerClass = new FactoryWithInitialization(ResizeController);			
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: DiagramNoteRenderer});
+			if (!FlexUtilGlobals.getInstance().isMobile) {
+				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController, {rendererClass : AutoGrowTextArea});
+			}			
 			EditorModelPlugin.getInstance().composedControllerProviderFactories["classDiagram.note"] = composedControllerProviderFactory;
 			
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();

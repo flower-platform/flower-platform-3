@@ -25,14 +25,19 @@ package org.flowerplatform.flexdiagram.util {
 	import flash.geom.Matrix;
 	
 	import mx.core.UIComponent;
+	import mx.managers.IFocusManagerComponent;
 		
 	/**
 	 * Graphical component that fills the surface with horizontal and/or vertical lines or bars.
 	 * 
+	 * <code>IFocusManagerComponent</code> needed to set focus on diagram
+	 * when clicking on the grid.
+	 * 
 	 * @author Luiza
+	 * @author Cristina Constantinescu
 	 */ 
 	[SecureSWF(rename="off")]
-	public class RectangularGrid extends UIComponent {
+	public class RectangularGrid extends UIComponent implements IFocusManagerComponent {
 		
 		protected var _drawHorizontalLines:Boolean = true;
 		

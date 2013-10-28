@@ -1,15 +1,17 @@
 package org.flowerplatform.editor.model.changes_processor;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
+import org.flowerplatform.codesync.config.extension.AddNewExtension_TopLevelElement;
 import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
-import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
@@ -20,13 +22,10 @@ import org.flowerplatform.editor.model.java.remote.NewJavaClassDiagramAction;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.tests.TestUtil;
-import org.flowerplatform.web.tests.codesync.CodeSyncJavascriptTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.communication.CodeSyncEditorStatefulService;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
@@ -91,7 +90,7 @@ public class ChangesProcessorTest {
 	public void testAddRemove() {
 		// TODO CS the static references
 		final Resource codeSyncMappingResource = CodeSyncDiagramOperationsService1.getCodeSyncMappingResource(diagramEditableResource);
-		final CodeSyncElement srcDir = AddNewTopLevelElementExtension.getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, new String[] { "js" });
+		final CodeSyncElement srcDir = AddNewExtension_TopLevelElement.getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, new String[] { "js" });
 		
 		/**
 		 * Adding on an empty list.

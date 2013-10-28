@@ -46,18 +46,22 @@ package org.flowerplatform.flexdiagram.tool {
 		public function InplaceEditorTool(diagramShell:DiagramShell) {
 			super(diagramShell);
 			
+			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_RIGHT_CLICK);		
 			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_DOWN, -1);
 			WakeUpTool.wakeMeUpIfEventOccurs(diagramShell, this, WakeUpTool.MOUSE_UP);			
 		}
 		
-		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {			
-			if (eventType == WakeUpTool.MOUSE_DOWN) {
+		public function wakeUp(eventType:String, initialEvent:MouseEvent):Boolean {	
+			if (eventType == WakeUpTool.MOUSE_RIGHT_CLICK) {
+				// right click event performed (opens menu) -> don't activate
+				context.wakedByRightClickEvent = true;
+			} else if (eventType == WakeUpTool.MOUSE_DOWN) {
 				context.wakedByMouseDownEvent = false;
 				var renderer:IVisualElement = getRendererFromDisplayCoordinates();
 				if (renderer is IDataRenderer && !(renderer is DiagramRenderer)) {
 					var model:Object = IDataRenderer(renderer).data;
 					if (diagramShell.getControllerProvider(model).getInplaceEditorController(model) != null) {
-						var selected:Boolean = diagramShell.selectedItems.getItemIndex(model) != -1;
+						var selected:Boolean = isSelected(renderer);
 						if (!selected || (selected && diagramShell.selectedItems.length > 1)) {
 							// if not selected or multiple selection
 							return false;
@@ -66,7 +70,7 @@ package org.flowerplatform.flexdiagram.tool {
 						return false;
 					}
 				}
-			} else if (context.wakedByMouseDownEvent) {
+			} else if (context.wakedByMouseDownEvent && !context.wakedByRightClickEvent) {
 				return true;
 			}
 			return false;
@@ -125,7 +129,7 @@ package org.flowerplatform.flexdiagram.tool {
 					}
 					break;
 				case Keyboard.ENTER: // commit value			
-					if (this == diagramShell.mainTool) {
+					if (!event.ctrlKey && this == diagramShell.mainTool) {
 						diagramShell.getControllerProvider(context.model).
 							getInplaceEditorController(context.model).commit(context.model);
 					}					
@@ -151,8 +155,28 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		override public function reset():void {				
-			delete context.wakedByMouseDownEvent;			
+			delete context.wakedByMouseDownEvent;
+			delete context.wakedByRightClickEvent;
 		}
+		
+		/**
+		 * Walking on parent hierarchy, verifies if a model with selection controller
+		 * is selected or not.
+		 */ 
+		private function isSelected(renderer:IVisualElement):Boolean {
+			if (renderer is IDataRenderer) {	
+				var model:Object = IDataRenderer(renderer).data;				
+				if (diagramShell.getControllerProvider(model).getSelectionController(model) != null) {
+					return diagramShell.selectedItems.getItemIndex(model) != -1;
+				}								
+			}			 	
+			var parent:IVisualElement = IVisualElement(renderer.parent);
+			if (parent is DiagramRenderer) {
+				return false;
+			}	
+			return isSelected(parent);			
+		}
+		
 	}
 	
 }

@@ -43,10 +43,13 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
-import org.flowerplatform.codesync.operation_extension.AddNewExtension;
-import org.flowerplatform.codesync.operation_extension.AddNewNoteExtension;
-import org.flowerplatform.codesync.operation_extension.AddNewTopLevelElementExtension;
-import org.flowerplatform.codesync.operation_extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.config.extension.AddNewExtension;
+import org.flowerplatform.codesync.config.extension.AddNewExtension_Note;
+import org.flowerplatform.codesync.config.extension.AddNewExtension_TopLevelElement;
+import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
+import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Default;
+import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Note;
 import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
@@ -113,6 +116,11 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected List<FeatureAccessExtension> featureAccessExtensions;
 	
 	protected List<AddNewExtension> addNewExtensions;
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	protected List<InplaceEditorExtension> inplaceEditorExtensions;
 	
 	protected CodeSyncTypeCriterionDispatcherProcessor codeSyncTypeCriterionDispatcherProcessor;
 	
@@ -195,6 +203,13 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		return addNewExtensions;
 	}
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	public List<InplaceEditorExtension> getInplaceEditorExtensions() {
+		return inplaceEditorExtensions;
+	}
+
 	public boolean useUIDs() {
 		return useUIDs;
 	}
@@ -202,6 +217,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Mariana Gheorge
 	 * @author Mircea Negreanu
+	 * @author Cristina Constantinescu
 	 */
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -218,6 +234,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		relationDescriptors = new ArrayList<RelationDescriptor>();
 		
 		addNewExtensions = new ArrayList<AddNewExtension>();
+		inplaceEditorExtensions = new ArrayList<InplaceEditorExtension>();
 		
 		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
 		
@@ -241,8 +258,11 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 
 				// extensions
-				addNewExtensions.add(new AddNewNoteExtension());	
-				addNewExtensions.add(new AddNewTopLevelElementExtension());							
+				getAddNewExtensions().add(new AddNewExtension_Note());	
+				getAddNewExtensions().add(new AddNewExtension_TopLevelElement());							
+				
+				getInplaceEditorExtensions().add(new InplaceEditorExtension_Default());
+				getInplaceEditorExtensions().add(new InplaceEditorExtension_Note());
 				
 				// processors
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());

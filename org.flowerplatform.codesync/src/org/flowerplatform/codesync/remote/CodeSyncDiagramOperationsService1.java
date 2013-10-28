@@ -27,8 +27,13 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.flowerplatform.codesync.operation_extension.AddNewExtension;
+import org.flowerplatform.codesync.config.extension.AddNewExtension;
+import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
+import org.flowerplatform.codesync.config.extension.InplaceEditorParseException;
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.ied.InplaceEditorException;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
@@ -192,15 +197,59 @@ public class CodeSyncDiagramOperationsService1 {
 		view.getPersistentChildren().add(categorySeparator);
 	}
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	@RemoteInvocation
-	public String getInplaceEditorText(String viewId) {
-		// TODO
-		return null;
+	public String getInplaceEditorText(ServiceInvocationContext context, String viewId) {
+		View view = getViewById(context.getAdditionalData(), viewId);
+				
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		for (InplaceEditorExtension extension : CodeSyncPlugin.getInstance().getInplaceEditorExtensions()) {
+			try {
+				if (!extension.getInplaceEditorText(view, parameters)) {
+					// the extension provided the right text, so don't continue with the others
+					break;
+				}
+			} catch (InplaceEditorParseException e) {
+				// the extension had to provide the right text, but something happened
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								e.getMessage(), 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));
+			}
+		}
+			
+		if (!parameters.containsKey(InplaceEditorExtension.VIEW_TEXT)) {
+			throw new RuntimeException("'parameters' doesn't contain key InplaceEditorExtension.VIEW_TEXT!");
+		}
+		return (String) parameters.get(InplaceEditorExtension.VIEW_TEXT);
 	}
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	@RemoteInvocation
-	public void setInplaceEditorText(String viewId, String text) {
-		// TODO
+	public void setInplaceEditorText(ServiceInvocationContext context, String viewId, String text) {
+		View view = getViewById(context.getAdditionalData(), viewId);
+		
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		for (InplaceEditorExtension extension : CodeSyncPlugin.getInstance().getInplaceEditorExtensions()) {
+			try {
+				if (!extension.setInplaceEditorText(view, text, parameters)) {	
+					// the extension set the new text, so don't continue with the others
+					break;
+				}
+			} catch (InplaceEditorParseException e) {
+				// the extension had to set the new text, but something happened
+				context.getCommunicationChannel().appendOrSendCommand(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								e.getMessage(), 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));
+			}
+		}
 	}
 	
 	public void addNewRelation(ServiceInvocationContext context, String type, String sourceViewId, String targetViewId) {

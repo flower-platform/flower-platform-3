@@ -19,12 +19,9 @@
 package org.flowerplatform.codesync.processor;
 
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.change_processor.IconDiagrammableElementFeatureChangesProcessor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.crispico.flower.mp.model.codesync.CodeSyncElement;
-import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 import com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl;
 
 /**
@@ -32,7 +29,7 @@ import com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl;
  * @author Mariana Gheorghe
  * @author Mircea Negreanu
  */
-public class CodeSyncDecoratorsProcessor extends
+public abstract class CodeSyncDecoratorsProcessor extends
 		IconDiagrammableElementFeatureChangesProcessor {
 
 	@Override
@@ -76,21 +73,7 @@ public class CodeSyncDecoratorsProcessor extends
 		}
 		return codeSyncPackage + image;
 	}
-	
-	@Override
-	public String getLabel(EObject object, boolean forEditing) {
-		CodeSyncElement cse = (CodeSyncElement) object;
-		String name = (String) CodeSyncOperationsService.getInstance()
-				.getFeatureValue(cse, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		return name;
-	}
 
-	public String getIconBeforeCodeSyncDecoration(EObject object) {
-		CodeSyncElement element = getCodeSyncElement(object);
-		return CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(element.getType()).getIconUrl();
-	}
+	abstract public String getIconBeforeCodeSyncDecoration(EObject object);
 	
-	protected CodeSyncElement getCodeSyncElement(EObject object) {
-		return (CodeSyncElement) object;
-	}
 }
