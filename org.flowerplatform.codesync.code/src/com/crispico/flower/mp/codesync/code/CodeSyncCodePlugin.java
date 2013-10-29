@@ -173,11 +173,12 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncElement codeSyncElement = getCodeSyncElement(srcDir, fragments);
 		
 		String srcDirPath = CommonPlugin.getInstance().getPathRelativeToFile(srcDirFile, project);
+		String relativeToProject = CommonPlugin.getInstance().getPathRelativeToFile(file, project);
 		if (codeSyncElement == null || showDialog) {
-			runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToSrcDir, technology, communicationChannel, showDialog);
+			runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToProject, technology, communicationChannel, showDialog);
 		} else {
 			if (showDialog) {
-				runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToSrcDir, technology, communicationChannel, showDialog);
+				runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToProject, technology, communicationChannel, showDialog);
 			}
 			return codeSyncElement;
 		}
@@ -243,7 +244,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		if (!limitedPath.startsWith("/")) {
 			limitedPath = "/" + limitedPath;
 		}
-		modelAdapterFactorySet.initialize(CodeSyncPlugin.getInstance().getAstCache(project, resourceSet), null, CodeSyncPlugin.getInstance().useUIDs());
+		modelAdapterFactorySet.initialize(CodeSyncPlugin.getInstance().getAstCache(project, resourceSet), limitedPath, CodeSyncPlugin.getInstance().useUIDs());
 		editableResource.setModelAdapterFactorySet(modelAdapterFactorySet);
 		
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);
