@@ -35,7 +35,7 @@ package org.flowerplatform.codesync.action {
 			super();
 			
 			preferShowOnActionBar = true;
-			label = "Show Descriptors";
+			label = CodeSyncPlugin.getInstance().getMessage("loadDesc.action.title");
 			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/Folder.gif");
 		}
 

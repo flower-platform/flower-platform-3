@@ -19,6 +19,7 @@
 package org.flowerplatform.codesync.views.loaded_descriptors {
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
@@ -41,7 +42,7 @@ package org.flowerplatform.codesync.views.loaded_descriptors {
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String {
-			return "Loaded Descriptors";
+			return CodeSyncPlugin.getInstance().getMessage("loadDesc.view.title");
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {

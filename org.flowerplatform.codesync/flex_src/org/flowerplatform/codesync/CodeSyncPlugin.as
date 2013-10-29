@@ -33,6 +33,7 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
+	import org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsView;
 	import org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsViewProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
@@ -131,6 +132,7 @@ package org.flowerplatform.codesync {
 		}
 		
 		/**
+		 * @author Mariana Gheorge
 		 * @author Mircea Negreanu
 		 */
 		public function loadDescriptorsFromServer():void {
@@ -150,6 +152,11 @@ package org.flowerplatform.codesync {
 			CommunicationPlugin.getInstance().bridge.sendObject(command);
 		}
 		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mariana Gheorghe
+		 * @author Mircea Negreanu
+		 */
 		protected function setCodeSyncElementDescriptorsCallback(codeSyncElementDescriptors:ArrayCollection):void {
 			this.codeSyncElementDescriptors = codeSyncElementDescriptors;
 			
@@ -160,6 +167,12 @@ package org.flowerplatform.codesync {
 			if (topLevelDescriptors != null) {
 				// TODO CS/JS: hardcoded diagram type
 				registerControllerProviderFactories("classDiagram", topLevelDescriptors);				
+			}
+			
+			// TEMPOARARY
+			// Notification to the LoadedDescriptorsView that new descriptors have been loaded
+			if (LoadedDescriptorsView.descriptorsView != null) {
+				LoadedDescriptorsView.descriptorsView.notificationDescriptorsLoaded();
 			}
 		}
 		
@@ -225,6 +238,11 @@ package org.flowerplatform.codesync {
 			}
 		}
 		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mariana Gheorghe
+		 * @author Mircea Negreanu
+		 */
 		protected function setRelationDescriptorsCallback(result:ArrayCollection):void {
 			relationDescriptors = result;
 			var addNewRelationActionProvider:VectorActionProvider = new VectorActionProvider();
@@ -233,6 +251,12 @@ package org.flowerplatform.codesync {
 				addNewRelationActionProvider.getActions(null).push(a);
 			}
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(addNewRelationActionProvider);
+			
+			// TEMPORARY
+			// notification to the LoadDescriptorsView that new descriptors were loaded from db
+			if (LoadedDescriptorsView.descriptorsView != null) {
+				LoadedDescriptorsView.descriptorsView.notificationDescriptorsLoaded();
+			}
 		}	
 		
 		public function getCodeSyncTypeFromView(potentialView:Object):String {

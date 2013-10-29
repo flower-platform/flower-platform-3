@@ -58,6 +58,15 @@ Displays all the loaded codeSyncElementDescriptors in a list
 	
 			private var _viewHost:IViewHost;
 			
+			/**
+			 * TEMPORARY 
+			 * static variable to be notified when descriptors are loaded
+			 */
+			public static var descriptorsView:LoadedDescriptorsView = null;
+			
+			/**
+			 * Properties menu action
+			 */
 			protected var actionProvider:ClassFactoryActionProvider = new ClassFactoryActionProvider()
 				.addActionClass(ShowPropertiesAction);
 			
@@ -102,6 +111,9 @@ Displays all the loaded codeSyncElementDescriptors in a list
 				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
 			}
 
+			/**
+			 * Convert selection to a list of StringSelectedItem (that are simpler)
+			 */
 			public function convertSelectionToSelectionForServer(selection:IList):IList {
 				if (selection == null) {
 					return selection;
@@ -120,35 +132,43 @@ Displays all the loaded codeSyncElementDescriptors in a list
 				return selectedItems;
 			}
 			
+			/**
+			 * When the button is clicked, ask the server to regenerate the descriptors
+			 */
 			protected function regenerateButton_clickHandler(event:MouseEvent):void {
 				var command:InvokeServiceMethodServerCommand = new InvokeServiceMethodServerCommand("codeSyncOperationsService", "regenerateDescriptors", null, this, regenerate_callback);
 				CommunicationPlugin.getInstance().bridge.sendObject(command);
 			}
 			
 			protected function regenerate_callback(result:String):void {
+				// TEMPORARY
+				// set the global variable to be notified when the descriptors are loaded
+				descriptorsView = this;
+				
 				// now reload descriptors on the flex side
 				CodeSyncPlugin.getInstance().loadDescriptorsFromServer();
 				
+				// show the resulting message
 				if (result != null && result.length > 0) {
 					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
 						.setText(result)
-						.setTitle("Regenerate Descriptors Results")
+						.setTitle(CodeSyncPlugin.getInstance().getMessage("loadDesc.view.regenerateResults"))
 						.setWidth(350)
 						.setHeight(300)
 						.showMessageBox();
 				} else {
 					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
-						.setText("No errors during regeneration")
-						.setTitle("Regenerate Descriptors Results")
+						.setText(CodeSyncPlugin.getInstance().getMessage("loadDesc.view.regenerateNoError"))
+						.setTitle(CodeSyncPlugin.getInstance().getMessage("loadDesc.view.regenerateResults"))
 						.setWidth(250)
 						.setHeight(200)
 						.showMessageBox();
 				}
-				
-				// regenerate the dataProvider
-//				list.dataProvider = generateListDataProvider();
 			}
 			
+			/**
+			 * On creation complete set the dataProvider on the list
+			 */
 			protected function view_creationCompleteHandler(event:FlexEvent):void {
 				list.dataProvider = generateListDataProvider();
 			}
@@ -161,6 +181,14 @@ Displays all the loaded codeSyncElementDescriptors in a list
 				return dataProvider;
 			}
 			
+			/**
+			 * TEMPORARY
+			 * TODO: TO be deleted
+			 * Notification that the descriptors have been loaded from the server
+			 */
+			public function notificationDescriptorsLoaded():void {
+				list.dataProvider = generateListDataProvider();
+			}
 		]]>
 	</fx:Script>
 	
@@ -169,12 +197,11 @@ Displays all the loaded codeSyncElementDescriptors in a list
 	</s:layout>
 
 	<s:Button id="regenerateButton"
-		label="Regenerate Descriptors"
+		label="{CodeSyncPlugin.getInstance().getMessage('loadDesc.view.regenerate')}"
 		click="regenerateButton_clickHandler(event)"/>
 	
 	<s:List id="list"
 		width="100%" height="100%"
-		dataProvider="{CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors()}"
 		change="selectionChangeHandler(event)"
 		/>
 </s:Group>
