@@ -319,11 +319,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 	
-	@Override
-	public void registerMessageBundle() throws Exception {
-		// no messages yet
-	}
-
 	/**
 	 * @author Mariana Gheorghe
 	 */
