@@ -38,7 +38,7 @@ import org.flowerplatform.common.regex.RegexWithAction;
  */
 public class Parser {
 
-	public static final String JS_FILE 				= "jsFile";
+	public static final String JS_FILE 				= "javaScriptFile";
 	public static final String HTML_FILE 			= "htmlFile";
 	
 	//////////////////////////////////

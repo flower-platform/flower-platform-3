@@ -33,6 +33,7 @@ public class JavaScriptDescriptors implements Runnable {
 	public static final String TYPE_REQUIRE_CLASS_DEPENDENCY = "requireClassDependency";
 	public static final String TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY = "requireHtmlTemplateDependency";
 	public static final String TYPE_INHERITANCE = "inheritance";
+	public static final String TYPE_JAVASCRIPT_FILE = "javaScriptFile";
 	
 	public static final String FEATURE_NAME = "name";
 	public static final String FEATURE_DEPENDENCY_PATH = "dependencyPath";
@@ -173,6 +174,22 @@ public class JavaScriptDescriptors implements Runnable {
 				.setKeyFeature("path")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 		);
+		
+		/////////////////////////////////////////
+		// TOP LEVEL
+		/////////////////////////////////////////
+		descriptors.add(
+				new CodeSyncElementDescriptor()
+				.setCodeSyncType(TYPE_JAVASCRIPT_FILE)
+				.addCodeSyncTypeCategory("topLevel")
+				.setLabel("JavaScript File")
+				.setIconUrl("images/full/obj16/jcu_obj.gif")
+				.setDefaultName("NewJavaScriptFile")
+				.setExtension(".js")
+				.addChildrenCodeSyncTypeCategory("backboneClassMember")
+				.addFeature(FEATURE_NAME)
+				.setKeyFeature(FEATURE_NAME)
+				.setStandardDiagramControllerProviderFactory("topLevelBox"));
 		
 		/////////////////////////////////////////
 		// TOP LEVEL
@@ -349,6 +366,7 @@ public class JavaScriptDescriptors implements Runnable {
 		// processors
 		ChildrenUpdaterDiagramProcessor parentElementProcessor = new ChildrenUpdaterDiagramProcessor();
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass", parentElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);
@@ -363,6 +381,8 @@ public class JavaScriptDescriptors implements Runnable {
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile.javaScriptAttribute", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
 						
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", childElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", childElementProcessor);
