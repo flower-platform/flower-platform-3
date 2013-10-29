@@ -34,6 +34,7 @@ package org.flowerplatform.editor.model.controller {
 	import org.flowerplatform.flexutil.text.AutoGrowSkinnableTextBaseSkin;
 	
 	import spark.components.TextArea;
+	import spark.components.TextInput;
 	import spark.components.supportClasses.SkinnableTextBase;
 	import spark.components.supportClasses.StyleableTextField;
 	
@@ -58,11 +59,12 @@ package org.flowerplatform.editor.model.controller {
 			var textField:SkinnableTextBase = new rendererClass();
 			textField.setStyle("skinClass", AutoGrowSkinnableTextBaseSkin);
 			
-			var skinClassFactory:ClassFactory = new ClassFactory();
-			skinClassFactory.generator = ContentAssistListTextAreaSkin;
-			skinClassFactory.properties = new Object();
-			skinClassFactory.properties.contentAssistProvider = new NotationDiagramContentAssistProvider(Node(model).id);
-			textField.setStyle("skinFactory", skinClassFactory);
+			// TODO CC: to reactivate
+//			var skinClassFactory:ClassFactory = new ClassFactory();
+//			skinClassFactory.generator = ContentAssistListTextAreaSkin;
+//			skinClassFactory.properties = new Object();
+//			skinClassFactory.properties.contentAssistProvider = new NotationDiagramContentAssistProvider(Node(model).id);
+//			textField.setStyle("skinFactory", skinClassFactory);
 			
 			diagramShell.diagramRenderer.addElement(textField);
 			
@@ -70,7 +72,11 @@ package org.flowerplatform.editor.model.controller {
 			textField.x = bounds.x + 2;
 			textField.y = bounds.y;
 			
-			textField.width = bounds.width;
+			if (textField is TextInput) {
+				textField.minWidth = bounds.width; // resize width if long text
+			} else {
+				textField.width = bounds.width;
+			}			
 			textField.minHeight = bounds.height;
 			
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_getInplaceEditorText(Node(model).id, function(text:String):void {

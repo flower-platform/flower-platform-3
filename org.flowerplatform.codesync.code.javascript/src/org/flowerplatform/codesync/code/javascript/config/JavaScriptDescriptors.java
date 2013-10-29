@@ -118,6 +118,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature(FEATURE_DEPENDENCY_PATH)
 				.setKeyFeature(FEATURE_VAR_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setInplaceEditorFeature("")
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -352,7 +353,7 @@ public class JavaScriptDescriptors implements Runnable {
 						"javaScriptAttribute", 
 						new String[] {NamedElementFeatureAccessExtension.NAME, "defaultValue"}, 
 						"%1$s=%2$s", 
-						"^(\\w*?)[=]*=(.*?)$");
+						"^(.\\w*?)[=]*=(.*?)$");
 		CodeSyncPlugin.getInstance().getInplaceEditorExtensions().add(javascriptAttributeInplaceEditorExtension);
 		
 		InplaceEditorExtension_RegExFormat javascriptOperationInplaceEditorExtension = 
@@ -360,8 +361,16 @@ public class JavaScriptDescriptors implements Runnable {
 						"javaScriptOperation", 
 						new String[] {NamedElementFeatureAccessExtension.NAME, "parameters"}, 
 						"%1$s(%2$s)", 
-						"(\\w*?)[\\(\\s]*\\([\\s]*(.*?)[\\s]*[\\)\\s]*\\)");
+						"(.\\w*?)[\\(\\s]*\\([\\s]*(.*?)[\\s]*[\\)\\s]*\\)");
 		CodeSyncPlugin.getInstance().getInplaceEditorExtensions().add(javascriptOperationInplaceEditorExtension);
+		
+		InplaceEditorExtension_RegExFormat requireEntryInplaceEditorExtension = 
+				new InplaceEditorExtension_RegExFormat(
+						JavaScriptDescriptors.TYPE_REQUIRE_ENTRY, 
+						new String[] {FEATURE_VAR_NAME, FEATURE_DEPENDENCY_PATH}, 
+						"%1$s:%2$s", 
+						"^(.\\w*?)[:]*:(.*?)$");
+		CodeSyncPlugin.getInstance().getInplaceEditorExtensions().add(requireEntryInplaceEditorExtension);
 		
 		// processors
 		ChildrenUpdaterDiagramProcessor parentElementProcessor = new ChildrenUpdaterDiagramProcessor();
@@ -381,9 +390,8 @@ public class JavaScriptDescriptors implements Runnable {
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile.javaScriptAttribute", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
-						
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", new TopLevelElementChildProcessor(requireEntryInplaceEditorExtension));
+
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", childElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", childElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", childElementProcessor);
