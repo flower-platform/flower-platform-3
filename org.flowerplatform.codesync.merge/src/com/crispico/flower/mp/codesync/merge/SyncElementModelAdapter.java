@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
@@ -74,8 +75,16 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 		resource.getContents().add(element);
 	}
 	
+	/**
+	 * Checks for a {@link FeatureChange} on the name feature first.
+	 */
 	@Override
 	public String getLabel(Object modelElement) {
+		CodeSyncElement codeSyncElement = (CodeSyncElement) modelElement;
+		FeatureChange change = codeSyncElement.getFeatureChanges().get(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
+		if (change != null) { 
+			return (String) change.getNewValue();
+		}
 		return (String) getMatchKey(modelElement);
 	}
 
@@ -119,7 +128,8 @@ public class SyncElementModelAdapter extends EObjectModelAdapter {
 	
 	@Override
 	public Object getMatchKey(Object element) {
-		return ((CodeSyncElement) element).getName();
+		return CodeSyncOperationsService.getInstance()
+				.getKeyFeatureValue(((CodeSyncElement) element));
 	}
 	
 	@Override

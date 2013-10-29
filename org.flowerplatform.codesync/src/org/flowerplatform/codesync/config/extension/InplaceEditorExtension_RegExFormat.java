@@ -49,15 +49,15 @@ public class InplaceEditorExtension_RegExFormat implements InplaceEditorExtensio
 	}
 
 	@Override
-	public boolean setInplaceEditorText(View view, String text, Map<String, Object> parameters) throws InplaceEditorException {
+	public boolean setInplaceEditorText(View view, String text, Map<String, Object> parameters) throws InplaceEditorParseException {
 		CodeSyncElement cse = (CodeSyncElement) view.getDiagrammableElement();
 		if (cse == null || !codeSyncType.equals(cse.getType())) {
 			return true;
 		}			
 		Matcher matcher = Pattern.compile(parseRegEx).matcher(text);
 		if (!matcher.find() || features.length != matcher.groupCount()) {
-			throw new InplaceEditorException("ied.regexParseError");
-		}
+			throw new InplaceEditorParseException(CodeSyncPlugin.getInstance().getMessage("ied.regexParseError"));
+		} 
 		for (int i = 0; i < features.length; i++) {
 			CodeSyncOperationsService.getInstance().setFeatureValue(cse, features[i], matcher.group(i + 1));
 		}

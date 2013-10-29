@@ -18,13 +18,16 @@
  */
 package org.flowerplatform.codesync.code.javascript.feature_provider;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstPackage;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
+import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * Feature provider for {@link CodeSyncElement}s and {@link Node}s.
@@ -36,7 +39,9 @@ public class RegExNodeFeatureProvider extends CodeSyncElementFeatureProvider {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<?> getFeatures(Object element) {
-		List features = super.getFeatures(element);
+		List<EStructuralFeature> features = new ArrayList<EStructuralFeature>();
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Type());
+		features.add(CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children());
 		features.add(RegExAstPackage.eINSTANCE.getRegExAstCacheElement_Parameters());
 		return features;
 	}

@@ -24,7 +24,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -120,11 +124,11 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		
 		// replace the parameters with their values from the node
 		for (RegExAstNodeParameter parameter : node.getParameters()) {
-			template = template.replaceAll("@" + parameter.getName(), parameter.getValue());
+			template = template.replaceAll("@" + parameter.getName(), Matcher.quoteReplacement(parameter.getValue()));
 		}
 		
 		// load children templates
-		boolean firstChild = true;
+		Map<String, Boolean> firstChild = new HashMap<String, Boolean>();
 		for (RegExAstNode child : getChildrenWithTemplate(node, new ArrayList<RegExAstNode>())) {
 			String childTemplate = loadTemplate(child);
 			String childType = getChildType(child);
@@ -136,7 +140,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 				if (childInsertPoint == -1) {
 					throw new RuntimeException("RegExAstNode does not accept children of type " + childType);
 				}
-				if (!firstChild) {
+				if (firstChild.get(childType) != null) {
 					String codeSyncType = child.getType();
 					CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
 					if (descriptor.getNextSiblingSeparator() != null) {
@@ -145,7 +149,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 				}
 				template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 				
-				firstChild = false;
+				firstChild.put(childType, false);
 			}
 		}
 		

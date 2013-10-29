@@ -50,9 +50,11 @@ import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Default;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Note;
+import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -245,19 +247,28 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			@Override
 			public void run() {
 				// descriptors
-				getCodeSyncElementDescriptors().add(
+				List<CodeSyncElementDescriptor> descriptors = new ArrayList<>();
+				descriptors.add(
 						new CodeSyncElementDescriptor()
 						.setCodeSyncType(FOLDER)
 						.setLabel(FOLDER)
-						.addChildrenCodeSyncTypeCategory(FILE));
-				getCodeSyncElementDescriptors().add(
+						.addChildrenCodeSyncTypeCategory(FILE)
+						.addFeature(NamedElementFeatureAccessExtension.NAME)
+						.setKeyFeature(NamedElementFeatureAccessExtension.NAME));
+				descriptors.add(
 						new CodeSyncElementDescriptor()
 						.setCodeSyncType(FILE)
 						.setLabel(FILE)
-						.addCodeSyncTypeCategory(FILE));
+						.addCodeSyncTypeCategory(FILE)
+						.addFeature(NamedElementFeatureAccessExtension.NAME)
+						.setKeyFeature(NamedElementFeatureAccessExtension.NAME));
+				getCodeSyncElementDescriptors().addAll(descriptors);
+				
 				EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 
 				// extensions
+				getFeatureAccessExtensions().add(new NamedElementFeatureAccessExtension(descriptors));
+				
 				getAddNewExtensions().add(new AddNewExtension_Note());	
 				getAddNewExtensions().add(new AddNewExtension_TopLevelElement());							
 				
@@ -324,11 +335,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		}
 	}
 	
-	@Override
-	public void registerMessageBundle() throws Exception {
-		// no messages yet
-	}
-
 	/**
 	 * @author Mariana Gheorghe
 	 */
@@ -494,7 +500,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		for (EObject eObj : resource.getContents()) {
 			if (eObj instanceof CodeSyncRoot) {
 				CodeSyncRoot root = (CodeSyncRoot) eObj;
-				if (root.getName().equals(srcDir))
+				if (CodeSyncOperationsService.getInstance()
+						.getKeyFeatureValue(root).equals(srcDir))
 					return root;
 			}
 		}
@@ -507,7 +514,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	public CodeSyncElement getSrcDir(Resource resource, String name) {
 		CodeSyncElement srcDir = null;
 		for (EObject member : resource.getContents()) {
-			if (((CodeSyncElement) member).getName().equals(name)) {
+			if ((CodeSyncOperationsService.getInstance().getKeyFeatureValue((CodeSyncElement) member)).equals(name)) {
 				srcDir = (CodeSyncElement) member;
 				break;
 			}

@@ -23,6 +23,7 @@ package  org.flowerplatform.flexutil.layout {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 	
 	
 	/**
@@ -127,10 +128,11 @@ package  org.flowerplatform.flexutil.layout {
 				if (viewLayoutData.viewId == viewProvider.getId()) {			
 					var title:String = viewProvider.getTitle(viewLayoutData);
 					var component:UIComponent = FlexUtilGlobals.getInstance().workbench.getComponent(viewLayoutData.viewId, viewLayoutData.customData);
+					if (component is IViewHost) {
+						component = UIComponent(IViewHost(component).activeViewContent);
+					}
 					if (component is ITitleDecorator) {
-						if (component is ITitleDecorator) {
-							title = ITitleDecorator(component).decorateTitle(title); 
-						}
+						title = ITitleDecorator(component).decorateTitle(title); 
 					}
 					return title;
 				}			

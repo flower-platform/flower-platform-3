@@ -37,6 +37,8 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 	
 	private ChangeRecorder changeRecorder;
 	
+	private boolean dirty;
+	
 	public DiagramEditableResource() {
 		resourceSet = new ResourceSetImpl();
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new ResourceFactoryImpl() {
@@ -80,8 +82,11 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 
 	@Override
 	public boolean isDirty() {
-		// TODO Auto-generated method stub
-		return true;
+		return dirty;
+	}
+	
+	public void setDirty(boolean dirty) {
+		this.dirty = dirty;
 	}
 
 	public ChangeRecorder getChangeRecorder() {

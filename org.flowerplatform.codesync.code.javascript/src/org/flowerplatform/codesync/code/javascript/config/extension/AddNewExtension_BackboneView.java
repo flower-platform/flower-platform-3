@@ -7,7 +7,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.config.extension.AddNewExtension;
-import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.common.util.Utils;
 import org.flowerplatform.emf_model.notation.View;
@@ -38,10 +37,10 @@ public class AddNewExtension_BackboneView implements AddNewExtension {
 	protected void doAddNew(CodeSyncElement codeSyncElement, View parent,
 			Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		
-		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, FeatureAccessExtension.CODE_SYNC_NAME, "View");	
+		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, JavaScriptDescriptors.FEATURE_NAME, "View");	
 		{
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_JAVASCRIPT_ATTRIBUTE);
-			CodeSyncOperationsService.getInstance().setFeatureValue(child, FeatureAccessExtension.CODE_SYNC_NAME, "tpl");
+			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME, "tpl");
 			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
 		}
 	}

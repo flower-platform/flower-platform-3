@@ -27,6 +27,7 @@ package org.flowerplatform.flexdiagram.tool {
 	import mx.core.IVisualElement;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.AnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.IDragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.ui.RelationAnchor;
@@ -104,10 +105,7 @@ package org.flowerplatform.flexdiagram.tool {
 				getDragToCreateRelationController(context.model);
 			if (controller) {
 				var renderer:IVisualElement = getRendererFromDisplayCoordinates(true);
-				var model:Object = null;
-				if (renderer is IDataRenderer) {
-					model = IDataRenderer(renderer).data;
-				}
+				var model:Object = getModelWithDragToCreateRelationController(renderer);				
 				controller.drop(context.model, model);
 			}
 		}
@@ -140,6 +138,22 @@ package org.flowerplatform.flexdiagram.tool {
 				obj = DisplayObject(obj).parent;
 			}			
 			return null;
+		}
+		
+		private function getModelWithDragToCreateRelationController(renderer:IVisualElement):Object {
+			if (renderer == null) {
+				return null;
+			}
+			if (renderer is IDataRenderer) {	
+				var model:Object = IDataRenderer(renderer).data;
+				if (renderer is DiagramRenderer) {
+					return model;
+				}				
+				if (diagramShell.getControllerProvider(model).getDragToCreateRelationController(model) != null) {
+					return model;
+				}				
+			}	
+			return getModelWithDragToCreateRelationController(IVisualElement(renderer.parent));	
 		}
 	}
 }
