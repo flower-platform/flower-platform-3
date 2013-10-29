@@ -30,7 +30,7 @@
 	xmlns:openresourcesview="com.crispico.flower.mp.web.editorsupport.openresourcesview.*" 
 	xmlns:tree="org.flowerplatform.communication.tree.*"
 	creationComplete="creationCompleteHandler()"
-	implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.editor.IDirtyStateProvider"
+	implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.editor.IDirtyStateProvider, org.flowerplatform.flexutil.layout.ITitleDecorator"
 	>
 	 
 	<fx:Script>
@@ -115,6 +115,13 @@
 			}
 			public function getActions(selection:IList):Vector.<IAction> {
 				return null;
+			}
+			
+			public function decorateTitle(title:String):String{
+				if (this.isDirty()) { 
+					return "* " +title ;
+				}
+				return title;
 			}
 //			
 //			/**
