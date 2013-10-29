@@ -45,7 +45,7 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 			if (!JavaScriptDescriptors.TYPE_REQUIRE_ENTRY.equals(child.getType())) {
 				continue;
 			}
-			if (className.equals(CodeSyncOperationsService.getInstance().getFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME))) {
+			if (className.equals(CodeSyncOperationsService.getInstance().getFeatureValue(child, JavaScriptDescriptors.FEATURE_VAR_NAME))) {
 				foundCorrespondingRequiresEntry = true;
 				break;
 			}
