@@ -100,7 +100,13 @@
 				
 				myCodeMirror.on("change", function (instance, changeObj) {
 					var app = parent.getFlexApp();				
-					app.codeMirrorEditorChangedHandler(editorStatefulClientId, myCodeMirror.indexFromPos(changeObj.from), changeObj.removed.join('\n'), changeObj.text.join('\n'));
+					while(changeObj) { // works like an iterator
+						var offset = myCodeMirror.indexFromPos(changeObj.from);
+						var oldText = changeObj.removed.join('\n');
+						var newText = changeObj.text.join('\n');
+						app.codeMirrorEditorChangedHandler(editorStatefulClientId, offset, oldText, newText);
+						changeObj = changeObj.next;
+					}					
 				});
 			}
 			
