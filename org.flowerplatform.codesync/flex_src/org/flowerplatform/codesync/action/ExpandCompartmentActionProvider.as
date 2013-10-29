@@ -54,7 +54,7 @@ package org.flowerplatform.codesync.action {
 							// and at that time the RHs for the children have not been processed yet
 							if (ref.registry != null) {
 								var child:Node = Node(ref.referencedObject);
-								if (category == child.viewDetails["title"]) {
+								if (child.viewDetails != null && category == child.viewDetails["title"]) {
 									alreadyExpanded = true;
 									break;
 								}
