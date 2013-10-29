@@ -30,8 +30,11 @@ package org.flowerplatform.editor.action {
 		
 		public var currentEditorStatefulClient:EditorStatefulClient;
 		
-		public override function run():void {		
-			currentEditorStatefulClient.save();			
-		}		
+		public override function run():void {
+			if (currentEditorStatefulClient != null) {
+				currentEditorStatefulClient.save();		
+			}
+		}
+		
 	}
 }

@@ -76,8 +76,7 @@ package org.flowerplatform.editor.open_resources_view {
 			return null;
 		}
 		
-		override protected function getLabelFunction(data:HierarchicalModelWrapper):String
-		{
+		override protected function getLabelFunction(data:HierarchicalModelWrapper):String {
 			if ( data.treeNode is EditableResource ) {
 				return EditorPlugin.getInstance().globalEditorOperationsManager.getEditableResourceLabel( EditableResource(data.treeNode) , true);
 				//return EditableResource(data.treeNode).label;
