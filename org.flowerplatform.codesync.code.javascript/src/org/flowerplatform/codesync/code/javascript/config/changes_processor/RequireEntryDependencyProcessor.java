@@ -1,5 +1,8 @@
 package org.flowerplatform.codesync.code.javascript.config.changes_processor;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.code.javascript.config.Utils;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
@@ -18,20 +21,45 @@ public class RequireEntryDependencyProcessor extends AbstractDependencyProcessor
 
 	protected String prefix;
 
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	protected List<String> ignoreTypesFromDependencyPath;
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	protected boolean ignoreTargetNameFromDependencyPath;
+	
+	
 	public RequireEntryDependencyProcessor(String prefix) {
+		this(prefix, false, null);
+	}
+
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */
+	public RequireEntryDependencyProcessor(String prefix, boolean ignoreTargetNameFromDependencyPath, String[] ignoreTypesFromDependencyPath) {
 		super();
 		this.prefix = prefix;
+		if (ignoreTypesFromDependencyPath != null) {
+			this.ignoreTypesFromDependencyPath = Arrays.asList(ignoreTypesFromDependencyPath);
+		}
+		this.ignoreTargetNameFromDependencyPath = ignoreTargetNameFromDependencyPath;
 	}
 
 	@Override
-	protected void updateSource(Relation relation, CodeSyncElement source,
-			CodeSyncElement target) {
+	protected void updateSource(Relation relation, CodeSyncElement source, CodeSyncElement target) {
 		updateRequireEntry(source, target);
 	}
 	
+	/**
+	 * @author Cristina Constantinescu
+	 */
 	protected void updateRequireEntry(CodeSyncElement requireEntry, CodeSyncElement targetClass) {
 		String className = (String) CodeSyncOperationsService.getInstance().getFeatureValue(targetClass, JavaScriptDescriptors.FEATURE_NAME);
-		String path = Utils.getQualifiedPath(targetClass);
+		String path = Utils.getQualifiedPath(targetClass, ignoreTargetNameFromDependencyPath, ignoreTypesFromDependencyPath);
 		if (prefix != null) {
 			path = prefix + path;
 		}

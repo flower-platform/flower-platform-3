@@ -28,7 +28,7 @@ public class AddNewExtension_BackboneTableView extends AddNewExtension_BackboneV
 		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, JavaScriptDescriptors.FEATURE_NAME, "TableView");	
 		{
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_JAVASCRIPT_ATTRIBUTE);
-			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME, "table...");
+			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME, "tableItemViewClass");
 			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
 		}
 		
