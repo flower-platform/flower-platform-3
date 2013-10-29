@@ -18,21 +18,8 @@
  */
 package org.flowerplatform.codesync.code.javascript;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
-
-import org.apache.commons.io.FileUtils;
-import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
-import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.Scriptable;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -61,45 +48,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		// descriptors for js code
 		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new JavaScriptDescriptors());
-	
-		// descriptors registered from sripts
-		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new Runnable() {
-			@Override
-			public void run() {
-				// search for js files and register them
-				jsScriptExtensions();
-			}
-		});		
 
 		CodeSyncPlugin.getInstance().addSrcDir("js");
 	}
-			
-	/**
-	 * Loads and executes javascript files from codesync/scripts
-	 * 
-	 * @author Mircea Negreanu
-	 */
-	public void jsScriptExtensions() {
-		// use rhino as a scripting engine instead of javax.scripting as we want to give
-		// the users the possibility to extend existing java classes (and not only implement
-		// interfaces)
-		Context cx = Context.enter();
-		try {
-			// we want ImporterTopLevel so we can just write importClass inside the js and 
-			// not use a JavaImporter()
-			Scriptable scope = new ImporterTopLevel(cx);
-			
-			URL url = CodeSyncPlugin.getInstance().getBundleContext().getBundle().getResource("scripts");
-			File folder = new File(FileLocator.resolve(url).toURI());
-			// read each file and evaluate it
-			for (File file: folder.listFiles()) {
-				cx.evaluateString(scope, FileUtils.readFileToString(file), file.getName(), 0, null);
-			}
-		} catch (IOException | URISyntaxException e) {
-			throw new RuntimeException("JS scripts loading error", e);
-		} finally {
-			Context.exit();
-		}
-	}
-	
 }

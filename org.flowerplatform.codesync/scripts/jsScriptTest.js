@@ -12,7 +12,7 @@ descriptor.defaultName = "NewBackboxClass (from js)";
 descriptor.extension = "js";
 descriptor.addChildrenCodeSyncTypeCategory("backboneClassMember1");
 descriptor.addChildrenCodeSyncTypeCategory("requiredEntry");
-descriptor.addFeature("superClass1");
+descriptor.addFeature("superClass");
 descriptor.addFeature("name");
 descriptor.keyFeature = "name";
 descriptor.standardDiagramControllerProviderFactory = "topLevelBox";
@@ -60,31 +60,34 @@ importClass(org.flowerplatform.codesync.remote.CodeSyncOperationsService);
 
 CodeSyncPlugin.instance.codeSyncTypeCriterionDispatcherProcessor.addProcessor("backboneClass1", new IChangesProcessor() {
 	processChanges: function(context, object, changes) {
-
-		var attribute = CodeSyncOperationsService.instance.create("javaScriptAttribute1");
-		CodeSyncOperationsService.instance.setFeatureValue(attribute, "codeSyncName", "atrFromJSProcessor1");
-		CodeSyncOperationsService.instance.add(object, attribute);
+		
+//		var attribute = CodeSyncOperationsService.instance.create("javaScriptAttribute1");
+//		CodeSyncOperationsService.instance.setFeatureValue(attribute, "codeSyncName", "atrFromJSProcessor1");
+//		CodeSyncOperationsService.instance.add(object, attribute);
 
 //		if (!(object instanceof CodeSyncElement)/* || !object.codeSyncType.equals("backboneClass1") */|| changes.getAddedToContainer() == null) {
 //			return;
 //		}
 		
-		var attribute = CodeSyncOperationsService.instance.create("javaScriptAttribute1");
-		CodeSyncOperationsService.instance.setFeatureValue(attribute, "codeSyncName", "atrFromJSProcessor");
-		CodeSyncOperationsService.instance.add(object, attribute);
+//		var attribute = CodeSyncOperationsService.instance.create("javaScriptAttribute1");
+//		CodeSyncOperationsService.instance.setFeatureValue(attribute, "codeSyncName", "atrFromJSProcessor");
+//		CodeSyncOperationsService.instance.add(object, attribute);
 	}
 });
 
 // and another processor by extending an existing one
 importClass(org.flowerplatform.codesync.remote.CodeSyncOperationsService);
 importClass(com.crispico.flower.mp.model.codesync.CodeSyncPackage);
-importClass( org.flowerplatform.codesync.processor.TopLevelElementChildProcessor);
+importClass(org.flowerplatform.codesync.processor.TopLevelElementChildProcessor);
 
 var proc = new JavaAdapter(TopLevelElementChildProcessor, {
-	getLabel: function(object, forEditing) {
-		var name = CodeSyncOperationsService.instance
-				.getFeatureValue(object, CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name());
-		return name + "-js";
+	getLabel: function(object, view, forEditing) {
+		if (object.getType() == "javaScriptAttribute1") {
+			return "newAttribute - js";
+		} else if (object.getType() == "javaScriptOperation1") {
+			return "newOperation - js";
+		}
+			return "New - js";
 	}
 });
 
