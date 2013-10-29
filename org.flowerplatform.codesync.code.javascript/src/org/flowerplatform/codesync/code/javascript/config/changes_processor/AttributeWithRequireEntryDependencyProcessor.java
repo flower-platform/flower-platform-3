@@ -16,7 +16,14 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 	private final static Logger logger = LoggerFactory.getLogger(AttributeWithRequireEntryDependencyProcessor.class);
 
 	public AttributeWithRequireEntryDependencyProcessor(String prefix) {
-		super(prefix);
+		super(prefix);		
+	}
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	public AttributeWithRequireEntryDependencyProcessor(String prefix,	boolean ignoreTargetNameFromDependencyPath, String[] ignoreTypesFromDependencyPath) {
+		super(prefix, ignoreTargetNameFromDependencyPath, ignoreTypesFromDependencyPath);		
 	}
 
 	@Override
