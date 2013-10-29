@@ -6,10 +6,11 @@ package org.flowerplatform.properties.property_renderer {
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-	import org.flowerplatform.properties.PropertiesItemRenderer;
 	import org.flowerplatform.properties.PropertiesView;
+	import org.flowerplatform.properties.PropertyItemRenderer;
 	
 	import spark.components.DataRenderer;
+	import spark.components.HGroup;
 	import spark.components.Label;
 	import spark.layouts.HorizontalLayout;
 
@@ -29,7 +30,7 @@ package org.flowerplatform.properties.property_renderer {
 		 *	@return the PropertiesView of the item renderer
 		 */
 		public function get propertiesView():PropertiesView {
-			return PropertiesView(PropertiesItemRenderer(parent).owner.parent);
+			return PropertiesView(PropertyItemRenderer(HGroup(parent).owner).owner.parent);
 		}
 		
  		override protected function focusOutHandler(event:FocusEvent):void {

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:mx="library://ns.adobe.com/flex/mx"
+				   borderColor="#696969" borderVisible="true" borderWeight="1"
+				   implements="mx.core.IDataRenderer">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.flexutil.FactoryWithInitialization;
+			import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
+
+			
+			public var itemRenderer:Class;
+			public var itemRenderedInstance:BasicPropertyRenderer;
+			// Internal variable for the property value.
+			private var _data:Object;
+			
+			// Make the data property bindable.
+			[Bindable("dataChange")]
+			
+			// Define the getter method.
+			public function get data():Object {
+				return _data;
+			}
+			
+			public function set data(value:Object):void {
+				// data being bindable, whenenver it changes it enters here and loses all past informations
+				// by checkig this, we make sure that the past event doesn't happen
+
+				if (data == value) {
+					return;
+				}
+				_data = value;
+				
+				dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
+				
+				data = value;
+				propertyName.text = data.name;
+				
+				if (itemRenderedInstance != null) {
+					hGroup.removeElement(itemRenderedInstance);
+				}
+				var factory:FactoryWithInitialization = FactoryWithInitialization(PropertiesPlugin.getInstance().propertyRendererClasses[data.type]);			
+				itemRenderedInstance = factory.newInstance(false);
+				itemRenderedInstance.percentWidth = 50;
+				itemRenderedInstance.percentHeight = 100;
+				hGroup.addElement(itemRenderedInstance);
+				
+			}
+
+		]]>
+	</fx:Script>
+	<s:HGroup id="hGroup" width="100%" height="100%" gap="0" verticalAlign="middle">
+		<s:Group width="50%" height="100%">
+			<s:Rect width="100%" height="100%">
+				<s:fill>
+					<s:SolidColor color="#9C9C9C"/>
+				</s:fill>
+			</s:Rect>
+			<s:HGroup width="100%" height="100%" verticalAlign="middle" paddingLeft="5">
+				<s:Label id = "propertyName"/>
+			</s:HGroup>
+		</s:Group>
+		<s:Line height="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="#696969"/>
+			</s:stroke>
+		</s:Line>
+	</s:HGroup>  
+</s:BorderContainer>

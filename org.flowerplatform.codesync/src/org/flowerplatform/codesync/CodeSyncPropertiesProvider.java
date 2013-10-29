@@ -87,7 +87,7 @@ public class CodeSyncPropertiesProvider implements IPropertiesProvider<DiagramSe
 	@Override
 	public Pair<String, String> getIconAndLabel(DiagramSelectedItem selectedItem, CodeSyncElement codeSyncElement) {
 		
-		String icon = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType()).getIconUrl();
+		String icon = CodeSyncPlugin.getInstance().getResourceUrl(CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType()).getIconUrl());
 		String label = codeSyncElement.getName();
 		
 		return new Pair<String, String>(icon, label);

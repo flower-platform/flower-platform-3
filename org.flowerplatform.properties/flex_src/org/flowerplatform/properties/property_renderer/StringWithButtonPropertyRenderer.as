@@ -6,9 +6,10 @@ package org.flowerplatform.properties.property_renderer {
 	import mx.binding.utils.BindingUtils;
 	
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-	import org.flowerplatform.properties.PropertiesItemRenderer;
+	import org.flowerplatform.properties.PropertyItemRenderer;
 	
 	import spark.components.Button;
+	import spark.components.HGroup;
 	import spark.components.TextInput;
 
 	public class StringWithButtonPropertyRenderer extends BasicPropertyRenderer implements IDialogResultHandler {
@@ -31,7 +32,7 @@ package org.flowerplatform.properties.property_renderer {
 		}
 		
 		override protected function createChildren():void {
-			super.data = PropertiesItemRenderer(parent).data;
+			super.data = PropertyItemRenderer(HGroup(parent).owner).data;
 			super.createChildren();
 			
 			propertyValue = new TextInput();

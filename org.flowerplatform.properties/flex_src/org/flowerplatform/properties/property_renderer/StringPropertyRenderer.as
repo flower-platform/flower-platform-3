@@ -4,9 +4,10 @@ package org.flowerplatform.properties.property_renderer {
 	import mx.binding.utils.BindingUtils;
 	import mx.core.IVisualElement;
 	
-	import org.flowerplatform.properties.PropertiesItemRenderer;
+	import org.flowerplatform.properties.PropertyItemRenderer;
 	
 	import spark.components.DataRenderer;
+	import spark.components.HGroup;
 	import spark.components.TextInput;
 
 	/**
@@ -22,7 +23,7 @@ package org.flowerplatform.properties.property_renderer {
 		}
 		
 		override protected function createChildren():void {
-			super.data = PropertiesItemRenderer(parent).data;
+			super.data = PropertyItemRenderer(HGroup(parent).owner).data;
 			super.createChildren();
 			
 			propertyValue = new TextInput();
@@ -31,7 +32,7 @@ package org.flowerplatform.properties.property_renderer {
 			propertyValue.percentHeight = 100;		
 			propertyValue.text = data.value;
 			propertyValue.editable = !data.readOnly;
-			
+			//propertyValue.setStyle("borderVisible", false);
 			if (!data.readOnly) {
 				propertyValue.addEventListener(FocusEvent.FOCUS_OUT, sendChangedValuesToServer);		
 				BindingUtils.bindProperty( data, "value", propertyValue, "text" );
