@@ -138,7 +138,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 					childInsertPoint = template.indexOf("// children-insert-point " + childType);
 				}
 				if (childInsertPoint == -1) {
-					throw new RuntimeException("RegExAstNode does not accept children of type " + childType);
+					throw new RuntimeException("RegExAstNode " + getKeyFeatureValue(node) + " of type " + node.getType() + " does not accept children of type " + childType);
 				}
 				if (firstChild.get(childType) != null) {
 					String codeSyncType = child.getType();
@@ -154,6 +154,15 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		}
 		
 		return template;
+	}
+	
+	private String getKeyFeatureValue(RegExAstNode node) {
+		for (RegExAstNodeParameter parameter : node.getParameters()) {
+			if (parameter.getName().equals(node.getKeyParameter())) {
+				return parameter.getValue();
+			}
+		}
+		return null;
 	}
 	
 	private String getChildType(RegExAstNode child) {
@@ -192,7 +201,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		if (parent.getChildrenInsertPoints().contains(getChildType(node))) {
 			return parent.getChildrenInsertPoints().get(getChildType(node));
 		} else {
-			throw new RuntimeException("RegExAstNode does not accept children of type " + getChildType(node));
+			throw new RuntimeException("RegExAstNode " + getKeyFeatureValue(parent) + " of type " + parent.getType() + " does not accept children of type " + getChildType(node));
 		}
 	}
 
