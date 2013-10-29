@@ -112,7 +112,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	protected EditableResource createEditableResourceInstance() {
 		return new DiagramEditableResource();
 	}
-
+	
 	public Diagram getDiagram(EditableResource editableResource) {
 		DiagramEditableResource er = (DiagramEditableResource) editableResource;
 		Diagram diagram = null;
@@ -163,6 +163,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		for (Resource resource : ((DiagramEditableResource) editableResource).getResourceSet().getResources()) {
 			try {
 				resource.save(options);
+				((DiagramEditableResource) editableResource).setDirty(false);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -240,8 +241,10 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 //		((DiagramEditableResource) editableResource).setMainResource(hbResource);
 //		((DiagramEditableResource) editableResource).setChangeRecorder(hbResource.getChangeRecorder());
 		
+
 		DiagramEditableResource diagramEditableResource = (DiagramEditableResource) editableResource;
 		diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource().getResourceSet()));
+		diagramEditableResource.setDirty(true);
 		
 		try {
 			EditableResourceClient client = editableResource.getEditableResourceClientByCommunicationChannel(statefulServiceInvocationContext.getCommunicationChannel());
