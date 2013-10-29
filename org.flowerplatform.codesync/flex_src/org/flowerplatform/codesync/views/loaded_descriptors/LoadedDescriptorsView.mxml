@@ -89,6 +89,12 @@ Displays all the loaded codeSyncElementDescriptors in a list
 			}
 			
 			protected function selectionChangeHandler(event:IndexChangeEvent):void {
+				// force focus on the list, so that the viewHost catches it and
+				// sets the activeViewContent accordingly
+				if (focusManager.getFocus() != list) {
+					focusManager.setFocus(list);
+				}
+
 				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
 			}
 
