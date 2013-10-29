@@ -258,5 +258,14 @@ package org.flowerplatform.codesync {
 			return codeSyncElementDescriptors;
 		}
 
+		/**
+		 * Returns all the relationDescriptors
+		 * <p>Needed by the Loaded Descriptors view</p>
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		public function getRelationDescriptors():ArrayCollection {
+			return relationDescriptors;
+		}
 	}
 }

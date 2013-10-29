@@ -29,6 +29,7 @@ Displays all the loaded codeSyncElementDescriptors in a list
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
 		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300"
 		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.selection.ISelectionProvider, org.flowerplatform.flexutil.selection.ISelectionForServerProvider"
+		 creationComplete="view_creationCompleteHandler(event)"
 		 >
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -39,6 +40,7 @@ Displays all the loaded codeSyncElementDescriptors in a list
 			import mx.collections.ArrayCollection;
 			import mx.collections.ArrayList;
 			import mx.collections.IList;
+			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.codesync.CodeSyncPlugin;
 			import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
@@ -142,6 +144,21 @@ Displays all the loaded codeSyncElementDescriptors in a list
 						.setHeight(200)
 						.showMessageBox();
 				}
+				
+				// regenerate the dataProvider
+//				list.dataProvider = generateListDataProvider();
+			}
+			
+			protected function view_creationCompleteHandler(event:FlexEvent):void {
+				list.dataProvider = generateListDataProvider();
+			}
+			
+			protected function generateListDataProvider():ArrayCollection {
+				var dataProvider:ArrayCollection = new ArrayCollection();
+				
+				dataProvider.addAll(CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors());
+				dataProvider.addAll(CodeSyncPlugin.getInstance().getRelationDescriptors());
+				return dataProvider;
 			}
 			
 		]]>
