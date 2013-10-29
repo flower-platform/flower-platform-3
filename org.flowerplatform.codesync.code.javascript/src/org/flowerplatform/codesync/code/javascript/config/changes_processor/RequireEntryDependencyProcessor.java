@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.code.javascript.config.Utils;
+import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +53,9 @@ public class RequireEntryDependencyProcessor extends AbstractDependencyProcessor
 	@Override
 	protected void updateSource(Relation relation, CodeSyncElement source, CodeSyncElement target) {
 		updateRequireEntry(source, target);
+		
+		String className = (String) CodeSyncOperationsService.getInstance().getFeatureValue(target, JavaScriptDescriptors.FEATURE_NAME);		
+		addHtmlIdSuffixValueIfNeeded((CodeSyncElement) source.eContainer(), className);
 	}
 	
 	/**
@@ -67,8 +71,33 @@ public class RequireEntryDependencyProcessor extends AbstractDependencyProcessor
 			logger.debug("Updating requireEntry({}, {})", className, path);
 		}
 		CodeSyncOperationsService.getInstance().setFeatureValue(requireEntry, JavaScriptDescriptors.FEATURE_VAR_NAME, className);
-		CodeSyncOperationsService.getInstance().setFeatureValue(requireEntry, JavaScriptDescriptors.FEATURE_DEPENDENCY_PATH, path);
+		CodeSyncOperationsService.getInstance().setFeatureValue(requireEntry, JavaScriptDescriptors.FEATURE_DEPENDENCY_PATH, path);		
 	}
 
-
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	protected void addHtmlIdSuffixValueIfNeeded(CodeSyncElement hostForRequireEntry, String name) {	
+		if (hostForRequireEntry == null) {
+			return;
+		}
+		// get last upper case index (name="CompanyForm")
+		int lastUpperCaseIndex = 0;
+		char[] chars = name.toCharArray();
+		for (int i = 0; i < chars.length; i++) {
+		    if (Character.isUpperCase(chars[i])) {
+		    	lastUpperCaseIndex = i;
+		    }
+		}
+		
+		// find child with name "htmlIdSuffix" and set its default value (value="company")
+		List<CodeSyncElement> children = hostForRequireEntry.getChildren();
+		for (CodeSyncElement child : children) {
+			if ("htmlIdSuffix".equals(CodeSyncOperationsService.getInstance().getFeatureValue(child, NamedElementFeatureAccessExtension.NAME))) {
+				CodeSyncOperationsService.getInstance().setFeatureValue(child, "defaultValue", "'" + name.substring(0, lastUpperCaseIndex).toLowerCase() + "'");
+				break;
+			}
+		}
+	}
+	
 }
