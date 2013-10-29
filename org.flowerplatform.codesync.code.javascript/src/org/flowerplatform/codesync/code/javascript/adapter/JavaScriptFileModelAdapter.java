@@ -38,6 +38,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.parser.Parser;
@@ -102,6 +103,12 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		} else if (node.isDeleted()) {
 			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));
 		} else {
+			// TODO we'd also need a modifier flag, that way we woudn't need to replace all the parameters
+			for (RegExAstNodeParameter parameter : node.getParameters()) {
+				if (parameter.getOffset() > 0 && parameter.getLength() > 0) {
+					edit.addChild(new ReplaceEdit(parameter.getOffset(), parameter.getLength(), parameter.getValue()));
+				}
+			}
 			for (RegExAstNode child : node.getChildren()) {
 				rewrite(document, child, edit);
 			}
