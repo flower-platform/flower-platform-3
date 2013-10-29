@@ -45,7 +45,7 @@ package org.flowerplatform.editor.model.renderer {
 			minHeight = 0;
 			percentWidth = 100;
 			
-			setStyle("verticalAlign", "middle");			
+			setStyle("verticalAlign", "middle");		
 			cacheAsBitmap = true;
 			
 			addEventListener(ZoomPerformedEvent.ZOOM_PERFORMED, zoomPerformedHandler);

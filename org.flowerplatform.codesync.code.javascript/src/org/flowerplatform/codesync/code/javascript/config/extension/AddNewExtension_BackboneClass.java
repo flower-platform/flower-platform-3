@@ -18,6 +18,11 @@ public class AddNewExtension_BackboneClass implements AddNewExtension {
 	@Override
 	public boolean addNew(CodeSyncElement codeSyncElement, View parent,
 			Resource codeSyncMappingResource, Map<String, Object> parameters) {
+		
+		if (!codeSyncElement.getType().equals(JavaScriptDescriptors.TYPE_BACKBONE_CLASS)) {
+			return true;
+		}
+		
 		{
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
 			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_VAR_NAME, "$");

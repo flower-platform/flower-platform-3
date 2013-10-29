@@ -38,6 +38,7 @@ import org.eclipse.jface.text.IDocument;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
+import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.parser.Parser;
@@ -102,6 +103,12 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		} else if (node.isDeleted()) {
 			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));
 		} else {
+			// TODO we'd also need a modifier flag, that way we woudn't need to replace all the parameters
+			for (RegExAstNodeParameter parameter : node.getParameters()) {
+				if (parameter.getOffset() > 0 && parameter.getLength() > 0) {
+					edit.addChild(new ReplaceEdit(parameter.getOffset(), parameter.getLength(), parameter.getValue()));
+				}
+			}
 			for (RegExAstNode child : node.getChildren()) {
 				rewrite(document, child, edit);
 			}
@@ -138,7 +145,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 					childInsertPoint = template.indexOf("// children-insert-point " + childType);
 				}
 				if (childInsertPoint == -1) {
-					throw new RuntimeException("RegExAstNode does not accept children of type " + childType);
+					throw new RuntimeException("RegExAstNode " + getKeyFeatureValue(node) + " of type " + node.getType() + " does not accept children of type " + childType);
 				}
 				if (firstChild.get(childType) != null) {
 					String codeSyncType = child.getType();
@@ -154,6 +161,15 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		}
 		
 		return template;
+	}
+	
+	private String getKeyFeatureValue(RegExAstNode node) {
+		for (RegExAstNodeParameter parameter : node.getParameters()) {
+			if (parameter.getName().equals(node.getKeyParameter())) {
+				return parameter.getValue();
+			}
+		}
+		return null;
 	}
 	
 	private String getChildType(RegExAstNode child) {
@@ -192,7 +208,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		if (parent.getChildrenInsertPoints().contains(getChildType(node))) {
 			return parent.getChildrenInsertPoints().get(getChildType(node));
 		} else {
-			throw new RuntimeException("RegExAstNode does not accept children of type " + getChildType(node));
+			throw new RuntimeException("RegExAstNode " + getKeyFeatureValue(parent) + " of type " + parent.getType() + " does not accept children of type " + getChildType(node));
 		}
 	}
 

@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
-import org.flowerplatform.common.ied.InplaceEditorException;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;

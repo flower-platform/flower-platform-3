@@ -155,7 +155,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		do {
 			srcDir = CodeSyncPlugin.getInstance().getSrcDir(cseResource, parent.getName());
 			srcDirFile = parent;
-			parent = file.getParentFile();
+			parent = parent.getParentFile();
 		} while (srcDir == null && !parent.equals(project));
 		if (srcDir == null) {
 			throw new RuntimeException("File " + file + " is not contained in a SrcDir!");
