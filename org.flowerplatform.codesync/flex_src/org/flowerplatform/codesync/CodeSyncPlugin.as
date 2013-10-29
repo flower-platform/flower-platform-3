@@ -118,12 +118,22 @@ package org.flowerplatform.codesync {
 		
 		/**
 		 * @author Mariana Gheorghe
+		 * @author Mircea Negreanu
 		 */
 		override public function handleConnectedToServer():void {
 			if (CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived) {
 				return;
 			}
 			
+			// split out the loading of the descriptors from server
+			// so that it can also be called from other parts
+			loadDescriptorsFromServer();
+		}
+		
+		/**
+		 * @author Mircea Negreanu
+		 */
+		public function loadDescriptorsFromServer():void {
 			var command:CompoundServerCommand = new CompoundServerCommand();
 			command.append(new InvokeServiceMethodServerCommand(
 				"codeSyncDiagramOperationsService",
