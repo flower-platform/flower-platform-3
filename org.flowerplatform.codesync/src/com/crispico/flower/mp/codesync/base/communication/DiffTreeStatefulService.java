@@ -83,7 +83,7 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 		openNode(context, getPathForNode(node), treeContext);
 	}
 	
-	private List<PathFragment> getPathForNode(DiffTreeNode node) {
+	public List<PathFragment> getPathForNode(DiffTreeNode node) {
 		List<PathFragment> path = new ArrayList<PathFragment>();
 		TreeNode crtNode = node;
 		while (crtNode != null) {
