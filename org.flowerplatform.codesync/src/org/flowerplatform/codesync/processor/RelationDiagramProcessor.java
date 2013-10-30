@@ -35,6 +35,7 @@ import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
  * @author Mariana Gheorghe
+ * @author Cristina Constantinescu
  */
 public class RelationDiagramProcessor implements IDiagrammableElementFeatureChangesProcessor {
 
@@ -49,7 +50,9 @@ public class RelationDiagramProcessor implements IDiagrammableElementFeatureChan
 		
 		RelationDescriptor descriptor = CodeSyncPlugin.getInstance().getRelationDescriptor(((Relation) object).getType());
 		viewDetails.put("label", descriptor.getLabel());
-
+		viewDetails.put("sourceEndFigureType", descriptor.getSourceEndFigureType());
+		viewDetails.put("targetEndFigureType", descriptor.getTargetEndFigureType());
+		
 		if (!viewDetails.isEmpty()) {
 			ViewDetailsUpdate update = new ViewDetailsUpdate();
 			update.setViewId(associatedViewOnOpenDiagram.eResource().getURIFragment(associatedViewOnOpenDiagram));

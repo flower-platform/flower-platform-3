@@ -116,7 +116,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setCategory("require entries")
 				.addFeature(FEATURE_VAR_NAME)
 				.addFeature(FEATURE_DEPENDENCY_PATH)
-				.setKeyFeature(FEATURE_VAR_NAME)
+				.setKeyFeature(FEATURE_VAR_NAME)				
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 				.setInplaceEditorFeature("")
 		);
@@ -307,6 +307,7 @@ public class JavaScriptDescriptors implements Runnable {
 				new RelationDescriptor()
 				.setType(TYPE_HTML_TEMPLATE_DEPENDENCY)
 				.setLabel("HTML Template Dependency")
+				.setTargetEndFigureType(RelationDescriptor.OPEN_ARROW)
 				.addSourceCodeSyncType(TYPE_JAVASCRIPT_ATTRIBUTE)
 				.addTargetCodeSyncTypeCategory("htmlTemplate")
 		);
@@ -315,6 +316,7 @@ public class JavaScriptDescriptors implements Runnable {
 				new RelationDescriptor()
 				.setType(TYPE_CLASS_DEPENDENCY)
 				.setLabel("Class Dependency")
+				.setTargetEndFigureType(RelationDescriptor.OPEN_ARROW)
 				.addSourceCodeSyncType(TYPE_JAVASCRIPT_ATTRIBUTE)
 				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
 		);
@@ -322,6 +324,7 @@ public class JavaScriptDescriptors implements Runnable {
 				new RelationDescriptor()
 				.setType(TYPE_REQUIRE_CLASS_DEPENDENCY)
 				.setLabel("Require Class")
+				.setTargetEndFigureType(RelationDescriptor.OPEN_ARROW)
 				.addSourceCodeSyncType(TYPE_REQUIRE_ENTRY)
 				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
 		);
@@ -329,6 +332,7 @@ public class JavaScriptDescriptors implements Runnable {
 				new RelationDescriptor()
 				.setType(TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY)
 				.setLabel("Require HTML Template")
+				.setTargetEndFigureType(RelationDescriptor.OPEN_ARROW)
 				.addSourceCodeSyncType(TYPE_REQUIRE_ENTRY)
 				.addTargetCodeSyncTypeCategory("htmlTemplate")
 		);
@@ -336,6 +340,7 @@ public class JavaScriptDescriptors implements Runnable {
 				new RelationDescriptor()
 				.setType(TYPE_INHERITANCE)
 				.setLabel("Inherits")
+				.setTargetEndFigureType(RelationDescriptor.CLOSED_ARROW)
 				.addSourceCodeSyncType(TYPE_BACKBONE_CLASS)
 				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
 		);
@@ -390,6 +395,9 @@ public class JavaScriptDescriptors implements Runnable {
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptFile", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptFile", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
+		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", new TopLevelElementChildProcessor(requireEntryInplaceEditorExtension));
 
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", childElementProcessor);

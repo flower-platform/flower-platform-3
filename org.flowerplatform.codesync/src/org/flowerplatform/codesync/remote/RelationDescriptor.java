@@ -7,10 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Cristi
+ * @author Cristian Spiescu
+ * @author Cristina Constantinescu
  */
 public class RelationDescriptor {
 
+	public static final String OPEN_ARROW = "open_arrow";
+	public static final String CLOSED_ARROW = "closed_arrow";
+	public static final String FILLED_ARROW = "filled_arrow";
+	public static final String DIAMOND = "diamond";
+	public static final String FILLED_DIAMOND = "filled_diamond";
+	
 	private String type;
 	
 	private String label;
@@ -25,6 +32,10 @@ public class RelationDescriptor {
 	
 	private List<String> targetCodeSyncTypeCategories;
 
+	private String sourceEndFigureType;
+	
+	private String targetEndFigureType;
+	
 	public String getType() {
 		return type;
 	}
@@ -121,5 +132,23 @@ public class RelationDescriptor {
 		targetCodeSyncTypeCategories.add(value);
 		return this;
 	}
-	
+
+	public String getSourceEndFigureType() {
+		return sourceEndFigureType;
+	}
+
+	public RelationDescriptor setSourceEndFigureType(String sourceEndFigureType) {
+		this.sourceEndFigureType = sourceEndFigureType;
+		return this;
+	}
+
+	public String getTargetEndFigureType() {
+		return targetEndFigureType;
+	}
+
+	public RelationDescriptor setTargetEndFigureType(String targetEndFigureType) {
+		this.targetEndFigureType = targetEndFigureType;
+		return this;
+	}
+		
 }
