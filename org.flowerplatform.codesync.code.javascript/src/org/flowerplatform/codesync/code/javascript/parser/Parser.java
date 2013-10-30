@@ -98,7 +98,7 @@ public class Parser {
 	
 	public static final String JS_ATTRIBUTE						= "javaScriptAttribute";
 	public static final String JS_ATTRIBUTE_CATEGORY			= "Attribute";
-	public static final String JS_ATTRIBUTE_REGEX				= "(\\w+)\\s*+:\\s*([\\S&&[^,]]+)";
+	public static final String JS_ATTRIBUTE_REGEX				= "(\\w+)\\s*+:\\s*([\\S&&[^,/]]+)";
 	
 	public static final String JS_EVENTS_ATTRIBUTE				= "eventsAttribute";
 	public static final String JS_EVENTS_ATTRIBUTE_CATEGORY 	= "Events";

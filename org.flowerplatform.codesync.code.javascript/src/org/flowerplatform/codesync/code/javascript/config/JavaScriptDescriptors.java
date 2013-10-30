@@ -415,7 +415,7 @@ public class JavaScriptDescriptors implements Runnable {
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!", true, null));
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_CLASS_DEPENDENCY, new RequireEntryDependencyProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY, new RequireEntryDependencyProcessor("text!", true, null));
-		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_INHERITANCE, new InheritanceProcessor());
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_INHERITANCE, new InheritanceProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
 	}
 
 }

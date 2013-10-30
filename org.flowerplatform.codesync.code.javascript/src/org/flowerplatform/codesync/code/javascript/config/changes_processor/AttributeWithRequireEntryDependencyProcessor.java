@@ -40,16 +40,8 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 	
 	protected void addRequireEntryIfNeeded(CodeSyncElement hostForRequireEntry, CodeSyncElement targetClass, String className) {
 		// look for a require entry; if not found, create one
-		boolean foundCorrespondingRequiresEntry = false; 
-		for (CodeSyncElement child : hostForRequireEntry.getChildren()) {
-			if (!JavaScriptDescriptors.TYPE_REQUIRE_ENTRY.equals(child.getType())) {
-				continue;
-			}
-			if (className.equals(CodeSyncOperationsService.getInstance().getFeatureValue(child, JavaScriptDescriptors.FEATURE_VAR_NAME))) {
-				foundCorrespondingRequiresEntry = true;
-				break;
-			}
-		}
+		boolean foundCorrespondingRequiresEntry = CodeSyncOperationsService.getInstance().hasChildWithKeyFeatureValue(
+				hostForRequireEntry, JavaScriptDescriptors.TYPE_REQUIRE_ENTRY, className); 
 		if (!foundCorrespondingRequiresEntry) {
 			CodeSyncElement requireEntry = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
 			updateRequireEntry(requireEntry, targetClass);

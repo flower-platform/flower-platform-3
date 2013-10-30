@@ -244,7 +244,7 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		if (!limitedPath.startsWith("/")) {
 			limitedPath = "/" + limitedPath;
 		}
-		modelAdapterFactorySet.initialize(CodeSyncPlugin.getInstance().getAstCache(project, resourceSet), limitedPath, CodeSyncPlugin.getInstance().useUIDs());
+		modelAdapterFactorySet.initialize(CodeSyncPlugin.getInstance().getAstCache(project, resourceSet), null, CodeSyncPlugin.getInstance().useUIDs());
 		editableResource.setModelAdapterFactorySet(modelAdapterFactorySet);
 		
 		new CodeSyncAlgorithm(editableResource.getModelAdapterFactorySet()).generateDiff(match);
