@@ -314,6 +314,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_HTML_FILE)
+				.setLabel("HTML File")
 				.addFeature(FEATURE_NAME)
 				.setKeyFeature(FEATURE_NAME));
 		
