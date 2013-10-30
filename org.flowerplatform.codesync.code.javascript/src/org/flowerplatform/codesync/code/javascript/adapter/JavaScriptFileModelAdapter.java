@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.jface.text.Document;
@@ -91,14 +95,20 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		return edit;
 	}
 
+	/**	
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	private void rewrite(IDocument document, RegExAstNode node, MultiTextEdit edit) {
-		if (node.isAdded()) {
+		if (node.isAdded()) {			
 			String template = loadTemplate(node);
-			CodeSyncElementDescriptor descriptor = 
-					CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(node.getType());
-			if (descriptor.getNextSiblingSeparator() != null) {
-				template = descriptor.getNextSiblingSeparator() + template;
-			}
+			
+			template = getIndentTemplate(document.get(), getInsertPoint(node), template, false);
+			
+			if (!isFirstChildAdded(node)) {							
+				CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(node.getType());				
+				template = (descriptor.getNextSiblingSeparator() != null ? descriptor.getNextSiblingSeparator() : "") + '\n' + template;
+			}			
 			edit.addChild(new InsertEdit(getInsertPoint(node), template));
 		} else if (node.isDeleted()) {
 			edit.addChild(new DeleteEdit(node.getOffset(), node.getLength()));
@@ -117,6 +127,8 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 
 	/**
 	 * Loads children templates as well, because we can't allow overlapping edits.
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
 	 */
 	private String loadTemplate(RegExAstNode node) {
 		String template = null;
@@ -147,12 +159,15 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 				if (childInsertPoint == -1) {
 					throw new RuntimeException("RegExAstNode " + getKeyFeatureValue(node) + " of type " + node.getType() + " does not accept children of type " + childType);
 				}
-				if (firstChild.get(childType) != null) {
+						
+				boolean isFirstChildAdded = firstChild.get(childType) == null;
+				
+				childTemplate = getIndentTemplate(template, childInsertPoint, childTemplate, isFirstChildAdded);
+				
+				if (!isFirstChildAdded) {				
 					String codeSyncType = child.getType();
 					CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
-					if (descriptor.getNextSiblingSeparator() != null) {
-						childTemplate = descriptor.getNextSiblingSeparator() + childTemplate;
-					}
+					childTemplate = (descriptor.getNextSiblingSeparator() != null ? descriptor.getNextSiblingSeparator() : "") + '\n' + childTemplate;
 				}
 				template = template.substring(0, childInsertPoint) + childTemplate + template.substring(childInsertPoint);
 				
@@ -162,6 +177,45 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		
 		return template;
 	}
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	private String getIndentTemplate(String template, int insertPoint, String childTemplate, boolean isFirstChildAdded) {
+		String prefixTemplate = template.substring(0, insertPoint);
+		char[] chars = prefixTemplate.toCharArray();
+		String indent = "";
+		for (int i = chars.length - 1; i >= 0; i--) {
+			if (chars[i] == '\n' || chars[i] == '\r') {
+				// if newline, stop
+				break;
+			}
+			if (Character.isWhitespace(chars[i])) {
+				// compute indentation string
+				indent = chars[i] + indent;
+			} else {
+				// other char found, clear indentation
+				indent = "";
+			}
+		}
+		// for each line, except first line if first child, add indentation
+		String[] lines = childTemplate.split("\n");
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < lines.length; i++) {
+			if (i == 0 && isFirstChildAdded) { 
+				// don't add indent to first line if it's the first child in parent
+			} else {
+				sb = sb.append(indent);
+			}
+			sb = sb.append(lines[i]);
+			if (i != lines.length - 1) {
+				// add new line at the end, except last line
+				sb = sb.append("\n");
+			}				
+		}			
+				
+		return sb.toString();		
+	}		
 	
 	private String getKeyFeatureValue(RegExAstNode node) {
 		for (RegExAstNodeParameter parameter : node.getParameters()) {
@@ -201,17 +255,35 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		int childIndex = parent.getChildren().indexOf(node);
 		for (int i = childIndex - 1; i >= 0 ; i--) {
 			RegExAstNode sibling = parent.getChildren().get(i);
-			if (!sibling.isAdded()) {
+			if (!sibling.isAdded() && getChildType(node).equals(sibling)) {
 				return sibling.getNextSiblingInsertPoint();
 			}
 		}
-		if (parent.getChildrenInsertPoints().contains(getChildType(node))) {
+		if (parent.getChildrenInsertPoints().keySet().contains(getChildType(node))) {
 			return parent.getChildrenInsertPoints().get(getChildType(node));
 		} else {
 			throw new RuntimeException("RegExAstNode " + getKeyFeatureValue(parent) + " of type " + parent.getType() + " does not accept children of type " + getChildType(node));
 		}
 	}
 
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	private boolean isFirstChildAdded(RegExAstNode node) {
+		RegExAstNode parent = (RegExAstNode) node.eContainer();
+		if (parent == null) {
+			return true;
+		}
+		int childIndex = parent.getChildren().indexOf(node);
+		for (int i = childIndex - 1; i >= 0 ; i--) {
+			RegExAstNode sibling = parent.getChildren().get(i);
+			if (getChildType(node).equals(getChildType(sibling))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	@Override
 	public List<?> getChildren(Object modelElement) {
 		return Collections.singletonList(getOrCreateFileInfo(getFile(modelElement)));
