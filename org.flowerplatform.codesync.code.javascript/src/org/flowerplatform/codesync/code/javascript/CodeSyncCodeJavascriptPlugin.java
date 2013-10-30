@@ -22,13 +22,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
-import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
@@ -61,21 +58,21 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		// descriptors for js code
 		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new JavaScriptDescriptors());
-	
-		// descriptors registered from sripts
+
+		// descriptors registered from scripts
 		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new Runnable() {
 			@Override
 			public void run() {
 				// search for js files and register them
 				jsScriptExtensions();
 			}
-		});		
-
+		});	
+		
 		CodeSyncPlugin.getInstance().addSrcDir("js");
 	}
-			
+	
 	/**
-	 * Loads and executes javascript files from codesync/scripts
+	 * Loads and executes javascript files from codesync/scripts.
 	 * 
 	 * @author Mircea Negreanu
 	 */
@@ -101,5 +98,4 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 			Context.exit();
 		}
 	}
-	
 }

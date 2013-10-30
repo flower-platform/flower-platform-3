@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.remote.FileBasedEditableResource;
 
 public class DiagramEditableResource extends FileBasedEditableResource {
@@ -76,8 +77,7 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 
 	@Override
 	public String getIconUrl() {
-		// TODO Auto-generated method stub
-		return null;
+		return EditorModelPlugin.getInstance().getResourceUrl("images/icon_flower.gif");
 	}
 
 	@Override

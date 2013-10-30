@@ -264,5 +264,9 @@ public class CodeSyncOperationsService {
 		File srcDir = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, "js");
 		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, srcDir, technology, context.getCommunicationChannel(), true);
 	}
-	
+
+	@RemoteInvocation
+	public String regenerateDescriptors() {
+		return CodeSyncPlugin.getInstance().regenerateDescriptors();
+	}
 }

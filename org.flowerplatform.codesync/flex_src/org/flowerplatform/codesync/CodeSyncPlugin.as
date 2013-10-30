@@ -29,9 +29,12 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.action.AddNewCodeSyncElementActionProvider;
 	import org.flowerplatform.codesync.action.AddNewRelationAction;
 	import org.flowerplatform.codesync.action.ExpandCompartmentActionProvider;
+	import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
+	import org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsView;
+	import org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsViewProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.CompoundServerCommand;
@@ -41,7 +44,6 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
-	import org.flowerplatform.flexdiagram.ui.RelationAnchor;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
@@ -87,6 +89,7 @@ package org.flowerplatform.codesync {
 			var editorDescriptor:EditorDescriptor = new CodeSyncEditorDescriptor();
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new LoadedDescriptorsViewProvider());
 		}
 		
 		override public function start():void {
@@ -97,7 +100,10 @@ package org.flowerplatform.codesync {
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(new ExpandCompartmentActionProvider());
 		}
 		
-		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mircea Negreanu
+		 */
 		override protected function registerClassAliases():void {
 			registerClassAliasFromAnnotation(CodeSyncElementDescriptor);
 			registerClassAliasFromAnnotation(RelationDescriptor);
@@ -106,16 +112,30 @@ package org.flowerplatform.codesync {
 			registerClassAliasFromAnnotation(DiffTreeNode);
 			registerClassAliasFromAnnotation(DiffContextMenuEntry);
 			registerClassAliasFromAnnotation(DiffActionEntry);
+			
+			// add the Descriptor too
+			registerClassAliasFromAnnotation(StringSelectedItem);
 		}
 		
 		/**
 		 * @author Mariana Gheorghe
+		 * @author Mircea Negreanu
 		 */
 		override public function handleConnectedToServer():void {
 			if (CommunicationPlugin.getInstance().firstWelcomeWithInitializationsReceived) {
 				return;
 			}
 			
+			// split out the loading of the descriptors from server
+			// so that it can also be called from other parts
+			loadDescriptorsFromServer();
+		}
+		
+		/**
+		 * @author Mariana Gheorge
+		 * @author Mircea Negreanu
+		 */
+		public function loadDescriptorsFromServer():void {
 			var command:CompoundServerCommand = new CompoundServerCommand();
 			command.append(new InvokeServiceMethodServerCommand(
 				"codeSyncDiagramOperationsService",
@@ -132,6 +152,11 @@ package org.flowerplatform.codesync {
 			CommunicationPlugin.getInstance().bridge.sendObject(command);
 		}
 		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mariana Gheorghe
+		 * @author Mircea Negreanu
+		 */
 		protected function setCodeSyncElementDescriptorsCallback(codeSyncElementDescriptors:ArrayCollection):void {
 			this.codeSyncElementDescriptors = codeSyncElementDescriptors;
 			
@@ -142,6 +167,12 @@ package org.flowerplatform.codesync {
 			if (topLevelDescriptors != null) {
 				// TODO CS/JS: hardcoded diagram type
 				registerControllerProviderFactories("classDiagram", topLevelDescriptors);				
+			}
+			
+			// TEMPOARARY
+			// Notification to the LoadedDescriptorsView that new descriptors have been loaded
+			if (LoadedDescriptorsView.descriptorsView != null) {
+				LoadedDescriptorsView.descriptorsView.notificationDescriptorsLoaded();
 			}
 		}
 		
@@ -207,6 +238,11 @@ package org.flowerplatform.codesync {
 			}
 		}
 		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Mariana Gheorghe
+		 * @author Mircea Negreanu
+		 */
 		protected function setRelationDescriptorsCallback(result:ArrayCollection):void {
 			relationDescriptors = result;
 			var addNewRelationActionProvider:VectorActionProvider = new VectorActionProvider();
@@ -215,6 +251,12 @@ package org.flowerplatform.codesync {
 				addNewRelationActionProvider.getActions(null).push(a);
 			}
 			EditorModelPlugin.getInstance().notationDiagramActionProviders.push(addNewRelationActionProvider);
+			
+			// TEMPORARY
+			// notification to the LoadDescriptorsView that new descriptors were loaded from db
+			if (LoadedDescriptorsView.descriptorsView != null) {
+				LoadedDescriptorsView.descriptorsView.notificationDescriptorsLoaded();
+			}
 		}	
 		
 		public function getCodeSyncTypeFromView(potentialView:Object):String {
@@ -229,6 +271,25 @@ package org.flowerplatform.codesync {
 			}
 			return view.viewType.substr(lastIndexOfDot + 1);
 		}
+		
+		/**
+		 * Returns all the codeSyncElementDescriptors.
+		 * <p>Needed by the Loaded Descriptors view</p>
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		public function getCodeSyncElementDescriptors():ArrayCollection {
+			return codeSyncElementDescriptors;
+		}
 
+		/**
+		 * Returns all the relationDescriptors
+		 * <p>Needed by the Loaded Descriptors view</p>
+		 * 
+		 * @author Mircea Negreanu
+		 */
+		public function getRelationDescriptors():ArrayCollection {
+			return relationDescriptors;
+		}
 	}
 }

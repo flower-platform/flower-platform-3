@@ -16,25 +16,24 @@
 *
 * license-end
 */
-package org.flowerplatform.editor.action {
-
+package org.flowerplatform.codesync.properties.remote {
+	import org.flowerplatform.properties.remote.SelectedItem;
 	
-	import org.flowerplatform.editor.remote.EditorStatefulClient;
-	import org.flowerplatform.flexutil.action.ActionBase;
-	
-	//use namespace mx_internal;
 	/**
-	 * @author Sebastian Solomon
+	 * @author Mircea Negreanu
 	 */
-	public class SaveAction extends ActionBase {
+	[RemoteClass]
+	public class StringSelectedItem extends SelectedItem {
 		
-		public var currentEditorStatefulClient:EditorStatefulClient;
+		public var descriptorName:String;
 		
-		public override function run():void {
-			if (currentEditorStatefulClient != null) {
-				currentEditorStatefulClient.save();		
-			}
+		public var isRelation:Boolean;
+		
+		public function StringSelectedItem(descriptorName:String, isRelation:Boolean = false) {
+			this.itemType = "descriptorElement";
+			
+			this.descriptorName = descriptorName;
+			this.isRelation = isRelation;
 		}
-		
 	}
 }
