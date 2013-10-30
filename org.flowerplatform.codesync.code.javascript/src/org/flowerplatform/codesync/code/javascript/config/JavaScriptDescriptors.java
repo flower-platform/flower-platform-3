@@ -7,6 +7,7 @@ import org.flowerplatform.codesync.code.javascript.config.changes_processor.Attr
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.InheritanceProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.RequireEntryDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneClass;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneCollectionView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneFormView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableItemView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableView;
@@ -69,6 +70,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_VIEW).addInitializationTypeLabel("Table View").addInitializationTypesOrderIndexes(130)
 				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_ITEM_VIEW).addInitializationTypeLabel("Table Item View").addInitializationTypesOrderIndexes(140)
 				.addInitializationType(INIT_TYPE_BACKBONE_FORM_VIEW).addInitializationTypeLabel("Form View").addInitializationTypesOrderIndexes(150)
+				.addInitializationType(INIT_TYPE_BACKBONE_COLLECTION_VIEW).addInitializationTypeLabel("Collection View").addInitializationTypesOrderIndexes(160)
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewBackboneClass")
 				.setExtension("js")
@@ -380,6 +382,7 @@ public class JavaScriptDescriptors implements Runnable {
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableView());
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableItemView());
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneFormView());
+		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneCollectionView());
 		
 		InplaceEditorExtension_RegExFormat javascriptAttributeInplaceEditorExtension = 
 				new InplaceEditorExtension_RegExFormat(
