@@ -39,7 +39,6 @@
 			import mx.collections.IList;
 			import mx.core.IDataRenderer;
 			
-			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.communication.stateful_service.StatefulClient;
 			import org.flowerplatform.communication.tree.remote.TreeNode;
@@ -48,6 +47,7 @@
 			import org.flowerplatform.editor.remote.EditableResource;
 			import org.flowerplatform.editor.remote.EditableResourceClient;
 			import org.flowerplatform.editor.remote.EditorStatefulClient;
+			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 			import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 			import org.flowerplatform.flexutil.view_content_host.IViewHost;
@@ -98,7 +98,7 @@
 			 */ 
 			private function selectionChangedHandler(event:Event):void {
 				// update the target of the Save action
-//				GlobalEditorOperationsManager.INSTANCE.editorInputChangedForComponent(this);
+				EditorPlugin.getInstance().globalEditorOperationsManager.editorInputChangedForComponent(this);
 			}
 //			
 			/**
@@ -164,13 +164,18 @@
 				return false;
 			}
 			
+			/**
+			 * @author Sebastian Solomon
+			 */ 
 			public function getEditorStatefulClientForSelectedElement():EditorStatefulClient {
-				if (!(tree.selectedItem is EditableResource)) {
-					return null;
+				var treeNode:Object = tree.selectedItem;
+				
+				if (treeNode is HierarchicalModelWrapper) {
+					treeNode = HierarchicalModelWrapper(treeNode).treeNode;
 				}
-				//TODO CS/STFL de scos castul la string
-				//var editableResourcePath:String = String(EditableResource(tree.selectedItem).editorInput);
-				//return GlobalEditorOperationsManager.INSTANCE.getInterestingEditorStatefulClientForEditableResourcePath(editableResourcePath);
+				if (treeNode is EditableResource) {
+					return EditableResource(treeNode).getEditorStatefulClient();
+				}
 				return null;
 			}
 			
