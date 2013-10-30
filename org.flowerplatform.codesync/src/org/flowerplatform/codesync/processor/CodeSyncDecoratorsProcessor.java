@@ -27,6 +27,7 @@ import com.crispico.flower.mp.model.codesync.impl.CodeSyncElementImpl;
 /**
  * @author Sebastian Solomon
  * @author Mariana Gheorghe
+ * @author Mircea Negreanu
  */
 public abstract class CodeSyncDecoratorsProcessor extends
 		IconDiagrammableElementFeatureChangesProcessor {
@@ -72,7 +73,7 @@ public abstract class CodeSyncDecoratorsProcessor extends
 		}
 		return codeSyncPackage + image;
 	}
-	
-	abstract public String getIconBeforeCodeSyncDecoration(EObject object);
 
+	abstract public String getIconBeforeCodeSyncDecoration(EObject object);
+	
 }

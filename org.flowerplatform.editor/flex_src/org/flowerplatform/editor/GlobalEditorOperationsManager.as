@@ -40,6 +40,7 @@ package org.flowerplatform.editor {
 	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
+	import org.flowerplatform.flexutil.view_content_host.IViewHost;
 
 	/**
 	 * @author Sebastian Solomon
@@ -159,8 +160,13 @@ package org.flowerplatform.editor {
 		 * Delegates to <code>editorInputChangedForComponent</code>.
 		 */
 		private function activeViewChangedHandler(evt:ActiveViewChangedEvent):void {
-			if (evt.newView is IDirtyStateProvider) {
-				editorInputChangedForComponent(IDirtyStateProvider(evt.newView));
+			var component:UIComponent = evt.newView;
+			
+			if (evt.newView is IViewHost) {
+				component = UIComponent(IViewHost(evt.newView).activeViewContent);
+			}
+			if (component is IDirtyStateProvider) {
+				editorInputChangedForComponent(IDirtyStateProvider(component));
 			} else {
 				saveAction.enabled = false;
 				saveAction.currentEditorStatefulClient = null;
@@ -173,7 +179,12 @@ package org.flowerplatform.editor {
 		 * 
 		 */
 		public function editorInputChangedForComponent(component:IDirtyStateProvider):void {
-		if (workbench.activeViewList.getActiveView() == component) {
+			var uiComponent:UIComponent = workbench.activeViewList.getActiveView();
+
+			if (uiComponent is IViewHost) {
+				uiComponent = UIComponent(IViewHost(uiComponent).activeViewContent);
+			}
+			if (uiComponent == component) {
 				// we are only interested in the active view (i.e. who's "linked" to the save action)
 				var editorStatefulClient:EditorStatefulClient = EditorStatefulClient(component.getEditorStatefulClientForSelectedElement());
 				if (editorStatefulClient == null) {
@@ -326,9 +337,12 @@ package org.flowerplatform.editor {
 		}
 		
 		public function getGlobalDirtyState():Boolean {
+			if (createEntriesToSave(CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList).length == 0){
+				return false;
+			}
+			return true;
 			// currently this is used by the Project Explorer view; I saw that when the app is started with this view
 			// minimized, this code is invoked earlier then the initialization of the menu bar (i.e. saveAll action as well) 
-			return this.saveAllAction != null ? this.saveAllAction.enabled : false;
 		}
 		
 		public function invokeSaveResourcesDialogAndInvoke(callbackObject:Object, callbackFunction:Function, callbackArguments:Array):void {

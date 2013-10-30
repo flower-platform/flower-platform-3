@@ -1,6 +1,9 @@
 package org.flowerplatform.codesync.code.javascript.config.changes_processor;
 
+import java.util.List;
+
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
+import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +38,9 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 		}
 		CodeSyncOperationsService.getInstance().setFeatureValue(sourceAttribute, JavaScriptDescriptors.FEATURE_DEFAULT_VALUE, className);
 		CodeSyncElement parentClassOfSourceAttribute = (CodeSyncElement) sourceAttribute.eContainer(); // TODO CS/JS: access parent through CSOS as well; children as well
-		addRequireEntryIfNeeded(parentClassOfSourceAttribute, targetClass, className);
+		addRequireEntryIfNeeded(parentClassOfSourceAttribute, targetClass, className);	
+		
+		addHtmlIdSuffixValueIfNeeded((CodeSyncElement) sourceAttribute.eContainer(), className);
 	}
 	
 	protected void addRequireEntryIfNeeded(CodeSyncElement hostForRequireEntry, CodeSyncElement targetClass, String className) {
@@ -46,8 +51,7 @@ public class AttributeWithRequireEntryDependencyProcessor extends RequireEntryDe
 			CodeSyncElement requireEntry = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
 			updateRequireEntry(requireEntry, targetClass);
 			CodeSyncOperationsService.getInstance().add(hostForRequireEntry, requireEntry);
-		}
-		
-	}
+		}		
+	}	
 
 }

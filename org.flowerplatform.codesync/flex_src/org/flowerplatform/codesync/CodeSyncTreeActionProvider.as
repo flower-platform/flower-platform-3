@@ -20,6 +20,7 @@ package org.flowerplatform.codesync {
 	
 	import mx.collections.IList;
 	
+	import org.flowerplatform.codesync.action.ShowCodeSyncDescriptorsAction;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
@@ -29,6 +30,10 @@ package org.flowerplatform.codesync {
 	 */
 	public class CodeSyncTreeActionProvider implements IActionProvider {
 		
+		/**
+		 * @author Mariana Gheorghe
+		 * @author Mircea Negreanu
+		 */
 		public function getActions(selection:IList):Vector.<IAction> {
 			var result:Vector.<IAction> = new Vector.<IAction>();
 			// TODO temp; reactivate other technologies at a later time
@@ -36,6 +41,8 @@ package org.flowerplatform.codesync {
 //			result.push(new CodeSyncAction("Code Sync - js", "js"));
 //			result.push(new CodeSyncAction("Wiki Sync", "github"));
 			result.push(new CodeSyncAction("Synchronize", "js"));
+			// also add the show descriptor list action
+			result.push(new ShowCodeSyncDescriptorsAction());
 			return result;
 		}
 	}

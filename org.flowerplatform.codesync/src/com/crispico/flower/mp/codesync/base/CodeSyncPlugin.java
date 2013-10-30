@@ -540,4 +540,31 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		runnablesThatLoadDescriptors.add(runnable);
 	}
 	
+	/**
+	 * Reruns all the registered runnable to regenerate descriptors,
+	 * processors, ..
+	 * 
+	 * @return String containing errors thrown during run (if any)
+	 */
+	public String regenerateDescriptors() {
+		// clear the descriptors
+		getCodeSyncElementDescriptors().clear();
+		getRelationDescriptors().clear();
+		getFeatureAccessExtensions().clear();
+		getAddNewExtensions().clear();
+		getInplaceEditorExtensions().clear();
+		getCodeSyncTypeCriterionDispatcherProcessor().clear();
+		
+		StringBuilder errorsCollected = new StringBuilder();
+		for (Runnable run: runnablesThatLoadDescriptors) {
+			try {
+				run.run();
+			} catch (Exception ex) {
+				errorsCollected.append(ex.toString());
+				errorsCollected.append("\n");
+			}
+		}
+		
+		return errorsCollected.toString();
+	}
 }

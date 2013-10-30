@@ -37,4 +37,13 @@ public abstract class AbstractCriterionDispatcherProcessor<T> implements IChange
 	
 	protected abstract List<IChangesProcessor> getProcessorsThatMeetCriterion(Map<String, Object> context, EObject object, Changes changes);
 	
+	/**
+	 * Add the possibility to clear the internal state
+	 * 
+	 * @author Mircea Negreanu
+	 */
+	public void clear() {
+		processors.clear();
+	}
+	
 }
