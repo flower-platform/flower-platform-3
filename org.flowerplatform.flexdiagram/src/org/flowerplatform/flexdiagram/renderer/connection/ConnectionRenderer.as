@@ -56,17 +56,10 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		private var _diagramShell:DiagramShell;
 		
 		private var _data:Object;
+				
+		private var _sourceEndType:String = ConnectionEnd.NONE;
 		
-		/**
-		 * A connection figure can have a decorator at each side. If 
-		 * sourceEndType/targetEndType is NONE => no decorator is 
-		 * being used.
-		 */
-		public static const NONE:String = "none";
-		
-		private var _sourceEndType:String = NONE;
-		
-		private var _targetEndType:String = NONE;
+		private var _targetEndType:String = ConnectionEnd.NONE;
 		
 		/**
 		 * The source figure: arrow, triangle or diamond.
@@ -151,6 +144,8 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 			addChild(segments[0]);
 			addChild(sourceFigure);
 			addChild(targetFigure);
+			
+			depth = int.MAX_VALUE;
 		}
 		
 		public function get diagramShell():DiagramShell {
@@ -558,7 +553,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		public function updateSourceFigure():void {
 			var auxPoint:BindablePoint;
 			sourceFigure.type = sourceEndType;
-			if (sourceEndType != NONE) {
+			if (sourceEndType != ConnectionEnd.NONE) {
 				sourceFigure.point = _sourcePoint;
 				if (_points.length > 0)
 					auxPoint = BindablePoint(_points.getItemAt(0));
@@ -575,7 +570,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		public function updateTargetFigure() {
 			var auxPoint:BindablePoint;
 			targetFigure.type = targetEndType;
-			if (targetEndType != NONE) {
+			if (targetEndType != ConnectionEnd.NONE) {
 				targetFigure.point = _targetPoint;
 				if (_points.length > 0) 
 					auxPoint = BindablePoint(_points.getItemAt(_points.length - 1));

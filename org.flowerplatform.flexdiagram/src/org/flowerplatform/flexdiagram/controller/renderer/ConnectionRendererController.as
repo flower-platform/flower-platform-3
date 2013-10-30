@@ -28,10 +28,14 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.renderer.connection.BindablePoint;
 	import org.flowerplatform.flexdiagram.renderer.connection.ClipUtils;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionEnd;
 	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionRenderer;
 	
 	import spark.components.Label;
 	
+	/**
+	 * @author Cristian Spiescu
+	 */	
 	public class ConnectionRendererController extends ClassReferenceRendererController {
 		protected static const SOURCE_UP:int = 0;
 		
@@ -55,8 +59,16 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 			super(diagramShell, rendererClass);
 		}
 		
+		/**
+		 * @author Cristian Spiescu
+		 * @author Cristina Constantinescu
+		 */ 
 		override public function associatedModelToRenderer(model:Object, renderer:IVisualElement):void {
 			updateConnectionEnds(model, null);
+			
+			var connectionRenderer:ConnectionRenderer = ConnectionRenderer(renderer);
+			connectionRenderer.sourceEndType = getSourceEndFigureType(model);
+			connectionRenderer.targetEndType = getTargetEndFigureType(model);
 		}
 		
 		/**
@@ -144,6 +156,20 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 		
 		public function getTargetModel(connectionModel:Object):Object {
 			throw new Error("This method should be implemented");
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public function getSourceEndFigureType(connectionModel:Object):String {
+			return ConnectionEnd.NONE;
+		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public function getTargetEndFigureType(connectionModel:Object):String {
+			return ConnectionEnd.NONE;
 		}
 		
 		public function hasMiddleLabel(connectionModel:Object):Boolean {
