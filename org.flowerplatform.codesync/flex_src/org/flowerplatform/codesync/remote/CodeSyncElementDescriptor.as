@@ -23,6 +23,7 @@ package org.flowerplatform.codesync.remote {
 	/**
 	 * @author Mariana Gheorghe
 	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
 	[RemoteClass]
 	public class CodeSyncElementDescriptor {
@@ -30,6 +31,7 @@ package org.flowerplatform.codesync.remote {
 		public var codeSyncType:String;
 		public var initializationTypes:ArrayCollection;
 		public var initializationTypesLabels:ArrayCollection;
+		public var initializationTypesOrderIndexes:ArrayCollection;		
 		public var label:String;
 		public var iconUrl:String;
 		public var defaultName:String;
@@ -39,11 +41,7 @@ package org.flowerplatform.codesync.remote {
 		public var category:String;
 		public var features:ArrayCollection;
 		public var keyFeature:String;		
-		public var standardDiagramControllerProviderFactory:String;
-		
-		/**
-		 * @author Cristina Constantinescu
-		 */
-		public var createCodeSyncElement:Boolean;
+		public var standardDiagramControllerProviderFactory:String;		
+		public var orderIndex:Number;
 	}
 }
