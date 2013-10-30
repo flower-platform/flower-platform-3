@@ -18,8 +18,6 @@
  */
 package org.flowerplatform.editor.model.remote;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,7 +38,6 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.communication.command.IServerCommand;
 import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -48,7 +45,6 @@ import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.remote.PathFragment;
-import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.IContentAssist;
@@ -60,9 +56,6 @@ import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.FileBasedEditorStatefulService;
 import org.flowerplatform.emf_model.notation.Diagram;
-import org.flowerplatform.emf_model.notation.Edge;
-import org.flowerplatform.emf_model.notation.Node;
-import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.notation.View;
 import org.slf4j.Logger;
@@ -157,9 +150,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 
 	@Override
 	protected void doSave(EditableResource editableResource) {
-		Map<Object, Object> options = new HashMap<Object, Object>();
-		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-		options.put(XMLResource.OPTION_XML_VERSION, "1.1");
+		Map<Object, Object> options = EditorModelPlugin.getInstance().getLoadSaveOptions();
 		for (Resource resource : ((DiagramEditableResource) editableResource).getResourceSet().getResources()) {
 			try {
 				resource.save(options);

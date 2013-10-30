@@ -23,17 +23,18 @@ public class AddNewExtension_BackboneClass implements AddNewExtension {
 			return true;
 		}
 		
-		{
+		if (!CodeSyncOperationsService.getInstance().hasChildWithKeyFeatureValue(codeSyncElement, JavaScriptDescriptors.TYPE_REQUIRE_ENTRY, "$")) {
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
 			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_VAR_NAME, "$");
-			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_DEPENDENCY_PATH, "jQuery");
-			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
+			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_DEPENDENCY_PATH, "jquery");
+			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);	
 		}
-		{
+		
+		if (!CodeSyncOperationsService.getInstance().hasChildWithKeyFeatureValue(codeSyncElement, JavaScriptDescriptors.TYPE_REQUIRE_ENTRY, "_")) {
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_REQUIRE_ENTRY);
 			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_VAR_NAME, "_");
 			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_DEPENDENCY_PATH, "underscore");
-			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
+			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);
 		}
 		
 		return true;

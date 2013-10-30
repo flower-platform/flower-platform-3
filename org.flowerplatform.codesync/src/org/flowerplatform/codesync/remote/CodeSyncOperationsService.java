@@ -247,6 +247,18 @@ public class CodeSyncOperationsService {
 
 	}
 	
+	public boolean hasChildWithKeyFeatureValue(CodeSyncElement parent, String childCodeSyncType, String keyFeatureValue) {
+		for (CodeSyncElement child : parent.getChildren()) {
+			if (!childCodeSyncType.equals(child.getType())) {
+				continue;
+			}
+			if (keyFeatureValue.equals(getKeyFeatureValue(child))) {
+				return true;
+			}
+		}
+		return false;
+	}
+		
 	public List<String> getFeatures(String codeSyncType) {
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
 		return descriptor.getFeatures();

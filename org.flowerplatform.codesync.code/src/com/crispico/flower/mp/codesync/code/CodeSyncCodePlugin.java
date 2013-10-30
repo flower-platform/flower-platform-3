@@ -173,11 +173,12 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		CodeSyncElement codeSyncElement = getCodeSyncElement(srcDir, fragments);
 		
 		String srcDirPath = CommonPlugin.getInstance().getPathRelativeToFile(srcDirFile, project);
+		String relativeToProject = CommonPlugin.getInstance().getPathRelativeToFile(file, project);
 		if (codeSyncElement == null || showDialog) {
-			runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToSrcDir, technology, communicationChannel, showDialog);
+			runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToProject, technology, communicationChannel, showDialog);
 		} else {
 			if (showDialog) {
-				runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToSrcDir, technology, communicationChannel, showDialog);
+				runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToProject, technology, communicationChannel, showDialog);
 			}
 			return codeSyncElement;
 		}

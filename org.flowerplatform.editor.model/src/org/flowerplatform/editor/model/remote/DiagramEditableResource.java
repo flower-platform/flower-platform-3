@@ -18,6 +18,8 @@
  */
 package org.flowerplatform.editor.model.remote;
 
+import java.util.Map;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
@@ -42,6 +44,8 @@ public class DiagramEditableResource extends FileBasedEditableResource {
 	
 	public DiagramEditableResource() {
 		resourceSet = new ResourceSetImpl();
+		Map<Object, Object> options = EditorModelPlugin.getInstance().getLoadSaveOptions();
+		resourceSet.getLoadOptions().putAll(options);
 		resourceSet.getResourceFactoryRegistry().getExtensionToFactoryMap().put(Resource.Factory.Registry.DEFAULT_EXTENSION, new ResourceFactoryImpl() {
 			
 			@Override
