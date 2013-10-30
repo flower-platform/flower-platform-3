@@ -22,7 +22,12 @@ package org.flowerplatform.editor.model.controller {
 	import org.flowerplatform.emf_model.notation.Edge;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.renderer.ConnectionRendererController;
+	import org.flowerplatform.flexdiagram.renderer.connection.ConnectionEnd;
 	
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	public class EdgeRendererController extends ConnectionRendererController {
 		public function EdgeRendererController(diagramShell:DiagramShell) {
 			super(diagramShell, EdgeRenderer);
@@ -34,6 +39,20 @@ package org.flowerplatform.editor.model.controller {
 		
 		override public function getTargetModel(connectionModel:Object):Object {
 			return Edge(connectionModel).target_RH.referencedObject;
+		}
+		
+		override public function getSourceEndFigureType(connectionModel:Object):String {
+			if (connectionModel.viewDetails.sourceEndFigureType) {
+				return connectionModel.viewDetails.sourceEndFigureType;
+			}
+			return super.getSourceEndFigureType(connectionModel);
+		}
+		
+		override public function getTargetEndFigureType(connectionModel:Object):String {
+			if (connectionModel.viewDetails.targetEndFigureType) {
+				return connectionModel.viewDetails.targetEndFigureType;
+			}
+			return super.getTargetEndFigureType(connectionModel);
 		}
 		
 		override public function hasMiddleLabel(connectionModel:Object):Boolean {

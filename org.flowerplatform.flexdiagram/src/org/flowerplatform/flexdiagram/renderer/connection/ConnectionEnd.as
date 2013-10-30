@@ -29,40 +29,20 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 	 */ 
 	public class ConnectionEnd extends UIComponent {
 	
-		/**
-		 * 
-		 */
 		private const ARROW_WIDTH:int = 4;
-		
-		/**
-		 * 
-		 */
 		private const ARROW_HEIGHT:int = 8;
 		
 		/**
-		 * 
+		 * A connection figure can have a decorator at each side. If 
+		 * sourceEndType/targetEndType is NONE => no decorator is 
+		 * being used.
 		 */
-		public static const SIMPLE_ARROW:String = "arrow";
-		
-		/**
-		 * 
-		 */
+		public static const NONE:String = "none";
+		public static const OPEN_ARROW:String = "open_arrow";
 		public static const CLOSED_ARROW:String = "closed_arrow";
-		
-		/**
-		 * 
-		 */
-		public static const CLOSED_FILLED_IN_ARROW:String = "closed_filled_in_arrow";
-		
-		/**
-		 * 
-		 */
-		public static const RHOMB:String = "shared";
-		
-		/**
-		 * 
-		 */
-		public static const FILLED_IN_RHOMB:String = "composite";
+		public static const FILLED_ARROW:String = "filled_arrow";
+		public static const DIAMOND:String = "diamond";
+		public static const FILLED_DIAMOND:String = "filled_diamond";
 		
 		/**
 		 * Represents the source/target point for a connection 
@@ -94,7 +74,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * attribute by drawing an arrow on the association line 
 		 * that connects two classes.
 		 */
-		private function drawSimpleArrow():void {
+		private function drawOpenArrow():void {
 			graphics.moveTo(point.x, point.y);
 			graphics.lineTo(point.x + ARROW_HEIGHT*Math.cos(angle) - ARROW_WIDTH*Math.sin(angle),
   									point.y + ARROW_HEIGHT*Math.sin(angle) + ARROW_WIDTH*Math.cos(angle));
@@ -125,7 +105,7 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 		 * Draws a rhomb - for associations (shared/composite)
 		 * Used by associations.
 		 */
-		private function drawRhomb(fillColor:uint = 0xffffff):void {
+		private function drawDiamond(fillColor:uint = 0xffffff):void {
 			graphics.beginFill(fillColor);
 			graphics.moveTo(point.x, point.y);
 			graphics.lineTo(point.x + ARROW_HEIGHT*Math.cos(angle) - ARROW_WIDTH*Math.sin(angle),
@@ -147,20 +127,20 @@ package org.flowerplatform.flexdiagram.renderer.connection {
 			graphics.clear();
 			graphics.lineStyle(getParent().thickness, getParent().color);
 			switch (type) {
-				case SIMPLE_ARROW:
-					drawSimpleArrow();
+				case OPEN_ARROW:
+					drawOpenArrow();
 					break;
 				case CLOSED_ARROW:
 					drawClosedArrow();
 					break;
-				case CLOSED_FILLED_IN_ARROW:
+				case FILLED_ARROW:
 					drawClosedArrow(getParent().color);
 					break;
-				case RHOMB:
-					drawRhomb();
+				case DIAMOND:
+					drawDiamond();
 					break;
-				case FILLED_IN_RHOMB:
-					drawRhomb(getParent().color);
+				case FILLED_DIAMOND:
+					drawDiamond(getParent().color);
 					break;
 				default:
 					break;
