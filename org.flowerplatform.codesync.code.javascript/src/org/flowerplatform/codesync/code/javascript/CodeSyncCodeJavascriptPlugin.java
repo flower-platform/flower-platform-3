@@ -29,6 +29,7 @@ import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
+import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 import org.osgi.framework.BundleContext;
 
@@ -88,9 +89,11 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 			
 			URL url = CodeSyncPlugin.getInstance().getBundleContext().getBundle().getResource("scripts");
 			File folder = new File(FileLocator.resolve(url).toURI());
+			
 			// read each file and evaluate it
 			for (File file: folder.listFiles()) {
-				cx.evaluateString(scope, FileUtils.readFileToString(file), file.getName(), 0, null);
+				Script compiledScript = cx.compileString(FileUtils.readFileToString(file), file.getName(), 0, null);
+				compiledScript.exec(cx, scope);
 			}
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("JS scripts loading error", e);
