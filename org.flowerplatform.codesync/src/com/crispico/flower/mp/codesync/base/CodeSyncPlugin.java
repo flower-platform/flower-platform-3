@@ -20,17 +20,13 @@ package com.crispico.flower.mp.codesync.base;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
@@ -62,9 +58,6 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.Scriptable;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -282,15 +275,6 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 
 		// give the codeSyncExtension the signal to register their own runnable descriptors
 		initializeExtensionPoint_codeSyncAlgorithmRunner();
-		
-		// descriptors registered from scripts
-		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new Runnable() {
-			@Override
-			public void run() {
-				// search for js files and register them
-				jsScriptExtensions();
-			}
-		});	
 		
 		// needs custom descriptor because it uses the builder template (i.e. setters return the instance)
 		new CustomSerializationDescriptor(CodeSyncElementDescriptor.class)
@@ -557,33 +541,11 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	/**
-	 * Loads and executes javascript files from codesync/scripts.
+	 * Reruns all the registered runnable to regenerate descriptors,
+	 * processors, ..
 	 * 
-	 * @author Mircea Negreanu
+	 * @return String containing errors thrown during run (if any)
 	 */
-	public void jsScriptExtensions() {
-		// use rhino as a scripting engine instead of javax.scripting as we want to give
-		// the users the possibility to extend existing java classes (and not only implement
-		// interfaces)
-		Context cx = Context.enter();
-		try {
-			// we want ImporterTopLevel so we can just write importClass inside the js and 
-			// not use a JavaImporter()
-			Scriptable scope = new ImporterTopLevel(cx);
-			
-			URL url = CodeSyncPlugin.getInstance().getBundleContext().getBundle().getResource("scripts");
-			File folder = new File(FileLocator.resolve(url).toURI());
-			// read each file and evaluate it
-			for (File file: folder.listFiles()) {
-				cx.evaluateString(scope, FileUtils.readFileToString(file), file.getName(), 0, null);
-			}
-		} catch (IOException | URISyntaxException e) {
-			throw new RuntimeException("JS scripts loading error", e);
-		} finally {
-			Context.exit();
-		}
-	}
-	
 	public String regenerateDescriptors() {
 		// clear the descriptors
 		getCodeSyncElementDescriptors().clear();
@@ -599,6 +561,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				run.run();
 			} catch (Exception ex) {
 				errorsCollected.append(ex.toString());
+				errorsCollected.append("\n");
 			}
 		}
 		
