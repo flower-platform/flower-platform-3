@@ -29,5 +29,3 @@ Export-Package: com.crispico.flower.mp.codesync.base,
  org.flowerplatform.codesync.remote
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.crispico.flower.mp.codesync.base.CodeSyncPlugin
-Bundle-ClassPath: lib/js.jar,
- .
