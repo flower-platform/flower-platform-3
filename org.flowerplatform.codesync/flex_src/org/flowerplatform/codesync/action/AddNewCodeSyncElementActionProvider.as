@@ -42,7 +42,6 @@ package org.flowerplatform.codesync.action {
 			}
 			
 			var result:Vector.<IAction> = new Vector.<IAction>();
-			
 			// by default topLevel
 			var selectedCodeSyncElementType:String = "";
 			if (selection.length == 1) {
@@ -61,7 +60,7 @@ package org.flowerplatform.codesync.action {
 						result.push(new AddNewCodeSyncElementAction(availableCodeSyncElement, initializationType));
 					}
 				}
-			}
+			}		
 			
 			return result;
 		}

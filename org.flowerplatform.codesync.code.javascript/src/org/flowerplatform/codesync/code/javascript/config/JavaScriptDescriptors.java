@@ -7,6 +7,7 @@ import org.flowerplatform.codesync.code.javascript.config.changes_processor.Attr
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.InheritanceProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.RequireEntryDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneClass;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneCollectionView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneFormView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableItemView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableView;
@@ -48,6 +49,7 @@ public class JavaScriptDescriptors implements Runnable {
 	public static final String INIT_TYPE_BACKBONE_FORM_VIEW = "backboneFormView";
 	public static final String INIT_TYPE_BACKBONE_TABLE_VIEW = "backboneTableView";
 	public static final String INIT_TYPE_BACKBONE_TABLE_ITEM_VIEW = "backboneTableItemView";
+	public static final String INIT_TYPE_BACKBONE_COLLECTION_VIEW = "backboneCollectionView";
 
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
@@ -63,11 +65,12 @@ public class JavaScriptDescriptors implements Runnable {
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_BACKBONE_CLASS).setLabel("Backbone Class")
 				.addCodeSyncTypeCategory("topLevel")
-				.addInitializationType(INIT_TYPE_NONE).addInitializationTypeLabel("Plain Backbone Class")
-				.addInitializationType(INIT_TYPE_BACKBONE_VIEW).addInitializationTypeLabel("Plain View")
-				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_VIEW).addInitializationTypeLabel("Table View")
-				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_ITEM_VIEW).addInitializationTypeLabel("Table Item View")
-				.addInitializationType(INIT_TYPE_BACKBONE_FORM_VIEW).addInitializationTypeLabel("Form View")
+				.addInitializationType(INIT_TYPE_NONE).addInitializationTypeLabel("Plain Backbone Class").addInitializationTypesOrderIndexes(110)
+				.addInitializationType(INIT_TYPE_BACKBONE_VIEW).addInitializationTypeLabel("Plain View").addInitializationTypesOrderIndexes(120)
+				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_VIEW).addInitializationTypeLabel("Table View").addInitializationTypesOrderIndexes(130)
+				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_ITEM_VIEW).addInitializationTypeLabel("Table Item View").addInitializationTypesOrderIndexes(140)
+				.addInitializationType(INIT_TYPE_BACKBONE_FORM_VIEW).addInitializationTypeLabel("Form View").addInitializationTypesOrderIndexes(150)
+				.addInitializationType(INIT_TYPE_BACKBONE_COLLECTION_VIEW).addInitializationTypeLabel("Collection View").addInitializationTypesOrderIndexes(160)
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewBackboneClass")
 				.setExtension("js")
@@ -77,6 +80,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature(FEATURE_SUPER_CLASS)
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
+				.setOrderIndex(10)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -92,6 +96,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 				.setInplaceEditorFeature("")
+				.setOrderIndex(130)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -107,6 +112,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 				.setInplaceEditorFeature("")
+				.setOrderIndex(120)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -121,6 +127,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setKeyFeature(FEATURE_VAR_NAME)				
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
 				.setInplaceEditorFeature("")
+				.setOrderIndex(110)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -135,6 +142,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature(FEATURE_NAME)
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setOrderIndex(140)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -149,6 +157,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature(FEATURE_NAME)
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setOrderIndex(150)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -163,6 +172,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("function")
 				.setKeyFeature("event")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setOrderIndex(160)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -176,6 +186,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("function")
 				.setKeyFeature("path")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setOrderIndex(170)
 		);
 		
 		/////////////////////////////////////////
@@ -184,7 +195,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_JAVASCRIPT_FILE)
-				.addCodeSyncTypeCategory("topLevel")
+//				.addCodeSyncTypeCategory("topLevel")
 				.setLabel("JavaScript File")
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewJavaScriptFile")
@@ -192,8 +203,9 @@ public class JavaScriptDescriptors implements Runnable {
 				.addChildrenCodeSyncTypeCategory("backboneClassMember")
 				.addFeature(FEATURE_NAME)
 				.setKeyFeature(FEATURE_NAME)
-				.setStandardDiagramControllerProviderFactory("topLevelBox"));
-		
+				.setStandardDiagramControllerProviderFactory("topLevelBox")				
+		);
+			
 		/////////////////////////////////////////
 		// TOP LEVEL
 		/////////////////////////////////////////
@@ -212,6 +224,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("headerRowId")
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
+				.setOrderIndex(20)
 		);
 
 		descriptors.add(
@@ -225,6 +238,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("title")
 				.setKeyFeature("title")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setOrderIndex(210)
 		);
 		
 		/////////////////////////////////////////
@@ -244,6 +258,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("itemUrl")
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
+				.setOrderIndex(30)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -256,6 +271,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("valueExpression")
 				.setKeyFeature("valueExpression")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setOrderIndex(310)
 		);
 		
 		/////////////////////////////////////////
@@ -274,6 +290,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature(FEATURE_NAME)
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
+				.setOrderIndex(40)
 		);
 		descriptors.add(
 				new CodeSyncElementDescriptor()
@@ -288,6 +305,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.addFeature("title")
 				.setKeyFeature("title")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+				.setOrderIndex(410)
 		);
 		
 		/////////////////////////////////////////
@@ -310,7 +328,8 @@ public class JavaScriptDescriptors implements Runnable {
 				.setLabel("Note")
 				.setIconUrl("images/full/obj16/note.png")
 				.setDefaultName("NewNote")				
-				.setCreateCodeSyncElement(false)				
+				.setCreateCodeSyncElement(false)	
+				.setOrderIndex(99)
 		);
 		
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().addAll(descriptors);
@@ -364,6 +383,7 @@ public class JavaScriptDescriptors implements Runnable {
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableView());
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableItemView());
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneFormView());
+		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneCollectionView());
 		
 		InplaceEditorExtension_RegExFormat javascriptAttributeInplaceEditorExtension = 
 				new InplaceEditorExtension_RegExFormat(

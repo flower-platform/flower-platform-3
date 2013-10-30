@@ -3,7 +3,7 @@
 <stringAttribute key="bad_container_name" value="\org.flowerplatform.flex_host_app\launch_config"/>
 <stringAttribute key="com.adobe.flexbuilder.debug.ATTR_APPLICATION" value="src/FlexHostApp.mxml"/>
 <stringAttribute key="com.adobe.flexbuilder.debug.ATTR_PROJECT" value="org.flowerplatform.flex_host_app"/>
-<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_RUN_URL" value="http://localhost:8080/flowerplatform/flowerContent.html"/>
+<stringAttribute key="com.adobe.flexbuilder.debug.ATTR_RUN_URL" value="http://localhost:8080/flowerplatform/flowerContent.html#,contentProvider=orion.flower.content"/>
 <booleanAttribute key="com.adobe.flexbuilder.debug.ATTR_USE_DEFAULT_URLS" value="false"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/org.flowerplatform.flex_host_app"/>

@@ -26,6 +26,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
  * @author Mariana Gheorghe
  * @author Cristian Spiescu
+ * @author Cristina Constantinescu
  */
 public class CodeSyncElementDescriptor {
 
@@ -34,6 +35,8 @@ public class CodeSyncElementDescriptor {
 	private List<String> initializationTypes;
 	
 	private List<String> initializationTypesLabels;
+	
+	private List<Long> initializationTypesOrderIndexes;
 	
 	private String label;
 	
@@ -65,16 +68,13 @@ public class CodeSyncElementDescriptor {
 	 * <p>
 	 * E.g. for notes, the value is <code>false</code>
 	 * ("use the create new element general logic, but don't create 
-	 * {@link CodeSyncElement} in model").
-	 * 
-	 * @author Cristina Constantinescu
+	 * {@link CodeSyncElement} in model").	 
 	 */
 	private boolean createCodeSyncElement;
 	
-	/**
-	 * @author Cristina Constantinescu
-	 */
 	private String inplaceEditorFeature;
+	
+	private long orderIndex;
 	
 	public CodeSyncElementDescriptor() {
 		// TODO CS/JS I'd recommend some lists lazy, cf. initializationTypes; maybe categories: leave always init
@@ -125,6 +125,23 @@ public class CodeSyncElementDescriptor {
 			initializationTypesLabels = new ArrayList<String>();
 		}
 		initializationTypesLabels.add(value);
+		return this;
+	}
+		
+	public List<Long> getInitializationTypesOrderIndexes() {
+		return initializationTypesOrderIndexes;
+	}
+
+	public CodeSyncElementDescriptor setInitializationTypesOrderIndexes(List<Long> initializationTypesOrderIndexes) {
+		this.initializationTypesOrderIndexes = initializationTypesOrderIndexes;
+		return this;
+	}
+
+	public CodeSyncElementDescriptor addInitializationTypesOrderIndexes(long value) {
+		if (initializationTypesOrderIndexes == null) {
+			initializationTypesOrderIndexes = new ArrayList<Long>();
+		}
+		initializationTypesOrderIndexes.add(value);
 		return this;
 	}
 	
@@ -242,18 +259,12 @@ public class CodeSyncElementDescriptor {
 			String standardDiagramControllerProviderFactory) {
 		this.standardDiagramControllerProviderFactory = standardDiagramControllerProviderFactory;
 		return this;
-	}
+	}	
 	
-	/**
-	 * @author Cristina Constantinescu
-	 */
 	public boolean getCreateCodeSyncElement() {
 		return createCodeSyncElement;
 	}
 
-	/**
-	 * @author Cristina Constantinescu
-	 */
 	public CodeSyncElementDescriptor setCreateCodeSyncElement(boolean createCodeSyncElement) {
 		this.createCodeSyncElement = createCodeSyncElement;
 		return this;
@@ -268,4 +279,13 @@ public class CodeSyncElementDescriptor {
 		return this;
 	}
 
+	public long getOrderIndex() {
+		return orderIndex;
+	}
+
+	public CodeSyncElementDescriptor setOrderIndex(long orderIndex) {
+		this.orderIndex = orderIndex;
+		return this;
+	}
+	
 }
