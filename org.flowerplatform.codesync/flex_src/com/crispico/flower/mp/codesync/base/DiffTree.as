@@ -28,6 +28,7 @@ package com.crispico.flower.mp.codesync.base
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorStatefulClient;
 	
 	import flash.display.DisplayObjectContainer;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -106,13 +107,20 @@ package com.crispico.flower.mp.codesync.base
 			super.expandCollapseNode(modelWrapper);
 		}
 		
-		public function updateFullContent():void {
-			for (var i:int = 0; i < dataProvider.length; i++) {
-				var wrapper:HierarchicalModelWrapper = HierarchicalModelWrapper(dataProvider.getItemAt(i));
-				if (wrapper.nestingLevel == 0) {
-					expandCollapseNode(wrapper);
-				}
+		public function updateFullContent(content:Object):void {
+			if (content != null) {
+				var list:ArrayCollection = ArrayCollection(content);
+				var path:ArrayCollection = ArrayCollection(list.getItemAt(0));
+				var node:DiffTreeNode = DiffTreeNode(list.getItemAt(1));
+				statefulClient.updateNode(path, node);
+				node.dispatchEvent(new Event(TreeList.UPDATE_TREE_RENDERER_EVENT));
 			}
+//			for (var i:int = 0; i < dataProvider.length; i++) {
+//				var wrapper:HierarchicalModelWrapper = HierarchicalModelWrapper(dataProvider.getItemAt(i));
+//				if (wrapper.nestingLevel == 0) {
+//					expandCollapseNode(wrapper);
+//				}
+//			}
 		}
 		
 		/**
