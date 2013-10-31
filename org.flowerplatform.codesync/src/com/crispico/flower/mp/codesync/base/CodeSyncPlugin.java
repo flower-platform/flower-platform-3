@@ -279,6 +279,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("codeSyncType")
 			.addDeclaredProperty("initializationTypes")
 			.addDeclaredProperty("initializationTypesLabels")
+			.addDeclaredProperty("initializationTypesOrderIndexes")
 			.addDeclaredProperty("label")
 			.addDeclaredProperty("iconUrl")
 			.addDeclaredProperty("defaultName")
@@ -289,7 +290,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("features")
 			.addDeclaredProperty("keyFeature")
 			.addDeclaredProperty("standardDiagramControllerProviderFactory")
-			.addDeclaredProperty("createCodeSyncElement")
+			.addDeclaredProperty("orderIndex")
 			.register();
 		
 		new CustomSerializationDescriptor(RelationDescriptor.class)

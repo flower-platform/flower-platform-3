@@ -75,7 +75,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService1.getInstance().getChildrenCategories(codeSyncElement.getType())) {
 			String category = childDescriptor.getCategory();
 			if (category != null) {
-				CodeSyncDiagramOperationsService1.getInstance().addCategorySeparator(node, childDescriptor);
+				CodeSyncDiagramOperationsService1.getInstance().addCategorySeparator(node, codeSyncElement, childDescriptor);
 			}
 		}
 		

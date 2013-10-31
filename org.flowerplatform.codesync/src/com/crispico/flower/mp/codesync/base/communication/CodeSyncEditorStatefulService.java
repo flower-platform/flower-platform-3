@@ -18,11 +18,16 @@
  */
 package com.crispico.flower.mp.codesync.base.communication;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
+import org.flowerplatform.common.util.RunnableWithParam;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
+import org.flowerplatform.communication.tree.GenericTreeContext;
+import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.editor.remote.EditableResourceClient;
 import org.flowerplatform.editor.remote.EditorStatefulService;
@@ -90,8 +95,27 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 		Runnable runnable = (Runnable) updatesToApply;
 		runnable.run();
 		
+		List<Object> result = null;
+		if (updatesToApply instanceof DiffTreeNodeRunnable) {
+			DiffTreeNode node = ((DiffTreeNodeRunnable) updatesToApply).nodeToSendToClient;
+			Object source = null;
+			do {
+				List<PathFragment> path = diffTree.getPathForNode(node);
+				GenericTreeContext genericTreeContext = diffTree.getTreeContext(context.getCommunicationChannel(), context.getStatefulClientId());
+				source = diffTree.getNodeByPath(path, genericTreeContext);
+				if (source != null) {
+					node = (DiffTreeNode) diffTree.openNodeInternal(context.getCommunicationChannel(), context.getStatefulClientId(), path, genericTreeContext.getClientContext());
+					result = new ArrayList<Object>();
+					result.add(path);
+					result.add(node);
+				} else {
+					node = (DiffTreeNode) node.getParent();
+				}
+			} while (source == null && node != null);
+		}
+		
 		for (EditableResourceClient client : editableResource.getClients()) {
-			sendContentUpdateToClient(editableResource, client, null, true);
+			sendContentUpdateToClient(editableResource, client, result, true);
 		}
 	}
 
@@ -220,10 +244,11 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 	
 	@RemoteInvocation
 	public void executeDiffAction(final StatefulServiceInvocationContext context, String editableResourcePath, final int actionType, final int diffIndex, final DiffTreeNode node, final Map<Object, Object> treeContext) {
-		attemptUpdateEditableResourceContent(context, getProjectPath(editableResourcePath), new Runnable() {
-			
+		attemptUpdateEditableResourceContent(context, getProjectPath(editableResourcePath), new DiffTreeNodeRunnable() {
+
 			@Override
 			public void run() {
+				this.nodeToSendToClient = node;
 				diffTree.executeDiffAction(context, actionType, diffIndex, node, treeContext);
 			}
 		});

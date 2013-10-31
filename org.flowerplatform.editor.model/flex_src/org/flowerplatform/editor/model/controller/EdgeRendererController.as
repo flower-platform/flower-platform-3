@@ -33,11 +33,35 @@ package org.flowerplatform.editor.model.controller {
 			super(diagramShell, EdgeRenderer);
 		}
 		
+		/**
+		 * @author Mariana Gheorghe
+		 * @author Cristina Constantinescu
+		 * @author Cristian Spiescu
+		 */
 		override public function getSourceModel(connectionModel:Object):Object {
+			if (connectionModel == null || connectionModel.source_RH == null) {
+				// this may happen if there is an edge which doesn't have a model associated. E.g. the source/target
+				// view doesn't exist any more, but the edge still exists. Normally the server should make sure that
+				// this doesn't happen (e.g. delete logic). But if for some reason this does happens, we return null
+				// and the diagram continues to work. The edge knows how to handle null source/target.
+				return null;
+			}
 			return Edge(connectionModel).source_RH.referencedObject;
 		}
 		
+		/**
+		 * @author Mariana Gheorghe
+		 * @author Cristina Constantinescu
+		 * @author Cristian Spiescu
+		 */
 		override public function getTargetModel(connectionModel:Object):Object {
+			if (connectionModel == null || connectionModel.target_RH == null) {
+				// this may happen if there is an edge which doesn't have a model associated. E.g. the source/target
+				// view doesn't exist any more, but the edge still exists. Normally the server should make sure that
+				// this doesn't happen (e.g. delete logic). But if for some reason this does happens, we return null
+				// and the diagram continues to work. The edge knows how to handle null source/target.
+				return null;
+			}
 			return Edge(connectionModel).target_RH.referencedObject;
 		}
 		
