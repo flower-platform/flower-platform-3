@@ -19,6 +19,7 @@
 package org.flowerplatform.codesync.code.javascript;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -31,6 +32,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -74,7 +76,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	/**
-	 * Loads and executes javascript files from codesync/scripts.
+	 * Loads and executes javascript files from codesync/scripts folder.
 	 * 
 	 * @author Mircea Negreanu
 	 */
@@ -85,20 +87,34 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		Context cx = Context.enter();
 		try {
 			// we want ImporterTopLevel so we can just write importClass inside the js and 
-			// not use a JavaImporter()
-			Scriptable scope = new ImporterTopLevel(cx);
+			// not use a JavaImporter() construct
+			Scriptable scope = new ImporterTopLevel(cx, true);
+			((ScriptableObject) scope).defineFunctionProperties(new String[] {"load"}, LoadJs.class, ScriptableObject.DONTENUM);
 			
 			URL url = CodeSyncPlugin.getInstance().getBundleContext().getBundle().getResource("scripts");
 			File folder = new File(FileLocator.resolve(url).toURI());
 			
-			// read each file and evaluate it
-			for (File file: folder.listFiles()) {
+			// read each file (obly js files) and evaluate it
+			for (File file: folder.listFiles(new FilenameFilter() {
+				@Override
+				public boolean accept(File dir, String name) {
+					if (name != null && name.toLowerCase().endsWith(".js")) {
+						return true;
+					}
+					return false;
+				}
+			})) {
+				// compile the sript and then execute it
 				Script compiledScript = cx.compileString(FileUtils.readFileToString(file), file.getName(), 0, null);
 				compiledScript.exec(cx, scope);
 			}
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("JS scripts loading error", e);
 		} finally {
+			// clear compiled scripts cache (we need them only when going
+			// through scripts, in order to not compile multiple time the same 
+			// included file)
+			LoadJs.clearCompileScriptsCache();
 			Context.exit();
 		}
 	}
