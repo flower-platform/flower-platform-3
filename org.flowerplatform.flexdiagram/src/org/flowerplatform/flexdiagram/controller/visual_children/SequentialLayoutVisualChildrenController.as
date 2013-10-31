@@ -101,6 +101,14 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 					parentRenderer.addElementAt(childRendererCandidate, i + visualElementsToSkip);
 					logRenderersAdded++;
 				}
+				
+				// TODO CC: temporary code
+				// special case: the childModel already has a renderer associated
+				// in while (line 115), the old renderer will be unassoc and the model deleted from diagramShell map
+				// -> problems
+				if (diagramShell.getRendererForModel(childModel) != null) {
+					diagramShell.unassociateModelFromRenderer(childModel, diagramShell.getRendererForModel(childModel), false);
+				}
 				diagramShell.associateModelToRenderer(childModel, childRendererCandidate, childControllerProvider);
 			}
 			

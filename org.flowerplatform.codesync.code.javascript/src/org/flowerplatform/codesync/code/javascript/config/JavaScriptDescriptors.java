@@ -326,6 +326,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setCodeSyncType("note")
 				.setLabel("Note")
 				.setIconUrl("images/full/obj16/note.png")
+				.setKeyFeature("text")
 				.setDefaultName("NewNote")				
 				.setCreateCodeSyncElement(false)	
 				.setOrderIndex(99)

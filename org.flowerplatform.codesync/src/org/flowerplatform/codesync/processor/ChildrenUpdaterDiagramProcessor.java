@@ -79,6 +79,10 @@ public class ChildrenUpdaterDiagramProcessor extends AbstractChildrenUpdaterDiag
 		return result;
 	}
 	
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
 	@Override
 	protected int getNewViewsIndex(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram) {
 		if (childModelElements.size() == 0) {
@@ -89,10 +93,22 @@ public class ChildrenUpdaterDiagramProcessor extends AbstractChildrenUpdaterDiag
 		CodeSyncElementDescriptor descriptor = 
 				CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
 		String category = descriptor.getCategory();
+		int index = 0;
+		
 		if (category != null) {
-			return getCategorySeparatorIndex(associatedViewOnOpenDiagram, category);
+			index = getCategorySeparatorIndex(associatedViewOnOpenDiagram, category);
 		}
-		return 0;
+		// add the number of previous added children having the same type as codeSyncElement
+		for (EObject child : object.eContents()) {
+			CodeSyncElement childElement = getCodeSyncElement(child);
+			if (childElement.equals(codeSyncElement)) {
+				break;
+			}
+			if (childElement.getType().equals(codeSyncElement.getType())) {
+				index++;
+			}						
+		}
+		return index;
 	}
 	
 	private int getCategorySeparatorIndex(View view, String category) {
