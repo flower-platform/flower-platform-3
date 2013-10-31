@@ -301,7 +301,6 @@ public class JavaScriptDescriptors implements Runnable {
 				.addCodeSyncTypeCategory("formItem")
 				.setCategory("items")
 				.addFeature("valueExpression")
-				.addFeature("editId")
 				.addFeature("title")
 				.setKeyFeature("title")
 				.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
