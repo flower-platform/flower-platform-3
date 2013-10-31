@@ -142,8 +142,10 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 				try {
 					document = new Document(FileUtils.readFileToString(file));
 					TextEdit edits = rewrite(document, fileInfo);
-					edits.apply(document);
-					FileUtils.writeStringToFile(file, document.get()); // TODO replace with call to IFileAccess
+					if (edits.getChildrenSize() != 0) {
+						edits.apply(document);
+						FileUtils.writeStringToFile(file, document.get()); // TODO replace with call to IFileAccess
+					}
 				} catch (IOException | MalformedTreeException | BadLocationException e) {
 					throw new RuntimeException(e);
 				}
