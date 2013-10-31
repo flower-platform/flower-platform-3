@@ -39,6 +39,7 @@
 			import flash.filters.DropShadowFilter;
 			
 			import mx.core.FlexGlobals;
+			import mx.core.IDataRenderer;
 			import mx.core.IVisualElement;
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
@@ -62,6 +63,8 @@
 			private var shadow:DropShadowFilter;
 			private var effectsController:BoxEffectsController;
 			private var shapeDrawer:ShapeDrawer;
+			
+			public var setOnlyMinWidthHeight:Boolean = false;
 			
 			public function get diagramShell():DiagramShell {
 				return _diagramShell;
@@ -105,7 +108,7 @@
 						y = bounds.y;
 						
 						height = bounds.height;
-						width = bounds.width;
+						width = bounds.width;						
 					}
 				}
 			}
@@ -141,10 +144,14 @@
 			}
 			
 			protected function measureHandler(event:Event):void {				
-				if (event.target is BoxChildIconItemRenderer && BoxChildIconItemRenderer(event.target).parent == this) {
+				if (event.target is IVisualElement && IVisualElement(event.target).parent == this) {
 					event.stopPropagation();
 					// recalculate parent's size if a child changes its size or added/removed
+					setOnlyMinWidthHeight = (event.type == Event.REMOVED_FROM_STAGE);
+					
 					measure();
+					
+					setOnlyMinWidthHeight = false;
 				}
 			}
 			
