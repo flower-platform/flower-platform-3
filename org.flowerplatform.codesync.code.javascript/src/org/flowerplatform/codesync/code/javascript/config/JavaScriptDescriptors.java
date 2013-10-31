@@ -288,6 +288,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("formItem")
 				.addFeature(FEATURE_NAME)
+				.addFeature("idSuffix")
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
 				.setOrderIndex(40)
