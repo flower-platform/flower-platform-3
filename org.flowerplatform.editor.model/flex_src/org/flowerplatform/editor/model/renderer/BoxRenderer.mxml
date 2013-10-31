@@ -106,8 +106,6 @@
 						
 						height = bounds.height;
 						width = bounds.width;
-						// make sure these sizes are greater than children's area, if not recalculate them
-						measure();
 					}
 				}
 			}
@@ -142,10 +140,10 @@
 				}
 			}
 			
-			protected function resizeEventHandler(event:ResizeEvent):void {				
+			protected function measureHandler(event:Event):void {				
 				if (event.target is BoxChildIconItemRenderer && BoxChildIconItemRenderer(event.target).parent == this) {
 					event.stopPropagation();
-					// recalculate parent's size if a child changes its size
+					// recalculate parent's size if a child changes its size or added/removed
 					measure();
 				}
 			}
@@ -176,7 +174,9 @@
 			protected function initializeHandler(event:FlexEvent):void {
 				// add event at initialization because the resize handler must be notified also
 				// when a child initial size is greater than its parent (the box renderer)
-				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
+				addEventListener(ResizeEvent.RESIZE, measureHandler, true);
+				addEventListener(Event.ADDED_TO_STAGE, measureHandler, true);
+				addEventListener(Event.REMOVED_FROM_STAGE, measureHandler, true);
 			}
 			
 		]]>

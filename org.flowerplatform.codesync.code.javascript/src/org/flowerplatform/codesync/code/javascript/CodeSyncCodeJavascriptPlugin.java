@@ -60,6 +60,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		// descriptors for js code
 		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new JavaScriptDescriptors());
 
+//		TODO CC: reactivate this mechanism 
 //		// descriptors registered from scripts
 //		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new Runnable() {
 //			@Override
