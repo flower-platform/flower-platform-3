@@ -24,18 +24,23 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import javax.script.Bindings;
+import javax.script.Compilable;
+import javax.script.CompiledScript;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
+import org.flowerplatform.codesync.code.javascript.scripting.FlowerScriptLoad;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ImporterTopLevel;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+import com.google.code.scriptengines.js.util.ExtendedScriptException;
 
 /**
  * @author Mariana Gheorghe
@@ -77,24 +82,32 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 	
 	/**
 	 * Loads and executes javascript files from codesync/scripts folder.
+	 * <p>Allows scripts to load scripts from inside scripts. The syntax is
+	 * <pre>
+	 * {@code
+	 * utils.load('path/to/script.js');
+	 * }
+	 * </pre>
+	 * The path to script is relative to the scripts folder in CodeSyncPlugin.</p>
 	 * 
 	 * @author Mircea Negreanu
 	 */
-	public void jsScriptExtensions() {
-		// use rhino as a scripting engine instead of javax.scripting as we want to give
-		// the users the possibility to extend existing java classes (and not only implement
-		// interfaces)
-		Context cx = Context.enter();
+	public void jsScriptExtensions() { 
+		ScriptEngineManager manager = new ScriptEngineManager();
+		Bindings binding = manager.getBindings();
+		
+		ScriptEngine engine = manager.getEngineByName("rhino-nonjdk");
+		ScriptContext context = engine.getContext();
+
+		// the class that will allow us to load scripts from inside scripts
+		FlowerScriptLoad scriptLoad = new FlowerScriptLoad(manager, context);
+		binding.put("utils", scriptLoad);
 		try {
-			// we want ImporterTopLevel so we can just write importClass inside the js and 
-			// not use a JavaImporter() construct
-			Scriptable scope = new ImporterTopLevel(cx, true);
-			((ScriptableObject) scope).defineFunctionProperties(new String[] {"load"}, LoadJs.class, ScriptableObject.DONTENUM);
-			
+			// get all the scripts from the scripts folder
 			URL url = CodeSyncPlugin.getInstance().getBundleContext().getBundle().getResource("scripts");
 			File folder = new File(FileLocator.resolve(url).toURI());
 			
-			// read each file (obly js files) and evaluate it
+			// at the moment load only js (because that's the only manager we have so far)
 			for (File file: folder.listFiles(new FilenameFilter() {
 				@Override
 				public boolean accept(File dir, String name) {
@@ -104,18 +117,48 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 					return false;
 				}
 			})) {
-				// compile the sript and then execute it
-				Script compiledScript = cx.compileString(FileUtils.readFileToString(file), file.getName(), 0, null);
-				compiledScript.exec(cx, scope);
+				compileAndExecuteScript(file, engine, context, null);
 			}
-		} catch (IOException | URISyntaxException e) {
-			throw new RuntimeException("JS scripts loading error", e);
+		} catch (IOException | URISyntaxException ex) {
+			throw new RuntimeException(ex);
+		} catch (ExtendedScriptException ex) {
+			throw new RuntimeException(ex.getCause());
+		} catch (ScriptException ex) {
+			throw new RuntimeException(ex);
 		} finally {
-			// clear compiled scripts cache (we need them only when going
-			// through scripts, in order to not compile multiple time the same 
-			// included file)
-			LoadJs.clearCompileScriptsCache();
-			Context.exit();
+			scriptLoad.clearCompileScriptsCache();
+		}
+	}
+	
+	/**
+	 * Loads, compile (if compilable) and executes a script.
+	 * 
+	 * @param file
+	 * @param engine
+	 * @param context
+	 * @param fileName file name to appear in the error, if null it is extracted from file
+	 * 
+	 * @throws ScriptException script compiling/execution error 
+	 * @throws IOException reading file error
+	 * 
+	 * @author Mircea Negreanu
+	 */
+	public void compileAndExecuteScript(File file, ScriptEngine engine, ScriptContext context, String fileName) throws ScriptException, IOException {
+		// compile the script and then execute it
+		if (fileName != null) {
+			engine.put(ScriptEngine.FILENAME, fileName);
+		} else {
+			engine.put(ScriptEngine.FILENAME, file.getName());
+		}
+		if (engine instanceof Compilable) {
+			// compile the script if possible
+			Compilable compilingEngine = (Compilable) engine;
+			CompiledScript script = compilingEngine.compile(FileUtils.readFileToString(file));
+			// execute the compiled script
+			script.eval(context);
+		} else {
+			// execute the uncompiled script
+			engine.eval(FileUtils.readFileToString(file), context);
 		}
 	}
 }
