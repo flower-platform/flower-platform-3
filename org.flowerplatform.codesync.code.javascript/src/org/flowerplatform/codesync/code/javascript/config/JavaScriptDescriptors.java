@@ -288,6 +288,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setExtension("html")
 				.addChildrenCodeSyncTypeCategory("formItem")
 				.addFeature(FEATURE_NAME)
+				.addFeature("idSuffix")
 				.setKeyFeature(FEATURE_NAME)
 				.setStandardDiagramControllerProviderFactory("topLevelBox")
 				.setOrderIndex(40)
@@ -415,7 +416,8 @@ public class JavaScriptDescriptors implements Runnable {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", parentElementProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form", parentElementProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);		
 		
 		TopLevelElementChildProcessor childElementProcessor = new TopLevelElementChildProcessor();
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("topLevelBoxTitle", childElementProcessor);

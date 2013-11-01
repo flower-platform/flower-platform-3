@@ -70,6 +70,7 @@ public class Parser {
 	
 	public static final String HTML_FORM_END					= "htmlFormEnd";
 	public static final String HTML_FORM_END_REGEX				= "</table>";
+	public static final String HTML_FORM_ID_SUFFIX_REGEX		= "type=\"button\"\\s*?id=\"edit-(.*?)\"";
 	
 	public static final String HTML_FORM_ITEM					= "formItem";
 	public static final String HTML_FORM_ITEM_REGEX 			= "<tr.*?<td>(.*?):</td>.*?<td .*?<%= (.*?) %>.*?</tr>";
@@ -253,6 +254,14 @@ public class Parser {
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
 					enterState(session, HTML_FORM, currentState.node, 1);
 				}
+			}
+			
+		})
+		.add(new RegexWithAction(HTML_FORM, HTML_FORM_ID_SUFFIX_REGEX) {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				addParameter(currentState.node, "idSuffix", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 			}
 			
 		})
