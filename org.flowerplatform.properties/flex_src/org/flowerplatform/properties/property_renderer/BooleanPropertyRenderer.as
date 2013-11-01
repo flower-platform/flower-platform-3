@@ -3,7 +3,7 @@ package org.flowerplatform.properties.property_renderer {
 	
 	import mx.binding.utils.BindingUtils;
 	
-	import org.flowerplatform.properties.PropertiesItemRenderer;
+	import org.flowerplatform.properties.PropertyItemRenderer;
 	
 	import spark.components.CheckBox;
 	import spark.components.HGroup;
@@ -23,7 +23,7 @@ package org.flowerplatform.properties.property_renderer {
 		}
 		
 		override protected function createChildren():void {
-			super.data = PropertiesItemRenderer(parent).data;
+			super.data = PropertyItemRenderer(HGroup(parent).owner).data;
 			super.createChildren();
 
 			checkBox = new CheckBox();
@@ -31,8 +31,9 @@ package org.flowerplatform.properties.property_renderer {
 			
 			checkBoxContainer.percentHeight = 100;
 			checkBoxContainer.percentWidth = 100;
-			checkBoxContainer.horizontalAlign = "center";
-			
+			checkBoxContainer.horizontalAlign = "left";
+			checkBoxContainer.verticalAlign = "middle";
+			checkBoxContainer.paddingLeft = 5;
 			checkBox.selected = data.value;
 			checkBox.enabled = !data.readOnly;
 			

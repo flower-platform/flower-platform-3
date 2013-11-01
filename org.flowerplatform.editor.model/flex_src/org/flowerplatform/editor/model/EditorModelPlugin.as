@@ -63,7 +63,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
-	import org.flowerplatform.flexdiagram.renderer.NoteRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
@@ -76,10 +75,10 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.text.AutoGrowTextArea;
-	import org.flowerplatform.properties.PropertiesItemRenderer;
-	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesPlugin;
+	import org.flowerplatform.properties.PropertiesView;
 	import org.flowerplatform.properties.action.ShowPropertiesAction;
+	import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
 	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
 	
 	import spark.components.TextInput;
@@ -248,11 +247,11 @@ package org.flowerplatform.editor.model {
 			PropertiesPlugin.getInstance().propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
 				(StringWithButtonPropertyRenderer, {
 					clickHandler: function(itemRendererHandler:IDialogResultHandler, propertyName:String, propertyValue:Object):void {
-						var propertiesList:PropertiesList =PropertiesList(PropertiesItemRenderer(StringWithButtonPropertyRenderer(itemRendererHandler).parent).owner);
+						var propertiesView:PropertiesView = BasicPropertyRenderer(itemRendererHandler).propertiesView;
 						
 						var dialog:ILocationForNewElementsDialog = new LocationForNewElementsDialog();
 						dialog.setResultHandler(itemRendererHandler);
-						dialog.selectionOfItems = propertiesList.selectionForServer;
+						dialog.selectionOfItems = propertiesView.selectionForServer;
 						dialog.currentLocationForNewElements = propertyValue;
 						
 						FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
