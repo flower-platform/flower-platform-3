@@ -147,59 +147,73 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	}
 
 	@Override
+	public void allActionsPerformed(Object element, Object correspondingElement) {
+		super.allActionsPerformed(element, correspondingElement);
+		
+		CodeSyncElement cse = getCodeSyncElement(element);
+		if (cse != null) {
+			boolean sync = cse.getFeatureChanges().size() == 0;
+			if (sync != cse.isSynchronized()) {
+				cse.setSynchronized(sync);
+				if (cse.eContainer() instanceof CodeSyncElement) {
+					setChildrenSync((CodeSyncElement) cse.eContainer());
+				}
+			}
+		}
+	}
+
+	@Override
 	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature) {
 		CodeSyncElement cse = getCodeSyncElement(element);
 		if (cse != null) {
 			FeatureChange change = cse.getFeatureChanges().get(feature);
-			if (change != null) {
-				if (getModelAdapterFactorySet().getFeatureProvider(cse).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
-					List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
-					List<Object> newValues = (List<Object>) change.getNewValue();
-					
-					// iterate through the children list; for each child not found in the new children, see if it exists in the corresponding element
-					for (Iterator it  = children.iterator(); it.hasNext();) {
-						Object existingChild = (Object) it .next();
-						Object matchKey = getModelAdapterFactory().getModelAdapter(existingChild).getMatchKey(existingChild);
-						Object newChild = findChild(newValues, matchKey);
-						if (newChild == null) {
-							if (!elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
-								// the child doesn't exist in the corresponding element either => delete it
-								it.remove();
-							}
+			if (change != null && getModelAdapterFactorySet().getFeatureProvider(cse).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
+				List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
+				List<Object> newValues = (List<Object>) change.getNewValue();
+				
+				// iterate through the children list; for each child not found in the new children, see if it exists in the corresponding element
+				for (Iterator it  = children.iterator(); it.hasNext();) {
+					Object existingChild = (Object) it .next();
+					Object matchKey = getModelAdapterFactory().getModelAdapter(existingChild).getMatchKey(existingChild);
+					Object newChild = findChild(newValues, matchKey);
+					if (newChild == null) {
+						if (!elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
+							// the child doesn't exist in the corresponding element either => delete it
+							it.remove();
 						}
 					}
-					
-					// iterate through the new values; for each child not found in the children list, see if it exists in the corresponding element
+				}
+				
+				// iterate through the new values; for each child not found in the children list, see if it exists in the corresponding element
+				for (Object newChild : newValues) {
+					Object matchKey = getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild);
+					Object existingChild = findChild(children, matchKey);
+					if (existingChild == null) {
+						if (elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
+							// the child exists in the corresponding element as well => add it to the children
+							children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
+						}
+					}
+				}
+				
+				// compare the new values with the existing children
+				if (newValues.size() == children.size()) {
+					int matches = 0;
 					for (Object newChild : newValues) {
-						Object matchKey = getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild);
-						Object existingChild = findChild(children, matchKey);
-						if (existingChild == null) {
-							if (elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
-								// the child exists in the corresponding element as well => add it to the children
-								children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
-							}
+						Object existingChild = findChild(children, getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild));
+						if (existingChild != null) {
+							children.remove(existingChild);
+							children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
+							matches++;
 						}
 					}
 					
-					// compare the new values with the existing children
-					if (newValues.size() == children.size()) {
-						int matches = 0;
-						for (Object newChild : newValues) {
-							Object existingChild = findChild(children, getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild));
-							if (existingChild != null) {
-								children.remove(existingChild);
-								children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
-								matches++;
-							}
-						}
-						
-						if (newValues.size() == matches) {
-							// the new values list and the existing list have the same children => remove the feature change
-							cse.getFeatureChanges().removeKey(feature);
-						} else {
-							// the new values list and the existing list are not identical => update the old values
-							change.setOldValue(children);
-						}
+					if (newValues.size() == matches) {
+						// the new values list and the existing list have the same children => remove the feature change
+						cse.getFeatureChanges().removeKey(feature);
+					} else {
+						// the new values list and the existing list are not identical => update the old values
+						change.setOldValue(children);
 					}
 				} else {
 					setValueFeatureValue(element, feature, change.getNewValue());
@@ -283,6 +297,25 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 						}
 					}
 				}
+			}
+		}
+	}
+	
+	private void setChildrenSync(CodeSyncElement element) {
+		boolean childrenSync = true;
+		for (CodeSyncElement child : element.getChildren()) {
+			if (!child.isSynchronized() || !child.isChildrenSynchronized()) {
+				childrenSync = false;
+				break; // found one child that is not sync
+			}
+		}
+		boolean oldChildrenSync = element.isChildrenSynchronized();
+		if (oldChildrenSync != childrenSync) {
+			// set new childrenSync status and go up on the parent
+			element.setChildrenSynchronized(childrenSync);
+			CodeSyncElement parent = (CodeSyncElement) element.eContainer();
+			if (parent != null) {
+				setChildrenSync(parent);
 			}
 		}
 	}
