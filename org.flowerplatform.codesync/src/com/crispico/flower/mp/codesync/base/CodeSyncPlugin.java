@@ -53,6 +53,7 @@ import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.change_processor.DiagramPropertiesChangeProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
@@ -268,6 +269,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				
 				// processors
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram", new DiagramPropertiesChangeProcessor());
 			}
 		});
 
@@ -551,6 +553,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		getAddNewExtensions().clear();
 		getInplaceEditorExtensions().clear();
 		getCodeSyncTypeCriterionDispatcherProcessor().clear();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().clear();
 		
 		StringBuilder errorsCollected = new StringBuilder();
 		for (Runnable run: runnablesThatLoadDescriptors) {

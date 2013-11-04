@@ -278,4 +278,12 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		}
 	}
 	
+	/**
+	 * Clears the internal cache of change processors 
+	 * 
+	 * @author Mircea Negreanu
+	 */
+	public void clear() {
+		diagrammableElementFeatureChangeProcessors.clear();
+	}
 }

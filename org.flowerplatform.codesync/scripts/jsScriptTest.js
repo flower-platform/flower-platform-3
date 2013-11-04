@@ -1,5 +1,5 @@
 // Adding a new descriptor
-
+utils.load('utils/zfunc.js');
 importClass(org.flowerplatform.codesync.remote.CodeSyncElementDescriptor);
 importClass(com.crispico.flower.mp.codesync.base.CodeSyncPlugin);
 
@@ -95,7 +95,7 @@ var proc = new JavaAdapter(TopLevelElementChildProcessor, {
 	getLabel: function(object, view, forEditing) {
 		try {
 			var name = this.processor.getLabel(object, view, forEditing);
-			return name + "-js";
+			return name + zfunc_fs();
 		} catch (e) {
 			return "error: " + e.message;
 		}

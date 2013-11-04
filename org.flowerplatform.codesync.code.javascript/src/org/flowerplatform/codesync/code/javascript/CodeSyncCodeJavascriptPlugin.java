@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.code.javascript.scripting.FlowerScriptLoad;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.mozilla.javascript.Context;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -98,7 +99,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		
 		ScriptEngine engine = manager.getEngineByName("rhino-nonjdk");
 		ScriptContext context = engine.getContext();
-
+		
 		// the class that will allow us to load scripts from inside scripts
 		FlowerScriptLoad scriptLoad = new FlowerScriptLoad(manager, context);
 		binding.put("utils", scriptLoad);
@@ -151,13 +152,21 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 			engine.put(ScriptEngine.FILENAME, file.getName());
 		}
 		if (engine instanceof Compilable) {
-			// compile the script if possible
-			Compilable compilingEngine = (Compilable) engine;
-			CompiledScript script = compilingEngine.compile(FileUtils.readFileToString(file));
-			// execute the compiled script
-			script.eval(context);
+			// set optimization level for compilation/run
+			// (only for javascript functions)
+			Context cx = Context.enter();
+			cx.setOptimizationLevel(9);
+			try {
+				// compile the script if possible
+				Compilable compilingEngine = (Compilable) engine;
+				CompiledScript script = compilingEngine.compile(FileUtils.readFileToString(file));
+				// execute the compiled script
+				script.eval(context);
+			} finally {
+				Context.exit();
+			}
 		} else {
-			// execute the uncompiled script
+			// executes the uncompiled script
 			engine.eval(FileUtils.readFileToString(file), context);
 		}
 	}
