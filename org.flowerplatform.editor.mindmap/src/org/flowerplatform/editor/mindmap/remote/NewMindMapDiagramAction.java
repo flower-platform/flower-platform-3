@@ -18,8 +18,6 @@
  */
 package org.flowerplatform.editor.mindmap.remote;
 
-import java.io.File;
-
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.editor.model.remote.NewDiagramAction;
 import org.flowerplatform.emf_model.notation.Diagram;
@@ -35,7 +33,7 @@ import com.crispico.flower.mp.model.codesync.MindMapRoot;
 public class NewMindMapDiagramAction extends NewDiagramAction {
 
 	@Override
-	protected Diagram createDiagram(File file, ResourceSet resourceSet) {
+	protected Diagram createDiagram(Object file, ResourceSet resourceSet) {
 		Diagram diagram = NotationFactory.eINSTANCE.createDiagram();
 		MindMapNode root = NotationFactory.eINSTANCE.createMindMapNode();
 		root.setViewType("default");
