@@ -562,6 +562,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			} catch (Exception ex) {
 				errorsCollected.append(ex.toString());
 				errorsCollected.append("\n");
+				logger.error("Error running descriptor regenerator runnables", ex);
 			}
 		}
 		

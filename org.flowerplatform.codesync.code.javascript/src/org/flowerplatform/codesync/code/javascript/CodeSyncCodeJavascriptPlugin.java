@@ -19,7 +19,7 @@
 package org.flowerplatform.codesync.code.javascript;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -33,6 +33,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.code.javascript.scripting.FlowerScriptLoad;
@@ -74,7 +75,7 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 //			@Override
 //			public void run() {
 //				// search for js files and register them
-//				jsScriptExtensions();
+//				registerExtensionsFromScripts();
 //			}
 //		});	
 		
@@ -82,8 +83,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	/**
-	 * Loads and executes javascript files from codesync/scripts folder.
-	 * <p>Allows scripts to load scripts from inside scripts. The syntax is
+	 * Loads and executes scripts from codesync/scripts folder.
+	 * <p>If the script is JavaScrtipt allows it to load another script from inside. 
+	 * The syntax is
 	 * <pre>
 	 * {@code
 	 * utils.load('path/to/script.js');
@@ -93,31 +95,45 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 	 * 
 	 * @author Mircea Negreanu
 	 */
-	public void jsScriptExtensions() { 
+	public void registerExtensionsFromScripts() { 
 		ScriptEngineManager manager = new ScriptEngineManager();
 		Bindings binding = manager.getBindings();
+
+		// build FlowerScriptLoad only if needed (aka js files)
+		FlowerScriptLoad scriptLoad = null;
 		
-		ScriptEngine engine = manager.getEngineByName("rhino-nonjdk");
-		ScriptContext context = engine.getContext();
-		
-		// the class that will allow us to load scripts from inside scripts
-		FlowerScriptLoad scriptLoad = new FlowerScriptLoad(manager, context);
-		binding.put("utils", scriptLoad);
 		try {
 			// get all the scripts from the scripts folder
 			URL url = CodeSyncPlugin.getInstance().getBundleContext().getBundle().getResource("scripts");
 			File folder = new File(FileLocator.resolve(url).toURI());
 			
-			// at the moment load only js (because that's the only manager we have so far)
-			for (File file: folder.listFiles(new FilenameFilter() {
+			// we are interested in only processing files
+			for (File file: folder.listFiles(new FileFilter() {
 				@Override
-				public boolean accept(File dir, String name) {
-					if (name != null && name.toLowerCase().endsWith(".js")) {
-						return true;
-					}
-					return false;
+				public boolean accept(File pathname) {
+					return pathname.isFile();
 				}
 			})) {
+				ScriptEngine engine = null;
+				ScriptContext context = null;
+				String scriptExtension = FilenameUtils.getExtension(file.getName());
+				// make a special case for js because we use a nonjdk manager
+				// (because we want the JavaAdapter from js to also extend classes -
+				// and not only interfaces as the one from jdk)
+				if ("js".equals(scriptExtension)) {
+					engine = manager.getEngineByName("rhino-nonjdk");
+					if (scriptLoad == null) {
+						context = engine.getContext();
+						// script loading is available for js (to load scripts from within scripts)
+						scriptLoad = new FlowerScriptLoad(manager, context);
+						binding.put("utils", scriptLoad);
+					}
+				} else {
+					engine = manager.getEngineByExtension(scriptExtension);
+					if (engine == null) {
+						throw new RuntimeException("No ScriptEngine registered for " + file.getName() + ".");
+					}
+				}
 				compileAndExecuteScript(file, engine, context, null);
 			}
 		} catch (IOException | URISyntaxException ex) {
@@ -127,7 +143,9 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		} catch (ScriptException ex) {
 			throw new RuntimeException(ex);
 		} finally {
-			scriptLoad.clearCompileScriptsCache();
+			if (scriptLoad != null) {
+				scriptLoad.clearCompileScriptsCache();
+			}
 		}
 	}
 	
@@ -151,22 +169,38 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		} else {
 			engine.put(ScriptEngine.FILENAME, file.getName());
 		}
+		
+		// for js files we can also set the optimizationLevel for compiling.
+		boolean isJS = false;
+		if ("js".equals(FilenameUtils.getExtension((String) engine.get(ScriptEngine.FILENAME)))) {
+			isJS = true;
+		}
+		
 		if (engine instanceof Compilable) {
-			// set optimization level for compilation/run
-			// (only for javascript functions)
-			Context cx = Context.enter();
-			cx.setOptimizationLevel(9);
+			// compile the script if possible
+			if (isJS) {
+				// set optimization level for compilation/run
+				Context cx = Context.enter();
+				cx.setOptimizationLevel(9);
+			}
 			try {
-				// compile the script if possible
 				Compilable compilingEngine = (Compilable) engine;
 				CompiledScript script = compilingEngine.compile(FileUtils.readFileToString(file));
 				// execute the compiled script
-				script.eval(context);
+				if (context != null) {
+					script.eval(context);
+				} else { 
+					// need this because 
+					// null as parameter will throw a NPE 
+					script.eval();
+				}
 			} finally {
-				Context.exit();
+				if (isJS) {
+					Context.exit();
+				}
 			}
 		} else {
-			// executes the uncompiled script
+			// eval the script (if it is not possible to compile it)
 			engine.eval(FileUtils.readFileToString(file), context);
 		}
 	}
