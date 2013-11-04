@@ -67,3 +67,11 @@ function getFlexApp() {
         return document["FlexHostApp"];
     }
 }
+
+/**
+ * @author Sebastian Solomon
+ * 
+ */
+function dragOnDiagram(paths) {
+	window.document.getElementById("FlexHostApp").dragOnDiagram(paths);
+}

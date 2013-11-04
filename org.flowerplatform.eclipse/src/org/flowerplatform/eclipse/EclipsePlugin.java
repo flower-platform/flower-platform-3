@@ -81,6 +81,8 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 		server = new FlowerJettyServer();
 		server.start();
 		
+		EditorPlugin.getInstance().setFileAccessController(new EclipseFileAccessController());
+		EditorModelPlugin.getInstance().setModelAccessController(new EclipseModelAccessController());
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
 			@Override
 			public void run() {

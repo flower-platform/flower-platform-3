@@ -17,9 +17,14 @@
  * license-end
  */
 package org.flowerplatform.editor.model {
+	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	
+	import mx.collections.ArrayList;
+	import mx.collections.IList;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
+	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
@@ -42,6 +47,8 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.ILocationForNewElementsDialog;
 	import org.flowerplatform.editor.model.properties.remote.DiagramSelectedItem;
+	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
@@ -244,7 +251,13 @@ package org.flowerplatform.editor.model {
 			notationDiagramClassFactoryActionProvider.actionClasses.push(SearchAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(ShowPropertiesAction);
 			
+			
+			if (ExternalInterface.available) { 
+				ExternalInterface.addCallback("dragOnDiagram", dragOnDiagram); 
+			}
+			
 			// register PropertiesPlugin Renderer
+			//TODO decoment
 			PropertiesPlugin.getInstance().propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
 				(StringWithButtonPropertyRenderer, {
 					clickHandler: function(itemRendererHandler:IDialogResultHandler, propertyName:String, propertyValue:Object):void {
@@ -285,6 +298,22 @@ package org.flowerplatform.editor.model {
 
 			registerClassAliasFromAnnotation(ContentAssistItem);
 		}	
+		
+
+		/**
+		 * @author Sebastian Solomon
+		 * 
+		 */
+		public function dragOnDiagram(paths:String):String {
+			//TODO to finish and test 
+			var alPaths:ArrayList;
+			
+			alPaths = new ArrayList(paths.split(","));
+//			var notationDiagramEditorStatefulClient:NotationDiagramEditorStatefulClient = NotationDiagramEditorStatefulClient(EditorPlugin.getInstance().globalEditorOperationsManager.saveAction.currentEditorStatefulClient)
+//			notationDiagramEditorStatefulClient.service_handleDragOnDiagram(alPaths);
+			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_handleDragOnDiagram(alPaths);
+			return "";
+		}
 		
 	}
 }
