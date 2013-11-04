@@ -107,10 +107,7 @@ package org.flowerplatform.web.layout {
 //			stack.children.addItem(view);
 //			view.parent = stack;
 //			
-			view = new ViewLayoutData();
-			view.viewId = PropertiesViewProvider.ID;
-			stack.children.addItem(view);
-			view.parent = stack;
+
 			
 			load(workbench, wld, sashEditor);
 		}

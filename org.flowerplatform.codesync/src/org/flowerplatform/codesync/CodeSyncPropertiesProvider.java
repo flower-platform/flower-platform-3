@@ -93,7 +93,7 @@ public class CodeSyncPropertiesProvider extends AbstractModelPropertiesProvider<
 	public Pair<String, String> getIconAndLabel(DiagramSelectedItem selectedItem, CodeSyncElement codeSyncElement) {
 		
 		String icon = CodeSyncPlugin.getInstance().getResourceUrl(CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType()).getIconUrl());
-		String label = codeSyncElement.getName();
+		String label = (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(codeSyncElement);//codeSyncElement.getName();
 		
 		return new Pair<String, String>(icon, label);
 	}

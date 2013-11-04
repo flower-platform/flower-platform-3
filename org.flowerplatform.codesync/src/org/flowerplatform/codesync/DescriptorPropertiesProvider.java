@@ -108,7 +108,7 @@ public class DescriptorPropertiesProvider implements IPropertiesProvider<StringS
 					listVal.append(id.toString());
 					listVal.append("\"");
 				}
-				result = listVal.toString();
+					result = "[" + listVal.toString() + "]";
 			}
 			return  new Property()
 					.setName(pd.getDisplayName())

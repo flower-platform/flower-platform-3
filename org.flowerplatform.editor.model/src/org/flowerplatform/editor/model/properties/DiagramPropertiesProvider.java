@@ -1,8 +1,10 @@
 package org.flowerplatform.editor.model.properties;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -87,7 +89,7 @@ public class DiagramPropertiesProvider extends AbstractModelPropertiesProvider<D
 	@Override
 	public Pair<String, String> getIconAndLabel(DiagramSelectedItem selectedItem, Diagram diagram) {
 		String icon = EditorModelPlugin.getInstance().getResourceUrl("images/icon_flower.gif");
-		String label = diagram.getName();
+		String label = FilenameUtils.getBaseName(selectedItem.getDiagramEditableResourcePath());
 		return new Pair<String, String>(icon, label);
 	}
 
