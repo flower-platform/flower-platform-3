@@ -20,16 +20,12 @@ package org.flowerplatform.editor.model.remote;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMLResource;
-import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.AbstractServerCommand;
 import org.flowerplatform.editor.EditorPlugin;
@@ -67,9 +63,7 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		Resource resource = resourceSet.createResource(resourceURI);
 		resource.getContents().clear();
 		resource.getContents().add(createDiagram(file, resourceSet));
-		Map<Object, Object> options = new HashMap<Object, Object>();
-		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-		options.put(XMLResource.OPTION_XML_VERSION, "1.1");
+		Map<Object, Object> options = EditorModelPlugin.getInstance().getLoadSaveOptions();
 		try {
 			for (Resource r : resourceSet.getResources()) {
 				r.save(options);

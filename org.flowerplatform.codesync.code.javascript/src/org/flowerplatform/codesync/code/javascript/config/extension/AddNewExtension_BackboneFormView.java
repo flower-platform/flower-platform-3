@@ -29,7 +29,7 @@ public class AddNewExtension_BackboneFormView extends AddNewExtension_BackboneVi
 		
 		{
 			CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_JAVASCRIPT_ATTRIBUTE);
-			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME, "form...");
+			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME, "htmlIdSuffix");
 			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
 		}
 	}

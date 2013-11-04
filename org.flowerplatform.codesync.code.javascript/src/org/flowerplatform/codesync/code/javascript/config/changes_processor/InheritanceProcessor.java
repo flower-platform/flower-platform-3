@@ -15,8 +15,8 @@ public class InheritanceProcessor extends AttributeWithRequireEntryDependencyPro
 
 	private final static Logger logger = LoggerFactory.getLogger(AttributeWithRequireEntryDependencyProcessor.class);
 
-	public InheritanceProcessor() {
-		super(null);
+	public InheritanceProcessor(String prefix, boolean ignoreTargetNameFromDependencyPath, String[] ignoreTypesFromDependencyPath) {
+		super(prefix, ignoreTargetNameFromDependencyPath, ignoreTypesFromDependencyPath);
 	}
 
 	@Override

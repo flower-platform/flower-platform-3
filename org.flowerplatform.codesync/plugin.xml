@@ -45,4 +45,11 @@
             serviceClass="org.flowerplatform.codesync.remote.LocationForNewElementsStatefulService">
       </service>
    </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="descriptorElement"
+            propertiesProviderClass="org.flowerplatform.codesync.DescriptorPropertiesProvider">
+      </propertiesProvider>
+   </extension>
 </plugin>

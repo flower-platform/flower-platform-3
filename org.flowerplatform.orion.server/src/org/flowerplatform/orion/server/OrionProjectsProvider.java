@@ -44,7 +44,7 @@ public class OrionProjectsProvider implements IProjectsProvider {
 	public String getPathRelativeToProject(File file) {		
 		Path path = new Path(CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file));
 		File project = new File(CommonPlugin.getInstance().getWorkspaceRoot(), path.segment(0));
-		return file.getAbsolutePath().substring(project.getParentFile().getAbsolutePath().length());		
+		return file.getAbsolutePath().substring(project.getAbsolutePath().length());		
 	}
 	
 }

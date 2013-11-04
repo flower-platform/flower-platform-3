@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +34,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
@@ -408,9 +406,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			}
 			for (Resource resource : resources) {
 				try { 
-					Map<Object, Object> options = new HashMap<Object, Object>();
-					options.put(XMLResource.OPTION_ENCODING, "UTF-8");
-					options.put(XMLResource.OPTION_XML_VERSION, "1.1");
+					Map<Object, Object> options = EditorModelPlugin.getInstance().getLoadSaveOptions();
 					resource.save(options);
 				} catch (IOException e) {
 					throw new RuntimeException(e);
@@ -540,4 +536,31 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		runnablesThatLoadDescriptors.add(runnable);
 	}
 	
+	/**
+	 * Reruns all the registered runnable to regenerate descriptors,
+	 * processors, ..
+	 * 
+	 * @return String containing errors thrown during run (if any)
+	 */
+	public String regenerateDescriptors() {
+		// clear the descriptors
+		getCodeSyncElementDescriptors().clear();
+		getRelationDescriptors().clear();
+		getFeatureAccessExtensions().clear();
+		getAddNewExtensions().clear();
+		getInplaceEditorExtensions().clear();
+		getCodeSyncTypeCriterionDispatcherProcessor().clear();
+		
+		StringBuilder errorsCollected = new StringBuilder();
+		for (Runnable run: runnablesThatLoadDescriptors) {
+			try {
+				run.run();
+			} catch (Exception ex) {
+				errorsCollected.append(ex.toString());
+				errorsCollected.append("\n");
+			}
+		}
+		
+		return errorsCollected.toString();
+	}
 }

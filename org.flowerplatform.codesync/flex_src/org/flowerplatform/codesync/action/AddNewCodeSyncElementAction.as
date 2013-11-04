@@ -66,7 +66,11 @@ package org.flowerplatform.codesync.action {
 		}
 		
 		override public function get visible():Boolean {
-			return true;
+			// (the action must NOT be visible when dragToCreateRelationTool active)
+			if (context != null && context.hasOwnProperty("sourceModel") && context.hasOwnProperty("targetModel")) {
+				return false;
+			}
+			return true
 		}
 		
 		override protected function showLocationForNewElementsDialog():Boolean {

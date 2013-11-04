@@ -18,9 +18,13 @@
  */
 package org.flowerplatform.editor.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -195,6 +199,19 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 
 	public void setModelAccessController(IModelAccessController modelAccessController) {
 		this.modelAccessController = modelAccessController;
+	}
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	public Map<Object, Object> getLoadSaveOptions() {
+		Map<Object, Object> options = new HashMap<Object, Object>();
+		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
+		options.put(XMLResource.OPTION_XML_VERSION, "1.1");
+		// read/write binary because the default SAX parser
+		// sometimes has issues reading a saved resource
+		options.put(XMLResource.OPTION_BINARY, true);
+		return options;
 	}
 	
 }
