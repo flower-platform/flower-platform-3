@@ -67,14 +67,17 @@ public abstract class MatchActionAddAbstract extends DiffAction {
 			case IModelAdapter.FEATURE_TYPE_VALUE:
 				Object value = thisMa.getValueFeatureValue(this_, childFeature, null);
 				Object valueOpposite = oppositeMa.getValueFeatureValue(opposite, childFeature, null);
-				if (!CodeSyncAlgorithm.safeEquals(value, valueOpposite))
+				if (!CodeSyncAlgorithm.safeEquals(value, valueOpposite)) {
 					oppositeMa.setValueFeatureValue(opposite, childFeature, value);
+					actionPerformed(thisMa, this_, oppositeMa, opposite, childFeature, new ActionResult(false, true, true));
+				}
 				break;
 			}
 		}
 		
-		if (processDiffs) 
+		if (processDiffs) {
 			processDiffs(match);
+		}
 		
 		match.setChildrenConflict(false);
 				
@@ -84,5 +87,9 @@ public abstract class MatchActionAddAbstract extends DiffAction {
 			for (Match childMatch : match.getSubMatches())
 				processMatch(match, childMatch, false);
 		}
+		
+		ActionResult result = new ActionResult(false, true, true, thisMa.getMatchKey(this_), true);
+		IModelAdapter thisParentMa = getThisModelAdapter(parentMatch);
+		actionPerformed(thisParentMa, getThis(parentMatch), oppositeParentMa, getOpposite(parentMatch), match.getFeature(), result);
 	}
 }

@@ -40,6 +40,10 @@ public class ActionResult {
 	 * @author Mariana
 	 */
 	public boolean childAdded;
+	
+	public Object modifiedChildFeature;
+	
+	public boolean childModified;
 
 	public ActionResult(boolean conflict, boolean modifiedLeft, boolean modifiedRight) {
 		super();
@@ -55,6 +59,12 @@ public class ActionResult {
 		this(conflict, modifiedLeft, modifiedRight);
 		this.childMatchKey = childMatchKey;
 		this.childAdded = childAdded;
+	}
+	
+	public ActionResult(boolean conflict, boolean modifiedLeft, boolean modifiedRight, Object childMatchKey, boolean childAdded, Object modifiedChildFeature, boolean childModified) {
+		this(conflict, modifiedLeft, modifiedRight, childMatchKey, childAdded);
+		this.modifiedChildFeature = modifiedChildFeature;
+		this.childModified = childModified;
 	}
 	
 }

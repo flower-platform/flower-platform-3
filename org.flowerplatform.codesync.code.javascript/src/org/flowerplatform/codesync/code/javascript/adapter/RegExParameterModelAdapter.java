@@ -25,7 +25,7 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParamet
 import com.crispico.flower.mp.codesync.merge.EObjectModelAdapter;
 
 /**
- * Mapped to {@link Parameter}.
+ * Mapped to {@link RegExAstNodeParameter}.
  * 
  * @author Mariana Gheorghe
  */

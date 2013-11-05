@@ -171,16 +171,6 @@ public class WikiNodeModelAdapter extends SyncElementModelAdapter {
 		// nothing to do
 	}
 
-	@Override
-	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature) {
-		// nothing to do
-	}
-
-	@Override
-	public void allActionsPerformed(Object element, Object correspondingElement) {
-		// nothing to do
-	}
-	
 	protected CodeSyncElement getWikiNode(Object element) {
 		return (CodeSyncElement) element;
 	}

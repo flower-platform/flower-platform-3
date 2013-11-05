@@ -36,7 +36,6 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
  */
 public class RegExNodeFeatureProvider extends CodeSyncElementFeatureProvider {
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<?> getFeatures(Object element) {
 		List<EStructuralFeature> features = new ArrayList<EStructuralFeature>();

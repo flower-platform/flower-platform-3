@@ -44,6 +44,8 @@ public abstract class MatchActionRemoveAbstract extends DiffAction {
 				match.getFeature(), 
 				child);
 		
+		ActionResult result = null;
+		
 		if (match.getAncestor() == null) {
 			if (getOpposite(match) != null) {
 				// for the RemoveLeft + RemoveRight case; this invocation will be followed
@@ -54,13 +56,16 @@ public abstract class MatchActionRemoveAbstract extends DiffAction {
 				// 0-match => remove the match
 				match.getParentMatch().getSubMatches().remove(match);
 				match.setParentMatch(null);
-				return new ActionResult(false, false, false, childModelAdapter.getMatchKey(child), false);
+				result = new ActionResult(false, false, false, childModelAdapter.getMatchKey(child), false);
 			}
 		} else {
 			// submatches (and possible diffs) still exist; they need to be updated
 			recurseUpdateFieldsAndFlags(match);
-			return new ActionResult(false, true, true, childModelAdapter.getMatchKey(child), false);
+			result = new ActionResult(false, true, true, childModelAdapter.getMatchKey(child), false);
 		}
+		
+		actionPerformed(modelAdapter, child, null, null, match.getFeature(), result);
+		return result;
 	}
 	
 	protected void recurseUpdateFieldsAndFlags(Match match) {
