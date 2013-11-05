@@ -27,5 +27,5 @@ Export-Package: org.flowerplatform.codesync.code.javascript,
  org.flowerplatform.codesync.code.javascript.regex_ast
 Bundle-ClassPath: lib/js.jar,
  lib/scriptengines-javascript-1.1.jar,
- lib/groovy-all-2.1.9.jar,
+ lib/groovy-all-2.1.9-indy.jar,
  .
