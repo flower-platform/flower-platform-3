@@ -111,23 +111,7 @@ package org.flowerplatform.flexdiagram.tool {
 			
 			super.activateAsMainTool();
 		}
-		
-		private function addModelByResettingSelection(model:Object):void {
-			if (diagramShell.selectedItems.length == 1 && diagramShell.selectedItems.getItemAt(0) == model) {
-				// don't add if the selection already has it and its the only one selected
-				return;
-			}
-			try {
-				// Because an addItem is called after, the eventsCanBeIgnored is set to true,
-				// this way listeners can limit the number of unwanted events.
-				diagramShell.selectedItems.eventsCanBeIgnored = true;
-				diagramShell.selectedItems.removeAll();							
-			} finally {
-				diagramShell.selectedItems.eventsCanBeIgnored = false;
-			}
-			diagramShell.selectedItems.addItem(model);
-		}
-		
+			
 		override public function deactivateAsMainTool():void {
 			delete context.ctrlPressed;
 			delete context.shiftPressed;	

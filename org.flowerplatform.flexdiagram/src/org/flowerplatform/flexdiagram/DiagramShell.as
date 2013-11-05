@@ -42,6 +42,7 @@ package org.flowerplatform.flexdiagram {
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.controller.selection.ISelectionController;
+	import org.flowerplatform.flexdiagram.event.ToolEvent;
 	import org.flowerplatform.flexdiagram.event.UpdateConnectionEndsEvent;
 	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
@@ -52,6 +53,7 @@ package org.flowerplatform.flexdiagram {
 	
 	/**
 	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
 	public class DiagramShell extends EventDispatcher {
 		
@@ -64,13 +66,11 @@ package org.flowerplatform.flexdiagram {
 		private var _mainSelectedItem:Object;
 		private var _selectedItems:ParentAwareArrayList = new ParentAwareArrayList(null);
 		
-		private var _defaultTool:Tool;
-		
-		private var _mainTool:Tool;
-		
-		private var _tools:Dictionary = new Dictionary();
-		
+		private var _defaultTool:Tool;		
+		private var _mainTool:Tool;		
+		private var _tools:Dictionary = new Dictionary();		
 		private var _toolsActivated:Boolean = false;
+		private var _currentActivatedExclusiveTool:Tool;
 		
 		public function get modelToExtraInfoMap():Dictionary {
 			return _modelToExtraInfoMap;
@@ -108,15 +108,7 @@ package org.flowerplatform.flexdiagram {
 		public function get selectedItems():ParentAwareArrayList {
 			return _selectedItems;
 		}
-		
-		public function get tools():Dictionary {
-			return _tools;
-		}
-		
-		public function set tools(array:Dictionary):void {
-			_tools = array;
-		}
-		
+			
 		public function set mainSelectedItem(value:Object):void {
 			if (_mainSelectedItem != value) {			
 				if (_mainSelectedItem != null &&
@@ -138,29 +130,7 @@ package org.flowerplatform.flexdiagram {
 		public function get mainSelectedItem():Object {			
 			return _mainSelectedItem;
 		}
-				
-		[Bindable]
-		public function get mainTool():Tool {			
-			return _mainTool;
-		}
-		
-		public function set mainTool(value:Tool):void {
-			if (_mainTool != value) {
-				if (_mainTool != null) {
-					_mainTool.deactivateAsMainTool();					
-				}
-				
-				_mainTool = value;
-				
-				if (mainTool != null) {
-					_mainTool.activateAsMainTool();					
-				}
-			}
-		}
-		
-		public function mainToolFinishedItsJob():void {
-			mainTool = _defaultTool;
-		}
+
 		
 		public function DiagramShell() {
 			selectedItems.addEventListener(CollectionEvent.COLLECTION_CHANGE, selectionChangeHandler);
@@ -171,13 +141,7 @@ package org.flowerplatform.flexdiagram {
 		
 			Multitouch.inputMode = MultitouchInputMode.GESTURE;
 		}
-		
-		public function registerTools(toolClasses:Array):void {
-			for (var i:int=0; i < toolClasses.length; i++) {
-				tools[toolClasses[i]] = new toolClasses[i](this);
-			}
-		}
-		
+				
 		public function getControllerProvider(model:Object):IControllerProvider {
 			throw new Error("Should be implemented by subclass");
 		}
@@ -379,6 +343,60 @@ package org.flowerplatform.flexdiagram {
 			}
 		}
 		
+		/**
+		 * @author Cristina Constantinescu
+		 */  
+		public function convertCoordinates(rectangle:Rectangle, fromComponent:UIComponent, toComponent:UIComponent):Rectangle {					
+			var fromGlobalPoint:Point = fromComponent.contentToGlobal(rectangle.topLeft);
+			
+			var localPoint:Point = toComponent.globalToLocal(fromGlobalPoint);
+			var contentPoint:Point = toComponent.localToContent(localPoint);
+			
+			return new Rectangle(
+				contentPoint.x, contentPoint.y, 
+				rectangle.width * toComponent.scaleX, rectangle.height * toComponent.scaleY);
+		}
+			
+		
+		////////////////////// TOOLS METHODS /////////////////////////
+				
+		public function get tools():Dictionary {
+			return _tools;
+		}
+		
+		public function set tools(array:Dictionary):void {
+			_tools = array;
+		}
+		
+		[Bindable]
+		public function get mainTool():Tool {			
+			return _mainTool;
+		}
+		
+		public function set mainTool(value:Tool):void {
+			if (_mainTool != value) {
+				if (_mainTool != null) {
+					_mainTool.deactivateAsMainTool();					
+				}
+				
+				_mainTool = value;
+				
+				if (mainTool != null) {
+					_mainTool.activateAsMainTool();					
+				}
+			}
+		}
+		
+		public function mainToolFinishedItsJob():void {
+			mainTool = _defaultTool;
+		}
+		
+		public function registerTools(toolClasses:Array):void {
+			for (var i:int=0; i < toolClasses.length; i++) {
+				tools[toolClasses[i]] = new toolClasses[i](this);
+			}
+		}
+		
 		public function activateTools():void {
 			// activate only if they weren't yet activated
 			if (!_toolsActivated) {
@@ -397,8 +415,11 @@ package org.flowerplatform.flexdiagram {
 		public function deactivateTools():void {
 			// deactivate only if they were activated
 			if (_toolsActivated) {
-				if (mainTool is IWakeUpableTool) { // return to default tool in case of a wakeupable tool
-					mainTool = _defaultTool;					
+				if (mainTool is IWakeUpableTool) { // return to previous exclusive tool in case of a wakeupable tool					
+					mainTool = _currentActivatedExclusiveTool;	
+					if (mainTool == null) {
+						mainTool = _defaultTool;
+					}
 				}
 				mainTool.deactivateAsMainTool();
 				for (var key:Object in tools) {
@@ -409,17 +430,55 @@ package org.flowerplatform.flexdiagram {
 		}
 		
 		/**
-		 * @author Cristina Constantinescu
-		 */  
-		public function convertCoordinates(rectangle:Rectangle, fromComponent:UIComponent, toComponent:UIComponent):Rectangle {					
-			var fromGlobalPoint:Point = fromComponent.contentToGlobal(rectangle.topLeft);
-			
-			var localPoint:Point = toComponent.globalToLocal(fromGlobalPoint);
-			var contentPoint:Point = toComponent.localToContent(localPoint);
-			
-			return new Rectangle(
-				contentPoint.x, contentPoint.y, 
-				rectangle.width * toComponent.scaleX, rectangle.height * toComponent.scaleY);
+		 * Activates a tool in "exclusive" mode.
+		 * 
+		 * <p>
+		 * Before activates a tool, deactivate the current tool (if one exist).
+		 * Checks if the tool is not active on another viewer. Otherwise, throws runtime error.
+		 *
+		 * <p>
+		 * May be called with a null param, meaning that the current tool is deactivated. If the viewer
+		 * is not active, the tool is not activated right away. It's "marked" for activation, and it will
+		 * become active when the viewer becomes active.
+		 * 
+		 * <p>
+		 * Dispatches tool lifecycle events: <code>ToolEvent.EXCLUSIVE_TOOL_ACTIVATED</code>,  
+		 * <code>ToolEvent.EXCLUSIVE_TOOL_DEACTIVATED</code>, <code>ToolEvent.EXCLUSIVE_TOOL_LOCKED</code>.
+		 * 
+		 * <p>
+		 * <code>cycleThroughToolStates</code> => successive calls with the same parameter cycle to the states:
+		 * tool activated->tool locked->tool deactivated/default tool selected. "tool locked" state is used only
+		 * if the tool allows it.
+		 * 		
+		 */
+		public function activateTool(tool:Tool, cycleThroughToolStates:Boolean = true):void {
+			if (_mainTool == tool) {
+				if (cycleThroughToolStates && tool != null && tool != _defaultTool) {
+					activateTool(_defaultTool);					
+				}
+			} else {				
+				// deactivate current tool
+				if (_mainTool != null) {
+					dispatchEvent(new ToolEvent(ToolEvent.EXCLUSIVE_TOOL_DEACTIVATED, _mainTool));
+					_mainTool.deactivateAsMainTool();										
+				}				
+				
+				// activate the received tool on this diagram				
+				_mainTool = tool;
+				tool.activateAsMainTool();
+				_currentActivatedExclusiveTool = _mainTool;
+				dispatchEvent(new ToolEvent(ToolEvent.EXCLUSIVE_TOOL_ACTIVATED, _mainTool));				
+			}
 		}
+		
+		/**
+		 * If the tool is not locked, activates default tool (if not null).
+		 * Dispatches <code>ToolEvent.EXCLUSIVE_TOOL_JOB_FINISHED</code>.
+		 */
+		public function jobFinishedForExclusiveTool(tool:Tool):void {
+			dispatchEvent(new ToolEvent(ToolEvent.EXCLUSIVE_TOOL_JOB_FINISHED, tool));
+			activateTool(_defaultTool);			
+		}
+			
 	}
 }

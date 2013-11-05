@@ -163,7 +163,11 @@ package org.flowerplatform.flexdiagram.util.infinitegroup {
 				case "verticalScrollPosition": 			
 				case "horizontalScrollPosition":					
 					goBackButton.calculatePosition();
-					skin.invalidateDisplayList();		
+					skin.invalidateDisplayList();
+
+					// needed to re-validate size and display
+					viewport.invalidateSize();
+					viewport.invalidateDisplayList();
 			}
 		}
 		
