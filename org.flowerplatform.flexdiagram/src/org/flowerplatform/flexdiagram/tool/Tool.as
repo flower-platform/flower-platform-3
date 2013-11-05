@@ -39,10 +39,7 @@ package org.flowerplatform.flexdiagram.tool {
 	/**
 	 * @author Cristina Constantinescu
 	 */	
-	public class Tool extends EventDispatcher {
-		
-		public static const ACTIVATED_AS_MAIN_TOOL:String = "activatedAsMainTool";
-		public static const DEACTIVATED_AS_MAIN_TOOL:String = "deactivatedAsMainTool";
+	public class Tool {
 		
 		protected var diagramShell:DiagramShell;
 		
@@ -58,12 +55,10 @@ package org.flowerplatform.flexdiagram.tool {
 		public function deactivateDozingMode():void { 				
 		}
 		
-		public function activateAsMainTool():void {		
-			dispatchEvent(new Event(ACTIVATED_AS_MAIN_TOOL));
+		public function activateAsMainTool():void {					
 		}
 		
-		public function deactivateAsMainTool():void {
-			dispatchEvent(new Event(DEACTIVATED_AS_MAIN_TOOL));		
+		public function deactivateAsMainTool():void {			
 		}
 		
 		public function get diagramRenderer():DiagramRenderer {			
@@ -117,6 +112,38 @@ package org.flowerplatform.flexdiagram.tool {
 		}
 		
 		public function reset():void {			
+		}
+		
+		/**
+		 * This function should be called by Tools that support lock-unlock behavior to announce when
+		 * they finished working. An unlocked Tool will be deactivated as soon as its job is over.
+		 * 
+		 * <p>
+		 * Note that there are Tools that work in locked behavior by default: they must not dispatch events when finished
+		 * because their work can be declared ended only by user when selecting another Tool.
+		 * However,(see SelectOrDragToCreateEleemntTool) there are Tools that have a well delimited action like creation Tools.
+		 * For theese, the job ends when the user finished a drag, a drop, etc.
+		 * 
+		 * @see #canLock();		
+		 */
+		public function jobFinished():void {
+			diagramShell.jobFinishedForExclusiveTool(this);
+		}
+		
+		protected function addModelByResettingSelection(model:Object):void {
+			if (diagramShell.selectedItems.length == 1 && diagramShell.selectedItems.getItemAt(0) == model) {
+				// don't add if the selection already has it and its the only one selected
+				return;
+			}
+			try {
+				// Because an addItem is called after, the eventsCanBeIgnored is set to true,
+				// this way listeners can limit the number of unwanted events.
+				diagramShell.selectedItems.removeEventsCanBeIgnored = true;
+				diagramShell.selectedItems.removeAll();							
+			} finally {
+				diagramShell.selectedItems.removeEventsCanBeIgnored = false;
+			}
+			diagramShell.selectedItems.addItem(model);
 		}
 	}	
 	

@@ -21,6 +21,8 @@
 <!--- 
 @author Cristian Spiescu
 @author Cristina Constantinescu
+
+Implements <code>IFocusManagerComponent</code> to gain focus when selected.
 -->
 <s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware, mx.managers.IFocusManagerComponent"
 	cacheAsBitmap="true"  
