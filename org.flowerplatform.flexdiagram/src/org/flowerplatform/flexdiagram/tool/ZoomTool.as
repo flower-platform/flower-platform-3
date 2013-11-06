@@ -36,7 +36,7 @@ package org.flowerplatform.flexdiagram.tool
 		
 		public static const ID:String = "ZoomTool";
 		
-		private const MIN_SCALE_DEFAULT:Number = 0.15; 
+		private const MIN_SCALE_DEFAULT:Number = 0.1; 
 		
 		private const MAX_SCALE_DEFAULT:Number = 4; 
 		
@@ -93,11 +93,13 @@ package org.flowerplatform.flexdiagram.tool
 					if (event.delta < 0) {
 						scale *= -1;
 					}
-					scale = 1 + scale;
 					
-					diagramRenderer.scaleX *= getScaleFactor(scale, true);
-					diagramRenderer.scaleY *= getScaleFactor(scale, false);
-					
+					var newScale:Number = (diagramRenderer.scaleX + diagramRenderer.scaleY)/2 + scale;				
+					if (newScale < _minScale || newScale > _maxScale) {
+						event.preventDefault(); // otherwise vertical scroll bar will take the lead and scroll
+						return;
+					}					
+					diagramRenderer.setScaleFactor(Number((newScale).toFixed(2)));									
 				}
 				// We stop the propagation of the event even if the delta is 0 because on Mac, sometimes when scrolling
 				// with CMD pressed at a speed not big enougth to be caught with delta !=0, it seams that it scrolls the diagram,
@@ -115,8 +117,11 @@ package org.flowerplatform.flexdiagram.tool
 				diagramShell.mainTool = this;
 			}
 			
-			diagramRenderer.scaleX *= getScaleFactor((event.scaleX + event.scaleY)/2, true);
-			diagramRenderer.scaleY *= getScaleFactor((event.scaleX + event.scaleY)/2, false);
+			var newScale:Number = (event.scaleX + event.scaleY) / 2;
+			if (newScale < _minScale || newScale > _maxScale) {
+				return;
+			}					
+			diagramRenderer.setScaleFactor(Number((newScale).toFixed(2)));	
 			
 			if (event.phase == GesturePhase.END) {	
 				// this will trigger a refresh for renderers to display truncated label if too long
@@ -125,14 +130,6 @@ package org.flowerplatform.flexdiagram.tool
 			}			
 		}
 			
-		private function getScaleFactor(scaleFactor:Number, isX:Boolean):Number {
-			if ((isX ? diagramRenderer.scaleX : diagramRenderer.scaleY) * scaleFactor < _minScale) {
-				return 1;
-			} else if ((isX ? diagramRenderer.scaleX : diagramRenderer.scaleY) * scaleFactor > _maxScale) {
-				return 1;
-			}
-			return scaleFactor;
-		}
 	}
 	
 }

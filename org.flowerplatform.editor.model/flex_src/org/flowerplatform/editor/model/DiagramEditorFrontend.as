@@ -39,6 +39,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
 	import org.flowerplatform.flexdiagram.tool.WakeUpTool;
 	import org.flowerplatform.flexdiagram.tool.toolbar.Toolbar;
+	import org.flowerplatform.flexdiagram.util.ZoomToolbar;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
@@ -134,6 +135,9 @@ package org.flowerplatform.editor.model {
 				EditorModelPlugin.getInstance().getMessage("tool.selectOrDragToCreateElement.toolTip"));
 			
 			toolbarsArea.addElement(toolbar);
+			
+			var zoomToolbar:ZoomToolbar = new ZoomToolbar(diagramShell);			
+			toolbarsArea.addElement(zoomToolbar);
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {
