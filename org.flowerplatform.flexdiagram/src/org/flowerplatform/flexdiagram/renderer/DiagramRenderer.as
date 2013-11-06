@@ -17,6 +17,7 @@
  * license-end
  */
 package org.flowerplatform.flexdiagram.renderer {
+	import flash.events.Event;
 	import flash.events.FocusEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -106,6 +107,28 @@ package org.flowerplatform.flexdiagram.renderer {
 		
 		public function setContentRect(rect:Rectangle):void {
 			contentRect = rect;
+		}
+		
+		/**
+		 * Sets new values for <code>scaleX</code> and <code>scaleY</code>.
+		 * At the end, dispatches an "scaleChanged" event.
+		 * 
+		 * <p>
+		 * Note: The "scaleXChanged" & "scaleYChanged" events aren't very useful
+		 * because they are dispatched separately and we need an event
+		 * to inform us when both scaleX & scaleY have been changed.
+		 * 
+		 * <p>
+		 * The general scaleFactor is considered to be the arithmetic average
+		 * of <code>scaleX</code> and <code>scaleY</code>.
+		 * 
+		 * @see ZoomToolbar 
+		 * @author Cristina Constantinescu
+		 */ 
+		public function setScaleFactor(value:Number):void {
+			scaleX = value;
+			scaleY = value;
+			diagramShell.dispatchEvent(new Event("scaleChanged"));
 		}
 		
 		/**

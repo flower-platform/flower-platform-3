@@ -76,6 +76,13 @@ package org.flowerplatform.flexdiagram.tool {
 		}		
 		
 		private function mouseDownHandler(event:MouseEvent = null):void {
+			if (diagramShell.modelToExtraInfoMap[diagramShell.rootModel].waitingToDeactivateDragTool) {
+				// don't do nothing, tool waits to be deactivated
+				return;
+			}
+			// reset selection to sigle item: diagram model
+			addModelByResettingSelection(diagramShell.rootModel);
+			
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 			diagramRenderer.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 				

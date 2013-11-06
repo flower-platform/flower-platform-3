@@ -1,4 +1,4 @@
 === Link required ===
 
-cursor.png http://www.famfamfam.com/lab/icons/silk/
+cursor_drag_arrow.png http://www.gentleface.com
 chart_line_add.png http://www.famfamfam.com/lab/icons/silk/

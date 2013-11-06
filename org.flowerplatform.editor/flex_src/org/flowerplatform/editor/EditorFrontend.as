@@ -124,7 +124,7 @@ package org.flowerplatform.editor {
 		public function EditorFrontend() { 
 //			_collaborativeExtension = new CollaborativeDiagramEditPartExtension(this);			
 			addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
-			setStyle("verticalGap", 0);
+			setStyle("verticalGap", 0);			
 		}
 		
 		/**
@@ -230,8 +230,9 @@ package org.flowerplatform.editor {
 			toolbarsArea.percentWidth = 100;
 			toolbarsArea.verticalAlign = "middle";
 			toolbarsArea.gap = 10;
+			toolbarsArea.paddingRight = 5;
 			
-			resourceStatusBar.percentWidth = 100; // Streach so that buttons may appear on the right side
+			resourceStatusBar.percentWidth = 100; // Streach so that buttons may appear on the right side			
 			toolbarsArea.addElementAt(resourceStatusBar, 0);
 			
 			addChildAt(toolbarsArea, 0);

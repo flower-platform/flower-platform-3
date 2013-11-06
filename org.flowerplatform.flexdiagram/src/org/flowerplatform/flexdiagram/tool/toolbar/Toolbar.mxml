@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---
+	@author Cristina Constatinescu
+-->
+<s:ButtonBar xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		  xmlns:s="library://ns.adobe.com/flex/spark" 
+		  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:button="org.flowerplatform.flexutil.button.*"
+		  implements="org.flowerplatform.flexdiagram.renderer.IDiagramShellAware"
+		  creationComplete="creationCompleteHandler(event)"
+		  
+		  labelField="label"
+		  skinClass="org.flowerplatform.flexdiagram.tool.toolbar.ToolbarButtonBarSkin"
+		  dataProvider="{buttonBarDataProvider}"
+		  requireSelection="true"
+		  horizontalCenter="0" verticalCenter="0">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayList;
+			import mx.core.IVisualElement;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.flexdiagram.DiagramShell;
+			import org.flowerplatform.flexdiagram.event.ToolEvent;
+			import org.flowerplatform.flexdiagram.tool.Tool;
+			
+			import spark.components.ButtonBarButton;
+			import spark.components.ToggleButton;
+			import spark.events.IndexChangeEvent;
+			import spark.events.RendererExistenceEvent;
+			
+			[Bindable]
+			private var buttonBarDataProvider:ArrayList = new ArrayList();
+			
+			private var _diagramShell:DiagramShell;
+			
+			public function get diagramShell():DiagramShell	{			
+				return _diagramShell;
+			}
+			
+			public function set diagramShell(value:DiagramShell):void {
+				this._diagramShell = value;				
+			}
+						
+			public function addTool(label:String, icon:Object, tool:Tool, toolTip:String = null, selected:Boolean = false):void {
+				var toolbarItem:ToolbarItem = new ToolbarItem();
+				toolbarItem.label = label;
+				toolbarItem.icon = icon;
+				toolbarItem.tool = tool;
+				toolbarItem.toolTip = toolTip;
+				toolbarItem.selected = selected;
+				buttonBarDataProvider.addItem(toolbarItem);
+			}
+											
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				diagramShell.addEventListener(ToolEvent.EXCLUSIVE_TOOL_ACTIVATED, exclusiveToolActivatedHandler);
+				diagramShell.addEventListener(ToolEvent.EXCLUSIVE_TOOL_DEACTIVATED, exclusiveToolDeactivatedHandler);
+			}
+			
+			private function exclusiveToolDeactivatedHandler(event:ToolEvent):void {
+				var item:ToolbarItem = findItemCorrespondingToTool(event.tool);
+				if (item != null) {
+					item.selected = false;					
+				}
+			}
+			
+			private function exclusiveToolActivatedHandler(event:ToolEvent):void {				
+				var item:ToolbarItem = findItemCorrespondingToTool(event.tool);
+				if (item != null) {
+					item.selected = true;
+				}				
+			}
+			
+			private function findItemCorrespondingToTool(tool:Tool):ToolbarItem {
+				for (var i:int = 0; i <buttonBarDataProvider.length; i++) {
+					var item:ToolbarItem = ToolbarItem(buttonBarDataProvider.getItemAt(i));
+					if (item.tool == tool) {
+						return item;
+					}
+				}
+				return null;
+			}		
+			
+			override protected function dataGroup_rendererAddHandler(event:RendererExistenceEvent):void {
+				super.dataGroup_rendererAddHandler(event);
+				
+				const renderer:IVisualElement = event.renderer; 
+				if (renderer) {
+					renderer.addEventListener(MouseEvent.CLICK, item_clickHandler);					
+				}
+			}
+			
+			override protected function dataGroup_rendererRemoveHandler(event:RendererExistenceEvent):void {
+				super.dataGroup_rendererRemoveHandler(event);
+				
+				const renderer:IVisualElement = event.renderer;
+				if (renderer) {
+					renderer.removeEventListener(MouseEvent.CLICK, item_clickHandler);
+				}
+			}
+			
+			private function item_clickHandler(event:MouseEvent):void {
+				var item:ToolbarItem = ToolbarItem(ButtonBarButton(event.currentTarget).data);				
+				diagramShell.activateTool(item.tool);
+			}
+		]]>
+	</fx:Script>
+	
+</s:ButtonBar>
