@@ -57,7 +57,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 
 	public CodeSyncEditorStatefulService() {
 		setEditorName("codeSync");
-		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addCommunicationLifecycleListener(this);
 	}
 	
 	private String getProjectPath(String editableResourcePath) {

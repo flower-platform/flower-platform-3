@@ -65,7 +65,7 @@ public class TextEditorStatefulService extends FileBasedEditorStatefulService {
 	
 	public TextEditorStatefulService() {
 		createRegexConfiguration();
-		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addCommunicationLifecycleListener(this);
 	}
 	
 	/**

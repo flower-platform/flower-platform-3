@@ -23,6 +23,7 @@ import java.io.InputStream;
 
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.flowerplatform.common.file_event.FileEventDispatcher;
+import org.flowerplatform.common.jmx.FlowerJMXRegistry;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -46,6 +47,11 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 	private FlowerProperties flowerProperties;
+	
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	private FlowerJMXRegistry flowerJMXRegistry;
 	
 	/**
 	 * @author Tache Razvan Mihai
@@ -111,6 +117,20 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	public FileEventDispatcher getFileEventDispatcher() {
 		return fileEventDispatcher;
+	}
+
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	public FlowerJMXRegistry getFlowerJMXRegistry() {
+		return flowerJMXRegistry;
+	}
+
+	/**
+	 * @author Cristina Constantinescu
+	 */
+	public void initializeFlowerJMXRegistry(String commonMXBeanLocation) {
+		flowerJMXRegistry = new FlowerJMXRegistry(commonMXBeanLocation);
 	}
 	
 }

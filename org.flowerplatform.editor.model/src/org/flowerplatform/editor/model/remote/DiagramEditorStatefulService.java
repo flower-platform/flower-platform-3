@@ -91,7 +91,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	
 	public DiagramEditorStatefulService() {
 		super();
-		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addCommunicationLifecycleListener(this);
 		scenarioTree = new ScenarioTreeStatefulService();
 		scenarioTree.setDiagramService(this);
 	}

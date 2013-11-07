@@ -22,6 +22,12 @@ package org.flowerplatform.communication.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.jmx.FlowerJMXRegistry;
+import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
+import org.flowerplatform.communication.stateful_service.StatefulService;
+
 /**
  * Central registry for application services, that may be invoked from
  * the Flex client, using {@link InvokeServiceMethodServerCommand}.
@@ -53,10 +59,15 @@ public class ServiceRegistry {
 	/**
 	 * Registers a new service.
 	 * 
-	 * 
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
 	public void registerService(String id, Object serviceInstance) {
 		map.put(id, serviceInstance);
+		
+		if (serviceInstance instanceof StatefulService) {				
+			CommonPlugin.getInstance().getFlowerJMXRegistry().registerJMXBean(serviceInstance, "stateful_service", id);
+		}		
 	}
 
 	/**
