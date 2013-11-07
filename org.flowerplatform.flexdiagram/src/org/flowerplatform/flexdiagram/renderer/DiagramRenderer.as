@@ -43,6 +43,20 @@ package org.flowerplatform.flexdiagram.renderer {
 		public var viewPortRectOffsetTowardOutside:int = 0;
 		
 		/**
+		 * Flag indicating whether or not the <code>ZoomPerformedEvent</code>
+		 * should be dispatched when refreshing visual children.
+		 * 
+		 * <p>
+		 * If <code>true</code>, invalidates renderer's size so that no label truncation needded.
+		 * 
+		 * @see AbsoluteLayoutVisualChildrenController.dispatchRecursiveZoomPerformedEventIfNecessary()
+		 * @see ZoomTool
+		 * 
+		 * @author Cristina Constantinescu
+		 */ 
+		public var shouldDispatchZoomPerformedEvent:Boolean = false;
+		
+		/**
 		 * @author Mircea Negreanu
 		 * 
 		 * The background grid
@@ -128,6 +142,11 @@ package org.flowerplatform.flexdiagram.renderer {
 		public function setScaleFactor(value:Number):void {
 			scaleX = value;
 			scaleY = value;
+			
+			// this will trigger a refresh for renderers to display truncated label if too long
+			shouldDispatchZoomPerformedEvent = true;
+			shouldRefreshVisualChildren = true; 
+			
 			diagramShell.dispatchEvent(new Event("scaleChanged"));
 		}
 		

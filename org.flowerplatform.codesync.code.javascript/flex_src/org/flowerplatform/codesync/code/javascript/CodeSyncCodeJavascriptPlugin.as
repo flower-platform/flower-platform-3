@@ -21,25 +21,6 @@ package org.flowerplatform.codesync.code.javascript {
 	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
-	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
-	import org.flowerplatform.editor.model.controller.BoxRendererController;
-	import org.flowerplatform.editor.model.controller.InplaceEditorController;
-	import org.flowerplatform.editor.model.controller.NodeAbsoluteLayoutRectangleController;
-	import org.flowerplatform.editor.model.controller.ResizeController;
-	import org.flowerplatform.editor.model.controller.ViewModelChildrenController;
-	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
-	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
-	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
-	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
-	import org.flowerplatform.flexdiagram.controller.model_extra_info.DynamicModelExtraInfoController;
-	import org.flowerplatform.flexdiagram.controller.renderer.ClassReferenceRendererController;
-	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
-	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
-	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
-	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
-	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
-	import org.flowerplatform.flexutil.FactoryWithInitialization;
-	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	
 	/**
