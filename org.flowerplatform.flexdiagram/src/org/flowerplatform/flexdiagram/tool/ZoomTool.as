@@ -36,7 +36,7 @@ package org.flowerplatform.flexdiagram.tool
 		
 		public static const ID:String = "ZoomTool";
 		
-		private const MIN_SCALE_DEFAULT:Number = 0.1; 
+		private const MIN_SCALE_DEFAULT:Number = 0.3; 
 		
 		private const MAX_SCALE_DEFAULT:Number = 4; 
 		
@@ -105,9 +105,7 @@ package org.flowerplatform.flexdiagram.tool
 				// with CMD pressed at a speed not big enougth to be caught with delta !=0, it seams that it scrolls the diagram,
 				// instead to perform a zooming.
 				event.preventDefault();
-				
-				// this will trigger a refresh for renderers to display truncated label if too long
-				diagramRenderer.shouldRefreshVisualChildren = true; 
+			
 				diagramShell.mainToolFinishedItsJob();
 			}
 		}
@@ -123,9 +121,7 @@ package org.flowerplatform.flexdiagram.tool
 			}					
 			diagramRenderer.setScaleFactor(Number((newScale).toFixed(2)));	
 			
-			if (event.phase == GesturePhase.END) {	
-				// this will trigger a refresh for renderers to display truncated label if too long
-				diagramRenderer.shouldRefreshVisualChildren = true; 
+			if (event.phase == GesturePhase.END) {					
 				diagramShell.mainToolFinishedItsJob();
 			}			
 		}

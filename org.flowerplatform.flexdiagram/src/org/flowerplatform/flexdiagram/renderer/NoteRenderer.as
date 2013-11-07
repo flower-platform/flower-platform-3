@@ -70,10 +70,8 @@ package org.flowerplatform.flexdiagram.renderer {
 			addEventListener(ZoomPerformedEvent.ZOOM_PERFORMED, zoomPerformedHandler);
 		}
 						
-		protected function zoomPerformedHandler(event:ZoomPerformedEvent):void {
-			invalidateSize();
-			// use calllater because the updateList must be done after recalculating size
-			callLater(invalidateDisplayList);
+		protected function zoomPerformedHandler(event:ZoomPerformedEvent):void {				
+			invalidateDisplayList();
 		}
 				
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {

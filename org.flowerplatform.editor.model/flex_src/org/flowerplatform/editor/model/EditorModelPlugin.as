@@ -45,7 +45,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
-	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.CenteredBoxChildRenderer;
 	import org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer;
 	import org.flowerplatform.editor.model.renderer.DiagramNoteRenderer;
 	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
@@ -63,7 +63,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
-	import org.flowerplatform.flexdiagram.renderer.NoteRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
@@ -150,7 +149,7 @@ package org.flowerplatform.editor.model {
 			// these controllerProvFactories are registered directly in composedControllerProviderFactories; not in standardControllerProviderFactories
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildRenderer});
 			if (!FlexUtilGlobals.getInstance().isMobile) {
 				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController, {rendererClass : TextInput});
 			}
@@ -216,7 +215,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactories["classDiagram.javaClass.javaOperation"] = composedControllerProviderFactory;
 				
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildRenderer});
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classDiagram.javaClass.title"] = composedControllerProviderFactory;
 			
