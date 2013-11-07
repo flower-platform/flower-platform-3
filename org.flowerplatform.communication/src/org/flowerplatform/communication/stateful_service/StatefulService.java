@@ -22,7 +22,6 @@ import java.util.Collection;
 
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
-import org.flowerplatform.communication.channel.CommunicationChannelManager;
 
 /**
  * @author Cristi

@@ -163,14 +163,14 @@ public class CommunicationChannelManager {
 		}
 	}
 	
-	public void addWebCommunicationLifecycleListener(ICommunicationChannelLifecycleListener listener) {
+	public void addCommunicationLifecycleListener(ICommunicationChannelLifecycleListener listener) {
 		communicationLifecycleListeners.add(listener);
 	}
 	
 	/**
 	 * 
 	 */
-	public void removeWebCommunicationLifecycleListener(ICommunicationChannelLifecycleListener listener) {
+	public void removeCommunicationLifecycleListener(ICommunicationChannelLifecycleListener listener) {
 		communicationLifecycleListeners.remove(listener);
 	}
 	
