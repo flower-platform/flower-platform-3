@@ -305,12 +305,14 @@ package org.flowerplatform.editor.model {
 		 * 
 		 */
 		public function dragOnDiagram(paths:String):String {
-			//TODO to finish and test 
 			var alPaths:ArrayList;
-			
+			if (paths.charAt(0) == '['){
+				paths = paths.substr(1);
+			}
+			if (paths.charAt(paths.length - 1) == ']'){
+				paths = paths.substr(0, paths.length - 1);
+			}
 			alPaths = new ArrayList(paths.split(","));
-//			var notationDiagramEditorStatefulClient:NotationDiagramEditorStatefulClient = NotationDiagramEditorStatefulClient(EditorPlugin.getInstance().globalEditorOperationsManager.saveAction.currentEditorStatefulClient)
-//			notationDiagramEditorStatefulClient.service_handleDragOnDiagram(alPaths);
 			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_handleDragOnDiagram(alPaths);
 			return "";
 		}

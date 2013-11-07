@@ -23,18 +23,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.jface.text.Document;
@@ -50,6 +45,8 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.code.adapter.AbstractFileModelAdapter;
@@ -60,15 +57,15 @@ import com.crispico.flower.mp.codesync.code.adapter.AbstractFileModelAdapter;
 public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 	
 	@Override
-	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
-		File file = getFile(element);
+	public Object createChildOnContainmentFeature(Object file, Object feature, Object correspondingChild) {
 		RegExAstNode node = (RegExAstNode) getOrCreateFileInfo(file);
 		return node;
 	}
 	
-	protected Object createFileInfo(File file) {
+	protected Object createFileInfo(Object file) {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController(); 
 		// parse the file
-		if (file.exists()) {
+		if (fileAccessController.exists(file)){
 			Parser parser = new Parser();
 			RegExAstNode node = parser.parse(file);
 			return node;
@@ -136,7 +133,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		try {
 			URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("templates/" + node.getType() + ".tpl");
 			File file = new File(FileLocator.resolve(url).toURI());
-			template = FileUtils.readFileToString(file);
+			template = EditorPlugin.getInstance().getFileAccessController().readFileToString(file);
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("Template does not exist", e);
 		}
@@ -286,7 +283,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 	
 	@Override
 	public List<?> getChildren(Object modelElement) {
-		return Collections.singletonList(getOrCreateFileInfo(getFile(modelElement)));
+		return Collections.singletonList(getOrCreateFileInfo(modelElement));
 	}
 
 }

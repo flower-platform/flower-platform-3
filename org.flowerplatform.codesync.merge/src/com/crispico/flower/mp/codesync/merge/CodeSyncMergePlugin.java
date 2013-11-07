@@ -76,7 +76,7 @@ public class CodeSyncMergePlugin extends AbstractFlowerJavaPlugin {
 		match.setLeft(CodeSyncPlugin.getInstance().getResource(null, leftFile).getContents().get(0));
 		match.setRight(CodeSyncPlugin.getInstance().getResource(null, rightFile).getContents().get(0));
 		
-		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(ancestorFile);
+		Object project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(ancestorFile);
 		String projectPath = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 //		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) ServiceRegistry.INSTANCE.getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);

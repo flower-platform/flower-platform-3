@@ -37,19 +37,20 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana Gheorghe
+ * @author Sebastian Solomon
  */
 public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 
 	@Override
 	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
 		for (Object object : draggedObjects) {
-			File resource;
+			Object resource;
 			try {
-				resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
+				resource = EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
+			Object project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
 			
 			if (!acceptDraggedObject(resource)) {
 				return false;
@@ -67,10 +68,10 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 	}
 	
 	private boolean acceptDraggedObject(Object object) {
-		if (!(object instanceof File)) {
+		if (!EditorPlugin.getInstance().getFileAccessController().isFile(object)) {
 			return false;
 		}
-		String extension = CodeSyncPlugin.getInstance().getFileExtension((File) object);
+		String extension = EditorPlugin.getInstance().getFileAccessController().getFileExtension(object); 
 		return (CodeSyncCodeJavascriptPlugin.TECHNOLOGY.equals(extension) || "html".equals(extension));
 	}
 

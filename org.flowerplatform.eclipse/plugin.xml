@@ -58,6 +58,12 @@
             httpcontextId="flower-platform"
             load-on-startup="false">
       </servlet>
+      <servlet
+            alias="/servlet/image-composer"
+            class="org.flowerplatform.communication.public_resources.ImageComposerServlet"
+            httpcontextId="flower-platform"
+            load-on-startup="false">
+      </servlet>
       <serviceSelector
             filter="(other.info=org.flowerplatform.eclipse)">
       </serviceSelector>
@@ -69,8 +75,17 @@
             locationURI="popup:org.eclipse.ui.popup.any?endof=group.open">
          <command
                commandId="addElementsOnDiagramCommand"
-               label="Add on Diagram!!!"
+               label="%addElementsOnDiagramCommand.label"
                style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <test
+                        property="org.flowerplatform.eclipse.isDiagramEditorOpen">
+                  </test>
+               </with>
+            </visibleWhen>
          </command>
       </menuContribution>
    </extension>
@@ -89,7 +104,7 @@
             locationURI="popup:org.eclipse.ui.popup.any?endof=group.new">
          <command
                commandId="NewDiagramCommand"
-               label="%command.label"
+               label="%newDiagramCommand.label"
                style="push">
             <visibleWhen
                   checkEnabled="false">
@@ -114,6 +129,22 @@
             id="NewDiagramCommand"
             name="%command.name">
       </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.flowerplatform.eclipse.IsDiagramEditorOpenTest"
+            id="org.flowerplatform.eclipse.propertyTester1"
+            namespace="org.flowerplatform.eclipse"
+            properties="isDiagramEditorOpen"
+            type="org.eclipse.jface.viewers.ISelection">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.flowerplatform.eclipse.Startup">
+      </startup>
    </extension>
 
 </plugin>

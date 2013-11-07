@@ -10,6 +10,8 @@ import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -70,6 +72,7 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 				// since the only reason this was needed was to lazy load the
 				// registry.
 				ExtendedImageRegistry.getInstance();
+				CodeSyncPlugin.getInstance().setProjectsProvider(new EclipseProjectsProvider());
 			}
 		});
 

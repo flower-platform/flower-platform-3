@@ -4,6 +4,8 @@ package org.flowerplatform.eclipse
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
 	
+	import flash.display.DisplayObject;
+	
 	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
@@ -26,38 +28,14 @@ package org.flowerplatform.eclipse
 			return INSTANCE;
 		}
 		
-		private var workbench:Workbench;
+//		private var workbench:Workbench;
 		
 		override public function start():void{
 			
 			super.start();
 			
 			INSTANCE = this;
-			
-			workbench = new Workbench();
-			var wld:WorkbenchLayoutData = new WorkbenchLayoutData();
-			var sashEditor:SashLayoutData = new SashLayoutData();
-			var application:IVisualElementContainer = IVisualElementContainer(FlexGlobals.topLevelApplication);
-			
-			application.addElement(workbench);
-
-			FlexUtilGlobals.getInstance().workbench = workbench;
-			workbench.viewProvider = FlexUtilGlobals.getInstance().composedViewProvider;
-			workbench.percentWidth = 100;
-			workbench.percentHeight = 100;
-//			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
-			
-			sashEditor.isEditor = true;
-			sashEditor.direction = SashLayoutData.HORIZONTAL;
-			sashEditor.ratios = new ArrayCollection([100]);
-			sashEditor.mrmRatios = new ArrayCollection([0]);
-			sashEditor.parent = wld;
-			wld.children.addItem(sashEditor);
-			
-			workbench.load(wld);
-//			IVisualElementContainer(FlexGlobals.topLevelApplication).addElement(workbench);
-			
+				
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.CONNECTED, connectedHandler);
 			CommunicationPlugin.getInstance().bridge.connect();
 			
@@ -81,7 +59,22 @@ package org.flowerplatform.eclipse
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-//			return (Workbench(FlexUtilGlobals.getInstance().workbench));
+			var wld:WorkbenchLayoutData = new WorkbenchLayoutData();
+			wld.direction = SashLayoutData.HORIZONTAL;
+			wld.ratios = new ArrayCollection([100]);
+			wld.mrmRatios = new ArrayCollection([0]);
+			
+			var sashEditor:SashLayoutData = new SashLayoutData();
+			sashEditor.isEditor = true;
+			sashEditor.direction = SashLayoutData.HORIZONTAL;
+			sashEditor.ratios = new ArrayCollection([100]);
+			sashEditor.mrmRatios = new ArrayCollection([0]);
+			sashEditor.parent = wld;
+			wld.children.addItem(sashEditor);
+			
+			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);			
+			Workbench(FlexUtilGlobals.getInstance().workbench).load(wld);
+
 //			ModalSpinner.removeGlobalModalSpinner();
 			CommonPlugin.getInstance().handleLinkWithQueryStringDecoded(FlexGlobals.topLevelApplication.parameters);
 		}

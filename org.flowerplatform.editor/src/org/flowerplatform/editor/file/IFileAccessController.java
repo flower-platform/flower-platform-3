@@ -1,5 +1,6 @@
 package org.flowerplatform.editor.file;
 
+import java.io.File;
 import java.io.InputStream;
 
 /**
@@ -30,5 +31,27 @@ public interface IFileAccessController {
 	Object createNewFile(Object file, String name);
 	
 	boolean exists(Object file);
+	
+	String getPathRelativeToFile(Object file, Object relativeTo);
+	
+	String getAbsolutePath (Object file);
+	
+	String getFileExtension (Object file);
+	
+	boolean isFile(Object file);
+	
+	Class getFileClass();
+	
+	Object[] listFiles(Object folder);
+
+	boolean delete(Object child);
+	
+	String getParent(Object file);
+	
+	void rename(Object file, Object dest);
+	
+	String readFileToString(Object file);
+	
+	void writeStringToFile(Object file, String str);
 	
 }

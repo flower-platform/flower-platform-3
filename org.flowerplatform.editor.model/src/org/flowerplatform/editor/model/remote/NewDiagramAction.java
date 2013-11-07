@@ -47,9 +47,7 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 	@Override
 	public void executeCommand() {
 		Object diagram = createDiagram();
-		if (diagram instanceof File) {
-			openDiagram((File) diagram);
-		}
+		openDiagram(diagram);
 	}
 
 	protected Object createDiagram() {
@@ -91,7 +89,7 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		return diagram;
 	}
 
-	public void openDiagram(File diagram) {
+	public void openDiagram(Object diagram) {
 		if (!openAutomatically) {
 			return;
 		}

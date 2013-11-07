@@ -18,9 +18,11 @@
  */
 package com.crispico.flower.mp.codesync.base;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 public class ModelAdapterFactory {
 	
@@ -53,7 +55,8 @@ public class ModelAdapterFactory {
 	public IModelAdapter getModelAdapter(Object modelElement) {
 		for (ModelAdapterEntry e : modelAdapters)
 			if (e.clazz != null && e.clazz.isAssignableFrom(modelElement.getClass())) {
-				if (!(modelElement instanceof File) || CodeSyncPlugin.getInstance().getFileExtension(((File) modelElement)).equals(e.extension)) {
+				IFileAccessController controller = EditorPlugin.getInstance().getFileAccessController();
+				if (!(controller.getFileClass().isAssignableFrom(modelElement.getClass())) || controller.getFileExtension(modelElement).equals(e.extension)) {
 					return e.modelAdapter;
 				}
 			}

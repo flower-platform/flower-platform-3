@@ -43,7 +43,7 @@ public class CodeSyncAction extends AbstractServerCommand {
 			throw new RuntimeException(String.format("Error while getting resource %s", path), e);
 		}
 		if (file != null) {
-			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
+			File project = (File)CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
 			CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, file, technology, communicationChannel, true);
 		}
 	}

@@ -11,6 +11,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.ide.ResourceUtil;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class CreateNewDiagramHandler extends AbstractHandler {
 
 	@Override
@@ -23,11 +26,9 @@ public class CreateNewDiagramHandler extends AbstractHandler {
 
 		if (selectedElement instanceof IFile) {
 			parent = ((IFile)selectedElement).getParent();
-			
 		} else if ((selectedElement instanceof IFolder)
 				|| (selectedElement instanceof IProject)) {
 			parent = (IResource) selectedElement;
-			
 		}
 		if (parent != null){
 			EclipseNewDiagramAction enda = new EclipseNewDiagramAction();
@@ -37,4 +38,5 @@ public class CreateNewDiagramHandler extends AbstractHandler {
 		}
 		return null;
 	}
+	
 }

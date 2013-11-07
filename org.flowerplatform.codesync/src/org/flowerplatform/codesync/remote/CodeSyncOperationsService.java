@@ -239,12 +239,10 @@ public class CodeSyncOperationsService {
 	 * @author Sebastian Solomon
 	 */
 	protected void propagateOnChildDelete(CodeSyncElement cse) {
-
 		for (CodeSyncElement child : cse.getChildren()) {
 			child.setDeleted(true);
 			propagateOnChildDelete(child);
 		}
-
 	}
 	
 	public boolean hasChildWithKeyFeatureValue(CodeSyncElement parent, String childCodeSyncType, String keyFeatureValue) {
@@ -272,8 +270,8 @@ public class CodeSyncOperationsService {
 		} catch (Exception e) {
 			throw new RuntimeException(path);
 		}
-		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(diagram);
-		File srcDir = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, "js");
+		File project = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(diagram);
+		File srcDir = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFolder(project, "js");
 		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, srcDir, technology, context.getCommunicationChannel(), true);
 	}
 

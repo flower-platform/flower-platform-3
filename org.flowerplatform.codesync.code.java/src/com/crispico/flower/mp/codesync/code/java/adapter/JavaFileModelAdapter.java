@@ -18,13 +18,10 @@
  */
 package com.crispico.flower.mp.codesync.code.java.adapter;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -32,6 +29,8 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.TextEdit;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 import com.crispico.flower.mp.codesync.code.adapter.AbstractFileModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -44,8 +43,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class JavaFileModelAdapter extends AbstractFileModelAdapter {
 
 	@Override
-	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
-		File file = getFile(element);
+	public Object createChildOnContainmentFeature(Object file, Object feature, Object correspondingChild) {
 		CompilationUnit cu = getOrCreateCompilationUnit(file);
 		ASTNode node = (ASTNode) JavaTypeModelAdapter.createCorrespondingModelElement(cu.getAST(), (CodeSyncElement) correspondingChild);
 		cu.types().add(node);
@@ -59,10 +57,10 @@ public class JavaFileModelAdapter extends AbstractFileModelAdapter {
 
 	@Override
 	public List<?> getChildren(Object modelElement) {
-		return getOrCreateCompilationUnit(getFile(modelElement)).types();
+		return getOrCreateCompilationUnit(modelElement).types();
 	}
 	
-	private CompilationUnit getOrCreateCompilationUnit(File file) {
+	private CompilationUnit getOrCreateCompilationUnit(Object file) {
 		return (CompilationUnit) getOrCreateFileInfo(file);
 	}
 	
@@ -70,24 +68,23 @@ public class JavaFileModelAdapter extends AbstractFileModelAdapter {
 	 * Creates a new compilation unit from the file's content.
 	 */
 	@Override
-	protected Object createFileInfo(File file) {
+	protected Object createFileInfo(Object file) {
+		
 		ASTParser parser = ASTParser.newParser(AST.JLS4);
 		Map options = new HashMap<>(JavaCore.getOptions());
 		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
 		parser.setCompilerOptions(options);
-		char[] initialContent = file.exists() ? getFileContent(file) : new char[0];
+		boolean fileExists = EditorPlugin.getInstance().getFileAccessController().exists(file);
+		char[] initialContent = fileExists ? getFileContent(file) : new char[0];
 		parser.setSource(initialContent);
 		CompilationUnit astRoot = (CompilationUnit) parser.createAST(null);
 		astRoot.recordModifications();
 		return astRoot;
 	}
 
-	private char[] getFileContent(File file) {
-		try {
-			return FileUtils.readFileToString(file).toCharArray();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	private char[] getFileContent(Object file) {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController();
+		return fileAccessController.readFileToString(file).toCharArray();
 	}
 
 	@Override

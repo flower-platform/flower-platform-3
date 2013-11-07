@@ -35,8 +35,8 @@ public class WebProjectsProvider implements IProjectsProvider {
 	 * @param path relative to project
 	 */
 	@Override
-	public File getFile(File project, String path) {
-		IProject wrapper = (IProject) ProjectsService.getInstance().getProjectWrapperResourceFromFile(project);
+	public File getFile(Object project, String path) {
+		IProject wrapper = (IProject) ProjectsService.getInstance().getProjectWrapperResourceFromFile((File)project);
 		if (wrapper == null) {
 			return null;
 		}
@@ -48,8 +48,8 @@ public class WebProjectsProvider implements IProjectsProvider {
 	}
 
 	@Override
-	public File getContainingProjectForFile(File file) {
-		IResource wrapper = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
+	public File getContainingProjectForFile(Object file) {
+		IResource wrapper = ProjectsService.getInstance().getProjectWrapperResourceFromFile((File)file);
 		if (wrapper == null) {
 			return null;
 		}
@@ -61,9 +61,17 @@ public class WebProjectsProvider implements IProjectsProvider {
 	}
 
 	@Override
-	public String getPathRelativeToProject(File file) {
-		IResource wrapper = ProjectsService.getInstance().getProjectWrapperResourceFromFile(file);
+	public String getPathRelativeToProject(Object file) {
+		IResource wrapper = ProjectsService.getInstance().getProjectWrapperResourceFromFile((File)file);
 		return wrapper.getFullPath().toString();
+	}
+	
+	/**
+	 * @author Sebastian Solomon
+	 */
+	@Override
+	public Object getFolder(Object project, String path) {
+		return getFile( project, path);
 	}
 	
 }

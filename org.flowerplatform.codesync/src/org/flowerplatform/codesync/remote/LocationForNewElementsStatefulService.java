@@ -106,7 +106,7 @@ public class LocationForNewElementsStatefulService extends GenericTreeStatefulSe
 		if (node instanceof Class) {			
 			DiagramEditableResource der = (DiagramEditableResource) getDiagramEditorStatefulService().getEditableResource(diagramEditableResourcePath);
 			ResourceSet resourceSet = der.getResourceSet();
-			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile((File) der.getFile());
+			Object project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(der.getFile());
 			Resource codeSyncMappingResource = CodeSyncPlugin.getInstance().getCodeSyncMapping(project, resourceSet);
 			
 			List<Pair<Object, String>> result = new ArrayList<Pair<Object, String>>();			
