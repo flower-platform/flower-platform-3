@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="dual_resource"
+    nsURI="http://www.flower-platform.com/xmi/dual_resource_1.0.0" nsPrefix="dual_resource">
+  <eClassifiers xsi:type="ecore:EClass" name="TestReferenceHolder" eSuperTypes="#//DualResourceObject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//TestReferenceHolder" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="referencedObject" eType="#//TestReferencedObject"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TestReferencedObject" eSuperTypes="#//DualResourceObject">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="children" upperBound="-1"
+        eType="#//TestReferencedObject" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DualResourceObject"/>
+</ecore:EPackage>

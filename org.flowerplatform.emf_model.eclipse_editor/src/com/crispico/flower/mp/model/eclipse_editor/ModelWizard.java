@@ -51,8 +51,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.edit.ui.provider.ExtendedImageRegistry;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -78,6 +80,9 @@ import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.dialogs.WizardNewFileCreationPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
+import org.flowerplatform.emf_model.dual_resource.DualResource;
+import org.flowerplatform.emf_model.dual_resource.DualResourceSet;
+
 
 
 /**
@@ -226,7 +231,7 @@ public class ModelWizard extends Wizard implements INewWizard {
 						try {
 							// Create a resource set
 							//
-							ResourceSet resourceSet = new ResourceSetImpl();
+							ResourceSet resourceSet = new DualResourceSet();
 
 							// Get the URI of the model file.
 							//

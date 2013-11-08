@@ -66,8 +66,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EValidator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.eclipse.emf.edit.domain.IEditingDomainProvider;
@@ -139,6 +142,9 @@ import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.ui.views.properties.IPropertySheetPage;
 import org.eclipse.ui.views.properties.PropertySheet;
 import org.eclipse.ui.views.properties.PropertySheetPage;
+import org.flowerplatform.emf_model.dual_resource.DualResource;
+import org.flowerplatform.emf_model.dual_resource.DualResourceSet;
+
 
 /**
  * This is an example of a Notation model editor.
@@ -703,9 +709,23 @@ public class Editor
 
 		// Create the editing domain with a special command stack.
 		//
-		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new EditingDomainProviderDualResourceSet());
 	}
 
+	/**
+	 * Needed for dirty logic.
+	 * 
+	 * @author Mariana Gheorghe
+	 */
+	protected class EditingDomainProviderDualResourceSet extends DualResourceSet implements IEditingDomainProvider {
+		
+		@Override
+		public EditingDomain getEditingDomain() {
+	      return Editor.this.getEditingDomain();
+	    }
+		
+	}
+	
 	/**
 	 * This is here for the listener to be able to call it.
 	 * <!-- begin-user-doc -->

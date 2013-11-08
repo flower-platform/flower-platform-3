@@ -65,6 +65,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 
+import com.crispico.flower.mp.model.dual_resource.action.LoadMappingResourceAction;
+
 /**
  * This is the action bar contributor for the Notation model editor.
  * 
@@ -182,7 +184,7 @@ public class ActionBarContributor
 	protected Collection<IAction> createRootObjectActions;
 	
 	protected IMenuManager createRootObjectMenuManager;
-		
+	
 	/**
 	 * This will contain one {@link org.eclipse.emf.edit.ui.action.CreateChildAction} corresponding to each descriptor
 	 * generated for the current selection by the item provider.
@@ -385,7 +387,6 @@ public class ActionBarContributor
 		return actions;
 	}
 	
-	
 	/**
 	 * This generates a {@link org.eclipse.emf.edit.ui.action.CreateChildAction} for each object in <code>descriptors</code>,
 	 * and returns the collection of these actions.
@@ -495,6 +496,9 @@ public class ActionBarContributor
 		populateManager(submenuManager, createSiblingActions, null);
 		menuManager.insertBefore("edit", submenuManager);
 
+		Editor editor = (Editor) activeEditorPart;
+		menuManager.insertAfter(CreateRootObjectAction.MENU_LABEL, new LoadMappingResourceAction(editor.getEditingDomain()));
+		
 		if (deleteRootObjectAction.isEnabled()) {
 			menuManager.insertAfter(CreateRootObjectAction.MENU_LABEL, deleteRootObjectAction);
 		}

@@ -28,6 +28,7 @@ import org.eclipse.emf.common.EMFPlugin;
 import org.eclipse.emf.common.ui.EclipseUIPlugin;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EPackage;
+import org.flowerplatform.emf_model.dual_resource.DualResourcePackage;
 import org.flowerplatform.emf_model.notation.NotationPackage;
 
 import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
@@ -115,7 +116,8 @@ public final class EclipseEditorPlugin extends EMFPlugin {
 	public EPackage[] ePackages = { 
 			NotationPackage.eINSTANCE,
 			CodeSyncPackage.eINSTANCE,
-			AstCacheCodePackage.eINSTANCE
+			AstCacheCodePackage.eINSTANCE,
+			DualResourcePackage.eINSTANCE
 	};
 
 }
