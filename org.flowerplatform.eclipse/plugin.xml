@@ -4,11 +4,27 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
+            default="true"
+            extensions="notation"
+            icon="public-resources/images/FlowerDiagramEditor.gif"
+            id="org.flowerplatform.eclipse.editor.FlowerDiagramEditorLauncher"
+            launcher="org.flowerplatform.eclipse.part.FlowerDiagramEditorLauncher"
+            name="%editor.launcher1">
+      </editor>
+      <editor
             class="org.flowerplatform.eclipse.part.FlowerDiagramEditor"
             default="false"
-            extensions="notation"
             id="org.flowerplatform.eclipse.editor.FlowerDiagramEditor"
+            matchingStrategy="org.flowerplatform.eclipse.part.FlowerDiagramMatchingStrategy"
             name="%editor.name">
+      </editor>
+      <editor
+            default="false"
+            extensions="notation"
+            icon="public-resources/images/FlowerDiagramEditor.gif"
+            id="org.flowerplatform.eclipse.OpenInNewEditor"
+            launcher="org.flowerplatform.eclipse.part.FlowerDiagramEditorLauncherOpenInNewEditor"
+            name="%editor.launcher2">
       </editor>
    </extension>
     <extension

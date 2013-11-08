@@ -20,15 +20,21 @@ package org.flowerplatform.editor {
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	
+	import flash.external.ExternalInterface;
 	import flash.utils.Dictionary;
 	
+	import flashx.textLayout.elements.BreakElement;
+	
 	import mx.collections.IList;
+	import mx.core.mx_internal;
 	
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.common.link.ILinkHandler;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.stateful_service.StatefulClient;
+	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
 	import org.flowerplatform.editor.action.SaveAction;
@@ -85,7 +91,7 @@ package org.flowerplatform.editor {
 			}
 			INSTANCE = this;
 			
-			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;			
+			CommonPlugin.getInstance().linkHandlers[OPEN_RESOURCES] = this;		
 		}
 		
 		/**
@@ -182,5 +188,7 @@ package org.flowerplatform.editor {
 						[files, index == null ? -1 : int(index)]));
 			}		
 		}
+		
+		
 	}
 }

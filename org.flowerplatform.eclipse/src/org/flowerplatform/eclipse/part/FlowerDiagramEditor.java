@@ -228,6 +228,7 @@ public class FlowerDiagramEditor extends EditorPart {
 				.getUrl()
 				+ "?openResources="
 				+ ((FileEditorInput) getEditorInput()).getFile().getFullPath());
+		//browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl());		
 	}
 
 	@Override

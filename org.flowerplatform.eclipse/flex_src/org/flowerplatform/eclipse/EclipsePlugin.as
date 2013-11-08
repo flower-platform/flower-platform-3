@@ -5,19 +5,26 @@ package org.flowerplatform.eclipse
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
 	
 	import flash.display.DisplayObject;
+	import flash.external.ExternalInterface;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
+	import mx.core.mx_internal;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.HelloServerCommand;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.stateful_service.StatefulClient;
 	import org.flowerplatform.editor.EditorPlugin;
+	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
+	
+	use namespace mx_internal;
 	
 	
 	public class EclipsePlugin extends AbstractFlowerFlexPlugin {
@@ -41,6 +48,7 @@ package org.flowerplatform.eclipse
 			
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, 
 				welcomeReceivedFromServerHandler);
+			ExternalInterface.addCallback("isEditableResoucesOpened", isEditableResoucesOpened);
 		}
 		
 		public function execute():void{
@@ -84,6 +92,17 @@ package org.flowerplatform.eclipse
 		}
 		
 		override protected function registerClassAliases():void {			
+		}
+
+		public function isEditableResoucesOpened( path:String ):Boolean {
+			for each (var sc:StatefulClient in CommunicationPlugin.getInstance().statefulClientRegistry.mx_internal::statefulClientsList) {
+				if ( EditorStatefulClient(sc).editableResourcePath == path) {
+					//if it's opened, set focus on it
+					EditorStatefulClient(sc).revealEditor();
+					return true;	
+				}
+			}
+			return false;
 		}
 	}
 }

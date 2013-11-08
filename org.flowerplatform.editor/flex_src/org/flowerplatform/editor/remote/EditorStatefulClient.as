@@ -547,8 +547,12 @@ package  org.flowerplatform.editor.remote {
 			if (editorFrontends.length > 0) {
 				var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
 				var lastEditorFrontend:EditorFrontend = editorFrontends[editorFrontends.length - 1];
+				//if (lastEditorFrontend is IPopupContent) {
+					UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend.parent]);
+//				} else {
+//					UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend]);
+//				}
 				
-				UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend]);
 			}
 		}
 	}
