@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="message-service" class="flex.messaging.services.MessageService">
+
+    <adapters>
+        <adapter-definition id="communicationMessagingAdapter" class="org.flowerplatform.blazeds.channel.CommunicationChannelMessagingAdapter" />
+    </adapters>
+    
+    <destination id="blazedsSecuredDestination">
+ 		<security>
+           	<security-constraint ref="tomcatSecurityConstraint"/>
+        </security>
+
+		<channels>			
+ 			<channel ref="blazedsLongPollingAMFChannel" /> 			
+		</channels>
+		
+		<adapter ref="communicationMessagingAdapter" />
+	</destination>
+</service>
