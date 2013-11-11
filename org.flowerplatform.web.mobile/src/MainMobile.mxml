@@ -116,6 +116,7 @@
 			private var plugins:Array = [
 				setDescriptorWithUrl(new CommonPlugin(), 'servlet/public-resources/org.flowerplatform.common/swc/org.flowerplatform.common.swc|library.swf'),
 				setDescriptorWithUrl(new CommunicationPlugin(), 'servlet/public-resources/org.flowerplatform.communication/swc/org.flowerplatform.communication.swc|library.swf'),
+				setDescriptorWithUrl(new PropertiesPlugin(), 'servlet/public-resources/org.flowerplatform.properties/swc/org.flowerplatform.properties.swc|library.swf?pluginClass=PropertiesPlugin'),
 				setDescriptorWithUrl(new EditorPlugin(), 'servlet/public-resources/org.flowerplatform.editor/swc/org.flowerplatform.editor.swc|library.swf'),
 				setDescriptorWithUrl(new EditorTextPlugin(), 'servlet/public-resources/org.flowerplatform.editor.text/swc/org.flowerplatform.editor.text.swc|library.swf?pluginClass=EditorTextPlugin'),
 				setDescriptorWithUrl(new EditorTextJavaPlugin(), 'servlet/public-resources/org.flowerplatform.editor.text.java/swc/org.flowerplatform.editor.text.java.swc|library.swf?pluginClass=EditorTextJavaPlugin'),
@@ -126,7 +127,6 @@
 				setDescriptorWithUrl(new CodeSyncPlugin(), 'servlet/public-resources/org.flowerplatform.codesync/swc/org.flowerplatform.codesync.swc|library.swf?pluginClass=CodeSyncPlugin'),
 				setDescriptorWithUrl(new CodeSyncCodeJavaPlugin(), 'servlet/public-resources/org.flowerplatform.codesync.code.java/swc/org.flowerplatform.codesync.code.java.swc|library.swf?pluginClass=CodeSyncCodeJavaPlugin'),
 				setDescriptorWithUrl(new CodeSyncCodeJavascriptPlugin(), 'servlet/public-resources/org.flowerplatform.codesync.code.javascript/swc/org.flowerplatform.codesync.code.javascript.swc|library.swf?pluginClass=CodeSyncCodeJavascriptPlugin'),
-				setDescriptorWithUrl(new PropertiesPlugin(), 'servlet/public-resources/org.flowerplatform.properties/swc/org.flowerplatform.properties.swc|library.swf?pluginClass=PropertiesPlugin'),
 				setDescriptorWithUrl(new MindMapModelPlugin(), 'servlet/public-resources/org.flowerplatform.editor.mindmap/swc/org.flowerplatform.editor.mindmap.swc|library.swf?pluginClass=MindMapModelPlugin')
 			];
 			
@@ -152,10 +152,6 @@
 				FlexUtilGlobals.getInstance().rootUrl = "http://localhost:8080/org.flowerplatform.web.app/";
 				
 				startPlugins();
-				
-				// unfortunately, for unknown reasons despite investigations and discussions on forum, the streaming
-				// channel doesn't work properly. It disconnects and reconnects after about 40 sec. See mindmap.
-				CommunicationPlugin.getInstance().bridge.initializeChannelSet(BlazeDSBridge.BLAZEDS_POLLING_CHANNEL);
 				
 				CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 			}

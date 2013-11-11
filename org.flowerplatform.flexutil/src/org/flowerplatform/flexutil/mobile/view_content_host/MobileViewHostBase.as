@@ -234,13 +234,11 @@ package org.flowerplatform.flexutil.mobile.view_content_host {
 				}
 			});
 			
-			if (parentActionId == null) {
-				// give the viewMenuItems to the actions so that it can calculate it's enablement
-				openMenuAction.viewMenuItems = newViewMenuItems;
-				viewMenuItems = newViewMenuItems; 
+			// give the viewMenuItems to the actions so that it can calculate it's enablement
+			openMenuAction.viewMenuItems = newViewMenuItems;
+			viewMenuItems = newViewMenuItems; 
 				
-				appendToActionContent(newActionContent);
-			}
+			appendToActionContent(newActionContent);
 		}
 		
 		/**
