@@ -4,9 +4,11 @@ package org.flowerplatform.properties.property_renderer {
 	import flash.sampler.NewObjectSample;
 	
 	import mx.binding.utils.BindingUtils;
+	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.properties.PropertyItemRenderer;
+	import org.flowerplatform.properties.TestItemRenderer;
 	
 	import spark.components.Button;
 	import spark.components.HGroup;
@@ -31,8 +33,20 @@ package org.flowerplatform.properties.property_renderer {
 			super();
 		}
 		
+		override public function set data(value:Object):void {
+			super.data = value;
+			propertyValue.text = data.value;
+			propertyValue.editable = !data.readOnly;
+			
+			if (!data.readOnly) {
+				BindingUtils.bindProperty( data, "value", propertyValue, "text" );
+				handleListeningOnEvent(FocusEvent.FOCUS_OUT, this, propertyValue);
+			}
+			
+		}
+		
 		override protected function createChildren():void {
-			super.data = PropertyItemRenderer(HGroup(parent).owner).data;
+			super.data = data;
 			super.createChildren();
 			
 			propertyValue = new TextInput();
@@ -40,17 +54,11 @@ package org.flowerplatform.properties.property_renderer {
 			
 			propertyValue.percentWidth = 90;
 			propertyValue.percentHeight = 100;		
-			propertyValue.text = data.value;
-			propertyValue.editable = !data.readOnly;
+
 			button.percentHeight = 100;
 			button.percentWidth = 10;
 			button.label = "...";
 			button.addEventListener(MouseEvent.CLICK, clickHandlerInternal);
-			
-			if (!data.readOnly) {
-				propertyValue.addEventListener(FocusEvent.FOCUS_OUT, sendChangedValuesToServer);		
-				BindingUtils.bindProperty( data, "value", propertyValue, "text" );
-			}
 			
 			addElement(propertyValue);
 			addElement(button);

@@ -3,9 +3,9 @@
 		 xmlns:s="library://ns.adobe.com/flex/spark"
 		 xmlns:mx="library://ns.adobe.com/flex/mx"
 		 height="182" creationComplete="creationCompleteHandler(event)"
-		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent">
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent, mx.managers.IFocusManagerComponent">
 	<s:layout>
-		<s:VerticalLayout/>
+		<s:VerticalLayout useVirtualLayout="true"/>
 	</s:layout>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
@@ -32,9 +32,9 @@
 			public var selectionForServer:IList;
 
 			protected function creationCompleteHandler(flexvent:FlexEvent):void {
+				
 				propertyList.itemRenderer = new ClassFactory(PropertyItemRenderer);
 				propertyList.dataProvider = new ArrayList();
-				
 				// get selection from active provider to populate properties list with data
 				var activeSelectionProvider:ISelectionProvider = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider;
 				if (activeSelectionProvider != null && activeSelectionProvider is ISelectionForServerProvider) {

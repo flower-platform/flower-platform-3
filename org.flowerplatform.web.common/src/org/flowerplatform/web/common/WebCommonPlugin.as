@@ -38,6 +38,7 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.resources.ResourceUpdatedEvent;
 	import org.flowerplatform.flexutil.resources.ResourcesUtils;
+	import org.flowerplatform.properties.action.ShowPropertiesAction;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;
 	import org.flowerplatform.web.common.communication.AuthenticationViewProvider;
 	import org.flowerplatform.web.common.communication.heartbeat.HeartbeatStatefulClient;
@@ -144,6 +145,7 @@ package org.flowerplatform.web.common {
 			explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
+			explorerTreeClassFactoryActionProvider.actionClasses.push(ShowPropertiesAction);
  		}
 		
 		/**

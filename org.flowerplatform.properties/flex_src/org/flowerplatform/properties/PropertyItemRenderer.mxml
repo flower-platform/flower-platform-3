@@ -3,13 +3,14 @@
 				   xmlns:s="library://ns.adobe.com/flex/spark"
 				   xmlns:mx="library://ns.adobe.com/flex/mx"
 				   borderColor="#696969" borderVisible="true" borderWeight="1"
-				   implements="mx.core.IDataRenderer">
+				   implements="mx.core.IDataRenderer, mx.managers.IFocusManagerComponent">
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.flexutil.FactoryWithInitialization;
 			import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
+			import org.flowerplatform.properties.property_renderer.StringPropertyRenderer;
 
 			
 			public var itemRenderer:Class;
@@ -28,25 +29,32 @@
 			public function set data(value:Object):void {
 				// data being bindable, whenenver it changes it enters here and loses all past informations
 				// by checkig this, we make sure that the past event doesn't happen
-
-				if (data == value) {
+				if (_data == value) {
 					return;
 				}
 				_data = value;
 				
 				dispatchEvent(new FlexEvent(FlexEvent.DATA_CHANGE));
-				
-				data = value;
+
 				propertyName.text = data.name;
 				
-				if (itemRenderedInstance != null) {
-					hGroup.removeElement(itemRenderedInstance);
-				}
+				
+				
 				var factory:FactoryWithInitialization = FactoryWithInitialization(PropertiesPlugin.getInstance().propertyRendererClasses[data.type]);			
-				itemRenderedInstance = factory.newInstance(false);
-				itemRenderedInstance.percentWidth = 50;
-				itemRenderedInstance.percentHeight = 100;
-				hGroup.addElement(itemRenderedInstance);
+
+				if (itemRenderedInstance != null && itemRenderedInstance is factory.generator) {
+					trace("Reciclying item renderer");
+				} else {
+					if (itemRenderedInstance != null) {
+						hGroup.removeElement(itemRenderedInstance);
+					}
+					itemRenderedInstance = factory.newInstance(false);
+					itemRenderedInstance.percentWidth = 50;
+					itemRenderedInstance.percentHeight = 100;
+					hGroup.addElement(itemRenderedInstance);
+				}
+			
+				itemRenderedInstance.data = data;
 				
 			}
 

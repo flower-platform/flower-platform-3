@@ -2,7 +2,9 @@ package org.flowerplatform.properties.property_renderer {
 	import flash.events.Event;
 	import flash.events.FocusEvent;
 	
+	import mx.binding.utils.BindingUtils;
 	import mx.controls.List;
+	import mx.events.FlexEvent;
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -49,11 +51,20 @@ package org.flowerplatform.properties.property_renderer {
 				);
 			}	
 		}
+		/**
+		 * Registers the objectToListen to the Event event, and removes the listner when the parentRenderer is removed
+		 * 
+		 */
+		protected function handleListeningOnEvent(event:String, parentRenderer:BasicPropertyRenderer, objectToListen:Object):void {
+			objectToListen.addEventListener(event, sendChangedValuesToServer);		
+			parentRenderer.addEventListener(FlexEvent.REMOVE, function(flexEvent:FlexEvent):void {
+				objectToListen.removeEventListener(event, sendChangedValuesToServer);
+				trace("Listener removed");
+			});
+		}
 		
 		override protected function createChildren():void {
 			super.createChildren();
 		}
-		
-		
 	}
 }
