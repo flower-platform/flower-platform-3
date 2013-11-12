@@ -9,7 +9,7 @@
             icon="public-resources/images/FlowerDiagramEditor.gif"
             id="org.flowerplatform.eclipse.editor.FlowerDiagramEditorLauncher"
             launcher="org.flowerplatform.eclipse.part.FlowerDiagramEditorLauncher"
-            name="%editor.launcher1">
+            name="%flowerDiagramEditorLauncher-name">
       </editor>
       <editor
             class="org.flowerplatform.eclipse.part.FlowerDiagramEditor"
@@ -24,7 +24,7 @@
             icon="public-resources/images/FlowerDiagramEditor.gif"
             id="org.flowerplatform.eclipse.OpenInNewEditor"
             launcher="org.flowerplatform.eclipse.part.FlowerDiagramEditorLauncherOpenInNewEditor"
-            name="%editor.launcher2">
+            name="%openInNewEditor-name">
       </editor>
    </extension>
     <extension

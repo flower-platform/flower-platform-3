@@ -106,7 +106,10 @@ package org.flowerplatform.editor {
 			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "s"), globalEditorOperationsManager.saveAction); // Ctrl + S
 			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, true, "s"), globalEditorOperationsManager.saveAllAction); // Ctrl + Shift + S
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
-			
+			if (ExternalInterface.available) {
+				// on mobile, it's not available
+				ExternalInterface.addCallback("doSaveAll", doSaveAll);
+			}
 		}
 		
 		
@@ -189,6 +192,9 @@ package org.flowerplatform.editor {
 			}		
 		}
 		
+		public function doSaveAll():void{
+			globalEditorOperationsManager.saveAllAction.run();
+		}
 		
 	}
 }

@@ -130,8 +130,8 @@ public class FlowerDiagramEditorLauncher implements IEditorLauncher {
 			if (edit instanceof FlowerDiagramEditor) {
 				final Browser browser = ((FlowerDiagramEditor) edit)
 						.getBrowser();
-				final BrowserFunction function = new CustomFunction(browser,
-						"theJavaFunction");
+				final BrowserFunction function = new GetIsDiagramOpened(browser,
+						"sendIsDiagramOpenedToJava");
 
 				browser.addProgressListener(new ProgressAdapter() {
 					public void completed(ProgressEvent event) {
@@ -157,9 +157,9 @@ public class FlowerDiagramEditorLauncher implements IEditorLauncher {
 	
 	
 	 // Called by JavaScript
-	class CustomFunction extends BrowserFunction {
+	class GetIsDiagramOpened extends BrowserFunction {
 
-		CustomFunction(Browser browser, String name) {
+		GetIsDiagramOpened(Browser browser, String name) {
 			super(browser, name);
 		}
 

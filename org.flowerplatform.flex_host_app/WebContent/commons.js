@@ -76,25 +76,35 @@ function dragOnDiagram(paths) {
 	window.document.getElementById("FlexHostApp").dragOnDiagram(paths);
 }
 
-
-
 function handleLink(link) {
 	var isSafariBrowser = navigator.userAgent.toLowerCase().indexOf("safari") != -1;
 //		if (!isSafariBrowser) {
 //			window.document.temp_form.temp_field.handleLink(link);
 //		}
-		
 	window.document.getElementById("FlexHostApp").handleLink(link);
 }
-	
 
 /**
  * @author Sebastian Solomon
  * 
  */
 function isFileOpened(path) {
-var isOpen = window.document.getElementById("FlexHostApp")
-		.isEditableResoucesOpened(path);
-theJavaFunction(isOpen);
+	var isOpen = window.document.getElementById("FlexHostApp")
+			.isEditableResoucesOpened(path);
+	sendIsDiagramOpenedToJava(isOpen);
+}
+/**
+ * @author Sebastian Solomon
+ * 
+ */
+function doSave(){
+	window.document.getElementById("FlexHostApp").doSaveAll();
 }
 
+/**
+ * @author Sebastian Solomon
+ * 
+ */
+function sendGlobalDirtyState(dirtyState){
+	sendGlobalDirtyStateToJava(dirtyState);
+}
