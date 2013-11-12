@@ -97,7 +97,7 @@ function isFileOpened(path) {
  * @author Sebastian Solomon
  * 
  */
-function doSave(){
+function doSave() {
 	window.document.getElementById("FlexHostApp").doSaveAll();
 }
 
@@ -105,6 +105,6 @@ function doSave(){
  * @author Sebastian Solomon
  * 
  */
-function sendGlobalDirtyState(dirtyState){
+function sendGlobalDirtyState(dirtyState) {
 	sendGlobalDirtyStateToJava(dirtyState);
 }

@@ -192,7 +192,7 @@ package org.flowerplatform.editor {
 			}		
 		}
 		
-		public function doSaveAll():void{
+		public function doSaveAll():void {
 			globalEditorOperationsManager.saveAllAction.run();
 		}
 		
