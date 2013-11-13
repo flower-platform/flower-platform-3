@@ -19,11 +19,12 @@
 package org.flowerplatform.web {
 	import com.crispico.flower.util.HTMLToolTip;
 	import com.crispico.flower.util.layout.Workbench;
+	import com.crispico.flower.util.layout.event.ActiveViewChangedEvent;
 	
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
-	import flash.external.ExternalInterface;
 	
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
@@ -173,8 +174,11 @@ package org.flowerplatform.web {
 			
 			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
 			
-			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
-			
+			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, 
+				EditorPlugin.getInstance().globalEditorOperationsManager.viewsRemovedHandler);
+			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ActiveViewChangedEvent.ACTIVE_VIEW_CHANGED, 
+				EditorPlugin.getInstance().globalEditorOperationsManager.activeViewChangedHandler);
+						
 			// is needed from other plugins
 			CommunicationPlugin.getInstance().bridge.addEventListener(BridgeEvent.WELCOME_RECEIVED_FROM_SERVER, welcomeReceivedFromServerHandler);
 

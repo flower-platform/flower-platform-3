@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.web.common {
 	
+	import flash.display.DisplayObject;
 	import flash.events.IEventDispatcher;
 	import flash.net.registerClassAlias;
 	
@@ -36,6 +37,7 @@ package org.flowerplatform.web.common {
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.resources.ResourceUpdatedEvent;
 	import org.flowerplatform.flexutil.resources.ResourcesUtils;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;

@@ -5,10 +5,21 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
 		<script src="lib/codemirror-compressed.js"></script>		
-		<link rel="stylesheet" href="codeMirrorEditor.css">
+		<link rel="stylesheet" href="codeMirrorEditor.css" />
 		
 		<script>
-			
+			function getURLParam(name) {
+				name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+			  	var regexS = "[\\?&]"+name+"=([^&#]*)";
+			  	var regex = new RegExp(regexS);
+			 	var results = regex.exec(window.location.href);
+			 	if (results == null) {
+			   	 	return "";
+			  	} else {
+			    	return results[1];
+			  	}
+			}	
+				
 			// Invert map
 			function invert(obj) {
 				var result = {};
@@ -76,46 +87,47 @@
 		
 			var ext2Mime = invert(mime2Ext);
 			
-			function getURLParam(name) {
-				name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-			  	var regexS = "[\\?&]"+name+"=([^&#]*)";
-			  	var regex = new RegExp(regexS);
-			 	var results = regex.exec(window.location.href);
-			 	if (results == null) {
-			   	 	return "";
-			  	} else {
-			    	return results[1];
-			  	}
-			}	
+			var isMobile = getURLParam('isMobile');
+			if (isMobile == "true") {	
+				document.write("<script src='lib/StageWebViewBridge.js'><\/script>");
+			}
 			
 			var myCodeMirror;
 			var editorStatefulClientId;
-			
-			function initialize(args) {
+						
+			function initialize(args) {				
 				myCodeMirror.setValue(unescape(args[0]));
 				editorStatefulClientId = args[1];
 				if (args[2]) { // readOnly = true
 					disableEditing();
 				}
 				
-				myCodeMirror.on("change", function (instance, changeObj) {
-					var app = parent.getFlexApp();				
+				myCodeMirror.on("change", function (instance, changeObj) {					
 					while(changeObj) { // works like an iterator
 						var offset = myCodeMirror.indexFromPos(changeObj.from);
 						var oldText = changeObj.removed.join('\n');
 						var newText = changeObj.text.join('\n');
-						app.codeMirrorEditorChangedHandler(editorStatefulClientId, offset, oldText, newText);
+						if (isMobile == "true") {						
+							StageWebViewBridge.call("codeMirrorEditorChangedHandler", null, editorStatefulClientId, offset, oldText, newText);
+						} else {
+							parent.getFlexApp().codeMirrorEditorChangedHandler(editorStatefulClientId, offset, oldText, newText);
+						}						
 						changeObj = changeObj.next;
 					}					
 				});
 			}
 			
-			function setContent(args) {
+			function setContent(args) {				
 				myCodeMirror.setValue(unescape(args[0]));		
 			}
 			
 			function getContent() {
-				return myCodeMirror.getValue();		
+				var result = myCodeMirror.getValue();
+				if (isMobile) {
+					document.location = result;
+				} else {
+					return result;	
+				}					
 			}
 			
 			function disableEditing() {
@@ -126,19 +138,19 @@
 				myCodeMirror.readOnly = false;
 			}
 			
-			function updateText(args) {
+			function updateText(args) {			
 				myCodeMirror.replaceRange(unescape(args[2]), myCodeMirror.posFromIndex(args[0]), myCodeMirror.posFromIndex(args[0] + args[1]));
-			}
+			}		
 		</script>
+				
 	</head>
 	
-	<body style="padding: 0; margin: 0; width: 100%; height: 100%;">
+	<body style="padding: 0; margin: 0; width: 100%; height: 100%;">			
 		<script>	
 			myCodeMirror = CodeMirror(document.body, {			 
 				mode: CodeMirror.mimeModes[ext2Mime[getURLParam('extension')]],
 			  	lineNumbers: true
 			});		
-					
 		</script>
 	</body>
 </html>
