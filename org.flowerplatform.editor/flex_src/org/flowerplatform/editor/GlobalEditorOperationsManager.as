@@ -47,8 +47,6 @@ package org.flowerplatform.editor {
 	 */  
 	public class GlobalEditorOperationsManager extends EventDispatcher {
 		
-		private var workbench:Workbench;
-		
 		public var saveAction:SaveAction;
 		
 		public var saveAllAction:SaveAllAction;
@@ -123,19 +121,11 @@ package org.flowerplatform.editor {
 			return result;
 		}
 		
-		
-		public function GlobalEditorOperationsManager(workbench:Workbench) {
-			workbench.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, viewsRemovedHandler);
-			workbench.addEventListener(ActiveViewChangedEvent.ACTIVE_VIEW_CHANGED, activeViewChangedHandler);
-
-			this.workbench = workbench;
-		}
-		
 		/**
 		 * @author Sebastian Solomon
 		 * @author Cristina Constantinescu
 		 */  
-		private function viewsRemovedHandler(e:ViewsRemovedEvent):void {
+		public function viewsRemovedHandler(e:ViewsRemovedEvent):void {
 			var editorFrontends:ArrayCollection = new ArrayCollection();
 			for each (var view:Object in e.removedViews) {
 				var viewComponent:UIComponent = UIComponent(view);
@@ -159,7 +149,7 @@ package org.flowerplatform.editor {
 		/**
 		 * Delegates to <code>editorInputChangedForComponent</code>.
 		 */
-		private function activeViewChangedHandler(evt:ActiveViewChangedEvent):void {
+		public function activeViewChangedHandler(evt:ActiveViewChangedEvent):void {
 			var component:UIComponent = evt.newView;
 			
 			if (evt.newView is IViewHost) {
@@ -179,7 +169,7 @@ package org.flowerplatform.editor {
 		 * 
 		 */
 		public function editorInputChangedForComponent(component:IDirtyStateProvider):void {
-			var uiComponent:UIComponent = workbench.activeViewList.getActiveView();
+			var uiComponent:UIComponent = Workbench(FlexUtilGlobals.getInstance().workbench).activeViewList.getActiveView();
 
 			if (uiComponent is IViewHost) {
 				uiComponent = UIComponent(IViewHost(uiComponent).activeViewContent);

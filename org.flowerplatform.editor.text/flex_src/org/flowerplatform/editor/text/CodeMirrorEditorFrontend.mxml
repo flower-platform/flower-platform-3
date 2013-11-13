@@ -27,18 +27,20 @@ license-end
 	xmlns:editor="com.crispico.flower.mp.web.texteditor.*"
 	xmlns:s="library://ns.adobe.com/flex/spark"
 	xmlns:editorsupport="org.flowerplatform.editor.*"
-	xmlns:iframe="org.flowerplatform.flexutil.iframe.*">
+	xmlns:iframe="org.flowerplatform.flexutil.iframe.*" xmlns:ns="org.flowerplatform.editor.text.javascript_view.*"
+	initialize="initializeHandler(event)">
 	
 	<mx:Script>	
 		<![CDATA[
-			import com.crispico.flower.texteditor.rules.WordRule;
-			
 			import mx.collections.ArrayCollection;
-			import mx.core.FlexGlobals;
+			import mx.core.UIComponent;
 			import mx.events.FlexEvent;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.remote.EditorStatefulClient;
+			import org.flowerplatform.editor.text.codemirror_editor.ICodeMirrorEditor;
+			import org.flowerplatform.editor.text.codemirror_editor.MobileCodeMirrorEditor;
+			import org.flowerplatform.editor.text.codemirror_editor.WebCodeMirrorEditor;
 			import org.flowerplatform.editor.text.remote.TextEditorUpdate;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
@@ -48,10 +50,20 @@ license-end
 			
 			private static const EDITOR_PAGE:String = "codemirror/codeMirrorEditor.html";
 			
+			protected function initializeHandler(event:FlexEvent):void {
+				if (FlexUtilGlobals.getInstance().isMobile) {					
+					editor = new MobileCodeMirrorEditor();						
+				} else {
+					editor = UIComponent(new WebCodeMirrorEditor("editor"));					
+				}					
+			}
+			
 			override protected function creationCompleteHandler(event:FlexEvent):void {		
 				super.creationCompleteHandler(event);
-								
-				codeMirrorEditor.source = FlexUtilGlobals.getInstance().createAbsoluteUrl(EditorTextPlugin.getInstance().getResourceUrl(getURL()));		
+												
+				ICodeMirrorEditor(editor).load(FlexUtilGlobals.getInstance().createAbsoluteUrl(EditorTextPlugin.getInstance().getResourceUrl(getURL())));
+				ICodeMirrorEditor(editor).addViewCompleteHandler(orionEditor_frameLoadHandler);
+				
 				creationComplete = true;
 			}
 			
@@ -60,7 +72,7 @@ license-end
 				if (lastDotIndex >= 0) {
 					// has an extension
 					var extension:String = editorStatefulClient.editableResourcePath.substring(lastDotIndex + 1);
-					return EDITOR_PAGE + "?extension=" + extension + "&objectId=" + FlexGlobals.topLevelApplication.id;
+					return EDITOR_PAGE + "?extension=" + extension + "&isMobile=" + FlexUtilGlobals.getInstance().isMobile;
 				}
 				return EDITOR_PAGE;
 			}
@@ -68,23 +80,23 @@ license-end
 			protected function orionEditor_frameLoadHandler(event:Event):void {
 				if (content != null) {	
 					// initialize code mirror editor
-					codeMirrorEditor.callIFrameFunction("initialize", [escape(content), editorStatefulClient.getStatefulClientId(), readOnly])
+					ICodeMirrorEditor(editor).callJavaScriptMethod("initialize", null, escape(content), editorStatefulClient.getStatefulClientId(), readOnly);
 					// listen for text changes
-					ExternalInterface.addCallback("codeMirrorEditorChangedHandler", textEditorChangedHandler);
+					ICodeMirrorEditor(editor).addCallbackHandler("codeMirrorEditorChangedHandler", textEditorChangedHandler);
 				}
 			}
 			
 			public function setContent(content:String):void {
-				codeMirrorEditor.callIFrameFunction("setContent", [escape(content)]);
+				ICodeMirrorEditor(editor).callJavaScriptMethod("setContent", null, escape(content));
 			}
 			
 			public function getContent(callback:Function):void {
-				codeMirrorEditor.callIFrameFunction("getContent", null, callback);
+				ICodeMirrorEditor(editor).callJavaScriptMethod("getContent", callback, null);
 			}
 			
 			override public function disableEditing():void {
 				if (creationComplete) {
-					codeMirrorEditor.callIFrameFunction("disableEditing");
+					ICodeMirrorEditor(editor).callJavaScriptMethod("disableEditing");
 				} else {
 					readOnly = true;
 				}				
@@ -92,14 +104,14 @@ license-end
 			
 			override public function enableEditing():void {
 				if (creationComplete) {
-					codeMirrorEditor.callIFrameFunction("enableEditing");
+					ICodeMirrorEditor(editor).callJavaScriptMethod("enableEditing");
 				} else {
 					readOnly = false;
 				}				
 			}
 			
 			protected function updateText(offset:int, oldTextLength:int, newText:String):void {
-				codeMirrorEditor.callIFrameFunction("updateText", [offset, oldTextLength, escape(newText)]);
+				ICodeMirrorEditor(editor).callJavaScriptMethod("updateText", null, offset, oldTextLength, escape(newText));
 			}
 			
 			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {				
@@ -124,7 +136,7 @@ license-end
 				update.oldTextLength = oldText.length;
 				update.newText = newText;
 				updates.addItem(update);
-						
+		
 				// here we must know where to send those updates
 				// ind the statefulClient based on the id sent at code mirror initialisation
 				var editorStatefulClient:EditorStatefulClient = 
@@ -135,12 +147,8 @@ license-end
 				editorStatefulClient.attemptUpdateContent(
 					editorStatefulClient.editorFrontends[editorStatefulClient.editorFrontends.length - 1], updates);
 			}
-			
+						
 		]]>
-	</mx:Script>
-	
-	<editorsupport:editor>		
-		<iframe:FlowerIFrame id="codeMirrorEditor" frameLoad="orionEditor_frameLoadHandler(event)"  />
-	</editorsupport:editor>
+	</mx:Script>	
 	
 </editorsupport:EditorFrontend>

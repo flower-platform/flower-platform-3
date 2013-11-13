@@ -3,7 +3,6 @@ package org.flowerplatform.web.mobile.view_content_host {
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.ArrayList;
-	import mx.collections.IList;
 	import mx.core.UIComponent;
 	import mx.events.FlexEvent;
 	
@@ -15,7 +14,6 @@ package org.flowerplatform.web.mobile.view_content_host {
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.mobile.view_content_host.split.MobileSplitViewHost;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
-	import org.flowerplatform.web.mobile.MainNavigatorContent;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -42,7 +40,7 @@ package org.flowerplatform.web.mobile.view_content_host {
 			leftActiveComponent = FlexUtilGlobals.getInstance().composedViewProvider.createView(new ViewLayoutData(ExplorerViewProvider.ID));
 			
 			FlexUtilGlobals.getInstance().workbench = this;
-			this.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().viewsRemoved);
+			this.addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, EditorPlugin.getInstance().globalEditorOperationsManager.viewsRemovedHandler);
 			
 			showOpenEditorsCalloutButton.splitView = this;
 		}
