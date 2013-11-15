@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1EMF;
 import org.flowerplatform.model_access_dao.model.Diagram1;
+import org.flowerplatform.model_access_dao.model.EntityEMF;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.ModelPackage;
 import org.flowerplatform.model_access_dao.model.Node1;
@@ -42,6 +43,13 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass codeSyncElement1EMFEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass entityEMFEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -182,6 +190,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getEntityEMF() {
+		return entityEMFEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getEntityEMF_ReferencedElements() {
+		return (EReference)entityEMFEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getNode1() {
 		return node1EClass;
 	}
@@ -311,6 +337,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		codeSyncElement1EMFEClass = createEClass(CODE_SYNC_ELEMENT1_EMF);
 		createEReference(codeSyncElement1EMFEClass, CODE_SYNC_ELEMENT1_EMF__CHILDREN);
 
+		entityEMFEClass = createEClass(ENTITY_EMF);
+		createEReference(entityEMFEClass, ENTITY_EMF__REFERENCED_ELEMENTS);
+
 		node1EClass = createEClass(NODE1);
 		createEAttribute(node1EClass, NODE1__ID);
 		createEAttribute(node1EClass, NODE1__NAME);
@@ -356,6 +385,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		// Add supertypes to classes
 		codeSyncElement1EMFEClass.getESuperTypes().add(this.getCodeSyncElement1());
+		entityEMFEClass.getESuperTypes().add(this.getCodeSyncElement1EMF());
 		node1EMFEClass.getESuperTypes().add(this.getNode1());
 		diagram1EClass.getESuperTypes().add(this.getNode1EMF());
 
@@ -366,6 +396,9 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(codeSyncElement1EMFEClass, CodeSyncElement1EMF.class, "CodeSyncElement1EMF", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getCodeSyncElement1EMF_Children(), this.getCodeSyncElement1(), null, "children", null, 0, -1, CodeSyncElement1EMF.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(entityEMFEClass, EntityEMF.class, "EntityEMF", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getEntityEMF_ReferencedElements(), this.getCodeSyncElement1(), null, "referencedElements", null, 0, -1, EntityEMF.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(node1EClass, Node1.class, "Node1", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNode1_Id(), ecorePackage.getEString(), "id", null, 0, 1, Node1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

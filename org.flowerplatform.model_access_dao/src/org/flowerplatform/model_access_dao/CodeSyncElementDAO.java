@@ -8,12 +8,19 @@ public interface CodeSyncElementDAO {
 	
 	String createCodeSyncElement(String repoId, String discussableDesignId, String resourceId, String id, String parentId);
 	CodeSyncElement1 getCodeSyncElement(String repoId, String discussableDesignId, String resourceId, String id);
+	
+	/**
+	 * Merge with global resource, if this is a local resource.
+	 */
 	List<CodeSyncElement1> getCodeSyncElements(String repoId, String discussableDesignId, String resourceId);
+	
+	/**
+	 * Merge with global resource, if this is a local resource.
+	 */
+	List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId);
 	
 	CodeSyncElement1 getParent(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId);
 	void setParent(CodeSyncElement1 parent, CodeSyncElement1 element);
-	
-	List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId);
 	
 	void deleteCodeSyncElement(CodeSyncElement1 element);
 	

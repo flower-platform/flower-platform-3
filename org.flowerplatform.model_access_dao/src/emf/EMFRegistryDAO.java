@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.common.util.URI;
@@ -21,6 +22,7 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.model_access_dao.RegistryDAO;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.ResourceInfo;
+import org.flowerplatform.model_access_dao.registry.DirWithResources;
 import org.flowerplatform.model_access_dao.registry.DiscussableDesign;
 import org.flowerplatform.model_access_dao.registry.Repository;
 
@@ -98,6 +100,9 @@ public class EMFRegistryDAO implements RegistryDAO {
 		
 		// create global mapping resource
 		createResource(GLOBAL_MAPPING_LOCATION, uuid, null, null);
+		
+		// create global app wizard resource
+		createResource(GLOBAL_APP_WIZARD_LOCATION, uuid, null, null);
 
 		System.out.println("> created repo " + dir);
 		
@@ -152,13 +157,25 @@ public class EMFRegistryDAO implements RegistryDAO {
 		}
 		
 		// create local mapping resource
-		createResource(MAPPING_LOCATION, repoId, uuid, (String) repo.getResources().keySet().toArray()[0]);
+		createResource(MAPPING_LOCATION, repoId, uuid, getResourceId(repo, MAPPING_LOCATION));
+		
+		// create local app wizard resource
+		createResource(APP_WIZARD_LOCATION, repoId, uuid, getResourceId(repo, APP_WIZARD_LOCATION));
 		
 		System.out.println("> created discussable design " + dir);
 		
 		resourceSets.clear();
 		
 		return uuid;
+	}
+	
+	public String getResourceId(DirWithResources dirWithResources, String suffix) {
+		for (Entry<String, URI> entry : dirWithResources.getResources().entrySet()) {
+			if (entry.getValue().toFileString().endsWith(suffix)) {
+				return entry.getKey();
+			}
+		}
+		throw new RuntimeException(String.format("No resource with suffix %s for %s", suffix, dirWithResources.getDir()));
 	}
 	
 	private File getDiscussableDesignDir(Repository repository, String dd) {

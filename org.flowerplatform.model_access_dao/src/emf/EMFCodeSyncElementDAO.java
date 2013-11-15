@@ -1,7 +1,7 @@
 package emf;
 
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 
 	@Override
 	public String createCodeSyncElement(String repoId, String discussableDesignId, String resourceId, String id, String parentId) {
-		CodeSyncElement1 element = ModelFactory.eINSTANCE.createCodeSyncElement1EMF();
+		CodeSyncElement1 element = createElement();
 		if (id == null) {
 			id = UUID.newUUID();
 		}
@@ -81,12 +81,13 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 		return duplicate;
 	}
 	
-	private void copyProperties(CodeSyncElement1 source, CodeSyncElement1 target) {
+	protected void copyProperties(CodeSyncElement1 source, CodeSyncElement1 target) {
 		target.setName(source.getName());
 	}
 	
 	public List<CodeSyncElement1> getCodeSyncElements(String repoId, String discussableDesignId, String resourceId) {
-		Map<String, CodeSyncElement1> codeSyncElements = new HashMap<String, CodeSyncElement1>();
+		// use LinkedHashMap to preserve insertion-order
+		Map<String, CodeSyncElement1> codeSyncElements = new LinkedHashMap<String, CodeSyncElement1>();
 		
 		// merge with global resource if we're in a discussable design
 		if (discussableDesignId != null) {
@@ -107,11 +108,31 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	
 	private void addToMap(CodeSyncElement1 codeSyncElement, Map<String, CodeSyncElement1> codeSyncElements) {
 		codeSyncElements.put(codeSyncElement.getId(), codeSyncElement);
-		for (CodeSyncElement1 child : getChildren(codeSyncElement, null, null, null)) {
+		for (CodeSyncElement1 child : getCodeSyncElement(codeSyncElement).getChildren()) {
 			addToMap(child, codeSyncElements);
 		}
 	}
 	
+	@Override
+	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId) {
+		// use LinkedHashMap to preserve insertion-order
+		Map<String , CodeSyncElement1> children = new LinkedHashMap<String, CodeSyncElement1>();
+		
+		// merge with global resource if we're in a discussable design
+		if (discussableDesignId != null) {
+			element = getCodeSyncElement(repoId, null, resourceId, element.getId());
+			for (CodeSyncElement1 child : getChildren(element, repoId, null, resourceId)) {
+				children.put(child.getId(), child);
+			}
+		}
+		
+		for (CodeSyncElement1 child : getCodeSyncElement(element).getChildren()) {
+			children.put(child.getId(), child);
+		}
+		
+		return Arrays.asList(children.values().toArray(new CodeSyncElement1[0]));
+	}
+
 	@Override
 	public CodeSyncElement1 getParent(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId) {
 		CodeSyncElement1 parent = (CodeSyncElement1) getCodeSyncElement(element).eContainer();
@@ -121,22 +142,17 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	@Override
 	public void setParent(CodeSyncElement1 parent, CodeSyncElement1 element) {
 		if (parent != null) {
-			getChildren(parent, null, null, null).add(element);
+			getCodeSyncElement(parent).getChildren().add(element);
 		} else {
 			parent = (CodeSyncElement1) element.eContainer();
 			if (parent == null) {
 				// remove from resource TODO
 			} else {
-				getChildren(parent, null, null, null).remove(element);
+				getCodeSyncElement(parent).getChildren().remove(element);
 			}
 		}
 	}
 	
-	@Override
-	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId) {
-		return getCodeSyncElement(element).getChildren();
-	}
-
 	@Override
 	public void deleteCodeSyncElement(CodeSyncElement1 element) {
 		ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(element);
@@ -147,6 +163,10 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	
 	protected CodeSyncElement1EMF getCodeSyncElement(CodeSyncElement1 element) {
 		return (CodeSyncElement1EMF) element;
+	}
+
+	protected CodeSyncElement1 createElement() {
+		return ModelFactory.eINSTANCE.createCodeSyncElement1EMF();
 	}
 
 }

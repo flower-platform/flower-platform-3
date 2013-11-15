@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
+import java.util.Map.Entry;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -16,8 +17,10 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.model_access_dao.DAOFactory;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
 import org.flowerplatform.model_access_dao.model.Diagram1;
+import org.flowerplatform.model_access_dao.model.EntityEMF;
 import org.flowerplatform.model_access_dao.model.Node1;
 import org.flowerplatform.model_access_dao.model.ResourceInfo;
+import org.flowerplatform.model_access_dao.registry.DirWithResources;
 import org.flowerplatform.model_access_dao.registry.DiscussableDesign;
 import org.flowerplatform.model_access_dao.registry.Repository;
 import org.junit.runner.RunWith;
@@ -33,9 +36,16 @@ import org.junit.runners.Suite.SuiteClasses;
 })
 public class ModelAccessDAOTests {
 
-	public static CodeSyncElement1 createCSEAndAsserNotNull(String repoId, String discussableDesignId, String resourceId, String id, String parentId) {
-		id = DAOFactory.codeSyncElementDAO.createCodeSyncElement(repoId, null, resourceId, id, parentId);
-		CodeSyncElement1 cse = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, null, resourceId, id);
+	public static CodeSyncElement1 createCSEAndAssertNotNull(String repoId, String discussableDesignId, String resourceId, String id, String parentId) {
+		id = DAOFactory.codeSyncElementDAO.createCodeSyncElement(repoId, discussableDesignId, resourceId, id, parentId);
+		CodeSyncElement1 cse = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, discussableDesignId, resourceId, id);
+		assertNotNull(cse);
+		return cse;
+	}
+	
+	public static CodeSyncElement1 createEntityAndAssertNotNull(String repoId, String discussableDesignId, String resourceId, String id, String parentId) {
+		id = DAOFactory.entityDAO.createCodeSyncElement(repoId, discussableDesignId, resourceId, id, parentId);
+		CodeSyncElement1 cse = DAOFactory.entityDAO.getCodeSyncElement(repoId, discussableDesignId, resourceId, id);
 		assertNotNull(cse);
 		return cse;
 	}
@@ -66,6 +76,15 @@ public class ModelAccessDAOTests {
 		return resourceSet.getResource(uri, true);
 	}
 	
+	public static String getResourceId(DirWithResources dirWithResources, String suffix) {
+		for (Entry<String, URI> entry : dirWithResources.getResources().entrySet()) {
+			if (entry.getValue().toFileString().endsWith(suffix)) {
+				return entry.getKey();
+			}
+		}
+		throw new RuntimeException(String.format("No resource with suffix %s for %s", suffix, dirWithResources.getDir()));
+	}
+	
 	public static void printContents(Resource resource, String repoId, String ddId) {
 		for (EObject object : resource.getContents()) {
 			printContents(object, repoId, ddId);
@@ -84,9 +103,11 @@ public class ModelAccessDAOTests {
 			if (cse.eIsProxy()) {
 				fail("Diagrammable element is proxy");
 			}
-			System.out.println(String.format("NODE [name = %s] -> CSE [name = %s]", 
+			System.out.println(String.format("NODE [name = %s] -> DGR ELT [name = %s]", 
 					node.getName(), cse.getName()));
-			for (EObject child : DAOFactory.nodeDAO.getChildren(node, repoId, discussableDesignId, null)) {
+			printContents(cse, repoId, discussableDesignId);
+			String resourceId = node.eResource().getURI().opaquePart();
+			for (EObject child : DAOFactory.nodeDAO.getChildren(node, repoId, discussableDesignId, resourceId)) {
 				printContents(child, repoId, discussableDesignId);
 			}
 		} else if (object instanceof ResourceInfo) {
@@ -97,9 +118,23 @@ public class ModelAccessDAOTests {
 			File ddFile = dd == null ? null : dd.getDir();
 			URI resourceUri = dd == null ? repo.getResources().get(info.getResourceId()) : dd.getResources().get(info.getResourceId());
 			System.out.println(String.format("RESOURCE INFO [repo = %s, dd = %s, uri = %s]", repoFile, ddFile, resourceUri));
+		} else if (object instanceof EntityEMF) {
+			EntityEMF entity = (EntityEMF) object;
+			System.out.println(String.format("ENTITY [name = %s]", entity.getName()));
+			String resourceId = entity.eResource().getURI().opaquePart();
+			for (EObject refElt : DAOFactory.entityDAO.getReferencedElements(entity, repoId, discussableDesignId, resourceId)) {
+				if (refElt.eIsProxy()) {
+					fail("Referenced element is proxy");
+				}
+				printContents(refElt, repoId, discussableDesignId);
+			}
 		} else if (object instanceof CodeSyncElement1) {
 			CodeSyncElement1 codeSyncElement = (CodeSyncElement1) object;
 			System.out.println(String.format("CSE [name = %s]", codeSyncElement.getName()));
+			String resourceId = codeSyncElement.eResource().getURI().opaquePart();
+			for (EObject child : DAOFactory.codeSyncElementDAO.getChildren(codeSyncElement, repoId, discussableDesignId, resourceId)) {
+				printContents(child, repoId, discussableDesignId);
+			}
 		}
 	}
 	

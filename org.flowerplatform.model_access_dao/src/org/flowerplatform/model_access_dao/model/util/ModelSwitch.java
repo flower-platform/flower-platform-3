@@ -83,6 +83,14 @@ public class ModelSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case ModelPackage.ENTITY_EMF: {
+				EntityEMF entityEMF = (EntityEMF)theEObject;
+				T result = caseEntityEMF(entityEMF);
+				if (result == null) result = caseCodeSyncElement1EMF(entityEMF);
+				if (result == null) result = caseCodeSyncElement1(entityEMF);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case ModelPackage.NODE1: {
 				Node1 node1 = (Node1)theEObject;
 				T result = caseNode1(node1);
@@ -141,6 +149,21 @@ public class ModelSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseCodeSyncElement1EMF(CodeSyncElement1EMF object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Entity EMF</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Entity EMF</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseEntityEMF(EntityEMF object) {
 		return null;
 	}
 

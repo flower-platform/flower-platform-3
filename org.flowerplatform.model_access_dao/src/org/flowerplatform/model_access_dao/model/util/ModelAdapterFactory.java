@@ -80,6 +80,10 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 				return createCodeSyncElement1EMFAdapter();
 			}
 			@Override
+			public Adapter caseEntityEMF(EntityEMF object) {
+				return createEntityEMFAdapter();
+			}
+			@Override
 			public Adapter caseNode1(Node1 object) {
 				return createNode1Adapter();
 			}
@@ -140,6 +144,20 @@ public class ModelAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createCodeSyncElement1EMFAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.flowerplatform.model_access_dao.model.EntityEMF <em>Entity EMF</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.flowerplatform.model_access_dao.model.EntityEMF
+	 * @generated
+	 */
+	public Adapter createEntityEMFAdapter() {
 		return null;
 	}
 

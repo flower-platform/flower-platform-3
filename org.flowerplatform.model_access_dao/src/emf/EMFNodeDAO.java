@@ -40,6 +40,11 @@ public class EMFNodeDAO implements NodeDAO {
 	}
 	
 	@Override
+	public List<Node1> getChildren(Node1 node, String repoId, String discussableDesignId, String resourceId) {
+		return getNode(node).getChildren();
+	}
+	
+	@Override
 	public Node1 getParent(Node1 element, String repoId, String discussableDesignId, String resourceId) {
 		// TODO Auto-generated method stub
 		return null;
@@ -48,20 +53,15 @@ public class EMFNodeDAO implements NodeDAO {
 	@Override
 	public void setParent(Node1 parent, Node1 node) {
 		if (parent != null) {
-			getChildren(parent, null, null, null).add(node);
+			getNode(parent).getChildren().add(node);
 		} else {
 			parent = (Node1) node.eContainer();
 			if (parent == null) {
 				// remove from resource TODO
 			} else {
-				getChildren(parent, null, null, null).remove(node);
+				getNode(parent).getChildren().remove(node);
 			}
 		}
-	}
-	
-	@Override
-	public List<Node1> getChildren(Node1 node, String repoId, String discussableDesignId, String resourceId) {
-		return getNode(node).getChildren();
 	}
 	
 	@Override

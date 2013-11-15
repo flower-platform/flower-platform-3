@@ -7,7 +7,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.model_access_dao.registry.DiscussableDesign;
 import org.flowerplatform.model_access_dao.registry.Repository;
 
-
 public interface RegistryDAO {
 	
 	public static final String FLOWER_PLATFORM_DATA = "flower-platform-data";
@@ -19,7 +18,9 @@ public interface RegistryDAO {
 	public static final String FLOWER_PLATFORM_DIAGRAMS = "flower-platform-diagrams";
 	
 	public static final String MAPPING_LOCATION = "mapping.notation";
-	public static final String GLOBAL_MAPPING_LOCATION = FLOWER_PLATFORM_DATA + "/mapping.notation";
+	public static final String GLOBAL_MAPPING_LOCATION = FLOWER_PLATFORM_DATA + "/" + MAPPING_LOCATION;
+	public static final String APP_WIZARD_LOCATION = "app-wizard.notation";
+	public static final String GLOBAL_APP_WIZARD_LOCATION = FLOWER_PLATFORM_DATA + "/" + APP_WIZARD_LOCATION;
 
 	////////////////////////
 	// Repositories

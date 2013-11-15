@@ -44,6 +44,15 @@ public interface ModelFactory extends EFactory {
 	CodeSyncElement1EMF createCodeSyncElement1EMF();
 
 	/**
+	 * Returns a new object of class '<em>Entity EMF</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Entity EMF</em>'.
+	 * @generated
+	 */
+	EntityEMF createEntityEMF();
+
+	/**
 	 * Returns a new object of class '<em>Node1</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -62,6 +62,7 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 		switch (eClass.getClassifierID()) {
 			case ModelPackage.CODE_SYNC_ELEMENT1: return createCodeSyncElement1();
 			case ModelPackage.CODE_SYNC_ELEMENT1_EMF: return createCodeSyncElement1EMF();
+			case ModelPackage.ENTITY_EMF: return createEntityEMF();
 			case ModelPackage.NODE1: return createNode1();
 			case ModelPackage.NODE1_EMF: return createNode1EMF();
 			case ModelPackage.DIAGRAM1: return createDiagram1();
@@ -89,6 +90,16 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public CodeSyncElement1EMF createCodeSyncElement1EMF() {
 		CodeSyncElement1EMFImpl codeSyncElement1EMF = new CodeSyncElement1EMFImpl();
 		return codeSyncElement1EMF;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EntityEMF createEntityEMF() {
+		EntityEMFImpl entityEMF = new EntityEMFImpl();
+		return entityEMF;
 	}
 
 	/**
