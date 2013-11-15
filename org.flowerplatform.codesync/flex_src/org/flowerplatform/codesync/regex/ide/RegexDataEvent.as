@@ -16,29 +16,31 @@
 *
 * license-end
 */
-package org.flowerplatform.editor.text.codemirror_editor {
-		
+package org.flowerplatform.codesync.regex.ide {
+	import flash.events.Event;
+	
+	import mx.collections.ArrayCollection;
+	
 	/**
-	 * Web and mobile code mirror editors must implement this interface 
-	 * to provide different behavior when communicating with javascript.
-	 * 
-	 * <p>
-	 * Note:
-	 * Mobile editor uses <code>StageWebView</code> and 
-	 * doesn't support <code>ExternalInterface</code>.
-	 * 
-	 * @see CodeMirrorEditorFrontend
 	 * @author Cristina Constantinescu
 	 */
-	public interface ICodeMirrorEditor {
+	public class RegexDataEvent extends Event {
 		
-		function load(url:String):void;		
+		public static const REGEX_ACTIONS_CHANGED:String = "regex_actions_changed";
 		
-		function callJavaScriptMethod(method:String, callback:Function = null, ... arguments):void;		
-		function addCallbackHandler(name:String, callback:Function):void;		
+		public static const REGEX_MATCHES_CHANGED:String = "regex_matches_changed";
 		
-		function addViewCompleteHandler(handler:Function):void;
+		public static const REGEX_MATCHES_SELECTED_CHANGED:String = "regex_matches_selected_changed";
 		
-		function dispose():void;
+		public static const REGEX_ACTIONS_SELECTED_CHANGED:String = "regex_actions_selected_changed";
+		
+		public var newData:ArrayCollection;
+				
+		public var newSelectedMatches:Array;
+		
+		public function RegexDataEvent(type:String) {
+			super(type, false, false);			
+		}
+		
 	}
 }

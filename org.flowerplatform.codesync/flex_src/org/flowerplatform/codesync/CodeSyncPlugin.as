@@ -30,6 +30,11 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.action.AddNewRelationAction;
 	import org.flowerplatform.codesync.action.ExpandCompartmentActionProvider;
 	import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
+	import org.flowerplatform.codesync.regex.ide.remote.RegexDto;
+	import org.flowerplatform.codesync.regex.ide.remote.RegexIndexDto;
+	import org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto;
+	import org.flowerplatform.codesync.regex.ide.remote.RegexMatchSelectedItem;
+	import org.flowerplatform.codesync.regex.ide.remote.RegexSubMatchDto;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -115,6 +120,12 @@ package org.flowerplatform.codesync {
 			
 			// add the Descriptor too
 			registerClassAliasFromAnnotation(StringSelectedItem);
+						
+			registerClassAliasFromAnnotation(RegexSubMatchDto);
+			registerClassAliasFromAnnotation(RegexIndexDto);
+			registerClassAliasFromAnnotation(RegexDto);
+			registerClassAliasFromAnnotation(RegexMatchDto);
+			registerClassAliasFromAnnotation(RegexMatchSelectedItem);
 		}
 		
 		/**

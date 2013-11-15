@@ -32,10 +32,12 @@ package org.flowerplatform.web {
 	import mx.managers.ToolTipManager;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
+	import org.flowerplatform.codesync.regex.ide.RegexActionsViewProvider;
+	import org.flowerplatform.codesync.regex.ide.RegexMatchesView;
+	import org.flowerplatform.codesync.regex.ide.RegexMatchesViewProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -44,15 +46,20 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
 	import org.flowerplatform.flexutil.global_menu.WebMenuBar;
+	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
-	import org.flowerplatform.flexutil.shortcut.KeyBindings;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.properties.PropertiesList;
+	import org.flowerplatform.properties.PropertiesViewProvider;
+	import org.flowerplatform.web.action.ShowViewAction;
+	import org.flowerplatform.web.action.SwitchPerspectiveAction;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-	import org.flowerplatform.web.common.communication.AuthenticationManager;
+	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.layout.Perspective;
+	import org.flowerplatform.web.layout.RegexIdePerspective;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.PermissionsScreen;
@@ -88,9 +95,12 @@ package org.flowerplatform.web {
 			INSTANCE = this;
 			
 			perspectives.push(new DefaultPerspective());
+			perspectives.push(new RegexIdePerspective());
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexActionsViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexMatchesViewProvider());
 		}
 		
 		/**
@@ -132,6 +142,29 @@ package org.flowerplatform.web {
 					showScreen(PermissionsScreen);
 				}, menuActionProvider);
 
+			createAndAddAction("Window", "window", null, null, null, menuActionProvider);
+						
+			if (perspectives.length > 0) {
+				createAndAddAction("Open Perspective", "show_perspective", "window", null, null, menuActionProvider);
+				
+				for each (var perspective:Perspective in perspectives) {
+					menuActionProvider.getActions(null).push(new SwitchPerspectiveAction(perspective));
+				}
+			}
+					
+			createAndAddAction("Show View", "show_view", "window", null, null, menuActionProvider);
+				
+			menuActionProvider.getActions(null).push(
+				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(ExplorerViewProvider.ID)));
+			menuActionProvider.getActions(null).push(
+				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(PropertiesViewProvider.ID)));
+			menuActionProvider.getActions(null).push(
+				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(OpenResourcesViewProvider.ID)));
+			menuActionProvider.getActions(null).push(
+				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(RegexActionsViewProvider.ID)));
+			menuActionProvider.getActions(null).push(
+				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(RegexMatchesViewProvider.ID)));				
+					
 			createAndAddAction("User", "user", null,  
 				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), 
 				null, menuActionProvider);
@@ -221,7 +254,7 @@ package org.flowerplatform.web {
 		private function createAndAddAction(label:String, id:String, parentId:String, icon:String, functionDelegate:Function, actionProvider:IActionProvider):void {
 			var action:ActionBase;
 			if (id != null) {
-				action = new ComposedAction();
+				action = new ComposedAction();				
 			} else {
 				action = new ActionBase();
 			}

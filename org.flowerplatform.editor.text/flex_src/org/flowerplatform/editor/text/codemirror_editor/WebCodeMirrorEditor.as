@@ -47,5 +47,9 @@ package org.flowerplatform.editor.text.codemirror_editor {
 			addEventListener("frameLoad", handler);
 		}
 		
+		public function dispose():void {
+			removeIFrame();
+		}
+		
 	}
 }

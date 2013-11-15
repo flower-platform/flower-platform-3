@@ -126,5 +126,10 @@ public class RegexConfiguration {
 		session.reset(false);
 		return session;
 	}
+
+	public RegexWithAction[] getCaptureGroupToRegexMapping() {
+		return captureGroupToRegexMapping;
+	}
+	
 	
 }

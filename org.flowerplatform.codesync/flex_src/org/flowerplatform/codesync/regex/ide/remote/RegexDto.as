@@ -16,29 +16,27 @@
 *
 * license-end
 */
-package org.flowerplatform.editor.text.codemirror_editor {
-		
+package org.flowerplatform.codesync.regex.ide.remote {
+	import flash.events.IEventDispatcher;
+	
+	import mx.collections.ArrayCollection;
+	import mx.collections.ArrayList;
+	
 	/**
-	 * Web and mobile code mirror editors must implement this interface 
-	 * to provide different behavior when communicating with javascript.
-	 * 
-	 * <p>
-	 * Note:
-	 * Mobile editor uses <code>StageWebView</code> and 
-	 * doesn't support <code>ExternalInterface</code>.
-	 * 
-	 * @see CodeMirrorEditorFrontend
 	 * @author Cristina Constantinescu
 	 */
-	public interface ICodeMirrorEditor {
+	[RemoteClass]
+	[Bindable]
+	public class RegexDto {
 		
-		function load(url:String):void;		
+		public var name:String;
 		
-		function callJavaScriptMethod(method:String, callback:Function = null, ... arguments):void;		
-		function addCallbackHandler(name:String, callback:Function):void;		
+		public var regex:String;
 		
-		function addViewCompleteHandler(handler:Function):void;
+		public var regexWithMacro:String;
+			
+		[Transient]
+		public var matches:ArrayCollection = new ArrayCollection();
 		
-		function dispose():void;
 	}
 }

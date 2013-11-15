@@ -24,11 +24,13 @@ package org.flowerplatform.web.layout {
 	
 	import mx.collections.ArrayCollection;
 	
+	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.properties.PropertiesViewProvider;
+	import org.flowerplatform.web.WebPlugin;
+	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
-		
-	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
+
 	/**
 	 * Flower Modeling Perspective.
 	 * Contains : 
@@ -50,11 +52,11 @@ package org.flowerplatform.web.layout {
 		}
 		
 		public override function get name():String {
-			return "Default Perspective";
+			return "Flower Perspective";
 		}
 		
 		public override function get iconUrl():String {			
-			return "icons/Web/icons/icon_flower.gif";
+			return WebPlugin.getInstance().getResourceUrl("images/icon_flower.gif");
 		}
 		
 		public override function resetPerspective(workbench:Workbench):void {
@@ -101,12 +103,7 @@ package org.flowerplatform.web.layout {
 			view.viewId = OpenResourcesViewProvider.ID;
 			stack.children.addItem(view);
 			view.parent = stack;
-			
-//			view = new ViewLayoutData();
-//			view.viewId = WebDocumentationViewProvider.ID;
-//			stack.children.addItem(view);
-//			view.parent = stack;
-//			
+
 			view = new ViewLayoutData();
 			view.viewId = PropertiesViewProvider.ID;
 			stack.children.addItem(view);

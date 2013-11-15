@@ -48,7 +48,7 @@ public class RegexProcessingSession {
 	public int currentNestingLevel;
 	
 	protected String lastMatchCategory;
-	
+		
 	public void reset(boolean resetMatcher) {
 		currentMatchGroupIndex = -1;
 		currentRegex = null;		
@@ -134,8 +134,7 @@ public class RegexProcessingSession {
 			for (int i = 0; i < currentRegex.numberOfCaptureGroups; i++) {
 				if (currentMatchGroupIndex + i + 1 > matcher.groupCount()) {
 					logger.error("Not enough match groups left, to fully populate the expected submatches. This shouldn't happen. Please see the audit logs to try to reproduce the input, while enabling trace for this package.");
-				}
-				
+				}				
 				currentSubMatchesForCurrentRegex[i] = matcher.group(currentMatchGroupIndex + i + 1); 
 			}
 		}

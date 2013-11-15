@@ -5,3 +5,11 @@
 	font-family: monospace;
 	height: 100%;
 }
+
+.match {	
+	background-color: #99C7FF;
+}
+
+.submatch {	
+	text-decoration:underline;
+}

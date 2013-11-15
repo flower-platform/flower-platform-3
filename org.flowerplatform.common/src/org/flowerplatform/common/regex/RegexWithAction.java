@@ -30,7 +30,11 @@ public abstract class RegexWithAction {
 	protected String regex;
 	
 	protected int numberOfCaptureGroups;
-	
+		
+	public String getHumanReadableRegexMeaning() {
+		return humanReadableRegexMeaning;
+	}
+
 	public abstract void executeAction(RegexProcessingSession session);
 	
 	public RegexWithAction(String humanReadableRegexMeaning, String regex) {
@@ -38,6 +42,13 @@ public abstract class RegexWithAction {
 		this.humanReadableRegexMeaning = humanReadableRegexMeaning;
 		this.regex = regex;
 		this.numberOfCaptureGroups = Pattern.compile(regex).matcher("").groupCount();
+	}	
+		
+	@Override
+	public String toString() {
+		return "RegexWithAction [humanReadableRegexMeaning="
+				+ humanReadableRegexMeaning + ", regex=" + regex
+				+ ", numberOfCaptureGroups=" + numberOfCaptureGroups + "]";
 	}
 
 	public static class IfFindThisSkip extends RegexWithAction {

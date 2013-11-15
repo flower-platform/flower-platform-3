@@ -52,4 +52,18 @@
             propertiesProviderClass="org.flowerplatform.codesync.DescriptorPropertiesProvider">
       </propertiesProvider>
    </extension>
+   <extension
+         point="org.flowerplatform.communication.service">
+      <service
+            id="regexRulesConfigService"
+            serviceClass="org.flowerplatform.codesync.regex.ide.RegexRulesConfigService">
+      </service>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="regex_match"
+            propertiesProviderClass="org.flowerplatform.codesync.regex.RegexMatchPropertiesProvider">
+      </propertiesProvider>
+   </extension>
 </plugin>

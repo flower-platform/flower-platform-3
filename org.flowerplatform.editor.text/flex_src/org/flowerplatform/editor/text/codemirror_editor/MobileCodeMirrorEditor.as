@@ -43,5 +43,6 @@ package org.flowerplatform.editor.text.codemirror_editor {
 		public function addViewCompleteHandler(handler:Function):void	{
 			stageWebView.addEventListener(StageWebViewBridgeEvent.DEVICE_READY, handler);
 		}
+			
 	}
 }

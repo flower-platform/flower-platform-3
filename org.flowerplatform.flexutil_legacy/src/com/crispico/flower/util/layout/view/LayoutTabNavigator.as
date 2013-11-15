@@ -342,12 +342,7 @@ package  com.crispico.flower.util.layout.view {
 			workbench.activeViewList.setActiveView(UIComponent(selectedObject));
 		}
   		
-		public function setStyles():void {
-			if (tabBar.contentPane == null) {
-				// try to execute after contentPane set
-				callLater(setStyles);
-				return;
-			}
+		public function setStyles():void {			
 			clearAllActiveViewStyles(workbench);
 					
 			// set styles on new active view
