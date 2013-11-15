@@ -63,8 +63,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
-	import org.flowerplatform.flexdiagram.renderer.NoteRenderer;
-	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.tool.controller.SelectOrDragToCreateElementController;
@@ -140,7 +138,7 @@ package org.flowerplatform.editor.model {
 			standardControllerProviderFactories["topLevelBoxChild"] = composedControllerProviderFactory;
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
-			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
 			if (!FlexUtilGlobals.getInstance().isMobile) {
@@ -206,7 +204,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
-			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
 			if (!FlexUtilGlobals.getInstance().isMobile) {

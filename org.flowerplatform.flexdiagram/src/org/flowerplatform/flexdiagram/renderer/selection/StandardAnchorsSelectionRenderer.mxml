@@ -41,6 +41,8 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import mx.core.UIComponent;
+			
 			override protected function createChildren():void {
 				addChild(anchorLeftUp);
 				addChild(anchorLeftMiddle);
@@ -103,6 +105,26 @@
 				relationAnchor1.invalidateDisplayList();	
 				relationAnchor2.invalidateDisplayList();	
 			}
+			
+			/**
+			 * Converts the target's coordinates (relative to its parent) to coordinates relative
+			 * to the parent of this selection renderer.
+			 * 
+			 * <b>
+			 * Needed for nested renderers, where the parent of the target is NOT the parent of 
+			 * the selection renderer.
+			 * 
+			 * @author Mariana Gheorghe
+			 */
+			override protected function handleTargetMoveResize(event:Event):void {
+				// find the global coordinates of the target renderer
+				var targetGlobalPos:Point = UIComponent(target.parent).contentToGlobal(new Point(target.x, target.y));
+				// convert the global coordinates to content coordinates, relative to parent
+				var targetContentPos:Point = UIComponent(parent).globalToContent(targetGlobalPos);
+				setLayoutBoundsPosition(targetContentPos.x, targetContentPos.y);
+				setLayoutBoundsSize(target.width, target.height);
+			}
+			
 		]]>
 	</fx:Script>
 </selection:AnchorsSelectionRenderer>
