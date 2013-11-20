@@ -11,13 +11,12 @@ import org.flowerplatform.model_access_dao.UUID;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.Node1;
-import org.flowerplatform.model_access_dao.model.Node1EMF;
 
 public class EMFNodeDAO implements NodeDAO {
 
 	@Override
 	public String createNode(String repoId, String discussableDesignId, String resourceId, String parentId) {
-		Node1 node = ModelFactory.eINSTANCE.createNode1EMF();
+		Node1 node = ModelFactory.eINSTANCE.createNode1();
 		node.setId(UUID.newUUID());
 		
 		System.out.println("> create node " + node.getId());
@@ -41,32 +40,31 @@ public class EMFNodeDAO implements NodeDAO {
 	
 	@Override
 	public List<Node1> getChildren(Node1 node, String repoId, String discussableDesignId, String resourceId) {
-		return getNode(node).getChildren();
+		return node.getChildren();
 	}
 	
 	@Override
 	public Node1 getParent(Node1 element, String repoId, String discussableDesignId, String resourceId) {
-		// TODO Auto-generated method stub
-		return null;
+		return (Node1) element.eContainer();
 	}
 
 	@Override
 	public void setParent(Node1 parent, Node1 node) {
 		if (parent != null) {
-			getNode(parent).getChildren().add(node);
+			parent.getChildren().add(node);
 		} else {
 			parent = (Node1) node.eContainer();
 			if (parent == null) {
 				// remove from resource TODO
 			} else {
-				getNode(parent).getChildren().remove(node);
+				parent.getChildren().remove(node);
 			}
 		}
 	}
 	
 	@Override
 	public CodeSyncElement1 getDiagrammableElement(Node1 node, String repoId, String discussableDesignId) {
-		CodeSyncElement1 element = getNode(node).getDiagrammableElement();
+		CodeSyncElement1 element = node.getDiagrammableElement();
 		if (element.eIsProxy()) {
 			URI uri = ((InternalEObject) element).eProxyURI();
 			String uid = uri.fragment();
@@ -78,7 +76,7 @@ public class EMFNodeDAO implements NodeDAO {
 
 	@Override
 	public void setDiagrammableElement(Node1 node, CodeSyncElement1 codeSyncElement) {
-		getNode(node).setDiagrammableElement(codeSyncElement);
+		node.setDiagrammableElement(codeSyncElement);
 	}
 	
 	@Override
@@ -90,8 +88,4 @@ public class EMFNodeDAO implements NodeDAO {
 		DAOFactory.codeSyncElementDAO.deleteCodeSyncElement(diagrammableElement);
 	}
 	
-	protected Node1EMF getNode(Node1 node) {
-		return (Node1EMF) node;
-	}
-
 }

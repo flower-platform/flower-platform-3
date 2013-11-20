@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static tests.ModelAccessDAOTests.assertCSE;
 import static tests.ModelAccessDAOTests.assertResourceInfo;
 import static tests.ModelAccessDAOTests.createCSEAndAssertNotNull;
-import static tests.ModelAccessDAOTests.createEntityAndAssertNotNull;
 import static tests.ModelAccessDAOTests.getResourceId;
 import static tests.ModelAccessDAOTests.loadResource;
 
@@ -14,7 +13,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.model_access_dao.DAOFactory;
 import org.flowerplatform.model_access_dao.RegistryDAO;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
-import org.flowerplatform.model_access_dao.model.CodeSyncElement1EMF;
 import org.flowerplatform.model_access_dao.registry.Repository;
 import org.junit.Test;
 
@@ -65,19 +63,19 @@ public class CreateGlobalModel {
 		// assert resource contents
 		folder1 = (CodeSyncElement1) resource.getContents().get(1);
 		assertCSE(folder1, folder1Id, FOLDER1);
-		class1 = ((CodeSyncElement1EMF) folder1).getChildren().get(0);
+		class1 = folder1.getChildren().get(0);
 		assertCSE(class1, class1Id, CLASS1);
-		met1 = ((CodeSyncElement1EMF) class1).getChildren().get(0);
+		met1 = class1.getChildren().get(0);
 		assertCSE(met1, met1Id, MET1);
 		
 		String globalAppWizardId = getResourceId(repo, RegistryDAO.APP_WIZARD_LOCATION);
 		
 		// create entities
-		CodeSyncElement1 methods = createEntityAndAssertNotNull(repoId, null, globalAppWizardId, null, null);
+		CodeSyncElement1 methods = createCSEAndAssertNotNull(repoId, null, globalAppWizardId, null, null);
 		methods.setName("methods");
 		methodsEntityId = methods.getId();
 		met1 = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, null, globalMappingId, met1Id);
-		DAOFactory.entityDAO.addReferencedElement(methods, met1);
+		DAOFactory.codeSyncElementDAO.addRelation(methods, met1, repoId, null, globalAppWizardId);
 		
 		DAOFactory.registryDAO.saveResource(repoId, null, globalAppWizardId);
 	}

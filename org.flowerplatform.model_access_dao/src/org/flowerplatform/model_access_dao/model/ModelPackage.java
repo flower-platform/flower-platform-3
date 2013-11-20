@@ -88,114 +88,68 @@ public interface ModelPackage extends EPackage {
 	int CODE_SYNC_ELEMENT1__NAME = 1;
 
 	/**
+	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_SYNC_ELEMENT1__CHILDREN = 2;
+
+	/**
+	 * The feature id for the '<em><b>Relations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CODE_SYNC_ELEMENT1__RELATIONS = 3;
+
+	/**
 	 * The number of structural features of the '<em>Code Sync Element1</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CODE_SYNC_ELEMENT1_FEATURE_COUNT = 2;
+	int CODE_SYNC_ELEMENT1_FEATURE_COUNT = 4;
 
 	/**
-	 * The meta object id for the '{@link org.flowerplatform.model_access_dao.model.impl.CodeSyncElement1EMFImpl <em>Code Sync Element1 EMF</em>}' class.
+	 * The meta object id for the '{@link org.flowerplatform.model_access_dao.model.impl.Relation1Impl <em>Relation1</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.flowerplatform.model_access_dao.model.impl.CodeSyncElement1EMFImpl
-	 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getCodeSyncElement1EMF()
+	 * @see org.flowerplatform.model_access_dao.model.impl.Relation1Impl
+	 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getRelation1()
 	 * @generated
 	 */
-	int CODE_SYNC_ELEMENT1_EMF = 1;
+	int RELATION1 = 1;
 
 	/**
-	 * The feature id for the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CODE_SYNC_ELEMENT1_EMF__ID = CODE_SYNC_ELEMENT1__ID;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Source</b></em>' container reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CODE_SYNC_ELEMENT1_EMF__NAME = CODE_SYNC_ELEMENT1__NAME;
+	int RELATION1__SOURCE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Target</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CODE_SYNC_ELEMENT1_EMF__CHILDREN = CODE_SYNC_ELEMENT1_FEATURE_COUNT + 0;
+	int RELATION1__TARGET = 1;
 
 	/**
-	 * The number of structural features of the '<em>Code Sync Element1 EMF</em>' class.
+	 * The number of structural features of the '<em>Relation1</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CODE_SYNC_ELEMENT1_EMF_FEATURE_COUNT = CODE_SYNC_ELEMENT1_FEATURE_COUNT + 1;
-
-	/**
-	 * The meta object id for the '{@link org.flowerplatform.model_access_dao.model.impl.EntityEMFImpl <em>Entity EMF</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.flowerplatform.model_access_dao.model.impl.EntityEMFImpl
-	 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getEntityEMF()
-	 * @generated
-	 */
-	int ENTITY_EMF = 2;
-
-	/**
-	 * The feature id for the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENTITY_EMF__ID = CODE_SYNC_ELEMENT1_EMF__ID;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENTITY_EMF__NAME = CODE_SYNC_ELEMENT1_EMF__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENTITY_EMF__CHILDREN = CODE_SYNC_ELEMENT1_EMF__CHILDREN;
-
-	/**
-	 * The feature id for the '<em><b>Referenced Elements</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENTITY_EMF__REFERENCED_ELEMENTS = CODE_SYNC_ELEMENT1_EMF_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Entity EMF</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ENTITY_EMF_FEATURE_COUNT = CODE_SYNC_ELEMENT1_EMF_FEATURE_COUNT + 1;
+	int RELATION1_FEATURE_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.model_access_dao.model.impl.Node1Impl <em>Node1</em>}' class.
@@ -205,7 +159,7 @@ public interface ModelPackage extends EPackage {
 	 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getNode1()
 	 * @generated
 	 */
-	int NODE1 = 3;
+	int NODE1 = 2;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -226,50 +180,13 @@ public interface ModelPackage extends EPackage {
 	int NODE1__NAME = 1;
 
 	/**
-	 * The number of structural features of the '<em>Node1</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NODE1_FEATURE_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link org.flowerplatform.model_access_dao.model.impl.Node1EMFImpl <em>Node1 EMF</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.flowerplatform.model_access_dao.model.impl.Node1EMFImpl
-	 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getNode1EMF()
-	 * @generated
-	 */
-	int NODE1_EMF = 4;
-
-	/**
-	 * The feature id for the '<em><b>Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NODE1_EMF__ID = NODE1__ID;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NODE1_EMF__NAME = NODE1__NAME;
-
-	/**
 	 * The feature id for the '<em><b>Diagrammable Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE1_EMF__DIAGRAMMABLE_ELEMENT = NODE1_FEATURE_COUNT + 0;
+	int NODE1__DIAGRAMMABLE_ELEMENT = 2;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -278,16 +195,16 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NODE1_EMF__CHILDREN = NODE1_FEATURE_COUNT + 1;
+	int NODE1__CHILDREN = 3;
 
 	/**
-	 * The number of structural features of the '<em>Node1 EMF</em>' class.
+	 * The number of structural features of the '<em>Node1</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NODE1_EMF_FEATURE_COUNT = NODE1_FEATURE_COUNT + 2;
+	int NODE1_FEATURE_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.model_access_dao.model.impl.Diagram1Impl <em>Diagram1</em>}' class.
@@ -297,7 +214,7 @@ public interface ModelPackage extends EPackage {
 	 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getDiagram1()
 	 * @generated
 	 */
-	int DIAGRAM1 = 5;
+	int DIAGRAM1 = 3;
 
 	/**
 	 * The feature id for the '<em><b>Id</b></em>' attribute.
@@ -306,7 +223,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM1__ID = NODE1_EMF__ID;
+	int DIAGRAM1__ID = NODE1__ID;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -315,7 +232,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM1__NAME = NODE1_EMF__NAME;
+	int DIAGRAM1__NAME = NODE1__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Diagrammable Element</b></em>' reference.
@@ -324,7 +241,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM1__DIAGRAMMABLE_ELEMENT = NODE1_EMF__DIAGRAMMABLE_ELEMENT;
+	int DIAGRAM1__DIAGRAMMABLE_ELEMENT = NODE1__DIAGRAMMABLE_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Children</b></em>' containment reference list.
@@ -333,7 +250,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM1__CHILDREN = NODE1_EMF__CHILDREN;
+	int DIAGRAM1__CHILDREN = NODE1__CHILDREN;
 
 	/**
 	 * The number of structural features of the '<em>Diagram1</em>' class.
@@ -342,7 +259,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int DIAGRAM1_FEATURE_COUNT = NODE1_EMF_FEATURE_COUNT + 0;
+	int DIAGRAM1_FEATURE_COUNT = NODE1_FEATURE_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.flowerplatform.model_access_dao.model.impl.ResourceInfoImpl <em>Resource Info</em>}' class.
@@ -352,7 +269,7 @@ public interface ModelPackage extends EPackage {
 	 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getResourceInfo()
 	 * @generated
 	 */
-	int RESOURCE_INFO = 6;
+	int RESOURCE_INFO = 4;
 
 	/**
 	 * The feature id for the '<em><b>Repo Id</b></em>' attribute.
@@ -424,46 +341,58 @@ public interface ModelPackage extends EPackage {
 	EAttribute getCodeSyncElement1_Name();
 
 	/**
-	 * Returns the meta object for class '{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1EMF <em>Code Sync Element1 EMF</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Code Sync Element1 EMF</em>'.
-	 * @see org.flowerplatform.model_access_dao.model.CodeSyncElement1EMF
-	 * @generated
-	 */
-	EClass getCodeSyncElement1EMF();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1EMF#getChildren <em>Children</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Children</em>'.
-	 * @see org.flowerplatform.model_access_dao.model.CodeSyncElement1EMF#getChildren()
-	 * @see #getCodeSyncElement1EMF()
+	 * @see org.flowerplatform.model_access_dao.model.CodeSyncElement1#getChildren()
+	 * @see #getCodeSyncElement1()
 	 * @generated
 	 */
-	EReference getCodeSyncElement1EMF_Children();
+	EReference getCodeSyncElement1_Children();
 
 	/**
-	 * Returns the meta object for class '{@link org.flowerplatform.model_access_dao.model.EntityEMF <em>Entity EMF</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1#getRelations <em>Relations</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Entity EMF</em>'.
-	 * @see org.flowerplatform.model_access_dao.model.EntityEMF
+	 * @return the meta object for the containment reference list '<em>Relations</em>'.
+	 * @see org.flowerplatform.model_access_dao.model.CodeSyncElement1#getRelations()
+	 * @see #getCodeSyncElement1()
 	 * @generated
 	 */
-	EClass getEntityEMF();
+	EReference getCodeSyncElement1_Relations();
 
 	/**
-	 * Returns the meta object for the reference list '{@link org.flowerplatform.model_access_dao.model.EntityEMF#getReferencedElements <em>Referenced Elements</em>}'.
+	 * Returns the meta object for class '{@link org.flowerplatform.model_access_dao.model.Relation1 <em>Relation1</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference list '<em>Referenced Elements</em>'.
-	 * @see org.flowerplatform.model_access_dao.model.EntityEMF#getReferencedElements()
-	 * @see #getEntityEMF()
+	 * @return the meta object for class '<em>Relation1</em>'.
+	 * @see org.flowerplatform.model_access_dao.model.Relation1
 	 * @generated
 	 */
-	EReference getEntityEMF_ReferencedElements();
+	EClass getRelation1();
+
+	/**
+	 * Returns the meta object for the container reference '{@link org.flowerplatform.model_access_dao.model.Relation1#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the container reference '<em>Source</em>'.
+	 * @see org.flowerplatform.model_access_dao.model.Relation1#getSource()
+	 * @see #getRelation1()
+	 * @generated
+	 */
+	EReference getRelation1_Source();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.flowerplatform.model_access_dao.model.Relation1#getTarget <em>Target</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Target</em>'.
+	 * @see org.flowerplatform.model_access_dao.model.Relation1#getTarget()
+	 * @see #getRelation1()
+	 * @generated
+	 */
+	EReference getRelation1_Target();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.model_access_dao.model.Node1 <em>Node1</em>}'.
@@ -498,36 +427,26 @@ public interface ModelPackage extends EPackage {
 	EAttribute getNode1_Name();
 
 	/**
-	 * Returns the meta object for class '{@link org.flowerplatform.model_access_dao.model.Node1EMF <em>Node1 EMF</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Node1 EMF</em>'.
-	 * @see org.flowerplatform.model_access_dao.model.Node1EMF
-	 * @generated
-	 */
-	EClass getNode1EMF();
-
-	/**
-	 * Returns the meta object for the reference '{@link org.flowerplatform.model_access_dao.model.Node1EMF#getDiagrammableElement <em>Diagrammable Element</em>}'.
+	 * Returns the meta object for the reference '{@link org.flowerplatform.model_access_dao.model.Node1#getDiagrammableElement <em>Diagrammable Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Diagrammable Element</em>'.
-	 * @see org.flowerplatform.model_access_dao.model.Node1EMF#getDiagrammableElement()
-	 * @see #getNode1EMF()
+	 * @see org.flowerplatform.model_access_dao.model.Node1#getDiagrammableElement()
+	 * @see #getNode1()
 	 * @generated
 	 */
-	EReference getNode1EMF_DiagrammableElement();
+	EReference getNode1_DiagrammableElement();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.model_access_dao.model.Node1EMF#getChildren <em>Children</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.flowerplatform.model_access_dao.model.Node1#getChildren <em>Children</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the containment reference list '<em>Children</em>'.
-	 * @see org.flowerplatform.model_access_dao.model.Node1EMF#getChildren()
-	 * @see #getNode1EMF()
+	 * @see org.flowerplatform.model_access_dao.model.Node1#getChildren()
+	 * @see #getNode1()
 	 * @generated
 	 */
-	EReference getNode1EMF_Children();
+	EReference getNode1_Children();
 
 	/**
 	 * Returns the meta object for class '{@link org.flowerplatform.model_access_dao.model.Diagram1 <em>Diagram1</em>}'.
@@ -631,40 +550,46 @@ public interface ModelPackage extends EPackage {
 		EAttribute CODE_SYNC_ELEMENT1__NAME = eINSTANCE.getCodeSyncElement1_Name();
 
 		/**
-		 * The meta object literal for the '{@link org.flowerplatform.model_access_dao.model.impl.CodeSyncElement1EMFImpl <em>Code Sync Element1 EMF</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.flowerplatform.model_access_dao.model.impl.CodeSyncElement1EMFImpl
-		 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getCodeSyncElement1EMF()
-		 * @generated
-		 */
-		EClass CODE_SYNC_ELEMENT1_EMF = eINSTANCE.getCodeSyncElement1EMF();
-
-		/**
 		 * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CODE_SYNC_ELEMENT1_EMF__CHILDREN = eINSTANCE.getCodeSyncElement1EMF_Children();
+		EReference CODE_SYNC_ELEMENT1__CHILDREN = eINSTANCE.getCodeSyncElement1_Children();
 
 		/**
-		 * The meta object literal for the '{@link org.flowerplatform.model_access_dao.model.impl.EntityEMFImpl <em>Entity EMF</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.flowerplatform.model_access_dao.model.impl.EntityEMFImpl
-		 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getEntityEMF()
-		 * @generated
-		 */
-		EClass ENTITY_EMF = eINSTANCE.getEntityEMF();
-
-		/**
-		 * The meta object literal for the '<em><b>Referenced Elements</b></em>' reference list feature.
+		 * The meta object literal for the '<em><b>Relations</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ENTITY_EMF__REFERENCED_ELEMENTS = eINSTANCE.getEntityEMF_ReferencedElements();
+		EReference CODE_SYNC_ELEMENT1__RELATIONS = eINSTANCE.getCodeSyncElement1_Relations();
+
+		/**
+		 * The meta object literal for the '{@link org.flowerplatform.model_access_dao.model.impl.Relation1Impl <em>Relation1</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.flowerplatform.model_access_dao.model.impl.Relation1Impl
+		 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getRelation1()
+		 * @generated
+		 */
+		EClass RELATION1 = eINSTANCE.getRelation1();
+
+		/**
+		 * The meta object literal for the '<em><b>Source</b></em>' container reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RELATION1__SOURCE = eINSTANCE.getRelation1_Source();
+
+		/**
+		 * The meta object literal for the '<em><b>Target</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference RELATION1__TARGET = eINSTANCE.getRelation1_Target();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.model_access_dao.model.impl.Node1Impl <em>Node1</em>}' class.
@@ -693,22 +618,12 @@ public interface ModelPackage extends EPackage {
 		EAttribute NODE1__NAME = eINSTANCE.getNode1_Name();
 
 		/**
-		 * The meta object literal for the '{@link org.flowerplatform.model_access_dao.model.impl.Node1EMFImpl <em>Node1 EMF</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.flowerplatform.model_access_dao.model.impl.Node1EMFImpl
-		 * @see org.flowerplatform.model_access_dao.model.impl.ModelPackageImpl#getNode1EMF()
-		 * @generated
-		 */
-		EClass NODE1_EMF = eINSTANCE.getNode1EMF();
-
-		/**
 		 * The meta object literal for the '<em><b>Diagrammable Element</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE1_EMF__DIAGRAMMABLE_ELEMENT = eINSTANCE.getNode1EMF_DiagrammableElement();
+		EReference NODE1__DIAGRAMMABLE_ELEMENT = eINSTANCE.getNode1_DiagrammableElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Children</b></em>' containment reference list feature.
@@ -716,7 +631,7 @@ public interface ModelPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NODE1_EMF__CHILDREN = eINSTANCE.getNode1EMF_Children();
+		EReference NODE1__CHILDREN = eINSTANCE.getNode1_Children();
 
 		/**
 		 * The meta object literal for the '{@link org.flowerplatform.model_access_dao.model.impl.Diagram1Impl <em>Diagram1</em>}' class.

@@ -20,7 +20,7 @@ import org.flowerplatform.model_access_dao.model.ModelPackage;
  *
  * @generated
  */
-public class Diagram1Impl extends Node1EMFImpl implements Diagram1 {
+public class Diagram1Impl extends Node1Impl implements Diagram1 {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

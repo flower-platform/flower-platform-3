@@ -6,6 +6,7 @@
  */
 package org.flowerplatform.model_access_dao.model;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 /**
@@ -18,6 +19,8 @@ import org.eclipse.emf.ecore.EObject;
  * <ul>
  *   <li>{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1#getId <em>Id</em>}</li>
  *   <li>{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1#getName <em>Name</em>}</li>
+ *   <li>{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1#getChildren <em>Children</em>}</li>
+ *   <li>{@link org.flowerplatform.model_access_dao.model.CodeSyncElement1#getRelations <em>Relations</em>}</li>
  * </ul>
  * </p>
  *
@@ -78,5 +81,39 @@ public interface CodeSyncElement1 extends EObject {
 	 * @generated
 	 */
 	void setName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Children</b></em>' containment reference list.
+	 * The list contents are of type {@link org.flowerplatform.model_access_dao.model.CodeSyncElement1}.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Children</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Children</em>' containment reference list.
+	 * @see org.flowerplatform.model_access_dao.model.ModelPackage#getCodeSyncElement1_Children()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<CodeSyncElement1> getChildren();
+
+	/**
+	 * Returns the value of the '<em><b>Relations</b></em>' containment reference list.
+	 * The list contents are of type {@link org.flowerplatform.model_access_dao.model.Relation1}.
+	 * It is bidirectional and its opposite is '{@link org.flowerplatform.model_access_dao.model.Relation1#getSource <em>Source</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Relations</em>' containment reference list isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Relations</em>' containment reference list.
+	 * @see org.flowerplatform.model_access_dao.model.ModelPackage#getCodeSyncElement1_Relations()
+	 * @see org.flowerplatform.model_access_dao.model.Relation1#getSource
+	 * @model opposite="source" containment="true"
+	 * @generated
+	 */
+	EList<Relation1> getRelations();
 
 } // CodeSyncElement1

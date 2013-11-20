@@ -35,22 +35,13 @@ public interface ModelFactory extends EFactory {
 	CodeSyncElement1 createCodeSyncElement1();
 
 	/**
-	 * Returns a new object of class '<em>Code Sync Element1 EMF</em>'.
+	 * Returns a new object of class '<em>Relation1</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Code Sync Element1 EMF</em>'.
+	 * @return a new object of class '<em>Relation1</em>'.
 	 * @generated
 	 */
-	CodeSyncElement1EMF createCodeSyncElement1EMF();
-
-	/**
-	 * Returns a new object of class '<em>Entity EMF</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Entity EMF</em>'.
-	 * @generated
-	 */
-	EntityEMF createEntityEMF();
+	Relation1 createRelation1();
 
 	/**
 	 * Returns a new object of class '<em>Node1</em>'.
@@ -60,15 +51,6 @@ public interface ModelFactory extends EFactory {
 	 * @generated
 	 */
 	Node1 createNode1();
-
-	/**
-	 * Returns a new object of class '<em>Node1 EMF</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Node1 EMF</em>'.
-	 * @generated
-	 */
-	Node1EMF createNode1EMF();
 
 	/**
 	 * Returns a new object of class '<em>Diagram1</em>'.

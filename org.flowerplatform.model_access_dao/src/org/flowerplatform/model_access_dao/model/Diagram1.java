@@ -17,5 +17,5 @@ package org.flowerplatform.model_access_dao.model;
  * @model
  * @generated
  */
-public interface Diagram1 extends Node1EMF {
+public interface Diagram1 extends Node1 {
 } // Diagram1

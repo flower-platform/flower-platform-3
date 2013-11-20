@@ -61,10 +61,8 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case ModelPackage.CODE_SYNC_ELEMENT1: return createCodeSyncElement1();
-			case ModelPackage.CODE_SYNC_ELEMENT1_EMF: return createCodeSyncElement1EMF();
-			case ModelPackage.ENTITY_EMF: return createEntityEMF();
+			case ModelPackage.RELATION1: return createRelation1();
 			case ModelPackage.NODE1: return createNode1();
-			case ModelPackage.NODE1_EMF: return createNode1EMF();
 			case ModelPackage.DIAGRAM1: return createDiagram1();
 			case ModelPackage.RESOURCE_INFO: return createResourceInfo();
 			default:
@@ -87,19 +85,9 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public CodeSyncElement1EMF createCodeSyncElement1EMF() {
-		CodeSyncElement1EMFImpl codeSyncElement1EMF = new CodeSyncElement1EMFImpl();
-		return codeSyncElement1EMF;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EntityEMF createEntityEMF() {
-		EntityEMFImpl entityEMF = new EntityEMFImpl();
-		return entityEMF;
+	public Relation1 createRelation1() {
+		Relation1Impl relation1 = new Relation1Impl();
+		return relation1;
 	}
 
 	/**
@@ -110,16 +98,6 @@ public class ModelFactoryImpl extends EFactoryImpl implements ModelFactory {
 	public Node1 createNode1() {
 		Node1Impl node1 = new Node1Impl();
 		return node1;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Node1EMF createNode1EMF() {
-		Node1EMFImpl node1EMF = new Node1EMFImpl();
-		return node1EMF;
 	}
 
 	/**

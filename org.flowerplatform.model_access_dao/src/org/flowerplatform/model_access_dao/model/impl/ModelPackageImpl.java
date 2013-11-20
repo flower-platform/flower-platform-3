@@ -10,17 +10,13 @@ import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
-
 import org.eclipse.emf.ecore.impl.EPackageImpl;
-
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
-import org.flowerplatform.model_access_dao.model.CodeSyncElement1EMF;
 import org.flowerplatform.model_access_dao.model.Diagram1;
-import org.flowerplatform.model_access_dao.model.EntityEMF;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.ModelPackage;
 import org.flowerplatform.model_access_dao.model.Node1;
-import org.flowerplatform.model_access_dao.model.Node1EMF;
+import org.flowerplatform.model_access_dao.model.Relation1;
 import org.flowerplatform.model_access_dao.model.ResourceInfo;
 
 /**
@@ -42,14 +38,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass codeSyncElement1EMFEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass entityEMFEClass = null;
+	private EClass relation1EClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -57,13 +46,6 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * @generated
 	 */
 	private EClass node1EClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass node1EMFEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -172,8 +154,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getCodeSyncElement1EMF() {
-		return codeSyncElement1EMFEClass;
+	public EReference getCodeSyncElement1_Children() {
+		return (EReference)codeSyncElement1EClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -181,8 +163,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getCodeSyncElement1EMF_Children() {
-		return (EReference)codeSyncElement1EMFEClass.getEStructuralFeatures().get(0);
+	public EReference getCodeSyncElement1_Relations() {
+		return (EReference)codeSyncElement1EClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -190,8 +172,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getEntityEMF() {
-		return entityEMFEClass;
+	public EClass getRelation1() {
+		return relation1EClass;
 	}
 
 	/**
@@ -199,8 +181,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getEntityEMF_ReferencedElements() {
-		return (EReference)entityEMFEClass.getEStructuralFeatures().get(0);
+	public EReference getRelation1_Source() {
+		return (EReference)relation1EClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getRelation1_Target() {
+		return (EReference)relation1EClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -235,8 +226,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getNode1EMF() {
-		return node1EMFEClass;
+	public EReference getNode1_DiagrammableElement() {
+		return (EReference)node1EClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -244,17 +235,8 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getNode1EMF_DiagrammableElement() {
-		return (EReference)node1EMFEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getNode1EMF_Children() {
-		return (EReference)node1EMFEClass.getEStructuralFeatures().get(1);
+	public EReference getNode1_Children() {
+		return (EReference)node1EClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -333,20 +315,18 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		codeSyncElement1EClass = createEClass(CODE_SYNC_ELEMENT1);
 		createEAttribute(codeSyncElement1EClass, CODE_SYNC_ELEMENT1__ID);
 		createEAttribute(codeSyncElement1EClass, CODE_SYNC_ELEMENT1__NAME);
+		createEReference(codeSyncElement1EClass, CODE_SYNC_ELEMENT1__CHILDREN);
+		createEReference(codeSyncElement1EClass, CODE_SYNC_ELEMENT1__RELATIONS);
 
-		codeSyncElement1EMFEClass = createEClass(CODE_SYNC_ELEMENT1_EMF);
-		createEReference(codeSyncElement1EMFEClass, CODE_SYNC_ELEMENT1_EMF__CHILDREN);
-
-		entityEMFEClass = createEClass(ENTITY_EMF);
-		createEReference(entityEMFEClass, ENTITY_EMF__REFERENCED_ELEMENTS);
+		relation1EClass = createEClass(RELATION1);
+		createEReference(relation1EClass, RELATION1__SOURCE);
+		createEReference(relation1EClass, RELATION1__TARGET);
 
 		node1EClass = createEClass(NODE1);
 		createEAttribute(node1EClass, NODE1__ID);
 		createEAttribute(node1EClass, NODE1__NAME);
-
-		node1EMFEClass = createEClass(NODE1_EMF);
-		createEReference(node1EMFEClass, NODE1_EMF__DIAGRAMMABLE_ELEMENT);
-		createEReference(node1EMFEClass, NODE1_EMF__CHILDREN);
+		createEReference(node1EClass, NODE1__DIAGRAMMABLE_ELEMENT);
+		createEReference(node1EClass, NODE1__CHILDREN);
 
 		diagram1EClass = createEClass(DIAGRAM1);
 
@@ -384,29 +364,24 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 		// Set bounds for type parameters
 
 		// Add supertypes to classes
-		codeSyncElement1EMFEClass.getESuperTypes().add(this.getCodeSyncElement1());
-		entityEMFEClass.getESuperTypes().add(this.getCodeSyncElement1EMF());
-		node1EMFEClass.getESuperTypes().add(this.getNode1());
-		diagram1EClass.getESuperTypes().add(this.getNode1EMF());
+		diagram1EClass.getESuperTypes().add(this.getNode1());
 
 		// Initialize classes and features; add operations and parameters
 		initEClass(codeSyncElement1EClass, CodeSyncElement1.class, "CodeSyncElement1", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getCodeSyncElement1_Id(), ecorePackage.getEString(), "id", null, 0, 1, CodeSyncElement1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getCodeSyncElement1_Name(), ecorePackage.getEString(), "name", "", 0, 1, CodeSyncElement1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCodeSyncElement1_Children(), this.getCodeSyncElement1(), null, "children", null, 0, -1, CodeSyncElement1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCodeSyncElement1_Relations(), this.getRelation1(), this.getRelation1_Source(), "relations", null, 0, -1, CodeSyncElement1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(codeSyncElement1EMFEClass, CodeSyncElement1EMF.class, "CodeSyncElement1EMF", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getCodeSyncElement1EMF_Children(), this.getCodeSyncElement1(), null, "children", null, 0, -1, CodeSyncElement1EMF.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(entityEMFEClass, EntityEMF.class, "EntityEMF", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getEntityEMF_ReferencedElements(), this.getCodeSyncElement1(), null, "referencedElements", null, 0, -1, EntityEMF.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(relation1EClass, Relation1.class, "Relation1", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getRelation1_Source(), this.getCodeSyncElement1(), this.getCodeSyncElement1_Relations(), "source", null, 0, 1, Relation1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getRelation1_Target(), this.getCodeSyncElement1(), null, "target", null, 0, 1, Relation1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(node1EClass, Node1.class, "Node1", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNode1_Id(), ecorePackage.getEString(), "id", null, 0, 1, Node1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNode1_Name(), ecorePackage.getEString(), "name", null, 0, 1, Node1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEClass(node1EMFEClass, Node1EMF.class, "Node1EMF", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getNode1EMF_DiagrammableElement(), this.getCodeSyncElement1(), null, "diagrammableElement", null, 0, 1, Node1EMF.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getNode1EMF_Children(), this.getNode1(), null, "children", null, 0, -1, Node1EMF.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNode1_DiagrammableElement(), this.getCodeSyncElement1(), null, "diagrammableElement", null, 0, 1, Node1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNode1_Children(), this.getNode1(), null, "children", null, 0, -1, Node1.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(diagram1EClass, Diagram1.class, "Diagram1", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
