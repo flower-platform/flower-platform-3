@@ -15,17 +15,17 @@ import org.flowerplatform.model_access_dao.model.Node1;
 public class EMFNodeDAO implements NodeDAO {
 
 	@Override
-	public String createNode(String repoId, String discussableDesignId, String resourceId, String parentId) {
+	public String createNode(String repoId, String resourceId, String parentId) {
 		Node1 node = ModelFactory.eINSTANCE.createNode1();
 		node.setId(UUID.newUUID());
 		
 		System.out.println("> create node " + node.getId());
 		
 		if (parentId == null) {
-			Resource resource = DAOFactory.registryDAO.loadResource(repoId, discussableDesignId, resourceId);
+			Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
 			resource.getContents().add(node);
 		} else {
-			Node1 parent = getNode(repoId, discussableDesignId, resourceId, parentId);
+			Node1 parent = getNode(repoId, resourceId, parentId);
 			setParent(parent, node);
 		}
 		
@@ -33,18 +33,18 @@ public class EMFNodeDAO implements NodeDAO {
 	}
 	
 	@Override
-	public Node1 getNode(String repoId, String discussableDesignId, String resourceId, String id) {
-		Resource resource = DAOFactory.registryDAO.loadResource(repoId, discussableDesignId, resourceId);
+	public Node1 getNode(String repoId, String resourceId, String id) {
+		Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
 		return (Node1) resource.getEObject(id);
 	}
 	
 	@Override
-	public List<Node1> getChildren(Node1 node, String repoId, String discussableDesignId, String resourceId) {
+	public List<Node1> getChildren(Node1 node, String repoId, String resourceId) {
 		return node.getChildren();
 	}
 	
 	@Override
-	public Node1 getParent(Node1 element, String repoId, String discussableDesignId, String resourceId) {
+	public Node1 getParent(Node1 element, String repoId, String resourceId) {
 		return (Node1) element.eContainer();
 	}
 
@@ -63,13 +63,13 @@ public class EMFNodeDAO implements NodeDAO {
 	}
 	
 	@Override
-	public CodeSyncElement1 getDiagrammableElement(Node1 node, String repoId, String discussableDesignId) {
+	public CodeSyncElement1 getDiagrammableElement(Node1 node, String repoId) {
 		CodeSyncElement1 element = node.getDiagrammableElement();
 		if (element.eIsProxy()) {
 			URI uri = ((InternalEObject) element).eProxyURI();
 			String uid = uri.fragment();
 			String resourceId = uri.opaquePart();
-			element = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, discussableDesignId, resourceId, uid);
+			element = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, resourceId, uid);
 		}
 		return element;
 	}
@@ -80,10 +80,10 @@ public class EMFNodeDAO implements NodeDAO {
 	}
 	
 	@Override
-	public void deleteNode(Node1 node, String repoId, String discussableDesignId) {
+	public void deleteNode(Node1 node, String repoId) {
 		// remove from parent
 		setParent(null, node);
-		CodeSyncElement1 diagrammableElement = getDiagrammableElement(node, repoId, discussableDesignId);
+		CodeSyncElement1 diagrammableElement = getDiagrammableElement(node, repoId);
 		setDiagrammableElement(node, null);
 		DAOFactory.codeSyncElementDAO.deleteCodeSyncElement(diagrammableElement);
 	}

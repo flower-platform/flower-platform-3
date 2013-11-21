@@ -24,7 +24,6 @@ import org.flowerplatform.model_access_dao.model.ResourceInfo;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.flowerplatform.model_access_dao.model.impl.ResourceInfoImpl#getRepoId <em>Repo Id</em>}</li>
- *   <li>{@link org.flowerplatform.model_access_dao.model.impl.ResourceInfoImpl#getDiscussableDesignId <em>Discussable Design Id</em>}</li>
  *   <li>{@link org.flowerplatform.model_access_dao.model.impl.ResourceInfoImpl#getResourceId <em>Resource Id</em>}</li>
  * </ul>
  * </p>
@@ -51,26 +50,6 @@ public class ResourceInfoImpl extends EObjectImpl implements ResourceInfo {
 	 * @ordered
 	 */
 	protected String repoId = REPO_ID_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #getDiscussableDesignId() <em>Discussable Design Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiscussableDesignId()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String DISCUSSABLE_DESIGN_ID_EDEFAULT = null;
-
-	/**
-	 * The cached value of the '{@link #getDiscussableDesignId() <em>Discussable Design Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDiscussableDesignId()
-	 * @generated
-	 * @ordered
-	 */
-	protected String discussableDesignId = DISCUSSABLE_DESIGN_ID_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getResourceId() <em>Resource Id</em>}' attribute.
@@ -137,27 +116,6 @@ public class ResourceInfoImpl extends EObjectImpl implements ResourceInfo {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public String getDiscussableDesignId() {
-		return discussableDesignId;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDiscussableDesignId(String newDiscussableDesignId) {
-		String oldDiscussableDesignId = discussableDesignId;
-		discussableDesignId = newDiscussableDesignId;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ModelPackage.RESOURCE_INFO__DISCUSSABLE_DESIGN_ID, oldDiscussableDesignId, discussableDesignId));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getResourceId() {
 		return resourceId;
 	}
@@ -184,8 +142,6 @@ public class ResourceInfoImpl extends EObjectImpl implements ResourceInfo {
 		switch (featureID) {
 			case ModelPackage.RESOURCE_INFO__REPO_ID:
 				return getRepoId();
-			case ModelPackage.RESOURCE_INFO__DISCUSSABLE_DESIGN_ID:
-				return getDiscussableDesignId();
 			case ModelPackage.RESOURCE_INFO__RESOURCE_ID:
 				return getResourceId();
 		}
@@ -202,9 +158,6 @@ public class ResourceInfoImpl extends EObjectImpl implements ResourceInfo {
 		switch (featureID) {
 			case ModelPackage.RESOURCE_INFO__REPO_ID:
 				setRepoId((String)newValue);
-				return;
-			case ModelPackage.RESOURCE_INFO__DISCUSSABLE_DESIGN_ID:
-				setDiscussableDesignId((String)newValue);
 				return;
 			case ModelPackage.RESOURCE_INFO__RESOURCE_ID:
 				setResourceId((String)newValue);
@@ -224,9 +177,6 @@ public class ResourceInfoImpl extends EObjectImpl implements ResourceInfo {
 			case ModelPackage.RESOURCE_INFO__REPO_ID:
 				setRepoId(REPO_ID_EDEFAULT);
 				return;
-			case ModelPackage.RESOURCE_INFO__DISCUSSABLE_DESIGN_ID:
-				setDiscussableDesignId(DISCUSSABLE_DESIGN_ID_EDEFAULT);
-				return;
 			case ModelPackage.RESOURCE_INFO__RESOURCE_ID:
 				setResourceId(RESOURCE_ID_EDEFAULT);
 				return;
@@ -244,8 +194,6 @@ public class ResourceInfoImpl extends EObjectImpl implements ResourceInfo {
 		switch (featureID) {
 			case ModelPackage.RESOURCE_INFO__REPO_ID:
 				return REPO_ID_EDEFAULT == null ? repoId != null : !REPO_ID_EDEFAULT.equals(repoId);
-			case ModelPackage.RESOURCE_INFO__DISCUSSABLE_DESIGN_ID:
-				return DISCUSSABLE_DESIGN_ID_EDEFAULT == null ? discussableDesignId != null : !DISCUSSABLE_DESIGN_ID_EDEFAULT.equals(discussableDesignId);
 			case ModelPackage.RESOURCE_INFO__RESOURCE_ID:
 				return RESOURCE_ID_EDEFAULT == null ? resourceId != null : !RESOURCE_ID_EDEFAULT.equals(resourceId);
 		}
@@ -264,8 +212,6 @@ public class ResourceInfoImpl extends EObjectImpl implements ResourceInfo {
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (repoId: ");
 		result.append(repoId);
-		result.append(", discussableDesignId: ");
-		result.append(discussableDesignId);
 		result.append(", resourceId: ");
 		result.append(resourceId);
 		result.append(')');

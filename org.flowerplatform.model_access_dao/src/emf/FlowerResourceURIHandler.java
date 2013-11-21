@@ -22,7 +22,6 @@ public class FlowerResourceURIHandler extends URIHandlerImpl {
 	public static final String SCHEME_FP_REPO = "fp-repo";
 	
 	public static final String OPTION_REPO = "repoId";
-	public static final String OPTION_DISCUSSABLE_DESIGN = "discussableDesignId";
 
 	protected URIHandler platformDependentHandler;
 
@@ -105,7 +104,6 @@ public class FlowerResourceURIHandler extends URIHandlerImpl {
 		String resourceId = uri.opaquePart();
 		uri = DAOFactory.registryDAO.getResource(
 				(String) options.get(OPTION_REPO), 
-				(String) options.get(OPTION_DISCUSSABLE_DESIGN), 
 				resourceId);
 		return uri;
 	}

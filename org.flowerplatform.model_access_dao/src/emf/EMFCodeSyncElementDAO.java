@@ -20,7 +20,7 @@ import org.flowerplatform.model_access_dao.model.Relation1;
 public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 
 	@Override
-	public String createCodeSyncElement(String repoId, String discussableDesignId, String resourceId, String id, String parentId) {
+	public String createCodeSyncElement(String repoId, String resourceId, String id, String parentId) {
 		CodeSyncElement1 element = ModelFactory.eINSTANCE.createCodeSyncElement1();
 		if (id == null) {
 			id = UUID.newUUID();
@@ -30,10 +30,10 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 		System.out.println("> created CSE " + element.getId());
 		
 		if (parentId == null) {
-			Resource resource = DAOFactory.registryDAO.loadResource(repoId, discussableDesignId, resourceId);
+			Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
 			resource.getContents().add(element);
 		} else {
-			CodeSyncElement1 parent = getCodeSyncElement(repoId, discussableDesignId, resourceId, parentId);
+			CodeSyncElement1 parent = getCodeSyncElement(repoId, resourceId, parentId);
 			setParent(parent, element);
 		}
 		
@@ -41,8 +41,8 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public CodeSyncElement1 getCodeSyncElement(String repoId, String discussableDesignId, String resourceId, String uid) {
-		Resource resource = DAOFactory.registryDAO.loadResource(repoId, discussableDesignId, resourceId);
+	public CodeSyncElement1 getCodeSyncElement(String repoId, String resourceId, String uid) {
+		Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
 
 		// search for the referenced object in this resource
 		CodeSyncElement1 referencedObject = null;
@@ -53,32 +53,33 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 			}
 		}
 		
-		if (discussableDesignId == null) {
+		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		if (masterRepoId == null) {
 			return null;
 		}
 
-		// no local resource, or the referenced object is not in this resource
-		// => search in the global resource
-		Resource globalResource = DAOFactory.registryDAO.loadResource(repoId, null, resourceId);
+		// no slave resource, or the referenced object is not in this resource
+		// => search in the master resource
+		Resource masterResource = DAOFactory.registryDAO.loadResource(masterRepoId, resourceId);
 		
-		if (globalResource == null) {
-			throw new RuntimeException("No global resource for repo " + repoId);
+		if (masterResource == null) {
+			throw new RuntimeException("No global resource for repo " + masterRepoId);
 		}
 		
-		referencedObject = (CodeSyncElement1) globalResource.getEObject(uid);
+		referencedObject = (CodeSyncElement1) masterResource.getEObject(uid);
 
-		// duplicate the object from the global resource
+		// duplicate the object from the master resource
 		if (resource != null) {
-			referencedObject = duplicateCodeSyncElement(repoId, discussableDesignId, resourceId, referencedObject);
+			referencedObject = duplicateCodeSyncElement(repoId, resourceId, referencedObject);
 		}
 		return (CodeSyncElement1) referencedObject;
 	}
 
-	private CodeSyncElement1 duplicateCodeSyncElement(String repoId, String discussableDesignId, String resourceId, CodeSyncElement1 referencedObject) {
-		CodeSyncElement1 parent = getParent(referencedObject, repoId, discussableDesignId, resourceId);
+	private CodeSyncElement1 duplicateCodeSyncElement(String repoId, String resourceId, CodeSyncElement1 referencedObject) {
+		CodeSyncElement1 parent = getParent(referencedObject, repoId, resourceId);
 		String parentId = parent == null ? null : parent.getId();
-		CodeSyncElement1 duplicate = getCodeSyncElement(repoId, discussableDesignId, resourceId, 
-				createCodeSyncElement(repoId, discussableDesignId, resourceId, referencedObject.getId(), parentId));
+		CodeSyncElement1 duplicate = getCodeSyncElement(repoId, resourceId, 
+				createCodeSyncElement(repoId, resourceId, referencedObject.getId(), parentId));
 		copyProperties(referencedObject, duplicate);
 		return duplicate;
 	}
@@ -87,18 +88,19 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 		target.setName(source.getName());
 	}
 	
-	public List<CodeSyncElement1> getCodeSyncElements(String repoId, String discussableDesignId, String resourceId) {
+	public List<CodeSyncElement1> getCodeSyncElements(String repoId, String resourceId) {
 		// use LinkedHashMap to preserve insertion-order
 		Map<String, CodeSyncElement1> codeSyncElements = new LinkedHashMap<String, CodeSyncElement1>();
 		
-		// merge with global resource if we're in a discussable design
-		if (discussableDesignId != null) {
-			for (CodeSyncElement1 codeSyncElement : getCodeSyncElements(repoId, null, resourceId)) {
+		// merge with master resource if we're in a slave repo
+		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		if (masterRepoId != null) {
+			for (CodeSyncElement1 codeSyncElement : getCodeSyncElements(masterRepoId, resourceId)) {
 				codeSyncElements.put(codeSyncElement.getId(), codeSyncElement);
 			}
 		}
 		
-		Resource resource = DAOFactory.registryDAO.loadResource(repoId, discussableDesignId, resourceId);
+		Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
 		for (EObject eObject : resource.getContents()) {
 			if (eObject instanceof CodeSyncElement1) {
 				addToMap((CodeSyncElement1) eObject, codeSyncElements);
@@ -116,15 +118,16 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 	
 	@Override
-	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId) {
+	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String resourceId) {
 		// use LinkedHashMap to preserve insertion-order
 		Map<String , CodeSyncElement1> children = new LinkedHashMap<String, CodeSyncElement1>();
 		
-		// merge with global resource if we're in a discussable design
-		if (discussableDesignId != null) {
-			CodeSyncElement1 globalElement = getCodeSyncElement(repoId, null, resourceId, element.getId());
-			if (globalElement != null) {
-				for (CodeSyncElement1 child : getChildren(globalElement, repoId, null, resourceId)) {
+		// merge with master resource if we're in a slave repo
+		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		if (masterRepoId != null) {
+			CodeSyncElement1 masterElement = getCodeSyncElement(masterRepoId, resourceId, element.getId());
+			if (masterElement != null) {
+				for (CodeSyncElement1 child : getChildren(masterElement, masterRepoId, resourceId)) {
 					children.put(child.getId(), child);
 				}
 			}
@@ -138,9 +141,9 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public CodeSyncElement1 getParent(CodeSyncElement1 element, String repoId, String discussableDesignId, String resourceId) {
+	public CodeSyncElement1 getParent(CodeSyncElement1 element, String repoId, String resourceId) {
 		CodeSyncElement1 parent = (CodeSyncElement1) element.eContainer();
-		return parent == null ? null : getCodeSyncElement(repoId, discussableDesignId, resourceId, parent.getId());
+		return parent == null ? null : getCodeSyncElement(repoId, resourceId, parent.getId());
 	}
 
 	@Override
@@ -167,7 +170,7 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	
 	@Override
 	public void addRelation(CodeSyncElement1 source, CodeSyncElement1 target, 
-			String repoId, String discussableDesignId, String resourceId) {
+			String repoId, String resourceId) {
 		Relation1 relation = ModelFactory.eINSTANCE.createRelation1();
 		relation.setSource(source);
 		relation.setTarget(target);
@@ -175,12 +178,13 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, String repoId, String discussableDesignId, String resourceId) {
+	public List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, String repoId, String resourceId) {
 		Map<String, CodeSyncElement1> referencedElements = new LinkedHashMap<String, CodeSyncElement1>();
 
-		if (discussableDesignId != null) {
-			CodeSyncElement1 globalSource = getCodeSyncElement(repoId, null, resourceId, source.getId());
-			for (CodeSyncElement1 refElt : getReferencedElements(globalSource, repoId, null, resourceId)) {
+		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		if (masterRepoId != null) {
+			CodeSyncElement1 globalSource = getCodeSyncElement(masterRepoId, resourceId, source.getId());
+			for (CodeSyncElement1 refElt : getReferencedElements(globalSource, masterRepoId, resourceId)) {
 				referencedElements.put(refElt.getId(), refElt);
 			}
 		}
@@ -193,21 +197,21 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public CodeSyncElement1 getSource(Relation1 relation, String repoId, String discussableDesignId) {
-		return resolveProxy(relation.getSource(), repoId, discussableDesignId);
+	public CodeSyncElement1 getSource(Relation1 relation, String repoId) {
+		return resolveProxy(relation.getSource(), repoId);
 	}
 
 	@Override
-	public CodeSyncElement1 getTarget(Relation1 relation, String repoId, String discussableDesignId) {
-		return resolveProxy(relation.getTarget(), repoId, discussableDesignId);
+	public CodeSyncElement1 getTarget(Relation1 relation, String repoId) {
+		return resolveProxy(relation.getTarget(), repoId);
 	}
 	
-	protected CodeSyncElement1 resolveProxy(CodeSyncElement1 element, String repoId, String discussableDesignId) {
+	protected CodeSyncElement1 resolveProxy(CodeSyncElement1 element, String repoId) {
 		if (element.eIsProxy()) {
 			URI uri = ((InternalEObject) element).eProxyURI();
 			String uid = uri.fragment();
 			String resourceId = uri.opaquePart();
-			element = getCodeSyncElement(repoId, discussableDesignId, resourceId, uid);
+			element = getCodeSyncElement(repoId, resourceId, uid);
 		}
 		return element;
 	}

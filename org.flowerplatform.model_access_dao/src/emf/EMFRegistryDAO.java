@@ -22,8 +22,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.model_access_dao.RegistryDAO;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.ResourceInfo;
-import org.flowerplatform.model_access_dao.registry.DirWithResources;
-import org.flowerplatform.model_access_dao.registry.DiscussableDesign;
 import org.flowerplatform.model_access_dao.registry.Repository;
 
 public class EMFRegistryDAO implements RegistryDAO {
@@ -40,22 +38,23 @@ public class EMFRegistryDAO implements RegistryDAO {
 	
 	private void iterateFiles(File file) throws IOException {
 		if (file.getName().equals(CONFIG) && file.getParentFile().getName().equals(FLOWER_PLATFORM_DATA)) {
-			String id = FileUtils.readFileToString(file);
+			String config = FileUtils.readFileToString(file);
+			String id = null, masterRepoId = null;
+			if (config.contains(" ")) {
+				String[] ids = config.split(" ");
+				id = ids[0];
+				masterRepoId = ids[1];
+			}
 			Repository repo = new Repository(id, file.getParentFile().getParentFile());
+			repo.setMasterId(masterRepoId);
 			repos.put(id, repo);
-		} else if (file.getName().equals(DISCUSSABLE_DESIGN_CONFIG)) {
-			String id = FileUtils.readFileToString(file);
-			Repository repo = (Repository) repos.values().toArray()[0];
-			DiscussableDesign discussableDesign = new DiscussableDesign(id, file.getParentFile());
-			repo.getDiscussableDesigns().put(id, discussableDesign);
 		} else if (file.getName().endsWith(".notation")) {
 			ResourceSet resourceSet = getResourceSet(null);
 			URI uri = URI.createFileURI(file.getPath());
 			Resource resource = resourceSet.getResource(uri, true);
 			ResourceInfo info = (ResourceInfo) resource.getContents().get(0);
 			Repository repo = getRepository(info.getRepoId());
-			DiscussableDesign discussableDesign = getDiscussableDesign(repo, info.getDiscussableDesignId());
-			Map<String, URI> resources = getResources(repo, discussableDesign);
+			Map<String, URI> resources = repo.getResources();
 			resources.put(info.getResourceId(), uri);
 		}
 		File[] children = file.listFiles();
@@ -71,7 +70,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 	////////////////////////
 	
 	@Override
-	public String createRepository(String path) {
+	public String createRepository(String path, String masterRepoId) {
 		// create repo dir
 		File dir = new File(path);
 		dir.mkdirs();
@@ -80,35 +79,65 @@ public class EMFRegistryDAO implements RegistryDAO {
 		File fpd = new File(dir, FLOWER_PLATFORM_DATA);
 		fpd.mkdir();
 		
+		// create diagrams dir
+		File dgrs = new File(dir, FLOWER_PLATFORM_DIAGRAMS);
+		dgrs.mkdirs();
+		
 		// create discussable designs dir
-		File dd = new File(fpd, DISCUSSABLE_DESIGNS);
-		dd.mkdir();
+		if (masterRepoId == null) {
+			File dd = new File(fpd, DISCUSSABLE_DESIGNS);
+			dd.mkdir();
+		}
 		
 		// generate UUID for resource
 		String uuid = org.flowerplatform.model_access_dao.UUID.newUUID();
 		Repository repo = new Repository(uuid, dir);
+		repo.setMasterId(masterRepoId);
 		repos.put(uuid, repo);
 		
 		// create config file
 		File config = new File(fpd, CONFIG);
 		try {
 			config.createNewFile();
-			FileUtils.writeStringToFile(config, uuid);
+			FileUtils.writeStringToFile(config, masterRepoId == null ? uuid : uuid + " " + masterRepoId);
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot create config file " + config, e);
 		}
 		
-		// create global mapping resource
-		createResource(GLOBAL_MAPPING_LOCATION, uuid, null, null);
+		String mappingLocation = null, appWizardLocation = null;
+		if (masterRepoId == null) {
+			mappingLocation = GLOBAL_MAPPING_LOCATION;
+			appWizardLocation = GLOBAL_APP_WIZARD_LOCATION;
+		} else {
+			mappingLocation = MAPPING_LOCATION;
+			appWizardLocation = APP_WIZARD_LOCATION;
+		}
 		
-		// create global app wizard resource
-		createResource(GLOBAL_APP_WIZARD_LOCATION, uuid, null, null);
+		if (masterRepoId != null) {
+			repo = getRepository(masterRepoId);
+		}
+		
+		// create mapping resource
+		createResource(mappingLocation, uuid, getResourceId(repo, mappingLocation));
+		
+		// create app wizard resource
+		createResource(appWizardLocation, uuid, getResourceId(repo, appWizardLocation));
 
 		System.out.println("> created repo " + dir);
 		
 		resourceSets.clear();
 		
 		return uuid;
+	}
+	
+	public String getResourceId(Repository dirWithResources, String suffix) {
+		for (Entry<String, URI> entry : dirWithResources.getResources().entrySet()) {
+			if (entry.getValue().toFileString().endsWith(suffix)) {
+				return entry.getKey();
+			}
+		}
+		return null;
+//		throw new RuntimeException(String.format("No resource with suffix %s for %s", suffix, dirWithResources.getDir()));
 	}
 	
 	@Override
@@ -121,87 +150,12 @@ public class EMFRegistryDAO implements RegistryDAO {
 		return Arrays.asList(repos.values().toArray(new Repository[0]));
 	}
 	
-	////////////////////////
-	// Discussable Designs
-	////////////////////////
-	
-	/**
-	 * 
-	 * @param repoId
-	 * @param path relative to the discussable designs directory
-	 * @return
-	 */
-	@Override
-	public String createDiscussableDesign(String repoId, String path) {
-		// create discussable design dir
-		File dir = getDiscussableDesignDir(getRepository(repoId), path);
-		dir.mkdirs();
-		
-		// create diagrams dir
-		File dgrs = new File(dir, FLOWER_PLATFORM_DIAGRAMS);
-		dgrs.mkdirs();
-		
-		// generate UUID for discussable design
-		String uuid = org.flowerplatform.model_access_dao.UUID.newUUID();
-		Repository repo = getRepository(repoId);
-		DiscussableDesign discussableDesign = new DiscussableDesign(uuid, dir);
-		repo.getDiscussableDesigns().put(uuid, discussableDesign);
-		
-		// create config file
-		File config = new File(dir, DISCUSSABLE_DESIGN_CONFIG);
-		try {
-			config.createNewFile();
-			FileUtils.writeStringToFile(config, uuid);
-		} catch (IOException e) {
-			throw new RuntimeException("Cannot create config file " + config, e);
+	public String getMasterRepositoryId(String id) {
+		Repository repo = getRepository(id);
+		if (repo.getMasterId() != null) {
+			return repo.getMasterId();
 		}
-		
-		// create local mapping resource
-		createResource(MAPPING_LOCATION, repoId, uuid, getResourceId(repo, MAPPING_LOCATION));
-		
-		// create local app wizard resource
-		createResource(APP_WIZARD_LOCATION, repoId, uuid, getResourceId(repo, APP_WIZARD_LOCATION));
-		
-		System.out.println("> created discussable design " + dir);
-		
-		resourceSets.clear();
-		
-		return uuid;
-	}
-	
-	public String getResourceId(DirWithResources dirWithResources, String suffix) {
-		for (Entry<String, URI> entry : dirWithResources.getResources().entrySet()) {
-			if (entry.getValue().toFileString().endsWith(suffix)) {
-				return entry.getKey();
-			}
-		}
-		throw new RuntimeException(String.format("No resource with suffix %s for %s", suffix, dirWithResources.getDir()));
-	}
-	
-	private File getDiscussableDesignDir(Repository repository, String dd) {
-		if (dd == null) {
-			return repository.getDir();
-		}
-		return new File(repository.getDir(), FLOWER_PLATFORM_DATA + "/" + DISCUSSABLE_DESIGNS + "/" + dd);
-	}
-	
-	@Override
-	public DiscussableDesign getDiscussableDesign(String repoId, String id) {
-		return getDiscussableDesign(getRepository(repoId), id);
-	}
-	
-	private DiscussableDesign getDiscussableDesign(Repository repo, String id) {
-		return repo.getDiscussableDesigns().get(id);
-	}
-	
-	public List<DiscussableDesign> getDiscussableDesigns(String repoId) {
-		Repository repo = getRepository(repoId);
-		return Arrays.asList(repo.getDiscussableDesigns().values().toArray(new DiscussableDesign[0]));
-	}
-	
-	@Override
-	public void deleteDiscussableDesign(String repoId, String id, boolean moveDiagrams) {
-		// TODO
+		return null;
 	}
 	
 	////////////////////////
@@ -213,17 +167,15 @@ public class EMFRegistryDAO implements RegistryDAO {
 	 * @param resource
 	 * @param path relative to the discussable design directory or repo
 	 * @param repoId
-	 * @param discussableDesignId
 	 * @param uuid force using this uuid for this new resource
 	 * @return
 	 */
 	@Override
-	public String createResource(String path, String repoId, String discussableDesignId, String uuid) {
+	public String createResource(String path, String repoId, String uuid) {
 		Repository repo = getRepository(repoId);
-		DiscussableDesign discussableDesign = getDiscussableDesign(repo, discussableDesignId);
-		Map<String, URI> resources = getResources(repo, discussableDesign);
+		Map<String, URI> resources = repo.getResources();
 		
-		File file = getFile(repo, discussableDesign, path);
+		File file = getFile(repo, path);
 		path = file.getPath();
 		
 		Resource resource = null;
@@ -236,7 +188,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 		ResourceSet resourceSet = getResourceSet(repoId);
 		ResourceInfo info = null;
 		if (file.exists()) {
-			resource = loadResource(repoId, discussableDesignId, uuid);
+			resource = loadResource(repoId, uuid);
 			info = (ResourceInfo) resource.getContents().get(0);
 		} else {
 			resource = resourceSet.createResource(uri);
@@ -245,7 +197,6 @@ public class EMFRegistryDAO implements RegistryDAO {
 		}
 		
 		info.setRepoId(repoId);
-		info.setDiscussableDesignId(discussableDesignId);
 		info.setResourceId(uuid);
 		saveResource(resource);
 		
@@ -254,28 +205,29 @@ public class EMFRegistryDAO implements RegistryDAO {
 		return uuid;
 	}
 	
-	private File getFile(Repository repo, DiscussableDesign discussableDesign, String path) {
-		if (discussableDesign != null) {
-			return new File(discussableDesign.getDir(), path);
-		} else {
-			return new File(repo.getDir(), path);
-		}
+	private File getFile(Repository repo, String path) {
+		return new File(repo.getDir(), path);
 	}
 
 	@Override
-	public URI getResource(String repoId, String discussableDesignId, String id) {
+	public URI getResource(String repoId, String id) {
 		Repository repo = getRepository(repoId);
-		DiscussableDesign discussableDesign = repo.getDiscussableDesigns().get(discussableDesignId);
-		return getResource(repo, discussableDesign, id);
+		return getResource(repo, id);
 	}
 	
-	private URI getResource(Repository repo, DiscussableDesign discussableDesign, String id) {
-		return getResources(repo, discussableDesign).get(id);
+	private URI getResource(Repository repo, String id) {
+		return repo.getResources().get(id);
 	}
 	
 	private Map<String, ResourceSet> resourceSets = new HashMap<String, ResourceSet>();
 	
 	private ResourceSet getResourceSet(String repoId) {
+		// delegate to master repository
+		String masterRepositoryId = getMasterRepositoryId(repoId);
+		if (masterRepositoryId != null) {
+			repoId = masterRepositoryId;
+		}
+		
 		ResourceSet resourceSet = resourceSets.get(repoId);
 		if (resourceSet != null) {
 			return resourceSet;
@@ -300,11 +252,10 @@ public class EMFRegistryDAO implements RegistryDAO {
 		
 		return resourceSet;
 	}
-	
-	
+
 	@Override
-	public Resource loadResource(String repoId, String discussableDesignId, String id) {
-		Resource resource = getLoadedResource(repoId, discussableDesignId, id);
+	public Resource loadResource(String repoId, String id) {
+		Resource resource = getLoadedResource(repoId, id);
 		if (resource != null) {
 			return resource;
 		}
@@ -314,7 +265,6 @@ public class EMFRegistryDAO implements RegistryDAO {
 		resource = resourceSet.createResource(uri);
 		Map<Object, Object> options = getOptions();
 		options.put(FlowerResourceURIHandler.OPTION_REPO, repoId);
-		options.put(FlowerResourceURIHandler.OPTION_DISCUSSABLE_DESIGN, discussableDesignId);
 		try {
 			resource.load(options);
 		} catch (IOException e) {
@@ -332,11 +282,11 @@ public class EMFRegistryDAO implements RegistryDAO {
 	}
 	
 	@Override
-	public void saveResource(String repoId, String discussableDesignId, String id) {
-		Resource resourceToSave = getLoadedResource(repoId, discussableDesignId, id);
+	public void saveResource(String repoId, String id) {
+		Resource resourceToSave = getLoadedResource(repoId, id);
 		if (resourceToSave == null) {
-			throw new RuntimeException(String.format("No resource loaded for repo = %s, dd = %s, id = %s", 
-					repoId, discussableDesignId, id));
+			throw new RuntimeException(String.format("No resource loaded for repo = %s, id = %s", 
+					repoId, id));
 		}
 		saveResource(resourceToSave);
 	}
@@ -346,11 +296,9 @@ public class EMFRegistryDAO implements RegistryDAO {
 			Map<Object, Object> options = getOptions();
 			ResourceInfo info = (ResourceInfo) resource.getContents().get(0);
 			String repoId = info.getRepoId();
-			String discussableDesignId = info.getDiscussableDesignId();
 			options.put(FlowerResourceURIHandler.OPTION_REPO, repoId);
-			options.put(FlowerResourceURIHandler.OPTION_DISCUSSABLE_DESIGN, discussableDesignId);
 			String resourceId = info.getResourceId();
-			URI uri = getResourceURI(repoId, discussableDesignId, resourceId);
+			URI uri = getResourceURI(repoId, resourceId);
 			try {
 				resource.save(options);
 			} catch (IOException e) {
@@ -361,18 +309,18 @@ public class EMFRegistryDAO implements RegistryDAO {
 		}
 	}
 	
-	private URI getResourceURI(String repoId, String discussableDesignId, String resourceId) {
-		Map<String, URI> resources = getResources(repoId, discussableDesignId);
+	private URI getResourceURI(String repoId, String resourceId) {
+		Map<String, URI> resources = getResources(repoId);
 		return resources.get(resourceId);
 	}
 	
-	private Resource getLoadedResource(String repoId, String discussableDesignId, String id) {
+	private Resource getLoadedResource(String repoId, String id) {
 		ResourceSet resourceSet = getResourceSet(repoId);
 		URI uri = FlowerResourceURIHandler.createFlowerResourceURI(id);
 		for (Resource resource : resourceSet.getResources()) {
 			if (resource.getURI().equals(uri)) {
 				ResourceInfo info = (ResourceInfo) resource.getContents().get(0);
-				if (safeEquals(info.getRepoId(), repoId) && safeEquals(info.getDiscussableDesignId(), discussableDesignId)) {
+				if (safeEquals(info.getRepoId(), repoId)) {
 					return resource;
 				}
 			}
@@ -392,39 +340,34 @@ public class EMFRegistryDAO implements RegistryDAO {
 		return new FileURIHandlerImpl();
 	}
 	
-	private Map<String, URI> getResources(Repository repo, DiscussableDesign discussableDesign) {
-		return discussableDesign == null ? repo.getResources() : discussableDesign.getResources();
-	}
-	
-	private Map<String, URI> getResources(String repoId, String discussableDesignId) {
+	private Map<String, URI> getResources(String repoId) {
 		Repository repo = getRepository(repoId);
-		DiscussableDesign discussableDesign = getDiscussableDesign(repo, discussableDesignId);
-		return getResources(repo, discussableDesign);
+		return repo.getResources();
 	}
 	
 	@Override
-	public String moveResource(String sourceRepoId, String sourceDiscussableDesignId, String sourceId, 
-			String targetPath, String targetRepoId, String targetDiscussableDesignId, String targetId) {
-		URI sourceUri = getResource(sourceRepoId, sourceDiscussableDesignId, sourceId);
+	public String moveResource(String sourceRepoId, String sourceId, 
+			String targetPath, String targetRepoId, String targetId) {
+		URI sourceUri = getResource(sourceRepoId, sourceId);
 		File sourceFile = new File(sourceUri.toFileString());
-		File targetFile = getFile(targetRepoId, targetDiscussableDesignId, targetPath);
+		File targetFile = getFile(targetRepoId, targetPath);
 		try {
 			FileUtils.copyFile(sourceFile, targetFile);
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot copy " + sourceFile + " -> " + targetFile, e);
 		}
-		targetId = createResource(targetPath, targetRepoId, targetDiscussableDesignId, targetId);
-		deleteResource(sourceRepoId, sourceDiscussableDesignId, sourceId);
+		targetId = createResource(targetPath, targetRepoId, targetId);
+		deleteResource(sourceRepoId, sourceId);
 		return targetId;
 	}
 	
-	private File getFile(String repoId, String discussableDesignId, String path) {
-		return getFile(getRepository(repoId), getDiscussableDesign(repoId, discussableDesignId), path);
+	private File getFile(String repoId, String path) {
+		return getFile(getRepository(repoId), path);
 	}
 	
 	@Override
-	public void deleteResource(String repoId, String discussableDesignId, String id) {
-		Map<String, URI> resources = getResources(repoId, discussableDesignId);
+	public void deleteResource(String repoId, String id) {
+		Map<String, URI> resources = getResources(repoId);
 		URI uri = resources.get(id);
 		File file = new File(uri.toFileString());
 		file.delete();

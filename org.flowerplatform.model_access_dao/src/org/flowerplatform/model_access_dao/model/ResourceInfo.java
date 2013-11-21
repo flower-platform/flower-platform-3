@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getRepoId <em>Repo Id</em>}</li>
- *   <li>{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getDiscussableDesignId <em>Discussable Design Id</em>}</li>
  *   <li>{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getResourceId <em>Resource Id</em>}</li>
  * </ul>
  * </p>
@@ -52,32 +51,6 @@ public interface ResourceInfo extends EObject {
 	 * @generated
 	 */
 	void setRepoId(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Discussable Design Id</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Discussable Design Id</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Discussable Design Id</em>' attribute.
-	 * @see #setDiscussableDesignId(String)
-	 * @see org.flowerplatform.model_access_dao.model.ModelPackage#getResourceInfo_DiscussableDesignId()
-	 * @model
-	 * @generated
-	 */
-	String getDiscussableDesignId();
-
-	/**
-	 * Sets the value of the '{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getDiscussableDesignId <em>Discussable Design Id</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Discussable Design Id</em>' attribute.
-	 * @see #getDiscussableDesignId()
-	 * @generated
-	 */
-	void setDiscussableDesignId(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Resource Id</b></em>' attribute.
