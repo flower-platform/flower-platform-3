@@ -16,7 +16,7 @@
  *
  * license-end
  */
-package org.flowerplatform.web.layout {
+package com.crispico.flower.util.layout {
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;

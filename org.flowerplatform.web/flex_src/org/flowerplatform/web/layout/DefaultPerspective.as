@@ -17,6 +17,7 @@
  * license-end
  */
 package org.flowerplatform.web.layout {
+	import com.crispico.flower.util.layout.Perspective;
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
@@ -28,7 +29,6 @@ package org.flowerplatform.web.layout {
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.properties.PropertiesViewProvider;
 	import org.flowerplatform.web.WebPlugin;
-	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 
 	/**

@@ -17,6 +17,7 @@
  * license-end
  */
 package  org.flowerplatform.web.git.layout {
+	import com.crispico.flower.util.layout.Perspective;
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
 	import com.crispico.flower.util.layout.persistence.StackLayoutData;
@@ -28,7 +29,6 @@ package  org.flowerplatform.web.git.layout {
 	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.git.GitPlugin;
 	import org.flowerplatform.web.git.history.GitHistoryViewProvider;
-	import org.flowerplatform.web.layout.Perspective;
 	
 	/**
 	 * @author Cristina Constantinescu

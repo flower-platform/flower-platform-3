@@ -18,12 +18,11 @@
 */
 package org.flowerplatform.web.action {
 	
+	import com.crispico.flower.util.layout.Perspective;
 	import com.crispico.flower.util.layout.Workbench;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
-	import org.flowerplatform.web.WebPlugin;
-	import org.flowerplatform.web.layout.Perspective;
 	
 	/**	
 	 * @author Cristina	Constatinescu

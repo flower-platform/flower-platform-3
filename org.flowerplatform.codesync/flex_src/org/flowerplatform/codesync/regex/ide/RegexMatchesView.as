@@ -18,6 +18,7 @@
 */
 package org.flowerplatform.codesync.regex.ide {
 	
+	import com.crispico.flower.util.layout.WorkbenchViewHost;
 	import com.crispico.flower.util.layout.event.ViewAddedEvent;
 	
 	import flash.display.DisplayObject;
@@ -79,7 +80,7 @@ package org.flowerplatform.codesync.regex.ide {
 			}
 			
 			_viewHost = viewHost;
-			
+						
 			DisplayObject(_viewHost).addEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
 			DisplayObject(_viewHost).addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);	
 		}
@@ -90,11 +91,14 @@ package org.flowerplatform.codesync.regex.ide {
 				array.addItem(selectedItems[i]);
 			}
 			return array;
-		}		
+		}
 				
 		private function viewAddedHandler(event:ViewAddedEvent):void {
 			FlexGlobals.topLevelApplication.addEventListener(RegexDataEvent.REGEX_MATCHES_CHANGED, regexMatchesChangedHandler);
 			FlexGlobals.topLevelApplication.addEventListener(RegexDataEvent.REGEX_ACTIONS_SELECTED_CHANGED, regexActionsSelectedChangedHandler);
+			
+			// show actions in buttonBar
+			_viewHost.selectionChanged();
 		}
 		
 		private function viewRemovedHandler(event:ViewRemovedEvent):void {			
@@ -153,7 +157,6 @@ package org.flowerplatform.codesync.regex.ide {
 			
 			return selectedItems;
 		}
-		
-		
+				
 	}
 }

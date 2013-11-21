@@ -135,7 +135,11 @@ license-end
 						}
 					}
 				}
-				selectedIndices = vector;
+				refreshLinearizedDataProvider();
+				selectedIndices = vector;		
+				if (selectedIndices.length > 0) {
+					ensureIndexIsVisible(selectedIndices[0]);
+				}
 			}
 			
 			private function findRegexItem(name:String):HierarchicalModelWrapper {

@@ -24,7 +24,6 @@ package org.flowerplatform.web.git.staging.communication {
 	import org.flowerplatform.communication.stateful_service.ServiceInvocationOptions;
 	import org.flowerplatform.communication.stateful_service.StatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.git.staging.GitStagingView;
 	import org.flowerplatform.web.git.staging.dto.StagingViewInfoDto;
 

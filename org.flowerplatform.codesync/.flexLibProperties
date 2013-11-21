@@ -8,6 +8,8 @@
     <classEntry path="org.flowerplatform.codesync.regex.ide.RegexDataEvent"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.RegexActionsView"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.RegexMatchSelectedItem"/>
+    <classEntry path="org.flowerplatform.codesync.regex.ide.RegexMacrosViewProvider"/>
+    <classEntry path="org.flowerplatform.codesync.regex.ide.RegexConfigsViewProvider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
