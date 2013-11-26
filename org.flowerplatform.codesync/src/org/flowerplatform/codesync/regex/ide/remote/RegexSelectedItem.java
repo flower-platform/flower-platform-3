@@ -18,15 +18,20 @@
  */
 package org.flowerplatform.codesync.regex.ide.remote;
 
+import org.flowerplatform.emf_model.regex.MacroRegex;
 import org.flowerplatform.properties.remote.SelectedItem;
 
 /**
  * @author Cristina Constantinescu
  */
-public class RegexMatchSelectedItem extends SelectedItem {
+public class RegexSelectedItem extends SelectedItem {
 
 	private RegexMatchDto match;
 
+	private MacroRegex regex;
+	
+	private String config;
+	
 	public RegexMatchDto getMatch() {
 		return match;
 	}
@@ -34,8 +39,21 @@ public class RegexMatchSelectedItem extends SelectedItem {
 	public void setMatch(RegexMatchDto match) {
 		this.match = match;
 	}
-
-	public RegexMatchSelectedItem() {	
+	
+	public MacroRegex getRegex() {
+		return regex;
 	}
-		
+
+	public void setRegex(MacroRegex regex) {
+		this.regex = regex;
+	}
+
+	public String getConfig() {
+		return config;
+	}
+
+	public void setConfig(String config) {
+		this.config = config;
+	}
+	
 }

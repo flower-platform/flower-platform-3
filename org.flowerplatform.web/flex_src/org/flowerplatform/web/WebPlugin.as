@@ -34,9 +34,9 @@ package org.flowerplatform.web {
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
 	import org.flowerplatform.codesync.regex.RegexIdePerspective;
-	import org.flowerplatform.codesync.regex.ide.RegexActionsViewProvider;
+	import org.flowerplatform.codesync.regex.ide.MacrosRegexViewProvider;
+	import org.flowerplatform.codesync.regex.ide.ParserRegexViewProvider;
 	import org.flowerplatform.codesync.regex.ide.RegexConfigsViewProvider;
-	import org.flowerplatform.codesync.regex.ide.RegexMacrosViewProvider;
 	import org.flowerplatform.codesync.regex.ide.RegexMatchesViewProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
@@ -85,6 +85,8 @@ package org.flowerplatform.web {
 		
 		public var perspectives:Vector.<Perspective> = new Vector.<Perspective>();
 		
+		private var menuArea:HBox;
+		
 		override public function preStart():void {
 			super.preStart();
 			webCommonPlugin.preStart();
@@ -98,9 +100,9 @@ package org.flowerplatform.web {
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexActionsViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new ParserRegexViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexMatchesViewProvider());
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexMacrosViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new MacrosRegexViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexConfigsViewProvider());
 		}
 		
@@ -191,6 +193,11 @@ package org.flowerplatform.web {
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
+			perspectives[0].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
+			
+			if (menuArea != null) {
+				return;
+			}
 			// create the actionProvider from menu
 			var menuActionProvider:VectorActionProvider = new VectorActionProvider();
 			
@@ -236,7 +243,7 @@ package org.flowerplatform.web {
 			menuActionProvider.getActions(null).push(
 				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(OpenResourcesViewProvider.ID)));
 			menuActionProvider.getActions(null).push(
-				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(RegexActionsViewProvider.ID)));
+				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(ParserRegexViewProvider.ID)));
 			menuActionProvider.getActions(null).push(
 				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(RegexMatchesViewProvider.ID)));
 			
@@ -264,13 +271,13 @@ package org.flowerplatform.web {
 				navigateToURL(new URLRequest("http://learn-discuss.flower-platform.com/flower_dev_center"), "_blank");
 			}, menuActionProvider);
 			
-			var hBox:HBox = new HBox();
-			hBox.percentWidth = 100;
+			menuArea = new HBox();
+			menuArea.percentWidth = 100;
 			
 			// create the menu
 			var menuBar:WebMenuBar = new WebMenuBar(menuActionProvider);
 			menuBar.percentWidth = 100;
-			hBox.addChild(menuBar);
+			menuArea.addChild(menuBar);
 			
 			// removed all the other buttons (were replaced by the menu)
 			// this is the only one left
@@ -279,11 +286,9 @@ package org.flowerplatform.web {
 			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
 				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
 			});
-			hBox.addChild(btn);
+			menuArea.addChild(btn);
 			
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
-						
-			perspectives[0].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(menuArea, 0);		
 		}
 			
 		override protected function registerMessageBundle():void {

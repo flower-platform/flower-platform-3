@@ -26,6 +26,12 @@ package org.flowerplatform.codesync.regex.ide {
 	 */
 	public class RegexDataEvent extends Event {
 		
+		public static const SELECTED_CONFIG_CHANGED:String = "selected_config_changed";
+		
+		public static const CONFIGS_REQUEST_REFRESH:String = "configs_request_refresh";
+		public static const MACROS_REQUEST_REFRESH:String = "macros_request_refresh";
+		public static const PARSERS_REQUEST_REFRESH:String = "parsers_request_refresh";
+		
 		public static const REGEX_ACTIONS_CHANGED:String = "regex_actions_changed";
 		
 		public static const REGEX_MATCHES_CHANGED:String = "regex_matches_changed";

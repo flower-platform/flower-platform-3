@@ -20,22 +20,18 @@ package org.flowerplatform.codesync.regex.ide.action {
 	
 	import com.crispico.flower.util.layout.Workbench;
 	
-	import flash.events.Event;
-	
 	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
 	import mx.core.FlexGlobals;
-	import mx.core.UIComponent;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.codesync.regex.ide.RegexDataEvent;
 	import org.flowerplatform.codesync.regex.ide.RegexMatchesView;
-	import org.flowerplatform.codesync.regex.ide.remote.RegexDto;
 	import org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto;
 	import org.flowerplatform.common.CommonPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
-	import org.flowerplatform.editor.EditorFrontend;
 	import org.flowerplatform.editor.text.CodeMirrorEditorFrontend;
+	import org.flowerplatform.emf_model.regex.ParserRegex;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
@@ -50,6 +46,7 @@ package org.flowerplatform.codesync.regex.ide.action {
 		public function RunAction(regexMatchesView:RegexMatchesView) {
 			this.regexMatchesView = regexMatchesView;
 			label = "Run";
+			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/common/refresh.png");
 			preferShowOnActionBar = true;
 		}
 				
@@ -76,7 +73,7 @@ package org.flowerplatform.codesync.regex.ide.action {
 			regexMatchesView.editorFrontend = CodeMirrorEditorFrontend(editorFrontend);
 			var editorPath:String = regexMatchesView.editorFrontend.editorStatefulClient.editableResourcePath;
 			CommunicationPlugin.getInstance().bridge.sendObject(
-				new InvokeServiceMethodServerCommand("regexRulesConfigService", "run", [editorPath], this, runCallbackHandler));
+				new InvokeServiceMethodServerCommand("regexService", "run", [editorPath], this, runCallbackHandler));
 		}	
 		
 		private function runCallbackHandler(result:Object):void {
@@ -84,13 +81,13 @@ package org.flowerplatform.codesync.regex.ide.action {
 				var matches:ArrayCollection = ArrayCollection(result[1]);
 				
 				var regexes:ArrayCollection = ArrayCollection(result[0]);
-				for each (var regex:RegexDto in regexes) {
+				for each (var action:ParserRegex in regexes) {
 					for each (var match:RegexMatchDto in matches) {
-						if (match.regexName == regex.name) {
-							if (regex.matches == null) {
-								regex.matches = new ArrayCollection();
+						if (match.parserRegex.name == action.name) {
+							if (action.matches == null) {
+								action.matches = new ArrayCollection();
 							}
-							regex.matches.addItem(match);
+							action.matches.addItem(match);
 						}
 					}
 				}

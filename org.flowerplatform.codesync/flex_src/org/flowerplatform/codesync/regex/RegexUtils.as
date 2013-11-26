@@ -16,22 +16,28 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.regex.ide.remote {
-	import mx.collections.ArrayCollection;
+package org.flowerplatform.codesync.regex {
+	import mx.core.FlexGlobals;
 	
-	import org.flowerplatform.emf_model.regex.MacroRegex;
-	import org.flowerplatform.emf_model.regex.ParserRegex;
+	import org.flowerplatform.codesync.regex.ide.RegexDataEvent;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	[RemoteClass]
-	[Bindable]
-	public class RegexMatchDto extends RegexSubMatchDto {
+	public class RegexUtils {
 		
-		public var parserRegex:ParserRegex;
-		
-		public var subMatches:ArrayCollection;
+		private var _selectedConfig:String;
+				
+		[Bindable]
+		public function get selectedConfig():String	{
+			return _selectedConfig;
+		}
+
+		public function set selectedConfig(value:String):void {
+			_selectedConfig = value;
+			
+			FlexGlobals.topLevelApplication.dispatchEvent(new RegexDataEvent(RegexDataEvent.SELECTED_CONFIG_CHANGED));
+		}
 
 	}
 }

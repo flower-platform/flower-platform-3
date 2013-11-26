@@ -33,7 +33,7 @@ package com.crispico.flower.util.layout {
 		public var viewWrapper:WorkbenchViewHost;
 		
 		public var action:IAction;
-		
+				
 		protected override function clickHandler(event:MouseEvent):void {
 			super.clickHandler(event);
 			if (ActionUtil.isComposedAction(action)) {

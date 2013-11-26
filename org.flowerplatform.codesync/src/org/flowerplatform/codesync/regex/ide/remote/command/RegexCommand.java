@@ -16,22 +16,27 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.regex.ide.remote {
-	import mx.collections.ArrayCollection;
-	
-	import org.flowerplatform.emf_model.regex.MacroRegex;
-	import org.flowerplatform.emf_model.regex.ParserRegex;
-	
-	/**
-	 * @author Cristina Constantinescu
-	 */
-	[RemoteClass]
-	[Bindable]
-	public class RegexMatchDto extends RegexSubMatchDto {
-		
-		public var parserRegex:ParserRegex;
-		
-		public var subMatches:ArrayCollection;
+package org.flowerplatform.codesync.regex.ide.remote.command;
 
+import org.flowerplatform.communication.command.AbstractClientCommand;
+
+/**
+ * @author Cristina Constantinescu
+ */
+public class RegexCommand extends AbstractClientCommand {
+
+	public static final String REFRESH_CONFIGS = "refreshConfigs";
+	public static final String REFRESH_MACROS = "refreshMacros";
+	public static final String REFRESH_PARSERS = "refreshParsers";
+	
+	private String operation;
+	
+	public String getOperation() {
+		return operation;
 	}
+
+	public void setOperation(String operation) {
+		this.operation = operation;
+	}
+		
 }

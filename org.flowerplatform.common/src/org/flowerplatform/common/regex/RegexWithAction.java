@@ -35,6 +35,10 @@ public abstract class RegexWithAction {
 		return humanReadableRegexMeaning;
 	}
 
+	public String getRegex() {
+		return regex;
+	}
+
 	public abstract void executeAction(RegexProcessingSession session);
 	
 	public RegexWithAction(String humanReadableRegexMeaning, String regex) {

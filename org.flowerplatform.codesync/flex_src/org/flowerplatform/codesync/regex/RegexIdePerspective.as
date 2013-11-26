@@ -26,11 +26,10 @@ package org.flowerplatform.codesync.regex {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
-	import org.flowerplatform.codesync.regex.ide.RegexActionsViewProvider;
+	import org.flowerplatform.codesync.regex.ide.MacrosRegexViewProvider;
+	import org.flowerplatform.codesync.regex.ide.ParserRegexViewProvider;
 	import org.flowerplatform.codesync.regex.ide.RegexConfigsViewProvider;
-	import org.flowerplatform.codesync.regex.ide.RegexMacrosViewProvider;
 	import org.flowerplatform.codesync.regex.ide.RegexMatchesViewProvider;
-	import org.flowerplatform.flexutil.layout.LayoutData;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.properties.PropertiesViewProvider;
 	
@@ -62,14 +61,13 @@ package org.flowerplatform.codesync.regex {
 			var sash:SashLayoutData = addSash(wld, SashLayoutData.VERTICAL,	[70, 30], [0, 0]);
 			var sashEditor:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [100], [0], true);
 									
-			var bottomSash:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [40, 20, 40], [0, 0, 0]);
-			addSingleViewInSash(PropertiesViewProvider.ID, bottomSash);
-			addSingleViewInSash(RegexConfigsViewProvider.ID, bottomSash);
-			addSingleViewInSash(RegexMacrosViewProvider.ID, bottomSash);
+			var bottomSash:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [60, 40], [0, 0]);
+			addViewsInSash([PropertiesViewProvider.ID], bottomSash);			
+			addViewsInSash([RegexConfigsViewProvider.ID, MacrosRegexViewProvider.ID], bottomSash);
 			
 			var rightSash:SashLayoutData = addSash(wld, SashLayoutData.VERTICAL, [50, 50], [0, 0]);
-			addSingleViewInSash(RegexActionsViewProvider.ID, rightSash);
-			addSingleViewInSash(RegexMatchesViewProvider.ID, rightSash);
+			addViewsInSash([ParserRegexViewProvider.ID], rightSash);
+			addViewsInSash([RegexMatchesViewProvider.ID], rightSash);
 								
 			load(workbench, wld, sashEditor);
 		}
@@ -91,15 +89,17 @@ package org.flowerplatform.codesync.regex {
 			return sash;
 		}
 		
-		private function addSingleViewInSash(id:String, parent:SashLayoutData):void {
+		private function addViewsInSash(viewIds:Array, parent:SashLayoutData):void {
 			var stack:StackLayoutData = new StackLayoutData();
 			stack.parent = parent;
 			parent.children.addItem(stack);
 			
-			var view:ViewLayoutData = new ViewLayoutData();
-			view.viewId = id;
-			stack.children.addItem(view);
-			view.parent = stack;
+			for each (var id:String in viewIds) {
+				var view:ViewLayoutData = new ViewLayoutData();
+				view.viewId = id;
+				stack.children.addItem(view);
+				view.parent = stack;
+			}			
 		}
 		
 	}

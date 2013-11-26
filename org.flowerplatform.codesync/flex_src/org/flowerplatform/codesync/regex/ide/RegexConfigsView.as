@@ -29,13 +29,14 @@ package org.flowerplatform.codesync.regex.ide {
 	import mx.core.ClassFactory;
 	import mx.core.FlexGlobals;
 	import mx.events.FlexEvent;
-	import mx.managers.IFocusManagerComponent;
 	
-	import org.flowerplatform.codesync.regex.ide.action.RunAction;
-	import org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto;
+	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.regex.ide.action.AddRegexConfigAction;
+	import org.flowerplatform.codesync.regex.ide.action.RemoveRegexConfigAction;
 	import org.flowerplatform.codesync.regex.ide.remote.RegexSelectedItem;
 	import org.flowerplatform.codesync.regex.ide.ui.RegexItemRenderer;
-	import org.flowerplatform.editor.text.CodeMirrorEditorFrontend;
+	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
@@ -49,30 +50,29 @@ package org.flowerplatform.codesync.regex.ide {
 	
 	/**
 	 * @author Cristina Constantinescu
-	 */
-	public class RegexMatchesView extends List implements IViewContent, ISelectionProvider, ISelectionForServerProvider {
+	 */ 
+	public class RegexConfigsView extends List implements IViewContent, ISelectionProvider, ISelectionForServerProvider {
 		
 		protected var _viewHost:IViewHost;
 		
-		public var editorFrontend:CodeMirrorEditorFrontend;
-		
-		public function RegexMatchesView() {
+		public function RegexConfigsView() {
 			super();
-			allowMultipleSelection = true;
 			itemRenderer = new ClassFactory(RegexItemRenderer);
-			labelFunction = function (object:Object):String {
-				return RegexMatchDto(object).value + ") " + RegexMatchDto(object).parserRegex.name;
-			}
+			ClassFactory(itemRenderer).properties = {iconFunction: getIcon};
 			addEventListener(FlexEvent.VALUE_COMMIT, changeHandler);
-			addEventListener(IndexChangeEvent.CHANGE, indexChangeHandler);					
+		}
+		
+		private function getIcon(item:Object):Object {
+			return CodeSyncPlugin.getInstance().getResourceUrl("images/regex/bullet_wrench.png");
 		}
 		
 		public function getActions(selection:IList):Vector.<IAction> {			
-			var result:Vector.<IAction> = new Vector.<IAction>();
-			result.push(new RunAction(this));
+			var result:Vector.<IAction> = new Vector.<IAction>();	
+			result.push(new AddRegexConfigAction());
+			result.push(new RemoveRegexConfigAction());
 			return result;
 		}
-				
+		
 		public function set viewHost(viewHost:IViewHost):void {
 			if (_viewHost != null) {
 				DisplayObject(_viewHost).removeEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
@@ -80,7 +80,7 @@ package org.flowerplatform.codesync.regex.ide {
 			}
 			
 			_viewHost = viewHost;
-						
+			
 			DisplayObject(_viewHost).addEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
 			DisplayObject(_viewHost).addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);	
 		}
@@ -92,76 +92,59 @@ package org.flowerplatform.codesync.regex.ide {
 			}
 			return array;
 		}
-				
+		
 		private function viewAddedHandler(event:ViewAddedEvent):void {
-			FlexGlobals.topLevelApplication.addEventListener(RegexDataEvent.REGEX_MATCHES_CHANGED, regexMatchesChangedHandler);
-			FlexGlobals.topLevelApplication.addEventListener(RegexDataEvent.REGEX_ACTIONS_SELECTED_CHANGED, regexActionsSelectedChangedHandler);
-			
 			// show actions in buttonBar
 			_viewHost.selectionChanged();
-		}
-		
-		private function viewRemovedHandler(event:ViewRemovedEvent):void {			
-			FlexGlobals.topLevelApplication.removeEventListener(RegexDataEvent.REGEX_MATCHES_CHANGED, regexMatchesChangedHandler);
-			FlexGlobals.topLevelApplication.removeEventListener(RegexDataEvent.REGEX_ACTIONS_SELECTED_CHANGED, regexActionsSelectedChangedHandler);
-		}
-		
-		private function changeHandler(event:Event):void {			
-			var array:Array = new Array(selectedItems.length);
-			for (var i:int = 0; i < selectedItems.length; i++) {
-				array[i] = selectedItems[i];
-			}
-//			editorFrontend.colorText(array);
 			
-			event.stopImmediatePropagation();
-		}
-		
-		private function indexChangeHandler(e:IndexChangeEvent):void {		
-			var array:Array = new Array(selectedItems.length);
-			for (var i:int = 0; i < selectedItems.length; i++) {
-				array[i] = selectedItems[i];
-			}
-			var event:RegexDataEvent = new RegexDataEvent(RegexDataEvent.REGEX_MATCHES_SELECTED_CHANGED);
-			event.newSelectedMatches = array;
-			FlexGlobals.topLevelApplication.dispatchEvent(event);
+			FlexGlobals.topLevelApplication.addEventListener(RegexDataEvent.CONFIGS_REQUEST_REFRESH, refreshHandler);
 			
-			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(_viewHost, this);
+			refreshHandler();
 		}
 		
-		private function regexMatchesChangedHandler(event:RegexDataEvent):void {			
-			dataProvider = event.newData;
+		private function viewRemovedHandler(event:ViewRemovedEvent):void {
+			FlexGlobals.topLevelApplication.removeEventListener(RegexDataEvent.CONFIGS_REQUEST_REFRESH, refreshHandler);
 		}
-		
-		private function regexActionsSelectedChangedHandler(event:RegexDataEvent):void {			
-			var vector:Vector.<int> = new Vector.<int>();			
-			for each (var match:RegexMatchDto in event.newSelectedMatches) {
-				var index:int = dataProvider.getItemIndex(match);
-				if (index != -1) {
-					vector.push(index);
-				}
-			}
-			selectedIndices = vector;
-			if (vector.length > 0) {
-				ensureIndexIsVisible(vector[0]);
-			}			
-			
-			event.stopImmediatePropagation();
-		}
-		
+					
 		public function convertSelectionToSelectionForServer(selection:IList):IList {
 			if (selection == null) {
 				return selection;
 			}			
 			var selectedItems:ArrayCollection = new ArrayCollection();
-			for each (var match:RegexMatchDto in selection.toArray()) {
+			for each (var config:String in selection.toArray()) {
 				var selectedItem:RegexSelectedItem = new RegexSelectedItem();
-				selectedItem.match = match;
-				selectedItem.itemType = "regex_match";
+				selectedItem.config = config;
+				selectedItem.itemType = "regex_config";
 				selectedItems.addItem(selectedItem);
 			}
 			
 			return selectedItems;
 		}
+		
+		private function changeHandler(event:Event):void {	
+			FlexUtilGlobals.getInstance().selectionManager.selectionChanged(_viewHost, this);
+			
+			CodeSyncPlugin.getInstance().regexUtils.selectedConfig = selectedItem;
+			
+			event.stopImmediatePropagation();
+		}
+		
+		public function getRegexConfigsCallbackHandler(result:ArrayCollection):void {
+			if (result != null) {
+				var oldSelectedItem:String = selectedItem;
 				
+				dataProvider = ArrayCollection(result);
+				
+				if (dataProvider.getItemIndex(oldSelectedItem) != -1) {
+					selectedItem = oldSelectedItem;
+				}
+			}
+		}
+		
+		public function refreshHandler(event:RegexDataEvent = null):void {
+			CommunicationPlugin.getInstance().bridge.sendObject(
+				new InvokeServiceMethodServerCommand("regexService", "getConfigs", null, this, getRegexConfigsCallbackHandler));
+		}
+						
 	}
 }

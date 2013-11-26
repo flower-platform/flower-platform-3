@@ -16,22 +16,25 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.regex.ide.remote {
-	import mx.collections.ArrayCollection;
+package org.flowerplatform.codesync.regex.ide.ui {
 	
-	import org.flowerplatform.emf_model.regex.MacroRegex;
-	import org.flowerplatform.emf_model.regex.ParserRegex;
+	import mx.managers.IFocusManagerComponent;
+	
+	import spark.components.IconItemRenderer;
+	import spark.components.LabelItemRenderer;
 	
 	/**
 	 * @author Cristina Constantinescu
-	 */
-	[RemoteClass]
-	[Bindable]
-	public class RegexMatchDto extends RegexSubMatchDto {
+	 */ 
+	public class RegexItemRenderer extends IconItemRenderer implements IFocusManagerComponent {
 		
-		public var parserRegex:ParserRegex;
+		public function RegexItemRenderer() {
+			minHeight = 22;
+			setStyle("verticalAlign", "middle");
+		}
 		
-		public var subMatches:ArrayCollection;
-
+		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {			
+		}
+		
 	}
 }

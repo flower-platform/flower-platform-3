@@ -19,6 +19,7 @@
 package org.flowerplatform.codesync.regex.ide {
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
@@ -42,7 +43,7 @@ package org.flowerplatform.codesync.regex.ide {
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return null;
+			return CodeSyncPlugin.getInstance().getResourceUrl("images/regex/brick.png");
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {

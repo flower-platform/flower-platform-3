@@ -55,15 +55,36 @@
    <extension
          point="org.flowerplatform.communication.service">
       <service
-            id="regexRulesConfigService"
-            serviceClass="org.flowerplatform.codesync.regex.ide.RegexRulesConfigService">
+            id="regexService"
+            serviceClass="org.flowerplatform.codesync.regex.ide.RegexService">
       </service>
    </extension>
    <extension
          point="org.flowerplatform.properties.propertiesProvider">
       <propertiesProvider
             itemType="regex_match"
-            propertiesProviderClass="org.flowerplatform.codesync.regex.RegexMatchPropertiesProvider">
+            propertiesProviderClass="org.flowerplatform.codesync.regex.RegexPropertiesProvider">
+      </propertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="regex_parser"
+            propertiesProviderClass="org.flowerplatform.codesync.regex.RegexPropertiesProvider">
+      </propertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="regex_config"
+            propertiesProviderClass="org.flowerplatform.codesync.regex.RegexPropertiesProvider">
+      </propertiesProvider>
+   </extension>
+   <extension
+         point="org.flowerplatform.properties.propertiesProvider">
+      <propertiesProvider
+            itemType="regex_macro"
+            propertiesProviderClass="org.flowerplatform.codesync.regex.RegexPropertiesProvider">
       </propertiesProvider>
    </extension>
 </plugin>

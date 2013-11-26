@@ -56,6 +56,11 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
+import org.flowerplatform.emf_model.notation.View;
+import org.flowerplatform.emf_model.regex.MacroRegex;
+import org.flowerplatform.emf_model.regex.ParserRegex;
+import org.flowerplatform.emf_model.regex.impl.MacroRegexImpl;
+import org.flowerplatform.emf_model.regex.impl.ParserRegexImpl;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,6 +273,17 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				
 				// processors
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
+				
+				CustomSerializationDescriptor macroRegexSD = new CustomSerializationDescriptor(MacroRegexImpl.class)
+				.addDeclaredProperty("name")
+				.addDeclaredProperty("regex")				
+				.register();
+				
+				new CustomSerializationDescriptor(ParserRegexImpl.class)
+				.addDeclaredProperties(macroRegexSD.getDeclaredProperties())
+				.addDeclaredProperty("action")
+				.addDeclaredProperty("fullRegex")				
+				.register();
 			}
 		});
 

@@ -17,32 +17,34 @@
 * license-end
 */
 package org.flowerplatform.codesync.regex.ide {
+	
 	import mx.core.UIComponent;
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
 	/**
 	 * @author Cristina Constantinescu
-	 */ 
-	public class RegexMacrosViewProvider implements IViewProvider {
+	 */
+	public class ParserRegexViewProvider implements IViewProvider {
 		
-		public static const ID:String = "regex_macros";
-		
+		public static const ID:String = "regex_parser";
+				
 		public function getId():String {
 			return ID;
 		}
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {
-			return new RegexActionsView();
+			return new ParserRegexView();
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String {
-			return "Regex Macros";
+			return "Regex Parsers";
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return null;
+			return CodeSyncPlugin.getInstance().getResourceUrl("images/regex/bricks.png");
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {

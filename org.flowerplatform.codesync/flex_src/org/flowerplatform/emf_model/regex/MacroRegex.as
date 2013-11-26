@@ -16,22 +16,17 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.regex.ide.remote {
-	import mx.collections.ArrayCollection;
-	
-	import org.flowerplatform.emf_model.regex.MacroRegex;
-	import org.flowerplatform.emf_model.regex.ParserRegex;
+package org.flowerplatform.emf_model.regex {
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	[RemoteClass]
 	[Bindable]
-	public class RegexMatchDto extends RegexSubMatchDto {
+	[RemoteClass(alias="org.flowerplatform.emf_model.regex.impl.MacroRegexImpl")]
+	public class MacroRegex {
 		
-		public var parserRegex:ParserRegex;
+		public var name:String;
 		
-		public var subMatches:ArrayCollection;
-
+		public var regex:String;
 	}
 }

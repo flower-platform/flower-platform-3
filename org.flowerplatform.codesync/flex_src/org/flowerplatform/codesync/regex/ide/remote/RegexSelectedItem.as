@@ -18,20 +18,20 @@
 */
 package org.flowerplatform.codesync.regex.ide.remote {
 	
+	import org.flowerplatform.emf_model.regex.MacroRegex;
+	import org.flowerplatform.emf_model.regex.ParserRegex;
 	import org.flowerplatform.properties.remote.SelectedItem;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
 	[RemoteClass]
-	public class RegexMatchSelectedItem extends SelectedItem {
+	public class RegexSelectedItem extends SelectedItem {
 		
 		public var match:RegexMatchDto;
+	
+		public var regex:MacroRegex;
 		
-		public function RegexMatchSelectedItem(match:RegexMatchDto) {
-			this.match = match;	
-			this.itemType = "regex_match";
-		}	
-		
+		public var config:String;
 	}
 }

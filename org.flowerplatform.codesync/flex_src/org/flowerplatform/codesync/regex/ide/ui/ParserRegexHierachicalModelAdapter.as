@@ -16,27 +16,31 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.regex.ide.remote {
-	import flash.events.IEventDispatcher;
+package org.flowerplatform.codesync.regex.ide.ui {
+	import mx.collections.IList;
 	
-	import mx.collections.ArrayCollection;
-	import mx.collections.ArrayList;
+	import org.flowerplatform.editor.remote.*;
+	import org.flowerplatform.emf_model.regex.ParserRegex;
+	import org.flowerplatform.flexutil.tree.IHierarchicalModelAdapter;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	[RemoteClass]
-	[Bindable]
-	public class RegexDto {
+	public class ParserRegexHierachicalModelAdapter implements IHierarchicalModelAdapter {
+
+		public function getChildren(treeNode:Object):IList {		
+			if (treeNode is ParserRegex) {
+				return ParserRegex(treeNode).matches;
+			}
+			return null;
+		}
 		
-		public var name:String;
-		
-		public var regex:String;
-		
-		public var regexWithMacro:String;
-			
-		[Transient]
-		public var matches:ArrayCollection = new ArrayCollection();
+		public function hasChildren(treeNode:Object):Boolean {			
+			if (treeNode is ParserRegex) {
+				return ParserRegex(treeNode).matches.length != 0;
+			}
+			return false;
+		}
 		
 	}
 }
