@@ -25,87 +25,48 @@ import org.flowerplatform.codesync.regex.ide.RegexService;
 import org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto;
 import org.flowerplatform.codesync.regex.ide.remote.RegexSelectedItem;
 import org.flowerplatform.codesync.regex.ide.remote.RegexSubMatchDto;
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.emf_model.regex.MacroRegex;
 import org.flowerplatform.emf_model.regex.ParserRegex;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
-import org.flowerplatform.properties.remote.SelectedItem;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
 /**
  * @author Cristina Constantinescu
  */
-public class RegexPropertiesProvider implements IPropertiesProvider {
+public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelectedItem, Object> {
 
-	@Override
-	public List<Property> getProperties(SelectedItem selectedItem) {
-		List<Property> properties = new ArrayList<Property>();	
+	public static final String NAME = "Name";
+	public static final String REGEX = "Regex";
+	public static final String REGEX_FULL = "Regex Full";
+	public static final String REGEX_MACROS = "Regex Macros";
+	public static final String START = "Start";
+	public static final String END = "End";
+	public static final String ACTION = "Action";
 		
-		if (selectedItem.getItemType().equals("regex_match")) {
-			RegexMatchDto match = ((RegexSelectedItem) selectedItem).getMatch();
-			
-			properties.add(new Property("RegEx Macros", match.getParserRegex().getRegex()));
-			properties.add(new Property("RegEx Full", match.getParserRegex().getFullRegex()));
-			properties.add(new Property("Start", match.getStart().toString()));
-			properties.add(new Property("End", match.getEnd().toString()));
-			
-			if (match.getSubMatches() != null) {
-				for (RegexSubMatchDto subMatch : match.getSubMatches()) {
-					properties.add(new Property(String.format("$%d", match.getSubMatches().indexOf(subMatch) + 1), subMatch.getValue()));
-				}
-			}
-		} else if (selectedItem.getItemType().equals("regex_config")) {
-			properties.add(new Property("Name", ((RegexSelectedItem) selectedItem).getConfig(), false));
-		} else if (selectedItem.getItemType().equals("regex_macro")) {
-			MacroRegex regex = ((RegexSelectedItem) selectedItem).getRegex();
-			
-			properties.add(new Property("Name", regex.getName(), false));
-			properties.add(new Property("Regex", regex.getRegex(), false));		
-		} else if (selectedItem.getItemType().equals("regex_parser")) {
-			ParserRegex regex = (ParserRegex) ((RegexSelectedItem) selectedItem).getRegex();
-			
-			properties.add(new Property("Name", regex.getName(), false));
-			properties.add(new Property("RegEx Macros", regex.getRegex(), false));
-			properties.add(new Property("RegEx Full", regex.getFullRegex()));
-			properties.add(new Property("Action", regex.getAction()));
-		}
-		
-		return properties;
-	}
-
 	@Override
-	public List<String> getPropertyNames() {
-		// doesn't support this
-		return null;
-	}
-
-	@Override
-	public Property getProperty(SelectedItem selectedItem, String propertyName) {	
-		// doesn't support this
-		return null;
-	}
-	
-	@Override
-	public boolean setProperty(ServiceInvocationContext context, SelectedItem selectedItem, String propertyName, Object propertyValue) {
-		RegexSelectedItem item = (RegexSelectedItem) selectedItem;
+	public boolean setProperty(ServiceInvocationContext context, RegexSelectedItem selectedItem, String propertyName, Object propertyValue) {		
 		if (selectedItem.getItemType().equals("regex_config")) {
 			RegexService.getInstance().renameConfig(
 					context.getCommunicationChannel(), 
-					item.getConfig(), 
+					selectedItem.getConfig(), 
 					(String) propertyValue);			
 			return true;
 		} else if (selectedItem.getItemType().equals("regex_macro")) {
 			if ("Name".equals(propertyName)) {
 				RegexService.getInstance().changeMacroName(
 						context.getCommunicationChannel(), 
-						item.getConfig(), 
-						item.getRegex(), 
+						selectedItem.getConfig(), 
+						selectedItem.getRegex(), 
 						(String) propertyValue);	
 			} else if ("Regex".equals(propertyName)) {
 				RegexService.getInstance().changeMacroRegex(
 						context.getCommunicationChannel(), 
-						item.getConfig(), 
-						item.getRegex(), 
+						selectedItem.getConfig(), 
+						selectedItem.getRegex(), 
 						(String) propertyValue);	
 			}
 			return true;
@@ -113,20 +74,20 @@ public class RegexPropertiesProvider implements IPropertiesProvider {
 			if ("Name".equals(propertyName)) {
 				RegexService.getInstance().changeParserName(
 						context.getCommunicationChannel(), 
-						item.getConfig(), 
-						(ParserRegex) item.getRegex(), 
+						selectedItem.getConfig(), 
+						(ParserRegex) selectedItem.getRegex(), 
 						(String) propertyValue);	
 			} else if ("RegEx Macros".equals(propertyName)) {
 				RegexService.getInstance().changeParserRegex(
 						context.getCommunicationChannel(), 
-						item.getConfig(), 
-						(ParserRegex) item.getRegex(), 
+						selectedItem.getConfig(), 
+						(ParserRegex) selectedItem.getRegex(), 
 						(String) propertyValue);	
 			} else if ("Action".equals(propertyName)) {
 				RegexService.getInstance().changeParserAction(
 						context.getCommunicationChannel(), 
-						item.getConfig(), 
-						(ParserRegex) item.getRegex(), 
+						selectedItem.getConfig(), 
+						(ParserRegex) selectedItem.getRegex(), 
 						(String) propertyValue);	
 			}
 			return true;
@@ -134,4 +95,143 @@ public class RegexPropertiesProvider implements IPropertiesProvider {
 		return false;
 	}
 
+	@Override
+	public List<String> getPropertyNames(RegexSelectedItem selectedItem, Object resolvedSelectedItem) {
+		List<String> properties = new ArrayList<String>();	
+		
+		if (selectedItem.getItemType().equals("regex_match")) {
+			RegexMatchDto match = ((RegexSelectedItem) selectedItem).getMatch();
+			
+			properties.add(REGEX_MACROS);
+			properties.add(REGEX_FULL);
+			properties.add(START);
+			properties.add(END);
+			
+			if (match.getSubMatches() != null) {
+				for (RegexSubMatchDto subMatch : match.getSubMatches()) {
+					properties.add(String.format("$%d", match.getSubMatches().indexOf(subMatch) + 1));
+				}
+			}
+		} else if (selectedItem.getItemType().equals("regex_config")) {
+			properties.add(NAME);
+		} else if (selectedItem.getItemType().equals("regex_macro")) {			
+			properties.add(NAME);
+			properties.add(REGEX);		
+		} else if (selectedItem.getItemType().equals("regex_parser")) {			
+			properties.add(NAME);
+			properties.add(REGEX_MACROS);
+			properties.add(REGEX_FULL);
+			properties.add(ACTION);
+		}
+		
+		return properties;
+	}
+
+	@Override
+	public Property getProperty(RegexSelectedItem selectedItem,	Object resolvedSelectedItem, String propertyName) {
+		if (selectedItem.getItemType().equals("regex_match")) {
+			RegexMatchDto match = ((RegexSelectedItem) selectedItem).getMatch();
+			
+			switch (propertyName) {
+				case REGEX_MACROS: {
+					return new Property()
+							.setName(REGEX_MACROS)
+							.setValue(match.getParserRegex().getRegex())
+							.setReadOnly(false);
+				}
+				case REGEX_FULL: {
+					return new Property()
+						.setName(REGEX_FULL)
+						.setValue(match.getParserRegex().getFullRegex());
+				}
+				case START: {
+					return new Property()
+						.setName(START)
+						.setValue(match.getStart());
+				}
+				case END: {
+					return new Property()
+						.setName(END)
+						.setValue(match.getEnd());
+				}			
+			}
+						
+			if (match.getSubMatches() != null) {
+				int index = Integer.parseInt(propertyName.substring(1));
+				return new Property()
+						.setName(propertyName)
+						.setValue(match.getSubMatches().get(index).getValue());				
+			}
+		} else if (selectedItem.getItemType().equals("regex_config")) {
+			return new Property()
+					.setName(NAME)
+					.setValue(selectedItem.getConfig())
+					.setReadOnly(false);
+		} else if (selectedItem.getItemType().equals("regex_macro")) {	
+			MacroRegex regex = selectedItem.getRegex();
+			
+			switch (propertyName) {
+				case NAME: {
+					return new Property()
+							.setName(NAME)
+							.setValue(regex.getName())
+							.setReadOnly(false);
+				}
+				case REGEX: {
+					return new Property()
+						.setName(REGEX)
+						.setValue(regex.getRegex());
+				}			
+			}				
+		} else if (selectedItem.getItemType().equals("regex_parser")) {			
+			ParserRegex regex = (ParserRegex) selectedItem.getRegex();
+			
+			switch (propertyName) {
+				case NAME: {
+					return new Property()
+							.setName(NAME)
+							.setValue(regex.getName())
+							.setReadOnly(false);
+				}
+				case REGEX_MACROS: {
+					return new Property()
+						.setName(REGEX_MACROS)
+						.setValue(regex.getRegex())
+						.setReadOnly(false);
+				}					
+				case REGEX_FULL: {
+					return new Property()
+						.setName(REGEX_FULL)
+						.setValue(regex.getFullRegex());
+				}
+				case ACTION: {
+					return new Property()
+						.setName(ACTION)
+						.setValue(regex.getAction())
+						.setReadOnly(false);
+				}
+			}			
+		}	
+		
+		return null;
+	}
+
+	@Override
+	public Object resolveSelectedItem(RegexSelectedItem selectedItem) {
+		return null;
+	}
+
+	@Override
+	public Pair<String, String> getIconAndLabel(RegexSelectedItem selectedItem, Object resolvedSelectedItem) {
+		if (selectedItem.getItemType().equals("regex_config")) {
+			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/wrench.png"), selectedItem.getConfig());
+		} else if (selectedItem.getItemType().equals("regex_macro")) {
+			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/star.png"), selectedItem.getRegex().getName());
+		} else if (selectedItem.getItemType().equals("regex_parser")) {
+			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/bricks.png"), selectedItem.getRegex().getName());
+		}
+		return null;
+	}
+
+	
 }

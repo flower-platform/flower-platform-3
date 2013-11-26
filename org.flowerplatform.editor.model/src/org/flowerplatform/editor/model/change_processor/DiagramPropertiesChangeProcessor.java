@@ -45,7 +45,7 @@ public class DiagramPropertiesChangeProcessor implements IDiagrammableElementFea
 	
 	protected void processFeatureChange(EObject object, FeatureChange featureChange, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
 		if (featureChange == null || NotationPackage.eINSTANCE.getDiagram_ShowLocationForNewElementsDialog().equals(featureChange.getFeature())) {
-			viewDetails.put(DiagramPropertiesProvider.SHOW_LOCATION_FOR_NEW_ELEMENTS_DILOG_PROPERTY, ((Diagram) associatedViewOnOpenDiagram).isShowLocationForNewElementsDialog());
+			viewDetails.put(DiagramPropertiesProvider.SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY, ((Diagram) associatedViewOnOpenDiagram).isShowLocationForNewElementsDialog());
 		}		
 		if (featureChange == null || NotationPackage.eINSTANCE.getDiagram_LocationForNewElements().equals(featureChange.getFeature())) {
 			viewDetails.put(DiagramPropertiesProvider.LOCATION_FOR_NEW_ELEMENTS_PROPERTY, ((Diagram) associatedViewOnOpenDiagram).getLocationForNewElements());
