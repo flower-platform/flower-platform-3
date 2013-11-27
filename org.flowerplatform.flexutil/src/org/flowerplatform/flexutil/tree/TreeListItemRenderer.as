@@ -28,8 +28,11 @@ package org.flowerplatform.flexutil.tree {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	
 	import spark.components.Group;
+	import spark.components.HGroup;
 	import spark.components.IconItemRenderer;
+	import spark.components.Image;
 	import spark.primitives.BitmapImage;
+	import spark.primitives.Graphic;
 	
 	public class TreeListItemRenderer extends IconItemRenderer {
 					
@@ -41,7 +44,7 @@ package org.flowerplatform.flexutil.tree {
 		[Embed(source="/minus.gif")]			
 		public static const _iconExpanded:Class;
 		
-		protected var expandIconDisplay:BitmapImage;
+		protected var expandIconDisplay:Image;
 				
 		public function TreeListItemRenderer() {
 			super();
@@ -86,28 +89,19 @@ package org.flowerplatform.flexutil.tree {
 		protected override function createChildren():void {
 			super.createChildren();
 			
-			// create BitmapImage container
-			var imageContainer:Group = new Group();
-			imageContainer.width = 16;
-			imageContainer.height = 16;
-			addChildAt(imageContainer, 0);
-			
-			// create BitmapImage
-			expandIconDisplay = new BitmapImage();
+			// create Image
+			expandIconDisplay = new Image();
 			// set to temporary emded icon in order to set width/height
 			expandIconDisplay.source = _iconExpanded;
-			imageContainer.addElement(expandIconDisplay);		
-						
-			// expandIcon position is set later because we must know its exact width/height
-			imageContainer.callLater(setExpandIconDisplayPosition, [imageContainer.width, imageContainer.height]);
-						
-			imageContainer.addEventListener(MouseEvent.CLICK, expandedIconDisplayClickHandler);
-		}
+			expandIconDisplay.width = 16;
+			expandIconDisplay.height = 16;
 			
-		private function setExpandIconDisplayPosition(width:Number, heigth:Number):void {
-			setElementPosition(expandIconDisplay, width/2 - expandIconDisplay.measuredWidth/2, heigth/2 - expandIconDisplay.measuredHeight/2);
+			setElementPosition(expandIconDisplay, expandIconDisplay.width/2, expandIconDisplay.height/2);
+			addChildAt(expandIconDisplay, 0);
+				
+			expandIconDisplay.addEventListener(MouseEvent.CLICK, expandedIconDisplayClickHandler);
 		}
-		
+					
 		protected function expandedIconDisplayClickHandler(event:MouseEvent):void {
 			var modelWrapper:HierarchicalModelWrapper = HierarchicalModelWrapper(data);
 			if (!TreeList(owner).hierarchicalModelAdapter.hasChildren(modelWrapper.treeNode)) {
@@ -119,20 +113,10 @@ package org.flowerplatform.flexutil.tree {
 		
 		override protected function layoutContents(unscaledWidth:Number, unscaledHeight:Number):void {	
 			// no need to call super.layoutContents() since we're changing how it happens here
-			
-			if (!TreeList(owner).hierarchicalModelAdapter.hasChildren(HierarchicalModelWrapper(data).treeNode)) {
-				expandIconDisplay.source = null;
-			} else if (HierarchicalModelWrapper(data).expanded) {
-				expandIconDisplay.source = _iconExpanded;
-			} else {
-				expandIconDisplay.source = _iconCollapsed;
-			}
-			
+						
 			// start laying out our children now
 			var iconWidth:Number = 0;
 			var iconHeight:Number = 0;
-			var expandIconWidth:Number = 0;
-			var expandIconHeight:Number = 0;
 			
 			var hasLabel:Boolean = labelDisplay && labelDisplay.text != "";
 			var hasMessage:Boolean = messageDisplay && messageDisplay.text != "";
@@ -160,12 +144,11 @@ package org.flowerplatform.flexutil.tree {
 			
 			paddingLeft += levelWidth * HierarchicalModelWrapper(data).nestingLevel;
 			
-			expandIconWidth = getElementPreferredWidth(expandIconDisplay.parent);
-			expandIconHeight = getElementPreferredHeight(expandIconDisplay.parent);
-			
 			// use vAlign to position the icon.
-			var expandIconDisplayY:Number = Math.round(vAlign * (viewHeight - expandIconHeight)) + paddingTop;
-			setElementPosition(expandIconDisplay.parent, paddingLeft, expandIconDisplayY);
+			var expandIconDisplayY:Number = Math.round(vAlign * (viewHeight - expandIconDisplay.height)) + paddingTop;			
+			if (expandIconDisplay.x != paddingLeft || expandIconDisplay.y != expandIconDisplayY) {
+				setElementPosition(expandIconDisplay, paddingLeft, expandIconDisplayY);
+			}			
 
 			// icon is on the left
 			if (iconDisplay) {
@@ -176,13 +159,13 @@ package org.flowerplatform.flexutil.tree {
 				iconHeight = iconDisplay.getLayoutBoundsHeight();
 				
 				// use vAlign to position the icon.
-				var iconDisplayY:Number = Math.round(vAlign * (viewHeight - iconHeight)) + paddingTop;
-				setElementPosition(iconDisplay, paddingLeft + expandIconWidth, iconDisplayY);
+				var iconDisplayY:Number = Math.round(vAlign * (viewHeight - iconHeight)) + paddingTop;				
+				setElementPosition(iconDisplay, paddingLeft + expandIconDisplay.width, iconDisplayY);
 			}
 						
 			// Figure out how much space we have for label and message as well as the 
 			// starting left position
-			var labelComponentsViewWidth:Number = viewWidth - iconWidth - expandIconWidth;
+			var labelComponentsViewWidth:Number = viewWidth - iconWidth - expandIconDisplay.width;
 			
 			// don't forget the extra gap padding if these elements exist
 			if (iconDisplay)
@@ -190,7 +173,7 @@ package org.flowerplatform.flexutil.tree {
 			if (decoratorDisplay)
 				labelComponentsViewWidth -= horizontalGap;
 			
-			var labelComponentsX:Number = paddingLeft + expandIconWidth;
+			var labelComponentsX:Number = paddingLeft + expandIconDisplay.width;
 			if (iconDisplay)
 				labelComponentsX += iconWidth + horizontalGap;
 			
@@ -248,18 +231,26 @@ package org.flowerplatform.flexutil.tree {
 		}
 				
 		override protected function measure():void {
-			super.measure();
-			// calculate expand icon width & left padding
-			var expandIconParent:UIComponent = UIComponent(expandIconDisplay.parent);
-			var expandIconParentLeftPadding:Number = getStyle("horizontalGap") + expandIconParent.x;
-			var expandIconParentWidth:Number = getElementPreferredWidth(expandIconParent);
+			super.measure();				
 			var verticalScrollCompensation:Number = 15;
 			
-			measuredWidth += expandIconParentLeftPadding + expandIconParentWidth + verticalScrollCompensation;			
-			measuredMinWidth += expandIconParentLeftPadding + expandIconParentWidth + verticalScrollCompensation;			
+			measuredWidth += getStyle("horizontalGap") + expandIconDisplay.x + expandIconDisplay.width + verticalScrollCompensation;			
+			measuredMinWidth += getStyle("horizontalGap") + expandIconDisplay.x + expandIconDisplay.width + verticalScrollCompensation;			
 		}
 		
 		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {			
+		}
+		
+		override protected function commitProperties():void {
+			super.commitProperties();
+			
+			if (!TreeList(owner).hierarchicalModelAdapter.hasChildren(HierarchicalModelWrapper(data).treeNode)) {
+				expandIconDisplay.source = null;
+			} else if (HierarchicalModelWrapper(data).expanded) {
+				expandIconDisplay.source = _iconExpanded;								
+			} else {
+				expandIconDisplay.source = _iconCollapsed;								
+			}
 		}
 	}
 	
