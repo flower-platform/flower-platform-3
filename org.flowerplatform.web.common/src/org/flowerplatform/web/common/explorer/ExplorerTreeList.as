@@ -107,6 +107,9 @@ package org.flowerplatform.web.common.explorer {
 		}
 		
 		private function doubleClickHandler(event:MouseEvent):void {
+			if (_viewHost == null) {
+				return;
+			}
 			var cachedActions:Vector.<IAction> = _viewHost.getCachedActions();
 			for (var i:int = 0; i < cachedActions.length; i++) {
 				var action:IAction = cachedActions[i];
