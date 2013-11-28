@@ -21,11 +21,10 @@
 <!--
 @author Cristina Constantinescu
 -->
-<popup:CustomTitlePanel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+<tree:GenericTreeList xmlns:fx="http://ns.adobe.com/mxml/2009" 
 						xmlns:s="library://ns.adobe.com/flex/spark" 
-						xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:popup="com.crispico.flower.util.panel.*" 
-						
-						headerHeight="0" borderStyle="none" xmlns:tree="org.flowerplatform.communication.tree.*" >
+						xmlns:mx="library://ns.adobe.com/flex/mx"
+						 xmlns:tree="org.flowerplatform.communication.tree.*" dispatchEnabled="false" >
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.IList;
@@ -34,7 +33,7 @@
 			import org.flowerplatform.communication.tree.remote.TreeNode;
 					
 			public function getSelectedBranch():String {
-				var selection:IList = tree.getSelection();
+				var selection:IList = getSelection();
 				if (selection.length == 0) {
 					return null;
 				}
@@ -51,7 +50,5 @@
 						
 		]]>
 	</fx:Script>
-		
-	<tree:GenericTreeList width="100%" height="100%" id="tree" dispatchEnabled="false"  />
 	
-</popup:CustomTitlePanel>
+</tree:GenericTreeList>

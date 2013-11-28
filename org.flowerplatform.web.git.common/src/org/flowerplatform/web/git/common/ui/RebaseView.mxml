@@ -61,13 +61,13 @@
 				statefulClient.context[BranchTreeStatefulClient.NODE_TYPE_FILTER_KEY] = 
 					new ArrayCollection([GitCommonPlugin.NODE_TYPE_LOCAL_BRANCHES, GitCommonPlugin.NODE_TYPE_REMOTE_BRANCHES]);
 				
-				branchPage.tree.statefulClient = statefulClient;				
-				statefulClient.treeList = branchPage.tree;
+				branchPage.statefulClient = statefulClient;				
+				statefulClient.treeList = branchPage;
 				
 				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 				
 				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
-				branchPage.tree.statefulClient.openNode(dto.repositoryNode, this, getData_callbackHandler);
+				branchPage.statefulClient.openNode(dto.repositoryNode, this, getData_callbackHandler);
 			}
 			
 			private function getData_callbackHandler(value:Object):void {
@@ -88,7 +88,7 @@
 			}
 						
 			protected override function removePopup():void {	
-				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(branchPage.tree.statefulClient, null);
+				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(branchPage.statefulClient, null);
 				super.removePopup();
 			}
 			
@@ -97,7 +97,7 @@
 	
 	<popup:states>				
 		<mx:State name="0">			
-			<mx:SetProperty name="wizardTitle" value="{GitCommonPlugin.getInstance().getMessage('git.rebase.subTitle')}"/>
+			<mx:SetProperty name="wizardTitle" value="{GitCommonPlugin.getInstance().getMessage('git.rebase.subTitle', [dto.branch])}"/>
 			<mx:SetProperty name="wizardDescription" value="{GitCommonPlugin.getInstance().getMessage('git.rebase.description', [dto.branch])}"/>
 			<mx:SetProperty target="{finish}" name="label" value="{GitCommonPlugin.getInstance().getMessage('git.rebase')}"/>
 			<mx:SetProperty target="{next}" name="visible" value="false"/>

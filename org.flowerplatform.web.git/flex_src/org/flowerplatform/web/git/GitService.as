@@ -23,8 +23,8 @@ package org.flowerplatform.web.git {
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.web.git.dto.GitRef;
-	import org.flowerplatform.web.git.dto.RemoteConfig;
+	import org.flowerplatform.web.git.common.remote.dto.GitRef;
+	import org.flowerplatform.web.git.common.remote.dto.RemoteConfig;
 
 	/**
 	 * @author Cristina Constantinescu
