@@ -57,6 +57,7 @@ import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.eclipse.jgit.util.FS;
 import org.flowerplatform.common.CommonPlugin;
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
@@ -501,7 +502,7 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 			
 			if (GitNodeType.NODE_TYPE_FILE.equals(nodeInfo.getPathFragment().getType()) 
 					|| GitNodeType.NODE_TYPE_WDIR.equals(nodeInfo.getPathFragment().getType())) {
-				repository = GitPlugin.getInstance().getUtils().getRepository((File) node);
+				repository = GitPlugin.getInstance().getUtils().getRepository((File) ((Pair<File, String>) node).a);
 			} else if (node instanceof RefNode) {
 				// create working directory for local branch
 				File mainRepoFile = repository.getDirectory().getParentFile();		
@@ -663,7 +664,7 @@ public class GitHistoryStatefulService extends RegularStatefulService<Communicat
 	@RemoteInvocation
 	public String getCommitMessage(StatefulServiceInvocationContext context, HistoryEntryDto entry, String repositoryLocation) {
 		try {
-			Repository repo = RepositoryCache.open(FileKey.exact(new File(repositoryLocation), FS.DETECTED));;
+			Repository repo = RepositoryCache.open(FileKey.exact(new File(repositoryLocation), FS.DETECTED));
 			RevCommit commit = new RevWalk(repo).parseCommit(repo.resolve(entry.getId()));
 			
 			return getCommitMessage(repo, entry, commit);
