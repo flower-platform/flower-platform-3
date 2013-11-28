@@ -22,11 +22,9 @@
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItem"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin"/>
     <classEntry path="org.flowerplatform.flexutil.popup.ScreenSizeAwarePopup"/>
-    <classEntry path="org.flowerplatform.flexutil.search.SearchView"/>
     <classEntry path="org.flowerplatform.flexutil.view_content_host.IViewHostAware"/>
     <classEntry path="org.flowerplatform.flexutil.view_content_host.ICachedActionsAndSelectionProvider"/>
     <classEntry path="org.flowerplatform.flexutil.action.VectorActionProvider"/>
-    <classEntry path="org.flowerplatform.flexutil.search.SearchView"/>
     <classEntry path="org.flowerplatform.flexutil.layout.ITitleDecorator"/>
   </includeClasses>
   <includeResources/>

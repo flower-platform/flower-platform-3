@@ -19,7 +19,7 @@
    <extension
          point="org.flowerplatform.editor.model.dragOnDiagramHandler">
       <dragOnDiagramHandler
-            dragOnDiagramHandler="org.flowerplatform.codesync.code.javascript.JavascriptDragOnDiagramHandler">
+            dragOnDiagramHandler="org.flowerplatform.codesync.code.javascript.JavaScriptDragOnDiagramHandler">
       </dragOnDiagramHandler>
    </extension>
    <extension
@@ -28,6 +28,12 @@
             codeSyncAlgorithmRunnerClass="com.crispico.flower.mp.codesync.code.CodeSyncAlgorithmRunner"
             technology="js">
       </codeSyncAlgorithmRunner>
+   </extension>
+   <extension
+         point="org.flowerplatform.editor.model.contentAssist">
+      <contentAssist
+            contentAssist="org.flowerplatform.codesync.code.javascript.JavaScriptCodeSyncElementContentAssist">
+      </contentAssist>
    </extension>
 
 </plugin>

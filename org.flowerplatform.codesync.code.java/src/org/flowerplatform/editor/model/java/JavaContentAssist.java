@@ -32,7 +32,7 @@ public class JavaContentAssist implements IContentAssist {
 
 	@Override
 	public List<ContentAssistItem> findMatches(Map<String, Object> context, String pattern) {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 	
 //
