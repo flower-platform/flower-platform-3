@@ -18,9 +18,13 @@
 */
 package org.flowerplatform.editor.model.action {
 	
+	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.content_assist.NotationDiagramContentAssistProvider;
+	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.flexdiagram.DiagramShell;
+	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
 	import org.flowerplatform.flexutil.FlexUtilAssets;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
@@ -29,7 +33,7 @@ package org.flowerplatform.editor.model.action {
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class SearchAction extends ActionBase {
+	public class SearchAction extends ActionBase implements IDiagramShellAware {
 		
 		public function SearchAction() {
 			super();
@@ -38,15 +42,26 @@ package org.flowerplatform.editor.model.action {
 			preferShowOnActionBar = true;
 		}
 		
+		private var _diagramShell:DiagramShell;
+		
+		public function get diagramShell():DiagramShell {		
+			return _diagramShell;
+		}
+		
+		public function set diagramShell(value:DiagramShell):void {
+			_diagramShell = value;
+		}
+		
 		override public function get visible():Boolean {
-			return selection.length == 1 && !(selection.getItemAt(0) is Diagram);
+			return selection.length == 1 && selection.getItemAt(0) is Diagram;
 		}
 		
 		override public function run():void {
-			var node:Node = Node(selection.getItemAt(0));
 			var view:SearchView = new SearchView();
-			view.contentAssistProvider = new NotationDiagramContentAssistProvider(node.id);
-			view.setResultHandler(new TestDialogResultHandler());
+			view.contentAssistProvider = new NotationDiagramContentAssistProvider();
+			var client:NotationDiagramEditorStatefulClient = NotationDiagramEditorStatefulClient(
+				NotationDiagramShell(diagramShell).editorStatefulClient);
+			view.setResultHandler(new DragOnDiagramHandler(client));
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
 				.setTitle(label)
 				.setWidth(400)
@@ -56,13 +71,21 @@ package org.flowerplatform.editor.model.action {
 		}
 	}
 }
-import mx.controls.Alert;
 
+import mx.collections.ArrayList;
+
+import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 
-class TestDialogResultHandler implements IDialogResultHandler {
+class DragOnDiagramHandler implements IDialogResultHandler {
+	
+	private var client:NotationDiagramEditorStatefulClient;
+	
+	public function DragOnDiagramHandler(client:NotationDiagramEditorStatefulClient) {
+		this.client = client;
+	}
 	
 	public function handleDialogResult(result:Object):void {
-		Alert.show("Selected item - " + result); 
+		client.service_handleDragOnDiagram(new ArrayList([result]));
 	}
 }

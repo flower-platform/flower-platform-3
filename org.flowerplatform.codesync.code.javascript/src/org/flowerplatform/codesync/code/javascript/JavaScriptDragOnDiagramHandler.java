@@ -38,7 +38,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 /**
  * @author Mariana Gheorghe
  */
-public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
+public class JavaScriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 
 	@Override
 	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {

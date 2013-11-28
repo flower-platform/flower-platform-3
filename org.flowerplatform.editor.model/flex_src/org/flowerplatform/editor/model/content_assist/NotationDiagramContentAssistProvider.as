@@ -35,7 +35,7 @@ package org.flowerplatform.editor.model.content_assist {
 		
 		private var triggerCharacters:ArrayCollection = new ArrayCollection([":".charCodeAt()]);
 		
-		public function NotationDiagramContentAssistProvider(viewId:Object) {
+		public function NotationDiagramContentAssistProvider(viewId:Object = null) {
 			this.viewId = viewId;
 		}
 

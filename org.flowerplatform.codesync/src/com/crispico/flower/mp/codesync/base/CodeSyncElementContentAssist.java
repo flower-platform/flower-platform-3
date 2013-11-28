@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.ContentAssistItem;
 import org.flowerplatform.editor.model.IContentAssist;
 
@@ -51,22 +52,22 @@ public abstract class CodeSyncElementContentAssist implements IContentAssist {
 		List<ContentAssistItem> matches = new ArrayList<ContentAssistItem>();
 		for (EObject object : codeSyncMapping.getContents()) {
 			if (object instanceof CodeSyncElement) {
-				iterateContents((CodeSyncElement) object, pattern, matches);
+				iterateContents(project, (CodeSyncElement) object, pattern, matches);
 			}
 		}
 		return matches;
 	}
 	
-	protected void iterateContents(CodeSyncElement element, String pattern, List<ContentAssistItem> matches) {
+	protected void iterateContents(Object project, CodeSyncElement element, String pattern, List<ContentAssistItem> matches) {
 		if (getAllowedTypes().contains(element.getType())) {
 			CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(element.getType());
 			String name = (String) CodeSyncOperationsService.getInstance().getFeatureValue(element, descriptor.getKeyFeature());
 			if (name.toLowerCase().startsWith(pattern.toLowerCase())) {
-				matches.add(createContentAssistItem(element));
+				matches.add(createContentAssistItem(project, element));
 			}
 		}
 		for (CodeSyncElement child : element.getChildren()) {
-			iterateContents(child, pattern, matches);
+			iterateContents(project, child, pattern, matches);
 		}
 	}
 
@@ -77,30 +78,40 @@ public abstract class CodeSyncElementContentAssist implements IContentAssist {
 	}
 	
 	/**
-	 * Gets the fully qualified name for the {@code element} by going up its parents hierarchy.
+	 * @return a {@link ContentAssistItem} where:
+	 * <ul>
+	 * 	<li> {@code item} is the full path of the element (e.g. proj/srcDir/pck1/pck2/MyClass.js);
+	 * 		it will be used to identify the element that will be dragged on the diagram
+	 * 	<li> {@code mainString} is the simple name of the element (e.g. MyClass)
+	 * 	<li> {@code extraString} is the package of the element (e.g. pck1.pck2)
+	 * </ul>
 	 */
-	protected ContentAssistItem createContentAssistItem(CodeSyncElement element) {
+	protected ContentAssistItem createContentAssistItem(Object project, CodeSyncElement element) {
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(element.getType());
 		String simpleName = (String) CodeSyncOperationsService.getInstance()
 				.getFeatureValue(element, descriptor.getKeyFeature());
 		StringBuilder pckBuilder = new StringBuilder();
+		StringBuilder pathBuilder = new StringBuilder();
 		CodeSyncElement parent = element;
 		while (parent != null) {
+			descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(parent.getType());
+			Object name = CodeSyncOperationsService.getInstance().getFeatureValue(parent, descriptor.getKeyFeature());
+			pathBuilder.insert(0, "/" + name);
 			if (parent.getType().equals(CodeSyncPlugin.FOLDER) && !(parent instanceof CodeSyncRoot)) {
-				descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(parent.getType());
-				pckBuilder.insert(0, "." + 
-							CodeSyncOperationsService.getInstance().getFeatureValue(parent, descriptor.getKeyFeature()));
+				pckBuilder.insert(0, "." + name);
 			}
 			parent = (CodeSyncElement) parent.eContainer();
 		}
+		
+		String path = pathBuilder.substring(0, pathBuilder.lastIndexOf("/"));
+		path = EditorPlugin.getInstance().getFileAccessController().getPath(project) + path;
+		
 		if (pckBuilder.length() > 0) {
 			pckBuilder.deleteCharAt(0);
 		}
-
 		String pck = pckBuilder.toString();
-		String fullyQualifiedName = pck + (pck.length() > 0 ? "." : "") + simpleName;
 		
-		return new ContentAssistItem(fullyQualifiedName, simpleName, pck, getIconUrl(element));
+		return new ContentAssistItem(path, simpleName, pck, getIconUrl(element));
 	}
 
 	protected String getIconUrl(CodeSyncElement element) {
