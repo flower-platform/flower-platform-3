@@ -29,7 +29,7 @@ package org.flowerplatform.web.git.common.action {
 		public function PullAction() {
 			label = GitCommonPlugin.getInstance().getMessage("git.action.pull.label");
 			icon = GitCommonPlugin.getInstance().getResourceUrl("images/full/obj16/pull.gif");
-			orderIndex = int(GitCommonPlugin.getInstance().getMessage("git.action.pull.team.sortIndex"));
+			orderIndex = int(GitCommonPlugin.getInstance().getMessage("git.action.pull.sortIndex"));
 		}
 		
 		override public function get visible():Boolean {
