@@ -21,8 +21,12 @@ package org.flowerplatform.web.git.layout {
 	import com.crispico.flower.util.spinner.ModalSpinner;
 	import com.crispico.flower.util.spinner.ModalSpinnerSupport;
 	
+	import mx.collections.IList;
 	import mx.containers.VBox;
 	
+	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.web.git.GitPlugin;
 	import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 
@@ -35,18 +39,15 @@ package org.flowerplatform.web.git.layout {
 			throw "Must implement get info()";
 		}
 		
-		protected function getSelectedObjectFromExplorer():Object {	
-			// TODO CS: use the global selection
-//			var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
-//			
-//			var explorer:UIComponent = workbench.getComponent("explorer");
-//		
-//			if (explorer is PopupHostViewWrapper) {
-//				var selection:IList = PopupHostViewWrapper(explorer).activeViewContent.getSelection();
-//				if (selection != null && selection.length == 1 && selection.getItemAt(0) is TreeNode) {
-//					return TreeNode(selection.getItemAt(0)).getPathForNode(true);
-//				}
-//			}
+		protected function getSelectedObjectFromExplorer():Object {				
+			var selectionProvider:ISelectionProvider = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider;
+			if (selectionProvider != null) {
+				var selection:IList = selectionProvider.getSelection();
+				
+				if (selection != null && selection.length == 1 && selection.getItemAt(0) is TreeNode) {
+					return TreeNode(selection.getItemAt(0)).getPathForNode(true);
+				}			
+			}
 			return null;				
 		}
 		

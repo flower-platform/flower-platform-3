@@ -55,13 +55,13 @@
 				
 				var statefulClient:GenericTreeStatefulClient = new BranchTreeStatefulClient();
 				
-				branchPage.tree.statefulClient = statefulClient;				
-				statefulClient.treeList = branchPage.tree;
+				branchPage.statefulClient = statefulClient;				
+				statefulClient.treeList = branchPage;
 				
 				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, null);
 				
 				viewHost.showSpinner(CommonPlugin.getInstance().getMessage("spinner.gettingData"));
-				branchPage.tree.statefulClient.openNode(dto.repositoryNode, this, getData_callbackHandler);
+				branchPage.statefulClient.openNode(dto.repositoryNode, this, getData_callbackHandler);
 			}
 			
 			private function getData_callbackHandler(value:Object):void {
@@ -82,7 +82,7 @@
 			}
 									
 			protected override function removePopup():void {	
-				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(branchPage.tree.statefulClient, null);
+				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(branchPage.statefulClient, null);
 				super.removePopup();
 			}
 			

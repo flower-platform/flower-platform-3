@@ -26,16 +26,13 @@
 	<mx:Script>
 		<![CDATA[
 			import com.crispico.flower.flexdiagram.action.ActionContext;
-			
-			import org.flowerplatform.web.git.GitPlugin;
-			
 			import com.crispico.flower.flexdiagram.contextmenu.ContextMenuManager;
 			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
 			
 			import mx.collections.ArrayCollection;
 			import mx.events.ListEvent;
 			
-			import org.flowerplatform.web.git.dto.CommitResourceDto;
+			import org.flowerplatform.web.git.common.remote.dto.CommitResourceDto;
 
 			public var stagingView:GitStagingView;
 			
