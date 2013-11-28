@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.editor.model.content_assist.NotationDiagramContentAssistProvider;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
+	import org.flowerplatform.flexutil.FlexUtilAssets;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.content_assist.SearchView;
@@ -33,7 +34,7 @@ package org.flowerplatform.editor.model.action {
 		public function SearchAction() {
 			super();
 			
-			label = "Search";
+			label = FlexUtilAssets.INSTANCE.getMessage("search");
 			preferShowOnActionBar = true;
 		}
 		
@@ -47,7 +48,7 @@ package org.flowerplatform.editor.model.action {
 			view.contentAssistProvider = new NotationDiagramContentAssistProvider(node.id);
 			view.setResultHandler(new TestDialogResultHandler());
 			FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()
-				.setTitle("Search")
+				.setTitle(label)
 				.setWidth(400)
 				.setHeight(600)
 				.setViewContent(view)

@@ -35,6 +35,7 @@ license-end
 			import mx.collections.IList;
 			import mx.events.FlexEvent;
 			
+			import org.flowerplatform.flexutil.FlexUtilAssets;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.content_assist.ContentAssistItemRenderer;
@@ -175,17 +176,17 @@ license-end
 	
 	<s:HGroup width="100%" verticalAlign="middle">
 		<s:TextInput id="pattern" enter="{enterHandler()}" change="patternChangeHandler(event)" width="100%"/>
-		<s:Button id="searchButton" label="Search" click="{search()}"/>
+		<s:Button id="searchButton" label="{FlexUtilAssets.INSTANCE.getMessage('search')}" click="{search()}"/>
 	</s:HGroup>
 	
-	<s:Label text="Matching items:"/>
+	<s:Label text="{FlexUtilAssets.INSTANCE.getMessage('search.matchingItems')}"/>
 	
 	<s:List id="items" width="100%" height="100%"
 			itemRenderer="org.flowerplatform.flexutil.content_assist.ContentAssistItemRenderer"/>
 	
 	<s:HGroup width="100%" horizontalAlign="right" verticalAlign="middle">
-		<s:Button id="okButton" label="OK" click="{commitSelectedItem()}"/>
-		<s:Button id="cancelButton" label="Cancel" click="{cancel()}"/>
+		<s:Button id="okButton" label="{FlexUtilAssets.INSTANCE.getMessage('dialog.ok')}" click="{commitSelectedItem()}"/>
+		<s:Button id="cancelButton" label="{FlexUtilAssets.INSTANCE.getMessage('dialog.cancel')}" click="{cancel()}"/>
 	</s:HGroup>
 	
 </s:Group>
