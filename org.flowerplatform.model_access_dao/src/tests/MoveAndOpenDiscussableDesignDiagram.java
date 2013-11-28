@@ -23,14 +23,14 @@ public class MoveAndOpenDiscussableDesignDiagram {
 		String masterRepoId = repo.getMasterId();
 		String slaveRepoId = repo.getId();
 		
-		String resourceId = getResourceId(repo, "dgr.notation");
-		String pathRelativeToRepo = "myProj/myDir/mySubDir/" + RegistryDAO.FLOWER_PLATFORM_DIAGRAMS + "/dgr.notation";
-		
-		resourceId = DAOFactory.registryDAO.moveResource(slaveRepoId, resourceId, pathRelativeToRepo, masterRepoId, resourceId);
-		
-		Resource resource = DAOFactory.registryDAO.loadResource(masterRepoId, resourceId);
-		
-		printContents(resource, masterRepoId);
+//		String resourceId = getResourceId(repo, "dgr.notation");
+//		String pathRelativeToRepo = "myProj/myDir/mySubDir/" + RegistryDAO.FLOWER_PLATFORM_DIAGRAMS + "/dgr.notation";
+//		
+//		resourceId = DAOFactory.registryDAO.moveResource(slaveRepoId, resourceId, pathRelativeToRepo, masterRepoId, resourceId);
+//		
+//		Resource resource = DAOFactory.registryDAO.loadResource(masterRepoId, resourceId);
+//		
+//		printContents(resource, masterRepoId);
 	}
 	
 }

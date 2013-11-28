@@ -21,10 +21,10 @@ public class OpenDiscussableDesignDiagram {
 		String repoId = repo.getId();
 		
 		Repository discussableDesign = DAOFactory.registryDAO.getRepository(repoId);
-		String resourceId = getResourceId(discussableDesign, "dgr.notation");
-		Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
+//		String resourceId = getResourceId(discussableDesign, "dgr.notation");
+//		Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
 		
-		printContents(resource, repoId);
+//		printContents(resource, repoId);
 	}
 
 }

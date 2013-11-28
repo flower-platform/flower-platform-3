@@ -10,6 +10,8 @@ public interface NodeDAO {
 	String createNode(String repoId, String resourceId, String parentId);
 	Node1 getNode(String repoId, String resourceId, String id);
 	
+	void updateNode(String repoId, String resourceId, Node1 node);
+	
 	List<Node1> getChildren(Node1 node, String repoId, String resourceId);
 	
 	Node1 getParent(Node1 node, String repoId, String resourceId);

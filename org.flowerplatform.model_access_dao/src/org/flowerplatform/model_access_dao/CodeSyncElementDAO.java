@@ -10,6 +10,8 @@ public interface CodeSyncElementDAO {
 	String createCodeSyncElement(String repoId, String resourceId, String id, String parentId);
 	CodeSyncElement1 getCodeSyncElement(String repoId, String resourceId, String id);
 	
+	void updateCodeSyncElement(String repoId, String resourceId, CodeSyncElement1 element);
+	
 	/**
 	 * Merge with global resource, if this is a local resource.
 	 */

@@ -36,9 +36,10 @@ public class CreateGlobalModel {
 		String repoId = DAOFactory.registryDAO.createRepository(REPO, null);
 		Repository repo = DAOFactory.registryDAO.getRepository(repoId);
 		
-		assertEquals("Resources not created", 2, repo.getResources().size());
+//		assertEquals("Resources not created", 2, repo.getResources().size());
 		
-		String globalMappingId = getResourceId(repo, RegistryDAO.MAPPING_LOCATION); 
+//		String globalMappingId = getResourceId(repo, RegistryDAO.MAPPING_LOCATION); 
+		String globalMappingId = "mapping";
 		
 		// create CodeSyncElements
 		CodeSyncElement1 folder1 = createCSEAndAssertNotNull(repoId, globalMappingId, null, null);
@@ -53,31 +54,39 @@ public class CreateGlobalModel {
 		met1.setName(MET1);
 		met1Id = met1.getId();
 		
-		DAOFactory.registryDAO.saveResource(repoId, globalMappingId);
+		DAOFactory.codeSyncElementDAO.updateCodeSyncElement(repoId, globalMappingId, folder1);
+		DAOFactory.codeSyncElementDAO.updateCodeSyncElement(repoId, globalMappingId, class1);
+		DAOFactory.codeSyncElementDAO.updateCodeSyncElement(repoId, globalMappingId, met1);
 		
-		Resource resource = loadResource(REPO + "/" + RegistryDAO.GLOBAL_MAPPING_LOCATION);
-	
-		// assert resource info
-		assertResourceInfo(resource, repoId, globalMappingId);
+//		DAOFactory.registryDAO.saveResource(repoId, globalMappingId);
+//		
+//		Resource resource = loadResource(REPO + "/" + RegistryDAO.GLOBAL_MAPPING_LOCATION);
+//	
+//		// assert resource info
+//		assertResourceInfo(resource, repoId, globalMappingId);
+//		
+//		// assert resource contents
+//		folder1 = (CodeSyncElement1) resource.getContents().get(1);
+//		assertCSE(folder1, folder1Id, FOLDER1);
+//		class1 = folder1.getChildren().get(0);
+//		assertCSE(class1, class1Id, CLASS1);
+//		met1 = class1.getChildren().get(0);
+//		assertCSE(met1, met1Id, MET1);
 		
-		// assert resource contents
-		folder1 = (CodeSyncElement1) resource.getContents().get(1);
-		assertCSE(folder1, folder1Id, FOLDER1);
-		class1 = folder1.getChildren().get(0);
-		assertCSE(class1, class1Id, CLASS1);
-		met1 = class1.getChildren().get(0);
-		assertCSE(met1, met1Id, MET1);
-		
-		String globalAppWizardId = getResourceId(repo, RegistryDAO.APP_WIZARD_LOCATION);
+//		String globalAppWizardId = getResourceId(repo, RegistryDAO.APP_WIZARD_LOCATION);
+		String globalAppWizardId = "appWizard";
 		
 		// create entities
 		CodeSyncElement1 methods = createCSEAndAssertNotNull(repoId, globalAppWizardId, null, null);
 		methods.setName("methods");
 		methodsEntityId = methods.getId();
+		
+		DAOFactory.codeSyncElementDAO.updateCodeSyncElement(repoId, globalAppWizardId, methods);
+		
 		met1 = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, globalMappingId, met1Id);
 		DAOFactory.codeSyncElementDAO.addRelation(methods, met1, repoId, globalAppWizardId);
 		
-		DAOFactory.registryDAO.saveResource(repoId, globalAppWizardId);
+//		DAOFactory.registryDAO.saveResource(repoId, globalAppWizardId);
 	}
 	
 	private void clearDir(File dir) {

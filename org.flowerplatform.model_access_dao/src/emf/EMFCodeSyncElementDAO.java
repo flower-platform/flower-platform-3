@@ -215,5 +215,10 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 		}
 		return element;
 	}
+
+	@Override
+	public void updateCodeSyncElement(String repoId, String resourceId, CodeSyncElement1 element) {
+		// nothing to do
+	}
 	
 }

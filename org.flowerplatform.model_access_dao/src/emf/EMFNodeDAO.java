@@ -87,5 +87,10 @@ public class EMFNodeDAO implements NodeDAO {
 		setDiagrammableElement(node, null);
 		DAOFactory.codeSyncElementDAO.deleteCodeSyncElement(diagrammableElement);
 	}
+
+	@Override
+	public void updateNode(String repoId, String resourceId, Node1 node) {
+		// nothing to do
+	}
 	
 }
