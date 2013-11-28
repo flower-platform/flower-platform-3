@@ -23,7 +23,7 @@ package org.flowerplatform.editor.model.action {
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.ActionBase;
-	import org.flowerplatform.flexutil.search.SearchView;
+	import org.flowerplatform.flexutil.content_assist.SearchView;
 	
 	/**
 	 * @author Mariana Gheorghe

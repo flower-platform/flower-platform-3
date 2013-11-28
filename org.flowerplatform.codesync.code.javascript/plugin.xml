@@ -29,5 +29,11 @@
             technology="js">
       </codeSyncAlgorithmRunner>
    </extension>
+   <extension
+         point="org.flowerplatform.editor.model.contentAssist">
+      <contentAssist
+            contentAssist="org.flowerplatform.codesync.code.javascript.JavaScriptCodeSyncElementContentAssist">
+      </contentAssist>
+   </extension>
 
 </plugin>

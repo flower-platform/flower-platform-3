@@ -48,7 +48,7 @@ package org.flowerplatform.editor.model.content_assist {
 		}
 		
 		public function getResource(resource:String):Object {
-			return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getResourceUrl(resource));
+			return FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(EditorModelPlugin.getInstance().getComposedImageUrl(resource));
 		}
 	}
 }
