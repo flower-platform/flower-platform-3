@@ -39,7 +39,7 @@ package org.flowerplatform.codesync.regex.ide {
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String {
-			return "Regex Macros";
+			return "RE Macros";
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {

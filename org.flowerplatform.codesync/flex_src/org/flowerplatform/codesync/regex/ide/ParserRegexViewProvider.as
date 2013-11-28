@@ -40,7 +40,7 @@ package org.flowerplatform.codesync.regex.ide {
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String {
-			return "Regex Parsers";
+			return "RE Parsers";
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {

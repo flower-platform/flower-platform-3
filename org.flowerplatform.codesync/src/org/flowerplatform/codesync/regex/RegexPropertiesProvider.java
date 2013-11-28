@@ -56,13 +56,13 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 					(String) propertyValue);			
 			return true;
 		} else if (selectedItem.getItemType().equals("regex_macro")) {
-			if ("Name".equals(propertyName)) {
+			if (NAME.equals(propertyName)) {
 				RegexService.getInstance().changeMacroName(
 						context.getCommunicationChannel(), 
 						selectedItem.getConfig(), 
 						selectedItem.getRegex(), 
 						(String) propertyValue);	
-			} else if ("Regex".equals(propertyName)) {
+			} else if (REGEX.equals(propertyName)) {
 				RegexService.getInstance().changeMacroRegex(
 						context.getCommunicationChannel(), 
 						selectedItem.getConfig(), 
@@ -71,19 +71,19 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 			}
 			return true;
 		} else if (selectedItem.getItemType().equals("regex_parser")) {
-			if ("Name".equals(propertyName)) {
+			if (NAME.equals(propertyName)) {
 				RegexService.getInstance().changeParserName(
 						context.getCommunicationChannel(), 
 						selectedItem.getConfig(), 
 						(ParserRegex) selectedItem.getRegex(), 
 						(String) propertyValue);	
-			} else if ("RegEx Macros".equals(propertyName)) {
+			} else if (REGEX_MACROS.equals(propertyName)) {
 				RegexService.getInstance().changeParserRegex(
 						context.getCommunicationChannel(), 
 						selectedItem.getConfig(), 
 						(ParserRegex) selectedItem.getRegex(), 
 						(String) propertyValue);	
-			} else if ("Action".equals(propertyName)) {
+			} else if (ACTION.equals(propertyName)) {
 				RegexService.getInstance().changeParserAction(
 						context.getCommunicationChannel(), 
 						selectedItem.getConfig(), 
@@ -147,12 +147,12 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 				case START: {
 					return new Property()
 						.setName(START)
-						.setValue(match.getStart());
+						.setValue(match.getStart().toString());
 				}
 				case END: {
 					return new Property()
 						.setName(END)
-						.setValue(match.getEnd());
+						.setValue(match.getEnd().toString());
 				}			
 			}
 						
@@ -160,7 +160,7 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 				int index = Integer.parseInt(propertyName.substring(1));
 				return new Property()
 						.setName(propertyName)
-						.setValue(match.getSubMatches().get(index).getValue());				
+						.setValue(match.getSubMatches().get(index - 1).getValue());				
 			}
 		} else if (selectedItem.getItemType().equals("regex_config")) {
 			return new Property()
@@ -180,7 +180,8 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 				case REGEX: {
 					return new Property()
 						.setName(REGEX)
-						.setValue(regex.getRegex());
+						.setValue(regex.getRegex())
+						.setReadOnly(false);
 				}			
 			}				
 		} else if (selectedItem.getItemType().equals("regex_parser")) {			
@@ -208,7 +209,8 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 					return new Property()
 						.setName(ACTION)
 						.setValue(regex.getAction())
-						.setReadOnly(false);
+						.setReadOnly(false)
+						.setType("DropDownListWithRegexActions");
 				}
 			}			
 		}	
@@ -223,10 +225,12 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 
 	@Override
 	public Pair<String, String> getIconAndLabel(RegexSelectedItem selectedItem, Object resolvedSelectedItem) {
-		if (selectedItem.getItemType().equals("regex_config")) {
+		if (selectedItem.getItemType().equals("regex_match")) {
+			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/brick.png"), selectedItem.getMatch().getParserRegex().getName());
+		} else if (selectedItem.getItemType().equals("regex_config")) {
 			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/wrench.png"), selectedItem.getConfig());
 		} else if (selectedItem.getItemType().equals("regex_macro")) {
-			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/star.png"), selectedItem.getRegex().getName());
+			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/bullet_star.png"), selectedItem.getRegex().getName());
 		} else if (selectedItem.getItemType().equals("regex_parser")) {
 			return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl("images/regex/bricks.png"), selectedItem.getRegex().getName());
 		}

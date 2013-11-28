@@ -25,7 +25,7 @@ license-end
 		  xmlns:s="library://ns.adobe.com/flex/spark" 
 		  xmlns:mx="library://ns.adobe.com/flex/mx"
 		  implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.selection.ISelectionProvider, org.flowerplatform.flexutil.selection.ISelectionForServerProvider"
-		  creationComplete="creationCompleteHandler(event)" paddingTop="5" paddingBottom="5">
+		  creationComplete="creationCompleteHandler(event)" paddingTop="10" paddingBottom="5">
 				
 
 	<fx:Script>
@@ -135,13 +135,14 @@ license-end
 			
 			public function getMacrosRegexesCallbackHandler(result:ArrayCollection):void {
 				if (result != null) {
-					var oldSelectedItem:String = list.selectedItem;
-					
-					list.dataProvider = ArrayCollection(result);
-					
-					if (list.dataProvider.getItemIndex(oldSelectedItem) != -1) {
-						list.selectedItem = oldSelectedItem;
+					var oldSelectedIndex:int = list.selectedIndex;
+					var itemsAddedOrRemoved:Boolean = true;
+					if (list.dataProvider != null) {
+						itemsAddedOrRemoved = (list.dataProvider.length != result.length);
 					}
+					
+					list.dataProvider = result;
+					list.selectedIndex = itemsAddedOrRemoved ? -1 : oldSelectedIndex;					
 				}
 			}
 			

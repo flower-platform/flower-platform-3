@@ -7,9 +7,9 @@
 }
 
 .match {	
-	background-color: #99C7FF;
+	background-color: #CCCCFF;
 }
 
 .submatch {	
-	text-decoration:underline;
+	background-color: #99C7FF;
 }

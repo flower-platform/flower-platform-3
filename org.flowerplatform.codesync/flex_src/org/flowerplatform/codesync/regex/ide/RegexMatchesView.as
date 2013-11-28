@@ -111,7 +111,7 @@ package org.flowerplatform.codesync.regex.ide {
 			for (var i:int = 0; i < selectedItems.length; i++) {
 				array[i] = selectedItems[i];
 			}
-//			editorFrontend.colorText(array);
+			editorFrontend.colorText(array);
 			
 			event.stopImmediatePropagation();
 		}

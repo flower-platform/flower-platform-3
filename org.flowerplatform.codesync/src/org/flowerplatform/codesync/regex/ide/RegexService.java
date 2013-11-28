@@ -25,6 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +35,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.codesync.regex.ide.remote.RegexIndexDto;
 import org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto;
 import org.flowerplatform.codesync.regex.ide.remote.RegexSubMatchDto;
@@ -152,7 +158,7 @@ public class RegexService {
 				channel.appendOrSendCommand(
 						new DisplaySimpleMessageClientCommand(
 								CommonPlugin.getInstance().getMessage("error"), 
-								CodeSyncPlugin.getInstance().getMessage("regex.macro.exists", config), 
+								CodeSyncPlugin.getInstance().getMessage("regex.macro.exists", newName), 
 								DisplaySimpleMessageClientCommand.ICON_ERROR));
 				return;
 			}
@@ -265,6 +271,15 @@ public class RegexService {
 		return (Root) resource.getContents().get(0);	
 	}
 
+	private MacroRegex nextMacro(ParserRegex parser, EList<MacroRegex> macros) {
+		for (MacroRegex macro : macros) {
+			if (parser.getFullRegex().contains(macro.getName())) {				
+				return macro;
+			}								
+		}
+		return null;
+	}
+	
 	private Map<Object, Object> getSaveOptions() {
 		Map<Object, Object> options = new HashMap<Object, Object>();
 		options.put(XMLResource.OPTION_ENCODING, "UTF-8");
@@ -364,6 +379,7 @@ public class RegexService {
 			URI resourceURI = EditorModelPlugin.getInstance().getModelAccessController().getURIFromFile(configFile);
 			ResourceSet resourceSet = new ResourceSetImpl();
 			Resource resource = resourceSet.createResource(resourceURI);
+						
 			resource.getContents().clear();
 			resource.getContents().add(RegexFactory.eINSTANCE.createRoot());
 						
@@ -416,7 +432,7 @@ public class RegexService {
 		macro.setRegex(regex);
 		
 		Root root = getRoot(config);
-				
+			
 		for (MacroRegex macroRegex : root.getMacroRegex()) {
 			if (macroRegex.getName().equals(name)) {
 				context.getCommunicationChannel().appendOrSendCommand(
@@ -460,10 +476,28 @@ public class RegexService {
 	@RemoteInvocation
 	public List<ParserRegex> getParserRegexes(ServiceInvocationContext context, String config) {
 		Root root = getRoot(config);
-					
+		
+		ECollections.sort(root.getMacroRegex(), new Comparator<MacroRegex>() {
+
+			@Override
+			public int compare(MacroRegex o1, MacroRegex o2) {				
+				return o1.getName().compareTo(o2.getName());
+			}			
+		});		
+		
+		for (ParserRegex parser : root.getParserRegex()) {	
+			parser.setFullRegex(parser.getRegex());
+			MacroRegex macro = null;
+			do {
+				if (macro != null) {
+					parser.setFullRegex(parser.getFullRegex().replaceAll(macro.getName(), macro.getRegex()));
+				}
+				macro = nextMacro(parser, root.getMacroRegex());
+			} while (macro != null);	
+		}
 		return root.getParserRegex();
 	}
-	
+		
 	@RemoteInvocation
 	public void addParserRegex(ServiceInvocationContext context, String config, String name, String regex, String action) {
 		ParserRegex parser = RegexFactory.eINSTANCE.createParserRegex();

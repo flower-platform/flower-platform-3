@@ -63,7 +63,7 @@ package org.flowerplatform.codesync.regex.ide {
 		}
 		
 		private function getIcon(item:Object):Object {
-			return CodeSyncPlugin.getInstance().getResourceUrl("images/regex/bullet_wrench.png");
+			return CodeSyncPlugin.getInstance().getResourceUrl("images/regex/wrench.png");
 		}
 		
 		public function getActions(selection:IList):Vector.<IAction> {			

@@ -74,9 +74,12 @@
 			private function selectionChangedHandler(event:SelectionChangedEvent):void {
 				// I did this, because the selection system, sends an empty selection when the diagram is opened
 				// so in case the event.selectionForServer is an empty array we stop the logic.
-				if (event.selectionForServer == null || event.selectionForServer.length == 0) 
+				if (event.selectionForServer == null || event.selectionForServer.length == 0) {
+					icon.source = null;
+					label.text = null;
+					IList(propertyList.dataProvider).removeAll();
 					return;
-				
+				}
 				CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
 					"propertiesService", "getProperties", 
 					[event.selectionForServer], 

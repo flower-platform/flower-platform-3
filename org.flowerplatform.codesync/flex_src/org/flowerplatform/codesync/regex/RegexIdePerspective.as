@@ -58,15 +58,19 @@ package org.flowerplatform.codesync.regex {
 			wld.ratios = new ArrayCollection([70, 30]);
 			wld.mrmRatios = new ArrayCollection([0, 0]);
 										
-			var sash:SashLayoutData = addSash(wld, SashLayoutData.VERTICAL,	[70, 30], [0, 0]);
+			var sash:SashLayoutData = addSash(wld, SashLayoutData.VERTICAL,	[60, 40], [0, 0]);
 			var sashEditor:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [100], [0], true);
 									
-			var bottomSash:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [60, 40], [0, 0]);
+			var bottomSash:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [70, 30], [0, 0]);
 			addViewsInSash([PropertiesViewProvider.ID], bottomSash);			
-			addViewsInSash([RegexConfigsViewProvider.ID, MacrosRegexViewProvider.ID], bottomSash);
+			addViewsInSash([RegexConfigsViewProvider.ID], bottomSash);
 			
 			var rightSash:SashLayoutData = addSash(wld, SashLayoutData.VERTICAL, [50, 50], [0, 0]);
-			addViewsInSash([ParserRegexViewProvider.ID], rightSash);
+			
+			var rightUpSash:SashLayoutData = addSash(rightSash, SashLayoutData.HORIZONTAL, [50, 50], [0, 0]);			
+			addViewsInSash([ParserRegexViewProvider.ID], rightUpSash);
+			addViewsInSash([MacrosRegexViewProvider.ID], rightUpSash);
+			
 			addViewsInSash([RegexMatchesViewProvider.ID], rightSash);
 								
 			load(workbench, wld, sashEditor);

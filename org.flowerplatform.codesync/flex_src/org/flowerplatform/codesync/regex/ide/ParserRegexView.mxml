@@ -25,7 +25,7 @@ license-end
 			   xmlns:s="library://ns.adobe.com/flex/spark" 
 			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:tree="org.flowerplatform.flexutil.tree.*"
 			   implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.selection.ISelectionProvider, org.flowerplatform.flexutil.selection.ISelectionForServerProvider"
-			   paddingTop="5" paddingBottom="5"
+			   paddingTop="10" paddingBottom="5"
 			   initialize="initializeHandler(event)" >
 				
 
@@ -144,7 +144,9 @@ license-end
 				event.newSelectedMatches = array;
 				FlexGlobals.topLevelApplication.dispatchEvent(event);
 				
-				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(_viewHost, this);				
+				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(_viewHost, this);
+				
+				e.stopImmediatePropagation();
 			}
 			
 			private function regexMatchesSelectedChangedHandler(event:RegexDataEvent):void {		
@@ -232,9 +234,11 @@ license-end
 						this, getParserRegexesCallbackHandler));
 			}
 			
-			public function getParserRegexesCallbackHandler(result:ArrayCollection):void {				
-				ParserRegex(tree.rootNode).matches = result;
-				tree.refreshLinearizedDataProvider();
+			public function getParserRegexesCallbackHandler(result:ArrayCollection):void {		
+				if (result != null) {				
+					ParserRegex(tree.rootNode).matches = result;					
+					tree.refreshLinearizedDataProvider();				
+				}
 			}
 		]]>
 	</fx:Script>

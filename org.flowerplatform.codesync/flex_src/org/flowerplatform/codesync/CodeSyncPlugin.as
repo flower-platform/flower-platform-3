@@ -52,9 +52,12 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.emf_model.regex.MacroRegex;
 	import org.flowerplatform.emf_model.regex.ParserRegex;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
+	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
+	import org.flowerplatform.properties.PropertiesPlugin;
+	import org.flowerplatform.properties.property_renderer.DropDownListPropertyRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -100,6 +103,14 @@ package org.flowerplatform.codesync {
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new LoadedDescriptorsViewProvider());
+			
+			// register PropertiesPlugin Renderer
+			PropertiesPlugin.getInstance().propertyRendererClasses["DropDownListWithRegexActions"] = new FactoryWithInitialization
+				(DropDownListPropertyRenderer, {
+					requestDataProviderHandler: function(callbackObject:Object, callbackFunction:Function):void {
+						callbackFunction.call(callbackObject, new ArrayCollection([1,2,3,4,5]));						
+					}
+				});
 		}
 		
 		override public function start():void {
