@@ -34,11 +34,14 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.flowerplatform.codesync.config.extension.AddNewExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorParseException;
+import org.flowerplatform.codesync.processor.RelationsChangesDiagramProcessor;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
+import org.flowerplatform.editor.model.EditorModelPlugin;
+import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.emf_model.notation.CategorySeparator;
@@ -306,17 +309,6 @@ public class CodeSyncDiagramOperationsService {
 		relation.setSource(source);
 		relation.setTarget(target);
 		source.getRelations().add(relation);
-		
-		EObject currentObject = sourceView;
-		Diagram diagram = null;
-		while (currentObject != null) {
-			if (currentObject instanceof Diagram) {
-				diagram = (Diagram) currentObject;
-				break;
-			}
-			currentObject = currentObject.eContainer();
-		}
-		createEdge(relation, sourceView, targetView, diagram);
 	}
 	
 	public void displayMissingRelations(ServiceInvocationContext context, String viewId, boolean addMissingElements) {
@@ -325,18 +317,20 @@ public class CodeSyncDiagramOperationsService {
 		
 		// add edges for relations where this element is the source
 		for (View view : views) {
-			addEdgesForOutgoingRelations(cse, cse.getRelations(), view, addMissingElements, context.getAdditionalData());
+			addEdgesForOutgoingRelations(cse, view, addMissingElements, context.getAdditionalData());
 		}
 		
 		// add edges for relations where this element is the target
-		addEdgesForIncomingRelations(cse, views, addMissingElements, context.getAdditionalData());
+		addEdgesForIncomingRelations(cse, addMissingElements, context.getAdditionalData());
 	}
 	
 	/**
-	 * Adds new {@link Edge}s for each {@link Relation}.
+	 * Adds new {@link Edge}s for each {@link Relation} that starts from {@code object}, 
+	 * from the {@code associatedViewOnOpenDiagram} to all the views corresponding to the relation's target.
 	 */
-	public void addEdgesForOutgoingRelations(EObject object, List<Relation> relations, View associatedViewOnOpenDiagram, boolean addMissingElements, Map<String, Object> context) {
+	public void addEdgesForOutgoingRelations(EObject object, View associatedViewOnOpenDiagram, boolean addMissingElements, Map<String, Object> context) {
 		Diagram diagram = getDiagram(context);
+		List<Relation> relations = ((CodeSyncElement) object).getRelations();
 		for (Relation relation : relations) {
 			List<View> views = getViewsForElement(relation.getTarget());
 			// if there are no views for the target and addMissingElements is true
@@ -352,7 +346,11 @@ public class CodeSyncDiagramOperationsService {
 		}
 	}
 	
-	public void addEdgesForIncomingRelations(EObject object, List<View> targetViews, boolean addMissingElements, Map<String, Object> context) {
+	/**
+	 * Adds new {@link Edge}s for each {@link Relation} that ends in {@code object},
+	 * from all the views corresponding to the relation's source to to all the views corresponding to the relation's target.
+	 */
+	public void addEdgesForIncomingRelations(EObject object, boolean addMissingElements, Map<String, Object> context) {
 		CodeSyncElement cse = (CodeSyncElement) object;
 		Diagram diagram = getDiagram(context);
 		for (EObject eObject : getInverseReferencesForElement(cse, CodeSyncPackage.eINSTANCE.getRelation_Target())) {
@@ -362,7 +360,7 @@ public class CodeSyncDiagramOperationsService {
 				addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, relation.getSource(), null);
 			} else {
 				for (View sourceView : sourceViews) {
-					for (View targetView : targetViews) {
+					for (View targetView : getViewsForElement(cse)) {
 						if (getEdge(sourceView, targetView) == null) {
 							createEdge(relation, sourceView, targetView, diagram);
 						}
@@ -399,14 +397,13 @@ public class CodeSyncDiagramOperationsService {
 	 * Some views (e.g. class title) cannot have edges even though their diagrammable element can have relations.
 	 */
 	protected boolean acceptsEdges(View view) {
-//		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance()
-//				.getDiagramUpdaterChangeProcessor()
-//				.getDiagrammableElementFeatureChangesProcessors(view.getViewType());
-//		for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-//			if (processor instanceof CodeSyncElementRelationsChangesProcessor) {
-//				return true;
-//			}
-//		}
+		List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor()
+				.getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+		for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+			if (processor instanceof RelationsChangesDiagramProcessor) {
+				return true;
+			}
+		}
 		return false;
 	}
 	

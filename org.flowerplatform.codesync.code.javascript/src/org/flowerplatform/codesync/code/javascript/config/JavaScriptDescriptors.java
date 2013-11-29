@@ -17,6 +17,7 @@ import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_RegEx
 import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.codesync.processor.CodeSyncCategorySeparatorProcessor;
+import org.flowerplatform.codesync.processor.RelationsChangesDiagramProcessor;
 import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -417,7 +418,7 @@ public class JavaScriptDescriptors implements Runnable {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form", parentElementProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);
 		
 		TopLevelElementChildProcessor childElementProcessor = new TopLevelElementChildProcessor();
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("topLevelBoxTitle", childElementProcessor);
@@ -438,6 +439,23 @@ public class JavaScriptDescriptors implements Runnable {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", childElementProcessor);
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("categorySeparator", new CodeSyncCategorySeparatorProcessor());
+		
+		RelationsChangesDiagramProcessor relationsChangesProcessor = new RelationsChangesDiagramProcessor();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", relationsChangesProcessor);
 		
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_CLASS_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!", true, null));
