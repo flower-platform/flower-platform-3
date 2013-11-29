@@ -169,6 +169,23 @@ public class CodeSyncDiagramOperationsService {
 		return result;
 	}
 	
+	/**
+	 * Only removes the view from the diagram, does not delete the model element.
+	 */
+	@RemoteInvocation
+	public void removeView(ServiceInvocationContext context, String viewId) {
+		View view = getViewById(context.getAdditionalData(), viewId);
+		// doing this because the idBeforeRemoval is not set during binary deserialization
+		view.setIdBeforeRemoval(view.eResource().getURIFragment(view));
+		if (view instanceof Edge) {
+			Diagram diagram = getDiagram(context.getAdditionalData());
+			diagram.getPersistentEdges().remove(view);
+		} else {
+			View parentView = (View) view.eContainer();
+			parentView.getPersistentChildren().remove(view);
+		}
+	}
+	
 	@RemoteInvocation
 	public void collapseCompartment(ServiceInvocationContext context, String viewId) {
 		View view = getViewById(context.getAdditionalData(), viewId);

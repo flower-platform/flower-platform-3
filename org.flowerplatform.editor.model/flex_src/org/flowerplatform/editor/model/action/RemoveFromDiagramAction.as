@@ -48,7 +48,7 @@ package org.flowerplatform.editor.model.action {
 		
 		override public function run():void {
 			var node:View = View(selection.getItemAt(0));
-			notationDiagramEditorStatefulClient.service_deleteView(node.id);
+			notationDiagramEditorStatefulClient.service_removeView(node.id);
 		}
 	}
 }
