@@ -29,8 +29,6 @@ public class ViewInfoDto {
 	
 	private Object selectedObject;
 	
-	private boolean isResource;
-	
 	private String statefulClientId;
 
 	public String getRepositoryLocation() {
@@ -55,14 +53,6 @@ public class ViewInfoDto {
 
 	public void setSelectedObject(Object selectedObject) {
 		this.selectedObject = selectedObject;
-	}
-
-	public boolean getIsResource() {
-		return isResource;
-	}
-	
-	public void setIsResource(boolean isResource) {
-		this.isResource = isResource;
 	}
 
 	public String getStatefulClientId() {

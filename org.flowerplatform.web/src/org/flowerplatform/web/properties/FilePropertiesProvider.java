@@ -39,6 +39,10 @@ import org.flowerplatform.web.properties.remote.FileSelectedItem;
  */
 public class FilePropertiesProvider implements IPropertiesProvider {
 
+	/**
+	 * @author Razvan Tache
+	 * @author Cristina Constantinescu
+	 */
 	private File getFile(List<PathFragment> pathWithRoot) {
 		
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
@@ -50,11 +54,18 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 			String path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
 			return new File(path);
 		} else if (object instanceof File) {
-			return (File)object;
-		} else {
+			return (File) object;
+		} else if (object instanceof Pair && ((Pair<Object, Object>) object).a instanceof File) {			
 			return ((Pair<File, Object>) object).a;
+		} else { // e.g. GIT nodes
+			return null;
 		}
 	}
+	
+	/**
+	 * @author Razvan Tache
+	 * @author Cristina Constantinescu
+	 */
 	@Override
 	public List<Property> getProperties(SelectedItem selectedItem) {
 		// proccessing step;
@@ -63,6 +74,11 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		File file = getFile(pathWithRoot);
 		
 		List<Property> properties = new ArrayList<Property>();	
+		
+		if (file == null) { // not a file
+			return properties;
+		}
+		
 		// TODO decide what properties are needed
 		properties.add(new Property("Name", file.getName(), false));
 		properties.add(new Property("Location", file.getAbsolutePath()));

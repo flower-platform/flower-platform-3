@@ -22,14 +22,13 @@
 @author Cristina Constantinescu
 -->
 <layout:GitAbstractView xmlns:mx="http://www.adobe.com/2006/mxml" 				 
-					 xmlns:s="library://ns.adobe.com/flex/spark" 					 
-					 creationComplete="creationComplete()"
+					 xmlns:s="library://ns.adobe.com/flex/spark" 					
 					 initialize="initHandler(event)"
 					 xmlns:git="org.flowerplatform.web.git.*" 
 					 xmlns:layout="org.flowerplatform.web.git.layout.*" 
 					 xmlns:util="com.crispico.flower.util.*" 
 					 xmlns:common="com.crispico.flower.flexdiagram.util.common.*" 
-					 xmlns:history="org.flowerplatform.web.git.history.*">
+					 xmlns:history="org.flowerplatform.web.git.history.*" xmlns:buttonbar="com.crispico.flower.util.buttonbar.*">
 	
 	<mx:Script>
 		<![CDATA[
@@ -50,16 +49,12 @@
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.flexutil.Utils;
 			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
+			import org.flowerplatform.web.git.GitPlugin;
 			import org.flowerplatform.web.git.history.remote.GitHistoryStatefulClient;
 			import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
 			import org.flowerplatform.web.git.history.remote.dto.HistoryViewInfoDto;
 			import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
-			
-			/**
-			 * Not null when the view is open; null otherwise.
-			 */
-			public static var INSTANCE:GitHistoryView;
-			
+						
 			/**
 			 * Stores info regarding this view as:
 			 * selected object, view selected options etc.
@@ -83,21 +78,13 @@
 				addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);				
 			}
 			
-			private function creationComplete():void {		
-				INSTANCE = this;
-				//historyEntriesTable.registerMenu();			
-			}
 			
 			private function viewAddedHandler(event:ViewAddedEvent):void {				
 				statefulClient = new GitHistoryStatefulClient(this);
-				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, this);	
-				//refresh();
+				CommunicationPlugin.getInstance().statefulClientRegistry.register(statefulClient, this);				
 			}
 			
-			private function viewRemovedHandler(event:ViewRemovedEvent):void {				
-				//historyEntriesTable.unregisterMenu();
-				INSTANCE = null;
-				
+			private function viewRemovedHandler(event:ViewRemovedEvent):void {								
 				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(statefulClient, this);
 				
 				removeEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
@@ -310,7 +297,7 @@
 				
 				if (includeInfo) {
 					info = new HistoryViewInfoDto();
-					//info.filter = ArrayCollection(bbFilter.dataProvider).getItemAt(bbFilter.selectedIndex).type;
+					info.filter = ArrayCollection(bbFilter.dataProvider).getItemAt(bbFilter.selectedIndex).type;
 				}
 				commitMessage.text = "";
 				fileDiffs.dataProvider = null;
@@ -342,12 +329,12 @@
 		</util:ButtonWithIconComponent>
 		
 		<mx:Spacer width="1%" />
-		<!--buttonbar:CustomToggleButtonBar id="bbFilter" toolTipField="toolTip" showLabel="false" selectedIndex="3" itemClick="filterChangedClickHandler(event)" 
+		<buttonbar:CustomToggleButtonBar id="bbFilter" toolTipField="toolTip" showLabel="false" selectedIndex="3" itemClick="filterChangedClickHandler(event)" 
 		dataProvider="{[ 
-		{ type: HistoryViewInfoDto.SHOWALLREPO, label: 'R', toolTip: getMessage('git.history.filterrepo.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_repo') },
-		{ type: HistoryViewInfoDto.SHOWALLPROJECT, label: 'P', toolTip: getMessage('git.history.filterproject.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_filter_project') },
-		{ type: HistoryViewInfoDto.SHOWALLFOLDER, label: 'F', toolTip: getMessage('git.history.filterfolder.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_filter_folder') },
-		{ type: HistoryViewInfoDto.SHOWALLRESOURCE, label: 'Re', toolTip: getMessage('git.history.filterresource.tooltip'), iconURL: SWTImageUtil.INSTANCE.getImageURLFromAlias('git_filter_resource') } ]}"/-->
+		{ type: HistoryViewInfoDto.SHOWALLREPO, label: 'R', toolTip: getMessage('git.history.filterrepo.tooltip'), iconURL: GitPlugin.getInstance().getResourceUrl('images/full/obj16/repository_rep.gif') },
+		{ type: HistoryViewInfoDto.SHOWALLPROJECT, label: 'P', toolTip: getMessage('git.history.filterproject.tooltip'), iconURL: GitPlugin.getInstance().getResourceUrl('images/elcl16/filterproject.gif') },
+		{ type: HistoryViewInfoDto.SHOWALLFOLDER, label: 'F', toolTip: getMessage('git.history.filterfolder.tooltip'), iconURL: GitPlugin.getInstance().getResourceUrl('images/elcl16/filterfolder.gif') },
+		{ type: HistoryViewInfoDto.SHOWALLRESOURCE, label: 'Re', toolTip: getMessage('git.history.filterresource.tooltip'), iconURL: GitPlugin.getInstance().getResourceUrl('images/elcl16/filterresource.gif') } ]}"/>
 		
 		<mx:Spacer width="1%" />
 		<util:ButtonWithIconComponent id="btnShowCommitMessage" selected="true" width="22" height="22" toggle="true" toolTip="Show Commit Message"
@@ -377,8 +364,7 @@
 	
 	<mx:VDividedBox id="dataArea" verticalGap="3" width="100%" height="100%" >	
 		
-		<history:HistoryDataGrid id="historyEntriesTable" width="100%" height="50%"
-								 historyView="{this}"
+		<history:HistoryDataGrid id="historyEntriesTable" width="100%" height="50%"								
 								 change="historyEntriesTable_changeHandler(event)" valueCommit="historyEntriesTable_changeHandler(event)" />
 		
 		<mx:HDividedBox id="detailArea" width="100%" height="50%" horizontalGap="3" >	

@@ -60,7 +60,7 @@ package org.flowerplatform.flexutil.action {
 			for (i = 0; i < actionsForCurrentParentActionId.length; i++) {
 				array[i] = actionsForCurrentParentActionId[i];
 			}			
-			array.sortOn("orderIndex");
+			array.sortOn("orderIndex", Array.NUMERIC);
 			actionsForCurrentParentActionId = new Vector.<IAction>();
 			for (i = 0; i < array.length; i++) {
 				actionsForCurrentParentActionId.push(array[i]);
