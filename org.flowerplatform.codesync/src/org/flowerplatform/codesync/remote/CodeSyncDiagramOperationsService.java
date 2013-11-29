@@ -352,12 +352,12 @@ public class CodeSyncDiagramOperationsService {
 			List<View> views = getViewsForElement(relation.getTarget());
 			// if there are no views for the target and addMissingElements is true
 			if (addMissingElements && views.size() == 0) {
-				addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, relation.getTarget(), null);
-			} else {
-				for (View target : views) {
-					if (getEdge(associatedViewOnOpenDiagram, target) == null) {
-						createEdge(relation, associatedViewOnOpenDiagram, target, diagram);
-					}
+				String viewId = addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, relation.getTarget(), null);
+				views.add(getViewById(context, viewId));
+			}
+			for (View target : views) {
+				if (getEdge(associatedViewOnOpenDiagram, target) == null) {
+					createEdge(relation, associatedViewOnOpenDiagram, target, diagram);
 				}
 			}
 		}
@@ -374,13 +374,13 @@ public class CodeSyncDiagramOperationsService {
 			Relation relation = (Relation) eObject;
 			List<View> sourceViews = getViewsForElement(relation.getSource());
 			if (addMissingElements && sourceViews.size() == 0) {
-				addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, relation.getSource(), null);
-			} else {
-				for (View sourceView : sourceViews) {
-					for (View targetView : getViewsForElement(cse)) {
-						if (getEdge(sourceView, targetView) == null) {
-							createEdge(relation, sourceView, targetView, diagram);
-						}
+				String viewId = addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, relation.getSource(), null);
+				sourceViews.add(getViewById(context, viewId));
+			}
+			for (View sourceView : sourceViews) {
+				for (View targetView : getViewsForElement(cse)) {
+					if (getEdge(sourceView, targetView) == null) {
+						createEdge(relation, sourceView, targetView, diagram);
 					}
 				}
 			}

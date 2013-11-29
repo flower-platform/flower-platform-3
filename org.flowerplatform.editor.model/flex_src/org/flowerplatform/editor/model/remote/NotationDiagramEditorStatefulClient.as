@@ -102,7 +102,10 @@ package org.flowerplatform.editor.model.remote {
 		}
 		
 		public function service_displayMissingRelations(viewId:Object, addMissingElements:Boolean):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "displayMissingRelations", [viewId, addMissingElements]));
+			attemptUpdateContent(null,  new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId,
+				"displayMissingRelations",
+				[viewId, addMissingElements]));
 		}
 		
 		public function service_contentAssist(viewId:Object, pattern:String, callbackFunction:Function):void {
