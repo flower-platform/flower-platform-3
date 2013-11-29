@@ -19,14 +19,11 @@
 package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
-	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class DeleteScenarioElementAction extends ActionBase {
+	public class DeleteScenarioElementAction extends DiagramShellAwareActionBase {
 		
 		public function DeleteScenarioElementAction() {
 			super();
@@ -47,7 +44,7 @@ package org.flowerplatform.editor.model.action {
 		
 		override public function run():void {
 			var node:TreeNode = TreeNode(selection.getItemAt(0));
-			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_deleteScenarioElement(node.getPathForNode());
+			notationDiagramEditorStatefulClient.service_deleteScenarioElement(node.getPathForNode());
 		}
 		
 	}

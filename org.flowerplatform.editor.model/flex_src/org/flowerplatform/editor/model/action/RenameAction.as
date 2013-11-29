@@ -18,20 +18,9 @@
  */
 package org.flowerplatform.editor.model.action {
 	
-	import flash.events.MouseEvent;
-	
-	import mx.core.IVisualElement;
-	import mx.core.IVisualElementContainer;
-	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
-	import org.flowerplatform.editor.model.content_assist.NotationDiagramContentAssistProvider;
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Node;
-	import org.flowerplatform.flexutil.content_assist.ContentAssistList;
 	import org.flowerplatform.flexutil.popup.IMessageBox;
-	
-	import spark.components.Button;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -40,9 +29,10 @@ package org.flowerplatform.editor.model.action {
 		public function RenameAction() {
 			super();
 			
-			label = "Rename";
+			label = EditorModelPlugin.getInstance().getMessage("action.rename");
 			icon = EditorModelPlugin.getInstance().getResourceUrl("images/rename.png");
 			preferShowOnActionBar = true;
+			orderIndex = 900;
 		}
 		
 		override public function get visible():Boolean {
@@ -57,12 +47,12 @@ package org.flowerplatform.editor.model.action {
 		override public function run():void {
 			var node:Node = Node(selection.getItemAt(0));
 			
-			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_getInplaceEditorText(node.id,
+			notationDiagramEditorStatefulClient.service_getInplaceEditorText(node.id,
 				function(labelForEditing:String):void {
 					
 					var messageBox:IMessageBox = askForTextInput(labelForEditing, "Rename", "Rename",
 						function(name:String):void {
-							NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_setInplaceEditorText(node.id, name);
+							notationDiagramEditorStatefulClient.service_setInplaceEditorText(node.id, name);
 						});
 				});
 		}

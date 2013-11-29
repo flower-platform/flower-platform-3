@@ -18,23 +18,22 @@
  */
 package org.flowerplatform.editor.model.action {
 	
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.View;
-	import org.flowerplatform.flexutil.action.ActionBase;
 
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class DeleteAction extends ActionBase {
+	public class RemoveFromDiagramAction extends DiagramShellAwareActionBase {
 		
-		public function DeleteAction() {
+		public function RemoveFromDiagramAction() {
 			super();
 			
-			label = "Delete";
-//			icon = WebCommonPlugin.getInstance().getResourceUrl("images/common/cancel_delete.png");
+			label = EditorModelPlugin.getInstance().getMessage("action.removeFromDiagram");
+			icon = EditorModelPlugin.getInstance().getResourceUrl("images/action/eraser.png");
 			preferShowOnActionBar = true;
+			orderIndex = 950;
 		}
 		
 		override public function get visible():Boolean {
@@ -49,7 +48,7 @@ package org.flowerplatform.editor.model.action {
 		
 		override public function run():void {
 			var node:View = View(selection.getItemAt(0));
-			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_deleteView(node.id);
+			notationDiagramEditorStatefulClient.service_deleteView(node.id);
 		}
 	}
 }

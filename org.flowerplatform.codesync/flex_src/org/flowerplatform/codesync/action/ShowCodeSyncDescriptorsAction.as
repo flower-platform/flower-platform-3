@@ -35,6 +35,8 @@ package org.flowerplatform.codesync.action {
 			super();
 			
 			preferShowOnActionBar = true;
+			orderIndex = 1000;
+			
 			label = CodeSyncPlugin.getInstance().getMessage("loadDesc.action.title");
 			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/Folder.gif");
 		}
