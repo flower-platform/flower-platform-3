@@ -20,7 +20,6 @@ package org.flowerplatform.web.git.history.remote.dto;
 
 import java.io.File;
 
-import org.eclipse.core.resources.IResource;
 import org.eclipse.jgit.lib.Repository;
 import org.flowerplatform.web.git.remote.dto.ViewInfoDto;
 
@@ -37,7 +36,6 @@ public class HistoryViewInfoDto extends ViewInfoDto {
 	
 	public static final int SHOWALLREPO = 3;
 	
-	private IResource resource;
 	private File file;
 	private Repository repository;
 		
@@ -47,22 +45,12 @@ public class HistoryViewInfoDto extends ViewInfoDto {
 	
 	private int filter;
 	
-	public HistoryViewInfoDto() {
+	public HistoryViewInfoDto() {		
+	}
 		
-	}
-	
-	public HistoryViewInfoDto(IResource resource, Repository repository) {		
-		this.resource = resource;
-		this.repository = repository;
-	}
-	
 	public HistoryViewInfoDto(File file, Repository repository) {		
 		this.file = file;
 		this.repository = repository;
-	}
-
-	public IResource getResource() {
-		return resource;
 	}
 
 	public File getFile() {
@@ -89,16 +77,9 @@ public class HistoryViewInfoDto extends ViewInfoDto {
 		this.filter = filter;
 	}
 
-	public void setResource1(IResource resource) {
-		this.resource = resource;
-	}
-
-	public void setFile1(File file) {
-		this.file = file;
-	}
-
-	public void setRepository1(Repository repository) {
+	public void setRepositoryAndFile(Repository repository, File file) {
 		this.repository = repository;
+		this.file = file;
 	}
 
 	public String getPath() {

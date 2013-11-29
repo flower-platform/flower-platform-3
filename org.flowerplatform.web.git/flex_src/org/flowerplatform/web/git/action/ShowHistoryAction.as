@@ -24,8 +24,8 @@ package org.flowerplatform.web.git.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.flexutil.action.ActionBase;
+	import org.flowerplatform.flexutil.layout.IWorkbench;
 	import org.flowerplatform.web.WebPlugin;
 	import org.flowerplatform.web.git.GitNodeType;
 	import org.flowerplatform.web.git.GitPlugin;
@@ -47,8 +47,10 @@ package org.flowerplatform.web.git.action {
 		override public function get visible():Boolean {
 			if (selection.length == 1 && selection.getItemAt(0) is TreeNode) {			
 				var node:TreeNode = TreeNode(selection.getItemAt(0));
+				// visible on local/remote bransh and git file type
 				return node.pathFragment.type == GitCommonPlugin.NODE_TYPE_LOCAL_BRANCH ||
-					node.pathFragment.type == GitCommonPlugin.NODE_TYPE_REMOTE_BRANCH;
+					node.pathFragment.type == GitCommonPlugin.NODE_TYPE_REMOTE_BRANCH ||
+					(node.customData != null && Boolean(node.customData[GitCommonPlugin.TREE_NODE_GIT_FILE_TYPE]));
 			}
 			return false;
 		}
