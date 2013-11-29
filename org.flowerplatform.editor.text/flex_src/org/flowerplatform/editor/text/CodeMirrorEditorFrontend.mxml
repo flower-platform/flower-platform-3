@@ -32,15 +32,21 @@ license-end
 	
 	<mx:Script>	
 		<![CDATA[
+			import com.crispico.flower.texteditor.TextChangedEventBuffer;
+			import com.crispico.flower.texteditor.events.BufferedTextChangesEvent;
+			import com.crispico.flower.texteditor.events.TextChangedEvent;
+			
 			import mx.collections.ArrayCollection;
 			import mx.core.UIComponent;
 			import mx.events.FlexEvent;
+			import mx.utils.UIDUtil;
 			
 			import org.flowerplatform.communication.CommunicationPlugin;
 			import org.flowerplatform.editor.remote.EditorStatefulClient;
 			import org.flowerplatform.editor.text.codemirror_editor.ICodeMirrorEditor;
 			import org.flowerplatform.editor.text.codemirror_editor.MobileCodeMirrorEditor;
 			import org.flowerplatform.editor.text.codemirror_editor.WebCodeMirrorEditor;
+			import org.flowerplatform.editor.text.remote.CodeMirrorEditorStatefulClient;
 			import org.flowerplatform.editor.text.remote.TextEditorUpdate;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			
@@ -48,7 +54,50 @@ license-end
 			private var readOnly:Boolean;	
 			private var creationComplete:Boolean;
 			
+			/**
+			 * Stores a codeMirror editor frontend id.
+			 * Used in flex - javascript communication to identify the right editor
+			 * when executing a function on flex side.
+			 * @see textEditorChangedHandler
+			 */ 
+			public var frontendId:String = UIDUtil.createUID();
+			
 			private static const EDITOR_PAGE:String = "codemirror/codeMirrorEditor.html";
+			
+			private static const CLIENT_KEYSTROKE_AGGREGATION_INTERVAL:String = "codemirror.client.keystroke.aggregation.interval";
+			
+			private static var _keystrokeAggregationInterval:int = 3000;			
+			
+			public var keystrokeBuffer:TextChangedEventBuffer;
+					
+			public function setKeystrokeAggregationInterval(interval:int = 0):void {
+				if (keystrokeBuffer)
+					keystrokeBuffer.setInterval(interval);
+				else
+					keystrokeBuffer = new TextChangedEventBuffer(this, interval);
+			}			
+			
+			/**
+			 * Changes the dirty state for the keystroke aggregation buffer.
+			 */ 
+			public function updateDirtyState(dirtyState:Boolean):void {
+				setKeystrokeAggregationBufferDirtyState(dirtyState);
+			}
+			
+			/**
+			 * Triggers events aggregation on the <code>TextChangedEventBuffer</code>
+			 * if the user is saving his changes. This is to ensure that all the 
+			 * changes have arrived on the server before the text file is saved.
+			 */ 
+			public function emptyKeystrokeAggregationBuffer():void {
+				if (keystrokeBuffer)
+					keystrokeBuffer.aggregateEvents();
+			}
+			
+			public function setKeystrokeAggregationBufferDirtyState(dirty:Boolean):void {
+				if (keystrokeBuffer)
+					keystrokeBuffer.dirty = dirty;
+			}
 			
 			protected function initializeHandler(event:FlexEvent):void {
 				if (FlexUtilGlobals.getInstance().isMobile) {					
@@ -65,6 +114,8 @@ license-end
 				ICodeMirrorEditor(editor).addViewCompleteHandler(orionEditor_frameLoadHandler);
 				
 				creationComplete = true;
+				setKeystrokeAggregationInterval(_keystrokeAggregationInterval);
+				addEventListener(BufferedTextChangesEvent.BUFFERED_TEXT_CHANGES, sendTextEditorChangesToServer);
 			}
 			
 			protected function getURL():String {
@@ -78,12 +129,12 @@ license-end
 			}
 			
 			protected function orionEditor_frameLoadHandler(event:Event):void {
-				if (content != null) {	
-					// initialize code mirror editor
-					ICodeMirrorEditor(editor).callJavaScriptMethod("initialize", null, escape(content), editorStatefulClient.getStatefulClientId(), readOnly);
-					// listen for text changes
-					ICodeMirrorEditor(editor).addCallbackHandler("codeMirrorEditorChangedHandler", textEditorChangedHandler);
-				}
+				// initialize code mirror editor
+				ICodeMirrorEditor(editor).callJavaScriptMethod("initialize", null, 
+					content != null ? escape(content) : null, editorStatefulClient.getStatefulClientId(), frontendId, readOnly);					
+				
+				// listen for text changes
+				ICodeMirrorEditor(editor).addCallbackHandler("codeMirrorEditorChangedHandler", textEditorChangedHandler);
 			}
 			
 			public function setContent(content:String):void {
@@ -128,26 +179,36 @@ license-end
 				}
 			}	
 				
-			protected function textEditorChangedHandler(statefulClientId:String, offset:String, oldText:String, newText:String):void {
-				var updates:ArrayCollection = new ArrayCollection();
-				
-				var update:TextEditorUpdate = new TextEditorUpdate();
-				update.offset = int(offset);
-				update.oldTextLength = oldText.length;
-				update.newText = newText;
-				updates.addItem(update);
-		
+			protected function textEditorChangedHandler(statefulClientId:String, frontendId:String, offset:String, oldText:String, newText:String):void {				
 				// here we must know where to send those updates
 				// ind the statefulClient based on the id sent at code mirror initialisation
 				var editorStatefulClient:EditorStatefulClient = 
 					EditorStatefulClient(CommunicationPlugin.getInstance().statefulClientRegistry.getStatefulClientById(statefulClientId));
 				
-				// for the moment the last editorFontend is used -> problems when using multiple editorFrontends
-				// TO DISCUSS: how can we know the exact editorFrontend
-				editorStatefulClient.attemptUpdateContent(
-					editorStatefulClient.editorFrontends[editorStatefulClient.editorFrontends.length - 1], updates);
+				for each (var editorFrontend:EditorFrontend in editorStatefulClient.editorFrontends) {
+					var codeMirrorEditor:CodeMirrorEditorFrontend = CodeMirrorEditorFrontend(editorFrontend);
+					if (codeMirrorEditor.frontendId == frontendId) {
+						codeMirrorEditor.keystrokeBuffer.add(new TextChangedEvent(int(offset), oldText.length, newText));		
+						break;
+					}
+				}	
 			}
 						
+			private function sendTextEditorChangesToServer(evt:BufferedTextChangesEvent):void {			
+				var buffer:ArrayCollection = evt.buffer;
+				
+				var updates:ArrayCollection = new ArrayCollection();
+				for each (var textChangedEvent:TextChangedEvent in buffer) {
+					var update:TextEditorUpdate = new TextEditorUpdate();
+					update.offset = textChangedEvent.offset;
+					update.oldTextLength = textChangedEvent.oldTextLength;
+					update.newText = textChangedEvent.newText;
+					updates.addItem(update);
+				}
+				
+				editorStatefulClient.attemptUpdateContent(this, updates);
+			}
+			
 		]]>
 	</mx:Script>	
 	
