@@ -31,15 +31,13 @@ package org.flowerplatform.editor.text.remote {
 		}
 		
 		override protected function copyLocalDataFromExistingEditorToNewEditor(existingEditor:EditorFrontend, newEditor:EditorFrontend):void	{
-			if (editableResourceStatus)
+			if (editableResourceStatus) {
 				newEditor.editableResourceStatusUpdated();
+			}
 			CodeMirrorEditorFrontend(existingEditor).getContent(function(value:String):void {
 				CodeMirrorEditorFrontend(newEditor).setContent(value);
 			});
 		}
-		
-		override public function updateDirtyState(editorInput:Object, dirtyState:Boolean):void {			
-		}
-		
+				
 	}
 }

@@ -93,24 +93,33 @@
 			}
 			
 			var myCodeMirror;
-			var editorStatefulClientId;
-						
-			function initialize(args) {				
-				myCodeMirror.setValue(unescape(args[0]));
-				editorStatefulClientId = args[1];
-				if (args[2]) { // readOnly = true
+			var statefulClientId;
+			var frontendId;			
+			var sendTextChangesToFlexClient = true;
+			
+			function initialize(args) {		
+				if (args[0] != null) {
+					myCodeMirror.setValue(unescape(args[0]));
+				}
+				
+				statefulClientId = args[1];
+				frontendId = args[2];
+				if (args[3]) { // readOnly = true
 					disableEditing();
 				}
 				
-				myCodeMirror.on("change", function (instance, changeObj) {					
+				myCodeMirror.on("change", function (instance, changeObj) {		
+					if (!sendTextChangesToFlexClient) {
+						return;
+					}
 					while(changeObj) { // works like an iterator
 						var offset = myCodeMirror.indexFromPos(changeObj.from);
 						var oldText = changeObj.removed.join('\n');
 						var newText = changeObj.text.join('\n');
 						if (isMobile == "true") {						
-							StageWebViewBridge.call("codeMirrorEditorChangedHandler", null, editorStatefulClientId, offset, oldText, newText);
+							StageWebViewBridge.call("codeMirrorEditorChangedHandler", null, statefulClientId, frontendId, offset, oldText, newText);
 						} else {
-							parent.getFlexApp().codeMirrorEditorChangedHandler(editorStatefulClientId, offset, oldText, newText);
+							parent.getFlexApp().codeMirrorEditorChangedHandler(statefulClientId, frontendId, offset, oldText, newText);
 						}						
 						changeObj = changeObj.next;
 					}					
@@ -123,7 +132,7 @@
 			
 			function getContent() {
 				var result = myCodeMirror.getValue();
-				if (isMobile) {
+				if (isMobile == "true") {
 					document.location = result;
 				} else {
 					return result;	
@@ -138,8 +147,13 @@
 				myCodeMirror.readOnly = false;
 			}
 			
-			function updateText(args) {			
-				myCodeMirror.replaceRange(unescape(args[2]), myCodeMirror.posFromIndex(args[0]), myCodeMirror.posFromIndex(args[0] + args[1]));
+			function updateText(args) {	
+				sendTextChangesToFlexClient = false;
+				try {
+					myCodeMirror.replaceRange(unescape(args[2]), myCodeMirror.posFromIndex(args[0]), myCodeMirror.posFromIndex(args[0] + args[1]));
+				} finally {
+					sendTextChangesToFlexClient = true;
+				}				
 			}		
 		</script>
 				
@@ -150,7 +164,7 @@
 			myCodeMirror = CodeMirror(document.body, {			 
 				mode: CodeMirror.mimeModes[ext2Mime[getURLParam('extension')]],
 			  	lineNumbers: true
-			});		
+			});				
 		</script>
 	</body>
 </html>
