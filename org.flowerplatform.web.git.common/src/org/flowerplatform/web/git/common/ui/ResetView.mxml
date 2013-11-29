@@ -74,6 +74,8 @@
 					FlexUtilGlobals.getInstance().messageBoxFactory.createMessageBox()
 						.setTitle(CommonPlugin.getInstance().getMessage("error"))
 						.setText(GitCommonPlugin.getInstance().getMessage("git.merge.selectRef"))
+						.setHeight(150)
+						.setWidth(300)
 						.showMessageBox();					
 					return;
 				}
