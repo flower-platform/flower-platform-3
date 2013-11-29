@@ -1,6 +1,6 @@
 package org.flowerplatform.codesync.config.extension;
 
-import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.VIEW;
+import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService.VIEW;
 
 import java.util.Map;
 

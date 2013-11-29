@@ -21,7 +21,7 @@
          point="org.flowerplatform.communication.service">
       <service
             id="codeSyncDiagramOperationsService"
-            serviceClass="org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1">
+            serviceClass="org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService">
       </service>
    </extension>
    <extension
