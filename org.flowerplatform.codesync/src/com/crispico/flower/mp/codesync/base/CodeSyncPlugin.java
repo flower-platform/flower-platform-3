@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
+import org.flowerplatform.codesync.DependentFeature;
 import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
 import org.flowerplatform.codesync.config.extension.AddNewExtension;
 import org.flowerplatform.codesync.config.extension.AddNewExtension_Note;
@@ -56,6 +57,7 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
+import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,6 +105,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
 	
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
+	
+	protected List<DependentFeature> dependentFeatures;
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
 	
@@ -160,6 +164,14 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 
 	public void setProjectsProvider(IProjectsProvider projectsProvider) {
 		this.projectsProvider = projectsProvider;
+	}
+	
+	/**
+	 * A list of feature to be deleted in case an object is deleted 
+	 * (e.g. an edge that starts or ends in a deleted view).
+	 */
+	public List<DependentFeature> getDependentFeatures() {
+		return dependentFeatures;
 	}
 	
 	public List<CodeSyncElementDescriptor> getCodeSyncElementDescriptors() {
@@ -234,7 +246,12 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
 		
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
-
+		
+		dependentFeatures = new ArrayList<DependentFeature>();
+		dependentFeatures.add(new DependentFeature(NotationPackage.eINSTANCE.getView(), NotationPackage.eINSTANCE.getEdge_Source(), true));
+		dependentFeatures.add(new DependentFeature(NotationPackage.eINSTANCE.getView(), NotationPackage.eINSTANCE.getEdge_Target(), true));
+		dependentFeatures.add(new DependentFeature(NotationPackage.eINSTANCE.getView(), NotationPackage.eINSTANCE.getView_PersistentChildren(), false));
+		
 		// main list of code sync descriptors
 		addRunnablesForLoadDescriptors(new Runnable() {
 			@Override

@@ -20,10 +20,12 @@ package org.flowerplatform.codesync.remote;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -31,6 +33,8 @@ import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.flowerplatform.codesync.DependentFeature;
 import org.flowerplatform.codesync.config.extension.AddNewExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorParseException;
@@ -73,7 +77,7 @@ public class CodeSyncDiagramOperationsService {
 		return (CodeSyncDiagramOperationsService) CommunicationPlugin.getInstance()
 				.getServiceRegistry().getService(ID);
 	}
-	
+
 	@RemoteInvocation
 	public List<CodeSyncElementDescriptor> getCodeSyncElementDescriptors() {
 		return CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors();
@@ -175,18 +179,58 @@ public class CodeSyncDiagramOperationsService {
 	@RemoteInvocation
 	public void removeView(ServiceInvocationContext context, String viewId) {
 		View view = getViewById(context.getAdditionalData(), viewId);
-		// doing this because the idBeforeRemoval is not set during binary deserialization
-		view.setIdBeforeRemoval(view.eResource().getURIFragment(view));
-		if (view instanceof Edge) {
-			Diagram diagram = getDiagram(context.getAdditionalData());
-			diagram.getPersistentEdges().remove(view);
-			Edge edge = (Edge) view;
-			edge.getSource().getSourceEdges().remove(edge);
-			edge.getTarget().getTargetEdges().remove(edge);
-		} else {
-			View parentView = (View) view.eContainer();
-			parentView.getPersistentChildren().remove(view);
+		delete(context.getAdditionalData(), view);
+	}
+	
+	/**
+	 * Delegates to {@link EcoreUtil#delete(EObject)} to remove the {@code object} from its parent and from all
+	 * the other features that reference it. 
+	 * 
+	 * <p>
+	 * Additionally, all the {@link DependentFeature}s for the object are removed recursively.
+	 * 
+	 * @see CodeSyncPlugin#getDependentFeatures()
+	 */
+	public void delete(Map<String, Object> context, EObject object) {
+		if (object instanceof View && object.eResource() != null) {
+			// doing this because the idBeforeRemoval is not set during binary deserialization
+			View view = (View) object;
+			view.setIdBeforeRemoval(view.eResource().getURIFragment(view));
 		}
+		for (DependentFeature dependentFeature : CodeSyncPlugin.getInstance().getDependentFeatures()) {
+			if (dependentFeature.getEClass().isSuperTypeOf(object.eClass())) {
+				if (dependentFeature.isInverse()) {
+					ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(object);
+					if (adapter == null) {
+						continue;
+					}
+					for (Setting setting : adapter.getInverseReferences(object)) {
+						if (dependentFeature.getFeature().equals(setting.getEStructuralFeature())) {
+							EObject reference = setting.getEObject();
+							delete(context, reference);
+						}
+					}
+					for (Setting setting : adapter.getNonNavigableInverseReferences(object)) {
+						if (dependentFeature.getFeature().equals(setting.getEStructuralFeature())) {
+							EObject reference = setting.getEObject();
+							delete(context, reference);
+						}
+					}
+				} else {
+					if (dependentFeature.getFeature().isMany()) {
+						CopyOnWriteArrayList<EObject> references = new CopyOnWriteArrayList(
+								(Collection<EObject>) object.eGet(dependentFeature.getFeature()));
+						for (Iterator<EObject> it = references.iterator(); it.hasNext();) {
+							delete(context, it.next());
+						}
+					} else {
+						EObject reference = (EObject) object.eGet(dependentFeature.getFeature());
+						delete(context, reference);
+					}
+				}
+			}
+		}
+		EcoreUtil.delete(object);
 	}
 	
 	@RemoteInvocation
@@ -237,6 +281,10 @@ public class CodeSyncDiagramOperationsService {
 				for (CodeSyncElementDescriptor descr : CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors()) {
 					for (String codeSyncTypeCategory : descr.getCodeSyncTypeCategories()) {
 						if (viewDescriptor.getChildrenCodeSyncTypeCategories().contains(codeSyncTypeCategory)) {
+							if (((CategorySeparator) child).getCategory().equals(descriptor.getCategory())) {
+								// the view already has a separator for this category
+								return;
+							}
 							if (((CategorySeparator) child).getCategory().equals(descr.getCategory())) {
 								if (descr.getOrderIndex() <= descriptor.getOrderIndex()) {
 									index++;
@@ -412,6 +460,7 @@ public class CodeSyncDiagramOperationsService {
 			} else {
 				for (View parentView : parentViews) {
 					parentViewIds.add(parentView.eResource().getURIFragment(parentView));
+					addCategorySeparator(parentView, parent, descriptor);
 				}
 			}
 		}

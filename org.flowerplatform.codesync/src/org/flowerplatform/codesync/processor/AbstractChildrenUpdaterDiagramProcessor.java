@@ -26,6 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.change_processor.AbstractDiagramProcessor;
 import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
@@ -91,9 +92,9 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 				if (newChild != null) {
 					getChildrenForCodeSyncElement(object).add(associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child), newChild);
 				} else {
-//					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 					removeChildView(child, child.getDiagrammableElement(), context);					
-					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+//					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+					CodeSyncDiagramOperationsService.getInstance().delete(context, child);
 				}
 			} else {
 				int currentViewIndex = associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child);
@@ -113,7 +114,8 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 				View child = it.next();
 				if (childViews.contains(child)) {
 					removeChildView(child, child.getDiagrammableElement(), context);
-					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+//					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
+					CodeSyncDiagramOperationsService.getInstance().delete(context, child);
 				}
 			}			
 		}
@@ -166,7 +168,7 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 				.getObjectsToDispose();
 		for (Object objectToDispose : objectsToDispose) {
 			if (objectToDispose instanceof Node) {
-				if (((Node) objectToDispose).getDiagrammableElement().equals(candidate)) {
+				if (candidate.equals(((Node) objectToDispose).getDiagrammableElement())) {
 					return false;
 				}
 			}
