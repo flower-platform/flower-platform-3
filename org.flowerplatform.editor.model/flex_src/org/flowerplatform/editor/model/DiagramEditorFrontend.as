@@ -32,6 +32,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
+	import org.flowerplatform.emf_model.notation.Edge;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.event.ExecuteDragToCreateEvent;
@@ -163,6 +164,8 @@ package org.flowerplatform.editor.model {
 			
 				if (node is Diagram) { // for diagram consider its viewType as diagramSelectedItem.itemType
 					diagramSelectedItem.itemType = node.viewType;
+				} else if (node is Edge) {
+					diagramSelectedItem.itemType = "relation";
 				} else {
 					diagramSelectedItem.itemType = "codeSyncElement";
 				}
