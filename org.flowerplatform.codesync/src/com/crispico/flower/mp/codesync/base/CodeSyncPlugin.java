@@ -96,6 +96,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static final String FILE = "File";
 	
+	public static final String TOP_LEVEL = "topLevel";
+	
 	private final static Logger logger = LoggerFactory.getLogger(CodeSyncPlugin.class);
 
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;

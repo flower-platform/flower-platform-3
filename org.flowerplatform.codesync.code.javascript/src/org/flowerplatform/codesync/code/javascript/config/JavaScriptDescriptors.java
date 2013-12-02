@@ -1,5 +1,7 @@
 package org.flowerplatform.codesync.code.javascript.config;
 
+import static com.crispico.flower.mp.codesync.base.CodeSyncPlugin.TOP_LEVEL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +67,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_BACKBONE_CLASS).setLabel("Backbone Class")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addInitializationType(INIT_TYPE_NONE).addInitializationTypeLabel("Plain Backbone Class").addInitializationTypesOrderIndexes(110)
 				.addInitializationType(INIT_TYPE_BACKBONE_VIEW).addInitializationTypeLabel("Plain View").addInitializationTypesOrderIndexes(120)
 				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_VIEW).addInitializationTypeLabel("Table View").addInitializationTypesOrderIndexes(130)
@@ -196,7 +198,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_JAVASCRIPT_FILE)
-//				.addCodeSyncTypeCategory("topLevel")
+//				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.setLabel("JavaScript File")
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewJavaScriptFile")
@@ -213,7 +215,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("table")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table HTML Template")
 				.setIconUrl("images/full/obj16/table.png")
@@ -248,7 +250,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItem")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table Item HTML Template")
 				.setIconUrl("images/full/obj16/table_select_row.png")
@@ -280,7 +282,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		descriptors.add(
 				new CodeSyncElementDescriptor()
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.setCodeSyncType("form")
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Form HTML Template")
@@ -324,7 +326,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		descriptors.add(
 				new CodeSyncElementDescriptor()
-				.addCodeSyncTypeCategory("topLevel").addCodeSyncTypeCategory("dontNeedLocation")
+				.addCodeSyncTypeCategory(TOP_LEVEL).addCodeSyncTypeCategory("dontNeedLocation")
 				.setCodeSyncType("note")
 				.setLabel("Note")
 				.setIconUrl("images/full/obj16/note.png")

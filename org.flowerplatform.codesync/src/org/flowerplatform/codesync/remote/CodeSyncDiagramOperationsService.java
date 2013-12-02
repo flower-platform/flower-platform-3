@@ -355,8 +355,11 @@ public class CodeSyncDiagramOperationsService {
 			List<View> views = getViewsForElement(relation.getTarget());
 			// if there are no views for the target and addMissingElements is true
 			if (addMissingElements && views.size() == 0) {
-				String viewId = addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, relation.getTarget(), null);
-				views.add(getViewById(context, viewId));
+				List<String> viewIds = new ArrayList<String>();
+				addOnDiagram(context, diagram, relation.getTarget(), viewIds);
+				for (String viewId : viewIds) {
+					views.add(getViewById(context, viewId));
+				}
 			}
 			for (View target : views) {
 				if (getEdge(associatedViewOnOpenDiagram, target) == null) {
@@ -377,8 +380,11 @@ public class CodeSyncDiagramOperationsService {
 			Relation relation = (Relation) eObject;
 			List<View> sourceViews = getViewsForElement(relation.getSource());
 			if (addMissingElements && sourceViews.size() == 0) {
-				String viewId = addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, relation.getSource(), null);
-				sourceViews.add(getViewById(context, viewId));
+				List<String> viewIds = new ArrayList<String>();
+				addOnDiagram(context, diagram, relation.getSource(), viewIds);
+				for (String viewId : viewIds) {
+					sourceViews.add(getViewById(context, viewId));
+				}
 			}
 			for (View sourceView : sourceViews) {
 				for (View targetView : getViewsForElement(cse)) {
@@ -388,6 +394,33 @@ public class CodeSyncDiagramOperationsService {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Adds views on the diagram for the {@code codeSyncElement} and its parents if needed.
+	 */
+	protected void addOnDiagram(Map<String, Object> context, Diagram diagram, CodeSyncElement codeSyncElement, List<String> viewIds) {
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
+		List<String> parentViewIds = new ArrayList<String>();
+		// not a top level element; recurse for the parents
+		if (!descriptor.getCodeSyncTypeCategories().contains(CodeSyncPlugin.TOP_LEVEL)) {
+			CodeSyncElement parent = (CodeSyncElement) codeSyncElement.eContainer();
+			List<View> parentViews = getViewsForElement(parent);
+			if (parentViews.size() == 0) {
+				// no parent views on the diagram; recurse
+				addOnDiagram(context, diagram, parent, parentViewIds);
+			} else {
+				for (View parentView : parentViews) {
+					parentViewIds.add(parentView.eResource().getURIFragment(parentView));
+				}
+			}
+		}
+		if (parentViewIds.size() == 0) {
+			viewIds.add(addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, codeSyncElement, null));
+		}
+		for (String parentViewId : parentViewIds) {
+			viewIds.add(addOnDiagram(context, diagram.eResource().getURIFragment(diagram), parentViewId, codeSyncElement, null));
+		}		
 	}
 	
 	protected Edge createEdge(Relation relation, View source, View target, Diagram diagram) {
