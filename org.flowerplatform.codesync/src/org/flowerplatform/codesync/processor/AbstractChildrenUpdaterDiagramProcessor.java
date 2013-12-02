@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.editor.model.change_processor.AbstractDiagramProcessor;
+import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
 import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.View;
 
@@ -40,16 +41,16 @@ import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDiagramProcessor {
 
 	@Override
-	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> viewDetails) {
+	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (object == null) {
 			return;
 		}		
 		if (featureChanges == null) {
 			// full content
-			processFeatureChange(object, null, associatedViewOnOpenDiagram, viewDetails);
+			processFeatureChange(object, null, associatedViewOnOpenDiagram, context);
 		} else {
 			for (FeatureChange featureChange : featureChanges) {
-				processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, viewDetails);
+				processFeatureChange(object, featureChange, associatedViewOnOpenDiagram, context);
 			}
 		}
 	}
@@ -64,17 +65,17 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 		}
 	}
 
-	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram, List<Node> childViews, Map<String, Object> viewDetails) {
+	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram, List<Node> childViews, Map<String, Object> context) {
 		int newViewsIndex = getNewViewsIndex(object, childModelElements, associatedViewOnOpenDiagram);
 		
 		if (newViewsIndex >= 0) {
 			// add a view for each child of the model element (cases: initial, or adding a new child model element)
 			for (EObject child : childModelElements) {
-				if (canAddChildView(associatedViewOnOpenDiagram, child)) {
+				if (canAddChildView(associatedViewOnOpenDiagram, child, context)) {
 //					Node newView = createChildView(associatedViewOnOpenDiagram, child);
 //					newView.setDiagrammableElement(child);
 //					associatedViewOnOpenDiagram.getPersistentChildren().add(newViewsIndex, newView);
-					addChildView(associatedViewOnOpenDiagram, child, newViewsIndex, viewDetails);					
+					addChildView(associatedViewOnOpenDiagram, child, newViewsIndex, context);					
 
 				}
 				newViewsIndex++;
@@ -91,7 +92,7 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 					getChildrenForCodeSyncElement(object).add(associatedViewOnOpenDiagram.getPersistentChildren().indexOf(child), newChild);
 				} else {
 //					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
-					removeChildView(child, child.getDiagrammableElement(), viewDetails);					
+					removeChildView(child, child.getDiagrammableElement(), context);					
 					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 				}
 			} else {
@@ -111,7 +112,7 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 			for (Iterator<Node> it = persistentChildren.iterator(); it.hasNext();) {
 				View child = it.next();
 				if (childViews.contains(child)) {
-					removeChildView(child, child.getDiagrammableElement(), viewDetails);
+					removeChildView(child, child.getDiagrammableElement(), context);
 					associatedViewOnOpenDiagram.getPersistentChildren().remove(child);
 				}
 			}			
@@ -159,7 +160,17 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 		associatedViewOnOpenDiagram.setDiagrammableElement(null);
 	}
 	
-	protected boolean canAddChildView(View view, EObject candidate) {
+	protected boolean canAddChildView(View view, EObject candidate, Map<String, Object> context) {
+		// must also check if the view was deleted for this element, so we don't add it again
+		List<Object> objectsToDispose = DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(context, false)
+				.getObjectsToDispose();
+		for (Object objectToDispose : objectsToDispose) {
+			if (objectToDispose instanceof Node) {
+				if (((Node) objectToDispose).getDiagrammableElement().equals(candidate)) {
+					return false;
+				}
+			}
+		}
 		return !containsChildViewForModelElement(view, candidate);
 	}
 	
