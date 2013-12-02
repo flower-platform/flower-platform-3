@@ -180,6 +180,9 @@ public class CodeSyncDiagramOperationsService {
 		if (view instanceof Edge) {
 			Diagram diagram = getDiagram(context.getAdditionalData());
 			diagram.getPersistentEdges().remove(view);
+			Edge edge = (Edge) view;
+			edge.getSource().getSourceEdges().remove(edge);
+			edge.getTarget().getTargetEdges().remove(edge);
 		} else {
 			View parentView = (View) view.eContainer();
 			parentView.getPersistentChildren().remove(view);
