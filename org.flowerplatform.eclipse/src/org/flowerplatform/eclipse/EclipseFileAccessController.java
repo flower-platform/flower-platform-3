@@ -67,16 +67,32 @@ public class EclipseFileAccessController implements IFileAccessController {
 		return ((IResource) file).getParent();
 	}
 
+	/**
+	 * @author Sebastian Solomon
+	 * @author Mariana Gheorghe
+	 */
 	@Override
 	public boolean createNewFile(Object file) {
-		String contents = "";
-		InputStream source = new ByteArrayInputStream(contents.getBytes());
-		try {
-			((IFile) file).create(source, true, null);
-			return true;
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
+		if (file instanceof IFolder) {
+			IFolder folder = (IFolder) file;
+			try {
+				folder.create(true, true, null);
+				return true;
+			} catch (CoreException e) {
+				throw new RuntimeException(e);
+			}
 		}
+		if (file instanceof IFile) {
+			String contents = "";
+			InputStream source = new ByteArrayInputStream(contents.getBytes());
+			try {
+				((IFile) file).create(source, true, null);
+				return true;
+			} catch (CoreException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -183,15 +199,15 @@ public class EclipseFileAccessController implements IFileAccessController {
 		}
 	}
 
+	/**
+	 * @author Sebastian Solomon
+	 * @author Mariana Gheorghe
+	 */
 	@Override
 	public void writeStringToFile(Object file, String str) {
 		InputStream source = new ByteArrayInputStream(str.getBytes());
 		try {
-			if( exists(file) ) {
-				delete(file);
-			}
-			((IFile) file).create(source, true, null);
-			//((IFile) file).setContents(source, true, true, null);
+			((IFile) file).setContents(source, true, true, null);
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		}

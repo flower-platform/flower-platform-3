@@ -18,8 +18,6 @@
  */
 package com.crispico.flower.mp.codesync.code;
 
-import java.io.File;
-
 import org.flowerplatform.communication.channel.CommunicationChannel;
 
 import com.crispico.flower.mp.codesync.base.ICodeSyncAlgorithmRunner;
@@ -31,7 +29,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class CodeSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner {
 
 	@Override
-	public void runCodeSyncAlgorithm(File project, File resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public void runCodeSyncAlgorithm(Object project, Object resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		CodeSyncElement cse = CodeSyncCodePlugin.getInstance().getCodeSyncElement(project, resource, technology, communicationChannel, showDialog);
 	}
 

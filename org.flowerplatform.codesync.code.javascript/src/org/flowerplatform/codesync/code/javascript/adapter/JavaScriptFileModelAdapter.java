@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
+import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
@@ -136,7 +137,7 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 		try {
 			URL url = CodeSyncCodeJavascriptPlugin.getInstance().getBundleContext().getBundle().getResource("templates/" + node.getType() + ".tpl");
 			File file = new File(FileLocator.resolve(url).toURI());
-			template = EditorPlugin.getInstance().getFileAccessController().readFileToString(file);
+			template = FileUtils.readFileToString(file);
 		} catch (IOException | URISyntaxException e) {
 			throw new RuntimeException("Template does not exist", e);
 		}

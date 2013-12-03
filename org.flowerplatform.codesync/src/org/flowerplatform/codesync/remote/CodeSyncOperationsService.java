@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.codesync.remote;
 
-import java.io.File;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -264,14 +263,14 @@ public class CodeSyncOperationsService {
 	
 	@RemoteInvocation
 	public void synchronize(ServiceInvocationContext context, String path, String technology) {
-		File diagram;
+		Object diagram;
 		try {
-			diagram = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
+			diagram = EditorPlugin.getInstance().getFileAccessController().getFile(path);
 		} catch (Exception e) {
 			throw new RuntimeException(path);
 		}
-		File project = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(diagram);
-		File srcDir = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFolder(project, "js");
+		Object project = CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(diagram);
+		Object srcDir = CodeSyncPlugin.getInstance().getProjectAccessController().getFolder(project, "js");
 		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, srcDir, technology, context.getCommunicationChannel(), true);
 	}
 

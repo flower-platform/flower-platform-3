@@ -18,7 +18,6 @@
  */
 package com.crispico.flower.mp.codesync.base;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class ComposedCodeSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner
 	}
 	
 	@Override
-	public void runCodeSyncAlgorithm(File project, File resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public void runCodeSyncAlgorithm(Object project, Object resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		runners.get(technology).runCodeSyncAlgorithm(project, resource, technology, communicationChannel, showDialog);
 	}
 
