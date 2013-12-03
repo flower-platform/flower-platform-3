@@ -27,6 +27,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import com.crispico.flower.mp.codesync.base.communication.DiffTreeNode;
 		
 			override public function disableEditing():void {
 			}
@@ -35,7 +36,7 @@
 			}
 			
 			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {
-				diffDialog.diffTree.updateFullContent();
+				diffDialog.diffTree.updateFullContent(content);
 //				diffDialog.ancestorTree.statefulClient.openNode(null);
 //				diffDialog.leftTree.statefulClient.openNode(null);
 //				diffDialog.rightTree.statefulClient.openNode(null);

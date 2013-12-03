@@ -113,7 +113,10 @@ public class JavaScriptFileModelAdapter extends AbstractFileModelAdapter {
 			// TODO we'd also need a modifier flag, that way we woudn't need to replace all the parameters
 			for (RegExAstNodeParameter parameter : node.getParameters()) {
 				if (parameter.getOffset() > 0 && parameter.getLength() > 0) {
-					edit.addChild(new ReplaceEdit(parameter.getOffset(), parameter.getLength(), parameter.getValue()));
+					String existingValue = document.get().substring(parameter.getOffset(), parameter.getOffset() + parameter.getLength());
+					if (!existingValue.equals(parameter.getValue())) {
+						edit.addChild(new ReplaceEdit(parameter.getOffset(), parameter.getLength(), parameter.getValue()));
+					}
 				}
 			}
 			for (RegExAstNode child : node.getChildren()) {

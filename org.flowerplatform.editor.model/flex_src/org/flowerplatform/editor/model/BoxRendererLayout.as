@@ -45,35 +45,34 @@ package org.flowerplatform.editor.model {
 		 * smaller than children's content size.
 		 */ 
 		override public function measure():void	{
-			var layoutTarget:GroupBase = target;
-			if (!layoutTarget)
+			var renderer:BoxRenderer = BoxRenderer(target);	
+			if (!renderer)
 				return;
 			
 			super.measure();
 			
 			var sizeChanged:Boolean = false;
-			if (layoutTarget.measuredWidth > layoutTarget.width) {
+			if (!renderer.setOnlyMinWidthHeight && renderer.measuredWidth > renderer.width) {
 				// children calculated width greater than parent's width
-				layoutTarget.width = Math.ceil(layoutTarget.measuredWidth);				
+				renderer.width = Math.ceil(renderer.measuredWidth);				
 				sizeChanged = true;
 			}
-			layoutTarget.minWidth = Math.ceil(layoutTarget.measuredMinWidth);
+			renderer.minWidth = Math.ceil(renderer.measuredMinWidth);
 			
-			if (layoutTarget.measuredHeight > layoutTarget.height) {
+			if (!renderer.setOnlyMinWidthHeight && renderer.measuredHeight > renderer.height) {
 				// children calculated height greater than parent's height
-				layoutTarget.height = Math.ceil(layoutTarget.measuredHeight);  				 
+				renderer.height = Math.ceil(renderer.measuredHeight);  				 
 				sizeChanged = true;
 			} 
-			layoutTarget.minHeight = Math.ceil(layoutTarget.measuredMinHeight);
+			renderer.minHeight = Math.ceil(renderer.measuredMinHeight);
 			
-			if (sizeChanged) { // save size to server
-				var renderer:BoxRenderer = BoxRenderer(layoutTarget);						
+			if (sizeChanged) { // save size to server									
 				var command:MoveResizeServerCommand = new MoveResizeServerCommand();
 				command.id = Node(renderer.data).layoutConstraint_RH.referenceIdAsString;
-				command.newWidth = layoutTarget.width;
-				command.newHeight = layoutTarget.height;
-				command.newX = layoutTarget.x;
-				command.newY = layoutTarget.y;						
+				command.newWidth = renderer.width;
+				command.newHeight = renderer.height;
+				command.newX = renderer.x;
+				command.newY = renderer.y;						
 				NotationDiagramShell(renderer.diagramShell).editorStatefulClient.attemptUpdateContent(null, command);								
 			}   
 		}

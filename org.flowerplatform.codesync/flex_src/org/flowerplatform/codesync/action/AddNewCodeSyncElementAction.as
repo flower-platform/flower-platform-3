@@ -47,7 +47,7 @@ package org.flowerplatform.codesync.action {
 		protected var initializationType:String;
 		
 		public function AddNewCodeSyncElementAction(descriptor:CodeSyncElementDescriptor, initializationType:String) {
-			super();
+			super();			
 			this.descriptor = descriptor;
 			this.initializationType = initializationType;
 			this.icon = CodeSyncPlugin.getInstance().getResourceUrl(descriptor.iconUrl);
@@ -57,11 +57,13 @@ package org.flowerplatform.codesync.action {
 				label = descriptor.label;
 				id = descriptor.codeSyncType; // so that the subactions recognize it
 				actAsNormalAction = descriptor.initializationTypes == null;
+				orderIndex = descriptor.orderIndex;
 			} else {
 				// executable for sure; set the right parentId; don't set id
 				parentId = descriptor.codeSyncType;
 				label = descriptor.initializationTypesLabels[descriptor.initializationTypes.getItemIndex(initializationType)];
 				actAsNormalAction = true;
+				orderIndex = descriptor.initializationTypesOrderIndexes[descriptor.initializationTypes.getItemIndex(initializationType)];
 			}
 		}
 		

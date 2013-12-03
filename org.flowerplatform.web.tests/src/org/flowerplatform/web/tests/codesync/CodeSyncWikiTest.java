@@ -32,7 +32,6 @@ import javax.security.auth.Subject;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -72,13 +71,13 @@ public class CodeSyncWikiTest {
 	
 	public static final String LINK = "/link-to-project";
 	
-	private File DOKUWIKI_FILE = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams.txt");
-	private File DOKUWIKI_FILE_2 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 2.txt");
-	private File DOKUWIKI_FILE_3 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 3.txt");
+	private File DOKUWIKI_FILE = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams.txt");
+	private File DOKUWIKI_FILE_2 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 2.txt");
+	private File DOKUWIKI_FILE_3 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 3.txt");
 	
-	private File MD_FILE = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/Test.md");
-	private File MD_FILE_2 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/left/Test.md");
-	private File MD_FILE_3 = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/right/Test.md");
+	private File MD_FILE = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/Test.md");
+	private File MD_FILE_2 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/left/Test.md");
+	private File MD_FILE_3 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/right/Test.md");
 	
 	private Pair[] expected;
 	private int index;

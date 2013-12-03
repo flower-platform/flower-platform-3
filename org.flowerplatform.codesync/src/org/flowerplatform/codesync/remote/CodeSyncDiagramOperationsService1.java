@@ -173,13 +173,17 @@ public class CodeSyncDiagramOperationsService1 {
 		View view = getViewById(context.getAdditionalData(), viewId);
 		for (CodeSyncElementDescriptor descriptor : getCodeSyncElementDescriptors()) {
 			if (category.equals(descriptor.getCategory())) {
-				addCategorySeparator(view, descriptor);
+				addCategorySeparator(view, (CodeSyncElement) view.getDiagrammableElement(), descriptor);
 				break;
 			}
 		}
 	}
 	
-	public void addCategorySeparator(View view, CodeSyncElementDescriptor descriptor) {
+	/**
+	 * @author Mariana Gheorghe
+	 * @author Cristina Constantinescu
+	 */
+	public void addCategorySeparator(View view, CodeSyncElement codeSyncElement, CodeSyncElementDescriptor descriptor) {
 		CategorySeparator categorySeparator = NotationFactory.eINSTANCE.createCategorySeparator();
 		categorySeparator.setViewType("categorySeparator");
 		categorySeparator.setCategory(descriptor.getCategory());
@@ -194,7 +198,43 @@ public class CodeSyncDiagramOperationsService1 {
 			image = codeSyncPackage + image;
 		}
 		categorySeparator.setNewChildIcon(image);
-		view.getPersistentChildren().add(categorySeparator);
+		
+		CodeSyncElementDescriptor viewDescriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());				
+		int index = 0;
+		for (View child : view.getPersistentChildren()) {
+			CodeSyncElement childElement = (CodeSyncElement) child.getDiagrammableElement();
+			if (childElement == null) { 
+				boolean foundOrderIndex = false;
+				// CategorySeparator, search for orderIndex in list of children that has this set as category
+				for (CodeSyncElementDescriptor descr : CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors()) {
+					for (String codeSyncTypeCategory : descr.getCodeSyncTypeCategories()) {
+						if (viewDescriptor.getChildrenCodeSyncTypeCategories().contains(codeSyncTypeCategory)) {
+							if (((CategorySeparator) child).getCategory().equals(descr.getCategory())) {
+								if (descr.getOrderIndex() <= descriptor.getOrderIndex()) {
+									index++;
+									foundOrderIndex = true;
+									break;
+								}
+							}							
+						}
+					}
+					if (foundOrderIndex) {
+						break;
+					}
+				}		
+			} else {
+				CodeSyncElementDescriptor childDescriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(childElement.getType());
+				if (childDescriptor.getOrderIndex() <= descriptor.getOrderIndex()) {
+					index++;
+				}
+			}
+		}
+		if (index != 0) {
+			view.getPersistentChildren().add(index, categorySeparator);
+		} else {
+			view.getPersistentChildren().add(categorySeparator);
+		}
+		
 	}
 	
 	/**

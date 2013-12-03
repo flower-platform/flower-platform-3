@@ -39,6 +39,7 @@
 			import flash.filters.DropShadowFilter;
 			
 			import mx.core.FlexGlobals;
+			import mx.core.IDataRenderer;
 			import mx.core.IVisualElement;
 			import mx.events.FlexEvent;
 			import mx.events.PropertyChangeEvent;
@@ -62,6 +63,8 @@
 			private var shadow:DropShadowFilter;
 			private var effectsController:BoxEffectsController;
 			private var shapeDrawer:ShapeDrawer;
+			
+			public var setOnlyMinWidthHeight:Boolean = false;
 			
 			public function get diagramShell():DiagramShell {
 				return _diagramShell;
@@ -105,9 +108,7 @@
 						y = bounds.y;
 						
 						height = bounds.height;
-						width = bounds.width;
-						// make sure these sizes are greater than children's area, if not recalculate them
-						measure();
+						width = bounds.width;						
 					}
 				}
 			}
@@ -142,11 +143,15 @@
 				}
 			}
 			
-			protected function resizeEventHandler(event:ResizeEvent):void {				
-				if (event.target is BoxChildIconItemRenderer && BoxChildIconItemRenderer(event.target).parent == this) {
+			protected function measureHandler(event:Event):void {				
+				if (event.target is IVisualElement && IVisualElement(event.target).parent == this) {
 					event.stopPropagation();
-					// recalculate parent's size if a child changes its size
+					// recalculate parent's size if a child changes its size or added/removed
+					setOnlyMinWidthHeight = (event.type == Event.REMOVED_FROM_STAGE);
+					
 					measure();
+					
+					setOnlyMinWidthHeight = false;
 				}
 			}
 			
@@ -176,7 +181,9 @@
 			protected function initializeHandler(event:FlexEvent):void {
 				// add event at initialization because the resize handler must be notified also
 				// when a child initial size is greater than its parent (the box renderer)
-				addEventListener(ResizeEvent.RESIZE, resizeEventHandler, true);
+				addEventListener(ResizeEvent.RESIZE, measureHandler, true);
+				addEventListener(Event.ADDED_TO_STAGE, measureHandler, true);
+				addEventListener(Event.REMOVED_FROM_STAGE, measureHandler, true);
 			}
 			
 		]]>

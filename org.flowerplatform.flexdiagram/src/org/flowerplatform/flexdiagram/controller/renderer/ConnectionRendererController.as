@@ -125,9 +125,10 @@ package org.flowerplatform.flexdiagram.controller.renderer {
 				// the renderer is not on the screen; => provide estimates
 				return getEstimatedRectForElementNotVisible(endModel);
 			} else {
-				// renderer on screen => provide real data from renderer
+				// renderer on screen => provide real data from renderer				
 				var rectRelativeToDiagram:Rectangle = DisplayObject(endRenderer).getBounds(DisplayObject(diagramShell.diagramRenderer));
-				return [rectRelativeToDiagram.x, rectRelativeToDiagram.y, rectRelativeToDiagram.width, rectRelativeToDiagram.height];
+				// bounds width/height aren't the right ones, use renderer's width/height instead
+				return [rectRelativeToDiagram.x, rectRelativeToDiagram.y, endRenderer.width, endRenderer.height];
 			}
 		}
 		

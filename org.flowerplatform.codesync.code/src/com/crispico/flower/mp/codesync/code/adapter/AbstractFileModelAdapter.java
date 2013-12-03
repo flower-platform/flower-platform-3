@@ -125,19 +125,21 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 			file = dest;
 		}
 		
-		if (!fileAccessController.exists(file)){
-				fileAccessController.createNewFile(file);
+		if (!fileAccessController.exists(file)) {
+			fileAccessController.createNewFile(file);
 		}
 		
-		if (!fileAccessController.exists(file)){
+		if (fileAccessController.exists(file)) {
 			Object fileInfo = fileInfos.get(initialFile);
 			if (fileInfo != null) {
 				Document document;
 				try {
 					document = new Document(fileAccessController.readFileToString(file));
 					TextEdit edits = rewrite(document, fileInfo);
-					edits.apply(document);
-					fileAccessController.writeStringToFile(fileInfo, document.get());
+					if (edits.getChildrenSize() != 0) {
+						edits.apply(document);
+						fileAccessController.writeStringToFile(file, document.get());
+					}
 				} catch (MalformedTreeException | BadLocationException e) {
 					throw new RuntimeException(e);
 				}

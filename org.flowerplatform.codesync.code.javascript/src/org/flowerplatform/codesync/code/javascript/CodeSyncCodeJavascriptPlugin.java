@@ -59,14 +59,15 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 		// descriptors for js code
 		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new JavaScriptDescriptors());
 
-		// descriptors registered from scripts
-		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new Runnable() {
-			@Override
-			public void run() {
-				// search for js files and register them
-				jsScriptExtensions();
-			}
-		});	
+//		TODO CC: reactivate this mechanism 
+//		// descriptors registered from scripts
+//		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new Runnable() {
+//			@Override
+//			public void run() {
+//				// search for js files and register them
+//				jsScriptExtensions();
+//			}
+//		});	
 		
 		CodeSyncPlugin.getInstance().addSrcDir("js");
 	}

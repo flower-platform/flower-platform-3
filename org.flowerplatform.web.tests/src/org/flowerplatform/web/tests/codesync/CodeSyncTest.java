@@ -25,6 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -40,7 +41,6 @@ import org.flowerplatform.communication.stateful_service.StatefulServiceInvocati
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.java.JavaDragOnDiagramHandler;
 import org.flowerplatform.web.communication.RecordingTestWebCommunicationChannel;
-import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.tests.TestUtil;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -417,8 +417,8 @@ public class CodeSyncTest {
 		CodeSyncPlugin.getInstance().addSrcDir(MODIFIED_NO_CONFLICTS_PERFORM_SYNC);
 		String fullyQualifiedName = PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE;
 		File project = getProject();
-		File cseLocation = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION);
-		File aceLocation = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncPlugin.getInstance().ACE_FILE_LOCATION);
+		File cseLocation = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION);
+		File aceLocation = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncPlugin.getInstance().ACE_FILE_LOCATION);
 
 		
 		File file = getFile(fullyQualifiedName);
