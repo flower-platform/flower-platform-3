@@ -43,7 +43,7 @@ public class RelationsChangesDiagramProcessor implements IDiagrammableElementFea
 	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges,
 			View associatedViewOnOpenDiagram, Map<String, Object> context) {
 		if (featureChanges == null) {
-			return; // TODO
+			return;
 		}
 		
 		for (FeatureChange featureChange : featureChanges) {

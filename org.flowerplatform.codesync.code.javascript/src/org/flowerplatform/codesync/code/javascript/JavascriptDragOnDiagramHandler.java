@@ -61,7 +61,9 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 			
 			CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
 					CommunicationPlugin.getInstance().getServiceRegistry().getService("codeSyncDiagramOperationsService");
-			service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, codeSyncElement, new HashMap<String, Object>());
+			String viewId = service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, codeSyncElement, new HashMap<String, Object>());
+			
+			service.displayMissingRelations(context, viewId, false);
 		}
 		return true;
 	}
