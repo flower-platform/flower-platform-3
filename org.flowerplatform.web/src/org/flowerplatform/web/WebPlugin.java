@@ -35,7 +35,7 @@ import org.flowerplatform.communication.tree.remote.GenericTreeStatefulService;
 import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.web.database.DatabaseManager;
-import org.flowerplatform.web.projects.WebProjectsProvider;
+import org.flowerplatform.web.projects.WebProjectAccessController;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 import org.flowerplatform.web.security.mail.SendMailService;
 import org.flowerplatform.web.security.service.GroupService;
@@ -158,7 +158,7 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 				EditorPlugin.getInstance().setFileAccessController(new WebFileAccessController());	
 				EditorModelPlugin.getInstance().setModelAccessController(new WebModelAccessController());	
 	
-				CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectsProvider());		
+				CodeSyncPlugin.getInstance().setProjectsProvider(new WebProjectAccessController());		
 			}
 		});	
 

@@ -2,13 +2,13 @@ package org.flowerplatform.eclipse;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.flowerplatform.codesync.projects.IProjectsProvider;
+import org.flowerplatform.codesync.projects.IProjectAccessController;
 
 /**
  * @author Mariana Gheorghe
  * @author Sebastian Solomon
  */
-public class EclipseProjectsProvider implements IProjectsProvider{
+public class EclipseProjectAccessController implements IProjectAccessController {
 
 	@Override
 	public Object getFile(Object project, String path) {

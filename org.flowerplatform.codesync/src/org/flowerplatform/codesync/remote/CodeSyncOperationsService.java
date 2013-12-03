@@ -270,8 +270,8 @@ public class CodeSyncOperationsService {
 		} catch (Exception e) {
 			throw new RuntimeException(path);
 		}
-		File project = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(diagram);
-		File srcDir = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFolder(project, "js");
+		File project = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(diagram);
+		File srcDir = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFolder(project, "js");
 		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, srcDir, technology, context.getCommunicationChannel(), true);
 	}
 

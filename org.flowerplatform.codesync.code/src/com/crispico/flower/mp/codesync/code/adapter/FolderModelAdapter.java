@@ -18,7 +18,6 @@
  */
 package com.crispico.flower.mp.codesync.code.adapter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,7 +35,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
- * Mapped to {@link File}. Children are {@link File}s that match the {@link #limitedPath}, if set.
+ * Mapped to platform-dependent files. Children are files that match the {@link #limitedPath}, if set.
  * 
  * @author Mariana
  */
@@ -123,7 +122,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	
 				@Override
 				protected boolean isAccepted(Object candidate) {
-					String candidatePath = CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject(candidate);
+					String candidatePath = CodeSyncPlugin.getInstance().getProjectAccessController().getPathRelativeToProject(candidate);
 					candidatePath = candidatePath.replaceAll("\\\\", "/");
 					if (limitedPath == null 
 							|| limitedPath.startsWith(candidatePath) 	// accept candidate a/b/c for limit a/b/c/d

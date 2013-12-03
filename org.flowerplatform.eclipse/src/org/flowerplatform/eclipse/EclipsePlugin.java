@@ -72,7 +72,7 @@ public class EclipsePlugin extends AbstractFlowerJavaPlugin {
 				// since the only reason this was needed was to lazy load the
 				// registry.
 				ExtendedImageRegistry.getInstance();
-				CodeSyncPlugin.getInstance().setProjectsProvider(new EclipseProjectsProvider());
+				CodeSyncPlugin.getInstance().setProjectsProvider(new EclipseProjectAccessController());
 			}
 		});
 

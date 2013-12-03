@@ -31,7 +31,7 @@ public class FileFullyQualifiedNameProvider implements IFullyQualifiedNameProvid
 	@Override
 	public String getFullyQualifiedName(Object object) {
 		if (object instanceof File) {
-			return CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject((File) object);
+			return CodeSyncPlugin.getInstance().getProjectAccessController().getPathRelativeToProject((File) object);
 		}
 		return null;
 	}

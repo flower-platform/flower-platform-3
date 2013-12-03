@@ -19,9 +19,7 @@
 package com.crispico.flower.mp.codesync.code;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -30,9 +28,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
-import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
@@ -83,13 +79,6 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	protected ModelAdapterFactorySetProvider modelAdapterFactorySetProvider;
-	
-	/**
-	 * @see #getOrCreateEditingDomain()
-	 * 
-	 * @author Mariana
-	 */
-	protected Map<File, AdapterFactoryEditingDomain> editingDomains = new HashMap<File, AdapterFactoryEditingDomain>();
 	
 	private Utils utils = new Utils();
 	
@@ -240,9 +229,9 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		match.setLeft(model);
 		Object ast;
 		if (model.getType().equals(CodeSyncPlugin.FOLDER)) {
-			ast = CodeSyncPlugin.getInstance().getProjectsProvider().getFolder(project, path);
+			ast = CodeSyncPlugin.getInstance().getProjectAccessController().getFolder(project, path);
 		}else {
-			ast = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, path);
+			ast = CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, path);
 		}
 		
 //		ast = file.getParent();

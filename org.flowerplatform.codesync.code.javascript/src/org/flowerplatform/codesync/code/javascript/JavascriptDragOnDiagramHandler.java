@@ -50,7 +50,7 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-			Object project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
+			Object project = CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(resource);
 			
 			if (!acceptDraggedObject(resource)) {
 				return false;

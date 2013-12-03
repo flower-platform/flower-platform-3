@@ -23,13 +23,13 @@ import java.io.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.Path;
-import org.flowerplatform.codesync.projects.IProjectsProvider;
+import org.flowerplatform.codesync.projects.IProjectAccessController;
 import org.flowerplatform.web.projects.remote.ProjectsService;
 
 /**
  * @author Mariana Gheorghe
  */
-public class WebProjectsProvider implements IProjectsProvider {
+public class WebProjectAccessController implements IProjectAccessController {
 
 	/**
 	 * @param path relative to project

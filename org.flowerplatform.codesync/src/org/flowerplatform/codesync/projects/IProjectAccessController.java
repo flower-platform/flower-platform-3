@@ -22,7 +22,7 @@ package org.flowerplatform.codesync.projects;
  * @author Mariana Gheorghe
  * @author Sebastian Solomon
  */
-public interface IProjectsProvider {
+public interface IProjectAccessController {
 	
 	/**
 	 * @param path relative to project

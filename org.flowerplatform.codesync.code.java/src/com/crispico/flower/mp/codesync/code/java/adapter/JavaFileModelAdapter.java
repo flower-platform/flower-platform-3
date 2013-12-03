@@ -36,7 +36,7 @@ import com.crispico.flower.mp.codesync.code.adapter.AbstractFileModelAdapter;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
- * Mapped to {@link File}s with the extension <code>java</code>. Chidren are {@link ASTNode}s.
+ * Mapped to files with the extension <code>java</code>. Chidren are {@link ASTNode}s.
  * 
  * @author Mariana
  */

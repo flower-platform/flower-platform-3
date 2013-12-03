@@ -339,7 +339,7 @@ public class CodeSyncDiagramOperationsService1 {
 	
 	public static Resource getCodeSyncMappingResource(DiagramEditableResource diagramEditableResource) {
 		ResourceSet resourceSet = diagramEditableResource.getResourceSet();
-		Object project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(diagramEditableResource.getFile());
+		Object project = CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(diagramEditableResource.getFile());
 		return CodeSyncPlugin.getInstance().getCodeSyncMapping(project, resourceSet);
 	}
 	

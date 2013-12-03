@@ -46,7 +46,7 @@ import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Defau
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Note;
 import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
-import org.flowerplatform.codesync.projects.IProjectsProvider;
+import org.flowerplatform.codesync.projects.IProjectAccessController;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -126,9 +126,9 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected List<Runnable> runnablesThatLoadDescriptors;
 	
 	/**
-	 * @see #getProjectsProvider()
+	 * @see #getProjectAccessController()
 	 */
-	private IProjectsProvider projectsProvider;
+	private IProjectAccessController projectAccessController;
 	
 	protected boolean useUIDs = true;
 	
@@ -153,12 +153,12 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	 * 
 	 * @author Mariana Gheorghe
 	 */
-	public IProjectsProvider getProjectsProvider() {
-		return projectsProvider;
+	public IProjectAccessController getProjectAccessController() {
+		return projectAccessController;
 	}
 
-	public void setProjectsProvider(IProjectsProvider projectsProvider) {
-		this.projectsProvider = projectsProvider;
+	public void setProjectsProvider(IProjectAccessController projectAccessController) {
+		this.projectAccessController = projectAccessController;
 	}
 	
 	public List<CodeSyncElementDescriptor> getCodeSyncElementDescriptors() {
@@ -335,7 +335,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	 * Important: the code sync mapping and cache resources <b>must</b> be loaded through the same {@link ResourceSet}.
 	 */
 	public ResourceSet getOrCreateResourceSet(Object file, String diagramEditorStatefulServiceId) {
-		Object project = getProjectsProvider().getContainingProjectForFile(file);
+		Object project = getProjectAccessController().getContainingProjectForFile(file);
 		DiagramEditorStatefulService service = (DiagramEditorStatefulService) CommunicationPlugin.getInstance()
 				.getServiceRegistry().getService(diagramEditorStatefulServiceId);
 
@@ -440,7 +440,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 	public Resource getCodeSyncMapping(Object project, ResourceSet resourceSet) {
-		Object codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CSE_MAPPING_FILE_LOCATION); 
+		Object codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, CSE_MAPPING_FILE_LOCATION); 
 		Resource cseResource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 		if (!EditorPlugin.getInstance().getFileAccessController().exists(codeSyncElementMappingFile)) {
 			// first clear the resource in case the mapping file was deleted 
@@ -467,7 +467,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	 * @author Mariana
 	 */
 	public Resource getAstCache(Object project, ResourceSet resourceSet) {
-		Object astCacheElementFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, ACE_FILE_LOCATION); 
+		Object astCacheElementFile = CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, ACE_FILE_LOCATION); 
 		Resource resource = CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
 		if (!EditorPlugin.getInstance().getFileAccessController().exists(astCacheElementFile)) {
 			resource.getContents().clear();

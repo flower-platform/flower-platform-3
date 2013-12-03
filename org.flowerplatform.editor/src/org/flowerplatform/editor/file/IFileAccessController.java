@@ -1,6 +1,5 @@
 package org.flowerplatform.editor.file;
 
-import java.io.File;
 import java.io.InputStream;
 
 /**

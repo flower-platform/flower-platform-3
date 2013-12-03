@@ -67,7 +67,7 @@ public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 			} catch (Exception e) {
 				throw new RuntimeException(String.format("Error while getting resource %s", object), e);
 			}
-			Object project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
+			Object project = CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(resource);
 			if (!acceptDraggedObject(resource)) {
 				return false;
 			}
