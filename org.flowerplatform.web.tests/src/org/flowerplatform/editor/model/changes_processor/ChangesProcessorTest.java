@@ -11,7 +11,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.config.extension.AddNewExtension_TopLevelElement;
-import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.AbstractServerCommand;
@@ -89,7 +89,7 @@ public class ChangesProcessorTest {
 	@Test
 	public void testAddRemove() {
 		// TODO CS the static references
-		final Resource codeSyncMappingResource = CodeSyncDiagramOperationsService1.getCodeSyncMappingResource(diagramEditableResource);
+		final Resource codeSyncMappingResource = CodeSyncDiagramOperationsService.getCodeSyncMappingResource(diagramEditableResource);
 		final CodeSyncElement srcDir = AddNewExtension_TopLevelElement.getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, new String[] { "js" });
 		
 		/**

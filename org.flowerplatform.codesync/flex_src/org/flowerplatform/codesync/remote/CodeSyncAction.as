@@ -46,8 +46,8 @@ package org.flowerplatform.codesync.remote {
 			this.label = label;
 			this.technology = technology;
 			this.icon = CodeSyncPlugin.getInstance().getResourceUrl("images/Synchronize.gif");
-			
 			preferShowOnActionBar = true;
+			orderIndex = 600;
 		}
 		
 		public function get diagramShell():DiagramShell {		

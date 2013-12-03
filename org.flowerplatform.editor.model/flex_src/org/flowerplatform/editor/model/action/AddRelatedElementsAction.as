@@ -27,6 +27,7 @@ package org.flowerplatform.editor.model.action {
 			addMissingElementsToDiagram = true;
 			label = EditorModelPlugin.getInstance().getMessage("action.addRelatedElements");
 			icon = EditorModelPlugin.getInstance().getResourceUrl("images/action/addMissEltsDisplayRelationsIcon.gif");
+			orderIndex = 801;
 		}
 		
 	}

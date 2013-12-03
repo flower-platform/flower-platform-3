@@ -103,7 +103,8 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 			}
 		} else {			
 			// removed
-			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());			
+			diagramUpdaterChangeDescriptionProcessingContext.getObjectIdsToDispose().add(((NotationElement) object).getIdBeforeRemoval());
+			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToDispose().add(object);
 		}
 	}
 	
@@ -215,23 +216,29 @@ public class DiagramUpdaterChangeProcessor implements IChangeProcessor {
 		if (diagrammableElementWasSetToNull) {		
 			return;
 		}
-		if (!diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().contains(notationElement)) {			
-			if (notationElement instanceof View) {
-				View view = (View) notationElement;
-				List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
-				if (processors != null) {
-					for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
-						// view.getDiagrammableElement() is null for diagram, so the if was removed
-						// be aware: there were cases when processFeatureChanges had crashed if null was sent
-						// as view.getDiagrammableElement()
-						processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);	
+		
+		// only if the element was not removed; in theory this check shouldn't be needed
+		// however using binary serialization, the idBeforeRemoval is not set when the resource is loaded
+		// so we need to set it manually, which triggers a change that is being processed here
+		if (notationElement.eResource() != null) {
+			if (!diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().contains(notationElement)) {			
+				if (notationElement instanceof View) {
+					View view = (View) notationElement;
+					List<IDiagrammableElementFeatureChangesProcessor> processors = EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().getDiagrammableElementFeatureChangesProcessors(view.getViewType());
+					if (processors != null) {
+						for (IDiagrammableElementFeatureChangesProcessor processor : processors) {
+							// view.getDiagrammableElement() is null for diagram, so the if was removed
+							// be aware: there were cases when processFeatureChanges had crashed if null was sent
+							// as view.getDiagrammableElement()
+							processor.processFeatureChanges(view.getDiagrammableElement(), null, view, context);	
+						}
 					}
-				}
+				}			
+			} else {
+				diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().remove(notationElement);
 			}			
-		} else {
-			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().remove(notationElement);
-		}			
-		diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().add(notationElement);	
+			diagramUpdaterChangeDescriptionProcessingContext.getObjectsToUpdate().add(notationElement);	
+		}
 	}
 
 	protected void processFeatureChangesForDiagrammableElement(Map.Entry<EObject, EList<FeatureChange>> entry, Map<String, Object> context) {

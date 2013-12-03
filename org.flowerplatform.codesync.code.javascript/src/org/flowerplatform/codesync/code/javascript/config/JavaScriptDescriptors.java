@@ -1,5 +1,7 @@
 package org.flowerplatform.codesync.code.javascript.config;
 
+import static com.crispico.flower.mp.codesync.base.CodeSyncPlugin.TOP_LEVEL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_RegEx
 import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.codesync.processor.CodeSyncCategorySeparatorProcessor;
+import org.flowerplatform.codesync.processor.RelationsChangesDiagramProcessor;
 import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -64,7 +67,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_BACKBONE_CLASS).setLabel("Backbone Class")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addInitializationType(INIT_TYPE_NONE).addInitializationTypeLabel("Plain Backbone Class").addInitializationTypesOrderIndexes(110)
 				.addInitializationType(INIT_TYPE_BACKBONE_VIEW).addInitializationTypeLabel("Plain View").addInitializationTypesOrderIndexes(120)
 				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_VIEW).addInitializationTypeLabel("Table View").addInitializationTypesOrderIndexes(130)
@@ -195,7 +198,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_JAVASCRIPT_FILE)
-//				.addCodeSyncTypeCategory("topLevel")
+//				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.setLabel("JavaScript File")
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewJavaScriptFile")
@@ -212,7 +215,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("table")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table HTML Template")
 				.setIconUrl("images/full/obj16/table.png")
@@ -247,7 +250,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItem")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table Item HTML Template")
 				.setIconUrl("images/full/obj16/table_select_row.png")
@@ -279,7 +282,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		descriptors.add(
 				new CodeSyncElementDescriptor()
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.setCodeSyncType("form")
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Form HTML Template")
@@ -323,7 +326,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		descriptors.add(
 				new CodeSyncElementDescriptor()
-				.addCodeSyncTypeCategory("topLevel").addCodeSyncTypeCategory("dontNeedLocation")
+				.addCodeSyncTypeCategory(TOP_LEVEL).addCodeSyncTypeCategory("dontNeedLocation")
 				.setCodeSyncType("note")
 				.setLabel("Note")
 				.setIconUrl("images/full/obj16/note.png")
@@ -417,7 +420,7 @@ public class JavaScriptDescriptors implements Runnable {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form", parentElementProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);
 		
 		TopLevelElementChildProcessor childElementProcessor = new TopLevelElementChildProcessor();
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("topLevelBoxTitle", childElementProcessor);
@@ -438,6 +441,23 @@ public class JavaScriptDescriptors implements Runnable {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form.formItem", childElementProcessor);
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("categorySeparator", new CodeSyncCategorySeparatorProcessor());
+		
+		RelationsChangesDiagramProcessor relationsChangesProcessor = new RelationsChangesDiagramProcessor();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", relationsChangesProcessor);
 		
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_CLASS_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
 		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!", true, null));

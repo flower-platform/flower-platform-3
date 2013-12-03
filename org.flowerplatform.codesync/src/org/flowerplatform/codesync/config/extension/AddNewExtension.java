@@ -21,8 +21,6 @@ package org.flowerplatform.codesync.config.extension;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
-import org.flowerplatform.emf_model.notation.Node;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;

@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -59,9 +59,11 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 					project, resource, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, communicationChannel, false);
 			codeSyncElement = codeSyncElement.getChildren().get(0);
 			
-			CodeSyncDiagramOperationsService1 service = (CodeSyncDiagramOperationsService1) 
+			CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
 					CommunicationPlugin.getInstance().getServiceRegistry().getService("codeSyncDiagramOperationsService");
-			service.addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, codeSyncElement, new HashMap<String, Object>());
+			String viewId = service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, codeSyncElement, new HashMap<String, Object>());
+			
+			service.displayMissingRelations(context, viewId, false);
 		}
 		return true;
 	}
