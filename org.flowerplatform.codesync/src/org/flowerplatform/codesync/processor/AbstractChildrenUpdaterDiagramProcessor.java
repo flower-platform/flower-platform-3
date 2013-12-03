@@ -141,7 +141,7 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 	abstract protected Node createChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context);
 	
 	/**
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */
 	protected Node addChildView(View associatedViewOnOpenDiagram, EObject child, int newViewsIndex, Map<String, Object> context) {
 		Node newView = createChildView(associatedViewOnOpenDiagram, child, context);
@@ -153,7 +153,7 @@ public abstract class AbstractChildrenUpdaterDiagramProcessor extends AbstractDi
 	}
 	
 	/**
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */
 	protected void removeChildView(View associatedViewOnOpenDiagram, EObject child, Map<String, Object> context) {
 		associatedViewOnOpenDiagram.setDiagrammableElement(null);

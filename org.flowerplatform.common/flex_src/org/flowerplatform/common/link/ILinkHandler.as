@@ -19,7 +19,7 @@
 package org.flowerplatform.common.link {
 	
 	/**
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */
 	public interface ILinkHandler {
 	

@@ -25,7 +25,7 @@ package org.flowerplatform.web.action {
 	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**	
-	 * @author Cristina	Constatinescu
+	 * @author Cristina	Constantinescu
 	 */
 	public class SwitchPerspectiveAction extends ActionBase {
 		

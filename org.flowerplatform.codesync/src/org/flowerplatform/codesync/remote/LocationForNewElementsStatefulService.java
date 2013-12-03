@@ -24,7 +24,7 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
- * @author Cristina Constatinescu
+ * @author Cristina Constantinescu
  */
 public class LocationForNewElementsStatefulService extends GenericTreeStatefulService {
 	

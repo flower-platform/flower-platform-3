@@ -31,6 +31,8 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.action.ExpandCompartmentActionProvider;
 	import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
 	import org.flowerplatform.codesync.regex.RegexUtils;
+	import org.flowerplatform.codesync.regex.ide.remote.MacroRegexDto;
+	import org.flowerplatform.codesync.regex.ide.remote.ParserRegexDto;
 	import org.flowerplatform.codesync.regex.ide.remote.RegexIndexDto;
 	import org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto;
 	import org.flowerplatform.codesync.regex.ide.remote.RegexSelectedItem;
@@ -49,8 +51,6 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.emf_model.notation.View;
-	import org.flowerplatform.emf_model.regex.MacroRegex;
-	import org.flowerplatform.emf_model.regex.ParserRegex;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
 	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -138,8 +138,8 @@ package org.flowerplatform.codesync {
 			registerClassAliasFromAnnotation(StringSelectedItem);
 						
 			registerClassAliasFromAnnotation(RegexCommand);
-			registerClassAliasFromAnnotation(MacroRegex);
-			registerClassAliasFromAnnotation(ParserRegex);
+			registerClassAliasFromAnnotation(MacroRegexDto);
+			registerClassAliasFromAnnotation(ParserRegexDto);
 					
 			registerClassAliasFromAnnotation(RegexSubMatchDto);			
 			registerClassAliasFromAnnotation(RegexIndexDto);			

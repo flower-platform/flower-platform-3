@@ -40,7 +40,7 @@ package  org.flowerplatform.web.action {
 	 * <p>	 
 	 * The action has the view's name and icon.
 	 * 
-	 * @author Cristina	Constatinescu
+	 * @author Cristina	Constantinescu
 	 */
 	public class ShowViewAction extends ActionBase {
 				

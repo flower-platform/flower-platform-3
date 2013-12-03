@@ -89,7 +89,7 @@ public class CommonPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	/**	
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */
 	public FlowerProperties getFlowerProperties() {
 // 		TODO: remove if no problems are detected when starting server

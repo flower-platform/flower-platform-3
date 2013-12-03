@@ -27,7 +27,7 @@ package org.flowerplatform.common.link {
 	import spark.components.TextArea;
 	
 	/**
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */ 
 	public class LinkTextArea extends TextArea {
 		

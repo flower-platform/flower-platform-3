@@ -61,7 +61,7 @@ package org.flowerplatform.common {
 		}
 		
 		/**
-		 * @author Cristina Constatinescu
+		 * @author Cristina Constantinescu
 		 */
 		public function handleLink(queryString:String):void {			
 			var commands:Object = parseQueryStringParameters(queryString); // map command -> parameters
@@ -74,7 +74,7 @@ package org.flowerplatform.common {
 		}
 		
 		/**
-		 * @author Cristina Constatinescu
+		 * @author Cristina Constantinescu
 		 */
 		public function handleLinkWithQueryStringDecoded(queryStringDecoded:Object):void {			
 			for (var object:String in queryStringDecoded) {	
@@ -86,7 +86,7 @@ package org.flowerplatform.common {
 		}
 		
 		/**
-		 * @author Cristina Constatinescu
+		 * @author Cristina Constantinescu
 		 */
 		public function parseQueryStringParameters(url:String):Object {
 			var query:String;
