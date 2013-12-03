@@ -71,13 +71,13 @@ public class CodeSyncWikiTest {
 	
 	public static final String LINK = "/link-to-project";
 	
-	private File DOKUWIKI_FILE = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams.txt");
-	private File DOKUWIKI_FILE_2 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 2.txt");
-	private File DOKUWIKI_FILE_3 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 3.txt");
+	private File DOKUWIKI_FILE = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams.txt");
+	private File DOKUWIKI_FILE_2 = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 2.txt");
+	private File DOKUWIKI_FILE_3 = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/dokuwiki/teste Scenarios in Diagrams 3.txt");
 	
-	private File MD_FILE = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/Test.md");
-	private File MD_FILE_2 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/left/Test.md");
-	private File MD_FILE_3 = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/right/Test.md");
+	private File MD_FILE = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/Test.md");
+	private File MD_FILE_2 = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/left/Test.md");
+	private File MD_FILE_3 = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(getProject(), ProjectsService.LINK_TO_PROJECT + "/markdown/right/Test.md");
 	
 	private Pair[] expected;
 	private int index;

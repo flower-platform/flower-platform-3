@@ -47,7 +47,7 @@ public class CodeSyncTestSuite extends EclipseDependentTestSuiteBase {
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("Error while getting resource %s", absolutePath), e);
 		}
-		return (File) CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
+		return (File) CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(resource);
 	}
 	
 	public static File getFile(String path) {

@@ -417,8 +417,8 @@ public class CodeSyncTest {
 		CodeSyncPlugin.getInstance().addSrcDir(MODIFIED_NO_CONFLICTS_PERFORM_SYNC);
 		String fullyQualifiedName = PROJECT + "/" + MODIFIED_NO_CONFLICTS_PERFORM_SYNC + "/" + SOURCE_FILE;
 		File project = getProject();
-		File cseLocation = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION);
-		File aceLocation = (File) CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CodeSyncPlugin.getInstance().ACE_FILE_LOCATION);
+		File cseLocation = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, CodeSyncPlugin.getInstance().CSE_MAPPING_FILE_LOCATION);
+		File aceLocation = (File) CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, CodeSyncPlugin.getInstance().ACE_FILE_LOCATION);
 
 		
 		File file = getFile(fullyQualifiedName);
