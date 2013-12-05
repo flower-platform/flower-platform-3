@@ -33,13 +33,14 @@ package org.flowerplatform.web {
 	import mx.managers.ToolTipManager;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
+	import org.flowerplatform.codesync.regex.MacrosRegexViewProvider;
+	import org.flowerplatform.codesync.regex.ParserRegexViewProvider;
+	import org.flowerplatform.codesync.regex.RegexConfigsViewProvider;
 	import org.flowerplatform.codesync.regex.RegexIdePerspective;
-	import org.flowerplatform.codesync.regex.ide.MacrosRegexViewProvider;
-	import org.flowerplatform.codesync.regex.ide.ParserRegexViewProvider;
-	import org.flowerplatform.codesync.regex.ide.RegexConfigsViewProvider;
-	import org.flowerplatform.codesync.regex.ide.RegexMatchesViewProvider;
+	import org.flowerplatform.codesync.regex.RegexMatchesViewProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -49,15 +50,14 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
 	import org.flowerplatform.flexutil.global_menu.WebMenuBar;
+	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
-	import org.flowerplatform.properties.PropertiesViewProvider;
 	import org.flowerplatform.web.action.ShowViewAction;
 	import org.flowerplatform.web.action.SwitchPerspectiveAction;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-	import org.flowerplatform.web.common.explorer.ExplorerViewProvider;
 	import org.flowerplatform.web.layout.DefaultPerspective;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
@@ -100,6 +100,7 @@ package org.flowerplatform.web {
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
+			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new ParserRegexViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexMatchesViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new MacrosRegexViewProvider());
@@ -233,21 +234,16 @@ package org.flowerplatform.web {
 					menuActionProvider.getActions(null).push(new SwitchPerspectiveAction(perspective));
 				}
 			}
-			
-			createAndAddAction("Show View", "show_view", "window", null, null, menuActionProvider);
-			
-			menuActionProvider.getActions(null).push(
-				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(ExplorerViewProvider.ID)));
-			menuActionProvider.getActions(null).push(
-				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(PropertiesViewProvider.ID)));
-			menuActionProvider.getActions(null).push(
-				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(OpenResourcesViewProvider.ID)));
-			menuActionProvider.getActions(null).push(
-				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(ParserRegexViewProvider.ID)));
-			menuActionProvider.getActions(null).push(
-				new ShowViewAction(FlexUtilGlobals.getInstance().composedViewProvider.getViewProvider(RegexMatchesViewProvider.ID)));
-			
-			
+						
+			if (FlexUtilGlobals.getInstance().composedViewProvider.viewProviders.length > 0) {
+				createAndAddAction("Show View", "show_view", "window", null, null, menuActionProvider);
+				for each (var viewProvider:IViewProvider in FlexUtilGlobals.getInstance().composedViewProvider.viewProviders) {
+					if (!(viewProvider is BasicEditorDescriptor)) {
+						menuActionProvider.getActions(null).push(new ShowViewAction(viewProvider));
+					}
+				}
+			}
+						
 			createAndAddAction("User", "user", null,  
 				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), 
 				null, menuActionProvider);

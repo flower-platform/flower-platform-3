@@ -31,13 +31,14 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.action.ExpandCompartmentActionProvider;
 	import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
 	import org.flowerplatform.codesync.regex.RegexUtils;
-	import org.flowerplatform.codesync.regex.ide.remote.MacroRegexDto;
-	import org.flowerplatform.codesync.regex.ide.remote.ParserRegexDto;
-	import org.flowerplatform.codesync.regex.ide.remote.RegexIndexDto;
-	import org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto;
-	import org.flowerplatform.codesync.regex.ide.remote.RegexSelectedItem;
-	import org.flowerplatform.codesync.regex.ide.remote.RegexSubMatchDto;
-	import org.flowerplatform.codesync.regex.ide.remote.command.RegexCommand;
+	import org.flowerplatform.codesync.regex.remote.MacroRegexDto;
+	import org.flowerplatform.codesync.regex.remote.ParserRegexDto;
+	import org.flowerplatform.codesync.regex.remote.RegexActionDto;
+	import org.flowerplatform.codesync.regex.remote.RegexIndexDto;
+	import org.flowerplatform.codesync.regex.remote.RegexMatchDto;
+	import org.flowerplatform.codesync.regex.remote.RegexSelectedItem;
+	import org.flowerplatform.codesync.regex.remote.RegexSubMatchDto;
+	import org.flowerplatform.codesync.regex.remote.command.RegexCommand;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -107,8 +108,26 @@ package org.flowerplatform.codesync {
 			// register PropertiesPlugin Renderer
 			PropertiesPlugin.getInstance().propertyRendererClasses["DropDownListWithRegexActions"] = new FactoryWithInitialization
 				(DropDownListPropertyRenderer, {
-					requestDataProviderHandler: function(callbackObject:Object, callbackFunction:Function):void {
-						callbackFunction.call(callbackObject, new ArrayCollection([1,2,3,4,5]));						
+					requestDataProviderHandler: function (callbackObject:Object, callbackFunction:Function):void {
+						CommunicationPlugin.getInstance().bridge.sendObject(
+							new InvokeServiceMethodServerCommand("regexService", "getRegexActions", 
+								null, callbackObject, callbackFunction));						
+					},
+					
+					labelFunction: function (object:Object):String {
+						return RegexActionDto(object).name + " - " + RegexActionDto(object).description;
+					},
+					
+					getItemIndexFromList: function (item:Object, list:ArrayCollection):int {
+						if (item != null) {
+							for (var i:int = 0; i < list.length; i++) {
+								var dto:RegexActionDto = RegexActionDto(list.getItemAt(i));
+								if (dto.name == RegexActionDto(item).name) {
+									return i;
+								}
+							}
+						}
+						return -1;
 					}
 				});
 		}
@@ -140,7 +159,7 @@ package org.flowerplatform.codesync {
 			registerClassAliasFromAnnotation(RegexCommand);
 			registerClassAliasFromAnnotation(MacroRegexDto);
 			registerClassAliasFromAnnotation(ParserRegexDto);
-					
+			registerClassAliasFromAnnotation(RegexActionDto);
 			registerClassAliasFromAnnotation(RegexSubMatchDto);			
 			registerClassAliasFromAnnotation(RegexIndexDto);			
 			registerClassAliasFromAnnotation(RegexMatchDto);

@@ -26,10 +26,6 @@ package org.flowerplatform.codesync.regex {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
-	import org.flowerplatform.codesync.regex.ide.MacrosRegexViewProvider;
-	import org.flowerplatform.codesync.regex.ide.ParserRegexViewProvider;
-	import org.flowerplatform.codesync.regex.ide.RegexConfigsViewProvider;
-	import org.flowerplatform.codesync.regex.ide.RegexMatchesViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.properties.PropertiesViewProvider;
 	
@@ -45,7 +41,7 @@ package org.flowerplatform.codesync.regex {
 		}
 		
 		public override function get name():String {
-			return "Regex Modeling";
+			return CodeSyncPlugin.getInstance().getMessage("regex.perspective");
 		}
 		
 		public override function get iconUrl():String {			

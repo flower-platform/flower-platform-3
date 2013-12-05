@@ -24,8 +24,10 @@ package org.flowerplatform.properties.property_renderer {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
+	import org.flowerplatform.properties.remote.Property;
 	
 	import spark.components.DropDownList;
+	import spark.events.IndexChangeEvent;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -39,6 +41,16 @@ package org.flowerplatform.properties.property_renderer {
 		 * Signature: function getDataProviderHandler(callbackObject:Object, callbackFunction:Function):void		 
 		 */ 
 		public var requestDataProviderHandler:Function;
+		
+		/**
+		 * Signature: function myLabelFunction(item:Object):String
+		 */ 
+		public var labelFunction:Function;
+		
+		/**
+		 * Signature: function getItemIndexFromList(item:Object, list:ArrayCollection):int
+		 */ 
+		public var getItemIndexFromList:Function;
 		
 		public function DropDownListPropertyRenderer() {
 			super();
@@ -55,23 +67,33 @@ package org.flowerplatform.properties.property_renderer {
 						
 			dropDownList.percentWidth = 100;
 			dropDownList.percentHeight = 100;		
+			dropDownList.labelFunction = labelFunction;
+			
+			//get data to fill dropDownList
 			requestDataProviderHandler(this, requestDataProviderCallbackHandler);
 			
 			addElement(dropDownList);			
 		}
 		
 		override public function set data(value:Object):void {
-			super.data = value;
-			dropDownList.selectedItem = data.value;
-			dropDownList.enabled = !data.readOnly;
+			super.data = value;			
+			dropDownList.enabled = !Property(data).readOnly;
 			
 			if (!data.readOnly) {				
-				handleListeningOnEvent(FocusEvent.FOCUS_OUT, this, dropDownList);
+				handleListeningOnEvent(IndexChangeEvent.CHANGE, this, dropDownList);
 			}			
 		}
 		
 		private function requestDataProviderCallbackHandler(result:ArrayCollection):void {
-			dropDownList.dataProvider = result;
+			dropDownList.dataProvider = result;		
+			if (result.length > 0) {
+				dropDownList.selectedIndex = getItemIndexFromList(Property(data).value, result);
+			}
 		}
+		
+		override protected function getValue():Object {
+			return dropDownList.selectedItem;	
+		}
+		
 	}
 }

@@ -11,10 +11,6 @@
     <classEntry path="org.flowerplatform.codesync.action.ShowCodeSyncDescriptorsAction"/>
     <classEntry path="org.flowerplatform.codesync.properties.remote.StringSelectedItem"/>
     <classEntry path="org.flowerplatform.codesync.regex.RegexIdePerspective"/>
-    <classEntry path="org.flowerplatform.codesync.regex.ide.RegexConfigsViewProvider"/>
-    <classEntry path="org.flowerplatform.codesync.regex.ide.RegexDataEvent"/>
-    <classEntry path="org.flowerplatform.codesync.regex.ide.RegexMatchesView"/>
-    <classEntry path="org.flowerplatform.codesync.regex.ide.RegexMatchesViewProvider"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.action.RunAction"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.RegexIndexDto"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.RegexMatchDto"/>
@@ -26,10 +22,10 @@
     <classEntry path="org.flowerplatform.codesync.remote.RelationDescriptor"/>
     <classEntry path="org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsView"/>
     <classEntry path="org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsViewProvider"/>
-    <classEntry path="org.flowerplatform.emf_model.regex.MacroRegex"/>
     <classEntry path="org.flowerplatform.emf_model.regex.ParserRegex"/>
     <classEntry path="org.flowerplatform.codesync.regex.RegexUtils"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.command.RegexCommand"/>
+    <classEntry path="org.flowerplatform.codesync.regex.ide.remote.RegexActionDto"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

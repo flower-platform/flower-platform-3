@@ -10,6 +10,7 @@ package org.flowerplatform.properties.property_renderer {
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.properties.PropertiesView;
 	import org.flowerplatform.properties.PropertyItemRenderer;
+	import org.flowerplatform.properties.remote.Property;
 	
 	import spark.components.DataRenderer;
 	import spark.components.HGroup;
@@ -46,11 +47,19 @@ package org.flowerplatform.properties.property_renderer {
 					new InvokeServiceMethodServerCommand(
 						"propertiesService",
 						"setProperties",
-						[selectionOfItems, data.name, data.value]
+						[selectionOfItems, data.name, getValue()]
 					)
 				);
 			}	
 		}
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		protected function getValue():Object {
+			return Property(data).value;	
+		}
+		
 		/**
 		 * Registers the objectToListen to the Event event, and removes the listner when the parentRenderer is removed
 		 * 

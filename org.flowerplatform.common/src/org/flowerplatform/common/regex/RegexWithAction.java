@@ -23,38 +23,47 @@ import java.util.regex.Pattern;
 /**
  * @author Cristi
  */
-public abstract class RegexWithAction {
+public abstract class RegexWithAction extends AbstractRegexWithAction {
 
-	protected String humanReadableRegexMeaning;
-	
+	protected String name;
 	protected String regex;
 	
 	protected int numberOfCaptureGroups;
 		
-	public String getHumanReadableRegexMeaning() {
-		return humanReadableRegexMeaning;
-	}
-
 	public String getRegex() {
 		return regex;
 	}
-
-	public abstract void executeAction(RegexProcessingSession session);
 	
-	public RegexWithAction(String humanReadableRegexMeaning, String regex) {
+	@Override
+	public String getName() {	
+		return name;
+	}	
+	
+	@Override
+	public RegexAction getRegexAction() {
+		// isn't used
+		return null;
+	}
+
+	@Override
+	public int getNumberOfCaptureGroups() {		
+		return numberOfCaptureGroups;
+	}
+
+	public RegexWithAction(String name, String regex) {
 		super();
-		this.humanReadableRegexMeaning = humanReadableRegexMeaning;
+		this.name = name;
 		this.regex = regex;
 		this.numberOfCaptureGroups = Pattern.compile(regex).matcher("").groupCount();
 	}	
 		
 	@Override
 	public String toString() {
-		return "RegexWithAction [humanReadableRegexMeaning="
-				+ humanReadableRegexMeaning + ", regex=" + regex
+		return "RegexWithAction [name="
+				+ name + ", regex=" + regex
 				+ ", numberOfCaptureGroups=" + numberOfCaptureGroups + "]";
 	}
-
+	
 	public static class IfFindThisSkip extends RegexWithAction {
 
 		public IfFindThisSkip(String humanReadableRegexMeaning, String regex) {
@@ -62,10 +71,9 @@ public abstract class RegexWithAction {
 		}
 
 		@Override
-		public void executeAction(RegexProcessingSession session) {
-			// do nothing
+		public void executeAction(RegexProcessingSession param) {
+			// do nothing			
 		}
-		
 	}
 	
 	public static class IfFindThisAnnounceMatchCandidate extends RegexWithAction {
@@ -82,7 +90,7 @@ public abstract class RegexWithAction {
 		public void executeAction(RegexProcessingSession session) {
 			if (!session.ignoreMatches && session.currentNestingLevel == session.configuration.targetNestingForMatches) {
 				session.candidateAnnounced(category);
-			}
+			}			
 		}
 		
 	}
@@ -99,23 +107,21 @@ public abstract class RegexWithAction {
 
 		@Override
 		public void executeAction(RegexProcessingSession session) {
-			session.currentNestingLevel += increment;
+			session.currentNestingLevel += increment;			
 		}
-		
+				
 	}
 	
 	public static class UntilFoundThisIgnoreAll extends RegexWithAction {
 
-		public UntilFoundThisIgnoreAll(String humanReadableRegexMeaning,
-				String regex) {
+		public UntilFoundThisIgnoreAll(String humanReadableRegexMeaning, String regex) {
 			super(humanReadableRegexMeaning, regex);
 		}
 
 		@Override
 		public void executeAction(RegexProcessingSession session) {
-			session.ignoreMatches = false;
-		}
-		
+			session.ignoreMatches = false;			
+		}				
 	}
 	
 }

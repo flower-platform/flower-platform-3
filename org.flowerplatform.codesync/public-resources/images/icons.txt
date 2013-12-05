@@ -10,5 +10,6 @@ images/full/obj16/arrow_right.png http://www.famfamfam.com/lab/icons/silk/
 images/regex/brick.png http://www.famfamfam.com/lab/icons/silk/
 images/regex/bricks.png http://www.famfamfam.com/lab/icons/silk/
 images/regex/bullet_star.png http://www.famfamfam.com/lab/icons/silk/
-images/regex/star.png http://www.famfamfam.com/lab/icons/silk/
 images/regex/wrench.png http://www.famfamfam.com/lab/icons/silk/
+
+images/regex/percent.png http://www.everaldo.com/#3cf/twitter

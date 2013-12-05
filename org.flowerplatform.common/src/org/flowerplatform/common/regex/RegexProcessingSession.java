@@ -39,7 +39,7 @@ public class RegexProcessingSession {
 	
 	protected int currentMatchGroupIndex;
 	
-	protected RegexWithAction currentRegex;
+	protected AbstractRegexWithAction currentRegex;
 	
 	protected String[] currentSubMatchesForCurrentRegex;
 	
@@ -74,7 +74,7 @@ public class RegexProcessingSession {
 		return currentMatchGroupIndex;
 	}
 
-	public RegexWithAction getCurrentRegex() {
+	public AbstractRegexWithAction getCurrentRegex() {
 		return currentRegex;
 	}
 
@@ -123,15 +123,15 @@ public class RegexProcessingSession {
 
 		currentRegex = configuration.captureGroupToRegexMapping[currentMatchGroupIndex];
 		if (logger.isTraceEnabled()) {
-			logger.trace("[{}:{}] corresponds to group #{}. Invoking Action...", new Object[] { currentRegex.humanReadableRegexMeaning, currentRegex.getClass().getSimpleName(), currentMatchGroupIndex});
+			logger.trace("[{}:{}] corresponds to group #{}. Invoking Action...", new Object[] { currentRegex.getName(), currentRegex.getClass().getSimpleName(), currentMatchGroupIndex});
 		}
 		
 		// for the the current regex, populate the submatches
-		if (currentRegex.numberOfCaptureGroups == 0) {
+		if (currentRegex.getNumberOfCaptureGroups() == 0) {
 			currentSubMatchesForCurrentRegex = null;
 		} else {
-			currentSubMatchesForCurrentRegex = new String[currentRegex.numberOfCaptureGroups];
-			for (int i = 0; i < currentRegex.numberOfCaptureGroups; i++) {
+			currentSubMatchesForCurrentRegex = new String[currentRegex.getNumberOfCaptureGroups()];
+			for (int i = 0; i < currentRegex.getNumberOfCaptureGroups(); i++) {
 				if (currentMatchGroupIndex + i + 1 > matcher.groupCount()) {
 					logger.error("Not enough match groups left, to fully populate the expected submatches. This shouldn't happen. Please see the audit logs to try to reproduce the input, while enabling trace for this package.");
 				}				

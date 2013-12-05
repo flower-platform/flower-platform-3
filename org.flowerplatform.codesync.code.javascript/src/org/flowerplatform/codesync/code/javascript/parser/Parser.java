@@ -20,18 +20,21 @@ package org.flowerplatform.codesync.code.javascript.parser;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.regex.Pattern;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
-import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstFactory;
+import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
+import org.flowerplatform.codesync.regex.CodeSyncRegexAction;
+import org.flowerplatform.codesync.regex.RegexService;
 import org.flowerplatform.common.regex.RegexConfiguration;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.common.regex.RegexUtil;
-import org.flowerplatform.common.regex.RegexWithAction;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
 /**
  * @author Mariana Gheorghe
@@ -40,6 +43,7 @@ public class Parser {
 
 	public static final String JS_FILE 				= "javaScriptFile";
 	public static final String HTML_FILE 			= "htmlFile";
+	
 	
 	//////////////////////////////////
 	// HTML
@@ -56,7 +60,7 @@ public class Parser {
 	
 	public static final String HTML_TABLE_HEADER_ENTRY 			= "tableHeaderEntry";
 	public static final String HTML_TABLE_HEADER_ENTRY_REGEX 	= "<th>(.*?)</th>";
-
+	
 	public static final String HTML_TABLE_ITEM					= "tableItem";
 	public static final String HTML_TABLE_ITEM_REGEX 			= "<!-- template tableItem -->";
 	public static final String HTML_TABLE_ITEM_URL				= "tableItemUrl";
@@ -114,7 +118,7 @@ public class Parser {
 	
 	public static final String JS_ROUTES_ATTRIBUTE_ENTRY		= "routesAttributeEntry";
 	public static final String JS_ROUTES_ATTRIBUTE_ENTRY_REGEX	= "\"(\\S+?)\"\\s*:\\s*\"(\\S+?)\"";
-	
+		
 	public static final String NAME = "name";
 	
 	public static RegexEngineState[] statesStack = new RegexEngineState[100];
@@ -134,13 +138,10 @@ public class Parser {
 		RegExAstNode root = createRegExAstNode(file.getPath().endsWith(".js") ? JS_FILE : HTML_FILE, NAME, false, 0, 0);
 		addParameter(root, NAME, file.getName().substring(0, file.getName().indexOf(".")), 0, 0);
 		
-		RegexConfiguration config = new RegexConfiguration();
-		if (file.getPath().endsWith(".js")) {
-			buildJsConfig(config);
-		} else {
-			buildHtmlConfig(config);
-		}
-		RegexProcessingSession session = config.startSession(input);
+		
+		List<RegexConfiguration> regexConfigs = RegexService.getInstance().getCompiledRegexConfigurations(file);
+
+		RegexProcessingSession session = regexConfigs.get(0).startSession(input);
 		
 		enterState(session, file.getPath().endsWith(".js") ? JS_FILE : HTML_FILE, root, 0);
 		
@@ -160,18 +161,20 @@ public class Parser {
 		return root;
 	}
 	
-	protected void buildHtmlConfig(RegexConfiguration config) {
-		config
-		.add(new RegexWithAction(HTML_CHILDREN_INSERT_POINT, HTML_CHILDREN_INSERT_POINT_REGEX) {
-
+	public void configureHtmlRegexActions() {
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
+			
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				currentState.node.getChildrenInsertPoints().put(session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex()));
-			}
+			}			
+		}
+		.setName(HTML_CHILDREN_INSERT_POINT)
+		.setDescription(HTML_CHILDREN_INSERT_POINT_REGEX)
+		);			
 			
-		})
-		.add(new RegexWithAction(HTML_TABLE, HTML_TABLE_REGEX) {
-
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
+			
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(HTML_FILE)) {
@@ -182,19 +185,53 @@ public class Parser {
 					enterState(session, HTML_TABLE, currentState.node, 1);
 				}
 			}
-			
-		})
-		.add(new RegexWithAction(HTML_TABLE_END, HTML_TABLE_END_REGEX) {
+		}
+		.setName(HTML_TABLE)
+		.setDescription(HTML_TABLE_REGEX)
+		);		
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				currentState.node.getChildrenInsertPoints().put(session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex()));
+			}			
+		}
+		.setName(HTML_CHILDREN_INSERT_POINT)
+		.setDescription(HTML_CHILDREN_INSERT_POINT_REGEX)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
+
+			@Override
+			public void executeAction(RegexProcessingSession session) {
+				if (currentState.category.equals(HTML_FILE)) {
+					currentState.node.setType(HTML_TABLE);
+					addParameter(currentState.node, "tableId", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
+					addParameter(currentState.node, "headerRowId", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
+					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
+					enterState(session, HTML_TABLE, currentState.node, 1);
+				}
+			}			
+		}
+		.setName(HTML_TABLE)
+		.setDescription(HTML_TABLE_REGEX)
+		);
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (HTML_TABLE.equals(currentState.node.getType()) || HTML_FORM.equals(currentState.node.getType())) {
 					exitState(session);
 				}
-			}
-			
-		})
-		.add(new RegexWithAction(HTML_TABLE_HEADER_ENTRY, HTML_TABLE_HEADER_ENTRY_REGEX) {
+			}			
+		}
+		.setName(HTML_TABLE_END)
+		.setDescription(HTML_TABLE_END_REGEX)
+		);
+
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -205,10 +242,13 @@ public class Parser {
 					addParameter(entry, "title", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					currentState.node.getChildren().add(entry);
 				}
-			}
-			
-		}) 
-		.add(new RegexWithAction(HTML_TABLE_ITEM, HTML_TABLE_ITEM_REGEX) {
+			}			
+		}
+		.setName(HTML_TABLE_HEADER_ENTRY)
+		.setDescription(HTML_TABLE_HEADER_ENTRY_REGEX)
+		);
+
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -217,10 +257,13 @@ public class Parser {
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
 					enterState(session, HTML_TABLE_ITEM, currentState.node, 1);
 				}
-			}
-			
-		})
-		.add(new RegexWithAction(HTML_TABLE_ITEM_URL, HTML_TABLE_ITEM_URL_REGEX) {
+			}			
+		}
+		.setName(HTML_TABLE_ITEM)
+		.setDescription(HTML_TABLE_ITEM_REGEX)
+		);
+	
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -228,10 +271,13 @@ public class Parser {
 					addParameter(currentState.node, "itemUrl", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					exitState(session);
 				}
-			}
-			
-		})
-		.add(new RegexWithAction(HTML_TABLE_ITEM_ENTRY, HTML_TABLE_ITEM_ENTRY_REGEX) {
+			}			
+		}
+		.setName(HTML_TABLE_ITEM_URL)
+		.setDescription(HTML_TABLE_ITEM_URL_REGEX)
+		);
+	
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -242,10 +288,13 @@ public class Parser {
 					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					currentState.node.getChildren().add(entry);
 				}
-			}
-			
-		})
-		.add(new RegexWithAction(HTML_FORM, HTML_FORM_REGEX) {
+			}			
+		}
+		.setName(HTML_TABLE_ITEM_ENTRY)
+		.setDescription(HTML_TABLE_ITEM_ENTRY_REGEX)
+		);
+
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -254,18 +303,24 @@ public class Parser {
 					currentState.node.setOffset(session.getMatcher().start(session.getCurrentMatchGroupIndex()));
 					enterState(session, HTML_FORM, currentState.node, 1);
 				}
-			}
-			
-		})
-		.add(new RegexWithAction(HTML_FORM, HTML_FORM_ID_SUFFIX_REGEX) {
+			}			
+		}
+		.setName(HTML_FORM)
+		.setDescription(HTML_FORM_REGEX)
+		);
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				addParameter(currentState.node, "idSuffix", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-			}
-			
-		})
-		.add(new RegexWithAction(HTML_FORM_ITEM, HTML_FORM_ITEM_REGEX) {
+			}			
+		}
+		.setName(HTML_FORM)
+		.setDescription(HTML_FORM_ID_SUFFIX_REGEX)
+		);
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -277,62 +332,88 @@ public class Parser {
 					addParameter(entry, "valueExpression", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 					currentState.node.getChildren().add(entry);
 				}
-			}
-			
-		})
-		.compile(Pattern.DOTALL);
+			}			
+		}
+		.setName(HTML_FORM_ITEM)
+		.setDescription(HTML_FORM_ITEM_REGEX)
+		);		
 	}
 	
-	protected void buildJsConfig(RegexConfiguration config) {
-		config
-		.add(new RegexWithAction(JS_CHILDREN_INSERT_POINT, JS_CHILDREN_INSERT_POINT_REGEX) {
+	public void configureJSRegexActions() {
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				currentState.node.getChildrenInsertPoints().put(session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex()));
-			}
-			
-		})
-		.add(new RegexWithAction(JS_BACKBONE_CLASS, JS_BACKBONE_CLASS_REGEX) {
+			}			
+		}
+		.setName(JS_CHILDREN_INSERT_POINT)
+		.setDescription(JS_CHILDREN_INSERT_POINT_REGEX)
+		);	
+	
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (currentState.category.equals(JS_FILE)) {
 					currentState.node.setType(JS_BACKBONE_CLASS);
-					attachJsDoc(currentState.node);
-					
+					attachJsDoc(currentState.node);					
 					enterState(session, JS_BACKBONE_CLASS, currentState.node, 1);
-				}
-			}
-			
-		})
-		.add(new RegexWithAction.IfFindThisSkip("multiline commment", RegexUtil.MULTI_LINE_COMMENT))
-		.add(new RegexWithAction.IfFindThisSkip("single line comment", RegexUtil.SINGLE_LINE_COMMENT))
-		.add(new RegexWithAction("closing bracket", "[\\}\\]\\)]") {
-			
+				}				
+			}			
+		}
+		.setName(JS_BACKBONE_CLASS)
+		.setDescription(JS_BACKBONE_CLASS_REGEX)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(
+				new CodeSyncRegexAction.IfFindThisSkip()
+				.setName("multiline commment")
+				.setDescription(RegexUtil.MULTI_LINE_COMMENT)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(
+				new CodeSyncRegexAction.IfFindThisSkip()
+				.setName("single line comment")
+				.setDescription(RegexUtil.SINGLE_LINE_COMMENT)
+		);	
+
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
+
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				exitState(session);
-			}
-		})
-		.add(new RegexWithAction("opening bracket", "[\\{\\[\\(]") {
-			
+				exitState(session);			
+			}			
+		}
+		.setName("closing bracket")
+		.setDescription("[\\}\\]\\)]")
+		);	
+
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
+
 			@Override
 			public void executeAction(RegexProcessingSession session) {
-				session.currentNestingLevel++;
-			}
-		})
-		.add(new RegexWithAction(JS_BACKBONE_SUPER_CLASS, JS_BACKBONE_SUPER_CLASS_REGEX) {
+				session.currentNestingLevel++;	
+			}			
+		}
+		.setName("opening bracket")
+		.setDescription("[\\{\\[\\(]")
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
 				if (JS_BACKBONE_CLASS.equals(currentState.node.getType())) {
 					addParameter(currentState.node, "superClass", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
-				}
-			}
-			
-		})
-		.add(new RegexWithAction(JS_REQUIRE_ENTRY, JS_REQUIRE_ENTRY_REGEX) {
+				}	
+			}			
+		}
+		.setName(JS_BACKBONE_SUPER_CLASS)
+		.setDescription(JS_BACKBONE_SUPER_CLASS_REGEX)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -345,9 +426,13 @@ public class Parser {
 				
 					attachJsDoc(requireEntry);
 				}
-			}
-		})
-		.add(new RegexWithAction(JS_OPERATION, JS_OPERATION_REGEX) {
+			}			
+		}
+		.setName(JS_REQUIRE_ENTRY)
+		.setDescription(JS_REQUIRE_ENTRY_REGEX)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -359,10 +444,13 @@ public class Parser {
 				attachJsDoc(function);
 				
 				enterState(session, JS_OPERATION, function, 1);
-			}
+			}			
+		}
+		.setName(JS_OPERATION)
+		.setDescription(JS_OPERATION_REGEX)
+		);	
 		
-		})
-		.add(new RegexWithAction(JS_EVENTS_ATTRIBUTE, JS_EVENTS_ATTRIBUTE_REGEX) {
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -372,10 +460,13 @@ public class Parser {
 				enterState(session, JS_EVENTS_ATTRIBUTE, currentState.node, 1);
 				
 				attachJsDoc(events);
-			}
+			}			
+		}
+		.setName(JS_EVENTS_ATTRIBUTE)
+		.setDescription(JS_EVENTS_ATTRIBUTE_REGEX)
+		);	
 		
-		})
-		.add(new RegexWithAction(JS_ROUTES_ATTRIBUTE, JS_ROUTES_ATTRIBUTE_REGEX) {
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -385,10 +476,13 @@ public class Parser {
 				enterState(session, JS_ROUTES_ATTRIBUTE, currentState.node, 1);
 				
 				attachJsDoc(routes);
-			}
-			
-		})
-		.add(new RegexWithAction(JS_ATTRIBUTE, JS_ATTRIBUTE_REGEX) {
+			}			
+		}
+		.setName(JS_ROUTES_ATTRIBUTE)
+		.setDescription(JS_ROUTES_ATTRIBUTE_REGEX)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -401,10 +495,13 @@ public class Parser {
 				attachJsDoc(attr);
 				
 //				enterState(session, JS_ATTRIBUTE, attr, 1);
-			}
-			
-		})
-		.add(new RegexWithAction(JS_EVENTS_ATTRIBUTE_ENTRY, JS_EVENTS_ATTRIBUTE_ENTRY_REGEX) {
+			}			
+		}
+		.setName(JS_ATTRIBUTE)
+		.setDescription(JS_ATTRIBUTE_REGEX)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -415,10 +512,13 @@ public class Parser {
 					addParameter(event, "selector", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 					addParameter(event, "handler", session.getCurrentSubMatchesForCurrentRegex()[2], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 3), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 3));
 				}
-			}
-			
-		})
-		.add(new RegexWithAction(JS_ROUTES_ATTRIBUTE_ENTRY, JS_ROUTES_ATTRIBUTE_ENTRY_REGEX) {
+			}			
+		}
+		.setName(JS_EVENTS_ATTRIBUTE_ENTRY)
+		.setDescription(JS_EVENTS_ATTRIBUTE_ENTRY_REGEX)
+		);	
+		
+		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new CodeSyncRegexAction() {
 
 			@Override
 			public void executeAction(RegexProcessingSession session) {
@@ -428,10 +528,12 @@ public class Parser {
 					addParameter(route, "path", session.getCurrentSubMatchesForCurrentRegex()[0], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 1), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 1));
 					addParameter(route, "function", session.getCurrentSubMatchesForCurrentRegex()[1], session.getMatcher().start(session.getCurrentMatchGroupIndex() + 2), session.getMatcher().end(session.getCurrentMatchGroupIndex() + 2));
 				}
-			}
-		
-		})
-		.compile(Pattern.DOTALL);
+			}			
+		}
+		.setName(JS_ROUTES_ATTRIBUTE_ENTRY)
+		.setDescription(JS_ROUTES_ATTRIBUTE_ENTRY_REGEX)
+		);
+
 	}
 	
 	protected static void enterState(RegexProcessingSession session, String state, RegExAstNode node, int increment) {

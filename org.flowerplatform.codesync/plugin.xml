@@ -56,7 +56,7 @@
          point="org.flowerplatform.communication.service">
       <service
             id="regexService"
-            serviceClass="org.flowerplatform.codesync.regex.ide.RegexService">
+            serviceClass="org.flowerplatform.codesync.regex.RegexService">
       </service>
    </extension>
    <extension
