@@ -24,6 +24,7 @@ import static org.flowerplatform.common.regex.JavaRegexConfigurationProvider.bui
 
 import org.flowerplatform.common.regex.JavaRegexConfigurationProvider;
 import org.flowerplatform.common.regex.RegexConfiguration;
+import org.flowerplatform.common.regex.RegexException;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.web.tests.TestUtil;
 import org.junit.Before;
@@ -58,7 +59,10 @@ public class RegexJavaTest extends RegexTestBase {
 		buildJavaConfiguration(config);
 		RegexTestBase.CategoryRecorderRegexProcessingSession session = (RegexTestBase.CategoryRecorderRegexProcessingSession) config.startSession(testFile1);
 		
-		while (session.find()) {
+		try {
+			session.find(null);
+		} catch (RegexException e) {
+			throw new RuntimeException(e);
 		}
 		
 		assertAllExpectedElementsFound("attributes", session.getRecorderCategory(ATTRIBUTE_CATEGORY), fieldPreffixInFile1, 1, numberOfFieldsInFile1);
@@ -76,8 +80,14 @@ public class RegexJavaTest extends RegexTestBase {
 			session.reset(true);
 			
 			String elementName = fieldPreffixInFile1 + i;
-			int[] range = session.findRangeFor(JavaRegexConfigurationProvider.ATTRIBUTE_CATEGORY, elementName);
-			assertIdentifierInRange(elementName, range, testInputFileAsString);
+			
+			try {
+				int[] range = session.findRangeFor(JavaRegexConfigurationProvider.ATTRIBUTE_CATEGORY, elementName);
+				assertIdentifierInRange(elementName, range, testInputFileAsString);
+			} catch (RegexException e) {
+				throw new RuntimeException(e);
+			}
+			
 		}
 	}
 }

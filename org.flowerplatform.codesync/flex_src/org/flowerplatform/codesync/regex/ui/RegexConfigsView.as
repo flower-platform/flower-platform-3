@@ -128,6 +128,8 @@ package org.flowerplatform.codesync.regex.ui {
 				
 				if (dataProvider.getItemIndex(oldSelectedItem) != -1) {
 					selectedItem = oldSelectedItem;
+				} else if (dataProvider.length > 0) {
+					selectedIndex = 0;
 				}
 			}
 		}

@@ -31,6 +31,7 @@ import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParamet
 import org.flowerplatform.codesync.regex.CodeSyncRegexAction;
 import org.flowerplatform.codesync.regex.RegexService;
 import org.flowerplatform.common.regex.RegexConfiguration;
+import org.flowerplatform.common.regex.RegexException;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.common.regex.RegexUtil;
 
@@ -146,8 +147,8 @@ public class Parser {
 		enterState(session, file.getPath().endsWith(".js") ? JS_FILE : HTML_FILE, root, 0);
 		
 		try {
-			while (session.find()) {}
-		} catch (Exception e) {
+			session.find(null);
+		} catch (RegexException e) {
 			throw new RuntimeException(e);
 		}
 		

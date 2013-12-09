@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -520,10 +519,10 @@ public class RegexService {
 	@RemoteInvocation
 	public List<RegexMatchDto> run(ServiceInvocationContext context, String editorResourcePath, String config) {		
 		try {
-			List<RegexMatchDto> regexMatchDtos = new ArrayList<RegexMatchDto>();
+			final List<RegexMatchDto> regexMatchDtos = new ArrayList<RegexMatchDto>();
 			
 			File file = (File) EditorPlugin.getInstance().getFileAccessController().getFile(editorResourcePath);
-			String fileContent = FileUtils.readFileToString(file);
+			final String fileContent = FileUtils.readFileToString(file);
 			String fileExtension = getFileExtension(file);
 										
 			Root root = getRoot(config);
@@ -546,32 +545,39 @@ public class RegexService {
 			}
 			regexConfig.compile(Pattern.DOTALL);
 						
-			int currentIndex = 1;				
-			RegexProcessingSession session = regexConfig.startSession(fileContent);				
-			while (session.find()) {
-				RegexMatchDto dto = new RegexMatchDto(
-						String.valueOf(currentIndex++), 
-						getRegexIndexDtoFromIndex(fileContent, session.getMatcher().start()), 
-						getRegexIndexDtoFromIndex(fileContent, session.getMatcher().end()));
-					
-				dto.setParserRegex(
-						new ParserRegexDto(
-								session.getCurrentRegex().getName(), 
-								((DelegatingRegexWithAction) session.getCurrentRegex()).getRegexWithMacros()));
-					
-				if (session.getCurrentSubMatchesForCurrentRegex() != null) { // has subMatches -> add them too
-					List<RegexSubMatchDto> regexSubMatchDtos = new ArrayList<RegexSubMatchDto>();
-					for (int i = 0; i < session.getCurrentSubMatchesForCurrentRegex().length; i++) {
-						int index = session.getCurrentMatchGroupIndex() + i + 1;
-						regexSubMatchDtos.add(new RegexSubMatchDto(
-								session.getCurrentSubMatchesForCurrentRegex()[i], 
-								getRegexIndexDtoFromIndex(fileContent, session.getMatcher().start(index)), 
-								getRegexIndexDtoFromIndex(fileContent, session.getMatcher().end(index))));
+				
+			final RegexProcessingSession session = regexConfig.startSession(fileContent);	
+			
+			session.find(new Runnable() {
+				
+				int currentIndex = 1;			
+				
+				@Override
+				public void run() {
+					RegexMatchDto dto = new RegexMatchDto(
+							String.valueOf(currentIndex++), 
+							getRegexIndexDtoFromIndex(fileContent, session.getMatcher().start()), 
+							getRegexIndexDtoFromIndex(fileContent, session.getMatcher().end()));
+						
+					dto.setParserRegex(
+							new ParserRegexDto(
+									session.getCurrentRegex().getName(), 
+									((DelegatingRegexWithAction) session.getCurrentRegex()).getRegexWithMacros()));
+						
+					if (session.getCurrentSubMatchesForCurrentRegex() != null) { // has subMatches -> add them too
+						List<RegexSubMatchDto> regexSubMatchDtos = new ArrayList<RegexSubMatchDto>();
+						for (int i = 0; i < session.getCurrentSubMatchesForCurrentRegex().length; i++) {
+							int index = session.getCurrentMatchGroupIndex() + i + 1;
+							regexSubMatchDtos.add(new RegexSubMatchDto(
+									session.getCurrentSubMatchesForCurrentRegex()[i], 
+									getRegexIndexDtoFromIndex(fileContent, session.getMatcher().start(index)), 
+									getRegexIndexDtoFromIndex(fileContent, session.getMatcher().end(index))));
+						}
+						dto.setSubMatches(regexSubMatchDtos);
 					}
-					dto.setSubMatches(regexSubMatchDtos);
+					regexMatchDtos.add(dto);
 				}
-				regexMatchDtos.add(dto);
-			}
+			});
 			
 			return regexMatchDtos;
 		} catch (Exception e) {
@@ -786,7 +792,7 @@ public class RegexService {
 							CommonPlugin.getInstance().getMessage("error"), 
 							String.format("%s\n%s", CodeSyncPlugin.getInstance().getMessage("regex.parser.remove.error"), e.getMessage()),
 							DisplaySimpleMessageClientCommand.ICON_ERROR));
-		}		
+		}
 	}
 	
 	@RemoteInvocation

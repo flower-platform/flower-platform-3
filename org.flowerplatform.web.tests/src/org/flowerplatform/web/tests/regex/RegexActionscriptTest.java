@@ -29,6 +29,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import org.flowerplatform.common.regex.RegexConfiguration;
+import org.flowerplatform.common.regex.RegexException;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.common.regex.ActionscriptRegexConfigurationProvider;
 import org.flowerplatform.web.tests.TestUtil;
@@ -65,7 +66,10 @@ public class RegexActionscriptTest extends RegexTestBase {
 		buildASConfiguration(config);
 		RegexTestBase.CategoryRecorderRegexProcessingSession session = (RegexTestBase.CategoryRecorderRegexProcessingSession) config.startSession(testFile2);
 		
-		while (session.find()) {
+		try {
+			session.find(null);
+		} catch (RegexException e) {
+			throw new RuntimeException(e);
 		}
 		
 		assertAllExist(session.getRecorderCategory(ATTRIBUTE_CATEGORY), testFile2_attributeNames);
@@ -86,8 +90,13 @@ public class RegexActionscriptTest extends RegexTestBase {
 	
 		for (String attributeName : testFile2_attributeNames) {
 			session.reset(true);
-			int[] range = session.findRangeFor(ATTRIBUTE_CATEGORY, attributeName);
-			assertIdentifierInRange(attributeName, range, testFileContent);
+			int[] range;
+			try {
+				range = session.findRangeFor(ATTRIBUTE_CATEGORY, attributeName);
+				assertIdentifierInRange(attributeName, range, testFileContent);
+			} catch (RegexException e) {
+				throw new RuntimeException(e);
+			}			
 		}
 		
 		/////////////////////////////
@@ -96,8 +105,12 @@ public class RegexActionscriptTest extends RegexTestBase {
 
 		for (String methodName : testFile2_methodNames) {
 			session.reset(true);
-			int[] range = session.findRangeFor(METHOD_CATEGORY, methodName);
-			assertIdentifierInRange(methodName, range, testFileContent);
+			try {
+				int[] range = session.findRangeFor(METHOD_CATEGORY, methodName);
+				assertIdentifierInRange(methodName, range, testFileContent);
+			} catch (RegexException e) {
+				throw new RuntimeException(e);
+			}			
 		}
 	}
 }

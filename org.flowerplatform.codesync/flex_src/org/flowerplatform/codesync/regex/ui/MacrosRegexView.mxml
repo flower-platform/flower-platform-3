@@ -97,8 +97,11 @@ license-end
 			private function viewAddedHandler(event:ViewAddedEvent):void {
 				// show actions in buttonBar
 				_viewHost.selectionChanged();
+								
 				FlexGlobals.topLevelApplication.addEventListener(RegexEvent.SELECTED_CONFIG_CHANGED, selectedConfigChangedHandler);
 				FlexGlobals.topLevelApplication.addEventListener(RegexEvent.MACROS_REQUEST_REFRESH, refreshHandler);
+				
+				selectedConfigChangedHandler();
 			}
 						
 			private function viewRemovedHandler(event:ViewRemovedEvent):void {			
@@ -106,9 +109,11 @@ license-end
 				FlexGlobals.topLevelApplication.removeEventListener(RegexEvent.MACROS_REQUEST_REFRESH, refreshHandler);
 			}
 			
-			private function selectedConfigChangedHandler(event:RegexEvent):void {
+			private function selectedConfigChangedHandler(event:RegexEvent = null):void {
 				if (CodeSyncPlugin.getInstance().regexUtils.selectedConfig == null) {
-					list.dataProvider.removeAll();
+					if (list.dataProvider != null) {
+						list.dataProvider.removeAll();
+					}
 				} else {
 					refreshHandler();
 				}

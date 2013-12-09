@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 import junit.framework.Assert;
 
 import org.flowerplatform.common.regex.RegexConfiguration;
+import org.flowerplatform.common.regex.RegexException;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.common.regex.RegexWithAction;
 import org.junit.Test;
@@ -78,7 +79,10 @@ public class RegexEngineTest extends RegexTestBase {
 			.compile(Pattern.DOTALL);	
 		
 		RegexProcessingSession session = re.startSession("Aceste este un string dar si un suf23. Am mai adaugat si atr:tip.");
-		while (session.find()) {
+		try {
+			session.find(null);
+		} catch (RegexException e) {
+			throw new RuntimeException(e);
 		}
 		
 		Assert.assertEquals("We have exactly 3 matches", 3, results.size());
