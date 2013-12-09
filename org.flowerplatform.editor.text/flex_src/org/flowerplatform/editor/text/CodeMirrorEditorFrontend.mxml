@@ -114,6 +114,10 @@ license-end
 				ICodeMirrorEditor(editor).callJavaScriptMethod("updateText", null, offset, oldTextLength, escape(newText));
 			}
 			
+			public function colorText(ranges:Array):void {
+				ICodeMirrorEditor(editor).callJavaScriptMethod("colorText", null, ranges);
+			}
+			
 			override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {				
 				var updates:ArrayCollection = ArrayCollection(content);
 				if (isFullContent) {

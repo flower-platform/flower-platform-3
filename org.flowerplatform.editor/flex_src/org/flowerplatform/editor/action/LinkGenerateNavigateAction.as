@@ -25,7 +25,7 @@ package org.flowerplatform.editor.action {
 	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */ 
 	public class LinkGenerateNavigateAction extends ActionBase  {
 				

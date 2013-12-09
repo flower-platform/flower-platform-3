@@ -4,7 +4,8 @@
 		<meta http-equiv="Content-Language" content="en-us">
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 
-		<script src="lib/codemirror-compressed.js"></script>		
+		<script src="lib/codemirror-compressed.js"></script>	
+		<script src="lib/overlay.js"></script>		
 		<link rel="stylesheet" href="codeMirrorEditor.css" />
 		
 		<script>
@@ -94,7 +95,7 @@
 			
 			var myCodeMirror;
 			var editorStatefulClientId;
-						
+			
 			function initialize(args) {				
 				myCodeMirror.setValue(unescape(args[0]));
 				editorStatefulClientId = args[1];
@@ -141,6 +142,39 @@
 			function updateText(args) {			
 				myCodeMirror.replaceRange(unescape(args[2]), myCodeMirror.posFromIndex(args[0]), myCodeMirror.posFromIndex(args[0] + args[1]));
 			}		
+			
+			function colorText(args) {
+				var marks = myCodeMirror.getAllMarks();
+				if (marks.length > 0) {
+					for (var i=0; i < marks.length; i++) {						
+						marks[i].clear();
+					}
+				}
+				
+				var matches = args[0];
+				for (var i=0; i < matches.length; i++) {
+					var match = matches[i];
+					myCodeMirror.markText(
+							{line: match.start.nbLine, ch: match.start.nbCharacter}, 
+							{line: match.end.nbLine, ch: match.end.nbCharacter}, 
+							{className: "match"}
+					);
+					if (match.subMatches != null) {
+						for (var j=0; j < match.subMatches.length; j++) {
+							var subMatch = match.subMatches.source[j];
+						
+							myCodeMirror.markText(
+									{line: subMatch.start.nbLine, ch: subMatch.start.nbCharacter}, 
+									{line: subMatch.end.nbLine, ch: subMatch.end.nbCharacter}, 
+									{className: "submatch"}
+							);
+						}
+					}
+				}
+				
+				myCodeMirror.scrollIntoView({line: matches[matches.length - 1].end.nbLine, ch: matches[matches.length - 1].end.nbCharacter}, 3);
+			}	
+			
 		</script>
 				
 	</head>

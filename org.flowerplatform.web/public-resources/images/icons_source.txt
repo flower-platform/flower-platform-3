@@ -1,0 +1,3 @@
+=== Link required ===
+folder_table.png http://www.famfamfam.com/lab/icons/silk/
+wand.png http://www.famfamfam.com/lab/icons/silk/

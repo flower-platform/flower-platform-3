@@ -1,9 +1,7 @@
 package org.flowerplatform.properties.property_renderer {
-	import flash.events.Event;
+	import flash.events.FocusEvent;
 	
 	import mx.binding.utils.BindingUtils;
-	
-	import org.flowerplatform.properties.PropertiesItemRenderer;
 	
 	import spark.components.CheckBox;
 	import spark.components.HGroup;
@@ -22,8 +20,22 @@ package org.flowerplatform.properties.property_renderer {
 			super();	
 		}
 		
+		override public function set data(value:Object):void {
+			if (value == null) {
+				return;
+			}
+			super.data = value;
+			checkBox.selected = data.value;
+			checkBox.enabled = !data.readOnly;
+			
+			if (!data.readOnly) {
+				BindingUtils.bindProperty(data, "value", checkBox, "selected");
+				handleListeningOnEvent(FocusEvent.FOCUS_OUT, this, checkBox);
+			}
+		}
+		
 		override protected function createChildren():void {
-			super.data = PropertiesItemRenderer(parent).data;
+			super.data = data;
 			super.createChildren();
 
 			checkBox = new CheckBox();
@@ -31,15 +43,9 @@ package org.flowerplatform.properties.property_renderer {
 			
 			checkBoxContainer.percentHeight = 100;
 			checkBoxContainer.percentWidth = 100;
-			checkBoxContainer.horizontalAlign = "center";
-			
-			checkBox.selected = data.value;
-			checkBox.enabled = !data.readOnly;
-			
-			if (!data.readOnly) {
-				checkBox.addEventListener(Event.CHANGE, sendChangedValuesToServer);
-				BindingUtils.bindProperty(data, "value", checkBox, "selected");
-			}
+			checkBoxContainer.horizontalAlign = "left";
+			checkBoxContainer.verticalAlign = "middle";
+			checkBoxContainer.paddingLeft = 5;
 			
 			checkBoxContainer.addElement(checkBox);
 			addElement(checkBoxContainer);

@@ -17,9 +17,15 @@
 * license-end
 */
 package org.flowerplatform.flexutil.iframe {
+	import flash.display.DisplayObjectContainer;
 	import flash.events.Event;
 	
+	import mx.containers.TabNavigator;
+	import mx.core.Container;
+	import mx.core.UIComponent;
+	import mx.core.mx_internal;
 	import mx.events.FlexEvent;
+	import mx.graphics.shaderClasses.ExclusionShader;
 	
 	/**
 	 * <code>IFrame</code> code was copied from here:
@@ -40,15 +46,22 @@ package org.flowerplatform.flexutil.iframe {
 			setStyle("paddingTop", 0);
 			
 			overlayDetection = true;			
-			addEventListener(FlexEvent.CREATION_COMPLETE, creationCompleteHandler);
-		}
-				
-		protected function creationCompleteHandler(event:FlexEvent):void {
-			addEventListener(Event.REMOVED_FROM_STAGE, removedFromStageHandler);
 		}
 		
-		protected function removedFromStageHandler(event:Event):void {
-			removeIFrame();
-		}		
+		override public function parentChanged(p:DisplayObjectContainer):void {
+			super.parentChanged(p);
+			updateFrameVisibility(true);
+		}
+		
+		override protected function updateFrameVisibility(value:Boolean):Boolean {
+			try {
+				return super.updateFrameVisibility(value);
+			} catch (e:Error) {
+				// error thrown when this object changes its parent, but the new parent isn't set yet
+				// to avoid it, catch it here and call it after, in parentChanged
+			}
+			return false;
+		}
+		
 	}
 }

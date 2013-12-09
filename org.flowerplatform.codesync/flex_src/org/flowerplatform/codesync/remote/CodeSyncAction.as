@@ -25,6 +25,7 @@ package org.flowerplatform.codesync.remote {
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.editor.remote.EditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
@@ -76,7 +77,7 @@ package org.flowerplatform.codesync.remote {
 			} else if (selection.getItemAt(0) is View) {
 				var editorStatefulClient:NotationDiagramEditorStatefulClient = 
 					NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient);
-				path = editorStatefulClient.editableResourcePath;
+				path = EditorStatefulClient(editorStatefulClient).editableResourcePath;
 				editorStatefulClient.service_synchronize(path, technology);
 			}
 		}

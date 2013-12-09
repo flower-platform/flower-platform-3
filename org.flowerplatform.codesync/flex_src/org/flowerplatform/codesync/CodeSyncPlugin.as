@@ -30,6 +30,15 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.action.AddNewRelationAction;
 	import org.flowerplatform.codesync.action.ExpandCompartmentActionProvider;
 	import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
+	import org.flowerplatform.codesync.regex.RegexUtils;
+	import org.flowerplatform.codesync.regex.remote.MacroRegexDto;
+	import org.flowerplatform.codesync.regex.remote.ParserRegexDto;
+	import org.flowerplatform.codesync.regex.remote.RegexActionDto;
+	import org.flowerplatform.codesync.regex.remote.RegexIndexDto;
+	import org.flowerplatform.codesync.regex.remote.RegexMatchDto;
+	import org.flowerplatform.codesync.regex.remote.RegexSelectedItem;
+	import org.flowerplatform.codesync.regex.remote.RegexSubMatchDto;
+	import org.flowerplatform.codesync.regex.remote.command.RegexCommand;
 	import org.flowerplatform.codesync.remote.CodeSyncAction;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
@@ -44,9 +53,12 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.controller.ComposedControllerProviderFactory;
+	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
+	import org.flowerplatform.properties.PropertiesPlugin;
+	import org.flowerplatform.properties.property_renderer.DropDownListPropertyRenderer;
 	
 	/**
 	 * @author Cristian Spiescu
@@ -73,6 +85,8 @@ package org.flowerplatform.codesync {
 		 */
 		public var availableChildrenForCodeSyncType:Dictionary;
 		
+		public var regexUtils:RegexUtils = new RegexUtils();
+		
 		protected static var INSTANCE:CodeSyncPlugin;
 		
 		public static function getInstance():CodeSyncPlugin {
@@ -90,6 +104,32 @@ package org.flowerplatform.codesync {
 			EditorPlugin.getInstance().editorDescriptors.push(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(editorDescriptor);
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new LoadedDescriptorsViewProvider());
+			
+			// register PropertiesPlugin Renderer
+			PropertiesPlugin.getInstance().propertyRendererClasses["DropDownListWithRegexActions"] = new FactoryWithInitialization
+				(DropDownListPropertyRenderer, {
+					requestDataProviderHandler: function (callbackObject:Object, callbackFunction:Function):void {
+						CommunicationPlugin.getInstance().bridge.sendObject(
+							new InvokeServiceMethodServerCommand("regexService", "getRegexActions", 
+								null, callbackObject, callbackFunction));						
+					},
+					
+					labelFunction: function (object:Object):String {
+						return RegexActionDto(object).name + " - " + RegexActionDto(object).description;
+					},
+					
+					getItemIndexFromList: function (item:Object, list:ArrayCollection):int {
+						if (item != null) {
+							for (var i:int = 0; i < list.length; i++) {
+								var dto:RegexActionDto = RegexActionDto(list.getItemAt(i));
+								if (dto.name == RegexActionDto(item).name) {
+									return i;
+								}
+							}
+						}
+						return -1;
+					}
+				});
 		}
 		
 		override public function start():void {
@@ -115,6 +155,16 @@ package org.flowerplatform.codesync {
 			
 			// add the Descriptor too
 			registerClassAliasFromAnnotation(StringSelectedItem);
+						
+			registerClassAliasFromAnnotation(RegexCommand);
+			registerClassAliasFromAnnotation(MacroRegexDto);
+			registerClassAliasFromAnnotation(ParserRegexDto);
+			registerClassAliasFromAnnotation(RegexActionDto);
+			registerClassAliasFromAnnotation(RegexSubMatchDto);			
+			registerClassAliasFromAnnotation(RegexIndexDto);			
+			registerClassAliasFromAnnotation(RegexMatchDto);
+			registerClassAliasFromAnnotation(RegexSelectedItem);
+
 		}
 		
 		/**

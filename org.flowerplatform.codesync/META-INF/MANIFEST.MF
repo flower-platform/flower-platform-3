@@ -18,7 +18,8 @@ Require-Bundle: org.eclipse.osgi,
  org.flowerplatform.editor.model;visibility:=reexport,
  org.eclipse.emf.ecore.change,
  org.eclipse.emf.ecore.xmi,
- org.flowerplatform.properties
+ org.flowerplatform.properties,
+ org.flowerplatform.emf_model.regex
 Export-Package: com.crispico.flower.mp.codesync.base,
  com.crispico.flower.mp.codesync.base.action,
  com.crispico.flower.mp.codesync.base.communication,
@@ -26,6 +27,7 @@ Export-Package: com.crispico.flower.mp.codesync.base,
  org.flowerplatform.codesync.config.extension,
  org.flowerplatform.codesync.processor,
  org.flowerplatform.codesync.projects,
+ org.flowerplatform.codesync.regex,
  org.flowerplatform.codesync.remote
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.crispico.flower.mp.codesync.base.CodeSyncPlugin

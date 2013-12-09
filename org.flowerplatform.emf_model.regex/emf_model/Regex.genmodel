@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.flowerplatform.emf_model.regex/src"
+    editDirectory="" editorDirectory="" modelPluginID="org.flowerplatform.emf_model.regex"
+    modelName="Regex" editPluginClass="org.flowerplatform.emf_model.regex.provider.RegexEditPlugin"
+    editorPluginClass="org.flowerplatform.emf_model.regex.presentation.RegexEditorPlugin"
+    testsDirectory="" importerID="org.eclipse.emf.importer.ecore" complianceLevel="6.0"
+    copyrightFields="false" editorPluginID="org.flowerplatform.emf_model.regex.edit"
+    language="" >
+  <foreignModel>Regex.ecore</foreignModel>
+  <genPackages prefix="Regex" basePackage="org.flowerplatform.emf_model" disposableProviderFactory="true"
+      ecorePackage="Regex.ecore#/">
+    <genClasses ecoreClass="Regex.ecore#//ParserRegex">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Regex.ecore#//ParserRegex/action"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Regex.ecore#//ParserRegex/fullRegex"/>
+    </genClasses>
+    <genClasses ecoreClass="Regex.ecore#//MacroRegex">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Regex.ecore#//MacroRegex/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Regex.ecore#//MacroRegex/regex"/>
+    </genClasses>
+    <genClasses ecoreClass="Regex.ecore#//Root">
+      <genFeatures property="None" children="true" createChild="true" propertyDescription=""
+          ecoreFeature="ecore:EReference Regex.ecore#//Root/parserRegexes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Regex.ecore#//Root/macroRegexes"/>
+    </genClasses>
+  </genPackages>
+</genmodel:GenModel>

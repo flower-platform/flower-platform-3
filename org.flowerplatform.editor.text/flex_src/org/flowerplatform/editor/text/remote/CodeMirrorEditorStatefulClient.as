@@ -20,6 +20,7 @@ package org.flowerplatform.editor.text.remote {
 	
 	import org.flowerplatform.editor.EditorFrontend;
 	import org.flowerplatform.editor.text.CodeMirrorEditorFrontend;
+	import org.flowerplatform.editor.text.codemirror_editor.ICodeMirrorEditor;
 
 	/**
 	 * @author Cristina Constantinescu
@@ -40,6 +41,12 @@ package org.flowerplatform.editor.text.remote {
 		
 		override public function updateDirtyState(editorInput:Object, dirtyState:Boolean):void {			
 		}
+		
+		override protected function unsubscribeFromStatefulService_removeEditorFrontend(editorFrontend:EditorFrontend, editorFrontendIndex:int):void {			
+			super.unsubscribeFromStatefulService_removeEditorFrontend(editorFrontend, editorFrontendIndex);
+			ICodeMirrorEditor(editorFrontend.editor).dispose();
+		}
+		
 		
 	}
 }

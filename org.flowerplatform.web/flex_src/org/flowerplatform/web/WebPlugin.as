@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.web {
 	import com.crispico.flower.util.HTMLToolTip;
+	import com.crispico.flower.util.layout.Perspective;
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.event.ActiveViewChangedEvent;
 	
@@ -32,10 +33,15 @@ package org.flowerplatform.web {
 	import mx.managers.ToolTipManager;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
+	import org.flowerplatform.codesync.regex.MacrosRegexViewProvider;
+	import org.flowerplatform.codesync.regex.ParserRegexViewProvider;
+	import org.flowerplatform.codesync.regex.RegexConfigsViewProvider;
+	import org.flowerplatform.codesync.regex.RegexIdePerspective;
+	import org.flowerplatform.codesync.regex.RegexMatchesViewProvider;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
+	import org.flowerplatform.editor.BasicEditorDescriptor;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.open_resources_view.OpenResourcesView;
 	import org.flowerplatform.editor.open_resources_view.OpenResourcesViewProvider;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
@@ -44,15 +50,15 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
 	import org.flowerplatform.flexutil.global_menu.WebMenuBar;
+	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
-	import org.flowerplatform.flexutil.shortcut.KeyBindings;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.web.action.ShowViewAction;
+	import org.flowerplatform.web.action.SwitchPerspectiveAction;
 	import org.flowerplatform.web.common.WebCommonPlugin;
-	import org.flowerplatform.web.common.communication.AuthenticationManager;
 	import org.flowerplatform.web.layout.DefaultPerspective;
-	import org.flowerplatform.web.layout.Perspective;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
 	import org.flowerplatform.web.security.ui.PermissionsScreen;
@@ -79,6 +85,8 @@ package org.flowerplatform.web {
 		
 		public var perspectives:Vector.<Perspective> = new Vector.<Perspective>();
 		
+		private var menuArea:HBox;
+		
 		override public function preStart():void {
 			super.preStart();
 			webCommonPlugin.preStart();
@@ -88,9 +96,15 @@ package org.flowerplatform.web {
 			INSTANCE = this;
 			
 			perspectives.push(new DefaultPerspective());
+			perspectives.push(new RegexIdePerspective());
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
+			
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new ParserRegexViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexMatchesViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new MacrosRegexViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexConfigsViewProvider());
 		}
 		
 		/**
@@ -105,74 +119,6 @@ package org.flowerplatform.web {
 			
 			ToolTipManager.showDelay = 0;
 			ToolTipManager.toolTipClass = HTMLToolTip;
-			
-			// create the actionProvider from menu
-			var menuActionProvider:VectorActionProvider = new VectorActionProvider();
-			
-			createAndAddAction("Administration", "administration", null, null, null,
-				menuActionProvider);
-
-			createAndAddAction("Organizations", null, "administration", 
-				WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"), function():void {
-					showScreen(OrganizationsScreen);
-				}, menuActionProvider);
-
-			createAndAddAction("Groups", null, "administration", 
-				WebPlugin.getInstance().getResourceUrl("images/usr_admin/group.png"), function():void {
-					showScreen(GroupsScreen);
-				}, menuActionProvider);
-
-			createAndAddAction("Users", null, "administration", 
-				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
-					showScreen(UsersScreen);
-				}, menuActionProvider);
-
-			createAndAddAction("Permissions", null, "administration", 
-				WebPlugin.getInstance().getResourceUrl("images/usr_admin/permission.png"), function():void {
-					showScreen(PermissionsScreen);
-				}, menuActionProvider);
-
-			createAndAddAction("User", "user", null,  
-				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), 
-				null, menuActionProvider);
-			
-			createAndAddAction("My Account", null, "user", 
-				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
-					showScreen(UserForm);
-				},menuActionProvider);
-			
-			createAndAddAction("Switch User", null, "user", null, function():void {
-				WebCommonPlugin.getInstance().authenticationManager.showAuthenticationView(true);
-			}, menuActionProvider);
-
-			createAndAddAction("Logout", null, "user", null, function():void {
-				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
-			}, menuActionProvider);
-	
-			createAndAddAction("Help", "help", null, null, null, menuActionProvider);
-
-			createAndAddAction("Lean and Discuss (opens a new window)", null, "help",  null, function():void {
-				navigateToURL(new URLRequest("http://learn-discuss.flower-platform.com/flower_dev_center"), "_blank");
-			}, menuActionProvider);
-			
-			var hBox:HBox = new HBox();
-			hBox.percentWidth = 100;
-			
-			// create the menu
-			var menuBar:WebMenuBar = new WebMenuBar(menuActionProvider);
-			menuBar.percentWidth = 100;
-			hBox.addChild(menuBar);
-			
-			// removed all the other buttons (were replaced by the menu)
-			// this is the only one left
-			var btn:Button = new Button();
-			btn.label = "Get Current User";
-			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
-				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
-			});
-			hBox.addChild(btn);
-			
-			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(hBox, 0);
 			
 			Workbench(FlexUtilGlobals.getInstance().workbench).addEventListener(ViewsRemovedEvent.VIEWS_REMOVED, 
 				EditorPlugin.getInstance().globalEditorOperationsManager.viewsRemovedHandler);
@@ -221,7 +167,7 @@ package org.flowerplatform.web {
 		private function createAndAddAction(label:String, id:String, parentId:String, icon:String, functionDelegate:Function, actionProvider:IActionProvider):void {
 			var action:ActionBase;
 			if (id != null) {
-				action = new ComposedAction();
+				action = new ComposedAction();				
 			} else {
 				action = new ActionBase();
 			}
@@ -249,8 +195,98 @@ package org.flowerplatform.web {
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
 			perspectives[0].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
+			
+			if (menuArea != null) {
+				return;
+			}
+			// create the actionProvider from menu
+			var menuActionProvider:VectorActionProvider = new VectorActionProvider();
+			
+			createAndAddAction("Administration", "administration", null, null, null,
+				menuActionProvider);
+			
+			createAndAddAction("Organizations", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/organization.png"), function():void {
+					showScreen(OrganizationsScreen);
+				}, menuActionProvider);
+			
+			createAndAddAction("Groups", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/group.png"), function():void {
+					showScreen(GroupsScreen);
+				}, menuActionProvider);
+			
+			createAndAddAction("Users", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
+					showScreen(UsersScreen);
+				}, menuActionProvider);
+			
+			createAndAddAction("Permissions", null, "administration", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/permission.png"), function():void {
+					showScreen(PermissionsScreen);
+				}, menuActionProvider);
+			
+			createAndAddAction("Window", "window", null, null, null, menuActionProvider);
+			
+			if (perspectives.length > 0) {
+				createAndAddAction("Open Perspective", "show_perspective", "window", null, null, menuActionProvider);
+				
+				for each (var perspective:Perspective in perspectives) {
+					menuActionProvider.getActions(null).push(new SwitchPerspectiveAction(perspective));
+				}
+			}
+						
+			if (FlexUtilGlobals.getInstance().composedViewProvider.viewProviders.length > 0) {
+				createAndAddAction("Show View", "show_view", "window", null, null, menuActionProvider);
+				for each (var viewProvider:IViewProvider in FlexUtilGlobals.getInstance().composedViewProvider.viewProviders) {
+					if (!(viewProvider is BasicEditorDescriptor)) {
+						menuActionProvider.getActions(null).push(new ShowViewAction(viewProvider));
+					}
+				}
+			}
+						
+			createAndAddAction("User", "user", null,  
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), 
+				null, menuActionProvider);
+			
+			createAndAddAction("My Account", null, "user", 
+				WebPlugin.getInstance().getResourceUrl("images/usr_admin/user.png"), function():void {
+					showScreen(UserForm);
+				},menuActionProvider);
+			
+			createAndAddAction("Switch User", null, "user", null, function():void {
+				WebCommonPlugin.getInstance().authenticationManager.showAuthenticationView(true);
+			}, menuActionProvider);
+			
+			createAndAddAction("Logout", null, "user", null, function():void {
+				CommunicationPlugin.getInstance().bridge.disconnectBecauseUserLoggedOut();
+			}, menuActionProvider);
+			
+			createAndAddAction("Help", "help", null, null, null, menuActionProvider);
+			
+			createAndAddAction("Lean and Discuss (opens a new window)", null, "help",  null, function():void {
+				navigateToURL(new URLRequest("http://learn-discuss.flower-platform.com/flower_dev_center"), "_blank");
+			}, menuActionProvider);
+			
+			menuArea = new HBox();
+			menuArea.percentWidth = 100;
+			
+			// create the menu
+			var menuBar:WebMenuBar = new WebMenuBar(menuActionProvider);
+			menuBar.percentWidth = 100;
+			menuArea.addChild(menuBar);
+			
+			// removed all the other buttons (were replaced by the menu)
+			// this is the only one left
+			var btn:Button = new Button();
+			btn.label = "Get Current User";
+			btn.addEventListener(MouseEvent.CLICK, function(evt:MouseEvent):void {
+				btn.label = "Logged in as: " + WebCommonPlugin.getInstance().authenticationManager.currentUserLoggedIn.name;
+			});
+			menuArea.addChild(btn);
+			
+			IVisualElementContainer(FlexGlobals.topLevelApplication).addElementAt(menuArea, 0);		
 		}
-		
+			
 		override protected function registerMessageBundle():void {
 			super.registerMessageBundle();
 		}

@@ -38,5 +38,7 @@ package org.flowerplatform.editor.text.codemirror_editor {
 		function addCallbackHandler(name:String, callback:Function):void;		
 		
 		function addViewCompleteHandler(handler:Function):void;
+		
+		function dispose():void;
 	}
 }

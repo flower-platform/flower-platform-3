@@ -68,10 +68,9 @@ package org.flowerplatform.flexutil.action {
 			
 			for (i = 0; i < actionsForCurrentParentActionId.length; i++) {
 				action = actionsForCurrentParentActionId[i];
-				if (isComposedAction(action)) {
-					// we do this only when processing the main list of actions
-					IComposedAction(action).childActions = parentActionIdToActions[action.id];
-				}
+				
+				setChildActionsForActionIfNecessary(parentActionIdToActions, action);
+				
 				try {
 					action.selection = selection;
 					action.context = context;
@@ -84,6 +83,24 @@ package org.flowerplatform.flexutil.action {
 				}
 			}
 
+		}
+		
+		/**
+		 * Set <code>childActions</code> recursively, for each <code>ComposedAction</code> found.
+		 *
+		 * Note: this way, multi level actions visibility is calculated correctly.
+		 * @author Cristina Constantinescu
+		 */
+		private static function setChildActionsForActionIfNecessary(parentActionIdToActions:Dictionary, action:IAction):void {
+			if (!isComposedAction(action)) {
+				return;
+			}
+			IComposedAction(action).childActions = parentActionIdToActions[action.id];
+			if (IComposedAction(action).childActions != null) {
+				for (var i:int = 0; i < IComposedAction(action).childActions.length; i++) {					
+					setChildActionsForActionIfNecessary(parentActionIdToActions, IComposedAction(action).childActions[i]);					
+				}
+			}
 		}
 		
 		public static function isComposedAction(action:IAction):Boolean {

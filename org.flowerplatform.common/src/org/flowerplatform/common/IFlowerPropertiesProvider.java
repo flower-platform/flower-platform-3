@@ -3,7 +3,7 @@ package org.flowerplatform.common;
 import java.io.InputStream;
 
 /**	
- * @author Cristina Constatinescu
+ * @author Cristina Constantinescu
  */
 public interface IFlowerPropertiesProvider {
 

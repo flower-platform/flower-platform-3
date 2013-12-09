@@ -92,7 +92,7 @@ package org.flowerplatform.flexutil.context_menu {
 		 * a click (e.g. select the item).
 		 *  
 		 * @author Cristian Spiescu
-		 * @author Cristina Constatinescu
+		 * @author Cristina Constantinescu
 		 */ 
 		protected function dispatchSimulatedMouseDownAndUpEvents(event:MouseEvent):void {
 			var simulatedMouseDownEvent:MouseEvent = new MouseEvent(
