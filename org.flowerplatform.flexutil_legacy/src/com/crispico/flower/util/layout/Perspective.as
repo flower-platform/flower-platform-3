@@ -19,7 +19,12 @@
 package com.crispico.flower.util.layout {
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
+	import com.crispico.flower.util.layout.persistence.StackLayoutData;
 	import com.crispico.flower.util.layout.persistence.WorkbenchLayoutData;
+	
+	import mx.collections.ArrayCollection;
+	
+	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	
 	/**
 	 * An instance for this class should exist for each perspective.
@@ -76,6 +81,36 @@ package com.crispico.flower.util.layout {
 				throw new Error("A sash editor must exist on a perspective!");
 			}
 			workbench.load(workbenchLayoutData, true, true);
+		}
+		
+		protected function addSash(parent:SashLayoutData, direction:Number, ratios:Array, mrmRatios:Array, isEditor:Boolean = false):SashLayoutData {
+			var sash:SashLayoutData = new SashLayoutData();
+			sash.isEditor = isEditor;
+			sash.direction = direction;
+			sash.ratios = new ArrayCollection(ratios);
+			sash.mrmRatios = new ArrayCollection(mrmRatios);
+			sash.parent = parent;
+			parent.children.addItem(sash);
+			
+			if (isEditor) { // add stack editor
+				var stack:StackLayoutData = new StackLayoutData();
+				stack.parent = sash;
+				sash.children.addItem(stack);
+			}
+			return sash;
+		}
+		
+		protected function addViewsInSash(viewIds:Array, parent:SashLayoutData):void {
+			var stack:StackLayoutData = new StackLayoutData();
+			stack.parent = parent;
+			parent.children.addItem(stack);
+			
+			for each (var id:String in viewIds) {
+				var view:ViewLayoutData = new ViewLayoutData();
+				view.viewId = id;
+				stack.children.addItem(view);
+				view.parent = stack;
+			}			
 		}
 	}
 }

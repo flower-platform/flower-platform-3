@@ -16,7 +16,8 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.regex {
+package org.flowerplatform.codesync.flower_app_wizard {
+	
 	import com.crispico.flower.util.layout.Perspective;
 	import com.crispico.flower.util.layout.Workbench;
 	import com.crispico.flower.util.layout.persistence.SashLayoutData;
@@ -26,50 +27,44 @@ package org.flowerplatform.codesync.regex {
 	import mx.collections.ArrayCollection;
 	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.regex.MacrosRegexViewProvider;
+	import org.flowerplatform.codesync.regex.RegexConfigsViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.properties.PropertiesViewProvider;
 	
 	/**
 	 * @author Cristina Constantinescu
-	 */ 
-	public class RegexIdePerspective extends Perspective {
+	 */
+	public class FlowerAppWizardPerspective extends Perspective {
 		
-		public static const ID:String = "regexIDEPerspective";
+		public static const ID:String = "flowerAppWizardPerspective";
 		
 		public override function get id():String {
 			return ID;
 		}
 		
 		public override function get name():String {
-			return CodeSyncPlugin.getInstance().getMessage("regex.perspective");
+			return CodeSyncPlugin.getInstance().getMessage("flowerAppWiz.perspective");
 		}
 		
 		public override function get iconUrl():String {			
-			return CodeSyncPlugin.getInstance().getResourceUrl("images/wand.png");
+			return CodeSyncPlugin.getInstance().getResourceUrl("images/wizard/wand-hat.png");
 		}
 		
 		public override function resetPerspective(workbench:Workbench):void {
 			var wld:WorkbenchLayoutData = new WorkbenchLayoutData();
-			wld.direction = SashLayoutData.HORIZONTAL;
+			wld.direction = SashLayoutData.VERTICAL;
 			wld.ratios = new ArrayCollection([70, 30]);
 			wld.mrmRatios = new ArrayCollection([0, 0]);
-										
-			var sash:SashLayoutData = addSash(wld, SashLayoutData.VERTICAL,	[60, 40], [0, 0]);
-			var sashEditor:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [100], [0], true);
-									
-			var bottomSash:SashLayoutData = addSash(sash, SashLayoutData.HORIZONTAL, [70, 30], [0, 0]);
-			addViewsInSash([PropertiesViewProvider.ID], bottomSash);			
+			
+			var sashEditor:SashLayoutData = addSash(wld, SashLayoutData.HORIZONTAL, [100], [0], true);
+			
+			var bottomSash:SashLayoutData = addSash(wld, SashLayoutData.HORIZONTAL, [20, 40, 40], [0, 0, 0]);					
 			addViewsInSash([RegexConfigsViewProvider.ID], bottomSash);
+			addViewsInSash([MacrosRegexViewProvider.ID], bottomSash);
+			addViewsInSash([PropertiesViewProvider.ID], bottomSash);
 			
-			var rightSash:SashLayoutData = addSash(wld, SashLayoutData.VERTICAL, [50, 50], [0, 0]);
-			
-			var rightUpSash:SashLayoutData = addSash(rightSash, SashLayoutData.HORIZONTAL, [50, 50], [0, 0]);			
-			addViewsInSash([ParserRegexViewProvider.ID], rightUpSash);
-			addViewsInSash([MacrosRegexViewProvider.ID], rightUpSash);
-			
-			addViewsInSash([RegexMatchesViewProvider.ID], rightSash);
-								
 			load(workbench, wld, sashEditor);
-		}
+		}		
 	}
 }

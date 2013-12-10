@@ -26,6 +26,7 @@
     <classEntry path="org.flowerplatform.codesync.regex.RegexUtils"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.command.RegexCommand"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.RegexActionDto"/>
+    <classEntry path="org.flowerplatform.codesync.flower_app_wizard.FlowerAppWizardPerspective"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

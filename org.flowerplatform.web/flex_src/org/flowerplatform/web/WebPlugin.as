@@ -33,6 +33,7 @@ package org.flowerplatform.web {
 	import mx.managers.ToolTipManager;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
+	import org.flowerplatform.codesync.flower_app_wizard.FlowerAppWizardPerspective;
 	import org.flowerplatform.codesync.regex.MacrosRegexViewProvider;
 	import org.flowerplatform.codesync.regex.ParserRegexViewProvider;
 	import org.flowerplatform.codesync.regex.RegexConfigsViewProvider;
@@ -97,6 +98,7 @@ package org.flowerplatform.web {
 			
 			perspectives.push(new DefaultPerspective());
 			perspectives.push(new RegexIdePerspective());
+			perspectives.push(new FlowerAppWizardPerspective());
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
