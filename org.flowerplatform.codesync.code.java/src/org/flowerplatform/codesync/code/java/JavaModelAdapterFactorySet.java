@@ -27,8 +27,6 @@ import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAda
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.ENUM;
 import static com.crispico.flower.mp.codesync.code.java.adapter.JavaTypeModelAdapter.INTERFACE;
 
-import java.io.File;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Annotation;
@@ -39,6 +37,8 @@ import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -96,14 +96,16 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 		// right - AST
 		rightFactory = new ModelAdapterFactory();
 		
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController();
+		
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
 		folderModelAdapter.setLimitedPath(limitedPath);
-		rightFactory.addModelAdapter(File.class, folderModelAdapter, "", CodeSyncPlugin.FOLDER);
+		rightFactory.addModelAdapter(fileAccessController.getFileClass(), folderModelAdapter, "", CodeSyncPlugin.FOLDER);
 		
 		// java specific adapters
 		JavaFileModelAdapter fileModelAdapter = (JavaFileModelAdapter) createAstModelAdapter(new JavaFileModelAdapter());
-		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavaPlugin.TECHNOLOGY, CodeSyncPlugin.FILE);
+		rightFactory.addModelAdapter(fileAccessController.getFileClass(), fileModelAdapter, CodeSyncCodeJavaPlugin.TECHNOLOGY, CodeSyncPlugin.FILE);
 		rightFactory.addModelAdapter(AbstractTypeDeclaration.class, createAstModelAdapter(new JavaTypeModelAdapter()), JavaTypeModelAdapter.CLASS);
 		rightFactory.addModelAdapter(FieldDeclaration.class, createAstModelAdapter(new JavaAttributeModelAdapter()), JavaAttributeModelAdapter.ATTRIBUTE);
 		rightFactory.addModelAdapter(MethodDeclaration.class, createAstModelAdapter(new JavaOperationModelAdapter()), JavaOperationModelAdapter.OPERATION);
@@ -123,9 +125,9 @@ public class JavaModelAdapterFactorySet extends ModelAdapterFactorySet {
 		
 		// feature providers
 		CodeSyncElementFeatureProvider featureProvider = new CodeSyncElementFeatureProvider();
-		addFeatureProvider(File.class, featureProvider);
+		addFeatureProvider(fileAccessController.getFileClass(), featureProvider);
 		addFeatureProvider(CodeSyncPlugin.FOLDER, featureProvider);
-		addFeatureProvider(File.class, featureProvider);
+		addFeatureProvider(fileAccessController.getFileClass(), featureProvider);
 		addFeatureProvider(CodeSyncPlugin.FILE, featureProvider);
 		
 		JavaTypeFeatureProvider typeFeatureProvider = new JavaTypeFeatureProvider();

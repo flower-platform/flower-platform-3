@@ -35,14 +35,14 @@ import com.crispico.flower.mp.model.codesync.CodeSyncRoot;
 public class WikiSyncAlgorithmRunner implements ICodeSyncAlgorithmRunner {
 
 	@Override
-	public void runCodeSyncAlgorithm(File project, File resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public void runCodeSyncAlgorithm(Object project, Object resource, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 		String name = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "mindmapEditorStatefulService");
 		// this will be a temporary tree, do not send the project
 		CodeSyncRoot leftRoot = WikiPlugin.getInstance().getWikiTree(null, resourceSet, project, name, technology);
-		CodeSyncRoot rightRoot = WikiPlugin.getInstance().getWikiTree(project, resourceSet, null, name, technology);
+		CodeSyncRoot rightRoot = WikiPlugin.getInstance().getWikiTree((File) project, resourceSet, null, name, technology);
 		
-		WikiPlugin.getInstance().updateTree(leftRoot, rightRoot, project, resourceSet, technology, communicationChannel, true);
+		WikiPlugin.getInstance().updateTree(leftRoot, rightRoot, (File) project, resourceSet, technology, communicationChannel, true);
 	}
 
 }

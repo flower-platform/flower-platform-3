@@ -18,14 +18,14 @@
  */
 package org.flowerplatform.codesync.code.javascript.adapter;
 
-import java.io.File;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.code.javascript.CodeSyncCodeJavascriptPlugin;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExNodeFeatureProvider;
 import org.flowerplatform.codesync.code.javascript.feature_provider.RegExParameterFeatureProvider;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNodeParameter;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncElementFeatureProvider;
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -49,18 +49,20 @@ public class JavaScriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 	public void initialize(Resource cache, String limitedPath, boolean useUIDs) {
 		super.initialize(cache, limitedPath, useUIDs);
 		
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController();
+		
 		// right - AST
 		rightFactory = new ModelAdapterFactory();
 		
 		// folder adapter
 		FolderModelAdapter folderModelAdapter = (FolderModelAdapter) createAstModelAdapter(new FolderModelAdapter());
 		folderModelAdapter.setLimitedPath(limitedPath);
-		rightFactory.addModelAdapter(File.class, folderModelAdapter, "", CodeSyncPlugin.FOLDER);
+		rightFactory.addModelAdapter(fileAccessController.getFileClass(), folderModelAdapter, "", CodeSyncPlugin.FOLDER);
 		
 		// javascript specific adapter
 		IModelAdapter fileModelAdapter = createAstModelAdapter(new JavaScriptFileModelAdapter());
-		rightFactory.addModelAdapter(File.class, fileModelAdapter, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, CodeSyncPlugin.FILE);
-		rightFactory.addModelAdapter(File.class, fileModelAdapter, "html", CodeSyncPlugin.FILE);
+		rightFactory.addModelAdapter(fileAccessController.getFileClass(), fileModelAdapter, CodeSyncCodeJavascriptPlugin.TECHNOLOGY, CodeSyncPlugin.FILE);
+		rightFactory.addModelAdapter(fileAccessController.getFileClass(), fileModelAdapter, "html", CodeSyncPlugin.FILE);
 		rightFactory.addModelAdapter(RegExAstNode.class, createAstModelAdapter(new RegExNodeAstModelAdapter()), MODEL_ELEMENT);
 		rightFactory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()), PARAMETER);
 		
@@ -72,7 +74,7 @@ public class JavaScriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		
 		// feature providers
 		CodeSyncElementFeatureProvider featureProvider = new CodeSyncElementFeatureProvider();
-		addFeatureProvider(File.class, featureProvider);
+		addFeatureProvider(fileAccessController.getFileClass(), featureProvider);
 		addFeatureProvider(CodeSyncPlugin.FOLDER, featureProvider);
 		addFeatureProvider(CodeSyncPlugin.FILE, featureProvider);
 		

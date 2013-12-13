@@ -18,7 +18,6 @@
  */
 package com.crispico.flower.mp.codesync.code.adapter;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.codesync.base.FilteredIterable;
@@ -34,7 +35,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
- * Mapped to {@link File}. Children are {@link File}s that match the {@link #limitedPath}, if set.
+ * Mapped to platform-dependent files. Children are files that match the {@link #limitedPath}, if set.
  * 
  * @author Mariana
  */
@@ -42,9 +43,9 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 
 	protected String limitedPath;
 	
-	private List<File> filesToDelete = new ArrayList<File>();
+	private List<Object> filesToDelete = new ArrayList<Object>();
 
-	private Map<File, String> filesToRename = new HashMap<File, String>();
+	private Map<Object, String> filesToRename = new HashMap<Object, String>();
 	
 	public FolderModelAdapter() {
 		super();
@@ -67,9 +68,8 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	}
 
 	@Override
-	public void setValueFeatureValue(Object element, Object feature, Object value) {
+	public void setValueFeatureValue(Object folder, Object feature, Object value) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name().equals(feature)) {
-			File folder = getFolder(element);
 			filesToRename.put(folder, (String) value);
 		}
 	}
@@ -78,7 +78,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
 			CodeSyncElement cse = (CodeSyncElement) correspondingChild;
-			return new File(getFolder(element), (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(cse));
+			return EditorPlugin.getInstance().getFileAccessController().createNewFile(element, (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(cse));
 		}
 		return null;
 	}
@@ -86,8 +86,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	@Override
 	public void removeChildrenOnContainmentFeature(Object parent, Object feature, Object child) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
-			File resource = (File) child;
-			filesToDelete.add(resource);
+			filesToDelete.add(child);
 		}
 	}
 
@@ -98,7 +97,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 
 	@Override
 	public List<?> getChildren(Object modelElement) {
-		File[] files = getFolder(modelElement).listFiles();
+		Object[] files = EditorPlugin.getInstance().getFileAccessController().listFiles(modelElement);
 		if (files == null) {
 			return Collections.emptyList();
 		}
@@ -107,7 +106,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 
 	@Override
 	public String getLabel(Object modelElement) {
-		return getFolder(modelElement).getName();
+		return EditorPlugin.getInstance().getFileAccessController().getName(modelElement);
 	}
 
 	@Override
@@ -123,7 +122,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	
 				@Override
 				protected boolean isAccepted(Object candidate) {
-					String candidatePath = CodeSyncPlugin.getInstance().getProjectsProvider().getPathRelativeToProject((File) candidate);
+					String candidatePath = CodeSyncPlugin.getInstance().getProjectAccessController().getPathRelativeToProject(candidate);
 					candidatePath = candidatePath.replaceAll("\\\\", "/");
 					if (limitedPath == null 
 							|| limitedPath.startsWith(candidatePath) 	// accept candidate a/b/c for limit a/b/c/d
@@ -150,32 +149,34 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	public Object createCorrespondingModelElement(Object element) {
 		return null;
 	}
-
+	
+	/**
+	 * @author Sebastian Solomon
+	 */
 	@Override
-	public boolean save(Object element) {
-		File folder = getFolder(element);
-		if (!folder.exists()) {
-			// create the folder if it doesn't exist
-			folder.mkdirs();
+	public boolean save(Object file) {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController();
+		if (!fileAccessController.exists(file)) {
+			fileAccessController.createNewFile(file);
 		}
 		
 		// remove children that were mark deleted	
-		File[] children = folder.listFiles();
+		Object[] children = fileAccessController.listFiles(file);
 		if (children != null) {
-			for (File child : folder.listFiles()) {
+			for (Object child : children) {
 				if (filesToDelete.contains(child)) {
-					child.delete();
+					fileAccessController.delete(child);
 					filesToDelete.remove(child);
 				}
 			}
 		}
 		
 		// move the folder if it was marked renamed
-		String newName = filesToRename.get(folder);
+		String newName = filesToRename.get(file);
 		if (newName != null) {
-			File dest = new File(folder.getParent(), newName);
-			folder.renameTo(dest);
-			filesToRename.remove(folder);
+			Object dest = fileAccessController.createNewFile(fileAccessController.getParentFile(file), newName);
+			fileAccessController.rename(file, dest);
+			filesToRename.remove(file);
 		}
 		return true;
 	}
@@ -185,10 +186,6 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 		return true;
 	}
 	
-	private File getFolder(Object element) {
-		return (File) element;
-	}
-
 	@Override
 	public void beforeFeaturesProcessed(Object element, Object correspondingElement) {
 		// nothing to do

@@ -18,8 +18,6 @@
  */
 package com.crispico.flower.mp.codesync.base;
 
-import java.io.File;
-
 import org.flowerplatform.communication.channel.CommunicationChannel;
 
 
@@ -28,6 +26,6 @@ import org.flowerplatform.communication.channel.CommunicationChannel;
  */
 public interface ICodeSyncAlgorithmRunner {
 
-	void runCodeSyncAlgorithm(File project, File resource, String technology, CommunicationChannel communicationChannel, boolean showDialog);
+	void runCodeSyncAlgorithm(Object project, Object resource, String technology, CommunicationChannel communicationChannel, boolean showDialog);
 	
 }

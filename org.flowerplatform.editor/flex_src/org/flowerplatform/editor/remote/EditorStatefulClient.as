@@ -22,6 +22,7 @@ package  org.flowerplatform.editor.remote {
 	
 	import flash.events.Event;
 	import flash.events.IEventDispatcher;
+	import flash.external.ExternalInterface;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.Application;
@@ -452,6 +453,12 @@ package  org.flowerplatform.editor.remote {
 			// will update actions, etc
 			if (dirtyStateChanged) {
 				EditorPlugin.getInstance().globalEditorOperationsManager.dirtyStateUpdated(this);
+				
+				//for eclipse
+				var globalDirtyState:Boolean = EditorPlugin.getInstance().globalEditorOperationsManager.getGlobalDirtyState();
+				if (ExternalInterface.available) {	
+					ExternalInterface.call("sendGlobalDirtyState", globalDirtyState ? "true" : "false");
+				}
 			}
 		}
 		
@@ -547,8 +554,12 @@ package  org.flowerplatform.editor.remote {
 			if (editorFrontends.length > 0) {
 				var workbench:IWorkbench = FlexUtilGlobals.getInstance().workbench;
 				var lastEditorFrontend:EditorFrontend = editorFrontends[editorFrontends.length - 1];
+				//if (lastEditorFrontend is IPopupContent) {
+					UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend.parent]);
+//				} else {
+//					UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend]);
+//				}
 				
-				UIComponent(workbench).callLater(workbench.setActiveView, [lastEditorFrontend]);
 			}
 		}
 	}

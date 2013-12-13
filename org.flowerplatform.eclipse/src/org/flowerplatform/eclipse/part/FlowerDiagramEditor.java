@@ -8,6 +8,11 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.BrowserFunction;
+import org.eclipse.swt.browser.LocationAdapter;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.ProgressAdapter;
+import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -18,6 +23,7 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.internal.EditorPane;
 import org.eclipse.ui.internal.EditorSite;
 import org.eclipse.ui.part.EditorPart;
@@ -28,13 +34,13 @@ import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-
 public class FlowerDiagramEditor extends EditorPart {
 
 	public static final String EDITOR_ID = "org.flowerplatform.eclipse.editor.FlowerDiagramEditor";
 
 	public CommunicationChannel communicationChannel;
+	
+	private boolean isDirty = false; 
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(FlowerDiagramEditor.class);
@@ -64,7 +70,7 @@ public class FlowerDiagramEditor extends EditorPart {
 	private Browser browser;
 
 	private Composite parent;
-
+	
 	public Composite getParent() {
 		return parent;
 	}
@@ -79,7 +85,7 @@ public class FlowerDiagramEditor extends EditorPart {
 	//
 
 	public void doSave(IProgressMonitor monitor) {
-		// TODO Auto-generated method stub
+		browser.execute("doSave()");
 	}
 
 	@Override
@@ -178,7 +184,15 @@ public class FlowerDiagramEditor extends EditorPart {
 	}
 
 	public boolean isDirty() {
-		return false;
+		return isDirty;
+	}
+	
+	protected void fireDirtyPropertyChange() {
+		PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				FlowerDiagramEditor.this.firePropertyChange(IEditorPart.PROP_DIRTY);
+			}
+		});
 	}
 
 	public boolean isSaveAsAllowed() {
@@ -223,7 +237,23 @@ public class FlowerDiagramEditor extends EditorPart {
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// TODO CC: here we must append openResources command
-		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer().getUrl());		
+		browser.setUrl(EclipsePlugin.getInstance().getFlowerJettyServer()
+				.getUrl()
+				+ "?openResources="
+				+ ((FileEditorInput) getEditorInput()).getFile().getFullPath());
+		
+		final BrowserFunction function = new GetGolobalDirtyState(browser, "sendGlobalDirtyStateToJava");
+
+		browser.addProgressListener(new ProgressAdapter() {
+			public void completed(ProgressEvent event) {
+				browser.addLocationListener(new LocationAdapter() { 
+					public void changed(LocationEvent event) {
+						browser.removeLocationListener(this);
+						function.dispose();
+					}
+				});
+			}
+		});
 	}
 
 	@Override
@@ -236,4 +266,25 @@ public class FlowerDiagramEditor extends EditorPart {
 		 getEditorInput()).getFile().getFullPath().toString();
 	}
 
+	 // Called by JavaScript
+	class GetGolobalDirtyState extends BrowserFunction {
+
+		GetGolobalDirtyState(Browser browser, String name) {
+			super(browser, name);
+		}
+
+		public Object function(Object[] arguments) {
+			boolean newDirtyState = Boolean.parseBoolean((String)arguments[0]);
+			
+			if (isDirty != newDirtyState){
+				isDirty = newDirtyState;
+				PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						FlowerDiagramEditor.this.firePropertyChange(IEditorPart.PROP_DIRTY);
+					}
+				});
+			}
+			return null;
+		}
+	}
 }
