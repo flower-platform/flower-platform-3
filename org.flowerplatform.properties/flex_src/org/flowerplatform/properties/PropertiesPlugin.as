@@ -1,6 +1,8 @@
 package org.flowerplatform.properties {
 	import flash.utils.Dictionary;
 	
+	import flexunit.utils.ArrayList;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
@@ -21,8 +23,13 @@ package org.flowerplatform.properties {
 		
 		protected static var INSTANCE:PropertiesPlugin;
 		
-		public var propertyView:PropertiesView;
+		public var propertiesView:PropertiesView;
 		public var propertyRendererClasses:Dictionary = new Dictionary();
+		
+		/**
+		 * @author Cristina Constantinescu
+		 */ 
+		public var propertiesProviders:ArrayList = new ArrayList();
 		
 		public static function getInstance():PropertiesPlugin {
 			return INSTANCE;
@@ -56,5 +63,6 @@ package org.flowerplatform.properties {
 				(BooleanPropertyRenderer);
 			
 		}
+
 	}
 }

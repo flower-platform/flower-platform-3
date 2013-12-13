@@ -141,10 +141,10 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 			case REGEX_CONFIG_TYPE:
 				switch (propertyName) {
 					case NAME:
-						return new Property().setName(NAME).setValue(selectedItem.getConfig()).setReadOnly(false);				
+						return new Property().setNameAs(NAME).setValueAs(selectedItem.getConfig()).setReadOnlyAs(false);				
 					case EXTENSIONS:
 						Root root = RegexService.getInstance().getRoot(selectedItem.getConfig());					
-						return new Property().setName(EXTENSIONS).setValue(StringUtils.join(root.getExtensions().toArray(), ",")).setReadOnly(false);
+						return new Property().setNameAs(EXTENSIONS).setValueAs(StringUtils.join(root.getExtensions().toArray(), ",")).setReadOnlyAs(false);
 				}
 				break;
 			case REGEX_MACRO_TYPE:
@@ -152,9 +152,9 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 				
 				switch (propertyName) {
 					case NAME:
-						return new Property().setName(NAME).setValue(regex.getName()).setReadOnly(false);				
+						return new Property().setNameAs(NAME).setValueAs(regex.getName()).setReadOnlyAs(false);				
 					case REGEX:
-						return new Property().setName(REGEX).setValue(regex.getRegex()).setReadOnly(false);						
+						return new Property().setNameAs(REGEX).setValueAs(regex.getRegex()).setReadOnlyAs(false);						
 				}			
 				break;
 			case REGEX_PARSER_TYPE:
@@ -162,13 +162,13 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 				
 				switch (propertyName) {
 					case NAME:
-						return new Property().setName(NAME).setValue(parserRegex.getName()).setReadOnly(false);				
+						return new Property().setNameAs(NAME).setValueAs(parserRegex.getName()).setReadOnlyAs(false);				
 					case REGEX_MACROS:
-						return new Property().setName(REGEX_MACROS).setValue(parserRegex.getRegex()).setReadOnly(false);								
+						return new Property().setNameAs(REGEX_MACROS).setValueAs(parserRegex.getRegex()).setReadOnlyAs(false);								
 					case REGEX_FULL:
-						return new Property().setName(REGEX_FULL).setValue(RegexService.getInstance().getFullRegex(selectedItem.getConfig(), parserRegex.getRegex()));
+						return new Property().setNameAs(REGEX_FULL).setValueAs(RegexService.getInstance().getFullRegex(selectedItem.getConfig(), parserRegex.getRegex()));
 					case ACTION:
-						return new Property().setName(ACTION).setValue(parserRegex.getAction()).setReadOnly(false).setType("DropDownListWithRegexActions");
+						return new Property().setNameAs(ACTION).setValueAs(parserRegex.getAction()).setReadOnlyAs(false).setTypeAs("DropDownListWithRegexActions");
 				}	
 				break;
 			case REGEX_MATCH_TYPE:
@@ -176,17 +176,17 @@ public class RegexPropertiesProvider implements IPropertiesProvider<RegexSelecte
 				
 				switch (propertyName) {
 					case REGEX_MACROS:
-						return new Property().setName(REGEX_MACROS).setValue(match.getParserRegex().getRegex());
+						return new Property().setNameAs(REGEX_MACROS).setValueAs(match.getParserRegex().getRegex());
 					case REGEX_FULL:
-						return new Property().setName(REGEX_FULL).setValue(RegexService.getInstance().getFullRegex(selectedItem.getConfig(), match.getParserRegex().getRegex()));					
+						return new Property().setNameAs(REGEX_FULL).setValueAs(RegexService.getInstance().getFullRegex(selectedItem.getConfig(), match.getParserRegex().getRegex()));					
 					case START:
-						return new Property().setName(START).setValue(match.getStart().toString());					
+						return new Property().setNameAs(START).setValueAs(match.getStart().toString());					
 					case END:
-						return new Property().setName(END).setValue(match.getEnd().toString());								
+						return new Property().setNameAs(END).setValueAs(match.getEnd().toString());								
 				}
 				if (match.getSubMatches() != null) {
 					int index = Integer.parseInt(propertyName.substring(1));
-					return new Property().setName(propertyName).setValue(match.getSubMatches().get(index - 1).getValue());				
+					return new Property().setNameAs(propertyName).setValueAs(match.getSubMatches().get(index - 1).getValue());				
 				}
 				break;
 		}		

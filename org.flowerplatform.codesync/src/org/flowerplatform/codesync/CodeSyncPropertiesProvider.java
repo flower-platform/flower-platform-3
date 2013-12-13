@@ -72,9 +72,9 @@ public class CodeSyncPropertiesProvider extends AbstractModelPropertiesProvider<
 	public Property getProperty(DiagramSelectedItem selectedItem, CodeSyncElement codeSyncElement,
 			String propertyName) {
 		return new Property()
-				.setName(propertyName)
-				.setValue(CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, propertyName))
-				.setReadOnly(false);
+				.setNameAs(propertyName)
+				.setValueAs(CodeSyncOperationsService.getInstance().getFeatureValue(codeSyncElement, propertyName))
+				.setReadOnlyAs(false);
 	}
 
 

@@ -16,24 +16,19 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.remote {
-	
-	import mx.collections.ArrayCollection;
+package org.flowerplatform.codesync.wizard.action {
+	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
-	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
-	[RemoteClass]
-	[Bindable]
-	public class RelationDescriptor {
-	
-		public var type:String;
-		public var label:String;
-		public var iconUrl:String;
-		public var sourceCodeSyncTypes:ArrayCollection;
-		public var targetCodeSyncTypes:ArrayCollection;
-		public var sourceCodeSyncTypeCategories:ArrayCollection;
-		public var targetCodeSyncTypeCategories:ArrayCollection;
+	public class AddWizardElementAction extends ActionBase {
 		
+		public function AddWizardElementAction() {
+			label = CodeSyncPlugin.getInstance().getMessage("wizard.add");
+			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/common/add.png");
+			preferShowOnActionBar = true;
+		}
 	}
 }

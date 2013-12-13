@@ -69,37 +69,37 @@ public class FilePropertiesProvider implements IPropertiesProvider<FileSelectedI
 		switch (propertyName) {
 			case PROPERTY_NAME: {
 				return new Property()
-						.setName(PROPERTY_NAME)
-						.setValue(file.getName())
-						.setReadOnly(false);
+						.setNameAs(PROPERTY_NAME)
+						.setValueAs(file.getName())
+						.setReadOnlyAs(false);
 			}
 			case PROPERTY_LOCATION: {
 				return new Property()
-					.setName(PROPERTY_LOCATION)
-					.setValue(file.getAbsolutePath());
+					.setNameAs(PROPERTY_LOCATION)
+					.setValueAs(file.getAbsolutePath());
 			}
 			case PROPERTY_SIZE: {
 				return new Property()
-					.setName(PROPERTY_SIZE)
-					.setValue(file.length());
+					.setNameAs(PROPERTY_SIZE)
+					.setValueAs(file.length());
 			}
 			case PROPERTY_LAST_MODIFIED: {
 				return new Property()
-					.setName(PROPERTY_LAST_MODIFIED)
-					.setValue(new Date(file.lastModified()));
+					.setNameAs(PROPERTY_LAST_MODIFIED)
+					.setValueAs(new Date(file.lastModified()));
 			}
 			case PROPERTY_TEST_ENABLED: {
 				return new Property()
-					.setName(PROPERTY_TEST_ENABLED)
-					.setValue(true)
-					.setType("Boolean")
-					.setReadOnly(false);
+					.setNameAs(PROPERTY_TEST_ENABLED)
+					.setValueAs(true)
+					.setTypeAs("Boolean")
+					.setReadOnlyAs(false);
 			}
 			case PROPERTY_TEST_DISABLED: {
 				return new Property()
-					.setName(PROPERTY_TEST_DISABLED)
-					.setValue(true)
-					.setType("Boolean");
+					.setNameAs(PROPERTY_TEST_DISABLED)
+					.setValueAs(true)
+					.setTypeAs("Boolean");
 			}
 		}
 		return null;

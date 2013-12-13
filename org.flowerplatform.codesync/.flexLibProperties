@@ -26,7 +26,16 @@
     <classEntry path="org.flowerplatform.codesync.regex.RegexUtils"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.command.RegexCommand"/>
     <classEntry path="org.flowerplatform.codesync.regex.ide.remote.RegexActionDto"/>
-    <classEntry path="org.flowerplatform.codesync.flower_app_wizard.FlowerAppWizardPerspective"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.WizardElementsViewProvider"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.ui.WizardElementsView"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.ui.WizardDependenciesView"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.actions.RemoveWizardElementAction"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.actions.RefreshWizardElementsAction"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.WizardEvent"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.remote.MDADependency"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.ui.WizardDependenciesListItemRenderer"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.WizardUtils"/>
+    <classEntry path="org.flowerplatform.codesync.wizard.ui.LocationForWizardDependencyTargetElement"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

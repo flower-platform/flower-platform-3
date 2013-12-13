@@ -247,11 +247,9 @@ package org.flowerplatform.editor.model {
 			PropertiesPlugin.getInstance().propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
 				(StringWithButtonPropertyRenderer, {
 					clickHandler: function(itemRendererHandler:IDialogResultHandler, propertyName:String, propertyValue:Object):void {
-						var propertiesView:PropertiesView = BasicPropertyRenderer(itemRendererHandler).propertiesView;
-						
 						var dialog:ILocationForNewElementsDialog = new LocationForNewElementsDialog();
 						dialog.setResultHandler(itemRendererHandler);
-						dialog.selectionOfItems = propertiesView.selectionForServer;
+						dialog.selectionOfItems = PropertiesPlugin.getInstance().propertiesView.selectionForServer;
 						dialog.currentLocationForNewElements = propertyValue;
 						
 						FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()

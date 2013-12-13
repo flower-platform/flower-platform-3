@@ -19,6 +19,7 @@
 package org.flowerplatform.properties.remote;
 /**
  * @author Razvan Tache
+ * @author Cristina Constantinescu
  */
 public class Property {
 	
@@ -37,17 +38,25 @@ public class Property {
 	public String getName() {
 		return name;
 	}
-
-	public Property setName(String name) {
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public Property setNameAs(String name) {
 		this.name = name;
 		return this;
 	}
-
+	
 	public Object getValue() {
 		return value;
 	}
 
-	public Property setValue(Object value) {
+	public void setValue(Object value) {
+		this.value = value;
+	}
+	
+	public Property setValueAs(Object value) {
 		this.value = value;
 		return this;
 	}
@@ -56,7 +65,11 @@ public class Property {
 		return readOnly;
 	}
 	
-	public Property setReadOnly(boolean readOnly) {
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+	
+	public Property setReadOnlyAs(boolean readOnly) {
 		this.readOnly = readOnly;
 		return this;
 	}
@@ -64,7 +77,12 @@ public class Property {
 	public String getType() {
 		return type;
 	}
-	public Property setType(String type) {
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public Property setTypeAs(String type) {
 		this.type = type;
 		return this;
 	}

@@ -39,17 +39,17 @@ public class DiagramPropertiesProvider extends AbstractModelPropertiesProvider<D
 		switch (propertyName) {
 			case LOCATION_FOR_NEW_ELEMENTS_PROPERTY: {
 				return new Property()
-						.setName(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)
-						.setValue(diagram.getLocationForNewElements())
-						.setType("StringWithDialog")
-						.setReadOnly(true);
+						.setNameAs(LOCATION_FOR_NEW_ELEMENTS_PROPERTY)
+						.setValueAs(diagram.getLocationForNewElements())
+						.setTypeAs("StringWithDialog")
+						.setReadOnlyAs(true);
 			}
 			case SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY: {
 				return new Property()
-						.setName(SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY)
-						.setValue(diagram.isShowLocationForNewElementsDialog())
-						.setType("Boolean")
-						.setReadOnly(false);
+						.setNameAs(SHOW_LOCATION_FOR_NEW_ELEMENTS_DIALOG_PROPERTY)
+						.setValueAs(diagram.isShowLocationForNewElementsDialog())
+						.setTypeAs("Boolean")
+						.setReadOnlyAs(false);
 			}
 		}
 		return null;

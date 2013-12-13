@@ -28,6 +28,7 @@ Export-Package: com.crispico.flower.mp.codesync.base,
  org.flowerplatform.codesync.processor,
  org.flowerplatform.codesync.projects,
  org.flowerplatform.codesync.regex,
- org.flowerplatform.codesync.remote
+ org.flowerplatform.codesync.remote,
+ org.flowerplatform.codesync.wizard
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.crispico.flower.mp.codesync.base.CodeSyncPlugin

@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.codesync.config.extension.AddNewExtension;
+import org.flowerplatform.codesync.config.extension.AddNewRelationExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorParseException;
 import org.flowerplatform.common.CommonPlugin;
@@ -59,6 +60,9 @@ public class CodeSyncDiagramOperationsService1 {
 	public static final String PARENT_CODE_SYNC_ELEMENT = "parentCodeSyncElement";
 	public static final String PARENT_VIEW = "parentView";
 
+	public static final String SOURCE = "source";
+	public static final String TARGET = "target";
+	
 	public static final String ID = "codeSyncDiagramOperationsService";
 	
 	public static CodeSyncDiagramOperationsService1 getInstance() {
@@ -295,13 +299,12 @@ public class CodeSyncDiagramOperationsService1 {
 	public void addNewRelation(ServiceInvocationContext context, String type, String sourceViewId, String targetViewId) {
 		View sourceView = getViewById(context.getAdditionalData(), sourceViewId);
 		View targetView = getViewById(context.getAdditionalData(), targetViewId);
-		CodeSyncElement source = (CodeSyncElement) sourceView.getDiagrammableElement();
-		CodeSyncElement target = (CodeSyncElement) targetView.getDiagrammableElement();
-		Relation relation = CodeSyncFactory.eINSTANCE.createRelation();
-		relation.setType(type);
-		relation.setSource(source);
-		relation.setTarget(target);
-		source.getRelations().add(relation);
+		
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put(SOURCE, sourceView.getDiagrammableElement());
+		parameters.put(TARGET, targetView.getDiagrammableElement());
+
+		Relation relation = addNewRelation(getCodeSyncMappingResource(getEditableResource(context.getAdditionalData())), type, parameters);
 		
 		EObject currentObject = sourceView;
 		Diagram diagram = null;
@@ -313,6 +316,33 @@ public class CodeSyncDiagramOperationsService1 {
 			currentObject = currentObject.eContainer();
 		}
 		createEdge(relation, sourceView, targetView, diagram);
+	}
+	
+	public Relation addNewRelation(Resource codeSyncMappingResource, String type, Map<String, Object> parameters) {
+		Relation relation = CodeSyncFactory.eINSTANCE.createRelation();
+		relation.setType(type);
+		
+		if (parameters == null) {
+			parameters = new HashMap<String, Object>();
+		}
+		
+		for (AddNewRelationExtension addNewExtension : CodeSyncPlugin.getInstance().getAddNewRelationExtensions()) {
+			if (!addNewExtension.addNew(relation, codeSyncMappingResource, parameters)) {
+				// element created, don't allow other extensions to perform add logic
+				break;
+			}
+		}
+			
+		if (parameters.containsKey(SOURCE)) {
+			CodeSyncElement source = (CodeSyncElement) parameters.get(SOURCE);
+			relation.setSource(source);
+			source.getRelations().add(relation);
+		}
+				
+		if (parameters.containsKey(TARGET)) {
+			relation.setTarget((CodeSyncElement) parameters.get(TARGET));
+		}		
+		return relation;
 	}
 	
 	protected Edge createEdge(Relation relation, View source, View target, Diagram diagram) {

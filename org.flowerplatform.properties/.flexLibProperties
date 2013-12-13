@@ -8,6 +8,7 @@
     <classEntry path="org.flowerplatform.properties.PropertiesView"/>
     <classEntry path="org.flowerplatform.properties.PropertyItemRenderer"/>
     <classEntry path="org.flowerplatform.properties.TestItemRenderer"/>
+    <classEntry path="org.flowerplatform.properties.IPropertiesProvider"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -33,12 +33,14 @@ package org.flowerplatform.web {
 	import mx.managers.ToolTipManager;
 	
 	import org.flowerplatform.blazeds.BridgeEvent;
-	import org.flowerplatform.codesync.flower_app_wizard.FlowerAppWizardPerspective;
 	import org.flowerplatform.codesync.regex.MacrosRegexViewProvider;
 	import org.flowerplatform.codesync.regex.ParserRegexViewProvider;
 	import org.flowerplatform.codesync.regex.RegexConfigsViewProvider;
 	import org.flowerplatform.codesync.regex.RegexIdePerspective;
 	import org.flowerplatform.codesync.regex.RegexMatchesViewProvider;
+	import org.flowerplatform.codesync.wizard.WizardDependenciesViewProvider;
+	import org.flowerplatform.codesync.wizard.WizardElementsViewProvider;
+	import org.flowerplatform.codesync.wizard.WizardPerspective;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.editor.BasicEditorDescriptor;
@@ -98,7 +100,7 @@ package org.flowerplatform.web {
 			
 			perspectives.push(new DefaultPerspective());
 			perspectives.push(new RegexIdePerspective());
-			perspectives.push(new FlowerAppWizardPerspective());
+			perspectives.push(new WizardPerspective());
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
@@ -107,6 +109,9 @@ package org.flowerplatform.web {
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexMatchesViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new MacrosRegexViewProvider());
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new RegexConfigsViewProvider());
+			
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new WizardElementsViewProvider());
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new WizardDependenciesViewProvider());
 		}
 		
 		/**

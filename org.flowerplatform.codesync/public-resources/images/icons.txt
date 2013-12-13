@@ -11,6 +11,7 @@ images/regex/brick.png http://www.famfamfam.com/lab/icons/silk/
 images/regex/bricks.png http://www.famfamfam.com/lab/icons/silk/
 images/regex/bullet_star.png http://www.famfamfam.com/lab/icons/silk/
 images/regex/wrench.png http://www.famfamfam.com/lab/icons/silk/
+images/chart_line.png http://www.famfamfam.com/lab/icons/silk/
 
 images/regex/percent.png http://www.everaldo.com/#3cf/twitter
 images/wizard/wand-hat.png http://p.yusukekamiyamane.com/

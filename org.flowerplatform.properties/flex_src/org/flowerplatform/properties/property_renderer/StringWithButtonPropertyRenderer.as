@@ -47,11 +47,10 @@ package org.flowerplatform.properties.property_renderer {
 			propertyValue = new TextInput();
 			button = new Button();
 			
-			propertyValue.percentWidth = 90;
+			propertyValue.percentWidth = 100;
 			propertyValue.percentHeight = 100;		
 
 			button.percentHeight = 100;
-			button.percentWidth = 10;
 			button.label = "...";
 			button.addEventListener(MouseEvent.CLICK, clickHandlerInternal);
 			

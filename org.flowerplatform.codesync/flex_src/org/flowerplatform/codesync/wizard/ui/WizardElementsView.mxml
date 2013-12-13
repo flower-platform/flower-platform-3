@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!-- 
+@author Cristina Constantinescu
+-->
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.selection.ISelectionProvider" 
+		 xmlns:tree="org.flowerplatform.flexutil.tree.*"
+		 creationComplete="creationCompleteHandler(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.layout.Workbench;
+			import com.crispico.flower.util.layout.WorkbenchViewHost;
+			import com.crispico.flower.util.layout.event.ViewAddedEvent;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.IList;
+			import mx.core.FlexGlobals;
+			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.codesync.CodeSyncPlugin;
+			import org.flowerplatform.codesync.wizard.WizardEvent;
+			import org.flowerplatform.codesync.wizard.action.AddWizardElementAction;
+			import org.flowerplatform.codesync.wizard.action.RefreshWizardElementsAction;
+			import org.flowerplatform.codesync.wizard.action.RemoveWizardElementAction;
+			import org.flowerplatform.communication.CommunicationPlugin;
+			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.communication.tree.TreeNodeHierarchicalModelAdapter;
+			import org.flowerplatform.communication.tree.remote.TreeNode;
+			import org.flowerplatform.editor.model.DiagramEditorFrontend;
+			import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+			import org.flowerplatform.flexutil.FlexUtilGlobals;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.layout.ViewLayoutData;
+			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
+			import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
+			
+			import spark.events.IndexChangeEvent;
+			
+			protected var _viewHost:IViewHost;
+			
+			public function getActions(selection:IList):Vector.<IAction> {
+				var result:Vector.<IAction> = new Vector.<IAction>();
+				result.push(new AddWizardElementAction());		
+				result.push(new RemoveWizardElementAction());
+				result.push(new RefreshWizardElementsAction(this));
+				return result;
+			}
+			
+			public function getSelection():IList {
+				return null;
+			}
+			
+			public function set viewHost(viewHost:IViewHost):void {
+				if (_viewHost != null) {
+					DisplayObject(_viewHost).removeEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+					DisplayObject(_viewHost).removeEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);	
+				}
+				
+				_viewHost = viewHost;
+				
+				DisplayObject(_viewHost).addEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+				DisplayObject(_viewHost).addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);	
+			}
+			
+			private function viewAddedHandler(event:ViewAddedEvent):void {
+				// show actions in buttonBar
+				_viewHost.selectionChanged();
+			}
+			
+			private function viewRemovedHandler(event:ViewRemovedEvent):void {
+			}
+			
+			public function refreshHandler():void {
+				// search for a open & selected codeMirrorEditor
+				var editorFrontend:Object = null;
+				var editors:ArrayCollection = Workbench(FlexUtilGlobals.getInstance().workbench).getAllVisibleViewLayoutData(true);			
+				for each (var editor:ViewLayoutData in editors) {
+					editorFrontend = Workbench(FlexUtilGlobals.getInstance().workbench).layoutDataToComponent[editor];
+					if (editorFrontend is WorkbenchViewHost) {
+						editorFrontend = UIComponent(WorkbenchViewHost(editorFrontend).activeViewContent);
+					}
+					if (editorFrontend is DiagramEditorFrontend) {
+						break;
+					}
+				}		
+				if (editorFrontend == null) {
+					return;
+				}
+				CodeSyncPlugin.getInstance().wizardUtils.selectedEditorStatefulClient = 
+					NotationDiagramEditorStatefulClient(DiagramEditorFrontend(editorFrontend).editorStatefulClient);
+				
+				CodeSyncPlugin.getInstance().wizardUtils.selectedEditorStatefulClient
+					.service_getMDAElements(this, getWizardElementsCallbackHandler);				
+			}
+			
+			private function getWizardElementsCallbackHandler(result:ArrayCollection):void {
+				if (result != null) {
+					TreeNode(tree.rootNode).children = result;		
+					tree.refreshLinearizedDataProvider();	
+					
+					if (TreeNode(tree.rootNode).children != null && TreeNode(tree.rootNode).children.length > 0) {
+						var vector:Vector.<int> = new Vector.<int>();
+						vector.push(0);
+						tree.selectedIndices = vector;
+						tree.validateProperties();
+					}					
+				}
+			}
+			
+			protected function creationCompleteHandler(event:FlexEvent):void {
+				var root:TreeNode = new TreeNode();
+				root.children = new ArrayCollection();
+				tree.rootNode = root;
+			}
+			
+			protected function tree_changeHandler(e:Event):void {
+				if (tree.selectedItems != null && tree.selectedItems.length > 0) {
+					CodeSyncPlugin.getInstance().wizardUtils.selectedMDAElementInfo = 
+						TreeNode(HierarchicalModelWrapper(tree.selectedItems[0]).treeNode).pathFragment;
+				} else {
+					CodeSyncPlugin.getInstance().wizardUtils.selectedMDAElementInfo = null;
+				}
+			
+				e.stopImmediatePropagation();
+			}
+			
+		]]>
+	</fx:Script>
+	<tree:TreeList id="tree" width="100%" height="100%"
+				   hierarchicalModelAdapter="{new TreeNodeHierarchicalModelAdapter()}"
+				   itemRenderer="org.flowerplatform.communication.tree.GenericTreeItemRenderer"
+				   valueCommit="tree_changeHandler(event)"/>		
+</s:Group>

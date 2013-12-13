@@ -8,6 +8,7 @@ package org.flowerplatform.properties.property_renderer {
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.properties.PropertiesPlugin;
 	import org.flowerplatform.properties.PropertiesView;
 	import org.flowerplatform.properties.PropertyItemRenderer;
 	import org.flowerplatform.properties.remote.Property;
@@ -28,28 +29,14 @@ package org.flowerplatform.properties.property_renderer {
 			percentWidth = 50;
 			percentHeight = 100;
 		}
-		
-		/**
-		 *	@return the PropertiesView of the item renderer
-		 */
-		public function get propertiesView():PropertiesView {
-			return PropertiesView(PropertyItemRenderer(HGroup(parent).owner).owner.parent);
-		}
-		
+				
  		override protected function focusOutHandler(event:FocusEvent):void {
 			super.focusOutHandler(event);	
 		}
 		
 		protected function sendChangedValuesToServer(event:Event):void {
-			var selectionOfItems:Object = propertiesView.getSelectionForServer();
 			if (!data.readOnly) {
-				CommunicationPlugin.getInstance().bridge.sendObject(
-					new InvokeServiceMethodServerCommand(
-						"propertiesService",
-						"setProperties",
-						[selectionOfItems, data.name, getValue()]
-					)
-				);
+				PropertiesPlugin.getInstance().propertiesView.setPropertyValue(data.name, getValue());
 			}	
 		}
 		

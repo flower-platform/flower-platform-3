@@ -111,8 +111,8 @@ public class DescriptorPropertiesProvider implements IPropertiesProvider<StringS
 					result = "[" + listVal.toString() + "]";
 			}
 			return  new Property()
-					.setName(pd.getDisplayName())
-					.setValue(result);
+					.setNameAs(pd.getDisplayName())
+					.setValueAs(result);
 		} catch (InvocationTargetException | IllegalAccessException ex) {
 			logger.error("Exception getting property value for CodeSyncElementDescriptor.class", ex);
 		}

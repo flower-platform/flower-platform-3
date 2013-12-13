@@ -29,10 +29,10 @@
 			
 			protected var _viewHost:IViewHost;
 			
+			public var selection:IList;
 			public var selectionForServer:IList;
 
-			protected function creationCompleteHandler(flexvent:FlexEvent):void {
-				
+			protected function creationCompleteHandler(flexvent:FlexEvent):void {				
 				propertyList.itemRenderer = new ClassFactory(PropertyItemRenderer);
 				propertyList.dataProvider = new ArrayList();
 				// get selection from active provider to populate properties list with data
@@ -53,11 +53,7 @@
 			private function viewRemovedHandler(event:ViewRemovedEvent):void {
 				FlexUtilGlobals.getInstance().selectionManager.removeEventListener(SelectionChangedEvent.SELECTION_CHANGED, selectionChangedHandler);
 			}
-			
-			public function getSelectionForServer():IList {
-				return selectionForServer;	
-			}
-			
+						
 			public function get viewHost():IViewHost {
 				return _viewHost;
 			}
@@ -69,27 +65,67 @@
 			public function getActions(selection:IList):Vector.<IAction> {
 				return null;
 			}
-			
-			
+						
 			private function selectionChangedHandler(event:SelectionChangedEvent):void {
-				// I did this, because the selection system, sends an empty selection when the diagram is opened
-				// so in case the event.selectionForServer is an empty array we stop the logic.
+				selection = event.selection;
+
+				// reset data
+				icon.source = null;
+				label.text = null;
+				IList(propertyList.dataProvider).removeAll();
+
+				// get properties from providers
+				for (var i:int=0; i < PropertiesPlugin.getInstance().propertiesProviders.length(); i++) {
+					var propertiesProvider:IPropertiesProvider = IPropertiesProvider(PropertiesPlugin.getInstance().propertiesProviders.getItemAt(i));
+					addPropertiesToList(propertiesProvider.getProperties(event.selection));			
+				}
+				
+				// get properties from server
 				if (event.selectionForServer == null || event.selectionForServer.length == 0) {
-					icon.source = null;
-					label.text = null;
-					IList(propertyList.dataProvider).removeAll();
 					return;
 				}
 				CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
 					"propertiesService", "getProperties", 
 					[event.selectionForServer], 
 					this, function(object:Object):void {
-						propertyList.dataProvider = IList(object.propertiesList);
+						addPropertiesToList(object);		
 						selectionForServer = event.selectionForServer;
-						icon.source = String(object.icon);
-						label.text = String(object.label);
 					}));	
 			}
+			
+			private function addPropertiesToList(object:Object):void {
+				if (object == null) {
+					return;
+				}
+				for (var j:int=0; j < IList(object.propertiesList).length; j++) {
+					var property:Object = IList(object.propertiesList).getItemAt(j);
+					propertyList.dataProvider.addItem(property);
+				}
+				if (object.icon != null) {
+					icon.source = String(object.icon);
+				}
+				if (object.label != null) {
+					label.text = String(object.label);
+				}
+			}
+			
+			public function setPropertyValue(propertyName:String, propertyValue:Object):void {
+				for (var i:int=0; i < PropertiesPlugin.getInstance().propertiesProviders.length(); i++) {
+					var propertiesProvider:IPropertiesProvider = IPropertiesProvider(PropertiesPlugin.getInstance().propertiesProviders.getItemAt(i));
+					if (propertiesProvider.setPropertyValue(selection, propertyName, propertyValue)) {
+						return; // property set by one provider, so stop
+					}
+				}
+				
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"propertiesService",
+						"setProperties",
+						[selectionForServer, propertyName, propertyValue]
+					)
+				);
+			}
+			
 		]]>
 	</fx:Script>
 	<s:HGroup id = "iconAndLabel" paddingLeft="5">

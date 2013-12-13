@@ -75,6 +75,10 @@
 				_resultHandler = resultHandler;
 			}			
 			
+			protected function getDiagramEditableResourcePath():String {
+				return DiagramSelectedItem(_selectionOfItems.getItemAt(0)).diagramEditableResourcePath
+			}
+			
 			protected function creationCompleteHandler(event:FlexEvent):void {
 				_viewHost.addToControlBar(buttonBar);
 				
@@ -84,7 +88,7 @@
 				statefulClient.treeList = treeList;
 				
 				statefulClient.context[LocationForNewElementsStatefulClient.DIAGRAM_EDITABLE_RESOURCE_PATH_KEY] = 
-					DiagramSelectedItem(_selectionOfItems.getItemAt(0)).diagramEditableResourcePath;
+					getDiagramEditableResourcePath();
 				statefulClient.context[LocationForNewElementsStatefulClient.NEW_ELEMENTS_PATH_KEY] = 
 					_currentLocationForNewElements;
 			
@@ -99,12 +103,26 @@
 					return;
 				}
 				
-				var location:String = locationTxt.text;
+				save();
+				
+				var result:Object = new Object();
+				result.location = locationTxt.text;
+				result.options = _options;
+				_resultHandler.handleDialogResult(result);
+				cancelHandler();
+			}
+			
+			private function cancelHandler():void {
+				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(treeList.statefulClient, null);
+				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
+			}
+						
+			protected function save():void {				
 				CommunicationPlugin.getInstance().bridge.sendObject(
 					new InvokeServiceMethodServerCommand(
 						"propertiesService",
 						"setProperties",
-						[_selectionOfItems, "locationForNewElements", location]
+						[_selectionOfItems, "locationForNewElements", locationTxt.text]
 					)
 				);
 				if (showDialog.visible) {
@@ -116,26 +134,14 @@
 						)
 					);
 				}
-				var result:Object = new Object();
-				result.location = location;
-				result.options = _options;
-				_resultHandler.handleDialogResult(result);
-				cancelHandler();
 			}
-			
-			private function cancelHandler():void {
-				CommunicationPlugin.getInstance().statefulClientRegistry.unregister(treeList.statefulClient, null);
-				FlexUtilGlobals.getInstance().popupHandlerFactory.removePopup(this);	
-			}
-						
 		]]>
 	</fx:Script>
 	<fx:Declarations>		
 		<s:HGroup id="buttonBar" width="100%" horizontalAlign="right" verticalAlign="middle">
-			<s:VGroup height="100%" width="100%">
+			<s:VGroup height="100%" width="100%" visible="{showNewElementsPathDialogCheckBox}" includeInLayout="{showNewElementsPathDialogCheckBox}">
 				<s:CheckBox label="{EditorModelPlugin.getInstance().getMessage('locationNewElements.showDialog')}" 
-							id="showDialog" 
-							visible="{showNewElementsPathDialogCheckBox}"
+							id="showDialog"							
 							selected="{_currentShowNewElementsPathDialog}" width="100%"/>
 				<s:Label color="0x808080" text="{EditorModelPlugin.getInstance().getMessage('locationNewElements.showDialogInfo')}" />
 			</s:VGroup>			

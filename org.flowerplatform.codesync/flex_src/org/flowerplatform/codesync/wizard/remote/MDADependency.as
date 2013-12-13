@@ -16,24 +16,26 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.remote {
-	
+package org.flowerplatform.codesync.wizard.remote {
 	import mx.collections.ArrayCollection;
 	
+	import org.flowerplatform.codesync.remote.RelationDescriptor;
+	
 	/**
-	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
 	[RemoteClass]
 	[Bindable]
-	public class RelationDescriptor {
-	
+	public class MDADependency {
+		
 		public var type:String;
+		
 		public var label:String;
-		public var iconUrl:String;
-		public var sourceCodeSyncTypes:ArrayCollection;
-		public var targetCodeSyncTypes:ArrayCollection;
-		public var sourceCodeSyncTypeCategories:ArrayCollection;
-		public var targetCodeSyncTypeCategories:ArrayCollection;
+		
+		[Transient]
+		public var checked:Boolean;
+		
+		public var properties:ArrayCollection;
 		
 	}
 }

@@ -16,24 +16,17 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.remote {
-	
-	import mx.collections.ArrayCollection;
+package org.flowerplatform.properties {
+	import mx.collections.IList;
 	
 	/**
-	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
-	[RemoteClass]
-	[Bindable]
-	public class RelationDescriptor {
-	
-		public var type:String;
-		public var label:String;
-		public var iconUrl:String;
-		public var sourceCodeSyncTypes:ArrayCollection;
-		public var targetCodeSyncTypes:ArrayCollection;
-		public var sourceCodeSyncTypeCategories:ArrayCollection;
-		public var targetCodeSyncTypeCategories:ArrayCollection;
+	public interface IPropertiesProvider {
+		
+		function getProperties(selection:IList):Object;
+		
+		function setPropertyValue(selection:IList, propertyName:String, propertyValue:Object):Boolean;
 		
 	}
 }

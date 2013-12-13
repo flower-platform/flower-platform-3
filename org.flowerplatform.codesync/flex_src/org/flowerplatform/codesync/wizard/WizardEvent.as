@@ -16,24 +16,22 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.remote {
+package org.flowerplatform.codesync.wizard {
 	
-	import mx.collections.ArrayCollection;
+	import flash.events.Event;
 	
 	/**
-	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
-	[RemoteClass]
-	[Bindable]
-	public class RelationDescriptor {
-	
-		public var type:String;
-		public var label:String;
-		public var iconUrl:String;
-		public var sourceCodeSyncTypes:ArrayCollection;
-		public var targetCodeSyncTypes:ArrayCollection;
-		public var sourceCodeSyncTypeCategories:ArrayCollection;
-		public var targetCodeSyncTypeCategories:ArrayCollection;
+	public class WizardEvent extends Event {
+		
+		public static const SELECTED_WIZARD_ELEMENT_CHANGED:String = "selectedWizardElementChanged";
+		
+		public var selection:Object;
+		
+		public function WizardEvent(type:String) {
+			super(type, false, false);			
+		}
 		
 	}
 }

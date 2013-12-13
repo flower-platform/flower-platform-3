@@ -16,45 +16,36 @@
 *
 * license-end
 */
-package org.flowerplatform.properties {
-	import mx.containers.HBox;
-	import mx.containers.VBox;
+package org.flowerplatform.codesync.wizard {
+	
 	import mx.core.UIComponent;
 	
-	import org.flowerplatform.communication.CommunicationPlugin;
-	import org.flowerplatform.communication.tree.GenericTreeList;
-	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
+	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.wizard.ui.WizardElementsView;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
-	import org.flowerplatform.properties.PropertiesPlugin;
-	
-	import spark.components.Button;
-	import spark.components.Group;
-	import spark.components.VGroup;
 	
 	/**
-	 * @author Razvan Tache
+	 * @author Cristina Constantinescu
 	 */
-	public class PropertiesViewProvider implements IViewProvider {
+	public class WizardElementsViewProvider implements IViewProvider {
 		
-		public static const ID:String = "properties";
+		public static const ID:String = "wizardElements";
 		
 		public function getId():String {
 			return ID;
 		}
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {
-			PropertiesPlugin.getInstance().propertiesView = new PropertiesView();
-			
-			return PropertiesPlugin.getInstance().propertiesView;
+			return new WizardElementsView();
 		}
 		
-		public function getTitle(viewLayoutData:ViewLayoutData=null):String	{
-			return "Properties";
+		public function getTitle(viewLayoutData:ViewLayoutData=null):String {
+			return CodeSyncPlugin.getInstance().getMessage("wizard.elements");
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return PropertiesPlugin.getInstance().getResourceUrl(PropertiesPlugin.getInstance().getMessage("icon.location"));
+			return CodeSyncPlugin.getInstance().getResourceUrl("images/wizard/wand-hat.png");
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {

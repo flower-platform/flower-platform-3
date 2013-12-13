@@ -16,7 +16,7 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.flower_app_wizard {
+package org.flowerplatform.codesync.wizard {
 	
 	import com.crispico.flower.util.layout.Perspective;
 	import com.crispico.flower.util.layout.Workbench;
@@ -35,16 +35,16 @@ package org.flowerplatform.codesync.flower_app_wizard {
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class FlowerAppWizardPerspective extends Perspective {
+	public class WizardPerspective extends Perspective {
 		
-		public static const ID:String = "flowerAppWizardPerspective";
+		public static const ID:String = "wizardPerspective";
 		
 		public override function get id():String {
 			return ID;
 		}
 		
 		public override function get name():String {
-			return CodeSyncPlugin.getInstance().getMessage("flowerAppWiz.perspective");
+			return CodeSyncPlugin.getInstance().getMessage("wizard.perspective");
 		}
 		
 		public override function get iconUrl():String {			
@@ -59,9 +59,9 @@ package org.flowerplatform.codesync.flower_app_wizard {
 			
 			var sashEditor:SashLayoutData = addSash(wld, SashLayoutData.HORIZONTAL, [100], [0], true);
 			
-			var bottomSash:SashLayoutData = addSash(wld, SashLayoutData.HORIZONTAL, [20, 40, 40], [0, 0, 0]);					
-			addViewsInSash([RegexConfigsViewProvider.ID], bottomSash);
-			addViewsInSash([MacrosRegexViewProvider.ID], bottomSash);
+			var bottomSash:SashLayoutData = addSash(wld, SashLayoutData.HORIZONTAL, [30, 30, 40], [0, 0, 0]);			
+			addViewsInSash([WizardElementsViewProvider.ID], bottomSash);
+			addViewsInSash([WizardDependenciesViewProvider.ID], bottomSash);
 			addViewsInSash([PropertiesViewProvider.ID], bottomSash);
 			
 			load(workbench, wld, sashEditor);

@@ -21,8 +21,10 @@ package org.flowerplatform.editor.model.remote {
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.ServiceInvocationOptions;
+	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.action.AddNewElementAction;
 	import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulClient;
@@ -139,5 +141,27 @@ package org.flowerplatform.editor.model.remote {
 //			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "deleteElement", [viewId]));
 		}
 		
+		public function service_getMDAElements(callbackObject:Object, callbackFunction:Function):void {
+			CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"getMDAElementsFromModel",
+				[editableResourcePath], 
+				callbackObject, callbackFunction));
+		}	
+		
+		public function service_getMDADependencies(mdaElementInfo:PathFragment, callbackObject:Object, callbackFunction:Function):void {
+			CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"getMDADependencies",
+				[mdaElementInfo], 
+				callbackObject, callbackFunction));			
+		}	
+		
+		public function service_addMDADependency(dependency:Object, mdaElementInfo:PathFragment):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"addMDADependency",
+				[editableResourcePath, dependency, mdaElementInfo]));
+		}	
 	}
 }
