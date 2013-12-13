@@ -17,10 +17,12 @@ import static tests.ModelAccessDAOTests.loadResource;
 import static tests.ModelAccessDAOTests.printContents;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.model_access_dao.DAOFactory;
 import org.flowerplatform.model_access_dao.RegistryDAO;
+import org.flowerplatform.model_access_dao.UUIDGenerator;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
 import org.flowerplatform.model_access_dao.model.Diagram1;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
@@ -40,33 +42,33 @@ public class CreateDiscussableDesign {
 	public void test() {
 		System.out.println("CREATE DISCUSSABLE DESIGN");
 		
-		String repoId = (String) DAOFactory.registryDAO.getRepositories().get(0).getId();
+		UUID repoId = DAOFactory.registryDAO.getRepositories().get(0).getId();
 		
 		// create discussable design
-		String ddId = DAOFactory.registryDAO.createRepository(MY_DISCUSSABLE_DESIGN, repoId);
+		UUID ddId = DAOFactory.registryDAO.createRepository(MY_DISCUSSABLE_DESIGN, repoId);
 		Repository dd = DAOFactory.registryDAO.getRepository(ddId);
 		
 //		assertEquals("Resources not created", 2, dd.getResources().size());
 		
 //		String localMappingId = getResourceId(dd, RegistryDAO.MAPPING_LOCATION);
-		String localMappingId = "mapping";
+		UUID localMappingId = dd.getResourcesAlias().get(Repository.MAPPING);
 		
 		// create diagram
 		String path = "flower-platform-diagrams/dgr.notation";
-		String diagramResourceId = DAOFactory.registryDAO.createResource(path, ddId, null);
+		UUID diagramResourceId = DAOFactory.registryDAO.createResource(path, ddId, null);
 		Resource resource = DAOFactory.registryDAO.loadResource(ddId, diagramResourceId);
 		Diagram1 diagram = ModelFactory.eINSTANCE.createDiagram1();
-		diagram.setId(org.flowerplatform.model_access_dao.UUID.newUUID());
+		diagram.setId(UUIDGenerator.newUUID().toString());
 		resource.getContents().add(diagram);
 		
 		// create nodes
-		Node1 node = addOnDiagram(diagram, "CLASS NODE", class1Id, ddId, localMappingId, diagramResourceId, diagram.getId());
-		node = addOnDiagram(diagram, "MET NODE", met1Id, ddId, localMappingId, diagramResourceId, node.getId());
+		Node1 node = addOnDiagram(diagram, "CLASS NODE", class1Id, ddId, localMappingId, diagramResourceId, UUID.fromString(diagram.getId()));
+		node = addOnDiagram(diagram, "MET NODE", met1Id, ddId, localMappingId, diagramResourceId, UUID.fromString(node.getId()));
 		
 //		String localAppWizardMapping = getResourceId(dd, RegistryDAO.APP_WIZARD_LOCATION);
-		String localAppWizardMapping = "appWizard";
+		UUID localAppWizardMapping = dd.getResourcesAlias().get(Repository.APP_WIZARD);
 		
-		addOnDiagram(diagram, "ENTITY NODE", methodsEntityId, ddId, localAppWizardMapping, diagramResourceId, diagram.getId());
+		addOnDiagram(diagram, "ENTITY NODE", methodsEntityId, ddId, localAppWizardMapping, diagramResourceId, UUID.fromString(diagram.getId()));
 		
 		DAOFactory.registryDAO.saveResource(ddId, diagramResourceId);
 		
@@ -95,7 +97,7 @@ public class CreateDiscussableDesign {
 		met2.setName("met2" + ADDED_FROM_DIAGRAM);
 		DAOFactory.codeSyncElementDAO.updateCodeSyncElement(ddId, localMappingId, met2);
 		
-		removeFromDiagram(node, ddId);
+//		removeFromDiagram(node, ddId);
 		DAOFactory.registryDAO.saveResource(ddId, diagramResourceId);
 
 		printContents(resource, ddId);
@@ -128,14 +130,14 @@ public class CreateDiscussableDesign {
 //		assertCSE(localCodeSyncElements.get(3), met2.getId(), met2.getName());
 	}
 	
-	private Node1 addOnDiagram(Diagram1 diagram, String name, String codeSyncElementId, String repoId, String localMappingId, String diagramResourceId, String parentId) {
-		String nodeId = DAOFactory.nodeDAO.createNode(repoId, diagramResourceId, parentId);
-		Node1 node = DAOFactory.nodeDAO.getNode(repoId, diagramResourceId, nodeId);
-		diagram.getChildren().add(node);
+	private Node1 addOnDiagram(Diagram1 diagram, String name, UUID codeSyncElementId, UUID ddId, UUID resourceId, UUID diagramResourceId, UUID parentId) {
+		UUID nodeId = DAOFactory.nodeDAO.createNode(ddId, diagramResourceId, parentId, null);
+		Node1 node = DAOFactory.nodeDAO.getNode(ddId, diagramResourceId, nodeId);
+//		diagram.getChildren().add(node);
 		node.setName(name);
-		DAOFactory.nodeDAO.updateNode(repoId, diagramResourceId, node);
+		DAOFactory.nodeDAO.updateNode(ddId, diagramResourceId, node);
 		
-		CodeSyncElement1 element = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, localMappingId, codeSyncElementId);
+		CodeSyncElement1 element = DAOFactory.codeSyncElementDAO.getCodeSyncElement(ddId, resourceId, codeSyncElementId);
 		DAOFactory.nodeDAO.setDiagrammableElement(node, element);
 		
 		System.out.println("> added on diagram " + element.getName());
@@ -143,7 +145,7 @@ public class CreateDiscussableDesign {
 		return node;
 	}
 	
-	private void removeFromDiagram(Node1 node, String repoId) {
+	private void removeFromDiagram(Node1 node, UUID repoId) {
 		DAOFactory.nodeDAO.deleteNode(node, repoId);
 		
 		System.out.println("> removed from diagram " + node.getName());

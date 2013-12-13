@@ -2,11 +2,12 @@ package db;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.model_access_dao.CodeSyncElementDAO;
 import org.flowerplatform.model_access_dao.DAOFactory;
-import org.flowerplatform.model_access_dao.UUID;
+import org.flowerplatform.model_access_dao.UUIDGenerator;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.Relation1;
@@ -18,44 +19,44 @@ import com.datastax.driver.core.Row;
 public class DBCodeSyncElementDAO implements CodeSyncElementDAO {
 
 	@Override
-	public String createCodeSyncElement(String repoId, String resourceId, String id, String parentId) {
+	public UUID createCodeSyncElement(UUID repoId, UUID resourceId, UUID id, UUID parentId) {
 		if (id == null) {
-			id = UUID.newUUID();
+			id = org.flowerplatform.model_access_dao.UUIDGenerator.newUUID();
 		}
 		
-		Repository repo = DAOFactory.registryDAO.getRepository(repoId);
-		if (repo.getMasterId() != null) {
-			repoId = repo.getMasterId();
-		}
+//		Repository repo = DAOFactory.registryDAO.getRepository(repoId);
+//		if (repo.getMasterId() != null) {
+//			repoId = repo.getMasterId();
+//		}
 		
 		System.out.println("> created CSE " + id);
 		
 		PreparedStatement stmt = CassandraData.getSession().prepare(
-				"INSERT INTO cse (repoId, cseId, parentId) VALUES (?, ?, ?)");
-		CassandraData.getSession().execute(stmt.bind(repoId, id, parentId));
+				"INSERT INTO cse (repoId, resourceId, cseId, parentId) VALUES (?, ?, ?, ?)");
+		CassandraData.getSession().execute(stmt.bind(repoId, resourceId, id, parentId));
 		
 		return id;
 	}
 
 	@Override
-	public CodeSyncElement1 getCodeSyncElement(String repoId, String resourceId, String id) {
+	public CodeSyncElement1 getCodeSyncElement(UUID repoId, UUID resourceId, UUID id) {
 		// TODO may replace with DD logic
-		Repository repo = DAOFactory.registryDAO.getRepository(repoId);
-		if (repo.getMasterId() != null) {
-			repoId = repo.getMasterId();
-		}
+//		Repository repo = DAOFactory.registryDAO.getRepository(repoId);
+//		if (repo.getMasterId() != null) {
+//			repoId = repo.getMasterId();
+//		}
 		
 		// find the element in the resource
 		Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
-		CodeSyncElement1 element = (CodeSyncElement1) resource.getEObject(id);
+		CodeSyncElement1 element = (CodeSyncElement1) resource.getEObject(id.toString());
 		if (element != null) {
 			return element; // TODO should we merge with the DB?
 		}
 		
 		// get the element from the DB
-		String query = "SELECT * FROM cse WHERE repoId = ? AND cseId = ?";
+		String query = "SELECT * FROM cse WHERE repoId = ? AND resourceId = ? AND cseId = ?";
 		PreparedStatement stmt = CassandraData.getSession().prepare(query);
-		List<Row> results = CassandraData.getSession().execute(stmt.bind(repoId, id)).all();
+		List<Row> results = CassandraData.getSession().execute(stmt.bind(repoId, resourceId, id)).all();
 
 		if (results.size() == 0) {
 			return null;
@@ -69,7 +70,7 @@ public class DBCodeSyncElementDAO implements CodeSyncElementDAO {
 		element = toCodeSyncElement(row);
 		
 		// recreate the element's parents structure
-		String parentId = row.getString("parentId");
+		UUID parentId = row.getUUID("parentId");
 		if (parentId != null) { 
 			CodeSyncElement1 parent = getCodeSyncElement(repoId, resourceId, parentId);
 			parent.getChildren().add(element);
@@ -82,31 +83,36 @@ public class DBCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 	
 	@Override
-	public void updateCodeSyncElement(String repoId, String resourceId,	CodeSyncElement1 element) {
+	public void updateCodeSyncElement(UUID repoId, UUID resourceId,	CodeSyncElement1 element) {
+//		Repository repo = DAOFactory.registryDAO.getRepository(repoId);
+//		if (repo.getMasterId() != null) {
+//			repoId = repo.getMasterId();
+//		}
+		
 		PreparedStatement stmt = CassandraData.getSession().prepare(
-				"UPDATE cse SET name = ? WHERE repoId = ? AND cseId = ?");
-		CassandraData.getSession().execute(stmt.bind(element.getName(), repoId, element.getId()));
+				"UPDATE cse SET name = ? WHERE repoId = ? AND resourceId = ? AND cseId = ?");
+		CassandraData.getSession().execute(stmt.bind(element.getName(), repoId, resourceId, UUID.fromString(element.getId())));
 	}
 
 	@Override
-	public List<CodeSyncElement1> getCodeSyncElements(String repoId, String resourceId) {
+	public List<CodeSyncElement1> getCodeSyncElements(UUID repoId, UUID resourceId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String resourceId) {
+	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, UUID repoId, UUID resourceId) {
 		PreparedStatement stmt = CassandraData.getSession().prepare(
-				"SELECT * FROM cse WHERE repoId = ? AND parentId = ?");
+				"SELECT * FROM cse WHERE repoId = ? AND resourceId = ? AND parentId = ?");
 		List<CodeSyncElement1> children = new ArrayList<CodeSyncElement1>();
-		for (Row row : CassandraData.getSession().execute(stmt.bind(repoId, element.getId())).all()) {
+		for (Row row : CassandraData.getSession().execute(stmt.bind(repoId, resourceId, UUID.fromString(element.getId()))).all()) {
 			children.add(toCodeSyncElement(row));
 		}
 		return children;
 	}
 
 	@Override
-	public CodeSyncElement1 getParent(CodeSyncElement1 element, String repoId, String resourceId) {
+	public CodeSyncElement1 getParent(CodeSyncElement1 element, UUID repoId, UUID resourceId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -124,35 +130,47 @@ public class DBCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public void addRelation(CodeSyncElement1 source, CodeSyncElement1 target, String repoId, String resourceId) {
+	public void addRelation(CodeSyncElement1 source, CodeSyncElement1 target, UUID repoId, UUID resourceId) {
 		PreparedStatement stmt = CassandraData.getSession().prepare(
 				"INSERT INTO relation (repoId, relationId, sourceId, targetId) VALUES (?, ?, ?, ?)");
-		CassandraData.getSession().execute(stmt.bind(repoId, UUID.newUUID(), source.getId(), target.getId()));
+		CassandraData.getSession().execute(stmt.bind(repoId, UUIDGenerator.newUUID(), UUID.fromString(source.getId()), UUID.fromString(target.getId())));
 	}
 
 	@Override
-	public List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, String repoId, String resourceId) {
+	public List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, UUID repoId, UUID resourceId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public CodeSyncElement1 getSource(Relation1 relation, String repoId) {
+	public CodeSyncElement1 getSource(Relation1 relation, UUID repoId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public CodeSyncElement1 getTarget(Relation1 relation, String repoId) {
+	public CodeSyncElement1 getTarget(Relation1 relation, UUID repoId) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
 	private CodeSyncElement1 toCodeSyncElement(Row row) {
 		CodeSyncElement1 element = ModelFactory.eINSTANCE.createCodeSyncElement1();
-		element.setId(row.getString("cseId"));
+		element.setId(row.getUUID("cseId").toString());
 		element.setName(row.getString("name"));
 		return element;
+	}
+
+	@Override
+	public void saveCodeSyncElement(UUID repoId, UUID resourceId, CodeSyncElement1 element) {
+		UUID parentId = null;
+		if (element.eContainer() != null) {
+			CodeSyncElement1 parent = (CodeSyncElement1) element.eContainer();
+			parentId = UUID.fromString(parent.getId());
+		}
+		UUID id = UUID.fromString(element.getId());
+		createCodeSyncElement(repoId, resourceId, id, parentId);
+		updateCodeSyncElement(repoId, resourceId, element);
 	}
 
 }

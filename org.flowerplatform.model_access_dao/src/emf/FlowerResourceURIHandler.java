@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.URIHandler;
@@ -32,8 +33,8 @@ public class FlowerResourceURIHandler extends URIHandlerImpl {
 	/**
 	 * @return fp-repo:resourceId
 	 */
-	public static URI createFlowerResourceURI(String resourceId) {
-		return URI.createGenericURI(SCHEME_FP_REPO, resourceId, null);
+	public static URI createFlowerResourceURI(UUID resourceId) {
+		return URI.createGenericURI(SCHEME_FP_REPO, resourceId.toString(), null);
 	}
 
 	/**
@@ -103,8 +104,8 @@ public class FlowerResourceURIHandler extends URIHandlerImpl {
 	protected URI convertToPlatformDependentURI(URI uri, Map<?, ?> options) {
 		String resourceId = uri.opaquePart();
 		uri = DAOFactory.registryDAO.getResource(
-				(String) options.get(OPTION_REPO), 
-				resourceId);
+				(UUID) options.get(OPTION_REPO), 
+				UUID.fromString(resourceId));
 		return uri;
 	}
 

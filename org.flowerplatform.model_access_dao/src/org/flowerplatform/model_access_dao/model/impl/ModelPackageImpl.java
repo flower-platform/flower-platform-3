@@ -271,8 +271,17 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getResourceInfo_ResourceId() {
+	public EAttribute getResourceInfo_DesignId() {
 		return (EAttribute)resourceInfoEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getResourceInfo_ResourceId() {
+		return (EAttribute)resourceInfoEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -323,6 +332,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		resourceInfoEClass = createEClass(RESOURCE_INFO);
 		createEAttribute(resourceInfoEClass, RESOURCE_INFO__REPO_ID);
+		createEAttribute(resourceInfoEClass, RESOURCE_INFO__DESIGN_ID);
 		createEAttribute(resourceInfoEClass, RESOURCE_INFO__RESOURCE_ID);
 	}
 
@@ -377,6 +387,7 @@ public class ModelPackageImpl extends EPackageImpl implements ModelPackage {
 
 		initEClass(resourceInfoEClass, ResourceInfo.class, "ResourceInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getResourceInfo_RepoId(), ecorePackage.getEString(), "repoId", null, 0, 1, ResourceInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getResourceInfo_DesignId(), ecorePackage.getEString(), "designId", null, 0, 1, ResourceInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getResourceInfo_ResourceId(), ecorePackage.getEString(), "resourceId", null, 0, 1, ResourceInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Create resource

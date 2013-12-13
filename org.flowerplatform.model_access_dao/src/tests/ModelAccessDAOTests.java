@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -29,19 +30,20 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
 	CreateGlobalModel.class,
 	CreateDiscussableDesign.class,
-	OpenDiscussableDesignDiagram.class,
-	MoveAndOpenDiscussableDesignDiagram.class
+//	OpenDiscussableDesignDiagram.class,
+//	MoveAndOpenDiscussableDesignDiagram.class
+	ImportTest.class
 })
 public class ModelAccessDAOTests {
 
-	public static CodeSyncElement1 createCSEAndAssertNotNull(String repoId, String resourceId, String id, String parentId) {
+	public static CodeSyncElement1 createCSEAndAssertNotNull(UUID repoId, UUID resourceId, UUID id, UUID parentId) {
 		id = DAOFactory.codeSyncElementDAO.createCodeSyncElement(repoId, resourceId, id, parentId);
 		CodeSyncElement1 cse = DAOFactory.codeSyncElementDAO.getCodeSyncElement(repoId, resourceId, id);
 		assertNotNull(cse);
 		return cse;
 	}
 	
-	public static void assertCSE(CodeSyncElement1 cse, String id, String name) {
+	public static void assertCSE(CodeSyncElement1 cse, UUID id, String name) {
 		assertEquals(id, cse.getId());
 		assertEquals(name, cse.getName());
 	}
@@ -66,8 +68,8 @@ public class ModelAccessDAOTests {
 		return resourceSet.getResource(uri, true);
 	}
 	
-	public static String getResourceId(Repository dirWithResources, String suffix) {
-		for (Entry<String, URI> entry : dirWithResources.getResources().entrySet()) {
+	public static UUID getResourceId(Repository dirWithResources, String suffix) {
+		for (Entry<UUID, URI> entry : dirWithResources.getResources().entrySet()) {
 			if (entry.getValue().toFileString().endsWith(suffix)) {
 				return entry.getKey();
 			}
@@ -75,13 +77,13 @@ public class ModelAccessDAOTests {
 		throw new RuntimeException(String.format("No resource with suffix %s for %s", suffix, dirWithResources.getDir()));
 	}
 	
-	public static void printContents(Resource resource, String repoId) {
+	public static void printContents(Resource resource, UUID repoId) {
 		for (EObject object : resource.getContents()) {
 			printContents(object, repoId);
 		}
 	}
 	
-	private static void printContents(EObject object, String repoId) {
+	private static void printContents(EObject object, UUID repoId) {
 		if (object instanceof Diagram1) {
 			Diagram1 dgr = (Diagram1) object;
 			for (EObject child : dgr.getChildren()) {
@@ -96,13 +98,13 @@ public class ModelAccessDAOTests {
 			System.out.println(String.format("NODE [name = %s] -> DGR ELT [name = %s]", 
 					node.getName(), cse.getName()));
 			printContents(cse, repoId);
-			String resourceId = node.eResource().getURI().opaquePart();
+			UUID resourceId = UUID.fromString(node.eResource().getURI().opaquePart());
 			for (EObject child : DAOFactory.nodeDAO.getChildren(node, repoId, resourceId)) {
 				printContents(child, repoId);
 			}
 		} else if (object instanceof ResourceInfo) {
 			ResourceInfo info = (ResourceInfo) object;
-			Repository repo = DAOFactory.registryDAO.getRepository(info.getRepoId());
+			Repository repo = DAOFactory.registryDAO.getRepository(UUID.fromString(info.getRepoId()));
 			File repoFile = repo.getDir();
 			URI resourceUri = repo.getResources().get(info.getResourceId());
 			System.out.println(String.format("RESOURCE INFO [repo = %s, uri = %s]", repoFile, resourceUri));
@@ -114,7 +116,7 @@ public class ModelAccessDAOTests {
 		} else if (object instanceof CodeSyncElement1) {
 			CodeSyncElement1 codeSyncElement = (CodeSyncElement1) object;
 			System.out.println(String.format("CSE [name = %s]", codeSyncElement.getName()));
-			String resourceId = codeSyncElement.eResource().getURI().opaquePart();
+			UUID resourceId = UUID.fromString(codeSyncElement.eResource().getURI().opaquePart());
 			for (EObject child : DAOFactory.codeSyncElementDAO.getChildren(codeSyncElement, repoId, resourceId)) {
 				printContents(child, repoId);
 			}

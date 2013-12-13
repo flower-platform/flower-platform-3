@@ -3,37 +3,44 @@ package org.flowerplatform.model_access_dao.registry;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 
 public class Repository {
 
-	private String id;
+	public static String MAPPING = "mapping";
 	
-	private String masterId;
+	public static String APP_WIZARD = "app-wizard";
+	
+	private UUID id;
+	
+	private UUID masterId;
 	
 	private File dir;
 	
-	private Map<String, URI> resources = new HashMap<String, URI>();
+	private Map<UUID, URI> resources = new HashMap<UUID, URI>();
+	
+	private Map<String, UUID> resourcesAlias = new HashMap<String, UUID>();
 
-	public Repository(String id, File dir) {
+	public Repository(UUID id, File dir) {
 		setId(id);
 		setDir(dir);
 	}
 	
-	public String getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 
-	public String getMasterId() {
+	public UUID getMasterId() {
 		return masterId;
 	}
 
-	public void setMasterId(String masterId) {
+	public void setMasterId(UUID masterId) {
 		this.masterId = masterId;
 	}
 
@@ -45,12 +52,20 @@ public class Repository {
 		this.dir = dir;
 	}
 
-	public Map<String, URI> getResources() {
+	public Map<UUID, URI> getResources() {
 		return resources;
 	}
 
-	public void setResources(Map<String, URI> resources) {
+	public void setResources(Map<UUID, URI> resources) {
 		this.resources = resources;
+	}
+	
+	public Map<String, UUID> getResourcesAlias() {
+		return resourcesAlias;
+	}
+	
+	public void setResourcesAlias(Map<String, UUID> resourcesAlias) {
+		this.resourcesAlias = resourcesAlias;
 	}
 
 	@Override

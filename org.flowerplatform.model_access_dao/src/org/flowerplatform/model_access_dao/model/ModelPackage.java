@@ -281,13 +281,22 @@ public interface ModelPackage extends EPackage {
 	int RESOURCE_INFO__REPO_ID = 0;
 
 	/**
+	 * The feature id for the '<em><b>Design Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int RESOURCE_INFO__DESIGN_ID = 1;
+
+	/**
 	 * The feature id for the '<em><b>Resource Id</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int RESOURCE_INFO__RESOURCE_ID = 1;
+	int RESOURCE_INFO__RESOURCE_ID = 2;
 
 	/**
 	 * The number of structural features of the '<em>Resource Info</em>' class.
@@ -296,7 +305,7 @@ public interface ModelPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int RESOURCE_INFO_FEATURE_COUNT = 2;
+	int RESOURCE_INFO_FEATURE_COUNT = 3;
 
 
 	/**
@@ -471,6 +480,17 @@ public interface ModelPackage extends EPackage {
 	EAttribute getResourceInfo_RepoId();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getDesignId <em>Design Id</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Design Id</em>'.
+	 * @see org.flowerplatform.model_access_dao.model.ResourceInfo#getDesignId()
+	 * @see #getResourceInfo()
+	 * @generated
+	 */
+	EAttribute getResourceInfo_DesignId();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getResourceId <em>Resource Id</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -640,6 +660,14 @@ public interface ModelPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute RESOURCE_INFO__REPO_ID = eINSTANCE.getResourceInfo_RepoId();
+
+		/**
+		 * The meta object literal for the '<em><b>Design Id</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute RESOURCE_INFO__DESIGN_ID = eINSTANCE.getResourceInfo_DesignId();
 
 		/**
 		 * The meta object literal for the '<em><b>Resource Id</b></em>' attribute feature.

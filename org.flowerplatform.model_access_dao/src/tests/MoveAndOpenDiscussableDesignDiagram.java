@@ -3,6 +3,8 @@ package tests;
 import static tests.ModelAccessDAOTests.getResourceId;
 import static tests.ModelAccessDAOTests.printContents;
 
+import java.util.UUID;
+
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.model_access_dao.DAOFactory;
 import org.flowerplatform.model_access_dao.RegistryDAO;
@@ -20,8 +22,8 @@ public class MoveAndOpenDiscussableDesignDiagram {
 			repo = DAOFactory.registryDAO.getRepositories().get(1);
 		}
 
-		String masterRepoId = repo.getMasterId();
-		String slaveRepoId = repo.getId();
+		UUID masterRepoId = repo.getMasterId();
+		UUID slaveRepoId = repo.getId();
 		
 //		String resourceId = getResourceId(repo, "dgr.notation");
 //		String pathRelativeToRepo = "myProj/myDir/mySubDir/" + RegistryDAO.FLOWER_PLATFORM_DIAGRAMS + "/dgr.notation";

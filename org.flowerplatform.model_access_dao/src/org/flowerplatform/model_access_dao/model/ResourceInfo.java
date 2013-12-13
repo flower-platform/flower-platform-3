@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getRepoId <em>Repo Id</em>}</li>
+ *   <li>{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getDesignId <em>Design Id</em>}</li>
  *   <li>{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getResourceId <em>Resource Id</em>}</li>
  * </ul>
  * </p>
@@ -51,6 +52,32 @@ public interface ResourceInfo extends EObject {
 	 * @generated
 	 */
 	void setRepoId(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Design Id</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Design Id</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Design Id</em>' attribute.
+	 * @see #setDesignId(String)
+	 * @see org.flowerplatform.model_access_dao.model.ModelPackage#getResourceInfo_DesignId()
+	 * @model
+	 * @generated
+	 */
+	String getDesignId();
+
+	/**
+	 * Sets the value of the '{@link org.flowerplatform.model_access_dao.model.ResourceInfo#getDesignId <em>Design Id</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Design Id</em>' attribute.
+	 * @see #getDesignId()
+	 * @generated
+	 */
+	void setDesignId(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Resource Id</b></em>' attribute.

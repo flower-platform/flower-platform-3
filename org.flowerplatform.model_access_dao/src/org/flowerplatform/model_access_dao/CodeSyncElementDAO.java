@@ -1,28 +1,31 @@
 package org.flowerplatform.model_access_dao;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
 import org.flowerplatform.model_access_dao.model.Relation1;
 
 public interface CodeSyncElementDAO {
 	
-	String createCodeSyncElement(String repoId, String resourceId, String id, String parentId);
-	CodeSyncElement1 getCodeSyncElement(String repoId, String resourceId, String id);
+	UUID createCodeSyncElement(UUID repoId, UUID resourceId, UUID id, UUID parentId);
+	CodeSyncElement1 getCodeSyncElement(UUID repoId, UUID resourceId, UUID id);
 	
-	void updateCodeSyncElement(String repoId, String resourceId, CodeSyncElement1 element);
+	void updateCodeSyncElement(UUID repoId, UUID resourceId, CodeSyncElement1 element);
 	
-	/**
-	 * Merge with global resource, if this is a local resource.
-	 */
-	List<CodeSyncElement1> getCodeSyncElements(String repoId, String resourceId);
+	void saveCodeSyncElement(UUID repoId, UUID resourceId, CodeSyncElement1 element);
 	
 	/**
 	 * Merge with global resource, if this is a local resource.
 	 */
-	List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String resourceId);
+	List<CodeSyncElement1> getCodeSyncElements(UUID repoId, UUID resourceId);
 	
-	CodeSyncElement1 getParent(CodeSyncElement1 element, String repoId, String resourceId);
+	/**
+	 * Merge with global resource, if this is a local resource.
+	 */
+	List<CodeSyncElement1> getChildren(CodeSyncElement1 element, UUID repoId, UUID resourceId);
+	
+	CodeSyncElement1 getParent(CodeSyncElement1 element, UUID repoId, UUID resourceId);
 	void setParent(CodeSyncElement1 parent, CodeSyncElement1 element);
 	
 	/**
@@ -30,12 +33,12 @@ public interface CodeSyncElementDAO {
 	 */
 	void deleteCodeSyncElement(CodeSyncElement1 element);
 	
-	void addRelation(CodeSyncElement1 source, CodeSyncElement1 target, String repoId, String resourceId);
+	void addRelation(CodeSyncElement1 source, CodeSyncElement1 target, UUID repoId, UUID resourceId);
 
-	List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, String repoId, String resourceId);
+	List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, UUID repoId, UUID resourceId);
 	
-	CodeSyncElement1 getSource(Relation1 relation, String repoId);
+	CodeSyncElement1 getSource(Relation1 relation, UUID repoId);
 	
-	CodeSyncElement1 getTarget(Relation1 relation, String repoId);
+	CodeSyncElement1 getTarget(Relation1 relation, UUID repoId);
 	
 }

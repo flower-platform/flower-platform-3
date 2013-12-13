@@ -1,6 +1,7 @@
 package org.flowerplatform.model_access_dao;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -24,25 +25,25 @@ public interface RegistryDAO {
 	// Repositories
 	////////////////////////
 	
-	String createRepository(String path, String masterRepoId);
+	UUID createRepository(String path, UUID masterRepoId);
 	
-	Repository getRepository(String id);
+	Repository getRepository(UUID id);
 	List<Repository> getRepositories();
 	
-	String getMasterRepositoryId(String id);
+	UUID getMasterRepositoryId(UUID id);
 	
 	////////////////////////
 	// Resources
 	////////////////////////
 	
-	String createResource(String path, String repoId, String id);
+	UUID createResource(String path, UUID repoId, UUID id);
 	
-	URI getResource(String repoId, String id);
+	URI getResource(UUID repoId, UUID id);
 	
-	Resource loadResource(String repoId, String id);
-	void saveResource(String repoId, String id);
-	String moveResource(String sourceRepoId, String sourceId,
-			String targetPath, String targetRepoId, String targetId);
+	Resource loadResource(UUID repoId, UUID id);
+	void saveResource(UUID repoId, UUID id);
+	UUID moveResource(UUID sourceRepoId, UUID sourceId,
+			String targetPath, UUID targetRepoId, UUID targetId);
 	
-	void deleteResource(String repoId, String id);
+	void deleteResource(UUID repoId, UUID id);
 }

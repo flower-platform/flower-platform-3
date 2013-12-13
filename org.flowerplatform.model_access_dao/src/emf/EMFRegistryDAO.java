@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.common.util.URI;
@@ -20,30 +21,31 @@ import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.model_access_dao.RegistryDAO;
+import org.flowerplatform.model_access_dao.UUIDGenerator;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.ResourceInfo;
 import org.flowerplatform.model_access_dao.registry.Repository;
 
 public class EMFRegistryDAO implements RegistryDAO {
 	
-	private Map<String, Repository> repos = new HashMap<String, Repository>();
+	private Map<UUID, Repository> repos = new HashMap<UUID, Repository>();
 	
 	public EMFRegistryDAO() {
-		try {
-			iterateFiles(new File("repos"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			iterateFiles(new File("repos"));
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	private void iterateFiles(File file) throws IOException {
 		if (file.getName().equals(CONFIG) && file.getParentFile().getName().equals(FLOWER_PLATFORM_DATA)) {
 			String config = FileUtils.readFileToString(file);
-			String id = null, masterRepoId = null;
+			UUID id = null, masterRepoId = null;
 			if (config.contains(" ")) {
 				String[] ids = config.split(" ");
-				id = ids[0];
-				masterRepoId = ids[1];
+				id = UUID.fromString(ids[0]);
+				masterRepoId = UUID.fromString(ids[1]);
 			}
 			Repository repo = new Repository(id, file.getParentFile().getParentFile());
 			repo.setMasterId(masterRepoId);
@@ -53,9 +55,9 @@ public class EMFRegistryDAO implements RegistryDAO {
 			URI uri = URI.createFileURI(file.getPath());
 			Resource resource = resourceSet.getResource(uri, true);
 			ResourceInfo info = (ResourceInfo) resource.getContents().get(0);
-			Repository repo = getRepository(info.getRepoId());
-			Map<String, URI> resources = repo.getResources();
-			resources.put(info.getResourceId(), uri);
+			Repository repo = getRepository(UUID.fromString(info.getRepoId()));
+			Map<UUID, URI> resources = repo.getResources();
+			resources.put(UUID.fromString(info.getResourceId()), uri);
 		}
 		File[] children = file.listFiles();
 		if (children != null) {
@@ -70,7 +72,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 	////////////////////////
 	
 	@Override
-	public String createRepository(String path, String masterRepoId) {
+	public UUID createRepository(String path, UUID masterRepoId) {
 		// create repo dir
 		File dir = new File(path);
 		dir.mkdirs();
@@ -90,7 +92,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 		}
 		
 		// generate UUID for resource
-		String uuid = org.flowerplatform.model_access_dao.UUID.newUUID();
+		UUID uuid = UUIDGenerator.newUUID();
 		Repository repo = new Repository(uuid, dir);
 		repo.setMasterId(masterRepoId);
 		repos.put(uuid, repo);
@@ -99,7 +101,8 @@ public class EMFRegistryDAO implements RegistryDAO {
 		File config = new File(fpd, CONFIG);
 		try {
 			config.createNewFile();
-			FileUtils.writeStringToFile(config, masterRepoId == null ? uuid : uuid + " " + masterRepoId);
+			FileUtils.writeStringToFile(config, 
+					masterRepoId == null ? uuid.toString() : uuid.toString() + " " + masterRepoId.toString());
 		} catch (IOException e) {
 			throw new RuntimeException("Cannot create config file " + config, e);
 		}
@@ -113,15 +116,20 @@ public class EMFRegistryDAO implements RegistryDAO {
 			appWizardLocation = APP_WIZARD_LOCATION;
 		}
 		
+		Repository masterRepo = null;
 		if (masterRepoId != null) {
-			repo = getRepository(masterRepoId);
+			masterRepo = getRepository(masterRepoId);
+		} else {
+			masterRepo = repo;
 		}
 		
 		// create mapping resource
-		createResource(mappingLocation, uuid, getResourceId(repo, mappingLocation));
+		repo.getResourcesAlias().put("mapping", 
+				createResource(mappingLocation, uuid, getResourceId(masterRepo, mappingLocation)));
 		
 		// create app wizard resource
-		createResource(appWizardLocation, uuid, getResourceId(repo, appWizardLocation));
+		repo.getResourcesAlias().put("app-wizard", 
+				createResource(appWizardLocation, uuid, getResourceId(masterRepo, appWizardLocation)));
 
 		System.out.println("> created repo " + dir);
 		
@@ -130,8 +138,8 @@ public class EMFRegistryDAO implements RegistryDAO {
 		return uuid;
 	}
 	
-	public String getResourceId(Repository dirWithResources, String suffix) {
-		for (Entry<String, URI> entry : dirWithResources.getResources().entrySet()) {
+	public UUID getResourceId(Repository dirWithResources, String suffix) {
+		for (Entry<UUID, URI> entry : dirWithResources.getResources().entrySet()) {
 			if (entry.getValue().toFileString().endsWith(suffix)) {
 				return entry.getKey();
 			}
@@ -141,7 +149,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 	}
 	
 	@Override
-	public Repository getRepository(String id) {
+	public Repository getRepository(UUID id) {
 		return repos.get(id);
 	}
 	
@@ -150,9 +158,9 @@ public class EMFRegistryDAO implements RegistryDAO {
 		return Arrays.asList(repos.values().toArray(new Repository[0]));
 	}
 	
-	public String getMasterRepositoryId(String id) {
+	public UUID getMasterRepositoryId(UUID id) {
 		Repository repo = getRepository(id);
-		if (repo.getMasterId() != null) {
+		if (repo != null && repo.getMasterId() != null) {
 			return repo.getMasterId();
 		}
 		return null;
@@ -171,9 +179,9 @@ public class EMFRegistryDAO implements RegistryDAO {
 	 * @return
 	 */
 	@Override
-	public String createResource(String path, String repoId, String uuid) {
+	public UUID createResource(String path, UUID repoId, UUID uuid) {
 		Repository repo = getRepository(repoId);
-		Map<String, URI> resources = repo.getResources();
+		Map<UUID, URI> resources = repo.getResources();
 		
 		File file = getFile(repo, path);
 		path = file.getPath();
@@ -181,7 +189,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 		Resource resource = null;
 		URI uri = URI.createFileURI(path);
 		if (uuid == null) {
-			uuid = org.flowerplatform.model_access_dao.UUID.newUUID();
+			uuid = UUIDGenerator.newUUID();
 		}
 		resources.put(uuid, uri);
 		uri = FlowerResourceURIHandler.createFlowerResourceURI(uuid);
@@ -196,8 +204,8 @@ public class EMFRegistryDAO implements RegistryDAO {
 			resource.getContents().add(0, info);
 		}
 		
-		info.setRepoId(repoId);
-		info.setResourceId(uuid);
+		info.setRepoId(repoId.toString());
+		info.setResourceId(uuid.toString());
 		saveResource(resource);
 		
 		System.out.println("> created resource " + path + " " + uuid);
@@ -210,20 +218,21 @@ public class EMFRegistryDAO implements RegistryDAO {
 	}
 
 	@Override
-	public URI getResource(String repoId, String id) {
+	public URI getResource(UUID repoId, UUID id) {
 		Repository repo = getRepository(repoId);
-		return getResource(repo, id);
+		URI uri = getResource(repo, id);
+		return uri;
 	}
 	
-	private URI getResource(Repository repo, String id) {
+	private URI getResource(Repository repo, UUID id) {
 		return repo.getResources().get(id);
 	}
 	
-	private Map<String, ResourceSet> resourceSets = new HashMap<String, ResourceSet>();
+	private Map<UUID, ResourceSet> resourceSets = new HashMap<UUID, ResourceSet>();
 	
-	private ResourceSet getResourceSet(String repoId) {
+	private ResourceSet getResourceSet(UUID repoId) {
 		// delegate to master repository
-		String masterRepositoryId = getMasterRepositoryId(repoId);
+		UUID masterRepositoryId = getMasterRepositoryId(repoId);
 		if (masterRepositoryId != null) {
 			repoId = masterRepositoryId;
 		}
@@ -254,7 +263,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 	}
 
 	@Override
-	public Resource loadResource(String repoId, String id) {
+	public Resource loadResource(UUID repoId, UUID id) {
 		Resource resource = getLoadedResource(repoId, id);
 		if (resource != null) {
 			return resource;
@@ -282,7 +291,7 @@ public class EMFRegistryDAO implements RegistryDAO {
 	}
 	
 	@Override
-	public void saveResource(String repoId, String id) {
+	public void saveResource(UUID repoId, UUID id) {
 		Resource resourceToSave = getLoadedResource(repoId, id);
 		if (resourceToSave == null) {
 			throw new RuntimeException(String.format("No resource loaded for repo = %s, id = %s", 
@@ -295,9 +304,9 @@ public class EMFRegistryDAO implements RegistryDAO {
 		for (Resource resource : resourceToSave.getResourceSet().getResources()) {
 			Map<Object, Object> options = getOptions();
 			ResourceInfo info = (ResourceInfo) resource.getContents().get(0);
-			String repoId = info.getRepoId();
+			UUID repoId = UUID.fromString(info.getRepoId());
 			options.put(FlowerResourceURIHandler.OPTION_REPO, repoId);
-			String resourceId = info.getResourceId();
+			UUID resourceId = UUID.fromString(info.getResourceId());
 			URI uri = getResourceURI(repoId, resourceId);
 			try {
 				resource.save(options);
@@ -309,18 +318,18 @@ public class EMFRegistryDAO implements RegistryDAO {
 		}
 	}
 	
-	private URI getResourceURI(String repoId, String resourceId) {
-		Map<String, URI> resources = getResources(repoId);
+	private URI getResourceURI(UUID repoId, UUID resourceId) {
+		Map<UUID, URI> resources = getResources(repoId);
 		return resources.get(resourceId);
 	}
 	
-	private Resource getLoadedResource(String repoId, String id) {
+	private Resource getLoadedResource(UUID repoId, UUID id) {
 		ResourceSet resourceSet = getResourceSet(repoId);
 		URI uri = FlowerResourceURIHandler.createFlowerResourceURI(id);
 		for (Resource resource : resourceSet.getResources()) {
 			if (resource.getURI().equals(uri)) {
 				ResourceInfo info = (ResourceInfo) resource.getContents().get(0);
-				if (safeEquals(info.getRepoId(), repoId)) {
+				if (safeEquals(info.getRepoId(), repoId.toString())) {
 					return resource;
 				}
 			}
@@ -340,14 +349,14 @@ public class EMFRegistryDAO implements RegistryDAO {
 		return new FileURIHandlerImpl();
 	}
 	
-	private Map<String, URI> getResources(String repoId) {
+	private Map<UUID, URI> getResources(UUID repoId) {
 		Repository repo = getRepository(repoId);
 		return repo.getResources();
 	}
 	
 	@Override
-	public String moveResource(String sourceRepoId, String sourceId, 
-			String targetPath, String targetRepoId, String targetId) {
+	public UUID moveResource(UUID sourceRepoId, UUID sourceId, 
+			String targetPath, UUID targetRepoId, UUID targetId) {
 		URI sourceUri = getResource(sourceRepoId, sourceId);
 		File sourceFile = new File(sourceUri.toFileString());
 		File targetFile = getFile(targetRepoId, targetPath);
@@ -361,13 +370,13 @@ public class EMFRegistryDAO implements RegistryDAO {
 		return targetId;
 	}
 	
-	private File getFile(String repoId, String path) {
+	private File getFile(UUID repoId, String path) {
 		return getFile(getRepository(repoId), path);
 	}
 	
 	@Override
-	public void deleteResource(String repoId, String id) {
-		Map<String, URI> resources = getResources(repoId);
+	public void deleteResource(UUID repoId, UUID id) {
+		Map<UUID, URI> resources = getResources(repoId);
 		URI uri = resources.get(id);
 		File file = new File(uri.toFileString());
 		file.delete();

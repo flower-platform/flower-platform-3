@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -12,7 +13,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
 import org.flowerplatform.model_access_dao.CodeSyncElementDAO;
 import org.flowerplatform.model_access_dao.DAOFactory;
-import org.flowerplatform.model_access_dao.UUID;
+import org.flowerplatform.model_access_dao.UUIDGenerator;
 import org.flowerplatform.model_access_dao.model.CodeSyncElement1;
 import org.flowerplatform.model_access_dao.model.ModelFactory;
 import org.flowerplatform.model_access_dao.model.Relation1;
@@ -20,12 +21,12 @@ import org.flowerplatform.model_access_dao.model.Relation1;
 public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 
 	@Override
-	public String createCodeSyncElement(String repoId, String resourceId, String id, String parentId) {
+	public UUID createCodeSyncElement(UUID repoId, UUID resourceId, UUID id, UUID parentId) {
 		CodeSyncElement1 element = ModelFactory.eINSTANCE.createCodeSyncElement1();
 		if (id == null) {
-			id = UUID.newUUID();
+			id = UUIDGenerator.newUUID();
 		}
-		element.setId(id);
+		element.setId(id.toString());
 		
 		System.out.println("> created CSE " + element.getId());
 		
@@ -37,23 +38,23 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 			setParent(parent, element);
 		}
 		
-		return element.getId();
+		return UUID.fromString(element.getId());
 	}
 
 	@Override
-	public CodeSyncElement1 getCodeSyncElement(String repoId, String resourceId, String uid) {
+	public CodeSyncElement1 getCodeSyncElement(UUID repoId, UUID resourceId, UUID uid) {
 		Resource resource = DAOFactory.registryDAO.loadResource(repoId, resourceId);
 
 		// search for the referenced object in this resource
 		CodeSyncElement1 referencedObject = null;
 		if (resource != null) {
-			referencedObject = (CodeSyncElement1) resource.getEObject(uid);
+			referencedObject = (CodeSyncElement1) resource.getEObject(uid.toString());
 			if (referencedObject != null) {
 				return (CodeSyncElement1) referencedObject;
 			}
 		}
 		
-		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		UUID masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
 		if (masterRepoId == null) {
 			return null;
 		}
@@ -66,7 +67,7 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 			throw new RuntimeException("No global resource for repo " + masterRepoId);
 		}
 		
-		referencedObject = (CodeSyncElement1) masterResource.getEObject(uid);
+		referencedObject = (CodeSyncElement1) masterResource.getEObject(uid.toString());
 
 		// duplicate the object from the master resource
 		if (resource != null) {
@@ -75,11 +76,11 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 		return (CodeSyncElement1) referencedObject;
 	}
 
-	private CodeSyncElement1 duplicateCodeSyncElement(String repoId, String resourceId, CodeSyncElement1 referencedObject) {
+	private CodeSyncElement1 duplicateCodeSyncElement(UUID repoId, UUID resourceId, CodeSyncElement1 referencedObject) {
 		CodeSyncElement1 parent = getParent(referencedObject, repoId, resourceId);
-		String parentId = parent == null ? null : parent.getId();
+		UUID parentId = parent == null ? null : UUID.fromString(parent.getId());
 		CodeSyncElement1 duplicate = getCodeSyncElement(repoId, resourceId, 
-				createCodeSyncElement(repoId, resourceId, referencedObject.getId(), parentId));
+				createCodeSyncElement(repoId, resourceId, UUID.fromString(referencedObject.getId()), parentId));
 		copyProperties(referencedObject, duplicate);
 		return duplicate;
 	}
@@ -88,12 +89,12 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 		target.setName(source.getName());
 	}
 	
-	public List<CodeSyncElement1> getCodeSyncElements(String repoId, String resourceId) {
+	public List<CodeSyncElement1> getCodeSyncElements(UUID repoId, UUID resourceId) {
 		// use LinkedHashMap to preserve insertion-order
 		Map<String, CodeSyncElement1> codeSyncElements = new LinkedHashMap<String, CodeSyncElement1>();
 		
 		// merge with master resource if we're in a slave repo
-		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		UUID masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
 		if (masterRepoId != null) {
 			for (CodeSyncElement1 codeSyncElement : getCodeSyncElements(masterRepoId, resourceId)) {
 				codeSyncElements.put(codeSyncElement.getId(), codeSyncElement);
@@ -118,14 +119,14 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 	
 	@Override
-	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, String repoId, String resourceId) {
+	public List<CodeSyncElement1> getChildren(CodeSyncElement1 element, UUID repoId, UUID resourceId) {
 		// use LinkedHashMap to preserve insertion-order
-		Map<String , CodeSyncElement1> children = new LinkedHashMap<String, CodeSyncElement1>();
+		Map<String, CodeSyncElement1> children = new LinkedHashMap<String, CodeSyncElement1>();
 		
 		// merge with master resource if we're in a slave repo
-		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		UUID masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
 		if (masterRepoId != null) {
-			CodeSyncElement1 masterElement = getCodeSyncElement(masterRepoId, resourceId, element.getId());
+			CodeSyncElement1 masterElement = getCodeSyncElement(masterRepoId, resourceId, UUID.fromString(element.getId()));
 			if (masterElement != null) {
 				for (CodeSyncElement1 child : getChildren(masterElement, masterRepoId, resourceId)) {
 					children.put(child.getId(), child);
@@ -141,9 +142,9 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public CodeSyncElement1 getParent(CodeSyncElement1 element, String repoId, String resourceId) {
+	public CodeSyncElement1 getParent(CodeSyncElement1 element, UUID repoId, UUID resourceId) {
 		CodeSyncElement1 parent = (CodeSyncElement1) element.eContainer();
-		return parent == null ? null : getCodeSyncElement(repoId, resourceId, parent.getId());
+		return parent == null ? null : getCodeSyncElement(repoId, resourceId, UUID.fromString(parent.getId()));
 	}
 
 	@Override
@@ -170,7 +171,7 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	
 	@Override
 	public void addRelation(CodeSyncElement1 source, CodeSyncElement1 target, 
-			String repoId, String resourceId) {
+			UUID repoId, UUID resourceId) {
 		Relation1 relation = ModelFactory.eINSTANCE.createRelation1();
 		relation.setSource(source);
 		relation.setTarget(target);
@@ -178,12 +179,12 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, String repoId, String resourceId) {
+	public List<CodeSyncElement1> getReferencedElements(CodeSyncElement1 source, UUID repoId, UUID resourceId) {
 		Map<String, CodeSyncElement1> referencedElements = new LinkedHashMap<String, CodeSyncElement1>();
 
-		String masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
+		UUID masterRepoId = DAOFactory.registryDAO.getMasterRepositoryId(repoId);
 		if (masterRepoId != null) {
-			CodeSyncElement1 globalSource = getCodeSyncElement(masterRepoId, resourceId, source.getId());
+			CodeSyncElement1 globalSource = getCodeSyncElement(masterRepoId, resourceId, UUID.fromString(source.getId()));
 			for (CodeSyncElement1 refElt : getReferencedElements(globalSource, masterRepoId, resourceId)) {
 				referencedElements.put(refElt.getId(), refElt);
 			}
@@ -197,28 +198,34 @@ public class EMFCodeSyncElementDAO implements CodeSyncElementDAO {
 	}
 
 	@Override
-	public CodeSyncElement1 getSource(Relation1 relation, String repoId) {
+	public CodeSyncElement1 getSource(Relation1 relation, UUID repoId) {
 		return resolveProxy(relation.getSource(), repoId);
 	}
 
 	@Override
-	public CodeSyncElement1 getTarget(Relation1 relation, String repoId) {
+	public CodeSyncElement1 getTarget(Relation1 relation, UUID repoId) {
 		return resolveProxy(relation.getTarget(), repoId);
 	}
 	
-	protected CodeSyncElement1 resolveProxy(CodeSyncElement1 element, String repoId) {
+	protected CodeSyncElement1 resolveProxy(CodeSyncElement1 element, UUID repoId) {
 		if (element.eIsProxy()) {
 			URI uri = ((InternalEObject) element).eProxyURI();
-			String uid = uri.fragment();
-			String resourceId = uri.opaquePart();
+			UUID uid = UUID.fromString(uri.fragment());
+			UUID resourceId = UUID.fromString(uri.opaquePart());
 			element = getCodeSyncElement(repoId, resourceId, uid);
 		}
 		return element;
 	}
 
 	@Override
-	public void updateCodeSyncElement(String repoId, String resourceId, CodeSyncElement1 element) {
+	public void updateCodeSyncElement(UUID repoId, UUID resourceId, CodeSyncElement1 element) {
 		// nothing to do
+	}
+
+	@Override
+	public void saveCodeSyncElement(UUID repoId, UUID resourceId, CodeSyncElement1 element) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

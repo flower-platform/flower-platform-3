@@ -69,6 +69,7 @@ public class CassandraData {
     session.execute("TRUNCATE relation");
     session.execute("TRUNCATE node");
     session.execute("TRUNCATE repository");
+    session.execute("TRUNCATE resource");
     
     return session;
   }
