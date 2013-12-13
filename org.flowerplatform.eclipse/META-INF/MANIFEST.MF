@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Eclipse
+Bundle-Name: %Bundle-Name
 Bundle-SymbolicName: org.flowerplatform.eclipse;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.flowerplatform.eclipse.EclipsePlugin
@@ -24,7 +24,10 @@ Require-Bundle: org.eclipse.ui,
  org.flowerplatform.editor;bundle-version="1.0.0",
  org.flowerplatform.common;bundle-version="1.0.0",
  org.flowerplatform.blazeds;bundle-version="1.0.0",
- org.eclipse.core.resources;bundle-version="3.7.101"
+ org.eclipse.core.resources;bundle-version="3.7.101",
+ org.flowerplatform.codesync.code.java,
+ org.flowerplatform.emf_model.notation,
+ org.flowerplatform.codesync;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: javax.servlet;version="2.5.0",
@@ -32,3 +35,4 @@ Import-Package: javax.servlet;version="2.5.0",
  org.eclipse.emf.common.util,
  org.eclipse.emf.edit.ui.provider,
  org.slf4j
+Bundle-Localization: OSGI-INF/l10n/plugin

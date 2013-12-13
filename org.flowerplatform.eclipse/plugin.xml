@@ -4,11 +4,27 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
+            default="true"
+            extensions="notation"
+            icon="public-resources/images/FlowerDiagramEditor.gif"
+            id="org.flowerplatform.eclipse.editor.FlowerDiagramEditorLauncher"
+            launcher="org.flowerplatform.eclipse.part.FlowerDiagramEditorLauncher"
+            name="%flowerDiagramEditorLauncher-name">
+      </editor>
+      <editor
             class="org.flowerplatform.eclipse.part.FlowerDiagramEditor"
             default="false"
-            extensions="notation"
             id="org.flowerplatform.eclipse.editor.FlowerDiagramEditor"
-            name="Flower Diagram Editor">
+            matchingStrategy="org.flowerplatform.eclipse.part.FlowerDiagramMatchingStrategy"
+            name="%editor.name">
+      </editor>
+      <editor
+            default="false"
+            extensions="notation"
+            icon="public-resources/images/FlowerDiagramEditor.gif"
+            id="org.flowerplatform.eclipse.OpenInNewEditor"
+            launcher="org.flowerplatform.eclipse.part.FlowerDiagramEditorLauncherOpenInNewEditor"
+            name="%openInNewEditor-name">
       </editor>
    </extension>
     <extension
@@ -58,9 +74,93 @@
             httpcontextId="flower-platform"
             load-on-startup="false">
       </servlet>
+      <servlet
+            alias="/servlet/image-composer"
+            class="org.flowerplatform.communication.public_resources.ImageComposerServlet"
+            httpcontextId="flower-platform"
+            load-on-startup="false">
+      </servlet>
       <serviceSelector
             filter="(other.info=org.flowerplatform.eclipse)">
       </serviceSelector>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?endof=group.open">
+         <command
+               commandId="addElementsOnDiagramCommand"
+               label="%addElementsOnDiagramCommand.label"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="selection">
+                  <test
+                        property="org.flowerplatform.eclipse.isDiagramEditorOpen">
+                  </test>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.flowerplatform.eclipse.AddElementsOnDiagramHandler"
+            id="addElementsOnDiagramCommand"
+            name="addElementsOnDiagram">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?endof=group.new">
+         <command
+               commandId="NewDiagramCommand"
+               label="%newDiagramCommand.label"
+               style="push">
+            <visibleWhen
+                  checkEnabled="false">
+               <with
+                     variable="activeMenuSelection">
+                  <iterate
+                        ifEmpty="false"
+                        operator="or">
+                     <adapt
+                           type="org.eclipse.core.resources.IResource">
+                     </adapt>
+                  </iterate>
+               </with>
+            </visibleWhen>
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.flowerplatform.eclipse.action.CreateNewDiagramHandler"
+            id="NewDiagramCommand"
+            name="%command.name">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.core.expressions.propertyTesters">
+      <propertyTester
+            class="org.flowerplatform.eclipse.IsDiagramEditorOpenTest"
+            id="org.flowerplatform.eclipse.propertyTester1"
+            namespace="org.flowerplatform.eclipse"
+            properties="isDiagramEditorOpen"
+            type="org.eclipse.jface.viewers.ISelection">
+      </propertyTester>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.flowerplatform.eclipse.Startup">
+      </startup>
    </extension>
 
 </plugin>

@@ -464,7 +464,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	 */
 	@RemoteInvocation
 	public void openNode(StatefulServiceInvocationContext context, List<PathFragment> path, Map<Object, Object> clientContext) {
-		scenarioTree.openNode(context, path, clientContext);
+//		scenarioTree.openNode(context, path, clientContext);
 	}
 	
 	/**

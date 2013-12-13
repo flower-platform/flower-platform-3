@@ -18,11 +18,8 @@
  */
 package org.flowerplatform.codesync.code.javascript.parser;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.flowerplatform.codesync.code.javascript.regex_ast.RegExAstNode;
@@ -32,6 +29,8 @@ import org.flowerplatform.common.regex.RegexConfiguration;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.common.regex.RegexUtil;
 import org.flowerplatform.common.regex.RegexWithAction;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 /**
  * @author Mariana Gheorghe
@@ -124,25 +123,22 @@ public class Parser {
 	
 	protected RegExAstNode jsDoc;
 	
-	public RegExAstNode parse(File file) {
-		try {
-			input = FileUtils.readFileToString(file);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+	public RegExAstNode parse(Object file) {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController();
 		
-		RegExAstNode root = createRegExAstNode(file.getPath().endsWith(".js") ? JS_FILE : HTML_FILE, NAME, false, 0, 0);
-		addParameter(root, NAME, file.getName().substring(0, file.getName().indexOf(".")), 0, 0);
+		input = fileAccessController.readFileToString(file);
+		RegExAstNode root = createRegExAstNode(fileAccessController.getPath(file).endsWith(".js") ? JS_FILE : HTML_FILE, NAME, false, 0, 0);
+		addParameter(root, NAME, fileAccessController.getName(file).substring(0, fileAccessController.getName(file).indexOf(".")), 0, 0);
 		
 		RegexConfiguration config = new RegexConfiguration();
-		if (file.getPath().endsWith(".js")) {
+		if (fileAccessController.getPath(file).endsWith(".js")) {
 			buildJsConfig(config);
 		} else {
 			buildHtmlConfig(config);
 		}
 		RegexProcessingSession session = config.startSession(input);
 		
-		enterState(session, file.getPath().endsWith(".js") ? JS_FILE : HTML_FILE, root, 0);
+		enterState(session, fileAccessController.getPath(file).endsWith(".js") ? JS_FILE : HTML_FILE, root, 0);
 		
 		try {
 			while (session.find()) {}

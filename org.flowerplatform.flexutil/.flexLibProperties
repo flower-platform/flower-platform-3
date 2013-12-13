@@ -18,6 +18,8 @@
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistList"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.IContentAssistProvider"/>
     <classEntry path="org.flowerplatform.flexutil.FlowerArrayList"/>
+    <classEntry path="org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.SplitWrapperView"/>
+    <classEntry path="org.flowerplatform.flexutil.mobile.popup.split_wrapper_view.ToggleOneViewModeAction"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItemRenderer"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistItem"/>
     <classEntry path="org.flowerplatform.flexutil.content_assist.ContentAssistListTextAreaSkin"/>

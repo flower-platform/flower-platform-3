@@ -43,7 +43,6 @@ public class IdeaPlugin extends AbstractFlowerJavaPlugin {
 		super.start(bundleContext);
 		INSTANCE = this;
 
-		CodeSyncPlugin.getInstance().setProjectsProvider(new IdeaProjectsProvider());
 		//		
 //		PublicResourcesServlet s;
 //
@@ -94,6 +93,7 @@ public class IdeaPlugin extends AbstractFlowerJavaPlugin {
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
 			@Override
 			public void run() {
+				CodeSyncPlugin.getInstance().setProjectsProvider(new IdeaProjectsProvider());
 				EditorPlugin.getInstance().setFileAccessController(new IdeaFileAccessController());
 				EditorModelPlugin.getInstance().setModelAccessController(new IdeaModelAccessController());
 			}

@@ -20,33 +20,42 @@ package org.flowerplatform.idea.file;
 
 import java.io.File;
 
-import org.flowerplatform.codesync.projects.IProjectsProvider;
+import org.flowerplatform.codesync.projects.IProjectAccessController;
 
 import myPackage.IdeaUtil;
+import myPackage.MyEditor;
 
 
 /**
  * @author Mariana Gheorghe
  */
-public class IdeaProjectsProvider implements IProjectsProvider {
+public class IdeaProjectsProvider implements IProjectAccessController {
 
 	/**
 	 * @param path relative to project
 	 */
+
 	@Override
-	public File getFile(File project, String path) {
-		return IdeaUtil.getFile(project, path);
+	public Object getFile(Object project, String path) {
+		return new File((File)project, path);
+		//return IdeaUtil.getFile(project, path);
 	}
 
 	@Override
-	public File getContainingProjectForFile(File file) {
-		return IdeaUtil.getContainingProjectForFile(file);
+	public Object getContainingProjectForFile(Object file) {
+//		return IdeaUtil.getContainingProjectForFile(file);
+		return new File("D:/data/java_work/runtime-flower-platform-idea/TestIdea");
 	}
 
 	@Override
-	public String getPathRelativeToProject(File file) {
-		// TODO Auto-generated method stub
-		return IdeaUtil.getPathRelativeToProject(file);
+	public String getPathRelativeToProject(Object file) {
+		return IdeaUtil.getPathRelativeToProject((File)file);
+	}
+
+	@Override
+	public Object getFolder(Object project, String path) {
+//		return IdeaUtil.getFile(project, path);
+		return null;
 	}
 
 	

@@ -114,13 +114,13 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 
 	public CodeSyncRoot getWikiRoot(File file, String technology, ResourceSet resourceSet, CommunicationChannel communicationChannel) {
-		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(file);
+		Object project = CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(file);
 		String name = EditorPlugin.getInstance().getFileAccessController().getPath(project);
 		// this will be a temporary tree, do not send the project
 		CodeSyncRoot leftRoot = getWikiTree(null, resourceSet, project, name, technology);
-		CodeSyncRoot rightRoot = getWikiTree(project, resourceSet, null, name, technology);
+		CodeSyncRoot rightRoot = getWikiTree((File)project, resourceSet, null, name, technology);
 		
-		updateTree(leftRoot, rightRoot, project, resourceSet, technology, communicationChannel, false);
+		updateTree(leftRoot, rightRoot, (File)project, resourceSet, technology, communicationChannel, false);
 		return rightRoot;
 	}
 	
@@ -192,12 +192,12 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	public Resource getAstCacheResource(File project, ResourceSet resourceSet) {
-		File astCacheElementFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, ACE_FILE_LOCATION);
+		Object astCacheElementFile = CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, ACE_FILE_LOCATION);
 		return CodeSyncPlugin.getInstance().getResource(resourceSet, astCacheElementFile);
 	}
 	
 	public Resource getCodeSyncMappingResource(File project, ResourceSet resourceSet) {
-		File codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, CSE_FILE_LOCATION);
+		Object codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, CSE_FILE_LOCATION);
 		return CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 	}
 

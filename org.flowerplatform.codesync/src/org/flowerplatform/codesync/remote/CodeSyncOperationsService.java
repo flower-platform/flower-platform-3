@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.codesync.remote;
 
-import java.io.File;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
@@ -239,12 +238,10 @@ public class CodeSyncOperationsService {
 	 * @author Sebastian Solomon
 	 */
 	protected void propagateOnChildDelete(CodeSyncElement cse) {
-
 		for (CodeSyncElement child : cse.getChildren()) {
 			child.setDeleted(true);
 			propagateOnChildDelete(child);
 		}
-
 	}
 	
 	public boolean hasChildWithKeyFeatureValue(CodeSyncElement parent, String childCodeSyncType, String keyFeatureValue) {
@@ -266,14 +263,14 @@ public class CodeSyncOperationsService {
 	
 	@RemoteInvocation
 	public void synchronize(ServiceInvocationContext context, String path, String technology) {
-		File diagram;
+		Object diagram;
 		try {
-			diagram = (File) EditorPlugin.getInstance().getFileAccessController().getFile(path);
+			diagram = EditorPlugin.getInstance().getFileAccessController().getFile(path);
 		} catch (Exception e) {
 			throw new RuntimeException(path);
 		}
-		File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(diagram);
-		File srcDir = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, "js");
+		Object project = CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(diagram);
+		Object srcDir = CodeSyncPlugin.getInstance().getProjectAccessController().getFolder(project, "js");
 		CodeSyncPlugin.getInstance().getCodeSyncAlgorithmRunner().runCodeSyncAlgorithm(project, srcDir, technology, context.getCommunicationChannel(), true);
 	}
 

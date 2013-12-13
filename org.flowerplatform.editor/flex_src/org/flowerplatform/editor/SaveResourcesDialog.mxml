@@ -136,6 +136,12 @@ license-end
 					}
 				}
 				
+				//for eclipse
+				var globalDirtyState:Boolean = EditorPlugin.getInstance().globalEditorOperationsManager.getGlobalDirtyState();
+				if (ExternalInterface.available) {
+					ExternalInterface.call("sendGlobalDirtyState", globalDirtyState ? "true" : "false");
+				}
+
 				ModalSpinner.removeModalSpinner(this);
 				closeForm();
 				if (callbackFunction != null) {

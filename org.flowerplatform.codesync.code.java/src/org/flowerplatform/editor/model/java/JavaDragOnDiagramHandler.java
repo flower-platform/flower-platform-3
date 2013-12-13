@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model.java;
 import java.io.File;
 import java.util.Collection;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.internal.core.CompilationUnit;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -60,13 +61,13 @@ public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 //		}
 		
 		for (Object object : draggedObjects) {
-			File resource;
+			Object resource;
 			try {
-				resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
+				resource = EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
 			} catch (Exception e) {
 				throw new RuntimeException(String.format("Error while getting resource %s", object), e);
 			}
-			File project = CodeSyncPlugin.getInstance().getProjectsProvider().getContainingProjectForFile(resource);
+			Object project = CodeSyncPlugin.getInstance().getProjectAccessController().getContainingProjectForFile(resource);
 			if (!acceptDraggedObject(resource)) {
 				return false;
 			}
@@ -99,12 +100,15 @@ public class JavaDragOnDiagramHandler implements IDragOnDiagramHandler {
 		
 		return true;
 	}
-
+	/**
+	 * @author Sebastian Solomon
+	 */
 	private boolean acceptDraggedObject(Object object) {
 		// TODO Mariana : add support for JE
 		return (object instanceof String 
-				|| object instanceof File && (CodeSyncPlugin.getInstance().getFileExtension((File) object).equals(CodeSyncCodeJavaPlugin.TECHNOLOGY)) 
-				|| object instanceof CompilationUnit);
+				|| object instanceof CompilationUnit)
+				|| object instanceof File && (EditorPlugin.getInstance().getFileAccessController().getFileExtension(object).equals(CodeSyncCodeJavaPlugin.TECHNOLOGY)) 
+				|| object instanceof IFile && (EditorPlugin.getInstance().getFileAccessController().getFileExtension(object).equals(CodeSyncCodeJavaPlugin.TECHNOLOGY));
 	}
 
 }

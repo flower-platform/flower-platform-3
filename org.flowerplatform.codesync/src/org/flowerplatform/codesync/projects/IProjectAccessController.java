@@ -18,20 +18,22 @@
  */
 package org.flowerplatform.codesync.projects;
 
-import java.io.File;
-
 /**
  * @author Mariana Gheorghe
+ * @author Sebastian Solomon
  */
-public interface IProjectsProvider {
+public interface IProjectAccessController {
 	
 	/**
 	 * @param path relative to project
 	 */
-	File getFile(File project, String path);
+	Object getFile(Object project, String path);
 	
-	File getContainingProjectForFile(File file);
+	Object getContainingProjectForFile(Object file);
 	
-	String getPathRelativeToProject(File file);
+	String getPathRelativeToProject(Object file);
+	
+	//needed for synchronization. because in Eclipse we can't use project.findMember(path) (it return null if resource dosn't exist). We use instead .getFile/getFolder
+	Object getFolder(Object project, String path);
 	
 }

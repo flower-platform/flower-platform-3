@@ -19,9 +19,7 @@
 package com.crispico.flower.mp.codesync.code;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -30,14 +28,13 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
-import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 import org.flowerplatform.editor.remote.EditorStatefulClientLocalState;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
@@ -82,13 +79,6 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	protected ModelAdapterFactorySetProvider modelAdapterFactorySetProvider;
-	
-	/**
-	 * @see #getOrCreateEditingDomain()
-	 * 
-	 * @author Mariana
-	 */
-	protected Map<File, AdapterFactoryEditingDomain> editingDomains = new HashMap<File, AdapterFactoryEditingDomain>();
 	
 	private Utils utils = new Utils();
 	
@@ -142,27 +132,29 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	/**
 	 * @author Cristi
 	 * @author Mariana
+	 * @author Sebastian Solomon
 	 */
-	public CodeSyncElement getCodeSyncElement(File project, File file, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public CodeSyncElement getCodeSyncElement(Object project, Object file, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController();
 		// find model files
 		ResourceSet resourceSet = CodeSyncPlugin.getInstance().getOrCreateResourceSet(project, "diagramEditorStatefulService");
 		Resource cseResource = CodeSyncPlugin.getInstance().getCodeSyncMapping(project, resourceSet);
 		
 		// find containing SrcDir
 		CodeSyncElement srcDir = null;
-		File srcDirFile = null;
-		File parent = file;
+		Object srcDirFile = null;
+		Object parent = file;
 		do {
-			srcDir = CodeSyncPlugin.getInstance().getSrcDir(cseResource, parent.getName());
+			srcDir = CodeSyncPlugin.getInstance().getSrcDir(cseResource, fileAccessController.getName(parent));
 			srcDirFile = parent;
-			parent = parent.getParentFile();
+			parent = fileAccessController.getParentFile(parent);
 		} while (srcDir == null && !parent.equals(project));
 		if (srcDir == null) {
 			throw new RuntimeException("File " + file + " is not contained in a SrcDir!");
 		}
 		
 		// find the CodeSyncElement in the SrcDir
-		String relativeToSrcDir = CommonPlugin.getInstance().getPathRelativeToFile(file, srcDirFile);
+		String relativeToSrcDir = EditorPlugin.getInstance().getFileAccessController().getPathRelativeToFile(file, srcDirFile);
 		// there are cases when path format is a\b\c and the split method will not return correctly.
 		// so replace \ with /
 		relativeToSrcDir = relativeToSrcDir.replaceAll("\\\\", "/");
@@ -172,8 +164,8 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		String[] fragments = relativeToSrcDir.length() > 0 ? relativeToSrcDir.split("/") : new String[0];
 		CodeSyncElement codeSyncElement = getCodeSyncElement(srcDir, fragments);
 		
-		String srcDirPath = CommonPlugin.getInstance().getPathRelativeToFile(srcDirFile, project);
-		String relativeToProject = CommonPlugin.getInstance().getPathRelativeToFile(file, project);
+		String srcDirPath = EditorPlugin.getInstance().getFileAccessController().getPathRelativeToFile(srcDirFile, project);
+		String relativeToProject =EditorPlugin.getInstance().getFileAccessController().getPathRelativeToFile(file, project);
 		if (codeSyncElement == null || showDialog) {
 			runCodeSyncAlgorithm(srcDir, project, resourceSet, srcDirPath, relativeToProject, technology, communicationChannel, showDialog);
 		} else {
@@ -217,8 +209,9 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 	
 	/**
 	 * @author Mariana
+	 * @author Sebastian Solomon
 	 */
-	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, File project, ResourceSet resourceSet, String path, String limitedPath, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
+	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, Object project, ResourceSet resourceSet, String path, String limitedPath, String technology, CommunicationChannel communicationChannel, boolean showDialog) {
 //	public CodeSyncEditableResource runCodeSyncAlgorithm(CodeSyncElement model, IProject project, IResource file, String technology, CommunicationChannel communicationChannel) {
 		CodeSyncEditorStatefulService service = (CodeSyncEditorStatefulService) CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncEditorStatefulService.SERVICE_ID);
 		String editableResourcePath = EditorPlugin.getInstance().getFileAccessController().getPath(project);
@@ -234,7 +227,13 @@ public class CodeSyncCodePlugin extends AbstractFlowerJavaPlugin {
 		Match match = new Match();
 		match.setAncestor(model);
 		match.setLeft(model);
-		File ast = CodeSyncPlugin.getInstance().getProjectsProvider().getFile(project, path);
+		Object ast;
+		if (model.getType().equals(CodeSyncPlugin.FOLDER)) {
+			ast = CodeSyncPlugin.getInstance().getProjectAccessController().getFolder(project, path);
+		}else {
+			ast = CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, path);
+		}
+		
 //		ast = file.getParent();
 		match.setRight(ast);
 		

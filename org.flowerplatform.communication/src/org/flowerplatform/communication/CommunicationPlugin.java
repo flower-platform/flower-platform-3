@@ -117,7 +117,6 @@ public class CommunicationPlugin extends AbstractFlowerJavaPlugin {
 
 		initExtensionPoint_servlet();
 		initExtensionPoint_authenticator();
-
 		if (bundleContext.getBundle(0).getState() == Bundle.ACTIVE) {
 			// If Eclipse is already started before this plugin is activated
 			// (happens during testing or

@@ -18,36 +18,32 @@
  */
 package com.crispico.flower.mp.codesync.code.adapter;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.MalformedTreeException;
 import org.eclipse.text.edits.TextEdit;
+import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.file.IFileAccessController;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
 
 /**
  * @author Mariana Gheorghe
+ * @author Sebastian Solomon
  */
 public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 
-	protected Map<File, Object> fileInfos = new HashMap<File, Object>();
+	protected Map<Object, Object> fileInfos = new HashMap<Object, Object>();
 	
-	protected Map<File, String> filesToRename = new HashMap<File, String>();
+	protected Map<Object, String> filesToRename = new HashMap<Object, String>();
 	
-	protected File getFile(Object modelElement) {
-		return (File) modelElement;
-	}
-	
-	protected Object getOrCreateFileInfo(File file) {
+	protected Object getOrCreateFileInfo(Object file) {
 		if (fileInfos.containsKey(file)) {
 			return fileInfos.get(file);
 		} else {
@@ -57,7 +53,7 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 		}
 	}
 	
-	protected abstract Object createFileInfo(File file);
+	protected abstract Object createFileInfo(Object file);
 	
 	@Override
 	public Object getValueFeatureValue(Object element, Object feature, Object correspondingValue) {
@@ -71,9 +67,8 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 	}
 	
 	@Override
-	public void setValueFeatureValue(Object element, Object feature, Object value) {
+	public void setValueFeatureValue(Object file, Object feature, Object value) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Name().equals(feature)) {
-			File file = getFile(element);
 			filesToRename.put(file, (String) value);
 		}
 	}
@@ -82,10 +77,13 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 	public Object getMatchKey(Object element) {
 		return getLabel(element);
 	}
-	
+
+	/**
+	 * @author Sebastian Solomonm
+	 */
 	@Override
 	public String getLabel(Object modelElement) {
-		return getFile(modelElement).getName();
+		return EditorPlugin.getInstance().getFileAccessController().getName(modelElement);
 	}
 	
 	@Override
@@ -116,37 +114,33 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 	 * Creates the file, if it does not exist, and commits all the modifications recorded by the AST.
 	 */
 	@Override
-	public boolean save(Object element) {
-		File file = getFile(element);
-		File initialFile = file;
+	public boolean save(Object file) {
+		IFileAccessController fileAccessController = EditorPlugin.getInstance().getFileAccessController();
+		Object initialFile = file;
 		
 		String newName = filesToRename.get(file);
 		if (newName != null) {
-			File dest = new File(file.getParent(), newName);
-			file.renameTo(dest);
+			Object dest = fileAccessController.createNewFile(fileAccessController.getParent(initialFile), newName);
+			fileAccessController.rename(file, dest);
 			file = dest;
 		}
 		
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+		if (!fileAccessController.exists(file)) {
+			fileAccessController.createNewFile(file);
 		}
 		
-		if (file.exists()) {
+		if (fileAccessController.exists(file)) {
 			Object fileInfo = fileInfos.get(initialFile);
 			if (fileInfo != null) {
 				Document document;
 				try {
-					document = new Document(FileUtils.readFileToString(file));
+					document = new Document(fileAccessController.readFileToString(file));
 					TextEdit edits = rewrite(document, fileInfo);
 					if (edits.getChildrenSize() != 0) {
 						edits.apply(document);
-						FileUtils.writeStringToFile(file, document.get()); // TODO replace with call to IFileAccess
+						fileAccessController.writeStringToFile(file, document.get());
 					}
-				} catch (IOException | MalformedTreeException | BadLocationException e) {
+				} catch (MalformedTreeException | BadLocationException e) {
 					throw new RuntimeException(e);
 				}
 			}
@@ -164,7 +158,7 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 	 */
 	@Override
 	public boolean discard(Object element) {
-		fileInfos.remove(getFile(element));
+		fileInfos.remove(element);
 		
 		// no need to call discard for the AST
 		return false;
