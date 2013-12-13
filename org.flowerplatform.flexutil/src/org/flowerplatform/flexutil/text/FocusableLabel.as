@@ -16,15 +16,14 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.regex.ui {
+package org.flowerplatform.flexutil.text {
 	
 	import mx.managers.IFocusManagerComponent;
 	
-	import spark.components.IconItemRenderer;
-	import spark.components.LabelItemRenderer;
+	import spark.components.Label;
 	
 	/**
-	 * Item renderer used only on web platform.
+	 * Label can be used in Item Renderer component.
 	 * 
 	 * <p>
 	 * Implements <code>IFocusManagerComponent</code>
@@ -34,16 +33,7 @@ package org.flowerplatform.codesync.regex.ui {
 	 * 
 	 * @author Cristina Constantinescu
 	 */ 
-	public class RegexItemRenderer extends IconItemRenderer implements IFocusManagerComponent {
-		
-		public function RegexItemRenderer() {
-			minHeight = 22;
-			setStyle("verticalAlign", "middle");
-			setStyle("paddingLeft", 5);
-		}
-		
-		override protected function drawBorder(unscaledWidth:Number, unscaledHeight:Number):void {			
-		}
-		
+	public class FocusableLabel extends Label implements IFocusManagerComponent {	
 	}
+	
 }

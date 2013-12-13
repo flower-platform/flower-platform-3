@@ -52,12 +52,13 @@ license-end
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
 			import org.flowerplatform.flexutil.action.IAction;
 			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
+			import org.flowerplatform.flexutil.renderer.FocusableListItemRenderer;
 			import org.flowerplatform.flexutil.view_content_host.IViewHost;
 			
 			protected var _viewHost:IViewHost;
 			
 			protected function creationCompleteHandler(event:FlexEvent):void {
-				list.itemRenderer = new ClassFactory(RegexItemRenderer);
+				list.itemRenderer = new ClassFactory(FocusableListItemRenderer);
 				ClassFactory(list.itemRenderer).properties = {iconFunction: getItemIcon};
 				
 				list.addEventListener(FlexEvent.VALUE_COMMIT, changeHandler);

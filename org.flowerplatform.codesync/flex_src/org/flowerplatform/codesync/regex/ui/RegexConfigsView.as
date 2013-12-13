@@ -41,6 +41,7 @@ package org.flowerplatform.codesync.regex.ui {
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
+	import org.flowerplatform.flexutil.renderer.FocusableListItemRenderer;
 	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
@@ -56,7 +57,7 @@ package org.flowerplatform.codesync.regex.ui {
 		protected var _viewHost:IViewHost;
 		
 		public function RegexConfigsView() {
-			itemRenderer = new ClassFactory(RegexItemRenderer);
+			itemRenderer = new ClassFactory(FocusableListItemRenderer);
 			ClassFactory(itemRenderer).properties = {iconFunction: getItemIcon};
 			
 			addEventListener(FlexEvent.VALUE_COMMIT, changeHandler);
