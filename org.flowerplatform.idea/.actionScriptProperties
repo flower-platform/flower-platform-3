@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<actionScriptProperties analytics="false" mainApplicationPath="org.flowerplatform.idea.as" projectUUID="189fb162-3616-451a-aa13-9819588e31f4" version="10">
+  <compiler additionalCompilerArguments="-locale en_US" autoRSLOrdering="true" copyDependentFiles="true" fteInMXComponents="false" generateAccessible="false" htmlExpressInstall="true" htmlGenerate="true" htmlHistoryManagement="true" htmlPlayerVersionCheck="true" includeNetmonSwc="false" outputFolderPath="public-resources/swc" removeUnusedRSL="true" sourceFolderPath="flex_src" strict="true" targetPlayerVersion="0.0.0" useApolloConfig="false" useDebugRSLSwfs="true" verifyDigests="true" warn="true">
+    <compilerSourcePath/>
+    <libraryPath defaultLinkType="0">
+      <libraryPathEntry kind="4" path="">
+        <excludedEntries>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
+          <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/core.swc" useDefaultLinkType="false"/>
+        </excludedEntries>
+      </libraryPathEntry>
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.common/public-resources/swc/org.flowerplatform.common.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.communication/public-resources/swc/org.flowerplatform.communication.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexutil/bin/org.flowerplatform.flexutil.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.editor/public-resources/swc/org.flowerplatform.editor.swc" useDefaultLinkType="false"/>
+      <libraryPathEntry kind="3" linkType="1" path="/org.flowerplatform.flexutil_legacy/bin/org.flowerplatform.flexutil_legacy.swc" useDefaultLinkType="false"/>
+    </libraryPath>
+    <sourceAttachmentPath/>
+  </compiler>
+  <applications>
+    <application path="org.flowerplatform.idea.as"/>
+  </applications>
+  <modules/>
+  <buildCSSFiles/>
+  <flashCatalyst validateFlashCatalystCompatibility="false"/>
+</actionScriptProperties>

@@ -25,6 +25,7 @@ package org.flowerplatform.codesync {
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	
 	import org.flowerplatform.codesync.action.AddNewCodeSyncElementActionProvider;
 	import org.flowerplatform.codesync.action.AddNewRelationAction;
