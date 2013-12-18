@@ -16,7 +16,9 @@ Require-Bundle: org.eclipse.core.runtime,
  org.flowerplatform.common;bundle-version="1.0.0",
  org.flowerplatform.blazeds;bundle-version="1.0.0",
  org.eclipse.core.resources;bundle-version="3.7.101",
- org.flowerplatform.codesync;bundle-version="1.0.0"
+ org.flowerplatform.codesync;bundle-version="1.0.0",
+ org.flowerplatform.codesync.code.java;bundle-version="1.0.0",
+ org.flowerplatform.emf_model.notation;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
-Import-Package: org.eclipse.emf.common.util, myPackage
+Import-Package: org.eclipse.emf.common.util, myPackage, com.intellij.openapi.vfs, com.intellij.openapi.roots, com.intellij.openapi.project, com.intellij.openapi.module

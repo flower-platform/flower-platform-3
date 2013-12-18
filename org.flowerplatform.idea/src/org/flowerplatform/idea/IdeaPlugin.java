@@ -1,3 +1,21 @@
+/* license-start
+ * 
+ * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation version 3.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *   Crispico - Initial API and implementation
+ *
+ * license-end
+ */
 package org.flowerplatform.idea;
 
 import org.flowerplatform.common.CommonPlugin;
@@ -7,11 +25,14 @@ import org.flowerplatform.editor.EditorPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.idea.file.IdeaFileAccessController;
 import org.flowerplatform.idea.file.IdeaModelAccessController;
-import org.flowerplatform.idea.file.IdeaProjectsProvider;
+import org.flowerplatform.idea.file.IdeaProjectAccessController;
 import org.osgi.framework.BundleContext;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class IdeaPlugin extends AbstractFlowerJavaPlugin {
 
 	private static BundleContext context;
@@ -93,7 +114,7 @@ public class IdeaPlugin extends AbstractFlowerJavaPlugin {
 		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
 			@Override
 			public void run() {
-				CodeSyncPlugin.getInstance().setProjectsProvider(new IdeaProjectsProvider());
+				CodeSyncPlugin.getInstance().setProjectsProvider(new IdeaProjectAccessController());
 				EditorPlugin.getInstance().setFileAccessController(new IdeaFileAccessController());
 				EditorModelPlugin.getInstance().setModelAccessController(new IdeaModelAccessController());
 			}
@@ -106,6 +127,10 @@ public class IdeaPlugin extends AbstractFlowerJavaPlugin {
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
 		IdeaPlugin.context = null;
+	}
+	
+	public FlowerJettyServer getServer() {
+		return server;
 	}
 
 }

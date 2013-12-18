@@ -78,7 +78,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 	public Object createChildOnContainmentFeature(Object element, Object feature, Object correspondingChild) {
 		if (CodeSyncPackage.eINSTANCE.getCodeSyncElement_Children().equals(feature)) {
 			CodeSyncElement cse = (CodeSyncElement) correspondingChild;
-			return EditorPlugin.getInstance().getFileAccessController().createNewFile(element, (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(cse));
+			return EditorPlugin.getInstance().getFileAccessController().getFile(element, (String) CodeSyncOperationsService.getInstance().getKeyFeatureValue(cse));
 		}
 		return null;
 	}
@@ -174,7 +174,7 @@ public class FolderModelAdapter extends AstModelElementAdapter {
 		// move the folder if it was marked renamed
 		String newName = filesToRename.get(file);
 		if (newName != null) {
-			Object dest = fileAccessController.createNewFile(fileAccessController.getParentFile(file), newName);
+			Object dest = fileAccessController.getFile(fileAccessController.getParentFile(file), newName);
 			fileAccessController.rename(file, dest);
 			filesToRename.remove(file);
 		}

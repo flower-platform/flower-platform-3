@@ -64,9 +64,10 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 				file = EditorPlugin.getInstance().getFileAccessController()
 						.getParentFile(file);
 			}
-			diagram = fileAccessController.createNewFile(file,
-					getNextDiagram(file, name));
-			fileAccessController.createNewFile(diagram);
+//			diagram = fileAccessController.createNewFile(file,
+//					getNextDiagram(file, name));
+			
+			diagram = fileAccessController.createNewFile(file, getNextDiagram(file, name));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -111,7 +112,7 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 		// before changing name, verify if the current one exists
 		IFileAccessController fileAccessController = EditorPlugin.getInstance()
 				.getFileAccessController();
-		Object newFile = fileAccessController.createNewFile(parent, name);
+		Object newFile = fileAccessController.getFile(parent, name);
 		if (!fileAccessController.exists(newFile)) {
 			return name;
 		}
@@ -122,7 +123,7 @@ public abstract class NewDiagramAction extends AbstractServerCommand {
 			i++;
 			builder = new StringBuilder(name);
 			builder.insert(builder.indexOf("."), i);
-			newFile = fileAccessController.createNewFile(parent,
+			newFile = fileAccessController.getFile(parent,
 					builder.toString());
 			if (!fileAccessController.exists(newFile)) {
 				exists = false;

@@ -3,6 +3,8 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="D:/Program Files/JetBrains/IntelliJ IDEA Community Edition 12.1.6/lib/openapi.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/JetBrains/IntelliJ IDEA Community Edition 12.1.6/lib/util.jar"/>
 	<classpathentry kind="lib" path="D:/data/java_work/StartingUp/out/production/StartingUp"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

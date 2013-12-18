@@ -120,7 +120,7 @@ public abstract class AbstractFileModelAdapter extends AstModelElementAdapter {
 		
 		String newName = filesToRename.get(file);
 		if (newName != null) {
-			Object dest = fileAccessController.createNewFile(fileAccessController.getParent(initialFile), newName);
+			Object dest = fileAccessController.getFile(fileAccessController.getParent(initialFile), newName);
 			fileAccessController.rename(file, dest);
 			file = dest;
 		}

@@ -123,8 +123,15 @@ public abstract class PlainFileAccessController implements IFileAccessController
 	}
 
 	@Override
-	public Object createNewFile(Object file, String name) {
-		return new File((File) file, name);
+	public Object createNewFile(Object parent, String name) {
+		File file = (File) getFile(parent, name);
+		createNewFile(file);
+		return file;
+	}
+	
+	@Override
+	public Object getFile(Object parent, String name) {		
+		return new File((File) parent, name);
 	}
 
 	@Override

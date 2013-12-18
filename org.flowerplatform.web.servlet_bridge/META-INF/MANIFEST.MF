@@ -6,5 +6,5 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Crispico
 Export-Package: org.eclipse.equinox.servletbridge; version=1.1, javax.
  servlet; version=100.0, javax.servlet.http; version=100.0, javax.servlet.
- resources; version=100.0, myPackage
+ resources; version=100.0, myPackage, com.intellij.openapi.vfs, com.intellij.openapi.project, com.intellij.openapi.roots, com.intellij.openapi.module
 Fragment-Host: system.bundle; extension:=framework

@@ -1,14 +1,31 @@
+/* license-start
+ * 
+ * Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation version 3.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *   Crispico - Initial API and implementation
+ *
+ * license-end
+ */
 package org.flowerplatform.idea;
 
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import myPackage.IIdeaToEclipseBridge;
-import myPackage.IdeaToEclipseBridge;
+import myPackage.BridgeUtilIdeaToEclipse;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.equinox.http.jetty.JettyConfigurator;
 import org.eclipse.equinox.http.jetty.JettyConstants;
-import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.osgi.framework.InvalidSyntaxException;
@@ -30,9 +47,6 @@ public class FlowerJettyServer {
 	
 	private String port;
 	
-	
-//	private IideaToEclipseCommunication itec;
-	
 	public void start() {
 		logger.debug("Starting server");
 		
@@ -47,14 +61,7 @@ public class FlowerJettyServer {
 			JettyConfigurator.startServer(webappName, d);
 			checkBundle();
 			
-			//TODO add IideaToEclipseComunication
-			
-			System.out.println(port);
-			
-			IIdeaToEclipseBridge jettyPort = new IdeaToEclipseBridge(port, host, context); 
-//			
-//			
-//			jettyPort.getServerPort();
+			BridgeUtilIdeaToEclipse.iIdeaToEclipseBridge = new IdeaToEclipseBirdge();
 		} catch (Exception e) {
 			logger.error("Server failed to start with error = {0}", e);
 		}

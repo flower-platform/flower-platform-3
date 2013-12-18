@@ -179,7 +179,7 @@ public class EditorOperationsService {
 		public DecodedLink(String externalEditableResourcePath) {
 			// e.g. editor:/path/to/url#fragment
 			// editor and fragment are optional
-			final String regex = "(?:(.*?):/)?([^#]*)(?:#(.+))?";					
+			final String regex = "(?:(.*?)\\|/)?([^#]*)(?:#(.+))?";					
 			Matcher matcher = Pattern.compile(regex).matcher(externalEditableResourcePath);
 			if (!matcher.find()) {
 				// this shouldn't happen, as the expression matches any string

@@ -16,21 +16,18 @@
  *
  * license-end
  */
-package org.flowerplatform.idea.file;
+package org.flowerplatform.idea.action;
 
-import org.eclipse.emf.common.util.URI;
-import org.flowerplatform.editor.model.IModelAccessController;
-
-import com.intellij.openapi.vfs.VirtualFile;
+import org.flowerplatform.editor.model.java.remote.NewJavaClassDiagramAction;
 
 /**
  * @author Sebastian Solomon
  */
-public class IdeaModelAccessController implements IModelAccessController {
+public class IdeaNewDiagramAction extends NewJavaClassDiagramAction {
 
 	@Override
-	public URI getURIFromFile(Object file) {		
-		return URI.createFileURI(((VirtualFile)file).getPath()); 
+	public void executeCommand() {
+		createDiagram();
 	}
 
 }

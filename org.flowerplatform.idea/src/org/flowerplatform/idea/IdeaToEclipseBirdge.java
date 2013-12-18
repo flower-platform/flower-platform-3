@@ -16,21 +16,31 @@
  *
  * license-end
  */
-package org.flowerplatform.idea.file;
+package org.flowerplatform.idea;
 
-import org.eclipse.emf.common.util.URI;
-import org.flowerplatform.editor.model.IModelAccessController;
+import myPackage.IIdeaToEclipseBridge;
 
+import org.flowerplatform.idea.action.IdeaNewDiagramAction;
+
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author Sebastian Solomon
  */
-public class IdeaModelAccessController implements IModelAccessController {
+public class IdeaToEclipseBirdge implements IIdeaToEclipseBridge{
 
 	@Override
-	public URI getURIFromFile(Object file) {		
-		return URI.createFileURI(((VirtualFile)file).getPath()); 
+	public String getUrl() {
+		return IdeaPlugin.getInstance().getServer().getUrl();
+	}
+	
+	@Override
+	public void createDiagram(VirtualFile vFile) {
+		IdeaNewDiagramAction inda = new IdeaNewDiagramAction();
+		inda.parentPath = CodeSyncPlugin.getInstance().getProjectAccessController().getPathRelativeToProject(vFile); 
+		inda.name = "NewDiagram.notation";
+		inda.executeCommand();
 	}
 
 }

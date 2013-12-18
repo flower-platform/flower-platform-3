@@ -96,7 +96,14 @@ public class EclipseFileAccessController implements IFileAccessController {
 	}
 
 	@Override
-	public Object createNewFile(Object parent, String digramName) {
+	public Object createNewFile(Object parent, String name) {
+		Object file = getFile(parent, name);
+		createNewFile(file);
+		return file;
+	}
+	
+	@Override
+	public Object getFile(Object parent, String digramName) {
 		IFile iFile = null;
 		if (parent instanceof IFolder) {
 			iFile = ((IFolder) parent).getFile(digramName);
