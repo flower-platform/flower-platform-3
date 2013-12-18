@@ -29,6 +29,7 @@ package org.flowerplatform.codesync.wizard.action {
 			label = CodeSyncPlugin.getInstance().getMessage("wizard.remove");
 			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/common/delete.png");
 			preferShowOnActionBar = true;
+			orderIndex = 20;
 		}
 		
 	}

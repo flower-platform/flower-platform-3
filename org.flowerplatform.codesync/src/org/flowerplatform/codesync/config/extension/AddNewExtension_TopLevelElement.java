@@ -18,9 +18,6 @@
  */
 package org.flowerplatform.codesync.config.extension;
 
-import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.PARENT_CODE_SYNC_ELEMENT;
-import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.VIEW;
-
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
@@ -52,7 +49,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 	@Override
 	public boolean addNew(CodeSyncElement codeSyncElement, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		Node node = NotationFactory.eINSTANCE.createNode();
-		parameters.put(VIEW, node);
+		parameters.put(CodeSyncPlugin.VIEW, node);
 		
 		// check if top-level element
 		if (parentView != null) {
@@ -91,7 +88,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 			CodeSyncOperationsService.getInstance().setKeyFeatureValue(file,  
 					descriptor.getDefaultName() + "." + descriptor.getExtension()); // TODO numbering logic
 			CodeSyncOperationsService.getInstance().add(parent, file);
-			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
+			parameters.put(CodeSyncPlugin.PARENT_CODE_SYNC_ELEMENT, file);
 		}
 				
 		return true;

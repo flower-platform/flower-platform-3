@@ -18,17 +18,50 @@
 */
 package org.flowerplatform.codesync.wizard.action {
 	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.wizard.ui.WizardElementsView;
+	import org.flowerplatform.communication.tree.remote.TreeNode;
+	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.action.ActionBase;
+	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
 	public class AddWizardElementAction extends ActionBase {
+				
+		private var wizardElementsView:WizardElementsView;
 		
-		public function AddWizardElementAction() {
-			label = CodeSyncPlugin.getInstance().getMessage("wizard.add");
+		public function AddWizardElementAction(wizardElementsView:WizardElementsView, addWizardAttribute:Boolean = false) {	
+			this.wizardElementsView = wizardElementsView;
 			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/common/add.png");
-			preferShowOnActionBar = true;
+			if (addWizardAttribute) {
+				label = CodeSyncPlugin.getInstance().getMessage("wizard.add.attribute");				
+			} else {
+				label = CodeSyncPlugin.getInstance().getMessage("wizard.add");
+				preferShowOnActionBar = true;
+			}
+			orderIndex = 10;
 		}
+		
+		override public function get visible():Boolean {
+			if (!preferShowOnActionBar && selection.length > 0) {
+				return TreeNode(HierarchicalModelWrapper(selection.getItemAt(0)).treeNode).pathFragment.type != "wizardAttribute";
+			}
+			return true;
+		}
+			
+		override public function run():void {
+			if (CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement == null) {
+				return;
+			}
+			var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
+			if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {
+				statefulClient.service_addWizardElement(
+						!preferShowOnActionBar,
+						CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true),
+						wizardElementsView, wizardElementsView.refreshHandler);		
+			}		
+		}		
+		
 	}
 }

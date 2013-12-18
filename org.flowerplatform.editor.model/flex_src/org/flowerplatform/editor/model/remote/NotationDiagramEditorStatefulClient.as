@@ -109,8 +109,8 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, invokeServiceMethod("contentAssist", [viewId, pattern], options));
 		}
 		
-		public function service_addNewRelation(type:String, sourceViewId:Object, targetViewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(codeSyncDiagramOperationsServiceId, "addNewRelation", [type, sourceViewId, targetViewId]));
+		public function service_addNewRelation(type:String, sourceViewId:Object, targetViewId:Object, parameters:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(codeSyncDiagramOperationsServiceId, "addNewRelation", [type, sourceViewId, targetViewId, parameters]));
 		}
 
 		public function service_addNewScenario(name:String):void {
@@ -141,27 +141,66 @@ package org.flowerplatform.editor.model.remote {
 //			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "deleteElement", [viewId]));
 		}
 		
-		public function service_getMDAElements(callbackObject:Object, callbackFunction:Function):void {
+		public function service_getWizardElements(callbackObject:Object, callbackFunction:Function):void {
 			CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
 				codeSyncOperationsServiceId,
-				"getMDAElementsFromModel",
+				"getWizardElements",
 				[editableResourcePath], 
 				callbackObject, callbackFunction));
 		}	
 		
-		public function service_getMDADependencies(mdaElementInfo:PathFragment, callbackObject:Object, callbackFunction:Function):void {
+		public function service_getWizardDependencies(path:ArrayCollection, callbackObject:Object, callbackFunction:Function):void {
 			CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
 				codeSyncOperationsServiceId,
-				"getMDADependencies",
-				[mdaElementInfo], 
+				"getWizardDependencies",
+				[editableResourcePath, path],  
 				callbackObject, callbackFunction));			
 		}	
 		
-		public function service_addMDADependency(dependency:Object, mdaElementInfo:PathFragment):void {
+		public function service_generateWizardDependencies(dependencies:ArrayCollection, path:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
 				codeSyncOperationsServiceId,
-				"addMDADependency",
-				[editableResourcePath, dependency, mdaElementInfo]));
+				"generateWizardDependencies",
+				[editableResourcePath, dependencies, path],
+				callbackObject, callbackFunction));		
 		}	
+		
+		public function service_dragOnDiagramWizardDependenciesTargets(dependencies:ArrayCollection, path:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"dragOnDiagramWizardDependenciesTargets",
+				[editableResourcePath, dependencies, path],
+				callbackObject, callbackFunction));		
+		}	
+		
+		public function service_dragOnDiagramWizardElements(paths:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"dragOnDiagramWizardElements",
+				[editableResourcePath, paths],
+				callbackObject, callbackFunction));		
+		}	
+		
+		public function service_addWizardElement(addWizardAttribute:Boolean, parentPath:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"addWizardElement",
+				[editableResourcePath, addWizardAttribute, parentPath],
+				callbackObject, callbackFunction));		
+		}	
+	
+		public function service_selectWizardDependenciesTargetsFromDiagram(dependencies:ArrayCollection, path:ArrayCollection):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"selectWizardDependenciesTargetsFromDiagram",
+				[editableResourcePath, dependencies, path]));		
+		}
+		
+		public function service_selectWizardElementsFromDiagram(paths:ArrayCollection):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"selectWizardElementsFromDiagram",
+				[editableResourcePath, paths]));		
+		}
 	}
 }

@@ -21,7 +21,9 @@ package org.flowerplatform.flexdiagram.tool.controller {
 	import flash.display.DisplayObject;
 	import flash.geom.Rectangle;
 	
+	import mx.core.FlexGlobals;
 	import mx.core.IVisualElement;
+	import mx.core.UIComponent;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
@@ -63,19 +65,22 @@ package org.flowerplatform.flexdiagram.tool.controller {
 		}
 		
 		public function drop(sourceModel:Object, targetModel:Object):void {
-			if (targetModel != null) {				
-				// the tool will be deactivated later, so wait until then
-				diagramShell.modelToExtraInfoMap[sourceModel].waitingToDeactivateDragTool = true;
+			// the tool will be deactivated later, so wait until then
+			diagramShell.modelToExtraInfoMap[sourceModel].waitingToDeactivateDragTool = true;
 				
-				// create context
-				var context:Object = new Object();
-				context.sourceModel = sourceModel;
-				context.targetModel =  targetModel;	
-				// dispatch event in order to let others implement the creation behavior
-				diagramShell.dispatchEvent(new ExecuteDragToCreateEvent(context, true));
-			} else {
-				diagramShell.mainToolFinishedItsJob();
-			}
+			var connection:ConnectionRenderer = diagramShell.modelToExtraInfoMap[sourceModel].tempConnection;
+				
+			// create context
+			var context:Object = new Object();
+			context.sourceModel = sourceModel;
+			context.targetModel = targetModel;	
+			context.rectangle = diagramShell.convertCoordinates(
+				new Rectangle(connection._targetPoint.x, connection._targetPoint.y, NaN, NaN), 
+				UIComponent(diagramShell.diagramRenderer), 
+				UIComponent(FlexGlobals.topLevelApplication));
+			
+			// dispatch event in order to let others implement the creation behavior
+			diagramShell.dispatchEvent(new ExecuteDragToCreateEvent(context, true));
 		}
 		
 		public function deactivate(model:Object):void {

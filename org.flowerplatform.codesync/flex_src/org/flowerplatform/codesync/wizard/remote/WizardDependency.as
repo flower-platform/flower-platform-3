@@ -16,24 +16,21 @@
 *
 * license-end
 */
-package org.flowerplatform.codesync.wizard.ui {
+package org.flowerplatform.codesync.wizard.remote {
+	import mx.collections.ArrayCollection;
 	
-	import org.flowerplatform.codesync.CodeSyncPlugin;
-	import org.flowerplatform.editor.model.location_new_elements.LocationForNewElementsDialog;
-	import org.flowerplatform.properties.PropertiesPlugin;
+	import org.flowerplatform.codesync.remote.RelationDescriptor;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class LocationForWizardDependencyTargetElement extends LocationForNewElementsDialog {
-				
-		override protected function getDiagramEditableResourcePath():String {
-			return CodeSyncPlugin.getInstance().wizardUtils.selectedEditorStatefulClient.editableResourcePath;
-		}
+	[RemoteClass]
+	[Bindable]
+	public class WizardDependency {
 		
-		override protected function save():void {
-			PropertiesPlugin.getInstance().propertiesView.setPropertyValue("Location", locationTxt.text);
-		}
-				
+		public var type:String;
+		public var label:String;
+		public var targetLabel:String;
+		public var targetIconUrl:String;
 	}
 }

@@ -54,7 +54,7 @@ import org.flowerplatform.codesync.regex.RegexService;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
-import org.flowerplatform.codesync.wizard.remote.MDADependency;
+import org.flowerplatform.codesync.wizard.remote.WizardDependency;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.model.EditorModelPlugin;
@@ -63,9 +63,6 @@ import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
 import org.flowerplatform.emf_model.regex.MacroRegex;
 import org.flowerplatform.emf_model.regex.ParserRegex;
-import org.flowerplatform.emf_model.regex.impl.MacroRegexImpl;
-import org.flowerplatform.emf_model.regex.impl.ParserRegexImpl;
-import org.flowerplatform.properties.remote.Property;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,6 +80,16 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected static CodeSyncPlugin INSTANCE;
 	
 	public static final String CONTEXT_INITIALIZATION_TYPE = "initializationType";
+	
+	public static final String VIEW = "view";
+	public static final String PARENT_CODE_SYNC_ELEMENT = "parentCodeSyncElement";
+	public static final String PARENT_VIEW = "parentView";
+
+	public static final String SOURCE = "source";
+	public static final String TARGET = "target";
+	
+	public static final String WIZARD_ELEMENT = "wizardElement";
+	public static final String WIZARD_ATTRIBUTE = "wizardAttribute";
 	
 	/**
 	 * The location of the CSE mapping file, relative to the project. May be
@@ -273,20 +280,20 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				
 				descriptors.add(
 						new CodeSyncElementDescriptor()
-						.setCodeSyncType("mdaElement")
+						.setCodeSyncType(WIZARD_ELEMENT)
 						.setLabel("Wizard Element")
 						.setIconUrl("images/wizard/wand-hat.png")
 						.setDefaultName("NewWizardElement")
 						.addCodeSyncTypeCategory("topLevel")
-						.addChildrenCodeSyncTypeCategory("mdaAttribute")
+						.addChildrenCodeSyncTypeCategory(WIZARD_ATTRIBUTE)
 						.addFeature(NamedElementFeatureAccessExtension.NAME)
 						.setKeyFeature(NamedElementFeatureAccessExtension.NAME)						
 						.setStandardDiagramControllerProviderFactory("topLevelBox")
 						.setOrderIndex(500));
 				descriptors.add(
 						new CodeSyncElementDescriptor()
-						.setCodeSyncType("mdaAttribute")
-						.addCodeSyncTypeCategory("mdaAttribute")
+						.setCodeSyncType(WIZARD_ATTRIBUTE)
+						.addCodeSyncTypeCategory(WIZARD_ATTRIBUTE)
 						.setLabel("Wizard Attribute")
 						.setIconUrl("images/wizard/wand-hat.png")
 						.setDefaultName("NewWizardAttribute")						
@@ -312,8 +319,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				
 				// processors
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
-				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.mdaElement", new ChildrenUpdaterDiagramProcessor());				
-				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.mdaElement.mdaAttribute", new TopLevelElementChildProcessor());
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement", new ChildrenUpdaterDiagramProcessor());				
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new TopLevelElementChildProcessor());
 				
 				CustomSerializationDescriptor macroRegexSD = new CustomSerializationDescriptor(MacroRegex.class)
 				.addDeclaredProperty("name")
@@ -358,12 +365,14 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("targetCodeSyncTypes")
 			.addDeclaredProperty("sourceCodeSyncTypeCategories")
 			.addDeclaredProperty("targetCodeSyncTypeCategories")
+			.addDeclaredProperty("acceptTargetNullIfNoCodeSyncTypeDetected")
 			.register();
 		
-		new CustomSerializationDescriptor(MDADependency.class)
+		new CustomSerializationDescriptor(WizardDependency.class)
 			.addDeclaredProperty("type")
 			.addDeclaredProperty("label")
-			.addDeclaredProperty("properties")			
+			.addDeclaredProperty("targetLabel")
+			.addDeclaredProperty("targetIconUrl")
 			.register();
 	}
 	

@@ -33,6 +33,7 @@ package org.flowerplatform.codesync.wizard.action {
 			label = CodeSyncPlugin.getInstance().getMessage("wizard.refresh");
 			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/common/refresh.png");
 			preferShowOnActionBar = true;
+			orderIndex = 30;
 		}
 		
 		override public function run():void {

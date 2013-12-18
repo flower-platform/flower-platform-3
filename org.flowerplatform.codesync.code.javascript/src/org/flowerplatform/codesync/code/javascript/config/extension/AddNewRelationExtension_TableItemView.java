@@ -16,32 +16,18 @@
  *
  * license-end
  */
-package org.flowerplatform.codesync.wizard;
+package org.flowerplatform.codesync.code.javascript.config.extension;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.flowerplatform.codesync.remote.RelationDescriptor;
-import org.flowerplatform.properties.remote.Property;
+import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 
 /**
  * @author Cristina Constantinescu
  */
-public class MDADependencyDescriptor extends RelationDescriptor {
+public class AddNewRelationExtension_TableItemView extends AddNewRelationExtension_FromWizardElement {
 
-	private List<Property> properties;
-
-	public List<Property> getProperties() {
-		return properties;
-	}
-
-	public MDADependencyDescriptor addProperty(Property property) {
-		if (properties == null) {
-			properties = new ArrayList<Property>();
-		}
-		properties.add(property);
-		return this;
+	public AddNewRelationExtension_TableItemView() {
+		super(JavaScriptDescriptors.DEPENDENCY_TABLE_ITEM_VIEW, JavaScriptDescriptors.TYPE_BACKBONE_CLASS);
+		this.newCodeSyncElementKeyFeatureFormat = "%sTableItemView";
 	}
 	
 }
-

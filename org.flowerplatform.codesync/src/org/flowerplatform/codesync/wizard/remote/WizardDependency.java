@@ -18,21 +18,19 @@
  */
 package org.flowerplatform.codesync.wizard.remote;
 
-import java.util.List;
-
-import org.flowerplatform.codesync.remote.RelationDescriptor;
-import org.flowerplatform.properties.remote.Property;
 
 /**
  * @author Cristina Constantinescu
  */
-public class MDADependency {
+public class WizardDependency {
 
 	private String type;
 	
 	private String label;
+		
+	private String targetLabel;
 	
-	private List<Property> properties;
+	private String targetIconUrl;
 	
 	public String getType() {
 		return type;
@@ -42,6 +40,11 @@ public class MDADependency {
 		this.type = type;
 	}
 
+	public WizardDependency setTypeAs(String type) {
+		this.type = type;
+		return this;
+	}
+	
 	public String getLabel() {
 		return label;
 	}
@@ -50,21 +53,38 @@ public class MDADependency {
 		this.label = label;
 	}
 
-	public List<Property> getProperties() {
-		return properties;
+	public WizardDependency setLabelAs(String label) {
+		this.label = label;
+		return this;
+	}
+	
+	public String getTargetLabel() {
+		return targetLabel;
 	}
 
-	public void setProperties(List<Property> properties) {
-		this.properties = properties;
+	public void setTargetLabel(String targetLabel) {
+		this.targetLabel = targetLabel;
+	}
+
+	public WizardDependency setTargetLabelAs(String targetLabel) {
+		this.targetLabel = targetLabel;
+		return this;
 	}
 	
-	public MDADependency() {	
+	public String getTargetIconUrl() {
+		return targetIconUrl;
+	}
+
+	public void setTargetIconUrl(String targetIconUrl) {
+		this.targetIconUrl = targetIconUrl;
+	}
+
+	public WizardDependency setTargetIconUrlAs(String targetIconUrl) {
+		this.targetIconUrl = targetIconUrl;
+		return this;
 	}
 	
-	public MDADependency(RelationDescriptor relationDescriptor, List<Property> properties) {
-		this.type = relationDescriptor.getType();
-		this.label = relationDescriptor.getLabel();
-		this.properties = properties;
-	}		
-	
+	public WizardDependency() {	
+	}
+		
 }

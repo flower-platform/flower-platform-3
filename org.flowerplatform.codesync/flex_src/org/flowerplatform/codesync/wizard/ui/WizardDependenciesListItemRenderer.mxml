@@ -1,32 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!-- 
+@author Cristina Constantinescu
+-->
 <s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
 				xmlns:s="library://ns.adobe.com/flex/spark" 
 				xmlns:mx="library://ns.adobe.com/flex/mx"				
-				implements="mx.managers.IFocusManagerComponent" height="22" xmlns:ui="org.flowerplatform.codesync.wizard.ui.*" xmlns:text="org.flowerplatform.flexutil.text.*">
+				
+				implements="mx.managers.IFocusManagerComponent" height="22" 
+				
+				xmlns:ui="org.flowerplatform.codesync.wizard.ui.*" 
+				xmlns:text="org.flowerplatform.flexutil.text.*">
 	<s:layout>
 		<s:HorizontalLayout gap="5" verticalAlign="middle" paddingLeft="5" />
 	</s:layout>
 	
 	<fx:Script>
 		<![CDATA[
+			import flashx.textLayout.conversion.TextConverter;
+			
 			import org.flowerplatform.codesync.CodeSyncPlugin;
-			import org.flowerplatform.codesync.wizard.remote.MDADependency;
-			import org.flowerplatform.communication.CommunicationPlugin;
-			import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+			import org.flowerplatform.codesync.wizard.remote.WizardDependency;
 			import org.flowerplatform.flexutil.FlexUtilGlobals;
-			
-			protected function cbSelected_clickHandler(event:MouseEvent):void {
-				MDADependency(data).checked = !MDADependency(data).checked;
-				
-				CodeSyncPlugin.getInstance().wizardUtils.selectedEditorStatefulClient
-					.service_addMDADependency(data, CodeSyncPlugin.getInstance().wizardUtils.selectedMDAElementInfo);		
-			}
-			
+
 		]]>
 	</fx:Script>	
-	
-	<s:CheckBox id="cbSelected" click="cbSelected_clickHandler(event)" selected="{MDADependency(data).checked}" />
-	<s:BitmapImage id="image" source="{FlexUtilGlobals.getInstance().createAbsoluteUrl(CodeSyncPlugin.getInstance().getResourceUrl('images/chart_line.png'))}"/>				                    
-	<text:FocusableLabel id="nameTxt" text="{MDADependency(data).label}" />									
-	
+	<s:BitmapImage source="{
+				   FlexUtilGlobals.getInstance().createAbsoluteUrl(
+				   	WizardDependency(data).targetLabel != null 
+				   	? WizardDependency(data).targetIconUrl 
+				   	: CodeSyncPlugin.getInstance().getResourceUrl('images/chart_line.png'))
+				   }" />
+		
+	<s:RichText width="100%" textFlow="{
+				TextConverter.importToFlow(
+					WizardDependency(data).targetLabel != null 
+					? CodeSyncPlugin.getInstance().getMessage('wizard.dependency.labelWithDepFormat', [WizardDependency(data).targetLabel, WizardDependency(data).label]) 
+					: CodeSyncPlugin.getInstance().getMessage('wizard.dependency.labelWithoutDepFormat', [WizardDependency(data).label]), TextConverter.TEXT_FIELD_HTML_FORMAT)
+				}" />
 </s:ItemRenderer>

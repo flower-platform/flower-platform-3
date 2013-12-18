@@ -34,6 +34,6 @@ package org.flowerplatform.codesync.remote {
 		public var targetCodeSyncTypes:ArrayCollection;
 		public var sourceCodeSyncTypeCategories:ArrayCollection;
 		public var targetCodeSyncTypeCategories:ArrayCollection;
-		
+		public var acceptTargetNullIfNoCodeSyncTypeDetected:Boolean;
 	}
 }

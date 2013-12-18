@@ -35,6 +35,7 @@ license-end
 			import com.crispico.flower.util.layout.event.ViewAddedEvent;
 			
 			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
 			import mx.collections.IList;
 			import mx.core.FlexGlobals;
 			import mx.core.UIComponent;
@@ -43,6 +44,7 @@ license-end
 			import org.flowerplatform.codesync.CodeSyncPlugin;
 			import org.flowerplatform.codesync.wizard.WizardEvent;
 			import org.flowerplatform.codesync.wizard.action.AddWizardElementAction;
+			import org.flowerplatform.codesync.wizard.action.DragWizardElementOnDiagramAction;
 			import org.flowerplatform.codesync.wizard.action.RefreshWizardElementsAction;
 			import org.flowerplatform.codesync.wizard.action.RemoveWizardElementAction;
 			import org.flowerplatform.communication.CommunicationPlugin;
@@ -64,14 +66,20 @@ license-end
 			
 			public function getActions(selection:IList):Vector.<IAction> {
 				var result:Vector.<IAction> = new Vector.<IAction>();
-				result.push(new AddWizardElementAction());		
+				result.push(new AddWizardElementAction(this));		
+				result.push(new AddWizardElementAction(this, true));	
 				result.push(new RemoveWizardElementAction());
 				result.push(new RefreshWizardElementsAction(this));
+				result.push(new DragWizardElementOnDiagramAction(this));
 				return result;
 			}
 			
 			public function getSelection():IList {
-				return null;
+				var array:ArrayList = new ArrayList();
+				for (var i:int = 0; i < tree.selectedItems.length; i++) {
+					array.addItem(tree.selectedItems[i]);
+				}
+				return array;
 			}
 			
 			public function set viewHost(viewHost:IViewHost):void {
@@ -94,40 +102,41 @@ license-end
 			private function viewRemovedHandler(event:ViewRemovedEvent):void {
 			}
 			
-			public function refreshHandler():void {
-				// search for a open & selected codeMirrorEditor
-				var editorFrontend:Object = null;
-				var editors:ArrayCollection = Workbench(FlexUtilGlobals.getInstance().workbench).getAllVisibleViewLayoutData(true);			
-				for each (var editor:ViewLayoutData in editors) {
-					editorFrontend = Workbench(FlexUtilGlobals.getInstance().workbench).layoutDataToComponent[editor];
-					if (editorFrontend is WorkbenchViewHost) {
-						editorFrontend = UIComponent(WorkbenchViewHost(editorFrontend).activeViewContent);
-					}
-					if (editorFrontend is DiagramEditorFrontend) {
-						break;
-					}
-				}		
-				if (editorFrontend == null) {
-					return;
-				}
-				CodeSyncPlugin.getInstance().wizardUtils.selectedEditorStatefulClient = 
-					NotationDiagramEditorStatefulClient(DiagramEditorFrontend(editorFrontend).editorStatefulClient);
-				
-				CodeSyncPlugin.getInstance().wizardUtils.selectedEditorStatefulClient
-					.service_getMDAElements(this, getWizardElementsCallbackHandler);				
+			public function refreshHandler(result:Object = null):void {
+				var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
+				if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {
+					statefulClient.service_getWizardElements(this, getWizardElementsCallbackHandler);		
+				} else {
+					TreeNode(tree.rootNode).children.removeAll();
+					tree.refreshLinearizedDataProvider();	
+				}					
 			}
 			
 			private function getWizardElementsCallbackHandler(result:ArrayCollection):void {
 				if (result != null) {
-					TreeNode(tree.rootNode).children = result;		
-					tree.refreshLinearizedDataProvider();	
+					// get old selected ids from tree
+					var oldSelectedIds:ArrayCollection = new ArrayCollection();
+					for each (var selected:Object in tree.selectedItems) {		
+						oldSelectedIds.addItem(TreeNode(HierarchicalModelWrapper(selected).treeNode).pathFragment.name);						
+					}			
 					
-					if (TreeNode(tree.rootNode).children != null && TreeNode(tree.rootNode).children.length > 0) {
+					TreeNode(tree.rootNode).children = result;		
+					tree.refreshLinearizedDataProvider();
+					tree.validateProperties(); // this will commit also the selection -> no selection
+					
+					if (oldSelectedIds.length > 0 && tree.dataProvider.length > 0) {
+						// get new selected items
 						var vector:Vector.<int> = new Vector.<int>();
-						vector.push(0);
+						for (var i:int=0; i < tree.dataProvider.length; i++) {							
+							if (oldSelectedIds.contains(TreeNode(HierarchicalModelWrapper(tree.dataProvider.getItemAt(i)).treeNode).pathFragment.name)) {
+								vector.push(i);
+								break;
+							}
+						}
+						// set new selection
 						tree.selectedIndices = vector;
-						tree.validateProperties();
-					}					
+						tree.validateProperties(); // this will commit the selection						
+					}								
 				}
 			}
 			
@@ -139,12 +148,23 @@ license-end
 			
 			protected function tree_changeHandler(e:Event):void {
 				if (tree.selectedItems != null && tree.selectedItems.length > 0) {
-					CodeSyncPlugin.getInstance().wizardUtils.selectedMDAElementInfo = 
-						TreeNode(HierarchicalModelWrapper(tree.selectedItems[0]).treeNode).pathFragment;
+					CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement = 
+						TreeNode(HierarchicalModelWrapper(tree.selectedItems[0]).treeNode);
 				} else {
-					CodeSyncPlugin.getInstance().wizardUtils.selectedMDAElementInfo = null;
+					CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement = null;
 				}
 			
+				var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
+				if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {	
+					var array:ArrayCollection = new ArrayCollection();
+					var selectedItems:IList = getSelection();
+					for (var i:int = 0; i < selectedItems.length; i++) {
+						var node:TreeNode = TreeNode(HierarchicalModelWrapper(selectedItems.getItemAt(i)).treeNode);
+						array.addItem(node.getPathForNode(true));				
+					}					
+					statefulClient.service_selectWizardElementsFromDiagram(array);		
+				}
+								
 				e.stopImmediatePropagation();
 			}
 			
@@ -153,5 +173,6 @@ license-end
 	<tree:TreeList id="tree" width="100%" height="100%"
 				   hierarchicalModelAdapter="{new TreeNodeHierarchicalModelAdapter()}"
 				   itemRenderer="org.flowerplatform.communication.tree.GenericTreeItemRenderer"
-				   valueCommit="tree_changeHandler(event)"/>		
+				   valueCommit="tree_changeHandler(event)"
+				   allowMultipleSelection="true"/>		
 </s:Group>

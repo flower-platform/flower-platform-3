@@ -1,7 +1,5 @@
 package org.flowerplatform.codesync.config.extension;
 
-import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.VIEW;
-
 import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.Resource;
@@ -10,6 +8,7 @@ import org.flowerplatform.emf_model.notation.NotationFactory;
 import org.flowerplatform.emf_model.notation.Note;
 import org.flowerplatform.emf_model.notation.View;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 public class AddNewExtension_Note extends AddNewExtension_TopLevelElement {
@@ -32,7 +31,7 @@ public class AddNewExtension_Note extends AddNewExtension_TopLevelElement {
 		bounds.setHeight(getParameterValue(parameters, HEIGHT, 100));
 		node.setLayoutConstraint(bounds);	
 		
-		parameters.put(VIEW, node);
+		parameters.put(CodeSyncPlugin.VIEW, node);
 		
 		return false;
 	}

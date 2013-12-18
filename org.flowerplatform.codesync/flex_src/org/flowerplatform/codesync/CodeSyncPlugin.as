@@ -45,7 +45,7 @@ package org.flowerplatform.codesync {
 	import org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsView;
 	import org.flowerplatform.codesync.views.loaded_descriptors.LoadedDescriptorsViewProvider;
 	import org.flowerplatform.codesync.wizard.WizardUtils;
-	import org.flowerplatform.codesync.wizard.remote.MDADependency;
+	import org.flowerplatform.codesync.wizard.remote.WizardDependency;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.command.CompoundServerCommand;
@@ -168,7 +168,7 @@ package org.flowerplatform.codesync {
 			registerClassAliasFromAnnotation(RegexMatchDto);
 			registerClassAliasFromAnnotation(RegexSelectedItem);
 
-			registerClassAliasFromAnnotation(MDADependency);
+			registerClassAliasFromAnnotation(WizardDependency);
 		}
 		
 		/**

@@ -32,7 +32,6 @@ import org.flowerplatform.codesync.config.extension.AddNewRelationExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorParseException;
 import org.flowerplatform.common.CommonPlugin;
-import org.flowerplatform.common.ied.InplaceEditorException;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
@@ -55,13 +54,6 @@ import com.crispico.flower.mp.model.codesync.Relation;
  * @author Mariana Gheorghe
  */
 public class CodeSyncDiagramOperationsService1 {
-
-	public static final String VIEW = "view";
-	public static final String PARENT_CODE_SYNC_ELEMENT = "parentCodeSyncElement";
-	public static final String PARENT_VIEW = "parentView";
-
-	public static final String SOURCE = "source";
-	public static final String TARGET = "target";
 	
 	public static final String ID = "codeSyncDiagramOperationsService";
 	
@@ -113,11 +105,11 @@ public class CodeSyncDiagramOperationsService1 {
 			
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
 		
-		Node view = (Node) parameters.get(VIEW);
+		Node view = (Node) parameters.get(CodeSyncPlugin.VIEW);
 		
 		// add to diagram
-		if (parameters.containsKey(PARENT_VIEW)) {
-			parentView = (View) parameters.get(PARENT_VIEW);
+		if (parameters.containsKey(CodeSyncPlugin.PARENT_VIEW)) {
+			parentView = (View) parameters.get(CodeSyncPlugin.PARENT_VIEW);
 		}
 		if (parentView == null && viewIdOfParent == null) {
 			parentView = getViewById(context.getAdditionalData(), diagramId);
@@ -130,8 +122,8 @@ public class CodeSyncDiagramOperationsService1 {
 			view.setDiagrammableElement(codeSyncElement);
 			if (codeSyncElement.eContainer() == null) {
 				CodeSyncElement parentCodeSyncElement = null;
-				if (parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
-					parentCodeSyncElement = (CodeSyncElement) parameters.get(PARENT_CODE_SYNC_ELEMENT);
+				if (parameters.containsKey(CodeSyncPlugin.PARENT_CODE_SYNC_ELEMENT)) {
+					parentCodeSyncElement = (CodeSyncElement) parameters.get(CodeSyncPlugin.PARENT_CODE_SYNC_ELEMENT);
 				} else {
 					parentCodeSyncElement = (CodeSyncElement) parentView.getDiagrammableElement();
 				}
@@ -296,15 +288,30 @@ public class CodeSyncDiagramOperationsService1 {
 		}
 	}
 	
-	public void addNewRelation(ServiceInvocationContext context, String type, String sourceViewId, String targetViewId) {
+	public void addNewRelation(ServiceInvocationContext context, String type, String sourceViewId, String targetViewId, Map<String, Object> parameters) {
+		if (parameters == null) {
+			parameters = new HashMap<String, Object>();
+		}
 		View sourceView = getViewById(context.getAdditionalData(), sourceViewId);
-		View targetView = getViewById(context.getAdditionalData(), targetViewId);
+		parameters.put(CodeSyncPlugin.SOURCE, sourceView.getDiagrammableElement());
 		
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put(SOURCE, sourceView.getDiagrammableElement());
-		parameters.put(TARGET, targetView.getDiagrammableElement());
+		View targetView = null;
+		if (targetViewId != null) {
+			targetView = getViewById(context.getAdditionalData(), targetViewId);
+			parameters.put(CodeSyncPlugin.TARGET, targetView.getDiagrammableElement());
+		}	
 
-		Relation relation = addNewRelation(getCodeSyncMappingResource(getEditableResource(context.getAdditionalData())), type, parameters);
+		Relation relation;
+		try {
+			relation = addNewRelationElement(getCodeSyncMappingResource(getEditableResource(context.getAdditionalData())), type, parameters);
+		} catch (Exception e) {		
+			context.getCommunicationChannel().sendCommandWithPush(
+					new DisplaySimpleMessageClientCommand(
+							CommonPlugin.getInstance().getMessage("error"), 
+							e.getMessage(), 
+							DisplaySimpleMessageClientCommand.ICON_ERROR));
+			return;
+		}
 		
 		EObject currentObject = sourceView;
 		Diagram diagram = null;
@@ -315,10 +322,16 @@ public class CodeSyncDiagramOperationsService1 {
 			}
 			currentObject = currentObject.eContainer();
 		}
+		
+		if (targetView == null) {						
+			parameters.put(CodeSyncPlugin.PARENT_VIEW, diagram);		
+			targetView = getViewById(context.getAdditionalData(), addOnDiagram(context, null, null, (CodeSyncElement) parameters.get(CodeSyncPlugin.TARGET), parameters));
+		}
+		
 		createEdge(relation, sourceView, targetView, diagram);
 	}
 	
-	public Relation addNewRelation(Resource codeSyncMappingResource, String type, Map<String, Object> parameters) {
+	public Relation addNewRelationElement(Resource codeSyncMappingResource, String type, Map<String, Object> parameters) throws Exception {
 		Relation relation = CodeSyncFactory.eINSTANCE.createRelation();
 		relation.setType(type);
 		
@@ -333,14 +346,14 @@ public class CodeSyncDiagramOperationsService1 {
 			}
 		}
 			
-		if (parameters.containsKey(SOURCE)) {
-			CodeSyncElement source = (CodeSyncElement) parameters.get(SOURCE);
+		if (parameters.containsKey(CodeSyncPlugin.SOURCE)) {
+			CodeSyncElement source = (CodeSyncElement) parameters.get(CodeSyncPlugin.SOURCE);
 			relation.setSource(source);
 			source.getRelations().add(relation);
 		}
 				
-		if (parameters.containsKey(TARGET)) {
-			relation.setTarget((CodeSyncElement) parameters.get(TARGET));
+		if (parameters.containsKey(CodeSyncPlugin.TARGET)) {
+			relation.setTarget((CodeSyncElement) parameters.get(CodeSyncPlugin.TARGET));
 		}		
 		return relation;
 	}

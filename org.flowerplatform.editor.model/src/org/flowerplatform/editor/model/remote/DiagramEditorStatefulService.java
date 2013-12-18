@@ -340,6 +340,10 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 		invokeClientMethod(communicationChannel, statefulClientId, "updateTransferableObjects", new Object[] { objectsToUpdate, objectsIdsToDispose, viewDetailsUpdates });
 	}
 	
+	public void client_selectObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectIdsToSelect) {
+		invokeClientMethod(communicationChannel, statefulClientId, "selectObjects", new Object[] { objectIdsToSelect });
+	}
+	
 	///////////////////////////////////////////////////////////////
 	// @RemoteInvocation methods
 	///////////////////////////////////////////////////////////////

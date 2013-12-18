@@ -23,11 +23,11 @@ import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 /**
  * @author Cristina Constantinescu
  */
-public class AddNewRelationExtension_SampleObjGen extends AddNewRelationExtension_FromWizardElement {
-	
-	public AddNewRelationExtension_SampleObjGen() {
-		super(JavaScriptDescriptors.DEPENDENCY_SAMPLE_OBJ_GEN, JavaScriptDescriptors.TYPE_BACKBONE_CLASS);
-		this.newCodeSyncElementKeyFeatureFormat = "%sSampleObject";
+public class AddNewRelationExtension_FormTemplate extends AddNewRelationExtension_FromWizardElement {
+
+	public AddNewRelationExtension_FormTemplate() {
+		super(JavaScriptDescriptors.DEPENDENCY_FORM_TEMPLATE, "form");
+		this.newCodeSyncElementKeyFeatureFormat = "%sFormTemplate";
 	}
 
 }

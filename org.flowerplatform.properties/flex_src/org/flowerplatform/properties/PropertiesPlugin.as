@@ -26,11 +26,6 @@ package org.flowerplatform.properties {
 		public var propertiesView:PropertiesView;
 		public var propertyRendererClasses:Dictionary = new Dictionary();
 		
-		/**
-		 * @author Cristina Constantinescu
-		 */ 
-		public var propertiesProviders:ArrayList = new ArrayList();
-		
 		public static function getInstance():PropertiesPlugin {
 			return INSTANCE;
 		}

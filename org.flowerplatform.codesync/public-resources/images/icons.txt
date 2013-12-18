@@ -15,3 +15,4 @@ images/chart_line.png http://www.famfamfam.com/lab/icons/silk/
 
 images/regex/percent.png http://www.everaldo.com/#3cf/twitter
 images/wizard/wand-hat.png http://p.yusukekamiyamane.com/
+images/wizard/generate.png http://icons8.com/

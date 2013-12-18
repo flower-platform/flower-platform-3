@@ -29,6 +29,6 @@ import com.crispico.flower.mp.model.codesync.Relation;
  */
 public interface AddNewRelationExtension {
 
-	boolean addNew(Relation relation, Resource codeSyncMappingResource, Map<String, Object> parameters);
+	boolean addNew(Relation relation, Resource codeSyncMappingResource, Map<String, Object> parameters) throws Exception;
 	
 }

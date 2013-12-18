@@ -36,6 +36,12 @@ public class RelationDescriptor {
 	
 	private String targetEndFigureType;
 	
+	/**
+	 * Used to show corresponding create action when dragging to create relation 
+	 * hasn't found a target (target = null) under mouse.
+	 */
+	private boolean acceptTargetNullIfNoCodeSyncTypeDetected;
+	
 	public String getType() {
 		return type;
 	}
@@ -150,5 +156,14 @@ public class RelationDescriptor {
 		this.targetEndFigureType = targetEndFigureType;
 		return this;
 	}
-		
+
+	public boolean isAcceptTargetNullIfNoCodeSyncTypeDetected() {
+		return acceptTargetNullIfNoCodeSyncTypeDetected;
+	}
+
+	public RelationDescriptor setAcceptTargetNullIfNoCodeSyncTypeDetected(boolean acceptTargetNullIfNoCodeSyncTypeDetected) {
+		this.acceptTargetNullIfNoCodeSyncTypeDetected = acceptTargetNullIfNoCodeSyncTypeDetected;
+		return this;
+	}		
+	
 }

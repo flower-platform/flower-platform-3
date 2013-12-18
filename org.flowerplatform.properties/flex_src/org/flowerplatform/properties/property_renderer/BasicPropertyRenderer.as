@@ -35,11 +35,18 @@ package org.flowerplatform.properties.property_renderer {
 		}
 		
 		protected function sendChangedValuesToServer(event:Event):void {
+			var selectionOfItems:Object = PropertiesPlugin.getInstance().propertiesView.selectionForServer;
 			if (!data.readOnly) {
-				PropertiesPlugin.getInstance().propertiesView.setPropertyValue(data.name, getValue());
+				CommunicationPlugin.getInstance().bridge.sendObject(
+					new InvokeServiceMethodServerCommand(
+						"propertiesService",
+						"setProperties",
+						[selectionOfItems, data.name, getValue()]
+					)
+				);
 			}	
 		}
-		
+
 		/**
 		 * @author Cristina Constantinescu
 		 */ 
