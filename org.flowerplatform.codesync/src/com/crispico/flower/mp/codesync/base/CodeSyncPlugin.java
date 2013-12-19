@@ -49,6 +49,7 @@ import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Note;
 import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
+import org.flowerplatform.codesync.processor.RelationsChangesDiagramProcessor;
 import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.codesync.projects.IProjectsProvider;
 import org.flowerplatform.codesync.regex.RegexService;
@@ -340,6 +341,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement", new ChildrenUpdaterDiagramProcessor());				
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new TopLevelElementChildProcessor());
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new RelationsChangesDiagramProcessor());
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement", new RelationsChangesDiagramProcessor());
 				
 				CustomSerializationDescriptor macroRegexSD = new CustomSerializationDescriptor(MacroRegex.class)
 				.addDeclaredProperty("name")

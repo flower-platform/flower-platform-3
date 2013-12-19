@@ -195,6 +195,14 @@ package org.flowerplatform.editor.model.remote {
 				callbackObject, callbackFunction));		
 		}	
 	
+		public function service_removeWizardElement(path:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"removeWizardElement",
+				[editableResourcePath, path],
+				callbackObject, callbackFunction));		
+		}	
+		
 		public function service_selectWizardDependenciesTargetsFromDiagram(dependencies:ArrayCollection, path:ArrayCollection):void {
 			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
 				codeSyncOperationsServiceId,

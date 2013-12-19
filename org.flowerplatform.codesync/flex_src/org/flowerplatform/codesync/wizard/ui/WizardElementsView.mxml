@@ -68,7 +68,7 @@ license-end
 				var result:Vector.<IAction> = new Vector.<IAction>();
 				result.push(new AddWizardElementAction(this));		
 				result.push(new AddWizardElementAction(this, true));	
-				result.push(new RemoveWizardElementAction());
+				result.push(new RemoveWizardElementAction(this));
 				result.push(new RefreshWizardElementsAction(this));
 				result.push(new DragWizardElementOnDiagramAction(this));
 				return result;
@@ -162,8 +162,12 @@ license-end
 						var node:TreeNode = TreeNode(HierarchicalModelWrapper(selectedItems.getItemAt(i)).treeNode);
 						array.addItem(node.getPathForNode(true));				
 					}					
-					statefulClient.service_selectWizardElementsFromDiagram(array);		
+					if (array.length > 0) {
+						statefulClient.service_selectWizardElementsFromDiagram(array);		
+					}
 				}
+							
+				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(_viewHost, this);
 								
 				e.stopImmediatePropagation();
 			}
@@ -173,6 +177,5 @@ license-end
 	<tree:TreeList id="tree" width="100%" height="100%"
 				   hierarchicalModelAdapter="{new TreeNodeHierarchicalModelAdapter()}"
 				   itemRenderer="org.flowerplatform.communication.tree.GenericTreeItemRenderer"
-				   valueCommit="tree_changeHandler(event)"
-				   allowMultipleSelection="true"/>		
+				   valueCommit="tree_changeHandler(event)"  />		
 </s:Group>

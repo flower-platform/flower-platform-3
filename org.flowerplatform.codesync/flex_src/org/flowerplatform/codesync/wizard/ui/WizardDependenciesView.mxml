@@ -141,10 +141,13 @@ license-end
 					return;
 				}
 				var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
-				if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {					
-					statefulClient.service_selectWizardDependenciesTargetsFromDiagram(
-						getSelectedWizardDependencies(),
-						CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true));		
+				if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {	
+					var list:ArrayCollection = getSelectedWizardDependencies();
+					if (list.length > 0) {
+						statefulClient.service_selectWizardDependenciesTargetsFromDiagram(
+							list,
+							CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true));	
+					}
 				}
 				
 				event.stopImmediatePropagation();

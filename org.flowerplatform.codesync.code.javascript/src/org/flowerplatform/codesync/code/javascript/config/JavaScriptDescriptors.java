@@ -499,7 +499,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setLabel("Attribute in Sample Object Generator")
 				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
 				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ATTRIBUTE)
-				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
+				.addTargetCodeSyncType(TYPE_JAVASCRIPT_ATTRIBUTE)
 				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
 		);
 
@@ -510,7 +510,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setLabel("Item Entry in Table Item Template")
 				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
 				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ATTRIBUTE)
-				.addTargetCodeSyncType("tableItem")
+				.addTargetCodeSyncType("tableItemEntry")
 				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
 		);
 		
@@ -521,7 +521,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setLabel("Item Entry in Form Template")
 				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
 				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ATTRIBUTE)
-				.addTargetCodeSyncType("form")
+				.addTargetCodeSyncType("formItem")
 				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
 		);
 		

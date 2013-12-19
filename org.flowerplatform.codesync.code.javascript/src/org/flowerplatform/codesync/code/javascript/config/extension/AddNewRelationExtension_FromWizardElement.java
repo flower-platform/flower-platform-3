@@ -66,6 +66,9 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 	}
 	
 	protected boolean preperareAdd(Relation relation, Resource codeSyncMappingResource, Map<String, Object> parameters) throws Exception {
+		if (parameters.containsKey(CodeSyncPlugin.TARGET)) {
+			return true;
+		}
 		if (!relation.getType().equals(dependencyType)) {
 			return true;
 		}			

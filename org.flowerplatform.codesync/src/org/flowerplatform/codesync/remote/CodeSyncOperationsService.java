@@ -21,7 +21,6 @@ package org.flowerplatform.codesync.remote;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -95,23 +94,7 @@ public class CodeSyncOperationsService {
 		}
 		return location;
 	}
-	
-	public void getViewsForCorrespondingCodeSyncElement(CodeSyncElement cse, View view, List<String> list) {
-		Iterator<EObject> iter = view.eContents().iterator();		
-		while (iter.hasNext()) {
-			EObject next = iter.next();
-			if (next instanceof View) {
-				if (((View) next).getDiagrammableElement() != null && ((View) next).getDiagrammableElement().equals(cse)) {
-					if (!list.contains(((View) next).getIdBeforeRemoval())) {
-						list.add(((View) next).getIdBeforeRemoval());			
-					}
-				} else {
-					getViewsForCorrespondingCodeSyncElement(cse, (View) next, list);
-				}				
-			}		
-		}
-	}
-	
+		
 	public CodeSyncElement create(String codeSyncType) {
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
 		if (descriptor == null) {
@@ -514,12 +497,17 @@ public class CodeSyncOperationsService {
 		Resource resource = getCodeSyncMappingResource(editorResourcePath);
 		CodeSyncElement source = getWizardElementFromPath(resource, path);
 		
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+		
+		
 		List<String> list = new ArrayList<String>();
-		for (WizardDependency dependency : dependencies) {
-			Diagram diagram = getDiagramFromEditableResourcePath(editorResourcePath);			
+		for (WizardDependency dependency : dependencies) {					
 			CodeSyncElement target = getRelation(source, dependency.getType()).getTarget();
 				
-			getViewsForCorrespondingCodeSyncElement(target, diagram, list);		
+			for (View view : service.getViewsForElement(target)) {
+				list.add(view.getIdBeforeRemoval());
+			}
 		}	
 		if (list.size() > 0) {
 			getDiagramEditorStatefulService().client_selectObjects(
@@ -532,12 +520,15 @@ public class CodeSyncOperationsService {
 	public void selectWizardElementsFromDiagram(ServiceInvocationContext context, String editorResourcePath, List<List<PathFragment>> paths) {
 		Resource resource = getCodeSyncMappingResource(editorResourcePath);
 		
-		Diagram diagram = getDiagramFromEditableResourcePath(editorResourcePath);
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
 		
 		List<String> list = new ArrayList<String>();
 		for (List<PathFragment> path : paths) {
 			CodeSyncElement source = getWizardElementFromPath(resource, path);
-			getViewsForCorrespondingCodeSyncElement(source, diagram, list);
+			for (View view : service.getViewsForElement(source)) {
+				list.add(view.getIdBeforeRemoval());
+			}
 		}
 		if (list.size() > 0) {
 			getDiagramEditorStatefulService().client_selectObjects(
@@ -565,6 +556,19 @@ public class CodeSyncOperationsService {
 		CodeSyncOperationsService.getInstance().setKeyFeatureValue(codeSyncElement,  descriptor.getDefaultName());
 		add(parentCodeSyncElement, codeSyncElement);
 					
+		return true;
+	}
+	
+	@RemoteInvocation
+	public boolean removeWizardElement(ServiceInvocationContext context, String editorResourcePath, List<PathFragment> path) {	
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		CodeSyncElement wizardElement = getWizardElementFromPath(resource, path);
+		
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+		
+		service.deleteCodeSyncElement(context.getAdditionalData(), wizardElement);
+		
 		return true;
 	}
 	

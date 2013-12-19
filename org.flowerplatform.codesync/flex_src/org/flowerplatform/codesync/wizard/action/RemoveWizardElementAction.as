@@ -18,6 +18,8 @@
 */
 package org.flowerplatform.codesync.wizard.action {
 	import org.flowerplatform.codesync.CodeSyncPlugin;
+	import org.flowerplatform.codesync.wizard.ui.WizardElementsView;
+	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
@@ -25,12 +27,27 @@ package org.flowerplatform.codesync.wizard.action {
 	 */
 	public class RemoveWizardElementAction extends ActionBase {
 		
-		public function RemoveWizardElementAction() {
+		private var wizardElementsView:WizardElementsView;
+		
+		public function RemoveWizardElementAction(wizardElementsView:WizardElementsView) {
+			this.wizardElementsView = wizardElementsView;
 			label = CodeSyncPlugin.getInstance().getMessage("wizard.remove");
 			icon = CodeSyncPlugin.getInstance().getResourceUrl("images/common/delete.png");
 			preferShowOnActionBar = true;
 			orderIndex = 20;
 		}
+		
+		override public function run():void {
+			if (CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement == null) {
+				return;
+			}
+			var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
+			if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {
+				statefulClient.service_removeWizardElement(					
+					CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true),
+					wizardElementsView, wizardElementsView.refreshHandler);		
+			}		
+		}	
 		
 	}
 }

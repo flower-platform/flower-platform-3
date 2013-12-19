@@ -44,21 +44,23 @@ package org.flowerplatform.codesync.wizard.action {
 		}
 		
 		override public function get visible():Boolean {
-			if (!preferShowOnActionBar && selection.length > 0) {
-				return TreeNode(HierarchicalModelWrapper(selection.getItemAt(0)).treeNode).pathFragment.type != "wizardAttribute";
+			if (!preferShowOnActionBar) {
+				if (selection.length == 0) {
+					return false;
+				}
+				return TreeNode(HierarchicalModelWrapper(selection.getItemAt(0)).treeNode).parent == null;
 			}
 			return true;
 		}
 			
-		override public function run():void {
-			if (CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement == null) {
-				return;
-			}
+		override public function run():void {			
 			var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
 			if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {
 				statefulClient.service_addWizardElement(
 						!preferShowOnActionBar,
-						CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true),
+						CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement != null 
+						? CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true) 
+						: null,
 						wizardElementsView, wizardElementsView.refreshHandler);		
 			}		
 		}		

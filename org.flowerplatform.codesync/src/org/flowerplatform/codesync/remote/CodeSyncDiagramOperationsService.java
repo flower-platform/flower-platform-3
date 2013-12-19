@@ -234,6 +234,17 @@ public class CodeSyncDiagramOperationsService {
 		EcoreUtil.delete(object);
 	}
 	
+	public void deleteCodeSyncElement(Map<String, Object> context, CodeSyncElement codeSyncElement) {
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+		
+		for (View view : service.getViewsForElement(codeSyncElement)) {
+			service.delete(context, view);
+		}
+		
+		EcoreUtil.delete(codeSyncElement, true);
+	}
+	
 	@RemoteInvocation
 	public void collapseCompartment(ServiceInvocationContext context, String viewId) {
 		View view = getViewById(context.getAdditionalData(), viewId);

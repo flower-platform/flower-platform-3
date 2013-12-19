@@ -57,16 +57,13 @@ public class RelationPropertiesProvider extends AbstractModelPropertiesProvider<
 			case "Type": {
 				return new Property()
 						.setNameAs("Type")
-						.setValueAs(descriptor.getType())
-						.setTypeAs("StringWithDialog")
-						.setReadOnlyAs(false);
+						.setValueAs(descriptor.getType());						
 			}
 			case "Label": {
 				return new Property()
 						.setNameAs("Label")
-						.setValueAs(descriptor.getLabel())
-						.setTypeAs("Boolean")
-						.setReadOnlyAs(true);
+						.setValueAs(descriptor.getLabel());						
+						
 			}
 		}
 		return null;
@@ -79,8 +76,14 @@ public class RelationPropertiesProvider extends AbstractModelPropertiesProvider<
 
 	@Override
 	public Pair<String, String> getIconAndLabel(DiagramSelectedItem selectedItem, Relation resolvedSelectedItem) {
-		// TODO Auto-generated method stub
-		return null;
+		Relation relation = resolveSelectedItem((DiagramSelectedItem) selectedItem);
+		if (relation == null) {
+			return null;
+		}
+		
+		RelationDescriptor descriptor = CodeSyncPlugin.getInstance().getRelationDescriptor(relation.getType());
+		
+		return new Pair<String, String>(descriptor.getIconUrl(), descriptor.getLabel());
 	}
 
 	@Override
