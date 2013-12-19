@@ -19,8 +19,6 @@
 package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.communication.tree.remote.TreeNode;
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	
 	/**
 	 * @author Mariana Gheorghe
@@ -47,7 +45,7 @@ package org.flowerplatform.editor.model.action {
 			var node:TreeNode = TreeNode(selection.getItemAt(0));
 			askForTextInput("Comment", "Add Comment", "Add",
 				function(name:String):void {
-					NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_addNewComment(node.getPathForNode(), name);
+					notationDiagramEditorStatefulClient.service_addNewComment(node.getPathForNode(), name);
 				});
 		}
 	}

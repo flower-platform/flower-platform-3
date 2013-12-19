@@ -19,15 +19,12 @@
 package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Node;
-	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class DisplayMissingRelationsAction extends ActionBase {
+	public class DisplayMissingRelationsAction extends DiagramShellAwareActionBase {
 		
 		protected var addMissingElementsToDiagram:Boolean = false;
 		
@@ -36,6 +33,7 @@ package org.flowerplatform.editor.model.action {
 			
 			label = EditorModelPlugin.getInstance().getMessage("action.displayMissingRelations");
 			icon = EditorModelPlugin.getInstance().getResourceUrl("images/action/addMissingRelationsIcon.gif");
+			orderIndex = 800;
 		}
 		
 		override public function get visible():Boolean {
@@ -47,11 +45,10 @@ package org.flowerplatform.editor.model.action {
 			return false;
 		}
 		
-		
 		override public function run():void	{
 			var node:Node = Node(selection.getItemAt(0));
-			NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE)
-				.service_displayMissingRelations(node.id, addMissingElementsToDiagram);
+			notationDiagramEditorStatefulClient.service_displayMissingRelations(
+				node.id, addMissingElementsToDiagram);
 		}
 		
 	}

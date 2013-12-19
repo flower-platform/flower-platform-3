@@ -25,7 +25,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
-	import org.flowerplatform.editor.model.action.DeleteAction;
+	import org.flowerplatform.editor.model.action.RemoveFromDiagramAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
@@ -228,7 +228,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactories["edge"] = composedControllerProviderFactory;
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(RemoveFromDiagramAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DisplayMissingRelationsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelatedElementsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);

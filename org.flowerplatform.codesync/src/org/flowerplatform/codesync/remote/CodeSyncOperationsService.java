@@ -80,7 +80,7 @@ public class CodeSyncOperationsService {
 	
 	private Resource getCodeSyncMappingResource(String editorResourcePath) {
 		DiagramEditableResource der = (DiagramEditableResource) getDiagramEditorStatefulService().getEditableResource(editorResourcePath);
-		return CodeSyncDiagramOperationsService1.getCodeSyncMappingResource(der);	
+		return CodeSyncDiagramOperationsService.getCodeSyncMappingResource(der);	
 	}
 	
 	public String getCodeSyncElementPath(EObject cse) {
@@ -455,8 +455,8 @@ public class CodeSyncOperationsService {
 			Map<String, Object> parameters = new HashMap<String, Object>();		
 			parameters.put(CodeSyncPlugin.SOURCE, source);
 			
-			CodeSyncDiagramOperationsService1 service = (CodeSyncDiagramOperationsService1) 
-					CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService1.ID);
+			CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+					CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
 			
 			try {
 				service.addNewRelationElement(resource, dependency.getType(), parameters);
@@ -478,8 +478,8 @@ public class CodeSyncOperationsService {
 		CodeSyncElement source = getWizardElementFromPath(resource, path);
 		
 		for (WizardDependency dependency : dependencies) {
-			CodeSyncDiagramOperationsService1 service = (CodeSyncDiagramOperationsService1) 
-					CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService1.ID);
+			CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+					CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
 			
 			Diagram diagram = getDiagramFromEditableResourcePath(editorResourcePath);
 			Relation relation = getRelation(source, dependency.getType());
@@ -488,7 +488,7 @@ public class CodeSyncOperationsService {
 			if (source.getType().equals(CodeSyncPlugin.WIZARD_ATTRIBUTE)) {
 				target = (CodeSyncElement) target.eContainer();
 			}
-			service.addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, target, new HashMap<String, Object>());
+			service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, target, new HashMap<String, Object>());
 		}		
 		return true;
 	}
@@ -497,14 +497,14 @@ public class CodeSyncOperationsService {
 	public boolean dragOnDiagramWizardElements(ServiceInvocationContext context, String editorResourcePath, List<List<PathFragment>> paths) {	
 		Resource resource = getCodeSyncMappingResource(editorResourcePath);
 		
-		CodeSyncDiagramOperationsService1 service = (CodeSyncDiagramOperationsService1) 
-				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService1.ID);
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
 		
 		Diagram diagram = getDiagramFromEditableResourcePath(editorResourcePath);
 		
 		for (List<PathFragment> path : paths) {
 			CodeSyncElement source = getWizardElementFromPath(resource, path);
-			service.addOnDiagram(context, diagram.eResource().getURIFragment(diagram), null, source, new HashMap<String, Object>());
+			service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, source, new HashMap<String, Object>());
 		}
 		
 		return true;

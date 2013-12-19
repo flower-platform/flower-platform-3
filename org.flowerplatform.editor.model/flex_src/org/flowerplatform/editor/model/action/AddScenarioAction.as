@@ -19,8 +19,6 @@
 package org.flowerplatform.editor.model.action {
 	
 	import org.flowerplatform.editor.model.EditorModelPlugin;
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	
 	/**
@@ -34,6 +32,7 @@ package org.flowerplatform.editor.model.action {
 			label = "Add Scenario";
 			icon = EditorModelPlugin.getInstance().getResourceUrl("images/chart_line_add.png");
 			preferShowOnActionBar = true;
+			orderIndex = 700;
 		}
 		
 		/**
@@ -50,7 +49,7 @@ package org.flowerplatform.editor.model.action {
 		override public function run():void {
 			askForTextInput("Scenario 1", "Add Scenario", "Add", 
 				function(name:String):void {
-					NotationDiagramEditorStatefulClient(DiagramEditorStatefulClient.TEMP_INSTANCE).service_addNewScenario(name);
+					notationDiagramEditorStatefulClient.service_addNewScenario(name);
 				});
 		}
 	}

@@ -25,6 +25,7 @@
     <classEntry path="org.flowerplatform.emf_model.notation.Note"/>
     <classEntry path="org.flowerplatform.editor.model.renderer.DiagramNoteRenderer"/>
     <classEntry path="org.flowerplatform.editor.model.renderer.CenteredBoxChildRenderer"/>
+    <classEntry path="org.flowerplatform.editor.model.action.DiagramShellAwareActionBase"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

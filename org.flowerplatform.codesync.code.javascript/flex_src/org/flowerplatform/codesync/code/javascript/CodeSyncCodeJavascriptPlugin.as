@@ -18,7 +18,6 @@
 */
 package org.flowerplatform.codesync.code.javascript {
 	
-	import org.flowerplatform.codesync.code.javascript.model.action.DeleteElementAction;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.flexutil.Utils;
@@ -40,8 +39,6 @@ package org.flowerplatform.codesync.code.javascript {
 				throw new Error("An instance of plugin " + Utils.getClassNameForObject(this, true) + " already exists; it should be a singleton!");
 			}
 			INSTANCE = this;
-			
-			EditorModelPlugin.getInstance().notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteElementAction);
 		}
 		
 		override protected function registerMessageBundle():void {
