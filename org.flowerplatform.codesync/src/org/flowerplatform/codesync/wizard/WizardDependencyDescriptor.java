@@ -22,31 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.flowerplatform.codesync.remote.RelationDescriptor;
-import org.flowerplatform.properties.remote.Property;
 
 /**
  * @author Cristina Constantinescu
  */
 public class WizardDependencyDescriptor extends RelationDescriptor {
 
-	private List<Property> properties;
-	
 	private List<String> requiredWizardDependencyTypes;
 	
 	private String targetCodeSyncElementLocation;
+
+	private String newCodeSyncElementKeyFeatureFormat = "%s";
 	
-	public List<Property> getProperties() {
-		return properties;
-	}
-
-	public WizardDependencyDescriptor addProperty(Property property) {
-		if (properties == null) {
-			properties = new ArrayList<Property>();
-		}
-		properties.add(property);
-		return this;
-	}
-
 	public List<String> getRequiredWizardDependencyTypes() {
 		return requiredWizardDependencyTypes;
 	}
@@ -67,6 +54,16 @@ public class WizardDependencyDescriptor extends RelationDescriptor {
 		this.targetCodeSyncElementLocation = targetCodeSyncElementLocation;
 		return this;
 	}
-			
+
+	public String getNewCodeSyncElementKeyFeatureFormat() {
+		return newCodeSyncElementKeyFeatureFormat;
+	}
+
+	public WizardDependencyDescriptor setNewCodeSyncElementKeyFeatureFormat(
+			String newCodeSyncElementKeyFeatureFormat) {
+		this.newCodeSyncElementKeyFeatureFormat = newCodeSyncElementKeyFeatureFormat;
+		return this;
+	}
+		
 }
 

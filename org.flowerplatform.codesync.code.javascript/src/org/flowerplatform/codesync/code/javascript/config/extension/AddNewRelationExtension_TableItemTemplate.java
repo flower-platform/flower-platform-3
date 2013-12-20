@@ -26,8 +26,7 @@ import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 public class AddNewRelationExtension_TableItemTemplate extends AddNewRelationExtension_FromWizardElement {
 
 	public AddNewRelationExtension_TableItemTemplate() {
-		super(JavaScriptDescriptors.DEPENDENCY_TABLE_ITEM_TEMPLATE, "tableItem");
-		this.newCodeSyncElementKeyFeatureFormat = "%sTableItemTemplate";
+		super(JavaScriptDescriptors.DEPENDENCY_TABLE_ITEM_TEMPLATE);		
 	}
 	
 }

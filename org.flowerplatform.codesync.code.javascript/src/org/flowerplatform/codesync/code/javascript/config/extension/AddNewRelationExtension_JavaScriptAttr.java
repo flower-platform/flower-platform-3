@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.codesync.wizard.WizardDependencyDescriptor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -31,12 +32,12 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
  */
 public class AddNewRelationExtension_JavaScriptAttr extends AddNewRelationExtension_FromWizardAttribute {
 
-	public AddNewRelationExtension_JavaScriptAttr(String dependencyType, String parentDependencyType) {
-		super(dependencyType, JavaScriptDescriptors.TYPE_JAVASCRIPT_ATTRIBUTE, parentDependencyType);
+	public AddNewRelationExtension_JavaScriptAttr(String dependencyType) {
+		super(dependencyType);		
 	}
 
-	protected void populateNewCodeSyncElement(CodeSyncElement codeSyncElement, Map<String, Object> parameters) {
-		super.populateNewCodeSyncElement(codeSyncElement, parameters);
+	protected void populateNewCodeSyncElement(CodeSyncElement codeSyncElement, WizardDependencyDescriptor descriptor, Map<String, Object> parameters) {
+		super.populateNewCodeSyncElement(codeSyncElement, descriptor, parameters);
 		CodeSyncOperationsService.getInstance().setFeatureValue(
 				codeSyncElement, 
 				JavaScriptDescriptors.FEATURE_DEFAULT_VALUE, 

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.codesync.wizard.WizardDependencyDescriptor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -34,10 +35,8 @@ public class AddNewRelationExtension_FromWizardAttribute extends AddNewRelationE
 	
 	protected String parentDependencyType;
 	
-	public AddNewRelationExtension_FromWizardAttribute(
-			String dependencyType, String newCodeSyncElementType, String parentDependencyType) {		
-		super(dependencyType, newCodeSyncElementType);		
-		this.parentDependencyType = parentDependencyType;
+	public AddNewRelationExtension_FromWizardAttribute(String dependencyType) {		
+		super(dependencyType);		
 	}
 
 	@Override
@@ -46,10 +45,10 @@ public class AddNewRelationExtension_FromWizardAttribute extends AddNewRelationE
 			return true;
 		}	
 		
-		CodeSyncElement sourceParentWizardElement = (CodeSyncElement) ((CodeSyncElement) parameters.get(CodeSyncPlugin.SOURCE)).eContainer();
-		Relation wizardDependency = CodeSyncOperationsService.getInstance().getRelation(sourceParentWizardElement, parentDependencyType);
+		CodeSyncElement sourceParentWizardElement = (CodeSyncElement) (getSource(parameters)).eContainer();
+		Relation wizardDependency = CodeSyncOperationsService.getInstance().getRelation(sourceParentWizardElement, getRelationDescriptor(relation.getType()).getRequiredWizardDependencyTypes().get(0));
 		
-		CodeSyncElement codeSyncElement = createNewCodeSyncElement(parameters);		
+		CodeSyncElement codeSyncElement = createNewCodeSyncElement(getRelationDescriptor(relation.getType()), parameters);		
 		CodeSyncOperationsService.getInstance().add(wizardDependency.getTarget(), codeSyncElement);	
 		
 		parameters.put(CodeSyncPlugin.TARGET, codeSyncElement);
@@ -57,8 +56,8 @@ public class AddNewRelationExtension_FromWizardAttribute extends AddNewRelationE
 		return false;
 	}
 	
-	protected void populateNewCodeSyncElement(CodeSyncElement codeSyncElement, Map<String, Object> parameters) {		
-		CodeSyncOperationsService.getInstance().setKeyFeatureValue(codeSyncElement, getKeyFeatureValue(CodeSyncOperationsService.getInstance().getKeyFeatureValue(((CodeSyncElement) parameters.get(CodeSyncPlugin.SOURCE)))));	
+	protected void populateNewCodeSyncElement(CodeSyncElement codeSyncElement, WizardDependencyDescriptor relationDescriptor, Map<String, Object> parameters) {		
+		CodeSyncOperationsService.getInstance().setKeyFeatureValue(codeSyncElement, getKeyFeatureValue(relationDescriptor, getKeyFeatureValue(getSource(parameters))));	
 	}
 
 }

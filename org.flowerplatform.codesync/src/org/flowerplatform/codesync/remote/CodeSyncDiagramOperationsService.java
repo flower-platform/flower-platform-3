@@ -606,7 +606,7 @@ public class CodeSyncDiagramOperationsService {
 		return views;
 	}
 	
-	protected List<? extends EObject> getInverseReferencesForElement(CodeSyncElement element, EStructuralFeature feature) {
+	public List<? extends EObject> getInverseReferencesForElement(CodeSyncElement element, EStructuralFeature feature) {
 		List<EObject> result = new ArrayList<EObject>();
 		ECrossReferenceAdapter adapter = ECrossReferenceAdapter.getCrossReferenceAdapter(element);
 		for (Setting setting : adapter.getNonNavigableInverseReferences(element)) {

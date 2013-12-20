@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.codesync.wizard.WizardDependencyDescriptor;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
@@ -31,14 +32,12 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class AddNewRelationExtension_FormView extends AddNewRelationExtension_FromWizardElement {
 
 	public AddNewRelationExtension_FormView() {
-		super(JavaScriptDescriptors.DEPENDENCY_FORM_VIEW, JavaScriptDescriptors.TYPE_BACKBONE_CLASS);
-		this.newCodeSyncElementKeyFeatureFormat = "%sFormView";
+		super(JavaScriptDescriptors.DEPENDENCY_FORM_VIEW);	
 	}
-
 	
 	@Override
-	protected CodeSyncElement createNewCodeSyncElement(Map<String, Object> parameters) {
-		CodeSyncElement codeSyncElement = super.createNewCodeSyncElement(parameters);
+	protected CodeSyncElement createNewCodeSyncElement(WizardDependencyDescriptor descriptor, Map<String, Object> parameters) {
+		CodeSyncElement codeSyncElement = super.createNewCodeSyncElement(descriptor, parameters);
 				
 		CodeSyncElement child = CodeSyncOperationsService.getInstance().create(JavaScriptDescriptors.TYPE_JAVASCRIPT_ATTRIBUTE);
 		CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME, "htmlIdSuffix");

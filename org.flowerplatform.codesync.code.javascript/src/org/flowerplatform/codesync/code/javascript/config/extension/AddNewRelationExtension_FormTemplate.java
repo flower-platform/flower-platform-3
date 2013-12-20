@@ -26,8 +26,7 @@ import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 public class AddNewRelationExtension_FormTemplate extends AddNewRelationExtension_FromWizardElement {
 
 	public AddNewRelationExtension_FormTemplate() {
-		super(JavaScriptDescriptors.DEPENDENCY_FORM_TEMPLATE, "form");
-		this.newCodeSyncElementKeyFeatureFormat = "%sFormTemplate";
+		super(JavaScriptDescriptors.DEPENDENCY_FORM_TEMPLATE);		
 	}
 
 }

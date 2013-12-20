@@ -37,15 +37,10 @@ import com.crispico.flower.mp.model.codesync.Relation;
 public abstract class AddNewRelationExtension_FromWizardElement implements AddNewRelationExtension {
 
 	protected String dependencyType;
-	
-	protected String newCodeSyncElementType;
-		
-	protected String newCodeSyncElementKeyFeatureFormat = "%s";
-	
-	public AddNewRelationExtension_FromWizardElement(String dependencyType, String newCodeSyncElementType) {
+
+	public AddNewRelationExtension_FromWizardElement(String dependencyType) {
 		super();
-		this.dependencyType = dependencyType;
-		this.newCodeSyncElementType = newCodeSyncElementType;
+		this.dependencyType = dependencyType;		
 	}
 
 	@Override
@@ -53,11 +48,11 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 		if (preperareAdd(relation, codeSyncMappingResource, parameters)) {
 			return true;
 		}			
-		WizardDependencyDescriptor descriptor = (WizardDependencyDescriptor) CodeSyncPlugin.getInstance().getRelationDescriptor(relation.getType());
+		WizardDependencyDescriptor descriptor = getRelationDescriptor(relation.getType());
 		
 		CodeSyncElement parent = AddNewExtension_TopLevelElement.getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, descriptor.getTargetCodeSyncElementLocation().split("/"));
 		
-		CodeSyncElement codeSyncElement = createNewCodeSyncElement(parameters);
+		CodeSyncElement codeSyncElement = createNewCodeSyncElement(descriptor, parameters);
 		CodeSyncOperationsService.getInstance().add(parent, codeSyncElement);
 		
 		parameters.put(CodeSyncPlugin.TARGET, codeSyncElement);
@@ -72,8 +67,8 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 		if (!relation.getType().equals(dependencyType)) {
 			return true;
 		}			
-		WizardDependencyDescriptor descriptor = (WizardDependencyDescriptor) CodeSyncPlugin.getInstance().getRelationDescriptor(relation.getType());
-		CodeSyncElement source = (CodeSyncElement) parameters.get(CodeSyncPlugin.SOURCE);
+		WizardDependencyDescriptor descriptor = getRelationDescriptor(relation.getType());
+		CodeSyncElement source = getSource(parameters);
 				
 		if (descriptor.getRequiredWizardDependencyTypes() != null) {
 			for (String requiredType : descriptor.getRequiredWizardDependencyTypes()) {
@@ -88,7 +83,7 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 					throw new Exception(
 							CodeSyncPlugin.getInstance().getMessage("relation.error", 
 							CodeSyncPlugin.getInstance().getMessage("wizard.relation.error", descriptor.getLabel()),
-							CodeSyncPlugin.getInstance().getMessage("wizard.relationRequired", CodeSyncPlugin.getInstance().getRelationDescriptor(requiredType).getLabel()))
+							CodeSyncPlugin.getInstance().getMessage("wizard.relationRequired", getRelationDescriptor(requiredType).getLabel()))
 					);
 				}
 			}			
@@ -106,21 +101,35 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 		return false;				
 	}
 	
-	protected CodeSyncElement createNewCodeSyncElement(Map<String, Object> parameters) {
-		CodeSyncElement codeSyncElement = CodeSyncOperationsService.getInstance().create(newCodeSyncElementType);
+	protected CodeSyncElement createNewCodeSyncElement(WizardDependencyDescriptor descriptor, Map<String, Object> parameters) {
+		CodeSyncElement codeSyncElement = CodeSyncOperationsService.getInstance().create(descriptor.getTargetCodeSyncTypes().get(0));
 
-		populateNewCodeSyncElement(codeSyncElement, parameters);
+		populateNewCodeSyncElement(codeSyncElement, descriptor, parameters);
 		
 		return codeSyncElement;
 	}
 	
-	protected void populateNewCodeSyncElement(CodeSyncElement codeSyncElement, Map<String, Object> parameters) {
+	protected void populateNewCodeSyncElement(CodeSyncElement codeSyncElement, WizardDependencyDescriptor relationDescriptor, Map<String, Object> parameters) {
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
-		CodeSyncOperationsService.getInstance().setKeyFeatureValue(codeSyncElement, getKeyFeatureValue(CodeSyncOperationsService.getInstance().getKeyFeatureValue(((CodeSyncElement) parameters.get(CodeSyncPlugin.SOURCE)))) + "." + descriptor.getExtension());	
+		CodeSyncOperationsService.getInstance().setKeyFeatureValue(
+				codeSyncElement, 
+				getKeyFeatureValue(relationDescriptor, getKeyFeatureValue(getSource(parameters))) + "." + descriptor.getExtension());	
 	}
 	
-	protected String getKeyFeatureValue(Object... keyFeatureFormatArgs) {
-		 return String.format(newCodeSyncElementKeyFeatureFormat, keyFeatureFormatArgs);	
+	protected String getKeyFeatureValue(WizardDependencyDescriptor relationDescriptor, Object... keyFeatureFormatArgs) {
+		 return String.format(relationDescriptor.getNewCodeSyncElementKeyFeatureFormat(), keyFeatureFormatArgs);	
+	}
+	
+	protected WizardDependencyDescriptor getRelationDescriptor(String type) {
+		return (WizardDependencyDescriptor) CodeSyncPlugin.getInstance().getRelationDescriptor(type);
+	}
+	
+	protected Object getKeyFeatureValue(CodeSyncElement codeSyncElement) {
+		return CodeSyncOperationsService.getInstance().getKeyFeatureValue(codeSyncElement);
 	}
 
+	protected CodeSyncElement getSource(Map<String, Object> parameters) {
+		return (CodeSyncElement) parameters.get(CodeSyncPlugin.SOURCE);
+	}
+	
 }

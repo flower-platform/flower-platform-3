@@ -56,6 +56,8 @@ import org.flowerplatform.codesync.regex.RegexService;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
+import org.flowerplatform.codesync.wizard.WizardAttributeProcessor;
+import org.flowerplatform.codesync.wizard.WizardElementKeyFeatureChangedProcessor;
 import org.flowerplatform.codesync.wizard.remote.WizardDependency;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -63,9 +65,9 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
+import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.flowerplatform.emf_model.regex.MacroRegex;
 import org.flowerplatform.emf_model.regex.ParserRegex;
-import org.flowerplatform.emf_model.notation.NotationPackage;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -343,6 +345,10 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new TopLevelElementChildProcessor());
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new RelationsChangesDiagramProcessor());
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement", new RelationsChangesDiagramProcessor());
+							
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("wizardAttribute", new WizardAttributeProcessor());
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("wizardAttribute", new WizardElementKeyFeatureChangedProcessor());
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("wizardElement", new WizardElementKeyFeatureChangedProcessor());
 				
 				CustomSerializationDescriptor macroRegexSD = new CustomSerializationDescriptor(MacroRegex.class)
 				.addDeclaredProperty("name")
@@ -658,4 +664,25 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		
 		return errorsCollected.toString();
 	}
+	
+	public List<RelationDescriptor> getRelationDescriptorsHavingThisTypeAsSourceCodeSyncType(String type) {
+		List<RelationDescriptor> descriptors = new ArrayList<RelationDescriptor>();
+		for (RelationDescriptor descriptor : getRelationDescriptors()) {
+			if (descriptor.getSourceCodeSyncTypes().contains(type)) {
+				descriptors.add(descriptor);
+			}
+		}
+		return descriptors;
+	}
+	
+	public List<RelationDescriptor> getRelationDescriptorsHavingThisEndTypes(String sourceType, String targetType) {
+		List<RelationDescriptor> descriptors = new ArrayList<RelationDescriptor>();
+		for (RelationDescriptor descriptor : getRelationDescriptors()) {
+			if (descriptor.getSourceCodeSyncTypes().contains(sourceType) && descriptor.getTargetCodeSyncTypes() != null && descriptor.getTargetCodeSyncTypes().contains(targetType)) {
+				descriptors.add(descriptor);
+			}
+		}
+		return descriptors;
+	}
+	
 }

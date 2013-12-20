@@ -275,6 +275,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			
 			diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource().getResourceSet()));
+			EditorModelPlugin.getInstance().getMainChangesDispatcher().processChangeDescription(processingContext, changeDescription);
 			EditorModelPlugin.getInstance().getComposedChangeProcessor().processChangeDescription(changeDescription, processingContext);
 			changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			
