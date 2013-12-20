@@ -1,0 +1,1886 @@
+!SESSION 2013-11-25 15:33:30.128 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:33:30.128
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:36:27.477 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:36:27.483
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:36:28.123
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:37:01.394 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:37:01.403
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:37:02.094
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:37:28.320 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:37:28.327
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:37:29.066
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:37:45.895 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:37:45.901
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:37:46.680
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:38:13.523 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:38:13.530
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:38:14.212
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:47:22.078 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:47:22.085
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:47:22.745
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:47:34.695 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:47:34.704
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:47:36.059
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 15:56:24.401 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 15:56:24.410
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 15:56:25.168
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (5ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 16:15:36.618 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 16:15:36.625
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:15:37.425
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 16:22:42.591 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 16:22:42.598
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:22:43.258
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:215)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:226)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:141)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:182)
+!SESSION 2013-11-25 16:36:35.294 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 16:36:35.302
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:36:35.979
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 16:40:41.376 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 16:40:41.383
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:41:16.206
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 16:44:35.937 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 16:44:35.946
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:44:36.656
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 16:45:23.278 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 16:45:23.285
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:45:24.202
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:241)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 16:47:08.572 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:47:08.572
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 16:51:31.536 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:51:31.536
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 16:54:23.941 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:54:23.941
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (3ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 16:55:05.166 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 16:55:05.167
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 34 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:230)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:242)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:144)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:197)
+!SESSION 2013-11-25 18:15:08.379 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 18:15:08.387
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-25 18:16:59.624 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 18:16:59.630
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-25 18:18:11.377 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 18:18:11.383
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-25 18:41:14.456 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 18:41:14.463
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-25 18:42:40.196 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 18:42:40.203
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 18:42:40.836
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:200)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:111)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:165)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 35 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:200)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:111)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:165)
+!SESSION 2013-11-25 18:49:29.127 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 18:49:29.134
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+
+!ENTRY org.eclipse.osgi 2 0 2013-11-25 18:49:30.261
+!MESSAGE While loading class "org.eclipse.equinox.internal.app.CommandLineArgs", thread "Thread[main,5,main]" timed out waiting (4ms) for thread "Thread[main,5,main]" to finish starting bundle "org.eclipse.equinox.app_1.3.100.v20110321 [8]". To avoid deadlock, thread "Thread[main,5,main]" is proceeding but "org.eclipse.equinox.internal.app.CommandLineArgs" may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle "file:plugins/org.eclipse.equinox.app_1.3.100.v20110321.jar" by thread "main".
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:200)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:111)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:165)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 35 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1087)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:297)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:440)
+	at org.eclipse.osgi.internal.loader.BundleLoader.setLazyTrigger(BundleLoader.java:268)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:107)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:463)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:216)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findLocalClass(BundleLoader.java:400)
+	at org.eclipse.osgi.internal.loader.SingleSourcePackage.loadClass(SingleSourcePackage.java:35)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClassInternal(BundleLoader.java:473)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:429)
+	at org.eclipse.osgi.internal.loader.BundleLoader.findClass(BundleLoader.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:107)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.eclipse.core.internal.runtime.PlatformActivator.startAppContainer(PlatformActivator.java:44)
+	at org.eclipse.core.internal.runtime.PlatformActivator.start(PlatformActivator.java:31)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl$1.run(BundleContextImpl.java:711)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.startActivator(BundleContextImpl.java:702)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:683)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:381)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.resume(AbstractBundle.java:389)
+	at org.eclipse.osgi.framework.internal.core.Framework.resumeBundle(Framework.java:1131)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resumeBundles(PackageAdminImpl.java:318)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.processDelta(PackageAdminImpl.java:557)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.doResolveBundles(PackageAdminImpl.java:253)
+	at org.eclipse.osgi.framework.internal.core.PackageAdminImpl.resolveBundles(PackageAdminImpl.java:191)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:322)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:299)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:291)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:200)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.start(OsgiLauncher.java:212)
+	at equinox.OsgiLauncher.<init>(OsgiLauncher.java:111)
+	at equinox.OsgiLauncher.main(OsgiLauncher.java:165)
+!SESSION 2013-11-25 18:51:42.777 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-25 18:51:42.785
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-26 16:55:58.496 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-26 16:55:58.499
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-26 19:04:12.095 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-26 19:04:12.102
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-26 19:19:27.214 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-26 19:19:27.222
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-26 19:22:04.188 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-26 19:22:04.198
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-26 19:23:41.938 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-11-26 19:23:41.947
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi
+!SESSION 2013-11-27 17:09:57.824 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.equinox.registry 2 0 2013-11-27 17:09:57.824
+!MESSAGE The extensions and extension-points from the bundle "org.flowerplatform.common" are ignored. The bundle is not marked as singleton. 
+!SESSION 2013-11-27 17:13:16.300 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.equinox.registry 2 0 2013-11-27 17:13:16.301
+!MESSAGE The extensions and extension-points from the bundle "org.flowerplatform.common" are ignored. The bundle is not marked as singleton. 
+!SESSION 2013-11-27 17:17:32.799 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.equinox.registry 2 0 2013-11-27 17:17:32.799
+!MESSAGE The extensions and extension-points from the bundle "org.flowerplatform.common" are ignored. The bundle is not marked as singleton. 
+!SESSION 2013-12-02 14:57:07.642 -----------------------------------------------
+eclipse.buildId=unknown
+java.version=1.7.0_45
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+
+!ENTRY org.eclipse.osgi 4 0 2013-12-02 14:57:07.652
+!MESSAGE The -clean (osgi.clean) option was not successful. Unable to clean the storage area: D:\data\java_work\StartingUp\org.eclipse.osgi

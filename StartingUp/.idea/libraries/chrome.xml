@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="chrome">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/mozilla/xulrunner_3_6_28_win32/chrome/en-US.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/mozilla/xulrunner_3_6_28_win32/chrome/comm.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/mozilla/xulrunner_3_6_28_win32/chrome/classic.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/mozilla/xulrunner_3_6_28_win32/chrome/pippki.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/mozilla/xulrunner_3_6_28_win32/chrome/toolkit.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

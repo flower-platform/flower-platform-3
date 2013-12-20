@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="PLUGIN_MODULE" version="4">
+  <component name="DevKit.ModuleBuildProperties" url="file://$MODULE_DIR$/META-INF/plugin.xml" />
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/public-resources" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="DJNativeSwing-SWT" level="project" />
+    <orderEntry type="library" name="org.slf4j.api_1.6.1.v20100831-0715" level="project" />
+    <orderEntry type="library" name="org.eclipse.osgi.source_3.7.2.v20120110-1415" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://D:/java/eclipse_3.7_modeling/plugins/org.eclipse.osgi_3.7.2.v20120110-1415.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.idea" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.idea/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <ANNOTATIONS>
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.web" />
+        </ANNOTATIONS>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.blazeds" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.common" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync.code" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync.code.javascript" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync.code.java" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.communication" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.editor.model" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.web" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.blazeds/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.common/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync.code/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync.code.javascript/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.codesync.code.java/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.communication/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.editor.model/src" />
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.web/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.editor" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../org.flowerplatform.editor/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
+

@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="bundles">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/out/run.osgi/runner/bundles/org.ops4j.pax.url.wrap_1.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/run.osgi/runner/bundles/org.ops4j.pax.url.cache_1.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/run.osgi/runner/bundles/org.ops4j.pax.url.war_1.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/run.osgi/runner/bundles/org.eclipse.osgi_3.5.1.R35x_v20090827.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/run.osgi/runner/bundles/org.ops4j.pax.url.link_1.6.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/run.osgi/runner/bundles/org.ops4j.pax.url.mvn_1.3.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/out/run.osgi/runner/bundles/org.ops4j.pax.url.assembly_1.6.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

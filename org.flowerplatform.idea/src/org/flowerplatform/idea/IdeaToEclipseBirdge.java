@@ -36,10 +36,10 @@ public class IdeaToEclipseBirdge implements IIdeaToEclipseBridge{
 	}
 	
 	@Override
-	public void createDiagram(VirtualFile vFile) {
+	public void createDiagram(VirtualFile vFile, String name) {
 		IdeaNewDiagramAction inda = new IdeaNewDiagramAction();
 		inda.parentPath = CodeSyncPlugin.getInstance().getProjectAccessController().getPathRelativeToProject(vFile); 
-		inda.name = "NewDiagram.notation";
+		inda.name = name + ".notation";
 		inda.executeCommand();
 	}
 

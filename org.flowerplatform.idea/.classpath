@@ -5,6 +5,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="D:/Program Files/JetBrains/IntelliJ IDEA Community Edition 12.1.6/lib/openapi.jar"/>
 	<classpathentry kind="lib" path="D:/Program Files/JetBrains/IntelliJ IDEA Community Edition 12.1.6/lib/util.jar"/>
-	<classpathentry kind="lib" path="D:/data/java_work/StartingUp/out/production/StartingUp"/>
+	<classpathentry kind="lib" path="D:/data/java_work/git_repo_fp/StartingUp/out/production/StartingUp"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

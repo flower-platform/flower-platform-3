@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="DJNativeSwing-SWT">
+    <CLASSES>
+      <root url="jar://D:/downloads/DJNativeSwing-SWT-1-0-2/DJNativeSwing-SWT.jar!/" />
+      <root url="jar://D:/downloads/DJNativeSwing-SWT-1-0-2/DJNativeSwing.jar!/" />
+      <root url="jar://D:/downloads/DJNativeSwing-SWT-1-0-2/lib/swt/swt-4.3-win32-win32-x86.jar!/" />
+      <root url="jar://D:/downloads/DJNativeSwing-SWT-1-0-2/lib/mozilla/MozillaInterfaces-1.8.1.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://D:/downloads/DJNativeSwing-SWT-1-0-2/src/DJNativeSwing" />
+      <root url="file://D:/downloads/DJNativeSwing-SWT-1-0-2/src/DJNativeSwing-SWT" />
+      <root url="file://D:/downloads/DJNativeSwing-SWT-1-0-2/src/DJNativeSwing-SWTCore" />
+    </SOURCES>
+  </library>
+</component>
