@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/StartingUp.iml" filepath="$PROJECT_DIR$/StartingUp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../communitySRC/samples/textEditor/textEditor.iml" filepath="$PROJECT_DIR$/../communitySRC/samples/textEditor/textEditor.iml" />
     </modules>
   </component>
 </project>

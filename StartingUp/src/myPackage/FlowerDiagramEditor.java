@@ -26,7 +26,7 @@ import java.net.URL;
  * Time: 15:13
  * To change this template use File | Settings | File Templates.
  */
-    public class MyEditor implements FileEditor, FileEditorManagerListener {
+    public class FlowerDiagramEditor implements FileEditor, FileEditorManagerListener {
         private static Project editorProject;
 
         public static IIdeaToEclipseBridge ideaToEclipseBridge;
@@ -79,9 +79,9 @@ import java.net.URL;
 //    }
 
      public static void setIideaToEclipseBridge(IIdeaToEclipseBridge ii){
-            MyEditor.ideaToEclipseBridge = ii;
+         FlowerDiagramEditor.ideaToEclipseBridge = ii;
     }
-        public MyEditor(Project project, VirtualFile file) {
+        public FlowerDiagramEditor(Project project, VirtualFile file) {
             //Presentation
 
 //            String s =  VfsUtilCore.getRelativePath(vfile, vAncestor, separator);

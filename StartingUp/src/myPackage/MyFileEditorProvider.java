@@ -45,7 +45,7 @@ public class MyFileEditorProvider implements ApplicationComponent, FileEditorPro
 //       if (file.getName().endsWith("notation")){
 //
 //       }
-        return new MyEditor(project, file);
+        return new FlowerDiagramEditor(project, file);
     }
 
     @Override

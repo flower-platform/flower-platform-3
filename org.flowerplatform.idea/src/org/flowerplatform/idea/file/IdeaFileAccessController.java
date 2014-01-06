@@ -132,7 +132,9 @@ public class IdeaFileAccessController implements IFileAccessController {
 
 	@Override
 	public String getPathRelativeToFile(Object file, Object relativeTo) {
-		throw new UnsupportedOperationException();
+        String sRelativeTo = ((VirtualFile)relativeTo).getPath();
+        String path = ((VirtualFile)file).getPath();
+        return path.substring(path.indexOf(sRelativeTo)+sRelativeTo.length());
 	}
 
 	@Override
@@ -148,7 +150,6 @@ public class IdeaFileAccessController implements IFileAccessController {
 
 	@Override
 	public boolean isFile(Object file) {
-		//TODO test
 		return (!((VirtualFile)file).isDirectory());
 	}
 

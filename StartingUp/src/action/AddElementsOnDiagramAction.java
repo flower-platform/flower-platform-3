@@ -24,9 +24,9 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.FileEditor;
 
-import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import myPackage.MyEditor;
+import myPackage.FlowerDiagramEditor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,24 +34,46 @@ import java.util.List;
 public class AddElementsOnDiagramAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         List<String> paths = new ArrayList();
-        FileEditorManager.getInstance(e.getProject()).getAllEditors();
-        FileEditor[] editorsList = FileEditorManager.getInstance(e.getProject()).getSelectedEditors();
-        FileEditor editor = editorsList[0];
+        Integer innt = null;
         VirtualFile vf = e.getData(PlatformDataKeys.VIRTUAL_FILE);
         paths.add(vf.getPath());
 
-        if (editor instanceof MyEditor){
-            ((MyEditor)editor).getBrowser().executeJavascript("dragOnDiagram('" + paths + "')");
+        FlowerDiagramEditor editor = findLastOpendDiagramEditor(e.getProject());
+        if (editor != null){
+            editor.getBrowser().executeJavascript("dragOnDiagram('" + paths + "')");
         }
-        int i=0;
-
-       // browser.execute("dragOnDiagram('" + paths + "')");
     }
 
     public void update(AnActionEvent e) {
         //TODO
-//        if(isDiagramEditorOpen())
-//            e.getPresentation().setEnabled(true);
-//        else e.getPresentation().setEnabled(false);
+        FileEditor[] openedEditors = FileEditorManager.getInstance(e.getProject()).getAllEditors();
+        for (int i = 0; i < openedEditors.length; i++) {
+            if (openedEditors[i] instanceof FlowerDiagramEditor){
+                e.getPresentation().setEnabled(true);
+                return;
+            }
+        }
+        e.getPresentation().setEnabled(false);
+        return;
+    }
+
+    protected FlowerDiagramEditor findLastOpendDiagramEditor(Project project) {
+        FlowerDiagramEditor flowerEditor = null;
+
+        FileEditor[] editorsList = FileEditorManager.getInstance(project).getSelectedEditors();
+        FileEditor activeEditor = editorsList[0];
+
+        if (activeEditor instanceof FlowerDiagramEditor) {
+            return (FlowerDiagramEditor)activeEditor;
+        }else {
+              FileEditor[] openedEditors = FileEditorManager.getInstance(project).getAllEditors();
+            for (int i = openedEditors.length - 1; i >= 0 ; i--) {
+                FileEditor editor = openedEditors[i];
+                if (editor instanceof FlowerDiagramEditor) {
+                    return (FlowerDiagramEditor)editor;
+                }
+            }
+        }
+        return flowerEditor;
     }
 }

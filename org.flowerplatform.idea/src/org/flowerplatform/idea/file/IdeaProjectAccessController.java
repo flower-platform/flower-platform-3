@@ -27,7 +27,7 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
-import myPackage.MyEditor;
+import myPackage.FlowerDiagramEditor;
 
 
 /**
@@ -52,7 +52,7 @@ public class IdeaProjectAccessController implements IProjectAccessController {
 	@Override
 	public Object getContainingProjectForFile(Object file) {
         //TODO test
-		Project ideaProject = MyEditor.getEditorProject();
+		Project ideaProject = FlowerDiagramEditor.getEditorProject();
         File moduleFile = new File(getModulePath(ideaProject, (VirtualFile)file));
 		if (moduleFile.exists()) {
 			return LocalFileSystem.getInstance().findFileByIoFile(moduleFile);
@@ -77,7 +77,7 @@ public class IdeaProjectAccessController implements IProjectAccessController {
 	}
 
 //	private String getPathRelativeToModule(VirtualFile file) {
-//        Project project = MyEditor.getEditorProject();
+//        Project project = FlowerDiagramEditor.getEditorProject();
 //        VirtualFile moduleSourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(file);
 //        String modulePath = removeLastSegment(removeLastSegment(moduleSourceRoot.getPath()));
 //        String filePath = file.getPath();

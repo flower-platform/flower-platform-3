@@ -6,7 +6,7 @@ import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import myPackage.BridgeUtilIdeaToEclipse;
-import myPackage.MyEditor;
+import myPackage.FlowerDiagramEditor;
 
 /* license-start
 * 
@@ -31,7 +31,7 @@ public class NewDiagramAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
 //        new Thread(){
 //            public void run() {
-                MyEditor.getEditorProject(); //to start eclipse if wasn't started
+            FlowerDiagramEditor.getEditorProject(); //to start eclipse if wasn't started
 //            }
 //
 //        }.start();

@@ -12,7 +12,7 @@
     <ignored path=".idea/workspace.xml" />
     <file path="/TextBoxes.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385976648728" ignored="false" />
     <file path="/MyActionClass.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384439060313" ignored="false" />
-    <file path="/Dummy.txt" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387551551257" ignored="false" />
+    <file path="/Dummy.txt" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389017879020" ignored="false" />
     <file path="/fragment.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387531498126" ignored="false" />
     <file path="/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387468089510" ignored="false" />
     <file path="/SimpleIcons.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384353777069" ignored="false" />
@@ -109,7 +109,7 @@
     <file path="$PROJECT_DIR$/../communitySRC/samples/textEditor/.idea/misc.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387294011592" ignored="false" />
     <file path="/MyVisualPanel.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387293741310" ignored="false" />
     <file path="/IdeaToEclipseBirdge2.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387361953377" ignored="false" />
-    <file path="/AddElementsOnDiagramAction.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387552686164" ignored="false" />
+    <file path="/AddElementsOnDiagramAction.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389018513354" ignored="false" />
     <file path="/AplicationComponent.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387550723279" ignored="false" />
     <file path="$PROJECT_DIR$/../../StartingUp/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387551192036" ignored="false" />
     <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387553310395" ignored="false" />
@@ -132,7 +132,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -170,21 +169,6 @@
       </breakpoint>
     </breakpoint_any>
     <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java" line="43" class="action.AddElementsOnDiagramAction" package="action">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java" line="71" class="org.flowerplatform.idea.file.IdeaFileAccessController" package="org.flowerplatform.idea.file">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
@@ -200,22 +184,8 @@
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/../org.flowerplatform.communication/src/org/flowerplatform/communication/service/InvokeServiceMethodServerCommand.java" line="230" class="org.flowerplatform.communication.service.InvokeServiceMethodServerCommand" package="org.flowerplatform.communication.service">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
     </line_breakpoints>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -225,30 +195,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AddElementsOnDiagramAction.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java">
+      <file leaf-file-name="EditorStatefulService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../org.flowerplatform.editor/src/org/flowerplatform/editor/remote/EditorStatefulService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="41" column="70" selection-start="1568" selection-end="1568" vertical-scroll-proportion="-1.76">
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DiagramEditorStatefulService.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../org.flowerplatform.editor.model/src/org/flowerplatform/editor/model/remote/DiagramEditorStatefulService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="257" column="0" selection-start="11618" selection-end="11618" vertical-scroll-proportion="0.0">
+            <state line="1236" column="0" selection-start="51742" selection-end="51742" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EditorStatefulService.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../org.flowerplatform.editor/src/org/flowerplatform/editor/remote/EditorStatefulService.java">
+      <file leaf-file-name="AddElementsOnDiagramAction.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="1236" column="0" selection-start="51742" selection-end="51742" vertical-scroll-proportion="0.0">
+            <state line="36" column="19" selection-start="1282" selection-end="1282" vertical-scroll-proportion="0.32458234">
               <folding />
             </state>
           </provider>
@@ -275,17 +234,28 @@
       <file leaf-file-name="MyFileEditorProvider.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/myPackage/MyFileEditorProvider.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="0" selection-start="1254" selection-end="1254" vertical-scroll-proportion="-3.28">
+            <state line="47" column="38" selection-start="1292" selection-end="1292" vertical-scroll-proportion="-0.68">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MyEditor.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/myPackage/MyEditor.java">
+      <file leaf-file-name="FlowerDiagramEditor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="104" column="0" selection-start="3775" selection-end="3775" vertical-scroll-proportion="0.367713">
+            <state line="83" column="34" selection-start="2961" selection-end="2961" vertical-scroll-proportion="-1.52">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NewDiagramAction.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/action/NewDiagramAction.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="33" column="12" selection-start="1158" selection-end="1158" vertical-scroll-proportion="-10.08">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -293,7 +263,7 @@
       <file leaf-file-name="IdeaFileAccessController.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="134" column="0" selection-start="3733" selection-end="3733" vertical-scroll-proportion="0.0">
+            <state line="135" column="0" selection-start="3799" selection-end="3799" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -336,8 +306,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/myPackage/BridgeUtilIdeaToEclipse.java" />
-        <option value="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.editor.model/src/org/flowerplatform/editor/model/remote/NewDiagramAction.java" />
         <option value="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.idea/src/org/flowerplatform/idea/IdeaToEclipseBirdge2.java" />
         <option value="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.editor/src/org/flowerplatform/editor/remote/EditorOperationsService.java" />
         <option value="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaProjectAccessController.java" />
@@ -347,9 +315,11 @@
         <option value="$PROJECT_DIR$/src/myPackage/AddElementsOnDiagramAction.java" />
         <option value="$PROJECT_DIR$/src/myPackage/IIdeaToEclipseBridge.java" />
         <option value="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java" />
-        <option value="$PROJECT_DIR$/src/myPackage/MyEditor.java" />
         <option value="$PROJECT_DIR$/src/myPackage/SimpleIcon.java" />
         <option value="$PROJECT_DIR$/META-INF/plugin.xml" />
+        <option value="$PROJECT_DIR$/src/myPackage/MyEditor.java" />
+        <option value="$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java" />
+        <option value="$PROJECT_DIR$/src/myPackage/MyFileEditorProvider.java" />
         <option value="$PROJECT_DIR$/src/action/NewDiagramAction.java" />
         <option value="$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java" />
       </list>
@@ -361,8 +331,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1296" />
-    <option name="height" value="1000" />
+    <option name="width" value="1456" />
+    <option name="height" value="876" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -532,7 +502,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="2" />
+    <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -547,6 +517,26 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="Production">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="StartingUp">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -595,26 +585,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="action" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scope">
-        <subPane subId="Production">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="StartingUp">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -669,8 +639,10 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.lastSelected" value="project.propVCSSupport.Mappings" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../communitySRC" />
@@ -680,6 +652,8 @@
     <property name="restartRequiresConfirmation" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
+    <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
@@ -689,11 +663,11 @@
       <recent name="DjProject" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\data\java_work\git_repo_fp\StartingUp\src\action" />
       <recent name="D:\data\java_work\StartingUp\src\myPackage" />
       <recent name="D:\data\java_work\StartingUp\public-resources" />
       <recent name="D:\data\java_work\StartingUp\resources" />
       <recent name="D:\data\java_work\StartingUp\src\DjProject" />
-      <recent name="D:\data\java_work\StartingUp" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\data\java_work\StartingUp\public-resources\images" />
@@ -741,19 +715,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -779,6 +740,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -872,23 +846,23 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1296" height="1000" extended-state="6" />
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32147095" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.52313167" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.52313167" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.60972714" sideWeight="0.80226904" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28789985" sideWeight="0.80226904" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36180308" sideWeight="0.19773096" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23662885" sideWeight="0.45314354" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36449704" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39027283" sideWeight="0.74392223" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38942978" sideWeight="0.74392223" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.61447215" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.52313167" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2771475" sideWeight="0.39027283" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.276901" sideWeight="0.71210015" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27758008" sideWeight="0.76661265" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -970,17 +944,13 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/.idea/modules.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="2" column="0" selection-start="61" selection-end="61" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/META-INF/plugin.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="44" column="66" selection-start="1648" selection-end="1648" vertical-scroll-proportion="0.0">
-          <folding>
-            <marker date="1387532379959" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -993,39 +963,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/IdeaToEclipseBirdge.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="0" selection-start="1227" selection-end="1227" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/action/NewDiagramAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="30" column="0" selection-start="1026" selection-end="1026" vertical-scroll-proportion="-2.32">
-          <folding />
-        </state>
+        <state line="40" column="0" selection-start="1227" selection-end="1227" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code.javascript/src/org/flowerplatform/codesync/code/javascript/JavascriptDragOnDiagramHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="0" selection-start="1897" selection-end="1897" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="70" selection-start="1568" selection-end="1568" vertical-scroll-proportion="-1.76">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.communication/src/org/flowerplatform/communication/service/InvokeServiceMethodServerCommand.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="230" column="0" selection-start="6873" selection-end="6873" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="48" column="0" selection-start="1897" selection-end="1897" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/../org.flowerplatform.editor.model/src/org/flowerplatform/editor/model/remote/DiagramEditorStatefulService.java">
@@ -1051,7 +994,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="134" column="0" selection-start="3733" selection-end="3733" vertical-scroll-proportion="0.0">
+        <state line="135" column="0" selection-start="3799" selection-end="3799" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1070,16 +1013,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/myPackage/MyFileEditorProvider.java">
+    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.communication/src/org/flowerplatform/communication/service/InvokeServiceMethodServerCommand.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="0" selection-start="1254" selection-end="1254" vertical-scroll-proportion="-3.28">
+        <state line="230" column="0" selection-start="6873" selection-end="6873" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/myPackage/MyEditor.java">
+    <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="104" column="0" selection-start="3775" selection-end="3775" vertical-scroll-proportion="0.367713">
+        <state line="83" column="34" selection-start="2961" selection-end="2961" vertical-scroll-proportion="-1.52">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/MyFileEditorProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="47" column="38" selection-start="1292" selection-end="1292" vertical-scroll-proportion="-0.68">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/action/NewDiagramAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="33" column="12" selection-start="1158" selection-end="1158" vertical-scroll-proportion="-10.08">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="36" column="19" selection-start="1282" selection-end="1282" vertical-scroll-proportion="0.32458234">
           <folding />
         </state>
       </provider>
@@ -1161,7 +1127,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>communitySRC</last-edited>
+          <last-edited>bundles</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
