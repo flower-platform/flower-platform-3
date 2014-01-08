@@ -7,7 +7,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
-import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
@@ -21,9 +20,8 @@ public class AddNewExtension_BackboneTableView extends AddNewExtension_BackboneV
 	}
 	
 	@Override
-	protected void doAddNew(CodeSyncElement codeSyncElement, View parent,
-			Resource codeSyncMappingResource, Map<String, Object> parameters) {
-		super.doAddNew(codeSyncElement, parent, codeSyncMappingResource, parameters);
+	protected void doAddNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+		super.doAddNew(codeSyncElement, codeSyncMappingResource, parameters);
 		
 		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, JavaScriptDescriptors.FEATURE_NAME, "TableView");	
 		{

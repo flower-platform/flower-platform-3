@@ -32,6 +32,8 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public interface AddNewExtension {
 	
 	/**
+	 * Add new view for <code>codeSyncElement</code>.
+	 * 
 	 * May populate the {@code parameters} map with values for:
 	 * <ul>
 	 * 		<li>{@link CodeSyncDiagramOperationsService1#PARENT_CODE_SYNC_ELEMENT}
@@ -40,6 +42,13 @@ public interface AddNewExtension {
 	 * 
 	 * @return <code>true</code> if other extensions can add new elements
 	 */
-	boolean addNew(CodeSyncElement codeSyncElement, View parent, Resource codeSyncMappingResource, Map<String, Object> parameters);
+	boolean addNewView(CodeSyncElement codeSyncElement, View parent, Resource codeSyncMappingResource, Map<String, Object> parameters);
+	
+	/**	
+	 * Configure new <code>codeSyncElement</code>.
+	 * 
+	 * @return <code>true</code> if other extensions can configure the same element
+	 */
+	boolean configNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters);
 	
 }

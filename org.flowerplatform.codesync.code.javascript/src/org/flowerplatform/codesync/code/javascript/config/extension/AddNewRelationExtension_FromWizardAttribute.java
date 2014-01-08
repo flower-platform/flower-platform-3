@@ -41,14 +41,14 @@ public class AddNewRelationExtension_FromWizardAttribute extends AddNewRelationE
 
 	@Override
 	public boolean addNew(Relation relation, Resource codeSyncMappingResource, Map<String, Object> parameters) throws Exception {	
-		if (preperareAdd(relation, codeSyncMappingResource, parameters)) {
+		if (preperareAdd(relation, parameters)) {
 			return true;
 		}	
 		
 		CodeSyncElement sourceParentWizardElement = (CodeSyncElement) (getSource(parameters)).eContainer();
 		Relation wizardDependency = CodeSyncOperationsService.getInstance().getRelation(sourceParentWizardElement, getRelationDescriptor(relation.getType()).getRequiredWizardDependencyTypes().get(0));
 		
-		CodeSyncElement codeSyncElement = createNewCodeSyncElement(getRelationDescriptor(relation.getType()), parameters);		
+		CodeSyncElement codeSyncElement = createNewCodeSyncElement(codeSyncMappingResource, getRelationDescriptor(relation.getType()), parameters);		
 		CodeSyncOperationsService.getInstance().add(wizardDependency.getTarget(), codeSyncElement);	
 		
 		parameters.put(CodeSyncPlugin.TARGET, codeSyncElement);
@@ -60,4 +60,8 @@ public class AddNewRelationExtension_FromWizardAttribute extends AddNewRelationE
 		CodeSyncOperationsService.getInstance().setKeyFeatureValue(codeSyncElement, getKeyFeatureValue(relationDescriptor, getKeyFeatureValue(getSource(parameters))));	
 	}
 
+	@Override
+	public boolean doAfterAddingRelationInModel(Relation relation, Map<String, Object> parameters) {		
+		return true;
+	}
 }

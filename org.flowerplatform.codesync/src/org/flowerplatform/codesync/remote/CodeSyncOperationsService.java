@@ -493,6 +493,7 @@ public class CodeSyncOperationsService {
 		return true;
 	}
 	
+	@RemoteInvocation
 	public void selectWizardDependenciesTargetsFromDiagram(ServiceInvocationContext context, String editorResourcePath, List<WizardDependency> dependencies, List<PathFragment> path) {
 		Resource resource = getCodeSyncMappingResource(editorResourcePath);
 		CodeSyncElement source = getWizardElementFromPath(resource, path);
@@ -517,6 +518,7 @@ public class CodeSyncOperationsService {
 		}
 	}
 	
+	@RemoteInvocation
 	public void selectWizardElementsFromDiagram(ServiceInvocationContext context, String editorResourcePath, List<List<PathFragment>> paths) {
 		Resource resource = getCodeSyncMappingResource(editorResourcePath);
 		

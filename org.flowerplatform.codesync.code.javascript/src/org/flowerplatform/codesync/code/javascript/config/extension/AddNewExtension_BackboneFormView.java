@@ -21,9 +21,8 @@ public class AddNewExtension_BackboneFormView extends AddNewExtension_BackboneVi
 	}
 	
 	@Override
-	protected void doAddNew(CodeSyncElement codeSyncElement, View parent,
-			Resource codeSyncMappingResource, Map<String, Object> parameters) {
-		super.doAddNew(codeSyncElement, parent, codeSyncMappingResource, parameters);
+	protected void doAddNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+		super.doAddNew(codeSyncElement, codeSyncMappingResource, parameters);
 		
 		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, JavaScriptDescriptors.FEATURE_NAME, "FormView");	
 		

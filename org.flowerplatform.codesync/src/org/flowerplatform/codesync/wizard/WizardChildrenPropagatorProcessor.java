@@ -39,14 +39,14 @@ import com.crispico.flower.mp.model.codesync.Relation;
 /**
  * @author Cristina Constantinescu
  */
-public class WizardAttributeProcessor implements IChangesProcessor {
-	
-	private final static Logger logger = LoggerFactory.getLogger(WizardAttributeProcessor.class);
+public class WizardChildrenPropagatorProcessor implements IChangesProcessor {
+
+	private final static Logger logger = LoggerFactory.getLogger(WizardChildrenPropagatorProcessor.class);
 	
 	@Override
 	public void processChanges(Map<String, Object> context, EObject object, Changes changes) {
 		if (changes.getRemovedFromContainer() != null) {
-			// wizard attribute deleted; don't do anything
+			// deleted; don't do anything
 			return;
 		}
 		
@@ -54,27 +54,31 @@ public class WizardAttributeProcessor implements IChangesProcessor {
 		if (parent != null) {
 			CodeSyncElement wizardElement = (CodeSyncElement) parent;
 			CodeSyncElement wizardAttribute = (CodeSyncElement) object;
-			
-			List<RelationDescriptor> descriptors = CodeSyncPlugin.getInstance().getRelationDescriptorsHavingThisTypeAsSourceCodeSyncType(wizardAttribute.getType());
-			for (RelationDescriptor descriptor : descriptors) {
-				for (String requiredDependencyType : ((WizardDependencyDescriptor) descriptor).getRequiredWizardDependencyTypes()) {
-					Relation relation = CodeSyncOperationsService.getInstance().getRelation(wizardElement, requiredDependencyType);
-					if (relation != null) {
-						Map<String, Object> parameters = new HashMap<String, Object>();		
-						parameters.put(CodeSyncPlugin.SOURCE, object);
-							
-						CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
-								CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+				
+			propagate(wizardElement, wizardAttribute);			
+		}		
+	}
+	
+	public static void propagate(CodeSyncElement wizardElement, CodeSyncElement wizardAttribute) {
+		List<RelationDescriptor> descriptors = CodeSyncPlugin.getInstance().getRelationDescriptorsHavingThisTypeAsSourceCodeSyncType(wizardAttribute.getType());
+		for (RelationDescriptor descriptor : descriptors) {
+			for (String requiredDependencyType : ((WizardDependencyDescriptor) descriptor).getRequiredWizardDependencyTypes()) {
+				Relation relation = CodeSyncOperationsService.getInstance().getRelation(wizardElement, requiredDependencyType);				
+				if (relation != null) {
+					Map<String, Object> parameters = new HashMap<String, Object>();		
+					parameters.put(CodeSyncPlugin.SOURCE, wizardAttribute);
 						
-						try {
-							service.addNewRelationElement(null, descriptor.getType(), parameters);
-						} catch (Exception e) {			
-							logger.error("Exception thrown while adding wizard dependency!", e.getMessage());
-						}		
+					CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+							CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+					
+					try {
+						service.addNewRelationElement(null, descriptor.getType(), parameters);
+					} catch (Exception e) {			
+						logger.error("Exception thrown while adding wizard dependency!", e.getMessage());
 					}
 				}
-			}			
-		}		
+			}
+		}			
 	}
 
 }

@@ -47,7 +47,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 	public static final String LOCATION = "location";
 	
 	@Override
-	public boolean addNew(CodeSyncElement codeSyncElement, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+	public boolean addNewView(CodeSyncElement codeSyncElement, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		Node node = NotationFactory.eINSTANCE.createNode();
 		parameters.put(CodeSyncPlugin.VIEW, node);
 		
@@ -74,8 +74,8 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 			if (category != null) {
 				CodeSyncDiagramOperationsService.getInstance().addCategorySeparator(node, codeSyncElement, childDescriptor);
 			}
-		}
-		
+		}	
+			
 		// populate PARENT_CODE_SYNC_ELEMENT
 		if (codeSyncElement.eContainer() == null) {
 			String location = (String) parameters.get(LOCATION);
@@ -142,6 +142,11 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 			}
 		}
 		return codeSyncElement;
+	}
+
+	@Override
+	public boolean configNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {		
+		return true;
 	}
 	
 }

@@ -56,7 +56,7 @@ import org.flowerplatform.codesync.regex.RegexService;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
-import org.flowerplatform.codesync.wizard.WizardAttributeProcessor;
+import org.flowerplatform.codesync.wizard.WizardChildrenPropagatorProcessor;
 import org.flowerplatform.codesync.wizard.WizardElementKeyFeatureChangedProcessor;
 import org.flowerplatform.codesync.wizard.remote.WizardDependency;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
@@ -346,9 +346,9 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new RelationsChangesDiagramProcessor());
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement", new RelationsChangesDiagramProcessor());
 							
-				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("wizardAttribute", new WizardAttributeProcessor());
-				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("wizardAttribute", new WizardElementKeyFeatureChangedProcessor());
-				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("wizardElement", new WizardElementKeyFeatureChangedProcessor());
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(WIZARD_ATTRIBUTE, new WizardChildrenPropagatorProcessor());
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(WIZARD_ATTRIBUTE, new WizardElementKeyFeatureChangedProcessor());
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(WIZARD_ELEMENT, new WizardElementKeyFeatureChangedProcessor());
 				
 				CustomSerializationDescriptor macroRegexSD = new CustomSerializationDescriptor(MacroRegex.class)
 				.addDeclaredProperty("name")
@@ -676,9 +676,31 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	}
 	
 	public List<RelationDescriptor> getRelationDescriptorsHavingThisEndTypes(String sourceType, String targetType) {
+		CodeSyncElementDescriptor sourceDescriptor = getCodeSyncElementDescriptor(sourceType);
+		CodeSyncElementDescriptor targetDescriptor = getCodeSyncElementDescriptor(targetType);
 		List<RelationDescriptor> descriptors = new ArrayList<RelationDescriptor>();
 		for (RelationDescriptor descriptor : getRelationDescriptors()) {
-			if (descriptor.getSourceCodeSyncTypes().contains(sourceType) && descriptor.getTargetCodeSyncTypes() != null && descriptor.getTargetCodeSyncTypes().contains(targetType)) {
+			boolean sourceTypeOk = false;
+			boolean targetTypeOk = false;
+			if (descriptor.getSourceCodeSyncTypes() != null && descriptor.getSourceCodeSyncTypes().contains(sourceType)) {
+				sourceTypeOk = true;				
+			} else {
+				for (String category : sourceDescriptor.getCodeSyncTypeCategories()) {
+					if (descriptor.getSourceCodeSyncTypeCategories() != null && descriptor.getSourceCodeSyncTypeCategories().contains(category)) {
+						sourceTypeOk = true;
+					}
+				}
+			}
+			if (descriptor.getTargetCodeSyncTypes() != null && descriptor.getTargetCodeSyncTypes().contains(targetType)) {
+				targetTypeOk = true;				
+			} else {
+				for (String category : targetDescriptor.getCodeSyncTypeCategories()) {
+					if (descriptor.getTargetCodeSyncTypeCategories() != null && descriptor.getTargetCodeSyncTypeCategories().contains(category)) {
+						targetTypeOk = true;
+					}
+				}
+			}
+			if (sourceTypeOk && targetTypeOk) {
 				descriptors.add(descriptor);
 			}
 		}

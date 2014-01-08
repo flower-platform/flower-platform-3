@@ -96,7 +96,34 @@ public class CodeSyncDiagramOperationsService {
 	public String addNew(ServiceInvocationContext context, String diagramId, String viewIdOfParent, String codeSyncType, Map<String, Object> parameters) {
 		// create new CodeSyncElement
 		CodeSyncElement codeSyncElement = CodeSyncOperationsService.getInstance().create(codeSyncType);
-		return addOnDiagram(context.getAdditionalData(), diagramId, viewIdOfParent, codeSyncElement, parameters);
+		
+		if (parameters == null) {
+			parameters = new HashMap<String, Object>();
+		}
+			
+		// run all AddNewExtensions
+		Resource codeSyncMappingResource = getCodeSyncMappingResource(getEditableResource(context.getAdditionalData()));
+		for (AddNewExtension addNewExtension : CodeSyncPlugin.getInstance().getAddNewExtensions()) {
+			if (!addNewExtension.configNew(codeSyncElement, codeSyncMappingResource, parameters)) {
+				// element created, don't allow other extensions to perform add logic
+				break;
+			}
+		}
+				
+		String result = addOnDiagram(context.getAdditionalData(), diagramId, viewIdOfParent, codeSyncElement, parameters);
+		
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());		
+		// add to parent
+		if (descriptor.getCreateCodeSyncElement()) { // can create and add codeSyncElement to resource			
+			if (codeSyncElement.eContainer() == null) {
+				CodeSyncElement parentCodeSyncElement = null;
+				if (parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
+					parentCodeSyncElement = (CodeSyncElement) parameters.get(PARENT_CODE_SYNC_ELEMENT);
+					CodeSyncOperationsService.getInstance().add(parentCodeSyncElement, codeSyncElement);
+				}					
+			}
+		}	
+		return result;
 	}
 
 	/**
@@ -114,14 +141,12 @@ public class CodeSyncDiagramOperationsService {
 		// run all AddNewExtensions
 		Resource codeSyncMappingResource = getCodeSyncMappingResource(getEditableResource(context));
 		for (AddNewExtension addNewExtension : CodeSyncPlugin.getInstance().getAddNewExtensions()) {
-			if (!addNewExtension.addNew(codeSyncElement, parentView, codeSyncMappingResource, parameters)) {
+			if (!addNewExtension.addNewView(codeSyncElement, parentView, codeSyncMappingResource, parameters)) {
 				// element created, don't allow other extensions to perform add logic
 				break;
 			}
 		}	
-			
-		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
-		
+					
 		Node view = (Node) parameters.get(VIEW);
 		
 		// add to diagram
@@ -133,20 +158,18 @@ public class CodeSyncDiagramOperationsService {
 		}
 		parentView.getPersistentChildren().add(view);
 		view.setViewType(parentView.getViewType() + "." + codeSyncElement.getType());
-				
+						
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
+		
 		// add to parent
 		if (descriptor.getCreateCodeSyncElement()) { // can create and add codeSyncElement to resource	
 			view.setDiagrammableElement(codeSyncElement);
-			if (codeSyncElement.eContainer() == null) {
-				CodeSyncElement parentCodeSyncElement = null;
-				if (parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
-					parentCodeSyncElement = (CodeSyncElement) parameters.get(PARENT_CODE_SYNC_ELEMENT);
-				} else {
-					parentCodeSyncElement = (CodeSyncElement) parentView.getDiagrammableElement();
-				}
-				CodeSyncOperationsService.getInstance().add(parentCodeSyncElement, codeSyncElement);
+			if (codeSyncElement.eContainer() == null) {				
+				if (!parameters.containsKey(PARENT_CODE_SYNC_ELEMENT)) {
+					parameters.put(PARENT_CODE_SYNC_ELEMENT, parentView.getDiagrammableElement());
+				}				
 			}
-		}		
+		}
 		// return ID of the view
 		return view.getIdBeforeRemoval();		
 	}
@@ -445,7 +468,15 @@ public class CodeSyncDiagramOperationsService {
 				
 		if (parameters.containsKey(CodeSyncPlugin.TARGET)) {
 			relation.setTarget((CodeSyncElement) parameters.get(CodeSyncPlugin.TARGET));
-		}		
+		}	
+		
+		for (AddNewRelationExtension addNewExtension : CodeSyncPlugin.getInstance().getAddNewRelationExtensions()) {
+			if (!addNewExtension.doAfterAddingRelationInModel(relation, parameters)) {
+				// don't allow other extensions to perform after logic
+				break;
+			}
+		}
+		
 		return relation;
 	}
 	

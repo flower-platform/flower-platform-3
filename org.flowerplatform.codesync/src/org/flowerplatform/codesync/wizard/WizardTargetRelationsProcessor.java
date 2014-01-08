@@ -31,6 +31,8 @@ import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
 import org.flowerplatform.editor.model.changes_processor.Changes;
 import org.flowerplatform.editor.model.changes_processor.IChangesProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
@@ -46,6 +48,8 @@ public class WizardTargetRelationsProcessor implements IChangesProcessor {
 	private String wizardDependencyTypeForTarget;
 	
 	private String sourceCodeSyncName;
+		
+	private final static Logger logger = LoggerFactory.getLogger(WizardTargetRelationsProcessor.class);
 		
 	public WizardTargetRelationsProcessor(String wizardDependencyTypeForSource, String wizardDependencyTypeForTarget, String sourceCodeSyncName) {		
 		this.wizardDependencyTypeForSource = wizardDependencyTypeForSource;
@@ -100,16 +104,14 @@ public class WizardTargetRelationsProcessor implements IChangesProcessor {
 							Map<String, Object> parameters = new HashMap<String, Object>();		
 							parameters.put(CodeSyncPlugin.SOURCE, source);
 							parameters.put(CodeSyncPlugin.TARGET, target);
-														
-							
+																					
 							if (CodeSyncOperationsService.getInstance().getRelation(source, relationDescriptor.getType()) != null) {
 								return;
 							}
 							try {
 								CodeSyncDiagramOperationsService.getInstance().addNewRelationElement(null, relationDescriptor.getType(), parameters);
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								logger.error("Exception thrown while adding wizard dependency!", e.getMessage());
 							}
 						}					
 					}					

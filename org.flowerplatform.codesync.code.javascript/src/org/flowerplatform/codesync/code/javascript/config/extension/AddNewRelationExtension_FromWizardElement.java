@@ -21,10 +21,12 @@ package org.flowerplatform.codesync.code.javascript.config.extension;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.config.extension.AddNewExtension;
 import org.flowerplatform.codesync.config.extension.AddNewExtension_TopLevelElement;
 import org.flowerplatform.codesync.config.extension.AddNewRelationExtension;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
+import org.flowerplatform.codesync.wizard.WizardChildrenPropagatorProcessor;
 import org.flowerplatform.codesync.wizard.WizardDependencyDescriptor;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -34,33 +36,45 @@ import com.crispico.flower.mp.model.codesync.Relation;
 /**
  * @author Cristina Constantinescu
  */
-public abstract class AddNewRelationExtension_FromWizardElement implements AddNewRelationExtension {
+public class AddNewRelationExtension_FromWizardElement implements AddNewRelationExtension {
 
 	protected String dependencyType;
 
+	private String targetCodeSyncElementInitializationType;
+	
 	public AddNewRelationExtension_FromWizardElement(String dependencyType) {
 		super();
 		this.dependencyType = dependencyType;		
 	}
 
+	public AddNewRelationExtension_FromWizardElement(String dependencyType, String targetCodeSyncElementInitializationType) {
+		this(dependencyType);			
+		this.targetCodeSyncElementInitializationType = targetCodeSyncElementInitializationType;
+	}
+	
 	@Override
 	public boolean addNew(Relation relation, Resource codeSyncMappingResource, Map<String, Object> parameters) throws Exception {		
-		if (preperareAdd(relation, codeSyncMappingResource, parameters)) {
+		if (preperareAdd(relation, parameters)) {
 			return true;
 		}			
 		WizardDependencyDescriptor descriptor = getRelationDescriptor(relation.getType());
 		
-		CodeSyncElement parent = AddNewExtension_TopLevelElement.getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, descriptor.getTargetCodeSyncElementLocation().split("/"));
+		parameters.put(AddNewExtension_TopLevelElement.LOCATION, descriptor.getTargetCodeSyncElementLocation());
+		if (targetCodeSyncElementInitializationType != null) {
+			parameters.put(CodeSyncPlugin.CONTEXT_INITIALIZATION_TYPE, targetCodeSyncElementInitializationType);
+		}
 		
-		CodeSyncElement codeSyncElement = createNewCodeSyncElement(descriptor, parameters);
+		CodeSyncElement parent = AddNewExtension_TopLevelElement.getOrCreateCodeSyncElementForLocation(codeSyncMappingResource, ((String) parameters.get(AddNewExtension_TopLevelElement.LOCATION)).split("/"));
+				
+		CodeSyncElement codeSyncElement = createNewCodeSyncElement(codeSyncMappingResource, descriptor, parameters);
 		CodeSyncOperationsService.getInstance().add(parent, codeSyncElement);
 		
 		parameters.put(CodeSyncPlugin.TARGET, codeSyncElement);
-		
+				
 		return false;
 	}
 	
-	protected boolean preperareAdd(Relation relation, Resource codeSyncMappingResource, Map<String, Object> parameters) throws Exception {
+	protected boolean preperareAdd(Relation relation, Map<String, Object> parameters) throws Exception {
 		if (parameters.containsKey(CodeSyncPlugin.TARGET)) {
 			return true;
 		}
@@ -101,11 +115,18 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 		return false;				
 	}
 	
-	protected CodeSyncElement createNewCodeSyncElement(WizardDependencyDescriptor descriptor, Map<String, Object> parameters) {
+	protected CodeSyncElement createNewCodeSyncElement(Resource codeSyncMappingResource, WizardDependencyDescriptor descriptor, Map<String, Object> parameters) {
 		CodeSyncElement codeSyncElement = CodeSyncOperationsService.getInstance().create(descriptor.getTargetCodeSyncTypes().get(0));
 
-		populateNewCodeSyncElement(codeSyncElement, descriptor, parameters);
+		for (AddNewExtension addNewExtension : CodeSyncPlugin.getInstance().getAddNewExtensions()) {
+			if (!addNewExtension.configNew(codeSyncElement, codeSyncMappingResource, parameters)) {
+				// element created, don't allow other extensions to perform add logic
+				break;
+			}
+		}
 		
+		populateNewCodeSyncElement(codeSyncElement, descriptor, parameters);
+				
 		return codeSyncElement;
 	}
 	
@@ -113,7 +134,7 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
 		CodeSyncOperationsService.getInstance().setKeyFeatureValue(
 				codeSyncElement, 
-				getKeyFeatureValue(relationDescriptor, getKeyFeatureValue(getSource(parameters))) + "." + descriptor.getExtension());	
+				getKeyFeatureValue(relationDescriptor, getKeyFeatureValue(getSource(parameters))) + "." + descriptor.getExtension());
 	}
 	
 	protected String getKeyFeatureValue(WizardDependencyDescriptor relationDescriptor, Object... keyFeatureFormatArgs) {
@@ -130,6 +151,21 @@ public abstract class AddNewRelationExtension_FromWizardElement implements AddNe
 
 	protected CodeSyncElement getSource(Map<String, Object> parameters) {
 		return (CodeSyncElement) parameters.get(CodeSyncPlugin.SOURCE);
+	}
+
+	/**
+	 * If relation's source is {@link CodeSyncPlugin#WIZARD_ELEMENT},
+	 * propagate adding relations to its children.
+	 */
+	@Override
+	public boolean doAfterAddingRelationInModel(Relation relation, Map<String, Object> parameters) {		
+		if (CodeSyncPlugin.WIZARD_ELEMENT.equals(relation.getSource().getType())) {
+			for (CodeSyncElement wizardAttribute : relation.getSource().getChildren()) {
+				WizardChildrenPropagatorProcessor.propagate(relation.getSource(), wizardAttribute);						
+			}
+		}
+		
+		return true;
 	}
 	
 }

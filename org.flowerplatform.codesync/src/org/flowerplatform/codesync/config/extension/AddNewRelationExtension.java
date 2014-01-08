@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.resource.Resource;
 
+import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
@@ -29,6 +30,19 @@ import com.crispico.flower.mp.model.codesync.Relation;
  */
 public interface AddNewRelationExtension {
 
+	/**	
+	 * Adds new {@link Relation}.
+	 * 
+	 * May populate the {@code parameters} map with values for:
+	 * <ul>
+	 * 		<li>{@link CodeSyncPlugin.SOURCE}
+	 * 		<li>{@link CodeSyncPlugin.TARGET} 		
+	 * </ul> 
+	 * 
+	 * @return <code>true</code> if other extensions can add new relations
+	 */
 	boolean addNew(Relation relation, Resource codeSyncMappingResource, Map<String, Object> parameters) throws Exception;
+	
+	boolean doAfterAddingRelationInModel(Relation relation, Map<String, Object> parameters);
 	
 }

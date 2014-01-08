@@ -14,8 +14,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class AddNewExtension_Note extends AddNewExtension_TopLevelElement {
 
 	@Override
-	public boolean addNew(CodeSyncElement codeSyncElement, View parent,
-			Resource codeSyncMappingResource, Map<String, Object> parameters) {
+	public boolean addNewView(CodeSyncElement codeSyncElement, View parent,	Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		// check if top-level element
 		if (parent != null || !"note".equals(codeSyncElement.getType())) {
 			return true;
@@ -34,6 +33,11 @@ public class AddNewExtension_Note extends AddNewExtension_TopLevelElement {
 		parameters.put(CodeSyncPlugin.VIEW, node);
 		
 		return false;
+	}
+	
+	@Override
+	public boolean configNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+		return true;
 	}
 
 }
