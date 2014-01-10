@@ -20,6 +20,7 @@ package org.flowerplatform.idea.file;
 
 import java.io.File;
 
+import com.intellij.openapi.project.ProjectLocator;
 import org.flowerplatform.codesync.projects.IProjectAccessController;
 
 import com.intellij.openapi.project.Project;
@@ -43,16 +44,16 @@ public class IdeaProjectAccessController implements IProjectAccessController {
 	public Object getFile(Object module, String path)  {
 		String filePath = ((VirtualFile)module).getPath() + path;
         File file = new File(filePath);
-        if (!file.exists()) {
-            return null;
-        }
+//        if (!file.exists()) {
+//            return null;
+//        }
 		return LocalFileSystem.getInstance().findFileByIoFile(file);
 	}
 
 	@Override
 	public Object getContainingProjectForFile(Object file) {
         //TODO test
-		Project ideaProject = FlowerDiagramEditor.getEditorProject();
+		Project ideaProject = ProjectLocator.getInstance().guessProjectForFile((VirtualFile)file);
         File moduleFile = new File(getModulePath(ideaProject, (VirtualFile)file));
 		if (moduleFile.exists()) {
 			return LocalFileSystem.getInstance().findFileByIoFile(moduleFile);
@@ -63,18 +64,14 @@ public class IdeaProjectAccessController implements IProjectAccessController {
 	@Override
 	public String getPathRelativeToProject(Object file) {
 		//return  absolute Path
-
-//		if (file == null){
-//			return "";
-//		}
-//		return getPathRelativeToModule((VirtualFile)file);
 		return ((VirtualFile)file).getPath();
 	}
 
 	@Override
 	public Object getFolder(Object project, String path) {
-		throw new UnsupportedOperationException();
+        return getFile(project, path);
 	}
+
 
 //	private String getPathRelativeToModule(VirtualFile file) {
 //        Project project = FlowerDiagramEditor.getEditorProject();

@@ -25,16 +25,19 @@
   -->
 
   <application-components>
-       <component>
-           <implementation-class>myPackage.OnFileSaveComponent</implementation-class>
-       </component>
-      <component>
-          <implementation-class>myPackage.AplicationComponent</implementation-class>
-      </component>
+       <!--<component>-->
+           <!--<implementation-class>myPackage.OnFileSaveComponent</implementation-class>-->
+       <!--</component>-->
+      <!--<component>-->
+          <!--<implementation-class>component.AplicationComponent</implementation-class>-->
+      <!--</component>-->
   </application-components>
 
    <project-components>
      <!-- Add your project components here -->
+       <component>
+           <implementation-class>component.FlowerDiagramSaveComponent</implementation-class>
+       </component>
   </project-components>
 
   <actions>

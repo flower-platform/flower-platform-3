@@ -106,5 +106,5 @@ function doSave() {
  * 
  */
 function sendGlobalDirtyState(dirtyState) {
-	sendGlobalDirtyStateToJava(dirtyState);
+	sendGlobalDirtyStateToJava(dirtyState); //used for eclipse/idea
 }

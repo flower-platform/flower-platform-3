@@ -37,14 +37,10 @@ public class MyFileEditorProvider implements ApplicationComponent, FileEditorPro
     @Override
     public boolean accept(@NotNull Project project, @NotNull VirtualFile virtualFile) {
         //TODO
-                return virtualFile.getName().endsWith("notation");
+        return virtualFile.getName().endsWith("notation");
     }
 
     public FileEditor createEditor(Project project, final VirtualFile file) {
-        //todo to review
-//       if (file.getName().endsWith("notation")){
-//
-//       }
         return new FlowerDiagramEditor(project, file);
     }
 
@@ -72,7 +68,6 @@ public class MyFileEditorProvider implements ApplicationComponent, FileEditorPro
     @NotNull
     @Override
     public FileEditorPolicy getPolicy() {
-        //TODO
         return FileEditorPolicy.HIDE_DEFAULT_EDITOR;
     }
 }

@@ -3,6 +3,7 @@ package myPackage;
 import chrriis.common.UIUtils;
 import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
+import chrriis.dj.nativeswing.swtimpl.components.WebBrowserFunction;
 import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.structureView.StructureViewBuilder;
 import com.intellij.openapi.fileEditor.*;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.net.URL;
 
@@ -27,40 +29,27 @@ import java.net.URL;
  * To change this template use File | Settings | File Templates.
  */
     public class FlowerDiagramEditor implements FileEditor, FileEditorManagerListener {
-        private static Project editorProject;
 
         public static IIdeaToEclipseBridge ideaToEclipseBridge;
 
         JPanel browserPanel;
 
-        //final JWebBrowser webBrowser = new JWebBrowser(JWebBrowser.useXULRunnerRuntime());
-        //final JWebBrowser webBrowser = new JWebBrowser();
-
         final JWebBrowser webBrowser = new JWebBrowser(JWebBrowser.destroyOnFinalization(), JWebBrowser.useXULRunnerRuntime());
-
-      //Browser browser;
 
         private final VirtualFile file;
 
         private final Project project;
 
+        private boolean isDirty = false;
 
+        private final PropertyChangeSupport myChangeSupport;
 
         //start eclipse
     static {
             FlowerFrameworkLauncher framework = new FlowerFrameworkLauncher();
-
             framework.init();
             framework.deploy();
             framework.start();
-//            if (ideaToEclipse != null){
-//                System.out.println(ideaToEclipse.getServerPort());
-//            }else {
-//                System.out.println("NULL!!");
-//            }
-//            String xulHome = new File("libs/mozilla/xulrunner_3_6_28_win32").getAbsolutePath();
-//            NSSystemPropertySWT.WEBBROWSER_XULRUNNER_HOME.set(xulHome);
-//            System.setProperty("org.eclipse.swt.browser.XULRunnerPath", xulHome);
 
             File file = new File("D:\\data\\java_work\\git_repo_fp\\StartingUp\\libs\\mozilla\\xulrunner_3_6_28_win32"); //TODO
             URL resourceUrl = null;
@@ -74,45 +63,48 @@ import java.net.URL;
             }
     }
 
-//    public void setIideaToEclipseBridge(){
-//        MyEditor.ideaToEclipseBridge =
-//    }
-
      public static void setIideaToEclipseBridge(IIdeaToEclipseBridge ii){
-         FlowerDiagramEditor.ideaToEclipseBridge = ii;
+         if (FlowerDiagramEditor.ideaToEclipseBridge == null) {
+            FlowerDiagramEditor.ideaToEclipseBridge = ii;
+         }
     }
-        public FlowerDiagramEditor(Project project, VirtualFile file) {
-            //Presentation
 
-//            String s =  VfsUtilCore.getRelativePath(vfile, vAncestor, separator);
-//            LocalFileSystem.getInstance().findFileByPath();
-//            LocalFileSystem.getInstance().findFileByPath("path".replace(File.separatorChar, '/'));
+    public FlowerDiagramEditor(Project project, VirtualFile file) {
+        NativeInterface.open();
+        UIUtils.setPreferredLookAndFeel();
 
+        //todo
+        this.file = file;
+        this.project = project;
 
-            String path = getPath(project, file);
-            System.out.println(file.getPath());
-            NativeInterface.open();
-            UIUtils.setPreferredLookAndFeel();
-            this.file = file;
-            this.project = project;
-            //todo
-            editorProject = project;
+        myChangeSupport = new PropertyChangeSupport(this);
 
-            browserPanel = new JPanel(new BorderLayout());
-            //webBrowser.setBarsVisible(falses);
+        browserPanel = new JPanel(new BorderLayout());
+        //webBrowser.setBarsVisible(false); //todo
+        webBrowser.navigate(BridgeUtilIdeaToEclipse.iIdeaToEclipseBridge.getUrl()+ "?openResources=" + file.getPath());
 
-            //webBrowser.navigate(BridgeUtilIdeaToEclipse.iIdeaToEclipseBridge.getUrl()+ "?openResources=" + path);
-            webBrowser.navigate(BridgeUtilIdeaToEclipse.iIdeaToEclipseBridge.getUrl()+ "?openResources=" + file.getPath());
+        browserPanel.add(webBrowser, BorderLayout.CENTER);
+        System.out.println();
+        browserPanel.setBorder(BorderFactory.createEtchedBorder());
+        browserPanel.setVisible(true);
 
+        FileEditorManager.getInstance(project).addFileEditorManagerListener(this);
 
-            browserPanel.add(webBrowser, BorderLayout.CENTER);
-            System.out.println();
-            browserPanel.setBorder(BorderFactory.createEtchedBorder());
+        webBrowser.registerFunction(new WebBrowserFunction("sendGlobalDirtyStateToJava") {
+            @Override
+            public Object invoke(JWebBrowser webBrowser, Object... args) {
+                boolean newDirtyState = Boolean.parseBoolean((String)args[0]);
+                if (isDirty != newDirtyState){
+                    isDirty = newDirtyState;
+                    myChangeSupport.firePropertyChange(FileEditor.PROP_MODIFIED, true, false);
+                }
+//                    this.firePropertyChange(FileEditor.PROP_MODIFIED, oldModified, Boolean.valueOf(myModified));
+                return null;
+            }
 
-            browserPanel.setVisible(true);
+        });
 
-            FileEditorManager.getInstance(project).addFileEditorManagerListener(this);
-        }
+    }
 
 
     private String getPath(Project project, VirtualFile file) {
@@ -129,15 +121,6 @@ import java.net.URL;
     public Project getProject(){
         return project;
     }
-
-    public static Project getEditorProject(){
-        return editorProject;
-    }
-
-    public static String getWorkspaceRoot(){
-        return editorProject.getBasePath().substring(0, editorProject.getBasePath().lastIndexOf('\\'));
-    }
-
 
         /**
          Returns component to be focused when editor is opened. Method
@@ -163,7 +146,6 @@ import java.net.URL;
 
         @Override
         public void setState(@NotNull FileEditorState fileEditorState) {
-
         }
 
         /**
@@ -172,8 +154,7 @@ import java.net.URL;
          */
         @Override
         public boolean isModified() {
-            //TODO
-            return false;
+            return isDirty;
         }
         /**
          @return whether the editor is valid or not. For some reasons
@@ -189,11 +170,6 @@ import java.net.URL;
         public void selectNotify() {
         }
 
-        private void reloadContent() {
-//            String path = getPath(project,file);
-//            webBrowser.navigate("http://localhost:51485/flower-platform/main.jsp?openResources=" + path);
-        }
-
         /**
          This method is invoked each time when the editor is deselected.
          */
@@ -203,10 +179,12 @@ import java.net.URL;
 
         @Override
         public void addPropertyChangeListener(@NotNull PropertyChangeListener propertyChangeListener) {
+            myChangeSupport.addPropertyChangeListener(propertyChangeListener);
         }
 
         @Override
         public void removePropertyChangeListener(@NotNull PropertyChangeListener propertyChangeListener) {
+            myChangeSupport.removePropertyChangeListener(propertyChangeListener);
         }
 
         @Nullable
@@ -241,8 +219,6 @@ import java.net.URL;
 
         @Override
         public void selectionChanged(FileEditorManagerEvent fileEditorManagerEvent) {
-            if (FileEditorManager.getInstance(project).getSelectedEditor(file) == this )
-                reloadContent ();
         }
 
         @Nullable
@@ -259,6 +235,7 @@ import java.net.URL;
         public JWebBrowser getBrowser(){
             return webBrowser;
         }
-    }
+
+}
 
 

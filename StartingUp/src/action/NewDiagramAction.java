@@ -31,7 +31,7 @@ public class NewDiagramAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
 //        new Thread(){
 //            public void run() {
-            FlowerDiagramEditor.getEditorProject(); //to start eclipse if wasn't started
+            FlowerDiagramEditor.setIideaToEclipseBridge(null); //to start eclipse if wasn't started
 //            }
 //
 //        }.start();

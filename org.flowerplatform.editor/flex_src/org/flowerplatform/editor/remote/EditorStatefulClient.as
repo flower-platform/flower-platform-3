@@ -454,7 +454,7 @@ package  org.flowerplatform.editor.remote {
 			if (dirtyStateChanged) {
 				EditorPlugin.getInstance().globalEditorOperationsManager.dirtyStateUpdated(this);
 				
-				//for eclipse
+				//for eclipse/idea
 				var globalDirtyState:Boolean = EditorPlugin.getInstance().globalEditorOperationsManager.getGlobalDirtyState();
 				if (ExternalInterface.available) {	
 					ExternalInterface.call("sendGlobalDirtyState", globalDirtyState ? "true" : "false");

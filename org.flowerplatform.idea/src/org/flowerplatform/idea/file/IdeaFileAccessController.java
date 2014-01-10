@@ -57,16 +57,11 @@ public class IdeaFileAccessController implements IFileAccessController {
 	
 	@Override
 	public String getPath(Object virtualFile) {
-		// TODO test
-//		File file = new File(((VirtualFile)virtualFile).getPath());
-//		return CommonPlugin.getInstance().getPathRelativeToWorkspaceRoot(file);
-		
 		return ((VirtualFile)virtualFile).getPath();
 	}
 
 	@Override
 	public Object getFile(String path) throws FileNotFoundException {
-        //File file = new File(MyEditor.getWorkspaceRoot(), path);
 		File file = new File(path);
         if (!file.exists()) {
             throw new FileNotFoundException(path);
@@ -76,7 +71,6 @@ public class IdeaFileAccessController implements IFileAccessController {
 
 	@Override
 	public boolean isDirectory(Object file) {
-		//TODO test
 		return (((VirtualFile)file).isDirectory());
 	}
 
@@ -87,43 +81,31 @@ public class IdeaFileAccessController implements IFileAccessController {
 
 	@Override
 	public boolean createNewFile(Object file) {
-		//TODO test
 		boolean isFileCreated = false;
 		try {
             isFileCreated = ((File) file).createNewFile();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		//VirtualFileManager.getInstance().asyncRefresh(null);
         return isFileCreated;
 	}
 
 	@Override
 	public Object createNewFile(Object parent, String digramName) {
-		//TODO test
-//        File f = new File(((VirtualFile)parent).getPath(), digramName);
-//        try {
-//            f.createNewFile();
-//            ((VirtualFile) parent).refresh(false, true);
-//            return LocalFileSystem.getInstance().findFileByIoFile(f); //nu merge, intoarce null
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        try {
-           return ((VirtualFile)parent).createChildData(null, digramName);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    	String path = ((VirtualFile)parent).getPath() + "/"+ digramName;
+    	File file = new File(path);
+		createNewFile(file);
+		return LocalFileSystem.getInstance().refreshAndFindFileByIoFile(file);
+//        return ((VirtualFile)parent).createChildData(null, digramName);
 	}
 	
 	@Override
 	public Object getFile(Object parent, String name) {
-		 return ((VirtualFile) parent).findChild(name);
+		 return ((VirtualFile) parent).findChild(name); //TODO it return null
 	}
 
 	@Override
 	public boolean exists(Object file) {
-		//TODO test
         if (file == null) {
             return false;
         }
@@ -144,8 +126,8 @@ public class IdeaFileAccessController implements IFileAccessController {
 
 	@Override
 	public String getFileExtension(Object file) {
-		return ((VirtualFile)file).getExtension();
-		
+        String extension = ((VirtualFile)file).getExtension();
+        return   (extension == null) ? "" : extension;
 	}
 
 	@Override
@@ -169,9 +151,6 @@ public class IdeaFileAccessController implements IFileAccessController {
 		//TODO test
 		File fileToDelete = new File(((VirtualFile)file).getPath());
 		return fileToDelete.delete();
-//		VirtualFileManager.getInstance().asyncRefresh(null);
-	
-		
 	}
 	
 

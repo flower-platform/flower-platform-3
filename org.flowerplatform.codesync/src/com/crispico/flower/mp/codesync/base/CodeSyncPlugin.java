@@ -443,6 +443,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		Object codeSyncElementMappingFile = CodeSyncPlugin.getInstance().getProjectAccessController().getFile(project, CSE_MAPPING_FILE_LOCATION); 
 		Resource cseResource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 		if (!EditorPlugin.getInstance().getFileAccessController().exists(codeSyncElementMappingFile)) {
+            cseResource = CodeSyncPlugin.getInstance().getResource(resourceSet, codeSyncElementMappingFile);
 			// first clear the resource in case the mapping file was deleted 
 			// after it has been loaded at a previous moment
 			cseResource.getContents().clear();

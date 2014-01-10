@@ -48,6 +48,12 @@
             httpcontextId="flower-platform"
             load-on-startup="false">
       </servlet>
+      <servlet
+            alias="/servlet/image-composer"
+            class="org.flowerplatform.communication.public_resources.ImageComposerServlet"
+            httpcontextId="flower-platform"
+            load-on-startup="false">
+      </servlet>
       <serviceSelector
             filter="(other.info=org.flowerplatform.idea)">
       </serviceSelector>

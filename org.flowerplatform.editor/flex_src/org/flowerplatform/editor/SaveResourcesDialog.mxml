@@ -136,7 +136,7 @@ license-end
 					}
 				}
 				
-				//for eclipse
+				//for eclipse/idea
 				var globalDirtyState:Boolean = EditorPlugin.getInstance().globalEditorOperationsManager.getGlobalDirtyState();
 				if (ExternalInterface.available) {
 					ExternalInterface.call("sendGlobalDirtyState", globalDirtyState ? "true" : "false");
