@@ -5,6 +5,8 @@ import static com.crispico.flower.mp.codesync.base.CodeSyncPlugin.TOP_LEVEL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.AttributeWithRequireEntryDependencyProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.InheritanceProcessor;
 import org.flowerplatform.codesync.code.javascript.config.changes_processor.RequireEntryDependencyProcessor;
@@ -557,7 +559,7 @@ public class JavaScriptDescriptors implements Runnable {
 						"javaScriptAttribute", 
 						new String[] {NamedElementFeatureAccessExtension.NAME, "defaultValue"}, 
 						"%1$s=%2$s", 
-						"^(.\\w*?)[=]*=(.*?)$");
+						"^(.\\w*?)[\\s]*[=]*=[\\s]*(.*?)$");
 		CodeSyncPlugin.getInstance().getInplaceEditorExtensions().add(javascriptAttributeInplaceEditorExtension);
 		
 		InplaceEditorExtension_RegExFormat javascriptOperationInplaceEditorExtension = 
@@ -573,7 +575,7 @@ public class JavaScriptDescriptors implements Runnable {
 						JavaScriptDescriptors.TYPE_REQUIRE_ENTRY, 
 						new String[] {FEATURE_VAR_NAME, FEATURE_DEPENDENCY_PATH}, 
 						"%1$s:%2$s", 
-						"^(.\\w*?)[:]*:(.*?)$");
+						"^(.\\w*?)[\\s]*[:]*:[\\s]*(.*?)$");
 		CodeSyncPlugin.getInstance().getInplaceEditorExtensions().add(requireEntryInplaceEditorExtension);
 		
 		// processors

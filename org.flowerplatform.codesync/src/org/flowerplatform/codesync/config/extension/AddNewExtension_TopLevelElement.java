@@ -96,7 +96,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 
 	protected int getParameterValue(Map<String, Object> parameters, String name, int defaultValue) {
 		if (parameters.containsKey(name)) {
-			return (int) parameters.get(name);
+			return ((Number) parameters.get(name)).intValue();
 		} else {
 			return defaultValue;
 		}
