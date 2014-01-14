@@ -210,7 +210,7 @@ public class EditorModelPlugin extends AbstractFlowerJavaPlugin {
 		options.put(XMLResource.OPTION_XML_VERSION, "1.1");
 		// read/write binary because the default SAX parser
 		// sometimes has issues reading a saved resource
-		options.put(XMLResource.OPTION_BINARY, true);
+//		options.put(XMLResource.OPTION_BINARY, true);
 		return options;
 	}
 	

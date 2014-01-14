@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.flowerplatform.common.util.RunnableWithParam;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
@@ -36,7 +35,6 @@ import com.crispico.flower.mp.codesync.base.CodeSyncEditableResource;
 import com.crispico.flower.mp.codesync.base.Match;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactory;
 import com.crispico.flower.mp.codesync.base.ModelAdapterFactorySet;
-import com.crispico.flower.mp.codesync.base.action.ActionResult;
 import com.crispico.flower.mp.codesync.base.action.ActionSynchronize;
 import com.crispico.flower.mp.codesync.base.action.DiffAction;
 import com.crispico.flower.mp.codesync.base.action.MatchActionAddLeftToRight;
@@ -119,11 +117,6 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 		}
 	}
 
-//	@Override
-//	protected File getEditableResourceFile(EditableResource editableResource) {
-//		return ResourcesPlugin.getWorkspace().getRoot().getProject(editableResource.getEditableResourcePath()).getLocation().toFile();
-//	}
-
 	public Match getMatchForPath(String path) {
 		CodeSyncEditableResource er = (CodeSyncEditableResource) getEditableResource(getProjectPath(path));
 		if (er != null) {
@@ -154,11 +147,9 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 		if (Match.MatchType._2MATCH_ANCESTOR_RIGHT.equals(match.getMatchType())) {
 			action = new MatchActionRemoveRight();
 		}
-
+		
 		if (action != null) {
-			ActionResult result = action.execute(match, -1);
-			actionPerformed(match, set.getLeftFactory(), true, true, match.getFeature(), result);
-			actionPerformed(match, set.getRightFactory(), false, true, match.getFeature(), result);
+			action.execute(match, -1);
 		}
 		
 		for (Match subMatch : match.getSubMatches()) {
@@ -166,39 +157,7 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 		}
 		
 		ActionSynchronize syncAction = new ActionSynchronize();
-		ActionResult[] results = syncAction.execute(match);
-		for (int i = 0; i < results.length; i++) {
-			Object feature = match.getDiffs().get(i).getFeature();
-			// notify that an action was performed
-			actionPerformed(match, set.getLeftFactory(), true, false, feature, results[i]);
-			actionPerformed(match, set.getRightFactory(), false, false, feature, results[i]);
-		}
-	}
-	
-	private void actionPerformed(Match match, ModelAdapterFactory factory, boolean isLeft, boolean fromParent, Object feature, ActionResult result) {
-		Match m = fromParent ? match.getParentMatch() : match;
-		Object lateral = isLeft ? m.getLeft() : m.getRight();
-		if (lateral != null) {
-			factory.getModelAdapter(lateral).actionPerformed(lateral, feature, result);
-		}
-	}
-	
-	private void allActionsPerformed(Match match, ModelAdapterFactorySet set) {
-		for (Match subMatch : match.getSubMatches()) {
-			allActionsPerformed(subMatch, set);
-		}
-		
-		// after all the available actions were performed on this element, notify the adapters
-		allActionsPerformed(match, set.getLeftFactory(), true);
-		allActionsPerformed(match, set.getRightFactory(), false);
-	}
-	
-	private void allActionsPerformed(Match match, ModelAdapterFactory factory, boolean isLeft) {
-		Object lateral = isLeft ? match.getLeft() : match.getRight();
-		Object opposite = isLeft ? match.getRight() : match.getLeft();
-		if (lateral != null) {
-			factory.getModelAdapter(lateral).allActionsPerformed(lateral, opposite);
-		}
+		syncAction.execute(match);
 	}
 	
 	private void saveModifications(CodeSyncEditableResource er) {
@@ -276,7 +235,6 @@ public class CodeSyncEditorStatefulService extends EditorStatefulService {
 				
 				@Override
 				public void run() {
-					allActionsPerformed(er.getMatch(), er.getModelAdapterFactorySet());
 					saveModifications(er);
 					unsubscribeAllClientsForcefully(getProjectPath(editableResourcePath), notifyClient);
 				}

@@ -303,26 +303,6 @@ public class EObjectModelAdapter extends AbstractModelAdapter {
 	 * @author Mariana
 	 */
 	@Override
-	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature) {
-		// nothing to do
-	}
-
-	/**
-	 * @author Mariana
-	 */
-	@Override
-	public void allActionsPerformed(Object element, Object correspondingElement) {
-		for (Object feature : getModelAdapterFactorySet().getFeatureProvider(element).getFeatures(element)) {
-//			if (getModelAdapterFactorySet().getFeatureProvider(element).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
-				allActionsPerformedForFeature(element, correspondingElement, feature);
-//			}
-		}
-	}
-
-	/**
-	 * @author Mariana
-	 */
-	@Override
 	public void beforeFeaturesProcessed(Object element, Object correspondingElement) {
 		// nothing to do
 	}

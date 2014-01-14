@@ -141,16 +141,6 @@ public class StringModelAdapter extends AbstractModelAdapter {
 	}
 
 	@Override
-	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature) {
-		// nothing to do
-	}
-
-	@Override
-	public void allActionsPerformed(Object element, Object correspondingElement) {
-		// nothing to do
-	}
-
-	@Override
 	public void beforeFeaturesProcessed(Object element, Object correspondingElement) {
 		// nothing to do
 	}

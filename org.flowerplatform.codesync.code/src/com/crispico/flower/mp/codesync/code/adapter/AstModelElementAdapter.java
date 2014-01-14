@@ -78,24 +78,6 @@ public abstract class AstModelElementAdapter extends AbstractModelAdapter {
 		// nothing to do
 	}
 
-	@Override
-	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature) {
-		// nothing to do
-	}
-
-	@Override
-	public void allActionsPerformed(Object element, Object correspondingElement) {
-		if (modelAdapterFactorySet.useUIDs()) {
-			updateUID(element, correspondingElement);
-		}
-		
-		for (Object feature : getModelAdapterFactorySet().getFeatureProvider(element).getFeatures(element)) {
-			if (getModelAdapterFactorySet().getFeatureProvider(element).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
-				allActionsPerformedForFeature(element, correspondingElement, feature);
-			}
-		}
-	}
-
 	abstract protected void updateUID(Object element, Object correspondingElement);
 	
 }

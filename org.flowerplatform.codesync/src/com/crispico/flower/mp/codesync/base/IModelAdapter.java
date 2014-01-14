@@ -113,21 +113,5 @@ public interface IModelAdapter extends IModelAdapterUI {
 	 * @author Mariana
 	 */
 	public void actionPerformed(Object element, Object feature, ActionResult result);
-
-	/**
-	 * Called after all the {@link DiffAction}s were performed for the <code>element</code>,
-	 * on the given <code>feature</code>.
-	 * 
-	 * @author Mariana
-	 */
-	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature);
-	
-	/**
-	 * Calls {@link #allActionsPerformedForFeature(Object, Object, Object)} for all the containment features
-	 * for the <code>element</code>.
-	 * 
-	 * @author Mariana
-	 */
-	public void allActionsPerformed(Object element, Object correspondingElement);
 	
 }

@@ -18,7 +18,7 @@
  */
 package com.crispico.flower.mp.codesync.base.action;
 
-
+import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.Match;
 
 /**
@@ -27,4 +27,19 @@ import com.crispico.flower.mp.codesync.base.Match;
 public abstract class DiffAction {
 	
 	public abstract ActionResult execute(Match match, int diffIndex);
+	
+	/**
+	 * @author Mariana Gheorghe
+	 */
+	public void actionPerformed(
+			IModelAdapter leftModelAdapter, Object left, 
+			IModelAdapter rightModelAdapter, Object right,
+			Object feature, ActionResult result) {
+		if (leftModelAdapter != null) {
+			leftModelAdapter.actionPerformed(left, feature, result);
+		}
+		if (rightModelAdapter != null) {
+			rightModelAdapter.actionPerformed(right, feature, result);
+		}
+	}
 }

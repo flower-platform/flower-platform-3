@@ -90,7 +90,7 @@ public class JavaScriptModelAdapterFactorySet extends ModelAdapterFactorySet {
 		factory.addModelAdapter(CodeSyncPlugin.FOLDER, new SyncElementModelAdapter(), CodeSyncPlugin.FOLDER);
 		factory.addModelAdapter(CodeSyncPlugin.FILE, new SyncElementModelAdapter(), CodeSyncPlugin.FILE);
 		factory.addModelAdapter(CodeSyncElement.class, new SyncElementModelAdapter(), MODEL_ELEMENT);
-		factory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapter()), PARAMETER);
+		factory.addModelAdapter(RegExAstNodeParameter.class, createAstModelAdapter(new RegExParameterModelAdapterLeft()), PARAMETER);
 		return factory;
 	}
 	

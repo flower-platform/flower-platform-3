@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
@@ -30,9 +31,6 @@ import com.crispico.flower.mp.codesync.base.FilteredIterable;
 import com.crispico.flower.mp.codesync.base.IModelAdapter;
 import com.crispico.flower.mp.codesync.base.action.ActionResult;
 import com.crispico.flower.mp.codesync.merge.SyncElementModelAdapter;
-import com.crispico.flower.mp.model.astcache.code.AstCacheCodePackage;
-import com.crispico.flower.mp.model.astcache.code.Operation;
-import com.crispico.flower.mp.model.astcache.code.Parameter;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncPackage;
@@ -69,7 +67,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	@Override
 	public Iterable<?> getContainmentFeatureIterable(final Object element, Object feature, Iterable<?> correspondingIterable) {
 		Iterable<?> list = super.getContainmentFeatureIterable(element, feature, correspondingIterable);
-		List result = (List) list;
+		List<Object> result = (List<Object>) list;
 		// if the AST cache was deleted, recreate the children using the corresponding iterable from the right side
 		if (isUndefinedList(list)) {
 			result = new ArrayList<Object>();
@@ -80,7 +78,7 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 		// get the children from the FeatureChange, if it exists
 		FeatureChange change = getFeatureChange(element, feature);
 		if (change != null) {
-			result = (List) change.getNewValue();
+			result = (List<Object>) change.getNewValue();
 		}
 		
 		// filter out deleted elements
@@ -147,163 +145,163 @@ public class CodeSyncElementModelAdapterLeft extends CodeSyncElementModelAdapter
 	}
 
 	@Override
-	public void allActionsPerformedForFeature(Object element, Object correspondingElement, Object feature) {
+	public void actionPerformed(Object element, Object feature, ActionResult result) {
+		if (result == null || result.conflict) {
+			return;
+		}
+		
 		CodeSyncElement cse = getCodeSyncElement(element);
 		if (cse != null) {
 			FeatureChange change = cse.getFeatureChanges().get(feature);
 			if (change != null) {
-				if (getModelAdapterFactorySet().getFeatureProvider(cse).getFeatureType(feature) == FEATURE_TYPE_CONTAINMENT) {
-					List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
-					List<Object> newValues = (List<Object>) change.getNewValue();
-					
-					// iterate through the children list; for each child not found in the new children, see if it exists in the corresponding element
-					for (Iterator it  = children.iterator(); it.hasNext();) {
-						Object existingChild = (Object) it .next();
-						Object matchKey = getModelAdapterFactory().getModelAdapter(existingChild).getMatchKey(existingChild);
-						Object newChild = findChild(newValues, matchKey);
-						if (newChild == null) {
-							if (!elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
-								// the child doesn't exist in the corresponding element either => delete it
-								it.remove();
-							}
-						}
-					}
-					
-					// iterate through the new values; for each child not found in the children list, see if it exists in the corresponding element
-					for (Object newChild : newValues) {
-						Object matchKey = getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild);
-						Object existingChild = findChild(children, matchKey);
-						if (existingChild == null) {
-							if (elementContainsChildWithMatchKey(correspondingElement, feature, matchKey)) {
-								// the child exists in the corresponding element as well => add it to the children
-								children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
-							}
-						}
-					}
-					
-					// compare the new values with the existing children
-					if (newValues.size() == children.size()) {
-						int matches = 0;
-						for (Object newChild : newValues) {
-							Object existingChild = findChild(children, getModelAdapterFactory().getModelAdapter(newChild).getMatchKey(newChild));
-							if (existingChild != null) {
-								children.remove(existingChild);
-								children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
-								matches++;
-							}
-						}
-						
-						if (newValues.size() == matches) {
-							// the new values list and the existing list have the same children => remove the feature change
-							cse.getFeatureChanges().removeKey(feature);
-						} else {
-							// the new values list and the existing list are not identical => update the old values
-							change.setOldValue(children);
-						}
-					}
+				int featureType = getModelAdapterFactorySet().getFeatureProvider(cse).getFeatureType(feature);
+				if (featureType == IModelAdapter.FEATURE_TYPE_VALUE) {
+					actionPerformed_ValueFeature(cse, feature, change);
 				} else {
-					setValueFeatureValue(element, feature, change.getNewValue());
-					cse.getFeatureChanges().removeKey(feature);
-				}
-			}
-			if (AstCacheCodePackage.eINSTANCE.getOperation_Parameters().equals(feature)) {
-				AstCacheElement ace = cse.getAstCacheElement();
-				if (ace != null && ace instanceof Operation) {
-					String newName = cse.getName().substring(0, cse.getName().indexOf("("));
-					newName += "(";
-					for (Parameter parameter : ((Operation) ace).getParameters()) {
-						newName += parameter.getType() + ",";
+					if (featureType == IModelAdapter.FEATURE_TYPE_CONTAINMENT) {
+						actionPerformed_ContainmentFeature(cse, feature, change, result);
 					}
-					if (newName.endsWith(",")) {
-						newName = newName.substring(0, newName.length() - 1);
-					}
-					newName += ")";
-					cse.setName(newName);
 				}
-			}
-		}
-	}
-
-	@Override
-	public void actionPerformed(Object element, Object feature, ActionResult result) {
-		if (result != null && !result.conflict) {
-			CodeSyncElement cse = getCodeSyncElement(element);
-			if (cse != null) {
-				FeatureChange change = cse.getFeatureChanges().get(feature);
-				if (change != null) {
-					int featureType = getModelAdapterFactorySet().getFeatureProvider(cse).getFeatureType(feature);
-					if (featureType == IModelAdapter.FEATURE_TYPE_VALUE) {
-						setValueFeatureValue(element, feature, change.getNewValue());
-						cse.getFeatureChanges().removeKey(feature);
+			} else {
+				List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
+				Object child = findChild(children, result.childMatchKey);
+				if (child != null && child instanceof CodeSyncElement) {
+					if (result.childAdded) {
+						((CodeSyncElement) child).setAdded(false);
 					} else {
-						if (featureType == IModelAdapter.FEATURE_TYPE_CONTAINMENT) {
-							List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
-							List<Object> newValues = (List<Object>) change.getNewValue();
-							if (result.childAdded) {
-								Object existingChild = findChild(children, result.childMatchKey);
-								if (existingChild == null) {
-									// child added to source from new children => add it to the actual children as well
-									Object newChild = findChild(newValues, result.childMatchKey);
-									if (newChild != null) {
-										children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
-									}
-								} else {
-									// child added to model from source => add it to the new values as well
-									Object newChild = findChild(newValues, result.childMatchKey);
-									if (newChild == null) {
-										newValues.add(existingChild instanceof EObject ? EcoreUtil.copy((EObject) existingChild) : existingChild);
-									}
-								}
-							} else {
-								Object existingChild = findChild(children, result.childMatchKey);
-								if (existingChild != null) {
-									// child removed from source => remove it from the actual children as well
-									children.remove(existingChild);
-								} else {
-									Object newChild = findChild(newValues, result.childMatchKey);
-									if (newChild != null) {
-										// child removed from model => remove it from the new children as well
-										newValues.remove(newChild);
-									}
-								}
-							}
-							if (newValues.size() == 0) {
-								cse.getFeatureChanges().removeKey(feature);
-							}
-						}
+						children.remove(child);
 					}
-				} else {
-					List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
-					Object child = findChild(children, result.childMatchKey);
-					if (child != null && child instanceof CodeSyncElement) {
-						if (result.childAdded) {
-							((CodeSyncElement) child).setAdded(false);
-						} else {
-							children.remove(child);
-						}
-					}
+				}
+			}
+			boolean sync = cse.getFeatureChanges().size() == 0;
+			if (cse.getChildren().size() == 0) {
+				cse.setChildrenSynchronized(true);
+			}
+			if (sync != cse.isSynchronized()) {
+				cse.setSynchronized(sync);
+				if (cse.eContainer() instanceof CodeSyncElement) {
+					setChildrenSync((CodeSyncElement) cse.eContainer());
 				}
 			}
 		}
 	}
 	
-	private boolean elementContainsChildWithMatchKey(Object element, Object feature, Object matchKey) {
-		if (element == null || matchKey == null) {
-			return false;
+	/**
+	 * Removes the feature change after the feature was processed.
+	 */
+	private void actionPerformed_ValueFeature(CodeSyncElement element, Object feature, FeatureChange change) {
+//		setValueFeatureValue(element, feature, change.getNewValue());
+		element.getFeatureChanges().removeKey(feature);
+	}
+	
+	/**
+	 * Compares the actual value of the containment feature to the value from the feature changes map;
+	 * removes the entry if the new value is set on the model element.
+	 */
+	private void actionPerformed_ContainmentFeature(CodeSyncElement element, Object feature, FeatureChange change, ActionResult result) {
+		List<Object> children = (List<Object>) super.getContainmentFeatureIterable(element, feature, null);
+		List<Object> newValues = (List<Object>) change.getNewValue();
+		if (result.childAdded) {
+			actionPerformed_ChildAdded(children, newValues, result);
+		} else if (result.childModified) {
+			actionPerformed_ChildModified(children, newValues, result);
+		} else {
+			actionPerformed_ChildRemoved(children, newValues, result);
 		}
-		Iterable<?> children = getEObjectConverter().getModelAdapter(element).getContainmentFeatureIterable(element, feature, null);
-		for (Object child : children) {
-			if (matchKey.equals(getEObjectConverter().getModelAdapter(child).getMatchKey(child))) {
-				return true;
+		if (listEquals(children, newValues)) {
+			element.getFeatureChanges().removeKey(feature);
+		}
+	}
+	
+	private void actionPerformed_ChildAdded(List<Object> children, List<Object> newValues, ActionResult result) {
+		Object existingChild = findChild(children, result.childMatchKey);
+		if (existingChild == null) {
+			// child added to source from new children => add it to the actual children as well
+			Object newChild = findChild(newValues, result.childMatchKey);
+			if (newChild != null) {
+				children.add(newChild instanceof EObject ? EcoreUtil.copy((EObject) newChild) : newChild);
+			}
+		} else {
+			// child added to model from source => add it to the new values as well
+			Object newChild = findChild(newValues, result.childMatchKey);
+			if (newChild == null) {
+				newValues.add(existingChild instanceof EObject ? EcoreUtil.copy((EObject) existingChild) : existingChild);
 			}
 		}
-		return false;
+	}
+	
+	private void actionPerformed_ChildRemoved(List<Object> children, List<Object> newValues, ActionResult result) {
+		Object existingChild = findChild(children, result.childMatchKey);
+		if (existingChild != null) {
+			// child removed from source => remove it from the actual children as well
+			children.remove(existingChild);
+		} else {
+			Object newChild = findChild(newValues, result.childMatchKey);
+			if (newChild != null) {
+				// child removed from model => remove it from the new children as well
+				newValues.remove(newChild);
+			}
+		}
+	}
+	
+	private void actionPerformed_ChildModified(List<Object> children, List<Object> newValues, ActionResult result) {
+		Object existingChild = findChild(children, result.childMatchKey);
+		if (existingChild != null) {
+			Object newChild = findChild(newValues, result.childMatchKey);
+			IModelAdapter adapter = getModelAdapterFactory().getModelAdapter(existingChild);
+			Object feature = result.modifiedChildFeature;
+			adapter.setValueFeatureValue(existingChild, feature, adapter.getValueFeatureValue(newChild, feature, null));
+		}
+	}
+	
+	private void setChildrenSync(CodeSyncElement element) {
+		boolean childrenSync = true;
+		for (CodeSyncElement child : element.getChildren()) {
+			if (!child.isSynchronized() || !child.isChildrenSynchronized()) {
+				childrenSync = false;
+				break; // found one child that is not sync
+			}
+		}
+		boolean oldChildrenSync = element.isChildrenSynchronized();
+		if (oldChildrenSync != childrenSync) {
+			// set new childrenSync status and go up on the parent
+			element.setChildrenSynchronized(childrenSync);
+			CodeSyncElement parent = (CodeSyncElement) element.eContainer();
+			if (parent != null) {
+				setChildrenSync(parent);
+			}
+		}
+	}
+	
+	/**
+	 * Needed because some implementations of {@link EList} do not use equals.
+	 */
+	private boolean listEquals(List<Object> list1, List<Object> list2) {
+		if (list1 == list2) {
+			return true;
+		}
+		if (list1.size() != list2.size()) {
+			return false;
+		}
+		for (Object o1 : list1) {
+			boolean containsObject = false;
+			for (Object o2 : list2) {
+				if (o1.equals(o2)) {
+					containsObject = true;
+					break;
+				}
+			}
+			if (!containsObject) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
 	 * Checks if the <code>list</code> contains the <code>child</code> based on its match key.
 	 */
-	private Object findChild(List list, Object matchKey) {
+	private Object findChild(List<Object> list, Object matchKey) {
 		if (matchKey == null)
 			return null;
 		for (Object existingChild : list) {

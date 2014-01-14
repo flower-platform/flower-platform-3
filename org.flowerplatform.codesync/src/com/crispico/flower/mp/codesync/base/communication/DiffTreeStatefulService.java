@@ -229,26 +229,12 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 		
 		if (actionType == -1) {
 			ActionSynchronize syncAction = new ActionSynchronize();
-			ActionResult[] results = syncAction.execute(match);
-			for (int i = 0; i < results.length; i++) {
-				Object feature = match.getDiffs().get(i).getFeature();
-				// notify that an action was performed
-				actionPerformed(match, true, false, feature, results[i], genericTreeContext);
-				actionPerformed(match, false, false, feature, results[i], genericTreeContext);
-			}
+			syncAction.execute(match);
 			return;
 		}
 		
 		DiffAction diffAction = DiffActionRegistry.ActionType.values()[actionType].diffAction;
 		ActionResult result = diffAction.execute(match, diffIndex);
-		if (diffIndex >= 0) {
-			Diff diff = match.getDiffs().get(diffIndex);
-			actionPerformed(match, true, false, diff.getFeature(), result, genericTreeContext);
-			actionPerformed(match, false, false, diff.getFeature(), result, genericTreeContext);
-		} else {
-			actionPerformed(parentMatch, true, false, match.getFeature(), result, genericTreeContext);
-			actionPerformed(parentMatch, false, false, match.getFeature(), result, genericTreeContext);
-		}
 		
 		if (diffIndex >= 0) // refresh diff flags only if a "diff" action
 			match.refreshDiffFlags(result.conflict, result.modifiedLeft, result.modifiedRight);
@@ -271,15 +257,6 @@ public class DiffTreeStatefulService extends GenericTreeStatefulService implemen
 		}
 		for (Match modifiedMatch : modifiedMatches) {
 //			dispatchDiffTreeNodeUpdate(context, modifiedMatch, treeContext);
-		}
-	}
-	
-	private void actionPerformed(Match match, boolean isLeft, boolean fromParent, Object feature, ActionResult result, GenericTreeContext context) {
-		Match m = fromParent ? match.getParentMatch() : match;
-		Object lateral = isLeft ? m.getLeft() : m.getRight();
-		if (lateral != null) {
-			IModelAdapter adapter = (IModelAdapter) getModelAdapterUI(lateral, isLeft ? TREE_TYPE_LEFT : TREE_TYPE_RIGHT, getProjectPathFromContext(context));
-			adapter.actionPerformed(lateral, feature, result);
 		}
 	}
 	

@@ -48,6 +48,9 @@ public class DiffActionRevert extends DiffAction {
 		}
 		match.getDiffs().remove(diffIndex);
 		
-		return new ActionResult(false, false, false);
+		ActionResult result = new ActionResult(false, false, false);
+		actionPerformed(leftModelAdapter, match.getLeft(), rightModelAdapter, match.getRight(), diff.getFeature(), result);
+		
+		return result;
 	}
 }
