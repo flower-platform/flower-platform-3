@@ -21,19 +21,17 @@ package org.flowerplatform.editor.model {
 	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayList;
-	import mx.collections.IList;
 	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
-	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.model.action.AddRelatedElementsAction;
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
-	import org.flowerplatform.editor.model.action.RemoveFromDiagramAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
+	import org.flowerplatform.editor.model.action.RemoveFromDiagramAction;
 	import org.flowerplatform.editor.model.action.RenameAction;
 	import org.flowerplatform.editor.model.action.SearchAction;
 	import org.flowerplatform.editor.model.controller.AbsoluteNodePlaceHolderDragController;
@@ -70,7 +68,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
-	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
 	import org.flowerplatform.flexdiagram.tool.controller.SelectOrDragToCreateElementController;
@@ -83,9 +80,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.text.AutoGrowTextArea;
 	import org.flowerplatform.properties.PropertiesPlugin;
-	import org.flowerplatform.properties.PropertiesView;
 	import org.flowerplatform.properties.action.ShowPropertiesAction;
-	import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
 	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
 	
 	import spark.components.TextInput;
@@ -146,7 +141,7 @@ package org.flowerplatform.editor.model {
 			standardControllerProviderFactories["topLevelBoxChild"] = composedControllerProviderFactory;
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
-			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
 			if (!FlexUtilGlobals.getInstance().isMobile) {
@@ -212,7 +207,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
 			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: BoxChildIconItemRenderer});
-			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: ChildAnchorsSelectionRenderer });
+			composedControllerProviderFactory.selectionControllerClass = new FactoryWithInitialization(SelectionController, { selectionRendererClass: StandardAnchorsSelectionRenderer });
 			composedControllerProviderFactory.modelChildrenControllerClass = new FactoryWithInitialization(ViewModelChildrenController);
 			composedControllerProviderFactory.dragToCreateRelationControllerClass = new FactoryWithInitialization(DragToCreateRelationController);
 			if (!FlexUtilGlobals.getInstance().isMobile) {
