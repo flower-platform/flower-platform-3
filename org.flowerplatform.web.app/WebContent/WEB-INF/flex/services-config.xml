@@ -39,6 +39,7 @@
 	 			<!--
 					Number of milliseconds to wait to write an empty message to the client.
 					In current context it does not really help us.
+					IMPORTANT FOR MOBILE: use value <= 1500 on mobile, otherwise it disconnects periodically
 					<server-to-client-heartbeat-millis>10000</server-to-client-heartbeat-millis>
 					
 			 		If nothing is sent to the client, the server will disconnect the client.

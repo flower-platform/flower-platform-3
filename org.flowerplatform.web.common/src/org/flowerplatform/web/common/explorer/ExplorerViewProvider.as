@@ -24,6 +24,7 @@ package org.flowerplatform.web.common.explorer {
 	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.flexutil.layout.IViewProvider;
 	import org.flowerplatform.flexutil.layout.ViewLayoutData;
+	import org.flowerplatform.web.common.WebCommonPlugin;
 	
 	public class ExplorerViewProvider implements IViewProvider {
 
@@ -53,7 +54,7 @@ package org.flowerplatform.web.common.explorer {
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return null;
+			return WebCommonPlugin.getInstance().getResourceUrl("images/folder_table.png");
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {

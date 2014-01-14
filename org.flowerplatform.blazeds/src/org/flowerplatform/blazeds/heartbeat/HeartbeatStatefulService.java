@@ -109,7 +109,7 @@ public class HeartbeatStatefulService extends RegularStatefulService<BlazedsComm
 	public HeartbeatStatefulService() {
 		HeartbeatProperties.initializeCommunicationProperties();
 		clients = new ConcurrentHashMap<BlazedsCommunicationChannel, HeartbeatDetails>(); // 2 clients may arrive at the same time.
-		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addCommunicationLifecycleListener(this);
 	}
 
 	public void dispose() {

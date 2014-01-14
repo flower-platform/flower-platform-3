@@ -34,7 +34,17 @@ package org.flowerplatform.flexdiagram.util {
 		
 		public var parent:Object;
 		
-		public var eventsCanBeIgnored:Boolean;
+		/**
+		 * If <code>true</code>, the next calls to "remove"/"remove all" methods 
+		 * will not dispatch remove events.
+		 * 
+		 * <p>
+		 * Use this to dispatch less COLLECTION_CHANGE events.
+		 * <p>
+		 * Caution: use try/finnaly block when setting this value to <code>true</code>.
+		 * Otherwise, a remove event will never be dispatched.
+		 */ 
+		public var removeEventsCanBeIgnored:Boolean;
 		
 		public function ParentAwareArrayList(parent:Object, source:Array=null) {
 			super(source);
@@ -66,7 +76,7 @@ package org.flowerplatform.flexdiagram.util {
 		
 		private function dispatchRemoveEventForEachItem(oldSource:Array):void {
 			try {				
-				eventsCanBeIgnored = true;
+				removeEventsCanBeIgnored = true;
 				if (oldSource != null)	{
 					var len:int = length;
 					for (var i:int = 0; i < oldSource.length; i++) {
@@ -74,7 +84,7 @@ package org.flowerplatform.flexdiagram.util {
 					}
 				}  						
 			} finally {
-				eventsCanBeIgnored = false;
+				removeEventsCanBeIgnored = false;
 			}		
 		}
 		

@@ -30,6 +30,7 @@ import org.flowerplatform.communication.tree.remote.PathFragment;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
+import org.flowerplatform.web.WebPlugin;
 import org.flowerplatform.web.entity.Organization;
 import org.flowerplatform.web.entity.WorkingDirectory;
 import org.flowerplatform.web.projects.remote.ProjectsService;
@@ -37,9 +38,76 @@ import org.flowerplatform.web.properties.remote.FileSelectedItem;
 /**
  * @author Razvan Tache
  */
-public class FilePropertiesProvider implements IPropertiesProvider {
+public class FilePropertiesProvider implements IPropertiesProvider<FileSelectedItem, File> {
+	
+	public static final String PROPERTY_NAME = "Name";
+	public static final String PROPERTY_LOCATION = "Location";
+	public static final String PROPERTY_SIZE = "Size";
+	public static final String PROPERTY_LAST_MODIFIED = "Last Modified";
+	public static final String PROPERTY_TEST_ENABLED = "Test Enabled";
+	public static final String PROPERTY_TEST_DISABLED = "Test Disabled";
+	
+	@Override
+	public List<String> getPropertyNames(FileSelectedItem selectedItem, File resolvedSelectedItem) {
+		List<String> propertiesNames = new ArrayList<String>();
+		
+		propertiesNames.add(PROPERTY_NAME);
+		propertiesNames.add(PROPERTY_LOCATION);
+		propertiesNames.add(PROPERTY_SIZE);
+		propertiesNames.add(PROPERTY_LAST_MODIFIED);
+		propertiesNames.add(PROPERTY_TEST_ENABLED);
+		propertiesNames.add(PROPERTY_TEST_DISABLED);
+		
+		return propertiesNames;
+	}
+	@Override
+	public Property getProperty(FileSelectedItem selectedItem, File file, String propertyName) {
+//		
 
-	private File getFile(List<PathFragment> pathWithRoot) {
+//		File file = getFile(pathWithRoot);
+		
+		switch (propertyName) {
+			case PROPERTY_NAME: {
+				return new Property()
+						.setNameAs(PROPERTY_NAME)
+						.setValueAs(file.getName())
+						.setReadOnlyAs(false);
+			}
+			case PROPERTY_LOCATION: {
+				return new Property()
+					.setNameAs(PROPERTY_LOCATION)
+					.setValueAs(file.getAbsolutePath());
+			}
+			case PROPERTY_SIZE: {
+				return new Property()
+					.setNameAs(PROPERTY_SIZE)
+					.setValueAs(file.length());
+			}
+			case PROPERTY_LAST_MODIFIED: {
+				return new Property()
+					.setNameAs(PROPERTY_LAST_MODIFIED)
+					.setValueAs(new Date(file.lastModified()));
+			}
+			case PROPERTY_TEST_ENABLED: {
+				return new Property()
+					.setNameAs(PROPERTY_TEST_ENABLED)
+					.setValueAs(true)
+					.setTypeAs("Boolean")
+					.setReadOnlyAs(false);
+			}
+			case PROPERTY_TEST_DISABLED: {
+				return new Property()
+					.setNameAs(PROPERTY_TEST_DISABLED)
+					.setValueAs(true)
+					.setTypeAs("Boolean");
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public File resolveSelectedItem(FileSelectedItem selectedItem) {
+		List<PathFragment> pathWithRoot = selectedItem.getPathWithRoot();
 		
 		Object object = GenericTreeStatefulService.getNodeByPathFor(
 				pathWithRoot, null);
@@ -54,39 +122,25 @@ public class FilePropertiesProvider implements IPropertiesProvider {
 		} else {
 			return ((Pair<File, Object>) object).a;
 		}
-	}
-	@Override
-	public List<Property> getProperties(SelectedItem selectedItem) {
-		// proccessing step;
-		List<PathFragment> pathWithRoot = ((FileSelectedItem)selectedItem).getPathWithRoot();
-
-		File file = getFile(pathWithRoot);
 		
-		List<Property> properties = new ArrayList<Property>();	
-		// TODO decide what properties are needed
-		properties.add(new Property("Name", file.getName(), false));
-		properties.add(new Property("Location", file.getAbsolutePath()));
-		properties.add(new Property("Size", file.length()));
-		properties.add(new Property("Last modified", new Date(file.lastModified())));
-		properties.add(new Property("testEnabled", true, "Boolean", false));
-		properties.add(new Property("testDisabled", true, "Boolean"));
-		
-		return properties;
 	}
 
 	@Override
-	public List<String> getPropertyNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Property getProperty(SelectedItem selectedItem, String propertyName) {
-		// TODO Auto-generated method stub
-		return null;
+	public Pair<String, String> getIconAndLabel(FileSelectedItem selectedItem, File file) {
+		String label;
+		String icon;
+		if (file.isDirectory()) {
+			icon = WebPlugin.getInstance().getResourceUrl("images/folder.gif");
+		} else {
+			icon = WebPlugin.getInstance().getResourceUrl("images/file.gif");
+		}
+		label = file.getName();
+		
+		return new Pair<String, String>(icon, label);
 	}
 	
 	@Override
-	public boolean setProperty(ServiceInvocationContext context, SelectedItem selectedItem, String propertyName, Object propertyValue) {
+	public boolean setProperty(ServiceInvocationContext context, FileSelectedItem selectedItem, String propertyName, Object propertyValue) {
 		// TODO Auto-generated method stub
 		return false;
 	}

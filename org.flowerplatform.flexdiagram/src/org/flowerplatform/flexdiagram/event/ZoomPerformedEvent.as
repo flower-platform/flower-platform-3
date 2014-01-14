@@ -2,6 +2,8 @@ package org.flowerplatform.flexdiagram.event {
 	import flash.events.Event;
 	
 	/**
+	 * @see AbsoluteLayoutVisualChildrenController.dispatchRecursiveZoomPerformedEventIfNecessary()
+	 * 
 	 * @author Cristina Constantinescu
 	 */ 
 	public class ZoomPerformedEvent extends Event {

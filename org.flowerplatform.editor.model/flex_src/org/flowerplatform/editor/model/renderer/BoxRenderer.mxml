@@ -21,6 +21,8 @@
 <!--- 
 @author Cristian Spiescu
 @author Cristina Constantinescu
+
+Implements <code>IFocusManagerComponent</code> to gain focus when selected.
 -->
 <s:DataRenderer implements="org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable, org.flowerplatform.flexdiagram.renderer.IDiagramShellAware, mx.managers.IFocusManagerComponent"
 	cacheAsBitmap="true"  
@@ -31,7 +33,7 @@
 	creationComplete="creationCompleteHandler(event)" xmlns:model="org.flowerplatform.editor.model.*" >
 	
 		<s:layout>
-			<model:BoxRendererLayout gap="1" />
+			<model:BoxRendererLayout gap="1" horizontalAlign="contentJustify" />
 		</s:layout>
 		
 	<fx:Script>
@@ -53,6 +55,7 @@
 			import org.flowerplatform.emf_model.notation.Node;
 			import org.flowerplatform.flexdiagram.DiagramShell;
 			import org.flowerplatform.flexdiagram.controller.visual_children.IVisualChildrenController;
+			import org.flowerplatform.flexdiagram.event.ZoomPerformedEvent;
 			import org.osmf.layout.ScaleMode;
 			
 			import spark.effects.Scale;
@@ -143,7 +146,8 @@
 				}
 			}
 			
-			protected function measureHandler(event:Event):void {				
+			protected function measureHandler(event:Event):void {
+				// take this event in consideration only if its target is a child of this renderer
 				if (event.target is IVisualElement && IVisualElement(event.target).parent == this) {
 					event.stopPropagation();
 					// recalculate parent's size if a child changes its size or added/removed
@@ -154,7 +158,7 @@
 					setOnlyMinWidthHeight = false;
 				}
 			}
-			
+					
 			protected function addShadow():void {
 				shadow = new DropShadowFilter();
 				shadow.alpha = 0.55;
@@ -183,7 +187,7 @@
 				// when a child initial size is greater than its parent (the box renderer)
 				addEventListener(ResizeEvent.RESIZE, measureHandler, true);
 				addEventListener(Event.ADDED_TO_STAGE, measureHandler, true);
-				addEventListener(Event.REMOVED_FROM_STAGE, measureHandler, true);
+				addEventListener(Event.REMOVED_FROM_STAGE, measureHandler, true);				
 			}
 			
 		]]>

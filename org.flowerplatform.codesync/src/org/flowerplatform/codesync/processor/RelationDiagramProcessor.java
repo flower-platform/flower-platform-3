@@ -18,32 +18,30 @@
  */
 package org.flowerplatform.codesync.processor;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.change.FeatureChange;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
-import org.flowerplatform.editor.model.change_processor.DiagramUpdaterChangeProcessorContext;
-import org.flowerplatform.editor.model.change_processor.IDiagrammableElementFeatureChangesProcessor;
-import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
+import org.flowerplatform.editor.model.change_processor.AbstractDiagramProcessor;
 import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
+ * Sets the view details (e.g. label) for an edge.
+ * 
  * @author Mariana Gheorghe
  * @author Cristina Constantinescu
  */
-public class RelationDiagramProcessor implements IDiagrammableElementFeatureChangesProcessor {
+public class RelationDiagramProcessor extends AbstractDiagramProcessor {
 
 	@Override
-	public void processFeatureChanges(EObject object, List<FeatureChange> featureChanges, View associatedViewOnOpenDiagram, Map<String, Object> context) {
-		Map<String, Object> viewDetails = new HashMap<String, Object>();
-		
-		if (featureChanges != null) {
+	protected void processFeatureChange(EObject object, 
+			FeatureChange featureChange, View associatedViewOnOpenDiagram,
+			Map<String, Object> viewDetails) {
+		if (featureChange != null) {
 			// the name is a constant; so don't react to change deltas
 			return;
 		}
@@ -52,15 +50,6 @@ public class RelationDiagramProcessor implements IDiagrammableElementFeatureChan
 		viewDetails.put("label", descriptor.getLabel());
 		viewDetails.put("sourceEndFigureType", descriptor.getSourceEndFigureType());
 		viewDetails.put("targetEndFigureType", descriptor.getTargetEndFigureType());
-		
-		if (!viewDetails.isEmpty()) {
-			ViewDetailsUpdate update = new ViewDetailsUpdate();
-			update.setViewId(associatedViewOnOpenDiagram.eResource().getURIFragment(associatedViewOnOpenDiagram));
-			update.setViewDetails(viewDetails);
-			
-			DiagramUpdaterChangeProcessorContext.getDiagramUpdaterChangeDescriptionProcessingContext(context, true).
-				getViewDetailsUpdates().add(update);
-		}
 	}
 
 }

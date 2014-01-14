@@ -20,6 +20,7 @@ package org.flowerplatform.properties.providers;
 
 import java.util.List;
 
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.properties.remote.Property;
 import org.flowerplatform.properties.remote.SelectedItem;
@@ -27,12 +28,8 @@ import org.flowerplatform.properties.remote.SelectedItem;
 /**
  * @author Razvan Tache
  */
-public interface IPropertiesProvider {
-	
-	public List<String> getPropertyNames();
-	public Property getProperty(SelectedItem selectedItem, String propertyName);
-	public List<Property> getProperties(SelectedItem selectedItem);
-	
+public interface IPropertiesProvider<SEL_ITEM extends SelectedItem, RES_SEL_ITEM> {
+		
 	/**
 	 * @return Should return <code>true</code> if the operation was successful. <code>false</code> otherwise (e.g. if
 	 * 		the underlying lock mechanism fails). In this case, the client will request the original value, to update the UI.
@@ -40,6 +37,10 @@ public interface IPropertiesProvider {
 	 * @author Razvan Tache
 	 * @author Cristian Spiescu
 	 */
-	public boolean setProperty(ServiceInvocationContext context, SelectedItem selectedItem, String propertyName, Object propertyValue);
+	public boolean setProperty(ServiceInvocationContext context, SEL_ITEM selectedItem, String propertyName, Object propertyValue);
+	public List<String> getPropertyNames(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem);
+	public Property getProperty(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem, String propertyName);
+	public RES_SEL_ITEM resolveSelectedItem(SEL_ITEM selectedItem);
+	public Pair<String, String> getIconAndLabel(SEL_ITEM selectedItem, RES_SEL_ITEM resolvedSelectedItem);
 	
 }

@@ -21,6 +21,7 @@ package org.flowerplatform.editor.model.remote {
 	
 	import mx.charts.chartClasses.InstanceCache;
 	import mx.collections.ArrayCollection;
+	import mx.collections.ArrayList;
 	import mx.collections.IList;
 	
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
@@ -102,5 +103,24 @@ package org.flowerplatform.editor.model.remote {
 			}
 		}	
 	
+		[RemoteInvocation]
+		public function selectObjects(objectIdsToSelect:ArrayCollection):void {
+			var objects:ArrayList = new ArrayList();
+			for each (var objectId:Object in objectIdsToSelect) {
+				objects.addItem(transferableObjectRegistry.getObjectById(objectId));
+			}
+			
+			for each (var ef:DiagramEditorFrontend in editorFrontends) {
+				try {
+					// Because an addItem is called after, the eventsCanBeIgnored is set to true,
+					// this way listeners can limit the number of unwanted events.
+					ef.diagramShell.selectedItems.removeEventsCanBeIgnored = true;
+					ef.diagramShell.selectedItems.removeAll();							
+				} finally {
+					ef.diagramShell.selectedItems.removeEventsCanBeIgnored = false;
+				}
+				ef.diagramShell.selectedItems.addAll(objects);
+			}
+		}
 	}
 }

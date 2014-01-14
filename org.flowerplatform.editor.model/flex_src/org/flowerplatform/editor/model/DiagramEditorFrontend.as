@@ -32,10 +32,15 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.emf_model.notation.Diagram;
+	import org.flowerplatform.emf_model.notation.Edge;
 	import org.flowerplatform.emf_model.notation.View;
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.event.ExecuteDragToCreateEvent;
 	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
+	import org.flowerplatform.flexdiagram.tool.SelectOrDragToCreateElementTool;
+	import org.flowerplatform.flexdiagram.tool.WakeUpTool;
+	import org.flowerplatform.flexdiagram.tool.toolbar.Toolbar;
+	import org.flowerplatform.flexdiagram.util.ZoomToolbar;
 	import org.flowerplatform.flexdiagram.util.infinitegroup.InfiniteScroller;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.action.IAction;
@@ -67,7 +72,7 @@ package org.flowerplatform.editor.model {
 		}
 		
 		protected function selectionChangedHandler(e:Event):void {
-			if (!diagramShell.selectedItems.eventsCanBeIgnored) { // catch events only if necessary
+			if (!diagramShell.selectedItems.removeEventsCanBeIgnored) { // catch events only if necessary
 				FlexUtilGlobals.getInstance().selectionManager.selectionChanged(viewHost, this);
 			}
 		}
@@ -91,7 +96,7 @@ package org.flowerplatform.editor.model {
 				FlexGlobals.topLevelApplication.removeEventListener(MenuClosedEvent.MENU_CLOSED, menuClosedHandler);
 			}
 			// deactivate tool
-			diagramShell.mainToolFinishedItsJob();
+			diagramShell.mainTool.jobFinished();
 		}
 		
 		protected function getDiagramShellInstance():DiagramShell {
@@ -116,7 +121,24 @@ package org.flowerplatform.editor.model {
 									
 			super.createChildren();		
 			
-			toolbarsArea.addElement(new Toolbar());
+			var toolbar:Toolbar = new Toolbar();
+			toolbar.diagramShell = diagramShell;
+			toolbar.addTool(
+				EditorModelPlugin.getInstance().getMessage("tool.wakeUp.label"),
+				EditorModelPlugin.getInstance().getResourceUrl("images/cursor_drag_arrow.png"),
+				diagramShell.tools[WakeUpTool],
+				EditorModelPlugin.getInstance().getMessage("tool.wakeUp.toolTip"),
+				true);
+			toolbar.addTool(
+				EditorModelPlugin.getInstance().getMessage("tool.selectOrDragToCreateElement.label"),
+				EditorModelPlugin.getInstance().getResourceUrl("images/select.png"),
+				diagramShell.tools[SelectOrDragToCreateElementTool],
+				EditorModelPlugin.getInstance().getMessage("tool.selectOrDragToCreateElement.toolTip"));
+			
+			toolbarsArea.addElement(toolbar);
+			
+			var zoomToolbar:ZoomToolbar = new ZoomToolbar(diagramShell);			
+			toolbarsArea.addElement(zoomToolbar);
 		}
 		
 		override public function executeContentUpdateLogic(content:Object, isFullContent:Boolean):void {
@@ -163,6 +185,8 @@ package org.flowerplatform.editor.model {
 			
 				if (node is Diagram) { // for diagram consider its viewType as diagramSelectedItem.itemType
 					diagramSelectedItem.itemType = node.viewType;
+				} else if (node is Edge) {
+					diagramSelectedItem.itemType = "relation";
 				} else {
 					diagramSelectedItem.itemType = "codeSyncElement";
 				}

@@ -44,9 +44,9 @@ package org.flowerplatform.properties {
 		}
 		
 		public function createView(viewLayoutData:ViewLayoutData):UIComponent {
-			PropertiesPlugin.getInstance().propertyList = new PropertiesList();
+			PropertiesPlugin.getInstance().propertiesView = new PropertiesView();
 			
-			return PropertiesPlugin.getInstance().propertyList;
+			return PropertiesPlugin.getInstance().propertiesView;
 		}
 		
 		public function getTitle(viewLayoutData:ViewLayoutData=null):String	{
@@ -54,7 +54,7 @@ package org.flowerplatform.properties {
 		}
 		
 		public function getIcon(viewLayoutData:ViewLayoutData=null):Object {
-			return PropertiesPlugin.getInstance().getResourceUrl("images/properties.gif");
+			return PropertiesPlugin.getInstance().getResourceUrl(PropertiesPlugin.getInstance().getMessage("icon.location"));
 		}
 		
 		public function getTabCustomizer(viewLayoutData:ViewLayoutData):Object {

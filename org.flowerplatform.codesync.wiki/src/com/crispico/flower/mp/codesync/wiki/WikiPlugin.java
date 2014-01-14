@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.common.regex.RegexException;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
@@ -216,7 +217,10 @@ public class WikiPlugin extends AbstractFlowerJavaPlugin {
 		session.setFlowerBlocks(flowerBlocks);
 		session.setResource(getAstCacheResource(page));
 		
-		while (session.find()) {
+		try {
+			session.find(null);
+		} catch (RegexException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	

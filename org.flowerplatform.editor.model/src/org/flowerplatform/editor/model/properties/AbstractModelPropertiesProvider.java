@@ -15,7 +15,7 @@ import org.flowerplatform.properties.remote.SelectedItem;
 /**
  * @author Cristian Spiescu
  */
-public abstract class AbstractModelPropertiesProvider<RES_SEL_ITEM extends EObject> implements IPropertiesProvider {
+public abstract class AbstractModelPropertiesProvider<SEL_ITEM extends SelectedItem, RES_SEL_ITEM extends EObject> implements IPropertiesProvider<SEL_ITEM, RES_SEL_ITEM> {
 
 	protected DiagramEditorStatefulService getDiagramEditorStatefulService(DiagramSelectedItem selectedItem) {
 		String diagramEditorStatefulServiceId = selectedItem.getEditorStatefulServiceId();

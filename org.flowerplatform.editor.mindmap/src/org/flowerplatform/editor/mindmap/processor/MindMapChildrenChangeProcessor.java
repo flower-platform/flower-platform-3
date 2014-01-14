@@ -57,8 +57,8 @@ public class MindMapChildrenChangeProcessor extends AbstractChildrenUpdaterDiagr
 	}
 
 	@Override
-	protected boolean canAddChildView(View view, EObject candidate) {
-		boolean canAdd = super.canAddChildView(view, candidate);
+	protected boolean canAddChildView(View view, EObject candidate, Map<String, Object> context) {
+		boolean canAdd = super.canAddChildView(view, candidate, context);
 		if (canAdd) {
 			return ((MindMapElement) view.getDiagrammableElement()).isExpanded();
 		}

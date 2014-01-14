@@ -17,6 +17,7 @@
  * license-end
  */
 package org.flowerplatform.web.common.explorer {
+	import flash.display.DisplayObject;
 	import flash.events.FocusEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -29,7 +30,9 @@ package org.flowerplatform.web.common.explorer {
 	
 	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
+	import org.flowerplatform.communication.stateful_service.StatefulClientRegistry;
 	import org.flowerplatform.communication.tree.GenericTreeList;
+	import org.flowerplatform.communication.tree.remote.GenericTreeStatefulClient;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
 	import org.flowerplatform.editor.action.EditorTreeActionProvider;
@@ -38,6 +41,7 @@ package org.flowerplatform.web.common.explorer {
 	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.action.IAction;
 	import org.flowerplatform.flexutil.action.IActionProvider;
+	import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
 	import org.flowerplatform.flexutil.selection.ISelectionForServerProvider;
 	import org.flowerplatform.flexutil.selection.ISelectionProvider;
 	import org.flowerplatform.flexutil.tree.HierarchicalModelWrapper;
@@ -48,6 +52,10 @@ package org.flowerplatform.web.common.explorer {
 	
 	import spark.events.IndexChangeEvent;
 	
+	/**
+	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
+	 */
 	public class ExplorerTreeList extends GenericTreeList implements IViewContent, ISelectionProvider, ISelectionForServerProvider {
 		
 		protected var _viewHost:IViewHost;
@@ -61,7 +69,7 @@ package org.flowerplatform.web.common.explorer {
 			
 			// open file at double click or ENTER
 			addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickHandler);
-			addEventListener(KeyboardEvent.KEY_UP, keyUpHandler1);
+			addEventListener(KeyboardEvent.KEY_UP, keyUpHandler1);			
 		}
 		
 		protected function selectionChangedHandler(e:IndexChangeEvent):void {
@@ -87,14 +95,21 @@ package org.flowerplatform.web.common.explorer {
 		}
 
 		public function set viewHost(value:IViewHost):void {
+			if (_viewHost != null) {
+				DisplayObject(_viewHost).removeEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
+			}
 			_viewHost = value;
+			DisplayObject(_viewHost).addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);
 		}
 
+		private function viewRemovedHandler(event:ViewRemovedEvent):void {			
+			CommunicationPlugin.getInstance().statefulClientRegistry.unregister(statefulClient, null);
+		}
 		
-		/**
-		 * @author Cristina Constantinescu
-		 */ 
 		private function doubleClickHandler(event:MouseEvent):void {
+			if (_viewHost == null) {
+				return;
+			}
 			var cachedActions:Vector.<IAction> = _viewHost.getCachedActions();
 			for (var i:int = 0; i < cachedActions.length; i++) {
 				var action:IAction = cachedActions[i];
@@ -106,9 +121,6 @@ package org.flowerplatform.web.common.explorer {
 			}			
 		}
 		
-		/**
-		 * @author Cristina Constantinescu
-		 */ 
 		private function keyUpHandler1(event:KeyboardEvent):void {
 			if (event.keyCode == Keyboard.ENTER) {
 				doubleClickHandler(null);

@@ -22,11 +22,13 @@ import static org.flowerplatform.common.regex.JavaRegexConfigurationProvider.ATT
 import static org.flowerplatform.common.regex.JavaRegexConfigurationProvider.METHOD_CATEGORY;
 import static org.flowerplatform.common.regex.MxmlRegexConfigurationProvider.buildMxmlConfiguration;
 
+import java.nio.channels.SeekableByteChannel;
 import java.util.Arrays;
 import java.util.List;
 
 import org.flowerplatform.common.regex.MxmlRegexConfigurationProvider;
 import org.flowerplatform.common.regex.RegexConfiguration;
+import org.flowerplatform.common.regex.RegexException;
 import org.flowerplatform.common.regex.RegexProcessingSession;
 import org.flowerplatform.web.tests.TestUtil;
 import org.junit.BeforeClass;
@@ -61,7 +63,10 @@ public class RegexMxmlTest extends RegexTestBase {
 		MxmlRegexConfigurationProvider.buildMxmlConfiguration(config);
 		RegexTestBase.CategoryRecorderRegexProcessingSession session = (RegexTestBase.CategoryRecorderRegexProcessingSession) config.startSession(testFile3);
 		
-		while (session.find()) {
+		try {
+			session.find(null);
+		} catch (RegexException e) {
+			throw new RuntimeException(e);
 		}
 		
 		assertAllExist(session.getRecorderCategory(ATTRIBUTE_CATEGORY), testFile3_attributeNames);
@@ -82,8 +87,13 @@ public class RegexMxmlTest extends RegexTestBase {
 	
 		for (String attributeName : testFile3_attributeNames) {
 			session.reset(true);
-			int[] range = session.findRangeFor(ATTRIBUTE_CATEGORY, attributeName);
-			assertIdentifierInRange(attributeName, range, testFileContent);
+			int[] range;
+			try {
+				range = session.findRangeFor(ATTRIBUTE_CATEGORY, attributeName);
+				assertIdentifierInRange(attributeName, range, testFileContent);
+			} catch (RegexException e) {
+				throw new RuntimeException(e);
+			}			
 		}
 		
 		/////////////////////////////
@@ -92,8 +102,12 @@ public class RegexMxmlTest extends RegexTestBase {
 
 		for (String methodName : testFile3_methodNames) {
 			session.reset(true);
-			int[] range = session.findRangeFor(METHOD_CATEGORY, methodName);
-			assertIdentifierInRange(methodName, range, testFileContent);
+			try {
+				int[] range = session.findRangeFor(METHOD_CATEGORY, methodName);
+				assertIdentifierInRange(methodName, range, testFileContent);
+			} catch (RegexException e) {
+				throw new RuntimeException(e);
+			}			
 		}
 	}
 	

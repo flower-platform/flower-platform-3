@@ -29,16 +29,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.flowerplatform.common.log.AuditDetails;
-import org.flowerplatform.common.log.LogUtil;
 import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.common.util.RunnableWithParam;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
+import org.flowerplatform.communication.channel.ICommunicationChannelLifecycleListener;
 import org.flowerplatform.communication.stateful_service.IStatefulClientLocalState;
 import org.flowerplatform.communication.stateful_service.NamedLockPool;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
-import org.flowerplatform.communication.stateful_service.StatefulService;
 import org.flowerplatform.communication.stateful_service.StatefulServiceInvocationContext;
 import org.flowerplatform.communication.tree.GenericTreeContext;
 import org.flowerplatform.communication.tree.IChildrenProvider;
@@ -78,7 +76,8 @@ import org.slf4j.LoggerFactory;
  * 
  * 
  */
-public abstract class GenericTreeStatefulService extends AbstractTreeStatefulService implements INodeInfoStatefulServiceMXBean, IChildrenProvider, INodeDataProvider, INodeByPathRetriever {
+public abstract class GenericTreeStatefulService extends AbstractTreeStatefulService 
+		implements INodeInfoStatefulServiceMXBean, IChildrenProvider, INodeDataProvider, INodeByPathRetriever, ICommunicationChannelLifecycleListener {
 	
 	public final static Object ROOT_NODE_MARKER = GenericTreeStatefulService.class;
 		
@@ -118,7 +117,7 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 	 * 
 	 * 
 	 */
-	private NodeInfo rootNodeInfo;
+	protected NodeInfo rootNodeInfo;
 		
 	/**
 	 * We use this instead of normal locking, because, during subscription there is a small
@@ -752,6 +751,16 @@ public abstract class GenericTreeStatefulService extends AbstractTreeStatefulSer
 			return informations[1];			
 		}
 		return null;
+	}
+	
+	@Override
+	public void communicationChannelCreated(CommunicationChannel webCommunicationChannel) {
+		
+	}
+	
+	@Override
+	public void communicationChannelDestroyed(CommunicationChannel webCommunicationChannel) {		
+		cleanupAfterNodeClosed(rootNodeInfo.getNode(), null, null, webCommunicationChannel, null, true);
 	}
 	
 	///////////////////////////////////////////////////////////////

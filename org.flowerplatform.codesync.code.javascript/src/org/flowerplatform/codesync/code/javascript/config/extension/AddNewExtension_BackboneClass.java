@@ -16,9 +16,12 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class AddNewExtension_BackboneClass implements AddNewExtension {
 
 	@Override
-	public boolean addNew(CodeSyncElement codeSyncElement, View parent,
-			Resource codeSyncMappingResource, Map<String, Object> parameters) {
-		
+	public boolean addNewView(CodeSyncElement codeSyncElement, View parent, Resource codeSyncMappingResource, Map<String, Object> parameters) {		
+		return true;
+	}
+	
+	@Override
+	public boolean configNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {		
 		if (!codeSyncElement.getType().equals(JavaScriptDescriptors.TYPE_BACKBONE_CLASS)) {
 			return true;
 		}

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+license-start
+
+Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+
+Contributors:
+Crispico - Initial API and implementation  The product is licensed under GPL. This is the new version of the license.
+
+license-end
+-->
+<!-- 
+@author Cristina Constantinescu
+-->
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 implements="org.flowerplatform.flexutil.view_content_host.IViewContent, org.flowerplatform.flexutil.selection.ISelectionProvider">
+		 
+	<fx:Script>
+		<![CDATA[
+			import com.crispico.flower.util.layout.event.ViewAddedEvent;
+			
+			import flashx.textLayout.conversion.TextConverter;
+			
+			import mx.collections.ArrayCollection;
+			import mx.collections.ArrayList;
+			import mx.collections.IList;
+			import mx.core.FlexGlobals;
+			import mx.events.FlexEvent;
+			
+			import org.flowerplatform.codesync.CodeSyncPlugin;
+			import org.flowerplatform.codesync.wizard.WizardEvent;
+			import org.flowerplatform.codesync.wizard.action.DragWizardDependencyTargetsOnDiagramAction;
+			import org.flowerplatform.codesync.wizard.action.GenerateWizardDependenciesAction;
+			import org.flowerplatform.codesync.wizard.remote.WizardDependency;
+			import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.layout.event.ViewRemovedEvent;
+			import org.flowerplatform.flexutil.view_content_host.IViewHost;
+			
+			protected var _viewHost:IViewHost;
+						
+			public function getActions(selection:IList):Vector.<IAction> {
+				var result:Vector.<IAction> = new Vector.<IAction>();
+				result.push(new GenerateWizardDependenciesAction(this));
+				result.push(new DragWizardDependencyTargetsOnDiagramAction(this));	
+				return result;
+			}
+			
+			public function getSelection():IList {
+				var array:ArrayList = new ArrayList();
+				for (var i:int = 0; i < list.selectedItems.length; i++) {
+					array.addItem(list.selectedItems[i]);
+				}
+				return array;
+			}
+			
+			public function set viewHost(viewHost:IViewHost):void {
+				if (_viewHost != null) {
+					DisplayObject(_viewHost).removeEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+					DisplayObject(_viewHost).removeEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);	
+				}
+				
+				_viewHost = viewHost;
+				
+				DisplayObject(_viewHost).addEventListener(ViewAddedEvent.VIEW_ADDED, viewAddedHandler);
+				DisplayObject(_viewHost).addEventListener(ViewRemovedEvent.VIEW_REMOVED, viewRemovedHandler);	
+			}
+			
+			private function viewAddedHandler(event:ViewAddedEvent):void {
+				// show actions in buttonBar
+				_viewHost.selectionChanged();
+				
+				FlexGlobals.topLevelApplication.addEventListener(WizardEvent.SELECTED_WIZARD_ELEMENT_CHANGED, selectedWizardElementChangedHandler);
+			}
+			
+			private function viewRemovedHandler(event:ViewRemovedEvent):void {
+				FlexGlobals.topLevelApplication.removeEventListener(WizardEvent.SELECTED_WIZARD_ELEMENT_CHANGED, selectedWizardElementChangedHandler);
+			}
+			
+			private function selectedWizardElementChangedHandler(event:WizardEvent = null):void {					
+				if (CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElementInfo == null) {
+					list.dataProvider = null;
+				} else {
+					refreshHandler();
+				}
+			}
+			
+			public function refreshHandler(result:Object = null):void {
+				var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
+				if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {
+					statefulClient.service_getWizardDependencies(
+						CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true), 
+						this, getWizardDependenciesCallbackHandler);		
+				}
+			}
+			
+			public function getWizardDependenciesCallbackHandler(result:ArrayCollection):void {
+				if (result != null) {
+					var oldSelectedItems:ArrayList = new ArrayList();
+					for each (var obj:Object in list.selectedItems) {
+						oldSelectedItems.addItem(WizardDependency(obj).label);
+					}
+					list.dataProvider = result;
+					
+					var newSelectedItems:Vector.<Object> = new Vector.<Object>();
+					if (oldSelectedItems.length > 0) {
+						for each (var object:Object in list.dataProvider) {
+							if (oldSelectedItems.getItemIndex(WizardDependency(object).label) != -1) {
+								newSelectedItems.push(object);
+							}
+						}
+					}
+					list.selectedItems = newSelectedItems;
+				}
+			}
+						
+			public function getSelectedWizardDependencies(withTargets:Boolean = true):ArrayCollection {
+				var array:ArrayCollection = new ArrayCollection();
+				for (var i:int = 0; i < list.selectedItems.length; i++) {
+					var dependency:WizardDependency = WizardDependency(list.selectedItems[i]);
+					if (withTargets ? dependency.targetLabel != null : dependency.targetLabel == null) {
+						array.addItem(dependency);
+					}
+				}
+				return array;
+			}
+			
+			protected function list_valueCommitHandler(event:FlexEvent):void {
+				if (CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement == null) {
+					return;
+				}
+				var statefulClient:NotationDiagramEditorStatefulClient = CodeSyncPlugin.getInstance().wizardUtils.getSelectedEditorStatefulClient();
+				if (CodeSyncPlugin.getInstance().wizardUtils.isSelectedEditorStatefulClientValid(statefulClient)) {	
+					var list:ArrayCollection = getSelectedWizardDependencies();
+					if (list.length > 0) {
+						statefulClient.service_selectWizardDependenciesTargetsFromDiagram(
+							list,
+							CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.getPathForNode(true));	
+					}
+				}
+				
+				event.stopImmediatePropagation();
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:RichText textFlow="{
+				TextConverter.importToFlow(
+					CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElementInfo == null 
+					? CodeSyncPlugin.getInstance().getMessage('wizard.selectedElement.none') 
+					: CodeSyncPlugin.getInstance().getMessage('wizard.selectedElement.info', [CodeSyncPlugin.getInstance().wizardUtils.selectedWizardElement.label]), TextConverter.TEXT_FIELD_HTML_FORMAT)
+				}" 
+				
+				width="100%" paddingLeft="5" paddingTop="5" />
+	
+	<s:List width="100%" height="100%" id="list" allowMultipleSelection="true" 
+			valueCommit="list_valueCommitHandler(event)"
+			itemRenderer="org.flowerplatform.codesync.wizard.ui.WizardDependenciesListItemRenderer" />			
+
+</s:VGroup>

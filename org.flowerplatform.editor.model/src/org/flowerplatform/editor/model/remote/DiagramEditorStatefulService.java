@@ -35,7 +35,6 @@ import org.eclipse.emf.ecore.change.ChangeDescription;
 import org.eclipse.emf.ecore.change.util.ChangeRecorder;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.ECrossReferenceAdapter;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.communication.channel.CommunicationChannel;
 import org.flowerplatform.communication.command.IServerCommand;
@@ -91,7 +90,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	
 	public DiagramEditorStatefulService() {
 		super();
-		CommunicationPlugin.getInstance().getCommunicationChannelManager().addWebCommunicationLifecycleListener(this);
+		CommunicationPlugin.getInstance().getCommunicationChannelManager().addCommunicationLifecycleListener(this);
 		scenarioTree = new ScenarioTreeStatefulService();
 		scenarioTree.setDiagramService(this);
 	}
@@ -276,6 +275,7 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			
 			diagramEditableResource.getChangeRecorder().beginRecording(Collections.singleton(diagramEditableResource.getMainResource().getResourceSet()));
+			EditorModelPlugin.getInstance().getMainChangesDispatcher().processChangeDescription(processingContext, changeDescription);
 			EditorModelPlugin.getInstance().getComposedChangeProcessor().processChangeDescription(changeDescription, processingContext);
 			changeDescription = diagramEditableResource.getChangeRecorder().endRecording();
 			
@@ -338,6 +338,10 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 			objectsToUpdate.remove(object);
 		}
 		invokeClientMethod(communicationChannel, statefulClientId, "updateTransferableObjects", new Object[] { objectsToUpdate, objectsIdsToDispose, viewDetailsUpdates });
+	}
+	
+	public void client_selectObjects(CommunicationChannel communicationChannel, String statefulClientId, Collection<?> objectIdsToSelect) {
+		invokeClientMethod(communicationChannel, statefulClientId, "selectObjects", new Object[] { objectIdsToSelect });
 	}
 	
 	///////////////////////////////////////////////////////////////

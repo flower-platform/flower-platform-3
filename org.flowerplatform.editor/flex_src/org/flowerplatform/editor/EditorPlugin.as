@@ -100,7 +100,7 @@ package org.flowerplatform.editor {
 		override public function start():void {
 			// TODO Auto Generated method stub
 			super.start();
-			globalEditorOperationsManager  = new GlobalEditorOperationsManager(Workbench(FlexUtilGlobals.getInstance().workbench));	
+			globalEditorOperationsManager = new GlobalEditorOperationsManager();	
 			globalEditorOperationsManager.saveAction = new SaveAction();
 			globalEditorOperationsManager.saveAllAction = new SaveAllAction();
 			FlexUtilGlobals.getInstance().keyBindings.registerBinding(new Shortcut(true, false, "s"), globalEditorOperationsManager.saveAction); // Ctrl + S
@@ -144,21 +144,6 @@ package org.flowerplatform.editor {
 				treeNode = treeNode.parent;
 			}
 			return result;
-		}
-		
-		public function viewsRemoved(event:ViewsRemovedEvent):void {
-			var editorStatefulClients:Dictionary = new Dictionary();
-			for each (var view:Object in event.removedViews) {
-				var editorStatefulClient:EditorStatefulClient = null;
-				if (view is EditorFrontend) {
-					editorStatefulClient = EditorFrontend(view).editorStatefulClient;
-				}
-				if (view is WorkbenchViewHost) {
-					if (WorkbenchViewHost(view).activeViewContent is EditorFrontend) {
-						editorStatefulClient = EditorFrontend(WorkbenchViewHost(view).activeViewContent).editorStatefulClient;
-					}
-				}
-			}
 		}
 				
 		public function getFirstEditorDescriptorForNode(contentTypeIndex:int, throwErrorIfNotFound:Boolean = true):BasicEditorDescriptor {			

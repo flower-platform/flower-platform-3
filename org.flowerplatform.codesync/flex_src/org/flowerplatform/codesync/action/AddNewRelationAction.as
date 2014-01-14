@@ -2,24 +2,25 @@ package org.flowerplatform.codesync.action {
 	
 	import com.crispico.flower.mp.codesync.base.editor.CodeSyncEditorDescriptor;
 	
+	import flash.geom.Rectangle;
+	
+	import mx.core.FlexGlobals;
+	import mx.core.UIComponent;
+	
 	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 	import org.flowerplatform.codesync.remote.RelationDescriptor;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
+	import org.flowerplatform.editor.model.action.DiagramShellAwareActionBase;
 	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.View;
-	import org.flowerplatform.flexdiagram.DiagramShell;
-	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
-	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
-	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */ 
-	public class AddNewRelationAction extends ActionBase implements IDiagramShellAware {
-		
-		private var _diagramShell:DiagramShell;
+	public class AddNewRelationAction extends DiagramShellAwareActionBase {
 		
 		protected var relationDescriptor:RelationDescriptor;
 		
@@ -34,14 +35,6 @@ package org.flowerplatform.codesync.action {
 			parentId = "new";
 		}
 		
-		public function get diagramShell():DiagramShell {		
-			return _diagramShell;
-		}
-		
-		public function set diagramShell(value:DiagramShell):void {
-			_diagramShell = value;
-		}
-				
 		override public function get visible():Boolean {	
 			// (the action must be visible when dragToCreateRelationTool active)
 			if (context == null || !context.hasOwnProperty("sourceModel") || !context.hasOwnProperty("targetModel")) {
@@ -52,7 +45,7 @@ package org.flowerplatform.codesync.action {
 				return false;
 			}
 			var targetCodeSyncType:String = CodeSyncPlugin.getInstance().getCodeSyncTypeFromView(context.targetModel);
-			if (targetCodeSyncType == null) {
+			if (targetCodeSyncType == null && !relationDescriptor.acceptTargetNullIfNoCodeSyncTypeDetected) {
 				return false;
 			}
 			
@@ -81,7 +74,7 @@ package org.flowerplatform.codesync.action {
 			}
 			
 			// match for codeSyncType?
-			if (relationDescriptor.targetCodeSyncTypes == null || !relationDescriptor.targetCodeSyncTypes.contains(targetCodeSyncType)) {
+			if (targetCodeSyncType != null && (relationDescriptor.targetCodeSyncTypes == null || !relationDescriptor.targetCodeSyncTypes.contains(targetCodeSyncType))) {
 				// no match for codeSyncType; try categories
 				if (relationDescriptor.targetCodeSyncTypeCategories == null) {
 					// no category configured in this descriptor 
@@ -106,9 +99,18 @@ package org.flowerplatform.codesync.action {
 			return true;
 		}
 		
-		override public function run():void {			
-			NotationDiagramEditorStatefulClient(NotationDiagramShell(_diagramShell).editorStatefulClient)
-				.service_addNewRelation(relationDescriptor.type, View(context.sourceModel).id, View(context.targetModel).id);
+		override public function run():void {
+			var rectangle:Rectangle = diagramShell.convertCoordinates(
+				context.rectangle, 
+				UIComponent(FlexGlobals.topLevelApplication), 
+				UIComponent(diagramShell.diagramRenderer));
+			
+			var parameters:Object = new Object();
+			parameters.x = rectangle.x;
+			parameters.y = rectangle.y;
+			
+			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
+				.service_addNewRelation(relationDescriptor.type, View(context.sourceModel).id, context.targetModel != null ? View(context.targetModel).id : null, parameters);
 		}
 		
 	}

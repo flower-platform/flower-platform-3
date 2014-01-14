@@ -24,18 +24,16 @@ public class AddNewExtension_BackboneView implements AddNewExtension {
 	}
 	
 	@Override
-	public boolean addNew(CodeSyncElement codeSyncElement, View parent,
-			Resource codeSyncMappingResource, Map<String, Object> parameters) {
+	public boolean configNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		String initializationType = (String) Utils.getValueSafe(parameters, CodeSyncPlugin.CONTEXT_INITIALIZATION_TYPE);
 		if (!getInitializationTypes().contains(initializationType)) {
 			return true;
 		}
-		doAddNew(codeSyncElement, parent, codeSyncMappingResource, parameters);
+		doAddNew(codeSyncElement, codeSyncMappingResource, parameters);
 		return true;
 	}
 	
-	protected void doAddNew(CodeSyncElement codeSyncElement, View parent,
-			Resource codeSyncMappingResource, Map<String, Object> parameters) {
+	protected void doAddNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		
 		CodeSyncOperationsService.getInstance().setFeatureValue(codeSyncElement, JavaScriptDescriptors.FEATURE_NAME, "View");	
 		{
@@ -43,6 +41,11 @@ public class AddNewExtension_BackboneView implements AddNewExtension {
 			CodeSyncOperationsService.getInstance().setFeatureValue(child, JavaScriptDescriptors.FEATURE_NAME, "tpl");
 			CodeSyncOperationsService.getInstance().add(codeSyncElement, child);		
 		}
+	}
+
+	@Override
+	public boolean addNewView(CodeSyncElement codeSyncElement, View parent,	Resource codeSyncMappingResource, Map<String, Object> parameters) {	
+		return true;
 	}
 
 }

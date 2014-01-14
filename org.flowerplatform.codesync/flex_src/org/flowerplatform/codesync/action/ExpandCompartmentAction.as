@@ -18,32 +18,20 @@
  */
 package org.flowerplatform.codesync.action {
 	
+	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.editor.model.EditorModelPlugin;
 	import org.flowerplatform.editor.model.NotationDiagramShell;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
+	import org.flowerplatform.editor.model.action.DiagramShellAwareActionBase;
 	import org.flowerplatform.emf_model.notation.Diagram;
 	import org.flowerplatform.emf_model.notation.Node;
 	import org.flowerplatform.emf_model.notation.View;
-	import org.flowerplatform.flexdiagram.DiagramShell;
-	import org.flowerplatform.flexdiagram.renderer.IDiagramShellAware;
-	import org.flowerplatform.flexutil.action.ActionBase;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class ExpandCompartmentAction extends ActionBase implements IDiagramShellAware {
+	public class ExpandCompartmentAction extends DiagramShellAwareActionBase {
 		
 		private var category:String;
-		
-		private var _diagramShell:DiagramShell;
-		
-		public function get diagramShell():DiagramShell {		
-			return _diagramShell;
-		}
-		
-		public function set diagramShell(value:DiagramShell):void {
-			_diagramShell = value;
-		}
 		
 		private function get diagram():Diagram {
 			return Diagram(NotationDiagramShell(diagramShell).rootModel);
@@ -52,9 +40,10 @@ package org.flowerplatform.codesync.action {
 		public function ExpandCompartmentAction(category:String) {
 			super();
 			
-			this.label = "Expand " + category + " compartment";
+			this.label = CodeSyncPlugin.getInstance().getMessage("action.expandCompartment", [category]);
 			this.category = category;			
 			icon = EditorModelPlugin.getInstance().getResourceUrl("images/obj16/expandall.gif");
+			orderIndex = 700;
 		}
 		
 		override public function get visible():Boolean {
@@ -71,8 +60,7 @@ package org.flowerplatform.codesync.action {
 		
 		override public function run():void {
 			var view:View = View(selection.getItemAt(0));
-			NotationDiagramEditorStatefulClient(NotationDiagramShell(diagramShell).editorStatefulClient)
-				.service_expandCompartment(view.id, category);
+			notationDiagramEditorStatefulClient.service_expandCompartment(view.id, category);
 		}
 		
 	}

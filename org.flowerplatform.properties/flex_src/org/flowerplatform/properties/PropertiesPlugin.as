@@ -1,17 +1,19 @@
 package org.flowerplatform.properties {
 	import flash.utils.Dictionary;
 	
+	import flexunit.utils.ArrayList;
+	
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.flexutil.FactoryWithInitialization;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.dialog.IDialog;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
-	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesViewProvider;
 	import org.flowerplatform.properties.property_renderer.BooleanPropertyRenderer;
 	import org.flowerplatform.properties.property_renderer.StringPropertyRenderer;
 	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
+	import org.flowerplatform.properties.remote.Properties;
 	import org.flowerplatform.properties.remote.Property;
 
 	/**
@@ -21,8 +23,7 @@ package org.flowerplatform.properties {
 		
 		protected static var INSTANCE:PropertiesPlugin;
 		
-		public var propertyList:PropertiesList;
-
+		public var propertiesView:PropertiesView;
 		public var propertyRendererClasses:Dictionary = new Dictionary();
 		
 		public static function getInstance():PropertiesPlugin {
@@ -57,5 +58,6 @@ package org.flowerplatform.properties {
 				(BooleanPropertyRenderer);
 			
 		}
+
 	}
 }

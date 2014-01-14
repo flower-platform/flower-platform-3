@@ -132,8 +132,8 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			var models:IList = getModelsUnderPlaceHolder(model, selectDragToCreatePlaceHolder);
 				
 			if (models.length != 0 || 
-				selectDragToCreatePlaceHolder.width < _dragToCreateMinWidth || 
-				selectDragToCreatePlaceHolder.height < _dragToCreateMinHeight) { 
+				Math.abs(selectDragToCreatePlaceHolder.width) < _dragToCreateMinWidth || 
+				Math.abs(selectDragToCreatePlaceHolder.height) < _dragToCreateMinHeight) { 
 				// SELECT MODE
 				selectDragToCreatePlaceHolder.colors = [_dragToSelectColor];
 				selectDragToCreatePlaceHolder.alphas = [_dragToSelectAlpha];					
@@ -151,6 +151,13 @@ package org.flowerplatform.flexdiagram.tool.controller {
 			var models:IList = getModelsUnderPlaceHolder(model, selectDragToCreatePlaceHolder);
 			
 			if (models.length == 0) {
+				if (Math.abs(selectDragToCreatePlaceHolder.width) < _dragToCreateMinWidth || 
+					Math.abs(selectDragToCreatePlaceHolder.height) < _dragToCreateMinHeight) {
+					// placeholder too small, don't do nothing
+					diagramShell.mainTool.jobFinished();
+					return;
+				}
+					
 				// the tool will be deactivated later, so wait until then
 				diagramShell.modelToExtraInfoMap[model].waitingToDeactivateDragTool = true;
 				
@@ -162,6 +169,10 @@ package org.flowerplatform.flexdiagram.tool.controller {
 				// dispatch event in order to let others implement the creation behavior
 				diagramShell.dispatchEvent(new ExecuteDragToCreateEvent(context, true));
 			} else {
+				// remove diagram model from selection if necessary
+				if (diagramShell.selectedItems.getItemIndex(diagramShell.rootModel) != -1) {
+					diagramShell.selectedItems.removeItem(diagramShell.rootModel);
+				}
 				// select/deselect models
 				for (var i:int = 0; i < models.length; i++) {
 					var obj:Object = models.getItemAt(i);
@@ -176,7 +187,9 @@ package org.flowerplatform.flexdiagram.tool.controller {
 					}
 				}
 				// done
-				diagramShell.mainToolFinishedItsJob();
+				// jobFinished is used instead mainToolFinishedItsJob,
+				// because the corresponding tool is also an exclusive tool
+				diagramShell.mainTool.jobFinished();
 			}			
 		}
 		

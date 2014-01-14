@@ -30,7 +30,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.action.AddScenarioAction;
 	import org.flowerplatform.editor.model.action.AddScenarioCommentAction;
 	import org.flowerplatform.editor.model.action.ContentAssistAction;
-	import org.flowerplatform.editor.model.action.DeleteAction;
+	import org.flowerplatform.editor.model.action.RemoveFromDiagramAction;
 	import org.flowerplatform.editor.model.action.DeleteScenarioElementAction;
 	import org.flowerplatform.editor.model.action.DisplayMissingRelationsAction;
 	import org.flowerplatform.editor.model.action.NewModelComposedAction;
@@ -52,7 +52,7 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.editor.model.remote.ViewDetailsUpdate;
 	import org.flowerplatform.editor.model.remote.command.MoveResizeServerCommand;
 	import org.flowerplatform.editor.model.renderer.BoxChildIconItemRenderer;
-	import org.flowerplatform.editor.model.renderer.CenteredBoxChildIconItemRenderer;
+	import org.flowerplatform.editor.model.renderer.CenteredBoxChildRenderer;
 	import org.flowerplatform.editor.model.renderer.ConnectionAnchorsSelectionRenderer;
 	import org.flowerplatform.editor.model.renderer.DiagramNoteRenderer;
 	import org.flowerplatform.editor.model.renderer.SeparatorRenderer;
@@ -70,7 +70,6 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexdiagram.controller.selection.SelectionController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.AbsoluteLayoutVisualChildrenController;
 	import org.flowerplatform.flexdiagram.controller.visual_children.SequentialLayoutVisualChildrenController;
-	import org.flowerplatform.flexdiagram.renderer.NoteRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.ChildAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.renderer.selection.StandardAnchorsSelectionRenderer;
 	import org.flowerplatform.flexdiagram.tool.controller.DragToCreateRelationController;
@@ -83,10 +82,10 @@ package org.flowerplatform.editor.model {
 	import org.flowerplatform.flexutil.content_assist.ContentAssistItem;
 	import org.flowerplatform.flexutil.dialog.IDialogResultHandler;
 	import org.flowerplatform.flexutil.text.AutoGrowTextArea;
-	import org.flowerplatform.properties.PropertiesItemRenderer;
-	import org.flowerplatform.properties.PropertiesList;
 	import org.flowerplatform.properties.PropertiesPlugin;
+	import org.flowerplatform.properties.PropertiesView;
 	import org.flowerplatform.properties.action.ShowPropertiesAction;
+	import org.flowerplatform.properties.property_renderer.BasicPropertyRenderer;
 	import org.flowerplatform.properties.property_renderer.StringWithButtonPropertyRenderer;
 	
 	import spark.components.TextInput;
@@ -157,7 +156,7 @@ package org.flowerplatform.editor.model {
 			// these controllerProvFactories are registered directly in composedControllerProviderFactories; not in standardControllerProviderFactories
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
 			composedControllerProviderFactory.modelExtraInfoControllerClass = new FactoryWithInitialization(DynamicModelExtraInfoController);
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildRenderer});
 			if (!FlexUtilGlobals.getInstance().isMobile) {
 				composedControllerProviderFactory.inplaceEditorControllerClass = new FactoryWithInitialization(InplaceEditorController, {rendererClass : TextInput});
 			}
@@ -223,7 +222,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactories["classDiagram.javaClass.javaOperation"] = composedControllerProviderFactory;
 				
 			composedControllerProviderFactory = new ComposedControllerProviderFactory();
-			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildIconItemRenderer});
+			composedControllerProviderFactory.rendererControllerClass = new FactoryWithInitialization(ClassReferenceRendererController, { rendererClass: CenteredBoxChildRenderer});
 			composedControllerProviderFactories["classTitle"] = composedControllerProviderFactory;
 			composedControllerProviderFactories["classDiagram.javaClass.title"] = composedControllerProviderFactory;
 			
@@ -236,7 +235,7 @@ package org.flowerplatform.editor.model {
 			composedControllerProviderFactories["edge"] = composedControllerProviderFactory;
 			
 			notationDiagramClassFactoryActionProvider.actionClasses.push(RenameAction);
-			notationDiagramClassFactoryActionProvider.actionClasses.push(DeleteAction);
+			notationDiagramClassFactoryActionProvider.actionClasses.push(RemoveFromDiagramAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(DisplayMissingRelationsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddRelatedElementsAction);
 			notationDiagramClassFactoryActionProvider.actionClasses.push(AddScenarioAction);
@@ -261,11 +260,9 @@ package org.flowerplatform.editor.model {
 			PropertiesPlugin.getInstance().propertyRendererClasses["StringWithDialog"] = new FactoryWithInitialization
 				(StringWithButtonPropertyRenderer, {
 					clickHandler: function(itemRendererHandler:IDialogResultHandler, propertyName:String, propertyValue:Object):void {
-						var propertiesList:PropertiesList =PropertiesList(PropertiesItemRenderer(StringWithButtonPropertyRenderer(itemRendererHandler).parent).owner);
-						
 						var dialog:ILocationForNewElementsDialog = new LocationForNewElementsDialog();
 						dialog.setResultHandler(itemRendererHandler);
-						dialog.selectionOfItems = propertiesList.selectionForServer;
+						dialog.selectionOfItems = PropertiesPlugin.getInstance().propertiesView.selectionForServer;
 						dialog.currentLocationForNewElements = propertyValue;
 						
 						FlexUtilGlobals.getInstance().popupHandlerFactory.createPopupHandler()

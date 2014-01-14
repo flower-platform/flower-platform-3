@@ -33,9 +33,9 @@ public class RegexConfiguration {
 
 	private static final Logger logger = LoggerFactory.getLogger(RegexConfiguration.class); 
 
-	protected List<RegexWithAction> regexes = new ArrayList<RegexWithAction>();
+	protected List<AbstractRegexWithAction> regexes = new ArrayList<AbstractRegexWithAction>();
 	
-	protected RegexWithAction[] captureGroupToRegexMapping;
+	protected AbstractRegexWithAction[] captureGroupToRegexMapping;
 	
 	protected Pattern pattern;
 	
@@ -60,21 +60,25 @@ public class RegexConfiguration {
 		return this;
 	}
 
-	public RegexConfiguration add(RegexWithAction regex) {
+	public RegexConfiguration add(AbstractRegexWithAction regex) {
 		regexes.add(regex);
 		return this;
 	}
-	
+		
+	public List<AbstractRegexWithAction> getRegexes() {
+		return regexes;
+	}
+
 	/**
 	 * Iterates on {@link #regexes} to find out how big the array should be. Then
 	 * creates the array.
 	 */
 	protected void createCaptureGroupToRegexMappingArray() {
 		int nextCaptureGroupIndex = 1;
-		for (RegexWithAction regex : regexes) {
-			nextCaptureGroupIndex += 1 + regex.numberOfCaptureGroups;
+		for (AbstractRegexWithAction regex : regexes) {
+			nextCaptureGroupIndex += 1 + regex.getNumberOfCaptureGroups();
 		}
-		captureGroupToRegexMapping = new RegexWithAction[nextCaptureGroupIndex];
+		captureGroupToRegexMapping = new AbstractRegexWithAction[nextCaptureGroupIndex];
 	}
 	
 	/**
@@ -92,20 +96,20 @@ public class RegexConfiguration {
 		for (int i = 0; i < regexes.size(); i++) {
 			composedRegex.append('(');
 		
-			RegexWithAction regex = regexes.get(i);
+			AbstractRegexWithAction regex = regexes.get(i);
 			
 			if (logger.isTraceEnabled()) {
-				logger.trace("Adding to capture group = {} regex = {} having {} capture groups", new Object[] { nextCaptureGroupIndex, regex.regex, regex.numberOfCaptureGroups});
+				logger.trace("Adding to capture group = {} regex = {} having {} capture groups", new Object[] { nextCaptureGroupIndex, regex.getRegex(), regex.getNumberOfCaptureGroups()});
 			}
 			
-			composedRegex.append(regex.regex);
+			composedRegex.append(regex.getRegex());
 			composedRegex.append(')');
 			if (i != regexes.size() - 1) {
 				composedRegex.append('|');
 			}
 			
 			captureGroupToRegexMapping[nextCaptureGroupIndex] = regex;
-			nextCaptureGroupIndex += 1 + regex.numberOfCaptureGroups;
+			nextCaptureGroupIndex += 1 + regex.getNumberOfCaptureGroups();
 		}
 		
 		if (logger.isTraceEnabled()) {
@@ -126,5 +130,10 @@ public class RegexConfiguration {
 		session.reset(false);
 		return session;
 	}
+
+	public AbstractRegexWithAction[] getCaptureGroupToRegexMapping() {
+		return captureGroupToRegexMapping;
+	}
+	
 	
 }

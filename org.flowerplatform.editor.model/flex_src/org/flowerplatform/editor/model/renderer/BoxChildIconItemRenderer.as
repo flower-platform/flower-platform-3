@@ -42,10 +42,9 @@ package org.flowerplatform.editor.model.renderer {
 			super();
 			iconFunction = getImage;
 			
-			minHeight = 0;
-			percentWidth = 100;
+			minHeight = 0;			
+			setStyle("verticalAlign", "middle");
 			
-			setStyle("verticalAlign", "middle");		
 			cacheAsBitmap = true;
 			
 			addEventListener(ZoomPerformedEvent.ZOOM_PERFORMED, zoomPerformedHandler);
@@ -92,8 +91,7 @@ package org.flowerplatform.editor.model.renderer {
 			}
 		}
 		
-		protected function zoomPerformedHandler(event:ZoomPerformedEvent):void {
-			invalidateSize();
+		protected function zoomPerformedHandler(event:ZoomPerformedEvent):void {			
 			invalidateDisplayList();
 		}
 		

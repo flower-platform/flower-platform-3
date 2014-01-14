@@ -18,14 +18,11 @@
  */
 package org.flowerplatform.codesync.config.extension;
 
-import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.PARENT_CODE_SYNC_ELEMENT;
-import static org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1.VIEW;
-
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.emf_model.notation.Bounds;
@@ -50,9 +47,9 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 	public static final String LOCATION = "location";
 	
 	@Override
-	public boolean addNew(CodeSyncElement codeSyncElement, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
+	public boolean addNewView(CodeSyncElement codeSyncElement, View parentView, Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		Node node = NotationFactory.eINSTANCE.createNode();
-		parameters.put(VIEW, node);
+		parameters.put(CodeSyncPlugin.VIEW, node);
 		
 		// check if top-level element
 		if (parentView != null) {
@@ -72,13 +69,13 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 		title.setViewType("topLevelBoxTitle");
 		node.getPersistentChildren().add(title);
 		
-		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService1.getInstance().getChildrenCategories(codeSyncElement.getType())) {
+		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService.getInstance().getChildrenCategories(codeSyncElement.getType())) {
 			String category = childDescriptor.getCategory();
 			if (category != null) {
-				CodeSyncDiagramOperationsService1.getInstance().addCategorySeparator(node, codeSyncElement, childDescriptor);
+				CodeSyncDiagramOperationsService.getInstance().addCategorySeparator(node, codeSyncElement, childDescriptor);
 			}
-		}
-		
+		}	
+			
 		// populate PARENT_CODE_SYNC_ELEMENT
 		if (codeSyncElement.eContainer() == null) {
 			String location = (String) parameters.get(LOCATION);
@@ -91,7 +88,7 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 			CodeSyncOperationsService.getInstance().setKeyFeatureValue(file,  
 					descriptor.getDefaultName() + "." + descriptor.getExtension()); // TODO numbering logic
 			CodeSyncOperationsService.getInstance().add(parent, file);
-			parameters.put(PARENT_CODE_SYNC_ELEMENT, file);
+			parameters.put(CodeSyncPlugin.PARENT_CODE_SYNC_ELEMENT, file);
 		}
 				
 		return true;
@@ -145,6 +142,11 @@ public class AddNewExtension_TopLevelElement implements AddNewExtension {
 			}
 		}
 		return codeSyncElement;
+	}
+
+	@Override
+	public boolean configNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {		
+		return true;
 	}
 	
 }

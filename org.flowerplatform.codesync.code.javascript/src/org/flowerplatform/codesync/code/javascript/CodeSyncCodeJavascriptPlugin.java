@@ -26,7 +26,9 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.flowerplatform.codesync.code.javascript.config.JavaScriptDescriptors;
+import org.flowerplatform.codesync.code.javascript.parser.Parser;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
+import org.flowerplatform.communication.CommunicationPlugin;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;
 import org.mozilla.javascript.Scriptable;
@@ -42,6 +44,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 	protected static CodeSyncCodeJavascriptPlugin INSTANCE;
 	
 	public static String TECHNOLOGY = "js";
+
+	public Parser javaScriptParser;
 	
 	public static CodeSyncCodeJavascriptPlugin getInstance() {
 		return INSTANCE;
@@ -55,6 +59,8 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		INSTANCE = this;
+		
+		
 		
 		// descriptors for js code
 		CodeSyncPlugin.getInstance().addRunnablesForLoadDescriptors(new JavaScriptDescriptors());
@@ -70,6 +76,16 @@ public class CodeSyncCodeJavascriptPlugin extends AbstractFlowerJavaPlugin {
 //		});	
 		
 		CodeSyncPlugin.getInstance().addSrcDir("js");
+		
+		CommunicationPlugin.getInstance().getAllServicesStartedListeners().add(new Runnable() {
+			@Override
+			public void run() {
+				javaScriptParser = new Parser();
+				javaScriptParser.configureHtmlRegexActions();
+				javaScriptParser.configureJSRegexActions();				
+			}
+		});
+		
 	}
 	
 	/**

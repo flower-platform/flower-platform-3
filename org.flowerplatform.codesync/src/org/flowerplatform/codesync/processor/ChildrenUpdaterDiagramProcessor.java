@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService1;
+import org.flowerplatform.codesync.remote.CodeSyncDiagramOperationsService;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.emf_model.notation.CategorySeparator;
 import org.flowerplatform.emf_model.notation.Node;
@@ -42,7 +42,7 @@ public class ChildrenUpdaterDiagramProcessor extends AbstractChildrenUpdaterDiag
 	protected void processChildren(EObject object, List<EObject> childModelElements, View associatedViewOnOpenDiagram,
 			List<Node> childViews, Map<String, Object> viewDetails) {
 		CodeSyncElement codeSyncElement = getCodeSyncElement(object);
-		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService1.getInstance().getChildrenCategories(codeSyncElement.getType())) {
+		for (CodeSyncElementDescriptor childDescriptor : CodeSyncDiagramOperationsService.getInstance().getChildrenCategories(codeSyncElement.getType())) {
 			String category = childDescriptor.getCategory();
 			super.processChildren(
 					object, filterChildModelElements(childModelElements, category), 

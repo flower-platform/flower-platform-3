@@ -32,16 +32,18 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.renderer.IRendererController;
 	import org.flowerplatform.flexdiagram.event.ZoomPerformedEvent;
+	import org.flowerplatform.flexdiagram.renderer.DiagramRenderer;
 	import org.flowerplatform.flexdiagram.renderer.IAbsoluteLayoutRenderer;
 	import org.flowerplatform.flexdiagram.renderer.IVisualChildrenRefreshable;
 	
 	/**
 	 * @author Cristian Spiescu
+	 * @author Cristina Constantinescu
 	 */
 	public class AbsoluteLayoutVisualChildrenController extends ControllerBase implements IVisualChildrenController {
 		
 		public var preferredMaxNumberOfRenderers:int = 150;
-		
+				
 		public function AbsoluteLayoutVisualChildrenController(diagramShell:DiagramShell) {
 			super(diagramShell);
 		}
@@ -133,11 +135,8 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 //							entry.visualIndex = visualIndex;
 //							entry.correctionStartingWithMe = 0;
 //							figuresToAdd++;
-						} else {
-							// TODO la ce o trebui asta?
-							// CC: am observat ca erau folosite cand se facea zoom (figurile cu label prea mare erau trunchiate)
-							// model is visible and still has a figure => position the figure correctly
-							notifyVisualChildren(UIComponent(childRenderer));
+						} else {							
+							dispatchRecursiveZoomPerformedEventIfNecessary(UIComponent(childRenderer));
 //							
 //							AbsolutePositionEditPartUtils.setChildFigureIndex(IVisualElementContainer(getFigure()), IVisualElement(ep.getFigure()), visualIndex - figuresToAdd);
 						}
@@ -255,11 +254,8 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 //					// position the figure to the correct index 
 //					AbsolutePositionEditPartUtils.setChildFigureIndex(IVisualElementContainer(getFigure()), IVisualElement(currentFigure), entry.visualIndex + currentCorrection);
 //					figToReuseEntry = null;
-//				}
-				
-				// TODO la ce servesc astea?
-				// CC: am observat ca erau folosite cand se facea zoom (figurile cu label prea mare erau trunchiate)
-				notifyVisualChildren(UIComponent(childRenderer));
+//				}				
+				dispatchRecursiveZoomPerformedEventIfNecessary(UIComponent(childRenderer));
 			}
 			
 //			childrenChangedFlag = false;
@@ -291,21 +287,29 @@ package org.flowerplatform.flexdiagram.controller.visual_children {
 			IVisualChildrenRefreshable(parentRenderer).shouldRefreshVisualChildren = false;
 			IAbsoluteLayoutRenderer(parentRenderer).noNeedToRefreshRect = new Rectangle(horizontalNoNeedToRefreshLeft, verticalNoNeedToRefreshTop, horizontalNoNeedToRefreshRight - horizontalNoNeedToRefreshLeft, verticalNoNeedToRefreshBottom - verticalNoNeedToRefreshTop);
 			
+			DiagramRenderer(diagramShell.diagramRenderer).shouldDispatchZoomPerformedEvent = false;
+			
 			trace("AbsLayout.refrVC(): " + (logTsModelIterationDone - logTsStart) + "ms/" + (new Date().time - logTsModelIterationDone) + "ms visibleReusableRenderers=" + visibleModelsCounter + 
 				",newModels=" + logNewModels + ",renderersReused=" + logRenderersReused + ",reusableRenderersCreated=" + logReusableRenderersCreated + 
 				",nonReusableRenderersCreated=" + logNonReusableRenderersCreated + ",reusableRenderersRemoved=" + logReusableRenderersRemoved);
 		}
 		
 		/**
-		 * Recursive method used to notify all the graphical children.		
+		 * Recursive method used to dispatch <code>ZoomPerformedEvent</code> to all children when zooming.		
+		 * 
+		 * <p>
+		 * Labels must recalculate their size, otherwise they will be truncated (adds ... at the label's end). 
 		 */
-		private function notifyVisualChildren(child:UIComponent):void {
-			child.dispatchEvent(new ZoomPerformedEvent());
-			for (var i:int = 0; i < child.numChildren; i++) {
-				if (child.getChildAt(i) is UIComponent) {
-					notifyVisualChildren(UIComponent(child.getChildAt(i)));		
+		private function dispatchRecursiveZoomPerformedEventIfNecessary(child:UIComponent):void {
+			if (DiagramRenderer(diagramShell.diagramRenderer).shouldDispatchZoomPerformedEvent) {
+				child.dispatchEvent(new ZoomPerformedEvent());
+				
+				for (var i:int = 0; i < child.numChildren; i++) {
+					if (child.getChildAt(i) is UIComponent) {
+						dispatchRecursiveZoomPerformedEventIfNecessary(UIComponent(child.getChildAt(i)));		
+					}
 				}
-			}
+			}			
 		}
 	
 	}

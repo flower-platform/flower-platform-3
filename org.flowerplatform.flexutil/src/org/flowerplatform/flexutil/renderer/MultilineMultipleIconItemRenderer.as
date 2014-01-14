@@ -24,7 +24,7 @@ package org.flowerplatform.flexutil.renderer {
 	/**
 	 * Code from http://flexponential.com/2011/08/21/adding-multiline-text-support-to-labelitemrenderer/.
 	 * Adapted to work when using <code>MultipleIconItemRenderer</code>.
-	 * @author Cristina Constatinescu
+	 * @author Cristina Constantinescu
 	 */ 
 	public class MultilineMultipleIconItemRenderer extends MultipleIconItemRenderer	{
 		

@@ -79,7 +79,7 @@ package org.flowerplatform.flexutil.samples.tree {
 			pansy.parent = blossom;
 			blossom.children = new ArrayCollection([lily,lilac,pansy]);
 			blossom.hasChildren = true;
-			
+						
 			return root;
 		}
 	}

@@ -18,7 +18,7 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 public class AddNewExtension_BackboneCollectionView implements AddNewExtension {
 	
 	@Override
-	public boolean addNew(CodeSyncElement codeSyncElement, View parent,	Resource codeSyncMappingResource, Map<String, Object> parameters) {
+	public boolean configNew(CodeSyncElement codeSyncElement, Resource codeSyncMappingResource, Map<String, Object> parameters) {
 		String initializationType = (String) Utils.getValueSafe(parameters, CodeSyncPlugin.CONTEXT_INITIALIZATION_TYPE);
 		if (!JavaScriptDescriptors.INIT_TYPE_BACKBONE_COLLECTION_VIEW.equals(initializationType)) {
 			return true;
@@ -33,6 +33,11 @@ public class AddNewExtension_BackboneCollectionView implements AddNewExtension {
 		}
 		
 		return true;		
+	}
+
+	@Override
+	public boolean addNewView(CodeSyncElement codeSyncElement, View parent, Resource codeSyncMappingResource, Map<String, Object> parameters) {		
+		return true;
 	}
 	
 }

@@ -21,8 +21,10 @@ package org.flowerplatform.editor.model.remote {
 	import mx.collections.ArrayCollection;
 	import mx.collections.IList;
 	
+	import org.flowerplatform.communication.CommunicationPlugin;
 	import org.flowerplatform.communication.service.InvokeServiceMethodServerCommand;
 	import org.flowerplatform.communication.stateful_service.ServiceInvocationOptions;
+	import org.flowerplatform.communication.tree.remote.PathFragment;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.model.action.AddNewElementAction;
 	import org.flowerplatform.editor.model.remote.scenario.ScenarioTreeStatefulClient;
@@ -94,12 +96,18 @@ package org.flowerplatform.editor.model.remote {
 				[viewId], null, callbackFunction));
 		}
 		
-		public function service_deleteView(viewId:Object):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "deleteView", [viewId]));
+		public function service_removeView(viewId:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId,
+				"removeView",
+				[viewId]));
 		}
 		
 		public function service_displayMissingRelations(viewId:Object, addMissingElements:Boolean):void {
-//			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("classDiagramOperationsDispatcher", "displayMissingRelations", [viewId, addMissingElements]));
+			attemptUpdateContent(null,  new InvokeServiceMethodServerCommand(
+				codeSyncDiagramOperationsServiceId,
+				"displayMissingRelations",
+				[viewId, addMissingElements]));
 		}
 		
 		public function service_contentAssist(viewId:Object, pattern:String, callbackFunction:Function):void {
@@ -107,8 +115,8 @@ package org.flowerplatform.editor.model.remote {
 			attemptUpdateContent(null, invokeServiceMethod("contentAssist", [viewId, pattern], options));
 		}
 		
-		public function service_addNewRelation(type:String, sourceViewId:Object, targetViewId:Object):void {
-			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(codeSyncDiagramOperationsServiceId, "addNewRelation", [type, sourceViewId, targetViewId]));
+		public function service_addNewRelation(type:String, sourceViewId:Object, targetViewId:Object, parameters:Object):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(codeSyncDiagramOperationsServiceId, "addNewRelation", [type, sourceViewId, targetViewId, parameters]));
 		}
 
 		public function service_addNewScenario(name:String):void {
@@ -139,5 +147,74 @@ package org.flowerplatform.editor.model.remote {
 //			attemptUpdateContent(null, new InvokeServiceMethodServerCommand("jsClassDiagramOperationsDispatcher", "deleteElement", [viewId]));
 		}
 		
+		public function service_getWizardElements(callbackObject:Object, callbackFunction:Function):void {
+			CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"getWizardElements",
+				[editableResourcePath], 
+				callbackObject, callbackFunction));
+		}	
+		
+		public function service_getWizardDependencies(path:ArrayCollection, callbackObject:Object, callbackFunction:Function):void {
+			CommunicationPlugin.getInstance().bridge.sendObject(new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"getWizardDependencies",
+				[editableResourcePath, path],  
+				callbackObject, callbackFunction));			
+		}	
+		
+		public function service_generateWizardDependencies(dependencies:ArrayCollection, path:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"generateWizardDependencies",
+				[editableResourcePath, dependencies, path],
+				callbackObject, callbackFunction));		
+		}	
+		
+		public function service_dragOnDiagramWizardDependenciesTargets(dependencies:ArrayCollection, path:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"dragOnDiagramWizardDependenciesTargets",
+				[editableResourcePath, dependencies, path],
+				callbackObject, callbackFunction));		
+		}	
+		
+		public function service_dragOnDiagramWizardElements(paths:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"dragOnDiagramWizardElements",
+				[editableResourcePath, paths],
+				callbackObject, callbackFunction));		
+		}	
+		
+		public function service_addWizardElement(addWizardAttribute:Boolean, parentPath:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"addWizardElement",
+				[editableResourcePath, addWizardAttribute, parentPath],
+				callbackObject, callbackFunction));		
+		}	
+	
+		public function service_removeWizardElement(path:ArrayCollection, callbackObject:Object = null, callbackFunction:Function = null):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"removeWizardElement",
+				[editableResourcePath, path],
+				callbackObject, callbackFunction));		
+		}	
+		
+		public function service_selectWizardDependenciesTargetsFromDiagram(dependencies:ArrayCollection, path:ArrayCollection):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"selectWizardDependenciesTargetsFromDiagram",
+				[editableResourcePath, dependencies, path]));		
+		}
+		
+		public function service_selectWizardElementsFromDiagram(paths:ArrayCollection):void {
+			attemptUpdateContent(null, new InvokeServiceMethodServerCommand(
+				codeSyncOperationsServiceId,
+				"selectWizardElementsFromDiagram",
+				[editableResourcePath, paths]));		
+		}
 	}
 }

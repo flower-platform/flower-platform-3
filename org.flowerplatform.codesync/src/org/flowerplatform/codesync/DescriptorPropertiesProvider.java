@@ -24,11 +24,13 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.flowerplatform.codesync.properties.remote.StringSelectedItem;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
+import org.flowerplatform.common.util.Pair;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.properties.providers.IPropertiesProvider;
 import org.flowerplatform.properties.remote.Property;
@@ -43,97 +45,103 @@ import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
  * 
  * @author Mircea Negreanu
  */
-public class DescriptorPropertiesProvider implements IPropertiesProvider {
+public class DescriptorPropertiesProvider implements IPropertiesProvider<StringSelectedItem, Object> {
 
 	private final static Logger logger = LoggerFactory.getLogger(DescriptorPropertiesProvider.class);
+
+	private PropertyDescriptor[] pds = null;
+	private HashMap<String, PropertyDescriptor> propertiesMap =  null;
 	
-	@Override
-	public List<String> getPropertyNames() {
-		return null;
-	}
-
-	@Override
-	public Property getProperty(SelectedItem selectedItem, String propertyName) {
-		return null;
-	}
-
-	/**
-	 * Get the list of the properties for the selectedItem.
-	 */
-	@Override
-	public List<Property> getProperties(SelectedItem selectedItem) {
-		List<Property> properties = new ArrayList<>();
-		
-		if (selectedItem instanceof StringSelectedItem) {
-			StringSelectedItem item = (StringSelectedItem)selectedItem;
-			// get the descriptor based on its type (relation/normal descriptor)
-			Object descriptor = null;
-			if (item.getIsRelation()) {
-				descriptor = CodeSyncPlugin.getInstance().getRelationDescriptor(item.getDescriptorName());
-			} else {
-				descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(item.getDescriptorName());
-			}
-			
-			// if the descriptor has been found
-			if (descriptor != null) {
-				// use javaBeans to get its the properties (and make our life a lot easier)
-				PropertyDescriptor[] pds = null;
-				try {
-					BeanInfo info = null;
-					if (item.getIsRelation()) {
-						info = Introspector.getBeanInfo(RelationDescriptor.class);
-					} else {
-						info = Introspector.getBeanInfo(CodeSyncElementDescriptor.class);
-					}
-					pds = info.getPropertyDescriptors();
-				} catch (IntrospectionException ex) {
-					logger.error("Exception getting properties on CodeSyncElementDesriptor.class", ex);
-				}
-				
-				// iterate on each property and get its value
-				if (pds != null) {
-					for (PropertyDescriptor pd: pds) {
-						// discard class (as we don't need to show this)
-						if (pd.getPropertyType().equals(Class.class)) {
-							continue;
-						}
-						// try/catch so we can advance even if we have a problem
-						try {
-							Object result = pd.getReadMethod().invoke(descriptor, (Object[]) null);
-							if (result != null && pd.getPropertyType() != null && pd.getPropertyType().equals(List.class)) {
-								StringBuffer listVal = new StringBuffer();
-								// just get the list and put it in a string with all the elements
-								@SuppressWarnings("unchecked")
-								List<Object> results = (List<Object>) result;
-								for (Object id: results) {
-									if (listVal.length() > 0) {
-										listVal.append(", ");
-									}
-									listVal.append("\"");
-									listVal.append(id.toString());
-									listVal.append("\"");
-								}
-								result = listVal.toString();
-							}
-							properties.add(new Property(pd.getDisplayName(), result));
-						} catch (InvocationTargetException | IllegalAccessException ex) {
-							logger.error("Exception getting property value for CodeSyncElementDescriptor.class", ex);
-						}
-					}
-				}
-			}
-		}
-		
-		return properties;
-	}
-
 	/**
 	 * The property grid should be readOnly
 	 */
 	@Override
-	public boolean setProperty(ServiceInvocationContext context,
-			SelectedItem selectedItem, String propertyName, Object propertyValue) {
+	public boolean setProperty(ServiceInvocationContext context, StringSelectedItem selectedItem, String propertyName,
+			Object propertyValue) {
 		throw new UnsupportedOperationException();
+		//return false;
+	}
+
+	@Override
+	public List<String> getPropertyNames(StringSelectedItem selectedItem, Object descriptor) {
+		// use javaBeans to get its the properties (and make our life a lot easier)		
+		propertiesMap = new HashMap<String, PropertyDescriptor>();
+		List<String> propertyNames = new ArrayList<String>();
+		try {
+			BeanInfo info = null;
+			if (selectedItem.getIsRelation()) {
+				info = Introspector.getBeanInfo(RelationDescriptor.class);
+			} else {
+				info = Introspector.getBeanInfo(CodeSyncElementDescriptor.class);
+			}
+			pds = info.getPropertyDescriptors();
+			
+			for (PropertyDescriptor pd: pds) {
+				// discard class (as we don't need to show this)
+				if (pd.getPropertyType().equals(Class.class)) {
+					continue;
+				}
+				propertiesMap.put(pd.getDisplayName(), pd);
+			}
+		} catch (IntrospectionException ex) {
+			logger.error("Exception getting properties on CodeSyncElementDesriptor.class", ex);
+		}
+		propertyNames.addAll(propertiesMap.keySet());
+		return propertyNames;
+	}
+
+	@Override
+	public Property getProperty(StringSelectedItem selectedItem, Object descriptor, String propertyName) {
+		PropertyDescriptor pd = propertiesMap.get(propertyName);
+		try {
+			Object result = pd.getReadMethod().invoke(descriptor, (Object[]) null);
+			if (result != null && pd.getPropertyType() != null && pd.getPropertyType().equals(List.class)) {
+				StringBuffer listVal = new StringBuffer();
+				// just get the list and put it in a string with all the elements
+				@SuppressWarnings("unchecked")
+				List<Object> results = (List<Object>) result;
+				for (Object id: results) {
+					if (listVal.length() > 0) {
+						listVal.append(", ");
+					}
+					listVal.append("\"");
+					listVal.append(id.toString());
+					listVal.append("\"");
+				}
+					result = "[" + listVal.toString() + "]";
+			}
+			return  new Property()
+					.setNameAs(pd.getDisplayName())
+					.setValueAs(result);
+		} catch (InvocationTargetException | IllegalAccessException ex) {
+			logger.error("Exception getting property value for CodeSyncElementDescriptor.class", ex);
+		}
+		return null;
+	}
+
+	@Override
+	public Object resolveSelectedItem(StringSelectedItem selectedItem) {
+		Object descriptor = null;
+		if (selectedItem.getIsRelation()) {
+			descriptor = CodeSyncPlugin.getInstance().getRelationDescriptor(selectedItem.getDescriptorName());
+		} else {
+			descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(selectedItem.getDescriptorName());
+		}
+		return descriptor;
+	}
+
+	@Override
+	public Pair<String, String> getIconAndLabel(StringSelectedItem selectedItem, Object descriptor) {
+		String label = "";
+		String icon = "";
+		if (selectedItem.getIsRelation()) {
+			label = ((RelationDescriptor) descriptor).getLabel();
+			icon = ((RelationDescriptor) descriptor).getIconUrl();
+		} else {
+			label = ((CodeSyncElementDescriptor) descriptor).getLabel();
+			icon = ((CodeSyncElementDescriptor) descriptor).getIconUrl();
+		}
+		return new Pair<String, String>(CodeSyncPlugin.getInstance().getResourceUrl(icon), label);
 	}
 
 }

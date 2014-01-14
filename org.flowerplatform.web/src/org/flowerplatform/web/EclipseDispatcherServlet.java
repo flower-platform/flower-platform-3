@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Cristian Spiescu
- * @author Cristina Constatinescu
+ * @author Cristina Constantinescu
  */
 @SuppressWarnings("serial")
 public class EclipseDispatcherServlet extends FlowerDispatcherServlet {

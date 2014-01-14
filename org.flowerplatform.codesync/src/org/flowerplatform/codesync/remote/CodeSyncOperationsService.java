@@ -18,21 +18,39 @@
  */
 package org.flowerplatform.codesync.remote;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.flowerplatform.codesync.config.extension.AddNewExtension_TopLevelElement;
 import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
+import org.flowerplatform.codesync.wizard.WizardDependencyDescriptor;
+import org.flowerplatform.codesync.wizard.remote.WizardDependency;
+import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
+import org.flowerplatform.communication.command.DisplaySimpleMessageClientCommand;
 import org.flowerplatform.communication.service.ServiceInvocationContext;
 import org.flowerplatform.communication.stateful_service.RemoteInvocation;
+import org.flowerplatform.communication.tree.remote.PathFragment;
+import org.flowerplatform.communication.tree.remote.TreeNode;
 import org.flowerplatform.editor.EditorPlugin;
+import org.flowerplatform.editor.model.remote.DiagramEditableResource;
+import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
+import org.flowerplatform.emf_model.notation.Diagram;
+import org.flowerplatform.emf_model.notation.View;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
 import com.crispico.flower.mp.model.codesync.AstCacheElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 import com.crispico.flower.mp.model.codesync.CodeSyncFactory;
 import com.crispico.flower.mp.model.codesync.FeatureChange;
+import com.crispico.flower.mp.model.codesync.Relation;
 
 /**
  * @author Mariana Gheorghe
@@ -46,6 +64,38 @@ public class CodeSyncOperationsService {
 				.getServiceRegistry().getService(ID);
 	}
 	
+	private DiagramEditorStatefulService getDiagramEditorStatefulService() {
+		return (DiagramEditorStatefulService) EditorPlugin.getInstance().getEditorStatefulServiceByEditorName("diagram");
+	}
+	
+	private Diagram getDiagramFromEditableResourcePath(String editorResourcePath) {		
+		DiagramEditableResource der = (DiagramEditableResource) getDiagramEditorStatefulService().getEditableResource(editorResourcePath);
+		for (EObject eObject : der.getMainResource().getContents()) {
+			if (eObject instanceof Diagram) {
+				return (Diagram) eObject;
+			}
+		}
+		return null;
+	}
+	
+	private Resource getCodeSyncMappingResource(String editorResourcePath) {
+		DiagramEditableResource der = (DiagramEditableResource) getDiagramEditorStatefulService().getEditableResource(editorResourcePath);
+		return CodeSyncDiagramOperationsService.getCodeSyncMappingResource(der);	
+	}
+	
+	public String getCodeSyncElementPath(EObject cse) {
+		String location = "";
+		EObject parent = cse;
+		while (parent instanceof CodeSyncElement && parent != null) {
+			if (location != "") {
+				location = "\\" + location;
+			}
+			location = getKeyFeatureValue((CodeSyncElement) parent) + location;
+			parent = parent.eContainer();
+		}
+		return location;
+	}
+		
 	public CodeSyncElement create(String codeSyncType) {
 		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncType);
 		if (descriptor == null) {
@@ -278,4 +328,249 @@ public class CodeSyncOperationsService {
 	public String regenerateDescriptors() {
 		return CodeSyncPlugin.getInstance().regenerateDescriptors();
 	}
+		
+	///////////////////////////////////////////////
+	// WIZARD METHODS
+	///////////////////////////////////////////////
+	
+	private void createWizardElementsTreeStructure(Object object, List<TreeNode> structure) {
+		for (EObject entity : object instanceof Resource ? ((Resource) object).getContents() : ((CodeSyncElement) object).getChildren()) {
+			CodeSyncElement cse = (CodeSyncElement) entity;
+			if (cse.getType().equals(CodeSyncPlugin.WIZARD_ELEMENT)) {
+				TreeNode node = getTreeNodeFromwWizardElement(cse);				
+				for (EObject attribute : cse.getChildren()) {									
+					if (node.getChildren() == null) {
+						node.setChildren(new ArrayList<TreeNode>());
+						node.setHasChildren(true);
+					}
+					TreeNode child = getTreeNodeFromwWizardElement((CodeSyncElement) attribute);
+					node.getChildren().add(child);
+					child.setParent(node);
+				}
+				structure.add(node);
+			}
+			createWizardElementsTreeStructure(entity, structure);
+		}
+	}
+	
+	private CodeSyncElement getWizardElementFromPath(Object object, List<PathFragment> path) {
+		CodeSyncElement wizardElement = getWizardElementFromParentByName(object, path.get(0));
+		if (wizardElement != null && path.size() == 2) {
+			return getWizardElementFromParentByName(wizardElement, path.get(1));
+		}		
+		return wizardElement;
+	}
+	
+	private CodeSyncElement getWizardElementFromParentByName(Object object, PathFragment wizardElementInfo) {
+		for (EObject entity : object instanceof Resource ? ((Resource) object).getContents() : ((CodeSyncElement) object).getChildren()) {		
+			CodeSyncElement cse = (CodeSyncElement) entity;
+			if (cse.getType().equals(wizardElementInfo.getType()) && (wizardElementInfo.getName() != null ? cse.eResource().getURIFragment(cse).equals(wizardElementInfo.getName()) : true)) {
+				return cse;
+			}
+			CodeSyncElement result = getWizardElementFromParentByName(cse, wizardElementInfo);
+			if (result != null) {
+				return result;
+			}
+		}
+		return null;
+	}
+	
+	private TreeNode getTreeNodeFromwWizardElement(CodeSyncElement wizardElement) {
+		TreeNode node = new TreeNode();
+		String keyFeature = (String) getKeyFeatureValue(wizardElement);
+		node.setLabel(keyFeature);
+		node.setIcon(CodeSyncPlugin.getInstance().getResourceUrl("images/wizard/wand-hat.png"));
+		node.setPathFragment(new PathFragment(wizardElement.eResource().getURIFragment(wizardElement), wizardElement.getType()));
+		return node;
+	}
+		
+	public Relation getRelation(CodeSyncElement cse, String relationType) {
+		for (Relation relation : cse.getRelations()) {
+			if (relation.getType().equals(relationType)) {
+				return relation;
+			}
+		}
+		return null;
+	}
+	
+	@RemoteInvocation
+	public List<TreeNode> getWizardElements(ServiceInvocationContext context, String editorResourcePath) {		
+		List<TreeNode> structure = new ArrayList<TreeNode>();
+		createWizardElementsTreeStructure(getCodeSyncMappingResource(editorResourcePath), structure);
+		return structure;
+	}
+		
+	@RemoteInvocation
+	public List<WizardDependency> getWizardDependencies(ServiceInvocationContext context, String editorResourcePath, List<PathFragment> path) {
+		List<WizardDependency> dependencies = new ArrayList<WizardDependency>();
+		
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		CodeSyncElement wizardElement = getWizardElementFromPath(resource, path);
+		PathFragment parentWizardElementInfo = path.get(path.size() - 1);
+		
+		for (RelationDescriptor descriptor : CodeSyncPlugin.getInstance().getRelationDescriptors()) {
+			if (descriptor instanceof WizardDependencyDescriptor && descriptor.getSourceCodeSyncTypes().contains(parentWizardElementInfo.getType())) {
+				WizardDependencyDescriptor wizardDescriptor = (WizardDependencyDescriptor) descriptor;
+				WizardDependency dependency = new WizardDependency()
+												.setLabelAs(wizardDescriptor.getLabel())
+												.setTypeAs(wizardDescriptor.getType());
+				
+				Relation relation = getRelation(wizardElement, wizardDescriptor.getType());
+				if (relation != null) {
+					CodeSyncElement target = relation.getTarget();
+					dependency.setTargetLabelAs((String) getCodeSyncElementPath(target))
+							  .setTargetIconUrlAs(CodeSyncPlugin.getInstance().getResourceUrl(
+									  CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(target.getType()).getIconUrl()));
+				}
+				dependencies.add(dependency);
+			}
+		}
+		return dependencies;
+	}
+	
+	@RemoteInvocation
+	public boolean generateWizardDependencies(ServiceInvocationContext context, String editorResourcePath, List<WizardDependency> dependencies, List<PathFragment> path) {	
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		CodeSyncElement source = getWizardElementFromPath(resource, path);
+		
+		for (WizardDependency dependency : dependencies) {
+			Map<String, Object> parameters = new HashMap<String, Object>();		
+			parameters.put(CodeSyncPlugin.SOURCE, source);
+			
+			CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+					CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+			
+			try {
+				service.addNewRelationElement(resource, dependency.getType(), parameters);
+			} catch (Exception e) {
+				context.getCommunicationChannel().sendCommandWithPush(
+						new DisplaySimpleMessageClientCommand(
+								CommonPlugin.getInstance().getMessage("error"), 
+								e.getMessage(), 
+								DisplaySimpleMessageClientCommand.ICON_ERROR));
+				return false;
+			}
+		}		
+		return true;
+	}
+
+	@RemoteInvocation
+	public boolean dragOnDiagramWizardDependenciesTargets(ServiceInvocationContext context, String editorResourcePath, List<WizardDependency> dependencies, List<PathFragment> path) {	
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		CodeSyncElement source = getWizardElementFromPath(resource, path);
+		
+		for (WizardDependency dependency : dependencies) {
+			CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+					CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+			
+			Diagram diagram = getDiagramFromEditableResourcePath(editorResourcePath);
+			Relation relation = getRelation(source, dependency.getType());
+			
+			CodeSyncElement target = relation.getTarget();
+			if (source.getType().equals(CodeSyncPlugin.WIZARD_ATTRIBUTE)) {
+				target = (CodeSyncElement) target.eContainer();
+			}
+			service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, target, new HashMap<String, Object>());
+		}		
+		return true;
+	}
+	
+	@RemoteInvocation
+	public boolean dragOnDiagramWizardElements(ServiceInvocationContext context, String editorResourcePath, List<List<PathFragment>> paths) {	
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+		
+		Diagram diagram = getDiagramFromEditableResourcePath(editorResourcePath);
+		
+		for (List<PathFragment> path : paths) {
+			CodeSyncElement source = getWizardElementFromPath(resource, path);
+			service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, source, new HashMap<String, Object>());
+		}
+		
+		return true;
+	}
+	
+	@RemoteInvocation
+	public void selectWizardDependenciesTargetsFromDiagram(ServiceInvocationContext context, String editorResourcePath, List<WizardDependency> dependencies, List<PathFragment> path) {
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		CodeSyncElement source = getWizardElementFromPath(resource, path);
+		
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+		
+		
+		List<String> list = new ArrayList<String>();
+		for (WizardDependency dependency : dependencies) {					
+			CodeSyncElement target = getRelation(source, dependency.getType()).getTarget();
+				
+			for (View view : service.getViewsForElement(target)) {
+				list.add(view.getIdBeforeRemoval());
+			}
+		}	
+		if (list.size() > 0) {
+			getDiagramEditorStatefulService().client_selectObjects(
+					context.getCommunicationChannel(), 
+					getDiagramEditorStatefulService().getEditableResource(editorResourcePath).getEditorStatefulClientId(), 
+					list);
+		}
+	}
+	
+	@RemoteInvocation
+	public void selectWizardElementsFromDiagram(ServiceInvocationContext context, String editorResourcePath, List<List<PathFragment>> paths) {
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+		
+		List<String> list = new ArrayList<String>();
+		for (List<PathFragment> path : paths) {
+			CodeSyncElement source = getWizardElementFromPath(resource, path);
+			for (View view : service.getViewsForElement(source)) {
+				list.add(view.getIdBeforeRemoval());
+			}
+		}
+		if (list.size() > 0) {
+			getDiagramEditorStatefulService().client_selectObjects(
+					context.getCommunicationChannel(), 
+					getDiagramEditorStatefulService().getEditableResource(editorResourcePath).getEditorStatefulClientId(), 
+					list);
+		}
+	}
+	
+	@RemoteInvocation
+	public boolean addWizardElement(ServiceInvocationContext context, String editorResourcePath, boolean addWizardAttribute, List<PathFragment> parentPath) {	
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		
+		CodeSyncElement codeSyncElement = null;
+		CodeSyncElement parentCodeSyncElement = null;
+		if (addWizardAttribute) {	
+			codeSyncElement = CodeSyncOperationsService.getInstance().create(CodeSyncPlugin.WIZARD_ATTRIBUTE);
+			parentCodeSyncElement = getWizardElementFromPath(resource, parentPath);
+		} else {	
+			codeSyncElement = CodeSyncOperationsService.getInstance().create(CodeSyncPlugin.WIZARD_ELEMENT);
+			parentCodeSyncElement = AddNewExtension_TopLevelElement.getOrCreateCodeSyncElementForLocation(resource, "/wizardElements".split("/"));			
+		}		
+		CodeSyncElementDescriptor descriptor = CodeSyncPlugin.getInstance().getCodeSyncElementDescriptor(codeSyncElement.getType());
+		
+		CodeSyncOperationsService.getInstance().setKeyFeatureValue(codeSyncElement,  descriptor.getDefaultName());
+		add(parentCodeSyncElement, codeSyncElement);
+					
+		return true;
+	}
+	
+	@RemoteInvocation
+	public boolean removeWizardElement(ServiceInvocationContext context, String editorResourcePath, List<PathFragment> path) {	
+		Resource resource = getCodeSyncMappingResource(editorResourcePath);
+		CodeSyncElement wizardElement = getWizardElementFromPath(resource, path);
+		
+		CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
+				CommunicationPlugin.getInstance().getServiceRegistry().getService(CodeSyncDiagramOperationsService.ID);
+		
+		service.deleteCodeSyncElement(context.getAdditionalData(), wizardElement);
+		
+		return true;
+	}
+	
 }

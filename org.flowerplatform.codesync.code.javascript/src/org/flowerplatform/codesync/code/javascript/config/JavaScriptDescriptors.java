@@ -1,5 +1,7 @@
 package org.flowerplatform.codesync.code.javascript.config;
 
+import static com.crispico.flower.mp.codesync.base.CodeSyncPlugin.TOP_LEVEL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +14,20 @@ import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtens
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableItemView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneTableView;
 import org.flowerplatform.codesync.code.javascript.config.extension.AddNewExtension_BackboneView;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewRelationExtension_FromWizardAttribute;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewRelationExtension_FromWizardElement;
+import org.flowerplatform.codesync.code.javascript.config.extension.AddNewRelationExtension_JavaScriptAttr;
 import org.flowerplatform.codesync.code.javascript.operation_extension.JavaScriptFeatureAccessExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_RegExFormat;
 import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
 import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.codesync.processor.CodeSyncCategorySeparatorProcessor;
+import org.flowerplatform.codesync.processor.RelationsChangesDiagramProcessor;
 import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
+import org.flowerplatform.codesync.wizard.WizardDependencyDescriptor;
+import org.flowerplatform.codesync.wizard.WizardTargetRelationsProcessor;
 import org.flowerplatform.editor.model.EditorModelPlugin;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
@@ -51,6 +59,19 @@ public class JavaScriptDescriptors implements Runnable {
 	public static final String INIT_TYPE_BACKBONE_TABLE_ITEM_VIEW = "backboneTableItemView";
 	public static final String INIT_TYPE_BACKBONE_COLLECTION_VIEW = "backboneCollectionView";
 
+	public static final String DEPENDENCY_SAMPLE_OBJ_GEN = "sampleObjGen";
+	public static final String DEPENDENCY_COLLECTION = "collection";
+	public static final String DEPENDENCY_FORM_TEMPLATE = "formTemplate";
+	public static final String DEPENDENCY_FORM_VIEW = "formView";
+	public static final String DEPENDENCY_TABLE_TEMPLATE = "tableTemplate";
+	public static final String DEPENDENCY_TABLE_VIEW = "tableView";
+	public static final String DEPENDENCY_TABLE_ITEM_TEMPLATE = "tableItemTemplate";
+	public static final String DEPENDENCY_TABLE_ITEM_VIEW = "tableItemView";
+	
+	public static final String DEPENDENCY_ATTR_SAMPLE_OBJ_GEN = "attrSampleObjGen";
+	public static final String DEPENDENCY_ATTR_TABLE_ITEM_TEMPLATE = "attrTableItemTemplate";
+	public static final String DEPENDENCY_ATTR_FORM_TEMPLATE = "attrFormTemplate";
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Runnable#run()
 	 */
@@ -64,7 +85,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_BACKBONE_CLASS).setLabel("Backbone Class")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addInitializationType(INIT_TYPE_NONE).addInitializationTypeLabel("Plain Backbone Class").addInitializationTypesOrderIndexes(110)
 				.addInitializationType(INIT_TYPE_BACKBONE_VIEW).addInitializationTypeLabel("Plain View").addInitializationTypesOrderIndexes(120)
 				.addInitializationType(INIT_TYPE_BACKBONE_TABLE_VIEW).addInitializationTypeLabel("Table View").addInitializationTypesOrderIndexes(130)
@@ -195,7 +216,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType(TYPE_JAVASCRIPT_FILE)
-//				.addCodeSyncTypeCategory("topLevel")
+//				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.setLabel("JavaScript File")
 				.setIconUrl("images/full/obj16/jcu_obj.gif")
 				.setDefaultName("NewJavaScriptFile")
@@ -212,7 +233,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("table")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table HTML Template")
 				.setIconUrl("images/full/obj16/table.png")
@@ -247,7 +268,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.setCodeSyncType("tableItem")
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table Item HTML Template")
 				.setIconUrl("images/full/obj16/table_select_row.png")
@@ -279,7 +300,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		descriptors.add(
 				new CodeSyncElementDescriptor()
-				.addCodeSyncTypeCategory("topLevel")
+				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.setCodeSyncType("form")
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Form HTML Template")
@@ -323,7 +344,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		descriptors.add(
 				new CodeSyncElementDescriptor()
-				.addCodeSyncTypeCategory("topLevel").addCodeSyncTypeCategory("dontNeedLocation")
+				.addCodeSyncTypeCategory(TOP_LEVEL).addCodeSyncTypeCategory("dontNeedLocation")
 				.setCodeSyncType("note")
 				.setLabel("Note")
 				.setIconUrl("images/full/obj16/note.png")
@@ -332,7 +353,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setCreateCodeSyncElement(false)	
 				.setOrderIndex(99)
 		);
-		
+				
 		CodeSyncPlugin.getInstance().getCodeSyncElementDescriptors().addAll(descriptors);
 		
 		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
@@ -341,7 +362,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setLabel("HTML Template Dependency")
 				.setTargetEndFigureType(RelationDescriptor.OPEN_ARROW)
 				.addSourceCodeSyncType(TYPE_JAVASCRIPT_ATTRIBUTE)
-				.addTargetCodeSyncTypeCategory("htmlTemplate")
+				.addTargetCodeSyncTypeCategory("htmlTemplate")				
 		);
 			
 		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
@@ -350,7 +371,7 @@ public class JavaScriptDescriptors implements Runnable {
 				.setLabel("Class Dependency")
 				.setTargetEndFigureType(RelationDescriptor.OPEN_ARROW)
 				.addSourceCodeSyncType(TYPE_JAVASCRIPT_ATTRIBUTE)
-				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
+				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)				
 		);
 		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
 				new RelationDescriptor()
@@ -376,6 +397,135 @@ public class JavaScriptDescriptors implements Runnable {
 				.addSourceCodeSyncType(TYPE_BACKBONE_CLASS)
 				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
 		);
+			
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()			
+				.setTargetCodeSyncElementLocation("js/models")
+				.setNewCodeSyncElementKeyFeatureFormat("%sSampleObject")
+				.setType(DEPENDENCY_SAMPLE_OBJ_GEN)
+				.setLabel("Sample Object Generator")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+		
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()				
+				.setTargetCodeSyncElementLocation("js/models")
+				.setNewCodeSyncElementKeyFeatureFormat("%sCollectionView")
+				.setType(DEPENDENCY_COLLECTION)
+				.setLabel("Collection View")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+						
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()	
+				.setTargetCodeSyncElementLocation("js/tpl")
+				.setNewCodeSyncElementKeyFeatureFormat("%sFormTemplate")
+				.setType(DEPENDENCY_FORM_TEMPLATE)
+				.setLabel("Form Template")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType("form")
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+				
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()	
+				.setTargetCodeSyncElementLocation("js/view")
+				.setNewCodeSyncElementKeyFeatureFormat("%sFormView")
+				.setType(DEPENDENCY_FORM_VIEW)
+				.setLabel("Form View")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+		
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()		
+				.setTargetCodeSyncElementLocation("js/tpl")
+				.setNewCodeSyncElementKeyFeatureFormat("%sTableTemplate")
+				.setType(DEPENDENCY_TABLE_TEMPLATE)
+				.setLabel("Table Template")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType("table")
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+			
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()	
+				.setTargetCodeSyncElementLocation("js/view")
+				.setNewCodeSyncElementKeyFeatureFormat("%sTableView")
+				.setType(DEPENDENCY_TABLE_VIEW)
+				.setLabel("Table View")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+		
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()		
+				.setTargetCodeSyncElementLocation("js/tpl")
+				.setNewCodeSyncElementKeyFeatureFormat("%sTableItemTemplate")
+				.setType(DEPENDENCY_TABLE_ITEM_TEMPLATE)
+				.setLabel("Table Item Template")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType("tableItem")
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+		
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()	
+				.setTargetCodeSyncElementLocation("js/view")
+				.setNewCodeSyncElementKeyFeatureFormat("%sTableItemView")
+				.setType(DEPENDENCY_TABLE_ITEM_VIEW)
+				.setLabel("Table Item View")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ELEMENT)
+				.addTargetCodeSyncType(TYPE_BACKBONE_CLASS)
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+						
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()				
+				.addRequiredWizardDependencyType(DEPENDENCY_SAMPLE_OBJ_GEN)
+				.setType(DEPENDENCY_ATTR_SAMPLE_OBJ_GEN)
+				.setLabel("Attribute in Sample Object Generator")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ATTRIBUTE)
+				.addTargetCodeSyncType(TYPE_JAVASCRIPT_ATTRIBUTE)
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()				
+				.addRequiredWizardDependencyType(DEPENDENCY_TABLE_ITEM_TEMPLATE)
+				.setType(DEPENDENCY_ATTR_TABLE_ITEM_TEMPLATE)
+				.setLabel("Item Entry in Table Item Template")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ATTRIBUTE)
+				.addTargetCodeSyncType("tableItemEntry")
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
+		
+		CodeSyncPlugin.getInstance().getRelationDescriptors().add(
+				new WizardDependencyDescriptor()				
+				.addRequiredWizardDependencyType(DEPENDENCY_FORM_TEMPLATE)
+				.setType(DEPENDENCY_ATTR_FORM_TEMPLATE)
+				.setLabel("Item Entry in Form Template")
+				.setTargetEndFigureType(RelationDescriptor.DIAMOND)
+				.addSourceCodeSyncType(CodeSyncPlugin.WIZARD_ATTRIBUTE)
+				.addTargetCodeSyncType("formItem")
+				.setAcceptTargetNullIfNoCodeSyncTypeDetected(true)
+		);
 		
 		// extensions
 		CodeSyncPlugin.getInstance().getFeatureAccessExtensions().add(new JavaScriptFeatureAccessExtension(descriptors));
@@ -385,6 +535,19 @@ public class JavaScriptDescriptors implements Runnable {
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneTableItemView());
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneFormView());
 		CodeSyncPlugin.getInstance().getAddNewExtensions().add(new AddNewExtension_BackboneCollectionView());
+		
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_SAMPLE_OBJ_GEN));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_COLLECTION, INIT_TYPE_BACKBONE_COLLECTION_VIEW));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_FORM_TEMPLATE));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_FORM_VIEW, INIT_TYPE_BACKBONE_FORM_VIEW));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_TABLE_ITEM_TEMPLATE));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_TABLE_ITEM_VIEW, INIT_TYPE_BACKBONE_TABLE_ITEM_VIEW));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_TABLE_TEMPLATE));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardElement(DEPENDENCY_TABLE_VIEW, INIT_TYPE_BACKBONE_TABLE_VIEW));
+		
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_JavaScriptAttr(DEPENDENCY_ATTR_SAMPLE_OBJ_GEN));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardAttribute(DEPENDENCY_ATTR_TABLE_ITEM_TEMPLATE));
+		CodeSyncPlugin.getInstance().getAddNewRelationExtensions().add(new AddNewRelationExtension_FromWizardAttribute(DEPENDENCY_ATTR_FORM_TEMPLATE));
 		
 		InplaceEditorExtension_RegExFormat javascriptAttributeInplaceEditorExtension = 
 				new InplaceEditorExtension_RegExFormat(
@@ -417,7 +580,7 @@ public class JavaScriptDescriptors implements Runnable {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", parentElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form", parentElementProcessor);
-		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);		
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", parentElementProcessor);
 		
 		TopLevelElementChildProcessor childElementProcessor = new TopLevelElementChildProcessor();
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("topLevelBoxTitle", childElementProcessor);
@@ -426,7 +589,7 @@ public class JavaScriptDescriptors implements Runnable {
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute", childElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", childElementProcessor);
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", childElementProcessor);
-		
+				
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", new TopLevelElementChildProcessor(javascriptAttributeInplaceEditorExtension));
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile.javaScriptOperation", new TopLevelElementChildProcessor(javascriptOperationInplaceEditorExtension));
@@ -439,11 +602,39 @@ public class JavaScriptDescriptors implements Runnable {
 		
 		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("categorySeparator", new CodeSyncCategorySeparatorProcessor());
 		
-		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_CLASS_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
-		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!", true, null));
-		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_CLASS_DEPENDENCY, new RequireEntryDependencyProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
-		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY, new RequireEntryDependencyProcessor("text!", true, null));
-		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(JavaScriptDescriptors.TYPE_INHERITANCE, new InheritanceProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
+		RelationsChangesDiagramProcessor relationsChangesProcessor = new RelationsChangesDiagramProcessor();
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.requireEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.eventsAttribute.eventsAttributeEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.routesAttribute.routesAttributeEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptOperation", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.backboneClass.javaScriptAttribute", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.javaScriptFile", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.table.tableHeaderEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.tableItem.tableItemEntry", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.form", relationsChangesProcessor);
+		EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.formItem", relationsChangesProcessor);
+		
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_CLASS_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_HTML_TEMPLATE_DEPENDENCY, new AttributeWithRequireEntryDependencyProcessor("text!", true, null));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_REQUIRE_CLASS_DEPENDENCY, new RequireEntryDependencyProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY, new RequireEntryDependencyProcessor("text!", true, null));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_INHERITANCE, new InheritanceProcessor(null, false, new String[] {CodeSyncPlugin.FILE}));
+		
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_BACKBONE_CLASS, new WizardTargetRelationsProcessor (DEPENDENCY_COLLECTION, DEPENDENCY_SAMPLE_OBJ_GEN, "sampleObjectGenerator"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_BACKBONE_CLASS, new WizardTargetRelationsProcessor (DEPENDENCY_TABLE_VIEW, DEPENDENCY_TABLE_ITEM_VIEW, "tableItemViewClass"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_BACKBONE_CLASS, new WizardTargetRelationsProcessor (DEPENDENCY_TABLE_VIEW, DEPENDENCY_TABLE_TEMPLATE, "tpl"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_BACKBONE_CLASS, new WizardTargetRelationsProcessor (DEPENDENCY_FORM_VIEW, DEPENDENCY_FORM_TEMPLATE, "tpl"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(TYPE_BACKBONE_CLASS, new WizardTargetRelationsProcessor (DEPENDENCY_TABLE_ITEM_VIEW, DEPENDENCY_TABLE_ITEM_TEMPLATE, "tpl"));
+			
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("table", new WizardTargetRelationsProcessor (DEPENDENCY_TABLE_VIEW, DEPENDENCY_TABLE_TEMPLATE, "tpl"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("form", new WizardTargetRelationsProcessor (DEPENDENCY_FORM_VIEW, DEPENDENCY_FORM_TEMPLATE, "tpl"));
+		CodeSyncPlugin.getInstance().getCodeSyncTypeCriterionDispatcherProcessor().addProcessor("tableItem", new WizardTargetRelationsProcessor (DEPENDENCY_TABLE_ITEM_VIEW, DEPENDENCY_TABLE_ITEM_TEMPLATE, "tpl"));
+		
 	}
 
 }

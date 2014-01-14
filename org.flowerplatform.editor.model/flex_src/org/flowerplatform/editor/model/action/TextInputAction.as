@@ -20,16 +20,15 @@ package org.flowerplatform.editor.model.action {
 	
 	import flash.events.MouseEvent;
 	
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.editor.model.remote.NotationDiagramEditorStatefulClient;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
-	import org.flowerplatform.flexutil.action.ActionBase;
 	import org.flowerplatform.flexutil.popup.IMessageBox;
+	
+	import spark.components.TextArea;
 	
 	/**
 	 * @author Mariana Gheorghe
 	 */
-	public class TextInputAction extends ActionBase {
+	public class TextInputAction extends DiagramShellAwareActionBase {
 		
 		public function TextInputAction() {
 			super();
@@ -53,6 +52,7 @@ package org.flowerplatform.editor.model.action {
 				.addButton("Cancel");
 			if (messageBox.hasOwnProperty("textArea")) {
 				textArea = messageBox.textArea;
+				TextArea(textArea).editable = true;
 			}
 			IMessageBox(messageBox).showMessageBox();
 			return IMessageBox(messageBox);

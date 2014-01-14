@@ -24,6 +24,7 @@ package org.flowerplatform.codesync.remote {
 	 * @author Cristian Spiescu
 	 */
 	[RemoteClass]
+	[Bindable]
 	public class RelationDescriptor {
 	
 		public var type:String;
@@ -33,6 +34,6 @@ package org.flowerplatform.codesync.remote {
 		public var targetCodeSyncTypes:ArrayCollection;
 		public var sourceCodeSyncTypeCategories:ArrayCollection;
 		public var targetCodeSyncTypeCategories:ArrayCollection;
-		
+		public var acceptTargetNullIfNoCodeSyncTypeDetected:Boolean;
 	}
 }

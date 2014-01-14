@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.osgi.framework.internal.core.FrameworkProperties;
 import org.flowerplatform.common.CommonPlugin;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
@@ -94,6 +95,9 @@ public class WebPlugin extends AbstractFlowerJavaPlugin {
 		
 		CommonPlugin.getInstance().initializeFlowerProperties(
 				this.getClass().getClassLoader().getResourceAsStream("META-INF/flower-web.properties"));
+
+		CommonPlugin.getInstance().initializeFlowerJMXRegistry(
+				FrameworkProperties.getProperty("flower.server.app.context"));
 
 		// Initially, this initialization was in the attribute initializer. But this lead to an issue:
 		// .communication was loaded, which processed the extension points, including services, 

@@ -36,20 +36,29 @@ import org.eclipse.emf.ecore.resource.impl.ResourceFactoryImpl;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.flowerplatform.blazeds.custom_serialization.CustomSerializationDescriptor;
+import org.flowerplatform.codesync.DependentFeature;
 import org.flowerplatform.codesync.changes_processor.CodeSyncTypeCriterionDispatcherProcessor;
 import org.flowerplatform.codesync.config.extension.AddNewExtension;
 import org.flowerplatform.codesync.config.extension.AddNewExtension_Note;
 import org.flowerplatform.codesync.config.extension.AddNewExtension_TopLevelElement;
+import org.flowerplatform.codesync.config.extension.AddNewRelationExtension;
 import org.flowerplatform.codesync.config.extension.FeatureAccessExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Default;
 import org.flowerplatform.codesync.config.extension.InplaceEditorExtension_Note;
 import org.flowerplatform.codesync.config.extension.NamedElementFeatureAccessExtension;
+import org.flowerplatform.codesync.processor.ChildrenUpdaterDiagramProcessor;
 import org.flowerplatform.codesync.processor.RelationDiagramProcessor;
+import org.flowerplatform.codesync.processor.RelationsChangesDiagramProcessor;
+import org.flowerplatform.codesync.processor.TopLevelElementChildProcessor;
 import org.flowerplatform.codesync.projects.IProjectAccessController;
+import org.flowerplatform.codesync.regex.RegexService;
 import org.flowerplatform.codesync.remote.CodeSyncElementDescriptor;
 import org.flowerplatform.codesync.remote.CodeSyncOperationsService;
 import org.flowerplatform.codesync.remote.RelationDescriptor;
+import org.flowerplatform.codesync.wizard.WizardChildrenPropagatorProcessor;
+import org.flowerplatform.codesync.wizard.WizardElementKeyFeatureChangedProcessor;
+import org.flowerplatform.codesync.wizard.remote.WizardDependency;
 import org.flowerplatform.common.plugin.AbstractFlowerJavaPlugin;
 import org.flowerplatform.communication.CommunicationPlugin;
 import org.flowerplatform.editor.EditorPlugin;
@@ -57,6 +66,9 @@ import org.flowerplatform.editor.model.EditorModelPlugin;
 import org.flowerplatform.editor.model.remote.DiagramEditableResource;
 import org.flowerplatform.editor.model.remote.DiagramEditorStatefulService;
 import org.flowerplatform.editor.remote.EditableResource;
+import org.flowerplatform.emf_model.notation.NotationPackage;
+import org.flowerplatform.emf_model.regex.MacroRegex;
+import org.flowerplatform.emf_model.regex.ParserRegex;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,6 +86,16 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected static CodeSyncPlugin INSTANCE;
 	
 	public static final String CONTEXT_INITIALIZATION_TYPE = "initializationType";
+	
+	public static final String VIEW = "view";
+	public static final String PARENT_CODE_SYNC_ELEMENT = "parentCodeSyncElement";
+	public static final String PARENT_VIEW = "parentView";
+
+	public static final String SOURCE = "source";
+	public static final String TARGET = "target";
+	
+	public static final String WIZARD_ELEMENT = "wizardElement";
+	public static final String WIZARD_ATTRIBUTE = "wizardAttribute";
 	
 	/**
 	 * The location of the CSE mapping file, relative to the project. May be
@@ -97,11 +119,15 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	
 	public static final String FILE = "File";
 	
+	public static final String TOP_LEVEL = "topLevel";
+	
 	private final static Logger logger = LoggerFactory.getLogger(CodeSyncPlugin.class);
 
 	protected ComposedFullyQualifiedNameProvider fullyQualifiedNameProvider;
 	
 	protected ComposedCodeSyncAlgorithmRunner codeSyncAlgorithmRunner;
+	
+	protected List<DependentFeature> dependentFeatures;
 	
 	protected List<CodeSyncElementDescriptor> codeSyncElementDescriptors;
 	
@@ -110,6 +136,8 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	protected List<FeatureAccessExtension> featureAccessExtensions;
 	
 	protected List<AddNewExtension> addNewExtensions;
+	
+	protected List<AddNewRelationExtension> addNewRelationExtensions;
 	
 	/**
 	 * @author Cristina Constantinescu
@@ -161,6 +189,14 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		this.projectAccessController = projectAccessController;
 	}
 	
+	/**
+	 * A list of feature to be deleted in case an object is deleted 
+	 * (e.g. an edge that starts or ends in a deleted view).
+	 */
+	public List<DependentFeature> getDependentFeatures() {
+		return dependentFeatures;
+	}
+	
 	public List<CodeSyncElementDescriptor> getCodeSyncElementDescriptors() {
 		return codeSyncElementDescriptors;
 	}
@@ -196,7 +232,11 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 	public List<AddNewExtension> getAddNewExtensions() {
 		return addNewExtensions;
 	}
-	
+		
+	public List<AddNewRelationExtension> getAddNewRelationExtensions() {
+		return addNewRelationExtensions;
+	}
+
 	/**
 	 * @author Cristina Constantinescu
 	 */
@@ -228,12 +268,18 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		relationDescriptors = new ArrayList<RelationDescriptor>();
 		
 		addNewExtensions = new ArrayList<AddNewExtension>();
+		addNewRelationExtensions = new ArrayList<AddNewRelationExtension>();
 		inplaceEditorExtensions = new ArrayList<InplaceEditorExtension>();
 		
 		featureAccessExtensions = new ArrayList<FeatureAccessExtension>();
 		
 		fullyQualifiedNameProvider = new ComposedFullyQualifiedNameProvider();
-
+		
+		dependentFeatures = new ArrayList<DependentFeature>();
+		dependentFeatures.add(new DependentFeature(NotationPackage.eINSTANCE.getView(), NotationPackage.eINSTANCE.getEdge_Source(), true));
+		dependentFeatures.add(new DependentFeature(NotationPackage.eINSTANCE.getView(), NotationPackage.eINSTANCE.getEdge_Target(), true));
+		dependentFeatures.add(new DependentFeature(NotationPackage.eINSTANCE.getView(), NotationPackage.eINSTANCE.getView_PersistentChildren(), false));
+		
 		// main list of code sync descriptors
 		addRunnablesForLoadDescriptors(new Runnable() {
 			@Override
@@ -254,21 +300,67 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 						.addCodeSyncTypeCategory(FILE)
 						.addFeature(NamedElementFeatureAccessExtension.NAME)
 						.setKeyFeature(NamedElementFeatureAccessExtension.NAME));
-				getCodeSyncElementDescriptors().addAll(descriptors);
 				
+				descriptors.add(
+						new CodeSyncElementDescriptor()
+						.setCodeSyncType(WIZARD_ELEMENT)
+						.setLabel("Wizard Element")
+						.setIconUrl("images/wizard/wand-hat.png")
+						.setDefaultName("NewWizardElement")
+						.addCodeSyncTypeCategory("topLevel")
+						.addChildrenCodeSyncTypeCategory(WIZARD_ATTRIBUTE)
+						.addFeature(NamedElementFeatureAccessExtension.NAME)
+						.setKeyFeature(NamedElementFeatureAccessExtension.NAME)						
+						.setStandardDiagramControllerProviderFactory("topLevelBox")
+						.setOrderIndex(500));
+				descriptors.add(
+						new CodeSyncElementDescriptor()
+						.setCodeSyncType(WIZARD_ATTRIBUTE)
+						.addCodeSyncTypeCategory(WIZARD_ATTRIBUTE)
+						.setLabel("Wizard Attribute")
+						.setIconUrl("images/wizard/wand-hat.png")
+						.setDefaultName("NewWizardAttribute")						
+						.setCategory("children")
+						.addFeature(NamedElementFeatureAccessExtension.NAME)
+						.setKeyFeature(NamedElementFeatureAccessExtension.NAME)						
+						.setStandardDiagramControllerProviderFactory("topLevelBoxChild")
+						.setOrderIndex(501));
+						
+				
+				getCodeSyncElementDescriptors().addAll(descriptors);
+								
 				EditorModelPlugin.getInstance().getMainChangesDispatcher().addProcessor(codeSyncTypeCriterionDispatcherProcessor);
 
 				// extensions
 				getFeatureAccessExtensions().add(new NamedElementFeatureAccessExtension(descriptors));
-				
+								
 				getAddNewExtensions().add(new AddNewExtension_Note());	
-				getAddNewExtensions().add(new AddNewExtension_TopLevelElement());							
-				
+				getAddNewExtensions().add(new AddNewExtension_TopLevelElement());					
+								
 				getInplaceEditorExtensions().add(new InplaceEditorExtension_Default());
 				getInplaceEditorExtensions().add(new InplaceEditorExtension_Note());
 				
 				// processors
 				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("edge", new RelationDiagramProcessor());
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement", new ChildrenUpdaterDiagramProcessor());				
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new TopLevelElementChildProcessor());
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement.wizardAttribute", new RelationsChangesDiagramProcessor());
+				EditorModelPlugin.getInstance().getDiagramUpdaterChangeProcessor().addDiagrammableElementFeatureChangeProcessor("classDiagram.wizardElement", new RelationsChangesDiagramProcessor());
+							
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(WIZARD_ATTRIBUTE, new WizardChildrenPropagatorProcessor());
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(WIZARD_ATTRIBUTE, new WizardElementKeyFeatureChangedProcessor());
+				getCodeSyncTypeCriterionDispatcherProcessor().addProcessor(WIZARD_ELEMENT, new WizardElementKeyFeatureChangedProcessor());
+				
+				CustomSerializationDescriptor macroRegexSD = new CustomSerializationDescriptor(MacroRegex.class)
+				.addDeclaredProperty("name")
+				.addDeclaredProperty("regex")				
+				.register();
+				
+				new CustomSerializationDescriptor(ParserRegex.class)
+				.addDeclaredProperties(macroRegexSD.getDeclaredProperties())
+				.addDeclaredProperty("action")
+				.addDeclaredProperty("fullRegex")				
+				.register();
 			}
 		});
 
@@ -302,8 +394,15 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 			.addDeclaredProperty("targetCodeSyncTypes")
 			.addDeclaredProperty("sourceCodeSyncTypeCategories")
 			.addDeclaredProperty("targetCodeSyncTypeCategories")
+			.addDeclaredProperty("acceptTargetNullIfNoCodeSyncTypeDetected")
 			.register();
 		
+		new CustomSerializationDescriptor(WizardDependency.class)
+			.addDeclaredProperty("type")
+			.addDeclaredProperty("label")
+			.addDeclaredProperty("targetLabel")
+			.addDeclaredProperty("targetIconUrl")
+			.register();
 	}
 	
 	private void initializeExtensionPoint_codeSyncAlgorithmRunner() throws CoreException {
@@ -553,6 +652,7 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		getAddNewExtensions().clear();
 		getInplaceEditorExtensions().clear();
 		getCodeSyncTypeCriterionDispatcherProcessor().clear();
+		RegexService.getInstance().clearRegexActionsAndCompiledRegexConfigurations();
 		
 		StringBuilder errorsCollected = new StringBuilder();
 		for (Runnable run: runnablesThatLoadDescriptors) {
@@ -566,4 +666,47 @@ public class CodeSyncPlugin extends AbstractFlowerJavaPlugin {
 		
 		return errorsCollected.toString();
 	}
+	
+	public List<RelationDescriptor> getRelationDescriptorsHavingThisTypeAsSourceCodeSyncType(String type) {
+		List<RelationDescriptor> descriptors = new ArrayList<RelationDescriptor>();
+		for (RelationDescriptor descriptor : getRelationDescriptors()) {
+			if (descriptor.getSourceCodeSyncTypes().contains(type)) {
+				descriptors.add(descriptor);
+			}
+		}
+		return descriptors;
+	}
+	
+	public List<RelationDescriptor> getRelationDescriptorsHavingThisEndTypes(String sourceType, String targetType) {
+		CodeSyncElementDescriptor sourceDescriptor = getCodeSyncElementDescriptor(sourceType);
+		CodeSyncElementDescriptor targetDescriptor = getCodeSyncElementDescriptor(targetType);
+		List<RelationDescriptor> descriptors = new ArrayList<RelationDescriptor>();
+		for (RelationDescriptor descriptor : getRelationDescriptors()) {
+			boolean sourceTypeOk = false;
+			boolean targetTypeOk = false;
+			if (descriptor.getSourceCodeSyncTypes() != null && descriptor.getSourceCodeSyncTypes().contains(sourceType)) {
+				sourceTypeOk = true;				
+			} else {
+				for (String category : sourceDescriptor.getCodeSyncTypeCategories()) {
+					if (descriptor.getSourceCodeSyncTypeCategories() != null && descriptor.getSourceCodeSyncTypeCategories().contains(category)) {
+						sourceTypeOk = true;
+					}
+				}
+			}
+			if (descriptor.getTargetCodeSyncTypes() != null && descriptor.getTargetCodeSyncTypes().contains(targetType)) {
+				targetTypeOk = true;				
+			} else {
+				for (String category : targetDescriptor.getCodeSyncTypeCategories()) {
+					if (descriptor.getTargetCodeSyncTypeCategories() != null && descriptor.getTargetCodeSyncTypeCategories().contains(category)) {
+						targetTypeOk = true;
+					}
+				}
+			}
+			if (sourceTypeOk && targetTypeOk) {
+				descriptors.add(descriptor);
+			}
+		}
+		return descriptors;
+	}
+	
 }

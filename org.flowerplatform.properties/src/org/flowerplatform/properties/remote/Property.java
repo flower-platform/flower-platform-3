@@ -19,13 +19,14 @@
 package org.flowerplatform.properties.remote;
 /**
  * @author Razvan Tache
+ * @author Cristina Constantinescu
  */
 public class Property {
 	
 	private String name;
 	private Object value;
-	private boolean readOnly;
-	private String type;
+	private boolean readOnly = true;
+	private String type = null;
 	
 	/**
 	 * This constructor is used for deserialisation and should not be used otherwise
@@ -33,53 +34,29 @@ public class Property {
 	public Property() {
 		// used for deserialisation
 	}
-	/**
-	 * The constructor creates a property with the parameters name and value, provided by user.
-	 * And sets the readOnly attribute to the default : true, and the type attribute to String.
-	 * Basically it calls new property(name, value, "String", true)
-	 * @param name
-	 * @param value 
-	 */
-	public Property(String name, Object value) {	
-		this(name, value, null, true);
-	}
-	
-	public Property(String name, Object value, String type) {	
-		this(name, value, type, true);
-	}
-	
-	public Property(String name, Object value, boolean readOnly) {
-		this(name, value, null, readOnly);
-	}
-	/**
-	 * The constructor creates a property with the name, value, and readOnly(true|false) provided by user
-	 * @param name
-	 * @param value 
-	 * @param type
-	 * @param readOnly
-	 */
-	public Property(String name, Object value, String type, boolean readOnly) {
-		super();
-		this.name = name;
-		this.value = value;
-		this.type = type;
-		this.readOnly = readOnly;
-	}
 	
 	public String getName() {
 		return name;
 	}
-
-	public Property setName(String name) {
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public Property setNameAs(String name) {
 		this.name = name;
 		return this;
 	}
-
+	
 	public Object getValue() {
 		return value;
 	}
 
-	public Property setValue(Object value) {
+	public void setValue(Object value) {
+		this.value = value;
+	}
+	
+	public Property setValueAs(Object value) {
 		this.value = value;
 		return this;
 	}
@@ -88,7 +65,11 @@ public class Property {
 		return readOnly;
 	}
 	
-	public Property setReadOnly(boolean readOnly) {
+	public void setReadOnly(boolean readOnly) {
+		this.readOnly = readOnly;
+	}
+	
+	public Property setReadOnlyAs(boolean readOnly) {
 		this.readOnly = readOnly;
 		return this;
 	}
@@ -96,7 +77,12 @@ public class Property {
 	public String getType() {
 		return type;
 	}
-	public Property setType(String type) {
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public Property setTypeAs(String type) {
 		this.type = type;
 		return this;
 	}

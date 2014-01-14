@@ -115,13 +115,15 @@ package com.crispico.flower.util.layout {
 			super.createChildren();
 			buttonBar = new HGroup();
 			buttonBar.percentWidth = 100;
-			addChild(buttonBar);
+			buttonBar.gap = 1;
 			buttonBar.paddingTop = 2;
 			buttonBar.paddingBottom = 2;
 			buttonBar.paddingLeft = 2;
 			buttonBar.paddingRight = 2;
 			buttonBar.horizontalAlign = "right";
 			buttonBar.height = 24;
+			addChild(buttonBar);
+			
 			addElement(activeViewContent);
 		}
 		
@@ -160,7 +162,12 @@ package com.crispico.flower.util.layout {
 			ActionUtil.processAndIterateActions(null, allActions, selection, contextForActions, this, function (action:IAction):void {
 				if (action.preferShowOnActionBar) {
 					var actionButton:ActionButton = new ActionButton();
-					actionButton.label = action.label;
+					if (action.label == null) {
+						actionButton.width = 22;
+						actionButton.height = 22;
+					} else {
+						actionButton.label = action.label;
+					}
 					actionButton.setStyle("icon", FlexUtilGlobals.getInstance().adjustImageBeforeDisplaying(action.icon));
 					actionButton.action = action;
 					actionButton.viewWrapper = this;
