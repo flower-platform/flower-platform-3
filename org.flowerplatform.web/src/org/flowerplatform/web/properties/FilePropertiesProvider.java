@@ -62,10 +62,6 @@ public class FilePropertiesProvider implements IPropertiesProvider<FileSelectedI
 	}
 	@Override
 	public Property getProperty(FileSelectedItem selectedItem, File file, String propertyName) {
-//		
-
-//		File file = getFile(pathWithRoot);
-		
 		switch (propertyName) {
 			case PROPERTY_NAME: {
 				return new Property()
@@ -118,11 +114,12 @@ public class FilePropertiesProvider implements IPropertiesProvider<FileSelectedI
 			String path = orgDir.getPath() + "/" + ((WorkingDirectory) object).getPathFromOrganization();
 			return new File(path);
 		} else if (object instanceof File) {
-			return (File)object;
-		} else {
+			return (File) object;
+		} else if (object instanceof Pair && ((Pair<Object, Object>) object).a instanceof File) {			
 			return ((Pair<File, Object>) object).a;
+		} else { // e.g. GIT nodes
+			return null;
 		}
-		
 	}
 
 	@Override

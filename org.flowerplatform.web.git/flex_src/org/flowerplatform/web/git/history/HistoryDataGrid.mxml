@@ -27,48 +27,29 @@
 			 
 			 sortableColumns="false" 
 			 labelFunction="getLabelForItem"
-			 rightClick="clickHandler(event)"			 
-			 itemRollOver="itemRollOverHandler(event)"
-			 implements="com.crispico.flower.flexdiagram.contextmenu.IContextMenuLogicProvider, com.crispico.flower.flexdiagram.action.IActionProvider2">
+			
+			 initialize="initializeHandler(event)">
 	
 	<fx:Script>
 		<![CDATA[
-			import com.crispico.flower.flexdiagram.action.ActionContext;
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 			
+			import org.flowerplatform.flexutil.action.ComposedAction;
+			import org.flowerplatform.flexutil.action.IAction;
+			import org.flowerplatform.flexutil.context_menu.FillContextMenuEvent;
+			import org.flowerplatform.web.git.GitPlugin;
+			import org.flowerplatform.web.git.common.GitCommonPlugin;
+			import org.flowerplatform.web.git.history.action.CheckoutAction;
+			import org.flowerplatform.web.git.history.action.CherryPickAction;
+			import org.flowerplatform.web.git.history.action.CopyIdToClipboardAction;
+			import org.flowerplatform.web.git.history.action.MergeAction;
+			import org.flowerplatform.web.git.history.action.RebaseAction;
+			import org.flowerplatform.web.git.history.action.ResetAction;
+			import org.flowerplatform.web.git.history.action.RevertAction;
 			import org.flowerplatform.web.git.history.remote.dto.HistoryEntryDto;
 			
-			import com.crispico.flower.flexdiagram.contextmenu.ContextMenuManager;
-			import com.crispico.flower.flexdiagram.contextmenu.FlowerContextMenu;
-			
-			import mx.collections.ArrayCollection;
-			import mx.events.ListEvent;
-			
-			public var historyView:GitHistoryView;
-			
-			private var itemIndexUnderMouse:int = -1;
-			
-			public function registerMenu():void {
-				ContextMenuManager.INSTANCE.registerClient(this, true, this, this, null, null, null, this, true);
-			}
-				
-			public function unregisterMenu():void {
-				ContextMenuManager.INSTANCE.unregisterClient(this, null);
-			}
-			
-			protected function itemRollOverHandler(event:ListEvent):void {				
-				itemIndexUnderMouse = itemRendererToIndex(event.itemRenderer);
-			}
-			
-			protected function clickHandler(event:MouseEvent):void {
-				if (!isOverSelection(event)) {
-					itemIndexUnderMouse = -1;
-					return;
-				}
-				if (selectedIndex != itemIndexUnderMouse) {
-					selectedIndex = itemIndexUnderMouse;
-					ContextMenuManager.INSTANCE.refresh(this);
-				}
-			}
+			private var historyView:GitHistoryView = GitPlugin.getInstance().getHistoryView();
 			
 			private function getLabelForItem(item:Object, column:DataGridColumn):String {
 				var label:String;
@@ -91,88 +72,42 @@
 				}
 				return label;
 			}
-						
-			public function fillContextMenu(contextMenu:FlowerContextMenu):void {				
-//				if (itemIndexUnderMouse == -1 || selectedItem == null) {
-//					return;
-//				}
-//					
-//				if (historyView.info.selectedObject is NavigatorTreeNode) {
-//					var treeNode:NavigatorTreeNode = NavigatorTreeNode(historyView.info.selectedObject);
-//					if (treeNode.customData != null && treeNode.customData.hasOwnProperty(ProjectExplorerTree.WRITE_PERMISSION_TAG)) {
-//						var hasWritePermissions:Boolean = treeNode.customData[ProjectExplorerTree.WRITE_PERMISSION_TAG];
-//						if (!hasWritePermissions) {
-//							return;
-//						}					
-//					}
-//				}
-//				
-//				contextMenu.setTitle(HistoryEntryDto(selectedItem).shortId);
-//				
-//				contextMenu.addActionEntryIfVisible(new CheckoutAction(historyView.info.repositoryLocation));
-//				contextMenu.addActionEntryIfVisible(new PushAction(historyView.info.repositoryLocation));
-//				
-//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.action.push.sortIndex")) + 1)); // after Push
-//				
-//				contextMenu.addActionEntryIfVisible(new CreateBranchAction(historyView.info.repositoryLocation));
-//				contextMenu.addActionEntryIfVisible(new CreateTagAction(historyView.info.repositoryLocation));
-//				
-//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.action.createTag.sortIndex")) + 1)); // after Create Tag
-//				
-//				contextMenu.addActionEntryIfVisible(new CherryPickAction(historyView.info.repositoryLocation));
-//				contextMenu.addActionEntryIfVisible(new RevertAction(historyView.info.repositoryLocation));
-//				contextMenu.addActionEntryIfVisible(new MergeAction(historyView.info.repositoryLocation));
-//				contextMenu.addActionEntryIfVisible(new RebaseAction(historyView.info.repositoryLocation));
-//				
-//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.action.revert.sortIndex")) + 1)); // after Revert
-//								
-//				var newMenu:SubMenuEntry = new SubMenuEntry(new SubMenuEntryModel(
-//					SWTImageUtil.INSTANCE.getImageURLFromAlias("git_reset"), 
-//					GitPlugin.getInstance().getMessage("git.history.menu.reset.label"),
-//					int(GitPlugin.getInstance().getMessage("git.history.menu.reset.sortIndex"))), contextMenu);
-//				
-//				newMenu.getSubMenu().addActionEntryIfVisible(new ResetAction(historyView.info.repositoryLocation, 0));
-//				newMenu.getSubMenu().addActionEntryIfVisible(new ResetAction(historyView.info.repositoryLocation, 1));
-//				newMenu.getSubMenu().addActionEntryIfVisible(new ResetAction(historyView.info.repositoryLocation, 2));
-//				
-//				if (newMenu.getSubMenu().getChildren().length > 0) {
-//					contextMenu.addChild(newMenu);				
-//				}	
-//				
-//				contextMenu.addChild(new HRuleContextMenuEntry(int(GitPlugin.getInstance().getMessage("git.history.menu.reset.sortIndex")) + 1)); // after Reset
-//								
-//				contextMenu.addActionEntryIfVisible(new CopyIdToClipboardAction());
-//				
-//				contextMenu.removeMultipleHRuleMenuEntries();
-			}
-						
-			public function getSelection():ArrayCollection {	
-				return new ArrayCollection([selectedItem]);
-			}
-			
-			public function isOverSelection(event:MouseEvent):Boolean {	
-				var mousePoint:Point = new Point(event.stageX, event.stageY);
 				
-				var point:Point = localToGlobal(new Point(stage.x, stage.y));
-				
-				if (mousePoint.x >= point.x 
-					&& mousePoint.y >= point.y + headerHeight
-					&& mousePoint.x <= point.x + width
-					&& mousePoint.y <= point.y + height) {
-					return true;
+			private function fillContextMenuHandler(event:FillContextMenuEvent):void {
+				if (selectedItem == null) {
+					return;
 				}
-				return false;
+				var actions:Vector.<IAction> = new Vector.<IAction>();
+				
+				actions.push(new CheckoutAction());				
+				actions.push(new CherryPickAction());
+				actions.push(new RevertAction());
+				actions.push(new MergeAction());
+				actions.push(new RebaseAction());
+				
+				var resetMenu:ComposedAction = new ComposedAction();
+				resetMenu.label = GitPlugin.getInstance().getMessage("git.history.menu.reset.label");
+				resetMenu.orderIndex = int(GitPlugin.getInstance().getMessage("git.history.menu.reset.sortIndex"));
+				resetMenu.icon = GitCommonPlugin.getInstance().getResourceUrl("images/full/obj16/reset.gif");
+				resetMenu.id = "reset";
+				actions.push(resetMenu);
+				
+				actions.push(new ResetAction(0));
+				actions.push(new ResetAction(1));
+				actions.push(new ResetAction(2));
+				
+				actions.push(new CopyIdToClipboardAction());
+						
+				event.allActions = actions;
+				event.selection = new ArrayCollection([selectedItem]);	
+				if (event.context == null) {
+					event.context = new Object();
+				}				
+				event.context.repository = historyView.info.repositoryLocation;
 			}
-			
-			public function get displayAreaOfSelection():Rectangle {				
-				return null;  
-			}
-			
-			public function getContext():ActionContext {
-				return null;
-			}
-			
-			public function setFocusOnMainSelectedObject():void {			
+
+			protected function initializeHandler(event:FlexEvent):void {
+				addEventListener(FillContextMenuEvent.FILL_CONTEXT_MENU, fillContextMenuHandler);
 			}
 			
 		]]>

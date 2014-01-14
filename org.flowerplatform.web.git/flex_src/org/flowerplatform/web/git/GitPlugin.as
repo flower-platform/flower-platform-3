@@ -24,6 +24,7 @@ package org.flowerplatform.web.git {
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.git.action.ShowHistoryAction;
 	import org.flowerplatform.web.git.common.GitCommonPlugin;
+	import org.flowerplatform.web.git.history.GitHistoryView;
 	import org.flowerplatform.web.git.history.GitHistoryViewProvider;
 	import org.flowerplatform.web.git.history.remote.GitHistoryStatefulClientLocalState;
 	import org.flowerplatform.web.git.history.remote.dto.HistoryCommitMessageDto;
@@ -78,6 +79,10 @@ package org.flowerplatform.web.git {
 			registerClassAliasFromAnnotation(HistoryCommitMessageDto);
 			registerClassAliasFromAnnotation(HistoryViewInfoDto);			
 			registerClassAliasFromAnnotation(GitHistoryStatefulClientLocalState);			
+		}
+		
+		public function getHistoryView():GitHistoryView {
+			return GitHistoryView(FlexUtilGlobals.getInstance().workbench.getComponent(GitHistoryViewProvider.ID));
 		}
 		
 	}
