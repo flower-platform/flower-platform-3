@@ -30,6 +30,7 @@
     <classEntry path="com.crispico.flower.texteditor.java.partitioning.JavaPartitionScanner"/>
     <classEntry path="com.crispico.flower.texteditor.java.tokenizing.JavaStringScanner"/>
     <classEntry path="com.crispico.flower.texteditor.mxml.rules.SpecialTagRule"/>
+    <classEntry path="com.crispico.flower.texteditor.TextChangedEventBuffer"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
