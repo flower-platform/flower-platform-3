@@ -363,15 +363,22 @@ public class DiagramEditorStatefulService extends FileBasedEditorStatefulService
 	public List<ContentAssistItem> contentAssist(StatefulServiceInvocationContext context, String viewId, String pattern) {
 		logger.debug("Search types for pattern [{}]", pattern);
 		DiagramEditableResource editableResource = getDiagramEditableResource(context);
-		View view = (View) editableResource.getEObjectById(viewId);
-		CodeSyncElement diagrammableElement = (CodeSyncElement) view.getDiagrammableElement();
-		if (diagrammableElement == null) {
-			throw new RuntimeException("No diagrammable element for view with id " + viewId);
+		
+		// find the type of the element that needs content assist
+		// it may be null if this was a search action to drag an element on the diagram
+		String type = null;
+		if (viewId != null) {
+			View view = (View) editableResource.getEObjectById(viewId);
+			CodeSyncElement diagrammableElement = (CodeSyncElement) view.getDiagrammableElement();
+			if (diagrammableElement == null) {
+				throw new RuntimeException("No diagrammable element for view with id " + viewId);
+			}
+			type = diagrammableElement.getType();
 		}
 		
 		// populate the search context, needed to set the search scope
 		Map<String, Object> searchContext = new HashMap<String, Object>();
-		searchContext.put(IContentAssist.TYPE, diagrammableElement.getType());
+		searchContext.put(IContentAssist.TYPE, type);
 		searchContext.put(IContentAssist.RESOURCE, editableResource.getFile());
 		List<ContentAssistItem> types = EditorModelPlugin.getInstance()
 				.getComposedContentAssist().findMatches(searchContext, pattern);

@@ -43,6 +43,9 @@ public class JavaScriptDescriptors implements Runnable {
 	public static final String TYPE_REQUIRE_HTML_TEMPLATE_DEPENDENCY = "requireHtmlTemplateDependency";
 	public static final String TYPE_INHERITANCE = "inheritance";
 	
+	public static final String TYPE_TABLE = "table";
+	public static final String TYPE_FORM = "form";
+	
 	public static final String TYPE_JAVASCRIPT_FILE = "javaScriptFile";
 	public static final String TYPE_HTML_FILE = "htmlFile";
 	
@@ -232,7 +235,7 @@ public class JavaScriptDescriptors implements Runnable {
 		/////////////////////////////////////////
 		descriptors.add(
 				new CodeSyncElementDescriptor()
-				.setCodeSyncType("table")
+				.setCodeSyncType(TYPE_TABLE)
 				.addCodeSyncTypeCategory(TOP_LEVEL)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Table HTML Template")
@@ -301,7 +304,7 @@ public class JavaScriptDescriptors implements Runnable {
 		descriptors.add(
 				new CodeSyncElementDescriptor()
 				.addCodeSyncTypeCategory(TOP_LEVEL)
-				.setCodeSyncType("form")
+				.setCodeSyncType(TYPE_FORM)
 				.addCodeSyncTypeCategory("htmlTemplate")
 				.setLabel("Form HTML Template")
 				.setIconUrl("images/full/obj16/application_form.png")

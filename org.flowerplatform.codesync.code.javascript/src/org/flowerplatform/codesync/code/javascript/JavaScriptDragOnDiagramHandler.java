@@ -37,16 +37,15 @@ import com.crispico.flower.mp.model.codesync.CodeSyncElement;
 
 /**
  * @author Mariana Gheorghe
- * @author Sebastian Solomon
  */
-public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
+public class JavaScriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 
 	@Override
 	public boolean handleDragOnDiagram(ServiceInvocationContext context, Collection<?> draggedObjects, Diagram diagram, View viewUnderMouse, Object layoutHint, CommunicationChannel communicationChannel) {
 		for (Object object : draggedObjects) {
-			Object resource;
+			File resource;
 			try {
-				resource = EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
+				resource = (File) EditorPlugin.getInstance().getFileAccessController().getFile((String) object);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -62,18 +61,16 @@ public class JavascriptDragOnDiagramHandler implements IDragOnDiagramHandler {
 			
 			CodeSyncDiagramOperationsService service = (CodeSyncDiagramOperationsService) 
 					CommunicationPlugin.getInstance().getServiceRegistry().getService("codeSyncDiagramOperationsService");
-			String viewId = service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, codeSyncElement, new HashMap<String, Object>());
-			
-			service.displayMissingRelations(context, viewId, false);
+			service.addOnDiagram(context.getAdditionalData(), diagram.eResource().getURIFragment(diagram), null, codeSyncElement, new HashMap<String, Object>());
 		}
 		return true;
 	}
 	
 	private boolean acceptDraggedObject(Object object) {
-		if (!EditorPlugin.getInstance().getFileAccessController().isFile(object)) {
+		if (!(object instanceof File)) {
 			return false;
 		}
-		String extension = EditorPlugin.getInstance().getFileAccessController().getFileExtension(object); 
+		String extension = CodeSyncPlugin.getInstance().getFileExtension((File) object);
 		return (CodeSyncCodeJavascriptPlugin.TECHNOLOGY.equals(extension) || "html".equals(extension));
 	}
 
