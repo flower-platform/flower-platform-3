@@ -53,7 +53,7 @@ package org.flowerplatform.flexdiagram.renderer {
 		 * 
 		 * @author Mircea Negreanu
 		 */
-		protected var useGrid:Boolean = true;
+		public var useGrid:Boolean = true;
 		
 		public function get diagramShell():DiagramShell {
 			return _diagramShell;

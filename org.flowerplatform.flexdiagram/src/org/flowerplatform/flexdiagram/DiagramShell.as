@@ -314,8 +314,10 @@ package org.flowerplatform.flexdiagram {
 			// linia e un pic decalata
 			// UPDATE: am rezolvat un pic, caci se trimitea de multe ori pentru ca era inregitrat si pentru diagrama
 			var children:IList = controller.getChildren(model);
-			for (var i:int = 0; i < children.length; i++) {
-				moveResizeHandler(null, children.getItemAt(i));
+			if (children != null) {
+				for (var i:int = 0; i < children.length; i++) {
+					moveResizeHandler(null, children.getItemAt(i));
+				}
 			}
 		}
 		

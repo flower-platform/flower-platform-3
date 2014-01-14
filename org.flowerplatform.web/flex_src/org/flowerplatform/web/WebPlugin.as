@@ -21,9 +21,9 @@ package org.flowerplatform.web {
 	import com.crispico.flower.util.layout.Workbench;
 	
 	import flash.events.MouseEvent;
+	import flash.external.ExternalInterface;
 	import flash.net.URLRequest;
 	import flash.net.navigateToURL;
-	import flash.external.ExternalInterface;
 	
 	import mx.containers.HBox;
 	import mx.core.FlexGlobals;
@@ -48,9 +48,11 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
 	import org.flowerplatform.flexutil.shortcut.KeyBindings;
 	import org.flowerplatform.flexutil.view_content_host.IViewContent;
+	import org.flowerplatform.mindmap.layout.MindMapEditorProvider;
 	import org.flowerplatform.web.common.WebCommonPlugin;
 	import org.flowerplatform.web.common.communication.AuthenticationManager;
 	import org.flowerplatform.web.layout.DefaultPerspective;
+	import org.flowerplatform.web.layout.MindMapPerspective;
 	import org.flowerplatform.web.layout.Perspective;
 	import org.flowerplatform.web.security.ui.GroupsScreen;
 	import org.flowerplatform.web.security.ui.OrganizationsScreen;
@@ -87,9 +89,12 @@ package org.flowerplatform.web {
 			INSTANCE = this;
 			
 			perspectives.push(new DefaultPerspective());
+			perspectives.push(new MindMapPerspective());
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
+			
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new MindMapEditorProvider());			
 		}
 		
 		/**
@@ -244,7 +249,7 @@ package org.flowerplatform.web {
 		}
 		
 		protected function welcomeReceivedFromServerHandler(event:BridgeEvent):void {
-			perspectives[0].resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
+			getPerspective(MindMapPerspective.ID).resetPerspective(Workbench(FlexUtilGlobals.getInstance().workbench));
 		}
 		
 		override protected function registerMessageBundle():void {

@@ -57,7 +57,11 @@ package org.flowerplatform.flexdiagram.mindmap {
 		
 		public function refreshDiagramChildren():void {
 			diagramChildren = new ArrayList();
-			addChildren(getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel).getItemAt(0));		
+			var children:IList = getControllerProvider(rootModel).getModelChildrenController(rootModel).getChildren(rootModel);
+			if (children != null) {
+				addChildren(children.getItemAt(0));
+				shouldRefreshVisualChildren(children.getItemAt(0));
+			}
 		}
 				
 		public function addChildren(model:Object):void {			
