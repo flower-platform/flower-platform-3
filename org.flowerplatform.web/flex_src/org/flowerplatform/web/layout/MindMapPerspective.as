@@ -44,11 +44,11 @@ package org.flowerplatform.web.layout {
 			stackEditor.parent = sashEditor;
 			sashEditor.children.addItem(stackEditor);
 			
-			var view:ViewLayoutData = new ViewLayoutData;
-			view.isEditor = true;
-			view.viewId = MindMapEditorProvider.ID;
-			view.parent = stackEditor;
-			stackEditor.children.addItem(view);
+//			var view:ViewLayoutData = new ViewLayoutData;
+//			view.isEditor = true;
+//			view.viewId = MindMapEditorProvider.ID;
+//			view.parent = stackEditor;
+//			stackEditor.children.addItem(view);
 			
 			load(workbench, wld, sashEditor);
 		}

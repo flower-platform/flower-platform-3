@@ -16,21 +16,22 @@
  *
  * license-end
  */
-package org.flowerplatform.flexdiagram.samples.mindmap.controller {
+package org.flowerplatform.flexdiagram.mindmap.controller {
 	import mx.collections.IList;
 	
 	import org.flowerplatform.flexdiagram.DiagramShell;
 	import org.flowerplatform.flexdiagram.controller.ControllerBase;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
-	import org.flowerplatform.flexdiagram.util.ParentAwareArrayList;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapRootController;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class SampleDiagramNodeChildrenController extends ControllerBase implements IModelChildrenController {
+	public class MindMapRootModelChildrenController extends ControllerBase implements IModelChildrenController {
 		
-		public function SampleDiagramNodeChildrenController(diagramShell:DiagramShell) {
+		public function MindMapRootModelChildrenController(diagramShell:DiagramShell) {
 			super(diagramShell);
 		}
 		
@@ -41,7 +42,8 @@ package org.flowerplatform.flexdiagram.samples.mindmap.controller {
 		public function getChildren(model:Object):IList {	
 			if (MindMapDiagramShell(diagramShell).diagramChildren.length == 0) { 
 				// add root model
-				MindMapDiagramShell(diagramShell).diagramChildren.addItem(ParentAwareArrayList(model).getItemAt(0));
+				MindMapDiagramShell(diagramShell).diagramChildren.addItem(
+					IMindMapControllerProvider(diagramShell.getControllerProvider(model)).getMindMapRootController(model).getMindMapRoot());
 				diagramShell.shouldRefreshVisualChildren(model);
 			}
 			return MindMapDiagramShell(diagramShell).diagramChildren;

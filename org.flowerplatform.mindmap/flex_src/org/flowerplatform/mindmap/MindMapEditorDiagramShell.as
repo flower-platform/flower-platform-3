@@ -16,21 +16,10 @@
  *
  * license-end
  */
-package org.flowerplatform.editor.mindmap {
+package org.flowerplatform.mindmap {
 	
 	import flash.events.Event;
 	
-	import org.flowerplatform.editor.mindmap.controller.MindMapDiagramNodeChildrenController;
-	import org.flowerplatform.editor.mindmap.controller.MindMapNodeChildrenController;
-	import org.flowerplatform.editor.mindmap.controller.MindMapNodeController;
-	import org.flowerplatform.editor.mindmap.controller.MindMapNodeDragController;
-	import org.flowerplatform.editor.mindmap.controller.MindMapNodeInplaceEditorController;
-	import org.flowerplatform.editor.mindmap.remote.MindMapDiagramEditorStatefulClient;
-	import org.flowerplatform.editor.mindmap.renderer.MindMapModelRenderer;
-	import org.flowerplatform.editor.mindmap.renderer.MindMapNodeSelectionRenderer;
-	import org.flowerplatform.editor.model.remote.DiagramEditorStatefulClient;
-	import org.flowerplatform.emf_model.notation.Diagram;
-	import org.flowerplatform.emf_model.notation.MindMapNode;
 	import org.flowerplatform.flexdiagram.controller.IAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.controller.IControllerProvider;
 	import org.flowerplatform.flexdiagram.controller.model_children.IModelChildrenController;
@@ -49,6 +38,8 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapRootController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapModelRendererController;
+	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapRootModelChildrenController;
+	import org.flowerplatform.flexdiagram.tool.InplaceEditorTool;
 	import org.flowerplatform.flexdiagram.tool.ScrollTool;
 	import org.flowerplatform.flexdiagram.tool.SelectOnClickTool;
 	import org.flowerplatform.flexdiagram.tool.ZoomTool;
@@ -57,49 +48,58 @@ package org.flowerplatform.editor.mindmap {
 	import org.flowerplatform.flexdiagram.tool.controller.IResizeController;
 	import org.flowerplatform.flexdiagram.tool.controller.ISelectOrDragToCreateElementController;
 	import org.flowerplatform.flexdiagram.tool.controller.drag.IDragController;
+	import org.flowerplatform.mindmap.controller.NodeChildrenController;
+	import org.flowerplatform.mindmap.controller.NodeController;
+	import org.flowerplatform.mindmap.controller.NodeDragController;
+	import org.flowerplatform.mindmap.controller.NodeInplaceEditorController;
+	import org.flowerplatform.mindmap.controller.NodeRootController;
+	import org.flowerplatform.mindmap.remote.Node;
+	import org.flowerplatform.mindmap.renderer.NodeRenderer;
+	import org.flowerplatform.mindmap.renderer.NodeSelectionRenderer;
 	
 	/**
 	 * @author Cristina Constantinescu
 	 */
-	public class NotationMindMapDiagramShell extends MindMapDiagramShell implements IMindMapControllerProvider {
+	public class MindMapEditorDiagramShell extends MindMapDiagramShell implements IMindMapControllerProvider {
 		
-		public var editorStatefulClient:MindMapDiagramEditorStatefulClient;
+		private var nodeController:IMindMapModelController;
+		private var rootController:IMindMapRootController;
+				
+		private var nodeDragController:NodeDragController;
+		private var nodeInplaceEditorController:NodeInplaceEditorController;
+		private var nodeSelectionController:SelectionController;
 		
-		private var mindMapNodeController:IMindMapModelController;
+		private var absoluteLayoutVisualChildrenController:IVisualChildrenController;
+		private var nodeAbsoluteRectangleController:IAbsoluteLayoutRectangleController;
 		
-		private var mindMapNodeAbsoluteRectangleController:IAbsoluteLayoutRectangleController;
-		private var mindMapNodeDragController:MindMapNodeDragController;
-		private var mindMapNodeInplaceEditorController:MindMapNodeInplaceEditorController;
-		private var mindMapNodeSelectionController:SelectionController;
-		private var mindMapNodeExtraInfoController:IModelExtraInfoController;
+		private var nodeChildrenController:IModelChildrenController;
+		private var diagramChildrenController:IModelChildrenController;
 		
-		private var absoluteLayoutVisualChildrenController:AbsoluteLayoutVisualChildrenController;
+		private var nodeRendererController:MindMapModelRendererController;
 		
-		private var mindMapNodeChildrenController:IModelChildrenController;
-		private var mindMapDiagramChildrenController:IModelChildrenController;
-		
-		private var mindMapNodeRendererController:MindMapModelRendererController;
-		private var lightWeightModelExtraInfoController:IModelExtraInfoController;
-						
-		public function NotationMindMapDiagramShell() {
+		private var diagramExtraInfoController:IModelExtraInfoController;
+		private var nodeExtraInfoController:IModelExtraInfoController;
+				
+		public function MindMapEditorDiagramShell() {
 			super();
 			
-			mindMapNodeController = new MindMapNodeController(this);
-			mindMapNodeAbsoluteRectangleController = new MindMapAbsoluteLayoutRectangleController(this);
-			mindMapNodeDragController = new MindMapNodeDragController(this);
-			mindMapNodeSelectionController = new SelectionController(this, MindMapNodeSelectionRenderer);
-			mindMapNodeExtraInfoController = new DynamicModelExtraInfoController(this);
-			mindMapNodeInplaceEditorController = new MindMapNodeInplaceEditorController(this);
+			nodeController = new NodeController(this);
+			nodeAbsoluteRectangleController = new MindMapAbsoluteLayoutRectangleController(this);
+			nodeDragController = new NodeDragController(this);
+			nodeSelectionController = new SelectionController(this, NodeSelectionRenderer);
+			nodeExtraInfoController = new DynamicModelExtraInfoController(this);
+			nodeInplaceEditorController = new NodeInplaceEditorController(this);
 			absoluteLayoutVisualChildrenController = new AbsoluteLayoutVisualChildrenController(this);
 			
-			mindMapNodeChildrenController = new MindMapNodeChildrenController(this);
-			mindMapDiagramChildrenController = new MindMapDiagramNodeChildrenController(this);
+			nodeChildrenController = new NodeChildrenController(this);
+			diagramChildrenController = new MindMapRootModelChildrenController(this);
 			
-			mindMapNodeRendererController = new MindMapModelRendererController(this, MindMapModelRenderer);
-			lightWeightModelExtraInfoController = new LightweightModelExtraInfoController(this);
+			nodeRendererController = new MindMapModelRendererController(this, NodeRenderer);
+			diagramExtraInfoController = new LightweightModelExtraInfoController(this);
 			
-			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, MindMapDragTool]);		
-			addEventListener(DiagramEditorStatefulClient.TRANSFERABLE_OBJECTS_UPDATED_EVENT, transferableObjectsUpdateCompleHandler);
+			rootController = new NodeRootController(this);		
+			
+			registerTools([ScrollTool, ZoomTool, SelectOnClickTool, MindMapDragTool, InplaceEditorTool]);
 		}
 			
 		protected function transferableObjectsUpdateCompleHandler(event:Event):void {
@@ -114,19 +114,19 @@ package org.flowerplatform.editor.mindmap {
 		}		
 				
 		public function getMindMapModelController(model:Object):IMindMapModelController {
-			return mindMapNodeController;
+			return nodeController;
 		}
 		
 		public function getAbsoluteLayoutRectangleController(model:Object):IAbsoluteLayoutRectangleController {
-			if (model is MindMapNode) {
-				return mindMapNodeAbsoluteRectangleController;
+			if (model is Node) {
+				return nodeAbsoluteRectangleController;
 			}
 			return null;
 		}
 		
 		public function getDragController(model:Object):IDragController {
-			if (model is MindMapNode) { 
-				return mindMapNodeDragController;
+			if (model is Node) { 
+				return nodeDragController;
 			}
 			return null;
 		}
@@ -136,29 +136,29 @@ package org.flowerplatform.editor.mindmap {
 		}
 		
 		public function getInplaceEditorController(model:Object):IInplaceEditorController {
-			if (model is MindMapNode) {
-				return mindMapNodeInplaceEditorController;
+			if (model is Node) {
+				return nodeInplaceEditorController;
 			}
 			return null;
 		}
 		
-		public function getModelChildrenController(model:Object):IModelChildrenController {		
-			if (model is Diagram) {
-				return mindMapDiagramChildrenController;
+		public function getModelChildrenController(model:Object):IModelChildrenController {	
+			if (model is Node) {
+				return nodeChildrenController;
 			}
-			return mindMapNodeChildrenController;			
+			return diagramChildrenController;
 		}
 		
 		public function getModelExtraInfoController(model:Object):IModelExtraInfoController {
-			if (model is MindMapNode) {
-				return mindMapNodeExtraInfoController;
+			if (model is Node) {
+				return nodeExtraInfoController;
 			}
-			return lightWeightModelExtraInfoController;
+			return diagramExtraInfoController;			
 		}
 		
 		public function getRendererController(model:Object):IRendererController {
-			if (model is MindMapNode) {
-				return mindMapNodeRendererController;
+			if (model is Node) {
+				return nodeRendererController;
 			}
 			return null;
 		}
@@ -172,8 +172,8 @@ package org.flowerplatform.editor.mindmap {
 		}
 		
 		public function getSelectionController(model:Object):ISelectionController {
-			if (model is MindMapNode) {
-				return mindMapNodeSelectionController;
+			if (model is Node) {
+				return nodeSelectionController;
 			}
 			return null;
 		}
@@ -185,13 +185,9 @@ package org.flowerplatform.editor.mindmap {
 			return null;
 		}
 		
-		public function getMindMapRootController(model:Object):IMindMapRootController
-		{
-			// TODO Auto Generated method stub
-			return null;
+		public function getMindMapRootController(model:Object):IMindMapRootController {			
+			return rootController;
 		}
 		
-		
-			
 	}
 }

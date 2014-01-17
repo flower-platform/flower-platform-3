@@ -43,6 +43,7 @@ package org.flowerplatform.web {
 	import org.flowerplatform.flexutil.action.IActionProvider;
 	import org.flowerplatform.flexutil.action.VectorActionProvider;
 	import org.flowerplatform.flexutil.global_menu.WebMenuBar;
+	import org.flowerplatform.flexutil.layout.ViewLayoutData;
 	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.popup.IPopupHandler;
 	import org.flowerplatform.flexutil.selection.SelectionChangedEvent;
@@ -92,9 +93,7 @@ package org.flowerplatform.web {
 			perspectives.push(new MindMapPerspective());
 			
 			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new UserFormViewProvider());			
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());
-			
-			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new MindMapEditorProvider());			
+			FlexUtilGlobals.getInstance().composedViewProvider.addViewProvider(new OpenResourcesViewProvider());	
 		}
 		
 		/**
@@ -157,6 +156,13 @@ package org.flowerplatform.web {
 
 			createAndAddAction("Lean and Discuss (opens a new window)", null, "help",  null, function():void {
 				navigateToURL(new URLRequest("http://learn-discuss.flower-platform.com/flower_dev_center"), "_blank");
+			}, menuActionProvider);
+			
+			createAndAddAction("Add MindMap Editor", null, "help",  null, function():void {
+				var view:ViewLayoutData = new ViewLayoutData;
+				view.isEditor = true;
+				view.viewId = MindMapEditorProvider.ID;
+				FlexUtilGlobals.getInstance().workbench.addEditorView(view, true);		
 			}, menuActionProvider);
 			
 			var hBox:HBox = new HBox();

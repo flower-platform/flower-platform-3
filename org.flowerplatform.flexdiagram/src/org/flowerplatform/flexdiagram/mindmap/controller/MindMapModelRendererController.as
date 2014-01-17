@@ -56,7 +56,7 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 		
 		private function addConnector(model:Object):void {
 			var modelParent:Object = diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model);
-			if (modelParent == diagramShell.rootModel) { // root node, no connectors
+			if (modelParent == null) { // root node, no connectors
 				return;
 			}
 			var connector:MindMapConnector = new MindMapConnector().setSource(model).setTarget(modelParent);
@@ -70,17 +70,19 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 			}
 						
 			// refresh connector to parent
-			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) != diagramShell.rootModel) {	
+			if (diagramShell.getControllerProvider(model).getModelChildrenController(model).getParent(model) != null) {	
 				if (getDynamicObject(model).connector != null) {
 					getDynamicObject(model).connector.invalidateDisplayList();
 				}
 			}
 			// refresh connectors to children
 			var children:IList = MindMapDiagramShell(diagramShell).getModelController(model).getChildren(model);
-			for (var i:int = 0; i < children.length; i++) {
-				var child:Object = children.getItemAt(i);						
-				if (getDynamicObject(child).connector != null) {
-					getDynamicObject(child).connector.invalidateDisplayList();
+			if (children != null) {
+				for (var i:int = 0; i < children.length; i++) {
+					var child:Object = children.getItemAt(i);						
+					if (getDynamicObject(child).connector != null) {
+						getDynamicObject(child).connector.invalidateDisplayList();
+					}
 				}
 			}
 		}

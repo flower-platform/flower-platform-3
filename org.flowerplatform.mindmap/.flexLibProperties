@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="org.flowerplatform.mindmap.MindMapPlugin"/>
+    <classEntry path="org.flowerplatform.mindmap.MindMapEditorFrontend"/>
+    <classEntry path="org.flowerplatform.mindmap.remote.Node"/>
+    <classEntry path="org.flowerplatform.mindmap.MindMapService"/>
+    <classEntry path="org.flowerplatform.mindmap.action.ReloadAction"/>
+    <classEntry path="org.flowerplatform.mindmap.action.RefreshAction"/>
+    <classEntry path="org.flowerplatform.mindmap.action.RenameAction"/>
+    <classEntry path="org.flowerplatform.mindmap.action.AddNodeAction"/>
+    <classEntry path="org.flowerplatform.mindmap.action.RemoveNodeAction"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>

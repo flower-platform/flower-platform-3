@@ -32,13 +32,15 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 	import org.flowerplatform.flexdiagram.mindmap.MindMapDiagramShell;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapControllerProvider;
 	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapModelController;
+	import org.flowerplatform.flexdiagram.mindmap.controller.IMindMapRootController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapAbsoluteLayoutRectangleController;
 	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapModelRendererController;
-	import org.flowerplatform.flexdiagram.samples.mindmap.controller.SampleDiagramNodeChildrenController;
+	import org.flowerplatform.flexdiagram.mindmap.controller.MindMapRootModelChildrenController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.SampleMindMapModelChildrenController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.SampleMindMapModelController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.SampleMindMapModelDragController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.controller.SampleMindMapModelInplaceEditorController;
+	import org.flowerplatform.flexdiagram.samples.mindmap.controller.SampleMindMapRootController;
 	import org.flowerplatform.flexdiagram.samples.mindmap.model.SampleMindMapModel;
 	import org.flowerplatform.flexdiagram.samples.mindmap.renderer.SampleMindMapModelRenderer;
 	import org.flowerplatform.flexdiagram.samples.mindmap.renderer.SampleMindMapModelSelectionRenderer;
@@ -57,7 +59,7 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		private var dynamicModelExtraInfoController:DynamicModelExtraInfoController;
 		
 		private var absoluteLayoutVisualChildrenController:AbsoluteLayoutVisualChildrenController;
-		private var rootModelChildrenController:SampleDiagramNodeChildrenController;
+		private var rootModelChildrenController:MindMapRootModelChildrenController;
 		private var mindmapModelChildrenController:IModelChildrenController;
 		
 		private var mindMapModelRendererController:MindMapModelRendererController;
@@ -67,13 +69,15 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		private var mindMapModelDragController:SampleMindMapModelDragController;
 		
 		private var mindMapModelInplaceEditorController:IInplaceEditorController;
+		private var rootController:SampleMindMapRootController;
+				
 		public function SampleMindMapDiagramShell() {
 			super();
 			
 			mindMapModelController = new SampleMindMapModelController(this);
 			dynamicModelExtraInfoController = new DynamicModelExtraInfoController(this);
 			absoluteLayoutVisualChildrenController = new AbsoluteLayoutVisualChildrenController(this);
-			rootModelChildrenController = new SampleDiagramNodeChildrenController(this);
+			rootModelChildrenController = new MindMapRootModelChildrenController(this);
 			mindMapModelRendererController = new MindMapModelRendererController(this, SampleMindMapModelRenderer);
 			minMapModelAbsoluteLayoutRectangleController = new MindMapAbsoluteLayoutRectangleController(this);
 			mindmapModelChildrenController = new SampleMindMapModelChildrenController(this);
@@ -81,6 +85,8 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 			mindMapModelInplaceEditorController = new SampleMindMapModelInplaceEditorController(this);
 			mindMapModelSelectionController = new SelectionController(this, SampleMindMapModelSelectionRenderer);
 			mindMapModelDragController = new SampleMindMapModelDragController(this);
+			
+			rootController = new SampleMindMapRootController();			
 		}
 		
 		public function getMindMapModelController(model:Object):IMindMapModelController {
@@ -158,6 +164,10 @@ package org.flowerplatform.flexdiagram.samples.mindmap {
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			return this;
 		}
-	
+		
+		public function getMindMapRootController(model:Object):IMindMapRootController {			
+			return rootController;
+		}
+				
 	}
 }

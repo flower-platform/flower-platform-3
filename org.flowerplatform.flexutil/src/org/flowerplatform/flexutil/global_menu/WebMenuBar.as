@@ -222,7 +222,10 @@ package org.flowerplatform.flexutil.global_menu {
 				// Only a composed action can have children
 				if (ActionUtil.isComposedAction(menuBarAction)) {
 					// get the current selection
-					var selection:IList = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
+					var selection:IList = null;
+					if (FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider != null) {
+						selection = FlexUtilGlobals.getInstance().selectionManager.activeSelectionProvider.getSelection();
+					}
 					
 					// get the list of actions of the current menu
 					menuDescriptor.selection = selection;

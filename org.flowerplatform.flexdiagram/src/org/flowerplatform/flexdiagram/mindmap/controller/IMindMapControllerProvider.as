@@ -25,5 +25,8 @@ package org.flowerplatform.flexdiagram.mindmap.controller {
 	public interface IMindMapControllerProvider extends IControllerProvider {
 		
 		function getMindMapModelController(model:Object):IMindMapModelController;
+		
+		function getMindMapRootController(model:Object):IMindMapRootController;
+		
 	}
 }

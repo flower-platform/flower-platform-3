@@ -84,8 +84,7 @@ package org.flowerplatform.flexdiagram.samples {
 		private var basicModelDragToCreateRelationController:BasicModelDragToCreateRelationController;
 		private var basicModelDragController:BasicModelDragController;
 		private var selectOrgDragToCreateElementgController:SelectOrDragToCreateElementController;
-		
-		
+			
 		// connections
 		private var connectionModelRendererController:ClassReferenceRendererController;
 		
@@ -111,7 +110,7 @@ package org.flowerplatform.flexdiagram.samples {
 			basicModelDragToCreateRelationController = new BasicModelDragToCreateRelationController(this);
 			basicModelDragController = new BasicModelDragController(this);
 			selectOrgDragToCreateElementgController = new SelectOrDragToCreateElementController(this);
-			
+					
 			// connections
 			connectionModelRendererController = new BasicConnectionRendererController(this, ConnectionRenderer);
 		}
@@ -202,6 +201,7 @@ package org.flowerplatform.flexdiagram.samples {
 		override public function getControllerProvider(model:Object):IControllerProvider {
 			return this;
 		}
+		
 		
 	}
 }

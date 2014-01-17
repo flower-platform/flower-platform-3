@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Mindmap
+Bundle-SymbolicName: org.flowerplatform.mindmap;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: org.flowerplatform.mindmap.MindMapPlugin
+Require-Bundle: org.flowerplatform.common,
+ org.flowerplatform.communication,
+ org.eclipse.core.runtime,
+ org.flowerplatform.blazeds,
+ org.freeplane.core;bundle-version="1.0.1",
+ org.freeplane.plugin.workspace;bundle-version="2.0.0"
