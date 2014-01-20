@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="javaxpcom">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/mozilla/xulrunner_3_6_28_win32/javaxpcom.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

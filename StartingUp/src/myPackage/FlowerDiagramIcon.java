@@ -18,8 +18,10 @@
 */
 package myPackage;
 
-public interface IIdeaToEclipseBridge {
-    String getUrl();
-    void createDiagram(FlowerVirtualFileWrapper path, String diagramName);
-}
+import com.intellij.openapi.util.IconLoader;
 
+import javax.swing.*;
+
+public class FlowerDiagramIcon {
+    public static final Icon FILE = IconLoader.getIcon("/images/FlowerDiagramEditor.gif");
+}

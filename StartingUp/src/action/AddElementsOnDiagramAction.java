@@ -26,7 +26,7 @@ import com.intellij.openapi.fileEditor.FileEditor;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import myPackage.FlowerDiagramEditor;
+import editor.FlowerDiagramEditor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,21 +45,20 @@ public class AddElementsOnDiagramAction extends AnAction {
     }
 
     public void update(AnActionEvent e) {
-        //TODO
         FileEditor[] openedEditors = FileEditorManager.getInstance(e.getProject()).getAllEditors();
         for (int i = 0; i < openedEditors.length; i++) {
             if (openedEditors[i] instanceof FlowerDiagramEditor){
                 e.getPresentation().setEnabled(true);
+                e.getPresentation().setVisible(true);
                 return;
             }
         }
         e.getPresentation().setEnabled(false);
+        e.getPresentation().setVisible(false);
         return;
     }
 
     protected FlowerDiagramEditor findLastOpendDiagramEditor(Project project) {
-        FlowerDiagramEditor flowerEditor = null;
-
         FileEditor[] editorsList = FileEditorManager.getInstance(project).getSelectedEditors();
         FileEditor activeEditor = editorsList[0];
 
@@ -74,6 +73,6 @@ public class AddElementsOnDiagramAction extends AnAction {
                 }
             }
         }
-        return flowerEditor;
+        return null;
     }
 }

@@ -5,142 +5,55 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="938a8148-c587-4f56-a31a-4475a8b942ea" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/component/AplicationComponent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/component/FlowerDiagramSaveComponent.java" />
-      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\.idea\libraries\lib.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\DjProject\JavascriptExecution.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\DjProject\SimpleWebBrowserExample.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\DjProject\XPCOMDownloadManager.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\AplicationComponent.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\IdeaToEclipseBridge.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\IdeaUtil.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.codesync/src/org/flowerplatform/codesync/remote/CodeSyncOperationsService.java" afterPath="$PROJECT_DIR$/../org.flowerplatform.codesync/src/org/flowerplatform/codesync/remote/CodeSyncOperationsService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.codesync/src/com/crispico/flower/mp/codesync/base/CodeSyncPlugin.java" afterPath="$PROJECT_DIR$/../org.flowerplatform.codesync/src/com/crispico/flower/mp/codesync/base/CodeSyncPlugin.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.editor/flex_src/org/flowerplatform/editor/remote/EditorStatefulClient.as" afterPath="$PROJECT_DIR$/../org.flowerplatform.editor/flex_src/org/flowerplatform/editor/remote/EditorStatefulClient.as" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java" afterPath="$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sampleAction/ChengeFocus.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/editor/FlowerDiagramEditor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/editor/FlowerSampleEditor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/myPackage/FlowerVirtualFileWrapper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/action/OpenInNewFlowerEditor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/sampleAction/SampleAction.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/editor/SampleEditor.java" />
+      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\.idea\libraries\bundles.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\.idea\libraries\chrome.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\.idea\libraries\communitySRC.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\.idea\libraries\javaxpcom.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\.idea\libraries\servlet_api.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\.idea\workspace.xml" afterPath="" />
+      <change type="DELETED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\FlowerDiagramEditor.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java" afterPath="$PROJECT_DIR$/src/action/AddElementsOnDiagramAction.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/component/AplicationComponent.java" afterPath="$PROJECT_DIR$/src/component/AplicationComponent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/myPackage/BridgeUtilIdeaToEclipse.java" afterPath="$PROJECT_DIR$/src/myPackage/BridgeUtilIdeaToEclipse.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/myPackage/DummyFileEditorState.java" afterPath="$PROJECT_DIR$/src/myPackage/DummyFileEditorState.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/component/FlowerDiagramSaveComponent.java" afterPath="$PROJECT_DIR$/src/component/FlowerDiagramSaveComponent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/myPackage/IIdeaToEclipseBridge.java" afterPath="$PROJECT_DIR$/src/myPackage/IIdeaToEclipseBridge.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java" afterPath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaModelAccessController.java" afterPath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaModelAccessController.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.idea/flex_src/org/flowerplatform/idea/IdeaPlugin.as" afterPath="$PROJECT_DIR$/../org.flowerplatform.idea/flex_src/org/flowerplatform/idea/IdeaPlugin.as" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaProjectAccessController.java" afterPath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaProjectAccessController.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/myPackage/MyFileEditorProvider.java" afterPath="$PROJECT_DIR$/src/myPackage/MyFileEditorProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/IdeaToEclipseBirdge.java" afterPath="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/IdeaToEclipseBirdge.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/action/NewDiagramAction.java" afterPath="$PROJECT_DIR$/src/action/NewDiagramAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/myPackage/OnFileSaveComponent.java" afterPath="$PROJECT_DIR$/src/myPackage/OnFileSaveComponent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.editor/flex_src/org/flowerplatform/editor/SaveResourcesDialog.mxml" afterPath="$PROJECT_DIR$/../org.flowerplatform.editor/flex_src/org/flowerplatform/editor/SaveResourcesDialog.mxml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.flex_host_app/WebContent/commons.js" afterPath="$PROJECT_DIR$/../org.flowerplatform.flex_host_app/WebContent/commons.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/myPackage/SimpleLanguage.java" afterPath="$PROJECT_DIR$/src/myPackage/SimpleLanguage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/StartingUp.iml" afterPath="$PROJECT_DIR$/StartingUp.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.eclipse/OSGI-INF/l10n/plugin.properties" afterPath="$PROJECT_DIR$/../org.flowerplatform.eclipse/OSGI-INF/l10n/plugin.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/META-INF/plugin.xml" afterPath="$PROJECT_DIR$/META-INF/plugin.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../org.flowerplatform.eclipse/plugin.xml" afterPath="$PROJECT_DIR$/../org.flowerplatform.eclipse/plugin.xml" />
+      <change type="MOVED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\MyFileEditorProvider.java" afterPath="$PROJECT_DIR$/src/myPackage/FlowerDiagramEditorProvider.java" />
+      <change type="MOVED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\MyFileTypeFactory.java" afterPath="$PROJECT_DIR$/src/myPackage/FlowerDiagramTypeFactory.java" />
+      <change type="MOVED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\SimpleFileType.java" afterPath="$PROJECT_DIR$/src/myPackage/FlowerDiagramFileType.java" />
+      <change type="MOVED" beforePath="D:\data\java_work\git_repo_fp\StartingUp\src\myPackage\SimpleIcon.java" afterPath="$PROJECT_DIR$/src/myPackage/FlowerDiagramIcon.java" />
     </list>
     <ignored path="StartingUp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/TextBoxes.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385976648728" ignored="false" />
-    <file path="/MyActionClass.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384439060313" ignored="false" />
-    <file path="/Dummy.txt" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389347558526" ignored="false" />
-    <file path="/fragment.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389282209479" ignored="false" />
-    <file path="/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389181692583" ignored="false" />
-    <file path="/SimpleIcons.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384353777069" ignored="false" />
-    <file path="/SimpleFileType.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384353930188" ignored="false" />
-    <file path="/MyFileTypeFactory.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385483524010" ignored="false" />
-    <file path="/SimpleLanguage.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384356454523" ignored="false" />
-    <file path="/XXX.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384443300458" ignored="false" />
-    <file path="/*.regexp" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386775280412" ignored="false" />
-    <file path="/new.txt" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384435846183" ignored="false" />
-    <file path="/3.txt" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384442943601" ignored="false" />
-    <file path="/MyFileEditorProvider.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387550707295" ignored="false" />
-    <file path="/MyEditor.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387456390658" ignored="false" />
-    <file path="/DummyFileEditorState.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384786433001" ignored="false" />
-    <file path="/a.dummy" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389270507446" ignored="false" />
-    <file path="/SimpleWebBrowserExample.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386586783955" ignored="false" />
-    <file path="$PROJECT_DIR$/../DJTest/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384954351145" ignored="false" />
-    <file path="$PROJECT_DIR$/../DJTest/src/SimpleWebBrowserExample.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384950716068" ignored="false" />
-    <file path="$PROJECT_DIR$/../DJTest/.idea/misc.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1384952865695" ignored="false" />
-    <file path="/OnFileSaveComponent.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389110622840" ignored="false" />
-    <file path="/FrameworkLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386162019901" ignored="false" />
-    <file path="/OsgiLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386149085767" ignored="false" />
-    <file path="/FrameworkLauncherFP.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385031519114" ignored="false" />
-    <file path="/OsgiLauncher2.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385988960931" ignored="false" />
-    <file path="$PROJECT_DIR$/../OsmorcTest/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385476723170" ignored="false" />
-    <file path="$PROJECT_DIR$/../OsmorcTest/META-INF/MANIFEST.MF" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385127002489" ignored="false" />
-    <file path="/MANIFEST.MF" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385564939191" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/src/a.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385459320076" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/src/OsgiLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385460966994" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/src/MyActivator.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385469587589" ignored="false" />
-    <file path="/MyActivator.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385469523094" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/src/osgi/launcher/MyActivator.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385469686922" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/src/osgi/launcher/OsgiLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385470632263" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385481604781" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/META-INF/MANIFEST.MF" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385471154366" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/.idea/runConfigurations/Unnamed.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385477388478" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/testPlugin/META-INF/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385476073396" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/OsgiLauncher/.idea/modules.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385475848425" ignored="false" />
-    <file path="$PROJECT_DIR$/../untitled/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386840236424" ignored="false" />
-    <file path="$PROJECT_DIR$/../chrriis/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385477568971" ignored="false" />
-    <file path="/AbstractFlowerJavaPlugin.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385478365704" ignored="false" />
-    <file path="/TestActivator.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385479473153" ignored="false" />
-    <file path="/AbstractTreeStatefulService.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385480300028" ignored="false" />
-    <file path="$PROJECT_DIR$/../OsmorcTest/src/OsgiLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385546402139" ignored="false" />
-    <file path="$PROJECT_DIR$/org.eclipse.osgi/bundles/11/1/bundlefile/src/org/flowerplatform/common/CommonPlugin.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385563339458" ignored="false" />
-    <file path="$PROJECT_DIR$/org.eclipse.osgi/bundles/11/1/bundlefile/flex_src/org/flowerplatform/common/CommonPlugin.as" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385563339458" ignored="false" />
-    <file path="$PROJECT_DIR$/org.eclipse.osgi/bundles/11/1/bundlefile/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385563339458" ignored="false" />
-    <file path="/TestBundle.iml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385569427177" ignored="false" />
-    <file path="/OsgiLauncher.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385636638177" ignored="false" />
-    <file path="$PROJECT_DIR$/zzz/META-INF/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385647595698" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/SimplePlugin/META-INF/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385720434807" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/SimplePlugin/.idea/modules.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385721027186" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/SimplePlugin/.idea/misc.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385721027186" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/SimplePlugin/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385721184905" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/SimplePlugin/META-INF/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385975932905" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/SimpleModulePlugin/META-INF/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385721352676" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/SimpleModulePlugin/SimpleModulePlugin.iml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385721555822" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/Simple/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385977618937" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/SimplePlugin/src/TextBoxes.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385976648728" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/SimplePlugin/src/OsgiLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385974509539" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/SimplePlugin/SimplePlugin.iml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385974727420" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/Simple/.idea/runConfigurations/SimplePlug.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385975699703" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/Simple/BundleStart/META-INF/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385976051696" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/BundleStart/META-INF/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385980502408" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/BundleStart/src/TextBoxes.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385976707960" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/BundleStart/src/OsgiLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1385990210057" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.common/src/org/flowerplatform/common/FlowerProperties.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386073563083" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.common/META-INF/MANIFEST.MF" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386073563083" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.common/plugin.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386073563083" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.common/src/org/flowerplatform/common/plugin/AbstractFlowerJavaPlugin.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386073563083" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.common/src/org/flowerplatform/common/IFlowerPropertiesProvider.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386073563083" ignored="false" />
-    <file path="$PROJECT_DIR$/../git_repo_fp/org.flowerplatform.common/src/org/flowerplatform/common/file_event/FileEventDispatcher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386073563083" ignored="false" />
-    <file path="/FlowerFrameworkLauncher.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386756609352" ignored="false" />
-    <file path="/IdeaToEclipseCommunication.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386326618582" ignored="false" />
-    <file path="/JettyPort.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386333385683" ignored="false" />
-    <file path="/JettyPortIdeaToEclipse.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386769576974" ignored="false" />
-    <file path="/XPCOMDownloadManager.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386689041635" ignored="false" />
-    <file path="/NativeWebBrowser.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386692152165" ignored="false" />
-    <file path="/IdeaToEclipseBridge.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387210894367" ignored="false" />
-    <file path="/IIdeaToEclipseBridge.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387464809126" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/NewProjectScratch/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386840203423" ignored="false" />
-    <file path="$PROJECT_DIR$/../community/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386840369693" ignored="false" />
-    <file path="/IdeaProjectProvider.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386843516891" ignored="false" />
-    <file path="/IdeaProjectsProvider.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1386857797482" ignored="false" />
-    <file path="/IdeaUtil.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387186279738" ignored="false" />
-    <file path="/VirtualFile.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387290896330" ignored="false" />
-    <file path="/IdeaFileAccessController.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389284246305" ignored="false" />
-    <file path="/IdeaProjectAccessController.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389277441742" ignored="false" />
-    <file path="/FlowerJettyServer.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387277777819" ignored="false" />
-    <file path="/TestCommunication.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387279722154" ignored="false" />
-    <file path="/BridgeUtilIdeaToEclipse.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387279703255" ignored="false" />
-    <file path="/NewDiagramAction.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389272859567" ignored="false" />
-    <file path="$PROJECT_DIR$/../IntllijTests/SimpleEditor/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387292521793" ignored="false" />
-    <file path="$PROJECT_DIR$/../communitySRC/samples/textEditor/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387294182105" ignored="false" />
-    <file path="$PROJECT_DIR$/../communitySRC/samples/textEditor/.idea/misc.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387294011592" ignored="false" />
-    <file path="/MyVisualPanel.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387293741310" ignored="false" />
-    <file path="/IdeaToEclipseBirdge2.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387361953377" ignored="false" />
-    <file path="/AddElementsOnDiagramAction.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389018513354" ignored="false" />
-    <file path="/AplicationComponent.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389267407519" ignored="false" />
-    <file path="$PROJECT_DIR$/../../StartingUp/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1387551192036" ignored="false" />
-    <file path="/FlowerDiagramEditor.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389349255789" ignored="false" />
-    <file path="/PerspectiveFileEditor.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389024823867" ignored="false" />
-    <file path="/TextEditorImpl.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389169134054" ignored="false" />
-    <file path="/ProjectComponent.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389181710686" ignored="false" />
-    <file path="/MyProjectComponent.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389271180218" ignored="false" />
-    <file path="/HintManagerImpl.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389199549869" ignored="false" />
-    <file path="/Project.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389254981934" ignored="false" />
-    <file path="/ApplicationComponent.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1389271044020" ignored="false" />
+    <file path="/Dummy.txt" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390219750971" ignored="false" />
+    <file path="/ChengeFocus.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390222194754" ignored="false" />
+    <file path="/fragment.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390221835904" ignored="false" />
+    <file path="/FlowerDiagramEditorProvider.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390223332944" ignored="false" />
+    <file path="/FlowerSampleEditor.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390224878911" ignored="false" />
+    <file path="/SampleEditor.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390224802134" ignored="false" />
+    <file path="/SampleAction.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390225443075" ignored="false" />
+    <file path="$PROJECT_DIR$/.idea/workspace.xml" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390226583938" ignored="false" />
+    <file path="/FlowerDiagramEditor.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390226430647" ignored="false" />
+    <file path="/OpenInNewFlowerEditor.java" changelist="938a8148-c587-4f56-a31a-4475a8b942ea" time="1390226582338" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -160,26 +73,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <exception_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint class_name="java.lang.NullPointerException" package_name="java.lang">
-        <option name="NOTIFY_CAUGHT" value="true" />
-        <option name="NOTIFY_UNCAUGHT" value="true" />
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-    </exception_breakpoints>
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="false" />
@@ -229,8 +122,8 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
       <breakpoint url="file://$PROJECT_DIR$/../../communitySRC/platform/core-impl/src/com/intellij/mock/MockProject.java" line="129" class="com.intellij.mock.MockProject" package="com.intellij.mock">
         <option name="ENABLED" value="true" />
@@ -244,10 +137,70 @@
         <option name="CONDITION_ENABLED" value="true" />
         <option name="CLASS_FILTERS_ENABLED" value="false" />
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java" line="176" class="org.flowerplatform.idea.file.IdeaFileAccessController" package="org.flowerplatform.idea.file">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/../../communitySRC/platform/platform-impl/src/com/intellij/ide/SaveAndSyncHandlerImpl.java" line="148" class="com.intellij.ide.SaveAndSyncHandlerImpl" package="com.intellij.ide">
+      <breakpoint url="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java" line="191" class="org.flowerplatform.idea.file.IdeaFileAccessController" package="org.flowerplatform.idea.file">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/../../community/platform/platform-impl/src/com/intellij/ide/actions/CloseAction.java" line="36" class="com.intellij.ide.actions.CloseAction" package="com.intellij.ide.actions">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/../../community/platform/platform-impl/src/com/intellij/ide/actions/CloseEditorAction.java" line="29" class="com.intellij.ide.actions.CloseEditorAction" package="com.intellij.ide.actions">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://D:/java/idea_13_0_0_sources/ideaIC-133.193/platform/platform-impl/src/com/intellij/openapi/fileEditor/impl/FileEditorManagerImpl.java" line="970" class="com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl" package="com.intellij.openapi.fileEditor.impl">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -262,22 +215,7 @@
         <option name="CONDITION" value="&#13;&#13;JAVA" />
         <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/../org.flowerplatform.codesync/src/com/crispico/flower/mp/codesync/base/ModelAdapterFactory.java" line="56" class="com.crispico.flower.mp.codesync.base.ModelAdapterFactory" package="com.crispico.flower.mp.codesync.base">
-        <option name="ENABLED" value="false" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="&#13;&#13;JAVA" />
-        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
-      </breakpoint>
-      <breakpoint url="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaProjectAccessController.java" line="60" class="org.flowerplatform.idea.file.IdeaProjectAccessController" package="org.flowerplatform.idea.file">
+      <breakpoint url="file://D:/java/idea_13_0_0_sources/ideaIC-133.193/platform/platform-impl/src/com/intellij/openapi/fileEditor/impl/FileEditorManagerImpl.java" line="1086" class="com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl" package="com.intellij.openapi.fileEditor.impl">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -291,8 +229,43 @@
         <option name="INSTANCE_FILTERS_ENABLED" value="false" />
         <option name="CONDITION" value="" />
         <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://D:/java/idea_12_1_6_sources/platform/platform-impl/src/com/intellij/openapi/fileEditor/impl/FileEditorManagerImpl.java" line="928" class="com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl" package="com.intellij.openapi.fileEditor.impl">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
       </breakpoint>
     </line_breakpoints>
+    <exception_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint class_name="java.lang.NullPointerException" package_name="java.lang">
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="&#13;&#13;JAVA" />
+        <option name="LOG_MESSAGE" value="&#13;&#13;JAVA" />
+      </breakpoint>
+    </exception_breakpoints>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -302,70 +275,98 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="IdeaProjectAccessController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaProjectAccessController.java">
+      <file leaf-file-name="FlowerDiagramFileType.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramFileType.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="23" selection-start="1924" selection-end="1924" vertical-scroll-proportion="0.0">
+            <state line="26" column="13" selection-start="831" selection-end="831" vertical-scroll-proportion="10.2">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OnFileSaveComponent.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/myPackage/OnFileSaveComponent.java">
+      <file leaf-file-name="FlowerDiagramIcon.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramIcon.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="44" selection-start="787" selection-end="787" vertical-scroll-proportion="-2.48">
+            <state line="24" column="13" selection-start="735" selection-end="735" vertical-scroll-proportion="-3.4">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ImageComposerServlet.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../org.flowerplatform.communication/src/org/flowerplatform/communication/public_resources/ImageComposerServlet.java">
+      <file leaf-file-name="FlowerDiagramTypeFactory.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramTypeFactory.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="46" column="0" selection-start="1450" selection-end="1450" vertical-scroll-proportion="0.0">
+            <state line="24" column="13" selection-start="820" selection-end="820" vertical-scroll-proportion="-3.4">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FlowerVirtualFileWrapper.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerVirtualFileWrapper.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="24" column="13" selection-start="766" selection-end="766" vertical-scroll-proportion="6.12">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="IIdeaToEclipseBridge.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/myPackage/IIdeaToEclipseBridge.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="17" selection-start="670" selection-end="670" vertical-scroll-proportion="-2.04">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SimpleLanguage.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/myPackage/SimpleLanguage.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="18" column="2" selection-start="635" selection-end="897" vertical-scroll-proportion="-5.96">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FlowerDiagramEditor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/editor/FlowerDiagramEditor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="257" column="8" selection-start="8289" selection-end="8289" vertical-scroll-proportion="-76.76">
               <folding>
-                <element signature="e#0#2634#0" expanded="true" />
+                <element signature="initializer##0;class#FlowerDiagramEditor#0" expanded="false" />
+                <element signature="e#4870#4883#0" expanded="false" />
+                <element signature="e#8289#8302#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PublicResourcesServlet.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../org.flowerplatform.communication/src/org/flowerplatform/communication/public_resources/PublicResourcesServlet.java">
+      <file leaf-file-name="OpenInNewFlowerEditor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/action/OpenInNewFlowerEditor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="115" column="0" selection-start="3540" selection-end="3540" vertical-scroll-proportion="0.0">
+            <state line="7" column="117" selection-start="373" selection-end="373" vertical-scroll-proportion="-4.76">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="IdeaFileAccessController.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java">
+      <file leaf-file-name="NewDiagramAction.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/action/NewDiagramAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="0" selection-start="2826" selection-end="2826" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FlowerDiagramSaveComponent.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/component/FlowerDiagramSaveComponent.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="18" selection-start="676" selection-end="676" vertical-scroll-proportion="-2.72">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FlowerDiagramEditor.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="0" selection-start="2948" selection-end="2948" vertical-scroll-proportion="0.5021097">
+            <state line="17" column="2" selection-start="632" selection-end="632" vertical-scroll-proportion="-0.45454547">
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="docComment;class#FlowerDiagramEditor#0" expanded="false" />
+                <element signature="e#0#1802#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SampleEditor.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/editor/SampleEditor.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="43" column="4" selection-start="1533" selection-end="1533" vertical-scroll-proportion="84.48">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -389,22 +390,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/myPackage/AplicationComponent.java" />
-        <option value="$PROJECT_DIR$/src/myPackage/IdeaToEclipseBridge.java" />
-        <option value="$PROJECT_DIR$/../../communitySRC/platform/core-api/src/com/intellij/openapi/components/ApplicationComponent.java" />
-        <option value="$PROJECT_DIR$/src/myPackage/MyProjectComponent.java" />
-        <option value="$PROJECT_DIR$/src/component/MyProjectComponent.java" />
-        <option value="$PROJECT_DIR$/src/action/NewDiagramAction.java" />
-        <option value="$PROJECT_DIR$/../org.flowerplatform.codesync/src/com/crispico/flower/mp/codesync/base/CodeSyncPlugin.java" />
-        <option value="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaProjectAccessController.java" />
-        <option value="$PROJECT_DIR$/../org.flowerplatform.codesync/src/org/flowerplatform/codesync/remote/CodeSyncOperationsService.java" />
-        <option value="$PROJECT_DIR$/../../communitySRC/platform/projectModel-impl/src/com/intellij/openapi/components/impl/stores/DefaultStateSerializer.java" />
-        <option value="$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java" />
+        <option value="$PROJECT_DIR$/src/myPackage/IIdeaToEclipseBridge.java" />
+        <option value="$PROJECT_DIR$/src/equinox/FlowerFrameworkLauncher.java" />
         <option value="$PROJECT_DIR$/src/component/AplicationComponent.java" />
-        <option value="$PROJECT_DIR$/src/myPackage/OnFileSaveComponent.java" />
-        <option value="$PROJECT_DIR$/META-INF/plugin.xml" />
         <option value="$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java" />
-        <option value="$PROJECT_DIR$/src/component/FlowerDiagramSaveComponent.java" />
+        <option value="$PROJECT_DIR$/META-INF/plugin.xml" />
+        <option value="$PROJECT_DIR$/src/sampleAction/ChengeFocus.java" />
+        <option value="$PROJECT_DIR$/src/myPackage/FlowerSampleEditor.java" />
+        <option value="$PROJECT_DIR$/src/sampleAction/SampleEditor.java" />
+        <option value="$PROJECT_DIR$/src/editor/FlowerSampleEditor.java" />
+        <option value="$PROJECT_DIR$/src/sampleAction/SampleAction.java" />
+        <option value="$PROJECT_DIR$/src/myPackage/FlowerDiagramEditorProvider.java" />
+        <option value="$PROJECT_DIR$/src/myPackage/SimpleLanguage.java" />
+        <option value="$PROJECT_DIR$/src/editor/SampleEditor.java" />
+        <option value="$PROJECT_DIR$/src/editor/FlowerDiagramEditor.java" />
+        <option value="$PROJECT_DIR$/src/action/OpenInNewFlowerEditor.java" />
+        <option value="$PROJECT_DIR$/src/action/NewDiagramAction.java" />
       </list>
     </option>
   </component>
@@ -587,6 +588,13 @@
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
   </component>
+  <component name="ProjectStructureProblems">
+    <ignored-problems>
+      <problem id="unused-library(library:project:bundles)" />
+      <problem id="unused-library(library:project:chrome)" />
+      <problem id="unused-library(library:project:communitySRC)" />
+    </ignored-problems>
+  </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
@@ -684,189 +692,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; IDEA IC-129.1359 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
               <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; IDEA IC-129.1359 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; IDEA IC-129.1359 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="intellij" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; IDEA IC-129.1359 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="intellij" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="compiler" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; IDEA IC-129.1359 &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea.jar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="intellij" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="compiler" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="actions" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org.flowerplatform.idea" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org.flowerplatform.idea" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org.flowerplatform.idea" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="idea" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="file" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="workspace" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value=".metadata" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -881,6 +707,24 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StartingUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="StartingUp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sampleAction" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -916,25 +760,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="equinox" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="component" />
+              <option name="myItemId" value="editor" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -956,58 +782,47 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="META-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="StartingUp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="libs" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="172" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="172" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="preferences.general" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
-    <property name="project.structure.side.proportion" value="0.278826" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="176" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="last_opened_file_path" value="D:/java/idea_12_1_6_sources" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="173" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="851" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="847" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="172" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="165" />
     <property name="GoToClass.includeJavaFiles" value="false" />
-    <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
-    <property name="restartRequiresConfirmation" value="true" />
-    <property name="FullScreen" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="options.lastSelected" value="preferences.general" />
+    <property name="project.structure.side.proportion" value="0.23407203" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="options.searchVisible" value="true" />
     <property name="dynamic.classpath" value="false" />
   </component>
   <component name="RecentsManager">
@@ -1059,6 +874,24 @@
           </MavenRunnerParameters>
         </option>
       </MavenSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
@@ -1221,31 +1054,40 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.57023644" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.52313167" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5479833" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3292683" sideWeight="0.62030596" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33379695" sideWeight="0.60329986" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24959481" sideWeight="0.52313167" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41724616" sideWeight="0.80226904" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36180308" sideWeight="0.19773096" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21736011" sideWeight="0.26008344" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26564673" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30876216" sideWeight="0.74392223" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.379694" sideWeight="0.86226684" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.379694" sideWeight="0.13773315" order="14" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21736011" sideWeight="0.26008344" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27260083" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.38108483" sideWeight="0.84289813" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962447" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24892396" sideWeight="0.64534074" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.52313167" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298217" sideWeight="0.52313167" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21736011" sideWeight="0.42976356" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.28694403" sideWeight="0.62030596" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27758008" sideWeight="0.76661265" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2195122" sideWeight="0.759388" order="5" side_tool="false" content_ui="combo" />
+      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2609727" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2642559" sideWeight="0.6037277" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781065" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15136299" sideWeight="0.7093185" order="4" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Dependency Viewer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781065" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2609727" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
     </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USERS">
+      <collection />
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -1316,119 +1158,130 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.codesync/src/org/flowerplatform/codesync/projects/IProjectAccessController.java">
+    <entry file="file://$PROJECT_DIR$/src/component/FlowerDiagramSaveComponent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="18" selection-start="866" selection-end="873" vertical-scroll-proportion="0.0">
+        <state line="29" column="13" selection-start="1024" selection-end="1024" vertical-scroll-proportion="-4.08">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.codesync/src/com/crispico/flower/mp/codesync/base/CodeSyncPlugin.java">
+    <entry file="file://D:/java/idea_12_1_6_sources/platform/platform-impl/src/com/intellij/openapi/fileEditor/impl/FileEditorManagerImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="471" column="0" selection-start="16852" selection-end="16852" vertical-scroll-proportion="0.0">
+        <state line="695" column="0" selection-start="25105" selection-end="25105" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code/src/com/crispico/flower/mp/codesync/code/adapter/FolderModelAdapter.java">
+    <entry file="file://$PROJECT_DIR$/src/editor/FlowerSampleEditor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="80" column="0" selection-start="2637" selection-end="2637" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.codesync/src/com/crispico/flower/mp/codesync/base/ModelAdapterFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="56" column="0" selection-start="1653" selection-end="1653" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.editor/src/org/flowerplatform/editor/remote/EditorStatefulService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1265" column="0" selection-start="53016" selection-end="53016" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/AplicationComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="246" column="0" selection-start="0" selection-end="10415" vertical-scroll-proportion="-27.64">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.communication/src/org/flowerplatform/communication/public_resources/ImageComposerServlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="46" column="0" selection-start="1450" selection-end="1450" vertical-scroll-proportion="0.0">
+        <state line="139" column="19" selection-start="4413" selection-end="4413" vertical-scroll-proportion="-5.64">
           <folding>
-            <element signature="e#0#2634#0" expanded="true" />
+            <element signature="e#1721#1731#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaProjectAccessController.java">
+    <entry file="file://$PROJECT_DIR$/src/sampleAction/ChengeFocus.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="23" selection-start="1924" selection-end="1924" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/component/FlowerDiagramSaveComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="18" selection-start="676" selection-end="676" vertical-scroll-proportion="-2.72">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../communitySRC/platform/platform-impl/src/com/intellij/openapi/fileEditor/impl/EditorComposite.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="202" column="35" selection-start="8134" selection-end="8134" vertical-scroll-proportion="0.9470752">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/myPackage/OnFileSaveComponent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="44" selection-start="787" selection-end="787" vertical-scroll-proportion="-2.48">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaFileAccessController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="0" selection-start="2826" selection-end="2826" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/META-INF/plugin.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="29" selection-start="1098" selection-end="1098" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.idea/src/org/flowerplatform/idea/file/IdeaModelAccessController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="31" selection-start="1077" selection-end="1077" vertical-scroll-proportion="0.7311828">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../org.flowerplatform.communication/src/org/flowerplatform/communication/public_resources/PublicResourcesServlet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="0" selection-start="3540" selection-end="3540" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramEditor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="0" selection-start="2948" selection-end="2948" vertical-scroll-proportion="0.5021097">
+        <state line="36" column="0" selection-start="1328" selection-end="1328" vertical-scroll-proportion="-15.8">
           <folding>
+            <element signature="e#0#1653#0" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="docComment;class#FlowerDiagramEditor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sampleAction/SampleAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="39" selection-start="1010" selection-end="1010" vertical-scroll-proportion="-4.28">
+          <folding>
+            <element signature="e#0#1879#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramEditorProvider.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="37" selection-start="2612" selection-end="2612" vertical-scroll-proportion="-29.92">
+          <folding>
+            <element signature="method#isFileOpened#0;class#FlowerDiagramEditorProvider#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramFileType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="26" column="13" selection-start="831" selection-end="831" vertical-scroll-proportion="10.2">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramIcon.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="13" selection-start="735" selection-end="735" vertical-scroll-proportion="-3.4">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerDiagramTypeFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="13" selection-start="820" selection-end="820" vertical-scroll-proportion="-3.4">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/FlowerVirtualFileWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="13" selection-start="766" selection-end="766" vertical-scroll-proportion="6.12">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/IIdeaToEclipseBridge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="17" selection-start="670" selection-end="670" vertical-scroll-proportion="-2.04">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/myPackage/SimpleLanguage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="2" selection-start="635" selection-end="897" vertical-scroll-proportion="-5.96">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/editor/SampleEditor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="43" column="4" selection-start="1533" selection-end="1533" vertical-scroll-proportion="84.48">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/editor/FlowerDiagramEditor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="257" column="8" selection-start="8289" selection-end="8289" vertical-scroll-proportion="-76.76">
+          <folding>
+            <element signature="initializer##0;class#FlowerDiagramEditor#0" expanded="false" />
+            <element signature="e#4870#4883#0" expanded="false" />
+            <element signature="e#8289#8302#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/action/OpenInNewFlowerEditor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="117" selection-start="373" selection-end="373" vertical-scroll-proportion="-4.76">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/action/NewDiagramAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="2" selection-start="632" selection-end="632" vertical-scroll-proportion="-0.45454547">
+          <folding>
+            <element signature="e#0#1802#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1442,7 +1295,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.278826" />
+                <option value="0.23407203" />
               </list>
             </option>
           </splitter-proportions>
@@ -1454,7 +1307,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.278826" />
+                <option value="0.23407203" />
               </list>
             </option>
           </splitter-proportions>
@@ -1466,7 +1319,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.278826" />
+                <option value="0.23407203" />
               </list>
             </option>
           </splitter-proportions>
@@ -1474,11 +1327,11 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>1.7</last-edited>
+          <last-edited>IDEA IC-129.1359</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.278826" />
+                <option value="0.23407203" />
               </list>
             </option>
           </splitter-proportions>
@@ -1490,7 +1343,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.278826" />
+                <option value="0.23407203" />
               </list>
             </option>
           </splitter-proportions>
@@ -1510,11 +1363,11 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>DJNativeSwing-SWT</last-edited>
+          <last-edited>org.slf4j.api_1.6.1.v20100831-0715</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.278826" />
+                <option value="0.23407203" />
               </list>
             </option>
           </splitter-proportions>

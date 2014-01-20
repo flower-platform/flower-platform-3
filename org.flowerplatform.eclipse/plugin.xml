@@ -162,5 +162,34 @@
             class="org.flowerplatform.eclipse.Startup">
       </startup>
    </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="dummyButton.DummyEditor"
+            default="false"
+            id="DummyEditor"
+            name="Open new Ediitor">
+      </editor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:org.eclipse.ui.popup.any?endof=group.open">
+         <command
+               commandId="DummyCommand"
+               label="DummyCommand"
+               style="push">
+         </command>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="dummyButton.DummyCommandHandler"
+            id="DummyCommand"
+            name="%dummyCommand.name">
+      </command>
+   </extension>
 
 </plugin>

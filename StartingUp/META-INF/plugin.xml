@@ -1,6 +1,6 @@
 <idea-plugin version="2">
-  <id>com.yourcompany.unique.plugin.id</id>
-  <name>Test PlugIn</name>
+  <id>org.flowerplatform.idea.plugin</id>
+  <name>FlowerPlatformPlugin</name>
   <version>1.0</version>
   <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
 
@@ -34,7 +34,6 @@
   </application-components>
 
    <project-components>
-     <!-- Add your project components here -->
        <component>
            <implementation-class>component.FlowerDiagramSaveComponent</implementation-class>
        </component>
@@ -50,10 +49,23 @@
           <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="AddToFavorites"/>
       </action>
 
+      <action id="OpenInNewFlowerEditor" class="action.OpenInNewFlowerEditor" text="Open in New Editor"
+              description="Open in new flower editor" icon ="/images/FlowerDiagramEditor.gif">
+          <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+      </action>
+
+      <action id="SampleAction" class="sampleAction.SampleAction" text="SampleAction"
+              description="Open new Editor" icon ="/images/FlowerDiagramEditor.gif">
+          <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+      </action>
+      <action id="ChengeFocus" class="sampleAction.ChengeFocus" text="ChengeFocus"
+              description="ChengeFocus" icon ="/images/FlowerDiagramEditor.gif">
+          <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
+      </action>
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">
-      <fileTypeFactory implementation="myPackage.MyFileTypeFactory"/>
-      <fileEditorProvider id="My Editor" implementation="myPackage.MyFileEditorProvider"/>
+      <fileTypeFactory implementation="myPackage.FlowerDiagramTypeFactory"/>
+      <fileEditorProvider id="My Editor" implementation="myPackage.FlowerDiagramEditorProvider"/>
   </extensions>
 </idea-plugin>

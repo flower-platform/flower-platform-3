@@ -1,3 +1,21 @@
+///* license-start
+//*
+//* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
+//*
+//* This program is free software: you can redistribute it and/or modify
+//* it under the terms of the GNU General Public License as published by
+//* the Free Software Foundation version 3.
+//*
+//* This program is distributed in the hope that it will be useful,
+//* but WITHOUT ANY WARRANTY; without even the implied warranty of
+//* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
+//*
+//* Contributors:
+//*   Crispico - Initial API and implementation
+//*
+//* license-end
+//*/
 //package component;
 //
 //import com.intellij.ide.actions.SaveAllAction;
@@ -23,24 +41,7 @@
 //import java.awt.event.InputEvent;
 //import java.util.List;
 //
-///* license-start
-//*
-//* Copyright (C) 2008 - 2013 Crispico, <http://www.crispico.com/>.
-//*
-//* This program is free software: you can redistribute it and/or modify
-//* it under the terms of the GNU General Public License as published by
-//* the Free Software Foundation version 3.
-//*
-//* This program is distributed in the hope that it will be useful,
-//* but WITHOUT ANY WARRANTY; without even the implied warranty of
-//* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//* GNU General Public License for more details, at <http://www.gnu.org/licenses/>.
-//*
-//* Contributors:
-//*   Crispico - Initial API and implementation
-//*
-//* license-end
-//*/
+////todo delete
 //public class AplicationComponent extends ActionManager implements SettingsSavingComponent, AnActionListener {
 //
 //    private final List<AnActionListener> myActionListeners = ContainerUtil.createLockFreeCopyOnWriteList();
@@ -116,7 +117,6 @@
 //     */
 //    @Override
 //    public void registerAction(@NonNls @NotNull String actionId, @NotNull AnAction action) {
-//        //To change body of implemented methods use File | Settings | File Templates.
 //    }
 //
 //    /**
@@ -129,7 +129,6 @@
 //     */
 //    @Override
 //    public void registerAction(@NotNull String actionId, @NotNull AnAction action, @Nullable PluginId pluginId) {
-//        //To change body of implemented methods use File | Settings | File Templates.
 //    }
 //
 //    /**
@@ -139,7 +138,6 @@
 //     */
 //    @Override
 //    public void unregisterAction(@NotNull String actionId) {
-//        //To change body of implemented methods use File | Settings | File Templates.
 //    }
 //
 //    /**
@@ -239,11 +237,13 @@
 //
 //    @Override
 //    public void save() {
-//        //  todo if needed, get opend projects and save all unsaved diagrams
 //    }
 //
 //    @Override
 //    public void beforeActionPerformed(AnAction action, DataContext dataContext, AnActionEvent event) {
+//        if(action.getTemplatePresentation().getDescription() == "Close currently focused content" ){
+//            int i=0;
+//        }
 //        if (action instanceof SaveAllAction) {
 //            Project project = PlatformDataKeys.PROJECT.getData(dataContext);
 //            FileEditor[] openedEditors = FileEditorManager.getInstance(project).getAllEditors();

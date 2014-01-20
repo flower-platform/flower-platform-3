@@ -18,6 +18,7 @@
  */
 package org.flowerplatform.idea.file;
 
+import myPackage.FlowerVirtualFileWrapper;
 import org.eclipse.emf.common.util.URI;
 import org.flowerplatform.editor.model.IModelAccessController;
 
@@ -30,7 +31,7 @@ public class IdeaModelAccessController implements IModelAccessController {
 
 	@Override
 	public URI getURIFromFile(Object file) {		
-		return URI.createFileURI(((VirtualFile)file).getPath()); 
+		return URI.createFileURI(((FlowerVirtualFileWrapper)file).getPath());
 	}
 
 }

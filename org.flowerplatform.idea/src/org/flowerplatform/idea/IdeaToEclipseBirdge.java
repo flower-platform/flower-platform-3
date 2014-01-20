@@ -18,12 +18,12 @@
  */
 package org.flowerplatform.idea;
 
+import myPackage.FlowerVirtualFileWrapper;
 import myPackage.IIdeaToEclipseBridge;
 
 import org.flowerplatform.idea.action.IdeaNewDiagramAction;
 
 import com.crispico.flower.mp.codesync.base.CodeSyncPlugin;
-import com.intellij.openapi.vfs.VirtualFile;
 
 /**
  * @author Sebastian Solomon
@@ -36,9 +36,9 @@ public class IdeaToEclipseBirdge implements IIdeaToEclipseBridge{
 	}
 	
 	@Override
-	public void createDiagram(VirtualFile vFile, String name) {
+	public void createDiagram(FlowerVirtualFileWrapper vFile, String name) {
 		IdeaNewDiagramAction inda = new IdeaNewDiagramAction();
-		inda.parentPath = CodeSyncPlugin.getInstance().getProjectAccessController().getPathRelativeToProject(vFile); 
+		inda.parentPath = CodeSyncPlugin.getInstance().getProjectAccessController().getPathRelativeToProject(vFile);
 		inda.name = name + ".notation";
 		inda.executeCommand();
 	}

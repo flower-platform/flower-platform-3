@@ -24,7 +24,7 @@ import com.intellij.openapi.components.SettingsSavingComponent;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import myPackage.FlowerDiagramEditor;
+import editor.FlowerDiagramEditor;
 import org.jetbrains.annotations.NotNull;
 
 public class FlowerDiagramSaveComponent implements ProjectComponent, SettingsSavingComponent {
@@ -50,7 +50,6 @@ public class FlowerDiagramSaveComponent implements ProjectComponent, SettingsSav
      */
     @Override
     public void projectClosed() {
-        //todo save diagrams
     }
 
     /**

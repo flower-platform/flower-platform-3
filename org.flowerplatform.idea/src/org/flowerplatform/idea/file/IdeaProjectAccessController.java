@@ -27,8 +27,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.openapi.vfs.VirtualFileCopyEvent;
 
-import myPackage.FlowerDiagramEditor;
+import myPackage.FlowerVirtualFileWrapper;
 
 
 /**
@@ -42,21 +43,16 @@ public class IdeaProjectAccessController implements IProjectAccessController {
 
 	@Override
 	public Object getFile(Object module, String path)  {
-		String filePath = ((VirtualFile)module).getPath() + path;
-        File file = new File(filePath);
-//        if (!file.exists()) {
-//            return null;
-//        }
-		return LocalFileSystem.getInstance().findFileByIoFile(file);
+		String filePath = ((FlowerVirtualFileWrapper)module).getPath() + path;
+		return new FlowerVirtualFileWrapper(filePath);
 	}
 
 	@Override
 	public Object getContainingProjectForFile(Object file) {
-        //TODO test
-		Project ideaProject = ProjectLocator.getInstance().guessProjectForFile((VirtualFile)file);
-        File moduleFile = new File(getModulePath(ideaProject, (VirtualFile)file));
+		Project ideaProject = ProjectLocator.getInstance().guessProjectForFile(((FlowerVirtualFileWrapper)file).getVirtualFile());
+        File moduleFile = new File(getModulePath(ideaProject, (FlowerVirtualFileWrapper)file));
 		if (moduleFile.exists()) {
-			return LocalFileSystem.getInstance().findFileByIoFile(moduleFile);
+			return new FlowerVirtualFileWrapper(LocalFileSystem.getInstance().findFileByIoFile(moduleFile));
 		}
 		return null;
 	}
@@ -64,7 +60,7 @@ public class IdeaProjectAccessController implements IProjectAccessController {
 	@Override
 	public String getPathRelativeToProject(Object file) {
 		//return  absolute Path
-		return ((VirtualFile)file).getPath();
+		return ((FlowerVirtualFileWrapper)file).getPath();
 	}
 
 	@Override
@@ -72,10 +68,10 @@ public class IdeaProjectAccessController implements IProjectAccessController {
         return getFile(project, path);
 	}
 
-
-//	private String getPathRelativeToModule(VirtualFile file) {
+	//TODO delete
+//	private String getPathRelativeToModule(FlowerVirtualFileWrapper file) {
 //        Project project = FlowerDiagramEditor.getEditorProject();
-//        VirtualFile moduleSourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(file);
+//        FlowerVirtualFileWrapper moduleSourceRoot = ProjectRootManager.getInstance(project).getFileIndex().getSourceRootForFile(file);
 //        String modulePath = removeLastSegment(removeLastSegment(moduleSourceRoot.getPath()));
 //        String filePath = file.getPath();
 //
@@ -89,8 +85,8 @@ public class IdeaProjectAccessController implements IProjectAccessController {
         return path;
     }
     
-    private String getModulePath(Project project, VirtualFile file) {
-    	return removeLastSegment(ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file).getModuleFilePath());
+    private String getModulePath(Project project, FlowerVirtualFileWrapper file) {
+    	return removeLastSegment(ProjectRootManager.getInstance(project).getFileIndex().getModuleForFile(file.getVirtualFile()).getModuleFilePath());
     }
 	
 }
