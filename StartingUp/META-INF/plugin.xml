@@ -49,19 +49,19 @@
           <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="AddToFavorites"/>
       </action>
 
-      <action id="OpenInNewFlowerEditor" class="action.OpenInNewFlowerEditor" text="Open in New Editor"
-              description="Open in new flower editor" icon ="/images/FlowerDiagramEditor.gif">
-          <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
-      </action>
+      <!--<action id="OpenInNewFlowerEditor" class="action.OpenInNewFlowerEditor" text="Open in New Editor"-->
+              <!--description="Open in new flower editor" icon ="/images/FlowerDiagramEditor.gif">-->
+          <!--<add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>-->
+      <!--</action>-->
 
       <action id="SampleAction" class="sampleAction.SampleAction" text="SampleAction"
               description="Open new Editor" icon ="/images/FlowerDiagramEditor.gif">
           <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
       </action>
-      <action id="ChengeFocus" class="sampleAction.ChengeFocus" text="ChengeFocus"
-              description="ChengeFocus" icon ="/images/FlowerDiagramEditor.gif">
-          <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>
-      </action>
+      <!--<action id="ChengeFocus" class="sampleAction.ChengeFocus" text="ChengeFocus"-->
+              <!--description="ChengeFocus" icon ="/images/FlowerDiagramEditor.gif">-->
+          <!--<add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="WeighingNewGroup"/>-->
+      <!--</action>-->
   </actions>
 
   <extensions defaultExtensionNs="com.intellij">

@@ -16,14 +16,14 @@
 *
 * license-end
 */
-//package myPackage;
-//
-//import com.intellij.lang.Language;
-//
-//public class SimpleLanguage extends Language {
-//    public static final SimpleLanguage INSTANCE = new SimpleLanguage();
-//
-//    private SimpleLanguage() {
-//        super("Notations");
-//    }
-//}
+package myPackage;
+
+import com.intellij.lang.Language;
+
+public class SimpleLanguage extends Language {
+    public static final SimpleLanguage INSTANCE = new SimpleLanguage();
+
+    private SimpleLanguage() {
+        super("Notations");
+    }
+}

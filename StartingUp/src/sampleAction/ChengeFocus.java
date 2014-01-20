@@ -17,24 +17,23 @@
 * license-end
 */
 
-package sampleAction;
-
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
-
-public class ChengeFocus extends AnAction {
-    /**
-     * Implement this method to provide your action handler.
-     *
-     * @param e Carries information on the invocation place
-     */
-    @Override
-    public void actionPerformed(AnActionEvent e) {
-        FileEditorManagerImpl fileEditorManager =   (FileEditorManagerImpl)FileEditorManager.getInstance(e.getProject());
-        fileEditorManager.getWindows()[0].setSelectedEditor(fileEditorManager.getWindows()[0].findFileComposite(e.getData(PlatformDataKeys.VIRTUAL_FILE)), true);
-//        IdeFocusManager.getInstance(e.getProject()).requestFocus(FileEditorManager.getInstance(e.getProject()).getAllEditors()[1].getComponent(), true);
-    }
-}
+//package sampleAction;
+//
+//import com.intellij.openapi.actionSystem.AnAction;
+//import com.intellij.openapi.actionSystem.AnActionEvent;
+//import com.intellij.openapi.actionSystem.PlatformDataKeys;
+//import com.intellij.openapi.fileEditor.FileEditorManager;
+//import com.intellij.openapi.fileEditor.impl.FileEditorManagerImpl;
+//
+//public class ChengeFocus extends AnAction {
+//    /**
+//     * Implement this method to provide your action handler.
+//     *
+//     * @param e Carries information on the invocation place
+//     */
+//    @Override
+//    public void actionPerformed(AnActionEvent e) {
+//        FileEditorManagerImpl fileEditorManager =   (FileEditorManagerImpl)FileEditorManager.getInstance(e.getProject());
+//        fileEditorManager.getWindows()[0].setSelectedEditor(fileEditorManager.getWindows()[0].findFileComposite(e.getData(PlatformDataKeys.VIRTUAL_FILE)), true);
+//    }
+//}
