@@ -10,9 +10,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="DJNativeSwing-SWT" level="project" />
-    <orderEntry type="library" name="org.slf4j.api_1.6.1.v20100831-0715" level="project" />
-    <orderEntry type="library" name="org.eclipse.osgi.source_3.7.2.v20120110-1415" level="project" />
+    <orderEntry type="library" exported="" name="DJNativeSwing-SWT" level="project" />
+    <orderEntry type="library" exported="" name="org.slf4j.api_1.6.1.v20100831-0715" level="project" />
+    <orderEntry type="library" exported="" name="org.eclipse.osgi.source_3.7.2.v20120110-1415" level="project" />
+    <orderEntry type="library" exported="" name="org.flowerplatform" level="project" />
   </component>
 </module>
 

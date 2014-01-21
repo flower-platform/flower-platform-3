@@ -21,6 +21,9 @@ package myPackage;
 import com.intellij.openapi.fileEditor.FileEditorState;
 import com.intellij.openapi.fileEditor.FileEditorStateLevel;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class DummyFileEditorState implements FileEditorState {
 
     public static final FileEditorState DUMMY = new DummyFileEditorState();
@@ -28,4 +31,5 @@ public class DummyFileEditorState implements FileEditorState {
     public boolean canBeMergedWith(FileEditorState otherState, FileEditorStateLevel level) {
         return true;
     }
+
 }

@@ -22,6 +22,9 @@ import com.intellij.openapi.util.IconLoader;
 
 import javax.swing.*;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class FlowerDiagramIcon {
     public static final Icon FILE = IconLoader.getIcon("/images/FlowerDiagramEditor.gif");
 }

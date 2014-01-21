@@ -18,6 +18,9 @@
 */
 package myPackage;
 
+/**
+ * @author Sebastian Solomon
+ */
 public interface IIdeaToEclipseBridge {
     String getUrl();
     void createDiagram(FlowerVirtualFileWrapper path, String diagramName);

@@ -192,7 +192,8 @@ public class IdeaFileAccessController implements IFileAccessController {
 	public void rename(Object file, Object dest) {
 		// TODO to test
 		try {
-			((FlowerVirtualFileWrapper)file).getVirtualFile().rename(null, ((FlowerVirtualFileWrapper)dest).getVirtualFile().getName());
+			((FlowerVirtualFileWrapper) file).getVirtualFile().rename(
+					null, ((FlowerVirtualFileWrapper) dest).getVirtualFile().getName());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -201,8 +202,7 @@ public class IdeaFileAccessController implements IFileAccessController {
 	@Override
 	public String readFileToString(Object file) {
 		try {
-            return new String(((FlowerVirtualFileWrapper)file).getVirtualFile().contentsToByteArray(), "UTF-8");
-
+            return new String(((FlowerVirtualFileWrapper) file).getVirtualFile().contentsToByteArray(), "UTF-8");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

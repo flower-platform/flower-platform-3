@@ -18,6 +18,9 @@
 */
 package myPackage;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class BridgeUtilIdeaToEclipse {
     public static IIdeaToEclipseBridge iIdeaToEclipseBridge;
 }

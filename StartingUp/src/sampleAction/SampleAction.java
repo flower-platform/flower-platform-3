@@ -25,11 +25,12 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.testFramework.LightVirtualFile;
 
-
+/**
+ * @author Sebastian Solomon
+ */
 public class SampleAction extends AnAction {
 
-    //just opens an  FlowerSampleEditor
-
+    // just opens an  FlowerSampleEditor
     public void actionPerformed(AnActionEvent e) {
         VirtualFile vf = new LightVirtualFile("FlowerDummyFile.notation"){
             public String getPresentableName() {
@@ -50,7 +51,7 @@ public class SampleAction extends AnAction {
 //        e.getPresentation().setEnabled(false);
 //        e.getPresentation().setVisible(false);
 //        return;
-        }
-//    }
+//        }
+    }
 
 }

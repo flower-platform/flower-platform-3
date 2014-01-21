@@ -32,7 +32,7 @@ public class DummyCommandHandler extends AbstractHandler {
 
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
-		//test code to open a new editor with no file behind
+		// test code to open a new editor with no file behind
 
 		String string = "";
 		IStorage storage = new StringStorage(string);
@@ -46,7 +46,5 @@ public class DummyCommandHandler extends AbstractHandler {
 		}
 		return null;
 	}
-
-	
 
 }

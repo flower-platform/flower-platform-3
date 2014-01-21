@@ -27,6 +27,9 @@ import myPackage.BridgeUtilIdeaToEclipse;
 import editor.FlowerDiagramEditor;
 import myPackage.FlowerVirtualFileWrapper;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class NewDiagramAction extends AnAction {
 
     public void actionPerformed(AnActionEvent e) {

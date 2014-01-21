@@ -33,12 +33,14 @@ import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import editor.SampleEditor;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class FlowerDiagramEditorProvider implements ApplicationComponent, FileEditorProvider {
 
-    boolean isOpenedFlag = false;
-
-    //needed to know in what editor is the file oppend when the answer comes from javascrips
-    FlowerDiagramEditor currentEditor;
+    private boolean isOpenedFlag = false;
+    // needed to know in what editor is the file oppend when the answer comes from javascrips
+    private FlowerDiagramEditor currentEditor;
 
     @Override
     public void initComponent() {

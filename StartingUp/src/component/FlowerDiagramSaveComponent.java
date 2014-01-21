@@ -27,6 +27,9 @@ import com.intellij.openapi.project.Project;
 import editor.FlowerDiagramEditor;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class FlowerDiagramSaveComponent implements ProjectComponent, SettingsSavingComponent {
 
     private Project project;

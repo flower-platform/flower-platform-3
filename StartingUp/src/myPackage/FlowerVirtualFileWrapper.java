@@ -22,16 +22,19 @@ package myPackage;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class FlowerVirtualFileWrapper {
     private VirtualFile virtualFile;
     private String path;
 
-    public FlowerVirtualFileWrapper(VirtualFile virtualFile){
-           this.virtualFile = virtualFile;
-           path = virtualFile.getPath();
+    public FlowerVirtualFileWrapper(VirtualFile virtualFile) {
+        this.virtualFile = virtualFile;
+        path = virtualFile.getPath();
     }
 
-    public FlowerVirtualFileWrapper(String path){
+    public FlowerVirtualFileWrapper(String path) {
         this.path = path;
         this.virtualFile = null;
     }

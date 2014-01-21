@@ -20,6 +20,9 @@ package myPackage;
 
 import com.intellij.lang.Language;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class SimpleLanguage extends Language {
     public static final SimpleLanguage INSTANCE = new SimpleLanguage();
 

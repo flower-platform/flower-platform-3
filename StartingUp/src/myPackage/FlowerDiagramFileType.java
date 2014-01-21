@@ -24,11 +24,14 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class FlowerDiagramFileType extends LanguageFileType {
     public static final FlowerDiagramFileType INSTANCE = new FlowerDiagramFileType();
 
     private FlowerDiagramFileType() {
-        super (SimpleLanguage.INSTANCE);
+        super(SimpleLanguage.INSTANCE);
     }
 
     @NotNull

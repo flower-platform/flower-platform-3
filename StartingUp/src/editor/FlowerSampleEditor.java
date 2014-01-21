@@ -37,9 +37,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 
-//Editor with no File behind, contains a browser
+/**
+ * @author Sebastian Solomon
+ */
+// Editor with no File behind, contains a browser
 public class FlowerSampleEditor implements FileEditor/*, FileEditorManagerListener*/ {
-
 
     JPanel browserPanel;
 

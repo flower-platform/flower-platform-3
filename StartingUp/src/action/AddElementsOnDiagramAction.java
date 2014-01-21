@@ -31,6 +31,9 @@ import editor.FlowerDiagramEditor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class AddElementsOnDiagramAction extends AnAction {
     public void actionPerformed(AnActionEvent e) {
         List<String> paths = new ArrayList();

@@ -1,0 +1,39 @@
+<component name="libraryTable">
+  <library name="org.flowerplatform">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.blazeds" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.emf_model.notation" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.common" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.editor" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.idea" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.editor.model" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.emf_model.astcache.code" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.communication" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.emf_model.codesync" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.properties" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code.javascript" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.merge" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code.java" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.blazeds/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.emf_model.notation/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.common/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.editor/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.idea/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.editor.model/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.emf_model.astcache.code/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.communication/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.emf_model.codesync/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.properties/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code.javascript/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.merge/src" />
+      <root url="file://$PROJECT_DIR$/../org.flowerplatform.codesync.code.java/src" />
+    </SOURCES>
+  </library>
+</component>

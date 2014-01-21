@@ -37,6 +37,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 
+/**
+ * @author Sebastian Solomon
+ */
 //Acest editor este inchis imediat dupa ce se deschide
 public class SampleEditor implements FileEditor, FileEditorManagerListener {
 
@@ -46,7 +49,7 @@ public class SampleEditor implements FileEditor, FileEditorManagerListener {
 
     public SampleEditor(Project project, VirtualFile file) {
         FileEditorManager.getInstance(project).addFileEditorManagerListener(this);
-        this.project =  project;
+        this.project = project;
         browserPanel = new JPanel(new BorderLayout());
         if (file.getName().equals("null")) {
             return;

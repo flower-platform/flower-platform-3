@@ -26,8 +26,6 @@ import com.intellij.codeHighlighting.BackgroundEditorHighlighter;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.ide.structureView.StructureViewBuilder;
-import com.intellij.openapi.command.CommandEvent;
-import com.intellij.openapi.command.CommandListener;
 import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.Key;
@@ -46,6 +44,9 @@ import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.net.URL;
 
+/**
+ * @author Sebastian Solomon
+ */
 public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListener*/ {
 
     public static IIdeaToEclipseBridge ideaToEclipseBridge;
@@ -62,15 +63,14 @@ public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListe
 
     private final PropertyChangeSupport myChangeSupport;
 
-
     static {
-        //start eclipse
+        // start eclipse
         FlowerFrameworkLauncher framework = new FlowerFrameworkLauncher();
         framework.init();
         framework.deploy();
         framework.start();
 
-        //configure xulrunner
+        // configure xulrunner
         File file = null;
         IdeaPluginDescriptor[] ipd = PluginManager.getPlugins();
         for(IdeaPluginDescriptor pluginDescriptor : ipd) {
@@ -92,12 +92,6 @@ public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListe
         }
     }
 
-    public static void setIideaToEclipseBridge(IIdeaToEclipseBridge ii){
-        if (FlowerDiagramEditor.ideaToEclipseBridge == null) {
-            FlowerDiagramEditor.ideaToEclipseBridge = ii;
-        }
-    }
-
     public FlowerDiagramEditor(Project project, VirtualFile file) {
         NativeInterface.open();
         UIUtils.setPreferredLookAndFeel();
@@ -107,7 +101,7 @@ public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListe
         myChangeSupport = new PropertyChangeSupport(this);
 
         browserPanel = new JPanel(new BorderLayout());
-        //webBrowser.setBarsVisible(false); //todo
+        // webBrowser.setBarsVisible(false); // todo
         // This call must happen in the AWT Event Dispatch Thread
         webBrowser.navigate(BridgeUtilIdeaToEclipse.iIdeaToEclipseBridge.getUrl()+ "?openResources=" + file.getPath());
 
@@ -156,6 +150,20 @@ public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListe
 //                    //To change body of implemented methods use File | Settings | File Templates.
 //                }
 //            });
+    }
+
+    public static void setIideaToEclipseBridge(IIdeaToEclipseBridge ii){
+        if (FlowerDiagramEditor.ideaToEclipseBridge == null) {
+            FlowerDiagramEditor.ideaToEclipseBridge = ii;
+        }
+    }
+
+    public JWebBrowser getBrowser(){
+        return webBrowser;
+    }
+
+    public VirtualFile getFile(){
+        return file;
     }
 
     @NotNull
@@ -214,7 +222,7 @@ public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListe
 
     @Override
     public void selectNotify() {
-        //apelata cadnd tabul devine activ
+        // apelata cadnd tabul devine activ
     }
 
     /**
@@ -255,7 +263,7 @@ public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListe
     @Override
     public void dispose() {
     }
-        //TODO delete
+        // TODO delete
 //        @Override
 //        public void fileOpened(FileEditorManager fileEditorManager, VirtualFile virtualFile) {
 //        }
@@ -278,14 +286,6 @@ public class FlowerDiagramEditor implements FileEditor/*, FileEditorManagerListe
 
     @Override
     public <T> void putUserData(@NotNull Key<T> tKey, @Nullable T t) {
-    }
-
-    public JWebBrowser getBrowser(){
-        return webBrowser;
-    }
-
-    public VirtualFile getFile(){
-        return file;
     }
 
 }
