@@ -18,7 +18,6 @@
  */
 package org.flowerplatform.web.common {
 	
-	import flash.display.DisplayObject;
 	import flash.events.IEventDispatcher;
 	import flash.net.registerClassAlias;
 	
@@ -26,18 +25,16 @@ package org.flowerplatform.web.common {
 	import mx.collections.ArrayList;
 	import mx.core.FlexGlobals;
 	
-	import org.flowerplatform.codesync.CodeSyncPlugin;
 	import org.flowerplatform.common.plugin.AbstractFlowerFlexPlugin;
 	import org.flowerplatform.communication.tree.remote.TreeNode;
 	import org.flowerplatform.editor.EditorPlugin;
-	import org.flowerplatform.editor.mindmap.remote.NewMindMapDiagramAction;
+
 	import org.flowerplatform.editor.model.action.DragOnDiagramAction;
 	import org.flowerplatform.editor.model.remote.NewJavaClassDiagramAction;
 	import org.flowerplatform.flexutil.FlexUtilGlobals;
 	import org.flowerplatform.flexutil.Utils;
 	import org.flowerplatform.flexutil.action.ClassFactoryActionProvider;
 	import org.flowerplatform.flexutil.action.IActionProvider;
-	import org.flowerplatform.flexutil.layout.event.ViewsRemovedEvent;
 	import org.flowerplatform.flexutil.resources.ResourceUpdatedEvent;
 	import org.flowerplatform.flexutil.resources.ResourcesUtils;
 	import org.flowerplatform.properties.action.ShowPropertiesAction;
@@ -145,7 +142,7 @@ package org.flowerplatform.web.common {
 			explorerTreeClassFactoryActionProvider.actionClasses.push(RefreshDirectoryAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(NewComposedAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(NewJavaClassDiagramAction);
-			explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
+//			explorerTreeClassFactoryActionProvider.actionClasses.push(NewMindMapDiagramAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(DragOnDiagramAction);
 			explorerTreeClassFactoryActionProvider.actionClasses.push(ShowPropertiesAction);
  		}

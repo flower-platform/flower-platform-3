@@ -20,7 +20,7 @@ server.url = http://localhost:8080
 users.email-unique = false
 users.min-password-length = 1
 
-git.git-install-dir = D:/Programs/Git/
+git.git-install-dir = C:/Program Files (x86)/Git/
 
 ########################################################################
 # Properties overrides; global / for all team / commited on SVN: END
